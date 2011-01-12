@@ -43,6 +43,7 @@ namespace xxx_deque{
             	//]
 	            os << std::endl;
             }
+/*
             {
             	//[deque_front
             	boost::for_each(
@@ -55,6 +56,7 @@ namespace xxx_deque{
             	//]
 	            os << std::endl;
             }
+*/
         }
     }
 
