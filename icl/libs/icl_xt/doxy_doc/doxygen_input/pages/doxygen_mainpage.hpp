@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------------------------+
-Copyright (c) 2007-2009: Joachim Faulhaber
+Copyright (c) 2007-2011: Joachim Faulhaber
 Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 +------------------------------------------------------------------------------+
    Distributed under the Boost Software License, Version 1.0.
@@ -16,7 +16,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 \section header_sec Interval Container Library (aka. Interval Template Library)
 
 Author: Joachim Faulhaber\n
-Copyright (c) 2007-2010: Joachim Faulhaber\n
+Copyright (c) 2007-2011: Joachim Faulhaber\n
 Copyright (c) 1999-2006: Cortex Software GmbH, Berlin\n
 
 Distributed under the Boost Software License, Version 1.0.\n
@@ -90,7 +90,11 @@ from sourceforge.
 
 <ul>
 
-<li>Changes after the review
+<li>Improvements for <b>Boost 1.46.0</b> (ICL+ version 4.0.1)
+
+The <b>Interval Container Library, Boost.Icl</b> will ship with the next Boost release 1.46.0 around February-1-2011. This version of the <b>full library, ICL+ 4.0.1,</b> contains the newest core library and implements improvements for class <b>interval_bitset</b>, Boost.DateTime interoperability and improved portability for a wide range of compilers.
+
+<li>Changes after the review (version 4.0.0)
 
 A number of changes have been done after the review as a result of the
 reviews and the related discussion.
