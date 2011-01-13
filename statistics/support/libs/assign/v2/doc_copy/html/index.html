@@ -1,0 +1,134 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Chapter&#160;1.&#160;Boost.Assign 2.0</title>
+<link rel="stylesheet" href="../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="index.html" title="Chapter&#160;1.&#160;Boost.Assign 2.0">
+<link rel="next" href="boost_assign_v2/qs.html" title="Quickstart">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../boost.png"></td>
+<td align="center"><a href="../../index.html">Home</a></td>
+<td align="center"><a href="../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav"><a accesskey="n" href="boost_assign_v2/qs.html"><img src="../../doc/src/images/next.png" alt="Next"></a></div>
+<div class="chapter">
+<div class="titlepage"><div>
+<div><h2 class="title">
+<a name="boost_assign_v2"></a>Chapter&#160;1.&#160;Boost.Assign 2.0</h2></div>
+<div><div class="author"><h3 class="author">
+<span class="firstname">Ottosen</span> <span class="surname">Thorsten</span>
+</h3></div></div>
+<div><div class="author"><h3 class="author">
+<span class="firstname">Erwann</span> <span class="surname">Rogard</span>
+</h3></div></div>
+<div><p class="copyright">Copyright &#169; 2003 -2004 Thorsten Ottosen, 2010 Erwann Rogard</p></div>
+<div><div class="legalnotice">
+<a name="id36330860"></a><p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></div>
+</div></div>
+<div class="toc">
+<p><b>Table of Contents</b></p>
+<dl>
+<dt><span class="section"><a href="index.html#boost_assign_v2.intro">Introduction</a></span></dt>
+<dt><span class="section"><a href="boost_assign_v2/qs.html">Quickstart</a></span></dt>
+<dt><span class="section"><a href="boost_assign_v2/conv.html">Convention</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="boost_assign_v2/conv.html#boost_assign_v2.conv.symb">Symbols</a></span></dt>
+<dt><span class="section"><a href="boost_assign_v2/conv/index.html">Index</a></span></dt>
+<dt><span class="section"><a href="boost_assign_v2/conv/syn.html">Synopsis</a></span></dt>
+<dt><span class="section"><a href="boost_assign_v2/conv/ex.html">Example</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="boost_assign_v2/put.html">Put </a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="boost_assign_v2/put.html#boost_assign_v2.put.pipe"><code class="computeroutput"><span class="keyword">operator</span><span class="special">|()</span></code> </a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="boost_assign_v2/put.html#boost_assign_v2.put.pipe.csv"><code class="computeroutput">_csv_put</code></a></span></dt>
+<dt><span class="section"><a href="boost_assign_v2/put.html#boost_assign_v2.put.pipe.functor"><code class="computeroutput">_put</code></a></span></dt>
+<dt><span class="section"><a href="boost_assign_v2/put.html#boost_assign_v2.put.pipe.ptr_cont">Pointer container</a></span></dt>
+<dt><span class="section"><a href="boost_assign_v2/put.html#boost_assign_v2.put.pipe.range"><code class="computeroutput">put_range</code></a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="boost_assign_v2/put/deque.html">Deque</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="boost_assign_v2/put/deque.html#boost_assign_v2.put.deque.csv"><code class="computeroutput"><span class="identifier">csv_deque</span></code></a></span></dt>
+<dt><span class="section"><a href="boost_assign_v2/put/deque.html#boost_assign_v2.put.deque.deque"><code class="computeroutput"><span class="identifier">deque</span></code></a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="boost_assign_v2/put/modulo.html"><code class="computeroutput"><span class="keyword">operator</span><span class="special">%()</span></code></a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="boost_assign_v2/put/modulo.html#boost_assign_v2.put.modulo.fun"><code class="computeroutput">_fun</code></a></span></dt>
+<dt><span class="section"><a href="boost_assign_v2/put/modulo.html#boost_assign_v2.put.modulo.modifier">Modifier</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="boost_assign_v2/put/modulo.html#boost_assign_v2.put.modulo.modifier.std">Standard</a></span></dt>
+<dt><span class="section"><a href="boost_assign_v2/put/modulo.html#boost_assign_v2.put.modulo.modifier.ext">Extended</a></span></dt>
+</dl></dd>
+</dl></dd>
+</dl></dd>
+<dt><span class="section"><a href="boost_assign_v2/ref.html">Ref</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="boost_assign_v2/ref.html#boost_assign_v2.ref.if">Interface</a></span></dt>
+<dt><span class="section"><a href="boost_assign_v2/ref/csv.html"><code class="computeroutput"><span class="identifier">csv_array</span></code></a></span></dt>
+<dt><span class="section"><a href="boost_assign_v2/ref/array.html"><code class="computeroutput"><span class="identifier">array</span></code></a></span></dt>
+<dt><span class="section"><a href="boost_assign_v2/ref/get.html"><code class="computeroutput">_get</code></a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="boost_assign_v2/util.html">Utility</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="boost_assign_v2/util.html#boost_assign_v2.util.convert"><code class="computeroutput">converter</code></a></span></dt>
+<dt><span class="section"><a href="boost_assign_v2/util/chain.html"><code class="computeroutput">_chain</code></a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="boost_assign_v2/util/chain.html#boost_assign_v2.util.chain.pipe"><code class="computeroutput"><span class="keyword">operator</span><span class="special">|()</span></code></a></span></dt>
+<dt><span class="section"><a href="boost_assign_v2/util/chain.html#boost_assign_v2.util.chain.short"><code class="computeroutput"><span class="keyword">operator</span><span class="special">&amp;&amp;()</span></code></a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="boost_assign_v2/util/sub_range.html"><code class="computeroutput">sub_range</code></a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="boost_assign_v2/nil.html"><code class="computeroutput">_nil</code></a></span></dt>
+<dt><span class="section"><a href="boost_assign_v2/arity.html">Configuring arity</a></span></dt>
+<dt><span class="section"><a href="boost_assign_v2/apx.html">Appendix</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="boost_assign_v2/apx.html#boost_assign_v2.apx.portability">Portability</a></span></dt>
+<dt><span class="section"><a href="boost_assign_v2/apx/change_log.html">Change log</a></span></dt>
+<dd><dl><dt><span class="section"><a href="boost_assign_v2/apx/change_log.html#boost_assign_v2.apx.change_log.v2">[Proposal for] Upgrading
+        from Boost v1.4x : Boost.Assign 2.0</a></span></dt></dl></dd>
+<dt><span class="section"><a href="boost_assign_v2/apx/help.html">Help</a></span></dt>
+<dt><span class="section"><a href="boost_assign_v2/apx/hist.html">History and acknowledgement</a></span></dt>
+<dt><span class="section"><a href="boost_assign_v2/apx/bibl.html">Bibliography</a></span></dt>
+</dl></dd>
+</dl>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="boost_assign_v2.intro"></a><a class="link" href="index.html#boost_assign_v2.intro" title="Introduction">Introduction</a>
+</h2></div></div></div>
+<p>
+      This library has grown out of <a href="../../../../../libs/assign/doc/index.html" target="_top">Boost.Assign
+      1.0</a> but is functionally independent of it. It provides a small set
+      of tools for carrying out operations that can be characterized as either putting
+      a set of values in a container, in simple or complex ways, or manipulating
+      references through a <a href="http://svn.boost.org/svn/boost/trunk/libs/range/doc/html/range/concepts/overview.html" target="_top">range-like</a>
+      interface. These are refered to as the <a class="link" href="boost_assign_v2/put.html" title="Put"><span class="emphasis"><em>put</em></span></a>
+      and <a class="link" href="boost_assign_v2/ref.html" title="Ref"><span class="emphasis"><em>ref</em></span></a> frameworks,
+      respectively. Each allows to code in one sweep, what would ordinarily require
+      repetitive statements, and integrates nicely with <a href="http://svn.boost.org/svn/boost/trunk/libs/range/doc/html/range/reference/algorithms.html" target="_top">range
+      algorithms</a>. <a class="link" href="boost_assign_v2/util.html" title="Utility">Utilities</a> bridging
+      the above with other container or range functionality are provided. The library
+      is open for <a class="link" href="boost_assign_v2/put/modulo.html#boost_assign_v2.put.modulo.modifier.ext.custom" title="Customization">extension</a>
+      with the help of macros.
+    </p>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"><p><small>Last revised: January 13, 2011 at 18:27:42 GMT</small></p></td>
+<td align="right"><div class="copyright-footer"></div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav"><a accesskey="n" href="boost_assign_v2/qs.html"><img src="../../doc/src/images/next.png" alt="Next"></a></div>
+</body>
+</html>
