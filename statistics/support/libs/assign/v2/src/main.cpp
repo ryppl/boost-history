@@ -27,8 +27,8 @@ int main (int argc, char * const argv[])
     }
     {
 		using namespace example_assign_v2;
-//		xxx_ref::run(std::cout);
-//		xxx_put::run(std::cout);
+		xxx_ref::run(std::cout);
+		xxx_put::run(std::cout);
 		xxx_utility::run(std::cout);
     }
     return 0;

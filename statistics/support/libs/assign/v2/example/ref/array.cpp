@@ -51,10 +51,10 @@ namespace xxx_array{
             std::vector<int> v( 3 ); v[0] = -1; v[1] = 0; v[2] = 1;
             int x, y, z;
             boost::copy(
-            	v,
+                v,
                 boost::begin(
-            		as2::ref::csv_array( x, y, z ) 
-                    	| as2::ref::_get 
+                    as2::ref::csv_array( x, y, z ) 
+                        | as2::ref::_get 
                 )
             );
             assert( x == -1 );

@@ -102,12 +102,6 @@ namespace xxx_pipe{
         {
             //[fun
             std::vector<int> cont;
-                cont | (
-                    as2::_csv_put % (
-                        as2::_fun = (2 * bl::_1)
-                    )
-                )( -1, 0, 1 );
-/*
             boost::for_each(
                 cont | (
                     as2::_csv_put % (
@@ -116,7 +110,6 @@ namespace xxx_pipe{
                 )( -1, 0, 1 ),
                 os << bl::_1 << ' '
             ); // outputs -2 0 2
-*/
             //]
             os << std::endl;
         }

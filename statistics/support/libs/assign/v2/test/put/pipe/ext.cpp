@@ -32,20 +32,17 @@ namespace xxx_ext{
     	namespace as2 = boost::assign::v2;
         namespace bl = boost::lambda;
     	{
-            //[lookup
             std::map<const char*,int> cont;
             cont["x"] = -1; cont["y"] = 0; cont["z"] = 1;
             cont | (
                 as2::_csv_put % ( as2::_lookup = ( bl::_1 +=2 ) )
             )( "z", "x", "y" );
-            //]
             BOOST_ASSIGN_V2_CHECK( cont["y"] == 2 );
             BOOST_ASSIGN_V2_CHECK( cont["x"] == 1 );
             BOOST_ASSIGN_V2_CHECK( cont["z"] == 3 );
         }
         typedef std::string str_;
         {
-            //[lookup2
             std::deque<const char*> cont;
             cont | as2::_put( "x" )( "y" )( "z" );
             //]
