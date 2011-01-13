@@ -231,6 +231,7 @@ the different ways in which interval containers combine added
 intervals. These ['*combining styles*] are described in the next
 section.
 
+
 [endsect]
 
 [section Interval Combining Styles]

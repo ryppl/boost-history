@@ -175,6 +175,7 @@ Distributed under the Boost Software License, Version 1.0.
 [def __biLIntervalOrderings__  [link boost_icl.function_reference.additional_interval_orderings ['*Orderings*]]]
 [def __biLIntervalMiscellaneous__  [link boost_icl.function_reference.miscellaneous_interval_functions ['*Miscellaneous*]]]
 
+
 [/ column headers]
 [def __ch_itvs__       intervals]
 
