@@ -11,7 +11,7 @@
 #define BOOST_ASSIGN_V2_REF_WRAPPER_FRAMEWORK_ER_2010_HPP
 
 namespace boost{
-namespace assign{ 
+namespace assign{
 namespace v2{
 namespace ref{
 
@@ -28,18 +28,18 @@ namespace result_of{
 }
 
 
-template<typename Tag, typename T> 
-inline ref::wrapper<Tag,T> 
+template<typename Tag, typename T>
+inline ref::wrapper<Tag,T>
 wrap(T & t)
-{ 
+{
     typedef ref::wrapper<Tag,T> result_;
     return result_( t );
 }
 
-template<typename Tag, typename T> 
-inline ref::wrapper<Tag, T const> 
+template<typename Tag, typename T>
+inline ref::wrapper<Tag, T const>
 wrap(T const & t)
-{ 
+{
     typedef ref::wrapper<Tag,T const> result_;
     return result_( t );
 }
@@ -56,31 +56,31 @@ wrap(T const & t)
 
 namespace boost{
 
-#define t assign::v2::ref::wrapper<Tag,T>
-
-#  define AUX_REFERENCE_WRAPPER_METAFUNCTIONS_DEF(suffix) \
+#  define AUX_REFERENCE_WRAPPER_METAFUNCTIONS_DEF(U) \
 template<typename Tag,typename T> \
-class is_reference_wrapper< t suffix> \
+class is_reference_wrapper<U> \
     : public mpl::true_ \
 { \
 }; \
 \
-template<typename Tag,typename T> \
-class unwrap_reference< t suffix > \
+template<typename Tag, typename T> \
+class unwrap_reference<U> \
 { \
  public: \
     typedef T type; \
 }; \
 /**/
 
-AUX_REFERENCE_WRAPPER_METAFUNCTIONS_DEF( )
+#define u assign::v2::ref::wrapper<Tag, T>
+
+AUX_REFERENCE_WRAPPER_METAFUNCTIONS_DEF(u)
 #if !defined(BOOST_NO_CV_SPECIALIZATIONS)
-AUX_REFERENCE_WRAPPER_METAFUNCTIONS_DEF( const )
-AUX_REFERENCE_WRAPPER_METAFUNCTIONS_DEF( volatile )
-AUX_REFERENCE_WRAPPER_METAFUNCTIONS_DEF( const volatile )
+AUX_REFERENCE_WRAPPER_METAFUNCTIONS_DEF(u const )
+AUX_REFERENCE_WRAPPER_METAFUNCTIONS_DEF(u volatile )
+AUX_REFERENCE_WRAPPER_METAFUNCTIONS_DEF(u const volatile )
 #endif
 
-#undef t
+#undef u
 #undef AUX_REFERENCE_WRAPPER_METAFUNCTIONS_DEF
 
 }// boost
