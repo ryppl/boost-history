@@ -20,10 +20,10 @@ namespace xxx_chain{
     	namespace as2 = boost::assign::v2;
         namespace ns = as2::checking::chain;
         ns::twin_values::do_check<int>();
-      	ns::distinct_values::do_check<short>();
-      	ns::distinct_values::do_check<int>();
-      	ns::distinct_values::do_check<float>();
-      	ns::distinct_values::do_check<double>();
+      	//ns::distinct_values::do_check<short>();
+      	//ns::distinct_values::do_check<int>();
+      	//ns::distinct_values::do_check<float>();
+      	//ns::distinct_values::do_check<double>();
     }
 
 }// xxx_chain

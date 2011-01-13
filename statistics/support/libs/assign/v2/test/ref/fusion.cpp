@@ -80,9 +80,9 @@ namespace xxx_fusion{
             ar_ ar = fusion<tag1_, tag2_>( _nil )( a )( b )( c );
             arw_ arw;
             assign_array( arw, ar );
-            BOOST_ASSIGN_V2_CHECK( &arw[ 0 ].unwrap() == &a );
-            BOOST_ASSIGN_V2_CHECK( &arw[ 1 ].unwrap() == &b );
-            BOOST_ASSIGN_V2_CHECK( &arw[ 2 ].unwrap() == &c );
+            BOOST_ASSIGN_V2_CHECK( &arw[ 0 ].get() == &a );
+            BOOST_ASSIGN_V2_CHECK( &arw[ 1 ].get() == &b );
+            BOOST_ASSIGN_V2_CHECK( &arw[ 2 ].get() == &c );
         }
     }
 

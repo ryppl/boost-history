@@ -35,7 +35,7 @@ namespace xxx_csv{
             a1 = a; b1 = b; c1 = c; d1 = d;
         }
 
-#define MACRO1(i) tmp.seq_args()[ i ]
+#define MACRO1(i) tmp.seq_args()[ i ].get()
 #define MACRO2(i,X) BOOST_ASSIGN_V2_CHECK( &X == &MACRO1(i) );
 #define MACRO3(i,X) BOOST_ASSIGN_V2_CHECK( X == MACRO1(i) );
 

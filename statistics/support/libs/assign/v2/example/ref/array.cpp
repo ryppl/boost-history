@@ -9,6 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #include <vector>
 
+#include <boost/assign/v2/ref/wrapper/get.hpp>
 #include <boost/assign/v2/ref/array/csv.hpp>
 #include <boost/assign/v2/ref/array/functor.hpp>
 #include <boost/range/algorithm/for_each.hpp>
@@ -44,6 +45,22 @@ namespace xxx_array{
             //[csv_array_empty
                 as2::ref::csv_array<int const>( as2::_nil );
             //]
+        }
+		{
+            //[csv_array_w2
+            std::vector<int> v( 3 ); v[0] = -1; v[1] = 0; v[2] = 1;
+            int x, y, z;
+            boost::copy(
+            	v,
+                boost::begin(
+            		as2::ref::csv_array( x, y, z ) 
+                    	| as2::ref::_get 
+                )
+            );
+            assert( x == -1 );
+            assert( z == 1 );
+            //]
+        
         }
         {
             //[array_r

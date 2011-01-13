@@ -14,7 +14,8 @@
 namespace test_assign_v2{
 namespace xxx_utility{
 
-    void test(){
+    void test()
+    {
         xxx_chain::test();
         xxx_convert::test();
     }

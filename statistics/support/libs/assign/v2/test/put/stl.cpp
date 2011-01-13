@@ -57,7 +57,7 @@ namespace xxx_stl{
                         as2::put( cont )
                             ( a, a )( b, b )( c, c )
                             ( d, d )( e, e )( f, f )
-                            ( g, g )( h, h ).unwrap()
+                            ( g, g )( h, h ).get()
                     );
                 }
             }// map
@@ -71,7 +71,7 @@ namespace xxx_stl{
                         as2::put( cont )
         		            ( a )( b )( c )
         		            ( d )( e )( f )
-        		            ( g )( h ).unwrap()
+        		            ( g )( h ).get()
         		        );
         		}
             }// map
@@ -86,7 +86,7 @@ namespace xxx_stl{
         		    namespace ns = as2::checking::container;
         		    ns::do_check(
         		        as2::put( cont )
-        		            ( a )( b )( c )( d )( e )( f )( g )( h ).unwrap()
+        		            ( a )( b )( c )( d )( e )( f )( g )( h ).get()
         		    );
         		}
             }// deque
@@ -98,7 +98,7 @@ namespace xxx_stl{
                 	namespace ns = as2::checking::container;
                     ns::do_check(
                 		as2::put( cont )
-                        	( a )( b )( c )( d )( e )( f )( g )( h ).unwrap()
+                        	( a )( b )( c )( d )( e )( f )( g )( h ).get()
         			);
                 }
             }// list
@@ -110,7 +110,7 @@ namespace xxx_stl{
                 	namespace ns = as2::checking::container;
                     ns::do_check(
                 		as2::put( cont )
-                        	( a )( b )( c )( d )( e )( f )( g )( h ).unwrap()
+                        	( a )( b )( c )( d )( e )( f )( g )( h ).get()
                     );
                 }
             }// vector
@@ -125,7 +125,7 @@ namespace xxx_stl{
                     namespace ns = as2::checking::container;
                     ns::do_check(
                         as2::put( cont )
-                            ( a )( b )( c )( d )( e )( f )( g )( h ).unwrap()
+                            ( a )( b )( c )( d )( e )( f )( g )( h ).get()
                     );
                 }
             }// queue
@@ -138,7 +138,7 @@ namespace xxx_stl{
                     namespace ns = as2::checking::container;
                     ns::do_check(
                         as2::put( cont )
-                            ( a )( b )( c )( d )( e )( f )( g )( h ).unwrap()
+                            ( a )( b )( c )( d )( e )( f )( g )( h ).get()
                     );
                 }
             }// queue

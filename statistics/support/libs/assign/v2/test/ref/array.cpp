@@ -24,7 +24,7 @@
 #include <boost/assign/v2/detail/checking/container.hpp>
 #include <boost/assign/v2/detail/checking/array.hpp>
 #include <boost/assign/v2/ref/array/functor.hpp>
-#include <boost/assign/v2/ref/wrapper/copy.hpp>
+#include <boost/assign/v2/ref/wrapper.hpp>
 #include <libs/assign/v2/test/ref/array.h>
 
 namespace test_assign_v2{
@@ -33,16 +33,17 @@ namespace xxx_array{
 
     void test()
     {
-    	using namespace boost::assign::v2;
+    	namespace as2 = boost::assign::v2;
         {
             // Array
-            typedef ref::nth_result_of::array<8, int const>::type ar_;
-            using namespace checking::constants;
-            ar_ ar = ref::array( a )( b )( c )( d )( e )( f )( g )( h );
+            typedef as2::ref::nth_result_of::array<8, int const>::type ar_;
+            using namespace as2::checking::constants;
+            ar_ ar = as2::ref::array( a )( b )( c )( d )( e )( f )( g )( h );
             {
-                using namespace checking;
-                typedef container_tag::static_array tag_;
-                do_check(tag_(), ar );
+
+                typedef as2::container_tag::static_array tag_;
+                namespace ns = as2::checking::container;
+                as2::checking::do_check(tag_(), ar );
             }
 		}
 		{
@@ -51,7 +52,7 @@ namespace xxx_array{
             typedef std::vector<int> vec_;
             vec_ vec;
             {
-            	using namespace checking::constants;
+            	using namespace as2::checking::constants;
             	vec.push_back( a );
             	vec.push_back( b );
             	vec.push_back( c );
@@ -63,13 +64,14 @@ namespace xxx_array{
             }
             boost::copy(
             	vec,
-            	boost::begin( ref::array
-            		( a1 )( b1 )( c1 )( d1 )( e1 )( f1 )( g1 )( h1 )
+            	boost::begin(  
+                    as2::ref::array( a1 )( b1 )( c1 )( d1 )
+                    	( e1 )( f1 )( g1 )( h1 ) | as2::ref::_get
                 )
             );
             {
-                namespace ns = checking::container;
-                ns::do_check( ref::array<int const>
+                namespace ns = as2::checking::container;
+                ns::do_check( as2::ref::array<int const>
             		( a1 )( b1 )( c1 )( d1 )( e1 )( f1 )( g1 )( h1 )
                 );
             }

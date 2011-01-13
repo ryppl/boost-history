@@ -36,18 +36,21 @@ namespace xxx_chain{
         }
         {
         	//[chain_w
-            int const x = -1; int y; boost::array<int, 2> ar;
+            std::vector<int> v( 3 ); v[0] = -1; v[1] = 0; v[2] = 1;
+            boost::array<int, 2> ar; int z; 
             boost::copy(
-                std::vector<int>(3, x),
+                v,
                 boost::begin(
                     ar /* lvalue */ | as2::_chain(
-                        as2::ref::csv_array( y /* lvalue */ )
-                    ) /* rvalue */
+                        as2::ref::csv_array( 
+                        	z /* lvalue */ 
+                        )  /* rvalue */ | as2::ref::_get 
+                    ) 
                 )
             );
-            assert( ar[0] == x );
-            assert( ar[1] == x );
-            assert( y == x );
+            assert( ar[0] == -1 );
+            assert( ar[1] == 0 );
+            assert( z == 1 );
             //]
         }
     }

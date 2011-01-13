@@ -34,7 +34,7 @@ namespace xxx_ptr{
                     namespace ns = as2::checking::container;
                     ns::do_check(
                         as2::csv_put( cont )
-                            ( a , b , c , d , e , f , g , h ).unwrap()
+                            ( a , b , c , d , e , f , g , h ).get()
                     );
                 }
             }
@@ -49,7 +49,7 @@ namespace xxx_ptr{
                     namespace ns = as2::checking::container;
                     ns::do_check(
                         as2::put( cont )
-                            ( a )( b )( c )( d )( e )( f )( g )( h ).unwrap()
+                            ( a )( b )( c )( d )( e )( f )( g )( h ).get()
                     );
                 }
             }// ptr_deque
@@ -61,7 +61,7 @@ namespace xxx_ptr{
                     namespace ns = as2::checking::container;
                     ns::do_check(
                         as2::put( cont )
-                            ( a )( b )( c )( d )( e )( f )( g )( h ).unwrap()
+                            ( a )( b )( c )( d )( e )( f )( g )( h ).get()
                     );
                 }
             }// ptr_list
@@ -73,7 +73,7 @@ namespace xxx_ptr{
                     namespace ns = as2::checking::container;
                     ns::do_check(
                         as2::put( cont )
-                            ( a )( b )( c )( d )( e )( f )( g )( h ).unwrap()
+                            ( a )( b )( c )( d )( e )( f )( g )( h ).get()
                     );
                 }
             }// ptr_vector

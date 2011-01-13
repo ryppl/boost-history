@@ -25,7 +25,7 @@ namespace xxx_wrapper{
 			typedef ref::copy_wrapper<val_>::type w_;
             w_ w;
             val_ a = 1, b = 2, c = 3;
-            w.rebind( a ); BOOST_ASSIGN_V2_CHECK( &w.unwrap() == &a );
+            w.rebind( a ); BOOST_ASSIGN_V2_CHECK( &w.get() == &a );
             w.assign( b ); BOOST_ASSIGN_V2_CHECK( a == b );
             w = c; BOOST_ASSIGN_V2_CHECK( a == c );
         }
@@ -33,7 +33,7 @@ namespace xxx_wrapper{
 			typedef ref::copy_wrapper<val_ const>::type w_;
             w_ w;
             val_ a = 1;
-            w.rebind( a ); BOOST_ASSIGN_V2_CHECK( &w.unwrap() == &a );
+            w.rebind( a ); BOOST_ASSIGN_V2_CHECK( &w.get() == &a );
         }
         #if BOOST_ASSIGN_V2_ENABLE_CPP0X
         {
@@ -44,12 +44,12 @@ namespace xxx_wrapper{
             {
                 val_&& a = 1;
                 w_ w( a );
-                BOOST_ASSIGN_V2_CHECK( &w.unwrap() == &a );
+                BOOST_ASSIGN_V2_CHECK( &w.get() == &a );
             }
             {
                 cval_ a = 1;
                 w_ w = w_( 1 );
-                BOOST_ASSIGN_V2_CHECK( w.unwrap() == a );
+                BOOST_ASSIGN_V2_CHECK( w.get() == a );
             }
         }
         #endif
