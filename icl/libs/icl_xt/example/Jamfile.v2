@@ -24,7 +24,7 @@ exe history
 exe time_and_duration
     :
         time_and_duration_/time_and_duration.cpp
-		/boost/date_time//boost_date_time
+        /boost/date_time//boost_date_time
     :
         <include>../../..
         <include>$(BOOST_ROOT)
