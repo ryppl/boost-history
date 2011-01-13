@@ -39,7 +39,7 @@ namespace fusion_aux{
         typedef typename wrapper_::unwrap_type link_type;
         link_type link()const
         {
-            return this->value.unwrap();
+            return this->value.get();
         }
 
         protected:

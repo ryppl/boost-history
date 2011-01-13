@@ -19,65 +19,66 @@
 #include <boost/assign/v2/ref/wrapper/crtp.hpp>
 
 namespace boost{
-namespace assign{ 
+namespace assign{
 namespace v2{
 namespace ref{
 namespace assign_tag{ struct copy{}; }
 namespace assign_copy{ typedef assign_tag::copy assign_tag_; }
 
     template< class T >
-    struct wrapper<ref::assign_tag::copy, T> 
-    : 
+    struct wrapper<ref::assign_tag::copy, T>
+    :
     	public ref::wrapper_crtp< wrapper<ref::assign_tag::copy, T>, T>
     {
-        typedef T type; 
-        BOOST_STATIC_CONSTANT( 
-            bool, 
-            is_const = boost::is_const<T>::value 
-        ); 
-        
-        wrapper(){} 
-        
-        explicit wrapper( T& r ) : ref_(&r) 
-        { } 
+        typedef T type;
+        BOOST_STATIC_CONSTANT(
+            bool,
+            is_const = boost::is_const<T>::value
+        );
 
-        void rebind(T& r ) 
-    	{ 
-            this->ref_ = &r; 
-    	} 
-        
+        wrapper(){}
+
+        explicit wrapper( T& r ) : ref_(&r)
+        { }
+
+        void rebind(T& r )
+    	{
+            this->ref_ = &r;
+    	}
+
+        // TODO a) crtp b) reference() or get()
         typedef T& unwrap_type;
-        T& unwrap() const 
-        { 
-            return *this->ref_; 
-        } 
+        T& get() const
+        {
+            return *this->ref_;
+        }
 
-        T* get_pointer() const { return this->ref_; } 
+        T* get_pointer() const { return this->ref_; }
 
-        using wrapper_crtp<wrapper,T>::operator=; 
+        using wrapper_crtp<wrapper,T>::operator=;
 
         void assign(typename boost::call_traits<T>::param_type r )
         {
-            this->unwrap() = r;
+            this->get() = r;
         }
 
         protected:
-		friend class wrapper_crtp<wrapper, T>; 
+		friend class wrapper_crtp<wrapper, T>;
 
-        T* ref_; 
+        T* ref_;
 
         typedef ref::assign_tag::copy assign_tag;
 
         void swap( wrapper& r )
         {
-            std::swap( this->unwrap(), r.unwrap() );
+            std::swap( this->get(), r.get() );
         }
 
     };
-    
+
     template<typename T>
     struct copy_wrapper{ typedef ref::wrapper<assign_tag::copy,T> type; };
-        
+
 }// ref
 }// v2
 }// assign

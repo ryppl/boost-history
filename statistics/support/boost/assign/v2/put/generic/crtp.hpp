@@ -147,7 +147,7 @@ BOOST_PP_REPEAT_FROM_TO(
 )
 #undef MACRO
 #endif
-		V& unwrap()const{ return this->derived().unwrap(); }
+		V& get()const{ return this->derived().get(); }
 
 		struct result_of_modulo{
 
@@ -170,7 +170,7 @@ BOOST_PP_REPEAT_FROM_TO(
         	typedef typename caller_::type cons_;
     		typedef typename result_of_modulo::deduce::type result_;
     		return result_(
-        		this->derived().unwrap(),
+        		this->derived().get(),
              	caller_::call()
         	);
         }
@@ -182,7 +182,7 @@ BOOST_PP_REPEAT_FROM_TO(
         {
         	typedef put_concept::ModifierImpl<modifier_, V, T*> concept_;
             BOOST_CONCEPT_ASSERT(( concept_ ));
-			this->modifier.impl( this->derived().unwrap(), t );
+			this->modifier.impl( this->derived().get(), t );
             return this->derived();
         }
 
@@ -206,7 +206,7 @@ BOOST_PP_REPEAT_FROM_TO(
         {
 			check_modifier( t );
 			this->modifier.impl(
-                this->derived().unwrap(),
+                this->derived().get(),
                 std::forward<T>( t )
             );
             return this->derived();
@@ -216,7 +216,7 @@ BOOST_PP_REPEAT_FROM_TO(
         result_type arg_deduct(T& t)const
         {
 			check_modifier( t );
-			this->modifier.impl( this->derived().unwrap(), t );
+			this->modifier.impl( this->derived().get(), t );
             return this->derived();
         }
 
@@ -224,7 +224,7 @@ BOOST_PP_REPEAT_FROM_TO(
         result_type arg_deduct(T const& t)const
         {
 			check_modifier( t );
-			this->modifier.impl( this->derived().unwrap(), t );
+			this->modifier.impl( this->derived().get(), t );
             return this->derived();
         }
 

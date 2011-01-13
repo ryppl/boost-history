@@ -26,8 +26,7 @@
 
 #include <boost/assign/v2/ref/wrapper/framework.hpp>
 #include <boost/assign/v2/ref/wrapper/crtp.hpp>
-#include <boost/assign/v2/ref/detail/unwrap/range.hpp>
-/*  #include <boost/assign/v2/detail/relational_op.hpp> */
+#include <boost/assign/v2/ref/wrapper/get.hpp>
 
 namespace boost{
 namespace assign{
@@ -42,17 +41,19 @@ namespace array_aux{
         typedef impl_ const cimpl_;
 
 		typedef typename Impl::value_type wrapper_;
-
-		typedef typename ref::result_of::unwrap_range<impl_>::type range_;
-		typedef typename ref::result_of::unwrap_range<cimpl_>::type crange_;
-        typedef typename boost::unwrap_reference<wrapper_>::type value_type;
-        typedef typename boost::add_reference<value_type>::type reference;
-        typedef typename boost::call_traits<
-            reference>::const_reference const_reference;
+        typedef typename boost::unwrap_reference<wrapper_>::type inner_type;
+        typedef impl_ range_;
+        typedef cimpl_ crange_;
         typedef typename boost::range_iterator<range_>::type iterator;
         typedef typename boost::range_iterator<crange_>::type const_iterator;
+        
+        typedef typename boost::range_value<range_>::type value_type;
+        typedef typename boost::range_reference<range_>::type reference;
+        typedef typename boost::range_reference<crange_>::type const_reference;
+        
+		typedef typename ref::result_of::get<wrapper_>::type result_of_get_;
+        typedef typename boost::call_traits<inner_type>::param_type param_type;
 
-        // wrappers
         #ifndef BOOST_MSVC
 		    typedef typename boost::range_size<impl_>::type size_type;
         #endif
@@ -65,11 +66,6 @@ namespace array_aux{
 
     template<typename Impl, typename D>
     class interface
-    /*:
-       public relational_op_aux::crtp<
-      		interface<Impl, D>
-        >
-	*/
     {
 
         typedef interface_traits<Impl> traits_;
@@ -77,9 +73,13 @@ namespace array_aux{
         typedef typename traits_::impl_ impl_;
         typedef typename traits_::cimpl_ cimpl_;
         typedef interface<Impl, D> this_;
+		typedef typename traits_::result_of_get_ result_of_get_;
+        typedef typename traits_::param_type param_type;
 
         public:
+
         typedef wrapper_ wrapper_type;
+        typedef typename traits_::inner_type inner_type;
         typedef typename traits_::value_type value_type;
         typedef typename traits_::iterator iterator;
         typedef typename traits_::const_iterator const_iterator;
@@ -87,7 +87,6 @@ namespace array_aux{
         typedef typename traits_::difference_type difference_type;
         typedef typename traits_::reference reference;
         typedef typename traits_::const_reference const_reference;
-		typedef typename boost::call_traits<value_type>::param_type param_type;
 
         BOOST_STATIC_CONSTANT(size_type, static_size = Impl::static_size);
 
@@ -117,35 +116,35 @@ namespace array_aux{
         	return this->wrappers().empty();
         }
 
-		void rebind(size_type i, reference t)
+		void rebind(size_type i, result_of_get_ t)
         {
         	return (this->wrappers())[i].rebind( t );
         }
 
         reference operator[](size_type i)
         {
-        	return (this->wrappers())[i].unwrap();
+        	return this->elem_impl( this->wrappers()[i] );
         }
         const_reference operator[](size_type i)const
         {
-             return (this->wrappers())[i].unwrap();
+        	return this->elem_impl( this->wrappers()[i] );
         }
 
         reference front()
         {
-        	return (this->wrappers()).front().unwrap();
+        	return this->elem_impl( this->wrappers().front() );
         }
         const_reference front() const
         {
-        	return (this->wrappers()).front().unwrap();
+        	return this->elem_impl( this->wrappers().front() );
         }
         reference back()
         {
-        	return (this->wrappers()).back().unwrap();
+        	return this->elem_impl( this->wrappers().back() );
         }
         const_reference back() const
         {
-        	return (this->wrappers()).back().unwrap();
+        	return this->elem_impl( this->wrappers().back() );
         }
 
         void assign(param_type val)
@@ -154,20 +153,6 @@ namespace array_aux{
         	this->assign_impl( val, int_() );
         }
 
-/*
-        // Relational op
-		template<typename R>
-        bool equal_to(const R& r)const{
-         	return ::boost::iterator_range_detail::equal(
-            	(*this), r );
-		}
-
-		template<typename R>
-        bool less_than(const R& r)const{
-         	return ::boost::iterator_range_detail::less_than(
-            	(*this), r );
-		}
-*/
 		protected:
 
         void assign_impl(param_type val, boost::mpl::int_<static_size>)
@@ -183,15 +168,18 @@ namespace array_aux{
             this->assign_impl( val, next_() );
         }
 
-        public:
-
-        typename traits_::range_ unwrap()
+		template<typename W>
+		reference elem_impl(W& w)
         {
-        	return ref::unwrap_range( this->wrappers() );
+        	return w; // w.get()
         }
-        typename traits_::crange_ unwrap()const{
-        	return ref::unwrap_range( this->wrappers() );
+		template<typename W>
+		const_reference elem_impl(W & w)const
+        {
+        	return w; // w.get()
         }
+
+        public:
 
         impl_& wrappers(){
             return static_cast<D&>(*this).impl();

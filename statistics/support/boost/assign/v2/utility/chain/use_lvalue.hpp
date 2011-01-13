@@ -26,37 +26,23 @@ namespace assign{
 namespace v2{
 namespace chain_aux{
 
-    template<typename U1,typename U2,typename Tag = use_default> 
-    struct use_lvalue
-    {
-    	
-        typedef typename boost::range_reference<U1>::type r1_;
-        typedef typename boost::range_reference<U2>::type r2_;
-        typedef boost::mpl::and_<
-            boost::is_reference<r1_>,
-            boost::is_reference<r2_>
-        > are_refs_;
-        
-        typedef boost::is_same<r1_,r2_> are_same_;
-        
-        typedef boost::mpl::and_<
-             are_refs_,
-             are_same_
-        > are_same_refs_;
-        
-        typedef boost::is_const<
-            typename boost::remove_reference<r1_>::type
-        > is_const_;
-        
-        typedef typename boost::mpl::eval_if<
-            is_const_,
-            boost::mpl::identity<boost::mpl::false_>,
-            are_same_refs_
-        >::type type;
-        
-        BOOST_STATIC_CONSTANT(bool, value = type::value);
-    };
+	template<typename U1, typename U2, 
+    	bool is_r = boost::is_reference<U1>::value,
+        bool is_c = boost::is_const<
+        	typename boost::remove_reference<U1>::type
+        >::value
+    >
+    struct use_lvalue_impl : boost::mpl::false_{};
+    
+	template<typename U>
+    struct use_lvalue_impl<U, U, true, false> : boost::mpl::true_{};
 
+    template<typename R1, typename R2, typename Tag = use_default> 
+    struct use_lvalue : use_lvalue_impl<
+    	typename boost::range_reference<R1>::type,
+    	typename boost::range_reference<R2>::type
+    >{};
+   
 }// chain_aux
 }// v2
 }// assign

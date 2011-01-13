@@ -65,32 +65,32 @@ namespace ref{
 
         operator T&() const
         {
-            return this->derived().unwrap();
+            return this->derived().get();
         }
 
         bool operator==( const wrapper_crtp& r )const
         {
-            return this->derived().unwrap() == r.derived().unwrap();
+            return this->derived().get() == r.derived().get();
         }
 
         bool operator<( const wrapper_crtp& r )const
         {
-            return this->derived().unwrap() < r.derived().unwrap();
+            return this->derived().get() < r.derived().get();
         }
 
         bool operator==( typename boost::call_traits<T>::param_type r )const
         {
-            return this->derived().unwrap() == r;
+            return this->derived().get() == r;
         }
 
         bool operator<( typename boost::call_traits<T>::param_type r )const
         {
-            return this->derived().unwrap() < r;
+            return this->derived().get() < r;
         }
 
         bool operator>( typename boost::call_traits<T>::param_type r )const
         {
-            return this->derived().unwrap() > r;
+            return this->derived().get() > r;
         }
         
     	template<class CharT, class Traits>
@@ -98,7 +98,7 @@ namespace ref{
     	operator<<(std::basic_ostream<CharT,Traits>& os,
         	       const wrapper_crtp& w)
     	{
-        	return (os << w.derived().unwrap() );
+        	return (os << w.derived().get() );
     	}
 
     };

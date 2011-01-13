@@ -42,7 +42,7 @@ namespace convert_aux{
         T type()const
         {
         	typedef typename convert_aux::deduce_tag<T, U>::type tag_;
-            return convert<T>( this->w.unwrap(), tag_() );
+            return convert<T>( this->w.get(), tag_() );
         }
 
 		private:

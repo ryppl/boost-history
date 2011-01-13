@@ -21,7 +21,7 @@ namespace chain_aux{
 
     // Tag1 controls conversion. Seet traits/type/meta_convert.hpp
 
-    template<typename U,typename Tag1 = use_default,typename Tag2 = void_>
+    template<typename U, typename Tag1 = use_default, typename Tag2 = void_>
     struct adaptor1
     {
         adaptor1( U& r ) : value( r ){}

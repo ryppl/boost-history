@@ -136,7 +136,7 @@ namespace fusion_aux{
         >::type
         static_lookup(boost::mpl::int_<I> same_index)const
         {
-        	return this->head.unwrap(); 
+        	return this->head.get(); 
         }
 
         template<int I>

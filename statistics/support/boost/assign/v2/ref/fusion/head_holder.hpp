@@ -36,7 +36,7 @@ namespace fusion_aux{
         
     	T& back()const
         {
-        	return this->head.unwrap();
+        	return this->head.get();
         }
         
     };

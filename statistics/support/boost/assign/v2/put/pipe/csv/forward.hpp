@@ -35,7 +35,7 @@ namespace put_pipe_aux{
         C const& c
     )
     {
-        f( c[ I ] );
+        f( c[ I ].get() );
         csv_forward<N, I+1>(f, c);
     }
 

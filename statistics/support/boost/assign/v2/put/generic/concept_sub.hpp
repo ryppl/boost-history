@@ -25,7 +25,7 @@ namespace sub{
 		BOOST_CONCEPT_USAGE(Pre1)
         {
 			X x( v );
-            V& ref = x.unwrap();
+            V& ref = x.get();
         }
         
         private:

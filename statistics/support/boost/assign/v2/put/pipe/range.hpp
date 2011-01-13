@@ -28,7 +28,7 @@ namespace put_range_aux
 
     	helper1(From const& from) : super_t(from){}
 
-        From const& from()const{ return this->unwrap(); }
+        From const& from()const{ return this->get(); }
 
         private:
         helper1();

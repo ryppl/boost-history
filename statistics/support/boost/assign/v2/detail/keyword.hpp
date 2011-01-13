@@ -11,6 +11,5 @@
 #define BOOST_ASSIGN_V2_DETAIL_KEYWORD_ER_2010_HPP
 
 #include <boost/assign/v2/detail/keyword/nil.hpp>
-#include <boost/assign/v2/detail/keyword/unwrap.hpp>
 
 #endif

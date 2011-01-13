@@ -67,7 +67,7 @@ namespace csv_put_aux{
         operator()(Args&&...args)
         {
             typedef typename result_of::put<V>::type result_;
-            result_ result = put( this->unwrap() );
+            result_ result = put( this->get() );
             this->impl(
                 result,
                 args...
@@ -81,7 +81,7 @@ namespace csv_put_aux{
     typename result_of::put<V>::type\
     operator()( BOOST_PP_ENUM_PARAMS(N, value_type const & _) )\
     {\
-        return put( this->unwrap() ) BOOST_PP_REPEAT(N, MACRO1, ~ );\
+        return put( this->get() ) BOOST_PP_REPEAT(N, MACRO1, ~ );\
     }\
 /**/
 BOOST_PP_REPEAT_FROM_TO(
@@ -93,8 +93,8 @@ BOOST_PP_REPEAT_FROM_TO(
 #undef MACRO1
 #undef MACRO2
 #endif
-		V& unwrap()const{
-        	return static_cast<super1_t const&>(*this).unwrap();
+		V& get()const{
+        	return static_cast<super1_t const&>(*this).get();
         }
 
     };

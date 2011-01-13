@@ -103,46 +103,46 @@ namespace put_deque_aux{
         typedef typename impl_::difference_type difference_type;
 
         size_type size()const{
-            return this->unwrap().size();
+            return this->get().size();
         }
         size_type max_size()const{
-            return this->unwrap().max_size();
+            return this->get().max_size();
         }
         bool empty()const{
-            return this->unwrap().empty();
+            return this->get().empty();
         }
         reference operator[](size_type n){
-            return this->unwrap()[n];
+            return this->get()[n];
         }
         const_reference operator[](size_type n)const{
-            return this->unwrap()[n];
+            return this->get()[n];
         }
         reference front(){
-            return this->unwrap().front();
+            return this->get().front();
         }
         const_reference front()const{
-            return this->unwrap().front();
+            return this->get().front();
         }
 		reference back(){
-        	return this->unwrap().back();
+        	return this->get().back();
         }
         const_reference back()const{
-            return this->unwrap().back();
+            return this->get().back();
         }
         void pop_front(){
-            this->unwrap().pop_front();
+            this->get().pop_front();
         }
         void pop_back(){
-            this->unwrap().pop_back();
+            this->get().pop_back();
         }
         void swap(cont& that){
-            this->unwrap().swap( that.unwrap() );
+            this->get().swap( that.get() );
         }
 
         // Note : the modifiers such as push_back() are ommitted as they
         // accessible through the put interface.
 
-       impl_& unwrap()const{ return this->impl; }
+       impl_& get()const{ return this->impl; }
         protected:
         mutable impl_ impl;
 

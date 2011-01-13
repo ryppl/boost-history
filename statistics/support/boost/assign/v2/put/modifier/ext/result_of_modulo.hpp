@@ -78,7 +78,7 @@ namespace result_of_modulo{
                 typedef put_concept::Parameter<m_,P> concept_;
                 BOOST_CONCEPT_ASSERT(( concept_ ));
                 return call(
-                    t.unwrap(),
+                    t.get(),
                     make_fun( t, is_same_fun() ),
                     m_( p.get() )
                 );

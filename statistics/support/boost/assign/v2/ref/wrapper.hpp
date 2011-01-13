@@ -12,5 +12,6 @@
 
 #include <boost/assign/v2/ref/wrapper/copy.hpp>
 #include <boost/assign/v2/ref/wrapper/cpp0x.hpp>
+#include <boost/assign/v2/ref/wrapper/get.hpp>
 
 #endif

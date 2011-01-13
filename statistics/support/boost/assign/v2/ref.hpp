@@ -11,5 +11,6 @@
 #define BOOST_ASSIGN_V2_REF_ER_2010_HPP
 
 #include <boost/assign/v2/ref/wrapper.hpp>
+#include <boost/assign/v2/ref/array.hpp>
 
 #endif

@@ -9,10 +9,12 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_TRAITS_TYPE_HAS_VALUE_TYPE_ER_2010_HPP
 #define BOOST_ASSIGN_V2_TRAITS_TYPE_HAS_VALUE_TYPE_ER_2010_HPP
-#include <boost/assign/v2/ref/detail/convert_traits/result.hpp>
+//#include <boost/assign/v2/ref/convert_traits/result.hpp>
+
+#include <boost/assign/v2/ref/convert_traits/reference.hpp>
 
 namespace boost{
-//	struct boost::use_default;
+	struct boost::use_default;
 namespace assign{
 namespace v2{
 namespace type_traits{
@@ -21,7 +23,8 @@ namespace type_traits{
     struct meta_convert{
 
         template<typename T1,typename T2>
-        struct apply : ref::convert_traits::result<T1,T2>{};
+//        struct apply : ref::convert_traits::result<T1, T2>{};
+        struct apply : ref::convert_traits::reference<T1, T2>{};
 
 	};
 
