@@ -10,8 +10,7 @@
 #ifndef BOOST_ASSIGN_V2_ER_2010_HPP
 #define BOOST_ASSIGN_V2_ER_2010_HPP
 
-#include <boost/assign/v2/chain.hpp>
-#include <boost/assign/v2/detail.hpp>
+#include <boost/assign/v2/utility.hpp>
 #include <boost/assign/v2/put.hpp>
 #include <boost/assign/v2/ref.hpp>
 
