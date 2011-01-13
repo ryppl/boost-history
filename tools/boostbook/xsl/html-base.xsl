@@ -10,29 +10,9 @@
                 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision"
                 version="1.0">
 
-  <!-- Import the HTML chunking stylesheet -->
-  <xsl:import
-    href="http://docbook.sourceforge.net/release/xsl/current/html/chunk.xsl"/>
-  <xsl:import
-    href="http://docbook.sourceforge.net/release/xsl/current/html/math.xsl"/>
+  <xsl:param name="chunker.output.doctype-public">-//W3C//DTD HTML 4.01 Transitional//EN</xsl:param>
+  <xsl:param name="chunker.output.doctype-system">http://www.w3.org/TR/html4/loose.dtd</xsl:param>
 
-  <!-- Bring in the fast chunking overrides.  There's nothing
-       that we need to override, so include instead of importing it. -->
-  <xsl:include
-    href="http://docbook.sourceforge.net/release/xsl/current/html/chunkfast.xsl"/>
-  
-  <!-- We have to make sure that our templates override all
-       docbook templates.  Therefore, we include our own templates
-       instead of importing them.  In order for this to work,
-       the stylesheets included here cannot also include each other -->
-  <xsl:include href="chunk-common.xsl"/>
-  <xsl:include href="docbook-layout.xsl"/>
-  <xsl:include href="navbar.xsl"/>
-  <xsl:include href="admon.xsl"/>
-  <xsl:include href="xref.xsl"/>
-  <xsl:include href="relative-href.xsl"/>
-  <xsl:include href="callout.xsl"/>
-  
   <xsl:param name="html.stylesheet">
     <xsl:choose>
       <xsl:when test = "$boost.defaults = 'Boost'">
@@ -40,6 +20,17 @@
       </xsl:when>
       <xsl:otherwise>
         boostbook.css
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:param>
+
+  <xsl:param name="boost.graphics.root">
+    <xsl:choose>
+      <xsl:when test = "$boost.defaults = 'Boost'">
+        <xsl:value-of select = "concat($boost.root, '/doc/src/images/')"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select = "'images/'"/>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:param>
@@ -62,12 +53,10 @@
   <xsl:param name="chunk.quietly" select="not(number($boostbook.verbose))"/>
   <xsl:param name="toc.max.depth">2</xsl:param>
   <xsl:param name="callout.graphics.number.limit">15</xsl:param>
-  <xsl:param name = "admon.graphics.path"
-            select = "concat($boost.root, '/doc/html/images/')"/>
-  <xsl:param name = "navig.graphics.path"
-            select = "concat($boost.root, '/doc/html/images/')"/>
+  <xsl:param name = "admon.graphics.path" select="$boost.graphics.root" />
+  <xsl:param name = "navig.graphics.path" select="$boost.graphics.root" />
   <xsl:param name = "callout.graphics.path"
-            select = "concat($boost.root, '/doc/src/images/callouts/')"/>
+            select = "concat($boost.graphics.root, 'callouts/')"/>
 
 
   <xsl:param name="admon.style">
