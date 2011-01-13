@@ -1,50 +1,53 @@
-11/29/10
 ...patience...
 ...patience...
-...found 1536 targets...
+...found 1519 targets...
 ...updating 32 targets...
-gcc.compile.c++ ../../../../../bin.v2/libs/assign/v2/test/unit_testing/type_traits.test/gcc-4.4.3/debug/type_traits.o
-gcc.link ../../../../../bin.v2/libs/assign/v2/test/unit_testing/type_traits.test/gcc-4.4.3/debug/type_traits
-testing.capture-output ../../../../../bin.v2/libs/assign/v2/test/unit_testing/type_traits.test/gcc-4.4.3/debug/type_traits.run
-**passed** ../../../../../bin.v2/libs/assign/v2/test/unit_testing/type_traits.test/gcc-4.4.3/debug/type_traits.test
 gcc.compile.c++ ../../../../../bin.v2/libs/assign/v2/test/unit_testing/detail.test/gcc-4.4.3/debug/detail.o
 gcc.link ../../../../../bin.v2/libs/assign/v2/test/unit_testing/detail.test/gcc-4.4.3/debug/detail
 testing.capture-output ../../../../../bin.v2/libs/assign/v2/test/unit_testing/detail.test/gcc-4.4.3/debug/detail.run
 **passed** ../../../../../bin.v2/libs/assign/v2/test/unit_testing/detail.test/gcc-4.4.3/debug/detail.test
-gcc.compile.c++ ../../../../../bin.v2/libs/assign/v2/test/unit_testing/anon.test/gcc-4.4.3/debug/anon.o
-gcc.link ../../../../../bin.v2/libs/assign/v2/test/unit_testing/anon.test/gcc-4.4.3/debug/anon
-testing.capture-output ../../../../../bin.v2/libs/assign/v2/test/unit_testing/anon.test/gcc-4.4.3/debug/anon.run
-**passed** ../../../../../bin.v2/libs/assign/v2/test/unit_testing/anon.test/gcc-4.4.3/debug/anon.test
-gcc.compile.c++ ../../../../../bin.v2/libs/assign/v2/test/unit_testing/chain.test/gcc-4.4.3/debug/chain.o
-../../../../../boost/assign/v2/chain/checking/twin_values.hpp: In function ‘void boost::assign::v2::checking::chain::twin_values::do_check() [with T = int]’:
-../../../../../boost/assign/v2/chain/checking/twin_values.hpp:157: warning: ‘a1’ may be used uninitialized in this function
-../../../../../boost/assign/v2/chain/checking/twin_values.hpp:157: warning: ‘b1’ may be used uninitialized in this function
-../../../../../boost/assign/v2/chain/checking/twin_values.hpp:157: warning: ‘c1’ may be used uninitialized in this function
-../../../../../boost/assign/v2/chain/checking/twin_values.hpp:157: warning: ‘d1’ may be used uninitialized in this function
-../../../../../boost/assign/v2/chain/checking/twin_values.hpp:157: warning: ‘e1’ may be used uninitialized in this function
-../../../../../boost/assign/v2/chain/checking/twin_values.hpp:157: warning: ‘f1’ may be used uninitialized in this function
-../../../../../boost/assign/v2/chain/checking/twin_values.hpp:157: warning: ‘g1’ may be used uninitialized in this function
-gcc.link ../../../../../bin.v2/libs/assign/v2/test/unit_testing/chain.test/gcc-4.4.3/debug/chain
-testing.capture-output ../../../../../bin.v2/libs/assign/v2/test/unit_testing/chain.test/gcc-4.4.3/debug/chain.run
-**passed** ../../../../../bin.v2/libs/assign/v2/test/unit_testing/chain.test/gcc-4.4.3/debug/chain.test
 gcc.compile.c++ ../../../../../bin.v2/libs/assign/v2/test/unit_testing/put.test/gcc-4.4.3/debug/put.o
 gcc.link ../../../../../bin.v2/libs/assign/v2/test/unit_testing/put.test/gcc-4.4.3/debug/put
 testing.capture-output ../../../../../bin.v2/libs/assign/v2/test/unit_testing/put.test/gcc-4.4.3/debug/put.run
 **passed** ../../../../../bin.v2/libs/assign/v2/test/unit_testing/put.test/gcc-4.4.3/debug/put.test
-gcc.compile.c++ ../../../../../bin.v2/libs/assign/v2/test/unit_testing/put_compose.test/gcc-4.4.3/debug/put_compose.o
-gcc.link ../../../../../bin.v2/libs/assign/v2/test/unit_testing/put_compose.test/gcc-4.4.3/debug/put_compose
-testing.capture-output ../../../../../bin.v2/libs/assign/v2/test/unit_testing/put_compose.test/gcc-4.4.3/debug/put_compose.run
-**passed** ../../../../../bin.v2/libs/assign/v2/test/unit_testing/put_compose.test/gcc-4.4.3/debug/put_compose.test
-gcc.compile.c++ ../../../../../bin.v2/libs/assign/v2/test/unit_testing/put_range.test/gcc-4.4.3/debug/put_range.o
-gcc.link ../../../../../bin.v2/libs/assign/v2/test/unit_testing/put_range.test/gcc-4.4.3/debug/put_range
-testing.capture-output ../../../../../bin.v2/libs/assign/v2/test/unit_testing/put_range.test/gcc-4.4.3/debug/put_range.run
-**passed** ../../../../../bin.v2/libs/assign/v2/test/unit_testing/put_range.test/gcc-4.4.3/debug/put_range.test
 gcc.compile.c++ ../../../../../bin.v2/libs/assign/v2/test/unit_testing/ref.test/gcc-4.4.3/debug/ref.o
-In file included from ref.cpp:20:
-../../../../../libs/assign/v2/test/ref/fusion_matrix.cpp: In function ‘void test_assign_v2::xxx_ref::xxx_fusion_matrix::test()’:
-../../../../../libs/assign/v2/test/ref/fusion_matrix.cpp:90: warning: unused variable ‘row’
-../../../../../libs/assign/v2/test/ref/fusion_matrix.cpp:112: warning: unused variable ‘row’
 gcc.link ../../../../../bin.v2/libs/assign/v2/test/unit_testing/ref.test/gcc-4.4.3/debug/ref
 testing.capture-output ../../../../../bin.v2/libs/assign/v2/test/unit_testing/ref.test/gcc-4.4.3/debug/ref.run
 **passed** ../../../../../bin.v2/libs/assign/v2/test/unit_testing/ref.test/gcc-4.4.3/debug/ref.test
+gcc.compile.c++ ../../../../../bin.v2/libs/assign/v2/test/unit_testing/utility.test/gcc-4.4.3/debug/utility.o
+In file included from ../../../../../boost/assign/v2/utility/chain/iterator.hpp:17,
+                 from ../../../../../boost/assign/v2/utility/chain/range.hpp:15,
+                 from ../../../../../boost/assign/v2/utility/chain/result.hpp:15,
+                 from ../../../../../boost/assign/v2/utility/chain/pipe.hpp:15,
+                 from ../../../../../boost/assign/v2/utility/chain/checking/twin_values.hpp:22,
+                 from ../../../../../libs/assign/v2/test/utility/chain.cpp:10,
+                 from utility.cpp:17:
+../../../../../boost/assign/v2/detail/traits/type/meta_convert.hpp:17: warning: declaration ‘struct boost::use_default’ does not declare anything
+gcc.link ../../../../../bin.v2/libs/assign/v2/test/unit_testing/utility.test/gcc-4.4.3/debug/utility
+testing.capture-output ../../../../../bin.v2/libs/assign/v2/test/unit_testing/utility.test/gcc-4.4.3/debug/utility.run
+**passed** ../../../../../bin.v2/libs/assign/v2/test/unit_testing/utility.test/gcc-4.4.3/debug/utility.test
+gcc.compile.c++ ../../../../../bin.v2/libs/assign/v2/test/unit_testing/detail.test/gcc-4.4.3/release/detail.o
+gcc.link ../../../../../bin.v2/libs/assign/v2/test/unit_testing/detail.test/gcc-4.4.3/release/detail
+testing.capture-output ../../../../../bin.v2/libs/assign/v2/test/unit_testing/detail.test/gcc-4.4.3/release/detail.run
+**passed** ../../../../../bin.v2/libs/assign/v2/test/unit_testing/detail.test/gcc-4.4.3/release/detail.test
+gcc.compile.c++ ../../../../../bin.v2/libs/assign/v2/test/unit_testing/put.test/gcc-4.4.3/release/put.o
+gcc.link ../../../../../bin.v2/libs/assign/v2/test/unit_testing/put.test/gcc-4.4.3/release/put
+testing.capture-output ../../../../../bin.v2/libs/assign/v2/test/unit_testing/put.test/gcc-4.4.3/release/put.run
+**passed** ../../../../../bin.v2/libs/assign/v2/test/unit_testing/put.test/gcc-4.4.3/release/put.test
+gcc.compile.c++ ../../../../../bin.v2/libs/assign/v2/test/unit_testing/ref.test/gcc-4.4.3/release/ref.o
+gcc.link ../../../../../bin.v2/libs/assign/v2/test/unit_testing/ref.test/gcc-4.4.3/release/ref
+testing.capture-output ../../../../../bin.v2/libs/assign/v2/test/unit_testing/ref.test/gcc-4.4.3/release/ref.run
+**passed** ../../../../../bin.v2/libs/assign/v2/test/unit_testing/ref.test/gcc-4.4.3/release/ref.test
+gcc.compile.c++ ../../../../../bin.v2/libs/assign/v2/test/unit_testing/utility.test/gcc-4.4.3/release/utility.o
+In file included from ../../../../../boost/assign/v2/utility/chain/iterator.hpp:17,
+                 from ../../../../../boost/assign/v2/utility/chain/range.hpp:15,
+                 from ../../../../../boost/assign/v2/utility/chain/result.hpp:15,
+                 from ../../../../../boost/assign/v2/utility/chain/pipe.hpp:15,
+                 from ../../../../../boost/assign/v2/utility/chain/checking/twin_values.hpp:22,
+                 from ../../../../../libs/assign/v2/test/utility/chain.cpp:10,
+                 from utility.cpp:17:
+../../../../../boost/assign/v2/detail/traits/type/meta_convert.hpp:17: warning: declaration ‘struct boost::use_default’ does not declare anything
+gcc.link ../../../../../bin.v2/libs/assign/v2/test/unit_testing/utility.test/gcc-4.4.3/release/utility
+testing.capture-output ../../../../../bin.v2/libs/assign/v2/test/unit_testing/utility.test/gcc-4.4.3/release/utility.run
+**passed** ../../../../../bin.v2/libs/assign/v2/test/unit_testing/utility.test/gcc-4.4.3/release/utility.test
 ...updated 32 targets...
