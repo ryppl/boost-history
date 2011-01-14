@@ -1,4 +1,4 @@
-/* test_gamma.cpp
+/* test_extreme_value.cpp
  *
  * Copyright Steven Watanabe 2010
  * Distributed under the Boost Software License, Version 1.0. (See
@@ -9,11 +9,11 @@
  *
  */
 
-#include <boost/random/weibull_distribution.hpp>
+#include <boost/random/extreme_value_distribution.hpp>
 #include <boost/random/uniform_int.hpp>
 #include <boost/random/uniform_01.hpp>
 #include <boost/random/mersenne_twister.hpp>
-#include <boost/math/distributions/weibull.hpp>
+#include <boost/math/distributions/extreme_value.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/exception/diagnostic_information.hpp>
 #include <vector>
@@ -22,23 +22,23 @@
 
 #include "statistic_tests.hpp"
 
-bool do_test(double alpha, double beta, int max) {
-    std::cout << "running gamma(" << alpha << ", " << beta << ")" << " " << max << " times: " << std::flush;
+bool do_test(double a, double b, int max) {
+    std::cout << "running extreme_value(" << a << ", " << b << ")" << " " << max << " times: " << std::flush;
 
-    boost::math::weibull_distribution<> expected(alpha, beta);
+    boost::math::extreme_value_distribution<> expected(a, b);
     
-    boost::random::weibull_distribution<> dist(alpha, beta);
+    boost::random::extreme_value_distribution<> dist(a, b);
     boost::mt19937 gen;
     kolmogorov_experiment test(max);
-    boost::variate_generator<boost::mt19937&, boost::random::weibull_distribution<> > vgen(gen, dist);
+    boost::variate_generator<boost::mt19937&, boost::random::extreme_value_distribution<> > vgen(gen, dist);
 
     double prob = test.probability(test.run(vgen, expected));
 
     bool result = prob < 0.99;
     const char* err = result? "" : "*";
-    std::cout << std::setprecision(17) << prob << err << std::endl;
+    std::cout << boost::detail::setprecision(17) << prob << err << std::endl;
 
-    std::cout << std::setprecision(6);
+    std::cout << boost::detail::setprecision(6);
 
     return result;
 }
@@ -60,7 +60,7 @@ bool do_tests(int repeat, double max_a, double max_b, int trials) {
 }
 
 int usage() {
-    std::cerr << "Usage: test_weibull -r <repeat> -a <max a> -b <max b> -t <trials>" << std::endl;
+    std::cerr << "Usage: test_extreme_value -r <repeat> -a <max a> -b <max b> -t <trials>" << std::endl;
     return 2;
 }
 
