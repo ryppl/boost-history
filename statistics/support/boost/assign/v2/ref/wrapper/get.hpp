@@ -32,7 +32,7 @@ namespace result_of{
 
 }// result_of
 
-	template<typename W>
+    template<typename W>
     typename boost::lazy_enable_if<
     	boost::is_reference_wrapper<W>,
         ref::result_of::get<W>
@@ -42,9 +42,9 @@ namespace result_of{
     	return w.get();	
     }
 
-	// Functor
+    // Functor
 
-	struct get_functor
+    struct get_functor
     {
     
     	template<typename S>
@@ -55,33 +55,33 @@ namespace result_of{
     
     	template<typename W>
     	typename boost::lazy_enable_if<
-    		boost::is_reference_wrapper<W>,
-        	ref::result_of::get<W>
+            boost::is_reference_wrapper<W>,
+            ref::result_of::get<W>
     	>::type
         operator()(W const& w)const
         {
-    		return get( w );
+            return get( w );
     	}
         
     };
 
-	// Range
+    // Range
 
 namespace result_of{
 
-	template<typename R>
+    template<typename R>
     struct range_get_impl{
     
     	typedef ref::get_functor functor_;
-    	typedef boost::transform_range<functor_, R> type;
+    	typedef boost::range_detail::transform_range<functor_, R> type;
     
     };
 
-	template<typename R>
+    template<typename R>
     struct range_get : boost::lazy_enable_if<
     	boost::is_reference_wrapper<
-        	typename boost::range_value<
-            	typename boost::remove_cv<R>::type
+            typename boost::range_value<
+                typename boost::remove_cv<R>::type
             >::type
         >,
         range_get_impl<R>
@@ -89,37 +89,37 @@ namespace result_of{
 
 }// result_of
 
-	template<typename R>
+    template<typename R>
     typename ref::result_of::range_get<R>::type
     range_get(R& r)
     {
-    	typedef typename ref::result_of::range_get<R>::type result_;
-		return result_(get_functor(), r);
+        typedef typename ref::result_of::range_get<R>::type result_;
+        return result_(get_functor(), r);
     }
-	template<typename R>
+    template<typename R>
     typename ref::result_of::range_get<R const>::type
     range_get(R const& r)
     {
-    	typedef typename ref::result_of::range_get<R const>::type result_;
-		return result_(get_functor(), r);
+        typedef typename ref::result_of::range_get<R const>::type result_;
+        return result_(get_functor(), r);
     }
 
-	struct get_adaptor{};
+    struct get_adaptor{};
     
 namespace{
-	get_adaptor const _get = get_adaptor();
+    get_adaptor const _get = get_adaptor();
 }
 
-	template<typename R>
+    template<typename R>
     typename ref::result_of::range_get<R>::type
-	operator|(R& r, get_adaptor){
-    	return range_get( r );
+    operator|(R& r, get_adaptor){
+        return range_get( r );
     }
 
-	template<typename R>
+    template<typename R>
     typename ref::result_of::range_get<R const>::type
-	operator|(R const& r, get_adaptor){
-    	return range_get( r );
+    operator|(R const& r, get_adaptor){
+        return range_get( r );
     }
 
 }// ref

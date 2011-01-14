@@ -48,23 +48,23 @@ namespace result_of{
 
     template<typename T>
     typename result_of::deque<T>::type
-	deque( keyword_aux::nil )
+    deque( keyword_aux::nil )
     {
     	typedef typename result_of::deque<T>::type result_;
         return result_();
     }
 
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
-	template<typename T, typename...Args>
-	typename result_of::deque<T>::type
-	deque(Args&&...args)
+    template<typename T, typename...Args>
+    typename result_of::deque<T>::type
+    deque(Args&&...args)
     {
     	return deque<T>(v2::_nil)( std::forward<Args>(args)... );
     }
 #else
 
     template<typename T>
-	typename result_of::deque<T>::type
+    typename result_of::deque<T>::type
     deque()
     {
         return deque<T>(v2::_nil)();
@@ -72,7 +72,7 @@ namespace result_of{
 
 #define MACRO1(r, SeqU) \
     template<typename T, BOOST_ASSIGN_V2_decl_params(SeqU)> \
-	typename result_of::deque<T>::type\
+    typename result_of::deque<T>::type\
     deque( BOOST_ASSIGN_V2_decl_args(SeqU) ){ \
         return deque<T>(v2::_nil)( \
             BOOST_ASSIGN_V2_args(SeqU) \
@@ -94,14 +94,14 @@ BOOST_PP_REPEAT(
 
 #define MACRO(z, N, data) \
     template<typename T BOOST_PP_ENUM_TRAILING_PARAMS(N, typename U)> \
-	typename result_of::deque<T>::type\
+    typename result_of::deque<T>::type\
     deque( BOOST_PP_ENUM_BINARY_PARAMS(N, U, &_) ){ \
         return deque<T>(v2::_nil)( \
             BOOST_PP_ENUM_PARAMS(N, _) \
         ); \
     } \
     template<typename T BOOST_PP_ENUM_TRAILING_PARAMS(N, typename U)> \
-	typename result_of::deque<T>::type\
+    typename result_of::deque<T>::type\
     deque( BOOST_PP_ENUM_BINARY_PARAMS(N, const U, &_) ){ \
         return deque<T>(v2::_nil)( \
             BOOST_PP_ENUM_PARAMS(N, _) \

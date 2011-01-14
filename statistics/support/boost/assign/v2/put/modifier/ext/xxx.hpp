@@ -31,10 +31,10 @@ namespace result_of_modulo{\
 }\
 namespace put_aux{\
 \
-	template<typename T,typename Arg>\
+    template<typename T,typename Arg>\
     typename boost::lazy_enable_if<\
-    	boost::is_base_of<put_aux::put_base, T>,\
-    	result_of_modulo::Param<T, Arg>\
+        boost::is_base_of<put_aux::put_base, T>,\
+        result_of_modulo::Param<T, Arg>\
     >::type\
 	operator%(\
     	T const& t,\
@@ -47,7 +47,7 @@ namespace put_aux{\
 \
 }\
 namespace{\
-	put_aux::BOOST_PP_CAT(Param,_keyword) const BOOST_PP_CAT(_,Param)\
+    put_aux::BOOST_PP_CAT(Param,_keyword) const BOOST_PP_CAT(_,Param)\
         = put_aux::BOOST_PP_CAT(Param,_keyword)();\
 }\
 /**/

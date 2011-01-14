@@ -41,15 +41,15 @@ namespace put_aux{
 	template<typename Tag>
     class modifier<modifier_tag::repeat<Tag> >
     {
-		typedef modifier<Tag> inner_;
+        typedef modifier<Tag> inner_;
 
     	public:
 
         typedef std::size_t size_type;
 
-		modifier() : n( 0 ){}
-		explicit modifier( size_type const& n_ )
-        	: n( n_ )
+        modifier() : n( 0 ){}
+        explicit modifier( size_type const& n_ )
+            : n( n_ )
         {
         }
 
@@ -75,7 +75,7 @@ namespace put_aux{
 
 #undef MACRO
 
-		size_type const& size()const{ return this->n; }
+        size_type const& size()const{ return this->n; }
 
         protected:
         inner_ inner;
@@ -83,15 +83,15 @@ namespace put_aux{
     };
 
     template<typename Arg = boost::mpl::na>
-	class repeat
+    class repeat
     {
 
-		public:
+        public:
 
         typedef std::size_t size_type;
 
         repeat( size_type const& n_)
-        	: n( n_ )
+            : n( n_ )
         {}
 
         size_type const& get()const{ return this->n; }
@@ -101,19 +101,19 @@ namespace put_aux{
 
     };
 
-	class repeat_keyword
+    class repeat_keyword
     {
 
-		public:
+        public:
 
         typedef std::size_t size_type;
 
         repeat_keyword(){}
 
-		repeat<> operator=( size_type const& n_)const
+        repeat<> operator=( size_type const& n_)const
         {
-        	typedef repeat<> result_;
-        	return result_( n_ );
+            typedef repeat<> result_;
+            return result_( n_ );
         }
 
     };

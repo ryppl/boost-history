@@ -47,7 +47,7 @@ namespace put_aux{
     {
 
         typedef Arg type;
-		typedef boost::shared_ptr<type> ptr_;
+        typedef boost::shared_ptr<type> ptr_;
 
         modifier(){}
         explicit modifier(
@@ -71,7 +71,7 @@ namespace put_aux{
 
         explicit lookup(type& arg_) : arg( arg_ ){}
 
-		type& get()const{ return this->arg; }
+        type& get()const{ return this->arg; }
 
         private:
         type& arg;

@@ -48,39 +48,38 @@ namespace put_aux{
 
         typedef std::size_t size_type;
 
-		modifier() : i( 0 ){}
-		explicit modifier( size_type const& i_ )
-        	: i( i_ )
+        modifier() : i( 0 ){}
+        explicit modifier( size_type const& i_ )
+           : i( i_ )
         {}
 
     	template<typename V, typename T>
         void impl(V& v, BOOST_ASSIGN_V2_forward_param(T, t) )const
         {
-        	v.at( i++ ) = BOOST_ASSIGN_V2_forward_arg(T, t);
+            v.at( i++ ) = BOOST_ASSIGN_V2_forward_arg(T, t);
         }
 
     	template<typename V, typename T>
         void impl(V& v, T* t)const
         {
-        
-			v.replace( i++ , t);
+            v.replace( i++ , t);
         }
 
         protected:
-		mutable std::size_t i;
+        mutable std::size_t i;
     };
 
     template<typename Arg = boost::mpl::na>
-	class iterate
+    class iterate
     {
 
-		public:
+        public:
 
         typedef std::size_t size_type;
 		
         iterate():i( 0 ){}
         iterate( size_type const& i_)
-        	: i( i_ )
+           : i( i_ )
         {}
 
         size_type const& get()const{ return this->i; }
@@ -90,10 +89,10 @@ namespace put_aux{
 
     };
 
-	class iterate_keyword : public iterate<>
+    class iterate_keyword : public iterate<>
     {
 
-		typedef iterate<> super_t;
+        typedef iterate<> super_t;
 
 		public:
 
@@ -101,10 +100,10 @@ namespace put_aux{
 
         iterate_keyword(){}
 
-		iterate<> operator=( size_type const& n_)const
+        iterate<> operator=( size_type const& n_)const
         {
-        	typedef iterate<> result_;
-        	return result_( n_ );
+            typedef iterate<> result_;
+            return result_( n_ );
         }
 
     };

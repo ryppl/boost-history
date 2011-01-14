@@ -15,7 +15,7 @@ namespace assign{
 namespace v2{
 namespace keyword_aux{ struct nil{}; }
 namespace{
-	const keyword_aux::nil _nil = keyword_aux::nil();
+    const keyword_aux::nil _nil = keyword_aux::nil();
 }	
 }// v2
 }// assign

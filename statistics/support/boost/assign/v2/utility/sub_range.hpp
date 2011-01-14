@@ -32,19 +32,19 @@ namespace result_of{
 
 }// result_of
 
-	// Use it, for example, to do comparisons:
+    // Use it, for example, to do comparisons:
     // v2::sub_range( ref::csv_array(-1, 0 ,1) ) < r;
 
-	template<typename R>
-	typename v2::result_of::sub_range<R>::type
+    template<typename R>
+    typename v2::result_of::sub_range<R>::type
     sub_range( R& r)
     {
     	typedef typename v2::result_of::sub_range<R>::type result_;
     	return result_( boost::begin( r ), boost::end( r ) ); 
     }
 
-	template<typename R>
-	typename v2::result_of::sub_range<R const>::type
+    template<typename R>
+    typename v2::result_of::sub_range<R const>::type
     sub_range( R const& r)
     {
     	typedef typename v2::result_of::sub_range<R const>::type result_;

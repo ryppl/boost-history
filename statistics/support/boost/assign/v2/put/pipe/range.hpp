@@ -19,8 +19,8 @@ namespace assign{
 namespace v2{
 namespace put_range_aux
 {
-	template<typename From>
-	class helper1 : ref::wrapper<ref::assign_tag::copy, From const>
+    template<typename From>
+    class helper1 : ref::wrapper<ref::assign_tag::copy, From const>
     {
         typedef ref::wrapper<ref::assign_tag::copy, From const> super_t;
 
@@ -34,7 +34,7 @@ namespace put_range_aux
         helper1();
     };
 
-	struct helper2
+    struct helper2
     {
     	helper2(){}
         template<typename From>
@@ -46,18 +46,18 @@ namespace put_range_aux
     };
 
     // This decl must come first, it seems.
-	template<typename To, typename From>
-	To operator|(::boost::type<To>, put_range_aux::helper1<From> const& h);
+    template<typename To, typename From>
+    To operator|(::boost::type<To>, put_range_aux::helper1<From> const& h);
 
-	template<typename To,typename From>
-	To& operator|(To& to, put_range_aux::helper1<From> const& h)
+    template<typename To,typename From>
+    To& operator|(To& to, put_range_aux::helper1<From> const& h)
     {
         ::boost::for_each( h.from(), put( to ) );
         return to;
     }
 
-	template<typename To, typename From>
-	To operator|(::boost::type<To>, put_range_aux::helper1<From> const& h)
+    template<typename To, typename From>
+    To operator|(::boost::type<To>, put_range_aux::helper1<From> const& h)
     {
 		To to;
         to | h;
@@ -66,7 +66,7 @@ namespace put_range_aux
 
 }// put_range_aux
 
-	put_range_aux::helper2 const _put_range = put_range_aux::helper2();
+    put_range_aux::helper2 const _put_range = put_range_aux::helper2();
 
 }// v2
 }// assign
@@ -83,7 +83,7 @@ namespace v2{
 namespace checking{
 namespace put_range{
 
-	template<typename To, typename From>
+    template<typename To, typename From>
     void do_check(From const& from)
     {
     	To to;

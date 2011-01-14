@@ -40,7 +40,7 @@ namespace array_aux{
         typedef Impl impl_;
         typedef impl_ const cimpl_;
 
-		typedef typename Impl::value_type wrapper_;
+        typedef typename Impl::value_type wrapper_;
         typedef typename boost::unwrap_reference<wrapper_>::type inner_type;
         typedef impl_ range_;
         typedef cimpl_ crange_;
@@ -51,11 +51,11 @@ namespace array_aux{
         typedef typename boost::range_reference<range_>::type reference;
         typedef typename boost::range_reference<crange_>::type const_reference;
         
-		typedef typename ref::result_of::get<wrapper_>::type result_of_get_;
+        typedef typename ref::result_of::get<wrapper_>::type result_of_get_;
         typedef typename boost::call_traits<inner_type>::param_type param_type;
 
         #ifndef BOOST_MSVC
-		    typedef typename boost::range_size<impl_>::type size_type;
+            typedef typename boost::range_size<impl_>::type size_type;
         #endif
         #ifdef BOOST_MSVC
             typedef std::size_t size_type;
@@ -73,7 +73,7 @@ namespace array_aux{
         typedef typename traits_::impl_ impl_;
         typedef typename traits_::cimpl_ cimpl_;
         typedef interface<Impl, D> this_;
-		typedef typename traits_::result_of_get_ result_of_get_;
+        typedef typename traits_::result_of_get_ result_of_get_;
         typedef typename traits_::param_type param_type;
 
         public:
@@ -153,14 +153,14 @@ namespace array_aux{
         	this->assign_impl( val, int_() );
         }
 
-		protected:
+        protected:
 
         void assign_impl(param_type val, boost::mpl::int_<static_size>)
         {
         	/* exit */
         }
 
-		template<int i>
+        template<int i>
         void assign_impl(param_type val, boost::mpl::int_<i>)
         {
             this->wrappers()[i] = val;
@@ -168,13 +168,13 @@ namespace array_aux{
             this->assign_impl( val, next_() );
         }
 
-		template<typename W>
-		reference elem_impl(W& w)
+        template<typename W>
+        reference elem_impl(W& w)
         {
         	return w; // w.get()
         }
-		template<typename W>
-		const_reference elem_impl(W & w)const
+        template<typename W>
+        const_reference elem_impl(W & w)const
         {
         	return w; // w.get()
         }

@@ -29,7 +29,7 @@ namespace put_aux{
         F value;
     };
     
-	template<typename T,typename F1>
+    template<typename T,typename F1>
     typename boost::mpl::apply1<result_of_modulo::new_fun<T>, F1>::type
 	operator%(
     	T const& t, 
@@ -43,13 +43,13 @@ namespace put_aux{
         return result_( t.get(), h.value, t.modifier );
     }
 
-	struct kwd_fun{
+    struct kwd_fun{
     
-		template<typename F>
+        template<typename F>
     	put_aux::new_fun<F>
-		operator=(F const& f)const
+        operator=(F const& f)const
     	{
-			return put_aux::new_fun<F>( f );
+            return put_aux::new_fun<F>( f );
     	}
 
     }; 
