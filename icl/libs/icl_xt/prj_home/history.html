@@ -10,205 +10,217 @@
 </head>
 <body>
 <div id="header">
-	<h1>Interval Container Library</h1>
-	<br><br>
-	<h2>by Joachim Faulhaber</h2>
+    <h1>Interval Container Library</h1>
+    <br><br>
+    <h2>by Joachim Faulhaber</h2>
 </div>
 <div id="menu">
-	<ul>
-		<li><a href="index.html">Home</a></li>
-		<li><a href="news.html">News</a></li>
-		<li><a href="download.html">Download</a></li>
-		<li><a href="documentation.html">Documentation</a></li>
-		<li><a href="reviews.html">Reviews</a></li>
-		<li><a href="history.html">History</a></li>
-	</ul>
+    <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="news.html">News</a></li>
+        <li><a href="download.html">Download</a></li>
+        <li><a href="documentation.html">Documentation</a></li>
+        <li><a href="reviews.html">Reviews</a></li>
+        <li><a href="history.html">History</a></li>
+    </ul>
 </div>
 <div id="content">
-	<div id="left">
-	
-		<h2>Revision History</h2>
-		
-		<p><b>
-		icl-4.0.0
-		</b> 
-		2010-11-04
-		</p>
-		<p>
-			Version for inclusion into boost 1.46.0. The library's name was changed to Interval Container Library (ICL).
-			Addition of statically bounded intervals. Addition of an interval concept and an interval traits class.
-			Made user defined intervals customizable. Extracted member functions to sets of namespace global
-			functions that build an interval_set and interval_map concept. Renamed some functions to conform
-			existing standards (ISO/OGC) and notions (identity_element, unit_element). 
-		</p>
-		
-		<p><b>
-		itl-3.2.1
-		</b>	
-		2010-01-16
-		</p>
-		<p>
-			Addition of doxygen generated documentation for extended library parts. 
-			Basic documentation and example for law based testing. 
-		</p>
+    <div id="left">
+    
+        <h2>Revision History</h2>
+        
+        <p><b>
+        icl-4.0.1
+        </b> 
+        2011-01-14
+        </p>
+        <p>
+            Version for inclusion into boost 1.46.0 (update 1). Improved portability due to boost night tests 
+            on most available compilers and platforms. Improved usability for intervals and interval 
+            containers of pointers and boost date_time durations. Bugfixes for interval_bitset and
+            addition of some functions and tests. Corrections and improvements of the docu&shy;mentation.
+        </p>
+        
+        <p><b>
+        icl-4.0.0
+        </b> 
+        2010-11-04
+        </p>
+        <p>
+            Version for inclusion into boost 1.46.0. The library's name was changed to Interval Container Library (ICL).
+            Addition of statically bounded intervals. Addition of an interval concept and an interval traits class.
+            Made user defined intervals customizable. Extracted member functions to sets of namespace global
+            functions that build an interval_set and interval_map concept. Renamed some functions to conform
+            existing standards (ISO/OGC) and notions (identity_element, unit_element). 
+        </p>
+        
+        <p><b>
+        itl-3.2.1
+        </b>    
+        2010-01-16
+        </p>
+        <p>
+            Addition of doxygen generated documentation for extended library parts. 
+            Basic documentation and example for law based testing. 
+        </p>
 
-		<p><b>
-		itl-3.2.0
-		</b>	
-		2009-12-08
-		</p>
-		<p>
-		  <!-- b>Review Version, update 1:</b -->
-		  Implementation of element iterators for all interval containers.
-		  Implementation of bit iterators for interval bitsets. 
-		  Added a commented example implementation
-		  "large bitset" to the quickbook documentation.
-		  Implementation of large interval_bitset including bit iterators. 
-		  Added itl::insert_iterator itl::add_iterator to fill interval 
-		  containers from stl containers of intervals.  
-		  Implemented boost warning policy.
-		  Law based tests of element iteration, bit iteration and 
-		  applicability of stl algorithms 
-		  (SortedAssociativeContainer properties).
-		</p>
-				
-		<p><b>
-		itl-3.1.0
-		</b>	
-	    2009-09-18
-		</p>
-		<p>
-		  <!-- b>Review Version:</b -->
-		  Algorithms are being refactored
-		  to improve efficiency.
-		  Documentation of complexity guarantees.
-		  Completion of quickbook documentation.
-		  Added time measurement to law based tests.
-		  Addition of law based tests to test suites.
-		</p>
-		
-		<p><b>
-		itl-3.0.0
-		</b>	
-	    2009-03-04
-		</p>
-		<p>
-		  <!-- b>BoostCon09 version:</b -->
-		  The library files are reorganized to comply the boost centric project structure.
-		  All set theoretic functions are implemented as namspace global operators in an 
-		  assigning o= and an infix variant. Overloads within and between interval 
-		  containers and for elements and segments are implemented. Intersection
-		  operator changed form (*=, *) to (&=, &). 
-		  The library has been validated for a number of semantic constraints
-		  using a law based tester. The results of these tests is documented in the
-		  boost quickbook documentation in section <i>semantics</i>.
-		  Added a test suite using Boost.Test. Tests for interoperability with
-		  Boost.Date_Time and Boost.Rational.
-		</p>
-		
-		<p><b>
-		itl-2.0.1
-		</b>	
-	    2008-07-28
-		</p>
-		<p>
-		  Redesign of all interval container class templates according to
-		  boost standards. Replacing virtual functions by means of static
-		  polymorphism using the CRT pattern. Adding the self minimizing
-		  interval_map and the separating separate_interval_set. Separation
-		  of add/subtract from insert/erase semantics. Starting to develop
-		  the law based tester and performing law based tests.
-		  Improvement of the doxygen generated documentation. Improved
-		  and new examples that use boost code particularly boost date and
-		  time classes.
-		</p>
-		
-		<p><b>
-		itl-2.0.0
-		</b>	
-	    2008-05-11
-		</p>
-		<p>
-		  This version is refactored from the initial version for some basic 
-		  boost standards, like naming conventions, third library
-		  dependencies and basic portability. This version has been used for
-		  the first proposal on the boost developers list.
-		  Improving doxygen generated documentation and examples.
-		</p>
+        <p><b>
+        itl-3.2.0
+        </b>    
+        2009-12-08
+        </p>
+        <p>
+          <!-- b>Review Version, update 1:</b -->
+          Implementation of element iterators for all interval containers.
+          Implementation of bit iterators for interval bitsets. 
+          Added a commented example implementation
+          "large bitset" to the quickbook documentation.
+          Implementation of large interval_bitset including bit iterators. 
+          Added itl::insert_iterator itl::add_iterator to fill interval 
+          containers from stl containers of intervals.  
+          Implemented boost warning policy.
+          Law based tests of element iteration, bit iteration and 
+          applicability of stl algorithms 
+          (SortedAssociativeContainer properties).
+        </p>
+                
+        <p><b>
+        itl-3.1.0
+        </b>    
+        2009-09-18
+        </p>
+        <p>
+          <!-- b>Review Version:</b -->
+          Algorithms are being refactored
+          to improve efficiency.
+          Documentation of complexity guarantees.
+          Completion of quickbook documentation.
+          Added time measurement to law based tests.
+          Addition of law based tests to test suites.
+        </p>
+        
+        <p><b>
+        itl-3.0.0
+        </b>    
+        2009-03-04
+        </p>
+        <p>
+          <!-- b>BoostCon09 version:</b -->
+          The library files are reorganized to comply the boost centric project structure.
+          All set theoretic functions are implemented as namspace global operators in an 
+          assigning o= and an infix variant. Overloads within and between interval 
+          containers and for elements and segments are implemented. Intersection
+          operator changed form (*=, *) to (&=, &). 
+          The library has been validated for a number of semantic constraints
+          using a law based tester. The results of these tests is documented in the
+          boost quickbook documentation in section <i>semantics</i>.
+          Added a test suite using Boost.Test. Tests for interoperability with
+          Boost.Date_Time and Boost.Rational.
+        </p>
+        
+        <p><b>
+        itl-2.0.1
+        </b>    
+        2008-07-28
+        </p>
+        <p>
+          Redesign of all interval container class templates according to
+          boost standards. Replacing virtual functions by means of static
+          polymorphism using the CRT pattern. Adding the self minimizing
+          interval_map and the separating separate_interval_set. Separation
+          of add/subtract from insert/erase semantics. Starting to develop
+          the law based tester and performing law based tests.
+          Improvement of the doxygen generated documentation. Improved
+          and new examples that use boost code particularly boost date and
+          time classes.
+        </p>
+        
+        <p><b>
+        itl-2.0.0
+        </b>    
+        2008-05-11
+        </p>
+        <p>
+          This version is refactored from the initial version for some basic 
+          boost standards, like naming conventions, third library
+          dependencies and basic portability. This version has been used for
+          the first proposal on the boost developers list.
+          Improving doxygen generated documentation and examples.
+        </p>
 
-		<p><b>
-		itl-1.0.0
-		</b>	
-		2007-05-17
-		</p>
-		<p>
-		  Initial version. Refactored version of the code released as open source by Cortex Software GmbH in 2006.
-		  Removed some dangling dependencies. Added initial doxygen generated documentation and some examples.	  
-		</p>		
+        <p><b>
+        itl-1.0.0
+        </b>    
+        2007-05-17
+        </p>
+        <p>
+          Initial version. Refactored version of the code released as open source by Cortex Software GmbH in 2006.
+          Removed some dangling dependencies. Added initial doxygen generated documentation and some examples.      
+        </p>        
 
 
-		
-	</div>
-	
-	
-	<!-- =============================================================== -->
-	<div id="right">
-		<!-- =============================================================== -->
-		<p>&ldquo;This can be a really useful class of data structures. 
-	     I sup&shy;port continued work on getting this into Boost.&rdquo;<br>
-		 &mdash;
-		 <a HREF="http://www.boost.org/users/people/dave_abrahams.html">Dave Abrahams</a>
-		 <!-- a HREF="http://en.wikipedia.org/wiki/David_Abrahams_(computer_programmer)">Dave Abrahams</a-->
-		</p>
-		<br>
-		
-	    <p>
-		&ldquo;So I love ICL &mdash; it really solved the visualization problem I was
-		having. [...] Visualizing that amount of data, in real time, is quite a challenge. I'm
-		using ICL to track pre-rendered regions of this time series data. It
-		does exactly what I want.&rdquo;
+        
+    </div>
+    
+    
+    <!-- =============================================================== -->
+    <div id="right">
+        <!-- =============================================================== -->
+        <p>&ldquo;This can be a really useful class of data structures. 
+         I sup&shy;port continued work on getting this into Boost.&rdquo;<br>
+         &mdash;
+         <a HREF="http://www.boost.org/users/people/dave_abrahams.html">Dave Abrahams</a>
+         <!-- a HREF="http://en.wikipedia.org/wiki/David_Abrahams_(computer_programmer)">Dave Abrahams</a-->
+        </p>
+        <br>
+        
+        <p>
+        &ldquo;So I love ICL &mdash; it really solved the visualization problem I was
+        having. [...] Visualizing that amount of data, in real time, is quite a challenge. I'm
+        using ICL to track pre-rendered regions of this time series data. It
+        does exactly what I want.&rdquo;
 
-		<br>&mdash; <a href="http://web.mit.edu/jonas/www">Eric M. Jonas</a>, coauthor of
-		<a HREF="http://github.com/somaproject/">The Soma Project</a>
-	    </p>
-		<br>
+        <br>&mdash; <a href="http://web.mit.edu/jonas/www">Eric M. Jonas</a>, coauthor of
+        <a HREF="http://github.com/somaproject/">The Soma Project</a>
+        </p>
+        <br>
 
-		<p>
-		My experience with this use&shy;case 
-		[...] did speak toward the richness of the interface. Each time we wanted to apply 
-		a dif&shy;ferent operation or extract a different view of the data we found that the scenario
-		had already been considered and a solution was readily available.
+        <p>
+        My experience with this use&shy;case 
+        [...] did speak toward the richness of the interface. Each time we wanted to apply 
+        a dif&shy;ferent operation or extract a different view of the data we found that the scenario
+        had already been considered and a solution was readily available.
 
-		<br>&mdash;
-		<a HREF="http://www.objectmodelingdesigns.com/index.html">Michael Caisse</a>
-	    </p>
-		<p><a href="reviews.html">More&#8230;</a></p>
-		<!-- =============================================================== -->		
-	</div>
+        <br>&mdash;
+        <a HREF="http://www.objectmodelingdesigns.com/index.html">Michael Caisse</a>
+        </p>
+        <p><a href="reviews.html">More&#8230;</a></p>
+        <!-- =============================================================== -->        
+    </div>
 </div>
 <!-- =============================================================== -->
 <div id="footer">
-	   
-	<table width="100%">
-	<tr>
-		<td align=left width="33%">
-			<a href="http://www.boost.org/">
-			<img src="images/boost_powered_by.png" width="210" height="62" border="0" alt="Boost.org Logo">
-			</a>
-		</td>
-		
-		<td align=center width="34%">
-			<p>Copyright &copy; 2010 Joachim Faulhaber.</p>
-			<p>Design by <a href="http://360guide.info">360guide.info</a></p>
-		</td>
-		
-		<td align=center valign=middle width="33%">
-			<a href="http://www.cortex-software.de/desktopdefault.aspx">
-				<img src="images/logo_cortex.png"  border="0" alt="Cortex Logo" >
-			</a>
-		</td>
-	</tr>
-	</table>
+       
+    <table width="100%">
+    <tr>
+        <td align=left width="33%">
+            <a href="http://www.boost.org/">
+            <img src="images/boost_powered_by.png" width="210" height="62" border="0" alt="Boost.org Logo">
+            </a>
+        </td>
+        
+        <td align=center width="34%">
+            <p>Copyright &copy; 2010 Joachim Faulhaber.</p>
+            <p>Design by <a href="http://360guide.info">360guide.info</a></p>
+        </td>
+        
+        <td align=center valign=middle width="33%">
+            <a href="http://www.cortex-software.de/desktopdefault.aspx">
+                <img src="images/logo_cortex.png"  border="0" alt="Cortex Logo" >
+            </a>
+        </td>
+    </tr>
+    </table>
 </div>
 </body>
 </html>
