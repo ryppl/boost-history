@@ -1,6 +1,7 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title>
       Header &lt;boost/interthreads/thread_specific_shared_ptr.hpp&gt;</title>
 <link rel="stylesheet" href="../../../../../../doc/html/boostbook.css" type="text/css">
@@ -23,7 +24,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="thread_decorator_hpp.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="keep_alive_file_hpp.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="thread_decorator_hpp.html"><img src="../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="keep_alive_file_hpp.html"><img src="../../../../../../doc/src/images/next.png" alt="Next"></a>
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
@@ -63,15 +64,16 @@
           Member Function <code class="computeroutput"><span class="identifier">get_map</span><span class="special">()</span></code></a></span></dt>
 </dl></dd>
 </dl></div>
-<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
-<span class="keyword">namespace</span> <span class="identifier">interthreads</span> <span class="special">{</span>
-
-    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
-    <span class="keyword">class</span> <span class="identifier">thread_specific_shared_ptr</span><span class="special">;</span>
-
-<span class="special">}</span>
-<span class="special">}</span>
-</pre>
+<pre class="programlisting">
+    <span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
+    <span class="keyword">namespace</span> <span class="identifier">interthreads</span> <span class="special">{</span>
+    
+        <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+        <span class="keyword">class</span> <span class="identifier">thread_specific_shared_ptr</span><span class="special">;</span>
+    
+    <span class="special">}</span>
+    <span class="special">}</span>
+<span class="special">=</span><span class="string">"bold"</span><span class="special">&gt;</span></pre>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h4 class="title">
 <a name="toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr"></a><a href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr" title="
@@ -111,38 +113,39 @@
           is an extension of the thread_specific_ptr providing access to the thread
           specific context from other threads.
         </p>
-<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
-<span class="keyword">class</span> <span class="identifier">thread_specific_shared_ptr</span> <span class="special">:</span> <span class="keyword">private</span> <span class="identifier">noncopyable</span>
-<span class="special">{</span>
-<span class="keyword">public</span><span class="special">:</span>
-    <span class="keyword">typedef</span> <span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span>               <span class="identifier">shared_ptr_type</span><span class="special">;</span>
-    <span class="keyword">typedef</span> <span class="char">'implementation defined'</span>    <span class="identifier">map_type</span><span class="special">;</span>
-    <span class="keyword">typedef</span> <span class="char">'implementation defined'</span>    <span class="identifier">mutex_type</span><span class="special">;</span>
-    <span class="keyword">typedef</span> <span class="char">'implementation defined'</span>    <span class="identifier">lock_type</span><span class="special">;</span>
+<pre class="programlisting">
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+    <span class="keyword">class</span> <span class="identifier">thread_specific_shared_ptr</span> <span class="special">:</span> <span class="keyword">private</span> <span class="identifier">noncopyable</span>
+    <span class="special">{</span>
+    <span class="keyword">public</span><span class="special">:</span>
+        <span class="keyword">typedef</span> <span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span>               <span class="identifier">shared_ptr_type</span><span class="special">;</span>
+        <span class="keyword">typedef</span> <span class="char">'implementation defined'</span>    <span class="identifier">map_type</span><span class="special">;</span>
+        <span class="keyword">typedef</span> <span class="char">'implementation defined'</span>    <span class="identifier">mutex_type</span><span class="special">;</span>
+        <span class="keyword">typedef</span> <span class="char">'implementation defined'</span>    <span class="identifier">lock_type</span><span class="special">;</span>
 
-    <span class="identifier">thread_specific_shared_ptr</span><span class="special">();</span>
-    <span class="keyword">explicit</span> <span class="identifier">thread_specific_shared_ptr</span><span class="special">(</span><span class="keyword">void</span> <span class="special">(*</span><span class="identifier">cleanup_</span><span class="special">)(</span><span class="identifier">shared_ptr_type</span><span class="special">));</span>
-    <span class="special">~</span><span class="identifier">thread_specific_shared_ptr</span><span class="special">();</span>
+        <span class="identifier">thread_specific_shared_ptr</span><span class="special">();</span>
+        <span class="keyword">explicit</span> <span class="identifier">thread_specific_shared_ptr</span><span class="special">(</span><span class="keyword">void</span> <span class="special">(*</span><span class="identifier">cleanup_</span><span class="special">)(</span><span class="identifier">shared_ptr_type</span><span class="special">));</span>
+        <span class="special">~</span><span class="identifier">thread_specific_shared_ptr</span><span class="special">();</span>
 
-    <span class="identifier">T</span><span class="special">*</span>                      <span class="identifier">get</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
-    <span class="identifier">T</span><span class="special">*</span>                      <span class="keyword">operator</span><span class="special">-&gt;()</span> <span class="keyword">const</span><span class="special">;</span>        
-    <span class="identifier">T</span><span class="special">&amp;</span>                      <span class="keyword">operator</span><span class="special">*()</span> <span class="keyword">const</span><span class="special">;</span>
-    <span class="keyword">void</span>                    <span class="identifier">reset</span><span class="special">();</span>
-    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Y</span><span class="special">&gt;</span> 
-    <span class="keyword">void</span>                    <span class="identifier">reset</span><span class="special">(</span><span class="identifier">Y</span> <span class="special">*</span> <span class="identifier">p</span><span class="special">);</span>
-    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Y</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">D</span><span class="special">&gt;</span> 
-    <span class="keyword">void</span>                    <span class="identifier">reset</span><span class="special">(</span><span class="identifier">Y</span> <span class="special">*</span> <span class="identifier">p</span><span class="special">,</span> <span class="identifier">D</span> <span class="identifier">d</span><span class="special">);</span>
-    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Y</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">D</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">A</span><span class="special">&gt;</span> 
-    <span class="keyword">void</span>                    <span class="identifier">reset</span><span class="special">(</span><span class="identifier">Y</span> <span class="special">*</span> <span class="identifier">p</span><span class="special">,</span> <span class="identifier">D</span> <span class="identifier">d</span><span class="special">,</span> <span class="identifier">A</span> <span class="identifier">a</span><span class="special">);</span>
-    
-    <span class="identifier">mutex_type</span><span class="special">&amp;</span>             <span class="identifier">get_mutex</span><span class="special">();</span>
-    <span class="keyword">const</span> <span class="identifier">map_type</span><span class="special">&amp;</span>         <span class="identifier">get_map</span><span class="special">(</span><span class="identifier">lock_type</span><span class="special">&amp;)</span> <span class="keyword">const</span><span class="special">;</span>
-    <span class="identifier">shared_ptr_type</span>   <span class="keyword">operator</span><span class="special">[](</span><span class="identifier">thread</span><span class="special">::</span><span class="identifier">id</span> <span class="identifier">id</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
-    <span class="identifier">shared_ptr_type</span>   <span class="identifier">wait_and_get</span><span class="special">(</span><span class="identifier">thread</span><span class="special">::</span><span class="identifier">id</span> <span class="identifier">id</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
-<span class="keyword">private</span><span class="special">:</span>        
-    <span class="identifier">shared_ptr_type</span>         <span class="identifier">get_shared_ptr</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
-<span class="special">};</span>
-</pre>
+        <span class="identifier">T</span><span class="special">*</span>                      <span class="identifier">get</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+        <span class="identifier">T</span><span class="special">*</span>                      <span class="keyword">operator</span><span class="special">-&gt;()</span> <span class="keyword">const</span><span class="special">;</span>        
+        <span class="identifier">T</span><span class="special">&amp;</span>                      <span class="keyword">operator</span><span class="special">*()</span> <span class="keyword">const</span><span class="special">;</span>
+        <span class="keyword">void</span>                    <span class="identifier">reset</span><span class="special">();</span>
+        <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Y</span><span class="special">&gt;</span> 
+        <span class="keyword">void</span>                    <span class="identifier">reset</span><span class="special">(</span><span class="identifier">Y</span> <span class="special">*</span> <span class="identifier">p</span><span class="special">);</span>
+        <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Y</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">D</span><span class="special">&gt;</span> 
+        <span class="keyword">void</span>                    <span class="identifier">reset</span><span class="special">(</span><span class="identifier">Y</span> <span class="special">*</span> <span class="identifier">p</span><span class="special">,</span> <span class="identifier">D</span> <span class="identifier">d</span><span class="special">);</span>
+        <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Y</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">D</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">A</span><span class="special">&gt;</span> 
+        <span class="keyword">void</span>                    <span class="identifier">reset</span><span class="special">(</span><span class="identifier">Y</span> <span class="special">*</span> <span class="identifier">p</span><span class="special">,</span> <span class="identifier">D</span> <span class="identifier">d</span><span class="special">,</span> <span class="identifier">A</span> <span class="identifier">a</span><span class="special">);</span>
+        
+        <span class="identifier">mutex_type</span><span class="special">&amp;</span>             <span class="identifier">get_mutex</span><span class="special">();</span>
+        <span class="keyword">const</span> <span class="identifier">map_type</span><span class="special">&amp;</span>         <span class="identifier">get_map</span><span class="special">(</span><span class="identifier">lock_type</span><span class="special">&amp;)</span> <span class="keyword">const</span><span class="special">;</span>
+        <span class="identifier">shared_ptr_type</span>   <span class="keyword">operator</span><span class="special">[](</span><span class="identifier">thread</span><span class="special">::</span><span class="identifier">id</span> <span class="identifier">id</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+        <span class="identifier">shared_ptr_type</span>   <span class="identifier">wait_and_get</span><span class="special">(</span><span class="identifier">thread</span><span class="special">::</span><span class="identifier">id</span> <span class="identifier">id</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+    <span class="keyword">private</span><span class="special">:</span>        
+        <span class="identifier">shared_ptr_type</span>         <span class="identifier">get_shared_ptr</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+    <span class="special">};</span>
+<span class="identifier">ad_specific_shared_ptr_hpp</span> <span class="identifier">Head</span></pre>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h5 class="title">
 <a name="toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_reference_parameters"></a><a href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_reference_parameters" title="
@@ -192,8 +195,9 @@
           Constructor">
           Constructor</a>
 </h5></div></div></div>
-<pre class="programlisting"><span class="identifier">thread_specific_shared_ptr</span><span class="special">();</span>
-</pre>
+<pre class="programlisting">
+    <span class="identifier">thread_specific_shared_ptr</span><span class="special">();</span>
+<span class="identifier">o</span></pre>
 <div class="variablelist">
 <p class="title"><b></b></p>
 <dl>
@@ -220,8 +224,9 @@
           Cleanup Constructor">
           Cleanup Constructor</a>
 </h5></div></div></div>
-<pre class="programlisting"><span class="keyword">explicit</span> <span class="identifier">thread_specific_shared_ptr</span><span class="special">(</span><span class="keyword">void</span> <span class="special">(*</span><span class="identifier">cleanup_</span><span class="special">)(</span><span class="identifier">shared_ptr_type</span><span class="special">));</span>
-</pre>
+<pre class="programlisting">
+    <span class="keyword">explicit</span> <span class="identifier">thread_specific_shared_ptr</span><span class="special">(</span><span class="keyword">void</span> <span class="special">(*</span><span class="identifier">cleanup_</span><span class="special">)(</span><span class="identifier">shared_ptr_type</span><span class="special">));</span>
+#</pre>
 <div class="variablelist">
 <p class="title"><b></b></p>
 <dl>
@@ -253,8 +258,9 @@
           Destructor">
           Destructor</a>
 </h5></div></div></div>
-<pre class="programlisting"><span class="special">~</span><span class="identifier">thread_specific_shared_ptr</span><span class="special">();</span>
-</pre>
+<pre class="programlisting">
+    <span class="special">~</span><span class="identifier">thread_specific_shared_ptr</span><span class="special">();</span>
+#</pre>
 <div class="variablelist">
 <p class="title"><b></b></p>
 <dl>
@@ -274,7 +280,7 @@
 </div>
 <div class="note"><table border="0" summary="Note">
 <tr>
-<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../../../doc/html/images/note.png"></td>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../../../doc/src/images/note.png"></td>
 <th align="left">Note</th>
 </tr>
 <tr><td align="left" valign="top"><p>
@@ -291,8 +297,9 @@
           Member Function get()">
           Member Function <code class="computeroutput"><span class="identifier">get</span><span class="special">()</span></code></a>
 </h5></div></div></div>
-<pre class="programlisting"><span class="identifier">shared_ptr_type</span> <span class="identifier">get</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
-</pre>
+<pre class="programlisting">
+    <span class="identifier">shared_ptr_type</span> <span class="identifier">get</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+<span class="identifier">u</span></pre>
 <div class="variablelist">
 <p class="title"><b></b></p>
 <dl>
@@ -312,7 +319,7 @@
 </div>
 <div class="note"><table border="0" summary="Note">
 <tr>
-<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../../../doc/html/images/note.png"></td>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../../../doc/src/images/note.png"></td>
 <th align="left">Note</th>
 </tr>
 <tr><td align="left" valign="top"><p>
@@ -327,8 +334,9 @@
           Member Function operator-&gt;()">
           Member Function <code class="computeroutput"><span class="keyword">operator</span><span class="special">-&gt;()</span></code></a>
 </h5></div></div></div>
-<pre class="programlisting"><span class="identifier">T</span><span class="special">*</span> <span class="keyword">operator</span><span class="special">-&gt;()</span> <span class="keyword">const</span><span class="special">;</span>        
-</pre>
+<pre class="programlisting">
+    <span class="identifier">T</span><span class="special">*</span> <span class="keyword">operator</span><span class="special">-&gt;()</span> <span class="keyword">const</span><span class="special">;</span>        
+<span class="identifier">e</span></pre>
 <div class="variablelist">
 <p class="title"><b></b></p>
 <dl>
@@ -358,8 +366,9 @@
           Member Function operator*()">
           Member Function <code class="computeroutput"><span class="keyword">operator</span><span class="special">*()</span></code></a>
 </h5></div></div></div>
-<pre class="programlisting"><span class="identifier">T</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">*()</span> <span class="keyword">const</span><span class="special">;</span>
-</pre>
+<pre class="programlisting">
+    <span class="identifier">T</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">*()</span> <span class="keyword">const</span><span class="special">;</span>
+<span class="identifier">_</span></pre>
 <div class="variablelist">
 <p class="title"><b></b></p>
 <dl>
@@ -389,8 +398,9 @@
           Member Function reset()">
           Member Function <code class="computeroutput"><span class="identifier">reset</span><span class="special">()</span></code></a>
 </h5></div></div></div>
-<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">reset</span><span class="special">();</span>
-</pre>
+<pre class="programlisting">
+    <span class="keyword">void</span> <span class="identifier">reset</span><span class="special">();</span>
+<span class="special">&gt;</span></pre>
 <div class="variablelist">
 <p class="title"><b></b></p>
 <dl>
@@ -412,8 +422,9 @@
               </p></dd>
 </dl>
 </div>
-<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Y</span><span class="special">&gt;</span> <span class="keyword">void</span> <span class="identifier">reset</span><span class="special">(</span><span class="identifier">Y</span> <span class="special">*</span> <span class="identifier">new_value</span><span class="special">);</span>
-</pre>
+<pre class="programlisting">
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Y</span><span class="special">&gt;</span> <span class="keyword">void</span> <span class="identifier">reset</span><span class="special">(</span><span class="identifier">Y</span> <span class="special">*</span> <span class="identifier">new_value</span><span class="special">);</span>
+#</pre>
 <div class="variablelist">
 <p class="title"><b></b></p>
 <dl>
@@ -435,8 +446,9 @@
               </p></dd>
 </dl>
 </div>
-<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Y</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">D</span><span class="special">&gt;</span> <span class="keyword">void</span> <span class="identifier">reset</span><span class="special">(</span><span class="identifier">Y</span> <span class="special">*</span> <span class="identifier">new_value</span><span class="special">,</span> <span class="identifier">D</span> <span class="identifier">deleter</span><span class="special">);</span>
-</pre>
+<pre class="programlisting">
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Y</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">D</span><span class="special">&gt;</span> <span class="keyword">void</span> <span class="identifier">reset</span><span class="special">(</span><span class="identifier">Y</span> <span class="special">*</span> <span class="identifier">new_value</span><span class="special">,</span> <span class="identifier">D</span> <span class="identifier">deleter</span><span class="special">);</span>
+#</pre>
 <div class="variablelist">
 <p class="title"><b></b></p>
 <dl>
@@ -458,8 +470,9 @@
               </p></dd>
 </dl>
 </div>
-<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Y</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">D</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">A</span><span class="special">&gt;</span> <span class="keyword">void</span> <span class="identifier">reset</span><span class="special">(</span><span class="identifier">Y</span> <span class="special">*</span> <span class="identifier">new_value</span><span class="special">,</span> <span class="identifier">D</span> <span class="identifier">deleter</span><span class="special">,</span> <span class="identifier">A</span> <span class="identifier">a</span><span class="special">);</span>
-</pre>
+<pre class="programlisting">
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Y</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">D</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">A</span><span class="special">&gt;</span> <span class="keyword">void</span> <span class="identifier">reset</span><span class="special">(</span><span class="identifier">Y</span> <span class="special">*</span> <span class="identifier">new_value</span><span class="special">,</span> <span class="identifier">D</span> <span class="identifier">deleter</span><span class="special">,</span> <span class="identifier">A</span> <span class="identifier">a</span><span class="special">);</span>
+#</pre>
 <div class="variablelist">
 <p class="title"><b></b></p>
 <dl>
@@ -499,8 +512,9 @@
           Member Function wait_and_get()">
           Member Function <code class="computeroutput"><span class="identifier">wait_and_get</span><span class="special">()</span></code></a>
 </h5></div></div></div>
-<pre class="programlisting"><span class="identifier">shared_ptr_type</span> <span class="identifier">wait_and_get</span><span class="special">(</span><span class="identifier">thread</span><span class="special">::</span><span class="identifier">id</span> <span class="identifier">id</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
-</pre>
+<pre class="programlisting">
+    <span class="identifier">shared_ptr_type</span> <span class="identifier">wait_and_get</span><span class="special">(</span><span class="identifier">thread</span><span class="special">::</span><span class="identifier">id</span> <span class="identifier">id</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+<span class="identifier">a</span></pre>
 <div class="variablelist">
 <p class="title"><b></b></p>
 <dl>
@@ -523,8 +537,9 @@
           Member Function operator[]()">
           Member Function <code class="computeroutput"><span class="keyword">operator</span><span class="special">[]()</span></code></a>
 </h5></div></div></div>
-<pre class="programlisting"><span class="identifier">shared_ptr_type</span> <span class="keyword">operator</span><span class="special">[](</span><span class="identifier">thread</span><span class="special">::</span><span class="identifier">id</span> <span class="identifier">id</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
-</pre>
+<pre class="programlisting">
+    <span class="identifier">shared_ptr_type</span> <span class="keyword">operator</span><span class="special">[](</span><span class="identifier">thread</span><span class="special">::</span><span class="identifier">id</span> <span class="identifier">id</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+<span class="identifier">o</span></pre>
 <div class="variablelist">
 <p class="title"><b></b></p>
 <dl>
@@ -546,8 +561,9 @@
           Member Function get_mutex()">
           Member Function <code class="computeroutput"><span class="identifier">get_mutex</span><span class="special">()</span></code></a>
 </h5></div></div></div>
-<pre class="programlisting"><span class="identifier">mutex_type</span><span class="special">&amp;</span>             <span class="identifier">get_mutex</span><span class="special">();</span>
-</pre>
+<pre class="programlisting">
+    <span class="identifier">mutex_type</span><span class="special">&amp;</span>             <span class="identifier">get_mutex</span><span class="special">();</span>
+<span class="identifier">n</span></pre>
 <div class="variablelist">
 <p class="title"><b></b></p>
 <dl>
@@ -568,8 +584,9 @@
           Member Function get_map()">
           Member Function <code class="computeroutput"><span class="identifier">get_map</span><span class="special">()</span></code></a>
 </h5></div></div></div>
-<pre class="programlisting"><span class="keyword">const</span> <span class="identifier">map_type</span><span class="special">&amp;</span>         <span class="identifier">get_map</span><span class="special">(</span><span class="identifier">lock_type</span><span class="special">&amp;)</span> <span class="keyword">const</span><span class="special">;</span>
-</pre>
+<pre class="programlisting">
+    <span class="keyword">const</span> <span class="identifier">map_type</span><span class="special">&amp;</span>         <span class="identifier">get_map</span><span class="special">(</span><span class="identifier">lock_type</span><span class="special">&amp;)</span> <span class="keyword">const</span><span class="special">;</span>
+<span class="identifier">a</span></pre>
 <div class="variablelist">
 <p class="title"><b></b></p>
 <dl>
@@ -590,7 +607,7 @@
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><div class="copyright-footer">Copyright © 2008 -2009 Vicente J. Botet Escriba<p>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2008 -2009 Vicente J. Botet Escriba<p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>
@@ -598,7 +615,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="thread_decorator_hpp.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="keep_alive_file_hpp.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="thread_decorator_hpp.html"><img src="../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="keep_alive_file_hpp.html"><img src="../../../../../../doc/src/images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>

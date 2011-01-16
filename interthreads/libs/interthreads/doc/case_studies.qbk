@@ -117,7 +117,7 @@ The implementation of these functions is straigtforward:
     std::streamsize detail::async_ostream_sink::write(const char* s, std::streamsize n) {
         return impl_->write(s,n);
     }
-
+    
     void async_ostream_sink::flush() {
         return impl_->flush();
     }

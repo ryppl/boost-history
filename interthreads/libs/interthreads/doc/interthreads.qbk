@@ -7,7 +7,7 @@
 ]
 
 [article Toward Boost.InterThreads
-    [quickbook 1.4]
+    [quickbook 1.5]
     [authors [Botet Escriba, Vicente J.]]
     [copyright 2008-2009 Vicente J. Botet Escriba]
     [purpose C++ Library extending the Boost.Thread library adding some inter threads mechanisms as

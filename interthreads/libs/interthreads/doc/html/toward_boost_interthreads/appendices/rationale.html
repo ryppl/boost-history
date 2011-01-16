@@ -1,6 +1,7 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title> Appendix
       B: Rationale</title>
 <link rel="stylesheet" href="../../../../../../doc/html/boostbook.css" type="text/css">
@@ -23,7 +24,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="changes.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../appendices.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="implementation.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="changes.html"><img src="../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../appendices.html"><img src="../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="implementation.html"><img src="../../../../../../doc/src/images/next.png" alt="Next"></a>
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
@@ -93,7 +94,8 @@
 <p>
               
 </p>
-<pre class="programlisting"><span class="identifier">thread_specific_shared_ptr</span><span class="special">();</span>
+<pre class="programlisting">
+<span class="identifier">thread_specific_shared_ptr</span><span class="special">();</span>
 <span class="keyword">explicit</span> <span class="identifier">thread_specific_shared_ptr</span><span class="special">(</span><span class="keyword">void</span> <span class="special">(*</span><span class="identifier">cleanup_</span><span class="special">)(</span><span class="identifier">shared_ptr_type</span><span class="special">));</span>
 <span class="identifier">T</span><span class="special">*</span> <span class="identifier">get</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
 <span class="identifier">T</span><span class="special">*</span> <span class="keyword">operator</span><span class="special">-&gt;()</span> <span class="keyword">const</span><span class="special">;</span>
@@ -115,7 +117,8 @@
 <p>
               
 </p>
-<pre class="programlisting"><span class="identifier">T</span><span class="special">*</span> <span class="identifier">get</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+<pre class="programlisting">
+<span class="identifier">T</span><span class="special">*</span> <span class="identifier">get</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
 <span class="identifier">T</span><span class="special">*</span> <span class="keyword">operator</span><span class="special">-&gt;()</span> <span class="keyword">const</span><span class="special">;</span>
 <span class="identifier">T</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">*()</span> <span class="keyword">const</span><span class="special">;</span>
 <span class="keyword">void</span> <span class="identifier">reset</span><span class="special">();</span>
@@ -135,12 +138,12 @@
 </dl>
 </div>
 <a name="toward_boost_interthreads.appendices.rationale.thread_specific_storage.comparaing_tsss_and_tss"></a><h5>
-<a name="id4850767"></a>
+<a name="id5035216"></a>
           <a href="rationale.html#toward_boost_interthreads.appendices.rationale.thread_specific_storage.comparaing_tsss_and_tss">Comparaing
           TSSS and TSS</a>
         </h5>
 <div class="table">
-<a name="id4850783"></a><p class="title"><b>Table 1. Comparaing TSSS and TSS</b></p>
+<a name="id5035232"></a><p class="title"><b>Table&#160;1.&#160;Comparaing TSSS and TSS</b></p>
 <table class="table" summary="Comparaing TSSS and TSS">
 <colgroup>
 <col>
@@ -591,7 +594,8 @@
 <p>
               
 </p>
-<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">join_all</span><span class="special">();</span>
+<pre class="programlisting">
+<span class="keyword">void</span> <span class="identifier">join_all</span><span class="special">();</span>
 <span class="keyword">void</span> <span class="identifier">interrupt_all</span><span class="special">();</span>
 <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">size</span><span class="special">();</span>
 </pre>
@@ -609,7 +613,8 @@
 <p>
               
 </p>
-<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">join</span><span class="special">();</span>
+<pre class="programlisting">
+<span class="keyword">void</span> <span class="identifier">join</span><span class="special">();</span>
 <span class="keyword">void</span> <span class="identifier">interrupt</span><span class="special">();</span>
 <span class="keyword">void</span> <span class="identifier">detach</span><span class="special">/</span><span class="identifier">detach_all</span><span class="special">();</span>
 <span class="keyword">bool</span> <span class="identifier">interruption_requested</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
@@ -632,7 +637,8 @@
 <p>
               
 </p>
-<pre class="programlisting"><span class="keyword">const</span> <span class="identifier">thread</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">[](</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">i</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span></pre>
+<pre class="programlisting">
+<span class="keyword">const</span> <span class="identifier">thread</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">[](</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">i</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span></pre>
 <p>
             </p>
 <p>
@@ -651,12 +657,12 @@
 </dl>
 </div>
 <a name="toward_boost_interthreads.appendices.rationale.thread_tuple.comparaing_thread__thread_group_and_thread_tuple"></a><h5>
-<a name="id4852183"></a>
+<a name="id5036636"></a>
           <a href="rationale.html#toward_boost_interthreads.appendices.rationale.thread_tuple.comparaing_thread__thread_group_and_thread_tuple">Comparaing
           thread, thread_group and thread_tuple</a>
         </h5>
 <div class="table">
-<a name="id4852200"></a><p class="title"><b>Table 2. Comparaing thread, thread_group and thread_tuple</b></p>
+<a name="id5036652"></a><p class="title"><b>Table&#160;2.&#160;Comparaing thread, thread_group and thread_tuple</b></p>
 <table class="table" summary="Comparaing thread, thread_group and thread_tuple">
 <colgroup>
 <col>
@@ -1122,7 +1128,7 @@
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><div class="copyright-footer">Copyright © 2008 -2009 Vicente J. Botet Escriba<p>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2008 -2009 Vicente J. Botet Escriba<p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>
@@ -1130,7 +1136,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="changes.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../appendices.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="implementation.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="changes.html"><img src="../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../appendices.html"><img src="../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="implementation.html"><img src="../../../../../../doc/src/images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>

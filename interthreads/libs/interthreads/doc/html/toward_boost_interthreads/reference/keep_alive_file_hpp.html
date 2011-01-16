@@ -1,6 +1,7 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title>
       Header &lt;boost/interthreads/thread_keep_alive.hpp&gt;</title>
 <link rel="stylesheet" href="../../../../../../doc/html/boostbook.css" type="text/css">
@@ -23,7 +24,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="thread_specific_shared_ptr_hpp.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="set_once_hpp.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="thread_specific_shared_ptr_hpp.html"><img src="../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="set_once_hpp.html"><img src="../../../../../../doc/src/images/next.png" alt="Next"></a>
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
@@ -58,20 +59,23 @@
 <p>
         Includes the keep alive enabling/disabling classes and non member functions.
       </p>
-<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
-<span class="keyword">namespace</span> <span class="identifier">interthreads</span> <span class="special">{</span>
-    <span class="keyword">namespace</span> <span class="identifier">this_thread</span> <span class="special">{</span>
-        <span class="keyword">class</span> <span class="identifier">enable_keep_alive</span><span class="special">;</span>
-        <span class="keyword">class</span> <span class="identifier">disable_keep_alive</span><span class="special">;</span>
+<pre class="programlisting">
+    <span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
+    <span class="keyword">namespace</span> <span class="identifier">interthreads</span> <span class="special">{</span>
+        <span class="keyword">namespace</span> <span class="identifier">this_thread</span> <span class="special">{</span>
+            <span class="keyword">class</span> <span class="identifier">enable_keep_alive</span><span class="special">;</span>
+            <span class="keyword">class</span> <span class="identifier">disable_keep_alive</span><span class="special">;</span>
 
-        <span class="keyword">void</span> <span class="identifier">keep_alive_check_point</span><span class="special">();</span>
-        <span class="keyword">bool</span> <span class="identifier">keep_alive_enabled</span><span class="special">();</span>
-        <span class="keyword">typedef</span> <span class="keyword">void</span> <span class="special">(*</span><span class="identifier">on_dead_thread_type</span><span class="special">)(</span><span class="identifier">thread</span><span class="special">::</span><span class="identifier">id</span><span class="special">);</span>
-        <span class="keyword">void</span> <span class="identifier">set_on_dead_thread</span><span class="special">(</span><span class="identifier">on_dead_thread_type</span> <span class="identifier">fct</span><span class="special">);</span>
+            <span class="keyword">void</span> <span class="identifier">keep_alive_check_point</span><span class="special">();</span>
+            <span class="keyword">bool</span> <span class="identifier">keep_alive_enabled</span><span class="special">();</span>
+            <span class="keyword">typedef</span> <span class="keyword">void</span> <span class="special">(*</span><span class="identifier">on_dead_thread_type</span><span class="special">)(</span><span class="identifier">thread</span><span class="special">::</span><span class="identifier">id</span><span class="special">);</span>
+            <span class="keyword">void</span> <span class="identifier">set_on_dead_thread</span><span class="special">(</span><span class="identifier">on_dead_thread_type</span> <span class="identifier">fct</span><span class="special">);</span>
+        <span class="special">}</span>
     <span class="special">}</span>
-<span class="special">}</span>
-<span class="special">}</span>
-</pre>
+    <span class="special">}</span>
+<span class="special">=======]</span>
+
+<span class="identifier">I</span></pre>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h4 class="title">
 <a name="toward_boost_interthreads.reference.keep_alive_file_hpp.enable_keep_alive"></a><a href="keep_alive_file_hpp.html#toward_boost_interthreads.reference.keep_alive_file_hpp.enable_keep_alive" title="
@@ -87,19 +91,21 @@
 <p>
           Keep alive enabler.
         </p>
-<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">enable_keep_alive</span> <span class="special">:</span> <span class="keyword">private</span> <span class="identifier">noncopyable</span><span class="special">{</span>
-<span class="keyword">public</span><span class="special">:</span>
-    <span class="identifier">enable_keep_alive</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">threshold</span><span class="special">=</span><span class="number">2</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">tap</span><span class="special">=</span><span class="number">1</span><span class="special">);</span>
-    <span class="special">~</span><span class="identifier">enable_keep_alive</span><span class="special">();</span>
-<span class="special">};</span>
-</pre>
+<pre class="programlisting">
+    <span class="keyword">class</span> <span class="identifier">enable_keep_alive</span> <span class="special">:</span> <span class="keyword">private</span> <span class="identifier">noncopyable</span><span class="special">{</span>
+    <span class="keyword">public</span><span class="special">:</span>
+        <span class="identifier">enable_keep_alive</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">threshold</span><span class="special">=</span><span class="number">2</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">tap</span><span class="special">=</span><span class="number">1</span><span class="special">);</span>
+        <span class="special">~</span><span class="identifier">enable_keep_alive</span><span class="special">();</span>
+    <span class="special">};</span>
+<span class="identifier">alive</span></pre>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h5 class="title">
 <a name="toward_boost_interthreads.reference.keep_alive_file_hpp.enable_keep_alive.keep_alive_enable_keep_alive_Constructor"></a><a href="keep_alive_file_hpp.html#toward_boost_interthreads.reference.keep_alive_file_hpp.enable_keep_alive.keep_alive_enable_keep_alive_Constructor" title="
           Constructor">
           Constructor</a>
 </h5></div></div></div>
-<pre class="programlisting"><span class="identifier">enable_keep_alive</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">threshold</span><span class="special">=</span><span class="number">2</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">tap</span><span class="special">=</span><span class="number">1</span><span class="special">);</span>
+<pre class="programlisting">
+<span class="identifier">enable_keep_alive</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">threshold</span><span class="special">=</span><span class="number">2</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">tap</span><span class="special">=</span><span class="number">1</span><span class="special">);</span>
 </pre>
 <div class="variablelist">
 <p class="title"><b></b></p>
@@ -121,8 +127,9 @@
           Destructor">
           Destructor</a>
 </h5></div></div></div>
-<pre class="programlisting"><span class="special">~</span><span class="identifier">enable_keep_alive</span><span class="special">();</span>
-</pre>
+<pre class="programlisting">
+        <span class="special">~</span><span class="identifier">enable_keep_alive</span><span class="special">();</span>
+<span class="identifier">t</span></pre>
 <div class="variablelist">
 <p class="title"><b></b></p>
 <dl>
@@ -153,20 +160,22 @@
 <p>
           Keep alive disabler.
         </p>
-<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">disable_keep_alive</span> <span class="keyword">private</span> <span class="identifier">noncopyable</span> <span class="special">{</span>
-<span class="keyword">public</span><span class="special">:</span>
-    <span class="identifier">disable_keep_alive</span><span class="special">();</span>
-    <span class="special">~</span><span class="identifier">disable_keep_alive</span><span class="special">();</span>
-<span class="special">};</span>
-</pre>
+<pre class="programlisting">
+    <span class="keyword">class</span> <span class="identifier">disable_keep_alive</span> <span class="keyword">private</span> <span class="identifier">noncopyable</span> <span class="special">{</span>
+    <span class="keyword">public</span><span class="special">:</span>
+        <span class="identifier">disable_keep_alive</span><span class="special">();</span>
+        <span class="special">~</span><span class="identifier">disable_keep_alive</span><span class="special">();</span>
+    <span class="special">};</span>
+<span class="identifier">e</span><span class="special">&gt;&lt;</span><span class="identifier">ph</span></pre>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h5 class="title">
 <a name="toward_boost_interthreads.reference.keep_alive_file_hpp.keep_alive_disable_keep_alive.keep_alive_disable_keep_alive_Constructor"></a><a href="keep_alive_file_hpp.html#toward_boost_interthreads.reference.keep_alive_file_hpp.keep_alive_disable_keep_alive.keep_alive_disable_keep_alive_Constructor" title="
           Constructor">
           Constructor</a>
 </h5></div></div></div>
-<pre class="programlisting"><span class="identifier">disable_keep_alive</span><span class="special">();</span>
-</pre>
+<pre class="programlisting">
+    <span class="identifier">disable_keep_alive</span><span class="special">();</span>
+<span class="identifier">i</span></pre>
 <div class="variablelist">
 <p class="title"><b></b></p>
 <dl>
@@ -187,8 +196,9 @@
           Destructor">
           Destructor</a>
 </h5></div></div></div>
-<pre class="programlisting"><span class="special">~</span><span class="identifier">disable_keep_alive</span><span class="special">();</span>
-</pre>
+<pre class="programlisting">
+    <span class="special">~</span><span class="identifier">disable_keep_alive</span><span class="special">();</span>
+<span class="special">:</span></pre>
 <div class="variablelist">
 <p class="title"><b></b></p>
 <dl>
@@ -213,8 +223,9 @@
 <p>
           Keep alive check point.
         </p>
-<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">keep_alive_check_point</span><span class="special">();</span>
-</pre>
+<pre class="programlisting">
+    <span class="keyword">void</span> <span class="identifier">keep_alive_check_point</span><span class="special">();</span>
+#</pre>
 <div class="variablelist">
 <p class="title"><b></b></p>
 <dl>
@@ -242,8 +253,9 @@
 <p>
           Keep alive query.
         </p>
-<pre class="programlisting"><span class="keyword">bool</span> <span class="identifier">keep_alive_enabled</span><span class="special">();</span>
-</pre>
+<pre class="programlisting">
+    <span class="keyword">bool</span> <span class="identifier">keep_alive_enabled</span><span class="special">();</span>
+<span class="identifier">a</span></pre>
 <div class="variablelist">
 <p class="title"><b></b></p>
 <dl>
@@ -267,8 +279,9 @@
 <p>
           Keep alive on dead thread action setting.
         </p>
-<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">set_on_dead_thread</span><span class="special">(</span><span class="identifier">on_dead_thread_type</span> <span class="identifier">fct</span><span class="special">);</span>
-</pre>
+<pre class="programlisting">
+    <span class="keyword">void</span> <span class="identifier">set_on_dead_thread</span><span class="special">(</span><span class="identifier">on_dead_thread_type</span> <span class="identifier">fct</span><span class="special">);</span>
+<span class="identifier">o</span></pre>
 <div class="variablelist">
 <p class="title"><b></b></p>
 <dl>
@@ -286,7 +299,7 @@
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><div class="copyright-footer">Copyright © 2008 -2009 Vicente J. Botet Escriba<p>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2008 -2009 Vicente J. Botet Escriba<p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>
@@ -294,7 +307,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="thread_specific_shared_ptr_hpp.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="set_once_hpp.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="thread_specific_shared_ptr_hpp.html"><img src="../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="set_once_hpp.html"><img src="../../../../../../doc/src/images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>

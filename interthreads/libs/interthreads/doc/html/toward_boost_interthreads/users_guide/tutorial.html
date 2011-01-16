@@ -1,6 +1,7 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title> Tutorial</title>
 <link rel="stylesheet" href="../../../../../../doc/html/boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.69.1">
@@ -22,7 +23,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="getting_started.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../users_guide.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="bibliography.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="getting_started.html"><img src="../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../users_guide.html"><img src="../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="bibliography.html"><img src="../../../../../../doc/src/images/next.png" alt="Next"></a>
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
@@ -114,7 +115,8 @@
             are usualy static and initialized with a <code class="computeroutput"><span class="identifier">Callable</span></code>
             object:
           </p>
-<pre class="programlisting"><span class="keyword">static</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">interthreads</span><span class="special">::</span><span class="identifier">thread_decoration</span> <span class="identifier">d</span><span class="special">;</span>
+<pre class="programlisting">
+<span class="keyword">static</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">interthreads</span><span class="special">::</span><span class="identifier">thread_decoration</span> <span class="identifier">d</span><span class="special">;</span>
 <span class="keyword">void</span> <span class="identifier">setup</span><span class="special">();</span>
 
 <span class="identifier">bith</span><span class="special">::</span><span class="identifier">thread_decoration</span> <span class="identifier">d</span><span class="special">(</span><span class="identifier">setup</span><span class="special">);</span>
@@ -136,13 +138,15 @@
             When we want the decorations to decorate one thread of execution we can
             create the thread using the decorator wrapper.
           </p>
-<pre class="programlisting"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">thread</span> <span class="identifier">th</span><span class="special">(</span><span class="identifier">bith</span><span class="special">::</span><span class="identifier">thread_decorator</span><span class="special">(</span><span class="identifier">fct</span><span class="special">));</span>
+<pre class="programlisting">
+<span class="identifier">boost</span><span class="special">::</span><span class="identifier">thread</span> <span class="identifier">th</span><span class="special">(</span><span class="identifier">bith</span><span class="special">::</span><span class="identifier">thread_decorator</span><span class="special">(</span><span class="identifier">fct</span><span class="special">));</span>
 </pre>
 <p>
             This behavion is obtained also using one of the <code class="computeroutput"><span class="identifier">AsynchronousExecutor</span></code>
             decorators of the Boost.Async library, as
           </p>
-<pre class="programlisting"><span class="identifier">bith</span><span class="special">::</span><span class="identifier">basic_threader_decorator</span> <span class="identifier">ae</span><span class="special">;</span>
+<pre class="programlisting">
+<span class="identifier">bith</span><span class="special">::</span><span class="identifier">basic_threader_decorator</span> <span class="identifier">ae</span><span class="special">;</span>
 <span class="identifier">BOOST_AUTO</span><span class="special">(</span><span class="identifier">th</span><span class="special">,</span> <span class="identifier">bith</span><span class="special">::</span><span class="identifier">fork</span><span class="special">(</span><span class="identifier">ae</span><span class="special">,</span> <span class="identifier">fct</span><span class="special">));</span>
 </pre>
 </div>
@@ -157,7 +161,8 @@
             is the case of the main thread, we need to call explicitly the function
             <code class="computeroutput"><span class="identifier">bith</span><span class="special">::</span><span class="identifier">decorate</span></code> at the begining of the thread.
           </p>
-<pre class="programlisting"><span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
+<pre class="programlisting">
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
     <span class="identifier">bith</span><span class="special">::</span><span class="identifier">decorate</span><span class="special">();</span>
     <span class="comment">// ...
 </span><span class="special">}</span>
@@ -196,7 +201,8 @@
             As the curent implementation uses the address of the thread_specific_shared_ptr&lt;&gt;
             object, there is no need to do anything to get the key.
           </p>
-<pre class="programlisting"><span class="identifier">bith</span><span class="special">::</span><span class="identifier">thread_specific_shared_ptr</span><span class="special">&lt;</span><span class="identifier">myclass</span><span class="special">&gt;</span> <span class="identifier">ptr</span><span class="special">;</span>
+<pre class="programlisting">
+<span class="identifier">bith</span><span class="special">::</span><span class="identifier">thread_specific_shared_ptr</span><span class="special">&lt;</span><span class="identifier">myclass</span><span class="special">&gt;</span> <span class="identifier">ptr</span><span class="special">;</span>
 </pre>
 </div>
 <div class="section" lang="en">
@@ -226,7 +232,8 @@
               explicitly on the curret thread. Basically it works like a thread local
               storage from inside the thread.
             </li></ul></div>
-<pre class="programlisting"><span class="identifier">bith</span><span class="special">::</span><span class="identifier">thread_specific_shared_ptr</span><span class="special">&lt;</span><span class="identifier">myclass</span><span class="special">&gt;</span> <span class="identifier">ptr</span><span class="special">;</span>
+<pre class="programlisting">
+<span class="identifier">bith</span><span class="special">::</span><span class="identifier">thread_specific_shared_ptr</span><span class="special">&lt;</span><span class="identifier">myclass</span><span class="special">&gt;</span> <span class="identifier">ptr</span><span class="special">;</span>
 <span class="keyword">void</span> <span class="identifier">func</span><span class="special">()</span> <span class="special">{</span> <span class="comment">// current thread
 </span>    <span class="comment">// ...
 </span>    <span class="identifier">ptr</span><span class="special">.</span><span class="identifier">reset</span><span class="special">(</span><span class="identifier">p</span><span class="special">);</span>
@@ -237,7 +244,8 @@
               When we associate a thread decoration to the thread_specific_shared_ptr&lt;&gt;
               we initialize implicitly every thread created with a thread_decorator.
             </li></ul></div>
-<pre class="programlisting"><span class="identifier">bith</span><span class="special">::</span><span class="identifier">thread_specific_shared_ptr</span><span class="special">&lt;</span><span class="identifier">myclass</span><span class="special">&gt;</span> <span class="identifier">ptr</span><span class="special">;</span>
+<pre class="programlisting">
+<span class="identifier">bith</span><span class="special">::</span><span class="identifier">thread_specific_shared_ptr</span><span class="special">&lt;</span><span class="identifier">myclass</span><span class="special">&gt;</span> <span class="identifier">ptr</span><span class="special">;</span>
 <span class="keyword">void</span> <span class="identifier">myclass_setup</span><span class="special">()</span> <span class="special">{</span>
     <span class="identifier">ptr</span><span class="special">.</span><span class="identifier">reset</span><span class="special">(</span><span class="keyword">new</span> <span class="identifier">myclass</span><span class="special">(</span><span class="identifier">any</span> <span class="identifier">specific</span> <span class="identifier">parameters</span><span class="special">));</span>
 <span class="special">}</span>
@@ -264,7 +272,8 @@
             and <code class="computeroutput"><span class="special">-&gt;</span></code> pointer deference
             operators.
           </p>
-<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">func</span><span class="special">()</span> <span class="special">{</span>
+<pre class="programlisting">
+<span class="keyword">void</span> <span class="identifier">func</span><span class="special">()</span> <span class="special">{</span>
 <span class="special">{</span> <span class="comment">// current thread
 </span>    <span class="comment">// ...
 </span>    <span class="keyword">if</span> <span class="special">(</span><span class="identifier">ptr</span><span class="special">.</span><span class="identifier">get</span><span class="special">()==</span><span class="number">0</span><span class="special">)</span> <span class="identifier">ptr</span><span class="special">.</span><span class="identifier">reset</span><span class="special">(</span><span class="keyword">new</span> <span class="identifier">myclass</span><span class="special">);</span>
@@ -283,7 +292,8 @@
             Besides, other threads can get access to the data provided a thread::id
             by:
           </p>
-<pre class="programlisting"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">thread</span> <span class="identifier">th</span><span class="special">=</span><span class="identifier">bith</span><span class="special">::</span><span class="identifier">make_decorated_thread</span><span class="special">(</span><span class="identifier">func</span><span class="special">);</span>
+<pre class="programlisting">
+<span class="identifier">boost</span><span class="special">::</span><span class="identifier">thread</span> <span class="identifier">th</span><span class="special">=</span><span class="identifier">bith</span><span class="special">::</span><span class="identifier">make_decorated_thread</span><span class="special">(</span><span class="identifier">func</span><span class="special">);</span>
 
 <span class="identifier">ptr</span><span class="special">[</span><span class="identifier">th</span><span class="special">-&gt;</span><span class="identifier">get_id</span><span class="special">()]-&gt;</span><span class="identifier">foo</span><span class="special">();</span>
 </pre>
@@ -297,14 +307,16 @@
             specific context could be not yet done. One way to manage with this error
             is to get the shared pointer and check if it contains something or not.
           </p>
-<pre class="programlisting"><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">myclass</span><span class="special">&gt;</span> <span class="identifier">shp</span> <span class="special">=</span> <span class="identifier">ptr</span><span class="special">[</span><span class="identifier">th</span><span class="special">-&gt;</span><span class="identifier">get_id</span><span class="special">()]-&gt;</span><span class="identifier">foo</span><span class="special">();</span>
+<pre class="programlisting">
+<span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">myclass</span><span class="special">&gt;</span> <span class="identifier">shp</span> <span class="special">=</span> <span class="identifier">ptr</span><span class="special">[</span><span class="identifier">th</span><span class="special">-&gt;</span><span class="identifier">get_id</span><span class="special">()]-&gt;</span><span class="identifier">foo</span><span class="special">();</span>
 <span class="keyword">if</span> <span class="special">(</span><span class="identifier">shp</span><span class="special">.</span><span class="identifier">get</span><span class="special">()</span> <span class="special">!=</span> <span class="number">0</span><span class="special">)</span> <span class="identifier">shp</span><span class="special">-&gt;</span><span class="identifier">foo</span><span class="special">();</span>
 <span class="keyword">else</span> <span class="special">...</span>
 </pre>
 <p>
             When we need this we can pool:
           </p>
-<pre class="programlisting"><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">myclass</span><span class="special">&gt;</span> <span class="identifier">shp</span><span class="special">;</span>
+<pre class="programlisting">
+<span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">myclass</span><span class="special">&gt;</span> <span class="identifier">shp</span><span class="special">;</span>
 <span class="keyword">do</span> <span class="special">{</span>
     <span class="identifier">shp</span> <span class="special">=</span> <span class="identifier">ptr</span><span class="special">[</span><span class="identifier">th</span><span class="special">-&gt;</span><span class="identifier">get_id</span><span class="special">()]-&gt;</span><span class="identifier">foo</span><span class="special">();</span>
 <span class="special">}</span> <span class="keyword">while</span><span class="special">(</span><span class="identifier">shp</span><span class="special">.</span><span class="identifier">get</span><span class="special">()</span> <span class="special">==</span> <span class="number">0</span><span class="special">);</span>
@@ -315,14 +327,16 @@
             The wait_and_get() function allows a thread to synchronize with the setting
             from another thread.
           </p>
-<pre class="programlisting"><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">myclass</span><span class="special">&gt;</span> <span class="identifier">shp</span> <span class="special">=</span> <span class="identifier">ptr</span><span class="special">.</span><span class="identifier">wait_and_get</span><span class="special">(</span><span class="identifier">th</span><span class="special">-&gt;</span><span class="identifier">get_id</span><span class="special">());</span>
+<pre class="programlisting">
+<span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">myclass</span><span class="special">&gt;</span> <span class="identifier">shp</span> <span class="special">=</span> <span class="identifier">ptr</span><span class="special">.</span><span class="identifier">wait_and_get</span><span class="special">(</span><span class="identifier">th</span><span class="special">-&gt;</span><span class="identifier">get_id</span><span class="special">());</span>
 <span class="identifier">shp</span><span class="special">-&gt;</span><span class="identifier">foo</span><span class="special">();</span>
 </pre>
 <p>
             shared_ptr&lt;myclass&gt; shp = ptr.wait_and_get(th-&gt;get_id()); shp-&gt;foo();
             or
           </p>
-<pre class="programlisting"><span class="identifier">ptr</span><span class="special">.</span><span class="identifier">wait_and_get</span><span class="special">(</span><span class="identifier">th</span><span class="special">-&gt;</span><span class="identifier">get_id</span><span class="special">()-&gt;</span><span class="identifier">foo</span><span class="special">();</span>
+<pre class="programlisting">
+<span class="identifier">ptr</span><span class="special">.</span><span class="identifier">wait_and_get</span><span class="special">(</span><span class="identifier">th</span><span class="special">-&gt;</span><span class="identifier">get_id</span><span class="special">()-&gt;</span><span class="identifier">foo</span><span class="special">();</span>
 </pre>
 <p>
             In order to ensure that the decorations have been called, a cleaner and
@@ -330,7 +344,8 @@
             behavior is obtained each time the thread is created with an <code class="computeroutput"><span class="identifier">AsynchronousExecutor</span></code> decorator when
             using the Boost.Async library, as
           </p>
-<pre class="programlisting"><span class="identifier">bith</span><span class="special">::</span><span class="identifier">basic_threader_decorator</span> <span class="identifier">ae</span><span class="special">;</span>
+<pre class="programlisting">
+<span class="identifier">bith</span><span class="special">::</span><span class="identifier">basic_threader_decorator</span> <span class="identifier">ae</span><span class="special">;</span>
 <span class="identifier">BOOST_AUTO</span><span class="special">(</span><span class="identifier">th</span><span class="special">,</span> <span class="identifier">bith</span><span class="special">::</span><span class="identifier">fork</span><span class="special">(</span><span class="identifier">ae</span><span class="special">,</span> <span class="identifier">func</span><span class="special">));</span>
 <span class="comment">// here you are sure all the decorations have been called
 </span><span class="comment">// so we can access any thread_specific_shared_ptr of the created thread.
@@ -355,7 +370,8 @@
             locking mechanism that 'ensure' that the map access is locked during
             the map query.
           </p>
-<pre class="programlisting"><span class="special">{</span>
+<pre class="programlisting">
+<span class="special">{</span>
     <span class="identifier">bith</span><span class="special">::</span><span class="identifier">thread_specific_shared_ptr</span><span class="special">&lt;</span><span class="identifier">myclass</span><span class="special">&gt;::</span><span class="identifier">lock_type</span> <span class="identifier">lock</span><span class="special">(</span><span class="identifier">ptr</span><span class="special">.</span><span class="identifier">get_mutex</span><span class="special">());</span>
     <span class="keyword">const</span> <span class="identifier">bith</span><span class="special">::</span><span class="identifier">thread_specific_shared_ptr</span><span class="special">&lt;</span><span class="identifier">myclass</span><span class="special">&gt;::</span><span class="identifier">map_type</span> <span class="identifier">amap</span> <span class="special">=</span> <span class="identifier">ptr</span><span class="special">.</span><span class="identifier">get_map</span><span class="special">(</span><span class="identifier">lock</span><span class="special">);</span>
     <span class="comment">// use the map
@@ -382,7 +398,8 @@
             deleter routine supplied to the constructor. The deleter function is
             called only when there are no more references to the shared pointer.
           </p>
-<pre class="programlisting"><span class="comment">// Add use of deleter !!!
+<pre class="programlisting">
+<span class="comment">// Add use of deleter !!!
 </span></pre>
 </div>
 <div class="section" lang="en">
@@ -410,7 +427,8 @@
             list. Cleanup finishes when there are no outstanding instances of <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">thread_specific_shared_ptr</span><span class="special">&lt;&gt;</span></code>
             with values.
           </p>
-<pre class="programlisting"><span class="comment">// Add use of at thread_exit!!!
+<pre class="programlisting">
+<span class="comment">// Add use of at thread_exit!!!
 </span></pre>
 </div>
 </div>
@@ -466,7 +484,8 @@
 <p>
             Next follows the keep alive interface.
           </p>
-<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
+<pre class="programlisting">
+<span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
 <span class="keyword">namespace</span> <span class="identifier">interthreads</span> <span class="special">{</span>
     <span class="keyword">namespace</span> <span class="identifier">this_thread</span> 	<span class="special">{</span>
         <span class="keyword">class</span> <span class="identifier">enable_keep_alive</span> <span class="special">{</span>
@@ -505,7 +524,8 @@
             The controler needs to access some thread specific shared context <code class="computeroutput"><span class="identifier">thread_keep_alive_ctx</span></code> to be able to
             control a thread.
           </p>
-<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">detail</span> <span class="special">{</span>
+<pre class="programlisting">
+<span class="keyword">namespace</span> <span class="identifier">detail</span> <span class="special">{</span>
     <span class="keyword">struct</span> <span class="identifier">thread_keep_alive_ctx</span> <span class="special">{</span>
         <span class="comment">// ...
 </span>        <span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">init</span><span class="special">();</span>
@@ -534,7 +554,8 @@
             specific context is done using an internal thread decoration <code class="computeroutput"><span class="identifier">thread_keep_alive_ctx</span><span class="special">::</span><span class="identifier">initializer_</span></code> with <code class="computeroutput"><span class="identifier">thread_keep_alive_ctx</span><span class="special">::</span><span class="identifier">init</span></code>
             as setup function.
           </p>
-<pre class="programlisting"><span class="identifier">thread_specific_shared_ptr</span><span class="special">&lt;</span><span class="identifier">detail</span><span class="special">::</span><span class="identifier">thread_keep_alive_ctx</span><span class="special">&gt;</span> <span class="identifier">thread_keep_alive_ctx</span><span class="special">::</span><span class="identifier">instance_</span><span class="special">;</span>
+<pre class="programlisting">
+<span class="identifier">thread_specific_shared_ptr</span><span class="special">&lt;</span><span class="identifier">detail</span><span class="special">::</span><span class="identifier">thread_keep_alive_ctx</span><span class="special">&gt;</span> <span class="identifier">thread_keep_alive_ctx</span><span class="special">::</span><span class="identifier">instance_</span><span class="special">;</span>
 <span class="identifier">thread_decoration</span> <span class="identifier">thread_keep_alive_ctx</span><span class="special">::</span><span class="identifier">initializer_</span><span class="special">(</span><span class="identifier">thread_keep_alive_ctx</span><span class="special">::</span><span class="identifier">init</span><span class="special">);</span>
 <span class="identifier">boost</span><span class="special">::</span><span class="identifier">once_flag</span> <span class="identifier">keep_alive_mgr</span><span class="special">::</span><span class="identifier">flag</span><span class="special">;</span>
 </pre>
@@ -542,7 +563,8 @@
             This setup function will initialize the <code class="computeroutput"><span class="identifier">keep_alive_mgr</span></code>
             and then set the <code class="computeroutput"><span class="identifier">thread_specific_shared_ptr</span><span class="special">&lt;&gt;</span></code> with a new <code class="computeroutput"><span class="identifier">thread_keep_alive_ctx</span></code>.
           </p>
-<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">thread_keep_alive_ctx</span><span class="special">::</span><span class="identifier">init</span><span class="special">()</span> <span class="special">{</span>
+<pre class="programlisting">
+<span class="keyword">void</span> <span class="identifier">thread_keep_alive_ctx</span><span class="special">::</span><span class="identifier">init</span><span class="special">()</span> <span class="special">{</span>
     <span class="identifier">keep_alive_mgr</span><span class="special">::</span><span class="identifier">initialize</span><span class="special">();</span>
     <span class="identifier">instance_</span><span class="special">.</span><span class="identifier">reset</span><span class="special">(</span><span class="keyword">new</span> <span class="identifier">thread_keep_alive_ctx</span><span class="special">());</span>
 <span class="special">}</span>
@@ -554,7 +576,8 @@
             the instance of the <code class="computeroutput"><span class="identifier">keep_alive_mgr</span></code>
             singleton.
           </p>
-<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">keep_alive_mgr</span><span class="special">::</span><span class="identifier">initialize</span><span class="special">()</span> <span class="special">{</span>
+<pre class="programlisting">
+<span class="keyword">void</span> <span class="identifier">keep_alive_mgr</span><span class="special">::</span><span class="identifier">initialize</span><span class="special">()</span> <span class="special">{</span>
     <span class="identifier">boost</span><span class="special">::</span><span class="identifier">call_once</span><span class="special">(</span><span class="identifier">flag_</span><span class="special">,</span> <span class="identifier">init</span><span class="special">);</span>
 <span class="special">}</span>
 <span class="keyword">void</span> <span class="identifier">keep_alive_mgr</span><span class="special">::</span><span class="identifier">init</span><span class="special">()</span> <span class="special">{</span>
@@ -578,7 +601,8 @@
             So we must either call <code class="computeroutput"><span class="identifier">bith</span><span class="special">::</span><span class="identifier">decorate</span></code>
             explicitly on the thread function
           </p>
-<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">fct</span><span class="special">()</span> <span class="special">{</span>
+<pre class="programlisting">
+<span class="keyword">void</span> <span class="identifier">fct</span><span class="special">()</span> <span class="special">{</span>
     <span class="identifier">bith</span><span class="special">::</span><span class="identifier">decorate</span><span class="special">();</span>
     <span class="comment">// ...
 </span><span class="special">}</span>
@@ -587,7 +611,8 @@
             or create the thread with the <code class="computeroutput"><span class="identifier">bith</span><span class="special">::</span><span class="identifier">make_decorator</span></code>
             wrapper
           </p>
-<pre class="programlisting"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">thread</span> <span class="identifier">th</span><span class="special">(</span><span class="identifier">bith</span><span class="special">::</span><span class="identifier">make_decorator</span><span class="special">(</span><span class="identifier">fct</span><span class="special">));</span>
+<pre class="programlisting">
+<span class="identifier">boost</span><span class="special">::</span><span class="identifier">thread</span> <span class="identifier">th</span><span class="special">(</span><span class="identifier">bith</span><span class="special">::</span><span class="identifier">make_decorator</span><span class="special">(</span><span class="identifier">fct</span><span class="special">));</span>
 </pre>
 </div>
 <div class="section" lang="en">
@@ -602,7 +627,8 @@
             to do at least one check point every 2 seconds using the <code class="computeroutput"><span class="identifier">bith</span><span class="special">::</span><span class="identifier">keep_alive_point</span><span class="special">()</span></code>
             function.
           </p>
-<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">fct</span><span class="special">()</span> <span class="special">{</span>
+<pre class="programlisting">
+<span class="keyword">void</span> <span class="identifier">fct</span><span class="special">()</span> <span class="special">{</span>
     <span class="keyword">using</span> <span class="identifier">bith</span><span class="special">::</span><span class="identifier">this_thread</span><span class="special">;</span>
 
     <span class="comment">// ...
@@ -628,7 +654,8 @@
             time. We can then disable the keep alive mechanisme by using a disabler
             <code class="computeroutput"><span class="identifier">bith</span><span class="special">::</span><span class="identifier">disable_keep_alive</span></code>.
           </p>
-<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">fct</span><span class="special">()</span> <span class="special">{</span>
+<pre class="programlisting">
+<span class="keyword">void</span> <span class="identifier">fct</span><span class="special">()</span> <span class="special">{</span>
     <span class="keyword">using</span> <span class="identifier">bith</span><span class="special">::</span><span class="identifier">this_thread</span><span class="special">;</span>
 
     <span class="comment">// ...
@@ -655,7 +682,8 @@
             the possibility to manage the keep alive error by interrupting the dead
             thread remains, once the task is finished.
           </p>
-<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">fct</span><span class="special">()</span> <span class="special">{</span>
+<pre class="programlisting">
+<span class="keyword">void</span> <span class="identifier">fct</span><span class="special">()</span> <span class="special">{</span>
     <span class="keyword">using</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">this_thread</span><span class="special">;</span>
     <span class="keyword">using</span> <span class="identifier">bith</span><span class="special">::</span><span class="identifier">this_thread</span><span class="special">;</span>
 
@@ -691,7 +719,8 @@
             the thread has not done a number of checkins in a given period. This
             can be useful when one knows the time a given task should take.
           </p>
-<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">fct</span><span class="special">()</span> <span class="special">{</span>
+<pre class="programlisting">
+<span class="keyword">void</span> <span class="identifier">fct</span><span class="special">()</span> <span class="special">{</span>
     <span class="keyword">using</span> <span class="identifier">bith</span><span class="special">::</span><span class="identifier">this_thread</span><span class="special">;</span>
 
     <span class="comment">// ...
@@ -727,7 +756,8 @@
             this thread using the backup function and then they enable/disable the
             KA mechanism. On destruction they restore the backed up context.
           </p>
-<pre class="programlisting"><span class="identifier">enable_keep_alive</span><span class="special">::</span><span class="identifier">enable_keep_alive</span><span class="special">(</span>
+<pre class="programlisting">
+<span class="identifier">enable_keep_alive</span><span class="special">::</span><span class="identifier">enable_keep_alive</span><span class="special">(</span>
         <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">periods</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">checkins</span><span class="special">)</span>
 <span class="special">{</span>
     <span class="identifier">backup_</span><span class="special">=</span><span class="identifier">detail</span><span class="special">::</span><span class="identifier">thread_keep_alive_ctx</span><span class="special">::</span><span class="identifier">instance</span><span class="special">()-&gt;</span><span class="identifier">backup</span><span class="special">(</span><span class="identifier">data_</span><span class="special">);</span>
@@ -750,7 +780,8 @@
 <p>
             These functions are quite simple
           </p>
-<pre class="programlisting"><span class="identifier">thread_keep_alive_internal</span><span class="special">*</span> <span class="identifier">thread_keep_alive_ctx</span><span class="special">::</span><span class="identifier">backup</span><span class="special">(</span><span class="identifier">thread_keep_alive_internal</span><span class="special">*</span> <span class="identifier">new_data</span><span class="special">)</span> <span class="special">{</span>
+<pre class="programlisting">
+<span class="identifier">thread_keep_alive_internal</span><span class="special">*</span> <span class="identifier">thread_keep_alive_ctx</span><span class="special">::</span><span class="identifier">backup</span><span class="special">(</span><span class="identifier">thread_keep_alive_internal</span><span class="special">*</span> <span class="identifier">new_data</span><span class="special">)</span> <span class="special">{</span>
     <span class="identifier">thread_keep_alive_internal</span><span class="special">*</span> <span class="identifier">the_backup</span><span class="special">=</span><span class="identifier">data_</span><span class="special">;</span>
     <span class="identifier">data_</span><span class="special">=</span><span class="identifier">new_data</span>
     <span class="keyword">return</span> <span class="identifier">the_backup</span><span class="special">;</span>
@@ -776,7 +807,8 @@
             relaying the request to the specific context of this thread. This function
             just increases the number of <code class="computeroutput"><span class="identifier">checkins_</span></code>.
           </p>
-<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">keep_alive_point</span><span class="special">()</span> <span class="special">{</span>
+<pre class="programlisting">
+<span class="keyword">void</span> <span class="identifier">keep_alive_point</span><span class="special">()</span> <span class="special">{</span>
     <span class="identifier">detail</span><span class="special">::</span><span class="identifier">thread_keep_alive_ctx</span><span class="special">::</span><span class="identifier">instance</span><span class="special">()-&gt;</span><span class="identifier">check_point</span><span class="special">();</span>
 <span class="special">}</span>
 
@@ -788,7 +820,8 @@
             The <code class="computeroutput"><span class="identifier">set_on_dead_thread</span><span class="special">()</span></code> does the same. This function just stores
             the on-dead action.
           </p>
-<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">set_on_dead_thread</span><span class="special">(</span><span class="identifier">on_dead_thread_type</span> <span class="identifier">fct</span><span class="special">,</span> <span class="identifier">thread</span><span class="special">*</span> <span class="identifier">th</span><span class="special">)</span> <span class="special">{</span>
+<pre class="programlisting">
+<span class="keyword">void</span> <span class="identifier">set_on_dead_thread</span><span class="special">(</span><span class="identifier">on_dead_thread_type</span> <span class="identifier">fct</span><span class="special">,</span> <span class="identifier">thread</span><span class="special">*</span> <span class="identifier">th</span><span class="special">)</span> <span class="special">{</span>
     <span class="identifier">detail</span><span class="special">::</span><span class="identifier">thread_keep_alive_ctx</span><span class="special">::</span><span class="identifier">instance</span><span class="special">()-&gt;</span><span class="identifier">set_on_dead_thread</span><span class="special">(</span><span class="identifier">fct</span><span class="special">,</span> <span class="identifier">th</span><span class="special">);</span>
 <span class="special">}</span>
 
@@ -816,7 +849,8 @@
 <p>
             The constructor just constructs a thread with the loop function.
           </p>
-<pre class="programlisting"><span class="identifier">keep_alive_mgr</span><span class="special">()</span> <span class="special">:</span> <span class="identifier">end_</span><span class="special">(</span><span class="keyword">false</span><span class="special">),</span> <span class="identifier">thread_</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">bind</span><span class="special">(</span><span class="identifier">loop</span><span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">ref</span><span class="special">(</span><span class="identifier">end_</span><span class="special">)))</span>  <span class="special">{}</span>
+<pre class="programlisting">
+<span class="identifier">keep_alive_mgr</span><span class="special">()</span> <span class="special">:</span> <span class="identifier">end_</span><span class="special">(</span><span class="keyword">false</span><span class="special">),</span> <span class="identifier">thread_</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">bind</span><span class="special">(</span><span class="identifier">loop</span><span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">ref</span><span class="special">(</span><span class="identifier">end_</span><span class="special">)))</span>  <span class="special">{}</span>
 </pre>
 <p>
             The loop function will iterate, every second, over all the thread_keep_alive_ctx
@@ -824,7 +858,8 @@
             as the map can be modified when threads are created or finished, we need
             to protect the iteration externally with a lock on the protecting mutex.
           </p>
-<pre class="programlisting"><span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">loop</span><span class="special">(</span><span class="keyword">bool</span><span class="special">&amp;</span> <span class="identifier">end</span><span class="special">)</span> <span class="special">{</span>
+<pre class="programlisting">
+<span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">loop</span><span class="special">(</span><span class="keyword">bool</span><span class="special">&amp;</span> <span class="identifier">end</span><span class="special">)</span> <span class="special">{</span>
     <span class="identifier">boost</span><span class="special">::</span><span class="identifier">xtime</span> <span class="identifier">t</span><span class="special">;</span>
     <span class="identifier">boost</span><span class="special">::</span><span class="identifier">xtime_get</span><span class="special">(&amp;</span><span class="identifier">t</span><span class="special">,</span><span class="number">1</span><span class="special">);</span>
     <span class="keyword">while</span><span class="special">(!</span><span class="identifier">end</span><span class="special">)</span> <span class="special">{</span>
@@ -848,7 +883,8 @@
             when the program finishes. So it is up to the destructor to set this
             variable and wait for the thread completion
           </p>
-<pre class="programlisting"><span class="special">~</span><span class="identifier">keep_alive_mgr</span><span class="special">()</span> <span class="special">{</span>
+<pre class="programlisting">
+<span class="special">~</span><span class="identifier">keep_alive_mgr</span><span class="special">()</span> <span class="special">{</span>
     <span class="identifier">end_</span><span class="special">=</span><span class="keyword">true</span><span class="special">;</span>
     <span class="identifier">thread_</span><span class="special">.</span><span class="identifier">join</span><span class="special">();</span>
 <span class="special">}</span>
@@ -859,7 +895,8 @@
             is declared dead it executes the on dead action and resets the check-ins
             and periods.
           </p>
-<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">control</span><span class="special">(</span><span class="identifier">thread</span><span class="special">::</span><span class="identifier">id</span> <span class="identifier">id</span><span class="special">)</span> <span class="special">{</span>
+<pre class="programlisting">
+<span class="keyword">void</span> <span class="identifier">control</span><span class="special">(</span><span class="identifier">thread</span><span class="special">::</span><span class="identifier">id</span> <span class="identifier">id</span><span class="special">)</span> <span class="special">{</span>
     <span class="keyword">if</span> <span class="special">(</span><span class="identifier">data_</span><span class="special">-&gt;</span><span class="identifier">enabled_</span><span class="special">)</span> <span class="special">{</span>
         <span class="special">--</span><span class="identifier">data_</span><span class="special">-&gt;</span><span class="identifier">periods_</span><span class="special">;</span>
         <span class="keyword">if</span> <span class="special">(</span><span class="identifier">dead</span><span class="special">())</span> <span class="special">{</span>
@@ -903,7 +940,8 @@
             to the function object. In this case, the user of <code class="computeroutput"><span class="identifier">thread_tuple</span><span class="special">&lt;&gt;</span></code> must ensure that the referred-to
             object outlives the newly-created thread of execution.
           </p>
-<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">callable</span>
+<pre class="programlisting">
+<span class="keyword">struct</span> <span class="identifier">callable</span>
 <span class="special">{</span>
     <span class="keyword">void</span> <span class="keyword">operator</span><span class="special">()();</span>
 <span class="special">};</span>
@@ -929,7 +967,8 @@
             additional arguments as is the case for threads to the <code class="computeroutput"><span class="identifier">thread_tuple</span><span class="special">&lt;&gt;</span></code>
             constructor, and you will need to use bind explicitly.
           </p>
-<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">find_the_question</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">the_answer</span><span class="special">);</span>
+<pre class="programlisting">
+<span class="keyword">void</span> <span class="identifier">find_the_question</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">the_answer</span><span class="special">);</span>
 
 <span class="identifier">bith</span><span class="special">::</span><span class="identifier">thread_tuple</span><span class="special">&lt;</span><span class="number">2</span><span class="special">&gt;</span> <span class="identifier">deep_thought_2</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">bind</span><span class="special">(</span><span class="identifier">find_the_question</span><span class="special">,</span><span class="number">42</span><span class="special">),</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">bind</span><span class="special">(</span><span class="identifier">find_the_question</span><span class="special">,</span><span class="number">16</span><span class="special">));</span>
 </pre>
@@ -1030,7 +1069,7 @@
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><div class="copyright-footer">Copyright © 2008 -2009 Vicente J. Botet Escriba<p>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2008 -2009 Vicente J. Botet Escriba<p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>
@@ -1038,7 +1077,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="getting_started.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../users_guide.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="bibliography.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="getting_started.html"><img src="../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../users_guide.html"><img src="../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="bibliography.html"><img src="../../../../../../doc/src/images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>
