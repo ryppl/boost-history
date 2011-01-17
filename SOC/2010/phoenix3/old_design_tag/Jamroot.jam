@@ -1,7 +1,0 @@
-
-import modules ;
-
-local boost = [ modules.peek : BOOST ] ;
-
-project phoenix : requirements <include>$(boost) ;
-
