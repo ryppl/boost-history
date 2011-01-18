@@ -10,7 +10,7 @@
 #include <vector>
 #include <stack>
 #include <queue>
-#include <boost/static_assert.hpp>
+#include <boost/mpl/assert.hpp>
 #include <boost/assign/v2/detail/traits/container/has_push.hpp>
 #include <libs/assign/v2/test/detail/traits/has_push.h>
 
@@ -25,18 +25,15 @@ namespace xxx_has_push{
          namespace ns = as2::container_traits;
          {
 			typedef std::queue<int> v_;
-            typedef ns::has_push<v_> has_push_;
-            BOOST_STATIC_ASSERT( has_push_::value );
+            BOOST_MPL_ASSERT(( ns::has_push<v_> ));
          }
          {
-			typedef std::stack<int> v_;
-            typedef ns::has_push<v_> has_push_;
-            BOOST_STATIC_ASSERT( has_push_::value );
+			typedef std::queue<int> v_;
+            BOOST_MPL_ASSERT(( ns::has_push<v_> ));
          }
          {
-             typedef std::vector<int> v_;
-             typedef ns::has_push<v_> has_push_;
-             BOOST_STATIC_ASSERT( !has_push_::value );
+			typedef std::vector<int> v_;
+            BOOST_MPL_ASSERT_NOT(( ns::has_push<v_> ));
          }
     }
     

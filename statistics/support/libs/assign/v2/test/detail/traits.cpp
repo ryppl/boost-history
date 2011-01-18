@@ -7,8 +7,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
+#include <boost/assign/v2/detail/traits.hpp> // ensure parses
 #include <libs/assign/v2/test/detail/traits/has_push.h>
-#include <libs/assign/v2/test/detail/traits/has_static_size.h>
 #include <libs/assign/v2/test/detail/traits/has_value_type.h>
 #include <libs/assign/v2/test/detail/traits.h>
 
@@ -18,7 +18,6 @@ namespace xxx_traits{
 
     void test(){
         xxx_has_push::test();
-        xxx_has_static_size::test();
         xxx_has_value_type::test();
     }
 

@@ -22,7 +22,6 @@
 #include <boost/assign/v2/detail/checking/check.hpp>
 #include <boost/assign/v2/detail/checking/constants.hpp>
 #include <boost/assign/v2/detail/checking/container.hpp>
-#include <boost/assign/v2/detail/checking/array.hpp>
 #include <boost/assign/v2/ref/array/functor.hpp>
 #include <boost/assign/v2/ref/wrapper.hpp>
 #include <libs/assign/v2/test/ref/array.h>
@@ -41,7 +40,7 @@ namespace xxx_array{
             ar_ ar = as2::ref::array( a )( b )( c )( d )( e )( f )( g )( h );
             {
 
-                typedef as2::container_tag::static_array tag_;
+                typedef as2::container_tag::array tag_;
                 namespace ns = as2::checking::container;
                 as2::checking::do_check(tag_(), ar );
             }

@@ -35,7 +35,7 @@ namespace xxx_csv_array{
             using namespace as2::checking::constants;
             ar_ ar = as2::ref::csv_array( a , b , c , d , e , f , g , h );
             {
-                typedef as2::container_tag::static_array tag_;
+                typedef as2::container_tag::array tag_;
                 as2::checking::do_check(tag_(), ar );
             }
             {
@@ -71,7 +71,7 @@ namespace xxx_csv_array{
                 )
             );
             {
-                typedef as2::container_tag::static_array tag_;
+                typedef as2::container_tag::array tag_;
                 as2::checking::do_check(
                     tag_(),
                     as2::ref::csv_array<int const>(
