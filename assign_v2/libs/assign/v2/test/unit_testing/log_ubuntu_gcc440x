@@ -1,0 +1,53 @@
+...patience...
+...patience...
+...found 1519 targets...
+...updating 32 targets...
+gcc.compile.c++ ../../../../../bin.v2/libs/assign/v2/test/unit_testing/utility.test/gcc-4.4.3/debug/utility.o
+In file included from ../../../../../boost/assign/v2/utility/chain/iterator.hpp:17,
+                 from ../../../../../boost/assign/v2/utility/chain/range.hpp:15,
+                 from ../../../../../boost/assign/v2/utility/chain/result.hpp:15,
+                 from ../../../../../boost/assign/v2/utility/chain/pipe.hpp:15,
+                 from ../../../../../boost/assign/v2/utility/chain/checking/twin_values.hpp:22,
+                 from ../../../../../libs/assign/v2/test/utility/chain.cpp:10,
+                 from utility.cpp:17:
+../../../../../boost/assign/v2/detail/traits/type/meta_convert.hpp:17: warning: declaration ‘struct boost::use_default’ does not declare anything
+gcc.link ../../../../../bin.v2/libs/assign/v2/test/unit_testing/utility.test/gcc-4.4.3/debug/utility
+testing.capture-output ../../../../../bin.v2/libs/assign/v2/test/unit_testing/utility.test/gcc-4.4.3/debug/utility.run
+**passed** ../../../../../bin.v2/libs/assign/v2/test/unit_testing/utility.test/gcc-4.4.3/debug/utility.test
+gcc.compile.c++ ../../../../../bin.v2/libs/assign/v2/test/unit_testing/detail.test/gcc-4.4.3/debug/detail.o
+gcc.link ../../../../../bin.v2/libs/assign/v2/test/unit_testing/detail.test/gcc-4.4.3/debug/detail
+testing.capture-output ../../../../../bin.v2/libs/assign/v2/test/unit_testing/detail.test/gcc-4.4.3/debug/detail.run
+**passed** ../../../../../bin.v2/libs/assign/v2/test/unit_testing/detail.test/gcc-4.4.3/debug/detail.test
+gcc.compile.c++ ../../../../../bin.v2/libs/assign/v2/test/unit_testing/put.test/gcc-4.4.3/debug/put.o
+gcc.link ../../../../../bin.v2/libs/assign/v2/test/unit_testing/put.test/gcc-4.4.3/debug/put
+testing.capture-output ../../../../../bin.v2/libs/assign/v2/test/unit_testing/put.test/gcc-4.4.3/debug/put.run
+**passed** ../../../../../bin.v2/libs/assign/v2/test/unit_testing/put.test/gcc-4.4.3/debug/put.test
+gcc.compile.c++ ../../../../../bin.v2/libs/assign/v2/test/unit_testing/ref.test/gcc-4.4.3/debug/ref.o
+gcc.link ../../../../../bin.v2/libs/assign/v2/test/unit_testing/ref.test/gcc-4.4.3/debug/ref
+testing.capture-output ../../../../../bin.v2/libs/assign/v2/test/unit_testing/ref.test/gcc-4.4.3/debug/ref.run
+**passed** ../../../../../bin.v2/libs/assign/v2/test/unit_testing/ref.test/gcc-4.4.3/debug/ref.test
+gcc.compile.c++ ../../../../../bin.v2/libs/assign/v2/test/unit_testing/detail.test/gcc-4.4.3/release/detail.o
+gcc.link ../../../../../bin.v2/libs/assign/v2/test/unit_testing/detail.test/gcc-4.4.3/release/detail
+testing.capture-output ../../../../../bin.v2/libs/assign/v2/test/unit_testing/detail.test/gcc-4.4.3/release/detail.run
+**passed** ../../../../../bin.v2/libs/assign/v2/test/unit_testing/detail.test/gcc-4.4.3/release/detail.test
+gcc.compile.c++ ../../../../../bin.v2/libs/assign/v2/test/unit_testing/put.test/gcc-4.4.3/release/put.o
+gcc.link ../../../../../bin.v2/libs/assign/v2/test/unit_testing/put.test/gcc-4.4.3/release/put
+testing.capture-output ../../../../../bin.v2/libs/assign/v2/test/unit_testing/put.test/gcc-4.4.3/release/put.run
+**passed** ../../../../../bin.v2/libs/assign/v2/test/unit_testing/put.test/gcc-4.4.3/release/put.test
+gcc.compile.c++ ../../../../../bin.v2/libs/assign/v2/test/unit_testing/ref.test/gcc-4.4.3/release/ref.o
+gcc.link ../../../../../bin.v2/libs/assign/v2/test/unit_testing/ref.test/gcc-4.4.3/release/ref
+testing.capture-output ../../../../../bin.v2/libs/assign/v2/test/unit_testing/ref.test/gcc-4.4.3/release/ref.run
+**passed** ../../../../../bin.v2/libs/assign/v2/test/unit_testing/ref.test/gcc-4.4.3/release/ref.test
+gcc.compile.c++ ../../../../../bin.v2/libs/assign/v2/test/unit_testing/utility.test/gcc-4.4.3/release/utility.o
+In file included from ../../../../../boost/assign/v2/utility/chain/iterator.hpp:17,
+                 from ../../../../../boost/assign/v2/utility/chain/range.hpp:15,
+                 from ../../../../../boost/assign/v2/utility/chain/result.hpp:15,
+                 from ../../../../../boost/assign/v2/utility/chain/pipe.hpp:15,
+                 from ../../../../../boost/assign/v2/utility/chain/checking/twin_values.hpp:22,
+                 from ../../../../../libs/assign/v2/test/utility/chain.cpp:10,
+                 from utility.cpp:17:
+../../../../../boost/assign/v2/detail/traits/type/meta_convert.hpp:17: warning: declaration ‘struct boost::use_default’ does not declare anything
+gcc.link ../../../../../bin.v2/libs/assign/v2/test/unit_testing/utility.test/gcc-4.4.3/release/utility
+testing.capture-output ../../../../../bin.v2/libs/assign/v2/test/unit_testing/utility.test/gcc-4.4.3/release/utility.run
+**passed** ../../../../../bin.v2/libs/assign/v2/test/unit_testing/utility.test/gcc-4.4.3/release/utility.test
+...updated 32 targets...

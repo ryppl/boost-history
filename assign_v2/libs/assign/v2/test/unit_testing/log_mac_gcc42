@@ -1,0 +1,42 @@
+11/29/10
+...patience...
+...patience...
+...found 1466 targets...
+...updating 32 targets...
+darwin.compile.c++ ../../../../../bin.v2/libs/assign/v2/test/unit_testing/type_traits.test/darwin-4.2.1/debug/type_traits.o
+darwin.link ../../../../../bin.v2/libs/assign/v2/test/unit_testing/type_traits.test/darwin-4.2.1/debug/type_traits
+testing.capture-output ../../../../../bin.v2/libs/assign/v2/test/unit_testing/type_traits.test/darwin-4.2.1/debug/type_traits.run
+**passed** ../../../../../bin.v2/libs/assign/v2/test/unit_testing/type_traits.test/darwin-4.2.1/debug/type_traits.test
+darwin.compile.c++ ../../../../../bin.v2/libs/assign/v2/test/unit_testing/detail.test/darwin-4.2.1/debug/detail.o
+darwin.link ../../../../../bin.v2/libs/assign/v2/test/unit_testing/detail.test/darwin-4.2.1/debug/detail
+testing.capture-output ../../../../../bin.v2/libs/assign/v2/test/unit_testing/detail.test/darwin-4.2.1/debug/detail.run
+**passed** ../../../../../bin.v2/libs/assign/v2/test/unit_testing/detail.test/darwin-4.2.1/debug/detail.test
+darwin.compile.c++ ../../../../../bin.v2/libs/assign/v2/test/unit_testing/anon.test/darwin-4.2.1/debug/anon.o
+darwin.link ../../../../../bin.v2/libs/assign/v2/test/unit_testing/anon.test/darwin-4.2.1/debug/anon
+testing.capture-output ../../../../../bin.v2/libs/assign/v2/test/unit_testing/anon.test/darwin-4.2.1/debug/anon.run
+**passed** ../../../../../bin.v2/libs/assign/v2/test/unit_testing/anon.test/darwin-4.2.1/debug/anon.test
+darwin.compile.c++ ../../../../../bin.v2/libs/assign/v2/test/unit_testing/chain.test/darwin-4.2.1/debug/chain.o
+darwin.link ../../../../../bin.v2/libs/assign/v2/test/unit_testing/chain.test/darwin-4.2.1/debug/chain
+testing.capture-output ../../../../../bin.v2/libs/assign/v2/test/unit_testing/chain.test/darwin-4.2.1/debug/chain.run
+**passed** ../../../../../bin.v2/libs/assign/v2/test/unit_testing/chain.test/darwin-4.2.1/debug/chain.test
+darwin.compile.c++ ../../../../../bin.v2/libs/assign/v2/test/unit_testing/put.test/darwin-4.2.1/debug/put.o
+darwin.link ../../../../../bin.v2/libs/assign/v2/test/unit_testing/put.test/darwin-4.2.1/debug/put
+testing.capture-output ../../../../../bin.v2/libs/assign/v2/test/unit_testing/put.test/darwin-4.2.1/debug/put.run
+**passed** ../../../../../bin.v2/libs/assign/v2/test/unit_testing/put.test/darwin-4.2.1/debug/put.test
+darwin.compile.c++ ../../../../../bin.v2/libs/assign/v2/test/unit_testing/put_compose.test/darwin-4.2.1/debug/put_compose.o
+darwin.link ../../../../../bin.v2/libs/assign/v2/test/unit_testing/put_compose.test/darwin-4.2.1/debug/put_compose
+testing.capture-output ../../../../../bin.v2/libs/assign/v2/test/unit_testing/put_compose.test/darwin-4.2.1/debug/put_compose.run
+**passed** ../../../../../bin.v2/libs/assign/v2/test/unit_testing/put_compose.test/darwin-4.2.1/debug/put_compose.test
+darwin.compile.c++ ../../../../../bin.v2/libs/assign/v2/test/unit_testing/put_range.test/darwin-4.2.1/debug/put_range.o
+darwin.link ../../../../../bin.v2/libs/assign/v2/test/unit_testing/put_range.test/darwin-4.2.1/debug/put_range
+testing.capture-output ../../../../../bin.v2/libs/assign/v2/test/unit_testing/put_range.test/darwin-4.2.1/debug/put_range.run
+**passed** ../../../../../bin.v2/libs/assign/v2/test/unit_testing/put_range.test/darwin-4.2.1/debug/put_range.test
+darwin.compile.c++ ../../../../../bin.v2/libs/assign/v2/test/unit_testing/ref.test/darwin-4.2.1/debug/ref.o
+In file included from ref.cpp:20:
+../../../../../libs/assign/v2/test/ref/fusion_matrix.cpp: In function ‘void test_assign_v2::xxx_ref::xxx_fusion_matrix::test()’:
+../../../../../libs/assign/v2/test/ref/fusion_matrix.cpp:89: warning: unused variable ‘row’
+../../../../../libs/assign/v2/test/ref/fusion_matrix.cpp:111: warning: unused variable ‘row’
+darwin.link ../../../../../bin.v2/libs/assign/v2/test/unit_testing/ref.test/darwin-4.2.1/debug/ref
+testing.capture-output ../../../../../bin.v2/libs/assign/v2/test/unit_testing/ref.test/darwin-4.2.1/debug/ref.run
+**passed** ../../../../../bin.v2/libs/assign/v2/test/unit_testing/ref.test/darwin-4.2.1/debug/ref.test
+...updated 32 targets...
