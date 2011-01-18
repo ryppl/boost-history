@@ -28,13 +28,13 @@ namespace container_traits{
 
 	template<typename T,std::size_t N>
     struct static_size< boost::array<T,N> >
-    	: boost::mpl::size_t<
+    	: ::boost::mpl::size_t<
     		boost::array<T,N>::static_size
     	>{};
 
 	template<typename T,std::size_t N,typename C>
     struct static_size< boost::ptr_array<T, N, C> >
-    	: boost::mpl::size_t<
+    	: ::boost::mpl::size_t<
     		N
     	>{};
 

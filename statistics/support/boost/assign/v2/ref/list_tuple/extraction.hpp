@@ -35,15 +35,15 @@ namespace list_tuple_aux{
         public:
 
         template<int I>
-        struct is_head : boost::mpl::bool_< I + 1 == N >{};
+        struct is_head : ::boost::mpl::bool_< I + 1 == N >{};
 
         template<int I>
         struct link_get_result : L::template get_result<I>{};
 
 		template<int I>
-		struct get_result : boost::mpl::eval_if<
+		struct get_result : ::boost::mpl::eval_if<
         	is_head<I>,
-            boost::mpl::identity<
+            ::boost::mpl::identity<
             	T const&
             >,
             link_get_result<I>
@@ -64,7 +64,7 @@ namespace list_tuple_aux{
         	is_head<I>,
         	get_result<I>
         >::type
-        get( boost::mpl::int_<I> index )const
+        get( ::boost::mpl::int_<I> index )const
         {
             return this->derived().get_link().unlink.get( index );
         }

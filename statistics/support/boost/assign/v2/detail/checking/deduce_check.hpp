@@ -13,7 +13,7 @@
 #include <boost/assign/v2/detail/traits/container/is_lifo.hpp>
 #include <boost/assign/v2/detail/traits/container/is_map.hpp>
 #include <boost/assign/v2/detail/traits/container/is_sorted.hpp>
-#include <boost/assign/v2/detail/traits/container/is_static_array.hpp>
+#include <boost/assign/v2/detail/traits/container/is_array.hpp>
 #include <boost/assign/v2/detail/traits/container/is_range.hpp>
 #include <boost/assign/v2/detail/traits/switch.hpp>
  
@@ -56,8 +56,8 @@ namespace switch_aux{
     template<>
     struct case_<switch_tag::deduce_check, 4> :
         switch_aux::helper<
-            v2::container_tag::static_array,
-            v2::container_traits::is_static_array
+            v2::container_tag::array,
+            v2::container_traits::is_array
         >{};
 
     template<>

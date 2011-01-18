@@ -22,7 +22,7 @@ namespace container_tag{
 namespace container_traits{
 
 	template<typename V>
-    struct is_associative : boost::mpl::or_<
+    struct is_associative : ::boost::mpl::or_<
     	container_traits::is_set<V>,
         container_traits::is_map<V>
     >{};

@@ -69,7 +69,7 @@ namespace put_aux{
         mutable std::size_t i;
     };
 
-    template<typename Arg = boost::mpl::na>
+    template<typename Arg = ::boost::mpl::na>
     class iterate
     {
 

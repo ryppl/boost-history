@@ -89,9 +89,9 @@ namespace functor_aux{
 
 #define MACRO1(r, SeqU) \
     template<BOOST_ASSIGN_V2_decl_params(SeqU)> \
-    typename boost::mpl::apply1< \
+    typename ::boost::mpl::apply1< \
         F, \
-        boost::mpl::vector<BOOST_ASSIGN_V2_params(SeqU)> \
+        ::boost::mpl::vector<BOOST_ASSIGN_V2_params(SeqU)> \
     >::type \
     operator()( BOOST_ASSIGN_V2_decl_args(SeqU) )const{ \
         return this->derived().template impl<BOOST_ASSIGN_V2_params(SeqU)>( \
@@ -117,7 +117,7 @@ BOOST_PP_REPEAT(
 
 #define MACRO(z, N, data) \
     template<BOOST_PP_ENUM_PARAMS(N, typename T)> \
-    typename boost::mpl::apply1< \
+    typename ::boost::mpl::apply1< \
         F, \
         BOOST_PP_CAT(boost::mpl::vector,N)<BOOST_PP_ENUM_PARAMS(N, T)> \
     >::type \
@@ -128,9 +128,9 @@ BOOST_PP_REPEAT(
     } \
     \
     template<BOOST_PP_ENUM_PARAMS(N, typename T)> \
-    typename boost::mpl::apply1< \
+    typename ::boost::mpl::apply1< \
         F, \
-        boost::mpl::vector<BOOST_PP_ENUM_PARAMS(N, const T)> \
+        ::boost::mpl::vector<BOOST_PP_ENUM_PARAMS(N, const T)> \
     >::type \
     operator()( BOOST_PP_ENUM_BINARY_PARAMS(N, T, const &_) )const{ \
         return this->derived().template impl< \

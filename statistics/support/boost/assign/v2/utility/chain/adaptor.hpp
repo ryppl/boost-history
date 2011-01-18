@@ -17,7 +17,7 @@ namespace assign{
 namespace v2{
 namespace chain_aux{
 
-    typedef boost::mpl::void_ void_;
+    typedef ::boost::mpl::void_ void_;
 
     // Tag1 controls conversion. Seet traits/type/meta_convert.hpp
 

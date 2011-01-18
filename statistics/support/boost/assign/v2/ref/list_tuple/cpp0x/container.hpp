@@ -57,10 +57,10 @@ namespace list_tuple_aux{
 
     template<int N, typename L, typename...Args>
     class container :
-    boost::mpl::eval_if_c<
+    ::boost::mpl::eval_if_c<
         N == 0,
-        boost::mpl::identity< boost::mpl::empty_base >,
-        boost::mpl::identity< link<L> >
+        ::boost::mpl::identity< ::boost::mpl::empty_base >,
+        ::boost::mpl::identity< link<L> >
     >::type,
     public list_tuple_aux::extraction<
         N, L,

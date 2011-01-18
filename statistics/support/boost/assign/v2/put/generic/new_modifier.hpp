@@ -41,7 +41,7 @@ namespace put_aux{
     };
 
 	template<typename T,typename NewTag>
-    typename boost::mpl::apply1<
+    typename ::boost::mpl::apply1<
     	v2::result_of_modulo::new_modifier<T>,
         NewTag
     >::type
@@ -50,7 +50,7 @@ namespace put_aux{
         put_aux::set_modifier<NewTag> const& h
     )
     {
-    	typedef typename boost::mpl::apply1<
+    	typedef typename ::boost::mpl::apply1<
     		v2::result_of_modulo::new_modifier<T>,
         	NewTag
     	>::type result_;

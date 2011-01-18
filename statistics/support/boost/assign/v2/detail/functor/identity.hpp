@@ -33,7 +33,7 @@ namespace functor_aux{
     struct result_of_identity{
 
         template<typename V>
-		struct is_ok : boost::mpl::equal_to<
+		struct is_ok : ::boost::mpl::equal_to<
        		boost::mpl::int_<1>,
        		boost::mpl::size<V>
     	>{};
@@ -41,7 +41,7 @@ namespace functor_aux{
     	template<typename V>
         struct enable
         {
-        	typedef typename boost::mpl::at_c<V, 0>::type t_;
+        	typedef typename ::boost::mpl::at_c<V, 0>::type t_;
             typedef typename boost::add_reference<t_>::type type;
         };
 
@@ -49,7 +49,7 @@ namespace functor_aux{
         struct disable{};
 
         template<typename V>
-        struct apply : boost::mpl::eval_if<
+        struct apply : ::boost::mpl::eval_if<
             is_ok<V>,
             enable<V>,
             disable<V>

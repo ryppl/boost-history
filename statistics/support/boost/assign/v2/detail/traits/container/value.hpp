@@ -28,7 +28,7 @@ namespace container_traits
     // 	range_value<V>, is available.
     // Think about ptr_container in making this change.
     template<typename V>
-    struct value : forward_to_value<
+    struct value : container_traits::forward_to_value<
     	type_traits::value,
         V
     >{};

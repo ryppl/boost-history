@@ -9,12 +9,22 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_REF_WRAPPER_GET_ER_2010_HPP
 #define BOOST_ASSIGN_V2_REF_WRAPPER_GET_ER_2010_HPP
+#include <boost/config.hpp>
 #include <boost/ref.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/add_reference.hpp>
 #include <boost/type_traits/remove_reference.hpp>
+#include <boost/type_traits/remove_cv.hpp>
 #include <boost/range/reference.hpp>
-#include <boost/range/adaptor/transformed.hpp>
+#include <boost/range/value_type.hpp>
+
+// [ MSVC
+#include <boost/range/begin.hpp>
+#include <boost/range/end.hpp>
+#include <boost/range/iterator_range.hpp>
+#include <boost/iterator/transform_iterator.hpp>
+//#include <boost/range/adaptor/transformed.hpp> 
+// ]
 
 namespace boost{
 namespace assign{ 
@@ -72,9 +82,15 @@ namespace result_of{
     template<typename R>
     struct range_get_impl{
     
-    	typedef ref::get_functor functor_;
-    	typedef boost::range_detail::transform_range<functor_, R> type;
-    
+    	typedef ref::get_functor f_;
+        // [ MSCV
+    	//typedef boost::range_detail::transform_range<f_, R> type;
+		typedef boost::iterator_range< 
+            boost::transform_iterator< f_,
+                BOOST_DEDUCED_TYPENAME boost::range_iterator<R>::type 
+            >
+        > type; 
+    	// ]
     };
 
     template<typename R>
@@ -94,14 +110,26 @@ namespace result_of{
     range_get(R& r)
     {
         typedef typename ref::result_of::range_get<R>::type result_;
-        return result_(get_functor(), r);
+        // [ MSVC
+//        return result_(get_functor(), r);
+		return result_(
+        	boost::make_transform_iterator( boost::begin(r), get_functor() ),
+        	boost::make_transform_iterator( boost::end(r), get_functor() )
+        );
+		// ]
     }
     template<typename R>
     typename ref::result_of::range_get<R const>::type
     range_get(R const& r)
     {
         typedef typename ref::result_of::range_get<R const>::type result_;
-        return result_(get_functor(), r);
+        // [ MSVC
+//        return result_(get_functor(), r);
+		return result_(
+        	boost::make_transform_iterator( boost::begin(r), get_functor() ),
+        	boost::make_transform_iterator( boost::end(r), get_functor() )
+        );
+        // ]_
     }
 
     struct get_adaptor{};

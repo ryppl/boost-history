@@ -20,7 +20,7 @@ namespace convert_aux{
     // two arguments.
     
     template<typename T, typename U>
-    struct default_f : boost::mpl::true_{};
+    struct default_f : ::boost::mpl::true_{};
     
     template<typename Tag, 
     	template<typename, typename> class F = convert_aux::default_f>

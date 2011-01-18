@@ -11,7 +11,7 @@
 #define BOOST_ASSIGN_V2_CHECKING_ARRAY_ER_2010_HPP
 #include <boost/assign/v2/detail/checking/check.hpp>
 #include <boost/assign/v2/detail/checking/constants.hpp>
-#include <boost/assign/v2/detail/traits/container/is_static_array.hpp>
+#include <boost/assign/v2/detail/traits/container/is_array.hpp>
 
 namespace boost{                                                               
 namespace assign{ 
@@ -19,7 +19,7 @@ namespace v2{
 namespace checking{ 
 
     template<typename V>
-    void do_check(v2::container_tag::static_array, V const& ar1)
+    void do_check(v2::container_tag::array, V const& ar1)
     {                                                                              
         BOOST_ASSIGN_V2_CHECK( !ar1.empty() );
         V ar = ar1;

@@ -34,7 +34,7 @@ namespace result_of_modulo{
 
         	typedef typename T::fun_type old_fun_;
         	typedef typename T::modifier_tag old_tag;
-        	typedef typename boost::mpl::apply2<
+        	typedef typename ::boost::mpl::apply2<
             	FParameter,
                 old_fun_,
                 old_tag
@@ -44,13 +44,13 @@ namespace result_of_modulo{
 
 			typedef typename boost::is_same<fun_, old_fun_>::type is_same_fun;
 
-			typedef typename boost::mpl::eval_if<
+			typedef typename ::boost::mpl::eval_if<
             	is_same_fun,
-                    boost::mpl::apply1<
+                    ::boost::mpl::apply1<
                         v2::result_of_modulo::new_modifier<T>,
                         tag
                     >,
-                    boost::mpl::apply2<
+                    ::boost::mpl::apply2<
                         v2::result_of_modulo::new_fun_modifier<T>,
                         fun_,
                         tag
@@ -64,11 +64,11 @@ namespace result_of_modulo{
             {
                 return type( v, f, m );
             }
-            static fun_ make_fun(const T& t, boost::mpl::false_)
+            static fun_ make_fun(const T& t, ::boost::mpl::false_)
             {
                 return fun_();
             }
-            static fun_ make_fun(const T& t, boost::mpl::true_)
+            static fun_ make_fun(const T& t, ::boost::mpl::true_)
             {
                 return t.fun;
             }

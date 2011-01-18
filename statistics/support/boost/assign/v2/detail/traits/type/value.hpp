@@ -18,7 +18,7 @@ namespace v2{
 namespace type_traits{
 
     template<typename V>
-    struct value_impl : boost::mpl::identity<
+    struct value_impl : ::boost::mpl::identity<
     	typename V::value_type
     >{};
 

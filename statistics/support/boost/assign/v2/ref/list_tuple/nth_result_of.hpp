@@ -30,8 +30,8 @@ namespace nth_result_of{
 			template<typename NewState, typename Vec>
             struct apply{
                 typedef list_tuple_aux::result<NewState> meta_;
-                typedef boost::mpl::unpack_args< meta_ > g_;
-                typedef typename boost::mpl::apply1<
+                typedef ::boost::mpl::unpack_args< meta_ > g_;
+                typedef typename ::boost::mpl::apply1<
                     g_,
                     Vec
                 >::type type;
@@ -42,7 +42,7 @@ namespace nth_result_of{
         public:
 
 		template<typename VecTypes>
-    	struct apply : boost::mpl::fold<
+    	struct apply : ::boost::mpl::fold<
             VecTypes,
             state_,
             forward_op

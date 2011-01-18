@@ -82,7 +82,7 @@ namespace put_aux{
         size_type n;
     };
 
-    template<typename Arg = boost::mpl::na>
+    template<typename Arg = ::boost::mpl::na>
     class repeat
     {
 

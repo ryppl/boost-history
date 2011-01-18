@@ -52,7 +52,7 @@ namespace put_pipe_aux{
     >
     void forward(
         F const& f ,
-        boost::mpl::int_<N>,
+        ::boost::mpl::int_<N>,
         ref::list_tuple_aux::container<N, L, Args...> const& list
     )
     {}
@@ -63,16 +63,16 @@ namespace put_pipe_aux{
     >
     void forward(
         F const& f ,
-        boost::mpl::int_<I>,
+        ::boost::mpl::int_<I>,
         ref::list_tuple_aux::container<N, L, Args...> const& list
     )
     {
         {
-            typedef boost::mpl::int_<I> int_;
+            typedef ::boost::mpl::int_<I> int_;
             forward( f, list.get( int_() ) );
         }
         {
-            typedef boost::mpl::int_<I+1> next_;
+            typedef ::boost::mpl::int_<I+1> next_;
             forward( f, next_(), list );
         }
     }
@@ -91,7 +91,7 @@ namespace put_pipe_aux{
         ref::list_tuple_aux::container<N, L, Args...> const& list
     )
     {
-        typedef boost::mpl::int_<0> int_;
+        typedef ::boost::mpl::int_<0> int_;
         forward(f, int_(), list);
     }
 

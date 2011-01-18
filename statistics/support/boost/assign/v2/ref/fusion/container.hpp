@@ -35,9 +35,9 @@ namespace ref{
 namespace fusion_aux{
 
     template<std::size_t N, typename L,typename Tag1, typename Tag2, typename T>
-	struct interface : boost::mpl::apply4<
+	struct interface : ::boost::mpl::apply4<
         fusion_aux::policy<Tag2>,
-        boost::mpl::int_<N>, L, Tag1, T
+        ::boost::mpl::int_<N>, L, Tag1, T
     >{};
 
     template<
@@ -48,10 +48,10 @@ namespace fusion_aux{
         public fusion_aux::interface<N, L, Tag1, Tag2, T>::type
     {
 
-    	typedef boost::mpl::int_<0> int0_;
-        typedef boost::mpl::int_<1> int1_;
-        typedef boost::mpl::int_<N> size_;
-        typedef typename boost::mpl::minus<size_,int1_>::type index_;
+    	typedef ::boost::mpl::int_<0> int0_;
+        typedef ::boost::mpl::int_<1> int1_;
+        typedef ::boost::mpl::int_<N> size_;
+        typedef typename ::boost::mpl::minus<size_,int1_>::type index_;
         typedef Tag1 assign_tag_;
 
 		typedef typename fusion_aux::interface<
@@ -73,7 +73,7 @@ namespace fusion_aux{
 
 		typedef std::size_t size_type;
         BOOST_STATIC_CONSTANT(std::size_t, static_size = N);
-        typedef typename boost::mpl::equal_to<size_,int0_>::type is_empty_;
+        typedef typename ::boost::mpl::equal_to<size_,int0_>::type is_empty_;
 
         explicit container(){}
         explicit container(const L& l, T& h)
@@ -114,16 +114,16 @@ namespace fusion_aux{
         // ---- static_lookup ---- //
 
         template<int I>
-        struct is_head : boost::mpl::bool_< I + 1 == N >{};
+        struct is_head : ::boost::mpl::bool_< I + 1 == N >{};
 
         template<int I>
         struct link_result_static_lookup : L::template 
         	result_static_lookup<I>{};
 
 		template<int I>
-		struct result_static_lookup : boost::mpl::eval_if<
+		struct result_static_lookup : ::boost::mpl::eval_if<
         	is_head<I>,
-            boost::mpl::identity<T&>,
+            ::boost::mpl::identity<T&>,
             link_result_static_lookup<I>
         >{};
 

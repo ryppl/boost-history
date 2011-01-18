@@ -43,23 +43,23 @@ namespace assign{
 namespace v2{
 namespace put_pipe_aux{
 
-    template<typename Pars = boost::mpl::vector0<> >
+    template<typename Pars = ::boost::mpl::vector0<> >
 	class csv_generator
     {
 
     	typedef boost::use_default tag2_;
     	typedef v2::ref::assign_copy::nth_result_of::fusion<tag2_> meta1_;
 
-		typedef boost::mpl::na na_;
+		typedef ::boost::mpl::na na_;
 
 		public:
 
 		BOOST_STATIC_CONSTANT(
         	std::size_t,
-            static_parameters_size = boost::mpl::size<Pars>::value
+            static_parameters_size = ::boost::mpl::size<Pars>::value
         );
 
-        typedef typename boost::mpl::apply1<
+        typedef typename ::boost::mpl::apply1<
             meta1_,
             Pars
         >::type pars_cont_type;
@@ -71,7 +71,7 @@ namespace put_pipe_aux{
         template<typename T>
         struct modulo_result
         {
-        	typedef typename boost::mpl::push_back<
+        	typedef typename ::boost::mpl::push_back<
     			Pars,
                 T const
             >::type new_;

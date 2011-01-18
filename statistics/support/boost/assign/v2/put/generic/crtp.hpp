@@ -55,7 +55,7 @@ namespace put_aux{
         typedef typename v2::container_traits::value<
             V
         >::type value_type;
-        typedef typename boost::mpl::eval_if<
+        typedef typename ::boost::mpl::eval_if<
         	container_traits::is_ptr_container<V>,
             functor_aux::deduce_new_<V>,
             functor_aux::deduce_constructor<V>
@@ -125,7 +125,7 @@ namespace put_aux{
         protected:
         typedef functor_aux::crtp_unary_and_up<
             crtp,
-            boost::mpl::always<result_type>
+            ::boost::mpl::always<result_type>
         > super_t;
 
         public:
@@ -155,7 +155,7 @@ BOOST_PP_REPEAT_FROM_TO(
             {
 				typedef functor_aux::deduce_constructor<V> caller_;
         		typedef typename caller_::type cons_;
-                typedef typename boost::mpl::apply1<
+                typedef typename ::boost::mpl::apply1<
                 	v2::result_of_modulo::new_fun<D>,
                     cons_
                 >::type type;

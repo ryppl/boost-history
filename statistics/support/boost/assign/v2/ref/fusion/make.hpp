@@ -27,9 +27,9 @@ namespace ref{
 namespace result_of{
 
 	template<typename Tag1,typename Tag2,typename Tnil>
-    struct fusion_nil : boost::mpl::apply1< 
+    struct fusion_nil : ::boost::mpl::apply1< 
         nth_result_of::fusion<Tag1, Tag2, Tnil>,
-        boost::mpl::vector0<>
+        ::boost::mpl::vector0<>
     >{};
     
 }// result_of

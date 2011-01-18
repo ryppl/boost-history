@@ -21,7 +21,7 @@ namespace type_traits{
 
     // To support string literals properly
     template< class T >
-    struct decay : boost::mpl::eval_if<
+    struct decay : ::boost::mpl::eval_if<
         ::boost::is_array<T>,
         ::boost::decay<const T>,
         ::boost::decay<T> >

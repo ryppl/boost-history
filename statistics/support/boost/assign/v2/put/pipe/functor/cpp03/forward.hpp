@@ -52,7 +52,7 @@ BOOST_PP_REPEAT(
     >
     void forward(
         F const& f ,
-        boost::mpl::int_<N>,
+        ::boost::mpl::int_<N>,
         ref::list_tuple_aux::container<N, L, params(T)> const& list
     )
     {}
@@ -63,16 +63,16 @@ BOOST_PP_REPEAT(
     >
     void forward(
         F const& f ,
-        boost::mpl::int_<I>,
+        ::boost::mpl::int_<I>,
         ref::list_tuple_aux::container<N, L, params(T)> const& list
     )
     {
         {
-            typedef boost::mpl::int_<I> int_;
+            typedef ::boost::mpl::int_<I> int_;
             forward( f, list.get( int_() ) );
         }
         {
-            typedef boost::mpl::int_<I+1> next_;
+            typedef ::boost::mpl::int_<I+1> next_;
             forward( f, next_(), list );
         }
     }
@@ -94,7 +94,7 @@ BOOST_PP_REPEAT(
         ref::list_tuple_aux::container<N, L, params(T)> const& list
     )
     {
-        typedef boost::mpl::int_<0> int_;
+        typedef ::boost::mpl::int_<0> int_;
         forward(f, int_(), list);
     }
 

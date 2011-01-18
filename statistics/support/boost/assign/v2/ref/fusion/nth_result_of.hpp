@@ -50,10 +50,10 @@ namespace fusion_aux{
         struct result : State::template result<T>{};
 
 		template<typename Vec>
-    	struct apply : boost::mpl::fold<
+    	struct apply : ::boost::mpl::fold<
         	Vec,
             state_,
-            result<boost::mpl::_1, boost::mpl::_2>
+            result<boost::mpl::_1, ::boost::mpl::_2>
         >{};
 
 	};
@@ -67,7 +67,7 @@ namespace nth_result_of{
 	struct fusion
     {
         template<typename Vec>
-        struct apply : boost::mpl::apply1<
+        struct apply : ::boost::mpl::apply1<
         	fusion_aux::nth_result<Tag1, Tag2, Tnil>,
         	Vec
         >{};

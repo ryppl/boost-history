@@ -43,7 +43,7 @@ struct nth_arg<N, Void>
 }// boost
 
 #define BOOST_MPL_DETAIL_VARIADIC_SEQUENCE_arg(z, n, data) \
-    typename boost::mpl::detail::variadic_sequence_aux::nth_arg< \
+    typename ::boost::mpl::detail::variadic_sequence_aux::nth_arg< \
         n, data, Args...\
     >::type \
 /**/

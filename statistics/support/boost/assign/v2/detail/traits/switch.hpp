@@ -31,7 +31,7 @@ namespace switch_aux{
     template<typename SwitchTag, int k> struct case_{};
     
     template<typename T>
-    struct default_f : boost::mpl::true_{};
+    struct default_f : ::boost::mpl::true_{};
     
     template<typename Tag, template<typename> class F = switch_aux::default_f>
     struct helper
@@ -50,8 +50,8 @@ namespace switch_aux{
     };
 
     template<typename SwitchTag, typename T, int k = 0>
-    struct result : boost::mpl::eval_if<
-        boost::mpl::apply1< switch_aux::case_<SwitchTag, k>, T >,
+    struct result : ::boost::mpl::eval_if<
+        ::boost::mpl::apply1< switch_aux::case_<SwitchTag, k>, T >,
         switch_aux::extract_tag< switch_aux::case_<SwitchTag, k> >,
         switch_aux::result< SwitchTag, T, k + 1>
     >{};

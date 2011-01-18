@@ -17,7 +17,7 @@ namespace v2{
 namespace ref{
 namespace fusion_aux{
 
-	typedef boost::mpl::void_ root_type;
+	typedef ::boost::mpl::void_ root_type;
 
 }// fusion_aux
 }// ref

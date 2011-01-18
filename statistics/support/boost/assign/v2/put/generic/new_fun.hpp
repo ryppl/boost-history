@@ -30,13 +30,13 @@ namespace put_aux{
     };
     
     template<typename T,typename F1>
-    typename boost::mpl::apply1<result_of_modulo::new_fun<T>, F1>::type
+    typename ::boost::mpl::apply1<result_of_modulo::new_fun<T>, F1>::type
 	operator%(
     	T const& t, 
         put_aux::new_fun<F1> const& h
     )
     {
-    	typedef typename boost::mpl::apply1<
+    	typedef typename ::boost::mpl::apply1<
     		result_of_modulo::new_fun<T>,
         	F1
     	>::type result_;

@@ -149,22 +149,22 @@ namespace array_aux{
 
         void assign(param_type val)
         {
-        	typedef boost::mpl::int_<0> int_;
+        	typedef ::boost::mpl::int_<0> int_;
         	this->assign_impl( val, int_() );
         }
 
         protected:
 
-        void assign_impl(param_type val, boost::mpl::int_<static_size>)
+        void assign_impl(param_type val, ::boost::mpl::int_<static_size>)
         {
         	/* exit */
         }
 
         template<int i>
-        void assign_impl(param_type val, boost::mpl::int_<i>)
+        void assign_impl(param_type val, ::boost::mpl::int_<i>)
         {
             this->wrappers()[i] = val;
-            typedef boost::mpl::int_<i+1> next_;
+            typedef ::boost::mpl::int_<i+1> next_;
             this->assign_impl( val, next_() );
         }
 

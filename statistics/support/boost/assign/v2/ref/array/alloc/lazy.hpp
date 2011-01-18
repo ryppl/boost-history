@@ -33,7 +33,7 @@ namespace array_aux{
             T
         >::array_type impl_;
 
-		typedef boost::mpl::int_<N> size_;
+		typedef ::boost::mpl::int_<N> size_;
                 
         void alloc_if()const{
             if(!this->ptr){

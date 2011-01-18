@@ -9,10 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_CONVERT_DEDUCE_ER_2010_HPP
 #define BOOST_ASSIGN_V2_CONVERT_DEDUCE_ER_2010_HPP
-#include <boost/mpl/eval_if.hpp>
-#include <boost/mpl/identity.hpp>
 #include <boost/mpl/pair.hpp>
-#include <boost/type_traits/is_same.hpp>
 #include <boost/assign/v2/detail/traits/switch.hpp>
 #include <boost/assign/v2/utility/convert/tag.hpp>
 #include <boost/assign/v2/utility/convert/helper.hpp>

@@ -18,7 +18,7 @@ namespace v2{
 namespace ref{
 namespace fusion_aux{
 
-	typedef boost::mpl::void_ nil_arg_type;
+	typedef ::boost::mpl::void_ nil_arg_type;
 
 }// fusion_aux
 }// ref

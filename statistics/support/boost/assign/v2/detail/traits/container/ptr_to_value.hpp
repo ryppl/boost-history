@@ -25,7 +25,7 @@ namespace container_traits{
 	template<typename V>
     struct ptr_to_value{
     
-    	struct is_applicable : boost::mpl::false_{};
+    	struct is_applicable : ::boost::mpl::false_{};
     
     };
 
@@ -43,7 +43,7 @@ namespace ptr_to_value_aux{
     struct common
     {
 
-    	struct is_applicable : boost::mpl::true_{};
+    	struct is_applicable : ::boost::mpl::true_{};
 
     	typedef typename boost::remove_reference<
         	typename V::reference
@@ -56,18 +56,18 @@ namespace ptr_to_value_aux{
     };
 
 	template<typename V,template<typename, std::size_t> class F>
-	struct static_array_like{	
+	struct array_like{	
 
 		// there is no allocator, hence can't derive from common<V>
 
-    	struct is_applicable : boost::mpl::true_{};
+    	struct is_applicable : ::boost::mpl::true_{};
 
     	typedef typename boost::remove_reference<
         	typename V::reference
         >::type value_type;
 	
 		typedef F<
-        	typename static_array_like::value_type,
+        	typename array_like::value_type,
             container_traits::static_size<V>::value 
         > container_type;
         
@@ -145,7 +145,7 @@ namespace ptr_to_value_aux{
     > 
     struct ptr_to_value<
     	boost::ptr_array<T,N,A>
-    > : ptr_to_value_aux::static_array_like<
+    > : ptr_to_value_aux::array_like<
     	boost::ptr_array<T,N,A>,
         boost::array
     >{};

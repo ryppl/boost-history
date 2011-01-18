@@ -14,6 +14,8 @@
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/identity.hpp>
 #include <boost/mpl/assert.hpp>
+#include <boost/type_traits/add_const.hpp>
+#include <boost/type_traits/is_same.hpp>
 #include <boost/range/algorithm/copy.hpp>
 #include <boost/assign/v2/detail/checking/range.hpp>
 #include <boost/assign/v2/ref/wrapper/get.hpp>
@@ -33,16 +35,16 @@ void verify_use_lvalue()
 {
     typedef v2::chain_aux::use_lvalue<cr1_, cr2_>  use_lvalue_; 
     BOOST_STATIC_ASSERT( use_lvalue_::value == the_value ); 
-    typedef typename boost::mpl::eval_if_c< 
+    typedef typename ::boost::mpl::eval_if_c< 
         the_value, 
-        boost::mpl::identity<boost::mpl::void_>, // why?
+        ::boost::mpl::identity<boost::mpl::void_>, // why?
         v2::result_of::chain<cr1_, cr2_> 
     >::type result_; 
 }
 
 template<bool x, typename T>
-struct add_const_if : boost::mpl::eval_if_c<
-	x, boost::add_const<T>, boost::mpl::identity<T>
+struct add_const_if : ::boost::mpl::eval_if_c<
+	x, boost::add_const<T>, ::boost::mpl::identity<T>
 >{};
 
 template<typename T, bool qual_v1, bool qual_e2, bool qual_v2, bool the_value>

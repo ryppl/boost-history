@@ -24,7 +24,7 @@ namespace put_pipe_aux{
     {
         typedef boost::use_default tag2_;
     	typedef v2::ref::assign_copy::nth_result_of::fusion<tag2_> meta1_;
-        typedef typename boost::mpl::apply1<
+        typedef typename ::boost::mpl::apply1<
             meta1_,
             Pars
         >::type pars_cont_type;

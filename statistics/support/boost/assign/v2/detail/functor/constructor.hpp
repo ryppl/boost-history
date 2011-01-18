@@ -36,7 +36,7 @@ namespace functor_aux{
 #else
     : public functor_aux::crtp_unary_and_up<
     	functor_aux::constructor<T>,
-        boost::mpl::always<T>
+        ::boost::mpl::always<T>
     >
 #endif
 	{
@@ -56,7 +56,7 @@ namespace functor_aux{
         }
 #else
         protected:
-            typedef boost::mpl::always<T> meta_result_;
+            typedef ::boost::mpl::always<T> meta_result_;
             typedef functor_aux::crtp_unary_and_up<this_, meta_result_> super_;
 
         public:

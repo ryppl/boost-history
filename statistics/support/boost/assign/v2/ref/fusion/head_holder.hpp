@@ -48,7 +48,7 @@ namespace fusion_aux{
     
     	public:
     
-    	typedef boost::mpl::void_ head_value_type;
+    	typedef ::boost::mpl::void_ head_value_type;
     
     	head_value_type back()const
         {

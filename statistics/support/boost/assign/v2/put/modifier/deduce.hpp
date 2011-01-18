@@ -16,7 +16,7 @@
 
 #include <boost/assign/v2/detail/traits/switch.hpp>
 
-#include <boost/assign/v2/detail/traits/container/is_static_array.hpp>
+#include <boost/assign/v2/detail/traits/container/is_array.hpp>
 #include <boost/assign/v2/detail/traits/container/has_push.hpp>
 #include <boost/assign/v2/detail/traits/container/is_associative.hpp>
 
@@ -46,7 +46,7 @@ namespace switch_aux{
     struct case_<switch_tag::deduce_put, 1> :
         switch_aux::helper<
 			v2::modifier_tag::iterate,
-            v2::container_traits::is_static_array
+            v2::container_traits::is_array
         >{};
 
     template<>
@@ -81,7 +81,7 @@ namespace put_aux{
     }
 
 	template<typename Option1,typename Option2>
-	struct deduce : boost::mpl::eval_if<
+	struct deduce : ::boost::mpl::eval_if<
     	boost::is_same<Option1, boost::use_default>,
     	boost::mpl::identity<Option2>,
     	boost::mpl::identity<Option1>

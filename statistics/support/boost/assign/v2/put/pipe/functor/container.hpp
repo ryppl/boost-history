@@ -37,8 +37,8 @@ namespace v2{
 namespace put_pipe_aux{
 
     template<
-    	typename Pars = boost::mpl::vector0<>,
-    	typename SeqArgs = boost::mpl::vector0<>,
+    	typename Pars = ::boost::mpl::vector0<>,
+    	typename SeqArgs = ::boost::mpl::vector0<>,
         bool enable_pars = (boost::mpl::size<SeqArgs>::value == 0)
     >
 	class container;
@@ -50,7 +50,7 @@ namespace put_pipe_aux{
     	template<typename V>
     	struct apply
     	{
-        	typedef typename boost::mpl::push_back<
+        	typedef typename ::boost::mpl::push_back<
                 SeqArgs,
                 V
             >::type new_;
@@ -79,7 +79,7 @@ namespace put_pipe_aux{
 
     	template<typename...Args>
         struct apply : helper_::template apply<
-            typename boost::mpl::detail::variadic_vector<
+            typename ::boost::mpl::detail::variadic_vector<
                 Args...
             >::type
         >
@@ -114,19 +114,19 @@ namespace put_pipe_aux{
 
 		BOOST_STATIC_CONSTANT(
         	std::size_t,
-        	static_pars_size = boost::mpl::size<Pars>::value
+        	static_pars_size = ::boost::mpl::size<Pars>::value
         );
 
 		BOOST_STATIC_CONSTANT(
         	std::size_t,
-            seq_args_size = boost::mpl::size<SeqArgs>::value
+            seq_args_size = ::boost::mpl::size<SeqArgs>::value
         );
 
-        typedef typename boost::mpl::apply1<
+        typedef typename ::boost::mpl::apply1<
             meta1_,
             Pars
         >::type pars_cont_type;
-        typedef typename boost::mpl::apply1<
+        typedef typename ::boost::mpl::apply1<
             meta2_,
             SeqArgs
         >::type seq_args_cont_type;
@@ -143,7 +143,7 @@ namespace put_pipe_aux{
         template<typename T>
         struct modulo_result
         {
-        	typedef typename boost::mpl::push_back<
+        	typedef typename ::boost::mpl::push_back<
     			Pars,
                 T const
             >::type new_;
@@ -210,7 +210,7 @@ namespace put_pipe_aux{
             container_result<Pars, SeqArgs, enable_pars>
     	> super_t;
 
-        typedef boost::mpl::vector0<> v0_;
+        typedef ::boost::mpl::vector0<> v0_;
 
         public:
 
@@ -232,12 +232,12 @@ namespace put_pipe_aux{
 #define MACRO2(z, N1, data)\
     template<BOOST_PP_ENUM_PARAMS(N1, typename U)>\
     typename result<\
-        boost::mpl::vector<\
+        ::boost::mpl::vector<\
             BOOST_PP_ENUM_PARAMS(N1, U)\
         >\
     >::type\
     impl( BOOST_PP_ENUM_BINARY_PARAMS(N1, U, &_) )const{\
-        typedef boost::mpl::vector<\
+        typedef ::boost::mpl::vector<\
             BOOST_PP_ENUM_PARAMS(N1, U)\
         > v_;\
         typedef typename result<v_>::type result_;\

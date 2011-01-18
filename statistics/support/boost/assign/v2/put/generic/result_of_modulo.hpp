@@ -38,12 +38,12 @@ namespace result_of_modulo{
     	template<typename F,typename Tag>
         struct apply
         {
-        	typedef typename boost::mpl::apply1<
+        	typedef typename ::boost::mpl::apply1<
             	new_fun<T>,
                 F
             >::type new_fun_;
             typedef result_of_modulo::new_modifier<new_fun_> new_modifier_;
-            typedef typename boost::mpl::apply1<
+            typedef typename ::boost::mpl::apply1<
             	new_modifier_,
                 Tag
             >::type type;
@@ -52,7 +52,7 @@ namespace result_of_modulo{
     };
     
     template<typename T>
-    struct generic
+    struct generic_
     {
     
     	template<typename P>

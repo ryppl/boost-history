@@ -9,11 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_TRAITS_CONTAINER_IS_ARRAY_ER_2010_HPP
 #define BOOST_ASSIGN_V2_TRAITS_CONTAINER_IS_ARRAY_ER_2010_HPP
-/*
-#include <boost/mpl/bool.hpp>
-#include <boost/type_traits/remove_cv.hpp>
-//#include <boost/assign/v2/detail/traits/container/has_static_size.hpp>
-#include <boost/assign/v2/detail/traits/container/forward_to_value.hpp>
+#include <boost/assign/v2/detail/traits/container/is.hpp>
 
 namespace boost{
 
@@ -25,27 +21,21 @@ namespace boost{
 namespace assign{
 namespace v2{
 namespace container_tag{
-	struct static_array{};
+	struct array{};
 }// container_tag
-namespace container_type_aux{
+namespace container_traits_aux{
 
-	template<typename V> struct is_array : boost::mpl::false_{};
-	template<typename V> struct is_array<
+	template<typename V> struct is_array : ::boost::mpl::false_{};
+	template<typename T, std::size_t sz> struct is_array<
     	boost::array<T, sz> 
-    > : boost::mpl::true_{};
+    > : ::boost::mpl::true_{};
     
 }// containert_type_aux
-namespace container_traits{
 
-    template<typename V>
-    struct is_array : forward_to_value<
-    	is_array_impl,
-    	typename boost::remove_cv<V>::type
-    >{};
+	BOOST_ASSIGN_V2_TRAITS_CONTAINER_IS(array)
 
-}// container_traits
 }// v2
 }// assign
 }// boost 
-*/
+
 #endif

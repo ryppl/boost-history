@@ -9,11 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_TRAITS_CONTAINER_IS_LIFO_ER_2010_HPP
 #define BOOST_ASSIGN_V2_TRAITS_CONTAINER_IS_LIFO_ER_2010_HPP
-#include <boost/mpl/bool.hpp>
-#include <boost/type_traits/remove_cv.hpp>
-#include <boost/assign/v2/detail/fwd/container.hpp>
-#include <boost/assign/v2/detail/traits/container/is_ptr_container.hpp>
-#include <boost/assign/v2/detail/traits/container/forward_to_value.hpp>
+#include <boost/assign/v2/detail/traits/container/is.hpp>
 
 namespace boost{
 namespace assign{
@@ -21,21 +17,19 @@ namespace v2{
 namespace container_tag{
 	struct lifo{};
 }// container_tag
-namespace container_traits{
+namespace container_traits_aux{
 
 	template<typename V>
-    struct is_lifo_impl : boost::mpl::false_{};
+    struct is_lifo : ::boost::mpl::false_{};
     
     template<typename T,typename A>
-    struct is_lifo_impl< std::stack<T,A> > : boost::mpl::true_{};
+    struct is_lifo< std::stack<T,A> > : ::boost::mpl::true_{};
 
-    template<typename V>
-    struct is_lifo : forward_to_value<
-    	is_lifo_impl,
-    	typename boost::remove_cv<V>::type
-    >{};
+}// container_traits_aux
 
-}// container_traits
+
+	BOOST_ASSIGN_V2_TRAITS_CONTAINER_IS(lifo)
+
 }// v2
 }// assign
 }// boost

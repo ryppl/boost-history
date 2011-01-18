@@ -11,7 +11,6 @@
 #define BOOST_ASSIGN_V2_TRAITS_CONTAINER_ER_2010_HPP
 
 #include <boost/assign/v2/detail/traits/container/has_push.hpp>
-#include <boost/assign/v2/detail/traits/container/has_static_size.hpp>
 #include <boost/assign/v2/detail/traits/container/forward_to_value.hpp>
 #include <boost/assign/v2/detail/traits/container/is_associative.hpp>
 #include <boost/assign/v2/detail/traits/container/is_fifo.hpp>
@@ -21,7 +20,7 @@
 #include <boost/assign/v2/detail/traits/container/is_range.hpp>
 #include <boost/assign/v2/detail/traits/container/is_set.hpp>
 #include <boost/assign/v2/detail/traits/container/is_sorted.hpp>
-#include <boost/assign/v2/detail/traits/container/is_static_array.hpp> // TODO
+#include <boost/assign/v2/detail/traits/container/is_array.hpp>
 #include <boost/assign/v2/detail/traits/container/ptr_to_value.hpp>
 #include <boost/assign/v2/detail/traits/container/ptr_to_value_container.hpp>
 #include <boost/assign/v2/detail/traits/container/static_size.hpp>

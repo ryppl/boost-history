@@ -32,10 +32,10 @@ namespace chain_aux{
         	typename boost::remove_reference<U1>::type
         >::value
     >
-    struct use_lvalue_impl : boost::mpl::false_{};
+    struct use_lvalue_impl : ::boost::mpl::false_{};
     
 	template<typename U>
-    struct use_lvalue_impl<U, U, true, false> : boost::mpl::true_{};
+    struct use_lvalue_impl<U, U, true, false> : ::boost::mpl::true_{};
 
     template<typename R1, typename R2, typename Tag = use_default> 
     struct use_lvalue : use_lvalue_impl<

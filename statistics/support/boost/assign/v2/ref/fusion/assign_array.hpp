@@ -29,7 +29,7 @@ namespace fusion_aux{
         std::size_t N, typename L, typename Tag1, typename Tag2, typename T
     >
     void assign_array(
-    	boost::mpl::true_ /*exit*/,
+    	::boost::mpl::true_ /*exit*/,
     	A& a,
         const fusion_aux::container<N, L, Tag1, Tag2, T>& f
     )
@@ -42,16 +42,16 @@ namespace fusion_aux{
         std::size_t N, typename L, typename Tag1, typename Tag2,typename T
     >
     void assign_array(
-    	boost::mpl::false_ /*exit*/,
+    	::boost::mpl::false_ /*exit*/,
     	A& a,
         const fusion_aux::container<N, L, Tag1, Tag2, T>& f
     )
     {
-        typedef boost::mpl::int_<K-1> index_;
+        typedef ::boost::mpl::int_<K-1> index_;
         a[ K - 1 ].rebind( f.static_lookup( index_() ) ) ;
         typedef index_ next_size_;
-        typedef boost::mpl::int_<0> zero_;
-        typedef typename boost::mpl::equal_to<next_size_,zero_>::type exit_;
+        typedef ::boost::mpl::int_<0> zero_;
+        typedef typename ::boost::mpl::equal_to<next_size_,zero_>::type exit_;
         assign_array<K-1>( exit_(), a, f );
     }
 
@@ -65,9 +65,9 @@ namespace fusion_aux{
     {
     	// don't replace by size_::value <= N (causes warning)
     	BOOST_STATIC_ASSERT( A::static_size <= N );
-        typedef boost::mpl::int_<0> zero_;
-        typedef boost::mpl::int_<A::static_size> size_;
-        typedef typename boost::mpl::equal_to<size_, zero_>::type exit_;
+        typedef ::boost::mpl::int_<0> zero_;
+        typedef ::boost::mpl::int_<A::static_size> size_;
+        typedef typename ::boost::mpl::equal_to<size_, zero_>::type exit_;
         fusion_aux::assign_array<size_::value>( exit_(), a, f );
     }
 

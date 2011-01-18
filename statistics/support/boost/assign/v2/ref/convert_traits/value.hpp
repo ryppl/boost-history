@@ -32,7 +32,7 @@ namespace convert_traits{
     // TODO upgrade
 	//	#include <boost/type_traits/is_arithmetic.hpp>
     //  #include <boost/numeric/conversion/conversion_traits.hpp>
-    //	struct value : boost::mpl::eval_if<
+    //	struct value : ::boost::mpl::eval_if<
     //		mpl::and_<is_arithmetic<V1>, is_arithmetic<V2> >,
     //   	boost::numeric::conversion_traits<V1, V2>::supertype.
     //		... as above ...

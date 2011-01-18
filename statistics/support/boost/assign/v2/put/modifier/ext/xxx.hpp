@@ -22,7 +22,7 @@ namespace result_of_modulo{\
 \
 	template<typename T, typename Arg>\
 	struct Param\
-    	: boost::mpl::apply1<\
+    	: ::boost::mpl::apply1<\
             result_of_modulo::ext_generic<T>\
             , put_parameter::Param<Arg>\
         >\

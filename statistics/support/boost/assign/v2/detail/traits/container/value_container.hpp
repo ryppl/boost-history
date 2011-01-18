@@ -20,10 +20,10 @@ namespace v2{
 namespace container_traits{
 
 	template<typename V>
-    struct value_container : boost::mpl::eval_if<
+    struct value_container : ::boost::mpl::eval_if<
         is_ptr_container<V>,
     	ptr_to_value_container<V>,
-        boost::mpl::identity<V>
+        ::boost::mpl::identity<V>
     >{};
     
 }// container_traits

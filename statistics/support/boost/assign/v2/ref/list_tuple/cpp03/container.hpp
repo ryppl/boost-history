@@ -83,12 +83,9 @@ namespace list_tuple_aux{
         > type;
 #undef MACRO
 
-        BOOST_STATIC_CONSTANT(
-            int,
-            size = ::boost::tuples::length<type>::value
-        );
 
     };
+
 
     template<typename NewState>
     struct result
@@ -132,10 +129,10 @@ namespace list_tuple_aux{
         	cont_,
         	boost::mpl::unpack_args<meta_result_>
     	> crtp_;
-        typedef typename boost::mpl::eval_if_c<
+        typedef typename ::boost::mpl::eval_if_c<
             N == 0,
-            boost::mpl::identity< boost::mpl::empty_base >,
-            boost::mpl::identity< link<L> >
+            ::boost::mpl::identity< ::boost::mpl::empty_base >,
+            ::boost::mpl::identity< link<L> >
         >::type link_;
     };
 
@@ -161,7 +158,7 @@ namespace list_tuple_aux{
         BOOST_STATIC_CONSTANT( size_type, static_get_size = N );
         BOOST_STATIC_CONSTANT(
             size_type,
-            static_tuple_size = tuple_::size
+            static_tuple_size = ::boost::tuples::length<tuple_>::value
         );
 
         container()

@@ -26,7 +26,7 @@ namespace fusion_aux{
     struct policy{};
 
 	template<>
-    struct policy<boost::use_default> : boost::mpl::always<
+    struct policy<boost::use_default> : ::boost::mpl::always<
     	boost::mpl::empty_base
     >{};
 

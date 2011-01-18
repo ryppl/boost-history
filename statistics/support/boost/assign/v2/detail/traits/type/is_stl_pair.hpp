@@ -23,10 +23,10 @@ namespace type_traits{
 //    boost::type_traits::no_type is_pair( ... ); 
 
     template<typename T>
-    struct is_stl_pair : boost::mpl::false_{};
+    struct is_stl_pair : ::boost::mpl::false_{};
     
     template<typename T,typename U>
-    struct is_stl_pair< std::pair<T, U> > : boost::mpl::true_{};
+    struct is_stl_pair< std::pair<T, U> > : ::boost::mpl::true_{};
 
 }// type_traits
 }// v2
