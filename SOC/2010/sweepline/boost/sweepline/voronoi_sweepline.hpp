@@ -16,12 +16,15 @@
 #include <list>
 #include <map>
 #include <queue>
+#include <stack>
 #include <vector>
 
 #ifdef USE_MULTI_PRECISION_LIBRARY
     #pragma warning( disable : 4800 )
     #include "gmpxx.h"
 #endif
+
+#define BOOST_POLYGON_UNSIGNED_LONG_LONG unsigned long long 
 
 #include "voronoi_output.hpp"
 #include "detail/voronoi_formation.hpp"

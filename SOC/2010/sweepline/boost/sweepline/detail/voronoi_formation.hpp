@@ -631,12 +631,13 @@ namespace detail {
     // Convert value to 64-bit unsigned integer.
     // Return true if the value is positive, else false.
     template <typename T>
-    static inline bool convert_to_65_bit(T value, unsigned long long &res) {
+    static inline bool convert_to_65_bit(
+        T value, BOOST_POLYGON_UNSIGNED_LONG_LONG &res) {
         if (value >= 0) {
-            res = static_cast<unsigned long long>(value);
+            res = static_cast<BOOST_POLYGON_UNSIGNED_LONG_LONG>(value);
             return true;
         } else {
-            res = static_cast<unsigned long long>(-value);
+            res = static_cast<BOOST_POLYGON_UNSIGNED_LONG_LONG>(-value);
             return false;
         }
     }
@@ -645,8 +646,9 @@ namespace detail {
     // then they are ordered the same way when their bits are reinterpreted as
     // sign-magnitude integers. Values are considered to be almost equal if
     // their integer reinterpretatoins differ in not more than maxUlps units.
-    static inline bool almost_equal(double a, double b, int maxUlps) {
-        long long ll_a, ll_b;
+    static inline bool almost_equal(double a, double b,
+                                    unsigned int maxUlps) {
+        BOOST_POLYGON_UNSIGNED_LONG_LONG ll_a, ll_b;
 
         // Reinterpret double bits as 64-bit signed integer.
         memcpy(&ll_a, &a, sizeof(double));
@@ -656,16 +658,17 @@ namespace detail {
         // Map negative zero to an integer zero representation - making it
         // identical to positive zero - the smallest negative number is
         // represented by negative one, and downwards from there.
-        if (ll_a < 0)
-            ll_a = 0x8000000000000000LL - ll_a;
-        if (ll_b < 0)
-            ll_b = 0x8000000000000000LL - ll_b;
+        if (ll_a < 0x8000000000000000ULL)
+            ll_a = 0x8000000000000000ULL - ll_a;
+        if (ll_b < 0x8000000000000000ULL)
+            ll_b = 0x8000000000000000ULL - ll_b;
 
         // Compare 64-bit signed integer representations of input values.
         // Difference in 1 Ulp is equivalent to a relative error of between
         // 1/4,000,000,000,000,000 and 1/8,000,000,000,000,000.
-        long long dif = ll_a - ll_b;
-        return (dif <= maxUlps) && (dif >= -maxUlps);
+        if (ll_a > ll_b)
+            return ll_a - ll_b <= maxUlps;
+        return ll_b - ll_a <= maxUlps;
     }
 
     // Robust orientation test. Works correctly for any input type that
@@ -677,16 +680,15 @@ namespace detail {
     template <typename T>
     static kOrientation orientation_test(T dif_x1_, T dif_y1_,
                                          T dif_x2_, T dif_y2_) {
-        typedef unsigned long long ull;
-        ull dif_x1, dif_y1, dif_x2, dif_y2;
+        BOOST_POLYGON_UNSIGNED_LONG_LONG dif_x1, dif_y1, dif_x2, dif_y2;
         bool dif_x1_plus, dif_x2_plus, dif_y1_plus, dif_y2_plus;
         dif_x1_plus = convert_to_65_bit(dif_x1_, dif_x1);
         dif_y1_plus = convert_to_65_bit(dif_y1_, dif_y1);
         dif_x2_plus = convert_to_65_bit(dif_x2_, dif_x2);
         dif_y2_plus = convert_to_65_bit(dif_y2_, dif_y2);
 
-        ull expr_l = dif_x1 * dif_y2;
-        ull expr_r = dif_x2 * dif_y1;
+        BOOST_POLYGON_UNSIGNED_LONG_LONG expr_l = dif_x1 * dif_y2;
+        BOOST_POLYGON_UNSIGNED_LONG_LONG expr_r = dif_x2 * dif_y1;
 
         bool expr_l_plus = (dif_x1_plus == dif_y2_plus) ? true : false;
         bool expr_r_plus = (dif_x2_plus == dif_y1_plus) ? true : false;
@@ -744,17 +746,16 @@ namespace detail {
     // The result is correct with epsilon relative error equal to 1EPS.
     template <typename T>
     static double robust_cross_product(T a1_, T b1_, T a2_, T b2_) {
-        typedef unsigned long long ull;
-        ull a1, b1, a2, b2;
+        BOOST_POLYGON_UNSIGNED_LONG_LONG a1, b1, a2, b2;
         bool a1_plus, a2_plus, b1_plus, b2_plus;
         a1_plus = convert_to_65_bit(a1_, a1);
         b1_plus = convert_to_65_bit(b1_, b1);
         a2_plus = convert_to_65_bit(a2_, a2);
         b2_plus = convert_to_65_bit(b2_, b2);
 
-        ull expr_l = a1 * b2;
+        BOOST_POLYGON_UNSIGNED_LONG_LONG expr_l = a1 * b2;
         bool expr_l_plus = (a1_plus == b2_plus) ? true : false;
-        ull expr_r = b1 * a2;
+        BOOST_POLYGON_UNSIGNED_LONG_LONG expr_r = b1 * a2;
         bool expr_r_plus = (a2_plus == b1_plus) ? true : false;
 
         if (expr_l == 0)
@@ -1062,9 +1063,8 @@ namespace detail {
     static bool robust_65bit_less_predicate(const point_2d<T> &left_point,
                                             const point_2d<T> &right_point,
                                             const point_2d<T> &new_point) {
-        typedef long long ll;
-        typedef unsigned long long ull;
-        ull a1, a2, b1, b2, b1_sqr, b2_sqr, l_expr, r_expr;
+        BOOST_POLYGON_UNSIGNED_LONG_LONG a1, a2, b1, b2;
+        BOOST_POLYGON_UNSIGNED_LONG_LONG b1_sqr, b2_sqr, l_expr, r_expr;
         bool l_expr_plus, r_expr_plus;
 
         // Compute a1 = (x0-x1), a2 = (x0-x2), b1 = (y0 - y1), b2 = (y0 - y2).
@@ -1076,8 +1076,8 @@ namespace detail {
         // Compute b1_sqr = (y0-y1)^2 and b2_sqr = (y0-y2)^2.
         b1_sqr = b1 * b1;
         b2_sqr = b2 * b2;
-        ull b1_sqr_mod = b1_sqr % a1;
-        ull b2_sqr_mod = b2_sqr % a2;
+        BOOST_POLYGON_UNSIGNED_LONG_LONG b1_sqr_mod = b1_sqr % a1;
+        BOOST_POLYGON_UNSIGNED_LONG_LONG b2_sqr_mod = b2_sqr % a2;
 
         // Compute l_expr = (x1 - x2).
         l_expr_plus = convert_to_65_bit(left_point.x() - right_point.x(), l_expr);
@@ -1095,8 +1095,8 @@ namespace detail {
         }
 
         // Compute right expression.
-        ull value1 = b1_sqr / a1;
-        ull value2 = b2_sqr / a2;
+        BOOST_POLYGON_UNSIGNED_LONG_LONG value1 = b1_sqr / a1;
+        BOOST_POLYGON_UNSIGNED_LONG_LONG value2 = b2_sqr / a2;
         if (value1 >= value2) {
             r_expr = value1 - value2;
             r_expr_plus = true;
@@ -1157,8 +1157,6 @@ namespace detail {
     template <typename T>
     static kPredicateResult fast_less_predicate(point_2d<T> site_point, site_event<T> segment_site,
                                                 point_2d<T> new_point, bool reverse_order) {
-        typedef long long ll;
-        typedef unsigned long long ull;
         if (orientation_test(segment_site.point0(true), segment_site.point1(true),
             new_point) != RIGHT_ORIENTATION) {
             return (!segment_site.is_inverse()) ? LESS : MORE;

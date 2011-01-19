@@ -118,7 +118,7 @@ protected:
                 if (!it->is_primary() && primary_edges_only_)
                     continue;
                 std::vector<point_2d_type> temp_v =
-                    voronoi_helper<coordinate_type>::get_intermediate_points(&(*it), brect_);
+                    voronoi_helper<coordinate_type>::get_intermediate_points(&(*it), brect_, 1E-3);
                 for (int i = 0; i < static_cast<int>(temp_v.size()) - 1; i++) {
                     glVertex2f(temp_v[i].x(), temp_v[i].y());
                     glVertex2f(temp_v[i+1].x(), temp_v[i+1].y());

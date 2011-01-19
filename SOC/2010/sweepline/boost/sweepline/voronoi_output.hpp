@@ -172,6 +172,14 @@ namespace sweepline {
             return y_max_;
         }
 
+        coordinate_type min_len() const {
+            return (std::min)(x_max_ - x_min_, y_max_ - y_min_);
+        }
+
+        coordinate_type max_len() const {
+            return (std::max)(x_max_ - x_min_, y_max_ - y_min_);
+        }
+
     private:
         coordinate_type x_min_;
         coordinate_type y_min_;
@@ -218,9 +226,13 @@ namespace sweepline {
         // Compute intermediate points for the voronoi edge within the given
         // bounding rectangle. The assumption is made that voronoi rectangle
         // contains all the finite endpoints of the edge.
+        // Max_error is the maximum distance (relative to the minor of two
+        // rectangle sides) allowed between the parabola and line segments
+        // that interpolate it.
         static std::vector<point_2d_type> get_intermediate_points(
                 const voronoi_edge<coordinate_type> *edge,
-                const BRect<coordinate_type> &brect) {
+                const BRect<coordinate_type> &brect,
+                double max_error) {
             // Retrieve the cell to the left of the current edge.
             const voronoi_cell<coordinate_type> *cell1 = edge->cell();
 
@@ -272,8 +284,9 @@ namespace sweepline {
                     // Edge is a segment or parabolic arc.
                     edge_points.push_back(edge->vertex0()->vertex());
                     edge_points.push_back(edge->vertex1()->vertex());
+                    double max_dist = max_error * brect.min_len();
                     fill_intermediate_points(point1, point2, point3,
-                                             edge_points);
+                                             edge_points, max_dist);
                 } else {
                     // Edge is a ray or line.
                     // Clip it with the bounding rectangle.
@@ -372,31 +385,26 @@ namespace sweepline {
     private:
         voronoi_helper();
 
-        // Find intermediate points of the parabola.
+        // Find intermediate points of the parabola. Number of points
+        // is defined by the value of max_dist parameter - maximum distance
+        // between parabola and line segments that interpolate it.
         // Parabola is a locus of points equidistant from the point and segment
         // sites. intermediate_points should contain two initial endpoints
         // of the edge (voronoi vertices). Intermediate points are inserted
         // between the given two endpoints.
+        // Max_dist is the maximum distance allowed between parabola and line
+        // segments that interpolate it.
         static void fill_intermediate_points(
                 point_2d_type point_site,
                 point_2d_type segment_site_start,
                 point_2d_type segment_site_end,
-                std::vector<point_2d_type> &intermediate_points) {
-            // Get the number of intermediate points to represent parabola.
-            int num_inter_points = get_intermediate_points_count(
-                intermediate_points[0], intermediate_points[1]);
-
-            // Check if there are any intermediate points.
-            // In case bisector is a segment there won't be any.
-            if (num_inter_points <= 0 ||
-                point_site == segment_site_start ||
-                point_site == segment_site_end) {
+                std::vector<point_2d_type> &intermediate_points,
+                double max_dist) {
+            // Check if bisector is a segment.
+            if (point_site == segment_site_start ||
+                point_site == segment_site_end)
                 return;
-            }
-
-            // Reserve space to avoid vector reallocations.
-            intermediate_points.reserve(2 + num_inter_points);
-
+                    
             // Apply the linear transformation to move start point of the
             // segment to the point with coordinates (0, 0) and the direction
             // of the segment to coincide the positive direction of the x-axis.
@@ -407,62 +415,86 @@ namespace sweepline {
             coordinate_type sqr_segment_length = segm_vec_x * segm_vec_x +
                                                  segm_vec_y * segm_vec_y;
 
-            // Compute coordinates of the endpoints of the edge
+            // Compute x-coordinates of the endpoints of the edge
             // in the transformed space.
-            coordinate_type projection_start = get_point_projection(
-                intermediate_points[0], segment_site_start, segment_site_end);
-            coordinate_type projection_end = get_point_projection(
-                intermediate_points[1], segment_site_start, segment_site_end);
-            coordinate_type step = (projection_end - projection_start) *
-                sqr_segment_length / (num_inter_points + 1);
+            coordinate_type projection_start = sqr_segment_length *
+                get_point_projection(intermediate_points[0],
+                                     segment_site_start,
+                                     segment_site_end);
+            coordinate_type projection_end = sqr_segment_length *
+                get_point_projection(intermediate_points[1],
+                                     segment_site_start,
+                                     segment_site_end);
 
             // Compute parabola parameterers in the transformed space.
             // Parabola has next representation:
-            // f(x) = ((x-point_rot_x)^2 + point_rot_y^2) / (2.0*point_rot_y).
+            // f(x) = ((x-rot_x)^2 + rot_y^2) / (2.0*rot_y).
             coordinate_type point_vec_x = point_site.x() -
                                           segment_site_start.x();
             coordinate_type point_vec_y = point_site.y() -
                                           segment_site_start.y();
-            coordinate_type point_rot_x = segm_vec_x * point_vec_x +
-                                          segm_vec_y * point_vec_y;
-            coordinate_type point_rot_y = segm_vec_x * point_vec_y -
-                                          segm_vec_y * point_vec_x;
+            coordinate_type rot_x = segm_vec_x * point_vec_x +
+                                    segm_vec_y * point_vec_y;
+            coordinate_type rot_y = segm_vec_x * point_vec_y -
+                                    segm_vec_y * point_vec_x;
 
-            // Compute the x-coordinate of the first intermediate point.
-            coordinate_type projection_cur_x = projection_start *
-                                               sqr_segment_length + step;
-
-            // Temporary remove the last point.
-            point_2d_type last_point = intermediate_points.back();
+            // Save the last point.
+            point_2d_type last_point = intermediate_points[1];
             intermediate_points.pop_back();
 
-            // Generate intermediate points.
-            for (int i = 0; i < num_inter_points;
-                 i++, projection_cur_x += step) {
-                // Compute coordinates of the intermediate points
-                // in the transformed space.
-                coordinate_type inter_rot_x = projection_cur_x;
-                coordinate_type inter_rot_y =
-                    ((inter_rot_x - point_rot_x) *
-                     (inter_rot_x - point_rot_x) +
-                     point_rot_y * point_rot_y) / (2.0 * point_rot_y);
+            // Use stack to avoid recursion.
+            std::stack< coordinate_type > point_stack;
+            point_stack.push(projection_end);
+            coordinate_type cur_x = projection_start;
+            coordinate_type cur_y = parabola_y(cur_x, rot_x, rot_y);
 
-                // Compute coordinates of the intermediates points
-                // in the initial space.
-                coordinate_type new_point_x =
-                    (segm_vec_x * inter_rot_x - segm_vec_y * inter_rot_y) /
-                    sqr_segment_length + segment_site_start.x();
-                coordinate_type new_point_y =
-                    (segm_vec_x * inter_rot_y + segm_vec_y * inter_rot_x) /
-                    sqr_segment_length + segment_site_start.y();
+            // Adjust max_dist parameter in the transformed space.
+            max_dist *= max_dist * sqr_segment_length;
 
-                // Append a new intermediate point to the end.
-                intermediate_points.push_back(
-                    make_point_2d(new_point_x, new_point_y));
+            while (!point_stack.empty()) {
+                coordinate_type new_x = point_stack.top();
+                coordinate_type new_y = parabola_y(new_x, rot_x, rot_y);
+
+                // Compute coordinates of the point of the parabola that is
+                // furthest from the current line segment.
+                coordinate_type mid_x = (new_y - cur_y) / (new_x - cur_x) *
+                                        rot_y + rot_x;
+                coordinate_type mid_y = parabola_y(mid_x, rot_x, rot_y);
+
+                // Compute maximum distance between the given parabolic arc
+                // and line segment that interpolates it.
+                double dist = (new_y - cur_y) * (mid_x - cur_x) -
+                              (new_x - cur_x) * (mid_y - cur_y);
+                dist = dist * dist / ((new_y - cur_y) * (new_y - cur_y) +
+                                      (new_x - cur_x) * (new_x - cur_x));
+                if (dist <= max_dist) {
+                    // Distance between parabola and line segment is
+                    // not greater than max_dist.
+                    point_stack.pop();
+                    coordinate_type inter_x =
+                        (segm_vec_x * new_x - segm_vec_y * new_y) /
+                        sqr_segment_length + segment_site_start.x();
+                    coordinate_type inter_y =
+                        (segm_vec_x * new_y + segm_vec_y * new_x) /
+                        sqr_segment_length + segment_site_start.y();
+                    intermediate_points.push_back(
+                        make_point_2d(inter_x, inter_y));
+                    cur_x = new_x;
+                    cur_y = new_y;
+                } else {
+                    point_stack.push(mid_x);
+                }
             }
 
-            // Append last point to the end.
-            intermediate_points.push_back(last_point);
+            // Update last point.
+            intermediate_points.back() = last_point;
+        }
+
+        // Compute y(x) = ((x - a) * (x - a) + b * b) / (2 * b).
+        static coordinate_type parabola_y(coordinate_type x,
+                                          coordinate_type a,
+                                          coordinate_type b) {
+            return ((x - a) * (x - a) + b * b) / (2.0 * b);
         }
 
         // Check whether extent is compatible with the edge type.
@@ -528,18 +560,6 @@ namespace sweepline {
             coordinate_type vec_dot = segment_vec_x * point_vec_x +
                                       segment_vec_y * point_vec_y;
             return vec_dot / sqr_segment_length;
-        }
-
-        // Return the number of the intermediate points to fill parabolic
-        // arc with. Arc is represented by it's two endpoints. This doesn't
-        // have any strong math background. Parameters were chosen
-        // experimentally.
-        static int get_intermediate_points_count(const point_2d_type &point1,
-                                                 const point_2d_type &point2) {
-            coordinate_type vec_x = point1.x() - point2.x();
-            coordinate_type vec_y = point1.y() - point2.y();
-            coordinate_type sqr_len = vec_x * vec_x + vec_y * vec_y;
-            return static_cast<int>(log(sqr_len) * 3.4 + 1E-6);
         }
     };
 
