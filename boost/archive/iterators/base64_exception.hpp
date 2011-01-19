@@ -1,5 +1,5 @@
-#ifndef BOOST_ARCHIVE_ITERATORS_DATAFLOW_EXCEPTION_HPP
-#define BOOST_ARCHIVE_ITERATORS_DATAFLOW_EXCEPTION_HPP
+#ifndef BOOST_ARCHIVE_ITERATORS_BASE64_EXCEPTION_HPP
+#define BOOST_ARCHIVE_ITERATORS_BASE64_EXCEPTION_HPP
 
 // MS compatible compilers support #pragma once
 #if defined(_MSC_VER) && (_MSC_VER >= 1020)
@@ -7,7 +7,7 @@
 #endif
 
 /////////1/////////2/////////3/////////4/////////5/////////6/////////7/////////8
-// dataflow_exception.hpp:
+// base64_exception.hpp:
 
 // (C) Copyright 2002 Robert Ramey - http://www.rrsd.com . 
 // Use, modification and distribution is subject to the Boost Software
@@ -19,7 +19,6 @@
 #include <boost/config.hpp>
 #ifndef BOOST_NO_EXCEPTIONS
 #include <exception>
-#endif //BOOST_NO_EXCEPTIONS
 
 #include <boost/assert.hpp>
 
@@ -28,42 +27,30 @@ namespace archive {
 namespace iterators {
 
 //////////////////////////////////////////////////////////////////////
-// exceptions thrown by dataflows
+// exceptions thrown by base64s
 //
-class dataflow_exception : public std::exception
+class base64_exception : public std::exception
 {
 public:
     typedef enum {
-        invalid_6_bitcode,
-        invalid_base64_character,
-        invalid_xml_escape_sequence,
-        comparison_not_permitted,
-        invalid_conversion,
+        invalid_code,       // attempt to encode a value > 6 bits
+        invalid_character,  // decode a value not in base64 char set
         other_exception
     } exception_code;
     exception_code code;
 
-    dataflow_exception(exception_code c = other_exception) : code(c)
+    base64_exception(exception_code c = other_exception) : code(c)
     {}
 
     virtual const char *what( ) const throw( )
     {
         const char *msg = "unknown exception code";
         switch(code){
-        case invalid_6_bitcode:
+        case invalid_code:
             msg = "attempt to encode a value > 6 bits";
             break;
-        case invalid_base64_character:
+        case invalid_character:
             msg = "attempt to decode a value not in base64 char set";
-            break;
-        case invalid_xml_escape_sequence:
-            msg = "invalid xml escape_sequence";
-            break;
-        case comparison_not_permitted:
-            msg = "cannot invoke iterator comparison now";
-            break;
-        case invalid_conversion:
-            msg = "invalid multbyte/wide char conversion";
             break;
         default:
             BOOST_ASSERT(false);
@@ -77,4 +64,5 @@ public:
 } // namespace archive
 } // namespace boost
 
-#endif //BOOST_ARCHIVE_ITERATORS_DATAFLOW_EXCEPTION_HPP
+#endif //BOOST_NO_EXCEPTIONS
+#endif //BOOST_ARCHIVE_ITERATORS_ARCHIVE_EXCEPTION_HPP
