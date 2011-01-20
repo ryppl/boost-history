@@ -11,7 +11,7 @@
 #include <map>
 #include <boost/assign/v2/detail/checking/container.hpp>
 #include <boost/assign/v2/detail/checking/constants.hpp>
-#include <boost/assign/v2/put.hpp>
+#include <boost/assign/v2/put/sub.hpp>
 #include <libs/assign/v2/test/put/modulo.h>
 
 namespace test_assign_v2{

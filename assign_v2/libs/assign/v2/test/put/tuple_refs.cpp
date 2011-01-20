@@ -11,7 +11,7 @@
 #include <boost/tuple/tuple.hpp>
 #include <boost/assign/v2/detail/checking/check.hpp>
 #include <boost/assign/v2/detail/checking/constants.hpp>
-#include <boost/assign/v2/put.hpp>
+#include <boost/assign/v2/put/sub.hpp>
 #include <libs/assign/v2/test/put/tuple_refs.h>
 
 namespace test_assign_v2{

@@ -40,23 +40,14 @@ namespace chain_aux{
         
         typedef typename boost::remove_reference<reference>::type value_type;
 
-/*
-typename demote_iterator_traversal_tag<
-                                  typename iterator_traversal<Iterator1>::type
-                                , typename iterator_traversal<Iterator2>::type>::type
-*/
 
     
-//    	typedef boost::range_detail::chain_iterator<
     	typedef boost::range_detail::join_iterator<
-        	It1,
-        	It2,
-        	value_type, 	
-        	reference,
-			// TODO should be able to use default 
-            // problems arise because traits are probably not defined for 
-            // complicated ranges
-            boost::single_pass_traversal_tag  
+        	It1
+        	,It2
+        	,value_type
+        	,reference
+            // , boost::single_pass_traversal_tag  
     	> type;
 
 	};

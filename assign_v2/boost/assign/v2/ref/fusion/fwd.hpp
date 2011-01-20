@@ -9,6 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_REF_FUSION_FWD_ER_2010_HPP
 #define BOOST_ASSIGN_V2_REF_FUSION_FWD_ER_2010_HPP
+#include <boost/assign/v2/ref/fusion/size_type.hpp>
 
 namespace boost{
 namespace assign{ 
@@ -16,11 +17,11 @@ namespace v2{
 namespace ref{
 namespace fusion_aux{
 
-    template<std::size_t N, typename L, 
+    template<fusion_aux::size_type N, typename L, 
     	typename Tag1,typename Tag2, typename T>
     class container;
     
-    template<typename A, std::size_t N, typename L, 
+    template<typename A, fusion_aux::size_type N, typename L, 
     	typename Tag1, typename Tag2, typename T>
     void assign_array(
     	A& a, 
