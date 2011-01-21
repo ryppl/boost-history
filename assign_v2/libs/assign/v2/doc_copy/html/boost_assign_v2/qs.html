@@ -1,0 +1,146 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Quickstart</title>
+<link rel="stylesheet" href="../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="../index.html" title="Chapter&#160;1.&#160;Boost.Assign 2.0">
+<link rel="up" href="../index.html" title="Chapter&#160;1.&#160;Boost.Assign 2.0">
+<link rel="prev" href="../index.html" title="Chapter&#160;1.&#160;Boost.Assign 2.0">
+<link rel="next" href="conv.html" title="Convention">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../boost.png"></td>
+<td align="center"><a href="../../../index.html">Home</a></td>
+<td align="center"><a href="../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../index.html"><img src="../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="conv.html"><img src="../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="boost_assign_v2.qs"></a><a class="link" href="qs.html" title="Quickstart">Quickstart</a>
+</h2></div></div></div>
+<p>
+      To be able to use this library, it is <span class="emphasis"><em>necessary</em></span> to put
+      the <a href="http://svn.boost.org/svn/boost/trunk" target="_top">directory</a> containing
+      the <a href="http://www.boost.org" target="_top">Boost</a> library in the search path
+      of the C++ compiler and it <span class="emphasis"><em>suffices</em></span> to declare 
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">assign</span><span class="special">/</span><span class="identifier">v2</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>	
+<span class="keyword">using</span> <span class="keyword">namespace</span> boost::assign::v2<span class="special">;</span>
+</pre>
+<p>
+      in order to bring the functionality <sup>[<a name="id36331020" href="#ftn.id36331020" class="footnote">1</a>]</sup> into scope. The examples that follow are taken from actual <a href="../../../example/" target="_top">source files</a> that conform to certain <a class="link" href="conv/ex.html" title="Example">conventions</a>,
+      notably that <code class="computeroutput"><span class="identifier">as2</span></code> is the alias
+      for the above <code class="computeroutput"><span class="keyword">namespace</span></code><sup>[<a name="id36331052" href="#ftn.id36331052" class="footnote">2</a>]</sup> .
+    </p>
+<p>
+      A typical <a class="link" href="put.html" title="Put"><span class="emphasis"><em>put</em></span></a>
+      call is
+    </p>
+<p>
+      
+</p>
+<pre class="programlisting"><span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;</span><span class="keyword">const</span> <span class="keyword">char</span><span class="special">*,</span> <span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">cont</span><span class="special">;</span>
+<span class="identifier">assert</span><span class="special">(</span>
+    <span class="special">(</span>
+        <span class="identifier">cont</span> <span class="special">|</span> <span class="identifier">as2</span><span class="special">::</span><span class="identifier">_put</span><span class="special">(</span><span class="string">"z"</span><span class="special">,</span> <span class="number">1</span><span class="special">)(</span><span class="string">"x"</span><span class="special">,</span> <span class="special">-</span><span class="number">1</span><span class="special">)(</span><span class="string">"y"</span><span class="special">,</span> <span class="number">0</span><span class="special">)</span>
+    <span class="special">)[</span><span class="string">"y"</span><span class="special">]</span> <span class="special">==</span> <span class="number">0</span>
+<span class="special">);</span>
+</pre>
+<p>
+    </p>
+<p>
+      Each call to <code class="computeroutput">_put<span class="special">()</span></code> executes two
+      steps. The first forwards each set of arguments to the value-type of <code class="computeroutput"><span class="identifier">cont</span></code>, yielding a value that we label <code class="computeroutput">t</code>.
+      The second calls <code class="computeroutput">cont<span class="special">.</span><span class="identifier">insert</span><span class="special">(</span> t <span class="special">)</span></code>, as deemed
+      appropriate by the library, for this category of container ( <a href="http://www.sgi.com/tech/stl/AssociativeContainer.html" target="_top">Associative</a>
+      ).
+    </p>
+<p>
+      The user may wish to override the library's default choice, which is accomodated
+      by a <a class="link" href="put/modulo.html" title="operator%()">parameter passing</a> mechanism.
+      Below is an example in which <code class="computeroutput"><span class="identifier">push_front</span><span class="special">()</span></code> is requested for executing the second step:
+    </p>
+<p>
+      
+</p>
+<pre class="programlisting"><span class="identifier">std</span><span class="special">::</span><span class="identifier">list</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">cont</span><span class="special">;</span>
+<span class="identifier">boost</span><span class="special">::</span><span class="identifier">for_each</span><span class="special">(</span>
+    <span class="identifier">cont</span> <span class="special">|</span> <span class="special">(</span>
+        <span class="identifier">as2</span><span class="special">::</span><span class="identifier">_csv_put</span> <span class="special">%</span> <span class="identifier">as2</span><span class="special">::</span><span class="identifier">_push_front</span>
+    <span class="special">)(</span> <span class="special">-</span><span class="number">1</span><span class="special">,</span> <span class="number">0</span><span class="special">,</span> <span class="number">1</span> <span class="special">),</span>
+    <span class="identifier">os</span> <span class="special">&lt;&lt;</span> <span class="identifier">bl</span><span class="special">::</span><span class="identifier">_1</span> <span class="special">&lt;&lt;</span> <span class="char">' '</span>
+<span class="special">);</span> <span class="comment">// outputs 1 0 -1
+</span></pre>
+<p>
+    </p>
+<p>
+      The keyword <code class="computeroutput">_push_front</code> is one of several parameters, some of
+      which perform complex tasks, that are available. In addition, this library
+      makes it easy, through the use of macros, to <a class="link" href="put/modulo.html#boost_assign_v2.put.modulo.modifier.ext.custom" title="Customization">extend
+      the repertoire</a>.
+    </p>
+<p>
+      Framework <a class="link" href="ref.html" title="Ref"><span class="emphasis"><em>ref</em></span></a>
+      provides a generalization of the reference wrapper to an array (like <a href="http://www.boost.org/doc/libs/release/doc/html/array.html" target="_top"><code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">array</span><span class="special">&lt;&gt;</span></code></a>, not C-style) e.g.
+    </p>
+<p>
+      
+</p>
+<pre class="programlisting"><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">x</span><span class="special">,</span> <span class="identifier">y</span><span class="special">,</span> <span class="identifier">z</span><span class="special">;</span>
+<span class="identifier">as2</span><span class="special">::</span><span class="identifier">ref</span><span class="special">::</span><span class="identifier">csv_array</span><span class="special">(</span> <span class="identifier">x</span><span class="special">,</span> <span class="identifier">y</span><span class="special">,</span> <span class="identifier">z</span> <span class="special">).</span><span class="identifier">assign</span><span class="special">(</span> <span class="string">"w"</span> <span class="special">);</span>
+<span class="identifier">assert</span><span class="special">(</span> <span class="identifier">y</span> <span class="special">==</span> <span class="string">"w"</span> <span class="special">);</span>
+</pre>
+<p>
+    </p>
+<p>
+      <a class="link" href="util.html" title="Utility">Utility</a> that inter-operates with
+      the above are
+    </p>
+<div class="orderedlist"><ol class="orderedlist" type="1">
+<li class="listitem">
+          <a class="link" href="util.html#boost_assign_v2.util.convert" title="converter">Conversion</a> between
+          containers
+        </li>
+<li class="listitem">
+          Extending the interface to accomodate such tasks as <a class="link" href="util/sub_range.html" title="sub_range">comparison</a>.
+        </li>
+<li class="listitem">
+          <a class="link" href="util/chain.html" title="_chain">Chaining</a> ranges, including
+          reference-arrays.
+        </li>
+</ol></div>
+<div class="footnotes">
+<br><hr width="100" align="left">
+<div class="footnote"><p><sup>[<a name="ftn.id36331020" href="#id36331020" class="para">1</a>] </sup>
+        Exceptions are singled out by this mention : This header has to be explicitly
+        included
+      </p></div>
+<div class="footnote"><p><sup>[<a name="ftn.id36331052" href="#id36331052" class="para">2</a>] </sup>
+        Why not use unqualified names, given the above <code class="computeroutput"><span class="keyword">using</span></code>
+        declaration? To make sure the reader is able to distinguish this library's
+        functionality from that of others which also appears in the examples.
+      </p></div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2003 -2004 Thorsten Ottosen, 2010 Erwann Rogard<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../index.html"><img src="../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="conv.html"><img src="../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>
