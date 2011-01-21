@@ -14,6 +14,7 @@
 #include <boost/mpl/int.hpp>
 #include <boost/mpl/equal_to.hpp>
 #include <boost/assign/v2/ref/fusion/fwd.hpp>
+#include <boost/assign/v2/ref/fusion/size_type.hpp>
 
 namespace boost{
 	struct use_default;
@@ -25,8 +26,8 @@ namespace fusion_aux{
     // ---- assign_array ---- //
 
     template<
-    	std::size_t K,typename A,
-        std::size_t N, typename L, typename Tag1, typename Tag2, typename T
+    	fusion_aux::size_type K,typename A,
+        fusion_aux::size_type N, typename L, typename Tag1, typename Tag2, typename T
     >
     void assign_array(
     	::boost::mpl::true_ /*exit*/,
@@ -38,8 +39,8 @@ namespace fusion_aux{
     }
 
     template<
-    	std::size_t K,typename A,
-        std::size_t N, typename L, typename Tag1, typename Tag2,typename T
+    	fusion_aux::size_type K,typename A,
+        fusion_aux::size_type N, typename L, typename Tag1, typename Tag2,typename T
     >
     void assign_array(
     	::boost::mpl::false_ /*exit*/,
@@ -56,7 +57,7 @@ namespace fusion_aux{
     }
 
 	// A must be a static array of reference wrappers
-    template<typename A,std::size_t N, typename L,
+    template<typename A,fusion_aux::size_type N, typename L,
     	typename Tag1, typename Tag2, typename T>
     void assign_array(
     	A& a,

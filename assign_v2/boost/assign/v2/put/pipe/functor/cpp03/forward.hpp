@@ -12,10 +12,11 @@
 #include <boost/preprocessor/repetition.hpp>
 #include <boost/preprocessor/arithmetic/inc.hpp>
 #include <boost/mpl/int.hpp>
+#include <boost/tuple/tuple.hpp>
 #include <boost/assign/v2/ref/wrapper/copy.hpp>
 #include <boost/assign/v2/ref/list_tuple.hpp>
 #include <boost/assign/v2/detail/config/limit_arity.hpp>
-#include <boost/tuple/tuple.hpp>
+#include <boost/assign/v2/put/pipe/functor/size_type.hpp>
 
 namespace boost{
 namespace assign{
@@ -48,7 +49,7 @@ BOOST_PP_REPEAT(
 
     template<
         typename F,
-        int N, typename L, params(typename T)
+        put_pipe_aux::size_type N, typename L, params(typename T)
     >
     void forward(
         F const& f ,
@@ -59,7 +60,9 @@ BOOST_PP_REPEAT(
 
     template<
         typename F,
-        int I, int N, typename L, params(typename T)
+        put_pipe_aux::size_type I, 
+        put_pipe_aux::size_type N, 
+        typename L, params(typename T)
     >
     void forward(
         F const& f ,
@@ -88,7 +91,8 @@ BOOST_PP_REPEAT(
         > const& list
     ){}
 
-    template<typename F, int N, typename L, params(typename T)>
+    template<typename F, 
+    	put_pipe_aux::size_type N, typename L, params(typename T)>
     void forward(
         F const& f,
         ref::list_tuple_aux::container<N, L, params(T)> const& list

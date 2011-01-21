@@ -14,6 +14,7 @@
 #include <boost/mpl/identity.hpp>
 #include <boost/mpl/int.hpp>
 #include <boost/utility/enable_if.hpp>
+#include <boost/assign/v2/ref/list_tuple/size_type.hpp>
 
 namespace boost{
 namespace assign{
@@ -21,7 +22,8 @@ namespace v2{
 namespace ref{
 namespace list_tuple_aux{
 
-    template<std::size_t N, typename L, typename T, typename D>
+    template<list_tuple_aux::get_size_type N, 
+    	typename L, typename T, typename D>
     class extraction
     {
         typedef D const& result_of_derived_;
@@ -34,13 +36,13 @@ namespace list_tuple_aux{
 
         public:
 
-        template<int I>
+        template<list_tuple_aux::get_size_type I>
         struct is_head : ::boost::mpl::bool_< I + 1 == N >{};
 
-        template<int I>
+        template<list_tuple_aux::get_size_type I>
         struct link_get_result : L::template get_result<I>{};
 
-		template<int I>
+		template<list_tuple_aux::get_size_type I>
 		struct get_result : ::boost::mpl::eval_if<
         	is_head<I>,
             ::boost::mpl::identity<
@@ -49,7 +51,7 @@ namespace list_tuple_aux{
             link_get_result<I>
         >{};
 
-        template<int I>
+        template<list_tuple_aux::get_size_type I>
         typename boost::lazy_enable_if<
         	is_head<I>,
         	get_result<I>
@@ -59,7 +61,7 @@ namespace list_tuple_aux{
         	return this->derived().get_tuple();
         }
 
-        template<int I>
+        template<list_tuple_aux::get_size_type I>
         typename boost::lazy_disable_if<
         	is_head<I>,
         	get_result<I>

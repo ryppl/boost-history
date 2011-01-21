@@ -18,7 +18,7 @@ namespace put_aux{
 	struct put_base{
     
     	// This base is needed to be able to distinguish objects that serves as
-        // parameter buffers for a later use, and those, that actually need to
+        // parameter buffers for a later use, and those that actually need to
         // be modified by a parameter. The latter must inherit publicly from
         // put_base.
 	};

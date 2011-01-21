@@ -28,6 +28,7 @@
 #include <boost/assign/v2/ref/fusion/head_holder.hpp>
 #include <boost/assign/v2/ref/fusion/fwd.hpp> // consistency
 
+
 namespace boost{
 	struct use_default;
 namespace assign{

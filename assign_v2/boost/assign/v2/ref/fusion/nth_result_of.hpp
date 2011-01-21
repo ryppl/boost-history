@@ -9,14 +9,10 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_REF_FUSION_NTH_RESULT_OF_ER_2010_HPP
 #define BOOST_ASSIGN_V2_REF_FUSION_NTH_RESULT_OF_ER_2010_HPP
-#include <boost/mpl/void.hpp>
-#include <boost/mpl/vector.hpp>
+#include <boost/mpl/vector.hpp> // for the user
 #include <boost/mpl/fold.hpp>
 #include <boost/mpl/placeholders.hpp>
-#include <boost/mpl/eval_if.hpp>
-#include <boost/mpl/identity.hpp>
-#include <boost/type_traits/is_same.hpp>
-#include <boost/assign/v2/ref/fusion/fwd.hpp>
+#include <boost/assign/v2/ref/fusion/container.hpp>
 #include <boost/assign/v2/ref/fusion/root.hpp>
 #include <boost/assign/v2/ref/fusion/nil_arg.hpp>
 

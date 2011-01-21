@@ -21,11 +21,11 @@
 #include <boost/assign/v2/detail/pp/forward.hpp>
 
 #include <boost/assign/v2/put/modifier.hpp>
-#include <boost/assign/v2/put/generic/result_of_modulo.hpp>
-#include <boost/assign/v2/put/generic/expose_modifier.hpp>
-#include <boost/assign/v2/put/generic/expose_fun.hpp>
 #include <boost/assign/v2/put/generic/base.hpp>
 #include <boost/assign/v2/put/generic/concept_modifier.hpp>
+#include <boost/assign/v2/put/generic/expose_modifier.hpp>
+#include <boost/assign/v2/put/generic/expose_fun.hpp>
+#include <boost/assign/v2/put/generic/result_of_modulo.hpp>
 
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X

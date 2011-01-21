@@ -20,9 +20,9 @@ namespace v2{
 namespace put_range_aux
 {
     template<typename From>
-    class helper1 : ref::wrapper<ref::assign_tag::copy, From const>
+    class helper1 : ref::copy_wrapper<From const>::type
     {
-        typedef ref::wrapper<ref::assign_tag::copy, From const> super_t;
+        typedef typename ref::copy_wrapper<From const>::type super_t;
 
         public:
 
@@ -45,10 +45,6 @@ namespace put_range_aux
         }
     };
 
-    // This decl must come first, it seems.
-    template<typename To, typename From>
-    To operator|(::boost::type<To>, put_range_aux::helper1<From> const& h);
-
     template<typename To,typename From>
     To& operator|(To& to, put_range_aux::helper1<From> const& h)
     {
@@ -57,7 +53,7 @@ namespace put_range_aux
     }
 
     template<typename To, typename From>
-    To operator|(::boost::type<To>, put_range_aux::helper1<From> const& h)
+    To operator|( ::boost::type<To>, put_range_aux::helper1<From> const& h)
     {
 		To to;
         to | h;
@@ -65,9 +61,9 @@ namespace put_range_aux
     }
 
 }// put_range_aux
-
+namespace{
     put_range_aux::helper2 const _put_range = put_range_aux::helper2();
-
+}
 }// v2
 }// assign
 }// boost

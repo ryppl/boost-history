@@ -10,13 +10,11 @@
 #ifndef BOOST_ASSIGN_V2_PUT_DEQUE_CONT_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_DEQUE_CONT_ER_2010_HPP
 #include <deque>
-#include <boost/range/iterator.hpp>
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
+#include <boost/range/iterator.hpp>
 #include <boost/range/size.hpp>
 #include <boost/range/size_type.hpp>
-#include <boost/range/iterator_range.hpp> //iterator_range_detail::
-#include <boost/assign/v2/put.hpp>
 #include <boost/assign/v2/put/generic/result_of_modulo.hpp>
 #include <boost/assign/v2/put/generic/crtp.hpp>
 #include <boost/assign/v2/put/deque/fwd.hpp>

@@ -60,23 +60,13 @@ namespace result_of_modulo{
         {
         	static T t;
             static P p;
-            typedef BOOST_TYPEOF_TPL( t % p ) type; // TODO workaround MSVC
+            typedef BOOST_TYPEOF_TPL( t % p ) type;
         };
     
     };
     
     
 }// result_of_modulo
-
-/*
-        struct deduce
-        {
-            typedef functor_aux::deduce_constructor<V> caller_;
-            typedef typename caller_::type cons_;
-            typedef typename Traits::template new_fun<cons_>::type type;
-        };
-*/
-
 }// v2
 }// assign
 }// boost

@@ -28,16 +28,12 @@ namespace csv_put_aux{
 
     template<typename V>
     class sub
-    	: protected ref::wrapper<
-        	ref::assign_tag::copy,
-            V
-        >
+    	: protected ref::copy_wrapper<V>::type
     {
 
 		protected:
 
-		typedef ref::assign_tag::copy assign_tag_;
-		typedef ref::wrapper<assign_tag_,V> super1_t;
+		typedef typename ref::copy_wrapper<V>::type super1_t;
 
 		typedef typename v2::container_traits::value<
             V

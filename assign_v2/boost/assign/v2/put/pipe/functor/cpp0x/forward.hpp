@@ -13,6 +13,7 @@
 #include <boost/assign/v2/ref/tuple/cpp0x.hpp>
 #include <boost/assign/v2/ref/list_tuple.hpp>
 #include <boost/assign/v2/temporary/variadic_args_to_indices.hpp>
+#include <boost/assign/v2/put/pipe/functor/size_type.hpp>
 
 namespace boost{
 namespace assign{
@@ -48,7 +49,7 @@ namespace put_pipe_aux{
 
     template<
         typename F,
-        int N, typename L, typename...Args
+        put_pipe_aux::size_type N, typename L, typename...Args
     >
     void forward(
         F const& f ,
@@ -59,7 +60,8 @@ namespace put_pipe_aux{
 
     template<
         typename F,
-        int I, int N, typename L, typename...Args
+        put_pipe_aux::size_type I, 
+        put_pipe_aux::size_type N, typename L, typename...Args
     >
     void forward(
         F const& f ,
@@ -85,7 +87,8 @@ namespace put_pipe_aux{
         ref::list_tuple_aux::container<0, L> const& list
     ){}
 
-    template<typename F, int N, typename L, typename...Args>
+    template<typename F, 
+    	put_pipe_aux::size_type N, typename L, typename...Args>
     void forward(
         F const& f,
         ref::list_tuple_aux::container<N, L, Args...> const& list

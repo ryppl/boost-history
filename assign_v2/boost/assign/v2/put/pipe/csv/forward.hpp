@@ -7,16 +7,18 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_ADAPTOR_CSV_FORWARD_ER_2010_HPP
-#define BOOST_ASSIGN_V2_ADAPTOR_CSV_FORWARD_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_PUT_PIPE_CSV_FORWARD_ER_2010_HPP
+#define BOOST_ASSIGN_V2_PUT_PIPE_CSV_FORWARD_ER_2010_HPP
 #include <boost/utility/enable_if.hpp>
+#include <boost/assign/v2/put/pipe/csv/size_type.hpp>
 
 namespace boost{
 namespace assign{
 namespace v2{
 namespace put_pipe_aux{
 
-    template<std::size_t N, std::size_t I, typename F, typename C>
+    template<put_pipe_aux::csv_size_type N, 
+    	put_pipe_aux::csv_size_type I, typename F, typename C>
     typename boost::enable_if_c<
         N == I
     >::type
@@ -26,7 +28,8 @@ namespace put_pipe_aux{
     )
     {}
 
-    template<std::size_t N, std::size_t I, typename F, typename C>
+    template<put_pipe_aux::csv_size_type N, 
+    	put_pipe_aux::csv_size_type I, typename F, typename C>
     typename boost::enable_if_c<
         I < N
     >::type

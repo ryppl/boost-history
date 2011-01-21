@@ -11,6 +11,7 @@
 #include <boost/assign/v2/detail/keyword/nil.hpp>
 #include <boost/assign/v2/ref/fusion/make.hpp>
 #include <boost/assign/v2/ref/fusion/nth_result_of.hpp>
+#include <boost/assign/v2/ref/fusion/nil_arg.hpp>
 #define BOOST_ASSIGN_V2_REF_FUSION_ASSIGN_XXX(NS, Tag1) \
  \
 namespace boost{ \

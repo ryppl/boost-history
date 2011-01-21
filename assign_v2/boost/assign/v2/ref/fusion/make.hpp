@@ -9,12 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_REF_FUSION_MAKE_ER_2010_HPP
 #define BOOST_ASSIGN_V2_REF_FUSION_MAKE_ER_2010_HPP
-#include <boost/mpl/void.hpp>
-#include <boost/mpl/eval_if.hpp>
-#include <boost/mpl/identity.hpp>
 #include <boost/mpl/vector/vector0.hpp>
-#include <boost/mpl/vector/vector10.hpp>
-#include <boost/type_traits/is_same.hpp>
 #include <boost/assign/v2/detail/keyword/nil.hpp>
 #include <boost/assign/v2/ref/fusion/container.hpp> 
 #include <boost/assign/v2/ref/fusion/nth_result_of.hpp> 

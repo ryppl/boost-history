@@ -9,7 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_PUT_PIPE_FUNCTOR_OPERATOR_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_PIPE_FUNCTOR_OPERATOR_ER_2010_HPP
-#include <boost/assign/v2/put/pipe/forward_pars.hpp>
+#include <boost/assign/v2/put/pipe/pars/forward.hpp>
 #include <boost/assign/v2/put/pipe/functor/container.hpp>
 #include <boost/assign/v2/put/pipe/functor/forward.hpp>
 #include <boost/assign/v2/put/sub/functor.hpp>

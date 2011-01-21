@@ -17,7 +17,7 @@
 #include <boost/assign/v2/put/generic/new_fun.hpp>
 #include <boost/assign/v2/put/generic/new_modifier.hpp>
 #include <boost/assign/v2/put/pipe/functor.hpp>
-#include <boost/assign/v2/put/pipe/forward_pars.hpp>
+#include <boost/assign/v2/put/pipe/pars/forward.hpp>
 
 #include <libs/assign/v2/test/put/pipe/forward_pars.h>
 

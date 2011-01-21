@@ -21,6 +21,7 @@
 #include <boost/assign/v2/ref/tuple/cpp0x.hpp>
 #include <boost/assign/v2/ref/list_tuple/extraction.hpp>
 #include <boost/assign/v2/ref/list_tuple/common.hpp>
+#include <boost/assign/v2/ref/list_tuple/size_type.hpp>
 
 namespace boost{
 namespace assign{
@@ -28,9 +29,10 @@ namespace v2{
 namespace ref{
 namespace list_tuple_aux{
 
-    template<int N, typename L, typename...Args> class container;
+    template<list_tuple_aux::get_size_type N, 
+    	typename L, typename...Args> class container;
 
-    template<int N, typename L, typename...Args>
+    template<list_tuple_aux::get_size_type N, typename L, typename...Args>
     struct meta_result
     {
 
@@ -55,7 +57,7 @@ namespace list_tuple_aux{
         struct apply : NewState::template result<Args...>{};
     };
 
-    template<int N, typename L, typename...Args>
+    template<list_tuple_aux::get_size_type N, typename L, typename...Args>
     class container :
     ::boost::mpl::eval_if_c<
         N == 0,
@@ -78,10 +80,11 @@ namespace list_tuple_aux{
         tuple_ const& get_tuple()const{ return this->tuple; }
         link_ const& get_link()const{ return *this; }
 
-        typedef int size_type;
-        BOOST_STATIC_CONSTANT( size_type, static_get_size = N );
+        typedef list_tuple_aux::get_size_type get_size_type;
+        typedef list_tuple_aux::tuple_size_type tuple_size_type;
+        BOOST_STATIC_CONSTANT( get_size_type, static_get_size = N );
         BOOST_STATIC_CONSTANT(
-            size_type,
+            tuple_size_type,
             static_tuple_size = sizeof...(Args)
         );
 

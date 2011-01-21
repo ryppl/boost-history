@@ -10,7 +10,6 @@
 #ifndef BOOST_ASSIGN_V2_REF_FUSION_NIL_ARG_ER_2010_HPP
 #define BOOST_ASSIGN_V2_REF_FUSION_NIL_ARG_ER_2010_HPP
 #include <boost/mpl/void.hpp>
-//#include <boost/mpl/aux_/na.hpp> // TODO
 
 namespace boost{
 namespace assign{ 

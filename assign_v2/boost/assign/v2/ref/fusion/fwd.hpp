@@ -18,7 +18,7 @@ namespace ref{
 namespace fusion_aux{
 
     template<fusion_aux::size_type N, typename L, 
-    	typename Tag1,typename Tag2, typename T>
+    	typename Tag1, typename Tag2, typename T>
     class container;
     
     template<typename A, fusion_aux::size_type N, typename L, 

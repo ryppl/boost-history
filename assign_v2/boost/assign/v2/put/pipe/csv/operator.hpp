@@ -9,7 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_PUT_PIPE_CSV_OPERATOR_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_PIPE_CSV_OPERATOR_ER_2010_HPP
-#include <boost/assign/v2/put/pipe/forward_pars.hpp>
+#include <boost/assign/v2/put/pipe/pars/forward.hpp>
 #include <boost/assign/v2/put/pipe/csv/container.hpp>
 #include <boost/assign/v2/put/pipe/csv/forward.hpp>
 #include <boost/assign/v2/put/sub/csv.hpp>
@@ -19,7 +19,8 @@ namespace assign{
 namespace v2{
 namespace put_pipe_aux{
 
-    template<typename V, typename Pars, int N, typename U>
+    template<typename V, 
+    	typename Pars, put_pipe_aux::csv_size_type N, typename U>
     V& operator|(
         V& v,
         put_pipe_aux::csv_container<Pars, N, U> const& c

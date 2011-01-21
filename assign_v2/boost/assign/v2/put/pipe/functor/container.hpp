@@ -13,11 +13,10 @@
 #include <boost/mpl/size.hpp>
 #include <boost/mpl/push_back.hpp>
 #include <boost/mpl/apply.hpp>
-#include <boost/mpl/unpack_args.hpp>
 
-#include <boost/assign/v2/ref/wrapper/copy.hpp>
-#include <boost/assign/v2/ref/fusion.hpp>
+#include <boost/assign/v2/ref/fusion/assign_copy.hpp>
 #include <boost/assign/v2/ref/list_tuple.hpp>
+#include <boost/assign/v2/put/pipe/pars/size_type.hpp>
 
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
@@ -113,7 +112,7 @@ namespace put_pipe_aux{
         public:
 
 		BOOST_STATIC_CONSTANT(
-        	std::size_t,
+        	pars_size_type,
         	static_pars_size = ::boost::mpl::size<Pars>::value
         );
 
