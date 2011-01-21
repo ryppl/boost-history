@@ -21,6 +21,7 @@ local rule if-has-file ( file + : dir * )
 local boost-src = [ if-has-file LICENSE_1_0.txt :
     [ MATCH --boost=(.*) : $(ARGV) ]
     $(BOOST)
+    $(BOOST_ROOT)
     $(.boost-build-file:D)/../boost
     $(.boost-build-file:D)/../Trunk
     ] ;
@@ -64,6 +65,7 @@ BOOST_ROOT ?= $(boost-src) ;
 #~ And load up Boost.Build...
 
 boost-build $(boost-build-src) ;
+
 
 
 
