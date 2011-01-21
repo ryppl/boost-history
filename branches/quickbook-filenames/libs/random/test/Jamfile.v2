@@ -1,0 +1,86 @@
+# Copyright 2003 Jens Maurer
+# Copyright 2009-2010 Steven Watanabe
+# Distributed under the Boost Software License, Version 1.0. (See accompany-
+# ing file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+
+# Boost Random Library test Jamfile
+
+# bring in rules for testing
+import testing ;
+
+project /boost/random/test ;
+
+run random_test.cpp ;
+run ../example/random_demo.cpp ;
+run validate.cpp ;
+run test_random_device.cpp /boost//random : : : <link>static : test_random_device ;
+run test_random_device.cpp /boost//random : : : <link>shared : test_random_device_dll ;
+
+local all-urngs = 
+    rand48
+    minstd_rand0
+    minstd_rand
+    ecuyer1988
+    kreutzer1986
+    hellekalek1995
+    mt11213b
+    mt19937_64
+    lagged_fibonacci
+    lagged_fibonacci607
+    ranlux3
+    ranlux4
+    ranlux3_01
+    ranlux4_01
+    ranlux64_3_01
+    ranlux64_4_01
+    ranlux24
+    ranlux48
+    taus88
+;
+
+for urng in $(all-urngs)
+{
+    run instantiate.cpp : : : <define>BOOST_RANDOM_URNG_TEST=$(urng) : test_$(urng) ;
+}
+
+run test_mt19937.cpp /boost//unit_test_framework ;
+
+run test_seed_seq.cpp /boost//unit_test_framework ;
+
+run test_binomial.cpp ;
+run test_binomial_distribution.cpp /boost//unit_test_framework ;
+run test_poisson.cpp ;
+run test_poisson_distribution.cpp /boost//unit_test_framework ;
+run test_discrete.cpp ;
+run test_discrete_distribution.cpp /boost//unit_test_framework ;
+run test_gamma.cpp ;
+run test_gamma_distribution.cpp /boost//unit_test_framework ;
+run test_weibull.cpp ;
+run test_weibull_distribution.cpp /boost//unit_test_framework ;
+run test_extreme_value.cpp ;
+run test_extreme_value_distribution.cpp /boost//unit_test_framework ;
+run test_negative_binomial.cpp ;
+run test_negative_binomial_distribution.cpp /boost//unit_test_framework ;
+run test_chi_squared.cpp ;
+run test_chi_squared_distribution.cpp /boost//unit_test_framework ;
+run test_fisher_f.cpp ;
+run test_fisher_f_distribution.cpp /boost//unit_test_framework ;
+run test_student_t.cpp ;
+run test_student_t_distribution.cpp /boost//unit_test_framework ;
+run test_normal.cpp ;
+run test_normal_distribution.cpp /boost//unit_test_framework ;
+run test_piecewise_constant.cpp ;
+run test_piecewise_constant_distribution.cpp /boost//unit_test_framework ;
+run test_piecewise_linear.cpp ;
+run test_piecewise_linear_distribution.cpp /boost//unit_test_framework ;
+
+# run nondet_random_speed.cpp ;
+# run random_device.cpp ;
+# run random_speed.cpp ;
+# run statistic_tests.cpp ;
+
+exe statistic_tests.exe : statistic_tests.cpp ;
+explicit statistic_tests.exe ;
+
+install statistic_tests : statistic_tests.exe : <install-type>EXE <location>. ;
+explicit statistic_tests ;

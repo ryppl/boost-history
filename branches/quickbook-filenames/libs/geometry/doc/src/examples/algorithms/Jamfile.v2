@@ -1,0 +1,26 @@
+# Boost.Geometry (aka GGL, Generic Geometry Library)
+#
+# Copyright Barend Gehrels, Geodan Holding B.V. Amsterdam, the Netherlands.
+# Copyright (c) 2009 Mateusz Loskot <mateusz@loskot.net>
+# Use, modification and distribution is subject to the Boost Software License,
+# Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+# http://www.boost.org/LICENSE_1_0.txt)
+
+
+project boost-geometry-doc-example-algorithms
+    : # requirements
+    ;
+
+exe area : area.cpp ;
+exe area_with_strategy : area_with_strategy.cpp ;
+
+exe intersection_ls_ls_point : intersection_ls_ls_point.cpp ;
+exe intersection_segment : intersection_segment.cpp ;
+
+exe intersects_linestring : intersects_linestring.cpp ;
+
+exe length : length.cpp ;
+exe length_with_strategy : length_with_strategy.cpp ;
+
+exe simplify : length.cpp ;
+exe simplify_inserter : simplify_inserter.cpp ;
