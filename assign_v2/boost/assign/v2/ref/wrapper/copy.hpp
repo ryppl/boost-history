@@ -9,8 +9,6 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_REF_WRAPPER_COPY_ER_2010_HPP
 #define BOOST_ASSIGN_V2_REF_WRAPPER_COPY_ER_2010_HPP
-#include <algorithm>
-#include <boost/mpl/bool.hpp>
 #include <boost/config.hpp>
 #include <boost/call_traits.hpp>
 #include <boost/type_traits/is_const.hpp>

@@ -35,7 +35,7 @@ namespace convert_aux{
         template<typename T>
         operator T () const
         {
-        	return type<T>();
+        	return this->type<T>();
         }
 
 		template<typename T>

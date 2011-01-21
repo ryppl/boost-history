@@ -13,12 +13,7 @@
 #include <boost/range/end.hpp>
 #include <boost/detail/workaround.hpp>
 
-//#ifdef BOOST_MSVC
-//#include <boost/range/algorithm/for_each.hpp>
-//#include <boost/assign/v2/put/sub.hpp>
-//#else
 #include <boost/assign/v2/put/pipe/range.hpp>
-//#endif
 
 #include <boost/assign/v2/utility/convert/tag.hpp>
 
@@ -31,12 +26,7 @@ namespace convert_aux{
     T dispatch(U const& u, convert_tag::put) 
     {
         T t; 
-    //#ifdef BOOST_MSVC
-    //    ::boost::for_each( u, v2::put( t ) );
-    //    return t;
-    //#else
         return (t | v2::_put_range( u ) );
-    //#endif
 
     }
 

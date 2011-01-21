@@ -10,6 +10,7 @@
 #ifndef BOOST_ASSIGN_V2_REF_ARRAY_INTERFACE_ER_2010_HPP
 #define BOOST_ASSIGN_V2_REF_ARRAY_INTERFACE_ER_2010_HPP
 #include <algorithm>
+#include <boost/config.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/int.hpp>
 
@@ -56,8 +57,7 @@ namespace array_aux{
 
         #ifndef BOOST_MSVC
             typedef typename boost::range_size<impl_>::type size_type;
-        #endif
-        #ifdef BOOST_MSVC
+		#else
             typedef std::size_t size_type;
         #endif
         typedef typename boost::range_difference<range_>::type difference_type;
