@@ -24,7 +24,7 @@ namespace result_of{
     struct sub_range
     {
 
-		// typedef boost::sub_range<R> type; // Compiler error    
+        // typedef boost::sub_range<R> type; // Compiler error    
         // Workaround:
         typedef typename ::boost::range_iterator<R>::type it_;
         typedef typename ::boost::iterator_range<it_>::type type;

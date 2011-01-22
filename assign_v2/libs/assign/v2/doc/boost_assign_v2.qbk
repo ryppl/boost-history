@@ -112,6 +112,7 @@
 [template tpl_foo_cpp[var] [@../../example/foo.cpp [var]] ] 
 [template tpl_ex[var] [@../../example/ [var]] ] 
 [template tpl_test[var] [@../../test/ [var]] ] 
+[template tpl_run_eff[var] [@../../speed/results [var]] ] 
 
 [/Concepts]
 
@@ -1096,16 +1097,15 @@ The determination of `U` for the second expression is identical to that for
 [section:get `__kwd_get__`]
 [heading Header]
 
-[def __header_ref_get__ [@../../../../../boost/assign/v2/ref/wrapper/get.hpp boost/assign/v2/ref/wrapper/get.hpp]]
+[def __header_ref_aget__ [@../../../../../boost/assign/v2/ref/wrapper/adaptor_get.hpp boost/assign/v2/ref/wrapper/adaptor_get.hpp]]
 
 ``
-	#include <__header_ref_get__>
+	#include <__header_ref_aget__>
 ``
-
 
 [heading Synopsis]
 
-Let `__range__` denote a range of reference-wrappers.
+Let `__range__` denote a [tpl_concept_range range] of reference-wrappers.
 
 
 [table Usage
@@ -1542,7 +1542,11 @@ in __url_boost_assign_v2__, by the free-function [link boost_assign_v2.util.conv
 
 [endsect][/ v2 ]
 [endsect][/log]
+[section:run_eff Runtime efficiency]
 
+Find [tpl_run_eff here] runtime efficiency data. 
+
+[endsect][/run_eff]
 [section:help Help]
 
 To get help or make a suggestion, post to the __user_mailing_list__, but also make sure to notify 
