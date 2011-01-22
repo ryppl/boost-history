@@ -11,6 +11,8 @@
 #include <list>
 #include <boost/array.hpp>
 #include <boost/assign/v2/utility/chain.hpp>
+#include <boost/assign/v2/ref/array.hpp>
+#include <boost/assign/v2/ref/wrapper/adaptor_get.hpp>
 #include <boost/assign/v2/put/deque.hpp>
 #include <libs/assign/v2/example/include.h>
 #include <libs/assign/v2/example/utility/chain.h>

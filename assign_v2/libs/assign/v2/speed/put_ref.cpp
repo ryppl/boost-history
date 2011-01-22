@@ -28,19 +28,20 @@
 #include <boost/assign/list_of.hpp>
 #include <boost/assign/list_inserter.hpp>
 #define BOOST_ASSIGN_V2_LIMIT_CSV_ARITY 128
-#include <boost/assign/v2.hpp>
+#include <boost/assign/v2/put.hpp>
+#include <boost/assign/v2/ref.hpp>
 
 #include <libs/assign/v2/speed/tools.h>
-#include <libs/assign/v2/speed/anon_put_ref.h>
+#include <libs/assign/v2/speed/put_ref.h>
 
 namespace speed_assign_v2{
-namespace xxx_anon_put_ref{
+namespace xxx_put_ref{
 
 void run(std::ostream& os)
 {
 
-    using namespace boost::assign;
-    using namespace v2;
+    namespace as1 = boost::assign;
+    namespace as2 = as1::v2;
 
     os << "-> Runtime efficiency " << std::endl;
 
@@ -48,13 +49,11 @@ void run(std::ostream& os)
     typedef std::string str_;
     typedef boost::format f_;
 
-// [---- Warning : don't override these markups as they are used by the doc
+// [---- Warning : don't override these markups
 
     //[types
     typedef std::vector<int> elem_; // T
-    // This STL container is of the same type as that internally used by the
-    // anon container of values, so we have a common basis for comparing
-    // their exec time.
+    // This STL type is that used internally by v2::deque<>
     typedef std::deque< elem_ > cont_;
     //]
     //[sim_param
@@ -80,11 +79,7 @@ void run(std::ostream& os)
     elem_ BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT( 128, a, rand_vec(elem_size) );
 
 	{
-    	str_ str = "This test times the filling of a std::deque<T>";
-        os << str << std::endl;
-    }
-	{
-    	f_ f("where T = std::vector<int>, and has max size %1%");
+    	f_ f("T = std::vector<int> of max size %1%");
         f % elem_size;
         os << f.str() << std::endl;
     }
@@ -143,25 +138,23 @@ void run(std::ostream& os)
             )\
             BOOST_PP_EXPR_IF(\
             	param2, \
-                put(cont) BOOST_PP_SEQ_FIRST_N(N, SEQ);\
+                as2::put(cont) BOOST_PP_SEQ_FIRST_N(N, SEQ);\
             )\
             BOOST_PP_EXPR_IF(\
             	param3, \
-                csv_put(cont)( BOOST_PP_ENUM_PARAMS(N, a) );\
+                as2::csv_put(cont)( BOOST_PP_ENUM_PARAMS(N, a) );\
             )\
             BOOST_PP_EXPR_IF(\
             	param4, \
-                using namespace adaptor;\
-                cont | _put BOOST_PP_SEQ_FIRST_N(N, SEQ);\
+                cont | as2::_put BOOST_PP_SEQ_FIRST_N(N, SEQ);\
             )\
             BOOST_PP_EXPR_IF(\
             	param5, \
-                using namespace adaptor;\
-                cont | _csv_put( BOOST_PP_ENUM_PARAMS(N, a) );\
+                cont | as2::_csv_put( BOOST_PP_ENUM_PARAMS(N, a) );\
             )\
             BOOST_PP_EXPR_IF(\
             	param6, \
-                push_back(cont) BOOST_PP_SEQ_FIRST_N(N, SEQ);\
+                as1::push_back(cont) BOOST_PP_SEQ_FIRST_N(N, SEQ);\
             )\
             int sz = (int)cont.size();\
             if(sz != N)\
@@ -188,20 +181,23 @@ void run(std::ostream& os)
     //os << str_n << std::endl;
     //os << str_t << std::endl;
 
-    str_ str_stl_push_back = "vec.push_back( t0 ); ... vec.push_back( tN-1 );";
+    // STL
+    str_ str_stl_push_back = "vec.push_back( t0 ); ... vec.push_back( tn-1 );";
 
-    str_ str_v1_cref_list_of = "cref_list_of<N>( t0 )...( tN-1 )";
-    str_ str_v1_list_of = "list_of( t0 )...( tN-1 )";
-    str_ str_v1_push_back = "push_back( vec )( t0 )...( tN-1 )";
+    // Boost.Assign
+    str_ str_v1_cref_list_of = "cref_list_of<n>( t0 )...( tn-1 )";
+    str_ str_v1_list_of = "list_of( t0 )...( tn-1 )";
+    str_ str_v1_push_back = "push_back( vec )( t0 )...( tn-1 )";
 
-    str_ str_v2_csv_anon = "csv_anon(t0, ...,tN-1)";
-    str_ str_v2_anon = "anon<T>( _nil )( t0 )...( tN-1 )";
-    str_ str_v2_ref_csv_anon = "ref::assign_copy::csv_anon(t0, ...,tN-1)";
-    str_ str_v2_ref_anon = "ref::assign_copy::anon( t0 )...( tN-1 )";
-    str_ str_v2_csv_put = "csv_put( vec )(t0, ...,tN-1)";
-    str_ str_v2_put = "put( vec )( t0 )...( tN-1 )";
-    str_ str_v2_adaptor_csv_put = "vec | _csv_put(t0, ...,tN-1)";
-    str_ str_v2_adaptor_put = "vec | _put( t0 )...( tN-1 )";
+    // Boost.Assign 2.0
+    str_ str_v2_csv_deque = "csv_deque(t0, ...,tn-1)";
+    str_ str_v2_deque = "deque<T>( _nil )( t0 )...( tn-1 )";
+    str_ str_v2_ref_csv_array = "ref::csv_array(t0, ..., tn-1)";
+    str_ str_v2_ref_array = "ref::array( t0 )...( tn-1 )";
+    str_ str_v2_csv_put = "csv_put( vec )(t0, ..., tn-1)";
+    str_ str_v2_put = "put( vec )( t0 )...( tn-1 )";
+    str_ str_v2_pipe_csv_put = "vec | _csv_put(t0, ..., tn-1)";
+    str_ str_v2_pipe_put = "vec | _put( t0 )...( tn-1 )";
 
 	f_ f_n( str_( "n = " ) + str_n );
 
@@ -211,25 +207,24 @@ void run(std::ostream& os)
     f_ f_v1_cref_list_of( str_v1_cref_list_of + str_t );
     f_ f_v1_push_back( str_v1_push_back + str_t );
 
-    f_ f_v2_csv_anon( str_v2_csv_anon + str_t );
-    f_ f_v2_anon( str_v2_anon + str_t ) ;
-    f_ f_v2_ref_csv_anon( str_v2_ref_csv_anon + str_t );
-    f_ f_v2_ref_anon( str_v2_ref_anon + str_t );
+    f_ f_v2_csv_deque( str_v2_csv_deque + str_t );
+    f_ f_v2_deque( str_v2_deque + str_t ) ;
+    f_ f_v2_ref_csv_array( str_v2_ref_csv_array + str_t );
+    f_ f_v2_ref_array( str_v2_ref_array + str_t );
     f_ f_v2_csv_put( str_v2_csv_put + str_t );
     f_ f_v2_put( str_v2_put + str_t );
-    f_ f_v2_adaptor_csv_put( str_v2_adaptor_csv_put + str_t );
-    f_ f_v2_adaptor_put( str_v2_adaptor_put + str_t );
+    f_ f_v2_pipe_csv_put( str_v2_pipe_csv_put + str_t );
+    f_ f_v2_pipe_put( str_v2_pipe_put + str_t );
 
 // MACRO2
 // param1 : stl_push_back
 // param2 : v2_put
 // param3 : v2_csv_put
-// param4 : v2_adaptor_put
-// param5 : v2_adaptor_csv_put
+// param4 : v2_pipe_put
+// param5 : v2_pipe_csv_put
 // param6 : v1_push_back
 
 #define MACRO(N)\
-    os << "N = " << N << " . . . ";\
     {\
     	MACRO2( N, 1, 0, 0, 0, 0, 0 )\
         f_stl_push_back % elapsed;\
@@ -238,36 +233,36 @@ void run(std::ostream& os)
     	MACRO2( N, 0, 0, 1, 0, 0, 0 )\
         f_v2_csv_put % elapsed;\
         MACRO2( N, 0, 0, 0, 1, 0, 0 )\
-        f_v2_adaptor_put % elapsed;\
+        f_v2_pipe_put % elapsed;\
     	MACRO2( N, 0, 0, 0, 0, 1, 0 )\
-        f_v2_adaptor_csv_put % elapsed;\
+        f_v2_pipe_csv_put % elapsed;\
     	MACRO2( N, 0, 0, 0, 0, 0, 1 )\
         f_v1_push_back % elapsed;\
 		\
-    	MACRO1( boost::assign::list_of, N, 1 )\
+    	MACRO1( as1::list_of, N, 1 )\
         f_v1_list_of % elapsed;\
         \
-    	MACRO1( boost::assign::cref_list_of<N>, N, 1 )\
+    	MACRO1( as1::cref_list_of<N>, N, 1 )\
         f_v1_cref_list_of % elapsed;\
         \
-    	MACRO1( boost::assign::v2::csv_anon, N, 0 )\
-        f_v2_csv_anon % elapsed;\
+    	MACRO1( as2::csv_deque, N, 0 )\
+        f_v2_csv_deque % elapsed;\
         \
-    	MACRO1( boost::assign::v2::anon<elem_>( _nil ), N, 1 )\
-        f_v2_anon % elapsed;\
+    	MACRO1( as2::deque<elem_>( as2::_nil ), N, 1 )\
+        f_v2_deque % elapsed;\
         \
-    	MACRO1( boost::assign::v2::ref::assign_copy::csv_anon, N, 0 )\
-        f_v2_ref_csv_anon % elapsed;\
+    	MACRO1( as2::ref::csv_array, N, 0 )\
+        f_v2_ref_csv_array % elapsed;\
 		\
-    	MACRO1( boost::assign::v2::ref::assign_copy::anon, N, 1 )\
-        f_v2_ref_anon % elapsed;\
+    	MACRO1( as2::ref::array, N, 1 )\
+        f_v2_ref_array % elapsed;\
 		\
         f_n % N;\
     }\
 /**/
 
-    double elapsed = 0; 
-    if(elapsed){ 
+    double elapsed = 0;
+    if(elapsed){
         //nothing
     }
 // -----------------------------------N------------------n----------
@@ -291,24 +286,35 @@ BOOST_PP_EXPR_IF( BOOST_PP_LESS_EQUAL(8, limit_N), MACRO(128) )
 
 	os << std::endl;
 	os << f_n.str() << std::endl;
+	os << "*** STL" << std::endl;
 	os << f_stl_push_back.str() << std::endl;
+	os << "*** Boost.Assign" << std::endl;
 
+	os << "** v1" << std::endl;
     os << f_v1_list_of.str() << std::endl;
     os << f_v1_cref_list_of.str() << std::endl;
     os << f_v1_push_back.str() << std::endl;
 
-    os << f_v2_csv_anon.str() << std::endl;
-    os << f_v2_anon.str() << std::endl;
-    os << f_v2_ref_csv_anon.str() << std::endl;
-    os << f_v2_ref_anon.str() << std::endl;
+	os << "** v2" << std::endl;
+	os << "* like v1's list_of()" << std::endl;
+    os << f_v2_csv_deque.str() << std::endl;
+    os << f_v2_deque.str() << std::endl;
+
+	os << "* like v1's ref_list_of<>()" << std::endl;
+    os << f_v2_ref_csv_array.str() << std::endl;
+    os << f_v2_ref_array.str() << std::endl;
+
+	os << "* like v1's push_back()" << std::endl;
+	os << "Backend" << std::endl;
     os << f_v2_csv_put.str() << std::endl;
     os << f_v2_put.str() << std::endl;
-    os << f_v2_adaptor_csv_put.str() << std::endl;
-    os << f_v2_adaptor_put.str() << std::endl;
+	os << "Frontend" << std::endl;
+    os << f_v2_pipe_csv_put.str() << std::endl;
+    os << f_v2_pipe_put.str() << std::endl;
 
     os << "<- " << std::endl;
 
 }
 
-}// xxx_anon_put_ref
+}// xxx_put_ref
 }// speed_assign_v2

@@ -14,6 +14,7 @@
 #include <set>
 #include <stack>
 #include <vector>
+#include <string>
 #include <boost/array.hpp>
 
 #include <boost/ptr_container/ptr_array.hpp>
@@ -53,7 +54,8 @@ namespace xxx_static{
 		{
         	typedef as2::modifier_tag::insert wanted_;
             as2::put_aux::check_deduce<std::set<int>, wanted_>();
-            as2::put_aux::check_deduce<std::map<const char*, int>, wanted_>();
+            typedef std::string str_;
+            as2::put_aux::check_deduce<std::map<str_, int>, wanted_>();
 		}
     }
 

@@ -42,8 +42,12 @@ namespace xxx_pipe{
             os << std::endl;
         }
         {
+        	// std::string may be replaced by const char* in GCC not MSVC or
+            // else runtime error. I guess it would work w. a custom comparison 
+            // functor 
+        
             //[map
-            typedef std::map<const char*, int> cont_;
+            typedef std::map<std::string, int> cont_;
             typedef cont_::value_type type;
             cont_ cont;
             assert(
@@ -59,7 +63,7 @@ namespace xxx_pipe{
         }
         {
             //[map2
-            std::map<const char*, int> cont;
+            std::map<std::string, int> cont;
             assert(
                 (
                     cont | as2::_put("z", 1)("x", -1)("y", 0)
