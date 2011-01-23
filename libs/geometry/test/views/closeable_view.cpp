@@ -12,7 +12,7 @@
 
 #include <geometry_test_common.hpp>
 
-#include <boost/geometry/util/closeable_view.hpp>
+#include <boost/geometry/views/closeable_view.hpp>
 
 #include <boost/geometry/extensions/gis/io/wkt/read_wkt.hpp>
 #include <boost/geometry/util/write_dsv.hpp>
@@ -111,7 +111,7 @@ void test_geometry(std::string const& wkt,
 template <typename P>
 void test_all()
 {
-    test_geometry<bg::model::linear_ring<P> >(
+    test_geometry<bg::model::ring<P> >(
             "POLYGON((1 1,1 4,4 4,4 1))",
             "(1, 1) (1, 4) (4, 4) (4, 1)",
             "(1, 1) (1, 4) (4, 4) (4, 1) (1, 1)");
