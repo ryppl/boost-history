@@ -1,6 +1,6 @@
 #include <iostream>
 #include <cassert>
-#include "boost/integer/pointer_plus_bits.hpp"
+#include "boost/integer/bitfield/pointer_plus_bits.hpp"
 
 #include <sys/stat.h>
 #include <errno.h>

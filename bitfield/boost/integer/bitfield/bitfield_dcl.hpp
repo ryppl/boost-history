@@ -9,10 +9,10 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef BOOST_INTEGER_BITFIELD_DCL__HPP
-#define BOOST_INTEGER_BITFIELD_DCL__HPP
+#ifndef BOOST_INTEGER_BITFIELD_BITFIELD_DCL_HPP
+#define BOOST_INTEGER_BITFIELD_BITFIELD_DCL_HPP
 
-#include <boost/integer/bitfield.hpp>
+#include <boost/integer/bitfield/bitfield.hpp>
 
 #define BOOST_BITFIELD_DCL(STORAGE_TYPE, STORAGE_VAR, VALUE_TYPE, FIELD, F, L) \
    typedef boost::integer::bitfield_traits<STORAGE_TYPE,F,L,VALUE_TYPE>   FIELD##_type; \
@@ -21,4 +21,4 @@
    void set_##FIELD(VALUE_TYPE& val) { FIELD##_type::reference(STORAGE_VAR).set(val); } \
    FIELD##_type::value::value_type get_##FIELD() const { return FIELD##_type::value(STORAGE_VAR).get(); }
 
-#endif
+#endif //BOOST_INTEGER_BITFIELD_BITFIELD_DCL_HPP

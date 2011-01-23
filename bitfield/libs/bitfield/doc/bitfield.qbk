@@ -6,7 +6,8 @@
  /]
 
 [article Toward Boost.Bitfield
-    [quickbook 1.4]
+    [quickbook 1.5]
+    [version 0.2.0]
     [authors [Botet Escriba, Vicente J.]]
     [copyright 2009 Vicente J. Botet Escriba]
     [purpose Bitfield portable traits]
@@ -32,20 +33,6 @@
 [section Overview]
 [/========================]
 
-[/==================]
-[heading Description]
-[/==================]
-
-Portable bitfields.
-
-The main source of inspiration of this library was Boost.Bitfield from Emile Cormier.
-
-[*Boost.Bitfield] provides:
-
-* a generic bitfield traits class providing generic getter and setter.
-* a BOOST_BITFIELD_DCL macro making easier the definition of the bitfield helper type and the bitfield getter and setter functions.
-
-
 [/====================================]
 [heading How to Use This Documentation]
 [/====================================]
@@ -54,12 +41,11 @@ This documentation makes use of the following naming and formatting conventions.
 
 * Code is in `fixed width font` and is syntax-highlighted.
 * Replaceable text that you will need to supply is in [~italics].
-* If a name refers to a free function, it is specified like this:
-  `free_function()`; that is, it is in code font and its name is followed by `()`   to indicate that it is a free function.
+* Free functions are rendered in the code font followed by (), as in free_function().
 * If a name refers to a class template, it is specified like this:   `class_template<>`; that is, it is in code font and its name is followed by `<>`   to indicate that it is a class template.
 * If a name refers to a function-like macro, it is specified like this: `MACRO()`;
   that is, it is uppercase in code font and its name is followed by `()` to   indicate that it is a function-like macro. Object-like macros appear without the   trailing `()`.
-* Names that refer to /concepts/ in the generic programming sense are   specified in CamelCase.
+* Names that refer to /concepts/ in the generic programming sense are  specified in CamelCase.
 
 [note In addition, notes such as this one specify non-essential information that provides additional background or rationale.]
 
@@ -67,8 +53,8 @@ Finally, you can mentally add the following to any code fragments in this docume
 
     // Include all of Bitfield files
     #include <boost/integer/bitfield.hpp>
-    #include <boost/integer/bitfield_dcl.hpp>
-
+    using namespace boost::integer;
+    
 [section Motivation]
    
 In order for an application or a device driver to use the same source code base on both platforms, it must either be endian neutral, or use conditional compilation to select appropriate code modules. A program module is considered endian neutral if it retains its functionality while being ported across platforms of different endianness. In other words, there is no relation between its functionality and the endianness of the platform it is running on.
@@ -209,6 +195,22 @@ If we want to write the storage type to a binary archive we need to precise whic
 
 
 [endsect]
+
+[/==================]
+[section Description]
+[/==================]
+
+Portable bitfields.
+
+The main source of inspiration of this library was Boost.Bitfield from Emile Cormier.
+
+[*Boost.Bitfield] provides:
+
+* a generic bitfield traits class providing generic getter and setter.
+* a BOOST_BITFIELD_DCL macro making easier the definition of the bitfield helper type and the bitfield getter and setter functions.
+
+[endsect]
+
 [endsect]
 
 [/==============================]
@@ -236,7 +238,7 @@ You can also access the latest (unstable?) state from the [@https://svn.boost.or
 [heading Building Boost.Bitfield]
 [/=================================]
 
-There is no need to compile [*Boost.Bitfield], since it's a header only library. Just include your Boost header directory in your compiler include path.
+[*Boost.Bitfield] is a header only library, so no need to compile anything.
 
 [/=========================]
 [heading Requirements]
@@ -249,8 +251,7 @@ There is no need to compile [*Boost.Bitfield], since it's a header only library.
 [heading Exceptions safety]
 [/========================]
 
-All functions in the library are exception-neutral and provide strong guarantee of exception safety as long as
-the underlying parameters provide it.
+All functions in the library are exception-neutral, providing the strong exception safety guarantee.
 
 [/====================]
 [heading Thread safety]
@@ -263,23 +264,41 @@ All functions in the library are thread-unsafe except when noted explicitly.
 [heading Tested compilers]
 [/=======================]
 
-Currently, [*Boost.Bitfield] has been tested in the following compilers/platforms:
+[*Boost.Bitfield] should work with an C++03 conforming compiler.  The current version has been tested on:
 
-*  GCC 3.4.4 Cygwin
-*  GCC 3.4.6 Linux
-[/*  GCC 4.3.2 Cygwin]
-*  GCC 4.1.2 Linux
+Windows with
+
+* MSVC 10.0
+
+Cygwin 1.5
+
+* GCC 3.4.4
+
+Cygwin 1.7
+
+* GCC 4.3.2
+
+MinGW with
+
+* GCC 4.4.0
+* GCC 4.5.0
+* GCC 4.5.0 c++0x
+* GCC 4.6.0
+* GCC 4.6.0 c++0x
+
+[note Please let us know how this works on other platforms/compilers.]
 
 [note Please send any questions, comments and bug reports to boost <at> lists <dot> boost <dot> org.]
 
 [endsect]
+[/
 [/=============================]
 [section Hello World! ]
 [/=============================]
 
 
 [endsect]
-
+]
 [endsect]
 
 [section Tutorial]
@@ -390,30 +409,44 @@ Next follows some examples of how these bitfields can be used.
 
 [section Reference]
 [/==========================================================================================]
-[section:bitfield_hpp Header `<boost/integer/bitfield.hpp>`]
+[section:integer_bitfield_hpp Header `<boost/integer/bitfield.hpp>`]
+[/==========================================================================================]
+
+Include all the Boost.Bitfields header files
+
+[endsect]
+[/==========================================================================================]
+[section:bitfield_include_hpp Header `<boost/integer/bitfield/include.hpp>`]
+[/==========================================================================================]
+
+Include all the Boost.Bitfields header files
+
+[endsect]
+
+[/==========================================================================================]
+[section:bitfield_hpp Header `<boost/integer/bitfield/bitfield.hpp>`]
 [/==========================================================================================]
 
 This is the main file of Boost.Bitfield, which includes the definition of the bitfield<> class. 
 
-    template <typename T>
-    struct bitfield_default_value_type;
-    
-    template <class, std::size, std::size, class, bool, class> 
-    class bitfield;
-    
-    template <class T, class R, class V> 
-    class bitfield_bit_proxy;
-    
-    template <typename STORAGE_TYPE, int F, int L
-        , typename VALUE_TYPE=bitfield_default_value_type<typename STORAGE_TYPE::type>
-    >
-    strcut bitfield_traits;
+    namespace boost { namespace integer {
+        template <typename T>
+        struct bitfield_default_value_type;
+        
+        template <class, std::size, std::size, class, bool, class> 
+        class bitfield;
+               
+        template <typename STORAGE_TYPE, int F, int L
+            , typename VALUE_TYPE=bitfield_default_value_type<typename STORAGE_TYPE::type>
+        >
+        struct bitfield_traits;
+    }
 
 [/==========================================================================================]
-[section:bitfield_default_value_type Metafunction `bitfield_default_value_type<>`]
+[section:bitfield_value_type Metafunction `bitfield_value_type<>`]
 [/==========================================================================================]
 
-The default value type associated to an storage type is the storage type.
+The default value type associated to an storage type is the storage type itself.
 
     template <typename T>
     struct bitfield_value_type {
@@ -428,9 +461,9 @@ The user could need to specialize this metafunction for some specific types, as 
 [section:bitfield Template class `bitfield<>`]
 [/==========================================================================================]
 
-The bitfield class is a wrapper to an storage type that allows to get/set a bitfield of a given value type defined by the first and last bit that the bitfield occupes in the strogae type. It defines the conversion to the bitfield value type as weel as all the arithmetic assignement operators.
+The `bitfield` class is a wrapper to an storage type that allows to get/`set a bitfield of a given value type defined by the first and last bit that the bitfield occupes in the storage type. It defines the conversion to the bitfield value type as weel as all the arithmetic assignement operators.
 
-This template class behaves as a reference to a bitfield. Note that C/C++ do not allows to take directly the address of a bit field.
+This template class behaves as a reference to a bit field. Note that C/C++ do not allows to take directly the address of a bit field.
 
     template <typename STORAGE_TYPE, std::size F, std::size L
         , typename VALUE_TYPE=typename bitfield_value_type<typename STORAGE_TYPE::type>
@@ -447,13 +480,8 @@ This template class behaves as a reference to a bitfield. Note that C/C++ do not
         //! Useful constants
         static const unsigned int FIRST;        //!< Position of the first bit
         static const unsigned int LAST;         //!< Position of the last bit
-        static const unsigned int STS;
-        static const unsigned int LASTD;
         static const unsigned int WIDTH;        //!< Width in bits of the bitfield
         static const unsigned int VAL_MASK;     //!< Mask applied against assigned values
-        static const unsigned int SIGN_MASK;    //!< Sign Mask applied against assigned values
-        static const value_type MIN_VAL;        //!< min value that can be represented with the bitfield
-        static const value_type MAX_VAL;        //!< max value that can be represented with the bitfield
         static const unsigned int FIELD_MASK;   //!< Mask of the field's bit positions
 
         static std::size_t first();
@@ -516,22 +544,6 @@ This template class behaves as a reference to a bitfield. Note that C/C++ do not
 
 [endsect]
 
-[/==========================================================================================]
-[section:bitfield_bit_proxy Template class `bitfield_bit_proxy<>`]
-[/==========================================================================================]
-
-This template class behaves as a reference to a bitfield bit. Note that C/C++ do not allows to take directly the address of a bit field. The class takes a reference to the storage and the index of the bit.
-
-    template <class T, class R, class V>
-    class bitfield_bit_proxy {
-    public:
-        bitfield_bit_proxy& operator=(bool state);
-
-        operator bool() const;
-    };
-
-
-[endsect]
 
 [/==========================================================================================]
 [section:bitfield_traits Template class `bitfield_traits<>`]
@@ -555,7 +567,7 @@ This traits class defies two traits:
 [endsect]
 
 [/==========================================================================================]
-[section:bitfield_dcl_hpp Header `<boost/integer/bitfield_dcl.hpp>`]
+[section:bitfield_dcl_hpp Header `<boost/integer/bitfield/bitfield_dcl.hpp>`]
 [/==========================================================================================]
 
 This file constains the macro making easier the definition of the bitfield helper type and the bitfield getter and setter functions.
@@ -576,30 +588,31 @@ This file constains the macro making easier the definition of the bitfield helpe
     * F: the first bit
     * L: the last bit
     
-* Effect
-This macro defines the bitfield traits and the functions necessary to make valid the following expressions:
+* Effect. This macro defines the bitfield traits and the functions necessary to make valid the following expressions:
     * str.FIELD() = value;
     * var= str.FIELD();
     * str.set_FIELD(var);
     * var= str.get_FIELD()
 
 
-Two styles of getter/setter are provided: one using overloading on the field name, the other using clasical prefic get_/set_.
+Two styles of getter/setter are provided: one using overloading on the field name, the other using clasical prefix `get_`/`set_`.
 
 [endsect]
 
 [endsect]
 
 [/==========================================================================================]
-[section:endian_bitfield_value_type_hpp Header `<boost/integer/endian_bitfield_value_type.hpp>`]
+[section:endian_bitfield_value_type_hpp Header `<boost/integer/bitfield/endian_bitfield_value_type.hpp>`]
 [/==========================================================================================]
 
-This file includes the customization for the endian types for the bitfield_default_value_type metafunction. You need to include this file if you use endian types as storage for the bitfields.
+This file includes the `bitfield_value_type` metafunction specialization for the endian types. You need to include this file if you use endian types as storage for the bitfields.
 
-    template <endianness E, typename T, std::size_t n_bits, alignment A>
-    struct bitfield_value_type<endian<E,T,n_bits,A> > {
-        typedef typename endian<E,T,n_bits,A>::value_type type;
-    };
+    namespace boost { namespace integer {
+        template <endianness E, typename T, std::size_t n_bits, alignment A>
+        struct bitfield_value_type<endian<E,T,n_bits,A> > {
+            typedef typename endian<E,T,n_bits,A>::value_type type;
+        };
+    }
 
 [endsect]
 
@@ -618,7 +631,18 @@ This file includes the customization for the endian types for the bitfield_defau
 [/=================]
 [section Appendices]
 [/=================]
+
 [section:history Appendix A: History]
+
+[section [*Version 0.2.0, Jan 29, 2011] ['Bitfield porting to Windows and MSVC]]
+
+[*Bugs:]
+
+* Fix uses of specific POSIX files in test.
+* Adapt to MSVC constraints.
+
+[endsect]
+
 [section [*Version 0.1.0, April 29, 2009] ['Announcement of Bitfield]]
 
 [*Features:]
@@ -646,7 +670,7 @@ Availability of bit order representations is important in some applications.
 
 * Why not just use Boost.Serialization? 
 
-Serialization involves a conversion for every object involved in I/O. Endian objects require no conversion or copying. They are already in the desired format for binary I/O. Thus they can be read or written in bulk.
+Serialization involves a conversion for every object involved in I/O. Bitfields objects require no conversion or copying. They are already in the desired format for binary I/O. Thus they can be read or written in bulk.
 
 * Do this type have any uses outside of I/O? 
 

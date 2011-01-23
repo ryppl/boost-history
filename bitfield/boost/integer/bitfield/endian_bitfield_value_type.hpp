@@ -10,12 +10,12 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef BOOST_INTEGER_BITFIELD__HPP
-#define BOOST_INTEGER_BITFIELD__HPP
+#ifndef BOOST_INTEGER_BITFIELD_ENDIAN_BITFIELD_VALUE_TYPE_HPP
+#define BOOST_INTEGER_BITFIELD_ENDIAN_BITFIELD_VALUE_TYPE_HPP
 
 #include <cstddef>
 #include <boost/integer/endian.hpp>
-#include <boost/bitfield.hpp>
+#include <boost/integer/bitfield/bitfield.hpp>
 
 namespace boost { namespace integer {
     
@@ -25,5 +25,6 @@ namespace boost { namespace integer {
     };
 
 }}
-#endif
+
+#endif // BOOST_INTEGER_BITFIELD_ENDIAN_BITFIELD_VALUE_TYPE_HPP
 

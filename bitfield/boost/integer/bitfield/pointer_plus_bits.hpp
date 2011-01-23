@@ -10,8 +10,8 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef BOOST_INTEGER_POINTER_PLUS_BITS__HPP
-#define BOOST_INTEGER_POINTER_PLUS_BITS__HPP
+#ifndef BOOST_INTEGER_BITFIELD_POINTER_PLUS_BITS_HPP
+#define BOOST_INTEGER_BITFIELD_POINTER_PLUS_BITS_HPP
 
 #include <cstddef>
 #include <boost/static_assert.hpp>
@@ -335,5 +335,5 @@ struct pointer_plus_bitfields {
 };
 
 }}
-#endif
+#endif // BOOST_INTEGER_BITFIELD_POINTER_PLUS_BITS_HPP
 

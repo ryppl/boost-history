@@ -10,11 +10,15 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef BOOST_INTEGER_BITFIELD_HPP
-#define BOOST_INTEGER_BITFIELD_HPP
+#ifndef BOOST_INTEGER_BITFIELD_INCLUDE_HPP
+#define BOOST_INTEGER_BITFIELD_INCLUDE_HPP
 
 //-----------------------------------------------------------------------------
-#include <boost/integer/bitfield/include.hpp>
+#include <boost/integer/bitfield/bitfield.hpp>
+#include <boost/integer/bitfield/bitfield_dcl.hpp>
+#if defined(BOOST_BITFIELD_USES_ENDIAN)
+#include <boost/integer/bitfield/endian_bitfield_value_type.hpp>
+#endif
 //-----------------------------------------------------------------------------
 
-#endif // BOOST_INTEGER_BITFIELD_HPP
+#endif // BOOST_INTEGER_BITFIELD_INCLUDE_HPP

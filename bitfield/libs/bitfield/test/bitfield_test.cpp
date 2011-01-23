@@ -1,12 +1,11 @@
 #include <iostream>
 #include <cassert>
-#include "boost/integer/bitfield.hpp"
-#include "boost/integer/bitfield_dcl.hpp"
+#include <boost/integer/bitfield.hpp>
+//~ #include <boost/integer/bitfield/bitfield_dcl.hpp>
 
 #include <sys/stat.h>
 #include <errno.h>
-#include <unistd.h>
-#include <netinet/in.h>
+#include <libs/bitfield/test/endian_flip.hpp>
 
 #define ASSERT_EQUALS(a,b) assert((a) == (b))
 #define ASSERT_UNEQUALS(a,b) assert((a) != (b))
@@ -139,25 +138,15 @@ void test_assign()
 {
    r.word = 0;
    r.high() = 0x12;
-   //printf("word=%x\n",int(r.word));
-   //printf("all=%x\n",int(r.all()));
    ASSERT_EQUALS(r.all(), 0x1200);
    r.low() = 0x34;
-   //printf("word=%x\n",int(r.word));
-   //printf("all=%x\n",int(r.all()));
    ASSERT_EQUALS(r.all(), 0x1234);
    r.mid() = 0xab;
-   //printf("word=%x\n",int(r.word));
-   //printf("all=%x\n",int(r.all()));
 
    ASSERT_EQUALS(r.all(), 0x1ab4);
    r.all() = 0x4321;
-   //printf("word=%x\n",int(r.word));
-   //printf("all=%x\n",int(r.all()));
    ASSERT_EQUALS(r.all(), 0x4321);
    r.single() = 1;
-   //printf("word=%x\n",int(r.word));
-   //printf("all=%x\n",int(r.all()));
    ASSERT_EQUALS(r.all(), 0x4b21);
 }
 
@@ -180,11 +169,11 @@ void test_flags()
 
    
    typedef uint16_t T;
-   ASSERT_EQUALS((boost::integer::bitfield<T, 8, 15>::static_value_to_storage<0x12>::value), 0x12);
-   ASSERT_EQUALS((boost::integer::bitfield<T, 8, 15>::get_flags(0x12)), 0x12);
-   ASSERT_EQUALS((boost::integer::bitfield<T, 4, 11>::static_value_to_storage<0x34>::value), 0x0340);
+   ASSERT_EQUALS((boost::integer::bitfield_value_to_stprage<boost::integer::bitfield<T, 8, 15>, 0x12>::value), 0x0012);
+   ASSERT_EQUALS((boost::integer::bitfield<T, 8, 15>::get_flags(0x12)), 0x0012);
+   ASSERT_EQUALS((boost::integer::bitfield_value_to_stprage<boost::integer::bitfield<T, 4, 11>, 0x34>::value), 0x0340);
    ASSERT_EQUALS((boost::integer::bitfield<T, 4, 11>::get_flags(0x34)), 0x0340);
-   ASSERT_EQUALS((boost::integer::bitfield<T, 0, 7>::static_value_to_storage<0x56>::value), 0x5600);
+   ASSERT_EQUALS((boost::integer::bitfield_value_to_stprage<boost::integer::bitfield<T, 0, 7>, 0x56>::value), 0x5600);
    ASSERT_EQUALS((boost::integer::bitfield<T, 0, 7>::get_flags(0x56)), 0x5600);
    ASSERT_EQUALS((boost::integer::bitfield<T, 0, 15>::get_flags(0xabcd)), 0xabcd);
    ASSERT_EQUALS((boost::integer::bitfield<T, 4, 4>::get_flags(0)), 0);
@@ -231,6 +220,7 @@ void test_traits()
    ASSERT_EQUALS((boost::integer::bitfield<T, 0, 7>::FIELD_MASK), 0xff);
 }
 
+#if 0
 //-----------------------------------------------------------------------------
 template <class B, class CB>
 void do_bit_access_test(B bf, CB& cbf)
@@ -240,11 +230,13 @@ void do_bit_access_test(B bf, CB& cbf)
    // Also test bit inversion and constant access at the same time.
    for (int i=0; i<B::WIDTH; ++i)
    {
-      r.word = htons(1u << (B::FIRST + i));
+      r.word = 1u << (B::FIRST + i);
+      boost::integer::endian_flip(r.word);
       ASSERT_EQUALS(cbf[i], true);
       ASSERT_EQUALS(~cbf[i], false);
 
-      r.word = htons(~ (1u << (B::FIRST + i)));
+      r.word = (~ (1u << (B::FIRST + i)));
+      r.word = boost::integer::endian_flip(r.word);
       ASSERT_EQUALS(bf[i], false);
       ASSERT_EQUALS(~cbf[i], true);
    }
@@ -253,16 +245,20 @@ void do_bit_access_test(B bf, CB& cbf)
    // reading r.word.
    for (int i=0; i<B::WIDTH; ++i)
    {
-      r.word = htons(0);
+      r.word = 0;
+      boost::integer::endian_flip(r.word);
       bf[i] = 1u;
-      ASSERT_EQUALS(htons(r.word), 1u << (B::FIRST + i));
+      boost::integer::endian_flip(r.word);
+      ASSERT_EQUALS(r.word, 1u << (B::FIRST + i));
 
-      r.word = htons(0xffff);
+      r.word = 0xfffful;
+      boost::integer::endian_flip(r.word);
       bf[i] = 0;
-      ASSERT_EQUALS( htons(r.word), (uint16_t)(~(1u << (B::FIRST + i))) );
+      boost::integer::endian_flip(r.word);
+      ASSERT_EQUALS( r.word, (uint16_t)(~(1u << (B::FIRST + i))) );
    }
 }
-
+#endif
 //-----------------------------------------------------------------------------
 void test_bit_access()
 {
@@ -296,8 +292,6 @@ void test_signed_unsigned() {
    r.ss()--;
    int i = r.ss();
    signed char c= r.ss();
-   //printf("----- l=%d %x\n", int(r.ss()), int(r.ss()));
-   //std::cout << std::hex << -2 << " " << r.word << " " << int(r.ss) << std::endl;
    ASSERT_EQUALS(r.ss(), -2);
    ASSERT_EQUALS(i, -2);
    ASSERT_EQUALS(c, -2);

@@ -1,0 +1,1558 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Toward Boost.Bitfield 0.2.0</title>
+<link rel="stylesheet" href="../../../../doc/src/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.69.1">
+<link rel="start" href="index.html" title="Toward Boost.Bitfield 0.2.0">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../boost.png"></td>
+<td align="center"><a href="../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav"></div>
+<div class="article" lang="en">
+<div class="titlepage">
+<div>
+<div><h2 class="title">
+<a name="toward_boost_bitfield"></a>Toward Boost.Bitfield 0.2.0</h2></div>
+<div><div class="authorgroup"><div class="author"><h3 class="author">
+<span class="firstname">Vicente J.</span> <span class="surname">Botet Escriba</span>
+</h3></div></div></div>
+<div><p class="copyright">Copyright &#169; 2009 Vicente J. Botet Escriba</p></div>
+<div><div class="legalnotice">
+<a name="id4987072"></a><p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></div>
+</div>
+<hr>
+</div>
+<div class="toc">
+<p><b>Table of Contents</b></p>
+<dl>
+<dt><span class="section"><a href="index.html#toward_boost_bitfield.overview">Overview</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="index.html#toward_boost_bitfield.overview.motivation">Motivation</a></span></dt>
+<dt><span class="section"><a href="index.html#toward_boost_bitfield.overview.description">Description</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="index.html#toward_boost_bitfield.users_guide"> Users'Guide</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="index.html#toward_boost_bitfield.users_guide.getting_started"> Getting
+      Started</a></span></dt>
+<dt><span class="section"><a href="index.html#toward_boost_bitfield.users_guide.tutorial">Tutorial</a></span></dt>
+<dt><span class="section"><a href="index.html#toward_boost_bitfield.users_guide.ext_references"> References</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="index.html#toward_boost_bitfield.reference">Reference</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="index.html#toward_boost_bitfield.reference.integer_bitfield_hpp">
+      Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">bitfield</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="index.html#toward_boost_bitfield.reference.bitfield_include_hpp">
+      Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">bitfield</span><span class="special">/</span><span class="identifier">include</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="index.html#toward_boost_bitfield.reference.bitfield_hpp"> Header
+      <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">bitfield</span><span class="special">/</span><span class="identifier">bitfield</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="index.html#toward_boost_bitfield.reference.bitfield_dcl_hpp"> Header
+      <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">bitfield</span><span class="special">/</span><span class="identifier">bitfield_dcl</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="index.html#toward_boost_bitfield.reference.endian_bitfield_value_type_hpp">
+      Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">bitfield</span><span class="special">/</span><span class="identifier">endian_bitfield_value_type</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="index.html#toward_boost_bitfield.appendices">Appendices</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="index.html#toward_boost_bitfield.appendices.history"> Appendix A:
+      History</a></span></dt>
+<dt><span class="section"><a href="index.html#toward_boost_bitfield.appendices.rationale"> Appendix
+      B: Rationale</a></span></dt>
+<dt><span class="section"><a href="index.html#toward_boost_bitfield.appendices.implementation"> Appendix
+      C: Implementation Notes</a></span></dt>
+<dt><span class="section"><a href="index.html#toward_boost_bitfield.appendices.acknowledgements"> Appendix
+      D: Acknowledgements</a></span></dt>
+<dt><span class="section"><a href="index.html#toward_boost_bitfield.appendices.appendix_e__tests">Appendix
+      E: Tests</a></span></dt>
+<dt><span class="section"><a href="index.html#toward_boost_bitfield.appendices.appendix_f__tickets">Appendix
+      F: Tickets</a></span></dt>
+<dt><span class="section"><a href="index.html#toward_boost_bitfield.appendices.todo"> Appendix F: Future
+      plans</a></span></dt>
+</dl></dd>
+</dl>
+</div>
+<div class="warning"><table border="0" summary="Warning">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Warning]" src="../../../../doc/src/images/warning.png"></td>
+<th align="left">Warning</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+      Bitfield is not a part of the Boost libraries.
+    </p></td></tr>
+</table></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="toward_boost_bitfield.overview"></a><a href="index.html#toward_boost_bitfield.overview" title="Overview">Overview</a>
+</h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="index.html#toward_boost_bitfield.overview.motivation">Motivation</a></span></dt>
+<dt><span class="section"><a href="index.html#toward_boost_bitfield.overview.description">Description</a></span></dt>
+</dl></div>
+<a name="toward_boost_bitfield.overview.how_to_use_this_documentation"></a><h3>
+<a name="id4986988"></a>
+      <a href="index.html#toward_boost_bitfield.overview.how_to_use_this_documentation">How
+      to Use This Documentation</a>
+    </h3>
+<p>
+      This documentation makes use of the following naming and formatting conventions.
+    </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+        Code is in <code class="computeroutput"><span class="identifier">fixed</span> <span class="identifier">width</span>
+        <span class="identifier">font</span></code> and is syntax-highlighted.
+      </li>
+<li>
+        Replaceable text that you will need to supply is in
+        <em class="replaceable"><code>
+          italics
+        </code></em>
+        .
+      </li>
+<li>
+        Free functions are rendered in the code font followed by (), as in free_function().
+      </li>
+<li>
+        If a name refers to a class template, it is specified like this: <code class="computeroutput"><span class="identifier">class_template</span><span class="special">&lt;&gt;</span></code>;
+        that is, it is in code font and its name is followed by <code class="computeroutput"><span class="special">&lt;&gt;</span></code>
+        to indicate that it is a class template.
+      </li>
+<li>
+        If a name refers to a function-like macro, it is specified like this: <code class="computeroutput"><span class="identifier">MACRO</span><span class="special">()</span></code>;
+        that is, it is uppercase in code font and its name is followed by <code class="computeroutput"><span class="special">()</span></code> to indicate that it is a function-like
+        macro. Object-like macros appear without the trailing <code class="computeroutput"><span class="special">()</span></code>.
+      </li>
+<li>
+        Names that refer to <span class="emphasis"><em>concepts</em></span> in the generic programming
+        sense are specified in CamelCase.
+      </li>
+</ul></div>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../doc/src/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+        In addition, notes such as this one specify non-essential information that
+        provides additional background or rationale.
+      </p></td></tr>
+</table></div>
+<p>
+      Finally, you can mentally add the following to any code fragments in this document:
+    </p>
+<pre class="programlisting">
+<span class="comment">// Include all of Bitfield files
+</span><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">bitfield</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">integer</span><span class="special">;</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="toward_boost_bitfield.overview.motivation"></a><a href="index.html#toward_boost_bitfield.overview.motivation" title="Motivation">Motivation</a>
+</h3></div></div></div>
+<p>
+        In order for an application or a device driver to use the same source code
+        base on both platforms, it must either be endian neutral, or use conditional
+        compilation to select appropriate code modules. A program module is considered
+        endian neutral if it retains its functionality while being ported across
+        platforms of different endianness. In other words, there is no relation between
+        its functionality and the endianness of the platform it is running on. Endianness
+        issues become important when porting the pieces of the application that relate
+        to client communication over a heterogeneous network, persistent data storage
+        on the disk, product tracing (it is important that trace generated on SPARC
+        gets formatted correctly on x86) and other related areas.
+      </p>
+<p>
+        Boost.Endian handles with most of the issues related to the byte ordering,
+        but do not manage the bit ordering. E.g. the following structure has a different
+        layout in big and little endian machines.
+      </p>
+<pre class="programlisting">
+<span class="keyword">struct</span> <span class="identifier">X</span> <span class="special">{</span>
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d00</span><span class="special">:</span><span class="number">1</span><span class="special">;</span>
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d01</span><span class="special">:</span><span class="number">7</span><span class="special">;</span>
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d02</span><span class="special">:</span><span class="number">2</span><span class="special">;</span>
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d03</span><span class="special">:</span><span class="number">6</span><span class="special">;</span>
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d04</span><span class="special">:</span><span class="number">4</span><span class="special">;</span>
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d05</span><span class="special">:</span><span class="number">4</span><span class="special">;</span>
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d06</span><span class="special">:</span><span class="number">1</span><span class="special">;</span>
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d07</span><span class="special">:</span><span class="number">3</span><span class="special">;</span>
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d08</span><span class="special">:</span><span class="number">4</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+<p>
+        In order to make this structure endian neutral, we need to use conditional
+        compilation, and swap on byte level of the fields
+      </p>
+<pre class="programlisting">
+<span class="keyword">struct</span> <span class="identifier">X</span> <span class="special">{</span>
+<span class="preprocessor">#if</span> <span class="identifier">__BYTE_ORDER</span> <span class="special">==</span> <span class="identifier">__BIG_ENDIAN</span>
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d00</span><span class="special">:</span><span class="number">1</span><span class="special">;</span> 
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d01</span><span class="special">:</span><span class="number">7</span><span class="special">;</span>
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d02</span><span class="special">:</span><span class="number">2</span><span class="special">;</span>
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d03</span><span class="special">:</span><span class="number">6</span><span class="special">;</span>
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d04</span><span class="special">:</span><span class="number">4</span><span class="special">;</span>
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d05</span><span class="special">:</span><span class="number">4</span><span class="special">;</span>
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d06</span><span class="special">:</span><span class="number">1</span><span class="special">;</span>
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d07</span><span class="special">:</span><span class="number">3</span><span class="special">;</span>
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d08</span><span class="special">:</span><span class="number">4</span><span class="special">;</span>
+<span class="preprocessor">#else</span>
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d01</span><span class="special">:</span><span class="number">7</span><span class="special">;</span>
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d00</span><span class="special">:</span><span class="number">1</span><span class="special">;</span>
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d03</span><span class="special">:</span><span class="number">6</span><span class="special">;</span>
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d02</span><span class="special">:</span><span class="number">2</span><span class="special">;</span>
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d05</span><span class="special">:</span><span class="number">4</span><span class="special">;</span>
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d04</span><span class="special">:</span><span class="number">4</span><span class="special">;</span>
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d08</span><span class="special">:</span><span class="number">4</span><span class="special">;</span>
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d07</span><span class="special">:</span><span class="number">3</span><span class="special">;</span>
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d06</span><span class="special">:</span><span class="number">1</span><span class="special">;</span>
+<span class="preprocessor">#endif</span>
+<span class="special">}</span>
+</pre>
+<p>
+        The preceding technique can be applied as far as the bitfield is contained
+        on a byte boundary. But for bitfields using several bytes as in
+      </p>
+<pre class="programlisting">
+<span class="keyword">struct</span> <span class="identifier">X</span> <span class="special">{</span>
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d00</span><span class="special">:</span><span class="number">11</span><span class="special">;</span>
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d01</span><span class="special">:</span><span class="number">21</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+<p>
+        there is no way using conditional compilation to adapt the structure and
+        preserve the fields.
+      </p>
+<p>
+        Two approaches can be considered:
+      </p>
+<a name="toward_boost_bitfield.overview.motivation.decompose_the_fields_not_defined_on_a_byte_boundary_on_several_bitfield_defined_on_a_byte_boundary"></a><h4>
+<a name="id4945430"></a>
+        <a href="index.html#toward_boost_bitfield.overview.motivation.decompose_the_fields_not_defined_on_a_byte_boundary_on_several_bitfield_defined_on_a_byte_boundary">Decompose
+        the fields not defined on a byte boundary on several bitfield defined on
+        a byte boundary</a>
+      </h4>
+<pre class="programlisting">
+<span class="keyword">struct</span> <span class="identifier">X</span> <span class="special">{</span>
+<span class="preprocessor">#if</span> <span class="identifier">__BYTE_ORDER</span> <span class="special">==</span> <span class="identifier">__BIG_ENDIAN</span>
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d00_b0</span><span class="special">:</span><span class="number">8</span><span class="special">;</span> 
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d00_b1</span><span class="special">:</span><span class="number">3</span><span class="special">;</span> 
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d01_b0</span><span class="special">:</span><span class="number">5</span><span class="special">;</span> 
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d01_b1</span><span class="special">:</span><span class="number">8</span><span class="special">;</span> 
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d01_b2</span><span class="special">:</span><span class="number">8</span><span class="special">;</span> 
+<span class="preprocessor">#else</span>
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d01_b2</span><span class="special">:</span><span class="number">8</span><span class="special">;</span> 
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d01_b1</span><span class="special">:</span><span class="number">8</span><span class="special">;</span> 
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d01_b0</span><span class="special">:</span><span class="number">5</span><span class="special">;</span> 
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d00_b1</span><span class="special">:</span><span class="number">3</span><span class="special">;</span> 
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d00_b0</span><span class="special">:</span><span class="number">8</span><span class="special">;</span> 
+<span class="preprocessor">#endif</span>
+<span class="special">};</span>
+</pre>
+<p>
+        and define a way to access the bitfield information of the ENDIAN_UNSAFE
+        structure. This library do not use this apprach.
+      </p>
+<a name="toward_boost_bitfield.overview.motivation.replace_the_bitfields_by_the_integer_type"></a><h4>
+<a name="id4942433"></a>
+        <a href="index.html#toward_boost_bitfield.overview.motivation.replace_the_bitfields_by_the_integer_type">Replace
+        the bitfields by the integer type</a>
+      </h4>
+<p>
+        When it is possible, a suggestion would be to transform the bitfields into
+        integers, as follows:
+      </p>
+<pre class="programlisting">
+<span class="keyword">struct</span> <span class="identifier">X</span> <span class="special">{</span>
+<span class="preprocessor">#ifdef</span> <span class="identifier">ATRIUM_PORTABLE</span>
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d0</span><span class="special">;</span>
+<span class="preprocessor">#else</span>
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d00</span><span class="special">:</span><span class="number">11</span><span class="special">;</span> <span class="comment">/* ENDIAN_UNSAFE */</span>
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d01</span><span class="special">:</span><span class="number">21</span><span class="special">;</span> <span class="comment">/* ENDIAN_UNSAFE */</span>
+<span class="preprocessor">#endif</span>
+<span class="special">};</span>
+</pre>
+<p>
+        and define a way to access the bitfield information.
+      </p>
+<p>
+        When the structure is used by a C++ program, all the uses of the bit fields
+        (d00 and d01) could be replaced by an inline function, so
+      </p>
+<pre class="programlisting">
+<span class="identifier">y</span> <span class="special">=</span> <span class="identifier">x</span><span class="special">.</span><span class="identifier">d00</span><span class="special">;</span>	
+</pre>
+<p>
+        could be replaced by
+      </p>
+<pre class="programlisting">
+<span class="identifier">y</span> <span class="special">=</span> <span class="identifier">x</span><span class="special">.</span><span class="identifier">d00</span><span class="special">();</span> 
+</pre>
+<p>
+        or
+      </p>
+<pre class="programlisting">
+<span class="identifier">y</span> <span class="special">=</span> <span class="identifier">x</span><span class="special">.</span><span class="identifier">get_d00</span><span class="special">();</span>
+</pre>
+<p>
+        and x.d00= y;
+      </p>
+<p>
+        could be replaced by
+      </p>
+<pre class="programlisting">
+<span class="identifier">x</span><span class="special">.</span><span class="identifier">d00</span><span class="special">()=</span> <span class="identifier">y</span><span class="special">;</span> 
+</pre>
+<p>
+        or
+      </p>
+<pre class="programlisting">
+<span class="identifier">x</span><span class="special">.</span><span class="identifier">set_d00</span><span class="special">(</span><span class="identifier">y</span><span class="special">)</span>
+</pre>
+<p>
+        where
+      </p>
+<pre class="programlisting">
+<span class="keyword">struct</span> <span class="identifier">X</span> <span class="special">{</span>
+    <span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">uint_32</span> <span class="identifier">storage_type</span><span class="special">;</span>
+    <span class="identifier">storage_type</span> <span class="identifier">d0</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">value_type</span><span class="special">;</span>
+    <span class="identifier">BOOST_BITFIELD_DCL</span><span class="special">(</span><span class="identifier">storage_type</span><span class="special">,</span> <span class="identifier">d0</span><span class="special">,</span> <span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">,</span> <span class="identifier">d00</span><span class="special">,</span> <span class="number">0</span><span class="special">,</span> <span class="number">10</span><span class="special">);</span>
+    <span class="identifier">BOOST_BITFIELD_DCL</span><span class="special">(</span><span class="identifier">storage_type</span><span class="special">,</span> <span class="identifier">d0</span><span class="special">,</span> <span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">,</span> <span class="identifier">d01</span><span class="special">,</span> <span class="number">11</span><span class="special">,</span> <span class="number">31</span><span class="special">);</span>
+<span class="special">};</span>
+</pre>
+<p>
+        The goal of Boost.Bitfield is to make possible this simple portable translation.
+      </p>
+<p>
+        If we want to write the storage type to a binary archive we need to precise
+        which will be the endian format of the storage type. For this end, you can
+        use any of the endian types provided by the Boost.Endian library. If the
+        storage is big you can declare
+      </p>
+<pre class="programlisting">
+<span class="keyword">struct</span> <span class="identifier">X</span> <span class="special">{</span>
+    <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">ubig_32</span> <span class="identifier">storage_type</span><span class="special">;</span>
+    <span class="identifier">storage_type</span> <span class="identifier">d0</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">value_type</span><span class="special">;</span>
+    <span class="identifier">BOOST_BITFIELD_DCL</span><span class="special">(</span><span class="identifier">storage_type</span><span class="special">,</span> <span class="identifier">d0</span><span class="special">,</span> <span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">,</span> <span class="identifier">d00</span><span class="special">,</span> <span class="number">0</span><span class="special">,</span> <span class="number">10</span><span class="special">);</span>
+    <span class="identifier">BOOST_BITFIELD_DCL</span><span class="special">(</span><span class="identifier">storage_type</span><span class="special">,</span> <span class="identifier">d0</span><span class="special">,</span> <span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">,</span> <span class="identifier">d01</span><span class="special">,</span> <span class="number">11</span><span class="special">,</span> <span class="number">31</span><span class="special">);</span>
+<span class="special">};</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="toward_boost_bitfield.overview.description"></a><a href="index.html#toward_boost_bitfield.overview.description" title="Description">Description</a>
+</h3></div></div></div>
+<p>
+        Portable bitfields.
+      </p>
+<p>
+        The main source of inspiration of this library was Boost.Bitfield from Emile
+        Cormier.
+      </p>
+<p>
+        <span class="bold"><strong>Boost.Bitfield</strong></span> provides:
+      </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+          a generic bitfield traits class providing generic getter and setter.
+        </li>
+<li>
+          a BOOST_BITFIELD_DCL macro making easier the definition of the bitfield
+          helper type and the bitfield getter and setter functions.
+        </li>
+</ul></div>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="toward_boost_bitfield.users_guide"></a><a href="index.html#toward_boost_bitfield.users_guide" title=" Users'Guide"> Users'Guide</a>
+</h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="index.html#toward_boost_bitfield.users_guide.getting_started"> Getting
+      Started</a></span></dt>
+<dd><dl><dt><span class="section"><a href="index.html#toward_boost_bitfield.users_guide.getting_started.install">
+        Installing Bitfield</a></span></dt></dl></dd>
+<dt><span class="section"><a href="index.html#toward_boost_bitfield.users_guide.tutorial">Tutorial</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="index.html#toward_boost_bitfield.users_guide.tutorial.declaring_a_storage_variable">Declaring
+        a storage variable</a></span></dt>
+<dt><span class="section"><a href="index.html#toward_boost_bitfield.users_guide.tutorial.bitfieds_helper_classes_and_bitfield_accessors">Bitfieds
+        helper classes and bitfield accessors</a></span></dt>
+<dt><span class="section"><a href="index.html#toward_boost_bitfield.users_guide.tutorial.using_macros_to_declare_portable_bitfields_">Using
+        macros to declare portable bitfields </a></span></dt>
+<dt><span class="section"><a href="index.html#toward_boost_bitfield.users_guide.tutorial.using_bitfield_getters_and_setters">Using
+        bitfield getters and setters</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="index.html#toward_boost_bitfield.users_guide.ext_references"> References</a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="toward_boost_bitfield.users_guide.getting_started"></a><a href="index.html#toward_boost_bitfield.users_guide.getting_started" title=" Getting
+      Started"> Getting
+      Started</a>
+</h3></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="index.html#toward_boost_bitfield.users_guide.getting_started.install">
+        Installing Bitfield</a></span></dt></dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_bitfield.users_guide.getting_started.install"></a><a href="index.html#toward_boost_bitfield.users_guide.getting_started.install" title="
+        Installing Bitfield">
+        Installing Bitfield</a>
+</h4></div></div></div>
+<a name="toward_boost_bitfield.users_guide.getting_started.install.getting_boost_bitfield"></a><h5>
+<a name="id4943415"></a>
+          <a href="index.html#toward_boost_bitfield.users_guide.getting_started.install.getting_boost_bitfield">Getting
+          Boost.Bitfield</a>
+        </h5>
+<p>
+          You can get the last stable release of Boost.Bitfield by downloading <code class="literal">bitfield.zip</code>
+          from the <a href="http://www.boost-consulting.com/vault/index.php?directory=Endianess%20Programming" target="_top">Boost
+          Vault</a>
+        </p>
+<p>
+          You can also access the latest (unstable?) state from the <a href="https://svn.boost.org/svn/boost/sandbox/bitfield" target="_top">Boost
+          Sandbox</a>.
+        </p>
+<a name="toward_boost_bitfield.users_guide.getting_started.install.building_boost_bitfield"></a><h5>
+<a name="id4943464"></a>
+          <a href="index.html#toward_boost_bitfield.users_guide.getting_started.install.building_boost_bitfield">Building
+          Boost.Bitfield</a>
+        </h5>
+<p>
+          <span class="bold"><strong>Boost.Bitfield</strong></span> is a header only library,
+          so no need to compile anything.
+        </p>
+<a name="toward_boost_bitfield.users_guide.getting_started.install.requirements"></a><h5>
+<a name="id4943496"></a>
+          <a href="index.html#toward_boost_bitfield.users_guide.getting_started.install.requirements">Requirements</a>
+        </h5>
+<p>
+          <span class="bold"><strong>Boost.Bitfield</strong></span> depends on some Boost library.
+          For these specific parts you must use either Boost version 1.38.0 or the
+          version in SVN trunk (even if older version should works also).
+        </p>
+<a name="toward_boost_bitfield.users_guide.getting_started.install.exceptions_safety"></a><h5>
+<a name="id4943529"></a>
+          <a href="index.html#toward_boost_bitfield.users_guide.getting_started.install.exceptions_safety">Exceptions
+          safety</a>
+        </h5>
+<p>
+          All functions in the library are exception-neutral, providing the strong
+          exception safety guarantee.
+        </p>
+<a name="toward_boost_bitfield.users_guide.getting_started.install.thread_safety"></a><h5>
+<a name="id4943556"></a>
+          <a href="index.html#toward_boost_bitfield.users_guide.getting_started.install.thread_safety">Thread
+          safety</a>
+        </h5>
+<p>
+          All functions in the library are thread-unsafe except when noted explicitly.
+        </p>
+<a name="toward_boost_bitfield.users_guide.getting_started.install.tested_compilers"></a><h5>
+<a name="id4943582"></a>
+          <a href="index.html#toward_boost_bitfield.users_guide.getting_started.install.tested_compilers">Tested
+          compilers</a>
+        </h5>
+<p>
+          <span class="bold"><strong>Boost.Bitfield</strong></span> should work with an C++03
+          conforming compiler. The current version has been tested on:
+        </p>
+<p>
+          Windows with
+        </p>
+<div class="itemizedlist"><ul type="disc"><li>
+            MSVC 10.0
+          </li></ul></div>
+<p>
+          Cygwin 1.5
+        </p>
+<div class="itemizedlist"><ul type="disc"><li>
+            GCC 3.4.4
+          </li></ul></div>
+<p>
+          Cygwin 1.7
+        </p>
+<div class="itemizedlist"><ul type="disc"><li>
+            GCC 4.3.2
+          </li></ul></div>
+<p>
+          MinGW with
+        </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+            GCC 4.4.0
+          </li>
+<li>
+            GCC 4.5.0
+          </li>
+<li>
+            GCC 4.5.0 c++0x
+          </li>
+<li>
+            GCC 4.6.0
+          </li>
+<li>
+            GCC 4.6.0 c++0x
+          </li>
+</ul></div>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../doc/src/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+            Please let us know how this works on other platforms/compilers.
+          </p></td></tr>
+</table></div>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../doc/src/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+            Please send any questions, comments and bug reports to boost &lt;at&gt;
+            lists &lt;dot&gt; boost &lt;dot&gt; org.
+          </p></td></tr>
+</table></div>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="toward_boost_bitfield.users_guide.tutorial"></a><a href="index.html#toward_boost_bitfield.users_guide.tutorial" title="Tutorial">Tutorial</a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="index.html#toward_boost_bitfield.users_guide.tutorial.declaring_a_storage_variable">Declaring
+        a storage variable</a></span></dt>
+<dt><span class="section"><a href="index.html#toward_boost_bitfield.users_guide.tutorial.bitfieds_helper_classes_and_bitfield_accessors">Bitfieds
+        helper classes and bitfield accessors</a></span></dt>
+<dt><span class="section"><a href="index.html#toward_boost_bitfield.users_guide.tutorial.using_macros_to_declare_portable_bitfields_">Using
+        macros to declare portable bitfields </a></span></dt>
+<dt><span class="section"><a href="index.html#toward_boost_bitfield.users_guide.tutorial.using_bitfield_getters_and_setters">Using
+        bitfield getters and setters</a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_bitfield.users_guide.tutorial.declaring_a_storage_variable"></a><a href="index.html#toward_boost_bitfield.users_guide.tutorial.declaring_a_storage_variable" title="Declaring
+        a storage variable">Declaring
+        a storage variable</a>
+</h4></div></div></div>
+<p>
+          The first thing to do is to declare a storage type able to store all the
+          bitfields. In the following example we want to stor bits for the RGB encoding,
+          so 16 bits is enough.
+        </p>
+<pre class="programlisting">
+<span class="keyword">struct</span> <span class="identifier">Rgb565</span>
+<span class="special">{</span>
+    <span class="keyword">typedef</span> <span class="identifier">ubig16_t</span> <span class="identifier">storage_type</span><span class="special">;</span>
+    <span class="identifier">storage_type</span> <span class="identifier">storage</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_bitfield.users_guide.tutorial.bitfieds_helper_classes_and_bitfield_accessors"></a><a href="index.html#toward_boost_bitfield.users_guide.tutorial.bitfieds_helper_classes_and_bitfield_accessors" title="Bitfieds
+        helper classes and bitfield accessors">Bitfieds
+        helper classes and bitfield accessors</a>
+</h4></div></div></div>
+<a name="toward_boost_bitfield.users_guide.tutorial.bitfieds_helper_classes_and_bitfield_accessors.declaring_a_bitfield_helper_type"></a><h5>
+<a name="id4996883"></a>
+          <a href="index.html#toward_boost_bitfield.users_guide.tutorial.bitfieds_helper_classes_and_bitfield_accessors.declaring_a_bitfield_helper_type">Declaring
+          a bitfield helper type</a>
+        </h5>
+<p>
+          For each bitfields we need to declare a type that knows about the bitfield
+          traits of the bitfield.
+        </p>
+<pre class="programlisting">
+<span class="keyword">struct</span> <span class="identifier">Rgb565</span>
+<span class="special">{</span>
+    <span class="comment">//...
+</span>    <span class="keyword">typedef</span> <span class="identifier">bitfield_traits</span><span class="special">&lt;</span><span class="identifier">storage_type</span><span class="special">,</span> <span class="number">0</span><span class="special">,</span> <span class="number">4</span><span class="special">,</span> <span class="keyword">unsigned</span> <span class="keyword">char</span><span class="special">&gt;</span>    <span class="identifier">red_type</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+<a name="toward_boost_bitfield.users_guide.tutorial.bitfieds_helper_classes_and_bitfield_accessors.bitfield_getters"></a><h5>
+<a name="id4997011"></a>
+          <a href="index.html#toward_boost_bitfield.users_guide.tutorial.bitfieds_helper_classes_and_bitfield_accessors.bitfield_getters">bitfield
+          getters</a>
+        </h5>
+<p>
+          Now we are ready to define the getter of this bitfield respect to the storage
+          variable. My prefered form is just to name the getter function as the type,
+          others will prefer the get_field() form.
+        </p>
+<pre class="programlisting">
+<span class="keyword">struct</span> <span class="identifier">Rgb565</span>
+<span class="special">{</span>
+    <span class="comment">//...
+</span>    <span class="identifier">red_type</span><span class="special">::</span><span class="identifier">value</span><span class="special">::</span><span class="identifier">value_type</span> <span class="identifier">red</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">{</span> <span class="keyword">return</span> <span class="identifier">red_type</span><span class="special">::</span><span class="identifier">value</span><span class="special">(</span><span class="identifier">storage</span><span class="special">).</span><span class="identifier">get</span><span class="special">();</span> <span class="special">}</span>
+    <span class="identifier">red_type</span><span class="special">::</span><span class="identifier">value</span><span class="special">::</span><span class="identifier">value_type</span> <span class="identifier">get_red</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">{</span> <span class="keyword">return</span> <span class="identifier">red_type</span><span class="special">::</span><span class="identifier">value</span><span class="special">(</span><span class="identifier">storage</span><span class="special">).</span><span class="identifier">get</span><span class="special">();</span> <span class="special">}</span>
+<span class="special">};</span>
+</pre>
+<a name="toward_boost_bitfield.users_guide.tutorial.bitfieds_helper_classes_and_bitfield_accessors.bitfield_setters"></a><h5>
+<a name="id4997245"></a>
+          <a href="index.html#toward_boost_bitfield.users_guide.tutorial.bitfieds_helper_classes_and_bitfield_accessors.bitfield_setters">bitfield
+          setters</a>
+        </h5>
+<p>
+          There are two variants for the setter. My prefered form is just to name
+          the setter function as the type and return a reference able to support
+          assignations. The other is the traditional set_field() taking the new value
+          as parameter.
+        </p>
+<pre class="programlisting">
+<span class="keyword">struct</span> <span class="identifier">Rgb565</span>
+<span class="special">{</span>
+    <span class="comment">//...
+</span>    <span class="identifier">red_type</span><span class="special">::</span><span class="identifier">reference</span> <span class="identifier">red</span><span class="special">()</span> <span class="special">{</span> <span class="keyword">return</span> <span class="identifier">red_type</span><span class="special">::</span><span class="identifier">reference</span><span class="special">(</span><span class="identifier">storage</span><span class="special">);</span> <span class="special">}</span>
+    <span class="keyword">void</span> <span class="identifier">set_red</span><span class="special">(</span><span class="keyword">unsigned</span> <span class="keyword">char</span> <span class="identifier">val</span><span class="special">)</span> <span class="special">{</span> <span class="keyword">return</span> <span class="identifier">red_type</span><span class="special">::</span><span class="identifier">reference</span><span class="special">(</span><span class="identifier">storage</span><span class="special">).</span><span class="identifier">set</span><span class="special">(</span><span class="identifier">val</span><span class="special">);</span> <span class="special">}</span>
+<span class="special">};</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_bitfield.users_guide.tutorial.using_macros_to_declare_portable_bitfields_"></a><a href="index.html#toward_boost_bitfield.users_guide.tutorial.using_macros_to_declare_portable_bitfields_" title="Using
+        macros to declare portable bitfields ">Using
+        macros to declare portable bitfields </a>
+</h4></div></div></div>
+<p>
+          All these stuf can be done at once using the BOOST_BITFIELD_DCL macro as
+          follows.
+        </p>
+<pre class="programlisting">
+<span class="keyword">struct</span> <span class="identifier">Rgb565</span>
+<span class="special">{</span>
+    <span class="keyword">typedef</span> <span class="keyword">volatile</span> <span class="identifier">uint16_t</span> <span class="identifier">storage_type</span><span class="special">;</span>
+    <span class="identifier">storage_type</span> <span class="identifier">storage</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="keyword">volatile</span> <span class="identifier">uint16_t</span> <span class="identifier">value_type</span><span class="special">;</span>
+    <span class="identifier">BOOST_BITFIELD_DCL</span><span class="special">(</span><span class="identifier">storage_type</span><span class="special">,</span> <span class="identifier">storage</span><span class="special">,</span> <span class="keyword">unsigned</span> <span class="keyword">char</span><span class="special">,</span> <span class="identifier">red</span><span class="special">,</span> <span class="number">0</span><span class="special">,</span> <span class="number">4</span><span class="special">);</span>
+    <span class="identifier">BOOST_BITFIELD_DCL</span><span class="special">(</span><span class="identifier">storage_type</span><span class="special">,</span> <span class="identifier">storage</span><span class="special">,</span> <span class="keyword">unsigned</span> <span class="keyword">char</span><span class="special">,</span> <span class="identifier">green</span><span class="special">,</span> <span class="number">5</span><span class="special">,</span> <span class="number">10</span><span class="special">);</span>
+    <span class="identifier">BOOST_BITFIELD_DCL</span><span class="special">(</span><span class="identifier">storage_type</span><span class="special">,</span> <span class="identifier">storage</span><span class="special">,</span> <span class="keyword">unsigned</span> <span class="keyword">char</span><span class="special">,</span> <span class="identifier">blue</span><span class="special">,</span> <span class="number">11</span><span class="special">,</span><span class="number">15</span><span class="special">);</span>
+<span class="special">};</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_bitfield.users_guide.tutorial.using_bitfield_getters_and_setters"></a><a href="index.html#toward_boost_bitfield.users_guide.tutorial.using_bitfield_getters_and_setters" title="Using
+        bitfield getters and setters">Using
+        bitfield getters and setters</a>
+</h4></div></div></div>
+<p>
+          Next follows some examples of how these bitfields can be used.
+        </p>
+<pre class="programlisting">
+<span class="identifier">Rgb565</span> <span class="identifier">r</span><span class="special">;</span>
+<span class="identifier">r</span><span class="special">.</span><span class="identifier">storage</span><span class="special">=</span> <span class="number">0xffff</span><span class="special">;</span>
+
+<span class="comment">// Write to a bitfield. Note that parenthesis are needed around the bitfield so
+</span><span class="identifier">r</span><span class="special">.</span><span class="identifier">red</span><span class="special">()</span> <span class="special">=</span> <span class="number">23</span><span class="special">;</span>
+
+<span class="comment">// Read from a bitfield
+</span><span class="identifier">Rgb565</span><span class="special">::</span><span class="identifier">value_type</span> <span class="identifier">b</span> <span class="special">=</span> <span class="identifier">r</span><span class="special">.</span><span class="identifier">blue</span><span class="special">();</span>
+
+<span class="comment">// Access a bit within a bit field
+</span><span class="keyword">bool</span> <span class="identifier">bit</span> <span class="special">=</span> <span class="identifier">r</span><span class="special">.</span><span class="identifier">blue</span><span class="special">()[</span><span class="number">3</span><span class="special">];</span>
+</pre>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="toward_boost_bitfield.users_guide.ext_references"></a><a href="index.html#toward_boost_bitfield.users_guide.ext_references" title=" References"> References</a>
+</h3></div></div></div>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term"><a href="http://www.boost.org/libs/integer/endian.htm" target="_top"><span class="bold"><strong>Boost.Endian</strong></span></a></span></dt>
+<dd><p>
+            general integer-like byte-holder binary types with explicit control over
+            byte order, value type, size, and alignment from Beman Dawes
+          </p></dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="toward_boost_bitfield.reference"></a><a href="index.html#toward_boost_bitfield.reference" title="Reference">Reference</a>
+</h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="index.html#toward_boost_bitfield.reference.integer_bitfield_hpp">
+      Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">bitfield</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="index.html#toward_boost_bitfield.reference.bitfield_include_hpp">
+      Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">bitfield</span><span class="special">/</span><span class="identifier">include</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="index.html#toward_boost_bitfield.reference.bitfield_hpp"> Header
+      <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">bitfield</span><span class="special">/</span><span class="identifier">bitfield</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="index.html#toward_boost_bitfield.reference.bitfield_hpp.bitfield_value_type">
+        Metafunction <code class="computeroutput"><span class="identifier">bitfield_value_type</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="index.html#toward_boost_bitfield.reference.bitfield_hpp.bitfield">
+        Template class <code class="computeroutput"><span class="identifier">bitfield</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="index.html#toward_boost_bitfield.reference.bitfield_hpp.bitfield_traits">
+        Template class <code class="computeroutput"><span class="identifier">bitfield_traits</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="index.html#toward_boost_bitfield.reference.bitfield_dcl_hpp"> Header
+      <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">bitfield</span><span class="special">/</span><span class="identifier">bitfield_dcl</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dd><dl><dt><span class="section"><a href="index.html#toward_boost_bitfield.reference.bitfield_dcl_hpp.BOOST_BITFIELD_DCL">
+        Macro <code class="computeroutput"><span class="identifier">BOOST_BITFIELD_DCL</span></code></a></span></dt></dl></dd>
+<dt><span class="section"><a href="index.html#toward_boost_bitfield.reference.endian_bitfield_value_type_hpp">
+      Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">bitfield</span><span class="special">/</span><span class="identifier">endian_bitfield_value_type</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="toward_boost_bitfield.reference.integer_bitfield_hpp"></a><a href="index.html#toward_boost_bitfield.reference.integer_bitfield_hpp" title="
+      Header &lt;boost/integer/bitfield.hpp&gt;">
+      Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">bitfield</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h3></div></div></div>
+<p>
+        Include all the Boost.Bitfields header files
+      </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="toward_boost_bitfield.reference.bitfield_include_hpp"></a><a href="index.html#toward_boost_bitfield.reference.bitfield_include_hpp" title="
+      Header &lt;boost/integer/bitfield/include.hpp&gt;">
+      Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">bitfield</span><span class="special">/</span><span class="identifier">include</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h3></div></div></div>
+<p>
+        Include all the Boost.Bitfields header files
+      </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="toward_boost_bitfield.reference.bitfield_hpp"></a><a href="index.html#toward_boost_bitfield.reference.bitfield_hpp" title=" Header
+      &lt;boost/integer/bitfield/bitfield.hpp&gt;"> Header
+      <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">bitfield</span><span class="special">/</span><span class="identifier">bitfield</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="index.html#toward_boost_bitfield.reference.bitfield_hpp.bitfield_value_type">
+        Metafunction <code class="computeroutput"><span class="identifier">bitfield_value_type</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="index.html#toward_boost_bitfield.reference.bitfield_hpp.bitfield">
+        Template class <code class="computeroutput"><span class="identifier">bitfield</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="index.html#toward_boost_bitfield.reference.bitfield_hpp.bitfield_traits">
+        Template class <code class="computeroutput"><span class="identifier">bitfield_traits</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+</dl></div>
+<p>
+        This is the main file of Boost.Bitfield, which includes the definition of
+        the bitfield&lt;&gt; class.
+      </p>
+<pre class="programlisting">
+<span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">integer</span> <span class="special">{</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">bitfield_default_value_type</span><span class="special">;</span>
+    
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size</span><span class="special">,</span> <span class="keyword">class</span><span class="special">,</span> <span class="keyword">bool</span><span class="special">,</span> <span class="keyword">class</span><span class="special">&gt;</span> 
+    <span class="keyword">class</span> <span class="identifier">bitfield</span><span class="special">;</span>
+           
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">STORAGE_TYPE</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">F</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">L</span>
+        <span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">VALUE_TYPE</span><span class="special">=</span><span class="identifier">bitfield_default_value_type</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">STORAGE_TYPE</span><span class="special">::</span><span class="identifier">type</span><span class="special">&gt;</span>
+    <span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">bitfield_traits</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_bitfield.reference.bitfield_hpp.bitfield_value_type"></a><a href="index.html#toward_boost_bitfield.reference.bitfield_hpp.bitfield_value_type" title="
+        Metafunction bitfield_value_type&lt;&gt;">
+        Metafunction <code class="computeroutput"><span class="identifier">bitfield_value_type</span><span class="special">&lt;&gt;</span></code></a>
+</h4></div></div></div>
+<p>
+          The default value type associated to an storage type is the storage type
+          itself.
+        </p>
+<pre class="programlisting">
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">bitfield_value_type</span> <span class="special">{</span>
+    <span class="keyword">typedef</span> <span class="identifier">T</span> <span class="identifier">type</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+<p>
+          The user could need to specialize this metafunction for some specific types,
+          as for example for types comming from the Boost.Endian library.
+        </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_bitfield.reference.bitfield_hpp.bitfield"></a><a href="index.html#toward_boost_bitfield.reference.bitfield_hpp.bitfield" title="
+        Template class bitfield&lt;&gt;">
+        Template class <code class="computeroutput"><span class="identifier">bitfield</span><span class="special">&lt;&gt;</span></code></a>
+</h4></div></div></div>
+<p>
+          The <code class="computeroutput"><span class="identifier">bitfield</span></code> class is a
+          wrapper to an storage type that allows to get/`set a bitfield of a given
+          value type defined by the first and last bit that the bitfield occupes
+          in the storage type. It defines the conversion to the bitfield value type
+          as weel as all the arithmetic assignement operators.
+        </p>
+<p>
+          This template class behaves as a reference to a bit field. Note that C/C++
+          do not allows to take directly the address of a bit field.
+        </p>
+<pre class="programlisting">
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">STORAGE_TYPE</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size</span> <span class="identifier">F</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size</span> <span class="identifier">L</span>
+    <span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">VALUE_TYPE</span><span class="special">=</span><span class="keyword">typename</span> <span class="identifier">bitfield_value_type</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">STORAGE_TYPE</span><span class="special">::</span><span class="identifier">type</span><span class="special">&gt;</span>
+    <span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">REFERENCE_TYPE</span><span class="special">=</span><span class="identifier">STORAGE_TYPE</span><span class="special">&amp;&gt;</span>
+<span class="keyword">class</span> <span class="identifier">bitfield</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="comment">//! Reference type of the word occupied by the bitfield
+</span>    <span class="keyword">typedef</span> <span class="identifier">REFERENCE_TYPE</span> <span class="identifier">reference_type</span><span class="special">;</span>
+    <span class="comment">//! Value type of the bitfield itself 
+</span>    <span class="keyword">typedef</span> <span class="identifier">VALUE_TYPE</span> <span class="identifier">value_type</span><span class="special">;</span>
+    <span class="comment">//! storage type of the bitfield support
+</span>    <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">reference_traits</span><span class="special">&lt;</span><span class="identifier">REFERENCE_TYPE</span><span class="special">&gt;::</span><span class="identifier">value_type</span> <span class="identifier">storage_type</span><span class="special">;</span>
+
+    <span class="comment">//! Useful constants
+</span>    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">FIRST</span><span class="special">;</span>        <span class="comment">//!&lt; Position of the first bit
+</span>    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">LAST</span><span class="special">;</span>         <span class="comment">//!&lt; Position of the last bit
+</span>    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">WIDTH</span><span class="special">;</span>        <span class="comment">//!&lt; Width in bits of the bitfield
+</span>    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">VAL_MASK</span><span class="special">;</span>     <span class="comment">//!&lt; Mask applied against assigned values
+</span>    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">FIELD_MASK</span><span class="special">;</span>   <span class="comment">//!&lt; Mask of the field's bit positions
+</span>
+    <span class="keyword">static</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">first</span><span class="special">();</span>
+    <span class="keyword">static</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">last</span><span class="special">();</span>
+    <span class="keyword">static</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">width</span><span class="special">();</span>
+    <span class="keyword">static</span> <span class="identifier">storage_type</span> <span class="identifier">val_mask</span><span class="special">();</span>
+    <span class="keyword">static</span> <span class="identifier">storage_type</span> <span class="identifier">field_mask</span><span class="special">();</span>
+
+    <span class="comment">//! deleted because a reference is nedeed
+</span>    <span class="identifier">bitfield</span><span class="special">()</span> <span class="special">=</span> <span class="keyword">delete</span><span class="special">;</span>
+    <span class="comment">//! explicit constructor from a reference
+</span>    <span class="keyword">explicit</span> <span class="identifier">bitfield</span><span class="special">(</span><span class="identifier">reference_type</span> <span class="identifier">field</span><span class="special">);</span>
+
+    <span class="comment">//! Assignment from a value type
+</span>    <span class="identifier">bitfield</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">=(</span><span class="identifier">value_type</span> <span class="identifier">val</span><span class="special">);</span>
+
+    <span class="comment">//! value_type implicit conversion
+</span>    <span class="keyword">operator</span> <span class="identifier">value_type</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+
+    <span class="comment">//! value_type explicit getter
+</span>    <span class="identifier">value_type</span> <span class="identifier">get</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+
+    <span class="comment">//! Returns the negative of the bitfield value.
+</span>    <span class="comment">// this must be modified on the case of signed value_type
+</span>    <span class="identifier">value_type</span> <span class="keyword">operator</span><span class="special">~()</span> <span class="keyword">const</span><span class="special">;</span>
+
+    <span class="identifier">bit_reference_type</span> <span class="keyword">operator</span><span class="special">[](</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">index</span><span class="special">);</span>
+
+    <span class="identifier">bit_const_reference_type</span> <span class="keyword">operator</span><span class="special">[](</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">index</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+
+    <span class="comment">//! Returns the current bitfield value as bit flags.
+</span>    <span class="comment">/*! The returned bit flags can be ORed with other bit flags. */</span>
+    <span class="identifier">storage_type</span> <span class="identifier">flags</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+
+    <span class="comment">//! Returns the current bitfield value as bit flags.
+</span>    <span class="comment">/*! The returned bit flags can be ORed with other bit flags. */</span>
+    <span class="keyword">static</span> <span class="identifier">storage_type</span> <span class="identifier">flags</span><span class="special">(</span><span class="identifier">value_type</span> <span class="identifier">val</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+
+    <span class="comment">//! Arithmetic-assign operators
+</span>    <span class="identifier">bitfield</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">++();</span>
+    <span class="identifier">value_type</span> <span class="keyword">operator</span><span class="special">++(</span><span class="keyword">int</span><span class="special">);</span>
+
+    <span class="identifier">bitfield</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">--();</span>
+    <span class="identifier">value_type</span> <span class="keyword">operator</span><span class="special">--(</span><span class="keyword">int</span><span class="special">);</span>
+
+    <span class="identifier">bitfield</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">+=(</span><span class="identifier">value_type</span> <span class="identifier">rhs</span><span class="special">);</span>
+    <span class="identifier">bitfield</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">-=(</span><span class="identifier">value_type</span> <span class="identifier">rhs</span><span class="special">);</span>
+
+    <span class="identifier">bitfield</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">*=(</span><span class="identifier">value_type</span> <span class="identifier">rhs</span><span class="special">);</span>
+    <span class="identifier">bitfield</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">/=(</span><span class="identifier">value_type</span> <span class="identifier">rhs</span><span class="special">);</span>
+    <span class="identifier">bitfield</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">%=(</span><span class="identifier">value_type</span> <span class="identifier">rhs</span><span class="special">);</span>
+
+    <span class="identifier">bitfield</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">&lt;&lt;=(</span><span class="keyword">int</span> <span class="identifier">rhs</span><span class="special">);</span>
+    <span class="identifier">bitfield</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">&gt;&gt;=(</span><span class="keyword">int</span> <span class="identifier">rhs</span><span class="special">);</span>
+
+    <span class="identifier">bitfield</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">&amp;=(</span><span class="identifier">value_type</span> <span class="identifier">rhs</span><span class="special">);</span>
+    <span class="identifier">bitfield</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">|=(</span><span class="identifier">value_type</span> <span class="identifier">rhs</span><span class="special">);</span>
+    <span class="identifier">bitfield</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">^=(</span><span class="identifier">value_type</span> <span class="identifier">rhs</span><span class="special">);</span>
+<span class="special">};</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_bitfield.reference.bitfield_hpp.bitfield_traits"></a><a href="index.html#toward_boost_bitfield.reference.bitfield_hpp.bitfield_traits" title="
+        Template class bitfield_traits&lt;&gt;">
+        Template class <code class="computeroutput"><span class="identifier">bitfield_traits</span><span class="special">&lt;&gt;</span></code></a>
+</h4></div></div></div>
+<p>
+          This traits class defies two traits:
+        </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+            reference: used to modify a bitfield
+          </li>
+<li>
+            value: used to get the value of a bitset
+          </li>
+</ul></div>
+<pre class="programlisting">
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">STORAGE_TYPE</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">F</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">L</span>
+    <span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">VALUE_TYPE</span><span class="special">=</span><span class="keyword">typename</span> <span class="identifier">bitfield_value_type</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">STORAGE_TYPE</span><span class="special">::</span><span class="identifier">type</span><span class="special">&gt;</span>
+<span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">bitfield_traits</span> <span class="special">{</span>
+    <span class="keyword">typedef</span> <span class="identifier">bitfield</span><span class="special">&lt;</span><span class="identifier">STORAGE_TYPE</span><span class="special">,</span> <span class="identifier">F</span><span class="special">,</span> <span class="identifier">L</span><span class="special">,</span> <span class="identifier">VALUE_TYPE</span><span class="special">&gt;</span> <span class="identifier">reference</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">bitfield</span><span class="special">&lt;</span><span class="keyword">const</span> <span class="identifier">STORAGE_TYPE</span><span class="special">,</span> <span class="identifier">F</span><span class="special">,</span> <span class="identifier">L</span><span class="special">,</span> <span class="identifier">VALUE_TYPE</span><span class="special">&gt;</span> <span class="identifier">value</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="toward_boost_bitfield.reference.bitfield_dcl_hpp"></a><a href="index.html#toward_boost_bitfield.reference.bitfield_dcl_hpp" title=" Header
+      &lt;boost/integer/bitfield/bitfield_dcl.hpp&gt;"> Header
+      <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">bitfield</span><span class="special">/</span><span class="identifier">bitfield_dcl</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h3></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="index.html#toward_boost_bitfield.reference.bitfield_dcl_hpp.BOOST_BITFIELD_DCL">
+        Macro <code class="computeroutput"><span class="identifier">BOOST_BITFIELD_DCL</span></code></a></span></dt></dl></div>
+<p>
+        This file constains the macro making easier the definition of the bitfield
+        helper type and the bitfield getter and setter functions.
+      </p>
+<pre class="programlisting">
+<span class="preprocessor">#define</span> <span class="identifier">BOOST_BITFIELD_DCL</span><span class="special">(</span><span class="identifier">STORAGE_TYPE</span><span class="special">,</span> <span class="identifier">STORAGE_VAR</span><span class="special">,</span> <span class="identifier">VALUE_TYPE</span><span class="special">,</span> <span class="identifier">FIELD</span><span class="special">,</span> <span class="identifier">F</span><span class="special">,</span> <span class="identifier">L</span><span class="special">)</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_bitfield.reference.bitfield_dcl_hpp.BOOST_BITFIELD_DCL"></a><a href="index.html#toward_boost_bitfield.reference.bitfield_dcl_hpp.BOOST_BITFIELD_DCL" title="
+        Macro BOOST_BITFIELD_DCL">
+        Macro <code class="computeroutput"><span class="identifier">BOOST_BITFIELD_DCL</span></code></a>
+</h4></div></div></div>
+<pre class="programlisting">
+<span class="preprocessor">#define</span> <span class="identifier">BOOST_BITFIELD_DCL</span><span class="special">(</span><span class="identifier">STORAGE_TYPE</span><span class="special">,</span> <span class="identifier">STORAGE_VAR</span><span class="special">,</span> <span class="identifier">VALUE_TYPE</span><span class="special">,</span> <span class="identifier">FIELD</span><span class="special">,</span> <span class="identifier">F</span><span class="special">,</span> <span class="identifier">L</span><span class="special">)</span>
+</pre>
+<div class="itemizedlist"><ul type="disc">
+<li>
+            Parameters
+            <div class="itemizedlist"><ul type="circle">
+<li>
+                STORAGE_TYPE: the type to store the bitfield
+              </li>
+<li>
+                STORAGE_VAR: the variable used to store the bitfield
+              </li>
+<li>
+                VALUE_TYPE: the type for the bitfield
+              </li>
+<li>
+                FIELD: the name of the bitfield
+              </li>
+<li>
+                F: the first bit
+              </li>
+<li>
+                L: the last bit
+              </li>
+</ul></div>
+</li>
+<li>
+            Effect. This macro defines the bitfield traits and the functions necessary
+            to make valid the following expressions:
+            <div class="itemizedlist"><ul type="circle">
+<li>
+                str.FIELD() = value;
+              </li>
+<li>
+                var= str.FIELD();
+              </li>
+<li>
+                str.set_FIELD(var);
+              </li>
+<li>
+                var= str.get_FIELD()
+              </li>
+</ul></div>
+</li>
+</ul></div>
+<p>
+          Two styles of getter<span class="emphasis"><em>setter are provided: one using overloading
+          on the field name, the other using clasical prefix `get_`</em></span><code class="computeroutput"><span class="identifier">set_</span></code>.
+        </p>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="toward_boost_bitfield.reference.endian_bitfield_value_type_hpp"></a><a href="index.html#toward_boost_bitfield.reference.endian_bitfield_value_type_hpp" title="
+      Header &lt;boost/integer/bitfield/endian_bitfield_value_type.hpp&gt;">
+      Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">bitfield</span><span class="special">/</span><span class="identifier">endian_bitfield_value_type</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h3></div></div></div>
+<p>
+        This file includes the <code class="computeroutput"><span class="identifier">bitfield_value_type</span></code>
+        metafunction specialization for the endian types. You need to include this
+        file if you use endian types as storage for the bitfields.
+      </p>
+<pre class="programlisting">
+<span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">integer</span> <span class="special">{</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="identifier">endianness</span> <span class="identifier">E</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">n_bits</span><span class="special">,</span> <span class="identifier">alignment</span> <span class="identifier">A</span><span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">bitfield_value_type</span><span class="special">&lt;</span><span class="identifier">endian</span><span class="special">&lt;</span><span class="identifier">E</span><span class="special">,</span><span class="identifier">T</span><span class="special">,</span><span class="identifier">n_bits</span><span class="special">,</span><span class="identifier">A</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">{</span>
+        <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">endian</span><span class="special">&lt;</span><span class="identifier">E</span><span class="special">,</span><span class="identifier">T</span><span class="special">,</span><span class="identifier">n_bits</span><span class="special">,</span><span class="identifier">A</span><span class="special">&gt;::</span><span class="identifier">value_type</span> <span class="identifier">type</span><span class="special">;</span>
+    <span class="special">};</span>
+<span class="special">}</span>
+</pre>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="toward_boost_bitfield.appendices"></a><a href="index.html#toward_boost_bitfield.appendices" title="Appendices">Appendices</a>
+</h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="index.html#toward_boost_bitfield.appendices.history"> Appendix A:
+      History</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="index.html#toward_boost_bitfield.appendices.history.__version_0_2_0__jan_29__2011____bitfield_porting_to_windows_and_msvc_"><span class="bold"><strong>Version 0.2.0, Jan 29, 2011</strong></span> <span class="emphasis"><em>Bitfield porting
+        to Windows and MSVC</em></span></a></span></dt>
+<dt><span class="section"><a href="index.html#toward_boost_bitfield.appendices.history.__version_0_1_0__april_29__2009____announcement_of_bitfield_"><span class="bold"><strong>Version 0.1.0, April 29, 2009</strong></span> <span class="emphasis"><em>Announcement
+        of Bitfield</em></span></a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="index.html#toward_boost_bitfield.appendices.rationale"> Appendix
+      B: Rationale</a></span></dt>
+<dt><span class="section"><a href="index.html#toward_boost_bitfield.appendices.implementation"> Appendix
+      C: Implementation Notes</a></span></dt>
+<dt><span class="section"><a href="index.html#toward_boost_bitfield.appendices.acknowledgements"> Appendix
+      D: Acknowledgements</a></span></dt>
+<dt><span class="section"><a href="index.html#toward_boost_bitfield.appendices.appendix_e__tests">Appendix
+      E: Tests</a></span></dt>
+<dd><dl><dt><span class="section"><a href="index.html#toward_boost_bitfield.appendices.appendix_e__tests.aligned_bitfields">aligned
+        bitfields</a></span></dt></dl></dd>
+<dt><span class="section"><a href="index.html#toward_boost_bitfield.appendices.appendix_f__tickets">Appendix
+      F: Tickets</a></span></dt>
+<dt><span class="section"><a href="index.html#toward_boost_bitfield.appendices.todo"> Appendix F: Future
+      plans</a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="toward_boost_bitfield.appendices.history"></a><a href="index.html#toward_boost_bitfield.appendices.history" title=" Appendix A:
+      History"> Appendix A:
+      History</a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="index.html#toward_boost_bitfield.appendices.history.__version_0_2_0__jan_29__2011____bitfield_porting_to_windows_and_msvc_"><span class="bold"><strong>Version 0.2.0, Jan 29, 2011</strong></span> <span class="emphasis"><em>Bitfield porting
+        to Windows and MSVC</em></span></a></span></dt>
+<dt><span class="section"><a href="index.html#toward_boost_bitfield.appendices.history.__version_0_1_0__april_29__2009____announcement_of_bitfield_"><span class="bold"><strong>Version 0.1.0, April 29, 2009</strong></span> <span class="emphasis"><em>Announcement
+        of Bitfield</em></span></a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_bitfield.appendices.history.__version_0_2_0__jan_29__2011____bitfield_porting_to_windows_and_msvc_"></a><a href="index.html#toward_boost_bitfield.appendices.history.__version_0_2_0__jan_29__2011____bitfield_porting_to_windows_and_msvc_" title="Version 0.2.0, Jan 29, 2011 Bitfield porting
+        to Windows and MSVC"><span class="bold"><strong>Version 0.2.0, Jan 29, 2011</strong></span> <span class="emphasis"><em>Bitfield porting
+        to Windows and MSVC</em></span></a>
+</h4></div></div></div>
+<p>
+          <span class="bold"><strong>Bugs:</strong></span>
+        </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+            Fix uses of specific POSIX files in test.
+          </li>
+<li>
+            Adapt to MSVC constraints.
+          </li>
+</ul></div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_bitfield.appendices.history.__version_0_1_0__april_29__2009____announcement_of_bitfield_"></a><a href="index.html#toward_boost_bitfield.appendices.history.__version_0_1_0__april_29__2009____announcement_of_bitfield_" title="Version 0.1.0, April 29, 2009 Announcement
+        of Bitfield"><span class="bold"><strong>Version 0.1.0, April 29, 2009</strong></span> <span class="emphasis"><em>Announcement
+        of Bitfield</em></span></a>
+</h4></div></div></div>
+<p>
+          <span class="bold"><strong>Features:</strong></span>
+        </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+            a generic bitfield traits class providing generic getter and setter for
+            portable bitfields.
+          </li>
+<li>
+            a BOOST_BITFIELD_DCL macro making easier the definition of the bitfield
+            helper type and the bitfield getter and setter functions.
+          </li>
+</ul></div>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="toward_boost_bitfield.appendices.rationale"></a><a href="index.html#toward_boost_bitfield.appendices.rationale" title=" Appendix
+      B: Rationale"> Appendix
+      B: Rationale</a>
+</h3></div></div></div>
+<a name="toward_boost_bitfield.appendices.rationale.why_we_can_not_declare_portable_c_c___bitfields__"></a><h4>
+<a name="id5001192"></a>
+        <a href="index.html#toward_boost_bitfield.appendices.rationale.why_we_can_not_declare_portable_c_c___bitfields__">Why
+        we can not declare portable C/C++ bitfields ?</a>
+      </h4>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="toward_boost_bitfield.appendices.implementation"></a><a href="index.html#toward_boost_bitfield.appendices.implementation" title=" Appendix
+      C: Implementation Notes"> Appendix
+      C: Implementation Notes</a>
+</h3></div></div></div>
+<a name="toward_boost_bitfield.appendices.implementation.faq"></a><h4>
+<a name="id5001231"></a>
+        <a href="index.html#toward_boost_bitfield.appendices.implementation.faq">FAQ</a>
+      </h4>
+<div class="itemizedlist"><ul type="disc"><li>
+          Why bother with endian bitfields ?
+        </li></ul></div>
+<p>
+        External data portability and both speed and space efficiency. Availability
+        of bit order representations is important in some applications.
+      </p>
+<div class="itemizedlist"><ul type="disc"><li>
+          Why not just use Boost.Serialization?
+        </li></ul></div>
+<p>
+        Serialization involves a conversion for every object involved in I/O. Bitfields
+        objects require no conversion or copying. They are already in the desired
+        format for binary I/O. Thus they can be read or written in bulk.
+      </p>
+<div class="itemizedlist"><ul type="disc"><li>
+          Do this type have any uses outside of I/O?
+        </li></ul></div>
+<p>
+        Probably not.
+      </p>
+<div class="itemizedlist"><ul type="disc"><li>
+          Is there is a performance hit when doing arithmetic using these types?
+        </li></ul></div>
+<p>
+        Yes, for sure, compared to arithmetic operations on native bitfields integer
+        types. However, these types are usually faster, and sometimes much faster,
+        for I/O compared to stream inserters and extractors, or to serialization.
+      </p>
+<div class="itemizedlist"><ul type="disc"><li>
+          These types are really just byte-holders. Why provide the arithmetic operations
+          at all?
+        </li></ul></div>
+<p>
+        The first goal of the library is to be as close as possible of the usage
+        of bitfields on C/C++. Providing a full set of operations reduces program
+        clutter and makes code both easier to write and to read. Consider incrementing
+        a variable in a record. It is very convenient to write:
+      </p>
+<pre class="programlisting">
+<span class="special">++</span><span class="identifier">record</span><span class="special">.</span><span class="identifier">bf</span><span class="special">();</span>
+</pre>
+<p>
+        Rather than:
+      </p>
+<pre class="programlisting">
+<span class="keyword">int</span> <span class="identifier">temp</span><span class="special">(</span> <span class="identifier">record</span><span class="special">.</span><span class="identifier">bf</span><span class="special">());</span>
+<span class="special">++</span><span class="identifier">temp</span><span class="special">;</span>
+<span class="identifier">record</span><span class="special">.</span><span class="identifier">vf</span><span class="special">()</span> <span class="special">=</span> <span class="identifier">temp</span><span class="special">;</span>
+</pre>
+<a name="toward_boost_bitfield.appendices.implementation.design_considerations_for_boost_bitfield"></a><h4>
+<a name="id5001438"></a>
+        <a href="index.html#toward_boost_bitfield.appendices.implementation.design_considerations_for_boost_bitfield">Design
+        considerations for Boost.Bitfield</a>
+      </h4>
+<div class="itemizedlist"><ul type="disc">
+<li>
+          Must provide exactly the size and internal bit ordering specified.
+        </li>
+<li>
+          It is better software engineering if the same implementation works regardless
+          of the CPU endianness. In other words, #ifdefs should be avoided where
+          possible.
+        </li>
+</ul></div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="toward_boost_bitfield.appendices.acknowledgements"></a><a href="index.html#toward_boost_bitfield.appendices.acknowledgements" title=" Appendix
+      D: Acknowledgements"> Appendix
+      D: Acknowledgements</a>
+</h3></div></div></div>
+<p>
+        Thanks to Emile Cormier, the initiator of this library. And also to Beman
+        Dawes; in a first version of the Boost.Bitfield the bitfield class tokes
+        in addition an endian template parameter to make the needed endian conversions.
+        With the Boost.Endian this is much more simpler and orthogonal.
+      </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="toward_boost_bitfield.appendices.appendix_e__tests"></a><a href="index.html#toward_boost_bitfield.appendices.appendix_e__tests" title="Appendix
+      E: Tests">Appendix
+      E: Tests</a>
+</h3></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="index.html#toward_boost_bitfield.appendices.appendix_e__tests.aligned_bitfields">aligned
+        bitfields</a></span></dt></dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_bitfield.appendices.appendix_e__tests.aligned_bitfields"></a><a href="index.html#toward_boost_bitfield.appendices.appendix_e__tests.aligned_bitfields" title="aligned
+        bitfields">aligned
+        bitfields</a>
+</h4></div></div></div>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Name
+                </p>
+                </th>
+<th>
+                <p>
+                  kind
+                </p>
+                </th>
+<th>
+                <p>
+                  Description
+                </p>
+                </th>
+<th>
+                <p>
+                  Result
+                </p>
+                </th>
+<th>
+                <p>
+                  Ticket
+                </p>
+                </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                <p>
+                  get
+                </p>
+                </td>
+<td>
+                <p>
+                  run
+                </p>
+                </td>
+<td>
+                <p>
+                  check getters
+                </p>
+                </td>
+<td>
+                <p>
+                  Pass
+                </p>
+                </td>
+<td>
+                <p>
+                  #
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  assign
+                </p>
+                </td>
+<td>
+                <p>
+                  run
+                </p>
+                </td>
+<td>
+                <p>
+                  check setters
+                </p>
+                </td>
+<td>
+                <p>
+                  Pass
+                </p>
+                </td>
+<td>
+                <p>
+                  #
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  flags
+                </p>
+                </td>
+<td>
+                <p>
+                  run
+                </p>
+                </td>
+<td>
+                <p>
+                  check flags
+                </p>
+                </td>
+<td>
+                <p>
+                  Pass
+                </p>
+                </td>
+<td>
+                <p>
+                  #
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  traits
+                </p>
+                </td>
+<td>
+                <p>
+                  run
+                </p>
+                </td>
+<td>
+                <p>
+                  check the traits of bitfield
+                </p>
+                </td>
+<td>
+                <p>
+                  Pass
+                </p>
+                </td>
+<td>
+                <p>
+                  #
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  invert
+                </p>
+                </td>
+<td>
+                <p>
+                  run
+                </p>
+                </td>
+<td>
+                <p>
+                  check the <code class="computeroutput"><span class="keyword">operator</span><span class="special">~</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  Pass
+                </p>
+                </td>
+<td>
+                <p>
+                  #
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  bit
+                </p>
+                </td>
+<td>
+                <p>
+                  run
+                </p>
+                </td>
+<td>
+                <p>
+                  check the <code class="computeroutput"><span class="keyword">operator</span><span class="special">[]</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  Pass
+                </p>
+                </td>
+<td>
+                <p>
+                  #
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  signed
+                </p>
+                </td>
+<td>
+                <p>
+                  run
+                </p>
+                </td>
+<td>
+                <p>
+                  check signed bitfields
+                </p>
+                </td>
+<td>
+                <p>
+                  Pass
+                </p>
+                </td>
+<td>
+                <p>
+                  #
+                </p>
+                </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+<div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title">
+<a name="toward_boost_bitfield.appendices.appendix_f__tickets"></a><a href="index.html#toward_boost_bitfield.appendices.appendix_f__tickets" title="Appendix
+      F: Tickets">Appendix
+      F: Tickets</a>
+</h3></div></div></div></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="toward_boost_bitfield.appendices.todo"></a><a href="index.html#toward_boost_bitfield.appendices.todo" title=" Appendix F: Future
+      plans"> Appendix F: Future
+      plans</a>
+</h3></div></div></div>
+<a name="toward_boost_bitfield.appendices.todo.tasks_to_do_before_review"></a><h4>
+<a name="id5001888"></a>
+        <a href="index.html#toward_boost_bitfield.appendices.todo.tasks_to_do_before_review">Tasks
+        to do before review</a>
+      </h4>
+<div class="itemizedlist"><ul type="disc"><li>
+          Add test with the Boost.Endian types and binary archive.
+        </li></ul></div>
+<a name="toward_boost_bitfield.appendices.todo.for_later_releases"></a><h4>
+<a name="id5001916"></a>
+        <a href="index.html#toward_boost_bitfield.appendices.todo.for_later_releases">For
+        later releases</a>
+      </h4>
+<p>
+        <span class="bold"><strong>Add bitfields group</strong></span>
+      </p>
+<p>
+        Used to easily manipulate groups of bitfields the same way as does C bitfields,
+        but in a portable manner. Example declaration:
+      </p>
+<pre class="programlisting">
+<span class="keyword">struct</span> <span class="identifier">Rgb565</span>
+<span class="special">{</span>
+    <span class="keyword">struct</span> <span class="identifier">red</span> <span class="special">{};</span>
+    <span class="keyword">struct</span> <span class="identifier">green</span> <span class="special">{};</span>
+    <span class="keyword">struct</span> <span class="identifier">blue</span> <span class="special">{};</span>
+    <span class="keyword">typedef</span> <span class="identifier">bitfields</span><span class="special">&lt;</span><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span>
+            <span class="identifier">member</span><span class="special">&lt;</span><span class="keyword">unsigned</span> <span class="keyword">char</span><span class="special">,</span> <span class="identifier">red</span><span class="special">,</span>   <span class="number">5</span><span class="special">&gt;,</span>
+            <span class="identifier">member</span><span class="special">&lt;</span><span class="keyword">unsigned</span> <span class="keyword">char</span><span class="special">,</span> <span class="identifier">green</span><span class="special">,</span> <span class="number">6</span><span class="special">&gt;,</span>
+            <span class="identifier">member</span><span class="special">&lt;</span><span class="keyword">unsigned</span> <span class="keyword">char</span><span class="special">,</span> <span class="identifier">blue</span><span class="special">,</span>  <span class="number">5</span><span class="special">&gt;</span> 
+    <span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">type</span><span class="special">;</span> 
+<span class="special">};</span>
+</pre>
+<p>
+        Example usage:
+      </p>
+<pre class="programlisting">
+<span class="identifier">Rgb565</span><span class="special">::</span><span class="identifier">type</span> <span class="identifier">r</span> <span class="special">=</span> <span class="identifier">make_bitfields</span><span class="special">&lt;</span><span class="identifier">Rgb565</span><span class="special">::</span><span class="identifier">type</span><span class="special">,</span> <span class="number">1</span><span class="special">,</span><span class="number">2</span><span class="special">,</span><span class="number">3</span><span class="special">&gt;;</span>
+
+<span class="comment">// Write to a bitfield.
+</span><span class="identifier">r</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">Rgb565</span><span class="special">::</span><span class="identifier">red</span><span class="special">&gt;()</span> <span class="special">=</span> <span class="number">23</span><span class="special">;</span>
+<span class="comment">//or
+</span><span class="identifier">r</span><span class="special">.</span><span class="identifier">set</span><span class="special">&lt;</span><span class="identifier">Rgb565</span><span class="special">::</span><span class="identifier">red</span><span class="special">&gt;(</span><span class="number">23</span><span class="special">);</span>
+
+<span class="comment">// Read from a bitfield
+</span><span class="identifier">Rgb565</span><span class="special">::</span><span class="identifier">at</span><span class="special">&lt;</span><span class="identifier">Rgb565</span><span class="special">::</span><span class="identifier">blue</span><span class="special">&gt;::</span><span class="identifier">value_type</span> <span class="identifier">b</span> <span class="special">=</span> <span class="identifier">r</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">Rgb565</span><span class="special">::</span><span class="identifier">blue</span><span class="special">&gt;();</span>
+</pre>
+<p>
+        Other posibility could be to use unamed bitfields whic are accessed as tuples.
+      </p>
+<pre class="programlisting">
+<span class="keyword">typedef</span> <span class="identifier">bitfields_group</span><span class="special">&lt;</span><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">vector_c</span><span class="special">&lt;</span><span class="number">5</span><span class="special">,</span><span class="number">6</span><span class="special">,</span><span class="number">5</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">Rgb565</span><span class="special">;</span> 
+<span class="identifier">Rgb565</span> <span class="identifier">r</span><span class="special">;</span>
+
+<span class="identifier">r</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="number">0</span><span class="special">&gt;()</span> <span class="special">=</span> <span class="number">23</span><span class="special">;</span>
+<span class="comment">// or
+</span><span class="identifier">r</span><span class="special">.</span><span class="identifier">set</span><span class="special">&lt;</span><span class="number">0</span><span class="special">&gt;(</span><span class="number">23</span><span class="special">);</span>
+
+<span class="comment">// Read from a bitfield
+</span><span class="identifier">Rgb565</span><span class="special">::</span><span class="identifier">at</span><span class="special">&lt;</span><span class="number">2</span><span class="special">&gt;::</span><span class="identifier">value_type</span> <span class="identifier">b</span> <span class="special">=</span> <span class="identifier">r</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="number">2</span><span class="special">&gt;();</span>
+</pre>
+<p>
+        <span class="bold"><strong>Add pointer_plus_bits</strong></span>
+      </p>
+<p>
+        Based on
+      </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+          The article of Joaquin <a href="http://bannalia.blogspot.com/2008/11/optimizing-red-black-tree-color-bits.html" target="_top">Optimizing
+          red-black tree color bits</a>,
+        </li>
+<li>
+          the implementation of Ion <a href="http://www.boost.org/boost/boost/intrusive/pointer_plus_bits.hpp" target="_top">pointer_plus_bits
+          from Boost.Intrusive </a>, and
+        </li>
+<li><a href="https://llvm.org/svn/llvm-project/llvm/trunk/include/llvm/ADT/PointerIntPair.h" target="_top">Clang's
+          QualType smart pointer</a></li>
+</ul></div>
+<p>
+        This class will allows to use the unsused bits of a pointer to reduce the
+        size of the nodes containing pointers and bits and sometimes improving also
+        the performances.
+      </p>
+<p>
+        I have not reached yet the interface I would like to have. For the moment
+        we can do
+      </p>
+<pre class="programlisting">
+<span class="keyword">typedef</span> <span class="identifier">pointer_plus_bits</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">*,</span><span class="number">1</span><span class="special">,</span><span class="keyword">bool</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">pint_and_bool</span><span class="special">;</span>
+
+<span class="keyword">int</span> <span class="identifier">i</span><span class="special">=</span><span class="number">0</span><span class="special">;</span>
+<span class="identifier">pint_and_bool</span> <span class="identifier">v1</span><span class="special">;</span>
+<span class="identifier">ASSERT_EQUALS</span><span class="special">(</span><span class="identifier">v1</span><span class="special">.</span><span class="identifier">pointer</span><span class="special">(),</span><span class="number">0</span><span class="special">);</span>
+<span class="identifier">ASSERT_EQUALS</span><span class="special">(</span><span class="identifier">v1</span><span class="special">.</span><span class="identifier">small_int</span><span class="special">(),</span><span class="keyword">false</span><span class="special">);</span>
+<span class="identifier">pint_and_bool</span> <span class="identifier">v2</span><span class="special">(&amp;</span><span class="identifier">i</span><span class="special">,</span> <span class="keyword">true</span><span class="special">);</span>
+<span class="identifier">ASSERT_EQUALS</span><span class="special">(</span><span class="identifier">v2</span><span class="special">.</span><span class="identifier">pointer</span><span class="special">(),&amp;</span><span class="identifier">i</span><span class="special">);</span>
+<span class="identifier">ASSERT_EQUALS</span><span class="special">(</span><span class="identifier">v2</span><span class="special">.</span><span class="identifier">small_int</span><span class="special">(),</span><span class="keyword">true</span><span class="special">);</span>
+<span class="identifier">v1</span><span class="special">.</span><span class="identifier">pointer</span><span class="special">()=</span><span class="identifier">v2</span><span class="special">.</span><span class="identifier">pointer</span><span class="special">();</span>
+<span class="identifier">v1</span><span class="special">.</span><span class="identifier">small_int</span><span class="special">()=</span><span class="keyword">true</span><span class="special">;</span>
+<span class="identifier">ASSERT_EQUALS</span><span class="special">(</span><span class="identifier">v1</span><span class="special">.</span><span class="identifier">pointer</span><span class="special">(),&amp;</span><span class="identifier">i</span><span class="special">);</span>
+<span class="identifier">ASSERT_EQUALS</span><span class="special">(</span><span class="identifier">v1</span><span class="special">.</span><span class="identifier">small_int</span><span class="special">(),</span><span class="keyword">true</span><span class="special">);</span>
+
+<span class="keyword">typedef</span> <span class="identifier">pointer_plus_bits</span><span class="special">&lt;</span>
+        <span class="identifier">pointer_plus_bits</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">*,</span><span class="number">1</span><span class="special">,</span><span class="keyword">bool</span><span class="special">&gt;::</span><span class="identifier">type</span>
+                        <span class="special">,</span><span class="number">1</span><span class="special">,</span> <span class="keyword">bool</span><span class="special">&gt;::</span><span class="identifier">type</span>  <span class="identifier">pint_and_bool_bool</span>
+<span class="identifier">pint_and_bool_bool</span> <span class="identifier">v1</span><span class="special">;</span>
+<span class="identifier">ASSERT_EQUALS</span><span class="special">(</span><span class="identifier">v1</span><span class="special">.</span><span class="identifier">small_int</span><span class="special">(),</span><span class="keyword">false</span><span class="special">);</span>
+<span class="identifier">ASSERT_EQUALS</span><span class="special">(</span><span class="identifier">v1</span><span class="special">.</span><span class="identifier">pointer</span><span class="special">().</span><span class="identifier">get_pointer</span><span class="special">(),</span><span class="number">0</span><span class="special">);</span>
+<span class="identifier">ASSERT_EQUALS</span><span class="special">(</span><span class="identifier">v1</span><span class="special">.</span><span class="identifier">get_pointer</span><span class="special">().</span><span class="identifier">get_pointer</span><span class="special">(),</span><span class="number">0</span><span class="special">);</span>
+<span class="identifier">ASSERT_EQUALS</span><span class="special">(</span><span class="identifier">v1</span><span class="special">.</span><span class="identifier">get_pointer</span><span class="special">().</span><span class="identifier">small_int</span><span class="special">(),</span><span class="keyword">false</span><span class="special">);</span>
+</pre>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"><p><small>Last revised: January 23, 2011 at 13:22:57 GMT</small></p></td>
+<td align="right"><div class="copyright-footer"></div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav"></div>
+</body>
+</html>
