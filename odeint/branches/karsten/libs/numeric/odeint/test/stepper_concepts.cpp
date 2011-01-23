@@ -1,19 +1,19 @@
 /* Boost stepper_euler.cpp test file
- 
+
  Copyright 2009 Karsten Ahnert
  Copyright 2009 Mario Mulansky
- 
+
  This file tests the use of the all different steppers with several state types:
  std::vector< double >
  vector_space_1d< double >  (see vector_space_1d.hpp)
  std::tr1::array< double , 1 >
-  
+
  Distributed under the Boost Software License, Version 1.0.
  (See accompanying file LICENSE_1_0.txt or
  copy at http://www.boost.org/LICENSE_1_0.txt)
 */
 
-#define BOOST_TEST_MODULE odeint_basic_test
+#define BOOST_TEST_MODULE odeint_stepper_concepts
 
 #include <vector>
 #include <cmath>
@@ -333,7 +333,7 @@ struct perform_controlled_stepper_test< ControlledStepper , vector_type >
 	{
 		vector_type x( 1 , 2.0 );
 		typename ControlledStepper::stepper_type error_stepper;
-		error_checker_standard< typename ControlledStepper::state_type , typename ControlledStepper::time_type > error_checker;
+		error_checker_standard< typename ControlledStepper::value_type > error_checker;
 		ControlledStepper controlled_stepper( error_stepper , error_checker );
 		check_controlled_stepper_concept( controlled_stepper , constant_system_vector , x );
 		check_controlled_stepper_concept( controlled_stepper , boost::cref( constant_system_vector_class() ) , x );
@@ -349,7 +349,7 @@ struct perform_controlled_stepper_test< ControlledStepper , vector_space_type >
 		vector_space_type x;
 		x.m_x = 2.0;
 		typename ControlledStepper::stepper_type error_stepper;
-		error_checker_standard< typename ControlledStepper::state_type , typename ControlledStepper::time_type , vector_space_algebra > error_checker;
+		error_checker_standard< typename ControlledStepper::value_type , vector_space_algebra > error_checker;
 		ControlledStepper controlled_stepper( error_stepper , error_checker );
 		check_controlled_stepper_concept( controlled_stepper , constant_system_vector_space , x );
 		check_controlled_stepper_concept( controlled_stepper , boost::cref( constant_system_vector_space_class() ) , x );
@@ -365,7 +365,7 @@ struct perform_controlled_stepper_test< ControlledStepper , array_type >
 		array_type x;
 		x[0] = 2.0;
 		typename ControlledStepper::stepper_type error_stepper;
-		error_checker_standard< typename ControlledStepper::state_type , typename ControlledStepper::time_type > error_checker;
+		error_checker_standard< typename ControlledStepper::value_type > error_checker;
 		ControlledStepper controlled_stepper( error_stepper , error_checker );
 		check_controlled_stepper_concept( controlled_stepper , constant_system_array , x );
 		check_controlled_stepper_concept( controlled_stepper , boost::cref( constant_system_array_class() ) , x );
