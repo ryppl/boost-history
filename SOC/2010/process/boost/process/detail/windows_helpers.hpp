@@ -67,10 +67,10 @@ inline boost::shared_array<char> environment_to_windows_strings(environment
             s.push_back(0);
         }
         envp.reset(new char[s.size() + 1]);
-#if defined(__CYGWIN__) || defined(_SCL_SECURE_NO_DEPRECATE)
-        memcpy(envp.get(), s.c_str(), s.size() + 1);
-#else
+#if (BOOST_MSVC >= 1400)
         memcpy_s(envp.get(), s.size() + 1, s.c_str(), s.size() + 1);
+#else
+        memcpy(envp.get(), s.c_str(), s.size() + 1);
 #endif
     }
 
@@ -122,10 +122,10 @@ inline boost::shared_array<char> collection_to_windows_cmdline(const Arguments
     boost::shared_array<char> cmdline(new char[size]);
     cmdline.get()[0] = '\0';
     for (arguments_t::size_type i = 0; i < args.size(); ++i)
-#if defined(__CYGWIN__) || defined(_SCL_SECURE_NO_DEPRECATE)
-        strncat(cmdline.get(), args2[i].c_str(), args2[i].size());
-#else
+#if (BOOST_MSVC >= 1400)
         strcat_s(cmdline.get(), size, args2[i].c_str());
+#else
+        strncat(cmdline.get(), args2[i].c_str(), args2[i].size());
 #endif
 
     return cmdline;
