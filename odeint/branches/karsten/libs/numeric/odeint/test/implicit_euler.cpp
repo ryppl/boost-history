@@ -10,6 +10,10 @@
  copy at http://www.boost.org/LICENSE_1_0.txt)
 */
 
+#define BOOST_TEST_MODULE odeint_implicit_euler
+
+#include <utility>
+
 #include <boost/test/unit_test.hpp>
 
 #include <boost/numeric/odeint.hpp>
@@ -51,7 +55,7 @@ BOOST_AUTO_TEST_CASE( test_euler )
 
     value_type eps = 1E-12;
 
-    stepper.do_step( sys , jacobi , x , 0.0 , 0.1 );
+    stepper.do_step( std::make_pair( sys , jacobi ) , x , 0.0 , 0.1 );
 
     using std::abs;
 
