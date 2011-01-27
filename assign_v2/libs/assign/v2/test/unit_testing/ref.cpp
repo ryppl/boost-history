@@ -16,7 +16,7 @@
 #define BOOST_ASSIGN_V2_CHECK( p ) BOOST_CHECK( p )
 #include <libs/assign/v2/test/ref/convert_traits.cpp>
 #include <libs/assign/v2/test/ref/wrapper.cpp>
-#include <libs/assign/v2/test/ref/fusion.cpp>
+#include <libs/assign/v2/test/ref/list.cpp>
 #include <libs/assign/v2/test/ref/list_tuple.cpp>
 #include <libs/assign/v2/test/ref/array.cpp>
 #include <libs/assign/v2/test/ref/csv_array.cpp>
@@ -31,7 +31,7 @@ test_suite* init_unit_test_suite( int argc, char* argv[] )
     	using namespace xxx_ref; 
 		test->add( BOOST_TEST_CASE( &xxx_convert_traits::test ) );
 		test->add( BOOST_TEST_CASE( &xxx_wrapper::test ) );
-		test->add( BOOST_TEST_CASE( &xxx_fusion::test ) );
+		test->add( BOOST_TEST_CASE( &xxx_list::test ) );
 		test->add( BOOST_TEST_CASE( &xxx_list_tuple::test ) );
 		test->add( BOOST_TEST_CASE( &xxx_array::test ) );
 		test->add( BOOST_TEST_CASE( &xxx_csv_array::test ) );

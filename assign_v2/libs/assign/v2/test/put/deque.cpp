@@ -7,21 +7,9 @@
 //  Boost Software License, Version 1.0. (See accompanying file           //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)      //
 ////////////////////////////////////////////////////////////////////////////
-#include <deque>
-#include <list>
-#include <map>
-#include <queue>
-#include <set>
-#include <stack>
-#include <vector>
 #include <string>
-#include <boost/array.hpp>
-#include <boost/typeof/typeof.hpp>
-#include <boost/assign/v2/detail/keyword.hpp>
-#include <boost/assign/v2/detail/checking/container.hpp>
-#include <boost/assign/v2/detail/checking/constants.hpp>
-
 #include <boost/assign/v2/put/deque.hpp>
+#include <boost/assign/v2/detail/checking/check.hpp>
 
 #include <libs/assign/v2/test/put/deque.h>
 
@@ -31,31 +19,30 @@ namespace xxx_deque{
 
 	void test()
     {
-    	using namespace boost::assign::v2;
+        namespace as2 = boost::assign::v2;
         {
-        	// CSV
-            using namespace checking::constants;
-            using namespace checking::container;
-            do_check( csv_deque( a,  b, c, d, e, f, g, h ) );
+        	//[csv_deque
+            typedef int T; T x = 1, y = 2, z = 0;
+            as2::result_of::deque<T>::type cont = as2::csv_deque( x, y, z );
+            BOOST_ASSIGN_V2_CHECK( cont.front() == x );
+            BOOST_ASSIGN_V2_CHECK( cont.back() == z );
+            //]
         }
         {
-        	// Functor
-            using namespace checking::constants;
-            using namespace checking::container;
-            do_check( deque<int>( a )( b )( c )( d )( e )( f )( g )( h ) );
+        	//[deque
+            typedef int T; T x = 1, y = 2, z = 0;
+            as2::result_of::deque<T>::type cont = as2::deque<T>( x )( y )( z );
+            BOOST_ASSIGN_V2_CHECK( cont.front() == x );
+            BOOST_ASSIGN_V2_CHECK( cont.back() == z );
+            //]
         }
         {
-        	// Operator%
-            BOOST_AUTO(tmp, ( deque<int>( _nil ) % ( _repeat = 3 ) ) );
-            tmp( 1 );
-            BOOST_ASSIGN_V2_CHECK( boost::size( tmp ) == 3 );
-            BOOST_ASSIGN_V2_CHECK( tmp.front() == 1 );
-            BOOST_ASSIGN_V2_CHECK( tmp.back() == 1 );
-        }
-        {
-        	// string literals
+        	//[deque_str
         	typedef std::string str_;
-            BOOST_ASSIGN_V2_CHECK( str_( csv_deque("x")[0] ) == "x");
+            BOOST_ASSIGN_V2_CHECK( 
+            	str_( as2::csv_deque( "x" )( "y" )( "z" )[1] ) == "y"
+            );
+            //]
         }
     }
 

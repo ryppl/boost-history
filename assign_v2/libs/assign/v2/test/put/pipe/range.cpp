@@ -8,17 +8,10 @@
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)      //
 ////////////////////////////////////////////////////////////////////////////
 #include <deque>
-#include <list>
-#include <map>
-#include <queue>
-#include <set>
 #include <stack>
 #include <vector>
-#include <boost/type.hpp>
 #include <boost/array.hpp>
-
-#include <boost/assign/v2/detail/checking/constants.hpp>
-#include <boost/assign/v2/detail/checking/container.hpp>
+#include <boost/assign/v2/detail/checking/check.hpp>
 #include <boost/assign/v2/put/pipe/range.hpp>
 
 #include <libs/assign/v2/test/put/pipe/range.h>
@@ -30,35 +23,39 @@ namespace xxx_range{
 
 	void test()
     {
-    	std::vector<int>  from;
         namespace as2 = boost::assign::v2;
-        {
-        	using namespace as2::checking::constants;
-            from.push_back( a );
-            from.push_back( b );
-            from.push_back( c );
-            from.push_back( d );
-            from.push_back( e );
-            from.push_back( f );
-            from.push_back( g );
-            from.push_back( h );
-        }
-        {
-        	namespace ns = as2::checking::put_range;
-            ns::do_check<boost::array<int,8> >( from );
-            ns::do_check<std::deque<int> >( from );
-            ns::do_check<std::list<int> >( from );
-            ns::do_check<std::queue<int> >( from );
-            ns::do_check<std::set<int> >( from );
-            ns::do_check<std::stack<int> >( from );
-            ns::do_check<std::vector<int> >( from );
+        
+        //[range_var
+    	typedef int T; T x = 1, y = 2, z = 0;
+        std::vector<T> r( 3 ); r[0] = x; r[1] = y; r[2] = z;
+        //]       
+        
+        // Forwards to put()
+		{
+        	//[range_array
+        	boost::array<T, 3> cont; cont | as2::_put_range( r );
+            BOOST_ASSIGN_V2_CHECK( cont.front() == x );
+            BOOST_ASSIGN_V2_CHECK( cont.back() == z );
+            //]
         }
 		{
-    		typedef std::stack<int> cont_;
-    		std::vector<int> v(2); v[0] = 1; v[1] = -99; 
-    		assert(
-    			(boost::type<cont_>() | as2::_put_range( v ) ).top() == -99
-    		);
+        	//[range_stack
+    		typedef std::stack<T> cont_;
+    		BOOST_ASSIGN_V2_CHECK( 
+            	( 
+                	::boost::type<cont_>() | as2::_put_range( r ) 
+                ).top() == x 
+            );
+            //]
+        }
+
+        // Calls C(b, e)
+		{
+        	//[range_deque
+        	std::deque<T> cont; cont | as2::_put_range( r );
+            BOOST_ASSIGN_V2_CHECK( cont.front() == x );
+            BOOST_ASSIGN_V2_CHECK( cont.back() == z );
+            //]
         }
     }
 

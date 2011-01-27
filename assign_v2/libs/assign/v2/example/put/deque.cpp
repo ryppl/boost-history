@@ -10,6 +10,7 @@
 #include <string>
 #include <assert.h>
 #include <boost/assign/v2/put/deque.hpp>
+#include <boost/assign/v2/put/std/push_front.hpp>
 #include <libs/assign/v2/example/include.h>
 #include <libs/assign/v2/example/foo.h>
 #include <libs/assign/v2/example/put/deque.h>

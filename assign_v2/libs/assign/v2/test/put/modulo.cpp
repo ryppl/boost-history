@@ -7,11 +7,13 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#include <queue>
-#include <map>
-#include <boost/assign/v2/detail/checking/container.hpp>
-#include <boost/assign/v2/detail/checking/constants.hpp>
-#include <boost/assign/v2/put/sub.hpp>
+#include <vector>
+#include <deque>
+#include <boost/assign/v2/detail/checking/check.hpp>
+#include <boost/assign/v2/put/container.hpp>
+#include <boost/assign/v2/put/std/push_front.hpp>
+#include <boost/assign/v2/put/modulo/fun.hpp>
+#include <boost/lambda/lambda.hpp>
 #include <libs/assign/v2/test/put/modulo.h>
 
 namespace test_assign_v2{
@@ -20,17 +22,28 @@ namespace xxx_modulo{
 
     void test()
     {
-        using namespace boost::assign::v2;
-        using namespace checking::constants;
-        namespace chk_cont = checking::container;
-        {	// Queue + Repeat
-            typedef std::queue<int> cont_;
-            cont_ cont;
-            ( put( cont ) % ( _repeat = 3 ) )( -1 );
-            BOOST_ASSIGN_V2_CHECK( cont.front() == -1); cont.pop();
-            BOOST_ASSIGN_V2_CHECK( cont.front() == -1); cont.pop();
-            BOOST_ASSIGN_V2_CHECK( cont.front() == -1); cont.pop();
-            BOOST_ASSIGN_V2_CHECK( cont.empty() == true);
+        namespace as2 = boost::assign::v2;
+        namespace bl = boost::lambda;
+        {
+        	//[modulo_fun
+            typedef int T; T x = 1, y = 2, z = 0;
+        	std::vector<int> cont;
+        	( 
+            	as2::put( cont ) % ( as2::_fun = ( bl::_1 + 1 ) )
+            )( x )( y )( z );
+        	BOOST_ASSIGN_V2_CHECK( cont.front() == ( x + 1 ) );
+        	BOOST_ASSIGN_V2_CHECK( cont.back() == ( z + 1 ) );
+        	//]
+        }
+        {
+        	//[modulo_modifier
+            typedef int T; T x = 1, y = 2, z = 0;
+        	std::deque<int> cont;
+        	( as2::put( cont ) % ( as2::_modifier 
+            	= as2::modifier_tag::push_front() ) )( x )( y )( z );
+        	BOOST_ASSIGN_V2_CHECK( cont.front() == z );
+        	BOOST_ASSIGN_V2_CHECK( cont.back() == x );
+        	//]
         }
     }
 

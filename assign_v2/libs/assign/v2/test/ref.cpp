@@ -10,7 +10,7 @@
 #include <libs/assign/v2/test/ref/array.h>
 #include <libs/assign/v2/test/ref/convert_traits.h>
 #include <libs/assign/v2/test/ref/csv_array.h>
-#include <libs/assign/v2/test/ref/fusion.h>
+#include <libs/assign/v2/test/ref/list.h>
 #include <libs/assign/v2/test/ref/list_tuple.h>
 #include <libs/assign/v2/test/ref/wrapper.h>
 #include <libs/assign/v2/test/ref.h>
@@ -23,7 +23,7 @@ namespace xxx_ref{
         xxx_array::test();
         xxx_convert_traits::test();
         xxx_csv_array::test();
-        xxx_fusion::test();
+        xxx_list::test();
         xxx_list_tuple::test();
         xxx_wrapper::test();
 

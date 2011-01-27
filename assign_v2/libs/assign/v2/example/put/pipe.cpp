@@ -131,7 +131,7 @@ namespace xxx_pipe{
         }
     	{
             //[lookup
-            std::map<const char*,int> cont;
+            std::map<std::string, int> cont;
             cont["x"] = -1; cont["y"] = 0; cont["z"] = 1;
             cont | (
                 as2::_csv_put % ( as2::_lookup = ( bl::_1 +=2 ) )

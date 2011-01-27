@@ -15,9 +15,9 @@
 
 #include <boost/assign/v2/put/pipe.hpp>
 #include <boost/assign/v2/detail/checking/check.hpp>
-#include <boost/assign/v2/put/modifier/ext/lookup.hpp>
-#include <boost/assign/v2/put/modifier/ext/repeat.hpp>
-#include <boost/assign/v2/put/modifier/ext/iterate.hpp>
+#include <boost/assign/v2/put/ext/lookup.hpp>
+#include <boost/assign/v2/put/ext/repeat.hpp>
+#include <boost/assign/v2/put/ext/iterate.hpp>
 #include <libs/assign/v2/test/put/pipe/ext.h>
 
 namespace test_assign_v2{

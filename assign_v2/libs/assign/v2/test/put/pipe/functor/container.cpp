@@ -7,13 +7,18 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
+#include <boost/array.hpp>
+#include <deque>
+#include <list>
+#include <map>
+#include <queue>
+#include <set>
+#include <stack>
+#include <vector>
 #include <string>
-#include <boost/mpl/int.hpp>
-#include <boost/typeof/typeof.hpp>
 #include <boost/assign/v2/detail/checking/check.hpp>
-#include <boost/assign/v2/detail/checking/constants.hpp>
-#include <boost/assign/v2/put/modifier/ext/repeat.hpp>
 #include <boost/assign/v2/put/pipe/functor.hpp>
+
 #include <libs/assign/v2/test/put/pipe/functor/container.h>
 
 namespace test_assign_v2{
@@ -22,114 +27,84 @@ namespace xxx_pipe{
 namespace xxx_functor{
 namespace xxx_container{
 
-	struct val_pred{
-
-    	val_pred(){}
-		template<typename T, typename U>
-    	void operator()(T const& t, U const& u)const
-        {
-        	BOOST_ASSIGN_V2_CHECK( t == u );
-        }
-    };
-
-	struct ref_pred{
-
-    	ref_pred(){}
-		template<typename T, typename U>
-    	void operator()(T const& t, U const& u)const
-        {
-        	BOOST_ASSIGN_V2_CHECK( &t == &u );
-        }
-    };
-
-	template<int i, int j, typename T, typename P, typename U>
-	void local_assert(T& tmp, P const& pred, U const& u)
-    {
-
-        using namespace boost; // tuple<> (cpp03)
-        using namespace boost::assign::v2; // tuple (cpp0x)
-    	pred(
-    		get<j>(
-        		tmp.seq_args().get( boost::mpl::int_<i>() )
-        	),
-            u
-        );
-    }
-
-	void test()
-    {
-
-        using namespace boost;
-        using namespace boost::assign::v2;
-        using namespace checking::constants;
-
-        typedef boost::mpl::int_<0> zero_;
-        {
-            typedef put_pipe_aux::container<> container_;
-            int x = -1;
-            BOOST_AUTO(
-            	tmp,
-            	( ( container_() %  ( _repeat = 3 ) )( x ) )
-            );
-            int n = tmp
-                .pars()
-                .static_lookup( zero_() ).get();
-            BOOST_ASSIGN_V2_CHECK( n == 3 );
+    void test(){
+        namespace as2 = boost::assign::v2;
+        {	
+            //[pipe_array	
+            typedef int T;
+            T x = 1, y = 2, z = 3;
+            boost::array<T, 3> ar;
+            ar | as2::_put( x )( y )( z );
+            BOOST_ASSIGN_V2_CHECK( ar[0] == x );
+            BOOST_ASSIGN_V2_CHECK( ar[2] == z );
+            //]
         }
         {
-            #define A -10
-            #define B 10
-            int a1, b1, c1;
-            using namespace checking::constants;
-            {
-                a1 = a; b1 = b; c1 = c;
-            }
-
-            BOOST_AUTO(
-            	tmp,
-                ( _put
-                    ( a1, b1 )( a1, b )( a1, B )
-                    ( a, b1 )( a, b )( a, B )
-                    ( A, b1 )( A, b )( A, B )
-                    ( a1 )
-                    ( a )
-                    ( A )
-                    ()
-                )
-            );
-			local_assert<0, 0>( tmp, ref_pred(), a1);
-			local_assert<0, 1>( tmp, ref_pred(), b1);
-			local_assert<1, 0>( tmp, ref_pred(), a1); local_assert<1, 1>( tmp, ref_pred(), b);
-			local_assert<2, 0>( tmp, ref_pred(), a1); local_assert<2, 1>( tmp, val_pred(), B);
-
-			local_assert<3, 0>( tmp, ref_pred(), a ); local_assert<3, 1>( tmp, ref_pred(), b1);
-			local_assert<4, 0>( tmp, ref_pred(), a ); local_assert<4, 1>( tmp, ref_pred(), b);
-			local_assert<5, 0>( tmp, ref_pred(), a ); local_assert<5, 1>( tmp, val_pred(), B);
-
-			local_assert<6, 0>( tmp, val_pred(), A); local_assert<6, 1>( tmp, ref_pred(), b1);
-			local_assert<7, 0>( tmp, val_pred(), A); local_assert<7, 1>( tmp, ref_pred(), b);
-			local_assert<8, 0>( tmp, val_pred(), A); local_assert<8, 1>( tmp, val_pred(), B);
-
-			local_assert<9, 0>( tmp, ref_pred(), a1);
-			local_assert<10, 0>( tmp, ref_pred(), a);
-			local_assert<11, 0>( tmp, val_pred(), A);
-
-#undef A
-#undef B
+        	//[pipe_map
+            std::map<std::string, int> assoc;
+            assoc | as2::_put( "jan", 31 )( "feb", 28 )( "mar", 31 );
+            BOOST_ASSIGN_V2_CHECK( assoc["feb"] == 28 );
+            //]
+        }
+		{
+            //[pipe_set
+            typedef std::string T;
+            std::set<T> assoc;
+            T x = "isomer", y = "ephemeral", z = "prosaic";
+            assoc | as2::_put( x )( y )( z );
+            BOOST_ASSIGN_V2_CHECK( assoc.count( x ) == 1 );
+            BOOST_ASSIGN_V2_CHECK( assoc.count( z ) == 1 );
+            //]
+		}        		    
+        {
+            //[pipe_deque
+            typedef int T; T x = 1, y = 2, z = 0;
+            std::deque<T> seq;
+            seq | as2::_put( x )( y )( z );
+            BOOST_ASSIGN_V2_CHECK( seq.front() == x );
+            BOOST_ASSIGN_V2_CHECK( seq.back() == z );
+            //]
         }
         {
-            BOOST_AUTO(tmp, _put( "x" ) );
-			typedef boost::mpl::int_<0> int_;
-			typedef std::string str_;
-			BOOST_ASSIGN_V2_CHECK(
-            	str_( get<0>( tmp.seq_args().get( int_() ) ) ) == "x"
-            );
+            //[pipe_list
+            typedef int T; T x = 1, y = 2, z = 0;
+            std::list<T> seq;
+            seq | as2::_put( x )( y )( z );
+            BOOST_ASSIGN_V2_CHECK( seq.front() == x );
+            BOOST_ASSIGN_V2_CHECK( seq.back() == z );
+            //]
+        }
+        {
+            //[pipe_vector
+            typedef int T; T x = 1, y = 2, z = 0;
+            std::vector<T> seq;
+            seq | as2::_put( x )( y )( z );
+            BOOST_ASSIGN_V2_CHECK( seq.front() == x );
+            BOOST_ASSIGN_V2_CHECK( seq.back() == z );
+            //]
+        }
+        {
+            //[pipe_queue
+            typedef int T; T x = 8, y = 7, z = 6;
+            std::queue<T> fifo;
+            fifo | as2::_put( x )( y )( z );
+            BOOST_ASSIGN_V2_CHECK( fifo.front() == x );
+            BOOST_ASSIGN_V2_CHECK( fifo.back() == z );
+            //]
 		}
-    }
-
+        {
+            //[pipe_stack
+            typedef int T; T x = 8, y = 7, z = 4;
+            std::stack<T> lifo;
+            lifo | as2::_put( x )( y )( z );
+            BOOST_ASSIGN_V2_CHECK( lifo.top() == z ); lifo.pop();
+            BOOST_ASSIGN_V2_CHECK( lifo.top() == y );
+            //]
+		}
+    }// test()
 
 }// xxx_container
-}// xxx_functor
+}// xxx_functor  
 }// xxx_pipe
 }// xxx_put
-}// test_assign_v2
+}// xxx_test_assign
