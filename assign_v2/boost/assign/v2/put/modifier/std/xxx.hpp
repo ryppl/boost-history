@@ -12,6 +12,7 @@
 #include <boost/accumulators/framework/accumulator_base.hpp>
 
 #include <boost/assign/v2/detail/pp/forward.hpp>
+
 #include <boost/assign/v2/put/modifier/def.hpp>
 #include <boost/assign/v2/put/generic/new_modifier.hpp>
 

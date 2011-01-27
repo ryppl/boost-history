@@ -9,6 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_REF_ARRAY_ALLOC_INSTANT_FWD_ER_2010_HPP
 #define BOOST_ASSIGN_V2_REF_ARRAY_ALLOC_INSTANT_FWD_ER_2010_HPP
+#include <boost/assign/v2/ref/array/size_type.hpp>
  
 namespace boost{
 namespace assign{
@@ -18,7 +19,8 @@ namespace alloc_tag{
 	struct instant_alloc{};
 }// alloc_tag
 namespace array_aux{ 
-   template<std::size_t N, typename Tag, typename T> class instant_alloc;
+   // template<size_type N, typename Tag, typename T> class instant_alloc;
+   template<size_type N, typename T> class instant_alloc;
 }// array_aux   
 }// ref 
 }// v2    

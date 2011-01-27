@@ -15,7 +15,7 @@ namespace assign{
 namespace v2{
 namespace put_deque_aux{
 
-    template<typename T,typename F,typename Tag> class cont;
+    template<typename T, typename F, typename Tag> class cont;
 
 }// put_deque_aux
 }// v2

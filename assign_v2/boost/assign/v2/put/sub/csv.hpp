@@ -89,7 +89,7 @@ BOOST_PP_REPEAT_FROM_TO(
 #undef MACRO1
 #undef MACRO2
 #endif
-		V& get()const{
+		V& container()const{
         	return static_cast<super1_t const&>(*this).get();
         }
 

@@ -17,18 +17,13 @@ namespace modifier_tag{
 	// add as necessary
 }
 namespace put_aux{
-
-	template<typename Tag>
-    struct modifier{
-		    	
-    	// Specialize on Tag:
-    	//	template<typename V,typename T>
-        //	void impl(V& v,T& t)const;
-
-		// Warning: modifiers such as modifier<modifier_tag::at_next> have an 
-        // internal state that affects impl()'s working. 
-        
-    };
+// TODO
+//	template<typename Tag>
+//    struct modifier{
+     /* Specialize on Tag: 
+        template<typename V,typename T>
+        void impl(V& v,T& t)const; */
+//    };
 
 }// put_aux
 }// v2

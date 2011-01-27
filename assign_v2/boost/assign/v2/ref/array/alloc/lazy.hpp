@@ -22,16 +22,15 @@ namespace v2{
 namespace ref{
 namespace array_aux{ 
                   
-   	template<std::size_t N,typename Tag, typename T, typename D>
+//   	template<std::size_t N,typename Tag, typename T, typename D>
+   	template<std::size_t N,typename T, typename D>
    	class lazy_alloc : public array_aux::interface<
    		typename array_aux::impl_traits<N, T>::array_type, 
-        lazy_alloc<N,Tag,T,D> 
+//        lazy_alloc<N,Tag,T,D> 
+        lazy_alloc<N, T, D> 
 	>
     {
-		typedef typename array_aux::impl_traits<
-        	N, 
-            T
-        >::array_type impl_;
+		typedef typename array_aux::impl_traits<N, T>::array_type impl_;
 
 		typedef ::boost::mpl::int_<N> size_;
                 

@@ -10,8 +10,7 @@
 #ifndef BOOST_ASSIGN_V2_PUT_PIPE_RANGE_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_PIPE_RANGE_ER_2010_HPP
 #include <boost/type.hpp>
-#include <boost/range/algorithm/for_each.hpp>
-#include <boost/assign/v2/put/sub/functor.hpp>
+#include <boost/assign/v2/put/container/range.hpp>
 #include <boost/assign/v2/ref/wrapper/copy.hpp>
 
 namespace boost{
@@ -19,16 +18,16 @@ namespace assign{
 namespace v2{
 namespace put_range_aux
 {
-    template<typename From>
-    class helper1 : ref::copy_wrapper<From const>::type
+    template<typename R>
+    class helper1 : ref::copy_wrapper<R const>::type
     {
-        typedef typename ref::copy_wrapper<From const>::type super_t;
+        typedef typename ref::copy_wrapper<R const>::type super_t;
 
         public:
 
-    	helper1(From const& from) : super_t(from){}
+    	helper1(R const& range) : super_t( range ){}
 
-        From const& from()const{ return this->get(); }
+        R const& range()const{ return this->get(); }
 
         private:
         helper1();
@@ -37,58 +36,30 @@ namespace put_range_aux
     struct helper2
     {
     	helper2(){}
-        template<typename From>
-        helper1<From> operator()(const From& from)const
+        template<typename R>
+        helper1<R> operator()(const R& range)const
         {
-        	typedef helper1<From> result_;
-        	return result_( from );
+        	typedef helper1<R> result_;
+        	return result_( range );
         }
     };
 
-    template<typename To,typename From>
-    To& operator|(To& to, put_range_aux::helper1<From> const& h)
+    template<typename C,typename R>
+    C& operator|(C& cont, put_range_aux::helper1<R> const& h)
     {
-        ::boost::for_each( h.from(), put( to ) );
-        return to;
+        return put_range( cont, h.range() );
     }
 
-    template<typename To, typename From>
-    To operator|( ::boost::type<To>, put_range_aux::helper1<From> const& h)
+    template<typename C, typename R>
+    C operator|( ::boost::type<C>, put_range_aux::helper1<R> const& h)
     {
-		To to;
-        to | h;
-        return to;
+		return put_range<C>( h.range() );
     }
 
 }// put_range_aux
 namespace{
     put_range_aux::helper2 const _put_range = put_range_aux::helper2();
 }
-}// v2
-}// assign
-}// boost
-
-#include <boost/assign/v2/detail/checking/fwd.hpp>
-
-// Must be preceded by
-// #include <boost/assign/v2/detail/checking/container.hpp>
-
-namespace boost{
-namespace assign{
-namespace v2{
-namespace checking{
-namespace put_range{
-
-    template<typename To, typename From>
-    void do_check(From const& from)
-    {
-    	To to;
-        namespace ns = checking::container;
-        ns::do_check( to | _put_range( from ) );
-    }
-
-}// put_range
-}// checking
 }// v2
 }// assign
 }// boost

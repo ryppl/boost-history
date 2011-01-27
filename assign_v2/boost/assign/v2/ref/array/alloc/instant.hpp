@@ -20,16 +20,15 @@ namespace v2{
 namespace ref{
 namespace array_aux{ 
 
-    template<std::size_t N, typename Tag, typename T>
+//    template<size_type N, typename Tag, typename T>
+    template<size_type N, typename T>
     class instant_alloc : public array_aux::interface<
 		typename array_aux::impl_traits<N, T>::array_type,
-        instant_alloc<N, Tag, T> 
+//        instant_alloc<N, Tag, T> 
+      instant_alloc<N, T> 
 	>
     {
-		typedef typename array_aux::impl_traits<
-        	N, 
-            T
-        >::array_type impl_;
+		typedef typename array_aux::impl_traits<N, T>::array_type impl_;
                 
         public:
 

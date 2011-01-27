@@ -45,7 +45,7 @@ namespace assign_copy{ typedef assign_tag::copy assign_tag_; }
     	}
 
         // TODO a) crtp b) reference() or get()
-        typedef T& unwrap_type;
+        typedef T& get_type;
         T& get() const
         {
             return *this->ref_;

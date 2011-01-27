@@ -11,6 +11,7 @@
 #define BOOST_ASSIGN_V2_REF_ARRAY_IMPL_TRAITS_ER_2010_HPP
 #include <boost/array.hpp>
 #include <boost/assign/v2/ref/wrapper.hpp>
+#include <boost/assign/v2/ref/array/size_type.hpp> 
  
 namespace boost{
 namespace assign{
@@ -18,7 +19,7 @@ namespace v2{
 namespace ref{
 namespace array_aux{ 
 
-    template<std::size_t N, typename T, typename Tag = ref::assign_tag::copy>
+    template<size_type N, typename T, typename Tag = ref::assign_tag::copy>
     struct impl_traits
     {
         typedef T value_type;

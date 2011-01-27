@@ -15,6 +15,7 @@ namespace assign{
 namespace v2{
 namespace put_aux{
 
+
 	struct put_base{
     
     	// This base is needed to be able to distinguish objects that serves as

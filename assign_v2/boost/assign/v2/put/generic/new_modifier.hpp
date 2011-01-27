@@ -55,7 +55,7 @@ namespace put_aux{
         	NewTag
     	>::type result_;
         typedef put_aux::modifier<NewTag> modifier_;
-        return result_( t.get(), t.fun, modifier_( h.modifier_tag ) );
+        return result_( t.container(), t.fun, modifier_( h.modifier_tag ) );
     }
 
 }// put_aux

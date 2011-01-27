@@ -15,7 +15,7 @@ namespace assign{
 namespace v2{
 namespace put_parameter{
 
-	template<typename F,typename Tag>
+	template<typename F, typename Tag>
 	struct pair{
         typedef F fun_type;
         typedef Tag modifier_tag;

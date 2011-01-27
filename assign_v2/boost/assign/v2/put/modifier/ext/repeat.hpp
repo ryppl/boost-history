@@ -11,8 +11,10 @@
 #define BOOST_ASSIGN_V2_PUT_MODIFIER_EXT_REPEAT_ER_2010_HPP
 #include <boost/mpl/aux_/na.hpp>
 #include <boost/assign/v2/detail/pp/forward.hpp>
+
 #include <boost/assign/v2/put/modifier/def.hpp>
 #include <boost/assign/v2/put/generic/parameter.hpp>
+
 #include <boost/assign/v2/put/modifier/ext/xxx.hpp>
 
 namespace boost{
@@ -94,7 +96,7 @@ namespace put_aux{
             : n( n_ )
         {}
 
-        size_type const& get()const{ return this->n; }
+        size_type const& arg()const{ return this->n; }
 
         protected:
         size_type n;

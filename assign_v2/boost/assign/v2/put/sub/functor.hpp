@@ -24,7 +24,7 @@ namespace put_aux{
 namespace result_of_modulo{
 	
     template<typename V,typename F,typename Tag>
-    struct new_fun<put_aux::sub<V,F,Tag> >
+    struct new_fun<put_aux::sub<V, F, Tag> >
     {
 
     	template<typename F1>
@@ -93,7 +93,7 @@ namespace put_aux{
                 // when Tag or F is modified.
         	}
 
-		V& get()const{ 
+		V& container()const{ 
         	return static_cast<super1_t const&>(*this).get(); 
         }
 

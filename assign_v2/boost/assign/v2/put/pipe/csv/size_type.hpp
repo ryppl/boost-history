@@ -9,14 +9,14 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_PUT_PIPE_CSV_SIZE_TYPE_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_PIPE_CSV_SIZE_TYPE_ER_2010_HPP
-#include <boost/assign/v2/ref/fusion/size_type.hpp>
+#include <boost/assign/v2/ref/list/size_type.hpp>
 
 namespace boost{
 namespace assign{
 namespace v2{
 namespace put_pipe_aux{
 
-	typedef ref::fusion_aux::size_type csv_size_type;
+	typedef ref::list_aux::size_type csv_size_type;
     
 }// put_pipe_aux
 }// v2

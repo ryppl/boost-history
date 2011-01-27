@@ -15,8 +15,10 @@
 #include <boost/assign/v2/put/modifier/def.hpp>
 #include <boost/assign/v2/detail/functor/identity.hpp>
 #include <boost/assign/v2/detail/pp/forward.hpp>
+
 #include <boost/assign/v2/put/generic/parameter.hpp>
 #include <boost/assign/v2/put/generic/result_of_modulo.hpp>
+
 #include <boost/assign/v2/put/modifier/ext/xxx.hpp>
 
 namespace boost{
@@ -69,12 +71,12 @@ namespace put_aux{
     {
         typedef Arg const type;
 
-        explicit lookup(type& arg_) : arg( arg_ ){}
+        explicit lookup(type& k) : key( k ){}
 
-        type& get()const{ return this->arg; }
+        type& arg()const{ return this->key; }
 
         private:
-        type& arg;
+        type& key;
 
     };
 

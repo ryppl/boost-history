@@ -14,5 +14,8 @@
 #include <boost/assign/v2/ref/array/functor/nth_result_of.hpp>
 #include <boost/assign/v2/ref/array/functor/tag2.hpp>
 
+// Must remain commented out
+// #include <boost/assign/v2/ref/array/functor/converter.hpp>
+
 #endif
 

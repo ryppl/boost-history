@@ -17,8 +17,8 @@ namespace assign{
 namespace v2{
 namespace put_pipe_aux{
 
-    template<put_pipe_aux::csv_size_type N, 
-    	put_pipe_aux::csv_size_type I, typename F, typename C>
+    template<csv_size_type N, 
+    	csv_size_type I, typename F, typename C>
     typename boost::enable_if_c<
         N == I
     >::type
@@ -28,8 +28,8 @@ namespace put_pipe_aux{
     )
     {}
 
-    template<put_pipe_aux::csv_size_type N, 
-    	put_pipe_aux::csv_size_type I, typename F, typename C>
+    template<csv_size_type N, 
+    	csv_size_type I, typename F, typename C>
     typename boost::enable_if_c<
         I < N
     >::type

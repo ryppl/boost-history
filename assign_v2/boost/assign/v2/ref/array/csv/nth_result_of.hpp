@@ -29,7 +29,8 @@ namespace nth_result_of{
     struct csv_array 
 	{
         typedef ref::array_tag1_ tag1_;
-        typedef array_aux::instant_alloc<N, tag1_, T> type;
+//        typedef array_aux::instant_alloc<N, tag1_, T> type;
+        typedef array_aux::instant_alloc<N, T> type;
     };
 
 }// nth_result_of

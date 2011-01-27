@@ -69,7 +69,7 @@ namespace put_aux{
     // then models concept_sub::Post
     // 
     // Usually, f is passed to the crtp. U = V& or V const& depending on need.
-    template<typename V,typename F, typename Tag, typename D>
+    template<typename V, typename F, typename Tag, typename D>
     class crtp :
     	public put_base,
     	public  put_aux::expose_fun<F> 
@@ -99,7 +99,7 @@ namespace put_aux{
 		D const& derived()const{ return static_cast<D const&>(*this); }
 
 		//public:
-
+		
 		crtp(){}
         explicit crtp( F const& f ) : expose_fun_( f ){}
         explicit crtp( F const& f, modifier_ const& m )
@@ -107,19 +107,20 @@ namespace put_aux{
 
     	result_type operator()()const
     	{
-			return this->arg_deduct( this->fun() );
+			return this->modify( this->fun() );
     	}
 
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 
+		//[fun_op
         template<typename...Args>
-        result_type
-        operator()( Args&&...args )const
+        result_type operator()( Args&&...args )const
         {
-            return this->arg_deduct(
+            return this->modify(
                 this->fun( std::forward<Args>(args)... )
             );
         }
+        //]
 
 #else
         protected:
@@ -136,7 +137,7 @@ namespace put_aux{
     result_type \
     impl( BOOST_PP_ENUM_BINARY_PARAMS(N, T, & _) )const \
 	{ \
-        return this->arg_deduct( this->fun(BOOST_PP_ENUM_PARAMS(N,_)) ); \
+        return this->modify( this->fun(BOOST_PP_ENUM_PARAMS(N,_)) ); \
 	} \
 /**/
 BOOST_PP_REPEAT_FROM_TO(
@@ -147,7 +148,7 @@ BOOST_PP_REPEAT_FROM_TO(
 )
 #undef MACRO
 #endif
-		V& get()const{ return this->derived().get(); }
+		V& container()const{ return this->derived().container(); }
 
 		struct result_of_modulo{
 
@@ -170,7 +171,7 @@ BOOST_PP_REPEAT_FROM_TO(
         	typedef typename caller_::type cons_;
     		typedef typename result_of_modulo::deduce::type result_;
     		return result_(
-        		this->derived().get(),
+        		this->derived().container(),
              	caller_::call()
         	);
         }
@@ -178,11 +179,11 @@ BOOST_PP_REPEAT_FROM_TO(
 		protected:
 
 		template<typename T>
-        result_type arg_deduct(T* t)const
+        result_type modify(T* t)const
         {
         	typedef put_concept::ModifierImpl<modifier_, V, T*> concept_;
             BOOST_CONCEPT_ASSERT(( concept_ ));
-			this->modifier.impl( this->derived().get(), t );
+			this->modifier.impl( this->derived().container(), t );
             return this->derived();
         }
 
@@ -201,30 +202,32 @@ BOOST_PP_REPEAT_FROM_TO(
 
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 
+		//[modify
 		template<typename T>
-        result_type arg_deduct(T&& t)const
+        result_type modify(T&& t)const
         {
 			check_modifier( t );
 			this->modifier.impl(
-                this->derived().get(),
+                this->derived().container(),
                 std::forward<T>( t )
-            );
+            )/* modifier depends on Tag */;
             return this->derived();
         }
+        //]
 #else
 		template<typename T>
-        result_type arg_deduct(T& t)const
+        result_type modify(T& t)const
         {
 			check_modifier( t );
-			this->modifier.impl( this->derived().get(), t );
+			this->modifier.impl( this->derived().container(), t );
             return this->derived();
         }
 
 		template<typename T>
-        result_type arg_deduct(T const& t)const
+        result_type modify(T const& t)const
         {
 			check_modifier( t );
-			this->modifier.impl( this->derived().get(), t );
+			this->modifier.impl( this->derived().container(), t );
             return this->derived();
         }
 

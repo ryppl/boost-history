@@ -15,8 +15,11 @@
 #include <boost/range/iterator.hpp>
 #include <boost/range/size.hpp>
 #include <boost/range/size_type.hpp>
-#include <boost/assign/v2/put/generic/result_of_modulo.hpp>
-#include <boost/assign/v2/put/generic/crtp.hpp>
+
+#include <boost/assign/v2/put/modulo/fun.hpp>
+#include <boost/assign/v2/put/modulo/modifier.hpp>
+#include <boost/assign/v2/put/frame/crtp.hpp>
+
 #include <boost/assign/v2/put/deque/fwd.hpp>
 
 namespace boost{
@@ -25,21 +28,17 @@ namespace v2{
 namespace result_of_modulo{
 
     template<typename T,typename F,typename Tag>
-    struct new_fun<put_deque_aux::cont<T,F,Tag> >
+    struct fun<put_deque_aux::cont<T, F, Tag> >
     {
-
     	template<typename F1>
         struct apply{ typedef put_deque_aux::cont<T, F1, Tag> type; };
-
     };
 
     template<typename T,typename F,typename Tag>
-    struct new_modifier<put_deque_aux::cont<T,F,Tag> >
+    struct modifier<put_deque_aux::cont<T, F, Tag> >
     {
-
     	template<typename NewTag>
         struct apply{ typedef put_deque_aux::cont<T, F, NewTag> type; };
-
     };
 
 }//result_of_modulo
@@ -101,46 +100,46 @@ namespace put_deque_aux{
         typedef typename impl_::difference_type difference_type;
 
         size_type size()const{
-            return this->get().size();
+            return this->container().size();
         }
         size_type max_size()const{
-            return this->get().max_size();
+            return this->container().max_size();
         }
         bool empty()const{
-            return this->get().empty();
+            return this->container().empty();
         }
         reference operator[](size_type n){
-            return this->get()[n];
+            return this->container()[n];
         }
         const_reference operator[](size_type n)const{
-            return this->get()[n];
+            return this->container()[n];
         }
         reference front(){
-            return this->get().front();
+            return this->container().front();
         }
         const_reference front()const{
-            return this->get().front();
+            return this->container().front();
         }
 		reference back(){
-        	return this->get().back();
+        	return this->container().back();
         }
         const_reference back()const{
-            return this->get().back();
+            return this->container().back();
         }
         void pop_front(){
-            this->get().pop_front();
+            this->container().pop_front();
         }
         void pop_back(){
-            this->get().pop_back();
+            this->container().pop_back();
         }
         void swap(cont& that){
-            this->get().swap( that.get() );
+            this->container().swap( that.container() );
         }
 
         // Note : the modifiers such as push_back() are ommitted as they
         // accessible through the put interface.
 
-       impl_& get()const{ return this->impl; }
+       impl_& container()const{ return this->impl; }
         protected:
         mutable impl_ impl;
 

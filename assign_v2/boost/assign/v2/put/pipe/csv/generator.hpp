@@ -10,15 +10,14 @@
 #ifndef BOOST_ASSIGN_V2_PUT_PIPE_CSV_GENERATOR_HPP_ER_2010
 #define BOOST_ASSIGN_V2_PUT_PIPE_CSV_GENERATOR_HPP_ER_2010
 #include <boost/mpl/apply.hpp>
-#include <boost/mpl/push_back.hpp>
 #include <boost/mpl/size.hpp>
 #include <boost/mpl/vector/vector0.hpp>
 
 #include <boost/assign/v2/ref/array/csv.hpp>
-#include <boost/assign/v2/ref/fusion/nth_result_of.hpp>
 #include <boost/assign/v2/ref/wrapper/copy.hpp>
 
-#include <boost/assign/v2/put/pipe/csv/container.hpp>
+#include <boost/assign/v2/put/pipe/csv/rhs.hpp>
+#include <boost/assign/v2/put/pipe/modulo/traits.hpp>
 
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
@@ -47,22 +46,16 @@ namespace put_pipe_aux{
 	class csv_generator
     {
 
-    	typedef boost::use_default tag2_;
-    	typedef v2::ref::assign_copy::nth_result_of::fusion<tag2_> meta1_;
+    	//typedef boost::use_default tag2_;
+    	//typedef v2::ref::assign_copy::nth_result_of::fusion<tag2_> meta1_;
 
 		typedef ::boost::mpl::na na_;
+        typedef modulo_traits<Pars> modulo_traits_;
 
 		public:
-
-		BOOST_STATIC_CONSTANT(
-        	std::size_t,
-            static_parameters_size = ::boost::mpl::size<Pars>::value
-        );
-
-        typedef typename ::boost::mpl::apply1<
-            meta1_,
-            Pars
-        >::type pars_cont_type;
+        
+        typedef typename modulo_traits_::size pars_size;
+        typedef typename modulo_traits_::cont_ pars_cont_type;
 
 		csv_generator(){}
 		explicit csv_generator(pars_cont_type const& p)
@@ -71,10 +64,7 @@ namespace put_pipe_aux{
         template<typename T>
         struct modulo_result
         {
-        	typedef typename ::boost::mpl::push_back<
-    			Pars,
-                T const
-            >::type new_;
+			typedef typename modulo_traits_:: template new_pars<T>::type new_;
             typedef csv_generator<new_> type;
         };
 
@@ -88,7 +78,7 @@ namespace put_pipe_aux{
 
     	template<std::size_t N, typename U = na_>
         struct result{
-        	typedef put_pipe_aux::csv_container<Pars, N, U> type;
+        	typedef put_pipe_aux::csv_rhs<Pars, N, U> type;
         };
 
 		typename result<0>::type

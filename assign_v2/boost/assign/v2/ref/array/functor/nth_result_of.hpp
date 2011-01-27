@@ -9,9 +9,10 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_REF_ARRAY_FUNCTOR_NTH_RESULT_OF_ER_2010_HPP
 #define BOOST_ASSIGN_V2_REF_ARRAY_FUNCTOR_NTH_RESULT_OF_ER_2010_HPP
-#include <boost/assign/v2/ref/fusion/nth_result_of.hpp>
-#include <boost/assign/v2/ref/array/functor/tag2.hpp>
-#include <boost/assign/v2/ref/array/tag1.hpp>
+#include <boost/assign/v2/ref/list/make.hpp>
+#include <boost/assign/v2/ref/list/container.hpp>
+#include <boost/assign/v2/ref/list/array.hpp>
+#include <boost/assign/v2/ref/array/size_type.hpp>
 
 namespace boost{
 namespace assign{
@@ -20,27 +21,22 @@ namespace ref{
 namespace array_aux{
 
     template<typename T>
-    struct empty_array : fusion_aux::empty<
-    	array_tag1_,
-        array_aux::functor_tag2_,
-        T
-    >{};
-
-	template<std::size_t N, typename T>
+    struct empty_array : ref::empty_list<list_aux::array_tag>{};
+         
+	template<size_type N, typename T>
     struct recursive_result
     {
     	typedef typename recursive_result<N-1, T>::type previous_;
-        typedef typename previous_::template result<T>::type type;
+        typedef typename previous_::template result<T&>::type type;
     };
 
 	template<typename T>
-    struct recursive_result<0, T>
-    	: empty_array<T>{};
+    struct recursive_result<0, T> : empty_array<T>{};
 
 }// array_aux
 namespace nth_result_of{
 
-    template<std::size_t N, typename T>
+    template<array_aux::size_type N, typename T>
 	struct array
     	: array_aux::recursive_result<N, T>
     {};

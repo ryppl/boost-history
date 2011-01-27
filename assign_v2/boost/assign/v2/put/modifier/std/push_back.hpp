@@ -10,6 +10,7 @@
 #ifndef BOOST_ASSIGN_V2_PUT_MODIFIER_STD_PUSH_BACK_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_MODIFIER_STD_PUSH_BACK_ER_2010_HPP
 #include <boost/assign/v2/put/modifier/std/xxx.hpp>
+
 BOOST_ASSIGN_V2_PUT_MODIFIER_STD_XXX(push_back)
 
 #endif

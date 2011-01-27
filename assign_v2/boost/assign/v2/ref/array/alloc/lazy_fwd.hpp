@@ -9,6 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_REF_ARRAY_ALLOC_LAZY_FWD_ER_2010_HPP
 #define BOOST_ASSIGN_V2_REF_ARRAY_ALLOC_LAZY_FWD_ER_2010_HPP
+#include <boost/assign/v2/ref/array/size_type.hpp> 
  
 namespace boost{
 namespace assign{
@@ -18,7 +19,8 @@ namespace alloc_tag{
 	struct lazy_alloc{};
 }// alloc_tag
 namespace array_aux{ 
-   template<std::size_t N, typename Tag, typename T, typename D>
+   template<size_type N, typename T, typename D>
+//   template<std::size_t N, typename Tag, typename T, typename D>
    class lazy_alloc;
 }// array_aux   
 }// ref 

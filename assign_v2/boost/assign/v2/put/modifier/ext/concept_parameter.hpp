@@ -23,7 +23,7 @@ namespace put_concept{
 
 		BOOST_CONCEPT_USAGE(Parameter)
         {
-        	M m( p.get() );
+        	M m( p.arg() );
         }
 
         private:

@@ -9,10 +9,10 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_PUT_PIPE_FUNCTOR_OPERATOR_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_PIPE_FUNCTOR_OPERATOR_ER_2010_HPP
-#include <boost/assign/v2/put/pipe/pars/forward.hpp>
-#include <boost/assign/v2/put/pipe/functor/container.hpp>
+#include <boost/assign/v2/put/pipe/modulo/forward.hpp>
+#include <boost/assign/v2/put/pipe/functor/rhs.hpp>
 #include <boost/assign/v2/put/pipe/functor/forward.hpp>
-#include <boost/assign/v2/put/sub/functor.hpp>
+#include <boost/assign/v2/put/container/functor.hpp>
 
 namespace boost{
 namespace assign{
@@ -27,7 +27,7 @@ namespace put_pipe_aux{
     >
     V& operator|(
         V& v,
-        put_pipe_aux::container<Pars, SeqArgs, enable_pars> const& c
+        put_pipe_aux::rhs<Pars, SeqArgs, enable_pars> const& c
     ){
         forward(
         	forward_pars<Pars>(
@@ -40,6 +40,11 @@ namespace put_pipe_aux{
     }
 
 }// put_pipe_aux
+namespace{
+
+	put_pipe_aux::rhs<> const _put = put_pipe_aux::rhs<>();
+
+}
 }// v2
 }// assign
 }// boost

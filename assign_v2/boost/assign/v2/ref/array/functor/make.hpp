@@ -9,10 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_REF_ARRAY_FUNCTOR_MAKE_ER_2010_HPP
 #define BOOST_ASSIGN_V2_REF_ARRAY_FUNCTOR_MAKE_ER_2010_HPP
-#include <boost/assign/v2/ref/fusion/make.hpp>
-#include <boost/assign/v2/ref/fusion/assign_array.hpp>
 #include <boost/assign/v2/ref/array/functor/nth_result_of.hpp>
-#include <boost/assign/v2/ref/array/functor/tag2.hpp>
 #include <boost/assign/v2/ref/array/alloc/lazy.hpp>
 
 namespace boost{
@@ -35,9 +32,7 @@ namespace result_of{
     typename result_of::empty_array<T>::type
 	array( keyword_aux::nil const& )
     {
-        typedef ref::array_tag1_ tag1_;
-        typedef array_aux::functor_tag2_ tag2_;
-    	return ref::fusion<tag1_, tag2_,T>( v2::_nil );
+		return ref::list<list_aux::array_tag>( v2::_nil );
     }
 
     template<typename T>

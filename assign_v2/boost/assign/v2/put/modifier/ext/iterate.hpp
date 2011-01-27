@@ -13,8 +13,10 @@
 #include <boost/mpl/aux_/na.hpp>
 #include <boost/assign/v2/detail/pp/forward.hpp>
 #include <boost/assign/v2/detail/functor/identity.hpp>
+
 #include <boost/assign/v2/put/modifier/def.hpp>
 #include <boost/assign/v2/put/generic/parameter.hpp>
+
 #include <boost/assign/v2/put/modifier/ext/xxx.hpp>
 
 namespace boost{
@@ -82,7 +84,7 @@ namespace put_aux{
            : i( i_ )
         {}
 
-        size_type const& get()const{ return this->i; }
+        size_type const& arg()const{ return this->i; }
 
         protected:
         size_type i;

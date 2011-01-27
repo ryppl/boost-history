@@ -63,4 +63,39 @@ namespace convert_aux{
 }// assign
 }// boost
 
+// Define name lookup for name
+// namespace ns{
+// 	template<typename A, typename B, typename C> cont;
+// }
+// is done by expanding this macro:
+// #define SEQ (A)(B)(C) 
+// namespace ns{
+// 	BOOST_ASSIGN_V2_CONVERTER( cont<A,B,C>, SEQ )
+// }
+// 
+
+#include <boost/preprocessor/seq/enum.hpp>
+#include <boost/preprocessor/seq/transform.hpp>
+
+#ifndef BOOST_ASSIGN_V2_CONVERTER_OP
+#define BOOST_ASSIGN_V2_CONVERTER_OP(s, data, T) typename T
+#endif
+#ifndef BOOST_ASSIGN_V2_CONVERTER
+#define BOOST_ASSIGN_V2_CONVERTER(U, Seq)\
+	template<BOOST_PP_SEQ_ENUM(\
+    	BOOST_PP_SEQ_TRANSFORM(\
+        	BOOST_ASSIGN_V2_CONVERTER_OP,\
+            ~,\
+            Seq\
+        )\
+    )>\
+    ::boost::assign::v2::convert_aux::converter< U > \
+	converter( U const& cont)\
+    {\
+    	typedef convert_aux::converter< U > result_; \
+    	return result_( cont );\
+    }\
+/**/    
+#endif
+
 #endif

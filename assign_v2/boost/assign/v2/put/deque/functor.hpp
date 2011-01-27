@@ -14,7 +14,7 @@
 #include <boost/type_traits/remove_cv.hpp>
 #include <boost/assign/v2/detail/keyword/nil.hpp>
 #include <boost/assign/v2/put/deque/cont.hpp>
-#include <boost/assign/v2/put/sub/functor.hpp>
+#include <boost/assign/v2/put/container/functor.hpp>
 
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 #include <utility>

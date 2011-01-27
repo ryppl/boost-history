@@ -40,7 +40,7 @@ namespace put_aux{
     		result_of_modulo::new_fun<T>,
         	F1
     	>::type result_;
-        return result_( t.get(), h.value, t.modifier );
+        return result_( t.container(), h.value, t.modifier );
     }
 
     struct kwd_fun{
