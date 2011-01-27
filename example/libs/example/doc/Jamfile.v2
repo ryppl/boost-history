@@ -19,6 +19,9 @@ xml example
         <dependency>ref
     ;
 
+install install-pdf : standalone : <location>. <format>pdf <name>example.pdf ;
+explicit install-pdf ;
+
 boostbook standalone
     :
         example
