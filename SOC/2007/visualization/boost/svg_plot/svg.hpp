@@ -203,7 +203,7 @@
 namespace boost
 {
 namespace svg
-{ //! \namespace boost \brief WWW.Boost.org.
+{ //! \namespace boost \brief www.Boost.org.
   //! \namespace boost::math \brief Boost.Math library at www.boost.org.
   //! \namespace boost::math::detail \brief Boost.Math library at www.boost.org implementation details.
   //! \namespace svg \brief Scalable Vector Graph plot functions, classes and data.

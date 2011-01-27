@@ -86,19 +86,22 @@ namespace svg
   //  somewhere = +5 // legend_top_left(x, y)
   //};
 
-  class svg_boxplot; // Box Plot that can display several boxplot data series.
-  class svg_boxplot_series; // Boxplot data series.
+  //! Box Plot that can display several boxplot data series.
+  class svg_boxplot;
+  //! Boxplot data series.
+  class svg_boxplot_series;
 
   // By convention, class data is suffixed by _ to permit function names to be used.
   // For example, string title_, but set with title("my title") and get with title().
 
+  /*! boost::svg::svg_boxplot_series
+     Information about a data series to be box plotted.
+     A Box Plot that can contain several boxplot data series.
+     Median, whiskers and outliers are computed for each series.
+     \see http://en.wikipedia.org/wiki/Boxplot
+  */
   class svg_boxplot_series
-  { /*! \class boost::svg::svg_boxplot_series
-     \brief Information about a data series to be box plotted.
-     \details A Box Plot that can contain several boxplot data series.
-        Median, whiskers and outliers are computed for each series.
-        \see http://en.wikipedia.org/wiki/Boxplot
-     */
+  {
   public: // private?
     std::vector<double> series_; //!< Data series for the boxplot.
     double whisker_min_; //!< Minimum of whisker.
@@ -622,12 +625,13 @@ namespace svg
 
 // End of svg_boxplot_series Definitions.
 
-class svg_boxplot  : public detail::axis_plot_frame<svg_boxplot>
-{ /*! \class boost::svg::svg_boxplot
-    \brief A plot that can display boxplots of several data series.
-    \details Holds all data about the plot (but not any data series - see svg_boxplot_series)
+/*!
+    A plot that can display boxplots of several data series.
+    Holds all data about the plot (but not any data series - see svg_boxplot_series)
     axis_plot_frame.hpp contains functions common to 1 and 2-D, and boxplot.
-  */
+*/
+class svg_boxplot  : public detail::axis_plot_frame<svg_boxplot>
+{
   friend svg_boxplot_series;
   friend class detail::axis_plot_frame<svg_boxplot>;
   // axis_plot_frame.hpp contains functions common to 1 and 2-D, and boxplot.

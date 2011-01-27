@@ -364,7 +364,7 @@ and there may be 'missing' data items.
     { 
       svg_2d_plot my_plot; // Construct a 2D plot.
 
-      my_plot.x_size(1000)
+      my_plot.x_size(2000)
              .image_y_size(400)
              .legend_on(true) // Set title and legend, and X axis range.
              .title("Temperatures at Long: 2:45:16.2W, Lat:54:17:47.1N")
@@ -431,7 +431,7 @@ so one can either use autoscale or explicitly set the number of X ticks.
     { // Plot another graph.
       svg_2d_plot my_plot; // Construct a 2D plot.
 
-      my_plot.x_size(1000)
+      my_plot.x_size(2000)
              .image_y_size(400)
              .legend_on(true) // Set title and legend, and X axis range.
              .title("Rainfall at Long: 2:45:16.2W, Lat:54:17:47.1N")

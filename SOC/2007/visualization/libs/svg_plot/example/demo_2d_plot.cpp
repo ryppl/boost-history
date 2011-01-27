@@ -20,6 +20,7 @@
 #  pragma warning (disable : 4503) // decorated name length exceeded, name was truncated
 #  pragma warning (disable : 4512) // assignment operator could not be generated
 #  pragma warning (disable : 4100) // unreferenced formal parameter
+#  pragma warning (disable : 4224) // formal parameter 'hash' was previously defined as a type
 #endif
 
 #include <boost/svg_plot/svg_2d_plot.hpp>

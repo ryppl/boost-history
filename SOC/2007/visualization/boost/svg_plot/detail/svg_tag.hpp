@@ -901,26 +901,29 @@ class text_element : public svg_element
 { /*! \class boost::svg::text_element
       \brief Holds text with position, size, font, (& styles) & orientation.
       \details
-      \verbatim
       Not necessarily shown correctly (or nicely) by all browsers, alas.
-      SVG Coordinates of 1st character EM box, see
-      http://www.w3.org/TR/SVG/text.html#TextElement 10.2
-      So any text with y coordinate = 0 shows only any roman lower case descenders!\n\n
+      SVG Coordinates of 1st character EM box, see http://www.w3.org/TR/SVG/text.html#TextElement 10.2
 
-      (Text may contain embedded xml Unicode characters
-      for Greek, math etc, for example: &#x3A9;).
+      So any text with y coordinate = 0 shows only any roman lower case descenders!\n
+
+      \verbatim
+        (Text may contain embedded xml Unicode characters for Greek, math etc, for example: &#x3A9;).
+      \endverbatim
+      \n
       int size; // " font-size = 12"
       http://www.w3.org/TR/SVG/text.html#CharactersAndGlyphs
       std::string font;  // font-family: "Arial" | "Times New Roman" | "Verdana" | "Lucida Sans Unicode"
       "sans", "serif", "times"
       http://www.w3.org/TR/SVG/text.html#FontFamilyProperty
-      10.10 Font selection properties
+      10.10 Font selection properties\n
+
       std::string style_; // font-style: normal | bold | italic | oblique
       std::string weight; // font-weight: normal | bold | bolder | lighter | 100 | 200 .. 900
       std::string stretch; // font-stretch: normal | wider | narrower ...
       std::string decoration; // // "underline" | "overline" | "line-through"
       Example:
-      <text x="250" y="219.5" text-anchor="middle"  font-family="verdana" font-size="12">0 </text>
+      \verbatim
+        <text x="250" y="219.5" text-anchor="middle"  font-family="verdana" font-size="12">0 </text>
       \endverbatim
 
   */

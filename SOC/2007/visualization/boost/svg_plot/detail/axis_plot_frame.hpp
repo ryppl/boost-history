@@ -3902,7 +3902,10 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
             }
             if(max_x <= min_x)
             { // max_x <= min_x.
-              throw std::runtime_error("X range: max <= min!");
+              std::stringstream message("X range: max <= min! ");
+              message << max_x << " <= " << min_x << std::ends;
+              throw std::runtime_error(message.str());
+              //throw std::runtime_error("X range: max <= min!");
             }
             if( (abs(max_x - min_x) < std::numeric_limits<double>::epsilon() * 1000 * abs(max_x))
               || (abs(max_x - min_x) < std::numeric_limits<double>::epsilon() * 1000 * abs(min_x))

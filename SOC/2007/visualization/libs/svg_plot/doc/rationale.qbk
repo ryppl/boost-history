@@ -17,6 +17,8 @@ It is still possible to switch these options off, for example with:
 `x_autoscale(false);`
 `y_label_on(false);`
 
+Obviously these must come after the function call that switches the option on.
+
 [h4 Number of  Minor ticks]
 
 `x_num_minor_ticks()` and `x_num_minor_ticks()`
@@ -41,7 +43,7 @@ num_minor_ticks = 2[super]n -1 are useful, for example
  [/h4 Minor ticks]
 
 This section provide more information about this implementation
-and some of the rationale for desing decisions.
+and some of the rationale for design decisions.
 
 [h4 SVG Specification]
 
@@ -325,7 +327,7 @@ Some data members end with _ to avoid name clashes, another widely used conventi
 [endsect] [/section:implementation Implementation & Rationale]
 
 [/ rationale.qbk
-  Copyright 2008 Jake Voytko and Paul A. Bristow.
+  Copyright 2008 - 2009 Jake Voytko and Paul A. Bristow.
   Distributed under the Boost Software License, Version 1.0.
   (See accompanying file LICENSE_1_0.txt or copy at
   http://www.boost.org/LICENSE_1_0.txt).

@@ -296,7 +296,7 @@ but will increase svg file sizes.]
 
 And the plot:
 
-[$images\demo_2d_values.svg]
+[$images/demo_2d_values.svg]
 
 [h4 Showing 2d Data 'at limit' Values Examples]
 
@@ -312,7 +312,7 @@ These values are displayed differently (and not used for autoscaling).
 
 And the plot:
 
-[$images\demo_2d_limits.svg]
+[$images/demo_2d_limits.svg]
 
 [endsect] [/section:demo_2d_values 2-D Data Values Examples]
 
@@ -328,7 +328,7 @@ And the plot:
 
 The plot is:
 
-[$images\auto_2d_plot.svg]
+[$images/auto_2d_plot.svg]
 
 [endsect] [/section:demo_2d_autoscaling 2-D Autoscaling Examples]
 
@@ -343,7 +343,7 @@ The plot is:
 
 The resulting plot is
 
-[$images\demo_2d_uncertainty.svg]
+[$images/demo_2d_uncertainty.svg]
 
 See [@../../example/demo_2d_uncertainty.cpp demo_2d_uncertainty.cpp]
 for full source code and sample output.
@@ -358,7 +358,7 @@ for full source code and sample output.
 
 The resulting plot is
 
-[$images\demo_2d_lines.svg]
+[$images/demo_2d_lines.svg]
 
 See [@../../example/demo_2d_lines.cpp demo_2d_lines.cpp]
 for full source code and sample output.
@@ -372,8 +372,8 @@ for full source code and sample output.
 
 The resulting histograms are
 
-[$images\demo_2d_histogram_x.svg]
-[$images\demo_2d_histogram_x2.svg]
+[$images/demo_2d_histogram_x.svg]
+[$images/demo_2d_histogram_x2.svg]
 
 [endsect] [/section:histograms  Histograms of 2D data]
 

@@ -125,7 +125,7 @@ namespace svg
     }  //  svg_color(bool is)
 
     svg_color(svg_color_constant col)
-    { //! Set a color (including blank) using the SVG 'standard' colors defined in enum #svg_color_constant
+    { //! Set a color (including blank) using the SVG 'standard' colors defined in enum boost::svg::svg_color_constant
       if (col == blank)
       { // NotAColor.
         is_blank_ = true;
@@ -224,7 +224,7 @@ namespace svg
 
   std::ostream& operator<<(std::ostream& os, const svg_color& color)
   { /*!
-      \brief Output color to stream as RGB. See #svg_color_constant
+      \brief Output color to stream as RGB. See boost::svg::svg_color_constant
       \details for example: "RGB(138, 43 , 226)" for blueviolet.
       This comment does not appear - for reasons entirely unclear.
     */
@@ -241,7 +241,7 @@ namespace svg
     }
     /*! \details Usage: svg_color my_color(127, 255, 212); cout << "my_color " << my_color << endl;
          Outputs: my_color RGB(127,255,212)       cout << "magenta " << svg_color(magenta) << endl;
-         but caution! cout << magenta << endl; outputs 85 because magenta is an enum #svg_color_constant !
+         but caution! cout << magenta << endl; outputs 85 because magenta is an enum boost::svg::svg_color_constant !
      */
     return os;
   } // std::ostream& operator<<
@@ -400,10 +400,9 @@ namespace svg
   }; // svg_color color_array[]
 
   void constant_to_rgb(svg_color_constant c, unsigned char& r, unsigned char& g, unsigned char& b)
-  { /*! Convert a named SVG standard color, see enum #svg_color_constant
+  { /*! Convert a named SVG standard color, see enum boost::svg::svg_color_constant
       to update three variables (r, g, b) holding red, green and blue values.
-      Assumes is c NOT the blank color, and asserts if it is.
-      This comment does not appear - for reasons unclear.
+      Asserts that c NOT the blank color.
     */
     BOOST_ASSERT(c != blank);
     svg_color color(color_array[c]);
@@ -413,7 +412,7 @@ namespace svg
   } // void constant_to_rgb
 
   svg_color constant_to_rgb(svg_color_constant c)
-  { /*! Convert a svg color constant enum #svg_color_constant to a svg_color.
+  { /*! Convert a svg color constant enum boost::svg::svg_color_constant to a svg_color.
     \return svg_color
       Example:
       constant_to_rgb(4) or constant_to_rgb(aquamarine)

@@ -1,8 +1,8 @@
 [article Plotting graphs in SVG format
-    [quickbook 1.4]
+    [quickbook 1.5]
     [id svg_plot]
     [authors [Voytko, Jake], [Bristow, Paul A.]]
-    [copyright 2007 to 2009 Jake Voytko and Paul A. Bristow]
+    [copyright 2007 to 2010 Jake Voytko and Paul A. Bristow]
     [license
         Distributed under the Boost Software License, Version 1.0.
         (See accompanying file LICENSE_1_0.txt or copy at
@@ -36,8 +36,9 @@
 [def __svg_2d_plot [^[classref boost::svg::svg_2d_plot svg_2d_plot<>]]]
 [def __svg_2d_plot_series [^[classref boost::svg::svg_2d_plot_series<>]]]
 
-[def __todo [link plotting_graphs_in_svg_format.todo TODO]]
-[def __rationale [link plotting_graphs_in_svg_format.implementation rationale and implementation]]
+[def __todo [link Plotting_graphs_in_SVG_format.todo TODO]]
+[/def __todo [link svg_plot.todo TODO]]
+[def __rationale [link Plotting_graphs_in_SVG_format.implementation rationale and implementation]]
 [def __caution Boost.Plot is not (yet) an official Boost library, but remains a library under construction,
      the code is functional, but interfaces, library structure, and function and distribution names
      may still be changed without notice.]
@@ -73,9 +74,7 @@ You may wish to associate Firefox with SVG files (or perhaps Inkview - see below
 
 * [@http://www.adobe.com/products/illustrator Adobe Illustrator].
 
-
 * [@http:/www.google.com/chrome Google Chrome browser]
-
 
 * [@www.opera.com Opera] has [@http://www.opera.com/docs/specs/svg/ svg support]
 but the quality of rendering is sometimes not as good as other browsers.
@@ -89,48 +88,14 @@ but the download software can still be obtained elsewhere, for example from
 Information about limitations of IE with Vista and the Adobe add-in are given on the
 [@http://www.adobe.com/svg/viewer/install/main.html Adobe End of Line FAQ]).
 
-* [@http://www.inkscape.org/ Inkscape], a fine Open Source SVG editor Inkscape and a viewer Inkview
-with excellent rendering, full scaling and other editing features.
+* [@http://www.inkscape.org/ Inkscape], a fine Open Source SVG editor Inkscape and
+a viewer Inkview with excellent rendering, full scaling and other editing features.
 
 Inkview also allows window resizing, showing the scalability of SVG files without any loss of quality,
 unlike bit image files that eventually reveal pixels as you expand the view.
-
-You may find it especially convenient to use the viewer, Inkview, on Microsoft Windows,
-and make this the default program for files of type .svg.
-To do this, you will need to download install the Inkscape package.
-Inkview.exe is included in the directory you chose for the install,
-usually C:\program Files\Inkscape.  You will need to use the Explorer, Tools, Folder Options,
-and add extension svg if necessary and then associate svg files with inkview.exe.
-
-You may also find it convenient to add "c:\program Files\inkscape" to your Path using
-Control Panel, System, Advanced system settings, Environment variables, Path, and edit
-to append the folder.  You can then use commands like "inkview my_picture.svg" from a command window.
-
-Inkview allows one to open many svg files as a slideshow
-and move forward and backward (and back to start) with the cursor keys.
-
-This works as expected using a command window,
-for example after changing to the directory containing your SVG files,
-and running "inkview *.svg" to display all the images in the directory as a slideshow.
-
-Sadly, by default, if you select many files (but not more than 15!) in Windows Explorer,
-multiple windows are opened instead of a slideshow.
-If you know how to change this 'by design' feature, please tell me.
-
-You can use this conveniently from your desktop (for example), by creating a shortcut to inkview.exe
-(right click in the inkscape install directory and choose Create Shortcut).  Drag the shortcut to the desktop.
-Append "*.svg" to the Target, usually \c "C:\Program Files\Inkscape\inkview.exe", or perhaps the name of
-a single file.  If necessary, change Start in to the folder containing the svg files, for example,
-\c C:\Users\Paul\Desktop\My_Plots\.  You can add comment describing what it will do, and change the
-name of the shortcut file to something more helpful, for example, "View My Plots".
-
-You may instead find it useful to create a batch file, for example called view_demo_plots.bat containing, for example:
-
-  START "Inkview" /MIN inkview.exe  C:\Users\Paul\Desktop\My_Plots\*.svg
-
-that will display all the svg images in folder \My_Plots in turn as the cursor keys are pressed.
-Of course, you can also omit the folder specification, and just have `*.svg` when the location of the
-batch file will determine which svg files are being viewed.
+See [link plotting_graphs_in_svg_format.inkviewscape Using Inkscape and Inkview]
+for details of how to use Inkview and to use Inkscape to edit your plot and
+convert to other format like Portable Network Graphics file type .png.
 
 * Many other graphics programs, for example see
 [@http://svg.software.informer.com/software/ Most popular SVG software].
@@ -161,6 +126,7 @@ the standard.
 [/include plot_defaults.qbk] [/See Doxygen reference documentation.]
 [/include interface.qbk] [/Replaced by Doxygen reference documentation.]
 [xinclude autodoc.xml] [/ Using Doxygen reference documentation.]
+[include inkscape.qbk]
 [include rationale.qbk]
 [include to_do.qbk]
 [include acknowledgements.qbk]
@@ -189,12 +155,12 @@ may still be changed without notice.  The current version is available at
 
 [*https://svn.boost.org/svn/boost/sandbox/SOC/2007/visualization Boost Sandbox source code]
 
-[note Comments and suggestions (even bugs) to Paul.A.Bristow (at) hetp (dot) u-net (dot) com
+[note Comments and suggestions (even bugs!) to Paul.A.Bristow (at) hetp (dot) u-net (dot) com
 or Jake Voytko at jakevoytko (at) gmail (dot) com]
 
 
 [/ svg_plot.qbk
-  Copyright 2008, 2009 Jake Voytko and Paul A. Bristow.
+  Copyright 2008 Jake Voytko and Paul A. Bristow 2008, 2009, 2010, 2011.
   Distributed under the Boost Software License, Version 1.0.
   (See accompanying file LICENSE_1_0.txt or copy at
   http://www.boost.org/LICENSE_1_0.txt).

@@ -7,10 +7,10 @@
 # user on the command-line or in the environment.
 
 # Establish this as the root of the boost installation.
-#  Most targets will want $(BOOST_ROOT) in their #include path.
+# Most targets will want $(BOOST_ROOT) in their #include path.
 
 path-global BOOST_ROOT : . ;
 
 # The current version of Boost.
-BOOST_VERSION ?= 1.37.0 ;
+BOOST_VERSION ?= 1.44.0 ;
 

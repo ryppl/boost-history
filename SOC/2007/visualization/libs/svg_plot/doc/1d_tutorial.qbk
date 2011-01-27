@@ -41,7 +41,7 @@ The IDE output is not very exciting in this case:
 
 The plot is:
 
-[$images\demo_1d_vector_float.svg]
+[$images/demo_1d_vector_float.svg]
 
 And you can view the other svg files (with most internet browsers, and other programs too) for example:
 
@@ -310,7 +310,7 @@ This example demonstrates showing values that are too small or too large, or Not
 Typical output is:
 [demo_1d_limits_output]
 
-[$images\demo_1d_limits.svg]
+[$images/demo_1d_limits.svg]
 See [@../../example/demo_1d_limits.cpp demo_1d_limits.cpp]
 for full source code and sample output.
 
@@ -323,8 +323,8 @@ This example shows some real-life data plotted in 1D and as a boxplot.
 
 [heat_flow_1d_plot_1]
 
-[$images\heat_flow_data.svg]
-[$images\heat_flow_data_boxplot.svg]
+[$images/heat_flow_data.svg]
+[$images/heat_flow_data_boxplot.svg]
 
 See [@../../example/demo_1d_heat_flow_data.cpp demo_1d_heat_flow_data.cpp]
 for full source code and sample output.
@@ -340,7 +340,7 @@ for full source code and sample output.
 [/demo_1d_uncertainty_output] [/Caution doesn't like 8-bit codepage +- symbol so don't use in .?pp or in output or .qbk, Only Unicode is OK.]
 
 The resulting plot is
-[$images\demo_1d_uncertainty.svg]
+[$images/demo_1d_uncertainty.svg]
 
 See [@../../example/demo_1d_uncertainty.cpp demo_1d_uncertainty.cpp]
 for full source code and sample output.

@@ -176,25 +176,27 @@ It accepts parameters controlling the scaling and updates 4 items. Its signature
     bool origin, // If true, ensures that zero is a tick value.
     double tight, // Allows user to avoid a small fraction over a tick using another tick.
     nt min_ticks, // Minimum number of ticks.
- */
+*/
   double axis_min_value; // Values to be updated by autoscale.
   double axis_max_value;
   double axis_tick_increment;
   int axis_ticks;
 
-/*` `min_value` and `max_value` could be provided by the user program:
-usually these values are derived in some way from the user data.
-Several examples follow:*/
+/*` The values of
+`min_value` and `max_value` could be provided by the user program:
+but usually these values are derived in some way from the user data.
+Several examples follow: */
 
-  // Scaling using first and last values in container,
-  // assuming the data are ordered in ascending value,
-  // for example, set, map, multimap, or a sorted vector or array.
-  //scale_axis(*my_data.begin(),*(--my_data.end()),
-  scale_axis(1., 9.,
+  scale_axis(1., 9., // User chosen min and max.
     &axis_min_value, &axis_max_value, &axis_tick_increment, &axis_ticks,
     false, tol100eps, 6, 0); // Display range.
   cout << "scaled min " << axis_min_value << ", max = " << axis_max_value
     << ", increment " << axis_tick_increment << ", axis ticks " << axis_ticks << endl;
+
+  // Scaling using only the first and last values in a container,
+  // assuming the data are already ordered in ascending value,
+  // for example, set, map, multimap, or a sorted vector or array.
+  // scale_axis(*my_data.begin(),*(--my_data.end()),
 
   // Scaling using two begin & end iterators into STL container,
   // scale_axis does finding min and max.

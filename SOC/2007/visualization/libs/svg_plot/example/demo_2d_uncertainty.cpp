@@ -102,13 +102,15 @@ the order of data values is important.
   data1.insert(make_pair(unc(4.1, 0.4F, 7), unc(3.1, 0.3F, 18))); //
   data1.insert(make_pair(unc(-2.234, 0.03F, 7), unc(-8.76, 0.9F, 9)));
 
-  /*`Make very sure you don't forget either unc() like this
-   `data1.insert(make_pair((-2.234, 0.12F, 7),(-8.76, 0.56F, 9)));`
-   because, by the bizarre operation of the comma operator, the result will be an integer!
-   So you will astonished to find that the values will be the pair of \b degrees of freedom, (7, 9)
-   and the other parts of unc will be undefined!/n
+  /*
+`Make very sure you don't forget either unc(...) like this
+`data1.insert(make_pair((-2.234, 0.12F, 7),(-8.76, 0.56F, 9)));`
+because, by the bizarre operation of the comma operator, the result will be an integer!
+So you will astonished to find that the values will be the *pair of degrees of freedom, (7, 9)*
+and the other parts of unc will be undefined!
 
-   Echo the values input: */
+Echo the values input:
+  */
   cout << data1.size() << " XY data pairs:" << endl;
   copy(data1.begin(), data1.end(), ostream_iterator<pair<unc, unc> >(cout, "\n"));
   cout << endl;
@@ -126,7 +128,8 @@ the order of data values is important.
   are all within the plot window,
   but if you are less interested in seeing the 2 and 3 ellipses,
   you could risk the outer edges spilling over the borders
-  by reducing autoscale_plusminus, for example, to 1.5, down to zero.*/
+  by reducing autoscale_plusminus, for example, to 1.5, down to zero.
+  */
   my_plot.autoscale_plusminus(1.5); // default is 3.
 
   /*`Use data set `data` to autoscale (you can use a different data set to scale from the one you chose to plot).

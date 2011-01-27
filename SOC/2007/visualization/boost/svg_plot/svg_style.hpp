@@ -1098,7 +1098,7 @@ public:
   }
 
   double axis_line_style::position()
-  { //! \returns How the axes intersect.\n
+  { //! \return How the axes intersect.\n
     //! enum x_axis_intersect {bottom = -1, x_intersects_y = 0, top = +1};
     //! enum y_axis_intersect {left = -1, y_intersects_x = 0, right = +1};
     //! If axes look like an L, then is bottom left.
