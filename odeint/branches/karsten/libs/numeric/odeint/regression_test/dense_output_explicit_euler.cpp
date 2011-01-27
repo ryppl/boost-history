@@ -10,16 +10,15 @@
  copy at http://www.boost.org/LICENSE_1_0.txt)
 */
 
+
 #include <tr1/array>
 #include <fstream>
 #include <iostream>
 
-#include <boost/test/unit_test.hpp>
+#include <boost/numeric/odeint/stepper/explicit_euler.hpp>
+#include <boost/numeric/odeint/stepper/dense_output_explicit_euler.hpp>
 
-#include <boost/numeric/odeint.hpp>
-#include <boost/numeric/odeint/stepper/implicit_euler.hpp>
 
-using namespace boost::unit_test;
 using namespace boost::numeric::odeint;
 
 typedef double value_type;
@@ -38,9 +37,7 @@ inline void sys( const state_type &x , state_type &dxdt , const value_type t )
 }
 
 
-BOOST_AUTO_TEST_SUITE( dense_output_explicit_euler_test )
-
-BOOST_AUTO_TEST_CASE( test_euler )
+int main( int argc , char **argv )
 {
     using std::abs;
 
@@ -76,10 +73,5 @@ BOOST_AUTO_TEST_CASE( test_euler )
     	t += dt;
     }
 
-//    // compare with analytic solution of above system
-//    BOOST_CHECK_MESSAGE( abs( x(0) - 20.0/81.0 ) < eps , x(0) - 20.0/81.0 );
-//    BOOST_CHECK_MESSAGE( abs( x(1) - 10.0/9.0 ) < eps , x(0) - 10.0/9.0 );
-
 }
 
-BOOST_AUTO_TEST_SUITE_END()
