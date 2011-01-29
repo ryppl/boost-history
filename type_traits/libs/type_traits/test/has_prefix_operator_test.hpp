@@ -1,4 +1,4 @@
-//  (C) Copyright Frederic Bron 2010.
+//  (C) Copyright Frederic Bron 2009-2010.
 //  Use, modification and distribution are subject to the
 //  Boost Software License, Version 1.0. (See accompanying file
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -6,7 +6,6 @@
 #include <iostream>
 #include <typeinfo>
 #include <string>
-#include <vector>
 
 // test with one template parameter
 #define TEST_T(TYPE,RESULT) BOOST_CHECK_INTEGRAL_CONSTANT((::tt::BOOST_TT_TRAIT_NAME<TYPE>::value), RESULT)

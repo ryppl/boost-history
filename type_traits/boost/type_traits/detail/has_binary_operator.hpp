@@ -1,4 +1,4 @@
-// Copyright 2010 Robert Stewart, Steven Watanabe, Roman Perepelitsa & Frédéric Bron
+//  (C) Copyright 2009-2011 Frédéric Bron, Robert Stewart, Steven Watanabe & Roman Perepelitsa
 //
 //  Use, modification and distribution are subject to the Boost Software License,
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
@@ -6,10 +6,19 @@
 //
 //  See http://www.boost.org/libs/type_traits for most recent version including documentation.
 
+#include <limits>
 #include <boost/config.hpp>
-#include <boost/type_traits/remove_cv.hpp>
-#include <boost/type_traits/integral_constant.hpp>
 #include <boost/type_traits/detail/yes_no_type.hpp>
+#include <boost/type_traits/integral_constant.hpp>
+#include <boost/type_traits/is_base_of.hpp>
+#include <boost/type_traits/is_class.hpp>
+#include <boost/type_traits/is_convertible.hpp>
+#include <boost/type_traits/is_pointer.hpp>
+#include <boost/type_traits/is_union.hpp>
+#include <boost/type_traits/is_void.hpp>
+#include <boost/type_traits/remove_cv.hpp>
+#include <boost/type_traits/remove_pointer.hpp>
+#include <boost/type_traits/remove_reference.hpp>
 
 // should be the last #include
 #include <boost/type_traits/detail/bool_trait_def.hpp>
@@ -67,9 +76,19 @@ struct BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl1)< LHS, RHS, RET, ::boost::true_type
 	static const bool value=false;
 };
 
+template < typename LHS, typename RHS, typename RET,
+	bool forbidden_if=BOOST_TT_FORBIDDEN_IF
+>
+struct BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl);
+
+template < typename LHS, typename RHS, typename RET >
+struct BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl) < LHS, RHS, RET, true > {
+	static const bool value=false;
+};
+
 // checks for return type if 3rd template parameter RET is non void
 template < typename LHS, typename RHS, typename RET >
-struct BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl) {
+struct BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl) < LHS, RHS, RET, false > {
 	static const bool value=
 			BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl1)< LHS, RHS, RET, typename ::boost::integral_constant< bool, BOOST_JOIN(BOOST_TT_TRAIT_NAME,_returns_void)< LHS, RHS >::value > >::value;
 };
@@ -79,7 +98,7 @@ tag operator,(tag, int);
 
 // do not check for return type if 3rd template parameter RET is void
 template < typename LHS, typename RHS >
-struct BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl)< LHS, RHS, void > {
+struct BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl)< LHS, RHS, void, false > {
 	static ::boost::type_traits::yes_type check(int); // this version is preferred for types convertible to RET
 	static ::boost::type_traits::no_type check(tag); // this version is used otherwise
 
@@ -88,32 +107,32 @@ struct BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl)< LHS, RHS, void > {
 };
 
 template < typename RHS, typename RET >
-struct BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl)< void, RHS, RET > {
+struct BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl)< void, RHS, RET, false > {
 	static const bool value=false;
 };
 
 template < typename LHS, typename RET >
-struct BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl)< LHS, void, RET > {
+struct BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl)< LHS, void, RET, false > {
 	static const bool value=false;
 };
 
 template < typename LHS >
-struct BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl)< LHS, void, void > {
+struct BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl)< LHS, void, void, false > {
 	static const bool value=false;
 };
 
 template < typename RHS >
-struct BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl)< void, RHS, void > {
+struct BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl)< void, RHS, void, false > {
 	static const bool value=false;
 };
 
 template < typename RET >
-struct BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl)< void, void, RET > {
+struct BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl)< void, void, RET, false > {
 	static const bool value=false;
 };
 
 template <>
-struct BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl)< void, void, void > {
+struct BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl)< void, void, void, false > {
 	static const bool value=false;
 };
 

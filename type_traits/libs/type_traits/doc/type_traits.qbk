@@ -7,7 +7,7 @@
 
 [library Boost.TypeTraits
     [quickbook 1.4]
-    [copyright 2000 2010 Adobe Systems Inc, David Abrahams, Frédéric Bron, 
+    [copyright 2000 2011 Adobe Systems Inc, David Abrahams, Frédéric Bron, 
     Steve Cleary, Beman Dawes, Aleksey Gurtovoy, Howard Hinnant, Jesse Jones, 
     Mat Marcus, Itay Maman, John Maddock, Alexander Nasonov, Thorsten Ottosen,
     Roman Perepelitsa, Robert Ramey, Jeremy Siek, Robert Stewart and Steven Watanabe]

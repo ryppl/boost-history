@@ -1,4 +1,4 @@
-//  (C) Copyright Frederic Bron 2010.
+//  (C) Copyright Frederic Bron 2009-2010.
 //  Use, modification and distribution are subject to the
 //  Boost Software License, Version 1.0. (See accompanying file
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -6,7 +6,6 @@
 #include <iostream>
 #include <typeinfo>
 #include <string>
-#include <vector>
 
 // test with one template parameter
 #define TEST_T(TYPE,RESULT) BOOST_CHECK_INTEGRAL_CONSTANT((::tt::BOOST_TT_TRAIT_NAME<TYPE>::value), RESULT)
@@ -19,43 +18,43 @@ struct ret { };
 
 struct without { };
 
-struct internal { ret operator BOOST_TT_TRAIT_OP (int) const; };
+struct internal { ret operator BOOST_TT_TRAIT_OP () const; };
 
 struct external { };
-ret operator BOOST_TT_TRAIT_OP (const external&, int);
+ret operator BOOST_TT_TRAIT_OP (const external&);
 
-class internal_private { ret operator BOOST_TT_TRAIT_OP (int) const; };
+class internal_private { ret operator BOOST_TT_TRAIT_OP () const; };
 
-struct returns_int { int operator BOOST_TT_TRAIT_OP (int); };
+struct returns_int { int operator BOOST_TT_TRAIT_OP (); };
 
-struct returns_void { void operator BOOST_TT_TRAIT_OP (int); };
+struct returns_void { void operator BOOST_TT_TRAIT_OP (); };
 
-struct returns_void_star { void *operator BOOST_TT_TRAIT_OP (int); };
+struct returns_void_star { void *operator BOOST_TT_TRAIT_OP (); };
 
-struct returns_double { double operator BOOST_TT_TRAIT_OP (int); };
+struct returns_double { double operator BOOST_TT_TRAIT_OP (); };
 
-struct returns_string { std::string operator BOOST_TT_TRAIT_OP (int); };
+struct returns_string { std::string operator BOOST_TT_TRAIT_OP (); };
 
 //struct convertible_to_bool { operator bool () const; };
-//struct returns_convertible_to_bool { convertible_to_bool operator BOOST_TT_TRAIT_OP (int); };
+//struct returns_convertible_to_bool { convertible_to_bool operator BOOST_TT_TRAIT_OP (); };
 
 class Base1 { };
 class Derived1 : public Base1 { };
 
-bool operator BOOST_TT_TRAIT_OP (const Base1&, int) { return true; }
+bool operator BOOST_TT_TRAIT_OP (const Base1&) { return true; }
 
 class Base2 { };
 struct Derived2 : public Base2 {
 	Derived2(int); // to check if it works with a class that is not default constructible
 };
 
-bool operator BOOST_TT_TRAIT_OP (const Derived2&, int) { return true; }
+bool operator BOOST_TT_TRAIT_OP (const Derived2&) { return true; }
 
 struct tag { };
 
 void run() {
 	// test with only one template parameter
-	TEST_T(bool, BOOST_TT_TRAIT_BOOL_RESULT);
+	TEST_T(bool, false);
 	TEST_T(char, true);
 	TEST_T(signed char, true);
 	TEST_T(short int, true);
@@ -72,7 +71,7 @@ void run() {
 	TEST_T(void, false);
 
 // test with three template parameters
-	TEST_TR(bool, bool, BOOST_TT_TRAIT_BOOL_RESULT);
+	TEST_TR(bool, bool, false);
 	TEST_TR(char, bool, true);
 	TEST_TR(signed char, bool, true);
 	TEST_TR(short int, bool, true);

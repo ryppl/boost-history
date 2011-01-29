@@ -1,4 +1,4 @@
-//  (C) Copyright Frederic Bron 2010.
+//  (C) Copyright Frederic Bron 2009-2010.
 //  Use, modification and distribution are subject to the
 //  Boost Software License, Version 1.0. (See accompanying file
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -6,7 +6,6 @@
 #include <iostream>
 #include <typeinfo>
 #include <string>
-#include <vector>
 
 // test with one template parameter
 #define TEST_T(TYPE,RESULT) BOOST_CHECK_INTEGRAL_CONSTANT((::tt::BOOST_TT_TRAIT_NAME<TYPE>::value), RESULT)
@@ -56,6 +55,9 @@ struct Derived2 : public Base2 {
 bool operator BOOST_TT_TRAIT_OP (const Derived2&, const Derived2&) { return true; }
 
 struct tag { };
+
+struct A { };
+struct B : public A { };
 
 void run() {
 	// test with only one template parameter
@@ -729,6 +731,103 @@ void run() {
 	TEST_TR(Derived1, bool, true);
 	TEST_TR(Base2, bool, false);
 	TEST_TR(Derived2, bool, true);
+	// pointers
+	TEST_TT(void*, bool, false);
+	TEST_TT(void*, int, false);
+	TEST_TT(void*, double, false);
+	TEST_TT(void*, A, false);
+	TEST_TT(void*, B, false);
+	TEST_TT(bool*, bool, false);
+	TEST_TT(bool*, int, false);
+	TEST_TT(bool*, double, false);
+	TEST_TT(bool*, A, false);
+	TEST_TT(bool*, B, false);
+	TEST_TT(int*, bool, false);
+	TEST_TT(int*, int, false);
+	TEST_TT(int*, double, false);
+	TEST_TT(int*, A, false);
+	TEST_TT(int*, B, false);
+	TEST_TT(double*, bool, false);
+	TEST_TT(double*, int, false);
+	TEST_TT(double*, double, false);
+	TEST_TT(double*, A, false);
+	TEST_TT(double*, B, false);
+	TEST_TT(A*, bool, false);
+	TEST_TT(A*, int, false);
+	TEST_TT(A*, double, false);
+	TEST_TT(A*, A, false);
+	TEST_TT(A*, B, false);
+	TEST_TT(B*, bool, false);
+	TEST_TT(B*, int, false);
+	TEST_TT(B*, double, false);
+	TEST_TT(B*, A, false);
+	TEST_TT(B*, B, false);
+	TEST_TT(bool, void*, false);
+	TEST_TT(bool, bool*, false);
+	TEST_TT(bool, int*, false);
+	TEST_TT(bool, double*, false);
+	TEST_TT(bool, A*, false);
+	TEST_TT(bool, B*, false);
+	TEST_TT(int, void*, false);
+	TEST_TT(int, bool*, false);
+	TEST_TT(int, int*, false);
+	TEST_TT(int, double*, false);
+	TEST_TT(int, A*, false);
+	TEST_TT(int, B*, false);
+	TEST_TT(double, void*, false);
+	TEST_TT(double, bool*, false);
+	TEST_TT(double, int*, false);
+	TEST_TT(double, double*, false);
+	TEST_TT(double, A*, false);
+	TEST_TT(double, B*, false);
+	TEST_TT(A, void*, false);
+	TEST_TT(A, bool*, false);
+	TEST_TT(A, int*, false);
+	TEST_TT(A, double*, false);
+	TEST_TT(A, A*, false);
+	TEST_TT(A, B*, false);
+	TEST_TT(B, void*, false);
+	TEST_TT(B, bool*, false);
+	TEST_TT(B, int*, false);
+	TEST_TT(B, double*, false);
+	TEST_TT(B, A*, false);
+	TEST_TT(B, B*, false);
+	TEST_TT(void*, void*, false);
+	TEST_TT(void*, bool*, false);
+	TEST_TT(void*, int*, false);
+	TEST_TT(void*, double*, false);
+	TEST_TT(void*, A*, false);
+	TEST_TT(void*, B*, false);
+	TEST_TT(bool*, void*, false);
+	TEST_TT(bool*, bool*, false);
+	TEST_TT(bool*, int*, false);
+	TEST_TT(bool*, double*, false);
+	TEST_TT(bool*, A*, false);
+	TEST_TT(bool*, B*, false);
+	TEST_TT(int*, void*, false);
+	TEST_TT(int*, bool*, false);
+	TEST_TT(int*, int*, false);
+	TEST_TT(int*, double*, false);
+	TEST_TT(int*, A*, false);
+	TEST_TT(int*, B*, false);
+	TEST_TT(double*, void*, false);
+	TEST_TT(double*, bool*, false);
+	TEST_TT(double*, int*, false);
+	TEST_TT(double*, double*, false);
+	TEST_TT(double*, A*, false);
+	TEST_TT(double*, B*, false);
+	TEST_TT(A*, void*, false);
+	TEST_TT(A*, bool*, false);
+	TEST_TT(A*, int*, false);
+	TEST_TT(A*, double*, false);
+	TEST_TT(A*, A*, false);
+	TEST_TT(A*, B*, false);
+	TEST_TT(B*, void*, false);
+	TEST_TT(B*, bool*, false);
+	TEST_TT(B*, int*, false);
+	TEST_TT(B*, double*, false);
+	TEST_TT(B*, A*, false);
+	TEST_TT(B*, B*, false);
 }
 }
 

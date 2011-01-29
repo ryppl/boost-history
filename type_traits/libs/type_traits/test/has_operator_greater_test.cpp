@@ -1,4 +1,4 @@
-//  (C) Copyright Frederic Bron 2010.
+//  (C) Copyright 2009-2011 Frédéric Bron (frederic.bron@m4x.org)
 //  Use, modification and distribution are subject to the
 //  Boost Software License, Version 1.0. (See accompanying file
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -15,4 +15,4 @@
 #define BOOST_TT_TRAIT_NAME has_operator_greater
 #define BOOST_TT_TRAIT_OP >
 
-#include "has_binary_operator_test.hpp"
+#include "has_comparison_operator_test.hpp"
