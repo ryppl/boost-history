@@ -19,6 +19,9 @@ import set ;
 import stage ;
 import common ;
 import path ;
+import type ;
+import virtual-target ;
+import regex ;
 
 extension.declare boost ;
 
@@ -27,9 +30,32 @@ feature.feature boost-asio : : free ;
 
 rule boost-tag ( name : type ? : property-set )
 {
-    return [ common.format-name
-        boost_ <base> <toolset> <threading> <runtime> <version:boost-version>
-        : $(name) : $(type) : $(property-set) ] ;
+    if [ type.is-subtype $(type) LIB ]
+    {
+        return [ common.format-name
+            boost_ <base> <toolset> <threading> <runtime> <version:boost-version>
+            : $(name) : $(type) : $(property-set) ] ;
+    }
+    else if [ type.is-subtype $(type) OBJ ]
+    {
+        local target = [ $(property-set).get <target> ] ;
+        local action = [ $(target).action ] ;
+        local sources = [ $(action).sources ] ;
+        local name ;
+        if [ path.is-rooted [ $(sources[1]).name ] ]
+        {
+            name = [ regex.split [ path.relative
+                [ $(sources[1]).name ]
+                [ $(property-set).get <boost-location> ]
+                ] "/" ] ;
+        }
+        else
+        {
+            name = [ $(sources[1]).name ] ;
+        }
+        return [ virtual-target.add-prefix-and-suffix
+            $(name:S=:J=,) : $(type) : $(property-set) ] ;
+    }
 }
 
 rule init ( version ? : location : options * )
@@ -57,22 +83,37 @@ rule init ( version ? : location : options * )
         :   $(common-requirements)
         ;
     
+    alias thread_src
+        :   [ glob
+                #~ $(location)/libs/thread/src/*.cpp
+                $(location)/libs/thread/src/pthread/*.cpp ]
+        :   -<extension>boost
+        :
+        :   <define>BOOST_THREAD_POSIX
+        ;
+    
+    alias thread_src
+        :   [ glob
+                #~ $(location)/libs/thread/src/*.cpp
+                $(location)/libs/thread/src/win32/*.cpp ]
+        :   -<extension>boost
+            <target-os>windows
+        ;
+    
     lib thread
-        :   [ set.difference
-                [ glob $(location)/libs/thread/src/*.cpp ]
-                :
-                [ glob $(location)/libs/thread/src/tss_null.cpp ]
-                ]
+        :   thread_src
         :   $(requirements)
             <location-prefix>thread
             <use>boost
             <threading>multi
-            <define>BOOST_THREAD_BUILD_DLL=1
+            <link>static:<define>BOOST_THREAD_BUILD_LIB=1
+            <link>shared:<define>BOOST_THREAD_BUILD_DLL=1
             <toolset>msvc:<cxxflags>/wd4275
             <toolset>msvc:<cxxflags>/wd4251
         :
         :   <threading>multi
-            <define>BOOST_THREAD_USE_DLL=1
+            <link>shared:<define>BOOST_THREAD_USE_DLL=1
+            <link>static:<define>BOOST_THREAD_USE_LIB=1
         ;
     
     lib regex
