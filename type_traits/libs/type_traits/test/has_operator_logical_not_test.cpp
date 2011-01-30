@@ -15,4 +15,4 @@
 #define BOOST_TT_TRAIT_NAME has_operator_logical_not
 #define BOOST_TT_TRAIT_OP !
 
-#include "has_prefix_operator_test.hpp"
+#include "has_prefix_plus_not_operator_test.hpp"

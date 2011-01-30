@@ -15,4 +15,4 @@
 #define BOOST_TT_TRAIT_NAME has_operator_unary_minus
 #define BOOST_TT_TRAIT_OP -
 
-#include "has_prefix_operator_test.hpp"
+#include "has_prefix_minus_operator_test.hpp"

@@ -13,7 +13,10 @@
 #define BOOST_TT_TRAIT_OP ++
 #define BOOST_TT_DEFAULT_RET void
 #define BOOST_TT_FORBIDDEN_IF\
-	false
+	/* void* */\
+	boost::is_pointer< typename boost::remove_reference<RHS>::type >::value and\
+	boost::is_void< typename boost::remove_pointer<RHS>::type >::value
+
 
 #include <boost/type_traits/detail/has_prefix_operator.hpp>
 

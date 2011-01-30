@@ -15,4 +15,4 @@
 #define BOOST_TT_TRAIT_NAME has_operator_prefix_increment
 #define BOOST_TT_TRAIT_OP ++
 
-#include "has_prefix_operator_test.hpp"
+#include "has_prefix_increment_operator_test.hpp"

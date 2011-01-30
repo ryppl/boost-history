@@ -15,4 +15,4 @@
 #define BOOST_TT_TRAIT_NAME has_operator_postfix_increment
 #define BOOST_TT_TRAIT_OP ++
 
-#include "has_postfix_operator_test.hpp"
+#include "has_postfix_increment_operator_test.hpp"
