@@ -13,30 +13,32 @@
 #define BOOST_TT_TRAIT_OP >>
 #define BOOST_TT_DEFAULT_RET void
 #define BOOST_TT_FORBIDDEN_IF\
-	/* two built-in, one non integer */\
 	(\
-		/* two builtin */\
-		not (\
-			boost::is_class  < typename boost::remove_reference<LHS>::type >::value or\
-			boost::is_union  < typename boost::remove_reference<LHS>::type >::value or\
+		/* two built-in, one non integer */\
+		(\
+			/* two builtin */\
+			not (\
+				boost::is_class  < typename boost::remove_reference<LHS>::type >::value or\
+				boost::is_union  < typename boost::remove_reference<LHS>::type >::value or\
+				boost::is_pointer< typename boost::remove_reference<LHS>::type >::value or\
+				boost::is_class  < typename boost::remove_reference<RHS>::type >::value or\
+				boost::is_union  < typename boost::remove_reference<RHS>::type >::value or\
+				boost::is_pointer< typename boost::remove_reference<RHS>::type >::value\
+			)\
+			and\
+			(\
+				/* one non integer */\
+				not std::numeric_limits< typename boost::remove_reference<LHS>::type >::is_integer\
+				or\
+				not std::numeric_limits< typename boost::remove_reference<RHS>::type >::is_integer\
+			)\
+		)\
+		or\
+		/* one pointer */\
+		(\
 			boost::is_pointer< typename boost::remove_reference<LHS>::type >::value or\
-			boost::is_class  < typename boost::remove_reference<RHS>::type >::value or\
-			boost::is_union  < typename boost::remove_reference<RHS>::type >::value or\
 			boost::is_pointer< typename boost::remove_reference<RHS>::type >::value\
 		)\
-		and\
-		(\
-			/* one non integer */\
-			not std::numeric_limits< typename boost::remove_reference<LHS>::type >::is_integer\
-			or\
-			not std::numeric_limits< typename boost::remove_reference<RHS>::type >::is_integer\
-		)\
-	)\
-	or\
-	/* one pointer */\
-	(\
-		boost::is_pointer< typename boost::remove_reference<LHS>::type >::value or\
-		boost::is_pointer< typename boost::remove_reference<RHS>::type >::value\
 	)
 
 

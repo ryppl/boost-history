@@ -13,8 +13,8 @@
 #define BOOST_TT_TRAIT_OP /
 #define BOOST_TT_DEFAULT_RET void
 #define BOOST_TT_FORBIDDEN_IF\
-	/* one pointer */\
 	(\
+		/* one pointer */\
 		boost::is_pointer< typename boost::remove_reference<LHS>::type >::value or\
 		boost::is_pointer< typename boost::remove_reference<RHS>::type >::value\
 	)

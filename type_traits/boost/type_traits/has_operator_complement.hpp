@@ -6,17 +6,25 @@
 //
 //  See http://www.boost.org/libs/type_traits for most recent version including documentation.
 
-#ifndef BOOST_TT_prefix_increment_HPP_INCLUDED
-#define BOOST_TT_prefix_increment_HPP_INCLUDED
+#ifndef BOOST_TT_complement_HPP_INCLUDED
+#define BOOST_TT_complement_HPP_INCLUDED
 
-#define BOOST_TT_TRAIT_NAME has_operator_prefix_increment
-#define BOOST_TT_TRAIT_OP ++
+#define BOOST_TT_TRAIT_NAME has_operator_complement
+#define BOOST_TT_TRAIT_OP ~
 #define BOOST_TT_DEFAULT_RET void
 #define BOOST_TT_FORBIDDEN_IF\
 	(\
-		/* void* */\
-		boost::is_pointer< typename boost::remove_reference<RHS>::type >::value and\
-		boost::is_void< typename boost::remove_pointer<RHS>::type >::value\
+		/* pointer */\
+		boost::is_pointer< typename boost::remove_reference<RHS>::type >::value\
+		or\
+		/* non integral built-in */\
+		(\
+			not (\
+				boost::is_class  < typename boost::remove_reference<RHS>::type >::value or\
+				boost::is_union  < typename boost::remove_reference<RHS>::type >::value\
+			)\
+			and not std::numeric_limits< typename boost::remove_reference<RHS>::type >::is_integer\
+		)\
 	)
 
 

@@ -13,39 +13,41 @@
 #define BOOST_TT_TRAIT_OP -
 #define BOOST_TT_DEFAULT_RET void
 #define BOOST_TT_FORBIDDEN_IF\
-	/* one is void* */\
 	(\
-		boost::is_pointer< typename boost::remove_reference<LHS>::type >::value and\
-		boost::is_void< typename boost::remove_pointer<LHS>::type >::value\
-	) or (\
-		boost::is_pointer< typename boost::remove_reference<RHS>::type >::value and\
-		boost::is_void< typename boost::remove_pointer<RHS>::type >::value\
-	)\
-	or\
-	/* LHS==pointer!=void* and RHS==built-in non integral */\
-	(\
+		/* one is void* */\
 		(\
 			boost::is_pointer< typename boost::remove_reference<LHS>::type >::value and\
-			not boost::is_void< typename boost::remove_pointer<LHS>::type >::value\
-		) and (\
-			not boost::is_class  < typename boost::remove_reference<RHS>::type >::value and\
-			not boost::is_union  < typename boost::remove_reference<RHS>::type >::value and\
-			not boost::is_pointer< typename boost::remove_reference<RHS>::type >::value and\
-			not std::numeric_limits< typename boost::remove_reference<RHS>::type >::is_integer\
+			boost::is_void< typename boost::remove_pointer<LHS>::type >::value\
+		) or (\
+			boost::is_pointer< typename boost::remove_reference<RHS>::type >::value and\
+			boost::is_void< typename boost::remove_pointer<RHS>::type >::value\
 		)\
-	)\
-	or\
-	/* LHS=non pointer and RHS=pointer */\
-	(\
-		not boost::is_pointer< typename boost::remove_reference<LHS>::type >::value and\
-		boost::is_pointer< typename boost::remove_reference<RHS>::type >::value\
-	)\
-	or\
-	/* two different pointers */\
-	(\
-		boost::is_pointer< typename boost::remove_reference<LHS>::type >::value and\
-		boost::is_pointer< typename boost::remove_reference<RHS>::type >::value and\
-		not boost::is_same< typename boost::remove_cv< typename boost::remove_reference<LHS>::type >::type, typename boost::remove_cv< typename boost::remove_reference<RHS>::type >::type >::value\
+		or\
+		/* LHS==pointer!=void* and RHS==built-in non integral */\
+		(\
+			(\
+				boost::is_pointer< typename boost::remove_reference<LHS>::type >::value and\
+				not boost::is_void< typename boost::remove_pointer<LHS>::type >::value\
+			) and (\
+				not boost::is_class  < typename boost::remove_reference<RHS>::type >::value and\
+				not boost::is_union  < typename boost::remove_reference<RHS>::type >::value and\
+				not boost::is_pointer< typename boost::remove_reference<RHS>::type >::value and\
+				not std::numeric_limits< typename boost::remove_reference<RHS>::type >::is_integer\
+			)\
+		)\
+		or\
+		/* LHS=non pointer and RHS=pointer */\
+		(\
+			not boost::is_pointer< typename boost::remove_reference<LHS>::type >::value and\
+			boost::is_pointer< typename boost::remove_reference<RHS>::type >::value\
+		)\
+		or\
+		/* two different pointers */\
+		(\
+			boost::is_pointer< typename boost::remove_reference<LHS>::type >::value and\
+			boost::is_pointer< typename boost::remove_reference<RHS>::type >::value and\
+			not boost::is_same< typename boost::remove_cv< typename boost::remove_reference<LHS>::type >::type, typename boost::remove_cv< typename boost::remove_reference<RHS>::type >::type >::value\
+		)\
 	)
 
 
