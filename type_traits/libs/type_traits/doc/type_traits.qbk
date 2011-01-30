@@ -185,6 +185,7 @@ See __has_nothrow_constructor.
 [include has_operator_bit_or_equal.qbk]
 [include has_operator_bit_xor.qbk]
 [include has_operator_bit_xor_equal.qbk]
+[include has_operator_complement.qbk]
 [include has_operator_divides.qbk]
 [include has_operator_divides_equal.qbk]
 [include has_operator_equal_to.qbk]
