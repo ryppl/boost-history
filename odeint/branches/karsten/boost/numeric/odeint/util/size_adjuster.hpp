@@ -18,7 +18,8 @@
 #include <boost/noncopyable.hpp>
 #include <boost/array.hpp>
 
-#include <boost/numeric/odeint/algebra/default_resize.hpp>
+#include <boost/numeric/odeint/util/is_resizeable.hpp>
+#include <boost/numeric/odeint/util/default_adjust_size.hpp>
 
 
 namespace boost {
@@ -36,26 +37,12 @@ struct adjust_size_always_tag {};
 
 
 
-/*
- * we need this interface in order to call matrix by vector resizing,
- * i.e. mat.resize( vec.size() , vec.size() )
- *
- * See implicit_euler.hpp for usage
- */
-struct default_adjust_size_caller
-{
-	template< class Container1 , class Container2 >
-	static bool adjust_size( const Container1 &x1 , Container2 &x2 )
-	{
-		return boost::numeric::odeint::adjust_size( x1 , x2 );
-	}
-};
 
 
 /*
  * Adjust size functionality with policies and resizeability
  */
-template< class Container , size_t Dim , class AdjustSizeCaller = default_adjust_size_caller >
+template< class Container , size_t Dim , class AdjustSizeCaller = default_adjust_size >
 class size_adjuster : boost::noncopyable
 {
 public:
@@ -132,77 +119,6 @@ private :
 	boost::array< container_type* , dim > m_states;
 };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
- * really old stuff
- */
-//template< class State , class AdjustSizeImpl >
-//class size_adjuster
-//{
-//public:
-//
-//	size_adjuster( AdjustSizeImpl &adjust_size_impl ) : m_is_initialized( false ) , m_adjust_size_impl( adjust_size_impl ) { }
-//
-//	void adjust_size( const State &x )
-//	{
-//		adjust_size_by_resizeability( x , typename is_resizeable< State >::type() );
-//	}
-//
-//	void adjust_size_by_policy( const State &x , adjust_size_manually_tag )
-//	{
-//	}
-//
-//	void adjust_size_by_policy( const State &x , adjust_size_initially_tag )
-//	{
-//		if( !m_is_initialized )
-//		{
-//			adjust_size_by_resizeability( x , typename is_resizeable< State >::type() );
-//			m_is_initialized = true;
-//		}
-//	}
-//
-//	void adjust_size_by_policy( const State &x , adjust_size_always_tag )
-//	{
-//		adjust_size_by_resizeability( x , typename is_resizeable< State >::type() );
-//	}
-//
-//
-//private:
-//
-//
-//	void adjust_size_by_resizeability( const State &x , boost::true_type )
-//	{
-//		m_adjust_size_impl( x );
-//	}
-//
-//	void adjust_size_by_resizeability( const State &x , boost::false_type )
-//	{
-//	}
-//
-//
-//private :
-//
-//	bool m_is_initialized;
-//	AdjustSizeImpl &m_adjust_size_impl;
-//};
 
 
 } // odeint
