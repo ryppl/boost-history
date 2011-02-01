@@ -3,19 +3,19 @@
 # SVG_plot Header files.
 !scan-path "boost/svg_plot" ".*\.hpp" true
 
-# Quickbook
-!scan-path "libs/svg_plot" ".*\.qbk"
+# SVG_plot Examples files.
+!scan-path "libs/svg_plot/example" ".*\.cpp" true
 
-# autoscaling - see scaling
-axis
-axes
-background
-border
-boxplot  \<boxplot\w*\>
+autoscaling  \<autoscal\w*\>
+axis <\<ax\w*\>
+# axis & axes
+background \<background\w*\>
+border \<border\w*\>
+boxplot \<boxplot\w*\>
 color  \<color\w*\>
-container
+container \<contain\w*\>
 data
-deque
+deque \<deque\w*\>
 example \<example\w*\>
 fill
 font  \<font\w*\>
@@ -23,25 +23,25 @@ greek
 grid  \<grid\w*\>
 quartile \<quartile\w*\>
 histogram
-intersect
+intersect <\w*\intersect\w*\>
 ioflags
 origin
 outlier
 label  \<label\w*\>
 layout
-legend <legend\w*\>
-marker  <marker\w*\>
-maximum <max\w*\>
-minimum <min\w*\>
+legend \<legend\w*\>
+marker  \<marker\w*\>
+maximum \<max\w*\>
+minimum \<min\w*\>
 precision
-range  <\w*\range\w*\>
-scaling <\w*\scal\w*\>
+range  \<\w*\range\w*\>
+scaling \<\w*\scal\w*\>
 series
 stroke
 SVG 
-tick <\w*\tick\w*\>
+tick \<\w*\tick\w*\>
 title
-Unicode <unicode\w*\>
-uncertainty <uncert\w*\>
-value <\w*\value\w*\>
-vector <\w*\vector\w*\>
+Unicode \<unicode\w*\>
+uncertainty \<uncert\w*\>
+value \<\w*\value\w*\>
+vector \<\w*\vector\w*\>
