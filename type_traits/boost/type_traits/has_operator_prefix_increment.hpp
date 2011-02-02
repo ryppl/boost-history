@@ -15,8 +15,8 @@
 #define BOOST_TT_FORBIDDEN_IF\
 	(\
 		/* void* */\
-		boost::is_pointer< typename boost::remove_reference<RHS>::type >::value and\
-		boost::is_void< typename boost::remove_pointer<RHS>::type >::value\
+		::boost::is_pointer< typename ::boost::remove_reference<RHS>::type >::value and\
+		::boost::is_void< typename ::boost::remove_pointer<RHS>::type >::value\
 	)
 
 

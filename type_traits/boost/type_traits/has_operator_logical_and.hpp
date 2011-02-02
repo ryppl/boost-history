@@ -16,20 +16,20 @@
 	(\
 		/* pointer with built-in non convertible to bool */\
 		(\
-			boost::is_pointer< typename boost::remove_reference<LHS>::type >::value and\
+			::boost::is_pointer< typename ::boost::remove_reference<LHS>::type >::value and\
 			not (\
-				boost::is_class  < typename boost::remove_reference<RHS>::type >::value or\
-				boost::is_union  < typename boost::remove_reference<RHS>::type >::value or\
-				boost::is_pointer< typename boost::remove_reference<RHS>::type >::value or\
-				boost::is_convertible < typename boost::remove_reference<RHS>::type, bool >::value\
+				::boost::is_class  < typename ::boost::remove_reference<RHS>::type >::value or\
+				::boost::is_union  < typename ::boost::remove_reference<RHS>::type >::value or\
+				::boost::is_pointer< typename ::boost::remove_reference<RHS>::type >::value or\
+				::boost::is_convertible < typename ::boost::remove_reference<RHS>::type, bool >::value\
 			)\
 		) or (\
-			boost::is_pointer< typename boost::remove_reference<RHS>::type >::value and\
+			::boost::is_pointer< typename ::boost::remove_reference<RHS>::type >::value and\
 			not (\
-				boost::is_class  < typename boost::remove_reference<LHS>::type >::value or\
-				boost::is_union  < typename boost::remove_reference<LHS>::type >::value or\
-				boost::is_pointer< typename boost::remove_reference<LHS>::type >::value or\
-				boost::is_convertible < typename boost::remove_reference<LHS>::type, bool >::value\
+				::boost::is_class  < typename ::boost::remove_reference<LHS>::type >::value or\
+				::boost::is_union  < typename ::boost::remove_reference<LHS>::type >::value or\
+				::boost::is_pointer< typename ::boost::remove_reference<LHS>::type >::value or\
+				::boost::is_convertible < typename ::boost::remove_reference<LHS>::type, bool >::value\
 			)\
 		)\
 	)

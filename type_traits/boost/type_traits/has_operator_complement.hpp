@@ -15,15 +15,15 @@
 #define BOOST_TT_FORBIDDEN_IF\
 	(\
 		/* pointer */\
-		boost::is_pointer< typename boost::remove_reference<RHS>::type >::value\
+		::boost::is_pointer< typename ::boost::remove_reference<RHS>::type >::value\
 		or\
 		/* non integral built-in */\
 		(\
 			not (\
-				boost::is_class  < typename boost::remove_reference<RHS>::type >::value or\
-				boost::is_union  < typename boost::remove_reference<RHS>::type >::value\
+				::boost::is_class  < typename ::boost::remove_reference<RHS>::type >::value or\
+				::boost::is_union  < typename ::boost::remove_reference<RHS>::type >::value\
 			)\
-			and not std::numeric_limits< typename boost::remove_reference<RHS>::type >::is_integer\
+			and not std::numeric_limits< typename ::boost::remove_reference<RHS>::type >::is_integer\
 		)\
 	)
 

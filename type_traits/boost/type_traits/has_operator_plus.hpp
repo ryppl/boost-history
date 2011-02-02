@@ -16,36 +16,36 @@
 	(\
 		/* pointer with pointer */\
 		(\
-			boost::is_pointer< typename boost::remove_reference<LHS>::type >::value and\
-			boost::is_pointer< typename boost::remove_reference<RHS>::type >::value\
+			::boost::is_pointer< typename ::boost::remove_reference<LHS>::type >::value and\
+			::boost::is_pointer< typename ::boost::remove_reference<RHS>::type >::value\
 		)\
 		or\
 		/* built-in non pointer non integral with pointer */\
 		(\
-			boost::is_pointer< typename boost::remove_reference<LHS>::type >::value\
+			::boost::is_pointer< typename ::boost::remove_reference<LHS>::type >::value\
 			and not (\
-				boost::is_class  < typename boost::remove_reference<RHS>::type >::value or\
-				boost::is_union  < typename boost::remove_reference<RHS>::type >::value or\
-				boost::is_pointer< typename boost::remove_reference<RHS>::type >::value or\
-				std::numeric_limits< typename boost::remove_reference<RHS>::type >::is_integer\
+				::boost::is_class  < typename ::boost::remove_reference<RHS>::type >::value or\
+				::boost::is_union  < typename ::boost::remove_reference<RHS>::type >::value or\
+				::boost::is_pointer< typename ::boost::remove_reference<RHS>::type >::value or\
+				std::numeric_limits< typename ::boost::remove_reference<RHS>::type >::is_integer\
 			)\
 		) or (\
-			boost::is_pointer< typename boost::remove_reference<RHS>::type >::value\
+			::boost::is_pointer< typename ::boost::remove_reference<RHS>::type >::value\
 			and not (\
-				boost::is_class  < typename boost::remove_reference<LHS>::type >::value or\
-				boost::is_union  < typename boost::remove_reference<LHS>::type >::value or\
-				boost::is_pointer< typename boost::remove_reference<LHS>::type >::value or\
-				std::numeric_limits< typename boost::remove_reference<LHS>::type >::is_integer\
+				::boost::is_class  < typename ::boost::remove_reference<LHS>::type >::value or\
+				::boost::is_union  < typename ::boost::remove_reference<LHS>::type >::value or\
+				::boost::is_pointer< typename ::boost::remove_reference<LHS>::type >::value or\
+				std::numeric_limits< typename ::boost::remove_reference<LHS>::type >::is_integer\
 			)\
 		)\
 		or\
 		/* one is void* */\
 		(\
-			boost::is_pointer< typename boost::remove_reference<LHS>::type >::value and\
-			boost::is_void< typename boost::remove_pointer<LHS>::type >::value\
+			::boost::is_pointer< typename ::boost::remove_reference<LHS>::type >::value and\
+			::boost::is_void< typename ::boost::remove_pointer<LHS>::type >::value\
 		) or (\
-			boost::is_pointer< typename boost::remove_reference<RHS>::type >::value and\
-			boost::is_void< typename boost::remove_pointer<RHS>::type >::value\
+			::boost::is_pointer< typename ::boost::remove_reference<RHS>::type >::value and\
+			::boost::is_void< typename ::boost::remove_pointer<RHS>::type >::value\
 		)\
 	)
 

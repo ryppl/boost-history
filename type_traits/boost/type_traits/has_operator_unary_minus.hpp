@@ -14,7 +14,7 @@
 #define BOOST_TT_DEFAULT_RET void
 #define BOOST_TT_FORBIDDEN_IF\
 	/* pointer */\
-	boost::is_pointer< typename boost::remove_reference<RHS>::type >::value
+	::boost::is_pointer< typename ::boost::remove_reference<RHS>::type >::value
 
 
 #include <boost/type_traits/detail/has_prefix_operator.hpp>
