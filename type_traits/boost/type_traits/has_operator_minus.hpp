@@ -13,42 +13,37 @@
 #define BOOST_TT_TRAIT_OP -
 #define BOOST_TT_DEFAULT_RET void
 #define BOOST_TT_FORBIDDEN_IF\
-	(\
+	::boost::type_traits::ice_or<\
 		/* one is void* */\
-		(\
-			::boost::is_pointer< typename ::boost::remove_reference<LHS>::type >::value and\
+		::boost::type_traits::ice_and<\
+			::boost::is_pointer< typename ::boost::remove_reference<LHS>::type >::value,\
 			::boost::is_void< typename ::boost::remove_pointer<LHS>::type >::value\
-		) or (\
-			::boost::is_pointer< typename ::boost::remove_reference<RHS>::type >::value and\
+		>::value,\
+		::boost::type_traits::ice_and<\
+			::boost::is_pointer< typename ::boost::remove_reference<RHS>::type >::value,\
 			::boost::is_void< typename ::boost::remove_pointer<RHS>::type >::value\
-		)\
-		or\
+		>::value,\
 		/* LHS==pointer!=void* and RHS==built-in non integral */\
-		(\
-			(\
-				::boost::is_pointer< typename ::boost::remove_reference<LHS>::type >::value and\
-				not ::boost::is_void< typename ::boost::remove_pointer<LHS>::type >::value\
-			) and (\
-				not ::boost::is_class  < typename ::boost::remove_reference<RHS>::type >::value and\
-				not ::boost::is_union  < typename ::boost::remove_reference<RHS>::type >::value and\
-				not ::boost::is_pointer< typename ::boost::remove_reference<RHS>::type >::value and\
-				not std::numeric_limits< typename ::boost::remove_reference<RHS>::type >::is_integer\
-			)\
-		)\
-		or\
+		::boost::type_traits::ice_and<\
+			::boost::is_pointer< typename ::boost::remove_reference<LHS>::type >::value,\
+			::boost::type_traits::ice_not< ::boost::is_void< typename ::boost::remove_pointer<LHS>::type >::value >::value,\
+			::boost::type_traits::ice_not< ::boost::is_class  < typename ::boost::remove_reference<RHS>::type >::value >::value,\
+			::boost::type_traits::ice_not< ::boost::is_union  < typename ::boost::remove_reference<RHS>::type >::value >::value,\
+			::boost::type_traits::ice_not< ::boost::is_pointer< typename ::boost::remove_reference<RHS>::type >::value >::value,\
+			::boost::type_traits::ice_not< std::numeric_limits< typename ::boost::remove_reference<RHS>::type >::is_integer >::value\
+		>::value,\
 		/* LHS=non pointer and RHS=pointer */\
-		(\
-			not ::boost::is_pointer< typename ::boost::remove_reference<LHS>::type >::value and\
+		::boost::type_traits::ice_and<\
+			::boost::type_traits::ice_not< ::boost::is_pointer< typename ::boost::remove_reference<LHS>::type >::value >::value,\
 			::boost::is_pointer< typename ::boost::remove_reference<RHS>::type >::value\
-		)\
-		or\
+		>::value,\
 		/* two different pointers */\
-		(\
-			::boost::is_pointer< typename ::boost::remove_reference<LHS>::type >::value and\
-			::boost::is_pointer< typename ::boost::remove_reference<RHS>::type >::value and\
-			not ::boost::is_same< typename ::boost::remove_cv< typename ::boost::remove_reference<LHS>::type >::type, typename ::boost::remove_cv< typename ::boost::remove_reference<RHS>::type >::type >::value\
-		)\
-	)
+		::boost::type_traits::ice_and<\
+			::boost::is_pointer< typename ::boost::remove_reference<LHS>::type >::value,\
+			::boost::is_pointer< typename ::boost::remove_reference<RHS>::type >::value,\
+			::boost::type_traits::ice_not< ::boost::is_same< typename ::boost::remove_cv< typename ::boost::remove_reference<LHS>::type >::type, typename ::boost::remove_cv< typename ::boost::remove_reference<RHS>::type >::type >::value >::value\
+		>::value\
+	>::value
 
 
 #include <boost/type_traits/detail/has_binary_operator.hpp>

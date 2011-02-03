@@ -13,11 +13,11 @@
 #define BOOST_TT_TRAIT_OP /=
 #define BOOST_TT_DEFAULT_RET void
 #define BOOST_TT_FORBIDDEN_IF\
-	(\
-		/* one pointer */\
-		::boost::is_pointer< typename ::boost::remove_reference<LHS>::type >::value or\
+	/* one pointer */\
+	::boost::type_traits::ice_or<\
+		::boost::is_pointer< typename ::boost::remove_reference<LHS>::type >::value,\
 		::boost::is_pointer< typename ::boost::remove_reference<RHS>::type >::value\
-	)
+	>::value
 
 
 #include <boost/type_traits/detail/has_binary_operator.hpp>

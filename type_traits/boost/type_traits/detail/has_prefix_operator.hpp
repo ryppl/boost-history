@@ -8,7 +8,7 @@
 
 #include <limits>
 #include <boost/config.hpp>
-#include <boost/type_traits/detail/yes_no_type.hpp>
+#include <boost/type_traits/ice.hpp>
 #include <boost/type_traits/integral_constant.hpp>
 #include <boost/type_traits/is_base_of.hpp>
 #include <boost/type_traits/is_class.hpp>

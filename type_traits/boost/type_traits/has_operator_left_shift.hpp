@@ -13,33 +13,32 @@
 #define BOOST_TT_TRAIT_OP <<
 #define BOOST_TT_DEFAULT_RET void
 #define BOOST_TT_FORBIDDEN_IF\
-	(\
+		::boost::type_traits::ice_or<\
 		/* two built-in, one non integer */\
-		(\
+		::boost::type_traits::ice_and<\
 			/* two builtin */\
-			not (\
-				::boost::is_class  < typename ::boost::remove_reference<LHS>::type >::value or\
-				::boost::is_union  < typename ::boost::remove_reference<LHS>::type >::value or\
-				::boost::is_pointer< typename ::boost::remove_reference<LHS>::type >::value or\
-				::boost::is_class  < typename ::boost::remove_reference<RHS>::type >::value or\
-				::boost::is_union  < typename ::boost::remove_reference<RHS>::type >::value or\
-				::boost::is_pointer< typename ::boost::remove_reference<RHS>::type >::value\
-			)\
-			and\
-			(\
-				/* one non integer */\
-				not std::numeric_limits< typename ::boost::remove_reference<LHS>::type >::is_integer\
-				or\
-				not std::numeric_limits< typename ::boost::remove_reference<RHS>::type >::is_integer\
-			)\
-		)\
-		or\
+			::boost::type_traits::ice_not<\
+				::boost::type_traits::ice_or<\
+					::boost::is_class  < typename ::boost::remove_reference<LHS>::type >::value,\
+					::boost::is_union  < typename ::boost::remove_reference<LHS>::type >::value,\
+					::boost::is_pointer< typename ::boost::remove_reference<LHS>::type >::value,\
+					::boost::is_class  < typename ::boost::remove_reference<RHS>::type >::value,\
+					::boost::is_union  < typename ::boost::remove_reference<RHS>::type >::value,\
+					::boost::is_pointer< typename ::boost::remove_reference<RHS>::type >::value\
+				>::value\
+			>::value,\
+			/* one non integer */\
+			::boost::type_traits::ice_or<\
+				::boost::type_traits::ice_not< std::numeric_limits< typename ::boost::remove_reference<LHS>::type >::is_integer >::value,\
+				::boost::type_traits::ice_not< std::numeric_limits< typename ::boost::remove_reference<RHS>::type >::is_integer >::value\
+			>::value\
+		>::value,\
 		/* one pointer */\
-		(\
-			::boost::is_pointer< typename ::boost::remove_reference<LHS>::type >::value or\
+		::boost::type_traits::ice_or<\
+			::boost::is_pointer< typename ::boost::remove_reference<LHS>::type >::value,\
 			::boost::is_pointer< typename ::boost::remove_reference<RHS>::type >::value\
-		)\
-	)
+		>::value\
+	>::value
 
 
 #include <boost/type_traits/detail/has_binary_operator.hpp>
