@@ -70,9 +70,9 @@ struct reifier_switch
       , HeadAbstract
       , TailAbstract...
       >
-    now_tar_src_t
+    now_tar_src_type
     ;
-      now_tar_src_t*
+      now_tar_src_type*
     my_tar_src
     ;
       HeadAbstract&
@@ -80,7 +80,7 @@ struct reifier_switch
     ;
     reifier_switch
       ( ReifyApply const& a_reify
-      , now_tar_src_t* a_ptrs_tar_src
+      , now_tar_src_type* a_ptrs_tar_src
       )
     : my_reify(a_reify)
     , my_tar_src(a_ptrs_tar_src)
@@ -118,7 +118,7 @@ struct reifier_switch
         return my_reify(next_tar_src_p);
     }
     
- public:    
+ public:
       template
       < case_type CaseValue
       >
@@ -128,7 +128,7 @@ struct reifier_switch
       )const
     {
         index_type const index_concrete=index_type(CaseValue);
-        auto a_tail_concrete=my_head_abstract.template project<index_concrete>();
+        auto& a_tail_concrete=my_head_abstract.template project<index_concrete>();
         return this->push_back_concrete(a_tail_concrete);
     }
         
