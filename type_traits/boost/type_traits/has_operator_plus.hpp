@@ -27,7 +27,7 @@
 					::boost::is_class  < typename ::boost::remove_reference<RHS>::type >::value,\
 					::boost::is_union  < typename ::boost::remove_reference<RHS>::type >::value,\
 					::boost::is_pointer< typename ::boost::remove_reference<RHS>::type >::value,\
-					std::numeric_limits< typename ::boost::remove_reference<RHS>::type >::is_integer\
+					::boost::is_integral< typename ::boost::remove_reference<RHS>::type >::value\
 				>::value\
 			>::value\
 		>::value,\
@@ -38,7 +38,7 @@
 					::boost::is_class  < typename ::boost::remove_reference<LHS>::type >::value,\
 					::boost::is_union  < typename ::boost::remove_reference<LHS>::type >::value,\
 					::boost::is_pointer< typename ::boost::remove_reference<LHS>::type >::value,\
-					std::numeric_limits< typename ::boost::remove_reference<LHS>::type >::is_integer\
+					::boost::is_integral< typename ::boost::remove_reference<LHS>::type >::value\
 				>::value\
 			>::value\
 		>::value,\

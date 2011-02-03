@@ -29,8 +29,8 @@
 			>::value,\
 			/* one non integer */\
 			::boost::type_traits::ice_or<\
-				::boost::type_traits::ice_not< std::numeric_limits< typename ::boost::remove_reference<LHS>::type >::is_integer >::value,\
-				::boost::type_traits::ice_not< std::numeric_limits< typename ::boost::remove_reference<RHS>::type >::is_integer >::value\
+				::boost::type_traits::ice_not< ::boost::is_integral< typename ::boost::remove_reference<LHS>::type >::value >::value,\
+				::boost::type_traits::ice_not< ::boost::is_integral< typename ::boost::remove_reference<RHS>::type >::value >::value\
 			>::value\
 		>::value,\
 		/* one pointer */\

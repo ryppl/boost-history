@@ -6,14 +6,15 @@
 //
 //  See http://www.boost.org/libs/type_traits for most recent version including documentation.
 
-#include <limits>
 #include <boost/config.hpp>
 #include <boost/type_traits/ice.hpp>
 #include <boost/type_traits/integral_constant.hpp>
 #include <boost/type_traits/is_base_of.hpp>
 #include <boost/type_traits/is_class.hpp>
 #include <boost/type_traits/is_convertible.hpp>
+#include <boost/type_traits/is_integral.hpp>
 #include <boost/type_traits/is_pointer.hpp>
+#include <boost/type_traits/is_same.hpp>
 #include <boost/type_traits/is_union.hpp>
 #include <boost/type_traits/is_void.hpp>
 #include <boost/type_traits/remove_cv.hpp>

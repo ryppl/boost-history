@@ -24,7 +24,7 @@
 					::boost::is_union  < typename ::boost::remove_reference<RHS>::type >::value\
 				>::value\
 			>::value,\
-			::boost::type_traits::ice_not< std::numeric_limits< typename ::boost::remove_reference<RHS>::type >::is_integer >::value\
+			::boost::type_traits::ice_not< ::boost::is_integral< typename ::boost::remove_reference<RHS>::type >::value >::value\
 		>::value\
 	>::value
 
