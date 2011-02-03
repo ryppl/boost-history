@@ -13,31 +13,31 @@
 #define BOOST_TT_TRAIT_OP ||
 #define BOOST_TT_DEFAULT_RET void
 #define BOOST_TT_FORBIDDEN_IF\
-	/* pointer with built-in non convertible to bool */\
-	::boost::type_traits::ice_or<\
-		::boost::type_traits::ice_and<\
-			::boost::is_pointer< typename ::boost::remove_reference<LHS>::type >::value,\
-			::boost::type_traits::ice_not<\
-				::boost::type_traits::ice_or<\
-					::boost::is_class  < typename ::boost::remove_reference<RHS>::type >::value,\
-					::boost::is_union  < typename ::boost::remove_reference<RHS>::type >::value,\
-					::boost::is_pointer< typename ::boost::remove_reference<RHS>::type >::value,\
-					::boost::is_convertible < typename ::boost::remove_reference<RHS>::type, bool >::value\
-				>::value\
-			>::value\
-		>::value,\
-		::boost::type_traits::ice_and<\
-			::boost::is_pointer< typename ::boost::remove_reference<RHS>::type >::value,\
-			::boost::type_traits::ice_not<\
-				::boost::type_traits::ice_or<\
-					::boost::is_class  < typename ::boost::remove_reference<LHS>::type >::value,\
-					::boost::is_union  < typename ::boost::remove_reference<LHS>::type >::value,\
-					::boost::is_pointer< typename ::boost::remove_reference<LHS>::type >::value,\
-					::boost::is_convertible < typename ::boost::remove_reference<LHS>::type, bool >::value\
-				>::value\
-			>::value\
-		>::value\
-	>::value
+   /* pointer with built-in non convertible to bool */\
+   ::boost::type_traits::ice_or<\
+      ::boost::type_traits::ice_and<\
+         ::boost::is_pointer< typename ::boost::remove_reference<LHS>::type >::value,\
+         ::boost::type_traits::ice_not<\
+            ::boost::type_traits::ice_or<\
+               ::boost::is_class< typename ::boost::remove_reference<RHS>::type >::value,\
+               ::boost::is_union< typename ::boost::remove_reference<RHS>::type >::value,\
+               ::boost::is_pointer< typename ::boost::remove_reference<RHS>::type >::value,\
+               ::boost::is_convertible< typename ::boost::remove_reference<RHS>::type, bool >::value\
+            >::value\
+         >::value\
+      >::value,\
+      ::boost::type_traits::ice_and<\
+         ::boost::is_pointer< typename ::boost::remove_reference<RHS>::type >::value,\
+         ::boost::type_traits::ice_not<\
+            ::boost::type_traits::ice_or<\
+               ::boost::is_class< typename ::boost::remove_reference<LHS>::type >::value,\
+               ::boost::is_union< typename ::boost::remove_reference<LHS>::type >::value,\
+               ::boost::is_pointer< typename ::boost::remove_reference<LHS>::type >::value,\
+               ::boost::is_convertible< typename ::boost::remove_reference<LHS>::type, bool >::value\
+            >::value\
+         >::value\
+      >::value\
+   >::value
 
 
 #include <boost/type_traits/detail/has_binary_operator.hpp>

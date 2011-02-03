@@ -13,20 +13,20 @@
 #define BOOST_TT_TRAIT_OP ~
 #define BOOST_TT_DEFAULT_RET void
 #define BOOST_TT_FORBIDDEN_IF\
-	::boost::type_traits::ice_or<\
-		/* pointer */\
-		::boost::is_pointer< typename ::boost::remove_reference<RHS>::type >::value,\
-		/* non integral built-in */\
-		::boost::type_traits::ice_and<\
-			::boost::type_traits::ice_not<\
-				::boost::type_traits::ice_or<\
-					::boost::is_class  < typename ::boost::remove_reference<RHS>::type >::value,\
-					::boost::is_union  < typename ::boost::remove_reference<RHS>::type >::value\
-				>::value\
-			>::value,\
-			::boost::type_traits::ice_not< ::boost::is_integral< typename ::boost::remove_reference<RHS>::type >::value >::value\
-		>::value\
-	>::value
+   ::boost::type_traits::ice_or<\
+      /* pointer */\
+      ::boost::is_pointer< typename ::boost::remove_reference<RHS>::type >::value,\
+      /* non integral built-in */\
+      ::boost::type_traits::ice_and<\
+         ::boost::type_traits::ice_not<\
+            ::boost::type_traits::ice_or<\
+               ::boost::is_class< typename ::boost::remove_reference<RHS>::type >::value,\
+               ::boost::is_union< typename ::boost::remove_reference<RHS>::type >::value\
+            >::value\
+         >::value,\
+         ::boost::type_traits::ice_not< ::boost::is_integral< typename ::boost::remove_reference<RHS>::type >::value >::value\
+      >::value\
+   >::value
 
 
 #include <boost/type_traits/detail/has_prefix_operator.hpp>
