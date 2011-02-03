@@ -1,0 +1,78 @@
+# mylibrary.idx index script file
+# for Boost.mylibrary Quickbook Doxygen documentation Auto-indexing.
+
+# Copyright (c) 2011 Paul A. Bristow
+
+# Use, modification and distribution is subject to the Boost Software
+# License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+# http://www.boost.org/LICENSE_1_0.txt)
+
+# Diagnostic output - useful during refinement of the index.
+!debug regular-expression 
+
+#  All header files, recursing down to include sub-folders.
+!scan-path "boost/mylibrary" ".*\.hpp" true 
+
+# All example source files, assuming no sub-folders.
+!scan-path "libs/mylibrary/example" ".*\.cpp" 
+
+# Terms that you want to appear in the Index.
+# Term to display in index, and word(s) that are to be matched (as a regular expression).
+
+Quickbook
+Doxygen
+
+# Plural, indexing and indexation.
+index \<index\w*\> 
+
+bold
+
+#Index C++, (but not C).
+C++
+
+# Allow alternative spellings colour | color, and plurals etc.
+color  \<\w*(colour|color)\w*\>
+
+CSS  \w*\<CSS>
+
+example
+# A two word index term (eclosed in quotes, of course)
+"example program"
+
+# Allow plural.
+image \<image\w*\>
+
+# To allow plural and italicization or italicisation:
+italic \<italic\w*\>
+
+# Allow hyperlink and hyperlinking:
+hyperlink \<hyperlink\w*\>
+
+Kelvin "" ".*idols.*"
+Voltaire "" ".*indexing.*"
+
+Twain
+
+macro
+obscure
+
+# Two word index term, allowing plurals.
+"side effect" \<side effect\w*\>
+
+text
+
+URL
+
+!exclude junk
+# Exclude the index term junk from the index,
+# so that "junk" anywhere does not have an index entry.
+
+# Remove leading "A" or "The" prefixes from section titles.
+!rewrite-name "(?i)(?:A|The)\s+(.*)" "\1"
+
+!rewrite-name "Additional Implementation Notes" "Implementation Notes"
+
+
+
+
+

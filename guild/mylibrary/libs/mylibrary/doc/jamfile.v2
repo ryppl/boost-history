@@ -1,0 +1,165 @@
+#  Boost.mylibrary library documentation template Jamfile.v2
+#
+#  Copyright Paul A. Bristow 2011. Use, modification and
+#  distribution is subject to the Boost Software License, Version
+#  1.0. (See accompanying file LICENSE_1_0.txt or copy at
+#  http://www.boost.org/LICENSE_1_0.txt)
+
+path-constant nav_images :  html/images/ ; # png and svg images for home, next, note, tip...
+path-constant images_location : html ; # location of SVG and PNG images referenced by Quickbook.
+
+echo "images_location" $(images_location) ; # \guild\my_library\libs\mylibrary\doc\html
+echo "nav_images" $(nav_images) ; # \guild\mylibrary\libs\my_library\doc\html\images
+
+import modules ;
+
+if --enable-index in  [ modules.peek : ARGV ]
+{
+   ECHO "Building the  docs with automatic index generation enabled." ;
+   using auto-index ;
+   project : requirements
+   
+        <auto-index>on # Turns on index (or off).
+        # Turns on (or off) index-verbose for diagnostic info (using /bin auto-index-verbose folders).
+        <auto-index-verbose>on 
+        
+        # Choose indexing method (separately for html and pdf):
+        <format>html:<auto-index-internal>on  # on (or off) to use internally generated indexes.
+        # <format>html:<xsl:param>generate.index=0 # Don't let the XSL stylesheets generate indexes.
+        
+        <format>pdf:<auto-index-internal>off # on (or off) to use internally generated indexes.
+        # <auto-index-type>index  # Use <index>...</index> as the XML wrapper.
+        
+        <format>html:<xsl:param>index.on.type=1 # = 1 For the native stylesheets to generate multiple different indexes.
+        
+        <format>pdf:<xsl:param>index.on.type=1 # For the native stylesheets to generate multiple different indexes.
+        # PDF native index support is probably better for PDFs as then you actually get page numbers.
+
+        <auto-index-script>mylibrary.idx # Specifies the name of the script to load for mylibrary. 
+        <auto-index-prefix>../../.. # Will get you back up to /mylibrary, so !scan-path "boost/mylibrary/" is where *.hpp will be,
+        # and /libs/mylibrary for other files.
+        # Without this would need !scan-path "../../../boost/mylibrary"
+        
+        <quickbook-define>enable_index ;
+}
+else
+{
+   ECHO "Building the my_library docs with automatic index generation disabled. To get an auto-index, try building with --enable-index." ;
+}
+
+using doxygen ;  # Required if you want to use Doxygen.
+using quickbook ;
+
+doxygen autodoc
+   :
+      [ glob ../../../boost/mylibrary/*.hpp ]
+      [ glob ../../../boost/mylibrary/detail/*.hpp ] #  More include files, if necessary to include headers in /details.
+   :
+			<doxygen:param>WARNINGS=YES # Default NO, but useful to see warnings, especially in a logfile.
+			# It is also wise to to set a warnings logfile like this:
+			<doxygen:param>WARN_LOGFILE=AutoDoxywarnings.log # This may not be empty (usually not a good sign!), depending on options chosen.
+			# Much better to send message to a logfile than the default stderr.
+			# and make sure that there are no Doxygen errors or significant warnings in the log file.
+			<doxygen:param>RECURSIVE=NO # Search recursively down subdirectories.
+      <doxygen:param>EXTRACT_ALL=NO
+			<doxygen:param>HIDE_UNDOC_MEMBERS=YES
+			<doxygen:param>EXTRACT_PRIVATE=NO
+			<doxygen:param>EXPAND_ONLY_PREDEF=YES
+			<xsl:param>"boost.doxygen.reftitle=Boost.mylibrary C++ Reference"
+   ;
+
+
+xml mylibrary : mylibrary.qbk ;
+
+using boostbook ;
+
+boostbook standalone
+   :
+      mylibrary
+   :
+   
+   # General settings
+   # =================
+    # Path for links to Boost. 
+		<xsl:param>boost.root=../../../../..
+		# Path for libraries index:
+		<xsl:param>boost.libraries=../../../../../libs/libraries.htm
+		# Use the main Boost stylesheet:
+		#<xsl:param>html.stylesheet=../../doc/html/boostbook.css
+		<xsl:param>html.stylesheet=./boostbook.css
+
+		#<xsl:param>nav.layout=none # No navigation bar (home, prev, next).
+		# defining creates a runtime error: Global parameter nav.layout already defined
+		<xsl:param>nav.layout=horizontal # to get a horizontal navigation bar (you probably DO want this).
+
+		# Path for links to Boost logo.
+		#<xsl:param>boost.root=.. # already defined
+		<xsl:param>boost.image=Boost # options are: none (no logo), Boost (for boost.png), or your own logo, for example, inspired_by_boost.png
+		<xsl:param>boost.image.src=./images/boost.png #
+		<xsl:param>boost.image.w=180 # Width of logo in pixels. (JM has W = 162, h = 46)
+    <xsl:param>boost.image.h=90 # Height of logo in pixels.
+  
+  	# Options for html and pdf
+  	# ========================
+		# No indent on body text:
+		<xsl:param>body.start.indent=0pt
+		# Margin size:
+		<xsl:param>page.margin.inner=0.5in
+		# Margin size:
+		<xsl:param>page.margin.outer=0.5in
+		# Yes, we want graphics for admonishments:
+		<xsl:param>admon.graphics=1
+  
+		# HTML options:
+		# =============
+		# Use graphics icons not text for navigation:
+		<xsl:param>navig.graphics=1
+		# How far down we chunk nested sections, basically all of them:
+		<xsl:param>chunk.section.depth=2
+		# Don't put the first section on the same page as the TOC itself:
+		<xsl:param>chunk.first.sections=1
+		# How far down sections get TOC's
+		<xsl:param>toc.section.depth=4
+		# Max depth in each TOC:
+		<xsl:param>toc.max.depth=2
+		# How far down we go with TOC's
+		<xsl:param>generate.section.toc.level=10
+		# Horizontal ? spacing in table cells.
+		<format>html:<xsl:param>html.cellspacing=3 # pixels
+		# Vertical spacing in table cells.
+		<format>html:<xsl:param>html.cellpadding=5 # pixels
+		#  Not sure if these are right way round?		
+
+		# PDF Options:
+		# ============
+		# TOC Generation: this is needed for FOP-0.9 and later:
+		<format>pdf:<xsl:param>fop1.extensions=0
+		# Or enable this if you're using XEP:
+		<format>pdf:<xsl:param>xep.extensions=1
+		# TOC generation: this is needed for FOP 0.2, but must not be set to zero for FOP-0.9!
+		<format>pdf:<xsl:param>fop.extensions=0
+		# No indent on body text:
+		<xsl:param>body.start.indent=0pt
+		# Margin size:
+		<xsl:param>page.margin.inner=0.5in
+		# Margin size:
+		<xsl:param>page.margin.outer=0.5in
+		
+		# Yes, we want graphics for admonishments:
+		<xsl:param>admon.graphics=1
+		
+		# Set these one for PDF generation *only*:
+		# default png graphics are awful in PDF form,
+		# better use SVG instead:
+		#<format>pdf:<xsl:param>admon.graphics.extension=".svg"
+		<format>pdf:<xsl:param>admon.graphics.extension=".png" # Only png images are available.
+		<format>pdf:<xsl:param>admon.graphics.path=$(nav_images)/ # next, prev, note, tip ... for pdf.
+		<format>pdf:<xsl:param>use.role.for.mediaobject=1 
+		<format>pdf:<xsl:param>preferred.mediaobject.role=print
+	  <format>pdf:<xsl:param>img.src.path=$(images_location)/ # graphics (diagrams) for pdf.
+		<format>pdf:<xsl:param>draft.mode="no"
+		<format>pdf:<xsl:param>boost.url.prefix=I:/boost-sandbox/guild/mylibrary/libs/mylibrary/doc/html
+		
+		<dependency>autodoc #
+
+   ;

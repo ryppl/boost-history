@@ -1,0 +1,279 @@
+[article Creating Boost HTML and PDF documentation using Quickbook, Doxygen and Auto-Indexing.
+    [quickbook 1.5]
+    [id my_library_template]
+    [copyright 2011 Paul A. Bristow]
+    [license
+        Distributed under the Boost Software License, Version 1.0.
+        (See accompanying file LICENSE_1_0.txt or copy at
+        [@http://www.boost.org/LICENSE_1_0.txt])
+    ]
+    [authors [Bristow, Paul A.]]
+    [source-mode c++]
+]
+
+[/purpose Template to prepare HTML and PDF documentation for Boost using Quickbook.]
+
+[/ Links - by (most common) convention, prefixed with double underscore so not confused with other names.]
+[def __alert      [$./images/alert.png]] [/ Examples of your own images (in doc/html/images/ .]
+[def __tip        [$./images/tip.png]]
+[/def :-)          [graphic smiley]] 
+[/ If you provide a file type like .png, you will probably find that the file is missing in the pdf version.]
+[/ This is because the default file type specified is .png in html, but .svg for pdf version.]
+
+[/ Some links to external sources.]
+[/ You often want to link more than once, so using a def ensures you always refer to the same location.]
+[def __boost [@http://www.boost.org/ Boost]] [/Boost.org]
+[def __boostroot [@boost: Boost root]] [/ Your boost root]
+[/Note the custom boost root url schema for linking to files within the Boost distribution.]
+[/Note It can't be used for images.]
+[/def __boostlicense [@http://www.boost.org/LICENSE_1_0.txt Boost License]]
+[/ Or refer to your most recent version of Boost.]
+[def __boostlicense [@boost:/LICENSE_1_0.txt Boost License]]
+[def __boostbook [@http://www.boost.org/doc/html/boostbook.html BoostBook]]
+[def __boostbook_docs [@http://www.boost.org/doc/libs/1_41_0/doc/html/boostbook.html BoostBook documentation]]
+
+[def __quickbook  [@http://www.boost.org/doc/tools/quickbook/index.html Quickbook]]
+[def __quickbook_syntax [@http://www.boost.org/doc/libs/1_41_0/doc/html/quickbook/ref.html Quickbook Syntax Compendium]]
+[def __docbook [@http://www.docbook.org/ DocBook]]
+[def __doxygen [@http://www.doxygen.org/ Doxygen]]
+[def __autoindex [@boost:\tools\auto_index\doc\html\index.html AutoIndex]]
+[def __pdf [@http://www.adobe.com/products/acrobat/adobepdf.html PDF]]
+[def __textpad [@http://www.textpad.com Textpad]]
+[def __emacs [@http://www.gnu.org/software/emacs/ GNU emacs]]
+[def __css [@http://en.wikipedia.org/wiki/Cascading_Style_Sheets Cascading Style Sheet]]
+
+[def __intro [link mylibrary.intro Introduction]] [/Link to a Quickbook section (see below).]
+[def __todo [link mylibrary.todo TODO]]
+
+[important This is a template, NOT an official Boost library.]
+
+[/ Examples of links to classes in own files.]
+[note Comments and suggestions (even bugs!) to Paul.A.Bristow (at) hetp (dot) u-net (dot) com]
+
+A printer-friendly PDF version of this manual is also available.
+
+[section:intro Introduction]
+[/ It is a good idea to give *all* sections an id - which must follow section: with *no* space(s).]
+[/ Perhaps also useful to use this text for the Doxygen standalone documentation.]
+
+There are many ways of generating documentation, but this combination of tools,
+(while absurdly complex and troublesome to set up, and a bit slow to build),
+produces some of the nicest and most comprehensive C++ documentation.
+
+Some features are:
+
+* Documentation is written in __quickbook, 
+a [@http://en.wikipedia.org/wiki/Wikiwiki Wiki-Wiki-style language].
+
+* Output in both html and/or [@http://en.wikipedia.org/wiki/Adobe_PDF Adobe PDF] formats.
+  PDF format is useful to readers in a complementary way
+  because it is a convenient single readonly file,
+  and because it can be *globally* searched for any text string,
+  providing a tool complementary to an index
+  (where the index terms are chosen by the author).
+
+* __quickbook files (.qbk like this file `mylibrary.qbk`)
+  are text files that can be edited with your favorite text editor.
+  (Syntax coloring of the Quickbook files can usually be selected
+  for many text editors like __emacs, __textpad, and is [*very] helpful).
+
+* Portable to nearly all platforms.
+
+* __boostlicense (so OK for commercial applications as well as non-profit commercial).
+
+* C++ specific, with C++ syntax colored code __quickbook blocks.
+
+* Automatic syntax coloring of C++ code samples (in both html and pdf).
+
+* __css support.
+   Deriving from Boostbook.css allows the user to chose his own syntax coloring.
+
+* __quickbook documentation can be embedded into C++ code
+  (as comments) to document the code itself
+  and also provide separate html and pdf documentation.
+  This ensures that the code snippets shown in the documentation
+  have been compiled, and are updated
+  automatically as the source C++ is changed.
+
+* Simple markup to link to __doxygen generated entities
+ (namespaces, classes, functions, typedefs).
+
+* __doxygen commands (as C++ comments) provide additional information
+  both in __quickbook automatically added reference section,
+  and also in __doxygen standalone documentation.
+
+* Automatic indexing to __doxygen-generated entities
+  (namespaces, classes, functions, typedefs).
+  and author chosen indexing of text
+  see __autoindex.
+
+* Macro system for simple text substitution.
+
+* Simple markup for italics, bold, preformatted, blurbs,
+  code samples, tables, URLs, anchors, images, etc.
+
+* Images (png, svg, jpg) of diagrams, graphs, equations, pictures...
+  are embedded into pdf and linked from html.
+
+__alert
+But to allow a standalone zipped version of html,
+ all images must be copied (installed) into the doc\html\images sub-directory.
+
+This document is intended to provide a sort of template to help new writers get started,
+with many handy hints and tips (based on the many pitfalls discovered en route).
+
+It is written in __quickbook to demonstrate some features
+(but for much more see __quickbook (itself written in __quickbook)
+especially the __quickbook_syntax.
+
+This documentation can be rebuilt to confirm that the
+ whole complex toolchain is working correctly.
+
+If all works OK, copy the whole `mylibrary directory` structure to you own workspace.
+Check that it works and then use each file as a starting point to add you own files.
+
+__tip I'm sure you will find it useful to do this before you start to write your own stuff! :-)
+
+[endsect] [/section:intro Introduction]
+
+[/ Now follow the main sections of your documentation.
+These .qbk files can of course many sections, and may include other .qbk files,
+links to other files of any type and location,
+and import C++ file snippets that may turn one or more sections into templates that can be included.]
+
+[/include todo.qbk]
+[/include acknowledgements.qbk]  [/ Who deserves credit for what.]
+[/references references.qbk] [/ references to academic papers, patents, prior art...]
+[/include credits.qbk]
+
+[/ If you need some greek, squiggles or math symbols.]
+[/html4_symbols.qbk]
+[/latin1_symbols.qbk]
+[/math_symbols.qbk]
+[/include test_html4_symbols.qbk]
+
+[section:indexing How to get Index(es) of your documentation]
+
+Users get great benefit from an *index* of nearly all documentation, however short.
+The only downside is that total size of documentation can be much increased by the index.
+Since space is not usually an issue, hyperlinking (in both html and pdf)
+makes the size increase not a significant disadvantage.
+
+A C++ Reference section, using __doxygen
+(and __doxygen comments in the C++ code
+provided you can put in the considerable work to provide them)
+will allow users to get an overview of the program,
+ see what classes and function do, and where used,
+and to get to read individual files easily.
+
+AutoIndexing - see __autoindex for guidance.
+
+The "Getting Started and Tutorial " section tells what you [*really] need to know.
+
+Step 1 is not really optional - the indexing process is slow, even with explicit
+specification of the auto-index.exe.  So follow these instructions carefully,
+including changes to your user-config.jam.
+
+[xinclude autodoc.xml] [/ Using Doxygen reference documentation.]
+[/ The position of this in the Quickbook determines the location of the Doxygen references section.]
+
+[/Include the class, function, typedef, and macro indexes, and also a full index with <index/>]
+'''
+  
+  <index type="class_name">
+   <title>Class Index</title>
+  </index>
+  
+  <index type="function_name">
+   <title>Function Index</title>
+  </index>
+  
+  <index type="typedef_name">
+  <title>Typedef Index</title>
+  </index>
+  
+  <index type="macro_name">
+  <title>Macro Index</title>
+  </index>
+
+  <index/>
+
+'''
+
+This is some junk that should [*never] be indexed!
+(because it is excluded in the script file index.idx).
+
+Here is a mention of degrees kelvin which should not 
+put the great man's name in the index to here.
+
+Voltaire should get an (silly) entry only in the indexing section here.
+
+Twain should be indexed in both.
+
+[endsect] [/section:indexing How to get Index(es) of your documentation]
+
+[section:idols Idols]
+
+You can restrict which sections are indexed for a particular term.
+So assuming that the docbook document has the usual hierarchical names for section ID's
+hierarchical names for section IDs(as Quickbook generates, for example),
+you can easily place a constraint on which sections are examined for a particular term.
+
+For example, if you want to index occurrences of Lord Kelvin's name,
+but only in the idols section,  and Voltaire only in the indexing section,
+but Twain in both, you might then add:
+
+[pre
+Kelvin "" ".*idols.*"
+Voltaire "" ".*indexing.*"
+] [/pre]
+
+to the script file,
+assuming that the section ID of the intro is "some_library_or_chapter_name.idols",
+here "mylibrary.idols".
+
+This section contains quotes from some scientist idols
+whose name should only be indexed in this section.
+
+"It ain't what you don't know that gets you into trouble.
+It's what you know for sure that just ain't so."
+['Mark Twain ]
+
+"No problem can stand the assault of sustained thinking."
+['Voltaire  1694-1778]
+
+"When you measure
+what you are speaking about and express it in numbers, you know
+something about it, but when you cannot (or do not) measure it, when
+you cannot (or do not) express it in numbers, then your knowledge is
+of a meagre and unsatisfactory kind."
+['Lord Kelvin ]
+
+
+Lord Kelvin was a famous scientist,
+but we should [*only] want an index to him in the idols section: 
+we don't want a index entry every time we state a temperature in degrees kelvin!
+
+Mark Twain [*should] get an index entry both here and in the idols section.
+
+Voltaire should only get an index entry here, and [*not] in idols section.
+
+[endsect] [/section:idols Idols]
+
+[section:version_id Version Info]
+
+Last edit to Quickbook file __FILENAME__ was at __TIME__ on __DATE__.
+
+[tip This should appear on the pdf version 
+(but may be redundant on html where the last edit date is on the first page).]
+[/See also Adobe Reader pdf File Properties for creation date, and PDF producer, version and page count.]
+
+[endsect] [/section:version_id Version Info]
+
+[/ All your .qbk documentation files should append a copyright claim and license like this (with your name of course).]
+[/ mylibrary.qbk
+  Copyright 2011 Paul A. Bristow.
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
