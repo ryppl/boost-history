@@ -13,7 +13,7 @@
 #define BOOST_TT_TRAIT_OP >>=
 #define BOOST_TT_DEFAULT_RET void
 #define BOOST_TT_FORBIDDEN_IF\
-      ::boost::type_traits::ice_or<\
+   ::boost::type_traits::ice_or<\
       /* two built-in, one non integer */\
       ::boost::type_traits::ice_and<\
          /* two builtin */\

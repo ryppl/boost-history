@@ -56,11 +56,11 @@ struct BOOST_JOIN(BOOST_TT_TRAIT_NAME,_returns_void) {
 };
 
 template < typename RHS, typename RET, typename RETURNS_VOID >
-struct BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl1);
+struct BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl2);
 
 // BOOST_TT_TRAIT_OP RHS does not return void, checks if it is convertible to RET
 template < typename RHS, typename RET >
-struct BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl1)< RHS, RET, ::boost::false_type > {
+struct BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl2)< RHS, RET, ::boost::false_type > {
    static ::boost::type_traits::yes_type is_convertible_to_RET(RET); // this version is preferred for types convertible to RET
    static ::boost::type_traits::no_type is_convertible_to_RET(...); // this version is used otherwise
 
@@ -69,24 +69,22 @@ struct BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl1)< RHS, RET, ::boost::false_type > {
 
 // BOOST_TT_TRAIT_OP RHS returns void!=RET
 template < typename RHS, typename RET >
-struct BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl1)< RHS, RET, ::boost::true_type > {
+struct BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl2)< RHS, RET, ::boost::true_type > {
    BOOST_STATIC_CONSTANT(bool, value = false);
 };
 
-template < typename RHS, typename RET,
-   bool forbidden_if=BOOST_TT_FORBIDDEN_IF
->
-struct BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl);
+template < typename RHS, typename RET, bool forbidden_if >
+struct BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl1);
 
 template < typename RHS, typename RET >
-struct BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl) < RHS, RET, true > {
+struct BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl1) < RHS, RET, true > {
    BOOST_STATIC_CONSTANT(bool, value = false);
 };
 
 // checks for return type if 2nd template parameter RET is non void
 template < typename RHS, typename RET >
-struct BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl) < RHS, RET, false > {
-   BOOST_STATIC_CONSTANT(bool, value = (BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl1)< RHS, RET, typename ::boost::integral_constant< bool, BOOST_JOIN(BOOST_TT_TRAIT_NAME,_returns_void)< RHS >::value > >::value));
+struct BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl1) < RHS, RET, false > {
+   BOOST_STATIC_CONSTANT(bool, value = (BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl2)< RHS, RET, typename ::boost::integral_constant< bool, BOOST_JOIN(BOOST_TT_TRAIT_NAME,_returns_void)< RHS >::value > >::value));
 };
 
 // in case we do not want to check for return type
@@ -94,7 +92,7 @@ tag operator,(tag, int);
 
 // do not check for return type if 2nd template parameter RET is void
 template < typename RHS >
-struct BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl)< RHS, void, false > {
+struct BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl1)< RHS, void, false > {
    static ::boost::type_traits::yes_type check(int); // this version is preferred for types convertible to RET
    static ::boost::type_traits::no_type check(tag); // this version is used otherwise
 
@@ -102,14 +100,17 @@ struct BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl)< RHS, void, false > {
 };
 
 template < typename RET >
-struct BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl)< void, RET, false > {
+struct BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl1)< void, RET, false > {
    BOOST_STATIC_CONSTANT(bool, value = false);
 };
 
 template <>
-struct BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl)< void, void, false > {
+struct BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl1)< void, void, false > {
    BOOST_STATIC_CONSTANT(bool, value = false);
 };
+
+template < typename RHS, typename RET >
+struct BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl) : public BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl1) < RHS, RET, BOOST_TT_FORBIDDEN_IF > { };
 
 } // namespace impl
 } // namespace detail
