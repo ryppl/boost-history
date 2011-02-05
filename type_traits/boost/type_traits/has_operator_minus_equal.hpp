@@ -15,17 +15,20 @@
 #define BOOST_TT_FORBIDDEN_IF\
    ::boost::type_traits::ice_or<\
       /* RHS==pointer */\
-      ::boost::is_pointer< typename ::boost::remove_reference<RHS>::type >::value,\
-      /* LHS==pointer and (LHS==void* or (RHS==builtin and RHS!=integral) */\
+      ::boost::type_traits::ice_and<\
+         ::boost::is_pointer< typename ::boost::remove_reference<RHS>::type >::value,\
+         ::boost::type_traits::ice_or<\
+            ::boost::is_fundamental< LHS >::value,\
+            ::boost::is_pointer< typename ::boost::remove_reference<LHS>::type >::value\
+         >::value\
+      >::value,\
+      /* LHS==pointer and RHS==fundamental and (LHS==void* or RHS!=integral) */\
       ::boost::type_traits::ice_and<\
          ::boost::is_pointer< typename ::boost::remove_reference<LHS>::type >::value,\
+         ::boost::is_fundamental< RHS >::value,\
          ::boost::type_traits::ice_or<\
             ::boost::is_void< typename ::boost::remove_pointer<LHS>::type >::value,\
-            ::boost::type_traits::ice_and<\
-               ::boost::type_traits::ice_not< ::boost::is_class< typename ::boost::remove_reference<RHS>::type >::value >::value,\
-               ::boost::type_traits::ice_not< ::boost::is_union< typename ::boost::remove_reference<RHS>::type >::value >::value,\
-               ::boost::type_traits::ice_not< ::boost::is_integral< typename ::boost::remove_reference<RHS>::type >::value >::value\
-            >::value\
+            ::boost::type_traits::ice_not< ::boost::is_integral< typename ::boost::remove_reference<RHS>::type >::value >::value\
          >::value\
       >::value\
    >::value

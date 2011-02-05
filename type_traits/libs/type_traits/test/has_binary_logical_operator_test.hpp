@@ -59,6 +59,12 @@ struct tag { };
 struct A { };
 struct B : public A { };
 
+struct C { };
+struct D { };
+bool operator BOOST_TT_TRAIT_OP (const C&, void*) { return true; }
+bool operator BOOST_TT_TRAIT_OP (void*, const D&) { return true; }
+bool operator BOOST_TT_TRAIT_OP (const C&, const D&) { return true; }
+
 void run() {
    // test with only one template parameter
    TEST_T(bool, true);
@@ -828,6 +834,11 @@ void run() {
    TEST_TT(B*, double*, true);
    TEST_TT(B*, A*, true);
    TEST_TT(B*, B*, true);
+   TEST_TT(C, void*, true);
+   TEST_TT(D, void*, false);
+   TEST_TT(void*, C, false);
+   TEST_TT(void*, D, true);
+   TEST_TT(C, D, true);
 }
 }
 
