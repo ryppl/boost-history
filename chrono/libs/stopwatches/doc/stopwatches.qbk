@@ -7,8 +7,9 @@
 
 [article Boost.Stopwatches
     [quickbook 1.5]
+    [version 0.2.0]
     [authors [Botet Escriba, Vicente J.]]
-    [copyright 2009-2010 Vicente J. Botet Escriba]
+    [copyright 2009-2011 Vicente J. Botet Escriba]
     [license
         Distributed under the Boost Software License, Version 1.0.
         (See accompanying file LICENSE_1_0.txt or copy at
@@ -24,7 +25,6 @@
 
 [/===============================================]
 
-[template common_type_link[link_text] [link boost_stopwatches.reference.cpp0x.common_type_hpp.common_type [link_text]]]
 [def __common_type__ `common_type`]
 
 [/===============================================]
@@ -32,14 +32,12 @@
 
 
 
-[template ratio_arithmetic[link_text] [link boost_stopwatches.reference.cpp0x.ratio_hpp.ratio_arithmetic [link_text]]]
 [def __ratio_add `ratio_add`]
 [def __ratio_subtract `ratio_subtract`]
 [def __ratio_multiply `ratio_multiply`]
 [def __ratio_divide `ratio_divide`]
 
 
-[template ratio_comparison[link_text] [link boost_stopwatches.reference.cpp0x.ratio_hpp.ratio_comparison [link_text]]]
 [def __ratio_equal `ratio_equal]]
 [def __ratio_not_equal `ratio_not_equal`]
 [def __ratio_less `ratio_less`]]
@@ -48,7 +46,6 @@
 [def __ratio_greater_equal `ratio_greater_equal`]
 
 
-[/template ratio_si_typedefs[link_text] [link boost_stopwatches.reference.cpp0x.ratio_hpp.ratio_si_typedefs [link_text]]]
 [template ratio_si_typedefs[link_text] [link_text]]
 [def __atto [ratio_si_typedefs `atto`]]
 [def __femto [ratio_si_typedefs `femto`]]
@@ -71,7 +68,6 @@
 [/==================]
 
 
-[/template chrono_conf[link_text] [link boost_stopwatches.reference.cpp0x.chrono_chrono_hpp.conf [link_text]]]
 [template chrono_conf[link_text] [link_text]]
 
 
@@ -79,9 +75,9 @@
 [def __BOOST_CHRONO_USES_MPL_ASSERT [chrono_conf `BOOST_CHRONO_USES_MPL_ASSERT`]]
 [def __BOOST_CHRONO_USES_ARRAY_ASSERT [chrono_conf `BOOST_CHRONO_USES_ARRAY_ASSERT`]]
 
-[/def __BOOST_CHRONO_HAS_CLOCK_MONOTONIC [link boost_stopwatches.reference.cpp0x.chrono_chrono_hpp.BOOST_CHRONO_HAS_CLOCK_MONOTONIC `BOOST_CHRONO_HAS_CLOCK_MONOTONIC`]]
+[/def __BOOST_CHRONO_HAS_CLOCK_STEADY [link boost_stopwatches.reference.cpp0x.chrono_chrono_hpp.BOOST_CHRONO_HAS_CLOCK_STEADY `BOOST_CHRONO_HAS_CLOCK_STEADY`]]
 
-[def __BOOST_CHRONO_HAS_CLOCK_MONOTONIC `BOOST_CHRONO_HAS_CLOCK_MONOTONIC`]
+[def __BOOST_CHRONO_HAS_CLOCK_STEADY `BOOST_CHRONO_HAS_CLOCK_STEADY`]
 
 
 [/template clock_concept_link[link_text] [link boost_stopwatches.reference.cpp0x.chrono_chrono_hpp.clock [link_text]]]
@@ -110,9 +106,9 @@
 [def __system_clock__ [system_clock_link `system_clock`]]
 
 [/==================]
-[/template monotonic_clock_link[link_text] [link boost_stopwatches.reference.cpp0x.chrono_chrono_hpp.monotonic_clock [link_text]]]
-[template monotonic_clock_link[link_text] [link_text]]
-[def __monotonic_clock__ [monotonic_clock_link `monotonic_clock`]]
+[/template steady_clock_link[link_text] [link boost_stopwatches.reference.cpp0x.chrono_chrono_hpp.steady_clock [link_text]]]
+[template steady_clock_link[link_text] [link_text]]
+[def __steady_clock__ [steady_clock_link `steady_clock`]]
 
 [/==================]
 [/template high_resolution_clock_link[link_text] [link boost_stopwatches.reference.cpp0x.chrono_chrono_hpp.high_resolution_clock [link_text]]]
@@ -169,6 +165,7 @@
 
 
 [def __stopwatch__ [link boost_stopwatches.reference.stopwatches.stopwatch_hpp.stopwatch `stopwatch`]]
+[def __lightweight_stopwatch__ [link boost_stopwatches.reference.stopwatches.lightweight_stopwatch_hpp.lightweight_stopwatch `lightweight_stopwatch`]]
 
 [def __stopwatch_accumulator__ [link boost_stopwatches.reference.stopwatches.stopwatch_accumulator_hpp.stopwatch_accumulator `stopwatch_accumulator`]]
 
@@ -227,7 +224,7 @@ This documentation makes use of the following naming and formatting conventions.
 
 * Code is in `fixed width font` and is syntax-highlighted.
 * Replaceable text that you will need to supply is in [~italics].
-* Free functions are rendered in the code font followed by (), as in free_function().
+* Free functions are rendered in the code font followed by (), as in `free_function()`.
 * If a name refers to a class template, it is specified like this:   `class_template<>`; that is, it is in code font and its name is followed by `<>`   to indicate that it is a class template.
 * If a name refers to a function-like macro, it is specified like this: `MACRO()`;
   that is, it is uppercase in code font and its name is followed by `()` to   indicate that it is a function-like macro. Object-like macros appear without the   trailing `()`.
@@ -334,8 +331,8 @@ On top of the standard facilities of __Boost_Chrono__, __Boost_Stopwatches__ pro
 [heading Getting __Boost_Stopwatches__ ]
 [/=================================]
 
-You can get the last stable release of __Boost_Stopwatches__ by downloading [^chrono.zip] from the
-[@http://www.boost-consulting.com/vault/index.php?directory=System Boost Vault], directories boost/stopwatches and libs/stopwatches.
+You can get the last stable release of __Boost_Stopwatches__ by downloading [^stopwatches.zip] from the
+[@http://www.boost-consulting.com/vault/index.php?directory=System Boost Vault].
 
 You can also access the latest (unstable?) state from the [@http://svn.boost.org/svn/boost/sandbox/chrono Boost Sandbox], directories boost/stopwatches and libs/stopwatches. Just go to [@http://svn.boost.org/trac/boost/wiki/BoostSubversion here] and follow the instructions there for anonymous SVN access.
 
@@ -378,7 +375,7 @@ In particular, __Boost_Stopwatches__ depends on:
     [[@http://www.boost.org/libs/system [*Boost.System]]] [for error_code, ...]
 ]
 [
-    [[@http://www.boost.org/libs/io [*Boost.Input/Outpu]]] [for io_state, ...]
+    [[@http://www.boost.org/libs/io [*Boost.Input/Output]]] [for io_state, ...]
 ]
 [
     [[@http://www.boost.org/libs/static_assert [*Boost.StaticAssert]]] [for STATIC_ASSERT, ...]
@@ -431,29 +428,28 @@ Current version has been tested on:
 Windows with
 
 * MSVC 10.0
-* MSVC 9.0 Express
-* MSVC 8.0
 
-[/* Intel 11.0]
-
-Scientific Linux with
-
-* GCC 4.1.2
-
-Cygwin with
+Cygwin 1.5 with
 
 * GCC 3.4.4
-* GCC 4.3.2
+
+Cygwin 1.7 with
+
+* GCC 4.3.4
 
 MinGW with
 
 * GCC 4.4.0
+* GCC 4.5.0
+* GCC 4.5.0 -std=c++0x
+* GCC 4.6.0
+* GCC 4.6.0 -std=c++0x
 
-Initial version was tested on:
+Ubuntu 10.10
 
-MacOS with GCC 4.2.4
+* GCC 4.4.5
+* GCC 4.4.5 -std=c++0x
 
-Ubuntu Linux with GCC 4.2.4
 
 [note Please let us know how this works on other platforms/compilers.]
 
@@ -1187,7 +1183,7 @@ Given a __Clock__, __suspendible_clock__ <__Clock__> is a model of __Suspendible
         typedef typename Clock::rep                                       rep;
         typedef typename Clock::period                                    period;
         typedef chrono::__time_point__<suspendible_clock<Clock> >  time_point;
-        static const bool is_monotonic =             true;
+        static const bool is_steady =             true;
 
         static time_point now( system::error_code & ec = system::throws );
 
@@ -1295,6 +1291,17 @@ A Stopwatch must meet the requirements in the following table. In this table `S`
 
 [endsect]
 
+[section:elapsed Member Function `elapsed()`]
+
+            duration elapsed(system::error_code & ec = system::throws) const;
+
+[*Returns:] the cumulated elapsed time.
+
+[*Throw:] Any exception the `Clock::now` function can throw when `ec` is `system::throws`
+
+[endsect]
+
+
 Models of `Stopwatch`:
 
 * __stopwatch__
@@ -1318,8 +1325,8 @@ Models of `Stopwatch`:
         > class __lightweight_stopwatch__;
 
         typedef <see above> system_lightweight_stopwatch;
-        #ifdef __BOOST_CHRONO_HAS_CLOCK_MONOTONIC
-        typedef <see above> monotonic_lightweight_stopwatch;
+        #ifdef __BOOST_CHRONO_HAS_CLOCK_STEADY
+        typedef <see above> steady_lightweight_stopwatch;
         #endif
         typedef <see above> high_resolution_lightweight_stopwatch;
     }}
@@ -1335,7 +1342,7 @@ Structure used to don't start a `lightweight_stopwatch` at construction time.
 
 [section:lightweight_stopwatch Template Class `lightweight_stopwatch<>`]
 
-`lightweight_stopwatch<>` is a model of a __lightweight_stopwatch_concept__.
+`lightweight_stopwatch<>` is a model of a __stopwatch_concept__.
 
 Knowing how long a part of a program takes to execute is useful in both test and production environments.
 A __lightweight_stopwatch__ object measures elapsed time. It is recommended to use it with clocks that measure wall clock rather than CPU time since the intended use is performance measurement on systems where total elapsed time is more important than just process or CPU time.
@@ -1373,11 +1380,10 @@ accuracy of timing information provided the Clock, and this coudl varies a great
 
             duration lifetime( system::error_code & ec = system::throws );
 
-            typedef lightweight_stopwatch_runner<lightweight_stopwatch<Clock> > scoped_run;
-            typedef lightweight_stopwatch_suspender<lightweight_stopwatch<Clock> > scoped_suspend;
-            typedef lightweight_stopwatch_resumer<lightweight_stopwatch<Clock> > scoped_resume;
-            typedef lightweight_stopwatch_reporter<lightweight_stopwatch<Clock> > reporter;
-
+            typedef stopwatch_runner<lightweight_stopwatch<Clock> > scoped_run;
+            typedef stopwatch_suspender<lightweight_stopwatch<Clock> > scoped_suspend;
+            typedef stopwatch_resumer<lightweight_stopwatch<Clock> > scoped_resume;
+            
         };
 
 
@@ -1404,18 +1410,9 @@ accuracy of timing information provided the Clock, and this coudl varies a great
 [endsect]
 
 
-[section:lightweight_stopwatch_elapsed Member Function `elapsed()`]
-
-            duration elapsed(system::error_code & ec = system::throws) const;
-
-[*Returns:] the cumulated elapsed time.
-
-[*Throw:] Any exception the `Clock::now` function can throw when `ec` is `system::throws`
-
-[endsect]
 
 
-[section:stopwatch_accumulator_accumulated Member Function `accumulated()`]
+[section:get_storage Member Function `get_storage()`]
 
             storage& get_storage();
 
@@ -1460,8 +1457,8 @@ accuracy of timing information provided the Clock, and this coudl varies a great
         };
 
         typedef <see above> system_stopwatch;
-        #ifdef __BOOST_CHRONO_HAS_CLOCK_MONOTONIC
-        typedef <see above> monotonic_stopwatch;
+        #ifdef __BOOST_CHRONO_HAS_CLOCK_STEADY
+        typedef <see above> steady_stopwatch;
         #endif
         typedef <see above> high_resolution_stopwatch;
     }}
@@ -1478,7 +1475,9 @@ The maximum measurable elapsed time depends on the Clock parameter. The accuracy
 accuracy of timing information provided the Clock, and this coudl varies a great deal from one clock to another.
 
     template <class Clock>
-    class stopwatch : private base_from_member<typename Clock::duration>, public lightweight_stopwatch<Clock>
+    class stopwatch : 
+	private base_from_member<typename Clock::duration>, 
+	public lightweight_stopwatch<Clock>
     {
     public:
         explicit stopwatch( system::error_code & ec = system::throws  );
@@ -1532,9 +1531,9 @@ The library provides stopwatch short cuts for all the models of __Clock__, repla
 
         typedef boost::stopwatches::stopwatch< boost::chrono::system_clock > 
             system_stopwatch;
-        #ifdef __BOOST_CHRONO_HAS_CLOCK_MONOTONIC
-        typedef boost::stopwatches::stopwatch< boost::chrono::monotonic_clock > 
-            monotonic_stopwatch;
+        #ifdef __BOOST_CHRONO_HAS_CLOCK_STEADY
+        typedef boost::stopwatches::stopwatch< boost::chrono::steady_clock > 
+            steady_stopwatch;
         #endif
         typedef boost::stopwatches::stopwatch< boost::chrono::high_resolution_clock > 
             high_resolution_stopwatch;
@@ -1568,8 +1567,8 @@ The library provides stopwatch short cuts for all the models of __Clock__, repla
         };
 
         typedef <see below> system_stopwatch_accumulator;
-    #ifdef __BOOST_CHRONO_HAS_CLOCK_MONOTONIC
-        typedef <see below> monotonic_stopwatch_accumulator;
+    #ifdef __BOOST_CHRONO_HAS_CLOCK_STEADY
+        typedef <see below> steady_stopwatch_accumulator;
     #endif
         typedef <see below> high_resolution_stopwatch_accumulator;
 
@@ -1582,7 +1581,11 @@ A `stopwatch_accumulator<>` is a model of a __stopwatch_concept__ that allows to
 
     template <class Clock, typename Features, typename Weight>
     class stopwatch_accumulator
-        : private base_from_member<typename accumulators::accumulator_set<typename Clock::duration::rep, Features, Weight> >,
+        : private base_from_member<
+		      typename accumulators::accumulator_set<
+			  typename Clock::duration::rep, Features, Weight
+		      > 
+		  >,
           public lightweight_stopwatch<Clock,Features,Weight> 
     {
     public:
@@ -1624,9 +1627,9 @@ The library provides stopwatch_accumulator shortcuts for all the models of __Clo
 
     typedef boost::stopwatches::stopwatch_accumulator< boost::chrono::system_clock > 
         system_stopwatch_accumulator;
-    #ifdef __BOOST_CHRONO_HAS_CLOCK_MONOTONIC
-    typedef boost::stopwatches::stopwatch_accumulator< boost::chrono::monotonic_clock > 
-        monotonic_stopwatch_accumulator;
+    #ifdef __BOOST_CHRONO_HAS_CLOCK_STEADY
+    typedef boost::stopwatches::stopwatch_accumulator< boost::chrono::steady_clock > 
+        steady_stopwatch_accumulator;
     #endif
     typedef boost::stopwatches::stopwatch_accumulator< boost::chrono::high_resolution_clock > 
         high_resolution_stopwatch_accumulator;
@@ -2008,8 +2011,8 @@ Usage
         template < class Clock, class Formatter > class wstopclock;
 
         typedef <see above> system_stopclock;
-        #ifdef __BOOST_CHRONO_HAS_CLOCK_MONOTONIC
-        typedef <see above> monotonic_stopclock;
+        #ifdef __BOOST_CHRONO_HAS_CLOCK_STEADY
+        typedef <see above> steady_stopclock;
         #endif
         typedef <see above> high_resolution_stopclock;
         typedef <see above> process_real_cpu_stopclock;
@@ -2017,8 +2020,8 @@ Usage
         typedef <see above> process_system_cpu_stopclock;
 
         typedef <see above> system_wstopclock;
-        #ifdef __BOOST_CHRONO_HAS_CLOCK_MONOTONIC
-        typedef <see above> monotonic_wstopclock;
+        #ifdef __BOOST_CHRONO_HAS_CLOCK_STEADY
+        typedef <see above> steady_wstopclock;
         #endif
         typedef <see above> high_resolution_wstopclock;
         typedef <see above> process_real_cpu_wstopclock;
@@ -2122,9 +2125,9 @@ The library provides stopclock shortcuts for all the models of __Clock__, replac
 
         typedef boost::stopwatches::stopclock< boost::chrono::system_clock > 
             system_stopwatch_stopclock;
-        #ifdef __BOOST_CHRONO_HAS_CLOCK_MONOTONIC
-        typedef boost::stopwatches::stopclock< boost::chrono::monotonic_clock > 
-            monotonic_stopwatch_stopclock;
+        #ifdef __BOOST_CHRONO_HAS_CLOCK_STEADY
+        typedef boost::stopwatches::stopclock< boost::chrono::steady_clock > 
+            steady_stopwatch_stopclock;
         #endif
         typedef boost::stopwatches::stopclock< boost::chrono::high_resolution_clock > 
             high_resolution_stopclock;
@@ -2188,9 +2191,9 @@ The library provides wstopclock shortcuts for all the models of __Clock__, repla
 
         typedef boost::stopwatches::wstopclock< boost::chrono::system_clock > 
             system_wstopclock;
-        #ifdef __BOOST_CHRONO_HAS_CLOCK_MONOTONIC
-        typedef boost::stopwatches::wstopclock< boost::chrono::monotonic_clock > 
-            monotonic_wstopclock;
+        #ifdef __BOOST_CHRONO_HAS_CLOCK_STEADY
+        typedef boost::stopwatches::wstopclock< boost::chrono::steady_clock > 
+            steady_wstopclock;
         #endif
         typedef boost::stopwatches::wstopclock< boost::chrono::high_resolution_clock > 
             high_resolution_wstopclock;
@@ -2219,8 +2222,8 @@ The library provides wstopclock shortcuts for all the models of __Clock__, repla
         class wstopclock_accumulator;
 
         typedef <see above> system_stopclock_accumulator;
-        #ifdef __BOOST_CHRONO_HAS_CLOCK_MONOTONIC
-        typedef <see above> monotonic_stopclock_accumulator;
+        #ifdef __BOOST_CHRONO_HAS_CLOCK_STEADY
+        typedef <see above> steady_stopclock_accumulator;
         #endif
         typedef <see above> high_resolution_stopclock_accumulator;
         typedef <see above> process_real_cpu_stopclock_accumulator;
@@ -2228,8 +2231,8 @@ The library provides wstopclock shortcuts for all the models of __Clock__, repla
         typedef <see above> process_system_cpu_stopclock_accumulator;
 
         typedef <see above> system_wstopclock_accumulator;
-        #ifdef __BOOST_CHRONO_HAS_CLOCK_MONOTONIC
-        typedef <see above> monotonic_wstopclock_accumulator;
+        #ifdef __BOOST_CHRONO_HAS_CLOCK_STEADY
+        typedef <see above> steady_wstopclock_accumulator;
         #endif
         typedef <see above> high_resolution_wstopclock_accumulator;
         typedef <see above> process_real_cpu_wstopclock_accumulator;
@@ -2339,9 +2342,9 @@ The library provides stopclock_accumulator shortcuts for all the models of __Clo
 
         typedef boost::stopwatches::stopclock_accumulator< boost::chrono::system_clock > 
             system_stopclock_accumulator;
-        #ifdef __BOOST_CHRONO_HAS_CLOCK_MONOTONIC
-        typedef boost::stopwatches::stopclock_accumulator< boost::chrono::monotonic_clock > 
-            monotonic_stopclock_accumulator;
+        #ifdef __BOOST_CHRONO_HAS_CLOCK_STEADY
+        typedef boost::stopwatches::stopclock_accumulator< boost::chrono::steady_clock > 
+            steady_stopclock_accumulator;
         #endif
         typedef boost::stopwatches::stopclock_accumulator< boost::chrono::high_resolution_clock > 
             high_resolution_stopclock_accumulator;
@@ -2406,9 +2409,9 @@ The library provides wstopclock_accumulator shortcuts for all the models of __Cl
 
         typedef boost::stopwatches::wstopclock_accumulator< boost::chrono::system_clock > 
             system_wstopclock_accumulator;
-        #ifdef __BOOST_CHRONO_HAS_CLOCK_MONOTONIC
-        typedef boost::stopwatches::wstopclock_accumulator< boost::chrono::monotonic_clock > 
-            monotonic_wstopclock_accumulator;
+        #ifdef __BOOST_CHRONO_HAS_CLOCK_STEADY
+        typedef boost::stopwatches::wstopclock_accumulator< boost::chrono::steady_clock > 
+            steady_wstopclock_accumulator;
         #endif
         typedef boost::stopwatches::wstopclock_accumulator< boost::chrono::high_resolution_clock > 
             high_resolution_wstopclock_accumulator;
@@ -2896,6 +2899,15 @@ The library provides basic_24_hours_formatter shortcuts for char and wchar_t.
 [/==================================]
 [section:history Appendix A: History]
 [/==================================]
+
+[section [*Version 0.2.0, Feb 6, 2011] ]
+
+[*Features:]
+
+* Adaptation to new Boost.Chrono inteface.
+
+[endsect]
+
 
 [section [*Version 0.1.0, September 10, 2010] ]
 

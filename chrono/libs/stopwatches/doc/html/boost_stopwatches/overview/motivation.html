@@ -2,9 +2,9 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title>Motivation</title>
-<link rel="stylesheet" href="../../../../../../doc/html/boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.69.1">
-<link rel="start" href="../../index.html" title="Boost.Stopwatches 0.1.0">
+<link rel="stylesheet" href="../../../../../../doc/src/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="../../index.html" title="Boost.Stopwatches 0.2.0">
 <link rel="up" href="../overview.html" title="Overview">
 <link rel="prev" href="../overview.html" title="Overview">
 <link rel="next" href="description.html" title="Description">
@@ -22,35 +22,31 @@
 <div class="spirit-nav">
 <a accesskey="p" href="../overview.html"><img src="../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../overview.html"><img src="../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="description.html"><img src="../../../../../../doc/src/images/next.png" alt="Next"></a>
 </div>
-<div class="section" lang="en">
+<div class="section">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="boost_stopwatches.overview.motivation"></a><a href="motivation.html" title="Motivation">Motivation</a>
+<a name="boost_stopwatches.overview.motivation"></a><a class="link" href="motivation.html" title="Motivation">Motivation</a>
 </h3></div></div></div>
-<a name="boost_stopwatches.overview.motivation.measuring_elapsed_time"></a><h4>
-<a name="id4948837"></a>
-        <a href="motivation.html#boost_stopwatches.overview.motivation.measuring_elapsed_time">Measuring
+<a name="boost_stopwatches.overview.motivation.measuring_elapsed_time"></a><h5>
+<a name="id3343313"></a>
+        <a class="link" href="motivation.html#boost_stopwatches.overview.motivation.measuring_elapsed_time">Measuring
         elapsed time</a>
-      </h4>
+      </h5>
 <p>
         Knowing how long a program, a function or a specific code block takes to
         execute is useful in both test and production environments. <span class="bold"><strong>Boost.Stopwatches</strong></span>
-        introduces the <a href="../reference/stopwatches.html#boost_stopwatches.reference.stopwatches.stopwatch_req" title="
-        Stopwatch Requirements"><code class="computeroutput"><span class="identifier">Stopwatch</span></code></a> concept which is a mechanism
+        introduces the <a class="link" href="../reference/stopwatches.html#boost_stopwatches.reference.stopwatches.stopwatch_req" title="Stopwatch Requirements"><code class="computeroutput"><span class="identifier">Stopwatch</span></code></a> concept which is a mechanism
         to measure the elapsed time. A Stopwatch allows to start, stop, suspend and
-        resume measuring the elapsed time. <a href="../reference/stopwatches.html#boost_stopwatches.reference.stopwatches.stopwatch_hpp.stopwatch" title="
-          Template Class stopwatch&lt;&gt;"><code class="computeroutput"><span class="identifier">stopwatch</span></code></a><code class="computeroutput"><span class="special">&lt;&gt;</span></code>
-        is the basic model of <a href="../reference/stopwatches.html#boost_stopwatches.reference.stopwatches.stopwatch_req" title="
-        Stopwatch Requirements"><code class="computeroutput"><span class="identifier">Stopwatch</span></code></a>.
+        resume measuring the elapsed time. <a class="link" href="../reference/stopwatches.html#boost_stopwatches.reference.stopwatches.stopwatch_hpp.stopwatch" title="Template Class stopwatch&lt;&gt;"><code class="computeroutput"><span class="identifier">stopwatch</span></code></a><code class="computeroutput"><span class="special">&lt;&gt;</span></code>
+        is the basic model of <a class="link" href="../reference/stopwatches.html#boost_stopwatches.reference.stopwatches.stopwatch_req" title="Stopwatch Requirements"><code class="computeroutput"><span class="identifier">Stopwatch</span></code></a>.
       </p>
-<a name="boost_stopwatches.overview.motivation.reporting_elapsed_time"></a><h4>
-<a name="id4948927"></a>
-        <a href="motivation.html#boost_stopwatches.overview.motivation.reporting_elapsed_time">Reporting
+<a name="boost_stopwatches.overview.motivation.reporting_elapsed_time"></a><h5>
+<a name="id3343409"></a>
+        <a class="link" href="motivation.html#boost_stopwatches.overview.motivation.reporting_elapsed_time">Reporting
         elapsed time</a>
-      </h4>
+      </h5>
 <p>
         It is often necessary to report elapsed time on a user display or in a log
-        file. <a href="../reference/reporters.html#boost_stopwatches.reference.reporters.stopwatch_reporter_hpp.stopwatch_reporter" title="
-          Template Class stopwatch_reporter&lt;&gt;"><code class="computeroutput"><span class="identifier">stopwatch_reporter</span></code></a>&lt;&gt; provides
+        file. <a class="link" href="../reference/reporters.html#boost_stopwatches.reference.reporters.stopwatch_reporter_hpp.stopwatch_reporter" title="Template Class stopwatch_reporter&lt;&gt;"><code class="computeroutput"><span class="identifier">stopwatch_reporter</span></code></a>&lt;&gt; provides
         a runtime reporting mechanism for this purpose which can be invoked in just
         one line of code.
       </p>
@@ -74,23 +70,20 @@
 <pre class="programlisting"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">stopwatches</span><span class="special">;</span>
 <span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span>
 <span class="special">{</span>
-    <a href="../reference/reporters.html#boost_stopwatches.reference.reporters.stopclock_hpp.stopclock" title="
-          Template Class stopclock&lt;&gt;"><code class="computeroutput"><span class="identifier">stopclock</span></code></a><span class="special">&lt;&gt;</span> <span class="identifier">_</span><span class="special">;</span>
+    <a class="link" href="../reference/reporters.html#boost_stopwatches.reference.reporters.stopclock_hpp.stopclock" title="Template Class stopclock&lt;&gt;"><code class="computeroutput"><span class="identifier">stopclock</span></code></a><span class="special">&lt;&gt;</span> <span class="identifier">_</span><span class="special">;</span>
   <span class="comment">// ...
 </span><span class="special">}</span>
 </pre>
-<a name="boost_stopwatches.overview.motivation.how_reliable_are_these_measures_"></a><h4>
-<a name="id4949316"></a>
-        <a href="motivation.html#boost_stopwatches.overview.motivation.how_reliable_are_these_measures_">How
+<a name="boost_stopwatches.overview.motivation.how_reliable_are_these_measures_"></a><h5>
+<a name="id3394301"></a>
+        <a class="link" href="motivation.html#boost_stopwatches.overview.motivation.how_reliable_are_these_measures_">How
         reliable are these measures?</a>
-      </h4>
+      </h5>
 <p>
         There are a number of things that can lead to unreliable measurement (see
-        <a href="../appendices/rationale.html" title=" Appendix B:
-      Rationale">here</a> for more
+        <a class="link" href="../appendices/rationale.html" title="Appendix B: Rationale">here</a> for more
         details), but they mostly amount to reporting overhead. Boost.Chrono provides
-        two ways to improve reliability of time measurements. A <a href="../reference/stopwatches.html#boost_stopwatches.reference.stopwatches.stopwatch_accumulator_hpp.stopwatch_accumulator" title="
-          Template Class stopwatch_accumulator&lt;&gt;"><code class="computeroutput"><span class="identifier">stopwatch_accumulator</span></code></a> only reports
+        two ways to improve reliability of time measurements. A <a class="link" href="../reference/stopwatches.html#boost_stopwatches.reference.stopwatches.stopwatch_accumulator_hpp.stopwatch_accumulator" title="Template Class stopwatch_accumulator&lt;&gt;"><code class="computeroutput"><span class="identifier">stopwatch_accumulator</span></code></a> only reports
         statistics once all measurements have been acquired, which removes reporting
         overhead from the measurements. The other approach is to use a <code class="computeroutput"><span class="identifier">SuspendibleClock</span></code> such that the reporting
         overhead can be ignored by suspending elapsed time tracking during reporting
@@ -99,7 +92,7 @@
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><div class="copyright-footer">Copyright &#169; 2009 -2010 Vicente J. Botet Escriba<p>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2009 -2011 Vicente J. Botet Escriba<p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>

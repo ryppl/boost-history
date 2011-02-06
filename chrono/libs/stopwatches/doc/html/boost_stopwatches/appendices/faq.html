@@ -1,15 +1,13 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
-<title> Appendix D: FAQ</title>
-<link rel="stylesheet" href="../../../../../../doc/html/boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.69.1">
-<link rel="start" href="../../index.html" title="Boost.Stopwatches 0.1.0">
+<title>Appendix D: FAQ</title>
+<link rel="stylesheet" href="../../../../../../doc/src/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="../../index.html" title="Boost.Stopwatches 0.2.0">
 <link rel="up" href="../appendices.html" title="Appendices">
-<link rel="prev" href="implementation.html" title=" Appendix
-      C: Implementation Notes">
-<link rel="next" href="acknowledgements.html" title=" Appendix
-      E: Acknowledgements">
+<link rel="prev" href="implementation.html" title="Appendix C: Implementation Notes">
+<link rel="next" href="acknowledgements.html" title="Appendix E: Acknowledgements">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
@@ -24,49 +22,49 @@
 <div class="spirit-nav">
 <a accesskey="p" href="implementation.html"><img src="../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../appendices.html"><img src="../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="acknowledgements.html"><img src="../../../../../../doc/src/images/next.png" alt="Next"></a>
 </div>
-<div class="section" lang="en">
+<div class="section">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="boost_stopwatches.appendices.faq"></a><a href="faq.html" title=" Appendix D: FAQ"> Appendix D: FAQ</a>
+<a name="boost_stopwatches.appendices.faq"></a><a class="link" href="faq.html" title="Appendix D: FAQ">Appendix D: FAQ</a>
 </h3></div></div></div>
-<a name="boost_stopwatches.appendices.faq.why_does_stopwatch_reporter_only_display_millisecond_place_precision_when_the_underlying_clock_has_nanosecond_precision_"></a><h4>
-<a name="id5047742"></a>
-        <a href="faq.html#boost_stopwatches.appendices.faq.why_does_stopwatch_reporter_only_display_millisecond_place_precision_when_the_underlying_clock_has_nanosecond_precision_">Why
+<a name="boost_stopwatches.appendices.faq.why_does_stopwatch_reporter_only_display_millisecond_place_precision_when_the_underlying_clock_has_nanosecond_precision_"></a><h5>
+<a name="id3447553"></a>
+        <a class="link" href="faq.html#boost_stopwatches.appendices.faq.why_does_stopwatch_reporter_only_display_millisecond_place_precision_when_the_underlying_clock_has_nanosecond_precision_">Why
         does stopwatch_reporter only display millisecond place precision when the
         underlying Clock has nanosecond precision?</a>
-      </h4>
+      </h5>
 <p>
         To avoid giving the impression of precision where none exists. See Caveat
         emptor. You can always specify additional decimal places if you want to live
         dangerously.
       </p>
-<a name="boost_stopwatches.appendices.faq.why_does_stopwatch_reporter_sometimes_report_more_cpu_seconds_than_real_seconds_"></a><h4>
-<a name="id5047781"></a>
-        <a href="faq.html#boost_stopwatches.appendices.faq.why_does_stopwatch_reporter_sometimes_report_more_cpu_seconds_than_real_seconds_">Why
+<a name="boost_stopwatches.appendices.faq.why_does_stopwatch_reporter_sometimes_report_more_cpu_seconds_than_real_seconds_"></a><h5>
+<a name="id3447592"></a>
+        <a class="link" href="faq.html#boost_stopwatches.appendices.faq.why_does_stopwatch_reporter_sometimes_report_more_cpu_seconds_than_real_seconds_">Why
         does stopwatch_reporter sometimes report more cpu seconds than real seconds?</a>
-      </h4>
+      </h5>
 <p>
         Ask your operating system supplier. The results have been inspected with
         a debugger, and both for Windows and Linux, that's what the OS appears to
         be reporting at times.
       </p>
-<a name="boost_stopwatches.appendices.faq.can_i_obtain_statistics_of_the_time_elapsed_between_calls_to_a_function_"></a><h4>
-<a name="id5047814"></a>
-        <a href="faq.html#boost_stopwatches.appendices.faq.can_i_obtain_statistics_of_the_time_elapsed_between_calls_to_a_function_">Can
+<a name="boost_stopwatches.appendices.faq.can_i_obtain_statistics_of_the_time_elapsed_between_calls_to_a_function_"></a><h5>
+<a name="id3447625"></a>
+        <a class="link" href="faq.html#boost_stopwatches.appendices.faq.can_i_obtain_statistics_of_the_time_elapsed_between_calls_to_a_function_">Can
         I obtain statistics of the time elapsed between calls to a function?</a>
-      </h4>
+      </h5>
 <p>
         The library does not provides this feature.
       </p>
-<a name="boost_stopwatches.appendices.faq.what_happens_if_i_press_ctrl_c_and_program_terminates__what_log_would_boost_stopwatches_output_"></a><h4>
-<a name="id5047842"></a>
-        <a href="faq.html#boost_stopwatches.appendices.faq.what_happens_if_i_press_ctrl_c_and_program_terminates__what_log_would_boost_stopwatches_output_">What
+<a name="boost_stopwatches.appendices.faq.what_happens_if_i_press_ctrl_c_and_program_terminates__what_log_would_boost_stopwatches_output_"></a><h5>
+<a name="id3447653"></a>
+        <a class="link" href="faq.html#boost_stopwatches.appendices.faq.what_happens_if_i_press_ctrl_c_and_program_terminates__what_log_would_boost_stopwatches_output_">What
         happens if I press Ctrl+C and program terminates? What log would Boost.Stopwatches
         output?</a>
-      </h4>
+      </h5>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><div class="copyright-footer">Copyright &#169; 2009 -2010 Vicente J. Botet Escriba<p>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2009 -2011 Vicente J. Botet Escriba<p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>

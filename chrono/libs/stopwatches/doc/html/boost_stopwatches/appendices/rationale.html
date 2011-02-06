@@ -1,15 +1,13 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
-<title> Appendix B:
-      Rationale</title>
-<link rel="stylesheet" href="../../../../../../doc/html/boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.69.1">
-<link rel="start" href="../../index.html" title="Boost.Stopwatches 0.1.0">
+<title>Appendix B: Rationale</title>
+<link rel="stylesheet" href="../../../../../../doc/src/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="../../index.html" title="Boost.Stopwatches 0.2.0">
 <link rel="up" href="../appendices.html" title="Appendices">
-<link rel="prev" href="history.html" title=" Appendix A: History">
-<link rel="next" href="implementation.html" title=" Appendix
-      C: Implementation Notes">
+<link rel="prev" href="history.html" title="Appendix A: History">
+<link rel="next" href="implementation.html" title="Appendix C: Implementation Notes">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
@@ -24,21 +22,19 @@
 <div class="spirit-nav">
 <a accesskey="p" href="history.html"><img src="../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../appendices.html"><img src="../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="implementation.html"><img src="../../../../../../doc/src/images/next.png" alt="Next"></a>
 </div>
-<div class="section" lang="en">
+<div class="section">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="boost_stopwatches.appendices.rationale"></a><a href="rationale.html" title=" Appendix B:
-      Rationale"> Appendix B:
-      Rationale</a>
+<a name="boost_stopwatches.appendices.rationale"></a><a class="link" href="rationale.html" title="Appendix B: Rationale">Appendix B: Rationale</a>
 </h3></div></div></div>
-<a name="boost_stopwatches.appendices.rationale.how_reliable_are_these_measures_"></a><h4>
-<a name="id5047406"></a>
-        <a href="rationale.html#boost_stopwatches.appendices.rationale.how_reliable_are_these_measures_">How
+<a name="boost_stopwatches.appendices.rationale.how_reliable_are_these_measures_"></a><h5>
+<a name="id3447225"></a>
+        <a class="link" href="rationale.html#boost_stopwatches.appendices.rationale.how_reliable_are_these_measures_">How
         reliable are these measures?</a>
-      </h4>
+      </h5>
 <p>
         There are three cases which can lead to get unreliable measures:
       </p>
-<div class="itemizedlist"><ul type="disc"><li>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
             It is not possible to measure events that transpire at rates of the same
             order of magnitude as the clock's precision with any reliability. For
             example, a 10ms clock cannot be used reliably to measure elapsed times
@@ -53,27 +49,26 @@
 </p>
 <pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
     <span class="special">...</span>
-    <a href="../reference/reporters.html#boost_stopwatches.reference.reporters.stopclock_hpp.stopclock" title="
-          Template Class stopclock&lt;&gt;"><code class="computeroutput"><span class="identifier">stopclock</span></code></a><span class="special">&lt;</span> <code class="computeroutput"><span class="identifier">high_resolution_clock</span></code><span class="special">&gt;</span> <span class="identifier">_</span><span class="special">;</span>
+    <a class="link" href="../reference/reporters.html#boost_stopwatches.reference.reporters.stopclock_hpp.stopclock" title="Template Class stopclock&lt;&gt;"><code class="computeroutput"><span class="identifier">stopclock</span></code></a><span class="special">&lt;</span> <code class="computeroutput"><span class="identifier">high_resolution_clock</span></code><span class="special">&gt;</span> <span class="identifier">_</span><span class="special">;</span>
 </pre>
 <p>
       </p>
-<div class="itemizedlist"><ul type="disc">
-<li>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
             Using a process clock in a multithreaded application will give elapsed
             time for the process as a whole, including threads other than the calling
             thread. To get time elapsed for a specific thread, use the supplied
             <code class="computeroutput"><span class="identifier">thread_clock</span></code> which returns
             time elapsed for the calling thread only, if supported by the platform.
           </li>
-<li>
+<li class="listitem">
             When stopclocks are nested, usually from stopclocks appearing in each
             of several nested function calls, the overhead of the stopclock processing
             begins to be significant relative to run time of the code being measured.
             The innermost measurements remain accurate, but those in the outermost
             layers can measure too much overhead to be trustworthy.
           </li>
-<li>
+<li class="listitem">
             Nested stopclocks (usually nested function calls where each function
             contains a stopclock). When the nesting is deep enough, the cumulative
             overhead of all the stopclock functionality make the data unreliable
@@ -86,16 +81,15 @@
         Most of the stopclock overhead is likely due to logging. There are two things
         we can do to make the difference :
       </p>
-<div class="itemizedlist"><ul type="disc">
-<li>
-            Don't flush log information while measuring elapsed time. A <a href="../reference/stopwatches.html#boost_stopwatches.reference.stopwatches.stopwatch_accumulator_hpp.stopwatch_accumulator" title="
-          Template Class stopwatch_accumulator&lt;&gt;"><code class="computeroutput"><span class="identifier">stopwatch_accumulator</span></code></a> can make
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+            Don't flush log information while measuring elapsed time. A <a class="link" href="../reference/stopwatches.html#boost_stopwatches.reference.stopwatches.stopwatch_accumulator_hpp.stopwatch_accumulator" title="Template Class stopwatch_accumulator&lt;&gt;"><code class="computeroutput"><span class="identifier">stopwatch_accumulator</span></code></a> can make
             that possible, because it don't report until all the measures have been
             compiled and then report some statistics. Alternatively, an asynchronous
             stream would permit normal logging but by a thread other than the one
             being measured.
           </li>
-<li>
+<li class="listitem">
             Add a mechanism to track the difference between the application time
             and stopclock time. If a <code class="computeroutput"><span class="identifier">Clock</span></code>
             models <code class="computeroutput"><span class="identifier">SuspendibleClock</span></code>
@@ -107,7 +101,7 @@
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><div class="copyright-footer">Copyright &#169; 2009 -2010 Vicente J. Botet Escriba<p>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2009 -2011 Vicente J. Botet Escriba<p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>
