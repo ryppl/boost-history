@@ -13,7 +13,9 @@ member data, and static member function.
 If you want to contact me directly, my name is 
 Edward Diener and you can reach me at 
 eld@tropicsoft.com. I am an independent computer
-consultant and I live in Atlanta, Georgia.
+consultant and I live in Atlanta, Georgia, and I 
+am always looking for exciting projects on which to 
+work for a living.
 
 You can also of course use the Boost newsgroups 
 to ask questions and make comments or suggestions 
