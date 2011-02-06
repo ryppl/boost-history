@@ -327,10 +327,18 @@ inline child create_child(const std::string &executable, Arguments args,
         detail::collection_to_windows_cmdline(args);
 
     boost::scoped_array<char> exe(new char[executable.size() + 1]);
+#if (BOOST_MSVC >= 1400)
     strcpy_s(exe.get(), executable.size() + 1, executable.c_str());
+#else
+    strcpy(exe.get(), executable.c_str());
+#endif
 
     boost::scoped_array<char> workdir(new char[ctx.work_dir.size() + 1]);
+#if (BOOST_MSVC >= 1400)
     strcpy_s(workdir.get(), ctx.work_dir.size() + 1, ctx.work_dir.c_str());
+#else
+    strcpy_s(workdir.get(), ctx.work_dir.c_str());
+#endif
 
     boost::shared_array<char> envstrs =
         detail::environment_to_windows_strings(ctx.env);

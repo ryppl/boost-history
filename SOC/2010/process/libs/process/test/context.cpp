@@ -39,7 +39,7 @@ BOOST_AUTO_TEST_CASE(test_context_with_default_streams)
     BOOST_CHECK_EQUAL(stdin_ends.child.native(), STDIN_FILENO); 
     BOOST_CHECK_EQUAL(stdout_ends.child.native(), STDOUT_FILENO); 
     BOOST_CHECK_EQUAL(stderr_ends.child.native(), STDERR_FILENO); 
-#elif defined(BOOST_WINDOWS_API) 
+#elif defined(BOOST_WINDOWS_API) && (_WIN32_WINNT < 0x0601) 
     BOOST_CHECK_EQUAL(stdin_ends.child.native(), 
         GetStdHandle(STD_INPUT_HANDLE)); 
     BOOST_CHECK_EQUAL(stdout_ends.child.native(), 
