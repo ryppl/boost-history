@@ -22,8 +22,6 @@
 #include <boost/accumulators/statistics/max.hpp>
 #include <boost/accumulators/statistics/mean.hpp>
 
-#include <boost/config/abi_prefix.hpp> // must be the last #include
-
 namespace boost
 {
   namespace stopwatches
@@ -82,7 +80,7 @@ namespace boost
         typedef typename Clock::rep        rep;
         typedef typename Clock::period     period;
 
-        explicit lightweight_stopwatch( storage_type& acc, system::error_code & ec = system::throws )
+        explicit lightweight_stopwatch( storage_type& acc, system::error_code & ec = BOOST_CHRONO_THROWS )
         : running_(false), suspended_(false),
           start_(duration::zero()), level_(0), partial_(duration::zero()), suspend_level_(0)
           , storage_(&acc), construction_(clock::now( ))
@@ -104,26 +102,32 @@ namespace boost
 
         
 //--------------------------------------------------------------------------------------//
-        std::pair<duration, time_point> restart( system::error_code & ec = system::throws )
+        std::pair<duration, time_point> restart( system::error_code & ec = BOOST_CHRONO_THROWS )
         {
-            time_point tmp=clock::now( ec );
-            if (ec) return time_point();
-            if (running_&&(level_==1)) {
-                partial_ += tmp - start_;
-                traits::set_duration(get_storage(),partial_);
-                partial_=duration::zero();
-            } else {
-                running_=true;
-            }
-            start_=tmp;
-            return std::make_pair(traits::get_duration(get_storage()),start_);
+		time_point tmp=clock::now( ec );
+		if (!BOOST_CHRONO_IS_THROWS(ec)) {
+			if (ec) return time_point();
+		}
+		if (running_&&(level_==1)) {
+			partial_ += tmp - start_;
+			traits::set_duration(get_storage(),partial_);
+			partial_=duration::zero();
+		} else {
+			running_=true;
+		}
+		start_=tmp;
+		return std::make_pair(traits::get_duration(get_storage()),start_);
         }
 
-        time_point start( system::error_code & ec = system::throws )
+        time_point start( system::error_code & ec = BOOST_CHRONO_THROWS )
         {
             if (!running_) {
                 time_point tmp = clock::now( ec );
-                if (ec) return time_point();
+		if (!BOOST_CHRONO_IS_THROWS(ec)) {
+			if (ec) {
+				return time_point();
+			}
+		}
                 start_ = tmp;
                 ++level_;
                 running_ = true;
@@ -135,11 +139,13 @@ namespace boost
             }
         }
 
-        duration stop( system::error_code & ec = system::throws )
+        duration stop( system::error_code & ec = BOOST_CHRONO_THROWS )
         {
             if (running_ && (--level_==0)) {
                 time_point tmp=clock::now( ec );
-                if (ec) return duration::zero();
+		if (!BOOST_CHRONO_IS_THROWS(ec)) {
+			if (ec) return duration::zero();
+		}
                 partial_ += tmp - start_;
                 traits::set_duration(get_storage(),partial_);
                 partial_=duration::zero();
@@ -151,12 +157,14 @@ namespace boost
             }
         }
 
-        duration suspend( system::error_code & ec = system::throws )
+        duration suspend( system::error_code & ec = BOOST_CHRONO_THROWS )
         {
             if (running_) {
                 if (!suspended_) {
                     time_point tmp=clock::now( ec );
-                    if (ec) return duration::zero();
+		    if (!BOOST_CHRONO_IS_THROWS(ec)) {
+			if (ec) return duration::zero();
+		    }
                     ++suspend_level_;
                     partial_ += tmp - start_;
                     suspended_=true;
@@ -172,11 +180,13 @@ namespace boost
             }
         }
 
-        time_point resume( system::error_code & ec = system::throws )
+        time_point resume( system::error_code & ec = BOOST_CHRONO_THROWS )
         {
             if (suspended_&&(--suspend_level_==0)) {
                 time_point tmp = clock::now( ec );
-                if (ec) return time_point();
+		if (!BOOST_CHRONO_IS_THROWS(ec)) {
+			if (ec) return time_point();
+		}
                 start_ = tmp;
                 suspended_=false;
                 return start_;
@@ -186,14 +196,16 @@ namespace boost
             }
         }
 
-        duration elapsed( system::error_code & ec = system::throws )
+        duration elapsed( system::error_code & ec = BOOST_CHRONO_THROWS )
         {
             if (running_) {
                 if (suspended_)
                     return traits::get_duration(get_storage());
                 else {
                     time_point tmp = clock::now( ec );
+		if (!BOOST_CHRONO_IS_THROWS(ec)) {
                     if (ec) return duration::zero();
+		}
                     return traits::get_duration(get_storage())+tmp - start_;
                 }
             } else {
@@ -201,15 +213,17 @@ namespace boost
             }
         }
 
-        time_point now( system::error_code & ec = system::throws )
+        time_point now( system::error_code & ec = BOOST_CHRONO_THROWS )
         {
             return time_point(elapsed( ec ));
         }
 
-        void reset( system::error_code & ec = system::throws )
+        void reset( system::error_code & ec = BOOST_CHRONO_THROWS )
         {
             construction_=clock::now( ec );
+		if (!BOOST_CHRONO_IS_THROWS(ec)) {
             if (ec) return;
+		}
             traits::reset(get_storage());
             running_=false;
             suspended_=false;
@@ -224,7 +238,7 @@ namespace boost
             return *storage_;
         }
 
-        duration lifetime( system::error_code & ec = system::throws )
+        duration lifetime( system::error_code & ec = BOOST_CHRONO_THROWS )
         {
             return  clock::now( ec ) - construction_;
         }
@@ -253,16 +267,16 @@ namespace boost
                         accumulators::tag::mean
         > default_features;
     typedef boost::stopwatches::lightweight_stopwatch< boost::chrono::system_clock > system_lightweight_stopwatch;
-#ifdef BOOST_STOPWATCHES_HAS_CLOCK_MONOTONIC
-    typedef boost::stopwatches::lightweight_stopwatch< boost::chrono::monotonic_clock > monotonic_lightweight_stopwatch;
+#ifdef BOOST_CHRONO_HAS_CLOCK_STEADY
+    typedef boost::stopwatches::lightweight_stopwatch< boost::chrono::steady_clock > steady_lightweight_stopwatch;
 #endif
     typedef boost::stopwatches::lightweight_stopwatch< boost::chrono::high_resolution_clock > high_resolution_lightweight_stopwatch;
 
     typedef boost::stopwatches::lightweight_stopwatch< boost::chrono::system_clock,
         lightweight_stopwatch_accumulator_set_traits<default_features> > system_lightweight_stopwatch_accumulator;
-#ifdef BOOST_STOPWATCHES_HAS_CLOCK_MONOTONIC
-    typedef boost::stopwatches::lightweight_stopwatch< boost::chrono::monotonic_clock,
-        lightweight_stopwatch_accumulator_set_traits<default_features> > monotonic_lightweight_stopwatch_accumulator;
+#ifdef BOOST_CHRONO_HAS_CLOCK_STEADY
+    typedef boost::stopwatches::lightweight_stopwatch< boost::chrono::steady_clock,
+        lightweight_stopwatch_accumulator_set_traits<default_features> > steady_lightweight_stopwatch_accumulator;
 #endif
     typedef boost::stopwatches::lightweight_stopwatch< boost::chrono::high_resolution_clock,
         lightweight_stopwatch_accumulator_set_traits<default_features> > high_resolution_lightweight_stopwatch_accumulator;
@@ -272,7 +286,5 @@ namespace boost
 
   } // namespace stopwatches
 } // namespace boost
-
-#include <boost/config/abi_suffix.hpp> // pops abi_prefix.hpp pragmas
 
 #endif

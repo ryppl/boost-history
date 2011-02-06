@@ -17,8 +17,6 @@
 #include <boost/thread/tss.hpp>
 #include <memory>
 
-//~ #include <boost/config/abi_prefix.hpp> // must be the last #include
-
 namespace boost { namespace stopwatches {
 
     template < class Clock=chrono::high_resolution_clock >
@@ -28,7 +26,7 @@ namespace boost { namespace stopwatches {
         typedef typename Clock::rep                                       rep;
         typedef typename Clock::period                                    period;
         typedef chrono::time_point<suspendible_clock<Clock> >  time_point;
-        static const bool is_monotonic =             true;
+        static const bool is_steady =             true;
 
     private:
         struct thread_specific_context {
@@ -43,23 +41,27 @@ namespace boost { namespace stopwatches {
                 , suspended_duration_(duration::zero())
                 , suspend_level_(0)
             {}
-            duration suspended(system::error_code & ec = system::throws) {
+            duration suspended(system::error_code & ec = BOOST_CHRONO_THROWS) {
                 if (!suspended_) {
                     ec.clear();
                     return suspended_duration_;                   
                 } else {
                     time_point tmp;
                     tmp+=duration(Clock::now(ec).time_since_epoch());
-                    if (ec) return duration::zero();
+		    if (!BOOST_CHRONO_IS_THROWS(ec)) {
+                      if (ec) return duration::zero();
+		    }
                     return suspended_duration_ + tmp - suspended_time_;
                 }
             }
 
-            void suspend( system::error_code & ec = system::throws ) {
+            void suspend( system::error_code & ec = BOOST_CHRONO_THROWS ) {
                 if (!suspended_) {
                     time_point tmp;
                     tmp+=duration(Clock::now(ec).time_since_epoch());
-                    if (ec) return;
+		    if (!BOOST_CHRONO_IS_THROWS(ec)) {
+                      if (ec) return;
+		    }
                     ++suspend_level_;
                     suspended_time_ = tmp;
                     suspended_=true;
@@ -68,11 +70,13 @@ namespace boost { namespace stopwatches {
                     ++suspend_level_;
                 }
             }
-            void resume( system::error_code & ec = system::throws ) {
+            void resume( system::error_code & ec = BOOST_CHRONO_THROWS ) {
                 if (suspended_&&(--suspend_level_==0)) {
                     time_point tmp;
                     tmp+=duration(Clock::now(ec).time_since_epoch());
-                    if (ec) return;
+		    if (!BOOST_CHRONO_IS_THROWS(ec)) {
+                      if (ec) return;
+		    }
                     suspended_duration_ += tmp - suspended_time_;
                     suspended_=false;
                 } else {
@@ -84,7 +88,7 @@ namespace boost { namespace stopwatches {
         static thread_specific_context* instance(system::error_code & ec) {
             thread_specific_context* ptr= ptr_.get();
             if (ptr==0) {
-                if (&ec == &system::throws) {
+                if (BOOST_CHRONO_IS_THROWS(ec))  {
                     std::auto_ptr<thread_specific_context> ptr2(new thread_specific_context());
                     ptr_.reset(ptr2.get());
                     ptr = ptr2.release();
@@ -125,21 +129,25 @@ namespace boost { namespace stopwatches {
         static time_point now( system::error_code & ec ) {
             time_point res;
             typename Clock::time_point t=Clock::now(ec);
-            if (ec) return time_point();
+	    if (!BOOST_CHRONO_IS_THROWS(ec)) {
+              if (ec) return time_point();
+	    }
             res+= duration(t.time_since_epoch())-suspended(ec);
-            if (ec) return time_point();
+	    if (!BOOST_CHRONO_IS_THROWS(ec)) {
+              if (ec) return time_point();
+	    }
             return res;
         }
 
-        static void suspend( system::error_code & ec = system::throws ) {
+        static void suspend( system::error_code & ec = BOOST_CHRONO_THROWS ) {
             thread_specific_context* ptr= instance(ec);
             if (ptr!=0) ptr->suspend(ec);
         }
-        static void resume( system::error_code & ec = system::throws ) {
+        static void resume( system::error_code & ec = BOOST_CHRONO_THROWS ) {
             thread_specific_context* ptr= instance(ec);
             if (ptr!=0) ptr->resume(ec);
         }
-        static duration suspended(system::error_code & ec = system::throws)
+        static duration suspended(system::error_code & ec = BOOST_CHRONO_THROWS)
         {
             thread_specific_context* ptr= instance(ec);
             if (ptr!=0) {
@@ -149,7 +157,7 @@ namespace boost { namespace stopwatches {
         }
         class scoped_suspend {
         public:
-            scoped_suspend(system::error_code & ec = system::throws)
+            scoped_suspend(system::error_code & ec = BOOST_CHRONO_THROWS)
                 : ptr_(instance(ec))
             {
                 if (ptr_!=0) ptr_->suspend(ec);
@@ -180,7 +188,7 @@ namespace boost { namespace stopwatches {
     class scoped_suspend<suspendible_clock<Clock> >
         : public suspendible_clock<Clock>::scoped_suspend {
     public:
-        scoped_suspend(system::error_code & ec = system::throws) : suspendible_clock<Clock>::scoped_suspend(ec) {}
+        scoped_suspend(system::error_code & ec = BOOST_CHRONO_THROWS) : suspendible_clock<Clock>::scoped_suspend(ec) {}
     private:
         //~ scoped_suspend(); // = delete;
         scoped_suspend(const scoped_suspend&); // = delete;
@@ -189,7 +197,5 @@ namespace boost { namespace stopwatches {
 
 } // namespace stopwatches
 } // namespace boost
-
-//~ #include <boost/config/abi_suffix.hpp> // pops abi_prefix.hpp pragmas
 
 #endif  // BOOST_CHRONO_SUSPENDIBLE_CLOCK_HPP

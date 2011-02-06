@@ -23,11 +23,7 @@
 #include <cstring>
 #include <cassert>
 
-#include <boost/config/abi_prefix.hpp> // must be the last #include
-
-
 #define BOOST_STOPWATCHES_TIME_FORMAT_DEFAULT "real %rs, cpu %cs (%p%), user %us, system %ss\n"
-
 
 namespace boost { namespace stopwatches  {
 
@@ -66,7 +62,7 @@ namespace boost { namespace stopwatches  {
           //  NOTE WELL: Will truncate least-significant digits to LDBL_DIG, which may
           //  be as low as 10, although will be 15 for many common platforms.
           {
-            if (&ec != &system::throws) ec.clear();
+	    if (!BOOST_CHRONO_IS_THROWS(ec))  ec.clear();
             typedef typename Stopwatch::duration duration;
             typedef typename duration::rep rep;
             if ( times.real < 0 ) return;
@@ -131,7 +127,9 @@ namespace boost { namespace stopwatches  {
             typedef typename Stopwatch::duration duration;
             typedef typename duration::rep rep;
             duration d = stopwatch_.elapsed( ec );
-            if (ec) return;
+	    if (!BOOST_CHRONO_IS_THROWS(ec)) {
+		if (ec) return;
+	    }
             rep times=d.count();
             show_time<Stopwatch>(times, format, places, os, ec);
         }
@@ -177,7 +175,5 @@ namespace detail {
 #else
 #define BOOST_STOPWATCHES_TIME_FUNCTION_FORMAT BOOST_STOPWATCHES_TIME_FORMAT(BOOST_CURRENT_FUNCTION)
 #endif
-
-#include <boost/config/abi_suffix.hpp> // pops abi_prefix.hpp pragmas
 
 #endif // BOOST_STOPWATCHES_TIME_FORMATTER_HPP

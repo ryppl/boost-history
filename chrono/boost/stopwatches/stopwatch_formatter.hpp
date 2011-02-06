@@ -22,8 +22,6 @@
 #include <cstring>
 #include <cassert>
 
-#include <boost/config/abi_prefix.hpp> // must be the last #include
-
 #define BOOST_STOPWATCHES_STOPWATCH_FORMAT_DEFAULT "%ds\n"
 
 namespace boost { namespace stopwatches  {
@@ -130,7 +128,5 @@ namespace detail {
 #else
 #define BOOST_STOPWATCHES_STOPWATCH_FUNCTION_FORMAT BOOST_STOPWATCHES_STOPWATCH_FORMAT(BOOST_CURRENT_FUNCTION)
 #endif
-
-#include <boost/config/abi_suffix.hpp> // pops abi_prefix.hpp pragmas
 
 #endif

@@ -18,8 +18,6 @@
 #include <boost/stopwatches/lightweight_stopwatch.hpp>
 #include <boost/utility/base_from_member.hpp>
 
-#include <boost/config/abi_prefix.hpp> // must be the last #include
-
 namespace boost
 {
   namespace stopwatches
@@ -71,8 +69,8 @@ namespace boost
 
 //--------------------------------------------------------------------------------------//
     typedef boost::stopwatches::stopwatch_accumulator< boost::chrono::system_clock > system_stopwatch_accumulator;
-#ifdef BOOST_STOPWATCHES_HAS_CLOCK_MONOTONIC
-    typedef boost::stopwatches::stopwatch_accumulator< boost::chrono::monotonic_clock > monotonic_stopwatch_accumulator;
+#ifdef BOOST_CHRONO_HAS_CLOCK_STEADY
+    typedef boost::stopwatches::stopwatch_accumulator< boost::chrono::steady_clock > steady_stopwatch_accumulator;
 #endif
     typedef boost::stopwatches::stopwatch_accumulator< boost::chrono::high_resolution_clock > high_resolution_stopwatch_accumulator;
 
@@ -81,7 +79,5 @@ namespace boost
 
   } // namespace stopwatches
 } // namespace boost
-
-#include <boost/config/abi_suffix.hpp> // pops abi_prefix.hpp pragmas
 
 #endif

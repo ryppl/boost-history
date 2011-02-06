@@ -17,8 +17,6 @@
 #include <boost/system/error_code.hpp>
 #include <boost/utility/base_from_member.hpp>
 
-#include <boost/config/abi_prefix.hpp> // must be the last #include
-
 namespace boost
 {
   namespace stopwatches
@@ -36,7 +34,8 @@ namespace boost
 //~ The elapsed time since the last start is available through the elapsed function.
 //--------------------------------------------------------------------------------------//
 
-    template <class Clock=chrono::high_resolution_clock>
+    //~ template <class Clock=chrono::high_resolution_clock>
+    template <class Clock=chrono::system_clock>
     class stopwatch;
 
     //~ struct dont_start_t{};
@@ -48,7 +47,7 @@ namespace boost
     {
     public:
         typedef base_from_member<typename Clock::duration> pbase_type;
-        explicit stopwatch( system::error_code & ec = system::throws  )
+        explicit stopwatch( system::error_code & ec = BOOST_CHRONO_THROWS  )
         : pbase_type(), lightweight_stopwatch<Clock>(pbase_type::member, ec)
         {
         }
@@ -61,8 +60,8 @@ namespace boost
 
 //--------------------------------------------------------------------------------------//
     typedef boost::stopwatches::stopwatch< boost::chrono::system_clock > system_stopwatch;
-#ifdef BOOST_STOPWATCHES_HAS_CLOCK_MONOTONIC
-    typedef boost::stopwatches::stopwatch< boost::chrono::monotonic_clock > monotonic_stopwatch;
+#ifdef BOOST_CHRONO_HAS_CLOCK_STEADY
+    typedef boost::stopwatches::stopwatch< boost::chrono::steady_clock > steady_stopwatch;
 #endif
     typedef boost::stopwatches::stopwatch< boost::chrono::high_resolution_clock > high_resolution_stopwatch;
 
@@ -70,7 +69,5 @@ namespace boost
 
   } // namespace stopwatches
 } // namespace boost
-
-#include <boost/config/abi_suffix.hpp> // pops abi_prefix.hpp pragmas
 
 #endif

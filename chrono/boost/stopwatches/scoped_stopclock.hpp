@@ -16,8 +16,6 @@
 #include <boost/stopwatches/time_formatter.hpp>
 #include <boost/stopwatches/stopwatch_accumulator_time_formatter.hpp>
 
-#include <boost/config/abi_prefix.hpp> // must be the last #include
-
 namespace boost { namespace stopwatches  {
 
 //--------------------------------------------------------------------------------------//
@@ -52,51 +50,51 @@ namespace boost { namespace stopwatches  {
         typedef typename Formatter::char_type char_type;
         typedef typename Formatter::ostream_type ostream_type;
 
-        explicit scoped_stopclock( const string_type& func, system::error_code & ec = system::throws )
+        explicit scoped_stopclock( const string_type& func, system::error_code & ec = BOOST_CHRONO_THROWS )
         : base_type(ec), func_(func)
         { begin(); }
         scoped_stopclock( const string_type& func, ostream_type & os,
-                    system::error_code & ec = system::throws )
+                    system::error_code & ec = BOOST_CHRONO_THROWS )
         : base_type(os, ec), func_(func)
         { begin(); }
 
         scoped_stopclock( const string_type& func, const string_type & format,
-                    system::error_code & ec = system::throws )
+                    system::error_code & ec = BOOST_CHRONO_THROWS )
         : base_type(format, ec), func_(func)
         { begin(); }
 
         scoped_stopclock( const string_type& func, int places,
-                    system::error_code & ec = system::throws )
+                    system::error_code & ec = BOOST_CHRONO_THROWS )
         : base_type(places, ec), func_(func)
         { begin(); }
 
         scoped_stopclock( const string_type& func, ostream_type & os, const string_type & format,
-                    system::error_code & ec = system::throws )
+                    system::error_code & ec = BOOST_CHRONO_THROWS )
         : base_type(os, format, ec), func_(func)
         { begin(); }
 
         scoped_stopclock( const string_type& func, const string_type & format, int places,
-                    system::error_code & ec = system::throws )
+                    system::error_code & ec = BOOST_CHRONO_THROWS )
         : base_type(format, places, ec), func_(func)
         { begin(); }
 
         scoped_stopclock( const string_type& func, ostream_type & os, int places,
-                    system::error_code & ec = system::throws )
+                    system::error_code & ec = BOOST_CHRONO_THROWS )
         : base_type(os, places, ec), func_(func)
         { begin(); }
 
         scoped_stopclock( const string_type& func, int places, const string_type & format,
-                    system::error_code & ec = system::throws )
+                    system::error_code & ec = BOOST_CHRONO_THROWS )
         : base_type(places, format, ec), func_(func)
         { begin(); }
 
         scoped_stopclock( const string_type& func, ostream_type & os, const string_type & format, int places,
-                    system::error_code & ec = system::throws )
+                    system::error_code & ec = BOOST_CHRONO_THROWS )
         : base_type(os, format, places, ec), func_(func)
         { begin(); }
 
         scoped_stopclock( const string_type& func, ostream_type & os, int places, const string_type & format,
-                    system::error_code & ec = system::throws )
+                    system::error_code & ec = BOOST_CHRONO_THROWS )
         : base_type(os, places, format, ec), func_(func)
         { begin(); }
 
@@ -116,7 +114,5 @@ namespace boost { namespace stopwatches  {
 
   } // namespace stopwatches
 } // namespace boost
-
-#include <boost/config/abi_suffix.hpp> // pops abi_prefix.hpp pragmas
 
 #endif // BOOST_STOPWATCHES_STOPCLOCK_HPP

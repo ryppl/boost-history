@@ -22,7 +22,7 @@ namespace boost { namespace stopwatches {
     template <class Clock>
     class scoped_suspend {
     public:
-        scoped_suspend(system::error_code & ec = system::throws) {
+        scoped_suspend(system::error_code & ec = BOOST_CHRONO_THROWS) {
             ec.clear();
         }
         ~scoped_suspend() {}

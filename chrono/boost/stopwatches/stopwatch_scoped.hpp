@@ -13,8 +13,6 @@
 #include <boost/chrono/chrono.hpp>
 #include <boost/system/error_code.hpp>
 
-#include <boost/config/abi_prefix.hpp> // must be the last #include
-
 namespace boost
 {
   namespace stopwatches
@@ -24,7 +22,7 @@ namespace boost
     template <class Stopwatch> class stopwatch_runner {
     public:
         typedef Stopwatch stopwatch;
-        stopwatch_runner(stopwatch & a, system::error_code & ec = system::throws)
+        stopwatch_runner(stopwatch & a, system::error_code & ec = BOOST_CHRONO_THROWS)
         : stopwatch_(a) {
             stopwatch_.start(ec);
         }
@@ -33,7 +31,7 @@ namespace boost
             stopwatch_.stop(ec);
         }
 #if 0
-        typename Stopwatch::duration elapsed(system::error_code & ec = system::throws)
+        typename Stopwatch::duration elapsed(system::error_code & ec = BOOST_CHRONO_THROWS)
         {
             return stopwatch_.elapsed(ec)-stopwatch_.get_storage();
         }
@@ -50,7 +48,7 @@ namespace boost
     template <class Stopwatch> class stopwatch_stopper {
     public:
         typedef Stopwatch stopwatch;
-        stopwatch_stopper(stopwatch & a, system::error_code & ec = system::throws)
+        stopwatch_stopper(stopwatch & a, system::error_code & ec = BOOST_CHRONO_THROWS)
         : stopwatch_(a) {
             stopwatch_.stop(ec);
         }
@@ -59,7 +57,7 @@ namespace boost
             stopwatch_.start(ec);
         }
 #if 0
-        typename Stopwatch::duration elapsed(system::error_code & ec = system::throws)
+        typename Stopwatch::duration elapsed(system::error_code & ec = BOOST_CHRONO_THROWS)
         {
             return stopwatch_.elapsed(ec)-stopwatch_.get_storage();
         }
@@ -76,7 +74,7 @@ namespace boost
     template <class Stopwatch> class stopwatch_suspender {
     public:
         typedef Stopwatch stopwatch;
-        stopwatch_suspender(stopwatch & a, system::error_code & ec = system::throws)
+        stopwatch_suspender(stopwatch & a, system::error_code & ec = BOOST_CHRONO_THROWS)
         : stopwatch_(a) {
             stopwatch_.suspend(ec);
         }
@@ -95,7 +93,7 @@ namespace boost
     template <class Stopwatch> class stopwatch_resumer {
     public:
         typedef Stopwatch stopwatch;
-        stopwatch_resumer(stopwatch & a, system::error_code & ec = system::throws)
+        stopwatch_resumer(stopwatch & a, system::error_code & ec = BOOST_CHRONO_THROWS)
         : stopwatch_(a) {
             stopwatch_.resume(ec);
         }
@@ -113,7 +111,5 @@ namespace boost
 
   } // namespace stopwatches
 } // namespace boost
-
-#include <boost/config/abi_suffix.hpp> // pops abi_prefix.hpp pragmas
 
 #endif

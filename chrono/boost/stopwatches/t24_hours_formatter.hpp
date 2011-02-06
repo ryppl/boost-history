@@ -23,8 +23,6 @@
 #include <cstring>
 #include <cassert>
 
-#include <boost/config/abi_prefix.hpp> // must be the last #include
-
 #define BOOST_STOPWATCHES_24_HOURS_FORMAT_DEFAULT "%d day(s) %h:%m:%s.%n\n"
 
 namespace boost { namespace stopwatches  {
@@ -65,8 +63,9 @@ namespace boost { namespace stopwatches  {
         {
             typedef typename Stopwatch::duration duration_t;
             duration_t d = stopwatch_.elapsed( ec );
-            if (ec) return;
-
+	    if (!BOOST_CHRONO_IS_THROWS(ec)) {
+              if (ec) return;
+	    }
             if ( d < duration_t::zero() ) return;
 
             boost::io::ios_flags_saver ifs( os );
@@ -160,8 +159,5 @@ namespace detail {
 #else
 #define BOOST_STOPWATCHES_24_HOURS_FUNCTION_FORMAT BOOST_STOPWATCHES_24_HOURS_FORMAT(BOOST_CURRENT_FUNCTION)
 #endif
-
-
-#include <boost/config/abi_suffix.hpp> // pops abi_prefix.hpp pragmas
 
 #endif // BOOST_STOPWATCHES_T24_HOURS_FORMATTER_HPP

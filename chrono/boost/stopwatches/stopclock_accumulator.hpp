@@ -22,8 +22,6 @@
 #include <boost/chrono/process_cpu_clocks.hpp>
 #include <boost/type_traits/is_same.hpp>
 
-#include <boost/config/abi_prefix.hpp> // must be the last #include
-
 namespace boost { namespace stopwatches  {
 
 //--------------------------------------------------------------------------------------//
@@ -88,42 +86,42 @@ namespace boost { namespace stopwatches  {
         typedef typename Formatter::char_type char_type;
         typedef typename Formatter::ostream_type ostream_type;
 
-        explicit basic_stopclock_accumulator( system::error_code & ec = system::throws )
+        explicit basic_stopclock_accumulator( system::error_code & ec = BOOST_CHRONO_THROWS )
         : base_type(ec) { }
         explicit basic_stopclock_accumulator( ostream_type & os,
-                    system::error_code & ec = system::throws )
+                    system::error_code & ec = BOOST_CHRONO_THROWS )
         : base_type(os, ec) { }
 
         explicit basic_stopclock_accumulator( const string_type & format,
-                    system::error_code & ec = system::throws )
+                    system::error_code & ec = BOOST_CHRONO_THROWS )
         : base_type(format, ec) { }
 
         explicit basic_stopclock_accumulator( int places,
-                    system::error_code & ec = system::throws )
+                    system::error_code & ec = BOOST_CHRONO_THROWS )
         : base_type(places, ec) { }
 
         basic_stopclock_accumulator( ostream_type & os, const string_type & format,
-                    system::error_code & ec = system::throws )
+                    system::error_code & ec = BOOST_CHRONO_THROWS )
         : base_type(os, format, ec) { }
 
         basic_stopclock_accumulator( const string_type & format, int places,
-                    system::error_code & ec = system::throws )
+                    system::error_code & ec = BOOST_CHRONO_THROWS )
         : base_type(format, places, ec) { }
 
         basic_stopclock_accumulator( ostream_type & os, int places,
-                    system::error_code & ec = system::throws )
+                    system::error_code & ec = BOOST_CHRONO_THROWS )
         : base_type(os, places, ec) { }
 
         basic_stopclock_accumulator( int places, const string_type & format,
-                    system::error_code & ec = system::throws )
+                    system::error_code & ec = BOOST_CHRONO_THROWS )
         : base_type(places, format, ec) { }
 
         basic_stopclock_accumulator( ostream_type & os, const string_type & format, int places,
-                    system::error_code & ec = system::throws )
+                    system::error_code & ec = BOOST_CHRONO_THROWS )
         : base_type(os, format, places, ec) { }
 
         basic_stopclock_accumulator( ostream_type & os, int places, const string_type & format,
-                    system::error_code & ec = system::throws )
+                    system::error_code & ec = BOOST_CHRONO_THROWS )
         : base_type(os, places, format, ec) { }
 
 
@@ -157,42 +155,42 @@ namespace boost { namespace stopwatches  {
         typedef typename Formatter::char_type char_type;
         typedef typename Formatter::ostream_type ostream_type;
 
-        explicit stopclock_accumulator( system::error_code & ec = system::throws )
+        explicit stopclock_accumulator( system::error_code & ec = BOOST_CHRONO_THROWS )
         : base_type(ec) { }
         explicit stopclock_accumulator( ostream_type & os,
-                    system::error_code & ec = system::throws )
+                    system::error_code & ec = BOOST_CHRONO_THROWS )
         : base_type(os, ec) { }
 
         explicit stopclock_accumulator( const string_type & format,
-                    system::error_code & ec = system::throws )
+                    system::error_code & ec = BOOST_CHRONO_THROWS )
         : base_type(format, ec) { }
 
         explicit stopclock_accumulator( int places,
-                    system::error_code & ec = system::throws )
+                    system::error_code & ec = BOOST_CHRONO_THROWS )
         : base_type(places, ec) { }
 
         stopclock_accumulator( ostream_type & os, const string_type & format,
-                    system::error_code & ec = system::throws )
+                    system::error_code & ec = BOOST_CHRONO_THROWS )
         : base_type(os, format, ec) { }
 
         stopclock_accumulator( const string_type & format, int places,
-                    system::error_code & ec = system::throws )
+                    system::error_code & ec = BOOST_CHRONO_THROWS )
         : base_type(format, places, ec) { }
 
         stopclock_accumulator( ostream_type & os, int places,
-                    system::error_code & ec = system::throws )
+                    system::error_code & ec = BOOST_CHRONO_THROWS )
         : base_type(os, places, ec) { }
 
         stopclock_accumulator( int places, const string_type & format,
-                    system::error_code & ec = system::throws )
+                    system::error_code & ec = BOOST_CHRONO_THROWS )
         : base_type(places, format, ec) { }
 
         stopclock_accumulator( ostream_type & os, const string_type & format, int places,
-                    system::error_code & ec = system::throws )
+                    system::error_code & ec = BOOST_CHRONO_THROWS )
         : base_type(os, format, places, ec) { }
 
         stopclock_accumulator( ostream_type & os, int places, const string_type & format,
-                    system::error_code & ec = system::throws )
+                    system::error_code & ec = BOOST_CHRONO_THROWS )
         : base_type(os, places, format, ec) { }
 
 
@@ -203,8 +201,8 @@ namespace boost { namespace stopwatches  {
     };
 
     typedef stopclock_accumulator< boost::chrono::system_clock > system_stopclock_accumulator;
-    #ifdef BOOST_STOPWATCHES_HAS_CLOCK_MONOTONIC
-    typedef stopclock_accumulator< boost::chrono::monotonic_clock > monotonic_stopclock_accumulator;
+    #ifdef BOOST_CHRONO_HAS_CLOCK_STEADY
+    typedef stopclock_accumulator< boost::chrono::steady_clock > steady_stopclock_accumulator;
     #endif
     typedef stopclock_accumulator< boost::chrono::high_resolution_clock > high_resolution_stopclock_accumulator;
     typedef stopclock_accumulator< boost::chrono::process_real_cpu_clock > process_real_cpu_stopclock_accumulator;
@@ -231,42 +229,42 @@ namespace boost { namespace stopwatches  {
         typedef typename Formatter::char_type char_type;
         typedef typename Formatter::ostream_type ostream_type;
 
-        explicit wstopclock_accumulator( system::error_code & ec = system::throws )
+        explicit wstopclock_accumulator( system::error_code & ec = BOOST_CHRONO_THROWS )
         : base_type(ec) { }
         explicit wstopclock_accumulator( ostream_type & os,
-                    system::error_code & ec = system::throws )
+                    system::error_code & ec = BOOST_CHRONO_THROWS )
         : base_type(os, ec) { }
 
         explicit wstopclock_accumulator( const string_type & format,
-                    system::error_code & ec = system::throws )
+                    system::error_code & ec = BOOST_CHRONO_THROWS )
         : base_type(format, ec) { }
 
         explicit wstopclock_accumulator( int places,
-                    system::error_code & ec = system::throws )
+                    system::error_code & ec = BOOST_CHRONO_THROWS )
         : base_type(places, ec) { }
 
         wstopclock_accumulator( ostream_type & os, const string_type & format,
-                    system::error_code & ec = system::throws )
+                    system::error_code & ec = BOOST_CHRONO_THROWS )
         : base_type(os, format, ec) { }
 
         wstopclock_accumulator( const string_type & format, int places,
-                    system::error_code & ec = system::throws )
+                    system::error_code & ec = BOOST_CHRONO_THROWS )
         : base_type(format, places, ec) { }
 
         wstopclock_accumulator( ostream_type & os, int places,
-                    system::error_code & ec = system::throws )
+                    system::error_code & ec = BOOST_CHRONO_THROWS )
         : base_type(os, places, ec) { }
 
         wstopclock_accumulator( int places, const string_type & format,
-                    system::error_code & ec = system::throws )
+                    system::error_code & ec = BOOST_CHRONO_THROWS )
         : base_type(places, format, ec) { }
 
         wstopclock_accumulator( ostream_type & os, const string_type & format, int places,
-                    system::error_code & ec = system::throws )
+                    system::error_code & ec = BOOST_CHRONO_THROWS )
         : base_type(os, format, places, ec) { }
 
         wstopclock_accumulator( ostream_type & os, int places, const string_type & format,
-                    system::error_code & ec = system::throws )
+                    system::error_code & ec = BOOST_CHRONO_THROWS )
         : base_type(os, places, format, ec) { }
 
 
@@ -277,8 +275,8 @@ namespace boost { namespace stopwatches  {
     };
 
     typedef wstopclock_accumulator< boost::chrono::system_clock > system_wstopclock_accumulator;
-    #ifdef BOOST_STOPWATCHES_HAS_CLOCK_MONOTONIC
-    typedef wstopclock_accumulator< boost::chrono::monotonic_clock > monotonic_wstopclock_accumulator;
+    #ifdef BOOST_CHRONO_HAS_CLOCK_STEADY
+    typedef wstopclock_accumulator< boost::chrono::steady_clock > steady_wstopclock_accumulator;
     #endif
     typedef wstopclock_accumulator< boost::chrono::high_resolution_clock > high_resolution_wstopclock_accumulator;
     typedef wstopclock_accumulator< boost::chrono::process_real_cpu_clock > process_real_cpu_wstopclock_accumulator;
@@ -289,7 +287,5 @@ namespace boost { namespace stopwatches  {
 
   } // namespace stopwatches
 } // namespace boost
-
-#include <boost/config/abi_suffix.hpp> // pops abi_prefix.hpp pragmas
 
 #endif // BOOST_STOPWATCHES_STOPCLOCK_HPP

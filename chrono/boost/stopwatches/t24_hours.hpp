@@ -12,7 +12,6 @@
 
 #include <boost/chrono/chrono.hpp>
 
-#include <boost/config/abi_prefix.hpp> // must be the last #include
 
 namespace boost { namespace stopwatches {
 
@@ -67,6 +66,5 @@ public:
 } // namespace stopwatches
 } // namespace boost
 
-#include <boost/config/abi_suffix.hpp> // pops abi_prefix.hpp pragmas
 
 #endif  // BOOST_STOPWATCHES_PROCESS_CLOCK_HPP
