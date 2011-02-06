@@ -28,6 +28,7 @@ project
         #<include>../../..
         <toolset>msvc:<asynch-exceptions>on
         <define>BOOST_ENABLE_WARNINGS
+	<define>BOOST_CHRONO_EXTENSIONS
         <warnings>all
         <toolset>gcc:<cxxflags>-Wextra
         <toolset>gcc:<cxxflags>-Wno-long-long        
@@ -43,12 +44,18 @@ project
 
     test-suite "other_clocks"
         :        
-        [ run test_suspendible_clock.cpp :  :  : <library>/boost/thread//boost_thread <link>static ]
-        [ run test_suspendible_clock.cpp :  :  : <library>/boost/thread//boost_thread : test_suspendible_clock_dll  ]
+        #[ run test_suspendible_clock.cpp :  :  : <library>/boost/thread//boost_thread <link>static ]
+        #[ run test_suspendible_clock.cpp :  :  : <library>/boost/thread//boost_thread : test_suspendible_clock_dll  ]
         ;
 
     test-suite "stopwatch"
         :
+        [ run stopclock_constructor_overload_test.cpp :  :  : <link>static ]
+        [ run stopclock_constructor_overload_test.cpp :  :  :   : stopclock_constructor_overload_test_dll ]
+        [ run wstopclock_constructor_overload_test.cpp :  :  : <link>static ]
+        [ run wstopclock_constructor_overload_test.cpp :  :  :   :  wstopclock_constructor_overload_test_dll ]
+        [ run ../example/scoped_stopclock_example.cpp :  :  : <link>static ]
+        [ run ../example/scoped_stopclock_example.cpp :  :  :   : function_stopclock_example_dll ]
         [ run ../example/stopwatch_example.cpp :  :  : <link>static ]
         [ run ../example/stopwatch_example.cpp :  :  :   : stopwatch_example_dll ]
         [ run ../example/scoped_stopwatch_example.cpp :  :  : <link>static ]
@@ -67,20 +74,14 @@ project
         [ run ../example/loop_stopclock_accumulator_example.cpp :  :  :  : loop_stopclock_accumulator_example_dll ]
         [ run ../example/t24_hours_example.cpp :  :  : <link>static ]
         [ run ../example/t24_hours_example.cpp :  :  :   : t24_hours_example_dll ]
-        [ run ../example/scoped_stopclock_example.cpp :  :  : <link>static ]
-        [ run ../example/scoped_stopclock_example.cpp :  :  :   : function_stopclock_example_dll ]
         [ link ../example/timex.cpp :  <link>static ]
         [ link ../example/timex.cpp :    : timex_dll ]
-        [ run stopclock_constructor_overload_test.cpp :  :  : <link>static ]
-        [ run stopclock_constructor_overload_test.cpp :  :  :   : stopclock_constructor_overload_test_dll ]
-        [ run wstopclock_constructor_overload_test.cpp :  :  : <link>static ]
-        [ run wstopclock_constructor_overload_test.cpp :  :  :   :  wstopclock_constructor_overload_test_dll ]
         ;
         
     test-suite "perf"
         :
-        [ run ../example/suspendible_stopclock_example.cpp :  :  : <library>/boost/thread//boost_thread <link>static ]
-        [ run ../example/suspendible_stopclock_example.cpp :  :  : <library>/boost/thread//boost_thread : suspendible_stopclock_example_dll ]
+        #[ run ../example/suspendible_stopclock_example.cpp :  :  : <library>/boost/thread//boost_thread <link>static ]
+        #[ run ../example/suspendible_stopclock_example.cpp :  :  : <library>/boost/thread//boost_thread : suspendible_stopclock_example_dll ]
         #[ run ../perf/stopclock_perf.cpp :  :  : <library>/boost/thread//boost_thread <link>static ]
         #[ run ../perf/stopclock_perf.cpp :  :  :  <library>/boost/thread//boost_thread : stopclock_perf_dll ]
         ;        

@@ -29,8 +29,9 @@ int main()
   stopwatch_reporter<stopwatch<> > _(BOOST_STOPWATCHES_STOPWATCH_FUNCTION_FORMAT);
 
     res=0;
-    for (long i =0; i< 3; ++i)
+    for (long i =0; i< 3; ++i) {
         f1(i*100);
+    }
 
     std::cout<< res << std::endl;
   return 0;

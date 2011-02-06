@@ -11,7 +11,7 @@ template <class Rep, class Period>
 void sleep_for(const boost::chrono::duration<Rep, Period>& d)
 {
     boost::chrono::high_resolution_clock::time_point go = boost::chrono::high_resolution_clock::now() + d;
-    while (boost::chrono::high_resolution_clock::now() < go);
+    while (boost::chrono::high_resolution_clock::now() < go) {}
 }
 }
 }

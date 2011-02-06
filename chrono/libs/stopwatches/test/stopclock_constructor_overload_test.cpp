@@ -20,7 +20,7 @@ using boost::stopwatches::stopclock;
 using boost::stopwatches::time_formatter;
 using boost::system::error_code;
 
-#include <boost/test/minimal.hpp>
+#include <boost/detail/lightweight_test.hpp>
 
 namespace
 {
@@ -64,13 +64,13 @@ namespace
 
 }
 
-int test_main( int /*argc*/, char * /*argv*/[] )
+int main( )
 {
-  std::locale loc( "" );     // test with appropriate locale
-  std::cout.imbue( loc );
+  //~ std::locale loc( "" );     // test with appropriate locale
+  //~ std::cout.imbue( loc );
 
   stopclock_constructor_overload_test();
   
-  return 0;
+  return boost::report_errors();
 }
 

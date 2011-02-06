@@ -29,7 +29,8 @@ using boost::stopwatches::wtime_formatter;
 using boost::stopwatches::time_formatter;
 using boost::system::error_code;
 using boost::stopwatches::detail::adaptive_string;
-#include <boost/test/minimal.hpp>
+
+#include <boost/detail/lightweight_test.hpp>
 
 
 namespace util
@@ -123,15 +124,15 @@ namespace
             > wstopclock_t; 
 }
 
-int test_main( int /*argc*/, char * /*argv*/[] )
+int main( )
 {
-  std::locale loc( "" );     // test with appropriate locale
-  std::cout.imbue( loc );
+  //~ std::locale loc( "" );     // test with appropriate locale
+  //~ std::cout.imbue( loc );
    
   stopclock_constructor_overload_test<stopclock_t>(); // test for char
 #ifndef BOOST_NO_STD_WSTRING
   stopclock_constructor_overload_test<wstopclock_t>(); // test for wchar_t 
 #endif    
-  return 0;
+  return boost::report_errors();
 }
 

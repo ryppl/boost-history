@@ -8,6 +8,7 @@
 
 //  See http://www.boost.org/libs/chrono for documentation.
 
+#include <iostream>
 #include <boost/stopwatches/stopwatches.hpp>
 #include <cmath>
 
