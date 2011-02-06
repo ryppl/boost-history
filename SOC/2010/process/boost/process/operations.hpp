@@ -337,7 +337,7 @@ inline child create_child(const std::string &executable, Arguments args,
 #if (BOOST_MSVC >= 1400)
     strcpy_s(workdir.get(), ctx.work_dir.size() + 1, ctx.work_dir.c_str());
 #else
-    strcpy_s(workdir.get(), ctx.work_dir.c_str());
+    strcpy(workdir.get(), ctx.work_dir.c_str());
 #endif
 
     boost::shared_array<char> envstrs =
