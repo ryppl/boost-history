@@ -10,6 +10,7 @@
 #include <boost/type_traits/ice.hpp>
 #include <boost/type_traits/integral_constant.hpp>
 #include <boost/type_traits/is_class.hpp>
+#include <boost/type_traits/is_const.hpp>
 #include <boost/type_traits/is_fundamental.hpp>
 #include <boost/type_traits/is_integral.hpp>
 #include <boost/type_traits/is_pointer.hpp>
@@ -43,7 +44,7 @@ tag operator BOOST_TT_TRAIT_OP (const any&);
 
 namespace {
    template <typename T>
-   typename ::boost::remove_cv<T>::type &make();
+   T &make();
 }
 
 template < typename RHS >
@@ -94,7 +95,7 @@ tag operator,(tag, int);
 // do not check for return type if 2nd template parameter RET is void
 template < typename RHS >
 struct BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl1)< RHS, void, false > {
-   static ::boost::type_traits::yes_type check(int); // this version is preferred for types convertible to RET
+   static ::boost::type_traits::yes_type check(int); // this version is preferred when operator exists
    static ::boost::type_traits::no_type check(tag); // this version is used otherwise
 
    BOOST_STATIC_CONSTANT(bool, value = (sizeof(check(((BOOST_TT_TRAIT_OP make<RHS>()),0)))==sizeof(::boost::type_traits::yes_type)));
@@ -111,7 +112,11 @@ struct BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl1)< void, void, false > {
 };
 
 template < typename RHS, typename RET >
-struct BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl) : public BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl1) < RHS, RET, BOOST_TT_FORBIDDEN_IF > { };
+struct BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl) {
+   typedef typename ::boost::remove_reference<RHS>::type rhs_noref;
+   typedef typename ::boost::remove_cv<rhs_noref>::type rhs_nocv;
+   BOOST_STATIC_CONSTANT(bool, value = (BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl1) < rhs_noref, RET, BOOST_TT_FORBIDDEN_IF >::value));
+};
 
 } // namespace impl
 } // namespace detail

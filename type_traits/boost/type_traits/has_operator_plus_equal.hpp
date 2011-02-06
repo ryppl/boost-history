@@ -16,31 +16,31 @@
    ::boost::type_traits::ice_or<\
       /* two pointers */\
       ::boost::type_traits::ice_and<\
-         ::boost::is_pointer< typename ::boost::remove_reference<LHS>::type >::value,\
-         ::boost::is_pointer< typename ::boost::remove_reference<RHS>::type >::value\
+         ::boost::is_pointer< lhs_noref >::value,\
+         ::boost::is_pointer< rhs_noref >::value\
       >::value,\
       /* void* with fundamental */\
       ::boost::type_traits::ice_and<\
-         ::boost::is_pointer< typename ::boost::remove_reference<LHS>::type >::value,\
-         ::boost::is_void< typename ::boost::remove_pointer<LHS>::type >::value,\
-         ::boost::is_fundamental< RHS >::value\
+         ::boost::is_pointer< lhs_noref >::value,\
+         ::boost::is_void< typename ::boost::remove_pointer< lhs_noref >::type >::value,\
+         ::boost::is_fundamental< rhs_nocv >::value\
       >::value,\
       ::boost::type_traits::ice_and<\
-         ::boost::is_pointer< typename ::boost::remove_reference<RHS>::type >::value,\
-         ::boost::is_void< typename ::boost::remove_pointer<RHS>::type >::value,\
-         ::boost::is_fundamental< LHS >::value\
+         ::boost::is_pointer< rhs_noref >::value,\
+         ::boost::is_void< typename ::boost::remove_pointer< rhs_noref >::type >::value,\
+         ::boost::is_fundamental< lhs_nocv >::value\
       >::value,\
       /* LHS==pointer and RHS==fundamental non integral */\
       ::boost::type_traits::ice_and<\
-         ::boost::is_pointer< typename ::boost::remove_reference<LHS>::type >::value,\
-         ::boost::is_fundamental< RHS >::value,\
-         ::boost::type_traits::ice_not< ::boost::is_integral< typename ::boost::remove_reference<RHS>::type >::value >::value\
+         ::boost::is_pointer< lhs_noref >::value,\
+         ::boost::is_fundamental< rhs_nocv >::value,\
+         ::boost::type_traits::ice_not< ::boost::is_integral< rhs_noref >::value >::value\
       >::value,\
       /* LHS==non bool fundamental and RHS==pointer */\
       ::boost::type_traits::ice_and<\
-         ::boost::is_fundamental< LHS >::value,\
-         ::boost::type_traits::ice_not< ::boost::is_same< bool, typename ::boost::remove_cv< typename ::boost::remove_reference<LHS>::type >::type >::value >::value,\
-         ::boost::is_pointer< typename ::boost::remove_reference<RHS>::type >::value\
+         ::boost::is_fundamental< lhs_nocv >::value,\
+         ::boost::type_traits::ice_not< ::boost::is_same< bool, lhs_nocv >::value >::value,\
+         ::boost::is_pointer< rhs_noref >::value\
       >::value\
    >::value
 

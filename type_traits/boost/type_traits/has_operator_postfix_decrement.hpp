@@ -13,13 +13,17 @@
 #define BOOST_TT_TRAIT_OP --
 #define BOOST_TT_DEFAULT_RET void
 #define BOOST_TT_FORBIDDEN_IF\
-   /* bool or void* */\
+   /* bool or void* or const fundamental */\
    ::boost::type_traits::ice_or<\
-      ::boost::is_same< bool, typename ::boost::remove_cv< typename ::boost::remove_reference<LHS>::type >::type >::value,\
+      ::boost::is_same< bool, lhs_nocv >::value,\
       ::boost::type_traits::ice_and<\
-         ::boost::is_pointer< typename ::boost::remove_reference<LHS>::type >::value,\
-         ::boost::is_void< typename ::boost::remove_pointer<LHS>::type >::value\
-      >::value\
+         ::boost::is_pointer< lhs_noref >::value,\
+         ::boost::is_void< typename ::boost::remove_pointer< lhs_noref >::type >::value\
+      >::value,\
+      ::boost::type_traits::ice_and<\
+         ::boost::is_fundamental< lhs_nocv >::value,\
+         ::boost::is_const< lhs_noref >::value\
+     >::value\
    >::value
 
 

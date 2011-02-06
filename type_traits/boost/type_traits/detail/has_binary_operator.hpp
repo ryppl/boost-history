@@ -45,7 +45,7 @@ tag operator BOOST_TT_TRAIT_OP (const any&, const any&);
 
 namespace {
    template <typename T>
-   typename ::boost::remove_cv<T>::type &make();
+   T &make();
 }
 
 template < typename LHS, typename RHS >
@@ -96,7 +96,7 @@ tag operator,(tag, int);
 // do not check for return type if 3rd template parameter RET is void
 template < typename LHS, typename RHS >
 struct BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl1)< LHS, RHS, void, false > {
-   static ::boost::type_traits::yes_type check(int); // this version is preferred for types convertible to RET
+   static ::boost::type_traits::yes_type check(int); // this version is preferred when operator exists
    static ::boost::type_traits::no_type check(tag); // this version is used otherwise
 
    BOOST_STATIC_CONSTANT(bool, value = (sizeof(check(((make<LHS>() BOOST_TT_TRAIT_OP make<RHS>()),0)))==sizeof(::boost::type_traits::yes_type)));
@@ -133,7 +133,13 @@ struct BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl1)< void, void, void, false > {
 };
 
 template < typename LHS, typename RHS, typename RET >
-struct BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl) : public BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl1) < LHS, RHS, RET, BOOST_TT_FORBIDDEN_IF > { };
+struct BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl) {
+   typedef typename ::boost::remove_reference<LHS>::type lhs_noref;
+   typedef typename ::boost::remove_reference<RHS>::type rhs_noref;
+   typedef typename ::boost::remove_cv<lhs_noref>::type lhs_nocv;
+   typedef typename ::boost::remove_cv<rhs_noref>::type rhs_nocv;
+   BOOST_STATIC_CONSTANT(bool, value = (BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl1) < lhs_noref, rhs_noref, RET, BOOST_TT_FORBIDDEN_IF >::value));
+};
 
 } // namespace impl
 } // namespace detail

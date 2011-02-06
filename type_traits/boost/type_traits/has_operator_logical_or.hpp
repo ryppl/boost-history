@@ -16,17 +16,17 @@
    /* pointer with fundamental non convertible to bool */\
    ::boost::type_traits::ice_or<\
       ::boost::type_traits::ice_and<\
-         ::boost::is_pointer< typename ::boost::remove_reference<LHS>::type >::value,\
+         ::boost::is_pointer< lhs_noref >::value,\
          ::boost::type_traits::ice_and<\
-            ::boost::is_fundamental< RHS >::value,\
-            ::boost::type_traits::ice_not< ::boost::is_convertible< typename ::boost::remove_reference<RHS>::type, bool >::value >::value\
+            ::boost::is_fundamental< rhs_nocv >::value,\
+            ::boost::type_traits::ice_not< ::boost::is_convertible< rhs_nocv, bool >::value >::value\
          >::value\
       >::value,\
       ::boost::type_traits::ice_and<\
-         ::boost::is_pointer< typename ::boost::remove_reference<RHS>::type >::value,\
+         ::boost::is_pointer< rhs_noref >::value,\
          ::boost::type_traits::ice_and<\
-            ::boost::is_fundamental< LHS >::value,\
-            ::boost::type_traits::ice_not< ::boost::is_convertible< typename ::boost::remove_reference<LHS>::type, bool >::value >::value\
+            ::boost::is_fundamental< lhs_nocv >::value,\
+            ::boost::type_traits::ice_not< ::boost::is_convertible< lhs_nocv, bool >::value >::value\
          >::value\
       >::value\
    >::value

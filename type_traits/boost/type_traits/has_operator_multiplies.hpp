@@ -16,17 +16,17 @@
    /* pointer with pointer or fundamental */\
    ::boost::type_traits::ice_or<\
       ::boost::type_traits::ice_and<\
-         ::boost::is_pointer< typename ::boost::remove_reference<LHS>::type >::value,\
+         ::boost::is_pointer< lhs_noref >::value,\
          ::boost::type_traits::ice_or<\
-            ::boost::is_fundamental< RHS >::value,\
-            ::boost::is_pointer< typename ::boost::remove_reference<RHS>::type >::value\
+            ::boost::is_fundamental< rhs_nocv >::value,\
+            ::boost::is_pointer< rhs_noref >::value\
          >::value\
       >::value,\
       ::boost::type_traits::ice_and<\
-         ::boost::is_pointer< typename ::boost::remove_reference<RHS>::type >::value,\
+         ::boost::is_pointer< rhs_noref >::value,\
          ::boost::type_traits::ice_or<\
-            ::boost::is_fundamental< LHS >::value,\
-            ::boost::is_pointer< typename ::boost::remove_reference<LHS>::type >::value\
+            ::boost::is_fundamental< lhs_nocv >::value,\
+            ::boost::is_pointer< lhs_noref >::value\
          >::value\
       >::value\
    >::value

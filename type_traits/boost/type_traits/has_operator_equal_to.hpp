@@ -16,23 +16,23 @@
    ::boost::type_traits::ice_or<\
       /* pointer and fundamental */\
       ::boost::type_traits::ice_and<\
-         ::boost::is_pointer< typename ::boost::remove_reference<LHS>::type >::value,\
-         ::boost::is_fundamental< RHS >::value\
+         ::boost::is_pointer< lhs_noref >::value,\
+         ::boost::is_fundamental< rhs_nocv >::value\
       >::value,\
       ::boost::type_traits::ice_and<\
-         ::boost::is_pointer< typename ::boost::remove_reference<RHS>::type >::value,\
-         ::boost::is_fundamental< LHS >::value\
+         ::boost::is_pointer< rhs_noref >::value,\
+         ::boost::is_fundamental< lhs_nocv >::value\
       >::value,\
       /* two pointers but no inheritance */\
       ::boost::type_traits::ice_and<\
-         ::boost::is_pointer< typename ::boost::remove_reference<LHS>::type >::value,\
-         ::boost::is_pointer< typename ::boost::remove_reference<RHS>::type >::value,\
+         ::boost::is_pointer< lhs_noref >::value,\
+         ::boost::is_pointer< rhs_noref >::value,\
          ::boost::type_traits::ice_not<\
             ::boost::type_traits::ice_or<\
-               ::boost::is_base_of< typename ::boost::remove_reference< typename ::boost::remove_pointer<LHS>::type >::type, typename ::boost::remove_reference< typename ::boost::remove_pointer<RHS>::type >::type >::value,\
-               ::boost::is_base_of< typename ::boost::remove_reference< typename ::boost::remove_pointer<RHS>::type >::type, typename ::boost::remove_reference< typename ::boost::remove_pointer<LHS>::type >::type >::value,\
-               ::boost::is_void< typename ::boost::remove_pointer<LHS>::type >::value,\
-               ::boost::is_void< typename ::boost::remove_pointer<RHS>::type >::value\
+               ::boost::is_base_of< typename ::boost::remove_reference< typename ::boost::remove_pointer< lhs_noref >::type >::type, typename ::boost::remove_reference< typename ::boost::remove_pointer< rhs_noref >::type >::type >::value,\
+               ::boost::is_base_of< typename ::boost::remove_reference< typename ::boost::remove_pointer< rhs_noref >::type >::type, typename ::boost::remove_reference< typename ::boost::remove_pointer< lhs_noref >::type >::type >::value,\
+               ::boost::is_void< typename ::boost::remove_pointer< lhs_noref >::type >::value,\
+               ::boost::is_void< typename ::boost::remove_pointer< rhs_noref >::type >::value\
             >::value\
          >::value\
       >::value\

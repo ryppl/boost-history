@@ -1,19 +1,19 @@
-//  (C) Copyright Frederic Bron 2009-2010.
-//  Use, modification and distribution are subject to the
-//  Boost Software License, Version 1.0. (See accompanying file
-//  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+   //  (C) Copyright Frederic Bron 2009-2010.
+   //  Use, modification and distribution are subject to the
+   //  Boost Software License, Version 1.0. (See accompanying file
+   //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 #include <iostream>
 #include <typeinfo>
 #include <string>
 
-// test with one template parameter
+   // test with one template parameter
 #define TEST_T(TYPE,RESULT) BOOST_CHECK_INTEGRAL_CONSTANT((::tt::BOOST_TT_TRAIT_NAME<TYPE>::value), RESULT)
-// test with one template parameter plus return value
+   // test with one template parameter plus return value
 #define TEST_TR(TYPE,RET,RESULT) BOOST_CHECK_INTEGRAL_CONSTANT((::tt::BOOST_TT_TRAIT_NAME<TYPE,TYPE,RET>::value), RESULT)
-// test with two template parameters
+   // test with two template parameters
 #define TEST_TT(TYPE1,TYPE2,RESULT) BOOST_CHECK_INTEGRAL_CONSTANT((::tt::BOOST_TT_TRAIT_NAME<TYPE1,TYPE2>::value), RESULT)
-// test with two template parameters plus return value
+   // test with two template parameters plus return value
 #define TEST_TTR(TYPE1,TYPE2,RET,RESULT) BOOST_CHECK_INTEGRAL_CONSTANT((::tt::BOOST_TT_TRAIT_NAME<TYPE1,TYPE2,RET>::value), RESULT)
 
 namespace {
@@ -39,8 +39,8 @@ struct returns_double { double operator BOOST_TT_TRAIT_OP (const returns_double&
 
 struct returns_string { std::string operator BOOST_TT_TRAIT_OP (const returns_string&); };
 
-//struct convertible_to_bool { operator bool () const; };
-//struct returns_convertible_to_bool { convertible_to_bool operator BOOST_TT_TRAIT_OP (const returns_convertible_to_bool&); };
+   //struct convertible_to_bool { operator bool () const; };
+   //struct returns_convertible_to_bool { convertible_to_bool operator BOOST_TT_TRAIT_OP (const returns_convertible_to_bool&); };
 
 class Base1 { };
 class Derived1 : public Base1 { };
@@ -82,6 +82,31 @@ void run() {
    TEST_T(double, true);
    TEST_T(long double, true);
    TEST_T(void, false);
+#	define CV(T) const T
+   TEST_T(CV(bool), true);
+   TEST_T(CV(int), true);
+   TEST_T(CV(double), true);
+#	define CV(T) volatile T
+   TEST_T(CV(bool), true);
+   TEST_T(CV(int), true);
+   TEST_T(CV(double), true);
+#	define CV(T) const volatile T
+   TEST_T(CV(bool), true);
+   TEST_T(CV(int), true);
+   TEST_T(CV(double), true);
+#	define CV(T) const T&
+   TEST_T(CV(bool), true);
+   TEST_T(CV(int), true);
+   TEST_T(CV(double), true);
+#	define CV(T) volatile T&
+   TEST_T(CV(bool), true);
+   TEST_T(CV(int), true);
+   TEST_T(CV(double), true);
+#	define CV(T) const volatile T&
+   TEST_T(CV(bool), true);
+   TEST_T(CV(int), true);
+   TEST_T(CV(double), true);
+
    // test with only two template parameters
    TEST_TT(bool, bool, true);
    TEST_TT(bool, char, true);
@@ -702,17 +727,450 @@ void run() {
    TEST_TTR(long double, double, tag, false);
    TEST_TTR(long double, long double, tag, false);
 
+#	define CV1(T) const T
+#	define CV2(T) T
+   // test with only two template parameters
+   TEST_TT(CV1(bool), CV2(int), true);
+   TEST_TT(CV1(bool), CV2(double), true);
+   TEST_TT(CV1(int), CV2(bool), true);
+   TEST_TT(CV1(int), CV2(double), true);
+   TEST_TT(CV1(double), CV2(bool), true);
+   TEST_TT(CV1(double), CV2(int), true);
+
+   // test with three template parameters
+   TEST_TTR(CV1(bool), CV2(int), bool, true);
+   TEST_TTR(CV1(bool), CV2(double), bool, true);
+   TEST_TTR(CV1(int), CV2(bool), bool, true);
+   TEST_TTR(CV1(int), CV2(double), bool, true);
+   TEST_TTR(CV1(double), CV2(bool), bool, true);
+   TEST_TTR(CV1(double), CV2(int), bool, true);
+   TEST_TTR(CV1(bool), CV2(int), tag, false);
+   TEST_TTR(CV1(bool), CV2(double), tag, false);
+   TEST_TTR(CV1(int), CV2(bool), tag, false);
+   TEST_TTR(CV1(int), CV2(double), tag, false);
+   TEST_TTR(CV1(double), CV2(bool), tag, false);
+   TEST_TTR(CV1(double), CV2(int), tag, false);
+
+#	define CV1(T) volatile T
+#	define CV2(T) T
+   // test with only two template parameters
+   TEST_TT(CV1(bool), CV2(int), true);
+   TEST_TT(CV1(bool), CV2(double), true);
+   TEST_TT(CV1(int), CV2(bool), true);
+   TEST_TT(CV1(int), CV2(double), true);
+   TEST_TT(CV1(double), CV2(bool), true);
+   TEST_TT(CV1(double), CV2(int), true);
+
+   // test with three template parameters
+   TEST_TTR(CV1(bool), CV2(int), bool, true);
+   TEST_TTR(CV1(bool), CV2(double), bool, true);
+   TEST_TTR(CV1(int), CV2(bool), bool, true);
+   TEST_TTR(CV1(int), CV2(double), bool, true);
+   TEST_TTR(CV1(double), CV2(bool), bool, true);
+   TEST_TTR(CV1(double), CV2(int), bool, true);
+   TEST_TTR(CV1(bool), CV2(int), tag, false);
+   TEST_TTR(CV1(bool), CV2(double), tag, false);
+   TEST_TTR(CV1(int), CV2(bool), tag, false);
+   TEST_TTR(CV1(int), CV2(double), tag, false);
+   TEST_TTR(CV1(double), CV2(bool), tag, false);
+   TEST_TTR(CV1(double), CV2(int), tag, false);
+
+#	define CV1(T) const volatile T
+#	define CV2(T) T
+   // test with only two template parameters
+   TEST_TT(CV1(bool), CV2(int), true);
+   TEST_TT(CV1(bool), CV2(double), true);
+   TEST_TT(CV1(int), CV2(bool), true);
+   TEST_TT(CV1(int), CV2(double), true);
+   TEST_TT(CV1(double), CV2(bool), true);
+   TEST_TT(CV1(double), CV2(int), true);
+
+   // test with three template parameters
+   TEST_TTR(CV1(bool), CV2(int), bool, true);
+   TEST_TTR(CV1(bool), CV2(double), bool, true);
+   TEST_TTR(CV1(int), CV2(bool), bool, true);
+   TEST_TTR(CV1(int), CV2(double), bool, true);
+   TEST_TTR(CV1(double), CV2(bool), bool, true);
+   TEST_TTR(CV1(double), CV2(int), bool, true);
+   TEST_TTR(CV1(bool), CV2(int), tag, false);
+   TEST_TTR(CV1(bool), CV2(double), tag, false);
+   TEST_TTR(CV1(int), CV2(bool), tag, false);
+   TEST_TTR(CV1(int), CV2(double), tag, false);
+   TEST_TTR(CV1(double), CV2(bool), tag, false);
+   TEST_TTR(CV1(double), CV2(int), tag, false);
+
+#	define CV1(T) const T&
+#	define CV2(T) T
+   // test with only two template parameters
+   TEST_TT(CV1(bool), CV2(int), true);
+   TEST_TT(CV1(bool), CV2(double), true);
+   TEST_TT(CV1(int), CV2(bool), true);
+   TEST_TT(CV1(int), CV2(double), true);
+   TEST_TT(CV1(double), CV2(bool), true);
+   TEST_TT(CV1(double), CV2(int), true);
+
+   // test with three template parameters
+   TEST_TTR(CV1(bool), CV2(int), bool, true);
+   TEST_TTR(CV1(bool), CV2(double), bool, true);
+   TEST_TTR(CV1(int), CV2(bool), bool, true);
+   TEST_TTR(CV1(int), CV2(double), bool, true);
+   TEST_TTR(CV1(double), CV2(bool), bool, true);
+   TEST_TTR(CV1(double), CV2(int), bool, true);
+   TEST_TTR(CV1(bool), CV2(int), tag, false);
+   TEST_TTR(CV1(bool), CV2(double), tag, false);
+   TEST_TTR(CV1(int), CV2(bool), tag, false);
+   TEST_TTR(CV1(int), CV2(double), tag, false);
+   TEST_TTR(CV1(double), CV2(bool), tag, false);
+   TEST_TTR(CV1(double), CV2(int), tag, false);
+
+#	define CV1(T) volatile T&
+#	define CV2(T) T
+   // test with only two template parameters
+   TEST_TT(CV1(bool), CV2(int), true);
+   TEST_TT(CV1(bool), CV2(double), true);
+   TEST_TT(CV1(int), CV2(bool), true);
+   TEST_TT(CV1(int), CV2(double), true);
+   TEST_TT(CV1(double), CV2(bool), true);
+   TEST_TT(CV1(double), CV2(int), true);
+
+   // test with three template parameters
+   TEST_TTR(CV1(bool), CV2(int), bool, true);
+   TEST_TTR(CV1(bool), CV2(double), bool, true);
+   TEST_TTR(CV1(int), CV2(bool), bool, true);
+   TEST_TTR(CV1(int), CV2(double), bool, true);
+   TEST_TTR(CV1(double), CV2(bool), bool, true);
+   TEST_TTR(CV1(double), CV2(int), bool, true);
+   TEST_TTR(CV1(bool), CV2(int), tag, false);
+   TEST_TTR(CV1(bool), CV2(double), tag, false);
+   TEST_TTR(CV1(int), CV2(bool), tag, false);
+   TEST_TTR(CV1(int), CV2(double), tag, false);
+   TEST_TTR(CV1(double), CV2(bool), tag, false);
+   TEST_TTR(CV1(double), CV2(int), tag, false);
+
+#	define CV1(T) const volatile T&
+#	define CV2(T) T
+   // test with only two template parameters
+   TEST_TT(CV1(bool), CV2(int), true);
+   TEST_TT(CV1(bool), CV2(double), true);
+   TEST_TT(CV1(int), CV2(bool), true);
+   TEST_TT(CV1(int), CV2(double), true);
+   TEST_TT(CV1(double), CV2(bool), true);
+   TEST_TT(CV1(double), CV2(int), true);
+
+   // test with three template parameters
+   TEST_TTR(CV1(bool), CV2(int), bool, true);
+   TEST_TTR(CV1(bool), CV2(double), bool, true);
+   TEST_TTR(CV1(int), CV2(bool), bool, true);
+   TEST_TTR(CV1(int), CV2(double), bool, true);
+   TEST_TTR(CV1(double), CV2(bool), bool, true);
+   TEST_TTR(CV1(double), CV2(int), bool, true);
+   TEST_TTR(CV1(bool), CV2(int), tag, false);
+   TEST_TTR(CV1(bool), CV2(double), tag, false);
+   TEST_TTR(CV1(int), CV2(bool), tag, false);
+   TEST_TTR(CV1(int), CV2(double), tag, false);
+   TEST_TTR(CV1(double), CV2(bool), tag, false);
+   TEST_TTR(CV1(double), CV2(int), tag, false);
+
+#	define CV1(T) T
+#	define CV2(T) const T
+   // test with only two template parameters
+   TEST_TT(CV1(bool), CV2(int), true);
+   TEST_TT(CV1(bool), CV2(double), true);
+   TEST_TT(CV1(int), CV2(bool), true);
+   TEST_TT(CV1(int), CV2(double), true);
+   TEST_TT(CV1(double), CV2(bool), true);
+   TEST_TT(CV1(double), CV2(int), true);
+
+   // test with three template parameters
+   TEST_TTR(CV1(bool), CV2(int), bool, true);
+   TEST_TTR(CV1(bool), CV2(double), bool, true);
+   TEST_TTR(CV1(int), CV2(bool), bool, true);
+   TEST_TTR(CV1(int), CV2(double), bool, true);
+   TEST_TTR(CV1(double), CV2(bool), bool, true);
+   TEST_TTR(CV1(double), CV2(int), bool, true);
+   TEST_TTR(CV1(bool), CV2(int), tag, false);
+   TEST_TTR(CV1(bool), CV2(double), tag, false);
+   TEST_TTR(CV1(int), CV2(bool), tag, false);
+   TEST_TTR(CV1(int), CV2(double), tag, false);
+   TEST_TTR(CV1(double), CV2(bool), tag, false);
+   TEST_TTR(CV1(double), CV2(int), tag, false);
+
+#	define CV1(T) T
+#	define CV2(T) volatile T
+   // test with only two template parameters
+   TEST_TT(CV1(bool), CV2(int), true);
+   TEST_TT(CV1(bool), CV2(double), true);
+   TEST_TT(CV1(int), CV2(bool), true);
+   TEST_TT(CV1(int), CV2(double), true);
+   TEST_TT(CV1(double), CV2(bool), true);
+   TEST_TT(CV1(double), CV2(int), true);
+
+   // test with three template parameters
+   TEST_TTR(CV1(bool), CV2(int), bool, true);
+   TEST_TTR(CV1(bool), CV2(double), bool, true);
+   TEST_TTR(CV1(int), CV2(bool), bool, true);
+   TEST_TTR(CV1(int), CV2(double), bool, true);
+   TEST_TTR(CV1(double), CV2(bool), bool, true);
+   TEST_TTR(CV1(double), CV2(int), bool, true);
+   TEST_TTR(CV1(bool), CV2(int), tag, false);
+   TEST_TTR(CV1(bool), CV2(double), tag, false);
+   TEST_TTR(CV1(int), CV2(bool), tag, false);
+   TEST_TTR(CV1(int), CV2(double), tag, false);
+   TEST_TTR(CV1(double), CV2(bool), tag, false);
+   TEST_TTR(CV1(double), CV2(int), tag, false);
+
+#	define CV1(T) T
+#	define CV2(T) const volatile T
+   // test with only two template parameters
+   TEST_TT(CV1(bool), CV2(int), true);
+   TEST_TT(CV1(bool), CV2(double), true);
+   TEST_TT(CV1(int), CV2(bool), true);
+   TEST_TT(CV1(int), CV2(double), true);
+   TEST_TT(CV1(double), CV2(bool), true);
+   TEST_TT(CV1(double), CV2(int), true);
+
+   // test with three template parameters
+   TEST_TTR(CV1(bool), CV2(int), bool, true);
+   TEST_TTR(CV1(bool), CV2(double), bool, true);
+   TEST_TTR(CV1(int), CV2(bool), bool, true);
+   TEST_TTR(CV1(int), CV2(double), bool, true);
+   TEST_TTR(CV1(double), CV2(bool), bool, true);
+   TEST_TTR(CV1(double), CV2(int), bool, true);
+   TEST_TTR(CV1(bool), CV2(int), tag, false);
+   TEST_TTR(CV1(bool), CV2(double), tag, false);
+   TEST_TTR(CV1(int), CV2(bool), tag, false);
+   TEST_TTR(CV1(int), CV2(double), tag, false);
+   TEST_TTR(CV1(double), CV2(bool), tag, false);
+   TEST_TTR(CV1(double), CV2(int), tag, false);
+
+#	define CV1(T) T
+#	define CV2(T) const T&
+   // test with only two template parameters
+   TEST_TT(CV1(bool), CV2(int), true);
+   TEST_TT(CV1(bool), CV2(double), true);
+   TEST_TT(CV1(int), CV2(bool), true);
+   TEST_TT(CV1(int), CV2(double), true);
+   TEST_TT(CV1(double), CV2(bool), true);
+   TEST_TT(CV1(double), CV2(int), true);
+
+   // test with three template parameters
+   TEST_TTR(CV1(bool), CV2(int), bool, true);
+   TEST_TTR(CV1(bool), CV2(double), bool, true);
+   TEST_TTR(CV1(int), CV2(bool), bool, true);
+   TEST_TTR(CV1(int), CV2(double), bool, true);
+   TEST_TTR(CV1(double), CV2(bool), bool, true);
+   TEST_TTR(CV1(double), CV2(int), bool, true);
+   TEST_TTR(CV1(bool), CV2(int), tag, false);
+   TEST_TTR(CV1(bool), CV2(double), tag, false);
+   TEST_TTR(CV1(int), CV2(bool), tag, false);
+   TEST_TTR(CV1(int), CV2(double), tag, false);
+   TEST_TTR(CV1(double), CV2(bool), tag, false);
+   TEST_TTR(CV1(double), CV2(int), tag, false);
+
+#	define CV1(T) T
+#	define CV2(T) volatile T&
+   // test with only two template parameters
+   TEST_TT(CV1(bool), CV2(int), true);
+   TEST_TT(CV1(bool), CV2(double), true);
+   TEST_TT(CV1(int), CV2(bool), true);
+   TEST_TT(CV1(int), CV2(double), true);
+   TEST_TT(CV1(double), CV2(bool), true);
+   TEST_TT(CV1(double), CV2(int), true);
+
+   // test with three template parameters
+   TEST_TTR(CV1(bool), CV2(int), bool, true);
+   TEST_TTR(CV1(bool), CV2(double), bool, true);
+   TEST_TTR(CV1(int), CV2(bool), bool, true);
+   TEST_TTR(CV1(int), CV2(double), bool, true);
+   TEST_TTR(CV1(double), CV2(bool), bool, true);
+   TEST_TTR(CV1(double), CV2(int), bool, true);
+   TEST_TTR(CV1(bool), CV2(int), tag, false);
+   TEST_TTR(CV1(bool), CV2(double), tag, false);
+   TEST_TTR(CV1(int), CV2(bool), tag, false);
+   TEST_TTR(CV1(int), CV2(double), tag, false);
+   TEST_TTR(CV1(double), CV2(bool), tag, false);
+   TEST_TTR(CV1(double), CV2(int), tag, false);
+
+#	define CV1(T) T
+#	define CV2(T) const volatile T&
+   // test with only two template parameters
+   TEST_TT(CV1(bool), CV2(int), true);
+   TEST_TT(CV1(bool), CV2(double), true);
+   TEST_TT(CV1(int), CV2(bool), true);
+   TEST_TT(CV1(int), CV2(double), true);
+   TEST_TT(CV1(double), CV2(bool), true);
+   TEST_TT(CV1(double), CV2(int), true);
+
+   // test with three template parameters
+   TEST_TTR(CV1(bool), CV2(int), bool, true);
+   TEST_TTR(CV1(bool), CV2(double), bool, true);
+   TEST_TTR(CV1(int), CV2(bool), bool, true);
+   TEST_TTR(CV1(int), CV2(double), bool, true);
+   TEST_TTR(CV1(double), CV2(bool), bool, true);
+   TEST_TTR(CV1(double), CV2(int), bool, true);
+   TEST_TTR(CV1(bool), CV2(int), tag, false);
+   TEST_TTR(CV1(bool), CV2(double), tag, false);
+   TEST_TTR(CV1(int), CV2(bool), tag, false);
+   TEST_TTR(CV1(int), CV2(double), tag, false);
+   TEST_TTR(CV1(double), CV2(bool), tag, false);
+   TEST_TTR(CV1(double), CV2(int), tag, false);
+
+#	define CV1(T) const T
+#	define CV2(T) const T
+   // test with only two template parameters
+   TEST_TT(CV1(bool), CV2(int), true);
+   TEST_TT(CV1(bool), CV2(double), true);
+   TEST_TT(CV1(int), CV2(bool), true);
+   TEST_TT(CV1(int), CV2(double), true);
+   TEST_TT(CV1(double), CV2(bool), true);
+   TEST_TT(CV1(double), CV2(int), true);
+
+   // test with three template parameters
+   TEST_TTR(CV1(bool), CV2(int), bool, true);
+   TEST_TTR(CV1(bool), CV2(double), bool, true);
+   TEST_TTR(CV1(int), CV2(bool), bool, true);
+   TEST_TTR(CV1(int), CV2(double), bool, true);
+   TEST_TTR(CV1(double), CV2(bool), bool, true);
+   TEST_TTR(CV1(double), CV2(int), bool, true);
+   TEST_TTR(CV1(bool), CV2(int), tag, false);
+   TEST_TTR(CV1(bool), CV2(double), tag, false);
+   TEST_TTR(CV1(int), CV2(bool), tag, false);
+   TEST_TTR(CV1(int), CV2(double), tag, false);
+   TEST_TTR(CV1(double), CV2(bool), tag, false);
+   TEST_TTR(CV1(double), CV2(int), tag, false);
+
+#	define CV1(T) const T&
+#	define CV2(T) const T&
+   // test with only two template parameters
+   TEST_TT(CV1(bool), CV2(int), true);
+   TEST_TT(CV1(bool), CV2(double), true);
+   TEST_TT(CV1(int), CV2(bool), true);
+   TEST_TT(CV1(int), CV2(double), true);
+   TEST_TT(CV1(double), CV2(bool), true);
+   TEST_TT(CV1(double), CV2(int), true);
+
+   // test with three template parameters
+   TEST_TTR(CV1(bool), CV2(int), bool, true);
+   TEST_TTR(CV1(bool), CV2(double), bool, true);
+   TEST_TTR(CV1(int), CV2(bool), bool, true);
+   TEST_TTR(CV1(int), CV2(double), bool, true);
+   TEST_TTR(CV1(double), CV2(bool), bool, true);
+   TEST_TTR(CV1(double), CV2(int), bool, true);
+   TEST_TTR(CV1(bool), CV2(int), tag, false);
+   TEST_TTR(CV1(bool), CV2(double), tag, false);
+   TEST_TTR(CV1(int), CV2(bool), tag, false);
+   TEST_TTR(CV1(int), CV2(double), tag, false);
+   TEST_TTR(CV1(double), CV2(bool), tag, false);
+   TEST_TTR(CV1(double), CV2(int), tag, false);
+
+#	define CV1(T) volatile T
+#	define CV2(T) volatile T
+   // test with only two template parameters
+   TEST_TT(CV1(bool), CV2(int), true);
+   TEST_TT(CV1(bool), CV2(double), true);
+   TEST_TT(CV1(int), CV2(bool), true);
+   TEST_TT(CV1(int), CV2(double), true);
+   TEST_TT(CV1(double), CV2(bool), true);
+   TEST_TT(CV1(double), CV2(int), true);
+
+   // test with three template parameters
+   TEST_TTR(CV1(bool), CV2(int), bool, true);
+   TEST_TTR(CV1(bool), CV2(double), bool, true);
+   TEST_TTR(CV1(int), CV2(bool), bool, true);
+   TEST_TTR(CV1(int), CV2(double), bool, true);
+   TEST_TTR(CV1(double), CV2(bool), bool, true);
+   TEST_TTR(CV1(double), CV2(int), bool, true);
+   TEST_TTR(CV1(bool), CV2(int), tag, false);
+   TEST_TTR(CV1(bool), CV2(double), tag, false);
+   TEST_TTR(CV1(int), CV2(bool), tag, false);
+   TEST_TTR(CV1(int), CV2(double), tag, false);
+   TEST_TTR(CV1(double), CV2(bool), tag, false);
+   TEST_TTR(CV1(double), CV2(int), tag, false);
+
+#	define CV1(T) volatile T&
+#	define CV2(T) volatile T&
+   // test with only two template parameters
+   TEST_TT(CV1(bool), CV2(int), true);
+   TEST_TT(CV1(bool), CV2(double), true);
+   TEST_TT(CV1(int), CV2(bool), true);
+   TEST_TT(CV1(int), CV2(double), true);
+   TEST_TT(CV1(double), CV2(bool), true);
+   TEST_TT(CV1(double), CV2(int), true);
+
+   // test with three template parameters
+   TEST_TTR(CV1(bool), CV2(int), bool, true);
+   TEST_TTR(CV1(bool), CV2(double), bool, true);
+   TEST_TTR(CV1(int), CV2(bool), bool, true);
+   TEST_TTR(CV1(int), CV2(double), bool, true);
+   TEST_TTR(CV1(double), CV2(bool), bool, true);
+   TEST_TTR(CV1(double), CV2(int), bool, true);
+   TEST_TTR(CV1(bool), CV2(int), tag, false);
+   TEST_TTR(CV1(bool), CV2(double), tag, false);
+   TEST_TTR(CV1(int), CV2(bool), tag, false);
+   TEST_TTR(CV1(int), CV2(double), tag, false);
+   TEST_TTR(CV1(double), CV2(bool), tag, false);
+   TEST_TTR(CV1(double), CV2(int), tag, false);
+
+#	define CV1(T) const volatile T
+#	define CV2(T) const volatile T
+   // test with only two template parameters
+   TEST_TT(CV1(bool), CV2(int), true);
+   TEST_TT(CV1(bool), CV2(double), true);
+   TEST_TT(CV1(int), CV2(bool), true);
+   TEST_TT(CV1(int), CV2(double), true);
+   TEST_TT(CV1(double), CV2(bool), true);
+   TEST_TT(CV1(double), CV2(int), true);
+
+   // test with three template parameters
+   TEST_TTR(CV1(bool), CV2(int), bool, true);
+   TEST_TTR(CV1(bool), CV2(double), bool, true);
+   TEST_TTR(CV1(int), CV2(bool), bool, true);
+   TEST_TTR(CV1(int), CV2(double), bool, true);
+   TEST_TTR(CV1(double), CV2(bool), bool, true);
+   TEST_TTR(CV1(double), CV2(int), bool, true);
+   TEST_TTR(CV1(bool), CV2(int), tag, false);
+   TEST_TTR(CV1(bool), CV2(double), tag, false);
+   TEST_TTR(CV1(int), CV2(bool), tag, false);
+   TEST_TTR(CV1(int), CV2(double), tag, false);
+   TEST_TTR(CV1(double), CV2(bool), tag, false);
+   TEST_TTR(CV1(double), CV2(int), tag, false);
+
+#	define CV1(T) const volatile T&
+#	define CV2(T) const volatile T&
+   // test with only two template parameters
+   TEST_TT(CV1(bool), CV2(int), true);
+   TEST_TT(CV1(bool), CV2(double), true);
+   TEST_TT(CV1(int), CV2(bool), true);
+   TEST_TT(CV1(int), CV2(double), true);
+   TEST_TT(CV1(double), CV2(bool), true);
+   TEST_TT(CV1(double), CV2(int), true);
+
+   // test with three template parameters
+   TEST_TTR(CV1(bool), CV2(int), bool, true);
+   TEST_TTR(CV1(bool), CV2(double), bool, true);
+   TEST_TTR(CV1(int), CV2(bool), bool, true);
+   TEST_TTR(CV1(int), CV2(double), bool, true);
+   TEST_TTR(CV1(double), CV2(bool), bool, true);
+   TEST_TTR(CV1(double), CV2(int), bool, true);
+   TEST_TTR(CV1(bool), CV2(int), tag, false);
+   TEST_TTR(CV1(bool), CV2(double), tag, false);
+   TEST_TTR(CV1(int), CV2(bool), tag, false);
+   TEST_TTR(CV1(int), CV2(double), tag, false);
+   TEST_TTR(CV1(double), CV2(bool), tag, false);
+   TEST_TTR(CV1(double), CV2(int), tag, false);
+
+
    TEST_T(without, false);
    TEST_T(internal, true);
    TEST_T(external, true);
-// compile time error
-// TEST_T(internal_private, false);
+   // compile time error
+   // TEST_T(internal_private, false);
    TEST_T(returns_int, true);
    TEST_T(returns_void, true);
    TEST_T(returns_void_star, true);
    TEST_T(returns_double, true);
    TEST_T(returns_string, true);
-// TEST_T(convertible_to_bool, true);
+   // TEST_T(convertible_to_bool, true);
    TEST_T(Base1, true);
    TEST_T(Derived1, true);
    TEST_T(Base2, false);
@@ -732,7 +1190,7 @@ void run() {
    TEST_TR(returns_double, double, true);
    TEST_TR(returns_string, bool, false);
    TEST_TR(returns_string, std::string, true);
-// TEST_TR(convertible_to_bool, bool, true);
+   // TEST_TR(convertible_to_bool, bool, true);
    TEST_TR(Base1, bool, true);
    TEST_TR(Derived1, bool, true);
    TEST_TR(Base2, bool, false);
