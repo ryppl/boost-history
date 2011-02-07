@@ -53,15 +53,17 @@ Voltaire "" ".*indexing.*"
 
 Twain
 
-macro
-obscure
+# macro  
+
+# An index term that should only be found in one Doxygen comment.
+obscure obscure
 
 # Two word index term, allowing plurals.
 "side effect" \<side effect\w*\>
 
-text
+text \<text\w*\>
 
-URL
+URL URL 
 
 !exclude junk
 # Exclude the index term junk from the index,
