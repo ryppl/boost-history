@@ -163,3 +163,7 @@ boostbook standalone
 		<dependency>autodoc #
 
    ;
+
+#install pdf-install : standalone : <install-type>PDF <location>. ;
+
+install pdf-install : standalone : <install-type>PDF <location>. <name>mylibrary.pdf ;
