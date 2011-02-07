@@ -1,4 +1,5 @@
-//
+// Copyright Paul A. Bristow 2011
+
 // Distributed under the Boost Software License, Version 1.0. (See
 // accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -14,7 +15,7 @@
   \file
   \brief Template for Boost documentation.
   \details Header file for use by example.
-  Also using Quickbook, Doxygen and indexed by Auto-index.
+   Also using Quickbook, Doxygen, and indexed by AutoIndex.
 
  \mainpage QuickBook Auto Doxygen Indexed Main page.
 This is the front page of the QuickBook Auto Doxygen Indexed
@@ -23,16 +24,17 @@ example of producing Boost documentation.
 \n It is redundant for production of html and pdf output,
 but useful to allow just Doxygen manuals (no Quickbook or indexing).
 
-These can provide a more convenient compact index of the classes, files, namespaces and functions.
+These can provide a convenient compact index of the classes, files, namespaces and functions.
 They provide the Doxygen comments, but not the text from Quickbook.
 
 These manuals are quickly produced using the Doxywizard GUI frontend.
-A suitable doxyfile holding the list of files to include etc
+A suitable Doxyfile holding the list of files to include etc
 is conveniently placed in a /doc/doxygen sub-folder.
 Selecting this as the working directory from which doxygen will run as Step 1,
 and the run tab, and "run doxygen' in Step 2 should generate an html in the /doxygen sub-folder.
 
-The mainpage should give a pointer to the full html and/or pdf versions that provide the full Quickbook generated information.
+The mainpage should give a hyperlink to the full html and pdf versions
+that provide the full Quickbook generated information, for example:
 
 http://www.boost.org/doc/libs/my_library/index.html My Library Manual
 
