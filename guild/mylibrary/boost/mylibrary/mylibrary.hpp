@@ -53,13 +53,15 @@ namespace boost
     it is more convenient to use C style.
   */
     public:
-      //! An enum.
-      /*! More detailed enum description.
-         needing more than one line so using C style comment markers. */
+      //! An fully useless enum with 3 values.
+      /*! More detailed enum description,
+         needing more than one line,
+         so using C style comment markers.
+      */
       enum test_enum {
-                   test_enum_val1, //!< Enum value TVal1 (not the < to link to the same line).
+                   test_enum_val1, //!< Enum value TVal1 (Note: the use of < to link this Doxygen comment to the same line).
                    test_enum_val2, //!< Enum value TVal2.
-                   test_enum_val3  /*!< Enum value TVal3. (using C style comment markers).*/
+                   test_enum_val3  /*!< Enum value TVal3. (Note: using C style comment markers).*/
                  };
 
       //! A constructor.
@@ -107,14 +109,12 @@ namespace boost
   }; // class myclass
 
   int donowt(int i)
-  { /*! Non-member free function that does nowt useful at all.
-
+  { /*!
+       Non-member free function that does nowt useful at all.
       \param i is an argument that is ignored completely.
-
-      \returns -1 always
-     \pre No preconditions.
-     \post No side effects.
-
+      \returns -1 always.
+      \pre No preconditions.
+      \post No side effects.
   */
     return -1;
   } //   int donowt(int i)
