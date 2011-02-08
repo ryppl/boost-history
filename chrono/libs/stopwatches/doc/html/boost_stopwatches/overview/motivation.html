@@ -27,7 +27,7 @@
 <a name="boost_stopwatches.overview.motivation"></a><a class="link" href="motivation.html" title="Motivation">Motivation</a>
 </h3></div></div></div>
 <a name="boost_stopwatches.overview.motivation.measuring_elapsed_time"></a><h5>
-<a name="id3343313"></a>
+<a name="id3226850"></a>
         <a class="link" href="motivation.html#boost_stopwatches.overview.motivation.measuring_elapsed_time">Measuring
         elapsed time</a>
       </h5>
@@ -40,7 +40,7 @@
         is the basic model of <a class="link" href="../reference/stopwatches.html#boost_stopwatches.reference.stopwatches.stopwatch_req" title="Stopwatch Requirements"><code class="computeroutput"><span class="identifier">Stopwatch</span></code></a>.
       </p>
 <a name="boost_stopwatches.overview.motivation.reporting_elapsed_time"></a><h5>
-<a name="id3343409"></a>
+<a name="id3226946"></a>
         <a class="link" href="motivation.html#boost_stopwatches.overview.motivation.reporting_elapsed_time">Reporting
         elapsed time</a>
       </h5>
@@ -75,7 +75,7 @@
 </span><span class="special">}</span>
 </pre>
 <a name="boost_stopwatches.overview.motivation.how_reliable_are_these_measures_"></a><h5>
-<a name="id3394301"></a>
+<a name="id3277838"></a>
         <a class="link" href="motivation.html#boost_stopwatches.overview.motivation.how_reliable_are_these_measures_">How
         reliable are these measures?</a>
       </h5>
@@ -85,7 +85,7 @@
         details), but they mostly amount to reporting overhead. Boost.Chrono provides
         two ways to improve reliability of time measurements. A <a class="link" href="../reference/stopwatches.html#boost_stopwatches.reference.stopwatches.stopwatch_accumulator_hpp.stopwatch_accumulator" title="Template Class stopwatch_accumulator&lt;&gt;"><code class="computeroutput"><span class="identifier">stopwatch_accumulator</span></code></a> only reports
         statistics once all measurements have been acquired, which removes reporting
-        overhead from the measurements. The other approach is to use a <code class="computeroutput"><span class="identifier">SuspendibleClock</span></code> such that the reporting
+        overhead from the measurements. The other approach is to use a <a class="link" href="../reference/other_clocks.html#boost_stopwatches.reference.other_clocks.suspendible_clock_req" title="SuspendibleClock Requirements"><code class="computeroutput"><span class="identifier">SuspendibleClock</span></code></a> such that the reporting
         overhead can be ignored by suspending elapsed time tracking during reporting
         operations
       </p>

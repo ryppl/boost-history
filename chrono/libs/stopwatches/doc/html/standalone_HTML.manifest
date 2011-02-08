@@ -8,7 +8,7 @@ boost_stopwatches/users_guide/tutorial.html
 boost_stopwatches/users_guide/examples.html
 boost_stopwatches/reference.html
 boost_stopwatches/reference/stopwatches_hpp.html
-boost_stopwatches/reference/chrono_stopwatches_hpp.html
+boost_stopwatches/reference/stopwatches_stopwatches_hpp.html
 boost_stopwatches/reference/other_clocks.html
 boost_stopwatches/reference/stopwatches.html
 boost_stopwatches/reference/reporters.html

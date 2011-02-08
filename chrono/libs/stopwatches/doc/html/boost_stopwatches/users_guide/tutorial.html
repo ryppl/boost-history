@@ -30,22 +30,22 @@
 <dt><span class="section"><a href="tutorial.html#boost_stopwatches.users_guide.tutorial.stopwatches_and_stopclocks">Stopwatches
         and Stopclocks</a></span></dt>
 <dd><dl>
-<dt><span class="section"><a href="tutorial.html#boost_stopwatches.users_guide.tutorial.stopwatches_and_stopclocks.stopwatches_accumulation_and_statistics">Stopwatches
+<dt><span class="section"><a href="tutorial.html#boost_stopwatches.users_guide.tutorial.stopwatches_and_stopclocks.accumulators">Stopwatches
           accumulation and statistics</a></span></dt>
-<dt><span class="section"><a href="tutorial.html#boost_stopwatches.users_guide.tutorial.stopwatches_and_stopclocks.how_can_i_prefix_each_report_with__boost_current_function__function_signature_">How
+<dt><span class="section"><a href="tutorial.html#boost_stopwatches.users_guide.tutorial.stopwatches_and_stopclocks.function">How
           can I prefix each report with <code class="computeroutput"><span class="identifier">BOOST_CURRENT_FUNCTION</span></code>
           function signature?</a></span></dt>
-<dt><span class="section"><a href="tutorial.html#boost_stopwatches.users_guide.tutorial.stopwatches_and_stopclocks.how_can_i_prefix_each_report_with____file_____line_____pattern_">How
+<dt><span class="section"><a href="tutorial.html#boost_stopwatches.users_guide.tutorial.stopwatches_and_stopclocks.file_line">How
           can I prefix each report with <code class="computeroutput"><span class="identifier">__FILE__</span><span class="special">[</span><span class="identifier">__LINE__</span><span class="special">]</span></code> pattern?</a></span></dt>
-<dt><span class="section"><a href="tutorial.html#boost_stopwatches.users_guide.tutorial.stopwatches_and_stopclocks.can_i_use_an_stopclock_accumulator_which_is_not_static_">Can
+<dt><span class="section"><a href="tutorial.html#boost_stopwatches.users_guide.tutorial.stopwatches_and_stopclocks.non_static_acc">Can
           I use an stopclock accumulator which is not static?</a></span></dt>
-<dt><span class="section"><a href="tutorial.html#boost_stopwatches.users_guide.tutorial.stopwatches_and_stopclocks.how_can_i_suspend_a_stopwatch_">How
+<dt><span class="section"><a href="tutorial.html#boost_stopwatches.users_guide.tutorial.stopwatches_and_stopclocks.suspend">How
           can I suspend a stopwatch?</a></span></dt>
-<dt><span class="section"><a href="tutorial.html#boost_stopwatches.users_guide.tutorial.stopwatches_and_stopclocks.how_to_get_specific_statistics_from_stopwatches_accumulator_">How
+<dt><span class="section"><a href="tutorial.html#boost_stopwatches.users_guide.tutorial.stopwatches_and_stopclocks.stats">How
           to get specific statistics from stopwatches accumulator?</a></span></dt>
 </dl></dd>
 <dt><span class="section"><a href="tutorial.html#boost_stopwatches.users_guide.tutorial.formatters">Formatters</a></span></dt>
-<dd><dl><dt><span class="section"><a href="tutorial.html#boost_stopwatches.users_guide.tutorial.formatters.how_can_i_make_a_specific_formatter_when_the_default_do_not_satisfy_my_expectations">How
+<dd><dl><dt><span class="section"><a href="tutorial.html#boost_stopwatches.users_guide.tutorial.formatters.other">How
           can I make a specific formatter when the default do not satisfy my expectations</a></span></dt></dl></dd>
 </dl></div>
 <div class="section">
@@ -54,18 +54,18 @@
         and Stopclocks</a>
 </h4></div></div></div>
 <div class="toc"><dl>
-<dt><span class="section"><a href="tutorial.html#boost_stopwatches.users_guide.tutorial.stopwatches_and_stopclocks.stopwatches_accumulation_and_statistics">Stopwatches
+<dt><span class="section"><a href="tutorial.html#boost_stopwatches.users_guide.tutorial.stopwatches_and_stopclocks.accumulators">Stopwatches
           accumulation and statistics</a></span></dt>
-<dt><span class="section"><a href="tutorial.html#boost_stopwatches.users_guide.tutorial.stopwatches_and_stopclocks.how_can_i_prefix_each_report_with__boost_current_function__function_signature_">How
+<dt><span class="section"><a href="tutorial.html#boost_stopwatches.users_guide.tutorial.stopwatches_and_stopclocks.function">How
           can I prefix each report with <code class="computeroutput"><span class="identifier">BOOST_CURRENT_FUNCTION</span></code>
           function signature?</a></span></dt>
-<dt><span class="section"><a href="tutorial.html#boost_stopwatches.users_guide.tutorial.stopwatches_and_stopclocks.how_can_i_prefix_each_report_with____file_____line_____pattern_">How
+<dt><span class="section"><a href="tutorial.html#boost_stopwatches.users_guide.tutorial.stopwatches_and_stopclocks.file_line">How
           can I prefix each report with <code class="computeroutput"><span class="identifier">__FILE__</span><span class="special">[</span><span class="identifier">__LINE__</span><span class="special">]</span></code> pattern?</a></span></dt>
-<dt><span class="section"><a href="tutorial.html#boost_stopwatches.users_guide.tutorial.stopwatches_and_stopclocks.can_i_use_an_stopclock_accumulator_which_is_not_static_">Can
+<dt><span class="section"><a href="tutorial.html#boost_stopwatches.users_guide.tutorial.stopwatches_and_stopclocks.non_static_acc">Can
           I use an stopclock accumulator which is not static?</a></span></dt>
-<dt><span class="section"><a href="tutorial.html#boost_stopwatches.users_guide.tutorial.stopwatches_and_stopclocks.how_can_i_suspend_a_stopwatch_">How
+<dt><span class="section"><a href="tutorial.html#boost_stopwatches.users_guide.tutorial.stopwatches_and_stopclocks.suspend">How
           can I suspend a stopwatch?</a></span></dt>
-<dt><span class="section"><a href="tutorial.html#boost_stopwatches.users_guide.tutorial.stopwatches_and_stopclocks.how_to_get_specific_statistics_from_stopwatches_accumulator_">How
+<dt><span class="section"><a href="tutorial.html#boost_stopwatches.users_guide.tutorial.stopwatches_and_stopclocks.stats">How
           to get specific statistics from stopwatches accumulator?</a></span></dt>
 </dl></div>
 <p>
@@ -110,7 +110,7 @@
 </pre>
 <div class="section">
 <div class="titlepage"><div><div><h5 class="title">
-<a name="boost_stopwatches.users_guide.tutorial.stopwatches_and_stopclocks.stopwatches_accumulation_and_statistics"></a><a class="link" href="tutorial.html#boost_stopwatches.users_guide.tutorial.stopwatches_and_stopclocks.stopwatches_accumulation_and_statistics" title="Stopwatches accumulation and statistics">Stopwatches
+<a name="boost_stopwatches.users_guide.tutorial.stopwatches_and_stopclocks.accumulators"></a><a class="link" href="tutorial.html#boost_stopwatches.users_guide.tutorial.stopwatches_and_stopclocks.accumulators" title="Stopwatches accumulation and statistics">Stopwatches
           accumulation and statistics</a>
 </h5></div></div></div>
 <p>
@@ -149,7 +149,7 @@
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h5 class="title">
-<a name="boost_stopwatches.users_guide.tutorial.stopwatches_and_stopclocks.how_can_i_prefix_each_report_with__boost_current_function__function_signature_"></a><a class="link" href="tutorial.html#boost_stopwatches.users_guide.tutorial.stopwatches_and_stopclocks.how_can_i_prefix_each_report_with__boost_current_function__function_signature_" title="How can I prefix each report with BOOST_CURRENT_FUNCTION function signature?">How
+<a name="boost_stopwatches.users_guide.tutorial.stopwatches_and_stopclocks.function"></a><a class="link" href="tutorial.html#boost_stopwatches.users_guide.tutorial.stopwatches_and_stopclocks.function" title="How can I prefix each report with BOOST_CURRENT_FUNCTION function signature?">How
           can I prefix each report with <code class="computeroutput"><span class="identifier">BOOST_CURRENT_FUNCTION</span></code>
           function signature?</a>
 </h5></div></div></div>
@@ -195,7 +195,7 @@
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h5 class="title">
-<a name="boost_stopwatches.users_guide.tutorial.stopwatches_and_stopclocks.how_can_i_prefix_each_report_with____file_____line_____pattern_"></a><a class="link" href="tutorial.html#boost_stopwatches.users_guide.tutorial.stopwatches_and_stopclocks.how_can_i_prefix_each_report_with____file_____line_____pattern_" title="How can I prefix each report with __FILE__[__LINE__] pattern?">How
+<a name="boost_stopwatches.users_guide.tutorial.stopwatches_and_stopclocks.file_line"></a><a class="link" href="tutorial.html#boost_stopwatches.users_guide.tutorial.stopwatches_and_stopclocks.file_line" title="How can I prefix each report with __FILE__[__LINE__] pattern?">How
           can I prefix each report with <code class="computeroutput"><span class="identifier">__FILE__</span><span class="special">[</span><span class="identifier">__LINE__</span><span class="special">]</span></code> pattern?</a>
 </h5></div></div></div>
 <p>
@@ -229,7 +229,7 @@
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h5 class="title">
-<a name="boost_stopwatches.users_guide.tutorial.stopwatches_and_stopclocks.can_i_use_an_stopclock_accumulator_which_is_not_static_"></a><a class="link" href="tutorial.html#boost_stopwatches.users_guide.tutorial.stopwatches_and_stopclocks.can_i_use_an_stopclock_accumulator_which_is_not_static_" title="Can I use an stopclock accumulator which is not static?">Can
+<a name="boost_stopwatches.users_guide.tutorial.stopwatches_and_stopclocks.non_static_acc"></a><a class="link" href="tutorial.html#boost_stopwatches.users_guide.tutorial.stopwatches_and_stopclocks.non_static_acc" title="Can I use an stopclock accumulator which is not static?">Can
           I use an stopclock accumulator which is not static?</a>
 </h5></div></div></div>
 <p>
@@ -251,7 +251,7 @@
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h5 class="title">
-<a name="boost_stopwatches.users_guide.tutorial.stopwatches_and_stopclocks.how_can_i_suspend_a_stopwatch_"></a><a class="link" href="tutorial.html#boost_stopwatches.users_guide.tutorial.stopwatches_and_stopclocks.how_can_i_suspend_a_stopwatch_" title="How can I suspend a stopwatch?">How
+<a name="boost_stopwatches.users_guide.tutorial.stopwatches_and_stopclocks.suspend"></a><a class="link" href="tutorial.html#boost_stopwatches.users_guide.tutorial.stopwatches_and_stopclocks.suspend" title="How can I suspend a stopwatch?">How
           can I suspend a stopwatch?</a>
 </h5></div></div></div>
 <pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">stopwatches</span><span class="special">/</span><span class="identifier">stopwatch</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
@@ -273,7 +273,7 @@
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h5 class="title">
-<a name="boost_stopwatches.users_guide.tutorial.stopwatches_and_stopclocks.how_to_get_specific_statistics_from_stopwatches_accumulator_"></a><a class="link" href="tutorial.html#boost_stopwatches.users_guide.tutorial.stopwatches_and_stopclocks.how_to_get_specific_statistics_from_stopwatches_accumulator_" title="How to get specific statistics from stopwatches accumulator?">How
+<a name="boost_stopwatches.users_guide.tutorial.stopwatches_and_stopclocks.stats"></a><a class="link" href="tutorial.html#boost_stopwatches.users_guide.tutorial.stopwatches_and_stopclocks.stats" title="How to get specific statistics from stopwatches accumulator?">How
           to get specific statistics from stopwatches accumulator?</a>
 </h5></div></div></div>
 <p>
@@ -333,11 +333,11 @@
 <div class="titlepage"><div><div><h4 class="title">
 <a name="boost_stopwatches.users_guide.tutorial.formatters"></a><a class="link" href="tutorial.html#boost_stopwatches.users_guide.tutorial.formatters" title="Formatters">Formatters</a>
 </h4></div></div></div>
-<div class="toc"><dl><dt><span class="section"><a href="tutorial.html#boost_stopwatches.users_guide.tutorial.formatters.how_can_i_make_a_specific_formatter_when_the_default_do_not_satisfy_my_expectations">How
+<div class="toc"><dl><dt><span class="section"><a href="tutorial.html#boost_stopwatches.users_guide.tutorial.formatters.other">How
           can I make a specific formatter when the default do not satisfy my expectations</a></span></dt></dl></div>
 <div class="section">
 <div class="titlepage"><div><div><h5 class="title">
-<a name="boost_stopwatches.users_guide.tutorial.formatters.how_can_i_make_a_specific_formatter_when_the_default_do_not_satisfy_my_expectations"></a><a class="link" href="tutorial.html#boost_stopwatches.users_guide.tutorial.formatters.how_can_i_make_a_specific_formatter_when_the_default_do_not_satisfy_my_expectations" title="How can I make a specific formatter when the default do not satisfy my expectations">How
+<a name="boost_stopwatches.users_guide.tutorial.formatters.other"></a><a class="link" href="tutorial.html#boost_stopwatches.users_guide.tutorial.formatters.other" title="How can I make a specific formatter when the default do not satisfy my expectations">How
           can I make a specific formatter when the default do not satisfy my expectations</a>
 </h5></div></div></div>
 <p>

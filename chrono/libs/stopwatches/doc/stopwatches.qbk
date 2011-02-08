@@ -149,8 +149,7 @@
 
 
 [/==================]
-[/template SuspendibleClock_concept_link[link_text] [link boost_stopwatches.reference.other_clocks.suspendible_clock_req [link_text]]]
-[template SuspendibleClock_concept_link[link_text] [link_text]]
+[template SuspendibleClock_concept_link[link_text] [link boost_stopwatches.reference.other_clocks.suspendible_clock_req [link_text]]]
 [def __SuspendibleClock_concept__ [SuspendibleClock_concept_link `SuspendibleClock` concept]]
 [def __SuspendibleClock_concept_type__ [SuspendibleClock_concept_link `SuspendibleClock`]]
 [def __SuspendibleClock_req__ [SuspendibleClock_concept_link `SuspendibleClock` requirements]]
@@ -457,7 +456,7 @@ Ubuntu 10.10
 
 [endsect]
 [/====================]
-[section Hello World! ]
+[section:hello Hello World! ]
 [/====================]
 
 If all you want to do is to time a program's execution:
@@ -537,7 +536,7 @@ Will produce the following output
     0.017s
 
 [/
-[section How reliable are these measures?]
+[section:reliable How reliable are these measures?]
 
 [note this section need to be reworked, the ideas are there, but ...]
 
@@ -579,7 +578,7 @@ See the performances section for more deep details.
 [endsect]
 ]
 
-[section  Stopwatches accumulation and statistics]
+[section:accumulators Stopwatches accumulation and statistics]
 
 The preceding stopwatch manage only with a measure. It is also interesting to have an statisitical view of these times, for example the sum, min, max and mean. __stopwatch_accumulator__`<>` associates an accumulator with a __stopwatch__, so we are able to retrieve any statistical feature Boost.Accumulator provides.
 
@@ -612,7 +611,7 @@ Will produce the following output
 
 
 
-[section How can I prefix each report with `BOOST_CURRENT_FUNCTION` function signature?]
+[section:function How can I prefix each report with `BOOST_CURRENT_FUNCTION` function signature?]
 
 You will need to give a specific format to your __stopclock__. You just need to concatenate your specific pattern to the default_format of the formatter.
 
@@ -649,7 +648,7 @@ With this macro you will just have to write
 
 [endsect]
 
-[section How can I prefix each report with `__FILE__[__LINE__]` pattern?]
+[section:file_line How can I prefix each report with `__FILE__[__LINE__]` pattern?]
 
 When you want to prefix with the `__FILE__[__LINE__]` pattern you can follow the same technique as described below:
 
@@ -678,7 +677,7 @@ Now you can mix fcntion and line reports as follows
 
 [endsect]
 
-[section Can I use an stopclock accumulator which is not static?]
+[section:non_static_acc Can I use an stopclock accumulator which is not static?]
 
 The typical example of stopclock_accumulator is to get statistical measures of the time a function takes for each one of its calls. You can also use __stopclock_accumulator__ to get statistical measures of the time a given loop takes for each one of its laps.
 
@@ -694,7 +693,7 @@ The typical example of stopclock_accumulator is to get statistical measures of t
 
 [endsect]
 
-[section How can I suspend a stopwatch?]
+[section:suspend How can I suspend a stopwatch?]
 
     #include <boost/stopwatches/stopwatch.hpp>
     #include <cmath>
@@ -714,7 +713,7 @@ The typical example of stopclock_accumulator is to get statistical measures of t
 
 [endsect]
 
-[section How to get specific statistics from stopwatches accumulator?]
+[section:stats How to get specific statistics from stopwatches accumulator?]
 
 There are two use cases that coul need to change the statistics associated to a stopwatches accumulator:
 
@@ -760,7 +759,7 @@ Unfortunately there is no error at compile time. Fortunately, the run-time execu
 
 
 [section Formatters]
-[section How can I make a specific formatter when the default do not satisfy my expectations]
+[section:other How can I make a specific formatter when the default do not satisfy my expectations]
 
 Imagine then that we want to report the `tag::variance(lazy)`. We will need to include the specific accumulator file
 
@@ -1046,7 +1045,7 @@ Here is the output for this program for several sets of command line arguments:
 [endsect]
 
 [/=============================================]
-[section:chrono_stopwatches_hpp Header `<boost/stopwatches/stopwatches.hpp>`]
+[section:stopwatches_stopwatches_hpp Header `<boost/stopwatches/stopwatches.hpp>`]
 [/=============================================]
 
 This file include all the stopwatches related files except the suspendible related files.
@@ -1084,18 +1083,18 @@ In this table `C`  denote `clock` types.
     [[`C::suspended()`]   [__duration__]  [Returns the delay(duration during which the clock has been suspended.]]
 ]
 
-[section:SuspendibleClock_suspend Static Member Function `suspend()`]
+[section:suspend Static Member Function `suspend()`]
 
-    void suspend( system::error_code & ec = system::throws );
+    void suspend( system::error_code & ec = throws() );
 
 [*Effect:] Suspends the SuspendibleClock.
 
 [*Throw:] Any exception the `Clock::now(ec)` function can throw. Otherwise `ec` is set with the correspoding error code set by `Clock::now(ec)`.
 
 [endsect]
-[section:SuspendibleClock_resume Static Member Function `resume()`]
+[section:resume Static Member Function `resume()`]
 
-    void resume( system::error_code & ec = system::throws );
+    void resume( system::error_code & ec = throws() );
 
 [*Effect:] Resumes the `SuspendibleClock`.
 
@@ -1103,19 +1102,19 @@ In this table `C`  denote `clock` types.
 
 [endsect]
 
-[section:SuspendibleClock_suspended Static Member Function `suspended()`]
+[section:suspended Static Member Function `suspended()`]
 
-    duration suspended( system::error_code & ec = system::throws );
+    duration suspended( system::error_code & ec = throws() );
 
 [*Returns:] the cumalative elapsed duration during which the `SuspendibleClock` has been suspendeed.
 
-[*Throw:] Any exception the Clock::now function can throw if `ec == system::throws`. Otherwise `ec` is set with the correspoding error code set by `Clock::now(ec)`.
+[*Throw:] Any exception the Clock::now function can throw if `ec == throws()`. Otherwise `ec` is set with the correspoding error code set by `Clock::now(ec)`.
 
 [endsect]
 
 Models of `SuspendibleClock`:
 
-* __suspendible_clock__]
+* __suspendible_clock__
 
 
 [endsect]
@@ -1142,7 +1141,7 @@ Models of `SuspendibleClock`:
     template <class Clock>
     class scoped_suspend {
     public:
-        scoped_suspend(system::error_code & ec = system::throws) {}
+        scoped_suspend(system::error_code & ec = throws()) {}
         ~scoped_suspend() {}
     private:
         scoped_suspend(); // = delete;
@@ -1165,7 +1164,7 @@ Models of `SuspendibleClock`:
         class suspendible_clock;
 
         template <class Clock>
-        struct is_suspendible<suspendible_clock<Clock> > : mpl:: true_ {};
+        struct is_suspendible<suspendible_clock<Clock> >;
 
         template <class Clock>
         class scoped_suspend<suspendible_clock<Clock> >;
@@ -1180,16 +1179,15 @@ Given a __Clock__, __suspendible_clock__ <__Clock__> is a model of __Suspendible
     class suspendible_clock {
     public:
         typedef typename Clock::duration                           duration;
-        typedef typename Clock::rep                                       rep;
-        typedef typename Clock::period                                    period;
+        typedef typename Clock::rep                                rep;
+        typedef typename Clock::period                             period;
         typedef chrono::__time_point__<suspendible_clock<Clock> >  time_point;
-        static const bool is_steady =             true;
+        static const bool is_steady = Clock::is_steady;
 
-        static time_point now( system::error_code & ec = system::throws );
-
-        static void suspend( system::error_code & ec = system::throws );
-        static void resume( system::error_code & ec = system::throws );
-        static duration suspended(system::error_code & ec = system::throws);
+        static time_point now( system::error_code & ec = throws() );
+        static void suspend( system::error_code & ec = throws() );
+        static void resume( system::error_code & ec = throws() );
+        static duration suspended(system::error_code & ec = throws());
     };
 
 [section `scoped_suspend` specialization for `suspendible_clock<>`]
@@ -1197,7 +1195,7 @@ Given a __Clock__, __suspendible_clock__ <__Clock__> is a model of __Suspendible
         template <class Clock>
         class scoped_suspend<suspendible_clock<Clock> > {
         public:
-            scoped_suspend(system::error_code & ec = system::throws);
+            scoped_suspend(system::error_code & ec = throws());
             ~scoped_suspend();
         };
 
@@ -1236,40 +1234,40 @@ A Stopwatch must meet the requirements in the following table. In this table `S`
 ]
 
 
-[section:stopwatch_start Member Function `start()`]
+[section:start Member Function `start()`]
 
-    time_point start( system::error_code & ec = system::throws );
+    time_point start( system::error_code & ec = throws() );
 
 [*Effect:] Starts running the stopwatch.
 
 [*Returns:] the starting time point.
 
-[*Throw:] Any exception the `Clock::now` function can throw when `ec` is `system::throws`
+[*Throw:] Any exception the `Clock::now` function can throw when `ec` is `throws()`
 
 [endsect]
-[section:stopwatch_stop Member Function `stop()`]
+[section:stop Member Function `stop()`]
 
-    duration stop( system::error_code & ec = system::throws );
+    duration stop( system::error_code & ec = throws() );
 
 [*Effect:] Stops running the stopwatch.
 
 [*Returns:] The cummulated elapsed time.
 
-[*Throw:] Any exception the `Clock::now` function can throw when `ec` is `system::throws`
+[*Throw:] Any exception the `Clock::now` function can throw when `ec` is `throws()`
 
 [endsect]
-[section:stopwatch_suspend Member Function `suspend()`]
+[section:suspend Member Function `suspend()`]
 
-    duration suspend( system::error_code & ec = system::throws );
+    duration suspend( system::error_code & ec = throws() );
 
 [*Effect:] Suspends the stopwatch.
 
-[*Throw:] Any exception the `Clock::now` function can throw when `ec` is `system::throws`
+[*Throw:] Any exception the `Clock::now` function can throw when `ec` is `throws()`
 
 [endsect]
-[section:stopwatch_resume Member Function `resume()`]
+[section:resume Member Function `resume()`]
 
-    time_point resume( system::error_code & ec = system::throws );
+    time_point resume( system::error_code & ec = throws() );
 
 [*Effect:] Resumes the stopwatch.
 
@@ -1279,25 +1277,25 @@ A Stopwatch must meet the requirements in the following table. In this table `S`
 
 [endsect]
 
-[section:stopwatch_restart Member Function `restart()`]
+[section:restart Member Function `restart()`]
 
-    time_point restart( system::error_code & ec = system::throws );
+    time_point restart( system::error_code & ec = throws() );
 
 [*Effect:] `stop`/`start` the stopwatch.
 
 [*Returns:] the starting time point.
 
-[*Throw:] Any exception the `Clock::now` function can throw when `ec` is `system::throws`
+[*Throw:] Any exception the `Clock::now` function can throw when `ec` is `throws()`
 
 [endsect]
 
 [section:elapsed Member Function `elapsed()`]
 
-            duration elapsed(system::error_code & ec = system::throws) const;
+            duration elapsed(system::error_code & ec = throws()) const;
 
 [*Returns:] the cumulated elapsed time.
 
-[*Throw:] Any exception the `Clock::now` function can throw when `ec` is `system::throws`
+[*Throw:] Any exception the `Clock::now` function can throw when `ec` is `throws()`
 
 [endsect]
 
@@ -1348,7 +1346,7 @@ Knowing how long a part of a program takes to execute is useful in both test and
 A __lightweight_stopwatch__ object measures elapsed time. It is recommended to use it with clocks that measure wall clock rather than CPU time since the intended use is performance measurement on systems where total elapsed time is more important than just process or CPU time.
 
 The maximum measurable elapsed time depends on the Clock parameter. The accuracy of timings depends on the
-accuracy of timing information provided the Clock, and this coudl varies a great deal from one clock to another.
+accuracy of timing information provided the Clock, and this could varies a great deal from one clock to another.
 
         template <class Clock, typename Features, typename Weight> 
         class lightweight_stopwatch {
@@ -1358,27 +1356,22 @@ accuracy of timing information provided the Clock, and this coudl varies a great
             typedef typename Clock::time_point  time_point;
             typedef <see below>                 storage;
 
-            explicit lightweight_stopwatch( storage& st, system::error_code & ec = system::throws );
+            explicit lightweight_stopwatch( storage& st, system::error_code & ec = throws() );
             lightweight_stopwatch( storage& st, const dont_start_t& t );
 
             ~lightweight_stopwatch();
 
-            time_point start( system::error_code & ec = system::throws );
-            duration stop( system::error_code & ec = system::throws );
-            std::pair<duration,time_point> restart( system::error_code & ec = system::throws );
-
-            duration suspend( system::error_code & ec = system::throws );
-            time_point resume( system::error_code & ec = system::throws );
-
-            duration elapsed( system::error_code & ec = system::throws );
-
-            time_point now( system::error_code & ec = system::throws );
-
-            void reset( system::error_code & ec = system::throws );
+            time_point start( system::error_code & ec = throws() );
+            duration stop( system::error_code & ec = throws() );
+            std::pair<duration,time_point> restart( system::error_code & ec = throws() );
+            duration suspend( system::error_code & ec = throws() );
+            time_point resume( system::error_code & ec = throws() );
+            duration elapsed( system::error_code & ec = throws() );
+            time_point now( system::error_code & ec = throws() );
+            void reset( system::error_code & ec = throws() );
 
             storage& get_storage( );
-
-            duration lifetime( system::error_code & ec = system::throws );
+            duration lifetime( system::error_code & ec = throws() );
 
             typedef stopwatch_runner<lightweight_stopwatch<Clock> > scoped_run;
             typedef stopwatch_suspender<lightweight_stopwatch<Clock> > scoped_suspend;
@@ -1388,14 +1381,16 @@ accuracy of timing information provided the Clock, and this coudl varies a great
 
 
 `storage` is either `Clock::duration` if Features and Weight are void and `accumulators::accumulator_set<typename Clock::duration::rep, Features, Weight>` otherwise.
-    
+
+Only the specificities of this class are documented here. See __stopwatch_concept__ for the common parts.
+
 [section:c1 Constructor `lightweight_stopwatch( storage&, system::error_code &)`]
 
-            explicit lightweight_stopwatch( storage& st, system::error_code & ec = system::throws );
+            explicit lightweight_stopwatch( storage& st, system::error_code & ec = throws() );
 
 [*Effect:] constructs and starts the lightweight_stopwatch.
 
-[*Throw:] Any exception the `Clock::now` function can throw when `ec` is `system::throws`
+[*Throw:] Any exception the `Clock::now` function can throw when `ec` is `throws()`
 
 [endsect]
 
@@ -1423,7 +1418,7 @@ accuracy of timing information provided the Clock, and this coudl varies a great
 [endsect]
 
 
-[section:stopwatch_accumulator_reset Member Function `reset()`]
+[section:reset Member Function `reset()`]
 
     void reset( );
 
@@ -1472,7 +1467,7 @@ Knowing how long a part of a program takes to execute is useful in both test and
 A __stopwatch__ object measures elapsed time. It is recommended to use it with clocks that measure wall clock rather than CPU time since the intended use is performance measurement on systems where total elapsed time is more important than just process or CPU time.
 
 The maximum measurable elapsed time depends on the Clock parameter. The accuracy of timings depends on the
-accuracy of timing information provided the Clock, and this coudl varies a great deal from one clock to another.
+accuracy of timing information provided the Clock, and this could varies a great deal from one clock to another.
 
     template <class Clock>
     class stopwatch : 
@@ -1480,18 +1475,18 @@ accuracy of timing information provided the Clock, and this coudl varies a great
 	public lightweight_stopwatch<Clock>
     {
     public:
-        explicit stopwatch( system::error_code & ec = system::throws  );
+        explicit stopwatch( system::error_code & ec = throws()  );
         explicit stopwatch( const dont_start_t& t );
         
     };
 
 [section:c1 Constructor `stopwatch( system::error_code &)`]
 
-            explicit stopwatch( system::error_code & ec = system::throws );
+            explicit stopwatch( system::error_code & ec = throws() );
 
 [*Effect:] constructs and starts the stopwatch.
 
-[*Throw:] Any exception the `Clock::now` function can throw when `ec` is `system::throws`
+[*Throw:] Any exception the `Clock::now` function can throw when `ec` is `throws()`
 
 [endsect]
 
@@ -1592,11 +1587,11 @@ A `stopwatch_accumulator<>` is a model of a __stopwatch_concept__ that allows to
         stopwatch_accumulator( );
     };
 
-[section:stopwatch_accumulator_c Constructor `stopwatch_accumulator()`]
+[section:c Constructor `stopwatch_accumulator()`]
 
     stopwatch_accumulator();
 
-[*Effect:] Initialize the elapsed duration and the times counter to 0.
+[*Effect:] Initialize the elapsed duration and the times counter to 0. The stopwatch is not started.
 
 [endsect]
 
@@ -1621,7 +1616,7 @@ The `wstopwatch_reporter_default_formatter` of a `stopwatch_accumulator<Clock>` 
 [endsect]
 
 
-[section:stopwatch_accumulator_typedefs `stopwatch_accumulator` useful typedefs]
+[section:typedefs `stopwatch_accumulator` useful typedefs]
 
 The library provides stopwatch_accumulator shortcuts for all the models of __Clock__, replacing clock by stopwatch_accumulator.
 
@@ -1651,12 +1646,12 @@ Boost.Chrono provides some helper classes ensuring pairwised operations (start/s
 
 [section:stopwatch_runner Template Class `stopwatch_runner<>`]
 
-This helper class ensures that the start/stop are pairwised. Start the associated accumulator at construction time, and stop it at destruction time.
+This helper class ensures that the start/stop are pairwised. Starts the associated __Stopwatch__ at construction time, and stops it at destruction time.
 
     template <class Stopwatch> class stopwatch_runner {
     public:
         typedef Stopwatch stopwatch;
-        stopwatch_runner(stopwatch & a, system::error_code & ec = system::throws);
+        stopwatch_runner(stopwatch & a, system::error_code & ec = throws());
         ~stopwatch_runner();
         stopwatch_runner() = delete;
         stopwatch_runner(const stopwatch_runner&) = delete;
@@ -1675,12 +1670,12 @@ Usage
 [endsect]
 [section:stopwatch_suspender Template Class `stopwatch_suspender<>`]
 
-This helper class ensures that the suspend/resume are pairwised. Suspend the associated accumulator at construction time, and resume it at destruction time.
+This helper class ensures that the suspend/resume are pairwised. Suspends the associated __Stopwatch__ at construction time, and resumes it at destruction time.
 
     template <class Stopwatch> class stopwatch_suspender {
     public:
         typedef Stopwatch stopwatch;
-        stopwatch_suspender(stopwatch & a, system::error_code & ec = system::throws);
+        stopwatch_suspender(stopwatch & a, system::error_code & ec = throws());
         ~stopwatch_suspender();
         stopwatch_suspender() = delete;
         stopwatch_suspender(const stopwatch_suspender&) = delete;
@@ -1706,12 +1701,12 @@ Usage
 
 [section:stopwatch_resumer Template Class `stopwatch_resumer<>`]
 
-This helper class ensures that the resume/suspend are pairwised. Resume the associated accumulator at construction time, and suspecd it at destruction time.
+This helper class ensures that the resume/suspend are pairwised. Resumes the associated __Stopwatch__ at construction time, and suspends it at destruction time.
 
     template <class Stopwatch> class stopwatch_resumer {
     public:
         typedef Stopwatch stopwatch;
-        stopwatch_resumer(stopwatch & a, system::error_code & ec = system::throws);
+        stopwatch_resumer(stopwatch & a, system::error_code & ec = throws());
         ~stopwatch_resumer();
         stopwatch_resumer() = delete;
         stopwatch_resumer(const stopwatch_resumer&) = delete;
@@ -1820,33 +1815,33 @@ The default format is given by Formatter::default_format().
         typedef Stopwatch stopwatch;
         typedef Formatter formatter;
 
-        explicit basic_stopwatch_reporter( system::error_code & ec = system::throws );
+        explicit basic_stopwatch_reporter( system::error_code & ec = throws() );
         explicit basic_stopwatch_reporter( std::ostream & os,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
 
         explicit basic_stopwatch_reporter( const std::string & format,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
         explicit basic_stopwatch_reporter( std::ostream & os, const std::string & format,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
 
         explicit basic_stopwatch_reporter( const std::string & format, int places,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
         explicit basic_stopwatch_reporter( std::ostream & os, const std::string & format, int places,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
 
         explicit basic_stopwatch_reporter( int places,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
         explicit basic_stopwatch_reporter( std::ostream & os, int places,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
 
         explicit basic_stopwatch_reporter( int places, const std::string & format,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
         explicit basic_stopwatch_reporter( std::ostream & os, int places, const std::string & format,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
 
         ~basic_stopwatch_reporter();
 
-        void report( system::error_code & ec = system::throws );
+        void report( system::error_code & ec = throws() );
         bool reported() const;
 
 
@@ -1875,33 +1870,33 @@ The default format is given by Formatter::default_format().
         typedef Stopwatch stopwatch;
         typedef Formatter formatter;
 
-        explicit stopwatch_reporter( system::error_code & ec = system::throws );
+        explicit stopwatch_reporter( system::error_code & ec = throws() );
         explicit stopwatch_reporter( std::ostream & os,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
 
         explicit stopwatch_reporter( const std::string & format,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
         explicit stopwatch_reporter( std::ostream & os, const std::string & format,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
 
         explicit stopwatch_reporter( const std::string & format, int places,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
         explicit stopwatch_reporter( std::ostream & os, const std::string & format, int places,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
 
         explicit stopwatch_reporter( int places,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
         explicit stopwatch_reporter( std::ostream & os, int places,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
 
         explicit stopwatch_reporter( int places, const std::string & format,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
         explicit stopwatch_reporter( std::ostream & os, int places, const std::string & format,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
 
         ~stopwatch_reporter();
 
-        void report( system::error_code & ec = system::throws );
+        void report( system::error_code & ec = throws() );
         bool reported() const;
 
 
@@ -1946,33 +1941,33 @@ The default format is given by Formatter::default_format().
         typedef Stopwatch stopwatch;
         typedef Formatter formatter;
 
-        explicit wstopwatch_reporter( system::error_code & ec = system::throws );
+        explicit wstopwatch_reporter( system::error_code & ec = throws() );
         explicit wstopwatch_reporter( std::ostream & os,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
 
         explicit wstopwatch_reporter( const std::string & format,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
         explicit wstopwatch_reporter( std::ostream & os, const std::string & format,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
 
         explicit wstopwatch_reporter( const std::string & format, int places,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
         explicit wstopwatch_reporter( std::ostream & os, const std::string & format, int places,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
 
         explicit wstopwatch_reporter( int places,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
         explicit wstopwatch_reporter( std::ostream & os, int places,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
 
         explicit wstopwatch_reporter( int places, const std::string & format,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
         explicit wstopwatch_reporter( std::ostream & os, int places, const std::string & format,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
 
         ~wstopwatch_reporter();
 
-        void report( system::error_code & ec = system::throws );
+        void report( system::error_code & ec = throws() );
         bool reported() const;
 
 
@@ -2043,27 +2038,27 @@ Usage
         typedef typename Formatter::char_type char_type;
         typedef typename Formatter::ostream_type ostream_type;
 
-        explicit basic_stopclock( system::error_code & ec = system::throws );
+        explicit basic_stopclock( system::error_code & ec = throws() );
         explicit basic_stopclock( ostream_type & os,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
         explicit basic_stopclock( const string_type & format,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
         explicit basic_stopclock( int places,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
 
         basic_stopclock( ostream_type & os, const string_type & format,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
         basic_stopclock( const string_type & format, int places,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
         basic_stopclock( ostream_type & os, int places,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
         basic_stopclock( int places, const string_type & format,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
 
         basic_stopclock( ostream_type & os, const string_type & format, int places,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
         basic_stopclock( ostream_type & os, int places, const string_type & format,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
 
 
         typedef typename base_type::scoped_run scoped_run;
@@ -2090,27 +2085,27 @@ A stopclock is a stopwatch with the ability to report elapsed time on an output 
         typedef typename Formatter::char_type char_type;
         typedef typename Formatter::ostream_type ostream_type;
 
-        explicit stopclock( system::error_code & ec = system::throws );
+        explicit stopclock( system::error_code & ec = throws() );
         explicit stopclock( ostream_type & os,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
         explicit stopclock( const string_type & format,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
         explicit stopclock( int places,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
 
         stopclock( ostream_type & os, const string_type & format,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
         stopclock( const string_type & format, int places,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
         stopclock( ostream_type & os, int places,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
         stopclock( int places, const string_type & format,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
 
         stopclock( ostream_type & os, const string_type & format, int places,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
         stopclock( ostream_type & os, int places, const string_type & format,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
 
 
         typedef typename base_type::scoped_run scoped_run;
@@ -2119,7 +2114,7 @@ A stopclock is a stopwatch with the ability to report elapsed time on an output 
     };
 
 [endsect]
-[section:stopclock_typedefs `stopclock` useful typedefs]
+[section:typedefs `stopclock` useful typedefs]
 
 The library provides stopclock shortcuts for all the models of __Clock__, replacing clock by stopclock.
 
@@ -2156,27 +2151,27 @@ The library provides stopclock shortcuts for all the models of __Clock__, replac
         typedef typename Formatter::char_type char_type;
         typedef typename Formatter::ostream_type ostream_type;
 
-        explicit wstopclock( system::error_code & ec = system::throws );
+        explicit wstopclock( system::error_code & ec = throws() );
         explicit wstopclock( ostream_type & os,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
         explicit wstopclock( const string_type & format,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
         explicit wstopclock( int places,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
 
         wstopclock( ostream_type & os, const string_type & format,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
         wstopclock( const string_type & format, int places,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
         wstopclock( ostream_type & os, int places,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
         wstopclock( int places, const string_type & format,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
 
         wstopclock( ostream_type & os, const string_type & format, int places,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
         wstopclock( ostream_type & os, int places, const string_type & format,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
 
 
         typedef typename base_type::scoped_run scoped_run;
@@ -2185,7 +2180,7 @@ The library provides stopclock shortcuts for all the models of __Clock__, replac
     };
 
 [endsect]
-[section:wstopclock_typedefs `wstopclock` useful typedefs]
+[section:wtypedefs `wstopclock` useful typedefs]
 
 The library provides wstopclock shortcuts for all the models of __Clock__, replacing clock by wstopclock.
 
@@ -2258,27 +2253,27 @@ The library provides wstopclock shortcuts for all the models of __Clock__, repla
         typedef typename Formatter::char_type char_type;
         typedef typename Formatter::ostream_type ostream_type;
 
-        explicit basic_stopclock_accumulator( system::error_code & ec = system::throws );
+        explicit basic_stopclock_accumulator( system::error_code & ec = throws() );
         explicit basic_stopclock_accumulator( ostream_type & os,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
         explicit basic_stopclock_accumulator( const string_type & format,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
         explicit basic_stopclock_accumulator( int places,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
 
         basic_stopclock_accumulator( ostream_type & os, const string_type & format,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
         basic_stopclock_accumulator( const string_type & format, int places,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
         basic_stopclock_accumulator( ostream_type & os, int places,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
         basic_stopclock_accumulator( int places, const string_type & format,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
 
         basic_stopclock_accumulator( ostream_type & os, const string_type & format, int places,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
         basic_stopclock_accumulator( ostream_type & os, int places, const string_type & format,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
 
 
         typedef typename base_type::scoped_run scoped_run;
@@ -2306,27 +2301,27 @@ The library provides wstopclock shortcuts for all the models of __Clock__, repla
         typedef typename Formatter::char_type char_type;
         typedef typename Formatter::ostream_type ostream_type;
 
-        explicit stopclock_accumulator( system::error_code & ec = system::throws );
+        explicit stopclock_accumulator( system::error_code & ec = throws() );
         explicit stopclock_accumulator( ostream_type & os,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
         explicit stopclock_accumulator( const string_type & format,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
         explicit stopclock_accumulator( int places,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
 
         stopclock_accumulator( ostream_type & os, const string_type & format,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
         stopclock_accumulator( const string_type & format, int places,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
         stopclock_accumulator( ostream_type & os, int places,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
         stopclock_accumulator( int places, const string_type & format,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
 
         stopclock_accumulator( ostream_type & os, const string_type & format, int places,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
         stopclock_accumulator( ostream_type & os, int places, const string_type & format,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
 
 
         typedef typename base_type::scoped_run scoped_run;
@@ -2335,7 +2330,7 @@ The library provides wstopclock shortcuts for all the models of __Clock__, repla
     };
 
 [endsect]
-[section:stopclock_accumulator_typedefs `stopclock_accumulator` useful typedefs]
+[section:typedefs `stopclock_accumulator` useful typedefs]
 
 The library provides stopclock_accumulator shortcuts for all the models of __Clock__, replacing clock by stopclock_accumulator.
 
@@ -2374,27 +2369,27 @@ The library provides stopclock_accumulator shortcuts for all the models of __Clo
         typedef typename Formatter::char_type char_type;
         typedef typename Formatter::ostream_type ostream_type;
 
-        explicit wstopclock_accumulator( system::error_code & ec = system::throws );
+        explicit wstopclock_accumulator( system::error_code & ec = throws() );
         explicit wstopclock_accumulator( ostream_type & os,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
         explicit wstopclock_accumulator( const string_type & format,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
         explicit wstopclock_accumulator( int places,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
 
         wstopclock_accumulator( ostream_type & os, const string_type & format,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
         wstopclock_accumulator( const string_type & format, int places,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
         wstopclock_accumulator( ostream_type & os, int places,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
         wstopclock_accumulator( int places, const string_type & format,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
 
         wstopclock_accumulator( ostream_type & os, const string_type & format, int places,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
         wstopclock_accumulator( ostream_type & os, int places, const string_type & format,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
 
 
         typedef typename base_type::scoped_run scoped_run;
@@ -2403,7 +2398,7 @@ The library provides stopclock_accumulator shortcuts for all the models of __Clo
     };
 
 [endsect]
-[section:wstopclock_accumulator_typedefs `wstopclock_accumulator` useful typedefs]
+[section:wtypedefs `wstopclock_accumulator` useful typedefs]
 
 The library provides wstopclock_accumulator shortcuts for all the models of __Clock__, replacing clock by wstopclock_accumulator.
 
@@ -2471,35 +2466,35 @@ A typical ussage of this class is
         typedef typename Formatter::ostream_type ostream_type;
 
         explicit scoped_stopclock( const std::string& func,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
         scoped_stopclock( const std::string& func, ostream_type & os,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
 
         scoped_stopclock( const std::string& func, const string_type & format,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
 
         scoped_stopclock( const std::string& func, int places,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
 
         scoped_stopclock( const std::string& func, ostream_type & os,
                     const string_type & format,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
 
         scoped_stopclock( const std::string& func, const string_type & format,
-                    int places, system::error_code & ec = system::throws );
+                    int places, system::error_code & ec = throws() );
 
         scoped_stopclock( const std::string& func, ostream_type & os, int places,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
 
         scoped_stopclock( const std::string& func, int places,
-                    const string_type & format, system::error_code & ec = system::throws );
+                    const string_type & format, system::error_code & ec = throws() );
 
         scoped_stopclock( const std::string& func, ostream_type & os,
                     const string_type & format, int places,
-                    system::error_code & ec = system::throws );
+                    system::error_code & ec = throws() );
 
         scoped_stopclock( const std::string& func, ostream_type & os, int places,
-                    const string_type & format, system::error_code & ec = system::throws );
+                    const string_type & format, system::error_code & ec = throws() );
 
         ~scoped_stopclock();
 
