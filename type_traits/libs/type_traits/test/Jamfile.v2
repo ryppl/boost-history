@@ -1,6 +1,6 @@
 # copyright John Maddock 2004
-# Use, modification and distribution are subject to the 
-# Boost Software License, Version 1.0. (See accompanying file 
+# Use, modification and distribution are subject to the
+# Boost Software License, Version 1.0. (See accompanying file
 # LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 # bring in the rules for testing
@@ -8,18 +8,26 @@ import testing ;
 
 # type_traits in V1 seem to have two modes: standalone, triggered
 # by a command line option, and a regular. For now, just imitate
-# regular               
+# regular
 
-rule all-tests {
+rule non-operator-tests {
      local result ;
-     for local source in [ glob *_test.cpp ] udt_specialisations.cpp
+     for local source in [ glob *_test.cpp : has_operator_*_test.cpp ] udt_specialisations.cpp
      {
          result += [ run $(source) ] ;
      }
-     return $(result) ;     
+     return $(result) ;
 }
-            
-test-suite type_traits : [ all-tests ] ;
 
+rule operator-tests {
+     local result ;
+     for local source in [ glob has_operator_*_test.cpp ]
+     {
+         result += [ run $(source) ] ;
+     }
+     return $(result) ;
+}
 
+test-suite type_traits : [ non-operator-tests operator-tests ] ;
 
+test-suite operators : [ operator-tests ] ;

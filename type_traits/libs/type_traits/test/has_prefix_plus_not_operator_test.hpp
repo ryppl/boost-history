@@ -69,8 +69,32 @@ void run() {
    TEST_T(double, true);
    TEST_T(long double, true);
    TEST_T(void, false);
+#	define CV(T) const T
+   TEST_T(CV(bool), true);
+   TEST_T(CV(int), true);
+   TEST_T(CV(double), true);
+#	define CV(T) volatile T
+   TEST_T(CV(bool), true);
+   TEST_T(CV(int), true);
+   TEST_T(CV(double), true);
+#	define CV(T) const volatile T
+   TEST_T(CV(bool), true);
+   TEST_T(CV(int), true);
+   TEST_T(CV(double), true);
+#	define CV(T) const T&
+   TEST_T(CV(bool), true);
+   TEST_T(CV(int), true);
+   TEST_T(CV(double), true);
+#	define CV(T) volatile T&
+   TEST_T(CV(bool), true);
+   TEST_T(CV(int), true);
+   TEST_T(CV(double), true);
+#	define CV(T) const volatile T&
+   TEST_T(CV(bool), true);
+   TEST_T(CV(int), true);
+   TEST_T(CV(double), true);
 
-// test with three template parameters
+   // test with three template parameters
    TEST_TR(bool, bool, true);
    TEST_TR(char, bool, true);
    TEST_TR(signed char, bool, true);

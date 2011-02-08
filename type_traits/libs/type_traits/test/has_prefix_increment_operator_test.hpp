@@ -94,7 +94,7 @@ void run() {
    TEST_T(CV(int), false);
    TEST_T(CV(double), false);
 
-// test with three template parameters
+   // test with three template parameters
    TEST_TR(bool, bool, true);
    TEST_TR(char, bool, true);
    TEST_TR(signed char, bool, true);
