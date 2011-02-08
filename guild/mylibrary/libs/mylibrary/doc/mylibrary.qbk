@@ -45,6 +45,11 @@
 [def __intro [link mylibrary.intro Introduction]] [/Link to a Quickbook section (see below).]
 [def __todo [link mylibrary.todo TODO]]
 
+[def __docbook_params [@http://docbook.sourceforge.net/release/xsl/current/doc/ Docbook xsl:param format options]]
+
+[template deg[]'''&#xB0;'''] [/ degree sign ]
+[/ See latin1_symbols.qbk and math_symbols.qbk for more]
+
 [important This is a template, NOT an official Boost library.]
 
 [/ Examples of links to classes in own files.]
@@ -94,6 +99,8 @@ a [@http://en.wikipedia.org/wiki/Wikiwiki Wiki-Wiki-style language].
   This ensures that the code snippets shown in the documentation
   have been compiled, and are updated
   automatically as the source C++ is changed.
+  The output can also be saved, perhaps appended to the example file,
+  and made visible as another snippet.
 
 * Simple markup to link to __doxygen generated entities
  (namespaces, classes, functions, typedefs).
@@ -102,9 +109,9 @@ a [@http://en.wikipedia.org/wiki/Wikiwiki Wiki-Wiki-style language].
   both in __quickbook automatically added reference section,
   and also in __doxygen standalone documentation.
 
-* Automatic indexing to __doxygen-generated entities
+* Automatic indexing to __doxygen -generated entities
   (namespaces, classes, functions, typedefs).
-  and author chosen indexing of text
+  and author-chosen indexing of text
   see __autoindex.
 
 * Macro system for simple text substitution.
@@ -117,10 +124,10 @@ a [@http://en.wikipedia.org/wiki/Wikiwiki Wiki-Wiki-style language].
 
 __alert
 But to allow a standalone zipped version of html,
- all images must be copied (installed) into the doc\html\images sub-directory.
+ all images must be copied (installed) into the `doc\html\images` sub-directory.
 
 This document is intended to provide a sort of template to help new writers get started,
-with many handy hints and tips (based on the many pitfalls discovered en route).
+with some handy hints and tips (based on the many pitfalls discovered en route).
 
 It is written in __quickbook to demonstrate some features
 (but for much more see __quickbook (itself written in __quickbook)
@@ -163,16 +170,16 @@ A C++ Reference section, using __doxygen
 (and __doxygen comments in the C++ code
 provided you can put in the considerable work to provide them)
 will allow users to get an overview of the program,
- see what classes and function do, and where used,
-and to get to read individual files easily.
+see what classes and function do, and where used,
+and to get to view individual files easily.
 
 AutoIndexing - see __autoindex for guidance.
 
-The "Getting Started and Tutorial " section tells what you [*really] need to know.
+The AutoIndex "Getting Started and Tutorial " section tells what you [*really] need to know.
 
 Step 1 is not really optional - the indexing process is slow, even with explicit
 specification of the auto-index.exe.  So follow these instructions carefully,
-including changes to your user-config.jam.
+including essential changes to your user-config.jam.
 
 [xinclude autodoc.xml] [/ Using Doxygen reference documentation.]
 [/ The position of this in the Quickbook determines the location of the Doxygen references section.]
@@ -200,15 +207,15 @@ including changes to your user-config.jam.
 
 '''
 
-This is some junk that should [*never] be indexed!
-(because it is excluded in the script file index.idx).
+This is some ['junk] that should [*never] be indexed!
+(because it is excluded in the index script file mylibrary.idx).
 
-Here is a mention of degrees kelvin which should not 
-put the great man's name in the index to here.
+Here is a mention of degrees [deg] kelvin which should [*not] 
+put the great man's name in the index linking to here.
 
-Voltaire should get an (silly) entry only in the indexing section here.
+Voltaire should get an (silly) entry only in the indexing section linking this section or page.
 
-Twain should be indexed in both.
+Twain should be indexed whereever it is found.
 
 [endsect] [/section:indexing How to get Index(es) of your documentation]
 
@@ -221,19 +228,19 @@ you can easily place a constraint on which sections are examined for a particula
 
 For example, if you want to index occurrences of Lord Kelvin's name,
 but only in the idols section,  and Voltaire only in the indexing section,
-but Twain in both, you might then add:
+but Twain in all sections, you might then add:
 
 [pre
 Kelvin "" ".*idols.*"
 Voltaire "" ".*indexing.*"
 ] [/pre]
 
-to the script file,
+to the index script file,
 assuming that the section ID of the intro is "some_library_or_chapter_name.idols",
 here "mylibrary.idols".
 
 This section contains quotes from some scientist idols
-whose name should only be indexed in this section.
+two of whose names should [*only] be indexed in this section.
 
 "It ain't what you don't know that gets you into trouble.
 It's what you know for sure that just ain't so."

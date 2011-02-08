@@ -8,7 +8,7 @@
 # http://www.boost.org/LICENSE_1_0.txt)
 
 # Diagnostic output - useful during refinement of the index.
-!debug regular-expression 
+!debug regular-expression
 
 #  All header files, recursing down to include sub-folders.
 !scan-path "boost/mylibrary" ".*\.hpp" true 
@@ -18,6 +18,8 @@
 
 # Terms that you want to appear in the Index.
 # Term to display in index, and word(s) that are to be matched (as a regular expression).
+
+!debug regular-expression
 
 Quickbook
 Doxygen
@@ -50,13 +52,26 @@ hyperlink \<hyperlink\w*\>
 
 Kelvin "" ".*idols.*"
 Voltaire "" ".*indexing.*"
-
 Twain
 
-# macro  
-
+macro
+parameters
+detailed
+syntax
+junk  
+elaborate
+explode
 # An index term that should only be found in one Doxygen comment.
-obscure obscure
+obscure
+# An index term that should be 
+trivial
+# index term in \mainpage in my library.hpp
+mainpage
+
+# Several warnings in \warnings comments
+warning
+# Mentioned in Doxygen \details comment in my_library_example.cpp
+markup
 
 # Two word index term, allowing plurals.
 "side effect" \<side effect\w*\>

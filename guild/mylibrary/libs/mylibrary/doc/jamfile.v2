@@ -32,7 +32,6 @@ if --enable-index in  [ modules.peek : ARGV ]
         
         <format>html:<xsl:param>index.on.type=1 # = 1 For the native stylesheets to generate multiple different indexes.
         
-        <format>pdf:<xsl:param>index.on.type=1 # For the native stylesheets to generate multiple different indexes.
         # PDF native index support is probably better for PDFs as then you actually get page numbers.
 
         <auto-index-script>mylibrary.idx # Specifies the name of the script to load for mylibrary. 

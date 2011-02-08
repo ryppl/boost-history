@@ -1,5 +1,5 @@
 /*! \file
-\brief 
+\brief
  An example to run the simplest "Hello world" program,
  and to use code in an included header file.
  \version 1
@@ -12,7 +12,7 @@ Demonstrate indexing of this example by including the path
 to this file in the scan-path in script file mylibrary.idx thus:
 
 # All example source files, assuming no sub-folders.
-!scan-path "libs/mylibrary/example" ".*\.cpp" 
+!scan-path "libs/mylibrary/example" ".*\.cpp"
 
 Some terms in this file should be indexed by the chosen index terms,
 but others should be excluded,
@@ -21,7 +21,7 @@ even the name of the great man himself "Lord Kelvin".
 
  \warning This example is entirely contrived to show off features, and does nothing useful.
 
- \author Paul A. Bristow 
+ \author Paul A. Bristow
  \version 3
  \date Feb 2011
 */
@@ -45,7 +45,7 @@ even the name of the great man himself "Lord Kelvin".
 //[mylibrary_example_1
 // This is a snippet of code that can be included into a Quickbook program.
 
-// Include Standard Library input output.
+// Include Standard Library input output, for example.
 #include <iostream>
 using std::cout;
 using std::endl;
@@ -53,23 +53,23 @@ using std::endl;
 // Include mylibrary header(s).
 #include <boost/mylibrary/mylibrary.hpp>
 
+// Probably need to add #include directories to the project as well.
 
-// Probably need to add #include directories too.
+/*!  A very simple example program, doing very little except some trivial output.
 
-/*!  A very simple example program, doing very little except some output.
-
-     \detail  273 o kelvin should not be indexed.
+     \detail  273 o kelvin should NOT be indexed.
      \pre No preconditions (apart from assuming that this is the main function)
      \post No side effects, just a zero return.
 
      \returns Zero always, even if an error is detected.
-     \remark This is a Doxygen remark about an obscure detail that should get indexed.
+     \remark This is a Doxygen remark about an obscure detail that should get indexed under "obscure".
 
 */
 
 int main()
 {
   using boost::mylibrary::myclass;
+
   cout << "Hello World!" << endl;
   return 0;
 
