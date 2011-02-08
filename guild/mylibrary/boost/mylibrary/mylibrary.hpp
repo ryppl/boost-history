@@ -17,7 +17,7 @@
   \details Header file for use by example.
    Also using Quickbook, Doxygen, and indexed by AutoIndex.
 
- \mainpage QuickBook Auto Doxygen Indexed Main page.
+ \mainpage QuickBook Auto Doxygen Indexed mainpage.
 This is the front page of the QuickBook Auto Doxygen Indexed
 example of producing Boost documentation.
 
@@ -75,8 +75,10 @@ namespace boost
 
       //! A destructor.
       /*!
-        A more elaborate description of the destructor.
-        \warning This destructor may explode in your face!
+        A more detailed description of the destructor.
+        \warning Warning! This destructor may explode in your face!
+        (The doxygen command warning will NOT be found by the index term warning,
+        but words in the warning, like explode, WILL be found).
       */
      ~myclass();
 
