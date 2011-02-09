@@ -467,9 +467,14 @@ private:
                     b2 = n2->compute_box();
 
                     /// areas
-                    typedef typename coordinate_type<Box>::type coordinate_type;
-                    coordinate_type b1_area, b2_area;
-                    coordinate_type eb1_area, eb2_area;
+                    // awulkiew - areas types changed
+                    //typedef typename coordinate_type<Box>::type coordinate_type;
+                    //coordinate_type b1_area, b2_area;
+                    //coordinate_type eb1_area, eb2_area;
+                    typedef typename area_result<Box>::type area_type;
+                    area_type b1_area, b2_area;
+                    area_type eb1_area, eb2_area;
+
                     b1_area = geometry::area(b1);
                     b2_area = geometry::area(b2);
                     eb1_area = compute_union_area(b1, it->first);
@@ -543,12 +548,16 @@ private:
                     b2 = n2->compute_box();
 
                     /// areas
-                    typedef typename coordinate_type<Box>::type coordinate_type;
-                    coordinate_type b1_area, b2_area;
-                    coordinate_type eb1_area, eb2_area;
+                    // awulkiew - areas types changed
+                    //typedef typename coordinate_type<Box>::type coordinate_type;
+                    //coordinate_type b1_area, b2_area;
+                    //coordinate_type eb1_area, eb2_area;
+                    typedef typename area_result<Box>::type area_type;
+                    area_type b1_area, b2_area;
+                    area_type eb1_area, eb2_area;
+
                     b1_area = geometry::area(b1);
                     b2_area = geometry::area(b2);
-
                     eb1_area = compute_union_area(b1, it->first);
                     eb2_area = compute_union_area(b2, it->first);
 

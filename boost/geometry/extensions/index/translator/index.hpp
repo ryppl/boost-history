@@ -1,0 +1,38 @@
+// Boost.Geometry (aka GGL, Generic Geometry Library)
+//
+// Boost.SpatialIndex - container index value to bounding object translation
+//
+// Copyright 2011 Adam Wulkiewicz.
+// Use, modification and distribution is subject to the Boost Software License,
+// Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+// http://www.boost.org/LICENSE_1_0.txt)
+
+#ifndef BOOST_GEOMETRY_EXTENSIONS_INDEX_TRANSLATOR_INDEX_HPP
+#define BOOST_GEOMETRY_EXTENSIONS_INDEX_TRANSLATOR_INDEX_HPP
+
+#include <boost/geometry/extensions/index/translator/helpers.hpp>
+
+namespace boost { namespace geometry { namespace index { namespace translator {
+
+template <typename Container>
+class index
+{
+public:
+    typedef typename detail::extract_bounding_geometry
+        <typename Container::value_type>::type bounding_geometry_type;
+
+    explicit index(Container const& c) : m_c(c) {}
+
+    bounding_geometry_type const& operator()(size_t i) const
+    {
+        return detail::extract_bounding_geometry
+            <typename Container::value_type>::get(m_c[i]);
+    }
+
+private:
+    Container const& m_c;
+};
+
+}}}} // namespace boost::geometry::index::translator
+
+#endif // BOOST_GEOMETRY_EXTENSIONS_INDEX_TRANSLATOR_INDEX_HPP

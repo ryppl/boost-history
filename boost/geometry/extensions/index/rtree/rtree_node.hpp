@@ -289,19 +289,25 @@ public:
             throw std::logic_error("Empty node trying to choose the least enlargement node.");
         }
 
-        typedef typename coordinate_type<Box>::type coordinate_type;
+        // awulkiew - areas types changed
+        //typedef typename coordinate_type<Box>::type coordinate_type;
+        typedef typename area_result<Box>::type area_type;
 
         bool first = true;
-        coordinate_type min_area = 0;
-        coordinate_type min_diff_area = 0;
+        //coordinate_type min_area = 0;
+        area_type min_area = 0;
+        //coordinate_type min_diff_area = 0;
+        area_type min_diff_area = 0;
         node_pointer chosen_node;
 
         // check for the least enlargement
         for (typename node_map::const_iterator it = m_nodes.begin(); it != m_nodes.end(); ++it)
         {
-            coordinate_type const 
-                diff_area = coordinate_type(compute_union_area(box, it->first)) 
-                    - geometry::area(it->first);
+            // awulkiew - areas types changed
+            //coordinate_type const 
+            //    diff_area = coordinate_type(compute_union_area(box, it->first)) 
+            //        - geometry::area(it->first);
+            area_type const diff_area = compute_union_area(box, it->first) - geometry::area(it->first);
 
             if (first)
             {
