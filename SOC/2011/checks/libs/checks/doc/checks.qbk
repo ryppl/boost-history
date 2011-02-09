@@ -1,0 +1,42 @@
+[article Boost.Checks
+    [quickbook 1.5]
+    [copyright 2011 Murilo Adriano Vasconcelos]
+    [purpose Creation and validation of check digits]
+    [license
+        Distributed under the Boost Software License, Version 1.0.
+        (See accompanying file LICENSE_1_0.txt or copy at
+        [@http://www.boost.org/LICENSE_1_0.txt])
+    ]
+    [authors [Vasconcelos, Murilo Adriano]]
+    [/last-revision $Date: 2011-02-08 12:58:15 +0000 (Tue, 02 Feb 2011) $]
+]
+
+[template super[x]'''<superscript>'''[x]'''</superscript>''']
+
+[section:checks Boost.Checks]
+
+[section Overview]
+The intent of this library is to provide a collection of functions for validating and creating check digits.
+[endsect]
+
+[endsect]
+
+[section ISBN checking]
+The functions defined at [@../../../../boost/checks/isbn.hpp <boost/checks/isbn.hpp>] are for validating and computing check digits of [http://en.wikipedia.org/wiki/International_Standard_Book_Number ISBN] strings.
+
+[section Synopsis]
+	/**
+	 * This function checks if a `isbn' is a valid ISBN 
+	 */
+	bool is_isbn(const std::string& isbn);
+	
+	/**
+	 * This function computes the check digit for a given ISBN in `isbn'
+	 */
+	char isbn_check_digit(const std::string& isbn); 
+	
+[endsect]
+
+Both functions assume that `isbn` is a 10-digit ISBN
+
+[endsect]
