@@ -34,6 +34,7 @@ xml doc
         <dependency>qbk/grammar.qbk
         <dependency>qbk/alternatives.qbk
         <dependency>qbk/examples.qbk
+        <dependency>qbk/rationale.qbk
         <dependency>qbk/releases.qbk
         <dependency>qbk/bibliography.qbk
         <dependency>qbk/acknowledgements.qbk

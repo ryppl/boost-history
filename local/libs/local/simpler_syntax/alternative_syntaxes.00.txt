@@ -1,0 +1,152 @@
+
+
+
+PRELIMINARY IDEAS TO SIMPLIFY THE PARENTHESIZED SYNTAX*
+
+Consider the following parenthesized syntax for local functions:
+
+    (void) (f)( (int)(x) (double&)(y) (const bind)((a)(&b)) (bind)((&c)(d)) ) // [0]
+
+The followings are possible ways to simply this syntax.
+
+(*) DISCLAIMER: I still don't know if any of the following alternative syntaxes really works because I have not tried to implement them yet. This is just a paper exercise to write down possible options before I start looking into their implementation.
+
+
+
+1   MERGING PARAMETER TYPE AND NAME (C++ preprocessor)
+
+Parameter names can be passed to function types so I can transform `int x` into `int`:
+
+    int x -[make function type]-> void (int x) -[get 1st parm type]-> int
+
+Type should allow me to simplify the parenthesized syntax (*) to:
+    
+    (void) (f)( (int x) (double& y) (const bind)((a)(&b)) (bind)((&c)(d)) ) // [1]
+
+Note that the (unbound) parameter type and name are merged into a single sequence element.
+
+The following should also be possible:
+
+    (void) (f)( (int x) (double& y) (const bind a) (const bind& b) (bind& c) (bind d) ) // [1a]
+
+Is this simpler than [1]?
+
+
+
+2   TOWARD A NORMAL PARAMETER LIST (C99 preprocessor)
+
+Using variadic macros I _might_ be able to use a variable length tuple instead of a sequence to represent the function parameters:
+
+    (void) (f)(int x, double& y, const bind a, const bind& b, bind& c, bind d) // [2]
+
+This appear to be a great simplification because it is the exact same syntax used by C++ to declare function parameter!
+
+Note that `const bind` and `bind` have been distributed to all the bound parameters. Given that sequences are best avoided (to reduce extra parenthesis), I do not think there is a less verbose way to enumerate the bound parameter list. The followings could also be possible:
+
+    (void) (f)(int x, double& y, const bind (a, &b), bind (&c, d) ) // [3]
+    (void) (f)(int x, double& y) (const bind)(a, &b) (bind)(&c, d) // [4]
+
+But I think enumerating every bound variable separately as in [2] makes the parameter list syntax look the closet to normal C++ syntax even it requires the repetition of `const bind` and `bind` as the types of the bound variables. Therefore, I would prefer [2].
+
+
+
+3   RETURN TYPE AND FUNCTION NAME
+
+I don't know how/if I can simplify the return type and function name passing because I do need the function name as a separate token within the preprocessor to do token concatenation and generate unique names that refer to the function name...
+
+Something like this should be possible (using tuples instead of sequences):
+    
+    void, f, ( (int)(x) (double&)(y) (const bind)((a)(&b)) (bind)((&c)(d)) ) // [5]
+    void, (f)( (int)(x) (double&)(y) (const bind)((a)(&b)) (bind)((&c)(d)) ) // [6]
+
+And on C99:
+    
+    void, f, (int x, double& y, const bind a, const bind& b, bind& c, bind d) // [7]
+    void, (f)(int x, double& y, const bind a, const bind& b, bind& c, bind d) // [8]
+
+However I don't see how these are simpler than [0] and [2].
+
+Actually, the function name is not really needed as it can be specified just in the END macro (like END_RENAME does) so I could take it out:
+
+    BOOST_LOCAL_FUNCTION( // [12]
+    (void) (int x, double& y, const bind a, const bind& b, bind& c, bind d)
+    ) {
+        ...
+    } BOOST_LOCAL_FUNCTION_END(f)
+    f(1, 1.23);
+
+If I could remove also the parenthesis around the return type, it would be really cool because the macro parameter would match 100% the usual C++ syntax for function types :)) :
+
+    BOOST_LOCAL_FUNCTION( // [13]
+    void (int x, double& y, const bind a, const bind& b, bind& c, bind d)
+    ) {
+        ...
+    } BOOST_LOCAL_FUNCTION_END(f)
+    f(1, 1.23);
+
+But I don't think I can actually do this :( given that void can be any token so I cannot strip it out with the pp... I might be able however to pull the return type outside the macro as in Alex-Steven's syntax:
+
+    void BOOST_LOCAL_FUNCTION(int x, double& y, const bind a, // [14]
+            const bind& b, bind& c, bind d) {
+        ...
+    } BOOST_LOCAL_FUNCTION_END(f)
+    f(1, 1.23);
+
+And regardless of what Alex-Steven did, I could do this by expanding to a dummy variable/expression and then get its type with typeof (but the library will then require typeof to determine the result type even when no bound parameter is used and for a type which is specified by programmes as a type -- that'd be strange):
+
+    void *result_ptr; // Plus append __LINE__...
+    typedef typeof(*result_ptr) result_type;
+    ...
+
+Then it would be better to pull the function name outside the end macro if I could (i.e., if I can program the correct default constructor for the local function_ref... which maybe I can't...):
+
+    void BOOST_LOCAL_FUNCTION(int x, double& y, const bind a, // [15]
+            const bind& b, bind& c, bind d) {
+        ...
+    } BOOST_LOCAL_FUNCTION_END f;
+    f(1, 1.23);
+
+For non C99:
+
+    void BOOST_LOCAL_FUNCTION( (int x) (double& y) (const bind a) // [16]
+            (const bind& b) (bind& c) (bind d) ) {
+        ...
+    } BOOST_LOCAL_FUNCTION_END f;
+    f(1, 1.23);
+
+With respect to the parenthesized syntax, this ad-hoc syntax does not make available to the preprocessor the followings: (1) return type; (2) function name; (3) separation between parameter type and name; But programmers might find this syntax more attractive for local functions...
+
+BTW, can I still specify the function parameters `auto` and `register` with this syntax as I can do with the parenthesized syntax? I don't think I can specify `inline` anymore... (but it's not clear if using `inline` can optimize local functions anyways).
+
+
+
+4   DEFAULT PARAMETER VALUES
+
+Currently local functions support default parameters:
+
+    (void) (f)( (int)(x)(default)(-1) (double)(y)(default)(1.23) ) // [9]
+
+I think this could be simplified to:
+    
+    (void) (f)( (int x)(default -1) (double y)(default 1.23) ) // [10]
+
+Note the merging of the parameter type with its name plus the removal of the parenthesis around the default value.
+
+Using C99 variadics:
+
+    (void) (f)(int x, default -1, double y, default 1.23) // [11]
+
+I am not a big fan of this because `default` is separated from its parameter by the comma `,`... but I don't think I can do better than this.
+
+
+
+5   OTHERS
+
+The following points not relevant for local functions but the parenthesized syntax [0] is a general syntax that makes all the elements of a function declaration available for preprocessor metaprogramming. Instead, syntax [1] and [2] do not separate the parameter type from the parameter name. Therefore:
+
+a) I don't think [1] and [2] allow to generate a parameter with the same name but a modified type. For example say I want to add `const` to `int x`, how can I do that unless `int x` is specified as `(int)(x)` or `(int, x)`? (I have to double check, but I don't think local functions need to manipulate parameter types retaining instead the parameter names so I don't think this is an issue for local function.)
+
+b) Having the parameter name as a separate token (which is possible with [0] but not with [1] or [2]) could be useful to generate unique names to handle function overloading. For example, in another library I PP_CAT the function name with the parameter names to generate unique names for overloaded function. As long as the overloaded functions use different parameter names (and not just different parameter types) this mechanism works.
+
+Therefore, *if* there was an interest in defining the parenthesized syntax to be as general as possible so it could be adopted everywhere macros spoil function definitions, [0] is more general because separate the parameter types from the names (at the cost of the extra parenthesis of course).
+

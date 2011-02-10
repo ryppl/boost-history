@@ -1,0 +1,20 @@
+
+
+
+* Double check all local function syntax elements (from Grammar) -- auto, register, etc.
+
+* Rename is_xxx.hpp to xxx.hpp for all PP_KEYWORD and add the strip (leading) macros.
+
+
+
+* Send comments on variadic_macro_data:
+
+
+
+
+* Add comparison with Look at Alex-Steven's syntax to docs:
+    http://thread.gmane.org/gmane.comp.lib.boost.devel/168612/focus=168694
+    >> This syntax uses same typeof trick to deduce result type.
+    >> This syntax uses a strange macro-into-macro for bind. I don't.
+
+

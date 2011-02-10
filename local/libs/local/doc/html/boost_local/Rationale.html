@@ -1,0 +1,1253 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Appendix: Rationale</title>
+<link rel="stylesheet" href="../../../../../doc/src/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<link rel="home" href="../index.html" title="Boost.Local 0.1.1">
+<link rel="up" href="../index.html" title="Boost.Local 0.1.1">
+<link rel="prev" href="Examples.html" title="Appendix: Examples">
+<link rel="next" href="Releases.html" title="Releases">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="Examples.html"><img src="../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="Releases.html"><img src="../../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="boost_local.Rationale"></a><a class="link" href="Rationale.html" title="Appendix: Rationale">Appendix: Rationale</a>
+</h2></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="Rationale.html#boost_local.Rationale.parenthesized_syntax_rationale">Parenthesized
+      Syntax Rationale</a></span></dt></dl></div>
+<p>
+      This section discusses rationale behind library design decisions in addition
+      to the rationale already provided throughout the rationale footnotes in the
+      rest of this documentation.
+    </p>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_local.Rationale.parenthesized_syntax_rationale"></a><a class="link" href="Rationale.html#boost_local.Rationale.parenthesized_syntax_rationale" title="Parenthesized Syntax Rationale">Parenthesized
+      Syntax Rationale</a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="Rationale.html#boost_local.Rationale.parenthesized_syntax_rationale.c99_preprocessor">C99
+        Preprocessor</a></span></dt>
+<dt><span class="section"><a href="Rationale.html#boost_local.Rationale.parenthesized_syntax_rationale.parameter_type_and_name_separation">Parameter
+        Type and Name Separation</a></span></dt>
+<dt><span class="section"><a href="Rationale.html#boost_local.Rationale.parenthesized_syntax_rationale.empty_function_parameters">Empty
+        Function Parameters</a></span></dt>
+<dt><span class="section"><a href="Rationale.html#boost_local.Rationale.parenthesized_syntax_rationale.default_parameter_values">Default
+        Parameter Values</a></span></dt>
+</dl></div>
+<p>
+        This section discusses the rationale behind parenthesized syntax design decisions.
+      </p>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_local.Rationale.parenthesized_syntax_rationale.c99_preprocessor"></a><a class="link" href="Rationale.html#boost_local.Rationale.parenthesized_syntax_rationale.c99_preprocessor" title="C99 Preprocessor">C99
+        Preprocessor</a>
+</h4></div></div></div>
+<p>
+          The C99 preprocessor (and therefore the C++0x preprocessor) allows for
+          additional features like specifying empty macro parameters and variadic
+          macro parameters which are not supported by the ISO C++ standard preprocessor.
+          The additional features of the C99 preprocessor can be used to simplify
+          the parenthesized syntax mainly by removing extra parenthesis and making
+          it look more like normal C++ syntax.
+        </p>
+<p>
+          Most (and maybe all) modern compilers support the C99 preprocessor at this
+          time and all new C++0x compilers will support the C99 preprocessor in the
+          future. Therefore, the library macros have been programmed to automatically
+          detect the presence of the C99 preprocessor and accept the simplified parenthesized
+          syntax in these cases. The same macro will only accept the parenthesized
+          syntax on non C99 preprocessor but will accept both the parenthesized syntax
+          and the simplified parenthesized syntax on C99 preprocessors. This way,
+          programmers that can afford to write C99 specific code can benefit from
+          the simplifications of the parenthesized syntax.
+        </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Function Feature
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Normal C++ Syntax
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Simplified Parenthesized Syntax (C99 only)
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Parenthesized Syntax (both C++ and C99)
+                  </p>
+                </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                  <p>
+                    <span class="emphasis"><em>Empty Parameter List</em></span>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">void</span> <span class="identifier">f</span><span class="special">()</span> <span class="special">{</span>
+    <span class="special">...</span>
+<span class="special">}</span>
+</pre>
+<p>
+                    Or: 
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">void</span> <span class="identifier">f</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">{</span>
+    <span class="special">...</span>
+<span class="special">}</span>
+</pre>
+<p>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Using empty macro parameter: 
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">BOOST_LOCAL_FUNCTION</span><span class="special">(</span>
+<span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">(</span><span class="identifier">f</span><span class="special">)()</span>
+<span class="special">)</span> <span class="special">{</span>
+    <span class="special">...</span>
+<span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_END</span><span class="special">(</span><span class="identifier">f</span><span class="special">)</span>
+</pre>
+<p>
+                    But also when no recursion and Boost.Typeof for result type:
+                    
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="comment">// No extra parenthesis at all!
+</span><span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">()</span> <span class="special">{</span>
+    <span class="special">...</span>
+<span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME_END</span><span class="special">(</span><span class="identifier">f</span><span class="special">)</span>
+</pre>
+<p>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Using <code class="computeroutput"><span class="keyword">void</span></code> parameter
+                    list: 
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">BOOST_LOCAL_FUNCTION</span><span class="special">(</span>
+<span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">(</span><span class="identifier">f</span><span class="special">)(</span> <span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">)</span>
+<span class="special">)</span> <span class="special">{</span>
+    <span class="special">...</span>
+<span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_END</span><span class="special">(</span><span class="identifier">f</span><span class="special">)</span>
+</pre>
+<p>
+                    But also when no recursion and Boost.Typeof for result type:
+                    
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span> <span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span>
+    <span class="special">...</span>
+<span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME_END</span><span class="special">(</span><span class="identifier">f</span><span class="special">)</span>
+</pre>
+<p>
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <span class="emphasis"><em>Parameter Types and Names</em></span>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">void</span> <span class="identifier">f</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">x</span><span class="special">,</span> <span class="keyword">double</span><span class="special">&amp;</span> <span class="identifier">y</span><span class="special">)</span> <span class="special">{</span>
+    <span class="special">...</span>
+<span class="special">}</span>
+</pre>
+<p>
+                    Local functions do not need to access the parameter names separately
+                    from their types so they are merged into a single token (even
+                    if that reduces the generality of the syntax).
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Merging parameter type with its name and using variable length
+                    tuples: 
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">BOOST_LOCAL_FUNCTION</span><span class="special">(</span>
+<span class="comment">// Parameter list syntax same as normal.
+</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">(</span><span class="identifier">f</span><span class="special">)(</span><span class="keyword">int</span> <span class="identifier">x</span><span class="special">,</span> <span class="keyword">double</span><span class="special">&amp;</span> <span class="identifier">y</span><span class="special">)</span>
+<span class="special">)</span> <span class="special">{</span>
+    <span class="special">...</span>
+<span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_END</span><span class="special">(</span><span class="identifier">f</span><span class="special">)</span>
+</pre>
+<p>
+                    But also when no recursion and Boost.Typeof for result type:
+                    
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="comment">// No extra parenthesis at all!
+</span><span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">x</span><span class="special">,</span> <span class="keyword">double</span><span class="special">&amp;</span> <span class="identifier">y</span><span class="special">)</span> <span class="special">{</span>
+    <span class="special">...</span>
+<span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">f</span><span class="special">)</span>
+</pre>
+<p>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Merging parameter type with its name and using sequences: 
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">BOOST_LOCAL_FUNCTION</span><span class="special">(</span>
+<span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">(</span><span class="identifier">f</span><span class="special">)(</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">x</span><span class="special">)</span> <span class="special">(</span><span class="keyword">double</span><span class="special">&amp;</span> <span class="identifier">y</span><span class="special">)</span>
+<span class="special">)</span> <span class="special">{</span>
+    <span class="special">...</span>
+<span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_END</span><span class="special">(</span><span class="identifier">f</span><span class="special">)</span>
+</pre>
+<p>
+                    But also when no recursion and Boost.Typeof for result type:
+                    
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">x</span><span class="special">)</span> <span class="special">(</span><span class="keyword">double</span><span class="special">&amp;</span> <span class="identifier">y</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span>
+    <span class="special">...</span>
+<span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">f</span><span class="special">)</span>
+</pre>
+<p>
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <span class="emphasis"><em>Parameter Defaults</em></span>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">void</span> <span class="identifier">f</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">x</span> <span class="special">=</span> <span class="special">-</span><span class="number">1</span><span class="special">,</span>
+        <span class="keyword">double</span> <span class="identifier">y</span> <span class="special">=</span> <span class="special">-</span><span class="number">1.23</span><span class="special">)</span> <span class="special">{</span>
+    <span class="special">...</span>
+<span class="special">}</span>
+</pre>
+<p>
+                    Parameter defaults need to be separated from their types and
+                    names because they cannot be part of function type expressions.
+                    The symbol <code class="computeroutput"><span class="special">=</span></code> cannot
+                    be used because it is not alphanumeric so <code class="computeroutput"><span class="keyword">default</span></code>
+                    is used instead.
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Using <code class="computeroutput"><span class="keyword">default</span></code> instead
+                    of <code class="computeroutput"><span class="special">=</span></code> and variable
+                    length tuples: 
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">BOOST_LOCAL_FUNCTION</span><span class="special">(</span>
+<span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">(</span><span class="identifier">f</span><span class="special">)(</span><span class="keyword">int</span> <span class="identifier">x</span><span class="special">,</span> <span class="keyword">default</span> <span class="special">-</span><span class="number">1</span><span class="special">,</span>
+        <span class="keyword">double</span> <span class="identifier">y</span><span class="special">,</span> <span class="keyword">default</span> <span class="special">-</span><span class="number">1.23</span><span class="special">)</span>
+<span class="special">)</span> <span class="special">{</span>
+    <span class="special">...</span>
+<span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_END</span><span class="special">(</span><span class="identifier">f</span><span class="special">)</span>
+</pre>
+<p>
+                    But also when no recursion and Boost.Typeof for result type:
+                    
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="comment">// No extra parenthesis needed.
+</span><span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">x</span><span class="special">,</span> <span class="keyword">default</span> <span class="special">-</span><span class="number">1</span><span class="special">,</span>
+        <span class="keyword">double</span> <span class="identifier">y</span><span class="special">,</span> <span class="keyword">default</span> <span class="special">-</span><span class="number">1.23</span><span class="special">)</span> <span class="special">{</span>
+    <span class="special">...</span>
+<span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">f</span><span class="special">)</span>
+</pre>
+<p>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Using <code class="computeroutput"><span class="keyword">default</span></code> instead
+                    of <code class="computeroutput"><span class="special">=</span></code> and sequences:
+                    
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">BOOST_LOCAL_FUNCTION</span><span class="special">(</span>
+<span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">(</span><span class="identifier">f</span><span class="special">)(</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">x</span><span class="special">)(</span><span class="keyword">default</span> <span class="special">-</span><span class="number">1</span><span class="special">)</span>
+        <span class="special">(</span><span class="keyword">double</span> <span class="identifier">y</span><span class="special">)(</span><span class="keyword">default</span> <span class="special">-</span><span class="number">1.23</span><span class="special">)</span> <span class="special">)</span>
+<span class="special">)</span> <span class="special">{</span>
+    <span class="special">...</span>
+<span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_END</span><span class="special">(</span><span class="identifier">f</span><span class="special">)</span>
+</pre>
+<p>
+                    But also when no recursion and Boost.Typeof for result type:
+                    
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">x</span><span class="special">)(</span><span class="keyword">default</span> <span class="special">-</span><span class="number">1</span><span class="special">)</span>
+        <span class="special">(</span><span class="keyword">double</span> <span class="identifier">y</span><span class="special">)(</span><span class="keyword">default</span> <span class="special">-</span><span class="number">1.23</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span>
+    <span class="special">...</span>
+<span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">f</span><span class="special">)</span>
+</pre>
+<p>
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <span class="emphasis"><em>Variable Binding</em></span>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Not supported by C++ (supported by C++0x via lambda functions).
+                    
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">int</span> <span class="identifier">a</span> <span class="special">=</span> <span class="number">0</span><span class="special">,</span> <span class="identifier">b</span> <span class="special">=</span> <span class="number">1</span><span class="special">,</span> <span class="identifier">c</span> <span class="special">=</span> <span class="number">2</span><span class="special">,</span> <span class="identifier">d</span> <span class="special">=</span> <span class="number">3</span><span class="special">;</span>
+<span class="keyword">void</span> <span class="identifier">f</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">x</span><span class="special">)</span> <span class="comment">/* bind a, b, c, d somehow... */</span> <span class="special">{</span>
+    <span class="special">...</span>
+<span class="special">}</span>
+</pre>
+<p>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Using <code class="computeroutput"><span class="identifier">bind</span></code> and
+                    <code class="computeroutput"><span class="keyword">const</span> <span class="identifier">bind</span></code>
+                    instead of the parameter type and variable length typles: 
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">BOOST_LOCAL_FUNCTION</span><span class="special">(</span>
+<span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">(</span><span class="identifier">f</span><span class="special">)(</span><span class="keyword">int</span> <span class="identifier">x</span><span class="special">,</span> <span class="identifier">bind</span> <span class="identifier">a</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">b</span><span class="special">,</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">c</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">d</span><span class="special">)</span>
+<span class="special">)</span> <span class="special">{</span>
+    <span class="special">...</span>
+<span class="special">)</span> <span class="identifier">BOOST_LOCAL_FUNCTION_END</span><span class="special">(</span><span class="identifier">f</span><span class="special">)</span>
+</pre>
+<p>
+                    But also when no recursion and Boost.Typeof for result type:
+                    
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="comment">// No extra parenthesis needed.
+</span><span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">x</span><span class="special">,</span> <span class="identifier">bind</span> <span class="identifier">a</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">b</span><span class="special">,</span>
+        <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">c</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">d</span><span class="special">)</span> <span class="special">{</span>
+    <span class="special">...</span>
+<span class="special">)</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">f</span><span class="special">)</span>
+</pre>
+<p>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Using <code class="computeroutput"><span class="identifier">bind</span></code> and
+                    <code class="computeroutput"><span class="keyword">const</span> <span class="identifier">bind</span></code>
+                    instead of the parameter type: 
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">BOOST_LOCAL_FUNCTION</span><span class="special">(</span>
+<span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">(</span><span class="identifier">f</span><span class="special">)(</span><span class="keyword">int</span> <span class="identifier">x</span><span class="special">,</span> <span class="identifier">bind</span> <span class="identifier">a</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">b</span><span class="special">,</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">c</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">d</span><span class="special">)</span>
+<span class="special">)</span> <span class="special">{</span>
+    <span class="special">...</span>
+<span class="special">)</span> <span class="identifier">BOOST_LOCAL_FUNCTION_END</span><span class="special">(</span><span class="identifier">f</span><span class="special">)</span>
+</pre>
+<p>
+                    But also when no recursion and Boost.Typeof for result type:
+                    
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="comment">// No extra parenthesis needed.
+</span><span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">x</span><span class="special">,</span> <span class="identifier">bind</span> <span class="identifier">a</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">b</span><span class="special">,</span>
+        <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">c</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">d</span><span class="special">)</span> <span class="special">{</span>
+    <span class="special">...</span>
+<span class="special">)</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">f</span><span class="special">)</span>
+</pre>
+<p>
+                  </p>
+                </td>
+</tr>
+</tbody>
+</table></div>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Feature
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Normal C++ Syntax
+                  </p>
+                </th>
+<th>
+                  <p>
+                    C99 Split Syntax
+                  </p>
+                </th>
+<th>
+                  <p>
+                    C99 Parenthesized Syntax
+                  </p>
+                </th>
+<th>
+                  <p>
+                    C++ Split Syntax
+                  </p>
+                </th>
+<th>
+                  <p>
+                    C++ Parenthesized Syntax
+                  </p>
+                </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                  <p>
+                    Use variadics macro parameters (limitation -- C99 preprocessor
+                    only).
+                  </p>
+                </td>
+<td>
+                </td>
+<td>
+                  <p>
+                    Yes.
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Yes.
+                  </p>
+                </td>
+<td>
+                  <p>
+                    No.
+                  </p>
+                </td>
+<td>
+                  <p>
+                    No.
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    Use empty macro parameter (limitation -- C99 preprocessor only).
+                  </p>
+                </td>
+<td>
+                </td>
+<td>
+                  <p>
+                    Yes.
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Yes.
+                  </p>
+                </td>
+<td>
+                  <p>
+                    No.
+                  </p>
+                </td>
+<td>
+                  <p>
+                    No.
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    Support recursive local function calls.
+                  </p>
+                </td>
+<td>
+                </td>
+<td>
+                  <p>
+                    No.
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Yes.
+                  </p>
+                </td>
+<td>
+                  <p>
+                    No.
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Yes.
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    Always require Boost.Type of for result type (limitation).
+                  </p>
+                </td>
+<td>
+                </td>
+<td>
+                  <p>
+                    Yes.
+                  </p>
+                </td>
+<td>
+                  <p>
+                    No.
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Yes.
+                  </p>
+                </td>
+<td>
+                  <p>
+                    No.
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    Support <code class="computeroutput"><span class="keyword">inline</span></code> local
+                    functions.
+                  </p>
+                </td>
+<td>
+                </td>
+<td>
+                  <p>
+                    No.
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Yes.
+                  </p>
+                </td>
+<td>
+                  <p>
+                    No.
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Yes.
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <span class="emphasis"><em>Empty parameter list.</em></span>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">void</span> <span class="identifier">f</span><span class="special">()</span> <span class="special">{</span>
+    <span class="special">...</span>
+<span class="special">}</span>
+</pre>
+<p>
+                    Or: 
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">void</span> <span class="identifier">f</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">{</span>
+    <span class="special">...</span>
+<span class="special">}</span>
+</pre>
+<p>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">()</span> <span class="special">{</span>
+    <span class="special">...</span>
+<span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">f</span><span class="special">)</span>
+</pre>
+<p>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">BOOST_LOCAL_FUNCTION</span><span class="special">(</span>
+<span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">(</span><span class="identifier">f</span><span class="special">)()</span>
+<span class="special">)</span> <span class="special">{</span>
+    <span class="special">...</span>
+<span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_END</span><span class="special">(</span><span class="identifier">f</span><span class="special">)</span>
+</pre>
+<p>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span> <span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span>
+    <span class="special">...</span>
+<span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">f</span><span class="special">)</span>
+</pre>
+<p>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">BOOST_LOCAL_FUNCTION</span><span class="special">(</span>
+<span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">(</span><span class="identifier">f</span><span class="special">)(</span> <span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">)</span>
+<span class="special">)</span> <span class="special">{</span>
+    <span class="special">...</span>
+<span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_END</span><span class="special">(</span><span class="identifier">f</span><span class="special">)</span>
+</pre>
+<p>
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <span class="emphasis"><em>Parameter types and names.</em></span>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">void</span> <span class="identifier">f</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">x</span><span class="special">,</span> <span class="keyword">double</span> <span class="identifier">y</span><span class="special">)</span> <span class="special">{</span>
+    <span class="special">...</span>
+<span class="special">}</span>
+</pre>
+<p>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span>
+        <span class="keyword">int</span> <span class="identifier">x</span><span class="special">,</span> <span class="keyword">double</span> <span class="identifier">y</span><span class="special">)</span> <span class="special">{</span>
+    <span class="special">...</span>
+<span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">f</span><span class="special">)</span>
+</pre>
+<p>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">BOOST_LOCAL_FUNCTION</span><span class="special">(</span>
+<span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">(</span><span class="identifier">f</span><span class="special">)(</span><span class="keyword">int</span> <span class="identifier">x</span><span class="special">,</span> <span class="keyword">double</span> <span class="identifier">y</span><span class="special">)</span>
+<span class="special">)</span> <span class="special">{</span>
+    <span class="special">...</span>
+<span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_END</span><span class="special">(</span><span class="identifier">f</span><span class="special">)</span>
+</pre>
+<p>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span>
+        <span class="special">(</span><span class="keyword">int</span> <span class="identifier">x</span><span class="special">)</span> <span class="special">(</span><span class="keyword">double</span> <span class="identifier">y</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span>
+    <span class="special">...</span>
+<span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">f</span><span class="special">)</span>
+</pre>
+<p>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">BOOST_LOCAL_FUNCTION</span><span class="special">(</span>
+<span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">(</span><span class="identifier">f</span><span class="special">)(</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">x</span><span class="special">)</span> <span class="special">(</span><span class="keyword">double</span> <span class="identifier">y</span><span class="special">)</span> <span class="special">)</span>
+<span class="special">)</span> <span class="special">{</span>
+    <span class="special">...</span>
+<span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_END</span><span class="special">(</span><span class="identifier">f</span><span class="special">)</span>
+</pre>
+<p>
+                  </p>
+                </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_local.Rationale.parenthesized_syntax_rationale.parameter_type_and_name_separation"></a><a class="link" href="Rationale.html#boost_local.Rationale.parenthesized_syntax_rationale.parameter_type_and_name_separation" title="Parameter Type and Name Separation">Parameter
+        Type and Name Separation</a>
+</h4></div></div></div>
+<p>
+          C++ allows to specify parameter names within function types:
+        </p>
+<pre class="programlisting"><span class="keyword">void</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">x</span><span class="special">,</span> <span class="keyword">double</span><span class="special">&amp;</span> <span class="identifier">y</span><span class="special">)</span>
+</pre>
+<p>
+          Therefore, the parenthesized syntax for local functions does not have to
+          separate the function parameter type and name tokens:
+        </p>
+<div class="table">
+<a name="boost_local.Rationale.parenthesized_syntax_rationale.parameter_type_and_name_separation.parameter_types_and_names"></a><p class="title"><b>Table&#160;1.&#160;Parameter Types and Names</b></p>
+<div class="table-contents"><table class="table" summary="Parameter Types and Names">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Normal C++ Syntax
+                  </p>
+                </th>
+<th>
+                  <p>
+                    C++ Parenthesized Syntax
+                  </p>
+                </th>
+<th>
+                  <p>
+                    C99-Only Parenthesized Syntax
+                  </p>
+                </th>
+</tr></thead>
+<tbody><tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="keyword">void</span> <span class="identifier">f</span><span class="special">(</span><span class="keyword">int</span>
+                    <span class="identifier">x</span><span class="special">,</span>
+                    <span class="keyword">double</span><span class="special">&amp;</span><span class="identifier">y</span><span class="special">)</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">(</span><span class="identifier">f</span><span class="special">)(</span>
+                    <span class="special">(</span><span class="keyword">int</span>
+                    <span class="identifier">x</span><span class="special">)</span>
+                    <span class="special">(</span><span class="keyword">double</span><span class="special">&amp;</span> <span class="identifier">y</span><span class="special">)</span> <span class="special">)</span>
+                    <span class="comment">// Is this better than its general version
+                    below selected by the authors? Local functions don't need the
+                    generality...</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">(</span><span class="identifier">f</span><span class="special">)(</span><span class="keyword">int</span> <span class="identifier">x</span><span class="special">,</span> <span class="keyword">double</span><span class="special">&amp;</span> <span class="identifier">y</span><span class="special">)</span> <span class="comment">// Authors'
+                    choice.</span></code>
+                  </p>
+                </td>
+</tr></tbody>
+</table></div>
+</div>
+<br class="table-break"><p>
+          Note that a more general form of the parenthesized syntax would have been
+          instead:
+        </p>
+<div class="table">
+<a name="boost_local.Rationale.parenthesized_syntax_rationale.parameter_type_and_name_separation.separated_parameter_types_and_names"></a><p class="title"><b>Table&#160;2.&#160;Separated Parameter Types and Names</b></p>
+<div class="table-contents"><table class="table" summary="Separated Parameter Types and Names">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Normal C++ Syntax
+                  </p>
+                </th>
+<th>
+                  <p>
+                    C++ Parenthesized Syntax
+                  </p>
+                </th>
+<th>
+                  <p>
+                    C99-Only Parenthesized Syntax
+                  </p>
+                </th>
+</tr></thead>
+<tbody><tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="keyword">void</span> <span class="identifier">f</span><span class="special">(</span><span class="keyword">int</span>
+                    <span class="identifier">x</span><span class="special">,</span>
+                    <span class="keyword">double</span><span class="special">&amp;</span>
+                    <span class="identifier">y</span><span class="special">)</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">(</span><span class="identifier">f</span><span class="special">)(</span>
+                    <span class="special">(</span><span class="keyword">int</span><span class="special">)(</span><span class="identifier">x</span><span class="special">)</span> <span class="special">(</span><span class="keyword">double</span><span class="special">&amp;)(</span><span class="identifier">y</span><span class="special">)</span>
+                    <span class="special">)</span> <span class="comment">// Authors'
+                    choice.</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">(</span><span class="identifier">f</span><span class="special">)(</span><span class="keyword">int</span><span class="special">,</span>
+                    <span class="identifier">x</span><span class="special">,</span>
+                    <span class="keyword">double</span><span class="special">&amp;,</span>
+                    <span class="identifier">y</span><span class="special">)</span></code>
+                    <span class="emphasis"><em>-or-</em></span>
+                  </p>
+                  <p>
+                    <code class="computeroutput"><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">(</span><span class="identifier">f</span><span class="special">)(</span>
+                    <span class="special">(</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">x</span><span class="special">)</span> <span class="special">,</span>
+                    <span class="special">(</span><span class="keyword">double</span><span class="special">&amp;,</span> <span class="identifier">y</span><span class="special">)</span> <span class="special">)</span></code>
+                    <span class="emphasis"><em>-or-</em></span>
+                  </p>
+                  <p>
+                    <code class="computeroutput"><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">(</span><span class="identifier">f</span><span class="special">)(</span>
+                    <span class="special">(</span><span class="keyword">int</span><span class="special">)(</span><span class="identifier">x</span><span class="special">)</span> <span class="special">,</span>
+                    <span class="special">(</span><span class="keyword">double</span><span class="special">&amp;)(</span><span class="identifier">y</span><span class="special">)</span> <span class="special">)</span></code>
+                  </p>
+                </td>
+</tr></tbody>
+</table></div>
+</div>
+<br class="table-break"><p>
+          This more general form makes available the parameter types and names as
+          separate tokens for preprocessor metaprogramming. In fact, there is no
+          way for the preprocessor to split <code class="computeroutput"><span class="special">(</span><span class="keyword">int</span> <span class="identifier">x</span><span class="special">)</span></code> into the parameter type <code class="computeroutput"><span class="keyword">int</span></code> and name <code class="computeroutput"><span class="identifier">x</span></code>
+          while it can split <code class="computeroutput"><span class="special">(</span><span class="keyword">int</span><span class="special">)(</span><span class="identifier">x</span><span class="special">)</span></code>.
+          The parameter types can be split at compile-time (for example to force
+          some parameters to be constant, references, etc):
+        </p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">arg_type</span><span class="special">&lt;</span><span class="keyword">void</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">x</span><span class="special">,</span> <span class="keyword">double</span><span class="special">&amp;</span> <span class="identifier">y</span><span class="special">),</span> <span class="number">0</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">arg_type0</span><span class="special">;</span> <span class="comment">// int
+</span><span class="keyword">typedef</span> <span class="identifier">arg_type</span><span class="special">&lt;</span><span class="keyword">void</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">x</span><span class="special">,</span> <span class="keyword">double</span><span class="special">&amp;</span> <span class="identifier">y</span><span class="special">),</span> <span class="number">1</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">arg_type1</span><span class="special">;</span> <span class="comment">// double&amp;
+</span></pre>
+<p>
+          But the parameter name <code class="computeroutput"><span class="identifier">x</span></code>
+          remains inaccessible as a token separately from its type. However, local
+          function do not need to access parameter types separately from their types
+          so this lack of generality is not an issue for local function and the less
+          general syntax (e.g., <code class="computeroutput"><span class="special">(</span><span class="keyword">int</span>
+          <span class="identifier">x</span><span class="special">)</span></code>)
+          is preferred over the more general one (e.g., <code class="computeroutput"><span class="special">(</span><span class="keyword">int</span><span class="special">)(</span><span class="identifier">x</span><span class="special">)</span></code>) because it is simpler as it uses a smaller
+          number of parenthesis and resembles more closely the normal C++ syntax
+          for function parameters.
+        </p>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../../doc/src/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+            <span class="bold"><strong>Overloaded functions.</strong></span> An example where
+            parameter names need to be accessed separately from their types is to
+            support overloading. For example, if the macro need to expand to support
+            code for an overloaded function, they might need to generate unique identifiers
+            for symbols within the support code. Assume also <code class="computeroutput"><span class="identifier">__LINE__</span></code>
+            cannot be used in this context because the unique identifiers need to
+            be referred by another macro expanding on a different line (so the unique
+            identifier need to be generated upon the function syntactic elements
+            -- function name, parameter names, etc). Such identifiers cannot simply
+            use the function name because the same function name is used multiple
+            times when the function is overloaded and therefore the identifiers will
+            not be unique. The parameter names can be concatenated by the preprocessor
+            together with the function name to generate such unique identifiers (with
+            the limitation that overloaded function need to used different parameter
+            names and not just different parameter types).
+          </p></td></tr>
+</table></div>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_local.Rationale.parenthesized_syntax_rationale.empty_function_parameters"></a><a class="link" href="Rationale.html#boost_local.Rationale.parenthesized_syntax_rationale.empty_function_parameters" title="Empty Function Parameters">Empty
+        Function Parameters</a>
+</h4></div></div></div>
+<p>
+          The C++ preprocessor does not allow to specify an empty macro parameter
+          as a consequence preprocessor sequences cannot contain empty elements
+          <code class="computeroutput"><span class="special">()</span></code>. Therefore the following
+          parenthesized syntax for a function with no parameter <code class="computeroutput"><span class="keyword">void</span>
+          <span class="identifier">f</span><span class="special">()</span></code>
+          is not valid for the C++ preprocessor:
+        </p>
+<pre class="programlisting"><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">(</span><span class="identifier">f</span><span class="special">)()</span> <span class="comment">// Error, cannot use empty `()`.
+</span></pre>
+<p>
+          This syntax is instead valid for the C99 preprocessor because it can instead
+          accept empty macro parameter.
+        </p>
+<p>
+          C++ also allow to specify an empty parameter list using <code class="computeroutput"><span class="keyword">void</span></code>:
+        </p>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">f</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span>
+</pre>
+<p>
+          This leads to the valid parenthesized syntax:
+        </p>
+<pre class="programlisting"><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">(</span><span class="identifier">f</span><span class="special">)(</span> <span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">)</span>
+</pre>
+<p>
+          In summary:
+        </p>
+<div class="table">
+<a name="boost_local.Rationale.parenthesized_syntax_rationale.empty_function_parameters.empty_function_parameters"></a><p class="title"><b>Table&#160;3.&#160;Empty Function Parameters</b></p>
+<div class="table-contents"><table class="table" summary="Empty Function Parameters">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Normal C++ Syntax
+                  </p>
+                </th>
+<th>
+                  <p>
+                    C++ Parenthesized Syntax
+                  </p>
+                </th>
+<th>
+                  <p>
+                    C99-Only Parenthesized Syntax
+                  </p>
+                </th>
+</tr></thead>
+<tbody><tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="keyword">void</span> <span class="identifier">f</span><span class="special">()</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">(</span><span class="identifier">f</span><span class="special">)(</span>
+                    <span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">)</span>
+                    <span class="comment">// Authors' choice.</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">(</span><span class="identifier">f</span><span class="special">)()</span>
+                    <span class="comment">// Authors' choice.</span></code>
+                  </p>
+                </td>
+</tr></tbody>
+</table></div>
+</div>
+<br class="table-break">
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_local.Rationale.parenthesized_syntax_rationale.default_parameter_values"></a><a class="link" href="Rationale.html#boost_local.Rationale.parenthesized_syntax_rationale.default_parameter_values" title="Default Parameter Values">Default
+        Parameter Values</a>
+</h4></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="Rationale.html#boost_local.Rationale.parenthesized_syntax_rationale.default_parameter_values.function_name__result__inline__etc">Function
+          Name, Result, Inline, Etc</a></span></dt>
+<dt><span class="section"><a href="Rationale.html#boost_local.Rationale.parenthesized_syntax_rationale.default_parameter_values.variable_binding">Variable
+          Binding</a></span></dt>
+</dl></div>
+<p>
+          C++ does not allow to specify default parameter values within function
+          types thus the following is not valid:
+        </p>
+<pre class="programlisting"><span class="keyword">void</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">x</span> <span class="special">=</span> <span class="special">-</span><span class="number">1</span><span class="special">,</span> <span class="keyword">double</span> <span class="identifier">y</span> <span class="special">=</span> <span class="special">-</span><span class="number">1.23</span><span class="special">)</span> <span class="comment">// Error, can't specify default parameters within function types.
+</span></pre>
+<p>
+          Therefore, the following parenthesized syntax cannot be used:
+        </p>
+<pre class="programlisting"><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">(</span><span class="identifier">f</span><span class="special">)(</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">x</span> <span class="special">=</span> <span class="special">-</span><span class="number">1</span><span class="special">)</span> <span class="special">(</span><span class="keyword">double</span> <span class="identifier">y</span> <span class="special">=</span> <span class="special">-</span><span class="number">1.23</span><span class="special">)</span> <span class="special">)</span>
+</pre>
+<p>
+          Because:
+        </p>
+<div class="orderedlist"><ol class="orderedlist" type="1">
+<li class="listitem">
+              It does not allow to strip the default parameter values from the parameter
+              type and name in order to construct and manipulate the local function
+              type.
+            </li>
+<li class="listitem">
+              Default parameter values are not part of the type so it is not possible
+              to program a metafunction that counts the number of default parameter
+              values at compile-time but such information is also needed by the local
+              functions in order to properly support default parameters. <sup>[<a name="id900828" href="#ftn.id900828" class="footnote">23</a>]</sup>
+            </li>
+</ol></div>
+<p>
+          Default parameters can be separated by the rest of the parameter expression
+          using:
+        </p>
+<pre class="programlisting"><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">(</span><span class="identifier">f</span><span class="special">)(</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">x</span><span class="special">)(</span><span class="keyword">default</span> <span class="special">-</span><span class="number">1</span><span class="special">)</span> <span class="special">(</span><span class="keyword">double</span> <span class="identifier">y</span><span class="special">)(</span><span class="keyword">default</span> <span class="special">-</span><span class="number">1.23</span><span class="special">)</span> <span class="special">)</span>
+</pre>
+<p>
+          Or using the more general parameter type/name form (even if not strictly
+          needed by local functions):
+        </p>
+<pre class="programlisting"><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">(</span><span class="identifier">f</span><span class="special">)(</span> <span class="special">(</span><span class="keyword">int</span><span class="special">)(</span><span class="identifier">x</span><span class="special">)(</span><span class="keyword">default</span> <span class="special">-</span><span class="number">1</span><span class="special">)</span> <span class="special">(</span><span class="keyword">double</span><span class="special">)(</span><span class="identifier">y</span><span class="special">)(</span><span class="keyword">default</span> <span class="special">-</span><span class="number">1.23</span><span class="special">)</span> <span class="special">)</span>
+</pre>
+<p>
+          Note that the <code class="computeroutput"><span class="special">=</span></code> symbol needs
+          to be replaced with the alphanumeric keyword <code class="computeroutput"><span class="keyword">default</span></code>
+          because parenthesized syntax elements cannot start with a non alphanumeric
+          symbol like <code class="computeroutput"><span class="special">=</span></code>. <sup>[<a name="id901227" href="#ftn.id901227" class="footnote">24</a>]</sup>
+        </p>
+<p>
+          For C99, some or all the parenthesis can be replaced by commas.
+        </p>
+<div class="table">
+<a name="boost_local.Rationale.parenthesized_syntax_rationale.default_parameter_values.default_parameter_values"></a><p class="title"><b>Table&#160;4.&#160;Default Parameter Values</b></p>
+<div class="table-contents"><table class="table" summary="Default Parameter Values">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Normal C++ Syntax
+                  </p>
+                </th>
+<th>
+                  <p>
+                    C++ Parenthesized Syntax
+                  </p>
+                </th>
+<th>
+                  <p>
+                    C99-Only Parenthesized Syntax
+                  </p>
+                </th>
+</tr></thead>
+<tbody><tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="keyword">void</span> <span class="identifier">f</span><span class="special">(</span><span class="identifier">inx</span>
+                    <span class="identifier">x</span> <span class="special">=</span>
+                    <span class="special">-</span><span class="number">1</span><span class="special">,</span> <span class="keyword">double</span>
+                    <span class="identifier">y</span> <span class="special">=</span>
+                    <span class="special">-</span><span class="number">1.23</span><span class="special">)</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">(</span><span class="identifier">f</span><span class="special">)(</span>
+                    <span class="special">(</span><span class="keyword">int</span>
+                    <span class="identifier">x</span><span class="special">)(</span><span class="keyword">default</span> <span class="special">-</span><span class="number">1</span><span class="special">)</span> <span class="special">(</span><span class="keyword">double</span>
+                    <span class="identifier">y</span><span class="special">)(</span><span class="keyword">default</span> <span class="special">-</span><span class="number">1.23</span><span class="special">)</span>
+                    <span class="special">)</span></code> <span class="emphasis"><em>-or-</em></span>
+                  </p>
+                  <p>
+                    <code class="computeroutput"><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">(</span><span class="identifier">f</span><span class="special">)(</span>
+                    <span class="special">(</span><span class="keyword">int</span><span class="special">)(</span><span class="identifier">x</span><span class="special">)(</span><span class="keyword">default</span>
+                    <span class="special">-</span><span class="number">1</span><span class="special">)</span> <span class="special">(</span><span class="keyword">double</span><span class="special">)(</span><span class="identifier">y</span><span class="special">)(</span><span class="keyword">default</span> <span class="special">-</span><span class="number">1.23</span><span class="special">)</span>
+                    <span class="special">)</span> <span class="comment">// Authors'
+                    choice.</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">(</span><span class="identifier">f</span><span class="special">)(</span><span class="keyword">int</span> <span class="identifier">x</span><span class="special">,</span> <span class="keyword">default</span>
+                    <span class="special">-</span><span class="number">1</span><span class="special">,</span> <span class="keyword">double</span>
+                    <span class="identifier">y</span><span class="special">,</span>
+                    <span class="keyword">default</span> <span class="special">-</span><span class="number">1.23</span><span class="special">)</span></code>
+                    <span class="emphasis"><em>-or-</em></span> <code class="computeroutput"><span class="comment">// Authors'
+                    choice.</span></code>
+                  </p>
+                  <p>
+                    <code class="computeroutput"><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">(</span><span class="identifier">f</span><span class="special">)(</span>
+                    <span class="special">(</span><span class="keyword">int</span>
+                    <span class="identifier">x</span><span class="special">,</span>
+                    <span class="keyword">default</span> <span class="special">-</span><span class="number">1</span><span class="special">)</span> <span class="special">,</span> <span class="special">(</span><span class="keyword">double</span> <span class="identifier">y</span><span class="special">,</span> <span class="keyword">default</span>
+                    <span class="special">-</span><span class="number">1.23</span><span class="special">)</span> <span class="special">)</span></code>
+                    <span class="emphasis"><em>-or-</em></span>
+                  </p>
+                  <p>
+                    <code class="computeroutput"><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">(</span><span class="identifier">f</span><span class="special">)(</span>
+                    <span class="special">(</span><span class="keyword">int</span>
+                    <span class="identifier">x</span><span class="special">)(</span><span class="keyword">default</span> <span class="special">-</span><span class="number">1</span><span class="special">)</span> <span class="special">,</span> <span class="special">(</span><span class="keyword">double</span> <span class="identifier">y</span><span class="special">)(</span><span class="keyword">default</span>
+                    <span class="special">-</span><span class="number">1.23</span><span class="special">)</span> <span class="special">)</span></code>
+                  </p>
+                </td>
+</tr></tbody>
+</table></div>
+</div>
+<br class="table-break"><p>
+          Default parameter values are probably most useful to overload a public
+          API. Therefore, it is not clear how beneficial they are for local functions
+          which will never be publicly available to caller because they are always
+          hidden within the enclosing scope by definition. Nevertheless, it seems
+          appropriate for local functions to support default parameter values given
+          that it is technically possible and let programmers decide when and if
+          to leverage such a feature.
+        </p>
+<div class="section">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_local.Rationale.parenthesized_syntax_rationale.default_parameter_values.function_name__result__inline__etc"></a><a class="link" href="Rationale.html#boost_local.Rationale.parenthesized_syntax_rationale.default_parameter_values.function_name__result__inline__etc" title="Function Name, Result, Inline, Etc">Function
+          Name, Result, Inline, Etc</a>
+</h5></div></div></div>
+<p>
+            Motivated by the C99-only simplified syntax, we note that if the local
+            function name and result type could be omitted from the local function
+            declaration, the macro invocation will be greatly simplified (using no
+            extra parenthesis at all):
+          </p>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">x</span><span class="special">,</span> <span class="keyword">double</span> <span class="identifier">y</span><span class="special">)</span> <span class="special">{</span> <span class="comment">// No extra parenthesis at all!
+</span>    <span class="special">...</span>
+<span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_END</span><span class="special">(</span><span class="identifier">f</span><span class="special">)</span>
+<span class="identifier">f</span><span class="special">(</span><span class="number">1</span><span class="special">,</span> <span class="number">1.23</span><span class="special">);</span>
+</pre>
+<p>
+            And for non-C99 preprocessors:
+          </p>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION</span><span class="special">(</span> <span class="special">(</span><span class="keyword">int</span><span class="special">)(</span><span class="identifier">x</span><span class="special">)</span> <span class="special">(</span><span class="keyword">double</span><span class="special">)(</span><span class="identifier">y</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span>
+    <span class="special">...</span>
+<span class="special">}</span>
+<span class="identifier">f</span><span class="special">(</span><span class="number">1</span><span class="special">,</span> <span class="number">1.23</span><span class="special">);</span>
+</pre>
+<p>
+            However, the above syntax introduces the following limitations:
+          </p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+                Recursive local functions are not possible if the function name is
+                not specified within the function declaration (because the declaration
+                macro expansion cannot define a factor with the local function name
+                before the body is specified given that the function name is only
+                specified by the end macro after the body).
+              </li>
+<li class="listitem">
+                The library will require the use of Boost.Typeof to deduce the result
+                type (because it is now specified outside the declaration macro)
+                even when no variable is bound to the local function.
+              </li>
+</ul></div>
+<p>
+            The Boost.Typeof requirements might not be a big limitation however now
+            allowing recursive function calls would be a major limitation -- for
+            example, the following will not be possible:
+          </p>
+<pre class="programlisting"><span class="identifier">BOOST_LOCAL_FUNCTION</span><span class="special">(</span>
+<span class="special">(</span><span class="keyword">int</span><span class="special">)</span> <span class="special">(</span><span class="identifier">factorial</span><span class="special">)(</span><span class="keyword">int</span> <span class="identifier">n</span><span class="special">)</span>
+<span class="special">)</span> <span class="special">{</span>
+    <span class="keyword">if</span> <span class="special">(</span><span class="identifier">n</span> <span class="special">&lt;</span> <span class="number">2</span><span class="special">)</span> <span class="keyword">return</span> <span class="number">1</span><span class="special">;</span>
+    <span class="keyword">else</span> <span class="keyword">return</span> <span class="identifier">n</span> <span class="special">*</span> <span class="identifier">factorial</span><span class="special">(</span><span class="identifier">n</span> <span class="special">-</span> <span class="number">1</span><span class="special">);</span> <span class="comment">// Recursive call.
+</span><span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_END</span><span class="special">(</span><span class="identifier">factorial</span><span class="special">)</span>
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">factorial</span><span class="special">(</span><span class="number">10</span><span class="special">)</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+</pre>
+<p>
+            The library could provide a different macros <code class="computeroutput"><span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span></code>
+            and <code class="computeroutput"><span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span></code>
+            to still support this syntax simplification at the cost of not allowing
+            recursion and requiring Boost.Typeof to deduce the result type. On C99
+            preprocessors:
+          </p>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">x</span><span class="special">,</span> <span class="keyword">double</span> <span class="identifier">y</span><span class="special">)</span> <span class="special">{</span>
+    <span class="special">...</span>
+<span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">f</span><span class="special">)</span>
+<span class="identifier">f</span><span class="special">(</span><span class="number">1</span><span class="special">,</span> <span class="number">1.23</span><span class="special">);</span>
+</pre>
+<p>
+            And for non-C99 preprocessors:
+          </p>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span> <span class="special">(</span><span class="keyword">int</span><span class="special">)(</span><span class="identifier">x</span><span class="special">)</span> <span class="special">(</span><span class="keyword">double</span><span class="special">)(</span><span class="identifier">y</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span>
+    <span class="special">...</span>
+<span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">f</span><span class="special">)</span>
+<span class="identifier">f</span><span class="special">(</span><span class="number">1</span><span class="special">,</span> <span class="number">1.23</span><span class="special">);</span>
+</pre>
+<p>
+            In summary:
+          </p>
+</div>
+<div class="section"><div class="titlepage"><div><div><h5 class="title">
+<a name="boost_local.Rationale.parenthesized_syntax_rationale.default_parameter_values.variable_binding"></a><a class="link" href="Rationale.html#boost_local.Rationale.parenthesized_syntax_rationale.default_parameter_values.variable_binding" title="Variable Binding">Variable
+          Binding</a>
+</h5></div></div></div></div>
+</div>
+</div>
+<div class="footnotes">
+<br><hr width="100" align="left">
+<div class="footnote"><p><sup>[<a id="ftn.id900828" href="#id900828" class="para">23</a>] </sup>
+                Specifically, the number of default parameter value is needed at
+                compile-time to instantiate the proper <code class="computeroutput"><span class="identifier">function_ref</span><span class="special">&lt;</span><span class="keyword">typename</span>
+                <span class="identifier">F</span><span class="special">,</span>
+                <span class="identifier">size_t</span> <span class="identifier">default_parameter_count</span></code>
+                template to hold the local function. The <code class="computeroutput"><span class="identifier">function_ref</span></code>
+                functor is needed to implement the trick that allows local functions
+                to be passed as template parameters (see <a href="http://lists.boost.org/Archives/boost/2010/09/170888.php" target="_top">http://lists.boost.org/Archives/boost/2010/09/170888.php</a>).
+              </p></div>
+<div class="footnote"><p><sup>[<a id="ftn.id901227" href="#id901227" class="para">24</a>] </sup>
+            This is because the parenthesized syntax needs to check if its token
+            matches a keyword like <code class="computeroutput"><span class="keyword">void</span></code>,
+            <code class="computeroutput"><span class="keyword">inline</span></code>, etc. This checking
+            is done by concatenating from the front the token with a special library-defined
+            symbol that generates a new macro that will ultimately expand to <code class="computeroutput"><span class="number">1</span></code> if and only if the element matches the
+            searched keyword. The preprocessor does not allow to concatenate non-alphanumeric
+            tokens so the parenthesized syntax tokens cannot start with a non-alphanumeric
+            token otherwise the concatenation will generate a preprocessor error
+            (see <a href="http://lists.boost.org/Archives/boost/2010/08/169859.php" target="_top">http://lists.boost.org/Archives/boost/2010/08/169859.php</a>).
+          </p></div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2009 -2011 Lorenzo Caminiti<p>
+        Use, modification, and distribution is subject to the Boost Software License,
+        Version 1.0 (see accompanying file LICENSE_1_0.txt or a copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>).
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="Examples.html"><img src="../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="Releases.html"><img src="../../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

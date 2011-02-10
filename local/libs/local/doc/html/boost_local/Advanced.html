@@ -194,7 +194,7 @@
 </span>    <span class="special">)</span>
 </pre>
 <p>
-        Consider the following complete example: <sup>[<a name="id875940" href="#ftn.id875940" class="footnote">15</a>]</sup>
+        Consider the following complete example: <sup>[<a name="id875947" href="#ftn.id875947" class="footnote">15</a>]</sup>
       </p>
 <p>
         
@@ -426,7 +426,7 @@
           Local functions are never copied by value. You can only obtain a reference
           to a local function therefore you need to make sure that the <span class="bold"><strong>local function survives the scope of its reference</strong></span>
           otherwise the reference will be invalid and its use will generate a run-time
-          error (as usual with C++ references). <sup>[<a name="id880460" href="#ftn.id880460" class="footnote">16</a>]</sup>
+          error (as usual with C++ references). <sup>[<a name="id880468" href="#ftn.id880468" class="footnote">16</a>]</sup>
         </p></td></tr>
 </table></div>
 <p>
@@ -548,7 +548,7 @@
         Where the <span class="emphasis"><em>new-local-function-name</em></span> no longer has to match
         the local function name as originally specified in the parenthesized signature
         passed to <code class="computeroutput"><a class="link" href="../BOOST_LOCAL_FUNCTION.html" title="Macro BOOST_LOCAL_FUNCTION">BOOST_LOCAL_FUNCTION</a></code>.
-        For example: <sup>[<a name="id883162" href="#ftn.id883162" class="footnote">17</a>]</sup>
+        For example: <sup>[<a name="id883170" href="#ftn.id883170" class="footnote">17</a>]</sup>
       </p>
 <pre class="programlisting"><span class="special">{</span>
     <code class="computeroutput"><a class="link" href="../BOOST_LOCAL_FUNCTION.html" title="Macro BOOST_LOCAL_FUNCTION">BOOST_LOCAL_FUNCTION</a></code><span class="special">(</span>
@@ -605,7 +605,7 @@
 <p>
       </p>
 <a name="boost_local.Advanced.renaming_local_functions.motivation"></a><h6>
-<a name="id884109"></a>
+<a name="id884117"></a>
         <a class="link" href="Advanced.html#boost_local.Advanced.renaming_local_functions.motivation">Motivation</a>
       </h6>
 <p>
@@ -672,14 +672,14 @@
         to usual features of C++ functions.
       </p>
 <a name="boost_local.Advanced.limitations__overloading__nesting__operators__etc.overloading"></a><h6>
-<a name="id885100"></a>
+<a name="id885108"></a>
         <a class="link" href="Advanced.html#boost_local.Advanced.limitations__overloading__nesting__operators__etc.overloading">Overloading</a>
       </h6>
 <p>
         It is not possible to overload local functions. Declaring multiple local
         functions with the same name within the same enclosing scope generates a
         compile-time error (even if the different declarations specify different
-        parameters). <sup>[<a name="id885120" href="#ftn.id885120" class="footnote">18</a>]</sup>
+        parameters). <sup>[<a name="id885128" href="#ftn.id885128" class="footnote">18</a>]</sup>
       </p>
 <p>
         For example, the following code will <span class="bold"><strong>not</strong></span>
@@ -702,12 +702,12 @@
 <span class="special">}</span>
 </pre>
 <a name="boost_local.Advanced.limitations__overloading__nesting__operators__etc.nesting"></a><h6>
-<a name="id885584"></a>
+<a name="id885592"></a>
         <a class="link" href="Advanced.html#boost_local.Advanced.limitations__overloading__nesting__operators__etc.nesting">Nesting</a>
       </h6>
 <p>
         It is not possible to nest local functions, local blocks, or local exits
-        within each other. Nesting will generate a compile-time error. <sup>[<a name="id885606" href="#ftn.id885606" class="footnote">19</a>]</sup>
+        within each other. Nesting will generate a compile-time error. <sup>[<a name="id885614" href="#ftn.id885614" class="footnote">19</a>]</sup>
       </p>
 <p>
         For example, the following code will <span class="bold"><strong>not</strong></span>
@@ -730,12 +730,12 @@
 <span class="special">}</span>
 </pre>
 <a name="boost_local.Advanced.limitations__overloading__nesting__operators__etc.operators"></a><h6>
-<a name="id886028"></a>
+<a name="id886036"></a>
         <a class="link" href="Advanced.html#boost_local.Advanced.limitations__overloading__nesting__operators__etc.operators">Operators</a>
       </h6>
 <p>
         Local functions cannot be operators. Naming a local function <code class="computeroutput"><span class="keyword">operator</span><span class="special">...</span></code>
-        will generate a compile-time error. <sup>[<a name="id886065" href="#ftn.id886065" class="footnote">20</a>]</sup>
+        will generate a compile-time error. <sup>[<a name="id886073" href="#ftn.id886073" class="footnote">20</a>]</sup>
       </p>
 <p>
         For example, the following code will <span class="bold"><strong>not</strong></span>
@@ -757,7 +757,7 @@
 <span class="special">}</span>
 </pre>
 <a name="boost_local.Advanced.limitations__overloading__nesting__operators__etc.etc"></a><h6>
-<a name="id886471"></a>
+<a name="id886479"></a>
         <a class="link" href="Advanced.html#boost_local.Advanced.limitations__overloading__nesting__operators__etc.etc">Etc</a>
       </h6>
 <p>
@@ -1062,39 +1062,39 @@
 </div>
 <div class="footnotes">
 <br><hr width="100" align="left">
-<div class="footnote"><p><sup>[<a id="ftn.id875940" href="#id875940" class="para">15</a>] </sup>
+<div class="footnote"><p><sup>[<a id="ftn.id875947" href="#id875947" class="para">15</a>] </sup>
           We recognize that the use of the <span class="emphasis"><em>identity macros</em></span> adds
           extra parenthesis to the already significant number of parenthesis required
           by the parenthesized syntax. However, parenthesized signatures usually
           do not contain unwrapped commas "<code class="computeroutput"><span class="special">,</span></code>"
           (unless template metaprogramming is being used).
         </p></div>
-<div class="footnote"><p><sup>[<a id="ftn.id880460" href="#id880460" class="para">16</a>] </sup>
+<div class="footnote"><p><sup>[<a id="ftn.id880468" href="#id880468" class="para">16</a>] </sup>
             The suffix <code class="computeroutput"><span class="identifier">ref</span></code> of <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">local</span><span class="special">::</span><a class="link" href="../boost/local/function_ref.html" title="Struct template function_ref">function_ref</a></code> is meant
             to help programmers remember that they are dealing with references to
             (and not copies of) local functions.
           </p></div>
-<div class="footnote"><p><sup>[<a id="ftn.id883162" href="#id883162" class="para">17</a>] </sup>
+<div class="footnote"><p><sup>[<a id="ftn.id883170" href="#id883170" class="para">17</a>] </sup>
           <span class="bold"><strong>Rationale.</strong></span> Local functions are often named
           <code class="computeroutput"><span class="identifier">l</span></code> in the casual examples
           of this documentation because the name of the author starts with the letter
           "<code class="computeroutput"><span class="identifier">l</span></code>". <span class="inlinemediaobject"><img src="../../images/smiley.png" alt="smiley"></span>
         </p></div>
-<div class="footnote"><p><sup>[<a id="ftn.id885120" href="#id885120" class="para">18</a>] </sup>
+<div class="footnote"><p><sup>[<a id="ftn.id885128" href="#id885128" class="para">18</a>] </sup>
           <span class="bold"><strong>Rationale.</strong></span> This is because a local function
           is a functor object declared as a local variable within the enclosing scope.
           Therefore, declaring two local functions with the same name within the
           same enclosing scope declares two local variables with the same name within
           the same scope and that is not allowed in C++.
         </p></div>
-<div class="footnote"><p><sup>[<a id="ftn.id885606" href="#id885606" class="para">19</a>] </sup>
+<div class="footnote"><p><sup>[<a id="ftn.id885614" href="#id885614" class="para">19</a>] </sup>
           <span class="bold"><strong>Rationale.</strong></span> This is because within a nested
           code block only global or static variables can be accessed while <a href="http://www.boost.org/doc/libs/release/libs/scope_exit/doc/html/index.html" target="_top">Boost.ScopeExit</a>
           variable <a href="http://lists.boost.org/Archives/boost/2006/11/113658.php" target="_top">binding
           mechanism</a> requires to access local variables that hold the bound
           variables.
         </p></div>
-<div class="footnote"><p><sup>[<a id="ftn.id886065" href="#id886065" class="para">20</a>] </sup>
+<div class="footnote"><p><sup>[<a id="ftn.id886073" href="#id886073" class="para">20</a>] </sup>
           <span class="bold"><strong>Rationale.</strong></span> This is the because a local
           function name must be a valid local variable name (the local variable to
           hold the local functor object) and operators cannot be used as local variable

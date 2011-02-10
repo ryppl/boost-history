@@ -1,0 +1,545 @@
+
+[section:Rationale Appendix: Rationale]
+
+This section discusses rationale behind library design decisions in addition to the rationale already provided throughout the rationale footnotes in the rest of this documentation.
+
+[section Parenthesized Syntax Rationale]
+
+This section discusses the rationale behind parenthesized syntax design decisions.
+
+[section C99 Preprocessor]
+
+The C99 preprocessor (and therefore the C++0x preprocessor) allows for additional features like specifying empty macro parameters and variadic macro parameters which are not supported by the ISO C++ standard preprocessor.
+The additional features of the C99 preprocessor can be used to simplify the parenthesized syntax mainly by removing extra parenthesis and making it look more like normal C++ syntax.
+
+Most (and maybe all) modern compilers support the C99 preprocessor at this time and all new C++0x compilers will support the C99 preprocessor in the future.
+Therefore, the library macros have been programmed to automatically detect the presence of the C99 preprocessor and accept the simplified parenthesized syntax in these cases.
+The same macro will only accept the parenthesized syntax on non C99 preprocessor but will accept both the parenthesized syntax and the simplified parenthesized syntax on C99 preprocessors.
+This way, programmers that can afford to write C99 specific code can benefit from the simplifications of the parenthesized syntax.
+
+[table
+[ [
+Function Feature
+] [
+Normal C++ Syntax
+] [
+Simplified Parenthesized Syntax (C99 only)
+] [
+Parenthesized Syntax (both C++ and C99)
+] ]
+
+[ [
+/Empty Parameter List/
+] [
+``
+    void f() {
+        ...
+    }
+``
+Or:
+``
+    void f(void) {
+        ...
+    }
+``
+] [
+Using empty macro parameter:
+``
+    BOOST_LOCAL_FUNCTION(
+    (void) (f)()
+    ) {
+        ...
+    } BOOST_LOCAL_FUNCTION_END(f)
+``
+But also when no recursion and Boost.Typeof for result type:
+``
+    // No extra parenthesis at all!
+    void BOOST_LOCAL_FUNCTION_PARAMS() {
+        ...
+    } BOOST_LOCAL_FUNCTION_NAME_END(f)
+``
+] [
+Using `void` parameter list:
+``
+    BOOST_LOCAL_FUNCTION(
+    (void) (f)( (void) )
+    ) {
+        ...
+    } BOOST_LOCAL_FUNCTION_END(f)
+``
+But also when no recursion and Boost.Typeof for result type:
+``
+    void BOOST_LOCAL_FUNCTION_PARAMS( (void) ) {
+        ...
+    } BOOST_LOCAL_FUNCTION_NAME_END(f)
+``
+] ]
+
+[ [
+/Parameter Types and Names/
+] [
+``
+    void f(int x, double& y) {
+        ...
+    }
+``
+Local functions do not need to access the parameter names separately from their types so they are merged into a single token (even if that reduces the generality of the syntax).
+] [
+Merging parameter type with its name and using variable length tuples:
+``
+    BOOST_LOCAL_FUNCTION(
+    // Parameter list syntax same as normal.
+    (void) (f)(int x, double& y)
+    ) {
+        ...
+    } BOOST_LOCAL_FUNCTION_END(f)
+``
+But also when no recursion and Boost.Typeof for result type:
+``
+    // No extra parenthesis at all!
+    void BOOST_LOCAL_FUNCTION_PARAMS(int x, double& y) {
+        ...
+    } BOOST_LOCAL_FUNCTION_NAME(f)
+``
+] [
+Merging parameter type with its name and using sequences:
+``
+    BOOST_LOCAL_FUNCTION(
+    (void) (f)( (int x) (double& y)
+    ) {
+        ...
+    } BOOST_LOCAL_FUNCTION_END(f)
+``
+But also when no recursion and Boost.Typeof for result type:
+``
+    void BOOST_LOCAL_FUNCTION_PARAMS( (int x) (double& y) ) {
+        ...
+    } BOOST_LOCAL_FUNCTION_NAME(f)
+``
+] ]
+
+[ [
+/Parameter Defaults/
+] [
+``
+    void f(int x = -1,
+            double y = -1.23) {
+        ...
+    }
+``
+Parameter defaults need to be separated from their types and names because they cannot be part of function type expressions.
+The symbol `=` cannot be used because it is not alphanumeric so `default` is used instead.
+] [
+Using `default` instead of `=` and variable length tuples:
+``
+    BOOST_LOCAL_FUNCTION(
+    (void) (f)(int x, default -1,
+            double y, default -1.23)
+    ) {
+        ...
+    } BOOST_LOCAL_FUNCTION_END(f)
+``
+But also when no recursion and Boost.Typeof for result type:
+``
+    // No extra parenthesis needed.
+    void BOOST_LOCAL_FUNCTION_PARAMS(int x, default -1,
+            double y, default -1.23) {
+        ...
+    } BOOST_LOCAL_FUNCTION_NAME(f)
+``
+] [
+Using `default` instead of `=` and sequences:
+``
+    BOOST_LOCAL_FUNCTION(
+    (void) (f)( (int x)(default -1)
+            (double y)(default -1.23) )
+    ) {
+        ...
+    } BOOST_LOCAL_FUNCTION_END(f)
+``
+But also when no recursion and Boost.Typeof for result type:
+``
+    void BOOST_LOCAL_FUNCTION_PARAMS( (int x)(default -1)
+            (double y)(default -1.23) ) {
+        ...
+    } BOOST_LOCAL_FUNCTION_NAME(f)
+``
+] ]
+
+[ [
+/Variable Binding/
+] [
+Not supported by C++ (supported by C++0x via lambda functions).
+``
+int a = 0, b = 1, c = 2, d = 3;
+void f(int x) /* bind a, b, c, d somehow... */ {
+    ...
+}
+``
+] [
+Using `bind` and `const bind` instead of the parameter type and variable length typles:
+``
+    BOOST_LOCAL_FUNCTION(
+    (void) (f)(int x, bind a, const bind b, bind& c, const bind& d)
+    ) {
+        ...
+    ) BOOST_LOCAL_FUNCTION_END(f)
+``
+But also when no recursion and Boost.Typeof for result type:
+``
+    // No extra parenthesis needed.
+    void BOOST_LOCAL_FUNCTION_PARAMS(int x, bind a, const bind b,
+            bind& c, const bind& d) {
+        ...
+    ) BOOST_LOCAL_FUNCTION_NAME(f)
+``
+] [
+Using `bind` and `const bind` instead of the parameter type:
+``
+    BOOST_LOCAL_FUNCTION(
+    (void) (f)(int x, bind a, const bind b, bind& c, const bind& d)
+    ) {
+        ...
+    ) BOOST_LOCAL_FUNCTION_END(f)
+``
+But also when no recursion and Boost.Typeof for result type:
+``
+    // No extra parenthesis needed.
+    void BOOST_LOCAL_FUNCTION_PARAMS(int x, bind a, const bind b,
+            bind& c, const bind& d) {
+        ...
+    ) BOOST_LOCAL_FUNCTION_NAME(f)
+``
+] ]
+
+]
+
+[table
+    [
+        [ Feature ]
+        [ Normal C++ Syntax ]
+        [ C99 Split Syntax ]
+        [ C99 Parenthesized Syntax ]
+        [ C++ Split Syntax ]
+        [ C++ Parenthesized Syntax ]
+    ]
+    [
+        [ Use variadics macro parameters (limitation -- C99 preprocessor only). ]
+        [ ]
+        [ Yes. ]
+        [ Yes. ]
+        [ No. ]
+        [ No. ]
+    ]       
+    [
+        [ Use empty macro parameter (limitation -- C99 preprocessor only). ]
+        [ ]
+        [ Yes. ]
+        [ Yes. ]
+        [ No. ]
+        [ No. ]
+    ]       
+    [
+        [ Support recursive local function calls. ]
+        [ ]
+        [ No. ]
+        [ Yes. ]
+        [ No. ]
+        [ Yes. ]
+    ]       
+    [
+        [ Always require Boost.Type of for result type (limitation). ]
+        [ ]
+        [ Yes. ]
+        [ No. ]
+        [ Yes. ]
+        [ No. ]
+    ]
+    [
+        [ Support `inline` local functions. ]
+        [ ]
+        [ No. ]
+        [ Yes. ]
+        [ No. ]
+        [ Yes. ]
+    ]
+    [
+        [ /Empty parameter list./ ]
+        [``
+            void f() {
+                ...
+            }
+        ``
+        Or:
+        ``
+            void f(void) {
+                ...
+            }
+        ``]
+        [``
+            void BOOST_LOCAL_FUNCTION_PARAMS() {
+                ...
+            } BOOST_LOCAL_FUNCTION_NAME(f)
+        ``]
+        [``
+            BOOST_LOCAL_FUNCTION(
+            (void) (f)()
+            ) {
+                ...
+            } BOOST_LOCAL_FUNCTION_END(f)
+        ``]
+        [``
+            void BOOST_LOCAL_FUNCTION_PARAMS( (void) ) {
+                ...
+            } BOOST_LOCAL_FUNCTION_NAME(f)
+        ``]
+        [``
+            BOOST_LOCAL_FUNCTION(
+            (void) (f)( (void) )
+            ) {
+                ...
+            } BOOST_LOCAL_FUNCTION_END(f)
+        ``]
+    ]
+    [
+        [ /Parameter types and names./ ]
+        [``
+            void f(int x, double y) {
+                ...
+            }
+        ``]
+        [``
+            void BOOST_LOCAL_FUNCTION_PARAMS(
+                    int x, double y) {
+                ...
+            } BOOST_LOCAL_FUNCTION_NAME(f)
+        ``]
+        [``
+            BOOST_LOCAL_FUNCTION(
+            (void) (f)(int x, double y)
+            ) {
+                ...
+            } BOOST_LOCAL_FUNCTION_END(f)
+        ``]
+        [``
+            void BOOST_LOCAL_FUNCTION_PARAMS(
+                    (int x) (double y) ) {
+                ...
+            } BOOST_LOCAL_FUNCTION_NAME(f)
+        ``]
+        [``
+            BOOST_LOCAL_FUNCTION(
+            (void) (f)( (int x) (double y) )
+            ) {
+                ...
+            } BOOST_LOCAL_FUNCTION_END(f)
+        ``]
+    ]
+]
+
+[endsect]
+
+[section Parameter Type and Name Separation]
+
+C++ allows to specify parameter names within function types:
+
+    void (int x, double& y)
+
+Therefore, the parenthesized syntax for local functions does not have to separate the function parameter type and name tokens:
+
+[table Parameter Types and Names
+[ [Normal C++ Syntax] [C++ Parenthesized Syntax] [C99-Only Parenthesized Syntax] ]
+[ [
+`void f(int x, double&y)`
+] [
+`(void) (f)( (int x) (double& y) ) // Is this better than its general version below selected by the authors? Local functions don't need the generality...`
+] [ 
+`(void) (f)(int x, double& y) // Authors' choice.`
+] ]
+]
+
+Note that a more general form of the parenthesized syntax would have been instead:
+[table Separated Parameter Types and Names
+[ [Normal C++ Syntax] [C++ Parenthesized Syntax] [C99-Only Parenthesized Syntax] ]
+[ [
+`void f(int x, double& y)`
+] [
+`(void) (f)( (int)(x) (double&)(y) ) // Authors' choice.`
+] [
+`(void) (f)(int, x, double&, y)` /-or-/
+
+`(void) (f)( (int, x) , (double&, y) )` /-or-/
+
+`(void) (f)( (int)(x) , (double&)(y) )`
+] ]
+]
+
+This more general form makes available the parameter types and names as separate tokens for preprocessor metaprogramming.
+In fact, there is no way for the preprocessor to split `(int x)` into the parameter type `int` and name `x` while it can split `(int)(x)`.
+The parameter types can be split at compile-time (for example to force some parameters to be constant, references, etc):
+    
+    typedef arg_type<void (int x, double& y), 0>::type arg_type0; // int
+    typedef arg_type<void (int x, double& y), 1>::type arg_type1; // double&
+
+But the parameter name `x` remains inaccessible as a token separately from its type.
+However, local function do not need to access parameter types separately from their types so this lack of generality is not an issue for local function and the less general syntax (e.g., `(int x)`) is preferred over the more general one (e.g., `(int)(x)`) because it is simpler as it uses a smaller number of parenthesis and resembles more closely the normal C++ syntax for function parameters.
+
+[note *Overloaded functions.*
+An example where parameter names need to be accessed separately from their types is to support overloading.
+For example, if the macro need to expand to support code for an overloaded function, they might need to generate unique identifiers for symbols within the support code.
+Assume also `__LINE__` cannot be used in this context because the unique identifiers need to be referred by another macro expanding on a different line (so the unique identifier need to be generated upon the function syntactic elements -- function name, parameter names, etc).
+Such identifiers cannot simply use the function name because the same function name is used multiple times when the function is overloaded and therefore the identifiers will not be unique.
+The parameter names can be concatenated by the preprocessor together with the function name to generate such unique identifiers (with the limitation that overloaded function need to used different parameter names and not just different parameter types).
+]
+
+[endsect]
+
+[section Empty Function Parameters]
+
+The C++ preprocessor does not allow to specify an empty macro parameter as a consequence preprocessor sequences cannot contain empty elements `()`.
+Therefore the following parenthesized syntax for a function with no parameter `void f()` is not valid for the C++ preprocessor:
+
+    (void) (f)() // Error, cannot use empty `()`.
+
+This syntax is instead valid for the C99 preprocessor because it can instead accept empty macro parameter.
+
+C++ also allow to specify an empty parameter list using `void`:
+    
+    void f(void)
+    
+This leads to the valid parenthesized syntax:
+
+    (void) (f)( (void) )
+
+In summary:
+
+[table Empty Function Parameters
+[ [Normal C++ Syntax] [C++ Parenthesized Syntax] [C99-Only Parenthesized Syntax] ]
+[ [
+`void f()`
+] [
+`(void) (f)( (void) ) // Authors' choice.`
+] [
+`(void) (f)() // Authors' choice.`
+] ]
+]
+
+[endsect]
+
+[section Default Parameter Values]
+
+C++ does not allow to specify default parameter values within function types thus the following is not valid:
+
+    void (int x = -1, double y = -1.23) // Error, can't specify default parameters within function types.
+
+Therefore, the following parenthesized syntax cannot be used:
+
+    (void) (f)( (int x = -1) (double y = -1.23) )
+
+Because:
+
+# It does not allow to strip the default parameter values from the parameter type and name in order to construct and manipulate the local function type.
+# Default parameter values are not part of the type so it is not possible to program a metafunction that counts the number of default parameter values at compile-time but such information is also needed by the local functions in order to properly support default parameters.
+[footnote
+Specifically, the number of default parameter value is needed at compile-time to instantiate the proper `function_ref<typename F, size_t default_parameter_count` template to hold the local function.
+The `function_ref` functor is needed to implement the trick that allows local functions to be passed as template parameters (see [@http://lists.boost.org/Archives/boost/2010/09/170888.php]).
+]
+
+Default parameters can be separated by the rest of the parameter expression using:
+
+    (void) (f)( (int x)(default -1) (double y)(default -1.23) )
+
+Or using the more general parameter type/name form (even if not strictly needed by local functions):
+
+    (void) (f)( (int)(x)(default -1) (double)(y)(default -1.23) )
+
+Note that the `=` symbol needs to be replaced with the alphanumeric keyword `default` because parenthesized syntax elements cannot start with a non alphanumeric symbol like `=`.
+[footnote
+This is because the parenthesized syntax needs to check if its token matches a keyword like `void`, `inline`, etc.
+This checking is done by concatenating from the front the token with a special library-defined symbol that generates a new macro that will ultimately expand to `1` if and only if the element matches the searched keyword.
+The preprocessor does not allow to concatenate non-alphanumeric tokens so the parenthesized syntax tokens cannot start with a non-alphanumeric token otherwise the concatenation will generate a preprocessor error (see [@http://lists.boost.org/Archives/boost/2010/08/169859.php]).
+]
+
+For C99, some or all the parenthesis can be replaced by commas.
+
+[table Default Parameter Values
+[ [Normal C++ Syntax] [C++ Parenthesized Syntax] [C99-Only Parenthesized Syntax] ]
+[ [
+`void f(inx x = -1, double y = -1.23)`
+] [
+`(void) (f)( (int x)(default -1) (double y)(default -1.23) )` /-or-/
+
+`(void) (f)( (int)(x)(default -1) (double)(y)(default -1.23) ) // Authors' choice.`
+] [
+`(void) (f)(int x, default -1, double y, default -1.23)` /-or-/ `// Authors' choice.`
+
+`(void) (f)( (int x, default -1) , (double y, default -1.23) )` /-or-/
+
+`(void) (f)( (int x)(default -1) , (double y)(default -1.23) )`
+] ]
+]
+
+Default parameter values are probably most useful to overload a public API.
+Therefore, it is not clear how beneficial they are for local functions which will never be publicly available to caller because they are always hidden within the enclosing scope by definition.
+Nevertheless, it seems appropriate for local functions to support default parameter values given that it is technically possible and let programmers decide when and if to leverage such a feature.
+
+[section Function Name, Result, Inline, Etc]
+
+Motivated by the C99-only simplified syntax, we note that if the local function name and result type could be omitted from the local function declaration, the macro invocation will be greatly simplified (using no extra parenthesis at all):
+
+    void BOOST_LOCAL_FUNCTION(int x, double y) { // No extra parenthesis at all!
+        ...
+    } BOOST_LOCAL_FUNCTION_END(f)
+    f(1, 1.23);
+
+And for non-C99 preprocessors:
+
+    void BOOST_LOCAL_FUNCTION( (int)(x) (double)(y) ) {
+        ...
+    }
+    f(1, 1.23);
+
+However, the above syntax introduces the following limitations:
+
+* Recursive local functions are not possible if the function name is not specified within the function declaration (because the declaration macro expansion cannot define a factor with the local function name before the body is specified given that the function name is only specified by the end macro after the body).
+* The library will require the use of Boost.Typeof to deduce the result type (because it is now specified outside the declaration macro) even when no variable is bound to the local function.
+
+The Boost.Typeof requirements might not be a big limitation however now allowing recursive function calls would be a major limitation -- for example, the following will  not be possible:
+
+    BOOST_LOCAL_FUNCTION(
+    (int) (factorial)(int n)
+    ) {
+        if (n < 2) return 1;
+        else return n * factorial(n - 1); // Recursive call.
+    } BOOST_LOCAL_FUNCTION_END(factorial)
+    std::cout << factorial(10) << std::endl;
+
+The library could provide a different macros `BOOST_LOCAL_FUNCTION_PARAMS` and `BOOST_LOCAL_FUNCTION_NAME` to still support this syntax simplification at the cost of not allowing recursion and requiring Boost.Typeof to deduce the result type.
+On C99 preprocessors:
+
+    void BOOST_LOCAL_FUNCTION_PARAMS(int x, double y) {
+        ...
+    } BOOST_LOCAL_FUNCTION_NAME(f)
+    f(1, 1.23);
+
+And for non-C99 preprocessors:
+
+    void BOOST_LOCAL_FUNCTION_PARAMS( (int)(x) (double)(y) ) {
+        ...
+    } BOOST_LOCAL_FUNCTION_NAME(f)
+    f(1, 1.23);
+
+In summary:
+
+
+[endsect]
+
+[section Variable Binding]
+[endsect]
+
+[endsect]
+
+[endsect]
+
+[endsect]
+

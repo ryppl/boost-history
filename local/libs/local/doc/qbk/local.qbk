@@ -8,9 +8,9 @@
 [preface Boost.Local
     [quickbook 1.5]
     [version 0.1.1 ]
-    [/ purpose Local functions for C++]
-    [/ category Function objects and higher-order programming]
-    [authors [Caminiti, Lorenzo]]
+    [/ purpose Local functions, blocks, and exits for C++]
+    [/ category Function Objects and Higher-Order Programming]
+    [authors [Caminiti (lorcaminiti@gmail.com), Lorenzo]]
     [copyright 2009-2011 Lorenzo Caminiti]
     [license
         Use, modification, and distribution is subject to the
@@ -92,6 +92,7 @@ The Boost Local library implements local functions, local blocks, and local exit
 [include grammar.qbk]
 [include alternatives.qbk]
 [include examples.qbk]
+[include rationale.qbk]
 [include releases.qbk]
 [include bibliography.qbk]
 [include acknowledgements.qbk]
