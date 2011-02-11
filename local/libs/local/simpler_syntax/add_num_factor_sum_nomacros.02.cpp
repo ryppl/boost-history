@@ -1,6 +1,7 @@
 
 #include <boost/local/function.hpp>
 #include <boost/function_types/parameter_types.hpp>
+#include <boost/typeof/typeof.hpp>
 #include <boost/mpl/at.hpp>
 #include <iostream>
 
@@ -13,7 +14,7 @@ int main() {
     typedef void (*boost_se_tag_0_add20)(int factor );
     typedef void (*boost_se_tag_1_add20)(int &sum );
     
-    typedef typeof__(
+    typedef BOOST_TYPEOF(
         boost::type_of::ensure_obj(
             boost::scope_exit::aux::wrap(
                 boost::scope_exit::aux::deref(
@@ -25,7 +26,7 @@ int main() {
     ) boost_se_wrapped_t_0_add20; 
     typedef boost_se_wrapped_t_0_add20::type boost_se_capture_t_0_add20; 
 
-    typedef typeof__(
+    typedef BOOST_TYPEOF(
         boost::type_of::ensure_obj(
             boost::scope_exit::aux::wrap(
                 boost::scope_exit::aux::deref(
@@ -103,11 +104,15 @@ int main() {
         sum += factor * num;
         std::clog << "Summed: " << sum << std::endl;
     }
+    
     // The END macro.
+
     }; 
     boost_local_auxXfunctorXadd boost_local_auxXobjectXadd( 
             boost_local_auxXargs.value); 
     boost_local_auxXaddXref add( boost_local_auxXobjectXadd);
+
+    // The rest of the code.
 
     add(100.0);
     return 0;

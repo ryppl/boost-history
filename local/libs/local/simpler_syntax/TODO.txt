@@ -1,5 +1,14 @@
 
 
+* Rework a no-macro version of the factorial example.
+    >>  Ask boost about inline -- is it useful?
+    >>  Tell boost that split-macros can support recursion at the cost of
+        allowing `this` within the function body (so no error if used instead
+        of `this_`).
+
+
+* Rename function_ref to function (because it now has a default constructor so it's not a reference anymore).
+
 
 * Double check all local function syntax elements (from Grammar) -- auto, register, etc.
 
