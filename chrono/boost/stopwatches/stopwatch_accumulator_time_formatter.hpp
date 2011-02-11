@@ -1,11 +1,8 @@
 //  boost/stopwatches/stopwatch_accumulator_time_formatter.hpp  ------------------------------------------------------------//
-
-//  Copyright 2009-2010 Vicente J. Botet Escriba
-
+//  Copyright 2009-2011 Vicente J. Botet Escriba
 //  Distributed under the Boost Software License, Version 1.0. (See accompanying
 //  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
-
-//  See http://www.boost.org/libs/system for documentation.
+//  See http://www.boost.org/libs/stopwatches for documentation.
 
 #ifndef BOOST_STOPWATCHES_STOPWATCH_ACCUMULATOR_TIMES_FORMATTER_HPP
 #define BOOST_STOPWATCHES_STOPWATCH_ACCUMULATOR_TIMES_FORMATTER_HPP

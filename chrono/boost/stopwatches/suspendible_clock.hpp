@@ -1,18 +1,15 @@
-//  boost/chrono/process_cpu_clocks.hpp  -----------------------------------------------------------//
-
-//  Copyright 2009-2010 Vicente J. Botet Escriba
-
+//  boost/chrono/suspendible_clock.hpp  -----------------------------------------------------------//
+//  Copyright 2009-2011 Vicente J. Botet Escriba
 //  Distributed under the Boost Software License, Version 1.0.
 //  See http://www.boost.org/LICENSE_1_0.txt
-
-//  See http://www.boost.org/libs/system for documentation.
+//  See http://www.boost.org/libs/stopwatches for documentation.
 
 #ifndef BOOST_STOPWATCHES_SUSPENDIBLE_CLOCK_HPP
 #define BOOST_STOPWATCHES_SUSPENDIBLE_CLOCK_HPP
 
 #include <boost/version.hpp>
 #include <boost/chrono/chrono.hpp>
-#include <boost/stopwatches/scoped_suspend.hpp>
+#include <boost/stopwatches/clock_suspender.hpp>
 #include <boost/system/error_code.hpp>
 #include <boost/thread/tss.hpp>
 #include <memory>
@@ -155,14 +152,14 @@ namespace boost { namespace stopwatches {
             }
             else return duration::zero();
         }
-        class scoped_suspend {
+        class clock_suspender {
         public:
-            scoped_suspend(system::error_code & ec = BOOST_CHRONO_THROWS)
+            clock_suspender(system::error_code & ec = BOOST_CHRONO_THROWS)
                 : ptr_(instance(ec))
             {
                 if (ptr_!=0) ptr_->suspend(ec);
             }
-            ~scoped_suspend() {
+            ~clock_suspender() {
                 if (ptr_!=0) {
                     system::error_code ec;
                     ptr_->resume(ec);
@@ -171,9 +168,9 @@ namespace boost { namespace stopwatches {
             }
         private:
             thread_specific_context* ptr_;
-            //~ scoped_suspend(); // = delete;
-            scoped_suspend(const scoped_suspend&); // = delete;
-            scoped_suspend& operator=(const scoped_suspend&); // = delete;
+            //~ clock_suspender(); // = delete;
+            clock_suspender(const clock_suspender&); // = delete;
+            clock_suspender& operator=(const clock_suspender&); // = delete;
         };
 
     };
@@ -185,14 +182,14 @@ namespace boost { namespace stopwatches {
     struct is_suspendible<suspendible_clock<Clock> > : mpl:: true_ {};
 
     template <class Clock>
-    class scoped_suspend<suspendible_clock<Clock> >
-        : public suspendible_clock<Clock>::scoped_suspend {
+    class clock_suspender<suspendible_clock<Clock> >
+        : public suspendible_clock<Clock>::clock_suspender {
     public:
-        scoped_suspend(system::error_code & ec = BOOST_CHRONO_THROWS) : suspendible_clock<Clock>::scoped_suspend(ec) {}
+        clock_suspender(system::error_code & ec = BOOST_CHRONO_THROWS) : suspendible_clock<Clock>::clock_suspender(ec) {}
     private:
-        //~ scoped_suspend(); // = delete;
-        scoped_suspend(const scoped_suspend&); // = delete;
-        scoped_suspend& operator=(const scoped_suspend&); // = delete;
+        //~ clock_suspender(); // = delete;
+        clock_suspender(const clock_suspender&); // = delete;
+        clock_suspender& operator=(const clock_suspender&); // = delete;
     };
 
 } // namespace stopwatches

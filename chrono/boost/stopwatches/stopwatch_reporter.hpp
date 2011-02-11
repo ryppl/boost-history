@@ -1,11 +1,8 @@
 //  boost/stopwatches/stopwatch_reporter.hpp  ------------------------------------------------------------//
-
-//  Copyright 2009-2010 Vicente J. Botet Escriba
-
+//  Copyright 2009-2011 Vicente J. Botet Escriba
 //  Distributed under the Boost Software License, Version 1.0. (See accompanying
 //  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
-
-//  See http://www.boost.org/libs/system for documentation.
+//  See http://www.boost.org/libs/stopwatches for documentation.
 
 #ifndef BOOST_STOPWATCHES_STOPWATCH_REPORTER_HPP
 #define BOOST_STOPWATCHES_STOPWATCH_REPORTER_HPP
@@ -23,7 +20,7 @@
 #include <boost/chrono/chrono.hpp>
 #include <boost/stopwatches/stopwatch_scoped.hpp>
 #include <boost/system/error_code.hpp>
-#include <boost/stopwatches/scoped_suspend.hpp>
+#include <boost/stopwatches/clock_suspender.hpp>
 #include <boost/cstdint.hpp>
 #include <string>
 #include <iostream>
@@ -177,7 +174,7 @@ namespace boost { namespace stopwatches  {
 
     template <class Stopwatch, class Formatter>
     void basic_stopwatch_reporter<Stopwatch, Formatter>::report( system::error_code & ec ) {
-        stopwatches::scoped_suspend<typename Stopwatch::clock> _(ec);
+        stopwatches::clock_suspender<typename Stopwatch::clock> _(ec);
 	if (!BOOST_CHRONO_IS_THROWS(ec)) {
 	    if (ec) return;
 	}
