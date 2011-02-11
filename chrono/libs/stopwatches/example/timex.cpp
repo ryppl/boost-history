@@ -1,11 +1,9 @@
 //  timex: timed execution program  ------------------------------------------//
-
 //  Copyright Beman Dawes 2007
-
+//  Copyright 2009-2011 Vicente J. Botet Escriba
 //  Distributed under the Boost Software License, Version 1.0. (See accompanying
 //  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
-
-//  See http://www.boost.org/libs/system for documentation.
+//  See http://www.boost.org/libs/stopwatches for documentation.
 
 #include <boost/stopwatches/stopclock.hpp>
 #include <cstdlib>

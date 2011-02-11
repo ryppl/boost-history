@@ -1,11 +1,8 @@
-//  boost stopclock_constructor_overload_test.cpp  -----------------------------------------------------//
-
+//  tes/stopclock_constructor_overload_test.cpp  -----------------------------------------------------//
 //  Copyright Beman Dawes 2006, 2008
-//  Copyright 2009 Vicente J. Botet Escriba
-
+//  Copyright 2009-2011 Vicente J. Botet Escriba
 //  Distributed under the Boost Software License, Version 1.0.
 //  See http://www.boost.org/LICENSE_1_0.txt
-
 //  See http://www.boost.org/libs/chrono for documentation.
 
 #include <boost/stopwatches/stopclock.hpp>

@@ -1,12 +1,9 @@
-//  stopwatch_example.cpp  ---------------------------------------------------//
-
+//  example/stopwatch_example.cpp  ---------------------------------------------------//
 //  Copyright Beman Dawes 2006, 2008
-//  Copyright 2009/2010 Vicente J. Botet Escriba
-
+//  Copyright 2009-2011 Vicente J. Botet Escriba
 //  Distributed under the Boost Software License, Version 1.0.
 //  See http://www.boost.org/LICENSE_1_0.txt
-
-//  See http://www.boost.org/libs/chrono for documentation.
+//  See http://www.boost.org/libs/stopwatches for documentation.
 
 #include <iostream>
 #include <boost/stopwatches/stopwatches.hpp>
