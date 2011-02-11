@@ -1,4 +1,4 @@
-/* test_uniform_real.cpp
+/* test_old_uniform_real.cpp
  *
  * Copyright Steven Watanabe 2011
  * Distributed under the Boost Software License, Version 1.0. (See
@@ -9,12 +9,11 @@
  *
  */
 
-#include <boost/random/uniform_real_distribution.hpp>
 #include <boost/random/uniform_real.hpp>
 #include <boost/math/distributions/uniform.hpp>
 
-#define BOOST_RANDOM_DISTRIBUTION boost::random::uniform_real_distribution<>
-#define BOOST_RANDOM_DISTRIBUTION_NAME uniform_int
+#define BOOST_RANDOM_DISTRIBUTION boost::uniform_real<>
+#define BOOST_RANDOM_DISTRIBUTION_NAME uniform_real
 #define BOOST_MATH_DISTRIBUTION boost::math::uniform
 #define BOOST_RANDOM_ARG1_TYPE double
 #define BOOST_RANDOM_ARG1_NAME b
