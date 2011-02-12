@@ -14,17 +14,17 @@ namespace bi = boost::integer;
 
 int main()
 {
-  boost::int64_t i64 = 0x0102030405060708;
+  boost::int64_t i64 = 0x0102030405060708LL;
   bi::endian_flip(i64);
-  BOOST_TEST_EQ(i64, 0x0807060504030201);
+  BOOST_TEST_EQ(i64, 0x0807060504030201LL);
   bi::endian_flip(i64);
-  BOOST_TEST_EQ(i64, 0x0102030405060708);
+  BOOST_TEST_EQ(i64, 0x0102030405060708LL);
 
-  i64 = 0xfefdfcfbfaf9f8f7;
+  i64 = 0xfefdfcfbfaf9f8f7LL;
   bi::endian_flip(i64);
-  BOOST_TEST_EQ(i64, 0xf7f8f9fafbfcfdfe);
+  BOOST_TEST_EQ(i64, 0xf7f8f9fafbfcfdfeLL);
   bi::endian_flip(i64);
-  BOOST_TEST_EQ(i64, 0xfefdfcfbfaf9f8f7);
+  BOOST_TEST_EQ(i64, 0xfefdfcfbfaf9f8f7LL);
 
   boost::int32_t i32 = 0x01020304;
   bi::endian_flip(i32);
@@ -50,11 +50,11 @@ int main()
   bi::endian_flip(i16);
   BOOST_TEST_EQ(i16, (boost::int16_t)0xfefd);
 
-  boost::uint64_t ui64 = 0x0102030405060708;
+  boost::uint64_t ui64 = 0x0102030405060708LL;
   bi::endian_flip(ui64);
-  BOOST_TEST_EQ(ui64, 0x0807060504030201);
+  BOOST_TEST_EQ(ui64, 0x0807060504030201LL);
   bi::endian_flip(ui64);
-  BOOST_TEST_EQ(ui64, 0x0102030405060708);
+  BOOST_TEST_EQ(ui64, 0x0102030405060708LL);
 
   boost::uint32_t ui32 = 0x01020304;
   bi::endian_flip(ui32);

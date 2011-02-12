@@ -101,22 +101,21 @@ BOOST_FUSION_ADAPT_STRUCT(
     (X::little_c, b)
 )
 
-BOOST_MPL_ASSERT_MSG((is_same<endianness::domain_map<network, X::big_c>::type,
-                             mpl::vector<endianness::big,endianness::big> >::value), 
-            SS, (network,endianness::domain_map<network, X::big_c>::type));
+BOOST_MPL_ASSERT_MSG((boost::is_same<boost::endianness::domain_map<network, X::big_c>::type,
+                             boost::mpl::vector<boost::endianness::big,boost::endianness::big> >::value), 
+            SS, (network,boost::endianness::domain_map<network, X::big_c>::type));
 
-BOOST_MPL_ASSERT_MSG((is_same<endianness::domain_map<network, X::little_c>::type,
+BOOST_MPL_ASSERT_MSG((boost::is_same<endianness::domain_map<network, X::little_c>::type,
                              mpl::vector<endianness::little,endianness::little> >::value), 
             RR, (network,endianness::domain_map<network, X::little_c>::type));
 
 typedef mpl::list<> floats;
 typedef mpl::push_front<floats,int>::type types;
 
-BOOST_MPL_ASSERT(( is_same< mpl::front<types>::type, int > ));
-
+BOOST_MPL_ASSERT(( boost::is_same< boost::mpl::front<types>::type, int > ));
 
 BOOST_MPL_ASSERT_MSG((
-            is_same<
+            boost::is_same<
                 mpl::front<
                     endianness::domain_map<network, X::mixed_c>::type
                 >::type,
@@ -132,7 +131,7 @@ BOOST_MPL_ASSERT_MSG((
 
 
 BOOST_MPL_ASSERT_MSG((
-            is_same<
+            boost::is_same<
                 mpl::front<
                     endianness::domain_map<network, X::big_c>::type
                 >::type,
@@ -152,13 +151,13 @@ typedef mpl::begin<endian_mixed_c>::type begin_endian_mixed_c;
 typedef mpl::deref<begin_endian_mixed_c>::type deref_begin_endian_mixed_c;
 
 BOOST_MPL_ASSERT_MSG((
-            is_same<
+            boost::is_same<
                 deref_begin_endian_mixed_c,
-                endianness::domain_map<network, X::big_c>::type 
+                boost::endianness::domain_map<network, X::big_c>::type 
             >::value), 
             SS, 
             (   deref_begin_endian_mixed_c, 
-                endianness::domain_map<network, X::big_c>::type
+                boost::endianness::domain_map<network, X::big_c>::type
             ));
 
 

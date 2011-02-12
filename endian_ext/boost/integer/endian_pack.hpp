@@ -36,6 +36,7 @@
 
 #include <boost/config.hpp>
 #include <boost/type_traits/is_signed.hpp>
+#include <climits>
 #include <boost/integer_traits.hpp>
 #include <boost/cstdint.hpp>
 #include <boost/static_assert.hpp>
