@@ -44,11 +44,11 @@ namespace {
    T &make();
 }
 
+struct returns_void_t {};
+template <typename T> int operator,(T const &, returns_void_t);
+
 template < typename LHS >
 struct BOOST_JOIN(BOOST_TT_TRAIT_NAME,_returns_void) {
-   struct returns_void_t {
-      template <typename T> friend int operator,(T const &, returns_void_t);
-   };
    static ::boost::type_traits::yes_type returns_void(returns_void_t);
    static ::boost::type_traits::no_type returns_void(int);
    BOOST_STATIC_CONSTANT(bool, value = (sizeof(::boost::type_traits::yes_type)==sizeof(returns_void((make<LHS>() BOOST_TT_TRAIT_OP,returns_void_t())))));
