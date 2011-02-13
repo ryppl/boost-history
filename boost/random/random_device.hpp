@@ -1,6 +1,7 @@
-/* boost nondet_random.hpp header file
+/* boost random/random_device.hpp header file
  *
  * Copyright Jens Maurer 2000
+ * Copyright Steven Watanabe 2010-2011
  * Distributed under the Boost Software License, Version 1.0. (See
  * accompanying file LICENSE_1_0.txt or copy at
  * http://www.boost.org/LICENSE_1_0.txt)
@@ -14,18 +15,16 @@
 //  See http://www.boost.org/libs/random for documentation.
 
 
-#ifndef BOOST_NONDET_RANDOM_HPP
-#define BOOST_NONDET_RANDOM_HPP
+#ifndef BOOST_RANDOM_RANDOM_DEVICE_HPP
+#define BOOST_RANDOM_RANDOM_DEVICE_HPP
 
-#include <string>                       // std::abs
-#include <algorithm>                    // std::min
-#include <boost/config/no_tr1/cmath.hpp>
+#include <string>
 #include <boost/config.hpp>
-#include <boost/utility.hpp>            // noncopyable
-#include <boost/integer_traits.hpp>     // compile-time integral limits
+#include <boost/noncopyable.hpp>
 #include <boost/random/detail/auto_link.hpp>
 
 namespace boost {
+namespace random {
 
 /**
  * Class \random_device models a \nondeterministic_random_number_generator.
@@ -78,7 +77,7 @@ namespace boost {
  *
  * <table cols="2">
  *   <tr><th>class</th><th>time per invocation [usec]</th></tr>
- *   <tr><td> @xmlonly <classname alt="boost::random_device">random_device</classname> @endxmlonly </td><td>92.0</td></tr>
+ *   <tr><td> \random_device </td><td>92.0</td></tr>
  * </table>
  *
  * The measurement error is estimated at +/- 1 usec.
@@ -86,57 +85,55 @@ namespace boost {
 class random_device : private noncopyable
 {
 public:
-  typedef unsigned int result_type;
-  BOOST_STATIC_CONSTANT(bool, has_fixed_range = true);
-  BOOST_STATIC_CONSTANT(result_type, min_value = integer_traits<result_type>::const_min);
-  BOOST_STATIC_CONSTANT(result_type, max_value = integer_traits<result_type>::const_max);
+    typedef unsigned int result_type;
+    BOOST_STATIC_CONSTANT(bool, has_fixed_range = false);
 
-  /**
-   * Returns: The smallest value that the \random_device can produce.
-   */
-  result_type min BOOST_PREVENT_MACRO_SUBSTITUTION () const { return min_value; }
-  /**
-   * Returns: The largest value that the \random_device can produce.
-   */
-  result_type max BOOST_PREVENT_MACRO_SUBSTITUTION () const { return max_value; }
-  /** 
-   * Constructs a @c random_device, optionally using the given token as an
-   * access specification (for example, a URL) to some implementation-defined
-   * service for monitoring a stochastic process. 
-   */
-  BOOST_RANDOM_DECL explicit random_device(const std::string& token = default_token);
-  BOOST_RANDOM_DECL ~random_device();
-  /**
-   * Returns: An entropy estimate for the random numbers returned by
-   * operator(), in the range min() to log2( max()+1). A deterministic
-   * random number generator (e.g. a pseudo-random number engine)
-   * has entropy 0.
-   *
-   * Throws: Nothing.
-   */
-  BOOST_RANDOM_DECL double entropy() const;
-  /**
-   * Returns: A random value in the range [min, max]
-   */
-  BOOST_RANDOM_DECL unsigned int operator()();
+    /** Returns the smallest value that the \random_device can produce. */
+    static result_type min BOOST_PREVENT_MACRO_SUBSTITUTION () { return 0; }
+    /** Returns the largest value that the \random_device can produce. */
+    static result_type max BOOST_PREVENT_MACRO_SUBSTITUTION () { return ~0u; }
+
+    /** Constructs a @c random_device, optionally using the default device. */
+    BOOST_RANDOM_DECL random_device();
+    /** 
+     * Constructs a @c random_device, optionally using the given token as an
+     * access specification (for example, a URL) to some implementation-defined
+     * service for monitoring a stochastic process. 
+     */
+    BOOST_RANDOM_DECL explicit random_device(const std::string& token);
+
+    BOOST_RANDOM_DECL ~random_device();
+
+    /**
+     * Returns: An entropy estimate for the random numbers returned by
+     * operator(), in the range min() to log2( max()+1). A deterministic
+     * random number generator (e.g. a pseudo-random number engine)
+     * has entropy 0.
+     *
+     * Throws: Nothing.
+     */
+    BOOST_RANDOM_DECL double entropy() const;
+    /** Returns a random value in the range [min, max]. */
+    BOOST_RANDOM_DECL unsigned int operator()();
+
+    /** Fills a range with random 32-bit values. */
+    template<class Iter>
+    void generate(Iter begin, Iter end)
+    {
+        for(; begin != end; ++begin) {
+            *begin = (*this)();
+        }
+    }
 
 private:
-  BOOST_RANDOM_DECL static const char * const default_token;
-
-  /*
-   * std:5.3.5/5 [expr.delete]: "If the object being deleted has incomplete
-   * class type at the point of deletion and the complete class has a
-   * non-trivial destructor [...], the behavior is undefined".
-   * This disallows the use of scoped_ptr<> with pimpl-like classes
-   * having a non-trivial destructor.
-   */
-  class impl;
-  impl * pimpl;
+    class impl;
+    impl * pimpl;
 };
 
+} // namespace random
 
-// TODO: put Schneier's Yarrow-160 algorithm here.
+using random::random_device;
 
 } // namespace boost
 
-#endif /* BOOST_NONDET_RANDOM_HPP */
+#endif /* BOOST_RANDOM_RANDOM_DEVICE_HPP */
