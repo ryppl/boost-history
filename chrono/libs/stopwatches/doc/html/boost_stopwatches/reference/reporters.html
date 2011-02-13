@@ -29,6 +29,15 @@
 <div class="toc"><dl>
 <dt><span class="section"><a href="reporters.html#boost_stopwatches.reference.reporters.formatter_req"><code class="computeroutput"><span class="identifier">Formatter</span></code> Requirements</a></span></dt>
 <dt><span class="section"><a href="reporters.html#boost_stopwatches.reference.reporters._formatter__related_traits"><code class="computeroutput"><span class="identifier">Formatter</span></code> related traits</a></span></dt>
+<dt><span class="section"><a href="reporters.html#boost_stopwatches.reference.reporters.reporters_req"><code class="computeroutput"><span class="identifier">Reporter</span></code> Requirements</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="reporters.html#boost_stopwatches.reference.reporters.reporters_req.R">Member
+          Function <code class="computeroutput"><span class="identifier">R</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="reporters.html#boost_stopwatches.reference.reporters.reporters_req.report">Member
+          Function <code class="computeroutput"><span class="identifier">report</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="reporters.html#boost_stopwatches.reference.reporters.reporters_req.reported">Member
+          Function <code class="computeroutput"><span class="identifier">reported</span><span class="special">()</span></code></a></span></dt>
+</dl></dd>
 <dt><span class="section"><a href="reporters.html#boost_stopwatches.reference.reporters.stopwatch_reporter_hpp">Header
         <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">stopwatches</span><span class="special">/</span><span class="identifier">stopwatch_reporter</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
 <dd><dl>
@@ -219,6 +228,502 @@
           the <code class="computeroutput"><span class="identifier">Formatter</span></code> parameter
           is not explicit.
         </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_stopwatches.reference.reporters.reporters_req"></a><a class="link" href="reporters.html#boost_stopwatches.reference.reporters.reporters_req" title="Reporter Requirements"><code class="computeroutput"><span class="identifier">Reporter</span></code> Requirements</a>
+</h4></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="reporters.html#boost_stopwatches.reference.reporters.reporters_req.R">Member
+          Function <code class="computeroutput"><span class="identifier">R</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="reporters.html#boost_stopwatches.reference.reporters.reporters_req.report">Member
+          Function <code class="computeroutput"><span class="identifier">report</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="reporters.html#boost_stopwatches.reference.reporters.reporters_req.reported">Member
+          Function <code class="computeroutput"><span class="identifier">reported</span><span class="special">()</span></code></a></span></dt>
+</dl></div>
+<p>
+          A <code class="computeroutput"><span class="identifier">Reporter</span></code> provides everything
+          a <a class="link" href="stopwatches.html#boost_stopwatches.reference.stopwatches.stopwatch_req" title="Stopwatch Requirements"><code class="computeroutput"><span class="identifier">Stopwatch</span></code></a> provides and adds reporting
+          capabilities. The reporting is controleed by two parameters:
+        </p>
+<p>
+          A <code class="computeroutput"><span class="identifier">Reporter</span></code> must meet the
+          requirements in the following table in addition of the <a class="link" href="stopwatches.html#boost_stopwatches.reference.stopwatches.stopwatch_req" title="Stopwatch Requirements"><code class="computeroutput"><span class="identifier">Stopwatch</span></code></a>. The reporting is controleed
+          by two parameters:
+        </p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+              format : The output format
+            </li>
+<li class="listitem">
+              places(precision): the number of decimal placess used.
+            </li>
+</ul></div>
+<p>
+          And is sent to an output stream.
+        </p>
+<p>
+          In this table <code class="computeroutput"><span class="identifier">R</span></code> denote
+          Reporters types. <code class="computeroutput"><span class="identifier">r</span></code> is an
+          instance of <code class="computeroutput"><span class="identifier">R</span></code>, ec is a
+          system::error_code, os is an std::ostream, f is a std::string, p is an
+          int. From the library perspective a Reporter needs to satisfy the following
+          requirements.
+        </p>
+<div class="table">
+<a name="boost_stopwatches.reference.reporters.reporters_req.reporter_requirements"></a><p class="title"><b>Table&#160;4.&#160;Reporter Requirements</b></p>
+<div class="table-contents"><table class="table" summary="Reporter Requirements">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    expression
+                  </p>
+                </th>
+<th>
+                  <p>
+                    return type
+                  </p>
+                </th>
+<th>
+                  <p>
+                    operational semantics
+                  </p>
+                </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">R</span><span class="special">::</span><span class="identifier">stopwatch</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    A model of <a class="link" href="stopwatches.html#boost_stopwatches.reference.stopwatches.stopwatch_req" title="Stopwatch Requirements"><code class="computeroutput"><span class="identifier">Stopwatch</span></code></a>.
+                  </p>
+                </td>
+<td>
+                  <p>
+                    The Stopwatch associated to this Reporter.
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">r</span><span class="special">.</span><span class="identifier">report</span><span class="special">()</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="keyword">void</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Creates a report.
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">r</span><span class="special">.</span><span class="identifier">report</span><span class="special">(</span><span class="identifier">ec</span><span class="special">)</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="keyword">void</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Creates a report.
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">r</span><span class="special">.</span><span class="identifier">reported</span><span class="special">()</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="keyword">bool</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    The reporting has been done.
+                  </p>
+                </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break"><p>
+          From the user point of view, the reporter provides often construction with
+          any of the parameters controleed the reporting.
+        </p>
+<div class="table">
+<a name="boost_stopwatches.reference.reporters.reporters_req.open_reporter_requirements"></a><p class="title"><b>Table&#160;5.&#160;Open Reporter Requirements</b></p>
+<div class="table-contents"><table class="table" summary="Open Reporter Requirements">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    expression
+                  </p>
+                </th>
+<th>
+                  <p>
+                    return type
+                  </p>
+                </th>
+<th>
+                  <p>
+                    operational semantics
+                  </p>
+                </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">R</span> <span class="identifier">r</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">R</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Creates a Reporter.
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">R</span> <span class="identifier">r</span><span class="special">(</span><span class="identifier">ec</span><span class="special">)</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">R</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Creates a Reporter.
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">R</span> <span class="identifier">r</span><span class="special">(</span><span class="identifier">os</span><span class="special">)</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">R</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Creates a Reporter.
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">R</span> <span class="identifier">r</span><span class="special">(</span><span class="identifier">os</span><span class="special">,</span><span class="identifier">ec</span><span class="special">)</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">R</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Creates a Reporter.
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">R</span> <span class="identifier">r</span><span class="special">(</span><span class="identifier">os</span><span class="special">,</span><span class="identifier">f</span><span class="special">)</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">R</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Creates a Reporter.
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">R</span> <span class="identifier">r</span><span class="special">(</span><span class="identifier">os</span><span class="special">,</span><span class="identifier">f</span><span class="special">,</span><span class="identifier">ec</span><span class="special">)</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">R</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Creates a Reporter.
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">R</span> <span class="identifier">r</span><span class="special">(</span><span class="identifier">os</span><span class="special">,</span><span class="identifier">f</span><span class="special">,</span><span class="identifier">p</span><span class="special">)</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">R</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Creates a Reporter.
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">R</span> <span class="identifier">r</span><span class="special">(</span><span class="identifier">os</span><span class="special">,</span><span class="identifier">f</span><span class="special">,</span><span class="identifier">p</span><span class="special">,</span><span class="identifier">ec</span><span class="special">)</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">R</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Creates a Reporter.
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">R</span> <span class="identifier">r</span><span class="special">(</span><span class="identifier">os</span><span class="special">,</span><span class="identifier">p</span><span class="special">)</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">R</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Creates a Reporter.
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">R</span> <span class="identifier">r</span><span class="special">(</span><span class="identifier">os</span><span class="special">,</span><span class="identifier">p</span><span class="special">,</span><span class="identifier">ec</span><span class="special">)</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">R</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Creates a Reporter.
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">R</span> <span class="identifier">r</span><span class="special">(</span><span class="identifier">f</span><span class="special">)</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">R</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Creates a Reporter.
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">R</span> <span class="identifier">r</span><span class="special">(</span><span class="identifier">f</span><span class="special">,</span><span class="identifier">ec</span><span class="special">)</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">R</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Creates a Reporter.
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">R</span> <span class="identifier">r</span><span class="special">(</span><span class="identifier">f</span><span class="special">,</span><span class="identifier">p</span><span class="special">)</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">R</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Creates a Reporter.
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">R</span> <span class="identifier">r</span><span class="special">(</span><span class="identifier">f</span><span class="special">,</span><span class="identifier">p</span><span class="special">,</span><span class="identifier">ec</span><span class="special">)</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">R</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Creates a Reporter.
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">R</span> <span class="identifier">r</span><span class="special">(</span><span class="identifier">p</span><span class="special">)</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">R</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Creates a Reporter.
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">R</span> <span class="identifier">r</span><span class="special">(</span><span class="identifier">p</span><span class="special">,</span><span class="identifier">ec</span><span class="special">)</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">R</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Creates a Reporter.
+                  </p>
+                </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break"><div class="section">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_stopwatches.reference.reporters.reporters_req.R"></a><a class="link" href="reporters.html#boost_stopwatches.reference.reporters.reporters_req.R" title="Member Function R()">Member
+          Function <code class="computeroutput"><span class="identifier">R</span><span class="special">()</span></code></a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">R</span><span class="special">(</span>
+    <span class="special">[</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">ostream</span> <span class="special">&amp;</span> <span class="identifier">os</span> <span class="special">]</span>
+    <span class="special">[,</span> <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&amp;</span> <span class="identifier">format</span><span class="special">]</span>
+    <span class="special">[,</span> <span class="keyword">int</span> <span class="identifier">places</span><span class="special">]</span>
+    <span class="special">[,</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">=</span> <span class="identifier">throws</span><span class="special">()]</span>
+    <span class="special">);</span>
+</pre>
+<p>
+            <span class="bold"><strong>Effect:</strong></span> Creates a reporter. All the
+            parameters are optional.
+          </p>
+<p>
+            <span class="bold"><strong>Throw:</strong></span> Nothing.
+          </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_stopwatches.reference.reporters.reporters_req.report"></a><a class="link" href="reporters.html#boost_stopwatches.reference.reporters.reporters_req.report" title="Member Function report()">Member
+          Function <code class="computeroutput"><span class="identifier">report</span><span class="special">()</span></code></a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">report</span><span class="special">(</span><span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">=</span> <span class="identifier">throws</span><span class="special">());</span>
+</pre>
+<p>
+            <span class="bold"><strong>Effect:</strong></span> Produce a report taking in account
+            the ostream, format and place.
+          </p>
+<p>
+            <span class="bold"><strong>Throw:</strong></span> Any exception the <code class="computeroutput"><span class="identifier">Formatter</span><span class="special">::</span><span class="identifier">show_time</span><span class="special">(*</span><span class="keyword">this</span><span class="special">,</span><span class="identifier">f</span><span class="special">,</span><span class="identifier">p</span><span class="special">,</span><span class="identifier">os</span><span class="special">,</span><span class="identifier">ec</span><span class="special">)</span></code>
+            function can throw when <code class="computeroutput"><span class="identifier">ec</span></code>
+            is <code class="computeroutput"><span class="identifier">throws</span><span class="special">()</span></code>.
+          </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_stopwatches.reference.reporters.reporters_req.reported"></a><a class="link" href="reporters.html#boost_stopwatches.reference.reporters.reporters_req.reported" title="Member Function reported()">Member
+          Function <code class="computeroutput"><span class="identifier">reported</span><span class="special">()</span></code></a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="keyword">bool</span> <span class="identifier">reported</span><span class="special">();</span>
+</pre>
+<p>
+            <span class="bold"><strong>Returns:</strong></span> True if the reportes has ben
+            reported already.
+          </p>
+<p>
+            <span class="bold"><strong>Throw:</strong></span> Nothing.
+          </p>
+</div>
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h4 class="title">
@@ -1021,7 +1526,7 @@
 <span class="special">}</span>
 </pre>
 <a name="boost_stopwatches.reference.reporters.scoped_stopclock_hpp.scoped_stopclock.synopsis"></a><h6>
-<a name="id3320814"></a>
+<a name="id2999203"></a>
             <a class="link" href="reporters.html#boost_stopwatches.reference.reporters.scoped_stopclock_hpp.scoped_stopclock.synopsis">Synopsis</a>
           </h6>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">Clock</span><span class="special">=</span><span class="identifier">process_cpu_clock</span>

@@ -260,7 +260,7 @@ It is often necessary to report elapsed time on a user display or in a log file.
     using namespace boost::stopwatches;
     int main()
     {
-        stopwatch_reporter<stopwatch<process_cpu_clock> > _;
+        __stopwatch_reporter__<__stopwatch__<process_cpu_clock> > _;
       // ...
     }
 
@@ -1471,8 +1471,8 @@ accuracy of timing information provided the Clock, and this could varies a great
 
     template <class Clock>
     class stopwatch : 
-	private base_from_member<typename Clock::duration>, 
-	public lightweight_stopwatch<Clock>
+        private base_from_member<typename Clock::duration>, 
+        public lightweight_stopwatch<Clock>
     {
     public:
         explicit stopwatch( system::error_code & ec = throws()  );
@@ -1577,10 +1577,10 @@ A `stopwatch_accumulator<>` is a model of a __stopwatch_concept__ that allows to
     template <class Clock, typename Features, typename Weight>
     class stopwatch_accumulator
         : private base_from_member<
-		      typename accumulators::accumulator_set<
-			  typename Clock::duration::rep, Features, Weight
-		      > 
-		  >,
+                      typename accumulators::accumulator_set<
+                          typename Clock::duration::rep, Features, Weight
+                      > 
+                  >,
           public lightweight_stopwatch<Clock,Features,Weight> 
     {
     public:
@@ -1772,6 +1772,90 @@ Models of `Formatter`:
 
 The nested typedef `type` defines the default formatter used by the __stopwatch_reporter__ class when the `Formatter` parameter is not explicit.
 
+[endsect]
+
+[section:reporters_req `Reporter` Requirements]
+
+A `Reporter` provides everything a __Stopwatch__ provides and adds reporting capabilities. The reporting is controleed by two parameters:
+
+A `Reporter` must meet the requirements in the following table in addition of the __Stopwatch__. 
+The reporting is controleed by two parameters:
+
+* format : The output format
+* places(precision): the number of decimal placess used.
+
+And is sent to an output stream.
+
+In this table `R` denote Reporters types. `r` is an instance of `R`, ec is a system::error_code, os is an std::ostream, f is a std::string, p is an int. From the library perspective a Reporter needs to satisfy the following requirements. 
+
+[table Reporter Requirements
+    [[expression]        [return type]  [operational semantics]]
+    [[`R::stopwatch`]        [A model of __Stopwatch__.]  [The Stopwatch associated to this Reporter.]]
+
+    [[`r.report()`]        [`void`]  [Creates a report.]]
+    [[`r.report(ec)`]        [`void`]  [Creates a report.]]
+    [[`r.reported()`]        [`bool`]  [The reporting has been done.]]
+]
+
+From the user point of view, the reporter provides often construction with any of the parameters controleed the reporting.
+
+[table Open Reporter Requirements
+    [[expression]        [return type]  [operational semantics]]
+    [[`R r`]        [`R`]  [Creates a Reporter.]]
+    [[`R r(ec)`]        [`R`]  [Creates a Reporter.]]
+
+    [[`R r(os)`]        [`R`]  [Creates a Reporter.]]
+    [[`R r(os,ec)`]        [`R`]  [Creates a Reporter.]]
+    [[`R r(os,f)`]        [`R`]  [Creates a Reporter.]]
+    [[`R r(os,f,ec)`]        [`R`]  [Creates a Reporter.]]
+    [[`R r(os,f,p)`]        [`R`]  [Creates a Reporter.]]
+    [[`R r(os,f,p,ec)`]        [`R`]  [Creates a Reporter.]]
+    [[`R r(os,p)`]        [`R`]  [Creates a Reporter.]]
+    [[`R r(os,p,ec)`]        [`R`]  [Creates a Reporter.]]
+
+    [[`R r(f)`]        [`R`]  [Creates a Reporter.]]
+    [[`R r(f,ec)`]        [`R`]  [Creates a Reporter.]]
+    [[`R r(f,p)`]        [`R`]  [Creates a Reporter.]]
+    [[`R r(f,p,ec)`]        [`R`]  [Creates a Reporter.]]
+
+    [[`R r(p)`]        [`R`]  [Creates a Reporter.]]
+    [[`R r(p,ec)`]        [`R`]  [Creates a Reporter.]]
+
+]
+
+[section:R Member Function `R()`]
+
+    void R(
+        [ std::ostream & os ]
+        [, const std::string & format]
+        [, int places]
+        [, system::error_code & ec = throws()]
+        );
+
+[*Effect:] Creates a reporter. All the parameters are optional.
+
+[*Throw:] Nothing.
+
+[endsect]
+
+[section:report Member Function `report()`]
+
+    void report(system::error_code & ec = throws());
+
+[*Effect:] Produce a report taking in account the ostream, format and place.
+
+[*Throw:] Any exception the `Formatter::show_time(*this,f,p,os,ec)` function can throw when `ec` is `throws()`.
+
+[endsect]
+[section:reported Member Function `reported()`]
+
+    bool reported();
+
+[*Returns:] True if the reportes has ben reported already.
+
+[*Throw:] Nothing.
+
+[endsect]
 [endsect]
 
 [/==================================================]
