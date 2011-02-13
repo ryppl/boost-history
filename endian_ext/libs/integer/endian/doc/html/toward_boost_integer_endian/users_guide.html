@@ -1,0 +1,1465 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Users'Guide</title>
+<link rel="stylesheet" href="../../../../../doc/src/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="../index.html" title="Toward Boost.Integer.Endian 0.2.0">
+<link rel="up" href="../index.html" title="Toward Boost.Integer.Endian 0.2.0">
+<link rel="prev" href="overview.html" title="Overview">
+<link rel="next" href="reference.html" title="Reference">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="overview.html"><img src="../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="reference.html"><img src="../../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="toward_boost_integer_endian.users_guide"></a><a class="link" href="users_guide.html" title="Users'Guide">Users'Guide</a>
+</h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="users_guide.html#toward_boost_integer_endian.users_guide.getting_started">Getting
+      Started</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="users_guide.html#toward_boost_integer_endian.users_guide.getting_started.install">Installing
+        <span class="bold"><strong>Boost.Integer.Endian.Ext</strong></span></a></span></dt>
+<dt><span class="section"><a href="users_guide.html#toward_boost_integer_endian.users_guide.getting_started.hello_endian_world__">Hello
+        Endian World! </a></span></dt>
+<dt><span class="section"><a href="users_guide.html#toward_boost_integer_endian.users_guide.getting_started.limitations_">Limitations
+        </a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="users_guide.html#toward_boost_integer_endian.users_guide.tutorial">Tutorial</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="users_guide.html#toward_boost_integer_endian.users_guide.tutorial.endian_aware_types">Endian
+        aware types</a></span></dt>
+<dt><span class="section"><a href="users_guide.html#toward_boost_integer_endian.users_guide.tutorial.endian_unaware_types">Endian
+        unaware types</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="users_guide.html#toward_boost_integer_endian.users_guide.examples">Examples</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="users_guide.html#toward_boost_integer_endian.users_guide.examples.aware">Endian
+        Aware</a></span></dt>
+<dt><span class="section"><a href="users_guide.html#toward_boost_integer_endian.users_guide.examples.receiver_makes_right">"receiver
+        makes right"</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="users_guide.html#toward_boost_integer_endian.users_guide.ext_references">References</a></span></dt>
+</dl></div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="toward_boost_integer_endian.users_guide.getting_started"></a><a class="link" href="users_guide.html#toward_boost_integer_endian.users_guide.getting_started" title="Getting Started">Getting
+      Started</a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="users_guide.html#toward_boost_integer_endian.users_guide.getting_started.install">Installing
+        <span class="bold"><strong>Boost.Integer.Endian.Ext</strong></span></a></span></dt>
+<dt><span class="section"><a href="users_guide.html#toward_boost_integer_endian.users_guide.getting_started.hello_endian_world__">Hello
+        Endian World! </a></span></dt>
+<dt><span class="section"><a href="users_guide.html#toward_boost_integer_endian.users_guide.getting_started.limitations_">Limitations
+        </a></span></dt>
+</dl></div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_integer_endian.users_guide.getting_started.install"></a><a class="link" href="users_guide.html#toward_boost_integer_endian.users_guide.getting_started.install" title="Installing Boost.Integer.Endian.Ext">Installing
+        <span class="bold"><strong>Boost.Integer.Endian.Ext</strong></span></a>
+</h4></div></div></div>
+<a name="toward_boost_integer_endian.users_guide.getting_started.install.getting__emphasis_role__bold__boost_integer_endian_ext__emphasis_"></a><h6>
+<a name="id2933658"></a>
+          <a class="link" href="users_guide.html#toward_boost_integer_endian.users_guide.getting_started.install.getting__emphasis_role__bold__boost_integer_endian_ext__emphasis_">Getting
+          <span class="bold"><strong>Boost.Integer.Endian.Ext</strong></span></a>
+        </h6>
+<p>
+          You can get the last stable release of <span class="bold"><strong>Boost.Integer.Endian.Ext</strong></span>
+          by downloading <code class="literal">integer_endian.zip</code> from the <a href="http://www.boost-consulting.com/vault/index.php?directory=Portability%20Programming" target="_top">Boost
+          Vault</a>
+        </p>
+<p>
+          You can also access the latest (unstable?) state from the <a href="https://svn.boost.org/svn/boost/sandbox/endian_ext" target="_top">Boost
+          Sandbox</a>.
+        </p>
+<a name="toward_boost_integer_endian.users_guide.getting_started.install.building__emphasis_role__bold__boost_integer_endian_ext__emphasis_"></a><h6>
+<a name="id2933719"></a>
+          <a class="link" href="users_guide.html#toward_boost_integer_endian.users_guide.getting_started.install.building__emphasis_role__bold__boost_integer_endian_ext__emphasis_">Building
+          <span class="bold"><strong>Boost.Integer.Endian.Ext</strong></span></a>
+        </h6>
+<p>
+          <span class="bold"><strong>Boost.Integer.Endian.Ext</strong></span> is implemented
+          entirely within headers, with no need to link to any Boost object libraries.
+        </p>
+<p>
+          Several macros allow user control over features:
+        </p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+              BOOST_ENDIAN_NO_CTORS causes class endian to have no constructors.
+              The intended use is for compiling user code that must be portable between
+              compilers regardless of C++0x Defaulted Functions support. Use of constructors
+              will always fail,
+            </li>
+<li class="listitem">
+              BOOST_ENDIAN_FORCE_PODNESS causes BOOST_ENDIAN_NO_CTORS to be defined
+              if the compiler does not support C++0x Defaulted Functions. This is
+              ensures that , and so can be used in unions. In C++0x, class endian
+              objects are POD's even though they have constructors.
+            </li>
+</ul></div>
+<a name="toward_boost_integer_endian.users_guide.getting_started.install.requirements"></a><h6>
+<a name="id2933790"></a>
+          <a class="link" href="users_guide.html#toward_boost_integer_endian.users_guide.getting_started.install.requirements">Requirements</a>
+        </h6>
+<p>
+          <span class="bold"><strong>Boost.Integer.Endian.Ext</strong></span> depends on some
+          Boost library. The library has been tested on trunk but an older version
+          should works also.
+        </p>
+<p>
+          In particular, <span class="bold"><strong>Boost.Integer.Endian.Ext</strong></span>
+          depends on:
+        </p>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term"><a href="http://www.boost.org/libs/config" target="_top"><span class="bold"><strong>Boost.Config</strong></span></a></span></dt>
+<dd><p>
+                for configuration purposes, ...
+              </p></dd>
+</dl>
+</div>
+<a name="toward_boost_integer_endian.users_guide.getting_started.install.exceptions_safety"></a><h6>
+<a name="id2933856"></a>
+          <a class="link" href="users_guide.html#toward_boost_integer_endian.users_guide.getting_started.install.exceptions_safety">Exceptions
+          safety</a>
+        </h6>
+<p>
+          All functions in the library are exception-neutral and provide strong guarantee
+          of exception safety as long as the underlying parameters provide it.
+        </p>
+<a name="toward_boost_integer_endian.users_guide.getting_started.install.thread_safety"></a><h6>
+<a name="id2933884"></a>
+          <a class="link" href="users_guide.html#toward_boost_integer_endian.users_guide.getting_started.install.thread_safety">Thread
+          safety</a>
+        </h6>
+<p>
+          All functions in the library are thread-unsafe except when noted explicitly.
+        </p>
+<a name="toward_boost_integer_endian.users_guide.getting_started.install.tested_compilers"></a><h6>
+<a name="id2933910"></a>
+          <a class="link" href="users_guide.html#toward_boost_integer_endian.users_guide.getting_started.install.tested_compilers">Tested
+          compilers</a>
+        </h6>
+<p>
+          The implementation will eventually work with most C++03 conforming compilers.
+          Current version has been tested on:
+        </p>
+<p>
+          Cygwin 1.7 with
+        </p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+              GCC 4.3.4
+            </li></ul></div>
+<p>
+          MinGW with
+        </p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+              GCC 4.4.0
+            </li>
+<li class="listitem">
+              GCC 4.5.0
+            </li>
+<li class="listitem">
+              GCC 4.5.0 -std=c++0x
+            </li>
+</ul></div>
+<p>
+          Ubuntu 10.10
+        </p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+              GCC 4.4.5
+            </li>
+<li class="listitem">
+              GCC 4.4.5 -std=c++0x
+            </li>
+</ul></div>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../../doc/src/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+            Please let us know how this works on other platforms/compilers.
+          </p></td></tr>
+</table></div>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../../doc/src/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+            Please send any questions, comments and bug reports to boost &lt;at&gt;
+            lists &lt;dot&gt; boost &lt;dot&gt; org.
+          </p></td></tr>
+</table></div>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_integer_endian.users_guide.getting_started.hello_endian_world__"></a><a class="link" href="users_guide.html#toward_boost_integer_endian.users_guide.getting_started.hello_endian_world__" title="Hello Endian World!">Hello
+        Endian World! </a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">endian</span><span class="special">/</span><span class="identifier">endian</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">endian</span><span class="special">/</span><span class="identifier">endian_binary_stream</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">binary_stream</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+
+<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">;</span>
+<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">integer</span><span class="special">;</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span>
+<span class="special">{</span>
+  <span class="identifier">int_least32_t</span> <span class="identifier">v</span> <span class="special">=</span> <span class="number">0x31323334L</span><span class="special">;</span>  <span class="comment">// = ASCII { '1', '2', '3', '4' }
+</span>                                  <span class="comment">// value chosen to work on text stream
+</span>  <span class="identifier">big32_t</span>    <span class="identifier">b</span><span class="special">(</span><span class="identifier">v</span><span class="special">);</span>
+  <span class="identifier">little32_t</span> <span class="identifier">l</span><span class="special">(</span><span class="identifier">v</span><span class="special">);</span>
+
+  <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Hello, endian world!\n\n"</span><span class="special">;</span>
+
+  <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">v</span> <span class="special">&lt;&lt;</span> <span class="char">' '</span> <span class="special">&lt;&lt;</span> <span class="identifier">b</span> <span class="special">&lt;&lt;</span> <span class="char">' '</span> <span class="special">&lt;&lt;</span> <span class="identifier">l</span> <span class="special">&lt;&lt;</span> <span class="char">'\n'</span><span class="special">;</span>
+  <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;=</span> <span class="identifier">v</span> <span class="special">&lt;=</span> <span class="char">' '</span> <span class="special">&lt;=</span> <span class="identifier">b</span> <span class="special">&lt;=</span> <span class="char">' '</span> <span class="special">&lt;=</span> <span class="identifier">l</span> <span class="special">&lt;=</span> <span class="char">'\n'</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+          On a little-endian CPU, this program outputs:
+        </p>
+<pre class="programlisting"><span class="identifier">Hello</span><span class="special">,</span> <span class="identifier">endian</span> <span class="identifier">world</span><span class="special">!</span>
+
+<span class="number">825373492</span> <span class="number">825373492</span> <span class="number">825373492</span>
+<span class="number">4321</span> <span class="number">1234</span> <span class="number">4321</span>
+</pre>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_integer_endian.users_guide.getting_started.limitations_"></a><a class="link" href="users_guide.html#toward_boost_integer_endian.users_guide.getting_started.limitations_" title="Limitations">Limitations
+        </a>
+</h4></div></div></div>
+<p>
+          Requires <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">climits</span><span class="special">&gt;</span> <span class="identifier">CHAR_BIT</span>
+          <span class="special">==</span> <span class="number">8</span></code>.
+          If <code class="computeroutput"><span class="identifier">CHAR_BIT</span></code> is some other
+          value, compilation will result in an <code class="computeroutput"><span class="preprocessor">#error</span></code>.
+          This restriction is in place because the design, implementation, testing,
+          and documentation has only considered issues related to 8-bit bytes, and
+          there have been no real-world use cases presented for other sizes.
+        </p>
+<p>
+          In C++03, endian does not meet the requirements for POD types because it
+          has constructors, private data members, and a base class. This means that
+          common use cases are relying on unspecified behavior in that the C++ Standard
+          does not guarantee memory layout for non-POD types. This has not been a
+          problem in practice since all known C++ compilers do layout memory as if
+          endian were a POD type. In C++0x, it will be possible to specify the default
+          constructor as trivial, and private data members and base classes will
+          no longer disqualify a type from being a POD. Thus under C++0x, endian
+          will no longer be relying on unspecified behavior.
+        </p>
+<a name="toward_boost_integer_endian.users_guide.getting_started.limitations_.binary_i_o_warnings_and_cautions"></a><h6>
+<a name="id2934700"></a>
+          <a class="link" href="users_guide.html#toward_boost_integer_endian.users_guide.getting_started.limitations_.binary_i_o_warnings_and_cautions">Binary
+          I/O warnings and cautions</a>
+        </h6>
+<div class="warning"><table border="0" summary="Warning">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Warning]" src="../../../../../doc/src/images/warning.png"></td>
+<th align="left">Warning</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+            Use only on streams opened with filemode <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">ios_base</span><span class="special">::</span><span class="identifier">binary</span></code>.
+            Thus unformatted binary I/O should not be with the standard streams (<code class="computeroutput"><span class="identifier">cout</span></code>, <code class="computeroutput"><span class="identifier">cin</span></code>,
+            etc.) since they are opened in text mode. Use on text streams may produce
+            incorrect results, such as insertion of unwanted characters or premature
+            end-of-file. For example, on Windows <code class="computeroutput"><span class="number">0x0D</span></code>
+            would become <code class="computeroutput"><span class="number">0x0D</span></code>, <code class="computeroutput"><span class="number">0x0A</span></code>.
+          </p></td></tr>
+</table></div>
+<div class="warning"><table border="0" summary="Warning">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Warning]" src="../../../../../doc/src/images/warning.png"></td>
+<th align="left">Warning</th>
+</tr>
+<tr><td align="left" valign="top">
+<p>
+            Caution: When mixing formatted (i.e. operator <code class="computeroutput"><span class="special">&lt;&lt;</span></code>
+            or <code class="computeroutput"><span class="special">&gt;&gt;</span></code>) and unformatted
+            (i.e. operator <code class="computeroutput"><span class="special">&lt;=</span></code> or
+            <code class="computeroutput"><span class="special">&gt;=</span></code>) stream I/O, be aware
+            that <code class="computeroutput"><span class="special">&lt;&lt;</span></code> and <code class="computeroutput"><span class="special">&gt;&gt;</span></code> take precedence over <code class="computeroutput"><span class="special">&lt;=</span></code> and <code class="computeroutput"><span class="special">&gt;=</span></code>.
+            Use parentheses to force correct order of evaluation. For example:
+          </p>
+<p>
+            
+</p>
+<pre class="programlisting"><span class="identifier">my_stream</span> <span class="special">&lt;&lt;</span> <span class="identifier">foo</span> <span class="special">&lt;=</span> <span class="identifier">bar</span><span class="special">;</span>    <span class="comment">// no parentheses needed
+</span><span class="special">(</span><span class="identifier">my_stream</span> <span class="special">&lt;=</span> <span class="identifier">foo</span><span class="special">)</span> <span class="special">&lt;&lt;</span> <span class="identifier">bar</span><span class="special">;</span>  <span class="comment">// parentheses required 
+</span></pre>
+<p>
+            As a practical matter, it may be easier and safer to never mix the character
+            and binary insertion or extraction operators in the same statement.
+          </p>
+</td></tr>
+</table></div>
+</div>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="toward_boost_integer_endian.users_guide.tutorial"></a><a class="link" href="users_guide.html#toward_boost_integer_endian.users_guide.tutorial" title="Tutorial">Tutorial</a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="users_guide.html#toward_boost_integer_endian.users_guide.tutorial.endian_aware_types">Endian
+        aware types</a></span></dt>
+<dd><dl><dt><span class="section"><a href="users_guide.html#toward_boost_integer_endian.users_guide.tutorial.endian_aware_types.endian_aware_integers">Endian
+          aware integers</a></span></dt></dl></dd>
+<dt><span class="section"><a href="users_guide.html#toward_boost_integer_endian.users_guide.tutorial.endian_unaware_types">Endian
+        unaware types</a></span></dt>
+</dl></div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_integer_endian.users_guide.tutorial.endian_aware_types"></a><a class="link" href="users_guide.html#toward_boost_integer_endian.users_guide.tutorial.endian_aware_types" title="Endian aware types">Endian
+        aware types</a>
+</h4></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="users_guide.html#toward_boost_integer_endian.users_guide.tutorial.endian_aware_types.endian_aware_integers">Endian
+          aware integers</a></span></dt></dl></div>
+<a name="toward_boost_integer_endian.users_guide.tutorial.endian_aware_types.basic_endian_holders"></a><h6>
+<a name="id2935008"></a>
+          <a class="link" href="users_guide.html#toward_boost_integer_endian.users_guide.tutorial.endian_aware_types.basic_endian_holders">basic
+          endian holders</a>
+        </h6>
+<p>
+          <span class="bold"><strong>Boost.Integer.Endian.Ext</strong></span> provides an endian
+          aware byte-holder class template:
+        </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="identifier">endianness</span><span class="special">::</span><span class="identifier">enum_t</span> <span class="identifier">E</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">n_bytes</span><span class="special">=</span><span class="number">8</span><span class="special">*</span><span class="keyword">sizeof</span><span class="special">(</span><span class="identifier">T</span><span class="special">),</span>
+  <span class="identifier">alignment</span><span class="special">::</span><span class="identifier">enum_t</span> <span class="identifier">A</span> <span class="special">=</span> <span class="identifier">alignment</span><span class="special">::</span><span class="identifier">aligned</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">endian_pack</span><span class="special">;</span>
+</pre>
+<p>
+          This class provide portable byte-holders for data, independent of particular
+          computer architectures. Use cases almost always involve I/O, either via
+          files or network connections. Although data portability is the primary
+          motivation, these byte-holders may also be used to reduce memory use, file
+          size, or network activity since they provide binary integer sizes not otherwise
+          available.
+        </p>
+<p>
+          Such byte-holder types are traditionally called endian types. See the Wikipedia
+          for a full exploration of endianness, including definitions of big endian
+          and little endian.
+        </p>
+<p>
+          This class doesn't provides arithmetic operators, but of course automatic
+          conversion to and assignment from the underlying integer value type are
+          provided.
+        </p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">endian</span><span class="special">/</span><span class="identifier">endian_pack</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+
+<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">;</span>
+<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">integer</span><span class="special">;</span>
+<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">integer</span><span class="special">::</span><span class="identifier">endianness</span><span class="special">;</span>
+
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span>
+<span class="special">{</span>
+    <span class="identifier">int_least32_t</span> <span class="identifier">v</span> <span class="special">=</span> <span class="number">0x31323334L</span><span class="special">;</span>  <span class="comment">// = ASCII { '1', '2', '3', '4' }
+</span>                                  <span class="comment">// value chosen to work on text stream
+</span>                                  
+    <span class="identifier">endian_pack</span><span class="special">&lt;</span><span class="identifier">big</span><span class="special">,</span> <span class="identifier">int_least32_t</span><span class="special">&gt;</span>    <span class="identifier">b</span><span class="special">(</span><span class="identifier">v</span><span class="special">);</span>
+    <span class="identifier">endian_pack</span><span class="special">&lt;</span><span class="identifier">little</span><span class="special">,</span> <span class="identifier">int_least32_t</span><span class="special">&gt;</span> <span class="identifier">l</span><span class="special">(</span><span class="identifier">v</span><span class="special">);</span>
+
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">v</span> <span class="special">&lt;&lt;</span> <span class="char">' '</span> <span class="special">&lt;&lt;</span> <span class="identifier">b</span> <span class="special">&lt;&lt;</span> <span class="char">' '</span> <span class="special">&lt;&lt;</span> <span class="identifier">l</span> <span class="special">&lt;&lt;</span> <span class="char">'\n'</span><span class="special">;</span>
+    <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+          On a little-endian CPU, this program outputs:
+        </p>
+<pre class="programlisting"><span class="number">825373492</span> <span class="number">825373492</span> <span class="number">825373492</span>
+</pre>
+<a name="toward_boost_integer_endian.users_guide.tutorial.endian_aware_types.binary_streams"></a><h6>
+<a name="id2935648"></a>
+          <a class="link" href="users_guide.html#toward_boost_integer_endian.users_guide.tutorial.endian_aware_types.binary_streams">Binary
+          streams</a>
+        </h6>
+<p>
+          Header &lt;boost/binary_stream.hpp&gt; provides operators <code class="computeroutput"><span class="special">&lt;=</span></code> and <code class="computeroutput"><span class="special">=&gt;</span></code>
+          for unformatted binary (as opposed to formatted character) stream insertion
+          and extraction of built-in and std::string types.
+        </p>
+<p>
+          Header &lt;boost/integer/endian/endian_binary_stream.hpp&gt; provides operators
+          <code class="computeroutput"><span class="special">&lt;=</span></code> and <code class="computeroutput"><span class="special">=&gt;</span></code>
+          for unformatted binary (as opposed to formatted character) stream insertion
+          and extraction of endian types.
+        </p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">endian</span><span class="special">/</span><span class="identifier">endian_pack</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">endian</span><span class="special">/</span><span class="identifier">endian_binary_stream</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">binary_stream</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+
+<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">;</span>
+<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">integer</span><span class="special">;</span>
+<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">integer</span><span class="special">::</span><span class="identifier">endianness</span><span class="special">;</span>
+
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span>
+<span class="special">{</span>
+    <span class="identifier">int_least32_t</span> <span class="identifier">n</span> <span class="special">=</span> <span class="number">0x31323334L</span><span class="special">;</span>  <span class="comment">// = ASCII { '1', '2', '3', '4' }
+</span>                                  <span class="comment">// value chosen to work on text stream
+</span>                                  
+    <span class="identifier">endian_pack</span><span class="special">&lt;</span><span class="identifier">big</span><span class="special">,</span> <span class="identifier">int_least32_t</span><span class="special">&gt;</span>    <span class="identifier">b</span><span class="special">(</span><span class="identifier">n</span><span class="special">);</span>
+    <span class="identifier">endian_pack</span><span class="special">&lt;</span><span class="identifier">little</span><span class="special">,</span> <span class="identifier">int_least32_t</span><span class="special">&gt;</span> <span class="identifier">l</span><span class="special">(</span><span class="identifier">n</span><span class="special">);</span>
+
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">n</span> <span class="special">&lt;&lt;</span> <span class="char">' '</span> <span class="special">&lt;&lt;</span> <span class="identifier">b</span> <span class="special">&lt;&lt;</span> <span class="char">' '</span> <span class="special">&lt;&lt;</span> <span class="identifier">l</span> <span class="special">&lt;&lt;</span> <span class="char">'\n'</span><span class="special">;</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;=</span> <span class="identifier">n</span> <span class="special">&lt;=</span> <span class="char">' '</span> <span class="special">&lt;=</span> <span class="identifier">b</span> <span class="special">&lt;=</span> <span class="char">' '</span> <span class="special">&lt;=</span> <span class="identifier">l</span> <span class="special">&lt;=</span> <span class="char">'\n'</span><span class="special">;</span>
+    <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+          On a little-endian CPU, this program outputs:
+        </p>
+<pre class="programlisting"><span class="identifier">Hello</span><span class="special">,</span> <span class="identifier">endian</span> <span class="identifier">world</span><span class="special">!</span>
+
+<span class="number">825373492</span> <span class="number">825373492</span> <span class="number">825373492</span>
+<span class="number">4321</span> <span class="number">1234</span> <span class="number">4321</span>
+</pre>
+<a name="toward_boost_integer_endian.users_guide.tutorial.endian_aware_types.endian_aware_unaligned_byte_holders"></a><h6>
+<a name="id2936359"></a>
+          <a class="link" href="users_guide.html#toward_boost_integer_endian.users_guide.tutorial.endian_aware_types.endian_aware_unaligned_byte_holders">endian
+          aware unaligned byte holders</a>
+        </h6>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">endian</span><span class="special">/</span><span class="identifier">endian_pack</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+
+<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">;</span>
+<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">integer</span><span class="special">;</span>
+<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">integer</span><span class="special">::</span><span class="identifier">endianness</span><span class="special">;</span>
+
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span>
+<span class="special">{</span>
+    <span class="identifier">int_least32_t</span> <span class="identifier">v</span> <span class="special">=</span> <span class="number">0x313233L</span><span class="special">;</span>  <span class="comment">// = ASCII { '1', '2', '3' }
+</span>                                  <span class="comment">// value chosen to work on text stream
+</span>                                  
+    <span class="identifier">endian_pack</span><span class="special">&lt;</span><span class="identifier">big</span><span class="special">,</span> <span class="identifier">int_least32_t</span><span class="special">,</span> <span class="number">24</span><span class="special">,</span> <span class="identifier">unaligned</span><span class="special">&gt;</span>    <span class="identifier">b</span><span class="special">(</span><span class="identifier">v</span><span class="special">);</span>
+    <span class="identifier">endian_pack</span><span class="special">&lt;</span><span class="identifier">little</span><span class="special">,</span> <span class="identifier">int_least32_t</span><span class="special">,</span> <span class="number">24</span><span class="special">,</span> <span class="identifier">unaligned</span><span class="special">&gt;</span> <span class="identifier">l</span><span class="special">(</span><span class="identifier">v</span><span class="special">);</span>
+
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">v</span> <span class="special">&lt;&lt;</span> <span class="char">' '</span> <span class="special">&lt;&lt;</span> <span class="identifier">b</span> <span class="special">&lt;&lt;</span> <span class="char">' '</span> <span class="special">&lt;&lt;</span> <span class="identifier">l</span> <span class="special">&lt;&lt;</span> <span class="char">'\n'</span><span class="special">;</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;=</span> <span class="identifier">b</span> <span class="special">&lt;=</span> <span class="char">' '</span> <span class="special">&lt;=</span> <span class="identifier">l</span> <span class="special">&lt;=</span> <span class="char">'\n'</span><span class="special">;</span>
+    <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+          On a little-endian CPU, this program outputs:
+        </p>
+<pre class="programlisting"><span class="number">3224115</span> <span class="number">3224115</span> <span class="number">3224115</span>
+<span class="number">123</span> <span class="number">321</span>
+</pre>
+<a name="toward_boost_integer_endian.users_guide.tutorial.endian_aware_types.endian_holders_common_typedefs"></a><h6>
+<a name="id2936918"></a>
+          <a class="link" href="users_guide.html#toward_boost_integer_endian.users_guide.tutorial.endian_aware_types.endian_holders_common_typedefs">endian
+          holders common typedefs</a>
+        </h6>
+<p>
+          Sixty typedefs, such as big32_t, provide convenient naming conventions
+          for common use cases:
+        </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Name
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Endianness
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Sign
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Sizes in bits (n)
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Alignment
+                  </p>
+                </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">big</span></code><span class="bold"><strong>n</strong></span><code class="computeroutput"><span class="identifier">_t</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">big</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    signed
+                  </p>
+                </td>
+<td>
+                  <p>
+                    8,16,24,32,40,48,56,64
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">unaligned</span></code>
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">ubig</span></code><span class="bold"><strong>n</strong></span><code class="computeroutput"><span class="identifier">_t</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">big</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    unsigned
+                  </p>
+                </td>
+<td>
+                  <p>
+                    8,16,24,32,40,48,56,64
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">unaligned</span></code>
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">little</span></code><span class="bold"><strong>n</strong></span><code class="computeroutput"><span class="identifier">_t</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">little</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    signed
+                  </p>
+                </td>
+<td>
+                  <p>
+                    8,16,24,32,40,48,56,64
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">unaligned</span></code>
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">ulittle</span></code><span class="bold"><strong>n</strong></span><code class="computeroutput"><span class="identifier">_t</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">little</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    unsigned
+                  </p>
+                </td>
+<td>
+                  <p>
+                    8,16,24,32,40,48,56,64
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">unaligned</span></code>
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">ulittle</span></code><span class="bold"><strong>n</strong></span><code class="computeroutput"><span class="identifier">_t</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">native</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    signed
+                  </p>
+                </td>
+<td>
+                  <p>
+                    8,16,24,32,40,48,56,64
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">unaligned</span></code>
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">unative</span></code><span class="bold"><strong>n</strong></span><code class="computeroutput"><span class="identifier">_t</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">native</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    unsigned
+                  </p>
+                </td>
+<td>
+                  <p>
+                    16,32,64
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">aligned</span></code>
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">aligned_big</span></code><span class="bold"><strong>n</strong></span><code class="computeroutput"><span class="identifier">_t</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">big</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    signed
+                  </p>
+                </td>
+<td>
+                  <p>
+                    16,32,64
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">aligned</span></code>
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">aligned_ubig</span></code><span class="bold"><strong>n</strong></span><code class="computeroutput"><span class="identifier">_t</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">big</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    unsigned
+                  </p>
+                </td>
+<td>
+                  <p>
+                    16,32,64
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">aligned</span></code>
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">aligned_little</span></code><span class="bold"><strong>n</strong></span><code class="computeroutput"><span class="identifier">_t</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">big</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    signed
+                  </p>
+                </td>
+<td>
+                  <p>
+                    16,32,64
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">aligned</span></code>
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">aligned_ulittle</span></code><span class="bold"><strong>n</strong></span><code class="computeroutput"><span class="identifier">_t</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">big</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    unsigned
+                  </p>
+                </td>
+<td>
+                  <p>
+                    16,32,64
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">aligned</span></code>
+                  </p>
+                </td>
+</tr>
+</tbody>
+</table></div>
+<p>
+          The unaligned types do not cause compilers to insert padding bytes in classes
+          and structs. This is an important characteristic that can be exploited
+          to minimize wasted space in memory, files, and network transmissions.
+        </p>
+<div class="warning"><table border="0" summary="Warning">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Warning]" src="../../../../../doc/src/images/warning.png"></td>
+<th align="left">Warning</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+            Code that uses aligned types is inherently non-portable because alignment
+            requirements vary between hardware architectures and because alignment
+            may be affected by compiler switches or pragmas. Furthermore, aligned
+            types are only available on architectures with 16, 32, and 64-bit integer
+            types.
+          </p></td></tr>
+</table></div>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../../doc/src/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+            One-byte big-endian, little-endian, and native-endian types provide identical
+            functionality. All three names are provided to improve code readability
+            and searchability.
+          </p></td></tr>
+</table></div>
+<p>
+          <span class="bold"><strong>Comment on naming</strong></span>
+        </p>
+<p>
+          When first exposed to endian types, programmers often fit them into a mental
+          model based on the &lt;cstdint&gt; types. Using that model, it is natural
+          to expect a 56-bit big-endian signed integer to be named <code class="computeroutput"><span class="identifier">int_big56_t</span></code>. But these byte-hodlers are
+          not realy integers.
+        </p>
+<p>
+          That seems to lead to formation of a new mental model specific to endian
+          byte-holder types. In that model, the endianness is the key feature, and
+          the integer aspect is downplayed. Once that mental transition is made,
+          a name like <code class="computeroutput"><span class="identifier">big56_t</span></code> is
+          a good reflection of the mental model.
+        </p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">endian</span><span class="special">/</span><span class="identifier">endian_pack</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+
+<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">;</span>
+<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">integer</span><span class="special">;</span>
+
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span>
+<span class="special">{</span>
+    <span class="identifier">int_least32_t</span> <span class="identifier">v</span> <span class="special">=</span> <span class="number">0x31323334L</span><span class="special">;</span>  <span class="comment">// = ASCII { '1', '2', '3', '4' }
+</span>                                  <span class="comment">// value chosen to work on text stream
+</span>    <span class="identifier">big32_t</span>    <span class="identifier">b</span><span class="special">(</span><span class="identifier">v</span><span class="special">);</span>
+    <span class="identifier">little32_t</span> <span class="identifier">l</span><span class="special">(</span><span class="identifier">v</span><span class="special">);</span>
+
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">v</span> <span class="special">&lt;&lt;</span> <span class="char">' '</span> <span class="special">&lt;&lt;</span> <span class="identifier">b</span> <span class="special">&lt;&lt;</span> <span class="char">' '</span> <span class="special">&lt;&lt;</span> <span class="identifier">l</span> <span class="special">&lt;&lt;</span> <span class="char">'\n'</span><span class="special">;</span>
+    <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+          On a little-endian CPU, this program outputs:
+        </p>
+<pre class="programlisting"><span class="number">825373492</span> <span class="number">825373492</span> <span class="number">825373492</span>
+</pre>
+<a name="toward_boost_integer_endian.users_guide.tutorial.endian_aware_types.endian_holders_of_udt"></a><h6>
+<a name="id2938188"></a>
+          <a class="link" href="users_guide.html#toward_boost_integer_endian.users_guide.tutorial.endian_aware_types.endian_holders_of_udt">endian
+          holders of UDT</a>
+        </h6>
+<p>
+          The user can define wrappers to integer types that behave as integers,
+          as it is the case for quantity&lt;&gt; class. This UDT can be packaged
+          on an endian holder to take care of endian issues, as show the following
+          example.
+        </p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">endian</span><span class="special">/</span><span class="identifier">endian_pack</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">endian</span><span class="special">/</span><span class="identifier">endian_binary_stream</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">binary_stream</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">units</span><span class="special">/</span><span class="identifier">io</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">units</span><span class="special">/</span><span class="identifier">quantity</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">units</span><span class="special">/</span><span class="identifier">systems</span><span class="special">/</span><span class="identifier">si</span><span class="special">/</span><span class="identifier">length</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">units</span><span class="special">/</span><span class="identifier">systems</span><span class="special">/</span><span class="identifier">si</span><span class="special">/</span><span class="identifier">plane_angle</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">;</span>
+<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">integer</span><span class="special">;</span>
+<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">integer</span><span class="special">::</span><span class="identifier">endianness</span><span class="special">;</span>
+<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">units</span><span class="special">;</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span>
+<span class="special">{</span>
+    <span class="identifier">quantity</span><span class="special">&lt;</span><span class="identifier">si</span><span class="special">::</span><span class="identifier">length</span><span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">int_least32_t</span><span class="special">&gt;</span> <span class="identifier">q</span> <span class="special">=</span> <span class="number">825373492</span> <span class="special">*</span> <span class="identifier">si</span><span class="special">::</span><span class="identifier">meter</span><span class="special">;</span>
+    <span class="identifier">endian_pack</span><span class="special">&lt;</span><span class="identifier">big</span><span class="special">,</span> <span class="identifier">quantity</span><span class="special">&lt;</span><span class="identifier">si</span><span class="special">::</span><span class="identifier">length</span><span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">int_least32_t</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">b</span><span class="special">;</span>
+    <span class="identifier">endian_pack</span><span class="special">&lt;</span><span class="identifier">little</span><span class="special">,</span> <span class="identifier">quantity</span><span class="special">&lt;</span><span class="identifier">si</span><span class="special">::</span><span class="identifier">length</span><span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">int_least32_t</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">l</span><span class="special">;</span>
+    <span class="identifier">b</span><span class="special">=</span><span class="identifier">q</span><span class="special">;</span>
+    <span class="identifier">l</span><span class="special">=</span><span class="identifier">q</span><span class="special">;</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">q</span> <span class="special">&lt;&lt;</span> <span class="char">' '</span> <span class="special">&lt;&lt;</span> <span class="identifier">b</span> <span class="special">&lt;&lt;</span> <span class="char">' '</span> <span class="special">&lt;&lt;</span> <span class="identifier">l</span> <span class="special">&lt;&lt;</span> <span class="char">'\n'</span><span class="special">;</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;=</span> <span class="identifier">b</span> <span class="special">&lt;=</span> <span class="char">' '</span> <span class="special">&lt;=</span> <span class="identifier">l</span> <span class="special">&lt;=</span> <span class="char">'\n'</span><span class="special">;</span>
+    <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+          On a little-endian CPU, this program outputs:
+        </p>
+<pre class="programlisting"><span class="number">825373492</span> <span class="identifier">m</span> <span class="number">825373492</span> <span class="identifier">m</span> <span class="number">825373492</span> <span class="identifier">m</span>
+<span class="number">1234</span> <span class="number">4321</span>
+</pre>
+<a name="toward_boost_integer_endian.users_guide.tutorial.endian_aware_types.arrays_of_endian_holders"></a><h6>
+<a name="id2939206"></a>
+          <a class="link" href="users_guide.html#toward_boost_integer_endian.users_guide.tutorial.endian_aware_types.arrays_of_endian_holders">Arrays
+          of endian holders</a>
+        </h6>
+<p>
+          Up to now we have see how to work with endian aware byte holders variables.
+          In this section we will see how to work with arrays of endian aware byte
+          holders.
+        </p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">endian</span><span class="special">/</span><span class="identifier">endian_pack</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">endian</span><span class="special">/</span><span class="identifier">endian_binary_stream</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">binary_stream</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+
+<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">;</span>
+<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">integer</span><span class="special">;</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span>
+<span class="special">{</span>
+    <span class="identifier">int_least32_t</span> <span class="identifier">an</span><span class="special">[</span><span class="number">100</span><span class="special">]</span> <span class="special">=</span> <span class="special">{</span> <span class="number">0x31323334L</span> <span class="special">};</span>  <span class="comment">// = ASCII { '1', '2', '3', '4' }
+</span>                                  <span class="comment">// value chosen to work on text stream
+</span>    <span class="identifier">big32_t</span>    <span class="identifier">ab</span><span class="special">[</span><span class="number">100</span><span class="special">];</span>
+    <span class="identifier">little32_t</span> <span class="identifier">al</span><span class="special">[</span><span class="number">100</span><span class="special">];</span>
+    
+    <span class="identifier">for_each</span>
+
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">an</span><span class="special">[</span><span class="number">3</span><span class="special">]</span> <span class="special">&lt;&lt;</span> <span class="char">' '</span> <span class="special">&lt;&lt;</span> <span class="identifier">ab</span><span class="special">[</span><span class="number">3</span><span class="special">]</span> <span class="special">&lt;&lt;</span> <span class="char">' '</span> <span class="special">&lt;&lt;</span> <span class="identifier">al</span><span class="special">[</span><span class="number">3</span><span class="special">]</span> <span class="special">&lt;&lt;</span> <span class="char">'\n'</span><span class="special">;</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;=</span> <span class="identifier">an</span><span class="special">[</span><span class="number">3</span><span class="special">]</span> <span class="special">&lt;=</span> <span class="char">' '</span> <span class="special">&lt;=</span> <span class="identifier">ab</span><span class="special">[</span><span class="number">3</span><span class="special">]</span> <span class="special">&lt;=</span> <span class="char">' '</span> <span class="special">&lt;=</span> <span class="identifier">al</span><span class="special">[</span><span class="number">3</span><span class="special">]</span> <span class="special">&lt;=</span> <span class="char">'\n'</span><span class="special">;</span>
+    <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<a name="toward_boost_integer_endian.users_guide.tutorial.endian_aware_types.structures_of_endian_holders"></a><h6>
+<a name="id2939824"></a>
+          <a class="link" href="users_guide.html#toward_boost_integer_endian.users_guide.tutorial.endian_aware_types.structures_of_endian_holders">Structures
+          of endian holders</a>
+        </h6>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">UdpHeader</span> <span class="special">{</span>
+    <span class="identifier">ubig16_pt</span> <span class="identifier">source_port</span><span class="special">;</span>
+    <span class="identifier">ubig16_pt</span> <span class="identifier">destination_port</span><span class="special">;</span>
+    <span class="identifier">ubig16_pt</span> <span class="identifier">length</span><span class="special">;</span>
+    <span class="identifier">ubig16_pt</span> <span class="identifier">checksum</span><span class="special">;</span>
+<span class="special">};</span> <span class="comment">// UdpHeader
+</span>
+<span class="identifier">UdpHeader</span> <span class="identifier">header</span><span class="special">;</span>
+<span class="identifier">header</span><span class="special">.</span><span class="identifier">source_port</span> <span class="special">=</span> <span class="number">1111</span><span class="special">;</span>
+<span class="identifier">header</span><span class="special">.</span><span class="identifier">destination_port</span> <span class="special">=</span> <span class="number">1234</span><span class="special">;</span>
+<span class="identifier">header</span><span class="special">.</span><span class="identifier">length</span> <span class="special">=</span> <span class="identifier">get_length</span><span class="special">(</span><span class="identifier">p</span><span class="special">);</span>
+<span class="identifier">header</span><span class="special">.</span><span class="identifier">checksum</span> <span class="special">=</span> <span class="identifier">checksum_of</span><span class="special">(</span><span class="identifier">p</span><span class="special">);</span>
+</pre>
+<div class="section">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_integer_endian.users_guide.tutorial.endian_aware_types.endian_aware_integers"></a><a class="link" href="users_guide.html#toward_boost_integer_endian.users_guide.tutorial.endian_aware_types.endian_aware_integers" title="Endian aware integers">Endian
+          aware integers</a>
+</h5></div></div></div>
+<p>
+            Boost endian integers are based on the byte_holder endian_pack class
+            template and provide in addition the same full set of C++ assignment,
+            arithmetic, and relational operators as C++ standard integral types,
+            with the standard semantics.
+          </p>
+<p>
+            One class template is provided:
+          </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">E</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">n_bytes</span><span class="special">=</span><span class="number">8</span><span class="special">*</span><span class="keyword">sizeof</span><span class="special">(</span><span class="identifier">T</span><span class="special">),</span>
+  <span class="identifier">alignment</span><span class="special">::</span><span class="identifier">enum_t</span> <span class="identifier">A</span> <span class="special">=</span> <span class="identifier">alignment</span><span class="special">::</span><span class="identifier">aligned</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">endian</span><span class="special">;</span>
+</pre>
+<p>
+            Unary arithmetic operators are <code class="computeroutput"><span class="special">+</span></code>,
+            <code class="computeroutput"><span class="special">-</span></code>, <code class="computeroutput"><span class="special">~</span></code>,
+            <code class="computeroutput"><span class="special">!</span></code>, prefix and postfix <code class="computeroutput"><span class="special">--</span></code> and <code class="computeroutput"><span class="special">++</span></code>.
+            Binary arithmetic operators are <code class="computeroutput"><span class="special">+</span></code>,
+            <code class="computeroutput"><span class="special">+=</span></code>, <code class="computeroutput"><span class="special">-</span></code>,
+            <code class="computeroutput"><span class="special">-=</span></code>, <code class="computeroutput"><span class="special">*</span></code>,
+            <code class="computeroutput"><span class="special">*=</span></code>, <code class="computeroutput"><span class="special">/</span></code>,
+            <code class="computeroutput"><span class="special">/=</span></code>, <code class="computeroutput"><span class="special">%</span></code>,
+            <code class="computeroutput"><span class="special">%=</span></code>, <code class="computeroutput"><span class="special">&amp;</span></code>,
+            <code class="computeroutput"><span class="special">&amp;=</span></code>, <code class="computeroutput"><span class="special">|</span></code>,
+            <code class="computeroutput"><span class="special">|=</span></code>, <code class="computeroutput"><span class="special">^</span></code>,
+            <code class="computeroutput"><span class="special">^=</span></code>, <code class="computeroutput"><span class="special">&lt;&lt;</span></code>,
+            <code class="computeroutput"><span class="special">&lt;&lt;=</span></code>, <code class="computeroutput"><span class="special">&gt;&gt;</span></code>, <code class="computeroutput"><span class="special">&gt;&gt;=</span></code>.
+            Binary relational operators are <code class="computeroutput"><span class="special">==</span></code>,
+            <code class="computeroutput"><span class="special">!=</span></code>, <code class="computeroutput"><span class="special">&lt;</span></code>,
+            <code class="computeroutput"><span class="special">&lt;=</span></code>, <code class="computeroutput"><span class="special">&gt;</span></code>,
+            <code class="computeroutput"><span class="special">&gt;=</span></code>.
+          </p>
+<p>
+            Automatic conversion is provided to the underlying integer value type.
+          </p>
+<a name="toward_boost_integer_endian.users_guide.tutorial.endian_aware_types.endian_aware_integers.typedefs"></a><h6>
+<a name="id2940554"></a>
+            <a class="link" href="users_guide.html#toward_boost_integer_endian.users_guide.tutorial.endian_aware_types.endian_aware_integers.typedefs">Typedefs</a>
+          </h6>
+<p>
+            Sixty typedefs, such as big32_t, provide convenient naming conventions
+            for common use cases:
+          </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                    <p>
+                      Name
+                    </p>
+                  </th>
+<th>
+                    <p>
+                      Endianness
+                    </p>
+                  </th>
+<th>
+                    <p>
+                      Sign
+                    </p>
+                  </th>
+<th>
+                    <p>
+                      Sizes in bits (n)
+                    </p>
+                  </th>
+<th>
+                    <p>
+                      Alignment
+                    </p>
+                  </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">int_big</span></code><span class="bold"><strong>n</strong></span><code class="computeroutput"><span class="identifier">_t</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">big</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      signed
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      8,16,24,32,40,48,56,64
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">unaligned</span></code>
+                    </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">uint_big</span></code><span class="bold"><strong>n</strong></span><code class="computeroutput"><span class="identifier">_t</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">big</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      unsigned
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      8,16,24,32,40,48,56,64
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">unaligned</span></code>
+                    </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">int_little</span></code><span class="bold"><strong>n</strong></span><code class="computeroutput"><span class="identifier">_t</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">little</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      signed
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      8,16,24,32,40,48,56,64
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">unaligned</span></code>
+                    </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">uint_little</span></code><span class="bold"><strong>n</strong></span><code class="computeroutput"><span class="identifier">_t</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">little</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      unsigned
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      8,16,24,32,40,48,56,64
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">unaligned</span></code>
+                    </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">uint_little</span></code><span class="bold"><strong>n</strong></span><code class="computeroutput"><span class="identifier">_t</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">native</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      signed
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      8,16,24,32,40,48,56,64
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">unaligned</span></code>
+                    </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">uint_native</span></code><span class="bold"><strong>n</strong></span><code class="computeroutput"><span class="identifier">_t</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">native</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      unsigned
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      16,32,64
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">aligned</span></code>
+                    </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">aligned_int_big</span></code><span class="bold"><strong>n</strong></span><code class="computeroutput"><span class="identifier">_t</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">big</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      signed
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      16,32,64
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">aligned</span></code>
+                    </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">aligned_uint_big</span></code><span class="bold"><strong>n</strong></span><code class="computeroutput"><span class="identifier">_t</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">big</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      unsigned
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      16,32,64
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">aligned</span></code>
+                    </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">aligned_int_little</span></code><span class="bold"><strong>n</strong></span><code class="computeroutput"><span class="identifier">_t</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">little</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      signed
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      16,32,64
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">aligned</span></code>
+                    </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">aligned_uint_little</span></code><span class="bold"><strong>n</strong></span><code class="computeroutput"><span class="identifier">_t</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">little</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      unsigned
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      16,32,64
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">aligned</span></code>
+                    </p>
+                  </td>
+</tr>
+</tbody>
+</table></div>
+<a name="toward_boost_integer_endian.users_guide.tutorial.endian_aware_types.endian_aware_integers.comment_on_naming"></a><h6>
+<a name="id2941400"></a>
+            <a class="link" href="users_guide.html#toward_boost_integer_endian.users_guide.tutorial.endian_aware_types.endian_aware_integers.comment_on_naming">Comment
+            on naming</a>
+          </h6>
+<p>
+            When first exposed to endian types, programmers often fit them into a
+            mental model based on the &lt;cstdint&gt; types. Using that model, it
+            is natural to expect a 56-bit big-endian signed integer to be named
+            <code class="computeroutput"><span class="identifier">int_big56_t</span></code>.
+          </p>
+<p>
+            As experience using these types grows, the realization creeps in that
+            they are lousy arithmetic integers - they are really byte holders that
+            for convenience support arithmetic operations - and that for use in internal
+            interfaces or anything more than trivial arithmetic computations it is
+            far better to convert values of these endian types to traditional integer
+            types.
+          </p>
+</div>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_integer_endian.users_guide.tutorial.endian_unaware_types"></a><a class="link" href="users_guide.html#toward_boost_integer_endian.users_guide.tutorial.endian_unaware_types" title="Endian unaware types">Endian
+        unaware types</a>
+</h4></div></div></div>
+<a name="toward_boost_integer_endian.users_guide.tutorial.endian_unaware_types.working_with_third_party_structures"></a><h6>
+<a name="id2941477"></a>
+          <a class="link" href="users_guide.html#toward_boost_integer_endian.users_guide.tutorial.endian_unaware_types.working_with_third_party_structures">Working
+          with third party structures</a>
+        </h6>
+<a name="toward_boost_integer_endian.users_guide.tutorial.endian_unaware_types.domain_map"></a><h6>
+<a name="id2941500"></a>
+          <a class="link" href="users_guide.html#toward_boost_integer_endian.users_guide.tutorial.endian_unaware_types.domain_map">Domain
+          map</a>
+        </h6>
+<a name="toward_boost_integer_endian.users_guide.tutorial.endian_unaware_types.in_place_conversions"></a><h6>
+<a name="id2941522"></a>
+          <a class="link" href="users_guide.html#toward_boost_integer_endian.users_guide.tutorial.endian_unaware_types.in_place_conversions">In-place
+          conversions</a>
+        </h6>
+</div>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="toward_boost_integer_endian.users_guide.examples"></a><a class="link" href="users_guide.html#toward_boost_integer_endian.users_guide.examples" title="Examples">Examples</a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="users_guide.html#toward_boost_integer_endian.users_guide.examples.aware">Endian
+        Aware</a></span></dt>
+<dt><span class="section"><a href="users_guide.html#toward_boost_integer_endian.users_guide.examples.receiver_makes_right">"receiver
+        makes right"</a></span></dt>
+</dl></div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_integer_endian.users_guide.examples.aware"></a><a class="link" href="users_guide.html#toward_boost_integer_endian.users_guide.examples.aware" title="Endian Aware">Endian
+        Aware</a>
+</h4></div></div></div>
+<p>
+          The endian_example.cpp program writes a binary file containing four byte
+          big-endian and little-endian integers.
+        </p>
+<p>
+          This is an extract from a very widely used GIS file format. I have no idea
+          why a designer would mix big and little endians in the same file - but
+          this is a real-world format and users wishing to write low level code manipulating
+          these files have to deal with the mixed endianness.
+        </p>
+<p>
+          Low-level I/O such as POSIX read/write or &lt;cstdio&gt; fread/fwrite is
+          sometimes used for binary file operations when ultimate efficiency is important.
+          Such I/O is often performed in some C++ wrapper class, but to drive home
+          the point that endian integers are often used in fairly low-level code
+          that does bulk I/O operations, &lt;cstdio&gt; fopen/fwrite is used for
+          I/O in this example.
+        </p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">cassert</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">cstdio</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">endian</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">integer</span><span class="special">;</span>
+
+<span class="keyword">namespace</span> 
+<span class="special">{</span>
+
+  <span class="keyword">struct</span> <span class="identifier">header</span>
+  <span class="special">{</span>
+    <span class="identifier">big32_t</span>     <span class="identifier">file_code</span><span class="special">;</span>
+    <span class="identifier">big32_t</span>     <span class="identifier">file_length</span><span class="special">;</span>
+    <span class="identifier">little32_t</span>  <span class="identifier">version</span><span class="special">;</span>
+    <span class="identifier">little32_t</span>  <span class="identifier">shape_type</span><span class="special">;</span>
+  <span class="special">};</span>
+
+  <span class="keyword">const</span> <span class="keyword">char</span> <span class="special">*</span> <span class="identifier">filename</span> <span class="special">=</span> <span class="string">"test.dat"</span><span class="special">;</span>
+<span class="special">}</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span>
+<span class="special">{</span>
+  <span class="identifier">assert</span><span class="special">(</span> <span class="keyword">sizeof</span><span class="special">(</span> <span class="identifier">header</span> <span class="special">)</span> <span class="special">==</span> <span class="number">16</span> <span class="special">);</span>  <span class="comment">// requirement for interoperability
+</span>
+  <span class="identifier">header</span> <span class="identifier">h</span><span class="special">;</span>
+
+  <span class="identifier">h</span><span class="special">.</span><span class="identifier">file_code</span>   <span class="special">=</span> <span class="number">0x04030201</span><span class="special">;</span>
+  <span class="identifier">h</span><span class="special">.</span><span class="identifier">file_length</span> <span class="special">=</span> <span class="keyword">sizeof</span><span class="special">(</span> <span class="identifier">header</span> <span class="special">);</span>
+  <span class="identifier">h</span><span class="special">.</span><span class="identifier">version</span>     <span class="special">=</span> <span class="special">-</span><span class="number">1</span><span class="special">;</span>
+  <span class="identifier">h</span><span class="special">.</span><span class="identifier">shape_type</span>  <span class="special">=</span> <span class="number">0x04030201</span><span class="special">;</span>
+
+  <span class="identifier">std</span><span class="special">::</span><span class="identifier">FILE</span> <span class="special">*</span> <span class="identifier">fi</span><span class="special">;</span>
+
+  <span class="keyword">if</span> <span class="special">(</span> <span class="special">!(</span><span class="identifier">fi</span> <span class="special">=</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">fopen</span><span class="special">(</span> <span class="identifier">filename</span><span class="special">,</span> <span class="string">"wb"</span> <span class="special">))</span> <span class="special">)</span>  <span class="comment">// MUST BE BINARY
+</span>  <span class="special">{</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"could not open "</span> <span class="special">&lt;&lt;</span> <span class="identifier">filename</span> <span class="special">&lt;&lt;</span> <span class="char">'\n'</span><span class="special">;</span>
+    <span class="keyword">return</span> <span class="number">1</span><span class="special">;</span>
+  <span class="special">}</span>
+
+  <span class="keyword">if</span> <span class="special">(</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">fwrite</span><span class="special">(</span> <span class="special">&amp;</span><span class="identifier">h</span><span class="special">,</span> <span class="keyword">sizeof</span><span class="special">(</span> <span class="identifier">header</span> <span class="special">),</span> <span class="number">1</span><span class="special">,</span> <span class="identifier">fi</span> <span class="special">)</span> <span class="special">!=</span> <span class="number">1</span> <span class="special">)</span> 
+  <span class="special">{</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"write failure for "</span> <span class="special">&lt;&lt;</span> <span class="identifier">filename</span> <span class="special">&lt;&lt;</span> <span class="char">'\n'</span><span class="special">;</span>
+    <span class="keyword">return</span> <span class="number">1</span><span class="special">;</span>
+  <span class="special">}</span>
+
+  <span class="identifier">std</span><span class="special">::</span><span class="identifier">fclose</span><span class="special">(</span> <span class="identifier">fi</span> <span class="special">);</span>
+
+  <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"created file "</span> <span class="special">&lt;&lt;</span> <span class="identifier">filename</span> <span class="special">&lt;&lt;</span> <span class="char">'\n'</span><span class="special">;</span>
+  <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+          After compiling and executing endian_example.cpp, a hex dump of test.dat
+          shows:
+        </p>
+<pre class="programlisting"><span class="number">0403</span> <span class="number">0201</span> <span class="number">0000</span> <span class="number">0010</span> <span class="identifier">ffff</span> <span class="identifier">ffff</span> <span class="number">0102</span> <span class="number">0304</span>
+</pre>
+</div>
+<div class="section"><div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_integer_endian.users_guide.examples.receiver_makes_right"></a><a class="link" href="users_guide.html#toward_boost_integer_endian.users_guide.examples.receiver_makes_right" title='"receiver makes right"'>"receiver
+        makes right"</a>
+</h4></div></div></div></div>
+</div>
+<div class="section"><div class="titlepage"><div><div><h3 class="title">
+<a name="toward_boost_integer_endian.users_guide.ext_references"></a><a class="link" href="users_guide.html#toward_boost_integer_endian.users_guide.ext_references" title="References">References</a>
+</h3></div></div></div></div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2006 -2009 Beman Dawes<br>Copyright &#169; 2010 Vicente J. Botet Escriba<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="overview.html"><img src="../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="reference.html"><img src="../../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>
