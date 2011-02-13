@@ -1,20 +1,25 @@
 [section:vmd_history History]
 
-Version 1.3
+[heading Version 1.3]
 
-# Moved version information and history into the documentation.
-# Updated readme.txt explanation for running executing jamfiles outside of a Boost implelmentation.
+* Moved version information and history into the documentation.
+* Separate files for build.txt in the doc sub-directory and readme.txt in the top-level directory.
+* Breaking changes
+  * The name of the main header file is shortened to 'vmd.hpp'.
+  * The library follows the Boost conventions.
+    * Changed the filenames to lower case and underscores.
+    * The macros now start with BOOST\_VMD\_ rather than just VMD\_ as previously.
 
-Version 1.2
+[heading Version 1.2]
 
-# Added a readme.txt file.
-# Updated all jamfiles so that the library may be tested and docs generated from its own local directory.
+* Added a readme.txt file.
+* Updated all jamfiles so that the library may be tested and docs generated from its own local directory.
 
-Version 1.1
+[heading Version 1.1]
 
-# Added better documentation for using variadic data with Boost PP and VMD.
+* Added better documentation for using variadic data with Boost PP and VMD.
 
-Version 1.0
+[heading Version 1.0]
 
 Initial version of the libary.
 
