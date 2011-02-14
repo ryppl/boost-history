@@ -5,5 +5,5 @@
 # (see accompanying file LICENSE_1_0.txt or a copy at
 # http://www.boost.org/LICENSE_1_0.txt).
 
-exe factorial_nomacros : factorial_nomacros.06.cpp ;
+exe factorial_nomacros : factorial_nomacros.07.cpp ;
 
