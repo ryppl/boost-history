@@ -21,23 +21,27 @@
 #include <boost/preprocessor/seq/elem.hpp>
 #include <boost/preprocessor/tuple/eat.hpp>
 #include <boost/preprocessor/cat.hpp>
+#include <boost/preprocessor/facilities/expand.hpp>
 
 // Private API.
 
-#define BOOST_LOCAL_AUX_PP_SIGN_PARSE_PARAMS_SEQ_VALIDATE_DEFAULTS_UNBIND_( \
+#define BOOST_LOCAL_AUX_PP_SIGN_PARSE_PARAMS_SEQ_VALIDATE_DEFAULTS_IS_UNBIND_( \
         elem) \
-    BOOST_PP_NOT(BOOST_PP_BITOR( \
-          BOOST_DETAIL_PP_KEYWORD_IS_DEFAULT_FRONT(elem) \
-        , BOOST_PP_BITOR( \
-            BOOST_LOCAL_AUX_PP_KEYWORD_IS_CONST_BIND_FRONT(elem) \
-            , BOOST_LOCAL_AUX_PP_KEYWORD_IS_BIND_FRONT(elem) \
-        ) \
-    ))
+    /* PP_OR/PP_BITOR (instead of IIF) don't expand on MSVC */ \
+    BOOST_PP_IIF(BOOST_DETAIL_PP_KEYWORD_IS_DEFAULT_FRONT(elem), \
+        0 \
+    , BOOST_PP_IIF(BOOST_LOCAL_AUX_PP_KEYWORD_IS_CONST_BIND_FRONT(elem), \
+        0 \
+    , BOOST_PP_IIF(BOOST_LOCAL_AUX_PP_KEYWORD_IS_BIND_FRONT(elem), \
+        0 \
+    , \
+        1 \
+    )))
 
 #define BOOST_LOCAL_AUX_PP_SIGN_PARSE_PARAMS_SEQ_VALIDATE_DEFAULTS_PREV_( \
         params_seq, index, error) \
     BOOST_PP_IIF( \
-        BOOST_LOCAL_AUX_PP_SIGN_PARSE_PARAMS_SEQ_VALIDATE_DEFAULTS_UNBIND_(\
+        BOOST_LOCAL_AUX_PP_SIGN_PARSE_PARAMS_SEQ_VALIDATE_DEFAULTS_IS_UNBIND_( \
                 BOOST_PP_SEQ_ELEM(BOOST_PP_DEC(index), params_seq)), \
         error /* no err, fwd existing one if any */ \
     , \

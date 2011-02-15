@@ -11,6 +11,7 @@
 #include <boost/preprocessor/logical/not.hpp>
 #include <boost/preprocessor/comparison/greater.hpp>
 #include <boost/preprocessor/control/iif.hpp>
+#include <boost/preprocessor/control/if.hpp>
 
 // Private API.
 
@@ -26,7 +27,7 @@
     BOOST_PP_NOT(BOOST_PP_IS_UNARY(__VA_ARGS__))
 
 #define BOOST_LOCAL_AUX_PP_IS_VA_(...) \
-    BOOST_PP_IIF(BOOST_PP_GREATER( \
+    BOOST_PP_IF(BOOST_PP_GREATER( /* IIF does not expand on MSVC */ \
             BOOST_LOCAL_AUX_PP_VA_SIZE_(__VA_ARGS__), 1), \
         1 BOOST_LOCAL_AUX_PP_VA_EAT_ \
     , \
