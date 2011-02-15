@@ -2,7 +2,7 @@
 #ifndef BOOST_LOCAL_AUX_PP_SIGN_PARAMS_BIND_HPP_
 #define BOOST_LOCAL_AUX_PP_SIGN_PARAMS_BIND_HPP_
 
-#include "../parsed_/params/index.hpp"
+#include "parsed_params_/index.hpp"
 #include <boost/preprocessor/tuple/elem.hpp>
 
 #define BOOST_LOCAL_AUX_PP_SIGN_PARAMS_BIND(params) \

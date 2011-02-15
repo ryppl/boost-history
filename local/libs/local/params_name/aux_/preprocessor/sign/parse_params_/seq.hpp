@@ -4,9 +4,9 @@
 
 #include "seq_validate.hpp"
 #include "seq_valid.hpp"
-#include "../../parsed_/params/nil.hpp"
-#include "../../parsed_/params/set_error.hpp"
-#include "../../parsed_/params/validate.hpp"
+#include "../parsed_params_/nil.hpp"
+#include "../parsed_params_/set_error.hpp"
+#include "../parsed_params_/validate.hpp"
 #include <boost/preprocessor/control/iif.hpp>
 #include <boost/preprocessor/facilities/is_empty.hpp>
 

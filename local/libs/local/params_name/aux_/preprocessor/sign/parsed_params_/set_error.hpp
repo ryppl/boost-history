@@ -2,9 +2,9 @@
 #ifndef BOOST_LOCAL_AUX_PP_SIGN_PARSED_PARAMS_SET_ERROR_HPP_
 #define BOOST_LOCAL_AUX_PP_SIGN_PARSED_PARAMS_SET_ERROR_HPP_
 
-#include "../../params/unbind.hpp"
-#include "../../params/bind.hpp"
-#include "../../params/const_bind.hpp"
+#include "../params_unbind.hpp"
+#include "../params_bind.hpp"
+#include "../params_const_bind.hpp"
 
 // error: `EMPTY` if no error, `ERROR_message_text EMPTY` if error.
 #define BOOST_LOCAL_AUX_PP_SIGN_PARSED_PARAMS_SET_ERROR(params, error) \

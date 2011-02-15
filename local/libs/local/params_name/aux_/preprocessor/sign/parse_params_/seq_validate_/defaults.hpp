@@ -2,8 +2,8 @@
 #ifndef BOOST_LOCAL_AUX_PP_PARSE_PARAMS_SEQ_VALIDATE_DEFAULTS_HPP_
 #define BOOST_LOCAL_AUX_PP_PARSE_PARAMS_SEQ_VALIDATE_DEFAULTS_HPP_
 
-#include "../../../../keyword/const_bind.hpp"
-#include "../../../../keyword/bind.hpp"
+#include "../../../keyword/const_bind.hpp"
+#include "../../../keyword/bind.hpp"
 #include <boost/detail/preprocessor/keyword/default.hpp>
 #include <boost/preprocessor/tuple/elem.hpp>
 #include <boost/preprocessor/control/while.hpp>

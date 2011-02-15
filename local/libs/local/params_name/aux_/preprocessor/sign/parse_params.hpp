@@ -2,9 +2,9 @@
 #ifndef BOOST_LOCAL_AUX_PP_SIGN_PARSE_PARAMS_HPP_
 #define BOOST_LOCAL_AUX_PP_SIGN_PARSE_PARAMS_HPP_
 
-#include "params_/is_void.hpp"
-#include "params_/seq.hpp"
-#include "../parsed_/params/nil.hpp"
+#include "parse_params_/is_void.hpp"
+#include "parse_params_/seq.hpp"
+#include "parsed_params_/nil.hpp"
 #include <boost/preprocessor/control/iif.hpp>
 
 // Private API.

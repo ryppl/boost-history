@@ -2,9 +2,9 @@
 #ifndef BOOST_LOCAL_AUX_PP_SIGN_PARSED_APPEND_UNBIND_HPP_
 #define BOOST_LOCAL_AUX_PP_SIGN_PARSED_APPEND_UNBIND_HPP_
 
-#include "../../params/unbind.hpp"
-#include "../../params/bind.hpp"
-#include "../../params/const_bind.hpp"
+#include "../params_unbind.hpp"
+#include "../params_bind.hpp"
+#include "../params_const_bind.hpp"
 #include <boost/preprocessor/facilities/empty.hpp>
 
 // unbind_classified_type_and_name: [auto | register] type name

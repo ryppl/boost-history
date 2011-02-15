@@ -2,9 +2,9 @@
 #ifndef BOOST_LOCAL_AUX_PP_SIGN_PARSED_PARAMS_APPEND_CONST_BIND_HPP_
 #define BOOST_LOCAL_AUX_PP_SIGN_PARSED_PARAMS_APPEND_CONST_BIND_HPP_
 
-#include "../../params/unbind.hpp"
-#include "../../params/bind.hpp"
-#include "../../params/const_bind.hpp"
+#include "../params_unbind.hpp"
+#include "../params_bind.hpp"
+#include "../params_const_bind.hpp"
 
 // const_bind_qualified_name: [&] name (with name != `this`)
 #define BOOST_LOCAL_AUX_PP_SIGN_PARSED_PARAMS_APPEND_CONST_BIND( \

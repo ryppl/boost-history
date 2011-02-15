@@ -3,9 +3,9 @@
 #ifndef BOOST_LOCAL_AUX_PP_SIGN_PARSED_PARAMS_INC_CONST_BIND_THIS_COUNT_HPP_
 #define BOOST_LOCAL_AUX_PP_SIGN_PARSED_PARAMS_INC_CONST_BIND_THIS_COUNT_HPP_
 
-#include "../../params/unbind.hpp"
-#include "../../params/bind.hpp"
-#include "../../params/const_bind.hpp"
+#include "../params_unbind.hpp"
+#include "../params_bind.hpp"
+#include "../params_const_bind.hpp"
 #include <boost/preprocessor/arithmetic/inc.hpp>
 
 #define BOOST_LOCAL_AUX_PP_SIGN_PARSED_PARAMS_INC_CONST_BIND_THIS_COUNT( \
