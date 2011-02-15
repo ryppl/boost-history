@@ -21,15 +21,16 @@
         BOOST_LOCAL_AUX_PP_SIGN_PARSED_PARAMS_SET_ERROR \
     , \
         params BOOST_PP_TUPLE_EAT(2) \
-    )(params, ERROR_object_this_cannot_be_bound_multiple_times)
+    )(params, /* trailing `EMPTY` because error might not be present */ \
+            ERROR_object_this_cannot_be_bound_multiple_times BOOST_PP_EMPTY)
 
 // Public API.
 
 #define BOOST_LOCAL_AUX_PP_SIGN_PARSED_PARAMS_VALIDATE_THIS_COUNT(params) \
     BOOST_PP_IIF(BOOST_LOCAL_AUX_PP_SIGN_PARAMS_HAVE_ERROR(params), \
-        BOOST_LOCAL_AUX_PP_SIGN_PARSED_PARAMS_VALIDATE_THIS_COUNT_ \
-    , \
         params BOOST_PP_TUPLE_EAT(1) /* fwd existing error */ \
+    , \
+        BOOST_LOCAL_AUX_PP_SIGN_PARSED_PARAMS_VALIDATE_THIS_COUNT_ \
     )(params)
 
 #endif // #include guard

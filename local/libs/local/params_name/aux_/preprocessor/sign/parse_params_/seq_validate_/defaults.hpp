@@ -43,6 +43,7 @@
     , \
         BOOST_PP_CAT(BOOST_PP_CAT(ERROR_default_value_at_element_, \
                 BOOST_PP_INC(index)), _must_follow_an_unbound_parameter) \
+        BOOST_PP_EMPTY /* because error might not be present */ \
     )
 
 #define BOOST_LOCAL_AUX_PP_SIGN_PARSE_PARAMS_SEQ_VALIDATE_DEFAULTS_INDEX_( \
@@ -51,6 +52,7 @@
         BOOST_LOCAL_AUX_PP_SIGN_PARSE_PARAMS_SEQ_VALIDATE_DEFAULTS_PREV_ \
     , \
         ERROR_default_value_cannot_be_specified_as_the_first_element \
+        BOOST_PP_EMPTY /* because error might not be present */ \
         BOOST_PP_TUPLE_EAT(3) \
     )(params_seq, index, error)
 
