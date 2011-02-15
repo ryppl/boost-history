@@ -2,7 +2,7 @@
 #ifndef BOOST_LOCAL_AUX_PP_SIGN_PARSED_PARAMS_NIL_HPP_
 #define BOOST_LOCAL_AUX_PP_SIGN_PARSED_PARAMS_NIL_HPP_
 
-#include <boost/preprcoessor/facilities/empty.hpp>
+#include <boost/preprocessor/facilities/empty.hpp>
 
 // See "index_.hpp".
 #define BOOST_LOCAL_AUX_PP_SIGN_PARSED_PARAMS_NIL \

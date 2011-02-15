@@ -33,7 +33,7 @@
     BOOST_PP_IIF(BOOST_PP_IS_UNARY(parenthesized_params), \
         BOOST_LOCLAL_AUX_PP_SIGN_PARSE_PARAMS_IS_VOID_SEQ_ \
     , /* else, it's a sequence */ \
-        BOOST_LOCAL_AUX_PP_SIGN_PRASE_PARAMS_IS_VOID_TOKEN_ \
+        BOOST_LOCAL_AUX_PP_SIGN_PARSE_PARAMS_IS_VOID_TOKEN_ \
     )(parenthesized_params)
 
 #endif // #include guard

@@ -2,11 +2,15 @@
 #ifndef BOOST_LOCAL_AUX_PP_SIGN_PARSE_PARAMS_SEQ_VALID_HPP_
 #define BOOST_LOCAL_AUX_PP_SIGN_PARSE_PARAMS_SEQ_VALID_HPP_
 
-#include "../../../parsed_/params/unbind.hpp"
-#include "../../../parsed_/params/bind.hpp"
-#include "../../../parsed_/params/const_bind.hpp"
-#include "../../../../keyword/const_bind.hpp"
-#include "../../../../keyword/bind.hpp"
+#include "../../parsed_/params/nil.hpp"
+#include "../../parsed_/params/append_unbind.hpp"
+#include "../../parsed_/params/append_unbind_default.hpp"
+#include "../../parsed_/params/append_const_bind.hpp"
+#include "../../parsed_/params/inc_const_bind_this_count.hpp"
+#include "../../parsed_/params/append_bind.hpp"
+#include "../../parsed_/params/inc_bind_this_count.hpp"
+#include "../../../keyword/const_bind.hpp"
+#include "../../../keyword/bind.hpp"
 #include <boost/detail/preprocessor/keyword/default.hpp>
 #include <boost/detail/preprocessor/keyword/this.hpp>
 #include <boost/preprocessor/control/iif.hpp>
@@ -18,7 +22,7 @@
     BOOST_LOCAL_AUX_PP_SIGN_PARSED_PARAMS_APPEND_UNBIND_DEFAULT(params, \
             BOOST_DETAIL_PP_KEYWORD_DEFAULT_REMOVE_FRONT(elem))
 
-#define BOOST_LOCAL_AUX_PP_PARSE_SIGN_PARAMS_SEQ_VALID_UNBIND_(params, elem) \
+#define BOOST_LOCAL_AUX_PP_SIGN_PARSE_PARAMS_SEQ_VALID_UNBIND_(params, elem) \
     BOOST_LOCAL_AUX_PP_SIGN_PARSED_PARAMS_APPEND_UNBIND(params, elem)
 
 // Private: Parse const binds.
@@ -82,7 +86,7 @@
 // its previous element is a unbind param (no const-bind and no bind).
 #define BOOST_LOCAL_AUX_PP_SIGN_PARSE_PARAMS_SEQ_VALID(params_seq) \
     BOOST_PP_SEQ_FOLD_LEFT(BOOST_LOCAL_AUX_PP_SIGN_PARSE_PARAMS_SEQ_VALID_, \
-            BOOST_LOCAL_AUX_PP_SIGN_PARAMS_NIL, params_seq)
+            BOOST_LOCAL_AUX_PP_SIGN_PARSED_PARAMS_NIL, params_seq)
 
 #endif // #include guard
 
