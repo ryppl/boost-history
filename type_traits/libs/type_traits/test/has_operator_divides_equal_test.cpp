@@ -15,4 +15,4 @@
 #define BOOST_TT_TRAIT_NAME has_operator_divides_equal
 #define BOOST_TT_TRAIT_OP /=
 
-#include "has_no_pointer_operator_test.hpp"
+#include "has_no_pointer_no_constlhs_operator_test.hpp"

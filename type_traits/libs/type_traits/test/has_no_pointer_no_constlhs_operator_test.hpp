@@ -78,39 +78,39 @@ void run() {
    TEST_T(unsigned int, true);
    TEST_T(unsigned long int, true);
    TEST_T(wchar_t, true);
-   TEST_T(float, false);
-   TEST_T(double, false);
-   TEST_T(long double, false);
+   TEST_T(float, true);
+   TEST_T(double, true);
+   TEST_T(long double, true);
    TEST_T(void, false);
 #	undef CV
 #	define CV(T) const T
-   TEST_T(CV(bool), true);
-   TEST_T(CV(int), true);
+   TEST_T(CV(bool), false);
+   TEST_T(CV(int), false);
    TEST_T(CV(double), false);
 #	undef CV
 #	define CV(T) volatile T
    TEST_T(CV(bool), true);
    TEST_T(CV(int), true);
-   TEST_T(CV(double), false);
+   TEST_T(CV(double), true);
 #	undef CV
 #	define CV(T) const volatile T
-   TEST_T(CV(bool), true);
-   TEST_T(CV(int), true);
+   TEST_T(CV(bool), false);
+   TEST_T(CV(int), false);
    TEST_T(CV(double), false);
 #	undef CV
 #	define CV(T) const T&
-   TEST_T(CV(bool), true);
-   TEST_T(CV(int), true);
+   TEST_T(CV(bool), false);
+   TEST_T(CV(int), false);
    TEST_T(CV(double), false);
 #	undef CV
 #	define CV(T) volatile T&
    TEST_T(CV(bool), true);
    TEST_T(CV(int), true);
-   TEST_T(CV(double), false);
+   TEST_T(CV(double), true);
 #	undef CV
 #	define CV(T) const volatile T&
-   TEST_T(CV(bool), true);
-   TEST_T(CV(int), true);
+   TEST_T(CV(bool), false);
+   TEST_T(CV(int), false);
    TEST_T(CV(double), false);
 
    // test with only two template parameters
@@ -125,9 +125,9 @@ void run() {
    TEST_TT(bool, unsigned int, true);
    TEST_TT(bool, unsigned long int, true);
    TEST_TT(bool, wchar_t, true);
-   TEST_TT(bool, float, false);
-   TEST_TT(bool, double, false);
-   TEST_TT(bool, long double, false);
+   TEST_TT(bool, float, true);
+   TEST_TT(bool, double, true);
+   TEST_TT(bool, long double, true);
    TEST_TT(char, bool, true);
    TEST_TT(char, char, true);
    TEST_TT(char, signed char, true);
@@ -139,9 +139,9 @@ void run() {
    TEST_TT(char, unsigned int, true);
    TEST_TT(char, unsigned long int, true);
    TEST_TT(char, wchar_t, true);
-   TEST_TT(char, float, false);
-   TEST_TT(char, double, false);
-   TEST_TT(char, long double, false);
+   TEST_TT(char, float, true);
+   TEST_TT(char, double, true);
+   TEST_TT(char, long double, true);
    TEST_TT(signed char, bool, true);
    TEST_TT(signed char, char, true);
    TEST_TT(signed char, signed char, true);
@@ -153,9 +153,9 @@ void run() {
    TEST_TT(signed char, unsigned int, true);
    TEST_TT(signed char, unsigned long int, true);
    TEST_TT(signed char, wchar_t, true);
-   TEST_TT(signed char, float, false);
-   TEST_TT(signed char, double, false);
-   TEST_TT(signed char, long double, false);
+   TEST_TT(signed char, float, true);
+   TEST_TT(signed char, double, true);
+   TEST_TT(signed char, long double, true);
    TEST_TT(short int, bool, true);
    TEST_TT(short int, char, true);
    TEST_TT(short int, signed char, true);
@@ -167,9 +167,9 @@ void run() {
    TEST_TT(short int, unsigned int, true);
    TEST_TT(short int, unsigned long int, true);
    TEST_TT(short int, wchar_t, true);
-   TEST_TT(short int, float, false);
-   TEST_TT(short int, double, false);
-   TEST_TT(short int, long double, false);
+   TEST_TT(short int, float, true);
+   TEST_TT(short int, double, true);
+   TEST_TT(short int, long double, true);
    TEST_TT(int, bool, true);
    TEST_TT(int, char, true);
    TEST_TT(int, signed char, true);
@@ -181,9 +181,9 @@ void run() {
    TEST_TT(int, unsigned int, true);
    TEST_TT(int, unsigned long int, true);
    TEST_TT(int, wchar_t, true);
-   TEST_TT(int, float, false);
-   TEST_TT(int, double, false);
-   TEST_TT(int, long double, false);
+   TEST_TT(int, float, true);
+   TEST_TT(int, double, true);
+   TEST_TT(int, long double, true);
    TEST_TT(long int, bool, true);
    TEST_TT(long int, char, true);
    TEST_TT(long int, signed char, true);
@@ -195,9 +195,9 @@ void run() {
    TEST_TT(long int, unsigned int, true);
    TEST_TT(long int, unsigned long int, true);
    TEST_TT(long int, wchar_t, true);
-   TEST_TT(long int, float, false);
-   TEST_TT(long int, double, false);
-   TEST_TT(long int, long double, false);
+   TEST_TT(long int, float, true);
+   TEST_TT(long int, double, true);
+   TEST_TT(long int, long double, true);
    TEST_TT(unsigned char, bool, true);
    TEST_TT(unsigned char, char, true);
    TEST_TT(unsigned char, signed char, true);
@@ -209,9 +209,9 @@ void run() {
    TEST_TT(unsigned char, unsigned int, true);
    TEST_TT(unsigned char, unsigned long int, true);
    TEST_TT(unsigned char, wchar_t, true);
-   TEST_TT(unsigned char, float, false);
-   TEST_TT(unsigned char, double, false);
-   TEST_TT(unsigned char, long double, false);
+   TEST_TT(unsigned char, float, true);
+   TEST_TT(unsigned char, double, true);
+   TEST_TT(unsigned char, long double, true);
    TEST_TT(unsigned short int, bool, true);
    TEST_TT(unsigned short int, char, true);
    TEST_TT(unsigned short int, signed char, true);
@@ -223,9 +223,9 @@ void run() {
    TEST_TT(unsigned short int, unsigned int, true);
    TEST_TT(unsigned short int, unsigned long int, true);
    TEST_TT(unsigned short int, wchar_t, true);
-   TEST_TT(unsigned short int, float, false);
-   TEST_TT(unsigned short int, double, false);
-   TEST_TT(unsigned short int, long double, false);
+   TEST_TT(unsigned short int, float, true);
+   TEST_TT(unsigned short int, double, true);
+   TEST_TT(unsigned short int, long double, true);
    TEST_TT(unsigned int, bool, true);
    TEST_TT(unsigned int, char, true);
    TEST_TT(unsigned int, signed char, true);
@@ -237,9 +237,9 @@ void run() {
    TEST_TT(unsigned int, unsigned int, true);
    TEST_TT(unsigned int, unsigned long int, true);
    TEST_TT(unsigned int, wchar_t, true);
-   TEST_TT(unsigned int, float, false);
-   TEST_TT(unsigned int, double, false);
-   TEST_TT(unsigned int, long double, false);
+   TEST_TT(unsigned int, float, true);
+   TEST_TT(unsigned int, double, true);
+   TEST_TT(unsigned int, long double, true);
    TEST_TT(unsigned long int, bool, true);
    TEST_TT(unsigned long int, char, true);
    TEST_TT(unsigned long int, signed char, true);
@@ -251,9 +251,9 @@ void run() {
    TEST_TT(unsigned long int, unsigned int, true);
    TEST_TT(unsigned long int, unsigned long int, true);
    TEST_TT(unsigned long int, wchar_t, true);
-   TEST_TT(unsigned long int, float, false);
-   TEST_TT(unsigned long int, double, false);
-   TEST_TT(unsigned long int, long double, false);
+   TEST_TT(unsigned long int, float, true);
+   TEST_TT(unsigned long int, double, true);
+   TEST_TT(unsigned long int, long double, true);
    TEST_TT(wchar_t, bool, true);
    TEST_TT(wchar_t, char, true);
    TEST_TT(wchar_t, signed char, true);
@@ -265,51 +265,51 @@ void run() {
    TEST_TT(wchar_t, unsigned int, true);
    TEST_TT(wchar_t, unsigned long int, true);
    TEST_TT(wchar_t, wchar_t, true);
-   TEST_TT(wchar_t, float, false);
-   TEST_TT(wchar_t, double, false);
-   TEST_TT(wchar_t, long double, false);
-   TEST_TT(float, bool, false);
-   TEST_TT(float, char, false);
-   TEST_TT(float, signed char, false);
-   TEST_TT(float, short int, false);
-   TEST_TT(float, int, false);
-   TEST_TT(float, long int, false);
-   TEST_TT(float, unsigned char, false);
-   TEST_TT(float, unsigned short int, false);
-   TEST_TT(float, unsigned int, false);
-   TEST_TT(float, unsigned long int, false);
-   TEST_TT(float, wchar_t, false);
-   TEST_TT(float, float, false);
-   TEST_TT(float, double, false);
-   TEST_TT(float, long double, false);
-   TEST_TT(double, bool, false);
-   TEST_TT(double, char, false);
-   TEST_TT(double, signed char, false);
-   TEST_TT(double, short int, false);
-   TEST_TT(double, int, false);
-   TEST_TT(double, long int, false);
-   TEST_TT(double, unsigned char, false);
-   TEST_TT(double, unsigned short int, false);
-   TEST_TT(double, unsigned int, false);
-   TEST_TT(double, unsigned long int, false);
-   TEST_TT(double, wchar_t, false);
-   TEST_TT(double, float, false);
-   TEST_TT(double, double, false);
-   TEST_TT(double, long double, false);
-   TEST_TT(long double, bool, false);
-   TEST_TT(long double, char, false);
-   TEST_TT(long double, signed char, false);
-   TEST_TT(long double, short int, false);
-   TEST_TT(long double, int, false);
-   TEST_TT(long double, long int, false);
-   TEST_TT(long double, unsigned char, false);
-   TEST_TT(long double, unsigned short int, false);
-   TEST_TT(long double, unsigned int, false);
-   TEST_TT(long double, unsigned long int, false);
-   TEST_TT(long double, wchar_t, false);
-   TEST_TT(long double, float, false);
-   TEST_TT(long double, double, false);
-   TEST_TT(long double, long double, false);
+   TEST_TT(wchar_t, float, true);
+   TEST_TT(wchar_t, double, true);
+   TEST_TT(wchar_t, long double, true);
+   TEST_TT(float, bool, true);
+   TEST_TT(float, char, true);
+   TEST_TT(float, signed char, true);
+   TEST_TT(float, short int, true);
+   TEST_TT(float, int, true);
+   TEST_TT(float, long int, true);
+   TEST_TT(float, unsigned char, true);
+   TEST_TT(float, unsigned short int, true);
+   TEST_TT(float, unsigned int, true);
+   TEST_TT(float, unsigned long int, true);
+   TEST_TT(float, wchar_t, true);
+   TEST_TT(float, float, true);
+   TEST_TT(float, double, true);
+   TEST_TT(float, long double, true);
+   TEST_TT(double, bool, true);
+   TEST_TT(double, char, true);
+   TEST_TT(double, signed char, true);
+   TEST_TT(double, short int, true);
+   TEST_TT(double, int, true);
+   TEST_TT(double, long int, true);
+   TEST_TT(double, unsigned char, true);
+   TEST_TT(double, unsigned short int, true);
+   TEST_TT(double, unsigned int, true);
+   TEST_TT(double, unsigned long int, true);
+   TEST_TT(double, wchar_t, true);
+   TEST_TT(double, float, true);
+   TEST_TT(double, double, true);
+   TEST_TT(double, long double, true);
+   TEST_TT(long double, bool, true);
+   TEST_TT(long double, char, true);
+   TEST_TT(long double, signed char, true);
+   TEST_TT(long double, short int, true);
+   TEST_TT(long double, int, true);
+   TEST_TT(long double, long int, true);
+   TEST_TT(long double, unsigned char, true);
+   TEST_TT(long double, unsigned short int, true);
+   TEST_TT(long double, unsigned int, true);
+   TEST_TT(long double, unsigned long int, true);
+   TEST_TT(long double, wchar_t, true);
+   TEST_TT(long double, float, true);
+   TEST_TT(long double, double, true);
+   TEST_TT(long double, long double, true);
    TEST_TT(bool, void, false);
    TEST_TT(void, bool, false);
    TEST_TT(char, void, false);
@@ -351,9 +351,9 @@ void run() {
    TEST_TTR(bool, unsigned int, bool, true);
    TEST_TTR(bool, unsigned long int, bool, true);
    TEST_TTR(bool, wchar_t, bool, true);
-   TEST_TTR(bool, float, bool, false);
-   TEST_TTR(bool, double, bool, false);
-   TEST_TTR(bool, long double, bool, false);
+   TEST_TTR(bool, float, bool, true);
+   TEST_TTR(bool, double, bool, true);
+   TEST_TTR(bool, long double, bool, true);
    TEST_TTR(char, bool, bool, true);
    TEST_TTR(char, char, bool, true);
    TEST_TTR(char, signed char, bool, true);
@@ -365,9 +365,9 @@ void run() {
    TEST_TTR(char, unsigned int, bool, true);
    TEST_TTR(char, unsigned long int, bool, true);
    TEST_TTR(char, wchar_t, bool, true);
-   TEST_TTR(char, float, bool, false);
-   TEST_TTR(char, double, bool, false);
-   TEST_TTR(char, long double, bool, false);
+   TEST_TTR(char, float, bool, true);
+   TEST_TTR(char, double, bool, true);
+   TEST_TTR(char, long double, bool, true);
    TEST_TTR(signed char, bool, bool, true);
    TEST_TTR(signed char, char, bool, true);
    TEST_TTR(signed char, signed char, bool, true);
@@ -379,9 +379,9 @@ void run() {
    TEST_TTR(signed char, unsigned int, bool, true);
    TEST_TTR(signed char, unsigned long int, bool, true);
    TEST_TTR(signed char, wchar_t, bool, true);
-   TEST_TTR(signed char, float, bool, false);
-   TEST_TTR(signed char, double, bool, false);
-   TEST_TTR(signed char, long double, bool, false);
+   TEST_TTR(signed char, float, bool, true);
+   TEST_TTR(signed char, double, bool, true);
+   TEST_TTR(signed char, long double, bool, true);
    TEST_TTR(short int, bool, bool, true);
    TEST_TTR(short int, char, bool, true);
    TEST_TTR(short int, signed char, bool, true);
@@ -393,9 +393,9 @@ void run() {
    TEST_TTR(short int, unsigned int, bool, true);
    TEST_TTR(short int, unsigned long int, bool, true);
    TEST_TTR(short int, wchar_t, bool, true);
-   TEST_TTR(short int, float, bool, false);
-   TEST_TTR(short int, double, bool, false);
-   TEST_TTR(short int, long double, bool, false);
+   TEST_TTR(short int, float, bool, true);
+   TEST_TTR(short int, double, bool, true);
+   TEST_TTR(short int, long double, bool, true);
    TEST_TTR(int, bool, bool, true);
    TEST_TTR(int, char, bool, true);
    TEST_TTR(int, signed char, bool, true);
@@ -407,9 +407,9 @@ void run() {
    TEST_TTR(int, unsigned int, bool, true);
    TEST_TTR(int, unsigned long int, bool, true);
    TEST_TTR(int, wchar_t, bool, true);
-   TEST_TTR(int, float, bool, false);
-   TEST_TTR(int, double, bool, false);
-   TEST_TTR(int, long double, bool, false);
+   TEST_TTR(int, float, bool, true);
+   TEST_TTR(int, double, bool, true);
+   TEST_TTR(int, long double, bool, true);
    TEST_TTR(long int, bool, bool, true);
    TEST_TTR(long int, char, bool, true);
    TEST_TTR(long int, signed char, bool, true);
@@ -421,9 +421,9 @@ void run() {
    TEST_TTR(long int, unsigned int, bool, true);
    TEST_TTR(long int, unsigned long int, bool, true);
    TEST_TTR(long int, wchar_t, bool, true);
-   TEST_TTR(long int, float, bool, false);
-   TEST_TTR(long int, double, bool, false);
-   TEST_TTR(long int, long double, bool, false);
+   TEST_TTR(long int, float, bool, true);
+   TEST_TTR(long int, double, bool, true);
+   TEST_TTR(long int, long double, bool, true);
    TEST_TTR(unsigned char, bool, bool, true);
    TEST_TTR(unsigned char, char, bool, true);
    TEST_TTR(unsigned char, signed char, bool, true);
@@ -435,9 +435,9 @@ void run() {
    TEST_TTR(unsigned char, unsigned int, bool, true);
    TEST_TTR(unsigned char, unsigned long int, bool, true);
    TEST_TTR(unsigned char, wchar_t, bool, true);
-   TEST_TTR(unsigned char, float, bool, false);
-   TEST_TTR(unsigned char, double, bool, false);
-   TEST_TTR(unsigned char, long double, bool, false);
+   TEST_TTR(unsigned char, float, bool, true);
+   TEST_TTR(unsigned char, double, bool, true);
+   TEST_TTR(unsigned char, long double, bool, true);
    TEST_TTR(unsigned short int, bool, bool, true);
    TEST_TTR(unsigned short int, char, bool, true);
    TEST_TTR(unsigned short int, signed char, bool, true);
@@ -449,9 +449,9 @@ void run() {
    TEST_TTR(unsigned short int, unsigned int, bool, true);
    TEST_TTR(unsigned short int, unsigned long int, bool, true);
    TEST_TTR(unsigned short int, wchar_t, bool, true);
-   TEST_TTR(unsigned short int, float, bool, false);
-   TEST_TTR(unsigned short int, double, bool, false);
-   TEST_TTR(unsigned short int, long double, bool, false);
+   TEST_TTR(unsigned short int, float, bool, true);
+   TEST_TTR(unsigned short int, double, bool, true);
+   TEST_TTR(unsigned short int, long double, bool, true);
    TEST_TTR(unsigned int, bool, bool, true);
    TEST_TTR(unsigned int, char, bool, true);
    TEST_TTR(unsigned int, signed char, bool, true);
@@ -463,9 +463,9 @@ void run() {
    TEST_TTR(unsigned int, unsigned int, bool, true);
    TEST_TTR(unsigned int, unsigned long int, bool, true);
    TEST_TTR(unsigned int, wchar_t, bool, true);
-   TEST_TTR(unsigned int, float, bool, false);
-   TEST_TTR(unsigned int, double, bool, false);
-   TEST_TTR(unsigned int, long double, bool, false);
+   TEST_TTR(unsigned int, float, bool, true);
+   TEST_TTR(unsigned int, double, bool, true);
+   TEST_TTR(unsigned int, long double, bool, true);
    TEST_TTR(unsigned long int, bool, bool, true);
    TEST_TTR(unsigned long int, char, bool, true);
    TEST_TTR(unsigned long int, signed char, bool, true);
@@ -477,9 +477,9 @@ void run() {
    TEST_TTR(unsigned long int, unsigned int, bool, true);
    TEST_TTR(unsigned long int, unsigned long int, bool, true);
    TEST_TTR(unsigned long int, wchar_t, bool, true);
-   TEST_TTR(unsigned long int, float, bool, false);
-   TEST_TTR(unsigned long int, double, bool, false);
-   TEST_TTR(unsigned long int, long double, bool, false);
+   TEST_TTR(unsigned long int, float, bool, true);
+   TEST_TTR(unsigned long int, double, bool, true);
+   TEST_TTR(unsigned long int, long double, bool, true);
    TEST_TTR(wchar_t, bool, bool, true);
    TEST_TTR(wchar_t, char, bool, true);
    TEST_TTR(wchar_t, signed char, bool, true);
@@ -491,51 +491,51 @@ void run() {
    TEST_TTR(wchar_t, unsigned int, bool, true);
    TEST_TTR(wchar_t, unsigned long int, bool, true);
    TEST_TTR(wchar_t, wchar_t, bool, true);
-   TEST_TTR(wchar_t, float, bool, false);
-   TEST_TTR(wchar_t, double, bool, false);
-   TEST_TTR(wchar_t, long double, bool, false);
-   TEST_TTR(float, bool, bool, false);
-   TEST_TTR(float, char, bool, false);
-   TEST_TTR(float, signed char, bool, false);
-   TEST_TTR(float, short int, bool, false);
-   TEST_TTR(float, int, bool, false);
-   TEST_TTR(float, long int, bool, false);
-   TEST_TTR(float, unsigned char, bool, false);
-   TEST_TTR(float, unsigned short int, bool, false);
-   TEST_TTR(float, unsigned int, bool, false);
-   TEST_TTR(float, unsigned long int, bool, false);
-   TEST_TTR(float, wchar_t, bool, false);
-   TEST_TTR(float, float, bool, false);
-   TEST_TTR(float, double, bool, false);
-   TEST_TTR(float, long double, bool, false);
-   TEST_TTR(double, bool, bool, false);
-   TEST_TTR(double, char, bool, false);
-   TEST_TTR(double, signed char, bool, false);
-   TEST_TTR(double, short int, bool, false);
-   TEST_TTR(double, int, bool, false);
-   TEST_TTR(double, long int, bool, false);
-   TEST_TTR(double, unsigned char, bool, false);
-   TEST_TTR(double, unsigned short int, bool, false);
-   TEST_TTR(double, unsigned int, bool, false);
-   TEST_TTR(double, unsigned long int, bool, false);
-   TEST_TTR(double, wchar_t, bool, false);
-   TEST_TTR(double, float, bool, false);
-   TEST_TTR(double, double, bool, false);
-   TEST_TTR(double, long double, bool, false);
-   TEST_TTR(long double, bool, bool, false);
-   TEST_TTR(long double, char, bool, false);
-   TEST_TTR(long double, signed char, bool, false);
-   TEST_TTR(long double, short int, bool, false);
-   TEST_TTR(long double, int, bool, false);
-   TEST_TTR(long double, long int, bool, false);
-   TEST_TTR(long double, unsigned char, bool, false);
-   TEST_TTR(long double, unsigned short int, bool, false);
-   TEST_TTR(long double, unsigned int, bool, false);
-   TEST_TTR(long double, unsigned long int, bool, false);
-   TEST_TTR(long double, wchar_t, bool, false);
-   TEST_TTR(long double, float, bool, false);
-   TEST_TTR(long double, double, bool, false);
-   TEST_TTR(long double, long double, bool, false);
+   TEST_TTR(wchar_t, float, bool, true);
+   TEST_TTR(wchar_t, double, bool, true);
+   TEST_TTR(wchar_t, long double, bool, true);
+   TEST_TTR(float, bool, bool, true);
+   TEST_TTR(float, char, bool, true);
+   TEST_TTR(float, signed char, bool, true);
+   TEST_TTR(float, short int, bool, true);
+   TEST_TTR(float, int, bool, true);
+   TEST_TTR(float, long int, bool, true);
+   TEST_TTR(float, unsigned char, bool, true);
+   TEST_TTR(float, unsigned short int, bool, true);
+   TEST_TTR(float, unsigned int, bool, true);
+   TEST_TTR(float, unsigned long int, bool, true);
+   TEST_TTR(float, wchar_t, bool, true);
+   TEST_TTR(float, float, bool, true);
+   TEST_TTR(float, double, bool, true);
+   TEST_TTR(float, long double, bool, true);
+   TEST_TTR(double, bool, bool, true);
+   TEST_TTR(double, char, bool, true);
+   TEST_TTR(double, signed char, bool, true);
+   TEST_TTR(double, short int, bool, true);
+   TEST_TTR(double, int, bool, true);
+   TEST_TTR(double, long int, bool, true);
+   TEST_TTR(double, unsigned char, bool, true);
+   TEST_TTR(double, unsigned short int, bool, true);
+   TEST_TTR(double, unsigned int, bool, true);
+   TEST_TTR(double, unsigned long int, bool, true);
+   TEST_TTR(double, wchar_t, bool, true);
+   TEST_TTR(double, float, bool, true);
+   TEST_TTR(double, double, bool, true);
+   TEST_TTR(double, long double, bool, true);
+   TEST_TTR(long double, bool, bool, true);
+   TEST_TTR(long double, char, bool, true);
+   TEST_TTR(long double, signed char, bool, true);
+   TEST_TTR(long double, short int, bool, true);
+   TEST_TTR(long double, int, bool, true);
+   TEST_TTR(long double, long int, bool, true);
+   TEST_TTR(long double, unsigned char, bool, true);
+   TEST_TTR(long double, unsigned short int, bool, true);
+   TEST_TTR(long double, unsigned int, bool, true);
+   TEST_TTR(long double, unsigned long int, bool, true);
+   TEST_TTR(long double, wchar_t, bool, true);
+   TEST_TTR(long double, float, bool, true);
+   TEST_TTR(long double, double, bool, true);
+   TEST_TTR(long double, long double, bool, true);
    TEST_TTR(bool, bool, tag, false);
    TEST_TTR(bool, char, tag, false);
    TEST_TTR(bool, signed char, tag, false);
@@ -737,17 +737,17 @@ void run() {
 #	undef CV2
 #	define CV2(T) T
    // test with only two template parameters
-   TEST_TT(CV1(bool), CV2(int), true);
+   TEST_TT(CV1(bool), CV2(int), false);
    TEST_TT(CV1(bool), CV2(double), false);
-   TEST_TT(CV1(int), CV2(bool), true);
+   TEST_TT(CV1(int), CV2(bool), false);
    TEST_TT(CV1(int), CV2(double), false);
    TEST_TT(CV1(double), CV2(bool), false);
    TEST_TT(CV1(double), CV2(int), false);
 
    // test with three template parameters
-   TEST_TTR(CV1(bool), CV2(int), bool, true);
+   TEST_TTR(CV1(bool), CV2(int), bool, false);
    TEST_TTR(CV1(bool), CV2(double), bool, false);
-   TEST_TTR(CV1(int), CV2(bool), bool, true);
+   TEST_TTR(CV1(int), CV2(bool), bool, false);
    TEST_TTR(CV1(int), CV2(double), bool, false);
    TEST_TTR(CV1(double), CV2(bool), bool, false);
    TEST_TTR(CV1(double), CV2(int), bool, false);
@@ -764,19 +764,19 @@ void run() {
 #	define CV2(T) T
    // test with only two template parameters
    TEST_TT(CV1(bool), CV2(int), true);
-   TEST_TT(CV1(bool), CV2(double), false);
+   TEST_TT(CV1(bool), CV2(double), true);
    TEST_TT(CV1(int), CV2(bool), true);
-   TEST_TT(CV1(int), CV2(double), false);
-   TEST_TT(CV1(double), CV2(bool), false);
-   TEST_TT(CV1(double), CV2(int), false);
+   TEST_TT(CV1(int), CV2(double), true);
+   TEST_TT(CV1(double), CV2(bool), true);
+   TEST_TT(CV1(double), CV2(int), true);
 
    // test with three template parameters
    TEST_TTR(CV1(bool), CV2(int), bool, true);
-   TEST_TTR(CV1(bool), CV2(double), bool, false);
+   TEST_TTR(CV1(bool), CV2(double), bool, true);
    TEST_TTR(CV1(int), CV2(bool), bool, true);
-   TEST_TTR(CV1(int), CV2(double), bool, false);
-   TEST_TTR(CV1(double), CV2(bool), bool, false);
-   TEST_TTR(CV1(double), CV2(int), bool, false);
+   TEST_TTR(CV1(int), CV2(double), bool, true);
+   TEST_TTR(CV1(double), CV2(bool), bool, true);
+   TEST_TTR(CV1(double), CV2(int), bool, true);
    TEST_TTR(CV1(bool), CV2(int), tag, false);
    TEST_TTR(CV1(bool), CV2(double), tag, false);
    TEST_TTR(CV1(int), CV2(bool), tag, false);
@@ -789,17 +789,17 @@ void run() {
 #	undef CV2
 #	define CV2(T) T
    // test with only two template parameters
-   TEST_TT(CV1(bool), CV2(int), true);
+   TEST_TT(CV1(bool), CV2(int), false);
    TEST_TT(CV1(bool), CV2(double), false);
-   TEST_TT(CV1(int), CV2(bool), true);
+   TEST_TT(CV1(int), CV2(bool), false);
    TEST_TT(CV1(int), CV2(double), false);
    TEST_TT(CV1(double), CV2(bool), false);
    TEST_TT(CV1(double), CV2(int), false);
 
    // test with three template parameters
-   TEST_TTR(CV1(bool), CV2(int), bool, true);
+   TEST_TTR(CV1(bool), CV2(int), bool, false);
    TEST_TTR(CV1(bool), CV2(double), bool, false);
-   TEST_TTR(CV1(int), CV2(bool), bool, true);
+   TEST_TTR(CV1(int), CV2(bool), bool, false);
    TEST_TTR(CV1(int), CV2(double), bool, false);
    TEST_TTR(CV1(double), CV2(bool), bool, false);
    TEST_TTR(CV1(double), CV2(int), bool, false);
@@ -815,17 +815,17 @@ void run() {
 #	undef CV2
 #	define CV2(T) T
    // test with only two template parameters
-   TEST_TT(CV1(bool), CV2(int), true);
+   TEST_TT(CV1(bool), CV2(int), false);
    TEST_TT(CV1(bool), CV2(double), false);
-   TEST_TT(CV1(int), CV2(bool), true);
+   TEST_TT(CV1(int), CV2(bool), false);
    TEST_TT(CV1(int), CV2(double), false);
    TEST_TT(CV1(double), CV2(bool), false);
    TEST_TT(CV1(double), CV2(int), false);
 
    // test with three template parameters
-   TEST_TTR(CV1(bool), CV2(int), bool, true);
+   TEST_TTR(CV1(bool), CV2(int), bool, false);
    TEST_TTR(CV1(bool), CV2(double), bool, false);
-   TEST_TTR(CV1(int), CV2(bool), bool, true);
+   TEST_TTR(CV1(int), CV2(bool), bool, false);
    TEST_TTR(CV1(int), CV2(double), bool, false);
    TEST_TTR(CV1(double), CV2(bool), bool, false);
    TEST_TTR(CV1(double), CV2(int), bool, false);
@@ -842,19 +842,19 @@ void run() {
 #	define CV2(T) T
    // test with only two template parameters
    TEST_TT(CV1(bool), CV2(int), true);
-   TEST_TT(CV1(bool), CV2(double), false);
+   TEST_TT(CV1(bool), CV2(double), true);
    TEST_TT(CV1(int), CV2(bool), true);
-   TEST_TT(CV1(int), CV2(double), false);
-   TEST_TT(CV1(double), CV2(bool), false);
-   TEST_TT(CV1(double), CV2(int), false);
+   TEST_TT(CV1(int), CV2(double), true);
+   TEST_TT(CV1(double), CV2(bool), true);
+   TEST_TT(CV1(double), CV2(int), true);
 
    // test with three template parameters
    TEST_TTR(CV1(bool), CV2(int), bool, true);
-   TEST_TTR(CV1(bool), CV2(double), bool, false);
+   TEST_TTR(CV1(bool), CV2(double), bool, true);
    TEST_TTR(CV1(int), CV2(bool), bool, true);
-   TEST_TTR(CV1(int), CV2(double), bool, false);
-   TEST_TTR(CV1(double), CV2(bool), bool, false);
-   TEST_TTR(CV1(double), CV2(int), bool, false);
+   TEST_TTR(CV1(int), CV2(double), bool, true);
+   TEST_TTR(CV1(double), CV2(bool), bool, true);
+   TEST_TTR(CV1(double), CV2(int), bool, true);
    TEST_TTR(CV1(bool), CV2(int), tag, false);
    TEST_TTR(CV1(bool), CV2(double), tag, false);
    TEST_TTR(CV1(int), CV2(bool), tag, false);
@@ -867,17 +867,17 @@ void run() {
 #	undef CV2
 #	define CV2(T) T
    // test with only two template parameters
-   TEST_TT(CV1(bool), CV2(int), true);
+   TEST_TT(CV1(bool), CV2(int), false);
    TEST_TT(CV1(bool), CV2(double), false);
-   TEST_TT(CV1(int), CV2(bool), true);
+   TEST_TT(CV1(int), CV2(bool), false);
    TEST_TT(CV1(int), CV2(double), false);
    TEST_TT(CV1(double), CV2(bool), false);
    TEST_TT(CV1(double), CV2(int), false);
 
    // test with three template parameters
-   TEST_TTR(CV1(bool), CV2(int), bool, true);
+   TEST_TTR(CV1(bool), CV2(int), bool, false);
    TEST_TTR(CV1(bool), CV2(double), bool, false);
-   TEST_TTR(CV1(int), CV2(bool), bool, true);
+   TEST_TTR(CV1(int), CV2(bool), bool, false);
    TEST_TTR(CV1(int), CV2(double), bool, false);
    TEST_TTR(CV1(double), CV2(bool), bool, false);
    TEST_TTR(CV1(double), CV2(int), bool, false);
@@ -894,19 +894,19 @@ void run() {
 #	define CV2(T) const T
    // test with only two template parameters
    TEST_TT(CV1(bool), CV2(int), true);
-   TEST_TT(CV1(bool), CV2(double), false);
+   TEST_TT(CV1(bool), CV2(double), true);
    TEST_TT(CV1(int), CV2(bool), true);
-   TEST_TT(CV1(int), CV2(double), false);
-   TEST_TT(CV1(double), CV2(bool), false);
-   TEST_TT(CV1(double), CV2(int), false);
+   TEST_TT(CV1(int), CV2(double), true);
+   TEST_TT(CV1(double), CV2(bool), true);
+   TEST_TT(CV1(double), CV2(int), true);
 
    // test with three template parameters
    TEST_TTR(CV1(bool), CV2(int), bool, true);
-   TEST_TTR(CV1(bool), CV2(double), bool, false);
+   TEST_TTR(CV1(bool), CV2(double), bool, true);
    TEST_TTR(CV1(int), CV2(bool), bool, true);
-   TEST_TTR(CV1(int), CV2(double), bool, false);
-   TEST_TTR(CV1(double), CV2(bool), bool, false);
-   TEST_TTR(CV1(double), CV2(int), bool, false);
+   TEST_TTR(CV1(int), CV2(double), bool, true);
+   TEST_TTR(CV1(double), CV2(bool), bool, true);
+   TEST_TTR(CV1(double), CV2(int), bool, true);
    TEST_TTR(CV1(bool), CV2(int), tag, false);
    TEST_TTR(CV1(bool), CV2(double), tag, false);
    TEST_TTR(CV1(int), CV2(bool), tag, false);
@@ -920,19 +920,19 @@ void run() {
 #	define CV2(T) volatile T
    // test with only two template parameters
    TEST_TT(CV1(bool), CV2(int), true);
-   TEST_TT(CV1(bool), CV2(double), false);
+   TEST_TT(CV1(bool), CV2(double), true);
    TEST_TT(CV1(int), CV2(bool), true);
-   TEST_TT(CV1(int), CV2(double), false);
-   TEST_TT(CV1(double), CV2(bool), false);
-   TEST_TT(CV1(double), CV2(int), false);
+   TEST_TT(CV1(int), CV2(double), true);
+   TEST_TT(CV1(double), CV2(bool), true);
+   TEST_TT(CV1(double), CV2(int), true);
 
    // test with three template parameters
    TEST_TTR(CV1(bool), CV2(int), bool, true);
-   TEST_TTR(CV1(bool), CV2(double), bool, false);
+   TEST_TTR(CV1(bool), CV2(double), bool, true);
    TEST_TTR(CV1(int), CV2(bool), bool, true);
-   TEST_TTR(CV1(int), CV2(double), bool, false);
-   TEST_TTR(CV1(double), CV2(bool), bool, false);
-   TEST_TTR(CV1(double), CV2(int), bool, false);
+   TEST_TTR(CV1(int), CV2(double), bool, true);
+   TEST_TTR(CV1(double), CV2(bool), bool, true);
+   TEST_TTR(CV1(double), CV2(int), bool, true);
    TEST_TTR(CV1(bool), CV2(int), tag, false);
    TEST_TTR(CV1(bool), CV2(double), tag, false);
    TEST_TTR(CV1(int), CV2(bool), tag, false);
@@ -946,19 +946,19 @@ void run() {
 #	define CV2(T) const volatile T
    // test with only two template parameters
    TEST_TT(CV1(bool), CV2(int), true);
-   TEST_TT(CV1(bool), CV2(double), false);
+   TEST_TT(CV1(bool), CV2(double), true);
    TEST_TT(CV1(int), CV2(bool), true);
-   TEST_TT(CV1(int), CV2(double), false);
-   TEST_TT(CV1(double), CV2(bool), false);
-   TEST_TT(CV1(double), CV2(int), false);
+   TEST_TT(CV1(int), CV2(double), true);
+   TEST_TT(CV1(double), CV2(bool), true);
+   TEST_TT(CV1(double), CV2(int), true);
 
    // test with three template parameters
    TEST_TTR(CV1(bool), CV2(int), bool, true);
-   TEST_TTR(CV1(bool), CV2(double), bool, false);
+   TEST_TTR(CV1(bool), CV2(double), bool, true);
    TEST_TTR(CV1(int), CV2(bool), bool, true);
-   TEST_TTR(CV1(int), CV2(double), bool, false);
-   TEST_TTR(CV1(double), CV2(bool), bool, false);
-   TEST_TTR(CV1(double), CV2(int), bool, false);
+   TEST_TTR(CV1(int), CV2(double), bool, true);
+   TEST_TTR(CV1(double), CV2(bool), bool, true);
+   TEST_TTR(CV1(double), CV2(int), bool, true);
    TEST_TTR(CV1(bool), CV2(int), tag, false);
    TEST_TTR(CV1(bool), CV2(double), tag, false);
    TEST_TTR(CV1(int), CV2(bool), tag, false);
@@ -972,19 +972,19 @@ void run() {
 #	define CV2(T) const T&
    // test with only two template parameters
    TEST_TT(CV1(bool), CV2(int), true);
-   TEST_TT(CV1(bool), CV2(double), false);
+   TEST_TT(CV1(bool), CV2(double), true);
    TEST_TT(CV1(int), CV2(bool), true);
-   TEST_TT(CV1(int), CV2(double), false);
-   TEST_TT(CV1(double), CV2(bool), false);
-   TEST_TT(CV1(double), CV2(int), false);
+   TEST_TT(CV1(int), CV2(double), true);
+   TEST_TT(CV1(double), CV2(bool), true);
+   TEST_TT(CV1(double), CV2(int), true);
 
    // test with three template parameters
    TEST_TTR(CV1(bool), CV2(int), bool, true);
-   TEST_TTR(CV1(bool), CV2(double), bool, false);
+   TEST_TTR(CV1(bool), CV2(double), bool, true);
    TEST_TTR(CV1(int), CV2(bool), bool, true);
-   TEST_TTR(CV1(int), CV2(double), bool, false);
-   TEST_TTR(CV1(double), CV2(bool), bool, false);
-   TEST_TTR(CV1(double), CV2(int), bool, false);
+   TEST_TTR(CV1(int), CV2(double), bool, true);
+   TEST_TTR(CV1(double), CV2(bool), bool, true);
+   TEST_TTR(CV1(double), CV2(int), bool, true);
    TEST_TTR(CV1(bool), CV2(int), tag, false);
    TEST_TTR(CV1(bool), CV2(double), tag, false);
    TEST_TTR(CV1(int), CV2(bool), tag, false);
@@ -998,19 +998,19 @@ void run() {
 #	define CV2(T) volatile T&
    // test with only two template parameters
    TEST_TT(CV1(bool), CV2(int), true);
-   TEST_TT(CV1(bool), CV2(double), false);
+   TEST_TT(CV1(bool), CV2(double), true);
    TEST_TT(CV1(int), CV2(bool), true);
-   TEST_TT(CV1(int), CV2(double), false);
-   TEST_TT(CV1(double), CV2(bool), false);
-   TEST_TT(CV1(double), CV2(int), false);
+   TEST_TT(CV1(int), CV2(double), true);
+   TEST_TT(CV1(double), CV2(bool), true);
+   TEST_TT(CV1(double), CV2(int), true);
 
    // test with three template parameters
    TEST_TTR(CV1(bool), CV2(int), bool, true);
-   TEST_TTR(CV1(bool), CV2(double), bool, false);
+   TEST_TTR(CV1(bool), CV2(double), bool, true);
    TEST_TTR(CV1(int), CV2(bool), bool, true);
-   TEST_TTR(CV1(int), CV2(double), bool, false);
-   TEST_TTR(CV1(double), CV2(bool), bool, false);
-   TEST_TTR(CV1(double), CV2(int), bool, false);
+   TEST_TTR(CV1(int), CV2(double), bool, true);
+   TEST_TTR(CV1(double), CV2(bool), bool, true);
+   TEST_TTR(CV1(double), CV2(int), bool, true);
    TEST_TTR(CV1(bool), CV2(int), tag, false);
    TEST_TTR(CV1(bool), CV2(double), tag, false);
    TEST_TTR(CV1(int), CV2(bool), tag, false);
@@ -1024,19 +1024,19 @@ void run() {
 #	define CV2(T) const volatile T&
    // test with only two template parameters
    TEST_TT(CV1(bool), CV2(int), true);
-   TEST_TT(CV1(bool), CV2(double), false);
+   TEST_TT(CV1(bool), CV2(double), true);
    TEST_TT(CV1(int), CV2(bool), true);
-   TEST_TT(CV1(int), CV2(double), false);
-   TEST_TT(CV1(double), CV2(bool), false);
-   TEST_TT(CV1(double), CV2(int), false);
+   TEST_TT(CV1(int), CV2(double), true);
+   TEST_TT(CV1(double), CV2(bool), true);
+   TEST_TT(CV1(double), CV2(int), true);
 
    // test with three template parameters
    TEST_TTR(CV1(bool), CV2(int), bool, true);
-   TEST_TTR(CV1(bool), CV2(double), bool, false);
+   TEST_TTR(CV1(bool), CV2(double), bool, true);
    TEST_TTR(CV1(int), CV2(bool), bool, true);
-   TEST_TTR(CV1(int), CV2(double), bool, false);
-   TEST_TTR(CV1(double), CV2(bool), bool, false);
-   TEST_TTR(CV1(double), CV2(int), bool, false);
+   TEST_TTR(CV1(int), CV2(double), bool, true);
+   TEST_TTR(CV1(double), CV2(bool), bool, true);
+   TEST_TTR(CV1(double), CV2(int), bool, true);
    TEST_TTR(CV1(bool), CV2(int), tag, false);
    TEST_TTR(CV1(bool), CV2(double), tag, false);
    TEST_TTR(CV1(int), CV2(bool), tag, false);
@@ -1049,17 +1049,17 @@ void run() {
 #	undef CV2
 #	define CV2(T) const T
    // test with only two template parameters
-   TEST_TT(CV1(bool), CV2(int), true);
+   TEST_TT(CV1(bool), CV2(int), false);
    TEST_TT(CV1(bool), CV2(double), false);
-   TEST_TT(CV1(int), CV2(bool), true);
+   TEST_TT(CV1(int), CV2(bool), false);
    TEST_TT(CV1(int), CV2(double), false);
    TEST_TT(CV1(double), CV2(bool), false);
    TEST_TT(CV1(double), CV2(int), false);
 
    // test with three template parameters
-   TEST_TTR(CV1(bool), CV2(int), bool, true);
+   TEST_TTR(CV1(bool), CV2(int), bool, false);
    TEST_TTR(CV1(bool), CV2(double), bool, false);
-   TEST_TTR(CV1(int), CV2(bool), bool, true);
+   TEST_TTR(CV1(int), CV2(bool), bool, false);
    TEST_TTR(CV1(int), CV2(double), bool, false);
    TEST_TTR(CV1(double), CV2(bool), bool, false);
    TEST_TTR(CV1(double), CV2(int), bool, false);
@@ -1075,17 +1075,17 @@ void run() {
 #	undef CV2
 #	define CV2(T) const T&
    // test with only two template parameters
-   TEST_TT(CV1(bool), CV2(int), true);
+   TEST_TT(CV1(bool), CV2(int), false);
    TEST_TT(CV1(bool), CV2(double), false);
-   TEST_TT(CV1(int), CV2(bool), true);
+   TEST_TT(CV1(int), CV2(bool), false);
    TEST_TT(CV1(int), CV2(double), false);
    TEST_TT(CV1(double), CV2(bool), false);
    TEST_TT(CV1(double), CV2(int), false);
 
    // test with three template parameters
-   TEST_TTR(CV1(bool), CV2(int), bool, true);
+   TEST_TTR(CV1(bool), CV2(int), bool, false);
    TEST_TTR(CV1(bool), CV2(double), bool, false);
-   TEST_TTR(CV1(int), CV2(bool), bool, true);
+   TEST_TTR(CV1(int), CV2(bool), bool, false);
    TEST_TTR(CV1(int), CV2(double), bool, false);
    TEST_TTR(CV1(double), CV2(bool), bool, false);
    TEST_TTR(CV1(double), CV2(int), bool, false);
@@ -1102,19 +1102,19 @@ void run() {
 #	define CV2(T) volatile T
    // test with only two template parameters
    TEST_TT(CV1(bool), CV2(int), true);
-   TEST_TT(CV1(bool), CV2(double), false);
+   TEST_TT(CV1(bool), CV2(double), true);
    TEST_TT(CV1(int), CV2(bool), true);
-   TEST_TT(CV1(int), CV2(double), false);
-   TEST_TT(CV1(double), CV2(bool), false);
-   TEST_TT(CV1(double), CV2(int), false);
+   TEST_TT(CV1(int), CV2(double), true);
+   TEST_TT(CV1(double), CV2(bool), true);
+   TEST_TT(CV1(double), CV2(int), true);
 
    // test with three template parameters
    TEST_TTR(CV1(bool), CV2(int), bool, true);
-   TEST_TTR(CV1(bool), CV2(double), bool, false);
+   TEST_TTR(CV1(bool), CV2(double), bool, true);
    TEST_TTR(CV1(int), CV2(bool), bool, true);
-   TEST_TTR(CV1(int), CV2(double), bool, false);
-   TEST_TTR(CV1(double), CV2(bool), bool, false);
-   TEST_TTR(CV1(double), CV2(int), bool, false);
+   TEST_TTR(CV1(int), CV2(double), bool, true);
+   TEST_TTR(CV1(double), CV2(bool), bool, true);
+   TEST_TTR(CV1(double), CV2(int), bool, true);
    TEST_TTR(CV1(bool), CV2(int), tag, false);
    TEST_TTR(CV1(bool), CV2(double), tag, false);
    TEST_TTR(CV1(int), CV2(bool), tag, false);
@@ -1128,19 +1128,19 @@ void run() {
 #	define CV2(T) volatile T&
    // test with only two template parameters
    TEST_TT(CV1(bool), CV2(int), true);
-   TEST_TT(CV1(bool), CV2(double), false);
+   TEST_TT(CV1(bool), CV2(double), true);
    TEST_TT(CV1(int), CV2(bool), true);
-   TEST_TT(CV1(int), CV2(double), false);
-   TEST_TT(CV1(double), CV2(bool), false);
-   TEST_TT(CV1(double), CV2(int), false);
+   TEST_TT(CV1(int), CV2(double), true);
+   TEST_TT(CV1(double), CV2(bool), true);
+   TEST_TT(CV1(double), CV2(int), true);
 
    // test with three template parameters
    TEST_TTR(CV1(bool), CV2(int), bool, true);
-   TEST_TTR(CV1(bool), CV2(double), bool, false);
+   TEST_TTR(CV1(bool), CV2(double), bool, true);
    TEST_TTR(CV1(int), CV2(bool), bool, true);
-   TEST_TTR(CV1(int), CV2(double), bool, false);
-   TEST_TTR(CV1(double), CV2(bool), bool, false);
-   TEST_TTR(CV1(double), CV2(int), bool, false);
+   TEST_TTR(CV1(int), CV2(double), bool, true);
+   TEST_TTR(CV1(double), CV2(bool), bool, true);
+   TEST_TTR(CV1(double), CV2(int), bool, true);
    TEST_TTR(CV1(bool), CV2(int), tag, false);
    TEST_TTR(CV1(bool), CV2(double), tag, false);
    TEST_TTR(CV1(int), CV2(bool), tag, false);
@@ -1153,17 +1153,17 @@ void run() {
 #	undef CV2
 #	define CV2(T) const volatile T
    // test with only two template parameters
-   TEST_TT(CV1(bool), CV2(int), true);
+   TEST_TT(CV1(bool), CV2(int), false);
    TEST_TT(CV1(bool), CV2(double), false);
-   TEST_TT(CV1(int), CV2(bool), true);
+   TEST_TT(CV1(int), CV2(bool), false);
    TEST_TT(CV1(int), CV2(double), false);
    TEST_TT(CV1(double), CV2(bool), false);
    TEST_TT(CV1(double), CV2(int), false);
 
    // test with three template parameters
-   TEST_TTR(CV1(bool), CV2(int), bool, true);
+   TEST_TTR(CV1(bool), CV2(int), bool, false);
    TEST_TTR(CV1(bool), CV2(double), bool, false);
-   TEST_TTR(CV1(int), CV2(bool), bool, true);
+   TEST_TTR(CV1(int), CV2(bool), bool, false);
    TEST_TTR(CV1(int), CV2(double), bool, false);
    TEST_TTR(CV1(double), CV2(bool), bool, false);
    TEST_TTR(CV1(double), CV2(int), bool, false);
@@ -1179,17 +1179,17 @@ void run() {
 #	undef CV2
 #	define CV2(T) const volatile T&
    // test with only two template parameters
-   TEST_TT(CV1(bool), CV2(int), true);
+   TEST_TT(CV1(bool), CV2(int), false);
    TEST_TT(CV1(bool), CV2(double), false);
-   TEST_TT(CV1(int), CV2(bool), true);
+   TEST_TT(CV1(int), CV2(bool), false);
    TEST_TT(CV1(int), CV2(double), false);
    TEST_TT(CV1(double), CV2(bool), false);
    TEST_TT(CV1(double), CV2(int), false);
 
    // test with three template parameters
-   TEST_TTR(CV1(bool), CV2(int), bool, true);
+   TEST_TTR(CV1(bool), CV2(int), bool, false);
    TEST_TTR(CV1(bool), CV2(double), bool, false);
-   TEST_TTR(CV1(int), CV2(bool), bool, true);
+   TEST_TTR(CV1(int), CV2(bool), bool, false);
    TEST_TTR(CV1(int), CV2(double), bool, false);
    TEST_TTR(CV1(double), CV2(bool), bool, false);
    TEST_TTR(CV1(double), CV2(int), bool, false);

@@ -69,26 +69,32 @@ void run() {
    TEST_T(double, false);
    TEST_T(long double, false);
    TEST_T(void, false);
+#	undef CV
 #	define CV(T) const T
    TEST_T(CV(bool), true);
    TEST_T(CV(int), true);
    TEST_T(CV(double), false);
+#	undef CV
 #	define CV(T) volatile T
    TEST_T(CV(bool), true);
    TEST_T(CV(int), true);
    TEST_T(CV(double), false);
+#	undef CV
 #	define CV(T) const volatile T
    TEST_T(CV(bool), true);
    TEST_T(CV(int), true);
    TEST_T(CV(double), false);
+#	undef CV
 #	define CV(T) const T&
    TEST_T(CV(bool), true);
    TEST_T(CV(int), true);
    TEST_T(CV(double), false);
+#	undef CV
 #	define CV(T) volatile T&
    TEST_T(CV(bool), true);
    TEST_T(CV(int), true);
    TEST_T(CV(double), false);
+#	undef CV
 #	define CV(T) const volatile T&
    TEST_T(CV(bool), true);
    TEST_T(CV(int), true);

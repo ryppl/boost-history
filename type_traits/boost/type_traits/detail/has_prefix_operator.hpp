@@ -24,6 +24,21 @@
 // should be the last #include
 #include <boost/type_traits/detail/bool_trait_def.hpp>
 
+// cannot include this header without getting warnings of the kind:
+// gcc:
+//    warning: value computed is not used
+//    warning: comparison between signed and unsigned integer expressions
+// msvc:
+//    warning C4146: unary minus operator applied to unsigned type, result still unsigned
+//    warning C4804: '-' : unsafe use of type 'bool' in operation
+// cannot find another implementation -> declared as system header to suppress these warnings.
+#if defined(__GNUC__) && ((__GNUC__==3 && __GNUC_MINOR__>=1) || (__GNUC__>3))
+#   pragma GCC system_header
+#elif BOOST_MSVC
+#   pragma warning ( push )
+#   pragma warning ( disable : 4146 4804 )
+#endif
+
 namespace boost {
 namespace detail {
 
@@ -124,5 +139,9 @@ struct BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl) {
 BOOST_TT_AUX_BOOL_TRAIT_DEF2(BOOST_TT_TRAIT_NAME,RHS,RET=BOOST_TT_DEFAULT_RET,(::boost::detail::BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl)::BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl)<RHS,RET>::value))
 
 } // namespace boost
+
+#ifdef BOOST_MSVC
+#   pragma warning ( pop )
+#endif
 
 #include <boost/type_traits/detail/bool_trait_undef.hpp>

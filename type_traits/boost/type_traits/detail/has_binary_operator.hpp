@@ -11,6 +11,7 @@
 #include <boost/type_traits/integral_constant.hpp>
 #include <boost/type_traits/is_base_of.hpp>
 #include <boost/type_traits/is_class.hpp>
+#include <boost/type_traits/is_const.hpp>
 #include <boost/type_traits/is_convertible.hpp>
 #include <boost/type_traits/is_fundamental.hpp>
 #include <boost/type_traits/is_integral.hpp>
@@ -24,6 +25,25 @@
 
 // should be the last #include
 #include <boost/type_traits/detail/bool_trait_def.hpp>
+
+// cannot include this header without getting warnings of the kind:
+// gcc:
+//    warning: value computed is not used
+//    warning: comparison between signed and unsigned integer expressions
+// msvc:
+//    warning C4018: '<' : signed/unsigned mismatch
+//    warning C4244: '+=' : conversion from 'double' to 'char', possible loss of data
+//    warning C4547: '*' : operator before comma has no effect; expected operator with side-effect
+//    warning C4800: 'int' : forcing value to bool 'true' or 'false' (performance warning)
+//    warning C4804: '<' : unsafe use of type 'bool' in operation
+//    warning C4805: '==' : unsafe mix of type 'bool' and type 'char' in operation
+// cannot find another implementation -> declared as system header to suppress these warnings.
+#if defined(__GNUC__) && ((__GNUC__==3 && __GNUC_MINOR__>=1) || (__GNUC__>3))
+#   pragma GCC system_header
+#elif BOOST_MSVC
+#   pragma warning ( push )
+#   pragma warning ( disable : 4018 4244 4547 4800 4804 4805 )
+#endif
 
 namespace boost {
 namespace detail {
@@ -147,5 +167,9 @@ struct BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl) {
 BOOST_TT_AUX_BOOL_TRAIT_DEF3(BOOST_TT_TRAIT_NAME,LHS,RHS=LHS,RET=BOOST_TT_DEFAULT_RET,(::boost::detail::BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl)::BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl)<LHS,RHS,RET>::value))
 
 } // namespace boost
+
+#ifdef BOOST_MSVC
+#   pragma warning ( pop )
+#endif
 
 #include <boost/type_traits/detail/bool_trait_undef.hpp>

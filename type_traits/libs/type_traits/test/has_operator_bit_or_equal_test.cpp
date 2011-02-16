@@ -15,4 +15,4 @@
 #define BOOST_TT_TRAIT_NAME has_operator_bit_or_equal
 #define BOOST_TT_TRAIT_OP |=
 
-#include "has_integral_operator_test.hpp"
+#include "has_integral_no_constlhs_operator_test.hpp"

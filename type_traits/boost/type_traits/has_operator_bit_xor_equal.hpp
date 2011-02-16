@@ -14,13 +14,14 @@
 #define BOOST_TT_DEFAULT_RET void
 #define BOOST_TT_FORBIDDEN_IF\
    ::boost::type_traits::ice_or<\
-      /* two fundamental, one non integral */\
+      /* two fundamental, one non integral or lhs is const*/\
       ::boost::type_traits::ice_and<\
          ::boost::is_fundamental< lhs_nocv >::value,\
          ::boost::is_fundamental< rhs_nocv >::value,\
          ::boost::type_traits::ice_or<\
             ::boost::type_traits::ice_not< ::boost::is_integral< lhs_noref >::value >::value,\
-            ::boost::type_traits::ice_not< ::boost::is_integral< rhs_noref >::value >::value\
+            ::boost::type_traits::ice_not< ::boost::is_integral< rhs_noref >::value >::value,\
+         	::boost::is_const< lhs_noref >::value\
          >::value\
       >::value,\
       /* one fundamental, one pointer */\
