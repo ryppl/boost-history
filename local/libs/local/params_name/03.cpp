@@ -1,12 +1,5 @@
 
-#include "function_params.hpp"
-
-/** @todo Add to docs that this can never be bound by ref (as in C++). */
-
-/** @todo Add to docs that MSVC is not C99 because it does not support empty params (so `()` can't be used for empty params and `void` -- or `(void)` -- should be used. However, MSVC supports variadics you can use `..., ...` to separate params instead of parenthesis `(...)...`. */
-
-/** @todo Add to docs that if `, default ...` syntax seems strange for C99, programmers can always #define and use the following macro (or somenthing similar). */
-#define WITH_DEFAULT(x) , default x
+#include <boost/local/function.hpp>
 
 // OK.
 
