@@ -1,4 +1,4 @@
-[/
+
 [/
   (C) Copyright 2008-2009 Vicente J. Botet Escriba
   Distributed under the Boost Software License, Version 1.0.
@@ -13,6 +13,7 @@
 [include getting_started.qbk]
 [include tutorial.qbk]
 
+[include case_studies.qbk]
 
 [/==============================]
 [section:bibliography References]

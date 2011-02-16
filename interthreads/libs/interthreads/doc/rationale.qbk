@@ -10,7 +10,7 @@
 [/=======================================]
 
 [/=======================]
-[section Thread Decorator]
+[section:decorator Thread Decorator]
 [/=======================]
 
 [variablelist
@@ -26,7 +26,7 @@ created and the __thread_decorator_decorate__ function is called.]]
 [endsect]
 
 [/==============================]
-[section Thread Specific Storage]
+[section:tss Thread Specific Storage]
 [/==============================]
 
 [variablelist
@@ -69,11 +69,11 @@ template<class Y, class D, class A> void reset(Y * p, D d, A a);
 ]
 
 [/==============================]
-[heading Comparaing TSSS and TSS]
+[heading:hcmp_tss Comparaing TSSS and TSS]
 [/==============================]
 
 
-[table Comparaing TSSS and TSS
+[table:tcmp_tss Comparaing TSSS and TSS
 [[Feature][thread_specific_shared_ptr][thread_specific_ptr][Compatible]]
 [[ownership][shared][exclusive][no]]
 [[default constructor][[*yes]][[*yes]][[*yes]]]
@@ -97,7 +97,7 @@ template<class Y, class D, class A> void reset(Y * p, D d, A a);
 [endsect]
 
 [/=================]
-[section Keep Alive]
+[section:ka Keep Alive]
 [/=================]
 
 [variablelist
@@ -121,7 +121,7 @@ The library provides this hook for user wanting to try something specific.]]
 
 
 [/===================]
-[section Thread Tuple]
+[section:tuple Thread Tuple]
 [/===================]
 
 [variablelist
@@ -166,11 +166,11 @@ The problem if we provide the non constant variant is that the user can detach t
 ]
 
 [/=======================================================]
-[heading Comparaing thread, thread_group and thread_tuple]
+[heading:hcmp_thread Comparaing thread, thread_group and thread_tuple]
 [/=======================================================]
 
 
-[table Comparaing thread, thread_group and thread_tuple
+[table:tcmp_thread Comparaing thread, thread_group and thread_tuple
 [[Feature][thread][thread_group][thread_tuple][Compatible]]
 [[default constructor][[*yes]][[*yes]][[*yes]][[*yes]]]
 [[copiable][no][no][no][[*yes]]]

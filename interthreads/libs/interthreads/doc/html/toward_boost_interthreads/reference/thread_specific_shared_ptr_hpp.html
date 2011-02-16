@@ -1,17 +1,13 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
-<title>
-      Header &lt;boost/interthreads/thread_specific_shared_ptr.hpp&gt;</title>
+<title>Header &lt;boost/interthreads/thread_specific_shared_ptr.hpp&gt;</title>
 <link rel="stylesheet" href="../../../../../../doc/html/boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.69.1">
-<link rel="start" href="../../index.html" title="Toward Boost.InterThreads">
-<link rel="up" href="../reference.html" title=" Reference">
-<link rel="prev" href="thread_decorator_hpp.html" title="
-      Header &lt;boost/interthreads/thread_decorator.hpp&gt;">
-<link rel="next" href="keep_alive_file_hpp.html" title="
-      Header &lt;boost/interthreads/thread_keep_alive.hpp&gt;">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="../../index.html" title="Toward Boost.InterThreads">
+<link rel="up" href="../reference.html" title="Reference">
+<link rel="prev" href="thread_decorator_hpp.html" title="Header &lt;boost/interthreads/thread_decorator.hpp&gt;">
+<link rel="next" href="keep_alive_file_hpp.html" title="Header &lt;boost/interthreads/thread_keep_alive.hpp&gt;">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
@@ -26,256 +22,239 @@
 <div class="spirit-nav">
 <a accesskey="p" href="thread_decorator_hpp.html"><img src="../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="keep_alive_file_hpp.html"><img src="../../../../../../doc/src/images/next.png" alt="Next"></a>
 </div>
-<div class="section" lang="en">
+<div class="section">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp"></a><a href="thread_specific_shared_ptr_hpp.html" title="
-      Header &lt;boost/interthreads/thread_specific_shared_ptr.hpp&gt;">
-      Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">interthreads</span><span class="special">/</span><span class="identifier">thread_specific_shared_ptr</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+<a name="toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp"></a><a class="link" href="thread_specific_shared_ptr_hpp.html" title="Header &lt;boost/interthreads/thread_specific_shared_ptr.hpp&gt;">Header
+      <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">interthreads</span><span class="special">/</span><span class="identifier">thread_specific_shared_ptr</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
 </h3></div></div></div>
 <div class="toc"><dl>
-<dt><span class="section"><a href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr">
-        Template Class <code class="computeroutput"><span class="identifier">thread_specific_shared_ptr</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr">Template
+        Class <code class="computeroutput"><span class="identifier">thread_specific_shared_ptr</span><span class="special">&lt;&gt;</span></code></a></span></dt>
 <dd><dl>
-<dt><span class="section"><a href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_reference_parameters">
-          Template parameters</a></span></dt>
-<dt><span class="section"><a href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_reference_types">
-          Public types</a></span></dt>
-<dt><span class="section"><a href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_default_constructor">
+<dt><span class="section"><a href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_reference_parameters">Template
+          parameters</a></span></dt>
+<dt><span class="section"><a href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_reference_types">Public
+          types</a></span></dt>
+<dt><span class="section"><a href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_default_constructor">Constructor</a></span></dt>
+<dt><span class="section"><a href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_constructor_with_custom_cleanup">Cleanup
           Constructor</a></span></dt>
-<dt><span class="section"><a href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_constructor_with_custom_cleanup">
-          Cleanup Constructor</a></span></dt>
-<dt><span class="section"><a href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_destructor">
-          Destructor</a></span></dt>
-<dt><span class="section"><a href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_get">
-          Member Function <code class="computeroutput"><span class="identifier">get</span><span class="special">()</span></code></a></span></dt>
-<dt><span class="section"><a href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_operator_arrow">
-          Member Function <code class="computeroutput"><span class="keyword">operator</span><span class="special">-&gt;()</span></code></a></span></dt>
-<dt><span class="section"><a href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_operator_star">
-          Member Function <code class="computeroutput"><span class="keyword">operator</span><span class="special">*()</span></code></a></span></dt>
-<dt><span class="section"><a href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_reset">
-          Member Function <code class="computeroutput"><span class="identifier">reset</span><span class="special">()</span></code></a></span></dt>
-<dt><span class="section"><a href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_wait_and_get">
-          Member Function <code class="computeroutput"><span class="identifier">wait_and_get</span><span class="special">()</span></code></a></span></dt>
-<dt><span class="section"><a href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_operatora">
-          Member Function <code class="computeroutput"><span class="keyword">operator</span><span class="special">[]()</span></code></a></span></dt>
-<dt><span class="section"><a href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.get_mutex">
-          Member Function <code class="computeroutput"><span class="identifier">get_mutex</span><span class="special">()</span></code></a></span></dt>
-<dt><span class="section"><a href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.get_map">
-          Member Function <code class="computeroutput"><span class="identifier">get_map</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_destructor">Destructor</a></span></dt>
+<dt><span class="section"><a href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_get">Member
+          Function <code class="computeroutput"><span class="identifier">get</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_operator_arrow">Member
+          Function <code class="computeroutput"><span class="keyword">operator</span><span class="special">-&gt;()</span></code></a></span></dt>
+<dt><span class="section"><a href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_operator_star">Member
+          Function <code class="computeroutput"><span class="keyword">operator</span><span class="special">*()</span></code></a></span></dt>
+<dt><span class="section"><a href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_reset">Member
+          Function <code class="computeroutput"><span class="identifier">reset</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_wait_and_get">Member
+          Function <code class="computeroutput"><span class="identifier">wait_and_get</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_operatora">Member
+          Function <code class="computeroutput"><span class="keyword">operator</span><span class="special">[]()</span></code></a></span></dt>
+<dt><span class="section"><a href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.get_mutex">Member
+          Function <code class="computeroutput"><span class="identifier">get_mutex</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.get_map">Member
+          Function <code class="computeroutput"><span class="identifier">get_map</span><span class="special">()</span></code></a></span></dt>
 </dl></dd>
 </dl></div>
-<pre class="programlisting">
-    <span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
-    <span class="keyword">namespace</span> <span class="identifier">interthreads</span> <span class="special">{</span>
-    
-        <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
-        <span class="keyword">class</span> <span class="identifier">thread_specific_shared_ptr</span><span class="special">;</span>
-    
-    <span class="special">}</span>
-    <span class="special">}</span>
-<span class="special">=</span><span class="string">"bold"</span><span class="special">&gt;</span></pre>
-<div class="section" lang="en">
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
+<span class="keyword">namespace</span> <span class="identifier">interthreads</span> <span class="special">{</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+    <span class="keyword">class</span> <span class="identifier">thread_specific_shared_ptr</span><span class="special">;</span>
+
+<span class="special">}</span>
+<span class="special">}</span>
+</pre>
+<div class="section">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr"></a><a href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr" title="
-        Template Class thread_specific_shared_ptr&lt;&gt;">
-        Template Class <code class="computeroutput"><span class="identifier">thread_specific_shared_ptr</span><span class="special">&lt;&gt;</span></code></a>
+<a name="toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr"></a><a class="link" href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr" title="Template Class thread_specific_shared_ptr&lt;&gt;">Template
+        Class <code class="computeroutput"><span class="identifier">thread_specific_shared_ptr</span><span class="special">&lt;&gt;</span></code></a>
 </h4></div></div></div>
 <div class="toc"><dl>
-<dt><span class="section"><a href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_reference_parameters">
-          Template parameters</a></span></dt>
-<dt><span class="section"><a href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_reference_types">
-          Public types</a></span></dt>
-<dt><span class="section"><a href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_default_constructor">
+<dt><span class="section"><a href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_reference_parameters">Template
+          parameters</a></span></dt>
+<dt><span class="section"><a href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_reference_types">Public
+          types</a></span></dt>
+<dt><span class="section"><a href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_default_constructor">Constructor</a></span></dt>
+<dt><span class="section"><a href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_constructor_with_custom_cleanup">Cleanup
           Constructor</a></span></dt>
-<dt><span class="section"><a href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_constructor_with_custom_cleanup">
-          Cleanup Constructor</a></span></dt>
-<dt><span class="section"><a href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_destructor">
-          Destructor</a></span></dt>
-<dt><span class="section"><a href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_get">
-          Member Function <code class="computeroutput"><span class="identifier">get</span><span class="special">()</span></code></a></span></dt>
-<dt><span class="section"><a href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_operator_arrow">
-          Member Function <code class="computeroutput"><span class="keyword">operator</span><span class="special">-&gt;()</span></code></a></span></dt>
-<dt><span class="section"><a href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_operator_star">
-          Member Function <code class="computeroutput"><span class="keyword">operator</span><span class="special">*()</span></code></a></span></dt>
-<dt><span class="section"><a href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_reset">
-          Member Function <code class="computeroutput"><span class="identifier">reset</span><span class="special">()</span></code></a></span></dt>
-<dt><span class="section"><a href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_wait_and_get">
-          Member Function <code class="computeroutput"><span class="identifier">wait_and_get</span><span class="special">()</span></code></a></span></dt>
-<dt><span class="section"><a href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_operatora">
-          Member Function <code class="computeroutput"><span class="keyword">operator</span><span class="special">[]()</span></code></a></span></dt>
-<dt><span class="section"><a href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.get_mutex">
-          Member Function <code class="computeroutput"><span class="identifier">get_mutex</span><span class="special">()</span></code></a></span></dt>
-<dt><span class="section"><a href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.get_map">
-          Member Function <code class="computeroutput"><span class="identifier">get_map</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_destructor">Destructor</a></span></dt>
+<dt><span class="section"><a href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_get">Member
+          Function <code class="computeroutput"><span class="identifier">get</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_operator_arrow">Member
+          Function <code class="computeroutput"><span class="keyword">operator</span><span class="special">-&gt;()</span></code></a></span></dt>
+<dt><span class="section"><a href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_operator_star">Member
+          Function <code class="computeroutput"><span class="keyword">operator</span><span class="special">*()</span></code></a></span></dt>
+<dt><span class="section"><a href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_reset">Member
+          Function <code class="computeroutput"><span class="identifier">reset</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_wait_and_get">Member
+          Function <code class="computeroutput"><span class="identifier">wait_and_get</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_operatora">Member
+          Function <code class="computeroutput"><span class="keyword">operator</span><span class="special">[]()</span></code></a></span></dt>
+<dt><span class="section"><a href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.get_mutex">Member
+          Function <code class="computeroutput"><span class="identifier">get_mutex</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.get_map">Member
+          Function <code class="computeroutput"><span class="identifier">get_map</span><span class="special">()</span></code></a></span></dt>
 </dl></div>
 <p>
           <code class="computeroutput"><span class="identifier">bith</span><span class="special">::</span><span class="identifier">thread_specific_shared_ptr</span><span class="special">&lt;&gt;</span></code>
           is an extension of the thread_specific_ptr providing access to the thread
           specific context from other threads.
         </p>
-<pre class="programlisting">
-    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
-    <span class="keyword">class</span> <span class="identifier">thread_specific_shared_ptr</span> <span class="special">:</span> <span class="keyword">private</span> <span class="identifier">noncopyable</span>
-    <span class="special">{</span>
-    <span class="keyword">public</span><span class="special">:</span>
-        <span class="keyword">typedef</span> <span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span>               <span class="identifier">shared_ptr_type</span><span class="special">;</span>
-        <span class="keyword">typedef</span> <span class="char">'implementation defined'</span>    <span class="identifier">map_type</span><span class="special">;</span>
-        <span class="keyword">typedef</span> <span class="char">'implementation defined'</span>    <span class="identifier">mutex_type</span><span class="special">;</span>
-        <span class="keyword">typedef</span> <span class="char">'implementation defined'</span>    <span class="identifier">lock_type</span><span class="special">;</span>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">thread_specific_shared_ptr</span> <span class="special">:</span> <span class="keyword">private</span> <span class="identifier">noncopyable</span>
+<span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">typedef</span> <span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span>               <span class="identifier">shared_ptr_type</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="char">'implementation defined'</span>    <span class="identifier">map_type</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="char">'implementation defined'</span>    <span class="identifier">mutex_type</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="char">'implementation defined'</span>    <span class="identifier">lock_type</span><span class="special">;</span>
 
-        <span class="identifier">thread_specific_shared_ptr</span><span class="special">();</span>
-        <span class="keyword">explicit</span> <span class="identifier">thread_specific_shared_ptr</span><span class="special">(</span><span class="keyword">void</span> <span class="special">(*</span><span class="identifier">cleanup_</span><span class="special">)(</span><span class="identifier">shared_ptr_type</span><span class="special">));</span>
-        <span class="special">~</span><span class="identifier">thread_specific_shared_ptr</span><span class="special">();</span>
+    <span class="identifier">thread_specific_shared_ptr</span><span class="special">();</span>
+    <span class="keyword">explicit</span> <span class="identifier">thread_specific_shared_ptr</span><span class="special">(</span><span class="keyword">void</span> <span class="special">(*</span><span class="identifier">cleanup_</span><span class="special">)(</span><span class="identifier">shared_ptr_type</span><span class="special">));</span>
+    <span class="special">~</span><span class="identifier">thread_specific_shared_ptr</span><span class="special">();</span>
 
-        <span class="identifier">T</span><span class="special">*</span>                      <span class="identifier">get</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
-        <span class="identifier">T</span><span class="special">*</span>                      <span class="keyword">operator</span><span class="special">-&gt;()</span> <span class="keyword">const</span><span class="special">;</span>        
-        <span class="identifier">T</span><span class="special">&amp;</span>                      <span class="keyword">operator</span><span class="special">*()</span> <span class="keyword">const</span><span class="special">;</span>
-        <span class="keyword">void</span>                    <span class="identifier">reset</span><span class="special">();</span>
-        <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Y</span><span class="special">&gt;</span> 
-        <span class="keyword">void</span>                    <span class="identifier">reset</span><span class="special">(</span><span class="identifier">Y</span> <span class="special">*</span> <span class="identifier">p</span><span class="special">);</span>
-        <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Y</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">D</span><span class="special">&gt;</span> 
-        <span class="keyword">void</span>                    <span class="identifier">reset</span><span class="special">(</span><span class="identifier">Y</span> <span class="special">*</span> <span class="identifier">p</span><span class="special">,</span> <span class="identifier">D</span> <span class="identifier">d</span><span class="special">);</span>
-        <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Y</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">D</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">A</span><span class="special">&gt;</span> 
-        <span class="keyword">void</span>                    <span class="identifier">reset</span><span class="special">(</span><span class="identifier">Y</span> <span class="special">*</span> <span class="identifier">p</span><span class="special">,</span> <span class="identifier">D</span> <span class="identifier">d</span><span class="special">,</span> <span class="identifier">A</span> <span class="identifier">a</span><span class="special">);</span>
-        
-        <span class="identifier">mutex_type</span><span class="special">&amp;</span>             <span class="identifier">get_mutex</span><span class="special">();</span>
-        <span class="keyword">const</span> <span class="identifier">map_type</span><span class="special">&amp;</span>         <span class="identifier">get_map</span><span class="special">(</span><span class="identifier">lock_type</span><span class="special">&amp;)</span> <span class="keyword">const</span><span class="special">;</span>
-        <span class="identifier">shared_ptr_type</span>   <span class="keyword">operator</span><span class="special">[](</span><span class="identifier">thread</span><span class="special">::</span><span class="identifier">id</span> <span class="identifier">id</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
-        <span class="identifier">shared_ptr_type</span>   <span class="identifier">wait_and_get</span><span class="special">(</span><span class="identifier">thread</span><span class="special">::</span><span class="identifier">id</span> <span class="identifier">id</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
-    <span class="keyword">private</span><span class="special">:</span>        
-        <span class="identifier">shared_ptr_type</span>         <span class="identifier">get_shared_ptr</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
-    <span class="special">};</span>
-<span class="identifier">ad_specific_shared_ptr_hpp</span> <span class="identifier">Head</span></pre>
-<div class="section" lang="en">
+    <span class="identifier">T</span><span class="special">*</span>                      <span class="identifier">get</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+    <span class="identifier">T</span><span class="special">*</span>                      <span class="keyword">operator</span><span class="special">-&gt;()</span> <span class="keyword">const</span><span class="special">;</span>        
+    <span class="identifier">T</span><span class="special">&amp;</span>                      <span class="keyword">operator</span><span class="special">*()</span> <span class="keyword">const</span><span class="special">;</span>
+    <span class="keyword">void</span>                    <span class="identifier">reset</span><span class="special">();</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Y</span><span class="special">&gt;</span> 
+    <span class="keyword">void</span>                    <span class="identifier">reset</span><span class="special">(</span><span class="identifier">Y</span> <span class="special">*</span> <span class="identifier">p</span><span class="special">);</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Y</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">D</span><span class="special">&gt;</span> 
+    <span class="keyword">void</span>                    <span class="identifier">reset</span><span class="special">(</span><span class="identifier">Y</span> <span class="special">*</span> <span class="identifier">p</span><span class="special">,</span> <span class="identifier">D</span> <span class="identifier">d</span><span class="special">);</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Y</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">D</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">A</span><span class="special">&gt;</span> 
+    <span class="keyword">void</span>                    <span class="identifier">reset</span><span class="special">(</span><span class="identifier">Y</span> <span class="special">*</span> <span class="identifier">p</span><span class="special">,</span> <span class="identifier">D</span> <span class="identifier">d</span><span class="special">,</span> <span class="identifier">A</span> <span class="identifier">a</span><span class="special">);</span>
+    
+    <span class="identifier">mutex_type</span><span class="special">&amp;</span>             <span class="identifier">get_mutex</span><span class="special">();</span>
+    <span class="keyword">const</span> <span class="identifier">map_type</span><span class="special">&amp;</span>         <span class="identifier">get_map</span><span class="special">(</span><span class="identifier">lock_type</span><span class="special">&amp;)</span> <span class="keyword">const</span><span class="special">;</span>
+    <span class="identifier">shared_ptr_type</span>   <span class="keyword">operator</span><span class="special">[](</span><span class="identifier">thread</span><span class="special">::</span><span class="identifier">id</span> <span class="identifier">id</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+    <span class="identifier">shared_ptr_type</span>   <span class="identifier">wait_and_get</span><span class="special">(</span><span class="identifier">thread</span><span class="special">::</span><span class="identifier">id</span> <span class="identifier">id</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+<span class="keyword">private</span><span class="special">:</span>        
+    <span class="identifier">shared_ptr_type</span>         <span class="identifier">get_shared_ptr</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+<div class="section">
 <div class="titlepage"><div><div><h5 class="title">
-<a name="toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_reference_parameters"></a><a href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_reference_parameters" title="
-          Template parameters">
-          Template parameters</a>
+<a name="toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_reference_parameters"></a><a class="link" href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_reference_parameters" title="Template parameters">Template
+          parameters</a>
 </h5></div></div></div>
 <p>
             <code class="computeroutput"><span class="identifier">thread_specific_shared_ptr</span><span class="special">&lt;&gt;</span></code> is instantiated with the following
             types:
           </p>
-<div class="itemizedlist"><ul type="disc"><li>
-              T The type of the pointeed object
-            </li></ul></div>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+                T The type of the pointeed object
+              </li></ul></div>
 </div>
-<div class="section" lang="en">
+<div class="section">
 <div class="titlepage"><div><div><h5 class="title">
-<a name="toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_reference_types"></a><a href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_reference_types" title="
-          Public types">
-          Public types</a>
+<a name="toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_reference_types"></a><a class="link" href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_reference_types" title="Public types">Public
+          types</a>
 </h5></div></div></div>
 <p>
             <code class="computeroutput"><span class="identifier">thread_specific_shared_ptr</span><span class="special">&lt;&gt;</span></code> defines the following types:
           </p>
-<div class="itemizedlist"><ul type="disc">
-<li>
-<span class="bold"><strong><code class="computeroutput"><span class="identifier">shared_ptr_type</span></code></strong></span>
-              The shared pointed type.
-            </li>
-<li>
-<span class="bold"><strong><code class="computeroutput"><span class="identifier">map_type</span></code></strong></span>
-              The mapping type from <code class="computeroutput"><span class="identifier">thread</span><span class="special">::</span><span class="identifier">id</span></code>
-              to <code class="computeroutput"><span class="identifier">shared_ptr_type</span></code>
-</li>
-<li>
-<span class="bold"><strong><code class="computeroutput"><span class="identifier">mutex_type</span></code></strong></span>
-              The protecting mutext type follwing the Lockable Concept
-            </li>
-<li>
-<span class="bold"><strong><code class="computeroutput"><span class="identifier">lock_type</span></code></strong></span>
-              The lock used to get the map follwing the unique_lock subjacent Concept
-            </li>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+                <span class="bold"><strong><code class="computeroutput"><span class="identifier">shared_ptr_type</span></code></strong></span>
+                The shared pointed type.
+              </li>
+<li class="listitem">
+                <span class="bold"><strong><code class="computeroutput"><span class="identifier">map_type</span></code></strong></span>
+                The mapping type from <code class="computeroutput"><span class="identifier">thread</span><span class="special">::</span><span class="identifier">id</span></code>
+                to <code class="computeroutput"><span class="identifier">shared_ptr_type</span></code>
+              </li>
+<li class="listitem">
+                <span class="bold"><strong><code class="computeroutput"><span class="identifier">mutex_type</span></code></strong></span>
+                The protecting mutext type follwing the Lockable Concept
+              </li>
+<li class="listitem">
+                <span class="bold"><strong><code class="computeroutput"><span class="identifier">lock_type</span></code></strong></span>
+                The lock used to get the map follwing the unique_lock subjacent Concept
+              </li>
 </ul></div>
 </div>
-<div class="section" lang="en">
+<div class="section">
 <div class="titlepage"><div><div><h5 class="title">
-<a name="toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_default_constructor"></a><a href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_default_constructor" title="
-          Constructor">
-          Constructor</a>
+<a name="toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_default_constructor"></a><a class="link" href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_default_constructor" title="Constructor">Constructor</a>
 </h5></div></div></div>
-<pre class="programlisting">
-    <span class="identifier">thread_specific_shared_ptr</span><span class="special">();</span>
-<span class="identifier">o</span></pre>
+<pre class="programlisting"><span class="identifier">thread_specific_shared_ptr</span><span class="special">();</span>
+</pre>
 <div class="variablelist">
 <p class="title"><b></b></p>
 <dl>
 <dt><span class="term">Effects:</span></dt>
 <dd><p>
-                Construct a <code class="computeroutput"><span class="identifier">thread_specific_shared_ptr</span><span class="special">&lt;&gt;</span></code> object for storing a pointer
-                to an object of type <code class="computeroutput"><span class="identifier">T</span></code>
-                specific to each thread.
-              </p></dd>
+                  Construct a <code class="computeroutput"><span class="identifier">thread_specific_shared_ptr</span><span class="special">&lt;&gt;</span></code> object for storing a pointer
+                  to an object of type <code class="computeroutput"><span class="identifier">T</span></code>
+                  specific to each thread.
+                </p></dd>
 <dt><span class="term">Throws:</span></dt>
 <dd><p>
-                <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">bad_alloc</span></code> when resources unavailable.
-              </p></dd>
+                  <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">bad_alloc</span></code> when resources unavailable.
+                </p></dd>
 <dt><span class="term">Thread safety:</span></dt>
 <dd><p>
-                safe.
-              </p></dd>
+                  safe.
+                </p></dd>
 </dl>
 </div>
 </div>
-<div class="section" lang="en">
+<div class="section">
 <div class="titlepage"><div><div><h5 class="title">
-<a name="toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_constructor_with_custom_cleanup"></a><a href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_constructor_with_custom_cleanup" title="
-          Cleanup Constructor">
-          Cleanup Constructor</a>
+<a name="toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_constructor_with_custom_cleanup"></a><a class="link" href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_constructor_with_custom_cleanup" title="Cleanup Constructor">Cleanup
+          Constructor</a>
 </h5></div></div></div>
-<pre class="programlisting">
-    <span class="keyword">explicit</span> <span class="identifier">thread_specific_shared_ptr</span><span class="special">(</span><span class="keyword">void</span> <span class="special">(*</span><span class="identifier">cleanup_</span><span class="special">)(</span><span class="identifier">shared_ptr_type</span><span class="special">));</span>
-#</pre>
+<pre class="programlisting"><span class="keyword">explicit</span> <span class="identifier">thread_specific_shared_ptr</span><span class="special">(</span><span class="keyword">void</span> <span class="special">(*</span><span class="identifier">cleanup_</span><span class="special">)(</span><span class="identifier">shared_ptr_type</span><span class="special">));</span>
+</pre>
 <div class="variablelist">
 <p class="title"><b></b></p>
 <dl>
 <dt><span class="term">Requires:</span></dt>
 <dd><p>
-                <code class="computeroutput"><span class="identifier">cleanup_function</span><span class="special">(</span><span class="keyword">this</span><span class="special">-&gt;</span><span class="identifier">get</span><span class="special">())</span></code> does not throw any exceptions.
-              </p></dd>
+                  <code class="computeroutput"><span class="identifier">cleanup_function</span><span class="special">(</span><span class="keyword">this</span><span class="special">-&gt;</span><span class="identifier">get</span><span class="special">())</span></code> does not throw any exceptions.
+                </p></dd>
 <dt><span class="term">Effects:</span></dt>
 <dd><p>
-                Construct a <code class="computeroutput"><span class="identifier">thread_specific_shared_ptr</span><span class="special">&lt;&gt;</span></code> object for storing a pointer
-                to an object of type <code class="computeroutput"><span class="identifier">T</span></code>
-                specific to each thread. The supplied <code class="computeroutput"><span class="identifier">cleanup_function</span></code>
-                will be called at thread exit.
-              </p></dd>
+                  Construct a <code class="computeroutput"><span class="identifier">thread_specific_shared_ptr</span><span class="special">&lt;&gt;</span></code> object for storing a pointer
+                  to an object of type <code class="computeroutput"><span class="identifier">T</span></code>
+                  specific to each thread. The supplied <code class="computeroutput"><span class="identifier">cleanup_function</span></code>
+                  will be called at thread exit.
+                </p></dd>
 <dt><span class="term">Throws:</span></dt>
 <dd><p>
-                <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">bad_alloc</span></code> when resources unavailable.
-              </p></dd>
+                  <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">bad_alloc</span></code> when resources unavailable.
+                </p></dd>
 <dt><span class="term">Thread safety:</span></dt>
 <dd><p>
-                safe.
-              </p></dd>
+                  safe.
+                </p></dd>
 </dl>
 </div>
 </div>
-<div class="section" lang="en">
+<div class="section">
 <div class="titlepage"><div><div><h5 class="title">
-<a name="toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_destructor"></a><a href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_destructor" title="
-          Destructor">
-          Destructor</a>
+<a name="toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_destructor"></a><a class="link" href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_destructor" title="Destructor">Destructor</a>
 </h5></div></div></div>
-<pre class="programlisting">
-    <span class="special">~</span><span class="identifier">thread_specific_shared_ptr</span><span class="special">();</span>
-#</pre>
+<pre class="programlisting"><span class="special">~</span><span class="identifier">thread_specific_shared_ptr</span><span class="special">();</span>
+</pre>
 <div class="variablelist">
 <p class="title"><b></b></p>
 <dl>
 <dt><span class="term">Effects:</span></dt>
 <dd><p>
-                Remove from the static map the current thread::id and destroys <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>.
-              </p></dd>
+                  Remove from the static map the current thread::id and destroys
+                  <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>.
+                </p></dd>
 <dt><span class="term">Throws:</span></dt>
 <dd><p>
-                Nothing.
-              </p></dd>
+                  Nothing.
+                </p></dd>
 <dt><span class="term">Thread safety:</span></dt>
 <dd><p>
-                safe.
-              </p></dd>
+                  safe.
+                </p></dd>
 </dl>
 </div>
 <div class="note"><table border="0" summary="Note">
@@ -291,30 +270,28 @@
             </p></td></tr>
 </table></div>
 </div>
-<div class="section" lang="en">
+<div class="section">
 <div class="titlepage"><div><div><h5 class="title">
-<a name="toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_get"></a><a href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_get" title="
-          Member Function get()">
-          Member Function <code class="computeroutput"><span class="identifier">get</span><span class="special">()</span></code></a>
+<a name="toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_get"></a><a class="link" href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_get" title="Member Function get()">Member
+          Function <code class="computeroutput"><span class="identifier">get</span><span class="special">()</span></code></a>
 </h5></div></div></div>
-<pre class="programlisting">
-    <span class="identifier">shared_ptr_type</span> <span class="identifier">get</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
-<span class="identifier">u</span></pre>
+<pre class="programlisting"><span class="identifier">shared_ptr_type</span> <span class="identifier">get</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+</pre>
 <div class="variablelist">
 <p class="title"><b></b></p>
 <dl>
 <dt><span class="term">Returns:</span></dt>
 <dd><p>
-                The pointer associated with the current thread.
-              </p></dd>
+                  The pointer associated with the current thread.
+                </p></dd>
 <dt><span class="term">Throws:</span></dt>
 <dd><p>
-                Nothing.
-              </p></dd>
+                  Nothing.
+                </p></dd>
 <dt><span class="term">Thread safety:</span></dt>
 <dd><p>
-                safe.
-              </p></dd>
+                  safe.
+                </p></dd>
 </dl>
 </div>
 <div class="note"><table border="0" summary="Note">
@@ -328,170 +305,161 @@
             </p></td></tr>
 </table></div>
 </div>
-<div class="section" lang="en">
+<div class="section">
 <div class="titlepage"><div><div><h5 class="title">
-<a name="toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_operator_arrow"></a><a href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_operator_arrow" title="
-          Member Function operator-&gt;()">
-          Member Function <code class="computeroutput"><span class="keyword">operator</span><span class="special">-&gt;()</span></code></a>
+<a name="toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_operator_arrow"></a><a class="link" href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_operator_arrow" title="Member Function operator-&gt;()">Member
+          Function <code class="computeroutput"><span class="keyword">operator</span><span class="special">-&gt;()</span></code></a>
 </h5></div></div></div>
-<pre class="programlisting">
-    <span class="identifier">T</span><span class="special">*</span> <span class="keyword">operator</span><span class="special">-&gt;()</span> <span class="keyword">const</span><span class="special">;</span>        
-<span class="identifier">e</span></pre>
+<pre class="programlisting"><span class="identifier">T</span><span class="special">*</span> <span class="keyword">operator</span><span class="special">-&gt;()</span> <span class="keyword">const</span><span class="special">;</span>        
+</pre>
 <div class="variablelist">
 <p class="title"><b></b></p>
 <dl>
 <dt><span class="term">Requires:</span></dt>
 <dd><p>
-                <code class="computeroutput"><span class="keyword">this</span><span class="special">-&gt;</span><span class="identifier">get</span><span class="special">()</span></code>
-                is not <code class="computeroutput"><span class="number">0</span></code>.
-              </p></dd>
+                  <code class="computeroutput"><span class="keyword">this</span><span class="special">-&gt;</span><span class="identifier">get</span><span class="special">()</span></code>
+                  is not <code class="computeroutput"><span class="number">0</span></code>.
+                </p></dd>
 <dt><span class="term">Returns:</span></dt>
 <dd><p>
-                <code class="computeroutput"><span class="keyword">this</span><span class="special">-&gt;</span><span class="identifier">get</span><span class="special">()</span></code>
-              </p></dd>
+                  <code class="computeroutput"><span class="keyword">this</span><span class="special">-&gt;</span><span class="identifier">get</span><span class="special">()</span></code>
+                </p></dd>
 <dt><span class="term">Throws:</span></dt>
 <dd><p>
-                Nothing.
-              </p></dd>
+                  Nothing.
+                </p></dd>
 <dt><span class="term">Thread safety:</span></dt>
 <dd><p>
-                safe.
-              </p></dd>
+                  safe.
+                </p></dd>
 </dl>
 </div>
 </div>
-<div class="section" lang="en">
+<div class="section">
 <div class="titlepage"><div><div><h5 class="title">
-<a name="toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_operator_star"></a><a href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_operator_star" title="
-          Member Function operator*()">
-          Member Function <code class="computeroutput"><span class="keyword">operator</span><span class="special">*()</span></code></a>
+<a name="toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_operator_star"></a><a class="link" href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_operator_star" title="Member Function operator*()">Member
+          Function <code class="computeroutput"><span class="keyword">operator</span><span class="special">*()</span></code></a>
 </h5></div></div></div>
-<pre class="programlisting">
-    <span class="identifier">T</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">*()</span> <span class="keyword">const</span><span class="special">;</span>
-<span class="identifier">_</span></pre>
+<pre class="programlisting"><span class="identifier">T</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">*()</span> <span class="keyword">const</span><span class="special">;</span>
+</pre>
 <div class="variablelist">
 <p class="title"><b></b></p>
 <dl>
 <dt><span class="term">Requires:</span></dt>
 <dd><p>
-                <code class="computeroutput"><span class="keyword">this</span><span class="special">-&gt;</span><span class="identifier">get</span><span class="special">()</span></code>
-                is not <code class="computeroutput"><span class="number">0</span></code>.
-              </p></dd>
+                  <code class="computeroutput"><span class="keyword">this</span><span class="special">-&gt;</span><span class="identifier">get</span><span class="special">()</span></code>
+                  is not <code class="computeroutput"><span class="number">0</span></code>.
+                </p></dd>
 <dt><span class="term">Returns:</span></dt>
 <dd><p>
-                <code class="computeroutput"><span class="special">*(</span><span class="keyword">this</span><span class="special">-&gt;</span><span class="identifier">get</span><span class="special">())</span></code>
-              </p></dd>
+                  <code class="computeroutput"><span class="special">*(</span><span class="keyword">this</span><span class="special">-&gt;</span><span class="identifier">get</span><span class="special">())</span></code>
+                </p></dd>
 <dt><span class="term">Throws:</span></dt>
 <dd><p>
-                Nothing.
-              </p></dd>
+                  Nothing.
+                </p></dd>
 <dt><span class="term">Thread safety:</span></dt>
 <dd><p>
-                safe.
-              </p></dd>
+                  safe.
+                </p></dd>
 </dl>
 </div>
 </div>
-<div class="section" lang="en">
+<div class="section">
 <div class="titlepage"><div><div><h5 class="title">
-<a name="toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_reset"></a><a href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_reset" title="
-          Member Function reset()">
-          Member Function <code class="computeroutput"><span class="identifier">reset</span><span class="special">()</span></code></a>
+<a name="toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_reset"></a><a class="link" href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_reset" title="Member Function reset()">Member
+          Function <code class="computeroutput"><span class="identifier">reset</span><span class="special">()</span></code></a>
 </h5></div></div></div>
-<pre class="programlisting">
-    <span class="keyword">void</span> <span class="identifier">reset</span><span class="special">();</span>
-<span class="special">&gt;</span></pre>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">reset</span><span class="special">();</span>
+</pre>
 <div class="variablelist">
 <p class="title"><b></b></p>
 <dl>
 <dt><span class="term">Effects:</span></dt>
 <dd><p>
-                Equivalent to <code class="computeroutput"><span class="identifier">shared_ptr</span><span class="special">().</span><span class="identifier">swap</span><span class="special">(</span><span class="keyword">this</span><span class="special">-&gt;</span><span class="identifier">get_shared_ptr</span><span class="special">())</span></code>. Update the mapping.
-              </p></dd>
+                  Equivalent to <code class="computeroutput"><span class="identifier">shared_ptr</span><span class="special">().</span><span class="identifier">swap</span><span class="special">(</span><span class="keyword">this</span><span class="special">-&gt;</span><span class="identifier">get_shared_ptr</span><span class="special">())</span></code>. Update the mapping.
+                </p></dd>
 <dt><span class="term">Postcondition:</span></dt>
 <dd><p>
-                <code class="computeroutput"><span class="keyword">this</span><span class="special">-&gt;</span><span class="identifier">get</span><span class="special">()==</span><span class="number">0</span></code>
-              </p></dd>
+                  <code class="computeroutput"><span class="keyword">this</span><span class="special">-&gt;</span><span class="identifier">get</span><span class="special">()==</span><span class="number">0</span></code>
+                </p></dd>
 <dt><span class="term">Throws:</span></dt>
 <dd><p>
-                <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">bad_alloc</span></code> when resources unavailable.
-              </p></dd>
+                  <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">bad_alloc</span></code> when resources unavailable.
+                </p></dd>
 <dt><span class="term">Thread safety:</span></dt>
 <dd><p>
-                safe.
-              </p></dd>
+                  safe.
+                </p></dd>
 </dl>
 </div>
-<pre class="programlisting">
-    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Y</span><span class="special">&gt;</span> <span class="keyword">void</span> <span class="identifier">reset</span><span class="special">(</span><span class="identifier">Y</span> <span class="special">*</span> <span class="identifier">new_value</span><span class="special">);</span>
-#</pre>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Y</span><span class="special">&gt;</span> <span class="keyword">void</span> <span class="identifier">reset</span><span class="special">(</span><span class="identifier">Y</span> <span class="special">*</span> <span class="identifier">new_value</span><span class="special">);</span>
+</pre>
 <div class="variablelist">
 <p class="title"><b></b></p>
 <dl>
 <dt><span class="term">Effects:</span></dt>
 <dd><p>
-                Equivalent to <code class="computeroutput"><span class="identifier">shared_ptr</span><span class="special">(</span><span class="identifier">new_value</span><span class="special">).</span><span class="identifier">swap</span><span class="special">(</span><span class="keyword">this</span><span class="special">-&gt;</span><span class="identifier">get_shared_ptr</span><span class="special">())</span></code>. Update the mapping.
-              </p></dd>
+                  Equivalent to <code class="computeroutput"><span class="identifier">shared_ptr</span><span class="special">(</span><span class="identifier">new_value</span><span class="special">).</span><span class="identifier">swap</span><span class="special">(</span><span class="keyword">this</span><span class="special">-&gt;</span><span class="identifier">get_shared_ptr</span><span class="special">())</span></code>. Update the mapping.
+                </p></dd>
 <dt><span class="term">Postcondition:</span></dt>
 <dd><p>
-                <code class="computeroutput"><span class="keyword">this</span><span class="special">-&gt;</span><span class="identifier">get</span><span class="special">()==</span><span class="identifier">new_value</span></code>
-              </p></dd>
+                  <code class="computeroutput"><span class="keyword">this</span><span class="special">-&gt;</span><span class="identifier">get</span><span class="special">()==</span><span class="identifier">new_value</span></code>
+                </p></dd>
 <dt><span class="term">Throws:</span></dt>
 <dd><p>
-                <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">bad_alloc</span></code> when resources unavailable.
-              </p></dd>
+                  <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">bad_alloc</span></code> when resources unavailable.
+                </p></dd>
 <dt><span class="term">Thread safety:</span></dt>
 <dd><p>
-                safe.
-              </p></dd>
+                  safe.
+                </p></dd>
 </dl>
 </div>
-<pre class="programlisting">
-    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Y</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">D</span><span class="special">&gt;</span> <span class="keyword">void</span> <span class="identifier">reset</span><span class="special">(</span><span class="identifier">Y</span> <span class="special">*</span> <span class="identifier">new_value</span><span class="special">,</span> <span class="identifier">D</span> <span class="identifier">deleter</span><span class="special">);</span>
-#</pre>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Y</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">D</span><span class="special">&gt;</span> <span class="keyword">void</span> <span class="identifier">reset</span><span class="special">(</span><span class="identifier">Y</span> <span class="special">*</span> <span class="identifier">new_value</span><span class="special">,</span> <span class="identifier">D</span> <span class="identifier">deleter</span><span class="special">);</span>
+</pre>
 <div class="variablelist">
 <p class="title"><b></b></p>
 <dl>
 <dt><span class="term">Effects:</span></dt>
 <dd><p>
-                Equivalent to <code class="computeroutput"><span class="identifier">shared_ptr</span><span class="special">(</span><span class="identifier">new_value</span><span class="special">,</span> <span class="identifier">deleter</span><span class="special">).</span><span class="identifier">swap</span><span class="special">(</span><span class="keyword">this</span><span class="special">-&gt;</span><span class="identifier">get_shared_ptr</span><span class="special">())</span></code>. Update the mapping.
-              </p></dd>
+                  Equivalent to <code class="computeroutput"><span class="identifier">shared_ptr</span><span class="special">(</span><span class="identifier">new_value</span><span class="special">,</span> <span class="identifier">deleter</span><span class="special">).</span><span class="identifier">swap</span><span class="special">(</span><span class="keyword">this</span><span class="special">-&gt;</span><span class="identifier">get_shared_ptr</span><span class="special">())</span></code>. Update the mapping.
+                </p></dd>
 <dt><span class="term">Postcondition:</span></dt>
 <dd><p>
-                <code class="computeroutput"><span class="keyword">this</span><span class="special">-&gt;</span><span class="identifier">get</span><span class="special">()==</span><span class="identifier">new_value</span></code>
-              </p></dd>
+                  <code class="computeroutput"><span class="keyword">this</span><span class="special">-&gt;</span><span class="identifier">get</span><span class="special">()==</span><span class="identifier">new_value</span></code>
+                </p></dd>
 <dt><span class="term">Throws:</span></dt>
 <dd><p>
-                <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">bad_alloc</span></code> when resources unavailable.
-              </p></dd>
+                  <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">bad_alloc</span></code> when resources unavailable.
+                </p></dd>
 <dt><span class="term">Thread safety:</span></dt>
 <dd><p>
-                safe.
-              </p></dd>
+                  safe.
+                </p></dd>
 </dl>
 </div>
-<pre class="programlisting">
-    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Y</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">D</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">A</span><span class="special">&gt;</span> <span class="keyword">void</span> <span class="identifier">reset</span><span class="special">(</span><span class="identifier">Y</span> <span class="special">*</span> <span class="identifier">new_value</span><span class="special">,</span> <span class="identifier">D</span> <span class="identifier">deleter</span><span class="special">,</span> <span class="identifier">A</span> <span class="identifier">a</span><span class="special">);</span>
-#</pre>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Y</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">D</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">A</span><span class="special">&gt;</span> <span class="keyword">void</span> <span class="identifier">reset</span><span class="special">(</span><span class="identifier">Y</span> <span class="special">*</span> <span class="identifier">new_value</span><span class="special">,</span> <span class="identifier">D</span> <span class="identifier">deleter</span><span class="special">,</span> <span class="identifier">A</span> <span class="identifier">a</span><span class="special">);</span>
+</pre>
 <div class="variablelist">
 <p class="title"><b></b></p>
 <dl>
 <dt><span class="term">Effects:</span></dt>
 <dd><p>
-                Equivalent to <code class="computeroutput"><span class="identifier">shared_ptr</span><span class="special">(</span><span class="identifier">new_value</span><span class="special">,</span> <span class="identifier">deleter</span><span class="special">,</span> <span class="identifier">a</span><span class="special">).</span><span class="identifier">swap</span><span class="special">(</span><span class="keyword">this</span><span class="special">-&gt;</span><span class="identifier">get_shared_ptr</span><span class="special">())</span></code>. Update the mapping.
-              </p></dd>
+                  Equivalent to <code class="computeroutput"><span class="identifier">shared_ptr</span><span class="special">(</span><span class="identifier">new_value</span><span class="special">,</span> <span class="identifier">deleter</span><span class="special">,</span> <span class="identifier">a</span><span class="special">).</span><span class="identifier">swap</span><span class="special">(</span><span class="keyword">this</span><span class="special">-&gt;</span><span class="identifier">get_shared_ptr</span><span class="special">())</span></code>. Update the mapping.
+                </p></dd>
 <dt><span class="term">Postcondition:</span></dt>
 <dd><p>
-                <code class="computeroutput"><span class="keyword">this</span><span class="special">-&gt;</span><span class="identifier">get</span><span class="special">()==</span><span class="identifier">new_value</span></code>
-              </p></dd>
+                  <code class="computeroutput"><span class="keyword">this</span><span class="special">-&gt;</span><span class="identifier">get</span><span class="special">()==</span><span class="identifier">new_value</span></code>
+                </p></dd>
 <dt><span class="term">Throws:</span></dt>
 <dd><p>
-                <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">bad_alloc</span></code> when resources unavailable.
-              </p></dd>
+                  <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">bad_alloc</span></code> when resources unavailable.
+                </p></dd>
 <dt><span class="term">Thread safety:</span></dt>
 <dd><p>
-                safe.
-              </p></dd>
+                  safe.
+                </p></dd>
 </dl>
 </div>
 <div class="variablelist">
@@ -499,107 +467,99 @@
 <dl>
 <dt><span class="term">Effects:</span></dt>
 <dd><p>
-                If <code class="computeroutput"><span class="keyword">this</span><span class="special">-&gt;</span><span class="identifier">get</span><span class="special">()!=</span><span class="identifier">new_value</span></code> and <code class="computeroutput"><span class="keyword">this</span><span class="special">-&gt;</span><span class="identifier">get</span><span class="special">()</span></code> is non-<code class="computeroutput"><span class="identifier">NULL</span></code>,
-                invoke <code class="computeroutput"><span class="keyword">delete</span> <span class="keyword">this</span><span class="special">-&gt;</span><span class="identifier">get</span><span class="special">()</span></code> or <code class="computeroutput"><span class="identifier">deleter</span><span class="special">(</span><span class="keyword">this</span><span class="special">-&gt;</span><span class="identifier">get</span><span class="special">())</span></code> as appropriate. Store <code class="computeroutput"><span class="identifier">new_value</span></code> as the pointer associated
-                with the current thread.
-              </p></dd>
+                  If <code class="computeroutput"><span class="keyword">this</span><span class="special">-&gt;</span><span class="identifier">get</span><span class="special">()!=</span><span class="identifier">new_value</span></code> and <code class="computeroutput"><span class="keyword">this</span><span class="special">-&gt;</span><span class="identifier">get</span><span class="special">()</span></code> is non-<code class="computeroutput"><span class="identifier">NULL</span></code>,
+                  invoke <code class="computeroutput"><span class="keyword">delete</span> <span class="keyword">this</span><span class="special">-&gt;</span><span class="identifier">get</span><span class="special">()</span></code> or <code class="computeroutput"><span class="identifier">deleter</span><span class="special">(</span><span class="keyword">this</span><span class="special">-&gt;</span><span class="identifier">get</span><span class="special">())</span></code> as appropriate. Store <code class="computeroutput"><span class="identifier">new_value</span></code> as the pointer associated
+                  with the current thread.
+                </p></dd>
 </dl>
 </div>
 </div>
-<div class="section" lang="en">
+<div class="section">
 <div class="titlepage"><div><div><h5 class="title">
-<a name="toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_wait_and_get"></a><a href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_wait_and_get" title="
-          Member Function wait_and_get()">
-          Member Function <code class="computeroutput"><span class="identifier">wait_and_get</span><span class="special">()</span></code></a>
+<a name="toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_wait_and_get"></a><a class="link" href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_wait_and_get" title="Member Function wait_and_get()">Member
+          Function <code class="computeroutput"><span class="identifier">wait_and_get</span><span class="special">()</span></code></a>
 </h5></div></div></div>
-<pre class="programlisting">
-    <span class="identifier">shared_ptr_type</span> <span class="identifier">wait_and_get</span><span class="special">(</span><span class="identifier">thread</span><span class="special">::</span><span class="identifier">id</span> <span class="identifier">id</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
-<span class="identifier">a</span></pre>
+<pre class="programlisting"><span class="identifier">shared_ptr_type</span> <span class="identifier">wait_and_get</span><span class="special">(</span><span class="identifier">thread</span><span class="special">::</span><span class="identifier">id</span> <span class="identifier">id</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+</pre>
 <div class="variablelist">
 <p class="title"><b></b></p>
 <dl>
 <dt><span class="term">Effects:</span></dt>
 <dd><p>
-                Waits until the specific shared pointer has been set and returns
-                a shared pointer to this context.
-              </p></dd>
+                  Waits until the specific shared pointer has been set and returns
+                  a shared pointer to this context.
+                </p></dd>
 <dt><span class="term">Throws:</span></dt>
 <dd><p>
-                <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">thread_interrupted</span></code> if the current
-                thread of execution is interrupted.
-              </p></dd>
+                  <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">thread_interrupted</span></code> if the current
+                  thread of execution is interrupted.
+                </p></dd>
 </dl>
 </div>
 </div>
-<div class="section" lang="en">
+<div class="section">
 <div class="titlepage"><div><div><h5 class="title">
-<a name="toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_operatora"></a><a href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_operatora" title="
-          Member Function operator[]()">
-          Member Function <code class="computeroutput"><span class="keyword">operator</span><span class="special">[]()</span></code></a>
+<a name="toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_operatora"></a><a class="link" href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.thread_specific_shared_ptr_operatora" title="Member Function operator[]()">Member
+          Function <code class="computeroutput"><span class="keyword">operator</span><span class="special">[]()</span></code></a>
 </h5></div></div></div>
-<pre class="programlisting">
-    <span class="identifier">shared_ptr_type</span> <span class="keyword">operator</span><span class="special">[](</span><span class="identifier">thread</span><span class="special">::</span><span class="identifier">id</span> <span class="identifier">id</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
-<span class="identifier">o</span></pre>
+<pre class="programlisting"><span class="identifier">shared_ptr_type</span> <span class="keyword">operator</span><span class="special">[](</span><span class="identifier">thread</span><span class="special">::</span><span class="identifier">id</span> <span class="identifier">id</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+</pre>
 <div class="variablelist">
 <p class="title"><b></b></p>
 <dl>
 <dt><span class="term">Effects:</span></dt>
 <dd><p>
-                Returns a copy of the specific shared_ptr of the thread of execution
-                identified by the <code class="computeroutput"><span class="identifier">thread</span><span class="special">::</span><span class="identifier">id</span></code>.
-              </p></dd>
+                  Returns a copy of the specific shared_ptr of the thread of execution
+                  identified by the <code class="computeroutput"><span class="identifier">thread</span><span class="special">::</span><span class="identifier">id</span></code>.
+                </p></dd>
 <dt><span class="term">Throws:</span></dt>
 <dd><p>
-                Nothing.
-              </p></dd>
+                  Nothing.
+                </p></dd>
 </dl>
 </div>
 </div>
-<div class="section" lang="en">
+<div class="section">
 <div class="titlepage"><div><div><h5 class="title">
-<a name="toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.get_mutex"></a><a href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.get_mutex" title="
-          Member Function get_mutex()">
-          Member Function <code class="computeroutput"><span class="identifier">get_mutex</span><span class="special">()</span></code></a>
+<a name="toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.get_mutex"></a><a class="link" href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.get_mutex" title="Member Function get_mutex()">Member
+          Function <code class="computeroutput"><span class="identifier">get_mutex</span><span class="special">()</span></code></a>
 </h5></div></div></div>
-<pre class="programlisting">
-    <span class="identifier">mutex_type</span><span class="special">&amp;</span>             <span class="identifier">get_mutex</span><span class="special">();</span>
-<span class="identifier">n</span></pre>
+<pre class="programlisting"><span class="identifier">mutex_type</span><span class="special">&amp;</span>             <span class="identifier">get_mutex</span><span class="special">();</span>
+</pre>
 <div class="variablelist">
 <p class="title"><b></b></p>
 <dl>
 <dt><span class="term">Effects:</span></dt>
 <dd><p>
-                Returns a reference to the protection mutex.
-              </p></dd>
+                  Returns a reference to the protection mutex.
+                </p></dd>
 <dt><span class="term">Throws:</span></dt>
 <dd><p>
-                Nothing.
-              </p></dd>
+                  Nothing.
+                </p></dd>
 </dl>
 </div>
 </div>
-<div class="section" lang="en">
+<div class="section">
 <div class="titlepage"><div><div><h5 class="title">
-<a name="toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.get_map"></a><a href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.get_map" title="
-          Member Function get_map()">
-          Member Function <code class="computeroutput"><span class="identifier">get_map</span><span class="special">()</span></code></a>
+<a name="toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.get_map"></a><a class="link" href="thread_specific_shared_ptr_hpp.html#toward_boost_interthreads.reference.thread_specific_shared_ptr_hpp.thread_specific_shared_ptr_reference_thread_specific_shared_ptr.get_map" title="Member Function get_map()">Member
+          Function <code class="computeroutput"><span class="identifier">get_map</span><span class="special">()</span></code></a>
 </h5></div></div></div>
-<pre class="programlisting">
-    <span class="keyword">const</span> <span class="identifier">map_type</span><span class="special">&amp;</span>         <span class="identifier">get_map</span><span class="special">(</span><span class="identifier">lock_type</span><span class="special">&amp;)</span> <span class="keyword">const</span><span class="special">;</span>
-<span class="identifier">a</span></pre>
+<pre class="programlisting"><span class="keyword">const</span> <span class="identifier">map_type</span><span class="special">&amp;</span>         <span class="identifier">get_map</span><span class="special">(</span><span class="identifier">lock_type</span><span class="special">&amp;)</span> <span class="keyword">const</span><span class="special">;</span>
+</pre>
 <div class="variablelist">
 <p class="title"><b></b></p>
 <dl>
 <dt><span class="term">Effects:</span></dt>
 <dd><p>
-                Returns a reference to the mapping from <code class="computeroutput"><span class="identifier">thread</span><span class="special">::</span><span class="identifier">id</span></code>
-                to the specific pointers provided the user gives a lock on the motext
-                get using <code class="computeroutput"><span class="identifier">get_mutex</span><span class="special">()</span></code>.
-              </p></dd>
+                  Returns a reference to the mapping from <code class="computeroutput"><span class="identifier">thread</span><span class="special">::</span><span class="identifier">id</span></code>
+                  to the specific pointers provided the user gives a lock on the
+                  motext get using <code class="computeroutput"><span class="identifier">get_mutex</span><span class="special">()</span></code>.
+                </p></dd>
 <dt><span class="term">Throws:</span></dt>
 <dd><p>
-                Nothing.
-              </p></dd>
+                  Nothing.
+                </p></dd>
 </dl>
 </div>
 </div>

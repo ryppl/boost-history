@@ -1,17 +1,13 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
-<title> Appendix
-      F: Tickets</title>
+<title>Appendix F: Tickets</title>
 <link rel="stylesheet" href="../../../../../../doc/html/boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.69.1">
-<link rel="start" href="../../index.html" title="Toward Boost.InterThreads">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="../../index.html" title="Toward Boost.InterThreads">
 <link rel="up" href="../appendices.html" title="Appendices">
-<link rel="prev" href="tests.html" title=" Appendix
-      E: Tests">
-<link rel="next" href="todo.html" title=" Appendix
-      G: Future plans">
+<link rel="prev" href="tests.html" title="Appendix E: Tests">
+<link rel="next" href="todo.html" title="Appendix G: Future plans">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
@@ -26,10 +22,9 @@
 <div class="spirit-nav">
 <a accesskey="p" href="tests.html"><img src="../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../appendices.html"><img src="../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="todo.html"><img src="../../../../../../doc/src/images/next.png" alt="Next"></a>
 </div>
-<div class="section" lang="en">
+<div class="section">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="toward_boost_interthreads.appendices.tickets"></a><a href="tickets.html" title=" Appendix
-      F: Tickets"> Appendix
+<a name="toward_boost_interthreads.appendices.tickets"></a><a class="link" href="tickets.html" title="Appendix F: Tickets">Appendix
       F: Tickets</a>
 </h3></div></div></div>
 <div class="informaltable"><table class="table">
@@ -44,228 +39,228 @@
 </colgroup>
 <thead><tr>
 <th>
-              <p>
-                Kind
-              </p>
+                <p>
+                  Kind
+                </p>
               </th>
 <th>
-              <p>
-                Identifier
-              </p>
+                <p>
+                  Identifier
+                </p>
               </th>
 <th>
-              <p>
-                Description
-              </p>
+                <p>
+                  Description
+                </p>
               </th>
 <th>
-              <p>
-                Resolution
-              </p>
+                <p>
+                  Resolution
+                </p>
               </th>
 <th>
-              <p>
-                State
-              </p>
+                <p>
+                  State
+                </p>
               </th>
 <th>
-              <p>
-                Tests
-              </p>
+                <p>
+                  Tests
+                </p>
               </th>
 <th>
-              <p>
-                Version
-              </p>
+                <p>
+                  Version
+                </p>
               </th>
 </tr></thead>
 <tbody>
 <tr>
 <td>
-              <p>
-                bug
-              </p>
+                <p>
+                  bug
+                </p>
               </td>
 <td>
-              <p>
-                v0.1#1
-              </p>
+                <p>
+                  v0.1#1
+                </p>
               </td>
 <td>
-              <p>
-                basic_keep_alive example do not link
-              </p>
+                <p>
+                  basic_keep_alive example do not link
+                </p>
               </td>
 <td>
-              <p>
-                Add to the link
-              </p>
+                <p>
+                  Add to the link
+                </p>
               </td>
 <td>
-              <p>
-                Closed
-              </p>
+                <p>
+                  Closed
+                </p>
               </td>
 <td>
-              <p>
-                See basic_keep_alive.cpp example
-              </p>
+                <p>
+                  See basic_keep_alive.cpp example
+                </p>
               </td>
 <td>
-              <p>
-                v0.2
-              </p>
-              </td>
-</tr>
-<tr>
-<td>
-              <p>
-                bug
-              </p>
-              </td>
-<td>
-              <p>
-                v0.1.1#1
-              </p>
-              </td>
-<td>
-              <p>
-                keep alive mechanism crash when setting set_on_dead_thread before
-                enabling the mechanism
-              </p>
-              </td>
-<td>
-              <p>
-                This was due to the fact that there were no default data for the
-                backup.
-              </p>
-              </td>
-<td>
-              <p>
-                Closed
-              </p>
-              </td>
-<td>
-              <p>
-                See basic_keep_alive.cpp example
-              </p>
-              </td>
-<td>
-              <p>
-                v0.4
-              </p>
+                <p>
+                  v0.2
+                </p>
               </td>
 </tr>
 <tr>
 <td>
-              <p>
-                bug
-              </p>
+                <p>
+                  bug
+                </p>
               </td>
 <td>
-              <p>
-                v0.1.1#2
-              </p>
+                <p>
+                  v0.1.1#1
+                </p>
               </td>
 <td>
-              <p>
-                keep alive mechanism do not detect dead threads
-              </p>
+                <p>
+                  keep alive mechanism crash when setting set_on_dead_thread before
+                  enabling the mechanism
+                </p>
               </td>
 <td>
-              <p>
-                We need to reset the counters only when the period is 0.
-              </p>
+                <p>
+                  This was due to the fact that there were no default data for the
+                  backup.
+                </p>
               </td>
 <td>
-              <p>
-                Closed
-              </p>
+                <p>
+                  Closed
+                </p>
               </td>
 <td>
-              <p>
-                See basic_keep_alive.cpp example
-              </p>
+                <p>
+                  See basic_keep_alive.cpp example
+                </p>
               </td>
 <td>
-              <p>
-                v0.4
-              </p>
-              </td>
-</tr>
-<tr>
-<td>
-              <p>
-                bug
-              </p>
-              </td>
-<td>
-              <p>
-                v0.1.1#3
-              </p>
-              </td>
-<td>
-              <p>
-                The set_on_dead_thread setting is not recovered by embeeding enablers/disablers
-              </p>
-              </td>
-<td>
-              <p>
-                The problem is that the on_dead and th thread pointer were stored
-                on the backup. It is enough to store them on the
-              </p>
-              </td>
-<td>
-              <p>
-                Closed
-              </p>
-              </td>
-<td>
-              <p>
-                See basic_keep_alive.cpp example
-              </p>
-              </td>
-<td>
-              <p>
-                v0.4
-              </p>
+                <p>
+                  v0.4
+                </p>
               </td>
 </tr>
 <tr>
 <td>
-              <p>
-                bug
-              </p>
+                <p>
+                  bug
+                </p>
               </td>
 <td>
-              <p>
-                v0.2.0#1
-              </p>
+                <p>
+                  v0.1.1#2
+                </p>
               </td>
 <td>
-              <p>
-                xxx
-              </p>
+                <p>
+                  keep alive mechanism do not detect dead threads
+                </p>
               </td>
 <td>
-              <p>
-                xx
-              </p>
+                <p>
+                  We need to reset the counters only when the period is 0.
+                </p>
               </td>
 <td>
-              <p>
-                Open
-              </p>
+                <p>
+                  Closed
+                </p>
               </td>
 <td>
-              <p>
-                xxx
-              </p>
+                <p>
+                  See basic_keep_alive.cpp example
+                </p>
               </td>
 <td>
-              <p>
-                v0.4.1
-              </p>
+                <p>
+                  v0.4
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  bug
+                </p>
+              </td>
+<td>
+                <p>
+                  v0.1.1#3
+                </p>
+              </td>
+<td>
+                <p>
+                  The set_on_dead_thread setting is not recovered by embeeding enablers/disablers
+                </p>
+              </td>
+<td>
+                <p>
+                  The problem is that the on_dead and th thread pointer were stored
+                  on the backup. It is enough to store them on the
+                </p>
+              </td>
+<td>
+                <p>
+                  Closed
+                </p>
+              </td>
+<td>
+                <p>
+                  See basic_keep_alive.cpp example
+                </p>
+              </td>
+<td>
+                <p>
+                  v0.4
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  bug
+                </p>
+              </td>
+<td>
+                <p>
+                  v0.2.0#1
+                </p>
+              </td>
+<td>
+                <p>
+                  xxx
+                </p>
+              </td>
+<td>
+                <p>
+                  xx
+                </p>
+              </td>
+<td>
+                <p>
+                  Open
+                </p>
+              </td>
+<td>
+                <p>
+                  xxx
+                </p>
+              </td>
+<td>
+                <p>
+                  v0.4.1
+                </p>
               </td>
 </tr>
 </tbody>

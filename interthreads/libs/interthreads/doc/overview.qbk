@@ -9,42 +9,6 @@
 [section:overview Overview]
 [/========================]
 
-[/==================]
-[heading Description]
-[/==================]
-
-__boost_interthreads__ extends __boost_thread__ adding some features:
-
-* A thread_decoration class allowing to define setup/cleanup functions which will be called only once by thread (if
-the thread function is decorated with thread_decorator): setup before the thread function and cleanup at thread exit.
-It is used together with asynchronous_executor_decorator
-
-* A thread_decorator/thread_decorate class/function which decorate a thread function in order to call the setup and the
-cleanup of all the thread_decorations.
-
-* A thread specific shared pointer which is an extension of the thread_specific_ptr providing access
-to this thread specific context from other threads.
-As it is shared the stored pointer is a shared_ptr instead of a raw one.
-
-* A thread keep alive mechanism: this mechanism allows to detect threads that do not prove that they are alive by
-calling to the keep_alive_point regularly.
-When a thread is declared dead a user provided function is called, which by default will abort the program.
-
-* A thread static array
-    * thread tuple: defines a thread groupe where the number of threads is know statically and the threads are
-created at construction time in oposition to a thread_group.
-
-* A thread static array and a thread group with wait for any feature
-    * set_once: a synchonizer that allows to set a variable only once, notifying to the variable value to whatever is waiting for that.
-
-    * thread_tuple_once: an extension of the boost::thread_tuple which allows to join the completion of any thread using for that the set_once synchronizer.
-
-    * thread_group_once: an extension of the boost::thread_group which allows to join the completion of any thread in the group  using for that the set_once synchronizer.
-
-[note  thread_decorator and thread_specific_shared_ptr are based on the original implementation of [@http://www.boost-consulting.com/vault/index.php?directory=Concurrent%20Programming [*threadalert]]
-written by Roland Schwarz.]
-
-
 
 [/====================================]
 [heading How to Use This Documentation]
@@ -79,4 +43,42 @@ Finally, you can mentally add the following to any code fragments in this docume
     namespace bith = boost::interthreads;
 
 [include introduction.qbk]
+
+[/==================]
+[section Description]
+[/==================]
+
+__boost_interthreads__ extends __boost_thread__ adding some features:
+
+* A thread_decoration class allowing to define setup/cleanup functions which will be called only once by thread (if
+the thread function is decorated with thread_decorator): setup before the thread function and cleanup at thread exit.
+It is used together with asynchronous_executor_decorator
+
+* A thread_decorator/thread_decorate class/function which decorate a thread function in order to call the setup and the
+cleanup of all the thread_decorations.
+
+* A thread specific shared pointer which is an extension of the thread_specific_ptr providing access
+to this thread specific context from other threads.
+As it is shared the stored pointer is a shared_ptr instead of a raw one.
+
+* A thread keep alive mechanism: this mechanism allows to detect threads that do not prove that they are alive by
+calling to the keep_alive_point regularly.
+When a thread is declared dead a user provided function is called, which by default will abort the program.
+
+* A thread static array
+    * thread tuple: defines a thread groupe where the number of threads is know statically and the threads are
+created at construction time in oposition to a thread_group.
+
+* A thread static array and a thread group with wait for any feature
+    * set_once: a synchonizer that allows to set a variable only once, notifying to the variable value to whatever is waiting for that.
+
+    * thread_tuple_once: an extension of the boost::thread_tuple which allows to join the completion of any thread using for that the set_once synchronizer.
+
+    * thread_group_once: an extension of the boost::thread_group which allows to join the completion of any thread in the group  using for that the set_once synchronizer.
+
+[note  thread_decorator and thread_specific_shared_ptr are based on the original implementation of [@http://www.boost-consulting.com/vault/index.php?directory=Concurrent%20Programming [*threadalert]]
+written by Roland Schwarz.]
+
+[endsect]
+
 [endsect]
