@@ -336,6 +336,9 @@ Ubuntu 10.10
 
 * GCC 4.4.5
 * GCC 4.4.5 -std=c++0x
+* GCC 4.5.1
+* GCC 4.5.1 -std=c++0x
+* clang 2.8
 
 
 [note Please let us know how this works on other platforms/compilers.]
