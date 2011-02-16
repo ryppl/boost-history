@@ -13,6 +13,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <iostream>
 #include <stdio.h>
 #include <time.h>
+#include <boost/thread.hpp>
 #include <boost/validate/validater/concept_validater.hpp>
 #include <boost/validate/utility.hpp>
 
@@ -93,9 +94,9 @@ namespace boost{namespace icl
 
         bool validate()
         {
-            //srand(static_cast<unsigned>(time(NULL))); //Different numbers each run
-            srand(static_cast<unsigned>(1)); //Same numbers each run (std)
-            //srand(static_cast<unsigned>(4711)); //Same numbers each run (varying)
+            srand(static_cast<unsigned>(time(NULL))); //seed time: different numbers each run 
+            //srand(static_cast<unsigned>(1)); //seed 1: same numbers each run (std)
+            //srand(static_cast<unsigned>(4711)); //seed var: same numbers every run (varying)
 
             for(int idx=0; !terminates(); idx++)
             {
@@ -137,6 +138,8 @@ namespace boost{namespace icl
 
         void reportFrequencies()
         {
+			extern boost::mutex g_Mutex; //JODO URG REV ...
+			g_Mutex.lock();
             std::cout << "------------------------------------------------------------------------------" << std::endl;
             std::cout << "--- Successfully tested law instantiation -------------------------runs---time" << std::endl;
             int valid_count = 1;
@@ -181,6 +184,7 @@ namespace boost{namespace icl
             }
             if(!icl::is_empty(_violations))
                 std::cout << "------------------------------------------------------------------------------" << std::endl;
+			g_Mutex.unlock();
         }
 
         void reportFrequencies(const std::string& filename)
