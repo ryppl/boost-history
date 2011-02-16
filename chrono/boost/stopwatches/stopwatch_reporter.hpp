@@ -85,7 +85,7 @@ namespace boost { namespace stopwatches  {
         basic_stopwatch_reporter( )
         : m_places(Formatter::default_places()), m_os(Formatter::default_os()), m_format(Formatter::default_format()), m_reported(false)  {
         }
-        explicit basic_stopwatch_reporter( system::error_code & ec )
+        explicit basic_stopwatch_reporter( system::error_code &  )
         : m_places(Formatter::default_places()), m_os(Formatter::default_os()), m_format(Formatter::default_format()), m_reported(false)  {
         }
         explicit basic_stopwatch_reporter( ostream_type & os,
