@@ -36,6 +36,13 @@
 
 // Names (functions, variables, etc) //
 
+#define BOOST_LOCAL_AUX_SYMBOL_DEDUCE_RESULT_TYPE(id) \
+    /* symbol (not internal) also gives error if missing result type */ \
+    BOOST_PP_CAT(ERROR_missing_result_type_before_the_local_function_parameter_macro_id, id)
+
+#define BOOST_LOCAL_AUX_SYMBOL_RESULT_TYPE(id) \
+    BOOST_LOCAL_AUX_INTERNAL_SYMBOL(BOOST_PP_CAT(result_type, id))
+
 #define BOOST_LOCAL_AUX_SYMBOL_THIS_PARAM_NAME \
     BOOST_LOCAL_CONFIG_THIS_PARAM_NAME
 
