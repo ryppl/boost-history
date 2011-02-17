@@ -26,7 +26,7 @@ For these metafunction class macros there is a simple form and a complex form na
 just as there is for the macro metafunctions. For each macro metafunction, 
 the name for the corresponding metafunction class macro is the macro 
 metafunction name with the sequence 'MTFC\_' ( for "MeTaFunction Class" )
-following the TTI\_ ( or TTI\_VM\_ ) portion of the macro metafunction name. 
+following the BOOST\_TTI\_ ( or BOOST\_TTI\_VM\_ ) portion of the macro metafunction name. 
 The subsequent metafunction class name, using the simple form, is the same name as 
 the corresponding macro metafunction name but with 'mtfc\_' prepended to the name. 
 
@@ -36,7 +36,7 @@ completely determined by the first 'trait' parameter.
 
 In the following table I do not specify the macro parameters
 as they are exactly the same as those for their corresponding macro
-metafunction:
+metafunction.
 
 [table:tbmetaclasses TTI Metafunction Classes
   [
@@ -45,95 +45,118 @@ metafunction:
     [Metafunction Class Name]
   ]
   [
-    [[macroref TTI_HAS_TYPE]]
-    [[macroref TTI_MTFC_HAS_TYPE]]
-    [tti::mtfc\_has\_type\_'name']
+    [[macroref BOOST_TTI_HAS_TYPE]]
+    [[macroref BOOST_TTI_MTFC_HAS_TYPE]]
+    [boost::tti::mtfc\_has\_type\_'name']
   ]
   [
-    [[macroref TTI_TRAIT_HAS_TYPE]]
-    [[macroref TTI_MTFC_TRAIT_HAS_TYPE]]
-    [tti::'trait']
+    [[macroref BOOST_TTI_TRAIT_HAS_TYPE]]
+    [[macroref BOOST_TTI_MTFC_TRAIT_HAS_TYPE]]
+    [boost::tti::'trait']
   ]
   [
-    [[macroref TTI_HAS_TEMPLATE]]
-    [[macroref TTI_MTFC_HAS_TEMPLATE]]
-    [tti::mtfc\_has\_template\_'name']
+    [[macroref BOOST_TTI_HAS_TEMPLATE]]
+    [[macroref BOOST_TTI_MTFC_HAS_TEMPLATE]]
+    [boost::tti::mtfc\_has\_template\_'name']
   ]
   [
-    [[macroref TTI_TRAIT_HAS_TEMPLATE]]
-    [[macroref TTI_MTFC_TRAIT_HAS_TEMPLATE]]
-    [tti::'trait']
+    [[macroref BOOST_TTI_TRAIT_HAS_TEMPLATE]]
+    [[macroref BOOST_TTI_MTFC_TRAIT_HAS_TEMPLATE]]
+    [boost::tti::'trait']
   ]
   [
-    [[macroref TTI_HAS_TEMPLATE_CHECK_PARAMS]]
-    [[macroref TTI_MTFC_HAS_TEMPLATE_CHECK_PARAMS]]
-    [tti::mtfc\_has\_template\_check\_params\_'name']
+    [[macroref BOOST_TTI_HAS_TEMPLATE_CHECK_PARAMS]]
+    [[macroref BOOST_TTI_MTFC_HAS_TEMPLATE_CHECK_PARAMS]]
+    [boost::tti::mtfc\_has\_template\_check\_params\_'name']
   ]
   [
-    [[macroref TTI_TRAIT_HAS_TEMPLATE_CHECK_PARAMS]]
-    [[macroref TTI_MTFC_TRAIT_HAS_TEMPLATE_CHECK_PARAMS]]
-    [tti::'trait']
+    [[macroref BOOST_TTI_TRAIT_HAS_TEMPLATE_CHECK_PARAMS]]
+    [[macroref BOOST_TTI_MTFC_TRAIT_HAS_TEMPLATE_CHECK_PARAMS]]
+    [boost::tti::'trait']
   ]
   [
-    [[macroref TTI_VM_HAS_TEMPLATE_CHECK_PARAMS]]
-    [[macroref TTI_VM_MTFC_HAS_TEMPLATE_CHECK_PARAMS]]
-    [tti::mtfc\_has\_template\_check\_params\_'name']
+    [[macroref BOOST_TTI_VM_HAS_TEMPLATE_CHECK_PARAMS]]
+    [[macroref BOOST_TTI_VM_MTFC_HAS_TEMPLATE_CHECK_PARAMS]]
+    [boost::tti::mtfc\_has\_template\_check\_params\_'name']
   ]
   [
-    [[macroref TTI_VM_TRAIT_HAS_TEMPLATE_CHECK_PARAMS]]
-    [[macroref TTI_VM_MTFC_TRAIT_HAS_TEMPLATE_CHECK_PARAMS]]
-    [tti::'trait']
+    [[macroref BOOST_TTI_VM_TRAIT_HAS_TEMPLATE_CHECK_PARAMS]]
+    [[macroref BOOST_TTI_VM_MTFC_TRAIT_HAS_TEMPLATE_CHECK_PARAMS]]
+    [boost::tti::'trait']
   ]
   [
-    [[macroref TTI_HAS_MEMBER]]
-    [[macroref TTI_MTFC_HAS_MEMBER]]
-    [tti::mtfc\_has\_member\_'name']
+    [[macroref BOOST_TTI_HAS_MEMBER]]
+    [[macroref BOOST_TTI_MTFC_HAS_MEMBER]]
+    [boost::tti::mtfc\_has\_member\_'name']
   ]
   [
-    [[macroref TTI_TRAIT_HAS_MEMBER]]
-    [[macroref TTI_MTFC_TRAIT_HAS_MEMBER]]
-    [tti::'trait']
+    [[macroref BOOST_TTI_TRAIT_HAS_MEMBER]]
+    [[macroref BOOST_TTI_MTFC_TRAIT_HAS_MEMBER]]
+    [boost::tti::'trait']
   ]
   [
-    [[macroref TTI_HAS_MEMBER_DATA]]
-    [[macroref TTI_MTFC_HAS_MEMBER_DATA]]
-    [tti::mtfc\_has\_member\_data\_'name']
+    [[macroref BOOST_TTI_HAS_MEMBER_DATA]]
+    [[macroref BOOST_TTI_MTFC_HAS_MEMBER_DATA]]
+    [boost::tti::mtfc\_has\_member\_data\_'name']
   ]
   [
-    [[macroref TTI_TRAIT_HAS_MEMBER_DATA]]
-    [[macroref TTI_MTFC_TRAIT_HAS_MEMBER_DATA]]
-    [tti::'trait']
+    [[macroref BOOST_TTI_TRAIT_HAS_MEMBER_DATA]]
+    [[macroref BOOST_TTI_MTFC_TRAIT_HAS_MEMBER_DATA]]
+    [boost::tti::'trait']
   ]
   [
-    [[macroref TTI_HAS_MEMBER_FUNCTION]]
-    [[macroref TTI_MTFC_HAS_MEMBER_FUNCTION]]
-    [tti::mtfc\_has\_member\_function\_'name']
+    [[macroref BOOST_TTI_HAS_MEMBER_FUNCTION]]
+    [[macroref BOOST_TTI_MTFC_HAS_MEMBER_FUNCTION]]
+    [boost::tti::mtfc\_has\_member\_function\_'name']
   ]
   [
-    [[macroref TTI_TRAIT_HAS_MEMBER_FUNCTION]]
-    [[macroref TTI_MTFC_TRAIT_HAS_MEMBER_FUNCTION]]
-    [tti::'trait']
+    [[macroref BOOST_TTI_TRAIT_HAS_MEMBER_FUNCTION]]
+    [[macroref BOOST_TTI_MTFC_TRAIT_HAS_MEMBER_FUNCTION]]
+    [boost::tti::'trait']
   ]
   [
-    [[macroref TTI_HAS_STATIC_MEMBER]]
-    [[macroref TTI_MTFC_HAS_STATIC_MEMBER]]
-    [tti::has\_static\_member\_'name']
+    [[macroref BOOST_TTI_HAS_STATIC_MEMBER]]
+    [[macroref BOOST_TTI_MTFC_HAS_STATIC_MEMBER]]
+    [boost::tti::mtfc\_has\_static\_member\_'name']
   ]
   [
-    [[macroref TTI_TRAIT_HAS_STATIC_MEMBER]]
-    [[macroref TTI_MTFC_TRAIT_HAS_STATIC_MEMBER]]
-    [tti::'trait']
+    [[macroref BOOST_TTI_TRAIT_HAS_STATIC_MEMBER]]
+    [[macroref BOOST_TTI_MTFC_TRAIT_HAS_STATIC_MEMBER]]
+    [boost::tti::'trait']
   ]
   [
-    [[macroref TTI_HAS_STATIC_MEMBER_FUNCTION]]
-    [[macroref TTI_MTFC_HAS_STATIC_MEMBER_FUNCTION]]
-    [tti::has\_static\_member\_function\_'name']
+    [[macroref BOOST_TTI_HAS_STATIC_MEMBER_FUNCTION]]
+    [[macroref BOOST_TTI_MTFC_HAS_STATIC_MEMBER_FUNCTION]]
+    [boost::tti::mtfc\_has\_static\_member\_function\_'name']
   ]
   [
-    [[macroref TTI_TRAIT_HAS_STATIC_MEMBER_FUNCTION]]
-    [[macroref TTI_MTFC_TRAIT_HAS_STATIC_MEMBER_FUNCTION]]
-    [tti::'trait']
+    [[macroref BOOST_TTI_TRAIT_HAS_STATIC_MEMBER_FUNCTION]]
+    [[macroref BOOST_TTI_MTFC_TRAIT_HAS_STATIC_MEMBER_FUNCTION]]
+    [boost::tti::'trait']
+  ]
+  [
+    [[macroref BOOST_TTI_MEMBER_TYPE]]
+    [[macroref BOOST_TTI_MTFC_MEMBER_TYPE]]
+    [boost::tti::mtfc\_member\_type\_'name']
+  ]
+  [
+    [[macroref BOOST_TTI_TRAIT_MEMBER_TYPE]]
+    [[macroref BOOST_TTI_MTFC_TRAIT_MEMBER_TYPE]]
+    [boost::tti::'trait']
   ]
 ]  
+
+Each of the metafunction classes have exactly the same functionality 
+as their corresponding macro metafunction. The metafunction class generated 
+can be passed as metadata in the same way that their correspending macro 
+metafunctions with placeholder expressions can be passed as metadata. 
+
+As will be seen when we discuss the nullary type metafunctions, each nullary type 
+metafunction takes as its first parameter a macro metafunction as metadata in
+the form of a lambda expression. Therefore we can use either a metafunction
+class generated by one of the macros above, or a placeholder expression, to 
+pass a macro metafunction as metadata to our nullary type metafunctions. Other 
+uses for our macro metafunctions as metadata may be found by the template 
+metaprogrammer using the TTI library.
   
 [endsect]
