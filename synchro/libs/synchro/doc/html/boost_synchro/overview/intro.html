@@ -1,13 +1,13 @@
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title> Introduction</title>
-<link rel="stylesheet" href="../../../../../../doc/html/boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.69.1">
-<link rel="start" href="../../index.html" title="Chapter 1. Boost.Synchro">
-<link rel="up" href="../overview.html" title=" Overview">
-<link rel="prev" href="../overview.html" title=" Overview">
-<link rel="next" href="../users_guide.html" title=" Users'Guide">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Introduction</title>
+<link rel="stylesheet" href="../../../../../../doc/src/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="../../index.html" title="Boost.Synchro 0.3.3">
+<link rel="up" href="../overview.html" title="Overview">
+<link rel="prev" href="../overview.html" title="Overview">
+<link rel="next" href="../users_guide.html" title="Users'Guide">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
@@ -20,14 +20,14 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="../overview.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../overview.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../users_guide.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="../overview.html"><img src="../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../overview.html"><img src="../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="../users_guide.html"><img src="../../../../../../doc/src/images/next.png" alt="Next"></a>
 </div>
-<div class="section" lang="en">
+<div class="section">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="boost_synchro.overview.intro"></a><a href="intro.html" title=" Introduction"> Introduction</a>
+<a name="boost_synchro.overview.intro"></a><a class="link" href="intro.html" title="Introduction">Introduction</a>
 </h3></div></div></div>
 <div class="toc"><dl>
-<dt><span class="section"><a href="intro.html#boost_synchro.overview.intro.uniform"> Using Thread,
+<dt><span class="section"><a href="intro.html#boost_synchro.overview.intro.uniform">Using Thread,
         Interprocess and Null synchronization mechanisms uniformly</a></span></dt>
 <dt><span class="section"><a href="intro.html#boost_synchro.overview.intro.mapping_the_current_mutexes__boost_thread_and_boost_interprocess__to_the_common_concepts">Mapping
         the current mutexes (Boost.Thread and Boost/Interprocess) to the common concepts</a></span></dt>
@@ -35,16 +35,15 @@
         lockable</a></span></dt>
 <dt><span class="section"><a href="intro.html#boost_synchro.overview.intro.exception_based_timed_locks">Exception-based
         Timed Locks</a></span></dt>
-<dt><span class="section"><a href="intro.html#boost_synchro.overview.intro.lockers"> Lockers</a></span></dt>
-<dt><span class="section"><a href="intro.html#boost_synchro.overview.intro.poly"> Polymorphic lockable</a></span></dt>
+<dt><span class="section"><a href="intro.html#boost_synchro.overview.intro.lockers">Lockers</a></span></dt>
+<dt><span class="section"><a href="intro.html#boost_synchro.overview.intro.poly">Polymorphic lockable</a></span></dt>
 <dt><span class="section"><a href="intro.html#boost_synchro.overview.intro.language_like_synchronized_block_">Language-like
         Synchronized Block </a></span></dt>
-<dt><span class="section"><a href="intro.html#boost_synchro.overview.intro.monitors"> Monitors</a></span></dt>
+<dt><span class="section"><a href="intro.html#boost_synchro.overview.intro.monitors">Monitors</a></span></dt>
 </dl></div>
-<div class="section" lang="en">
+<div class="section">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="boost_synchro.overview.intro.uniform"></a><a href="intro.html#boost_synchro.overview.intro.uniform" title=" Using Thread,
-        Interprocess and Null synchronization mechanisms uniformly"> Using Thread,
+<a name="boost_synchro.overview.intro.uniform"></a><a class="link" href="intro.html#boost_synchro.overview.intro.uniform" title="Using Thread, Interprocess and Null synchronization mechanisms uniformly">Using Thread,
         Interprocess and Null synchronization mechanisms uniformly</a>
 </h4></div></div></div>
 <p>
@@ -70,77 +69,73 @@
 <pre class="programlisting"><span class="identifier">ExclusiveLockable</span> <span class="special">&lt;-</span> <span class="identifier">SharedLockable</span> <span class="special">&lt;-</span> <span class="identifier">UpgradeLockable</span>
 </pre>
 <p>
-          </p>
-<p>
-            
+          
 </p>
 <pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">exclusive_lock_tag</span> <span class="special">{};</span>
 <span class="keyword">struct</span> <span class="identifier">sharable_lock_tag</span> <span class="special">:</span> <span class="identifier">exclusive_lock_tag</span> <span class="special">{};</span>
 <span class="keyword">struct</span> <span class="identifier">upgradable_lock_tag</span> <span class="special">:</span> <span class="identifier">sharable_lock_tag</span>  <span class="special">{};</span>
 </pre>
 <p>
-          </p>
-<p>
         </p>
 <p>
           Locking behavior can be further categorized as:
         </p>
-<div class="itemizedlist"><ul type="disc"><li>
-            Re-entrancy: recursive or not
-          </li></ul></div>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+              Re-entrancy: recursive or not
+            </li></ul></div>
 <pre class="programlisting"><span class="identifier">non_recursive</span> <span class="special">&lt;-</span> <span class="identifier">recursive</span>
 </pre>
-<div class="itemizedlist"><ul type="disc"><li>
-            Scope: whether the lock is usable with a mono-threaded, multi-threaded
-            or multi-process context
-          </li></ul></div>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+              Scope: whether the lock is usable with a mono-threaded, multi-threaded
+              or multi-process context
+            </li></ul></div>
 <pre class="programlisting"><span class="identifier">mono_threaded</span> <span class="special">&lt;-</span> <span class="identifier">multi_threaded</span> <span class="special">&lt;-</span> <span class="identifier">multi_process</span>
 </pre>
-<div class="itemizedlist"><ul type="disc"><li>
-            Lifetime: The lifetime of a lock could be associated to the process,
-            the kernel or the file-system
-          </li></ul></div>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+              Lifetime: The lifetime of a lock could be associated to the process,
+              the kernel or the file-system
+            </li></ul></div>
 <pre class="programlisting"><span class="identifier">process_lifetime</span> <span class="special">&lt;-</span> <span class="identifier">kernel_lifetime</span> <span class="special">&lt;-</span> <span class="identifier">filesystem_lifetime</span>
 </pre>
-<div class="itemizedlist"><ul type="disc"><li>
-            Timed interface: has or not a timed interfaces
-          </li></ul></div>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+              Timed interface: has or not a timed interfaces
+            </li></ul></div>
 <pre class="programlisting"><span class="identifier">hasnt_timed_interface</span> <span class="special">&lt;-</span> <span class="identifier">has_timed_interface</span>
 </pre>
 <p>
           Substitutability applies both to the degree of syntactic support and to
           the locking semantics
         </p>
-<div class="itemizedlist"><ul type="disc">
-<li>
-            A recursive mutex and binary semaphore are substitutable in code written
-            against a exclusive mutex
-          </li>
-<li>
-            A null mutex is substitutable for all others in a single-threaded environment
-          </li>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+              A recursive mutex and binary semaphore are substitutable in code written
+              against a exclusive mutex
+            </li>
+<li class="listitem">
+              A null mutex is substitutable for all others in a single-threaded environment
+            </li>
 </ul></div>
 <p>
           We can see these axes of variation expressed against some Boost synchronization
           mechanisms (from now bip stands for boost::interprocess):
         </p>
-<div class="itemizedlist"><ul type="disc">
-<li>
-            boost::mutex: ExclusiveLock, non-recursive, has-not-timed-interface,
-            multi-threaded
-          </li>
-<li>
-            boost::shared_mutex: UpgradableLock, non-recursive, has-timed-interface,
-            multi-threaded
-          </li>
-<li>
-            bip::synchro::null_mutex: UpgradableLock, recursive, has-timed-interface,
-            mono-threaded
-          </li>
-<li>
-            bip::synchro::interprocess_recursive_mutex ExclusiveLock, recursive,
-            has-timed-interface, multi_process.
-          </li>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+              boost::mutex: ExclusiveLock, non-recursive, has-not-timed-interface,
+              multi-threaded
+            </li>
+<li class="listitem">
+              boost::shared_mutex: UpgradableLock, non-recursive, has-timed-interface,
+              multi-threaded
+            </li>
+<li class="listitem">
+              bip::synchro::null_mutex: UpgradableLock, recursive, has-timed-interface,
+              mono-threaded
+            </li>
+<li class="listitem">
+              bip::synchro::interprocess_recursive_mutex ExclusiveLock, recursive,
+              has-timed-interface, multi_process.
+            </li>
 </ul></div>
 <p>
           <span class="bold"><strong>Lock traits</strong></span>
@@ -200,29 +195,29 @@
           and Boost::Interprocess libraries. The differences identified up to now
           are:
         </p>
-<div class="itemizedlist"><ul type="disc">
-<li>
-            The scoped locks live in a different namespace and some have different
-            names with the same semantic. IMO these should be shared.
-          </li>
-<li>
-            The exception thrown lives in a different name space and different names
-            with the same semantic.
-          </li>
-<li>
-            This exception should be common.
-          </li>
-<li>
-            The move semantics (&amp;&amp;) are expressed with a class named differently.
-            This class could be a good candidate of Boost library by itself.
-          </li>
-<li>
-            The scoped locks can be initialized with static const variables in order
-            to overload the constructor for lock adoption, lock deferral or try to
-            lock. Even if the name of these variables is the same, these variables
-            live in different namespace. It would be nice if these both libraries
-            use the same type and the same variables
-          </li>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+              The scoped locks live in a different namespace and some have different
+              names with the same semantic. IMO these should be shared.
+            </li>
+<li class="listitem">
+              The exception thrown lives in a different name space and different
+              names with the same semantic.
+            </li>
+<li class="listitem">
+              This exception should be common.
+            </li>
+<li class="listitem">
+              The move semantics (&amp;&amp;) are expressed with a class named differently.
+              This class could be a good candidate of Boost library by itself.
+            </li>
+<li class="listitem">
+              The scoped locks can be initialized with static const variables in
+              order to overload the constructor for lock adoption, lock deferral
+              or try to lock. Even if the name of these variables is the same, these
+              variables live in different namespace. It would be nice if these both
+              libraries use the same type and the same variables
+            </li>
 </ul></div>
 <p>
           I hope that these two Boost libraries will merge their synchronization
@@ -230,10 +225,9 @@
           a temporary solution.
         </p>
 </div>
-<div class="section" lang="en">
+<div class="section">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="boost_synchro.overview.intro.mapping_the_current_mutexes__boost_thread_and_boost_interprocess__to_the_common_concepts"></a><a href="intro.html#boost_synchro.overview.intro.mapping_the_current_mutexes__boost_thread_and_boost_interprocess__to_the_common_concepts" title="Mapping
-        the current mutexes (Boost.Thread and Boost/Interprocess) to the common concepts">Mapping
+<a name="boost_synchro.overview.intro.mapping_the_current_mutexes__boost_thread_and_boost_interprocess__to_the_common_concepts"></a><a class="link" href="intro.html#boost_synchro.overview.intro.mapping_the_current_mutexes__boost_thread_and_boost_interprocess__to_the_common_concepts" title="Mapping the current mutexes (Boost.Thread and Boost/Interprocess) to the common concepts">Mapping
         the current mutexes (Boost.Thread and Boost/Interprocess) to the common concepts</a>
 </h4></div></div></div>
 <p>
@@ -286,10 +280,9 @@
           are defined. For the others the default works as expected.
         </p>
 </div>
-<div class="section" lang="en">
+<div class="section">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="boost_synchro.overview.intro.condition_lockable"></a><a href="intro.html#boost_synchro.overview.intro.condition_lockable" title="Condition
-        lockable">Condition
+<a name="boost_synchro.overview.intro.condition_lockable"></a><a class="link" href="intro.html#boost_synchro.overview.intro.condition_lockable" title="Condition lockable">Condition
         lockable</a>
 </h4></div></div></div>
 <p>
@@ -336,42 +329,41 @@
 <span class="special">};</span>
 </pre>
 </div>
-<div class="section" lang="en">
+<div class="section">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="boost_synchro.overview.intro.exception_based_timed_locks"></a><a href="intro.html#boost_synchro.overview.intro.exception_based_timed_locks" title="Exception-based
-        Timed Locks">Exception-based
+<a name="boost_synchro.overview.intro.exception_based_timed_locks"></a><a class="link" href="intro.html#boost_synchro.overview.intro.exception_based_timed_locks" title="Exception-based Timed Locks">Exception-based
         Timed Locks</a>
 </h4></div></div></div>
 <p>
           Based on the idead of Kevlin Henney, the library supports timeout exception
           for all the locking functions having a time or duration parameter.
         </p>
-<div class="itemizedlist"><ul type="disc">
-<li>
-            A lock with a timeout parameter, i.e. a time or a duration, throws a
-            <code class="computeroutput"><span class="identifier">timeout_exception</span></code> on
-            expiry
-          </li>
-<li>
-            A <code class="computeroutput"><span class="identifier">try_lock</span></code> with a timeout
-            simply returns false on expiry
-          </li>
-<li>
-            Any of the conditional locks throw a <code class="computeroutput"><span class="identifier">timeout_exception</span></code>
-            on expiry
-          </li>
-<li>
-            all the locker constructors with the first parameter a timeout.
-          </li>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+              A lock with a timeout parameter, i.e. a time or a duration, throws
+              a <code class="computeroutput"><span class="identifier">timeout_exception</span></code>
+              on expiry
+            </li>
+<li class="listitem">
+              A <code class="computeroutput"><span class="identifier">try_lock</span></code> with a timeout
+              simply returns false on expiry
+            </li>
+<li class="listitem">
+              Any of the conditional locks throw a <code class="computeroutput"><span class="identifier">timeout_exception</span></code>
+              on expiry
+            </li>
+<li class="listitem">
+              all the locker constructors with the first parameter a timeout.
+            </li>
 </ul></div>
 <p>
           Use of timeouts can create more robust programs, by not blocking forever,
           but at the same time one needs to avoid annoyingly arbitrary limits.
         </p>
 </div>
-<div class="section" lang="en">
+<div class="section">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="boost_synchro.overview.intro.lockers"></a><a href="intro.html#boost_synchro.overview.intro.lockers" title=" Lockers"> Lockers</a>
+<a name="boost_synchro.overview.intro.lockers"></a><a class="link" href="intro.html#boost_synchro.overview.intro.lockers" title="Lockers">Lockers</a>
 </h4></div></div></div>
 <p>
           Typically, object-oriented programs use object-level locking by associating
@@ -389,19 +381,19 @@
           A locker is any object or function responsible for coordinating the use
           of lockable objects.
         </p>
-<div class="itemizedlist"><ul type="disc">
-<li>
-            Lockers depend on lockable objects - which need not be locking primitives
-            - and not vice-versa. This avoids cycles in the dependency graph.
-          </li>
-<li>
-            Lockers are applications of lockable objects and, as such, form a potentially
-            unbounded family. Most common role of lockers is for exception safety
-            and programming convenience
-          </li>
-<li>
-            Lockers execute-around the lock-unlock pairing.
-          </li>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+              Lockers depend on lockable objects - which need not be locking primitives
+              - and not vice-versa. This avoids cycles in the dependency graph.
+            </li>
+<li class="listitem">
+              Lockers are applications of lockable objects and, as such, form a potentially
+              unbounded family. Most common role of lockers is for exception safety
+              and programming convenience
+            </li>
+<li class="listitem">
+              Lockers execute-around the lock-unlock pairing.
+            </li>
 </ul></div>
 <p>
           A locker defines an execution strategy for locking and unlocking that is
@@ -421,20 +413,20 @@
           Boost.Thread and Boost.Interprocess defines already a good starting point
           with these lockers:
         </p>
-<div class="itemizedlist"><ul type="disc">
-<li>
-<code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">lock_guard</span></code>,
-          </li>
-<li>
-<code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">unique_lock</span></code>, <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">interprocess</span><span class="special">::</span><span class="identifier">unique_lock</span></code>
-            and <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">interprocess</span><span class="special">::</span><span class="identifier">scoped_lock</span></code>
-</li>
-<li>
-<code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">share_lock</span></code> and <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">interprocess</span><span class="special">::</span><span class="identifier">sharable_lock</span></code>
-</li>
-<li>
-<code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">upgrade_lock</span></code> and <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">interprocess</span><span class="special">::</span><span class="identifier">upgradable_lock</span></code>.
-          </li>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+              <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">lock_guard</span></code>,
+            </li>
+<li class="listitem">
+              <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">unique_lock</span></code>, <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">interprocess</span><span class="special">::</span><span class="identifier">unique_lock</span></code>
+              and <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">interprocess</span><span class="special">::</span><span class="identifier">scoped_lock</span></code>
+            </li>
+<li class="listitem">
+              <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">share_lock</span></code> and <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">interprocess</span><span class="special">::</span><span class="identifier">sharable_lock</span></code>
+            </li>
+<li class="listitem">
+              <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">upgrade_lock</span></code> and <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">interprocess</span><span class="special">::</span><span class="identifier">upgradable_lock</span></code>.
+            </li>
 </ul></div>
 <p>
           The problem is that even if these locker models the same model, there is
@@ -478,21 +470,21 @@
 <p>
           The library provides three strict lockers
         </p>
-<div class="itemizedlist"><ul type="disc">
-<li>
-<code class="computeroutput"><span class="identifier">strict_locker</span></code>: is the
-            basic strict locker, special use when doing external locking.
-          </li>
-<li>
-<code class="computeroutput"><span class="identifier">neested_strict_locker</span></code>:
-            is a strict_locker of another locker as a unique_lock.
-          </li>
-<li>
-<code class="computeroutput"><span class="identifier">conditional_unique_locker</span></code>
-            and <code class="computeroutput"><span class="identifier">conditional_shared_locker</span></code>
-            : are strict lockers with the condition_lockable interface. These are
-            the synchronizer of the monitor class.
-          </li>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+              <code class="computeroutput"><span class="identifier">strict_locker</span></code>: is the
+              basic strict locker, special use when doing external locking.
+            </li>
+<li class="listitem">
+              <code class="computeroutput"><span class="identifier">neested_strict_locker</span></code>:
+              is a strict_locker of another locker as a unique_lock.
+            </li>
+<li class="listitem">
+              <code class="computeroutput"><span class="identifier">conditional_unique_locker</span></code>
+              and <code class="computeroutput"><span class="identifier">conditional_shared_locker</span></code>
+              : are strict lockers with the condition_lockable interface. These are
+              the synchronizer of the monitor class.
+            </li>
 </ul></div>
 <pre class="programlisting"><span class="keyword">class</span> <span class="identifier">product_queue</span> <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
@@ -772,17 +764,21 @@
           Where only external locking is used, a safe approach is needed for calling
           single functions easily. The library provides two classes
         </p>
-<div class="itemizedlist"><ul type="disc">
-<li>
-<code class="computeroutput"><span class="identifier">locking_ptr</span></code> and
-          </li>
-<li><code class="computeroutput"><span class="identifier">on_dereference_locking_ptr</span></code></li>
-<li><code class="computeroutput"><span class="identifier">externally_locked</span></code></li>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+              <code class="computeroutput"><span class="identifier">locking_ptr</span></code> and
+            </li>
+<li class="listitem">
+              <code class="computeroutput"><span class="identifier">on_dereference_locking_ptr</span></code>
+            </li>
+<li class="listitem">
+              <code class="computeroutput"><span class="identifier">externally_locked</span></code>
+            </li>
 </ul></div>
 </div>
-<div class="section" lang="en">
+<div class="section">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="boost_synchro.overview.intro.poly"></a><a href="intro.html#boost_synchro.overview.intro.poly" title=" Polymorphic lockable"> Polymorphic lockable</a>
+<a name="boost_synchro.overview.intro.poly"></a><a class="link" href="intro.html#boost_synchro.overview.intro.poly" title="Polymorphic lockable">Polymorphic lockable</a>
 </h4></div></div></div>
 <p>
           The locks classes introduced previously are a non-polymorphic classes.
@@ -822,10 +818,9 @@
 <span class="special">};</span>
 </pre>
 </div>
-<div class="section" lang="en">
+<div class="section">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="boost_synchro.overview.intro.language_like_synchronized_block_"></a><a href="intro.html#boost_synchro.overview.intro.language_like_synchronized_block_" title="Language-like
-        Synchronized Block ">Language-like
+<a name="boost_synchro.overview.intro.language_like_synchronized_block_"></a><a class="link" href="intro.html#boost_synchro.overview.intro.language_like_synchronized_block_" title="Language-like Synchronized Block">Language-like
         Synchronized Block </a>
 </h4></div></div></div>
 <p>
@@ -864,9 +859,9 @@
     <span class="identifier">BOOST_SYNCHRONIZED_VAR</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">scoped_guard</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">mutex</span><span class="special">&gt;</span> <span class="identifier">__lock</span><span class="special">(</span><span class="identifier">MUTEX</span><span class="special">))</span>
 </pre>
 </div>
-<div class="section" lang="en">
+<div class="section">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="boost_synchro.overview.intro.monitors"></a><a href="intro.html#boost_synchro.overview.intro.monitors" title=" Monitors"> Monitors</a>
+<a name="boost_synchro.overview.intro.monitors"></a><a class="link" href="intro.html#boost_synchro.overview.intro.monitors" title="Monitors">Monitors</a>
 </h4></div></div></div>
 <p>
           Concurrent components may interact in different ways: they may access the
@@ -887,7 +882,7 @@
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><div class="copyright-footer">Copyright © 2008 Vicente J. Botet Escriba<p>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2008 Vicente J. Botet Escriba<p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>
@@ -895,7 +890,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="../overview.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../overview.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../users_guide.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="../overview.html"><img src="../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../overview.html"><img src="../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="../users_guide.html"><img src="../../../../../../doc/src/images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>
