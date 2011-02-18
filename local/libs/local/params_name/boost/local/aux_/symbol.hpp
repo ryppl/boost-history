@@ -22,19 +22,17 @@
 // reserved to the implementation for use as a name in the global namespace".
 #define BOOST_LOCAL_AUX_SYMBOL_INFIX X // `X` used as separator.
 
-#define BOOST_LOCAL_AUX_SYMBOL_PREFIX \
-
-// Expand to `contract...<name>`.
-#define BOOST_LOCAL_AUX_SYMBOL(name) \
-    BOOST_PP_CAT(BOOST_PP_CAT(boost_local, \
-            BOOST_LOCAL_AUX_SYMBOL_INFIX), name)
-
-// Expand to `contract...aux...<name>` (internal).
+// Expand to `...aux...<name>` (internal).
 #define BOOST_LOCAL_AUX_INTERNAL_SYMBOL(name) \
     BOOST_PP_CAT(BOOST_PP_CAT(boost_local_aux, \
             BOOST_LOCAL_AUX_SYMBOL_INFIX), name)
 
 // Names (functions, variables, etc) //
+
+// Expand to `<name>...aux...` (internal).
+#define BOOST_LOCAL_AUX_SYMBOL_TYPEOF_TYPE(name) \
+    BOOST_PP_CAT(BOOST_PP_CAT(name, BOOST_LOCAL_AUX_SYMBOL_INFIX), \
+            BOOST_LOCAL_AUX_INTERNAL_SYMBOL(typeof_type))
 
 #define BOOST_LOCAL_AUX_SYMBOL_DEDUCE_RESULT_TYPE(id) \
     /* symbol (not internal) also gives error if missing result type */ \
@@ -63,6 +61,9 @@
 
 #define BOOST_LOCAL_AUX_SYMBOL_BINDS_VARIABLE_NAME \
     BOOST_LOCAL_AUX_INTERNAL_SYMBOL(binds)
+
+#define BOOST_LOCAL_AUX_SYMBOL_FUNCTION_TYPE \
+    BOOST_LOCAL_AUX_INTERNAL_SYMBOL(function_type)
 
 #define BOOST_LOCAL_AUX_SYMBOL_FUNCTOR_TYPE \
     BOOST_LOCAL_AUX_INTERNAL_SYMBOL(functor_type)

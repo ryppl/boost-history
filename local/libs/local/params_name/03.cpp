@@ -1,6 +1,8 @@
 
 #include <boost/local/function.hpp>
 
+#define WITH_DEFAULT(value) , default value
+
 // OK.
 
 char& BOOST_LOCAL_FUNCTION_PARAMS( (int x) (double y)(default 1.23)
@@ -12,7 +14,7 @@ char& BOOST_LOCAL_FUNCTION_PARAMS(int x, double y WITH_DEFAULT(1.23), // C99 (ok
 
 char& BOOST_LOCAL_FUNCTION_PARAMS(void)
 char& BOOST_LOCAL_FUNCTION_PARAMS( (void) )
-//BOOST_LOCAL_FUNCTION_PARAMS() // C99 (not MSVC)
+//char& BOOST_LOCAL_FUNCTION_PARAMS() // C99 (not MSVC)
 
 // Errors.
     

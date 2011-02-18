@@ -40,7 +40,7 @@ struct abstract_function {}; // Empty so never used directly.
 // Iteration within the namespace.
 #       define BOOST_PP_ITERATION_PARAMS_1 \
                 (3, (0, BOOST_LOCAL_CONFIG_FUNCTION_ARITY_MAX, \
-                BOOST_LOCAL_AUX_FILE_FUNCTION_BASE_HPP))
+                BOOST_LOCAL_AUX_FILE_ABSTRACT_FUNCTION_HPP))
 #       include BOOST_PP_ITERATE() // Iterate over arity.
 
 }}} // namespace boost::local::aux
@@ -57,7 +57,7 @@ struct abstract_function {}; // Empty so never used directly.
 
 #   define BOOST_PP_ITERATION_PARAMS_2 \
             (3, (0, BOOST_LOCAL_AUX_arity, \
-            BOOST_LOCAL_AUX_FILE_FUNCTION_BASE_HPP))
+            BOOST_LOCAL_AUX_FILE_ABSTRACT_FUNCTION_HPP))
 #   include BOOST_PP_ITERATE() // Iterate over default params count.
 #   undef BOOST_LOCAL_AUX_arity
 

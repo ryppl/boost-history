@@ -5,6 +5,7 @@
 #include "../../symbol.hpp"
 // Use this lib's ScopeExit impl (for TYPEOF).
 #include "../../scope_exit/scope_exit.hpp"
+#include <boost/type_traits.hpp>
 
 // This must follow the result type.
 #define BOOST_LOCAL_AUX_FUNCTION_CODE_DEDUCE_RESULT_TYPE( \

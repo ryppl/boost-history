@@ -63,7 +63,7 @@ extern boost::scope_exit::aux::undeclared
     /* has some bind param then all bind names is never empty nil-seq */ \
     BOOST_LOCAL_AUX_FUNCTION_CODE_BINDING_WITH_TAGS_SEQ_( \
             BOOST_LOCAL_AUX_PP_SIGN_PARAMS_ALL_BIND(sign_params), \
-            BOOST_LOCAL_AUX_PP_SIGN_PARAMS_HAS_ANY_BIND_THIS(sign_params), \
+            BOOST_LOCAL_AUX_PP_SIGN_PARAMS_HAVE_ANY_BIND_THIS(sign_params), \
             id, typename_keyword)
 
 // PUBLIC //
@@ -72,7 +72,7 @@ extern boost::scope_exit::aux::undeclared
         sign_params, id, typename_keyword) \
     /* deduce bound type and stores their values/references */ \
     BOOST_PP_IIF(BOOST_PP_EXPAND( /* expand needed on MSVC */ \
-            BOOST_LOCAL_AUX_PP_SIGN_PARAMS_HAS_ANY_BIND(sign_params)), \
+            BOOST_LOCAL_AUX_PP_SIGN_PARAMS_HAVE_ANY_BIND(sign_params)), \
         BOOST_LOCAL_AUX_FUNCTION_CODE_BINDING_ \
     , \
         BOOST_PP_TUPLE_EAT(3) \
@@ -91,7 +91,7 @@ extern boost::scope_exit::aux::undeclared
     /* stores bound types/values into `...args` variable (args variable */ \
     /* can be accessed by `NAME` macro because doesn't use __LINE__ id) */ \
     BOOST_PP_EXPR_IIF(BOOST_PP_EXPAND( /* expand needed on MSVC */ \
-            BOOST_LOCAL_AUX_PP_SIGN_PARAMS_HAS_ANY_BIND(sign_params)), \
+            BOOST_LOCAL_AUX_PP_SIGN_PARAMS_HAVE_ANY_BIND(sign_params)), \
         BOOST_LOCAL_AUX_SYMBOL_ARGS_VARIABLE_NAME.value = \
                 &BOOST_LOCAL_AUX_SYMBOL_PARAMS_LOCAL_VARIABLE_NAME(id); \
     )

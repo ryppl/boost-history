@@ -35,6 +35,18 @@
 #define BOOST_DETAIL_PP_NILSEQ_ELEM(n, nilseq) \
     BOOST_PP_SEQ_ELEM(BOOST_PP_INC(n), nilseq) /* INC for leading `(NIL)` */
 
+// ENUM //
+
+#define BOOST_DETAIL_PP_NILSEQ_ENUM_(nilseq) \
+    BOOST_PP_SEQ_ENUM(BOOST_DETAIL_PP_NILSEQ_TO_SEQ(nileseq))
+
+#define BOOST_DETAIL_PP_NILSEQ_ENUM(nilseq) \
+    BOOST_PP_IIF(BOOST_DETAIL_PP_NILSEQ_IS_NIL(nilseq), \
+        BOOST_PP_TUPLE_EAT(1) \
+    , \
+        BOOST_DETAIL_PP_NILSEQ_ENUM_ \
+    )(nilseq)
+
 // FOR_EACH_I //
 
 #define BOOST_DETAIL_PP_NILSEQ_FOR_EACH_I_(op, data, nilseq) \

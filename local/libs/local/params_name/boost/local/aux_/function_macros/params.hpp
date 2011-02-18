@@ -14,7 +14,7 @@
 
 #define BOOST_LOCAL_AUX_FUNCTION_PARAMS_OK_(sign_params, id, typename_keyword) \
     BOOST_LOCAL_AUX_FUNCTION_CODE_BINDING(sign_params, id, typename_keyword) \
-    BOOST_LOCAL_AUX_FUNCTION_BODE_FUNCTOR(sign_params, id, typename_keyword)
+    BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR(sign_params, id, typename_keyword)
 
 #define BOOST_LOCAL_AUX_FUNCTION_PARAMS_ERROR_( \
         sign_params, id, typename_keyword) \
