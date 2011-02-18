@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
-<title>Boost.Checks: Main Page</title>
+<title>Boost.Checks: boost/checks/isbn.hpp File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/search.js"></script>
@@ -28,9 +28,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div>
   <div id="navrow1" class="tabs">
     <ul class="tablist">
-      <li class="current"><a href="index.html"><span>Main&#160;Page</span></a></li>
+      <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="namespaces.html"><span>Namespaces</span></a></li>
-      <li><a href="files.html"><span>Files</span></a></li>
+      <li class="current"><a href="files.html"><span>Files</span></a></li>
       <li id="searchli">
         <div id="MSearchBox" class="MSearchBoxInactive">
         <span class="left">
@@ -49,13 +49,41 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       </li>
     </ul>
   </div>
+  <div id="navrow2" class="tabs2">
+    <ul class="tablist">
+      <li><a href="files.html"><span>File&#160;List</span></a></li>
+    </ul>
+  </div>
 </div>
 <div class="header">
+  <div class="summary">
+<a href="#namespaces">Namespaces</a> &#124;
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
-<h1>Boost.Checks Documentation</h1>  </div>
+<h1>boost/checks/isbn.hpp File Reference</h1>  </div>
 </div>
 <div class="contents">
+
+<p>ISBN checking and validation functions.  
+<a href="#_details">More...</a></p>
+<div class="textblock"><code>#include &lt;string&gt;</code><br/>
 </div>
+<p><a href="isbn_8hpp_source.html">Go to the source code of this file.</a></p>
+<table class="memberdecls">
+<tr><td colspan="2"><h2><a name="namespaces"></a>
+Namespaces</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost.html">boost</a></td></tr>
+<tr><td colspan="2"><h2><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost.html#a907196d068f21ab96123dd2a5f0c3af4">boost::is_isbn</a> (const std::string &amp;isbn)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if the string contained in `isbn` is a valid ISBN.  <a href="#a907196d068f21ab96123dd2a5f0c3af4"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost.html#a88ccc0500faa07570fd01ad1728591b9">boost::isbn_check_digit</a> (const std::string &amp;isbn)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a char which corresponds to the check digit of a given ISBN.  <a href="#a88ccc0500faa07570fd01ad1728591b9"></a><br/></td></tr>
+</table>
+<hr/><a name="_details"></a><h2>Detailed Description</h2>
+<div class="textblock"><p>ISBN checking and validation functions. </p>
+<p>This header file provide functions for validating and checking ISBN (see <a href="http://en.wikipedia.org/wiki/International_Standard_Book_Number">http://en.wikipedia.org/wiki/International_Standard_Book_Number</a>). </p>
+</div></div>
 <!--- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
