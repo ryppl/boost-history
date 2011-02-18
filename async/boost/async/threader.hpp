@@ -21,7 +21,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/bind.hpp>
 #include <boost/tuple/tuple.hpp>
-#include <boost/futures/future.hpp>
+#include <boost/thread/future.hpp>
 #include <boost/utility/result_of.hpp>
 
 #include <boost/async/fork.hpp>
@@ -337,7 +337,9 @@ public:
 #else
         unique_joiner<result_type> unique_joiner_(f);
 #endif
-        return boost::move(unique_joiner_);
+//        return boost::move(unique_joiner_);
+        boost::detail::thread_move_t<unique_joiner<result_type> > m(unique_joiner_);
+        return unique_joiner<result_type>(m);
     }
 
 };

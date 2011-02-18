@@ -19,7 +19,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/bind.hpp>
 #include <boost/tp/pool.hpp>
-#include <boost/futures/future.hpp>
+#include <boost/thread/future.hpp>
 #include <boost/utility/result_of.hpp>
 
 #include <boost/async/algorithm.hpp>

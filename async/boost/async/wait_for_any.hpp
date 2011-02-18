@@ -17,7 +17,7 @@
 #include <boost/async/algorithm/get.hpp>
 #include <boost/async/fork_all.hpp>
 #include <boost/fusion/include/tuple.hpp>
-#include <boost/futures/future.hpp>
+#include <boost/thread/future.hpp>
 #include <boost/utility/result_of.hpp>
 #include <boost/type_traits/remove_reference.hpp>
 #include <exception>

@@ -16,7 +16,7 @@
 
 #include <boost/async/act_traits.hpp>
 #include <boost/thread/detail/move.hpp>
-#include <boost/futures/future.hpp>
+#include <boost/thread/future.hpp>
 #include <boost/type_traits/is_fundamental.hpp>
 #include <boost/type_traits/is_convertible.hpp>
 #include <boost/mpl/if.hpp>

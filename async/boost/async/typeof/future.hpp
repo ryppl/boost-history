@@ -14,7 +14,7 @@
 #ifndef BOOST_ASYNC_TYPEOF_FUTURE__HPP
 #define BOOST_ASYNC_TYPEOF_FUTURE__HPP
 
-#include <boost/futures/future.hpp>
+#include <boost/thread/future.hpp>
 #include <boost/typeof/typeof.hpp>
 
 #include BOOST_TYPEOF_INCREMENT_REGISTRATION_GROUP()

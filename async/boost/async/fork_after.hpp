@@ -17,7 +17,7 @@
 #include <boost/bind.hpp>
 #include <boost/ref.hpp>
 #include <boost/utility/result_of.hpp>
-#include <boost/futures/future.hpp>
+#include <boost/thread/future.hpp>
 #include <boost/async/fork.hpp>
 #include <boost/async/algorithm/wait_all.hpp>
 

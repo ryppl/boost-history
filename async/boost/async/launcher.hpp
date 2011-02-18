@@ -16,7 +16,7 @@
 
 #include <boost/thread/detail/move.hpp>
 #include <boost/thread/thread.hpp>
-#include <boost/futures/future.hpp>
+#include <boost/thread/future.hpp>
 #include <boost/utility/result_of.hpp>
 
 #include <boost/async/algorithm.hpp>
@@ -56,7 +56,9 @@ public:
 #else
         thread th(boost::move(tsk));
 #endif
-        return boost::move(act);
+//        return boost::move(act);
+        boost::detail::thread_move_t<boost::unique_future<result_type> > m(act);
+        return unique_future<result_type>(m);
     }
 
 };

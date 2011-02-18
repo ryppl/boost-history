@@ -16,7 +16,7 @@
 
 #include <boost/bind.hpp>
 #include <boost/utility/result_of.hpp>
-#include <boost/futures/future.hpp>
+#include <boost/thread/future.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/type_traits/is_fundamental.hpp>
 #include <boost/type_traits/is_convertible.hpp>
