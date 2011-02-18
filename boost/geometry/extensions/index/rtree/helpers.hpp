@@ -118,12 +118,12 @@ template <typename SrcBox, typename DstBox>
 void copy_box(SrcBox const& src, DstBox & dst)
 {
     BOOST_STATIC_ASSERT(
-        traits::dimension<traits::point_type<SrcBox>::type>::value
-        == traits::dimension<traits::point_type<DstBox>::type>::value
+        traits::dimension<typename traits::point_type<SrcBox>::type>::value
+        == traits::dimension<typename traits::point_type<DstBox>::type>::value
     );
 
     dispatch::copy_box<
-        traits::dimension<traits::point_type<SrcBox>::type>::value,
+        traits::dimension<typename traits::point_type<SrcBox>::type>::value,
         SrcBox,
         DstBox
     >::apply(src, dst);
@@ -165,7 +165,7 @@ void convert_to_box(BoundingObject const& bo, Box & b)
 {
     dispatch::convert_to_box<
         BoundingObject,
-        traits::tag<BoundingObject>::type,
+        typename traits::tag<BoundingObject>::type,
         Box
     >::apply(bo, b);
 }

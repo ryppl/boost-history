@@ -34,7 +34,8 @@ namespace boost { namespace geometry { namespace index
 template <
     typename Value,
     typename Translator = translator::def<Value>,
-    typename Box = detail::bounding_box<Translator::bounding_geometry_type>::type
+    typename Box = typename detail::bounding_box
+		<typename Translator::bounding_geometry_type>::type
 >
 class rtree
 {

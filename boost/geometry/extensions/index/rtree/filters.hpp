@@ -18,14 +18,14 @@
 
 namespace boost { namespace geometry { namespace index { namespace filters {
 
-template <typename Box, typename Value>
-class spatial_filter< index::rtree<Box, Value> >
+template <typename Value, typename Translator, typename Box>
+class spatial_filter< index::rtree<Value, Translator, Box> >
 {
 public:
     typedef typename std::deque<Value>::iterator iterator;
     typedef typename std::deque<Value>::const_iterator const_iterator;
 
-    spatial_filter(index::rtree<Box, Value> const& rtree, Box const& b)
+    spatial_filter(index::rtree<Value, Translator, Box> const& rtree, Box const& b)
     {
         m_result = rtree.find(b);
     }
@@ -81,8 +81,8 @@ struct sphere_to_min_max<Box, 1>
 // implement final version of nearest filter
 // range should be sorted (for Boxes - by closest corner)
 
-template <typename Box, typename Value>
-class nearest_filter< index::rtree<Box, Value> >
+template <typename Value, typename Translator, typename Box>
+class nearest_filter< index::rtree<Value, Translator, Box> >
 {
 public:
     typedef typename std::deque<Value>::iterator iterator;
@@ -90,7 +90,7 @@ public:
 
     template <typename Point>
     nearest_filter(
-        index::rtree<Box, Value> const& rtree,
+        index::rtree<Value, Translator, Box> const& rtree,
         Point const& box_centre,
         typename traits::coordinate_type<Point>::type const& radius
         )
