@@ -92,9 +92,9 @@ public:
     boost::iterator_range<typename boost::range_iterator<Range>::type> operator[](unsigned i) {
         unsigned size = boost::size(range_);
         if (i<(parts_-1))
-            return boost::make_sliced_range(range_, i*(size/parts_), ((i+1)*(size/parts_)));
+            return boost::sliced_range<typename boost::range_iterator<Range>::type>(range_, i*(size/parts_), ((i+1)*(size/parts_)));
         else 
-            return boost::make_sliced_range(range_, (parts_-1)*(size/parts_), size);
+            return boost::sliced_range<typename boost::range_iterator<Range>::type>(range_, (parts_-1)*(size/parts_), size);
     }
 };
 
