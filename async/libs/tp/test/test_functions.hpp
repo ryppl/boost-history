@@ -1,4 +1,6 @@
-//  Copyright (c) 2008 Oliver Kowalke. Distributed under the Boost
+//  Copyright (c) 2008 Oliver Kowalke. 
+//  Copyright (c) 2011 Vicente J. Botet Escriba. 
+//  Distributed under the Boost
 //  Software License, Version 1.0. (See accompanying file
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
@@ -14,7 +16,7 @@
 #include <boost/bind.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/function.hpp>
-#include <boost/future.hpp>
+#include <boost/thread/future.hpp>
 #include <boost/test/unit_test.hpp>
 #include <boost/test/auto_unit_test.hpp>
 #include <boost/thread.hpp>
