@@ -1,13 +1,13 @@
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title> Motivation</title>
-<link rel="stylesheet" href="../../../../../../doc/html/boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.69.1">
-<link rel="start" href="../../index.html" title="Toward Boost Async">
-<link rel="up" href="../overview.html" title=" Overview">
-<link rel="prev" href="../overview.html" title=" Overview">
-<link rel="next" href="../users_guide.html" title=" Users'Guide">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Motivation</title>
+<link rel="stylesheet" href="../../../../../../doc/src/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="../../index.html" title="Toward Boost Async 0.2">
+<link rel="up" href="../overview.html" title="Overview">
+<link rel="prev" href="../overview.html" title="Overview">
+<link rel="next" href="../users_guide.html" title="Users'Guide">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
@@ -20,21 +20,20 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="../overview.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../overview.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../users_guide.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="../overview.html"><img src="../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../overview.html"><img src="../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="../users_guide.html"><img src="../../../../../../doc/src/images/next.png" alt="Next"></a>
 </div>
-<div class="section" lang="en">
+<div class="section">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="toward_boost_async.overview.motivation"></a><a href="motivation.html" title=" Motivation"> Motivation</a>
+<a name="toward_boost_async.overview.motivation"></a><a class="link" href="motivation.html" title="Motivation">Motivation</a>
 </h3></div></div></div>
 <div class="toc"><dl>
 <dt><span class="section"><a href="motivation.html#toward_boost_async.overview.motivation.asynchronous_executors_and_asynchronous_completion_token_handles">Asynchronous
         Executors and Asynchronous Completion Token Handles</a></span></dt>
 <dt><span class="section"><a href="motivation.html#toward_boost_async.overview.motivation.threader_joiner">Threader/Joiner</a></span></dt>
 </dl></div>
-<div class="section" lang="en">
+<div class="section">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="toward_boost_async.overview.motivation.asynchronous_executors_and_asynchronous_completion_token_handles"></a><a href="motivation.html#toward_boost_async.overview.motivation.asynchronous_executors_and_asynchronous_completion_token_handles" title="Asynchronous
-        Executors and Asynchronous Completion Token Handles">Asynchronous
+<a name="toward_boost_async.overview.motivation.asynchronous_executors_and_asynchronous_completion_token_handles"></a><a class="link" href="motivation.html#toward_boost_async.overview.motivation.asynchronous_executors_and_asynchronous_completion_token_handles" title="Asynchronous Executors and Asynchronous Completion Token Handles">Asynchronous
         Executors and Asynchronous Completion Token Handles</a>
 </h4></div></div></div>
 <p>
@@ -69,8 +68,8 @@
           fork-like function and the asynchronous completion token handle.
         </p>
 <div class="table">
-<a name="id4765459"></a><p class="title"><b>Table 1. AE/ACT/fork-like relationship</b></p>
-<table class="table" summary="AE/ACT/fork-like relationship">
+<a name="id3125076"></a><p class="title"><b>Table&#160;1.&#160;AE/ACT/fork-like relationship</b></p>
+<div class="table-contents"><table class="table" summary="AE/ACT/fork-like relationship">
 <colgroup>
 <col>
 <col>
@@ -79,164 +78,164 @@
 </colgroup>
 <thead><tr>
 <th>
-              <p>
-                <span class="bold"><strong>Proposal</strong></span>
-              </p>
-              </th>
+                  <p>
+                    <span class="bold"><strong>Proposal</strong></span>
+                  </p>
+                </th>
 <th>
-              <p>
-                <span class="bold"><strong>executor</strong></span>
-              </p>
-              </th>
+                  <p>
+                    <span class="bold"><strong>executor</strong></span>
+                  </p>
+                </th>
 <th>
-              <p>
-                <span class="bold"><strong>fork-like</strong></span>
-              </p>
-              </th>
+                  <p>
+                    <span class="bold"><strong>fork-like</strong></span>
+                  </p>
+                </th>
 <th>
-              <p>
-                <span class="bold"><strong>ACT handle</strong></span>
-              </p>
-              </th>
+                  <p>
+                    <span class="bold"><strong>ACT handle</strong></span>
+                  </p>
+                </th>
 </tr></thead>
 <tbody>
 <tr>
 <td>
-              <p>
-                Boost.Thread
-              </p>
-              </td>
+                  <p>
+                    Boost.Thread
+                  </p>
+                </td>
 <td>
-              <p>
-                <code class="computeroutput"><span class="identifier">thread</span></code> class
-              </p>
-              </td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">thread</span></code> class
+                  </p>
+                </td>
 <td>
-              <p>
-                <code class="computeroutput"><span class="identifier">thread</span><span class="special">()</span></code>
-                constructor
-              </p>
-              </td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">thread</span><span class="special">()</span></code>
+                    constructor
+                  </p>
+                </td>
 <td>
-              <p>
-                <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">thread</span></code>
-              </p>
-              </td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">thread</span></code>
+                  </p>
+                </td>
 </tr>
 <tr>
 <td>
-              <p>
-                Boost.ThreadPool
-              </p>
-              </td>
+                  <p>
+                    Boost.ThreadPool
+                  </p>
+                </td>
 <td>
-              <p>
-                <code class="computeroutput"><span class="identifier">tp</span><span class="special">::</span><span class="identifier">pool</span></code>
-              </p>
-              </td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">tp</span><span class="special">::</span><span class="identifier">pool</span></code>
+                  </p>
+                </td>
 <td>
-              <p>
-                <code class="computeroutput"><span class="identifier">submit</span><span class="special">()</span></code>
-              </p>
-              </td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">submit</span><span class="special">()</span></code>
+                  </p>
+                </td>
 <td>
-              <p>
-                <code class="computeroutput"><span class="identifier">tp</span><span class="special">::</span><span class="identifier">task</span></code>
-              </p>
-              </td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">tp</span><span class="special">::</span><span class="identifier">task</span></code>
+                  </p>
+                </td>
 </tr>
 <tr>
 <td>
-              <p>
-                N2276
-              </p>
-              </td>
+                  <p>
+                    N2276
+                  </p>
+                </td>
 <td>
-              <p>
-                <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">thread</span></code>
-              </p>
-              </td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">thread</span></code>
+                  </p>
+                </td>
 <td>
-              <p>
-                <code class="computeroutput"><span class="identifier">launch_in_thread</span><span class="special">()</span></code>
-              </p>
-              </td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">launch_in_thread</span><span class="special">()</span></code>
+                  </p>
+                </td>
 <td>
-              <p>
-                <code class="computeroutput"><span class="identifier">unique_future</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code>
-              </p>
-              </td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">unique_future</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code>
+                  </p>
+                </td>
 </tr>
 <tr>
 <td>
-              <p>
-                N2276
-              </p>
-              </td>
+                  <p>
+                    N2276
+                  </p>
+                </td>
 <td>
-              <p>
-                thread_pool
-              </p>
-              </td>
+                  <p>
+                    thread_pool
+                  </p>
+                </td>
 <td>
-              <p>
-                <code class="computeroutput"><span class="identifier">launch_in_pool</span><span class="special">()</span></code>
-              </p>
-              </td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">launch_in_pool</span><span class="special">()</span></code>
+                  </p>
+                </td>
 <td>
-              <p>
-                <code class="computeroutput"><span class="identifier">unique_future</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code>
-              </p>
-              </td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">unique_future</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code>
+                  </p>
+                </td>
 </tr>
 <tr>
 <td>
-              <p>
-                N2185
-              </p>
-              </td>
+                  <p>
+                    N2185
+                  </p>
+                </td>
 <td>
-              <p>
-                thread pool
-              </p>
-              </td>
+                  <p>
+                    thread pool
+                  </p>
+                </td>
 <td>
-              <p>
-                <code class="computeroutput"><span class="identifier">fork</span><span class="special">()</span></code>
-              </p>
-              </td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">fork</span><span class="special">()</span></code>
+                  </p>
+                </td>
 <td>
-              <p>
-                <code class="computeroutput"><span class="identifier">future</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code>
-              </p>
-              </td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">future</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code>
+                  </p>
+                </td>
 </tr>
 <tr>
 <td>
-              <p>
-                N1833
-              </p>
-              </td>
+                  <p>
+                    N1833
+                  </p>
+                </td>
 <td>
-              <p>
-                <code class="computeroutput"><span class="identifier">threader</span></code>
-              </p>
-              </td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">threader</span></code>
+                  </p>
+                </td>
 <td>
-              <p>
-                <code class="computeroutput"><span class="identifier">thread</span><span class="special">()</span></code>
-              </p>
-              </td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">thread</span><span class="special">()</span></code>
+                  </p>
+                </td>
 <td>
-              <p>
-                <code class="computeroutput"><span class="identifier">joiner</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code>
-              </p>
-              </td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">joiner</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code>
+                  </p>
+                </td>
 </tr>
 </tbody>
-</table>
+</table></div>
 </div>
-<p>
+<br class="table-break"><p>
           The asynchronous completion token models can follow two interfaces, the
           thread interface and the future interface. Some asynchronous completion
           tokens handle allow to recover the result of the evaluation of the function,
@@ -503,51 +502,51 @@
           To make common tasks easier the library provides some functors in the name
           space fct: for the thread interface as
         </p>
-<div class="itemizedlist"><ul type="disc">
-<li>
-            fct::join
-          </li>
-<li>
-            fct::join_until
-          </li>
-<li>
-            fct::join_for
-          </li>
-<li>
-            fct::detach
-          </li>
-<li>
-            fct::interrupt
-          </li>
-<li>
-            fct::interrupt_requested
-          </li>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+              fct::join
+            </li>
+<li class="listitem">
+              fct::join_until
+            </li>
+<li class="listitem">
+              fct::join_for
+            </li>
+<li class="listitem">
+              fct::detach
+            </li>
+<li class="listitem">
+              fct::interrupt
+            </li>
+<li class="listitem">
+              fct::interrupt_requested
+            </li>
 </ul></div>
 <p>
           and for the future operations as
         </p>
-<div class="itemizedlist"><ul type="disc">
-<li>
-            fct::get
-          </li>
-<li>
-            fct::wait
-          </li>
-<li>
-            fct::wait_until
-          </li>
-<li>
-            fct::wait_for
-          </li>
-<li>
-            fct::is_ready
-          </li>
-<li>
-            fct::has_value
-          </li>
-<li>
-            fct::has_exception
-          </li>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+              fct::get
+            </li>
+<li class="listitem">
+              fct::wait
+            </li>
+<li class="listitem">
+              fct::wait_until
+            </li>
+<li class="listitem">
+              fct::wait_for
+            </li>
+<li class="listitem">
+              fct::is_ready
+            </li>
+<li class="listitem">
+              fct::has_value
+            </li>
+<li class="listitem">
+              fct::has_exception
+            </li>
 </ul></div>
 <p>
           Here is an example for get:
@@ -565,46 +564,46 @@
           In addition the library provides some non member functions that are the
           result of applying these functors to the tuple using a fusion algorithm:
         </p>
-<div class="itemizedlist"><ul type="disc">
-<li>
-            join_all
-          </li>
-<li>
-            join_all_until
-          </li>
-<li>
-            join_all_for
-          </li>
-<li>
-            detach_all
-          </li>
-<li>
-            interrupt_all
-          </li>
-<li>
-            interrupt_requested_on_all
-          </li>
-<li>
-            get_all
-          </li>
-<li>
-            wait_all
-          </li>
-<li>
-            wait_all_until
-          </li>
-<li>
-            wait_all_for
-          </li>
-<li>
-            are_all_ready
-          </li>
-<li>
-            have_all_value
-          </li>
-<li>
-            have_all_exception
-          </li>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+              join_all
+            </li>
+<li class="listitem">
+              join_all_until
+            </li>
+<li class="listitem">
+              join_all_for
+            </li>
+<li class="listitem">
+              detach_all
+            </li>
+<li class="listitem">
+              interrupt_all
+            </li>
+<li class="listitem">
+              interrupt_requested_on_all
+            </li>
+<li class="listitem">
+              get_all
+            </li>
+<li class="listitem">
+              wait_all
+            </li>
+<li class="listitem">
+              wait_all_until
+            </li>
+<li class="listitem">
+              wait_all_for
+            </li>
+<li class="listitem">
+              are_all_ready
+            </li>
+<li class="listitem">
+              have_all_value
+            </li>
+<li class="listitem">
+              have_all_exception
+            </li>
 </ul></div>
 <p>
           Next follows how get_all is defined.
@@ -702,9 +701,9 @@
 <span class="special">};</span>
 </pre>
 </div>
-<div class="section" lang="en">
+<div class="section">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="toward_boost_async.overview.motivation.threader_joiner"></a><a href="motivation.html#toward_boost_async.overview.motivation.threader_joiner" title="Threader/Joiner">Threader/Joiner</a>
+<a name="toward_boost_async.overview.motivation.threader_joiner"></a><a class="link" href="motivation.html#toward_boost_async.overview.motivation.threader_joiner" title="Threader/Joiner">Threader/Joiner</a>
 </h4></div></div></div>
 <p>
           See the <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2005/n1883.pdf" target="_top">N1833
@@ -726,7 +725,7 @@
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><div class="copyright-footer">Copyright © 2008 -2009 Vicente J. Botet Escriba<p>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2008 -2009 Vicente J. Botet Escriba<p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>
@@ -734,7 +733,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="../overview.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../overview.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../users_guide.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="../overview.html"><img src="../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../overview.html"><img src="../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="../users_guide.html"><img src="../../../../../../doc/src/images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>

@@ -8,12 +8,13 @@
 
 [article Toward Boost Async
     [quickbook 1.4]
+    [version 0.2]
     [authors [Botet Escriba, Vicente J.]]
     [copyright 2008-2009 Vicente J. Botet Escriba]
     [id boost.async]
-    [dirname async]
-    [purpose C++ Asynchronous executors and asyncronous completion tokes framework with threaders/joiners, launcher.]
-    [category text]
+    [/dirname async]
+    [/purpose C++ Asynchronous executors and asyncronous completion tokes framework with threaders/joiners, launcher.]
+    [/category text]
     [license
         Distributed under the Boost Software License, Version 1.0.
         (See accompanying file LICENSE_1_0.txt or copy at
