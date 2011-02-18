@@ -28,16 +28,16 @@
 namespace boost { namespace geometry { namespace index {
 
 /// forward declaration
-template <typename Box, typename Value>
+template <typename Box, typename Value, typename Translator>
 class rtree_leaf;
 
-template <typename Box, typename Value>
+template <typename Box, typename Value, typename Translator>
 class rtree_node
 {
 public:
 
-    typedef boost::shared_ptr<rtree_node<Box, Value> > node_pointer;
-    typedef boost::shared_ptr<rtree_leaf<Box, Value> > leaf_pointer;
+    typedef boost::shared_ptr<rtree_node<Box, Value, Translator> > node_pointer;
+    typedef boost::shared_ptr<rtree_leaf<Box, Value, Translator> > leaf_pointer;
 
     /// type for the node map
     typedef std::vector<std::pair<Box, node_pointer > > node_map;
@@ -210,7 +210,8 @@ public:
     /**
      * \brief Remove elements inside the 'box'
      */
-    virtual void remove(Box const& box)
+    // awulkiew - name changed to avoid ambiguity (Value may be of type Box)
+    virtual void remove_in(Box const& box)
     {
         for (typename node_map::iterator it = m_nodes.begin();
              it != m_nodes.end(); ++it)
@@ -226,7 +227,7 @@ public:
     /**
      * \brief Remove value in this leaf
      */
-    virtual void remove(Value const&)
+    virtual void remove(Value const&, Translator const&)
     {
         // TODO: mloskot - define & use GGL exception
         throw std::logic_error("Can't remove a non-leaf node by value.");
@@ -290,13 +291,10 @@ public:
         }
 
         // awulkiew - areas types changed
-        //typedef typename coordinate_type<Box>::type coordinate_type;
         typedef typename area_result<Box>::type area_type;
 
         bool first = true;
-        //coordinate_type min_area = 0;
         area_type min_area = 0;
-        //coordinate_type min_diff_area = 0;
         area_type min_diff_area = 0;
         node_pointer chosen_node;
 
@@ -304,9 +302,6 @@ public:
         for (typename node_map::const_iterator it = m_nodes.begin(); it != m_nodes.end(); ++it)
         {
             // awulkiew - areas types changed
-            //coordinate_type const 
-            //    diff_area = coordinate_type(compute_union_area(box, it->first)) 
-            //        - geometry::area(it->first);
             area_type const diff_area = compute_union_area(box, it->first) - geometry::area(it->first);
 
             if (first)

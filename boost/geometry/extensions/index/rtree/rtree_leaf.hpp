@@ -27,13 +27,16 @@
 namespace boost { namespace geometry { namespace index
 {
 
-template <typename Box, typename Value >
-class rtree_leaf : public rtree_node<Box, Value>
+template <typename Box, typename Value, typename Translator>
+class rtree_leaf : public rtree_node<Box, Value, Translator>
 {
 public:
 
+    // awulkiew - typedef added
+    typedef rtree_node<Box, Value, Translator> rtree_node;
+
     /// container type for the leaves
-    typedef boost::shared_ptr<rtree_node<Box, Value> > node_pointer;
+    typedef boost::shared_ptr<rtree_node> node_pointer;
     typedef std::vector<std::pair<Box, Value> > leaf_map;
 
     /**
@@ -47,7 +50,7 @@ public:
      * \brief Creates a new leaf, with 'parent' as parent
      */
     inline rtree_leaf(node_pointer const& parent)
-        : rtree_node<Box, Value> (parent, 0)
+        : rtree_node(parent, 0)
     {
     }
 
@@ -166,7 +169,8 @@ public:
     /**
      * \brief Remove value with key 'box' in this leaf
      */
-    virtual void remove(Box const& box)
+    // awulkiew - name changed to avoid ambiguity (Value may be of type Box)
+    virtual void remove_in(Box const& box)
     {
 
         for (typename leaf_map::iterator it = m_nodes.begin();
@@ -186,12 +190,13 @@ public:
     /**
      * \brief Remove value in this leaf
      */
-    virtual void remove(Value const& v)
+    virtual void remove(Value const& v, Translator const& tr)
     {
         for (typename leaf_map::iterator it = m_nodes.begin();
              it != m_nodes.end(); ++it)
         {
-            if (it->second == v)
+            // awulkiew - use of translator
+            if ( tr.equals(it->second, v) )
             {
                 m_nodes.erase(it);
                 return;
@@ -234,8 +239,9 @@ public:
             std::cerr << "( " << geometry::get<max_corner, 0>
                 (it->first) << " , " << geometry::get<max_corner, 1>
                 (it->first) << " )";
-            std::cerr << " -> ";
-            std::cerr << it->second;
+            // awulkiew - commented
+            //std::cerr << " -> ";
+            //std::cerr << it->second;
             std::cerr << " | " << std::endl;;
         }
         std::cerr << "\t" << " --< Leaf --------" << std::endl;

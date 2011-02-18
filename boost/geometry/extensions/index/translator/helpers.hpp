@@ -106,12 +106,12 @@ struct extract_bounding_geometry< std::pair<First, Second> >
     typedef typename dispatch::choose_pair_element<
         std::pair<First, Second>,
         typename dispatch::bounding_geometry<
-        First,
-        typename geometry::traits::tag<First>::type
+            First,
+            typename geometry::traits::tag<First>::type
         >::type,
         typename dispatch::bounding_geometry<
-        Second,
-        typename geometry::traits::tag<Second>::type
+            Second,
+            typename geometry::traits::tag<Second>::type
         >::type
     > cp;
 
@@ -155,6 +155,51 @@ template <typename T>
 struct is_smart_ptr
 {
     static const bool value = has_element_type<T>::value;
+};
+
+} // namespace detail
+
+namespace dispatch {
+
+template <typename Geometry, typename Tag>
+struct equals
+{
+    static bool apply(Geometry const& g1, Geometry const& g2)
+    {
+        return geometry::equals(g1, g2);
+    }
+};
+
+template <typename T>
+struct equals<T, void>
+{
+    static bool apply(T const& v1, T const& v2)
+    {
+        return v1 == v2;
+    }
+};
+
+} // namespace dispatch
+
+namespace detail {
+
+template <typename Geometry>
+struct equals
+{
+    static bool apply(Geometry const& g1, Geometry const& g2)
+    {
+        return geometry::equals(g1, g2);
+    }
+};
+
+template <typename First, typename Second>
+struct equals< std::pair<First, Second> >
+{
+    static bool apply(std::pair<First, Second> const& p1, std::pair<First, Second> const& p2)
+    {
+        return dispatch::equals<First, traits::tag<First>::type>::apply(p1.first, p2.first) &&
+            dispatch::equals<Second, traits::tag<Second>::type>::apply(p1.second, p2.second);
+    }
 };
 
 } // namespace detail

@@ -16,6 +16,7 @@
 
 // awulkiew - added
 #include <boost/geometry/algorithms/combine.hpp>
+#include <boost/geometry/algorithms/convert.hpp>
 
 namespace boost { namespace geometry { namespace index {
 
@@ -69,6 +70,142 @@ inline bool is_overlapping(Box const& b1, Box const& b2)
 {
     return ! geometry::disjoint(b1, b2);
 }
+
+// awulkiew - structures and functions added below
+
+namespace dispatch {
+
+template <size_t D, typename SrcBox, typename DstBox>
+struct copy_box
+{
+    BOOST_STATIC_ASSERT(0 < D);
+
+    static void apply(SrcBox const& src, DstBox & dst)
+    {
+        geometry::set<min_corner, D - 1>(dst, geometry::get<min_corner, D - 1>(src));
+        geometry::set<max_corner, D - 1>(dst, geometry::get<max_corner, D - 1>(src));
+
+        copy_box<D - 1, SrcBox, DstBox>::apply(src, dst);
+    }
+};
+
+template <typename SrcBox, typename DstBox>
+struct copy_box<1, SrcBox, DstBox>
+{
+    static void apply(SrcBox const& src, DstBox & dst)
+    {
+        geometry::set<min_corner, 0>(dst, geometry::get<min_corner, 0>(src));
+        geometry::set<max_corner, 0>(dst, geometry::get<max_corner, 0>(src));
+    }
+};
+
+template <size_t D, typename Box>
+struct copy_box<D, Box, Box>
+{
+    BOOST_STATIC_ASSERT(0 < D);
+
+    static void apply(Box const& src, Box & dst)
+    {
+        dst = src;
+    }
+};
+
+} // namespace dispatch
+
+namespace detail {
+
+template <typename SrcBox, typename DstBox>
+void copy_box(SrcBox const& src, DstBox & dst)
+{
+    BOOST_STATIC_ASSERT(
+        traits::dimension<traits::point_type<SrcBox>::type>::value
+        == traits::dimension<traits::point_type<DstBox>::type>::value
+    );
+
+    dispatch::copy_box<
+        traits::dimension<traits::point_type<SrcBox>::type>::value,
+        SrcBox,
+        DstBox
+    >::apply(src, dst);
+}
+
+} // namespace detail
+
+namespace dispatch {
+
+template <typename BoundingObject, typename BoundingObjectTag, typename Box>
+struct convert_to_box
+{
+};
+
+template <typename BoundingObject, typename Box>
+struct convert_to_box<BoundingObject, geometry::box_tag, Box>
+{
+    static void apply(BoundingObject const& bo, Box & b)
+    {
+        detail::copy_box(bo, b);
+    }
+};
+
+template <typename BoundingObject, typename Box>
+struct convert_to_box<BoundingObject, geometry::point_tag, Box>
+{
+    static void apply(BoundingObject const& bo, Box & b)
+    {
+        geometry::convert(bo, b);
+    }
+};
+
+} // namespace dispatch
+
+namespace detail {
+
+template <typename BoundingObject, typename Box>
+void convert_to_box(BoundingObject const& bo, Box & b)
+{
+    dispatch::convert_to_box<
+        BoundingObject,
+        traits::tag<BoundingObject>::type,
+        Box
+    >::apply(bo, b);
+}
+
+} // namespace detail
+
+namespace dispatch {
+
+template <typename BoundingGeometry, typename BoundingGeometryTag>
+struct bounding_box
+{
+    typedef void type;
+};
+
+template <typename BoundingGeometry>
+struct bounding_box<BoundingGeometry, geometry::box_tag>
+{
+    typedef BoundingGeometry type;
+};
+
+template <typename BoundingGeometry>
+struct bounding_box<BoundingGeometry, geometry::point_tag>
+{
+    typedef geometry::model::box<BoundingGeometry> type;
+};
+
+} // namespace dispatch
+
+namespace detail {
+
+template <typename BoundingGeometry>
+struct bounding_box
+{
+    typedef typename dispatch::bounding_box<
+        BoundingGeometry,
+        typename traits::tag<BoundingGeometry>::type
+    >::type type;
+};
+
+} // namespace detail
 
 }}} // namespace boost::geometry::index
 

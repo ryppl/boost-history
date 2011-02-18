@@ -28,6 +28,11 @@ struct def
     {
         return detail::extract_bounding_geometry<Value>::get(v);
     }
+
+    bool equals(Value const& v1, Value const& v2) const
+    {
+        return detail::equals<Value>::apply(v1, v2);
+    }
 };
 
 // Iterator
@@ -40,6 +45,11 @@ struct def<Value, true, IsSmartPtr>
     {
         return detail::extract_bounding_geometry<typename Value::value_type>::get(*v);
     }
+
+    bool equals(Value const& v1, Value const& v2) const
+    {
+        return v1 == v2;
+    }
 };
 
 // SmartPtr
@@ -51,6 +61,11 @@ struct def<Value, false, true>
     bounding_geometry_type const& operator()(Value const& v) const
     {
         return detail::extract_bounding_geometry<typename Value::element_type>::get(*v);
+    }
+
+    bool equals(Value const& v1, Value const& v2) const
+    {
+        return v1 == v2;
     }
 };
 
@@ -75,6 +90,11 @@ struct def<Value*>
     bounding_geometry_type const& operator()(const Value *v) const
     {
         return detail::extract_bounding_geometry<Value>::get(*v);
+    }
+
+    bool equals(const Value* v1, const Value* v2) const
+    {
+        return v1 == v2;
     }
 };
 

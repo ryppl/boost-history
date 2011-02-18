@@ -24,25 +24,38 @@
 #include <boost/geometry/extensions/index/rtree/rtree_node.hpp>
 #include <boost/geometry/extensions/index/rtree/rtree_leaf.hpp>
 
+// awulkiew - added
+#include <boost/geometry/extensions/index/translator/def.hpp>
+
 namespace boost { namespace geometry { namespace index
 {
 
-template <typename Box, typename Value >
+// awulkiew - template parameters changed
+template <
+    typename Value,
+    typename Translator = translator::def<Value>,
+    typename Box = detail::bounding_box<Translator::bounding_geometry_type>::type
+>
 class rtree
 {
 public:
+    // awulkiew - typedefs added
+    typedef rtree_node<Box, Value, Translator> rtree_node;
+    typedef rtree_leaf<Box, Value, Translator> rtree_leaf;
 
-    typedef boost::shared_ptr<rtree_node<Box, Value> > node_pointer;
-    typedef boost::shared_ptr<rtree_leaf<Box, Value> > leaf_pointer;
+    typedef boost::shared_ptr<rtree_node> node_pointer;
+    typedef boost::shared_ptr<rtree_leaf> leaf_pointer;
 
     /**
      * \brief Creates a rtree with 'maximum' elements per node and 'minimum'.
      */
-    rtree(unsigned int const& maximum, unsigned int const& minimum)
+    rtree(unsigned int const& maximum, unsigned int const& minimum, Translator tr = translator::def<Value>())
         : m_count(0)
         , m_min_elems_per_node(minimum)
         , m_max_elems_per_node(maximum)
-        , m_root(new rtree_node<Box, Value>(node_pointer(), 1))
+        , m_root(new rtree_node(node_pointer(), 1))
+        // awulkiew - added
+        , m_translator(tr)
     {
     }
 
@@ -50,11 +63,13 @@ public:
      * \brief Creates a rtree with maximum elements per node
      *        and minimum (box is ignored).
      */
-    rtree(Box const& box, unsigned int const& maximum, unsigned int const& minimum)
+    rtree(Box const& box, unsigned int const& maximum, unsigned int const& minimum, Translator tr = translator::def<Value>())
         : m_count(0)
         , m_min_elems_per_node(minimum)
         , m_max_elems_per_node(maximum)
-        , m_root(new rtree_node<Box, Value>(node_pointer(), 1))
+        , m_root(new rtree_node(node_pointer(), 1))
+        // awulkiew - added
+        , m_translator(tr)
     {
         boost::ignore_unused_variable_warning(box);
     }
@@ -68,44 +83,52 @@ public:
     /**
      * \brief Remove elements inside the 'box'
      */
-    inline void remove(Box const& box)
+    // awulkiew - name changed to avoid ambiguity (Value may be of type Box)
+    inline void remove_in(Box const& box)
     {
         try
         {
-            node_pointer leaf(choose_exact_leaf(box));
-            typename rtree_leaf<Box, Value>::leaf_map q_leaves;
+// awulkiew - an error!
+// choose_exact_leaf returns wrong value
+// remember that remove_in() function is used in remove() so changing it may corrupt the other one
 
-            leaf->remove(box);
+            node_pointer leaf(choose_exact_leaf(box));
+            typename rtree_leaf::leaf_map q_leaves;
+
+            leaf->remove_in(box);
 
             if (leaf->elements() < m_min_elems_per_node && elements() > m_min_elems_per_node)
             {
                 q_leaves = leaf->get_leaves();
 
                 // we remove the leaf_node in the parent node because now it's empty
-                leaf->get_parent()->remove(leaf->get_parent()->get_box(leaf));
+                leaf->get_parent()->remove_in(leaf->get_parent()->get_box(leaf));
             }
 
-            typename rtree_node<Box, Value>::node_map q_nodes;
+            typename rtree_node::node_map q_nodes;
             condense_tree(leaf, q_nodes);
 
             std::vector<std::pair<Box, Value> > s;
-            for (typename rtree_node<Box, Value>::node_map::const_iterator it = q_nodes.begin();
+            for (typename rtree_node::node_map::const_iterator it = q_nodes.begin();
                  it != q_nodes.end(); ++it)
             {
-                typename rtree_leaf<Box, Value>::leaf_map leaves = it->second->get_leaves();
+                typename rtree_leaf::leaf_map leaves = it->second->get_leaves();
 
                 // reinserting leaves from nodes
-                for (typename rtree_leaf<Box, Value>::leaf_map::const_iterator itl = leaves.begin();
+                for (typename rtree_leaf::leaf_map::const_iterator itl = leaves.begin();
                      itl != leaves.end(); ++itl)
                 {
                     s.push_back(*itl);
                 }
             }
 
-            for (typename std::vector<std::pair<Box, Value> >::const_iterator it = s.begin(); it != s.end(); ++it)
+            for (typename std::vector<std::pair<Box, Value> >::const_iterator it = s.begin();
+                it != s.end();
+                ++it)
             {
                 m_count--;
-                insert(it->first, it->second);
+                // awulkiew - changed
+                insert(it->second);
             }
 
             // if the root has only one child and the child is not a leaf,
@@ -118,11 +141,12 @@ public:
                 }
             }
             // reinserting leaves
-            for (typename rtree_leaf<Box, Value>::leaf_map::const_iterator it = q_leaves.begin();
+            for (typename rtree_leaf::leaf_map::const_iterator it = q_leaves.begin();
                  it != q_leaves.end(); ++it)
             {
                 m_count--;
-                insert(it->first, it->second);
+                // awulkiew - parameters changed
+                insert(it->second);
             }
 
             m_count--;
@@ -140,14 +164,18 @@ public:
     /**
      * \brief Remove element inside the box with value
      */
-    void remove(Box const& box, Value const& value)
+    // awulkiew - added conversion to Box
+    void remove(Value const& value)
     {
         try
         {
+            Box box;
+            detail::convert_to_box(m_translator(value), box);
+            
             node_pointer leaf;
 
             // find possible leaves
-            typedef typename std::vector<node_pointer > node_type;
+            typedef typename std::vector<node_pointer> node_type;
             node_type nodes;
             m_root->find_leaves(box, nodes);
 
@@ -157,7 +185,8 @@ public:
                 leaf = *it;
                 try
                 {
-                    leaf->remove(value);
+                    // awulkiew - translator passed
+                    leaf->remove(value, m_translator);
                     break;
                 } catch (...)
                 {
@@ -168,37 +197,40 @@ public:
             if (!leaf)
                 return;
 
-            typename rtree_leaf < Box, Value >::leaf_map q_leaves;
+            typename rtree_leaf::leaf_map q_leaves;
 
             if (leaf->elements() < m_min_elems_per_node && elements() > m_min_elems_per_node)
             {
                 q_leaves = leaf->get_leaves();
 
                 // we remove the leaf_node in the parent node because now it's empty
-                leaf->get_parent()->remove(leaf->get_parent()->get_box(leaf));
+                leaf->get_parent()->remove_in(leaf->get_parent()->get_box(leaf));
             }
 
-            typename rtree_node<Box, Value>::node_map q_nodes;
+            typename rtree_node::node_map q_nodes;
             condense_tree(leaf, q_nodes);
 
             std::vector<std::pair<Box, Value> > s;
-            for (typename rtree_node<Box, Value>::node_map::const_iterator it = q_nodes.begin();
+            for (typename rtree_node::node_map::const_iterator it = q_nodes.begin();
                  it != q_nodes.end(); ++it)
             {
-                typename rtree_leaf<Box, Value>::leaf_map leaves = it->second->get_leaves();
+                typename rtree_leaf::leaf_map leaves = it->second->get_leaves();
 
                 // reinserting leaves from nodes
-                for (typename rtree_leaf<Box, Value>::leaf_map::const_iterator itl = leaves.begin();
+                for (typename rtree_leaf::leaf_map::const_iterator itl = leaves.begin();
                      itl != leaves.end(); ++itl)
                 {
                     s.push_back(*itl);
                 }
             }
 
-            for (typename std::vector<std::pair<Box, Value> >::const_iterator it = s.begin(); it != s.end(); ++it)
+            for (typename std::vector<std::pair<Box, Value> >::const_iterator it = s.begin();
+                it != s.end(); ++it)
             {
                 m_count--;
-                insert(it->first, it->second);
+                // awulkiew - changed
+                //insert(it->first, it->second);
+                insert(it->second);
             }
 
             // if the root has only one child and the child is not a leaf,
@@ -212,11 +244,13 @@ public:
             }
 
             // reinserting leaves
-            for (typename rtree_leaf<Box, Value>::leaf_map::const_iterator it = q_leaves.begin();
+            for (typename rtree_leaf::leaf_map::const_iterator it = q_leaves.begin();
                  it != q_leaves.end(); ++it)
             {
                 m_count--;
-                insert(it->first, it->second);
+                // awulkiew - changed
+                //insert(it->first, it->second);
+                insert(it->second);
             }
 
             m_count--;
@@ -244,8 +278,12 @@ public:
     /**
      * \brief Inserts an element with 'box' as key with value.
      */
-    inline void insert(Box const& box, Value const& value)
+    // awulkiew - added conversion to Box
+    inline void insert(Value const& value)
     {
+        Box box;
+        detail::convert_to_box(m_translator(value), box);
+
         m_count++;
 
         node_pointer leaf(choose_corresponding_leaf(box));
@@ -256,8 +294,8 @@ public:
             leaf->insert(box, value);
 
             // split!
-            node_pointer n1(new rtree_leaf<Box, Value>(leaf->get_parent()));
-            node_pointer n2(new rtree_leaf<Box, Value>(leaf->get_parent()));
+            node_pointer n1(new rtree_leaf(leaf->get_parent()));
+            node_pointer n2(new rtree_leaf(leaf->get_parent()));
 
             split_node(leaf, n1, n2);
             adjust_tree(leaf, n1, n2);
@@ -306,12 +344,14 @@ private:
     /// tree root
     node_pointer m_root;
 
+    // awulkiew - added
+    Translator m_translator;
+
     /**
      * \brief Reorganize the tree after a removal. It tries to
      *        join nodes with less elements than m.
      */
-    void condense_tree(node_pointer const& leaf,
-        typename rtree_node<Box, Value>::node_map& q_nodes)
+    void condense_tree(node_pointer const& leaf, typename rtree_node::node_map& q_nodes)
     {
         if (leaf.get() == m_root.get())
         {
@@ -331,8 +371,8 @@ private:
             }
 
             // get the nodes that we should reinsert
-            typename rtree_node<Box, Value>::node_map this_nodes = parent->get_nodes();
-            for(typename rtree_node<Box, Value>::node_map::const_iterator it = this_nodes.begin();
+            typename rtree_node::node_map this_nodes = parent->get_nodes();
+            for(typename rtree_node::node_map::const_iterator it = this_nodes.begin();
                 it != this_nodes.end(); ++it)
             {
                 q_nodes.push_back(*it);
@@ -340,7 +380,7 @@ private:
 
             // we remove the node in the parent node because now it should be
             // re inserted
-            parent->get_parent()->remove(parent->get_parent()->get_box(parent));
+            parent->get_parent()->remove_in(parent->get_parent()->get_box(parent));
         }
 
         condense_tree(parent, q_nodes);
@@ -372,7 +412,7 @@ private:
         // check if we are in the root and do the split
         if (leaf.get() == m_root.get())
         {
-            node_pointer new_root(new rtree_node<Box,Value>(node_pointer (), leaf->get_level() + 1));
+            node_pointer new_root(new rtree_node(node_pointer(), leaf->get_level() + 1));
             new_root->add_node(n1->compute_box(), n1);
             new_root->add_node(n2->compute_box(), n2);
 
@@ -394,8 +434,8 @@ private:
         // if parent is full, split and readjust
         if (parent->elements() > m_max_elems_per_node)
         {
-            node_pointer p1(new rtree_node<Box, Value>(parent->get_parent(), parent->get_level()));
-            node_pointer p2(new rtree_node<Box, Value>(parent->get_parent(), parent->get_level()));
+            node_pointer p1(new rtree_node(parent->get_parent(), parent->get_level()));
+            node_pointer p2(new rtree_node(parent->get_parent(), parent->get_level()));
 
             split_node(parent, p1, p2);
             adjust_tree(parent, p1, p2);
@@ -437,10 +477,10 @@ private:
         {
             // TODO: mloskot - add assert(node.size() >= 2); or similar
 
-            typename rtree_leaf<Box, Value>::leaf_map nodes = n->get_leaves();
+            typename rtree_leaf::leaf_map nodes = n->get_leaves();
             unsigned int remaining = nodes.size() - 2;
 
-            for (typename rtree_leaf<Box, Value>::leaf_map::const_iterator it = nodes.begin();
+            for (typename rtree_leaf::leaf_map::const_iterator it = nodes.begin();
                  it != nodes.end(); ++it, index++)
             {
                 if (index != seed1 && index != seed2)
@@ -468,9 +508,6 @@ private:
 
                     /// areas
                     // awulkiew - areas types changed
-                    //typedef typename coordinate_type<Box>::type coordinate_type;
-                    //coordinate_type b1_area, b2_area;
-                    //coordinate_type eb1_area, eb2_area;
                     typedef typename area_result<Box>::type area_type;
                     area_type b1_area, b2_area;
                     area_type eb1_area, eb2_area;
@@ -517,9 +554,9 @@ private:
         {
             // TODO: mloskot - add assert(node.size() >= 2); or similar
 
-            typename rtree_node<Box, Value>::node_map nodes = n->get_nodes();
+            typename rtree_node::node_map nodes = n->get_nodes();
             unsigned int remaining = nodes.size() - 2;
-            for(typename rtree_node<Box, Value>::node_map::const_iterator it = nodes.begin();
+            for(typename rtree_node::node_map::const_iterator it = nodes.begin();
                 it != nodes.end(); ++it, index++)
             {
 
@@ -549,9 +586,6 @@ private:
 
                     /// areas
                     // awulkiew - areas types changed
-                    //typedef typename coordinate_type<Box>::type coordinate_type;
-                    //coordinate_type b1_area, b2_area;
-                    //coordinate_type eb1_area, eb2_area;
                     typedef typename area_result<Box>::type area_type;
                     area_type b1_area, b2_area;
                     area_type eb1_area, eb2_area;
@@ -639,8 +673,12 @@ private:
      *        pick_seeds algorithm.
      */
     template <std::size_t D, typename T>
-    void find_normalized_separations(std::vector<Box> const& boxes, T& separation,
-        unsigned int& first, unsigned int& second) const
+    void find_normalized_separations(
+        std::vector<Box> const& boxes,
+        T& separation,
+        unsigned int& first,
+        unsigned int& second
+    ) const
     {
         if (boxes.size() < 2)
         {
@@ -730,8 +768,8 @@ private:
         // if the tree is empty add an initial leaf
         if (m_root->elements() == 0)
         {
-            leaf_pointer new_leaf(new rtree_leaf<Box, Value>(m_root));
-            m_root->add_leaf_node(Box (), new_leaf);
+            leaf_pointer new_leaf(new rtree_leaf(m_root));
+            m_root->add_leaf_node(Box(), new_leaf);
 
             return new_leaf;
         }
@@ -747,7 +785,8 @@ private:
     /**
      * \brief Choose the exact leaf where an insertion should be done
      */
-    node_pointer choose_exact_leaf(Box const&e) const
+    // awulkiew - this method is used only in remove_in() method
+    node_pointer choose_exact_leaf(Box const& e) const
     {
         // find possible leaves
         typedef typename std::vector<node_pointer> node_type;
@@ -763,9 +802,8 @@ private:
             for (typename leaves_type::const_iterator itl = leaves.begin();
                  itl != leaves.end(); ++itl)
             {
-
-                if (itl->first.max_corner() == e.max_corner()
-                    && itl->first.min_corner() == e.min_corner())
+                // awulkiew - operator== changed to geometry::equals
+                if ( geometry::equals(itl->first, e) )
                 {
                     return *it;
                 }
