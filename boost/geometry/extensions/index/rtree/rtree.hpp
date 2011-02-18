@@ -49,7 +49,7 @@ public:
     /**
      * \brief Creates a rtree with 'maximum' elements per node and 'minimum'.
      */
-    rtree(unsigned int const& maximum, unsigned int const& minimum, Translator tr = translator::def<Value>())
+    rtree(unsigned int const& maximum, unsigned int const& minimum, Translator tr = Translator())
         : m_count(0)
         , m_min_elems_per_node(minimum)
         , m_max_elems_per_node(maximum)

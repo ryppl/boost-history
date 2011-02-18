@@ -1,6 +1,7 @@
 #include <boost/geometry/geometry.hpp>
 
 #include <boost/geometry/extensions/index/rtree/rtree.hpp>
+#include <boost/geometry/extensions/index/translator/index.hpp>
 
 #include <iostream>
 
@@ -147,6 +148,41 @@ int main()
         t.print();
 
         t.remove(m.find(3));
+        t.print();
+    }
+
+    std::cout << "-------------------------------------------------\n";
+    std::cout << "-------------------------------------------------\n";
+
+    // size_t
+    {
+        typedef boost::geometry::model::point<float, 2, boost::geometry::cs::cartesian> P;
+        typedef boost::geometry::model::box<P> B;
+
+        typedef size_t V;
+        typedef boost::geometry::index::translator::index<std::vector<B> > T;
+
+        std::vector<B> v;
+        v.push_back(B(P(0, 0), P(1, 1)));
+        v.push_back(B(P(2, 2), P(3, 3)));
+        v.push_back(B(P(4, 4), P(5, 5)));
+        v.push_back(B(P(6, 6), P(7, 7)));
+
+        boost::geometry::index::rtree<V, T> t(3, 0, T(v));
+
+        t.insert(0);
+        t.insert(1);
+        t.insert(2);
+        t.insert(3);
+        t.print();
+
+        // error
+        t.remove_in(B(P(0, 0), P(2, 1)));
+        // ok
+        t.remove_in(B(P(0, 0), P(1, 1)));
+        t.print();
+
+        t.remove(3);
         t.print();
     }
 
