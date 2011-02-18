@@ -239,7 +239,7 @@ namespace boost
         }
         const char* data() const  { return m_value; }        
     private:
-  	    char m_value[n_bits/8];
+        char m_value[n_bits/8];
     };
 
     //  unaligned little endian specialization
@@ -274,7 +274,7 @@ namespace boost
         }
         const char* data() const  { return m_value; }
       private:
-  	    char m_value[n_bits/8];
+          char m_value[n_bits/8];
     };
 
 
@@ -309,7 +309,7 @@ namespace boost
         //~ const char* data() const  { return reinterpret_cast<const char *>(&m_value); }
         const char* data() const  { return m_value; }
       private:
-  	    //~ T m_value;
+          //~ T m_value;
       char m_value[sizeof(value_type)];
     };
 
@@ -332,7 +332,7 @@ namespace boost
         operator T() const        { return m_value; }
         const char* data() const  { return reinterpret_cast<const char *>(&m_value); }
       private:
-  	    T m_value;
+          T m_value;
     };    
 #else    
     //  aligned big endian specialization
@@ -363,7 +363,7 @@ namespace boost
 #   endif  
         const char* data() const  { return reinterpret_cast<const char *>(&m_value); }
       private:
-  	    T m_value;
+          T m_value;
     };
 
     //  aligned little endian specialization
@@ -394,7 +394,7 @@ namespace boost
     #endif
         const char* data() const  { return reinterpret_cast<const char *>(&m_value); }
       private:
-  	    T m_value;
+          T m_value;
     };
 #endif    
 
