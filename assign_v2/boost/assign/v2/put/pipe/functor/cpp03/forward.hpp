@@ -25,24 +25,24 @@ namespace put_pipe_aux{
 
     // --- Tuple --- //
 
-#define MACRO1(z, I, data) ::boost::get<I>( data )
-#define MACRO(z, N, data)\
+#define BOOST_ASSIGN_V2_MACRO1(z, I, data) ::boost::get<I>( data )
+#define BOOST_ASSIGN_V2_MACRO(z, N, data)\
     template<typename F BOOST_PP_ENUM_TRAILING_PARAMS(N, typename T)>\
     void forward(\
         F const& f,\
         ::boost::tuples::tuple<BOOST_PP_ENUM_PARAMS(N, T)> const& t\
     )\
     {\
-        f( BOOST_PP_ENUM(N, MACRO1, t) );\
+        f( BOOST_PP_ENUM(N, BOOST_ASSIGN_V2_MACRO1, t) );\
     }\
 /**/
 BOOST_PP_REPEAT(
     BOOST_PP_INC(BOOST_ASSIGN_V2_LIMIT_ARITY),
-    MACRO,
+    BOOST_ASSIGN_V2_MACRO,
     ~
 )
-#undef MACRO1
-#undef MACRO
+#undef BOOST_ASSIGN_V2_MACRO1
+#undef BOOST_ASSIGN_V2_MACRO
     // --- List  --- //
 
 #define params(T) BOOST_PP_ENUM_PARAMS(BOOST_ASSIGN_V2_LIMIT_ARITY,T)

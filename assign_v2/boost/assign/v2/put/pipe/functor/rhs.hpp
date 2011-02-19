@@ -216,10 +216,10 @@ namespace put_pipe_aux{
 
 		using super_t::operator();
 
-#define MACRO1( z, n, data )\
+#define BOOST_ASSIGN_V2_MACRO1( z, n, data )\
  ( BOOST_PP_CAT(_,n) )\
 /**/
-#define MACRO2(z, N1, data)\
+#define BOOST_ASSIGN_V2_MACRO2(z, N1, data)\
     template<BOOST_PP_ENUM_PARAMS(N1, typename U)>\
     typename result<\
         ::boost::mpl::vector<\
@@ -240,11 +240,11 @@ namespace put_pipe_aux{
 BOOST_PP_REPEAT_FROM_TO(
 	1,
     BOOST_PP_INC(BOOST_ASSIGN_V2_LIMIT_ARITY),
-    MACRO2,
+    BOOST_ASSIGN_V2_MACRO2,
     ~
 )
-#undef MACRO1
-#undef MACRO2
+#undef BOOST_ASSIGN_V2_MACRO1
+#undef BOOST_ASSIGN_V2_MACRO2
 
 #endif // BOOST_ASSIGN_V2_ENABLE_CPP0X
 

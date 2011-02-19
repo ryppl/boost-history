@@ -15,7 +15,7 @@
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/is_base_of.hpp>
 
-/* needed throughout /put/ext : */ 
+// Needed by dependants
 #include <boost/assign/v2/detail/keyword/nil.hpp> 
 #include <boost/assign/v2/put/modulo/modifier.hpp>
 #include <boost/assign/v2/put/frame/base.hpp>

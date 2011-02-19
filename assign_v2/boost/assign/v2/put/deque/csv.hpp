@@ -13,6 +13,7 @@
 #include <boost/assign/v2/detail/keyword/nil.hpp>
 #include <boost/assign/v2/put/deque/cont.hpp>
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
+#include <boost/assign/v2/put/deque/functor.hpp>
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 #include <utility>
 #else
@@ -59,8 +60,8 @@ namespace put_csv_deque_aux{
     }
 
 #else
-#define MACRO1(z, i, data) ( BOOST_PP_CAT(_, i) )
-#define MACRO2(z, N, data)\
+#define BOOST_ASSIGN_V2_MACRO1(z, i, data) ( BOOST_PP_CAT(_, i) )
+#define BOOST_ASSIGN_V2_MACRO2(z, N, data)\
 	template<typename T>\
     typename result_of::deque<\
     	typename boost::decay<T>::type\
@@ -68,17 +69,17 @@ namespace put_csv_deque_aux{
     csv_deque( BOOST_PP_ENUM_PARAMS(N, T const & _) )\
     {\
     	typedef typename boost::decay<T>::type decay_;\
-        return deque<decay_>( v2::_nil) BOOST_PP_REPEAT(N, MACRO1, ~ );\
+        return deque<decay_>( v2::_nil) BOOST_PP_REPEAT(N, BOOST_ASSIGN_V2_MACRO1, ~ );\
     }\
 /**/
 BOOST_PP_REPEAT_FROM_TO(
 	1,
     BOOST_PP_INC(BOOST_ASSIGN_V2_LIMIT_CSV_ARITY),
-    MACRO2,
+    BOOST_ASSIGN_V2_MACRO2,
     ~
 )
-#undef MACRO1
-#undef MACRO2
+#undef BOOST_ASSIGN_V2_MACRO1
+#undef BOOST_ASSIGN_V2_MACRO2
 #endif
 
 }// v2

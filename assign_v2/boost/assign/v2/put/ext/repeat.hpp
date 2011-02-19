@@ -45,7 +45,7 @@ namespace put_aux{
         {
         }
 
-#define MACRO(arg)\
+#define BOOST_ASSIGN_V2_MACRO(arg)\
         size_type m = this->n;\
         while(m--) this->inner.impl(\
             v,\
@@ -56,16 +56,16 @@ namespace put_aux{
         void impl(V& v, BOOST_ASSIGN_V2_forward_param(T, t) )const
         {
 
-            MACRO( BOOST_ASSIGN_V2_forward_arg(T, t) )
+            BOOST_ASSIGN_V2_MACRO( BOOST_ASSIGN_V2_forward_arg(T, t) )
         }
 
     	template<typename V, typename T>
         void impl(V& v, T* t)const
         {
-            MACRO( t )
+            BOOST_ASSIGN_V2_MACRO( t )
         }
 
-#undef MACRO
+#undef BOOST_ASSIGN_V2_MACRO
 
         size_type const& size()const{ return this->n; }
 

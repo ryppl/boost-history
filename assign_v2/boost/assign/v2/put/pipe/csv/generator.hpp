@@ -127,38 +127,38 @@ namespace put_pipe_aux{
 
 #else
 
-#define MACRO1(N, U)\
+#define BOOST_ASSIGN_V2_MACRO1(N, U)\
     return result_( \
         this->pars_cont, \
         ref::csv_array<U>( BOOST_PP_ENUM_PARAMS(N, _) ) \
     );\
 /**/
 
-#define MACRO2(z, N, data)\
+#define BOOST_ASSIGN_V2_MACRO2(z, N, data)\
 	template<typename T>\
 	typename result<N, T>::type\
     operator()( BOOST_PP_ENUM_PARAMS(N, T &_) )const \
     { \
     	typedef typename result<N, T>::type result_;\
-        MACRO1( N, T )\
+        BOOST_ASSIGN_V2_MACRO1( N, T )\
     } \
 	template<typename T>\
 	typename result<N, T const>::type\
     operator()( BOOST_PP_ENUM_PARAMS(N, T const &_) )const \
     { \
     	typedef typename result<N, T const>::type result_;\
-        MACRO1( N, T const )\
+        BOOST_ASSIGN_V2_MACRO1( N, T const )\
     } \
 /**/
 
 BOOST_PP_REPEAT_FROM_TO(
 	1,
     BOOST_PP_INC(BOOST_ASSIGN_V2_LIMIT_CSV_ARITY),
-    MACRO2,
+    BOOST_ASSIGN_V2_MACRO2,
     ~
 )
-#undef MACRO1
-#undef MACRO2
+#undef BOOST_ASSIGN_V2_MACRO1
+#undef BOOST_ASSIGN_V2_MACRO2
 
 #endif
 

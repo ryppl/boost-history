@@ -20,15 +20,13 @@ namespace result_of_modulo{
     template<typename T>
     struct generic_
     {
-    
     	template<typename P>
         struct apply
         {
         	static T t;
             static P p;
             typedef BOOST_TYPEOF_TPL( t % p ) type;
-        };
-    
+        };    
     };
     
 }// result_of_modulo

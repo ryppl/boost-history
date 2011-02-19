@@ -69,22 +69,22 @@ namespace csv_put_aux{
         }
 
 #else
-#define MACRO1(z, i, data) ( BOOST_PP_CAT(_, i) )
-#define MACRO2(z, N, data)\
+#define BOOST_ASSIGN_V2_MACRO1(z, i, data) ( BOOST_PP_CAT(_, i) )
+#define BOOST_ASSIGN_V2_MACRO2(z, N, data)\
     typename result_of::put<C>::type\
     operator()( BOOST_PP_ENUM_PARAMS(N, value_type const & _) )\
     {\
-        return put( this->get() ) BOOST_PP_REPEAT(N, MACRO1, ~ );\
+        return put( this->get() ) BOOST_PP_REPEAT(N, BOOST_ASSIGN_V2_MACRO1, ~ );\
     }\
 /**/
 BOOST_PP_REPEAT_FROM_TO(
 	1,
     BOOST_PP_INC(BOOST_ASSIGN_V2_LIMIT_CSV_ARITY),
-    MACRO2,
+    BOOST_ASSIGN_V2_MACRO2,
     ~
 )
-#undef MACRO1
-#undef MACRO2
+#undef BOOST_ASSIGN_V2_MACRO1
+#undef BOOST_ASSIGN_V2_MACRO2
 #endif
 		C& container()const{
         	return static_cast<super1_t const&>(*this).get();

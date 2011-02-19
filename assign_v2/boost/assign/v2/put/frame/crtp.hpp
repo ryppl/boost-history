@@ -128,7 +128,7 @@ namespace put_aux{
         public:
 		using super_t::operator();
 
-#define MACRO(z, N, data) \
+#define BOOST_ASSIGN_V2_MACRO(z, N, data) \
 	template<BOOST_PP_ENUM_PARAMS(N, typename T)> \
     result_type \
     impl( BOOST_PP_ENUM_BINARY_PARAMS(N, T, & _) )const \
@@ -139,10 +139,10 @@ namespace put_aux{
 BOOST_PP_REPEAT_FROM_TO(
 	1,
     BOOST_PP_INC(BOOST_ASSIGN_V2_LIMIT_ARITY),
-    MACRO,
+    BOOST_ASSIGN_V2_MACRO,
     ~
 )
-#undef MACRO
+#undef BOOST_ASSIGN_V2_MACRO
 #endif
 		C& container()const{ return this->derived().container(); }
 
