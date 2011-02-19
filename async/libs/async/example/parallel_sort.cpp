@@ -36,11 +36,11 @@ class scoped_timer {
     boost::posix_time::ptime start_;
 public:    
     scoped_timer() 
-		: start_(boost::posix_time::microsec_clock::universal_time())
+        : start_(boost::posix_time::microsec_clock::universal_time())
     {}
     ~scoped_timer() {
-		boost::posix_time::ptime stop( boost::posix_time::microsec_clock::universal_time() );
-		std::cout << " " << ( stop - start_).total_milliseconds() << " milli seconds" << std::endl;
+        boost::posix_time::ptime stop( boost::posix_time::microsec_clock::universal_time() );
+        std::cout << " " << ( stop - start_).total_milliseconds() << " milli seconds" << std::endl;
     }
 };
 
