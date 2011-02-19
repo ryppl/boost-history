@@ -115,7 +115,6 @@ namespace result_of{
     }
 
 }// ref
-    using ref::get;
 }// v2
 }// assign
 }// boost

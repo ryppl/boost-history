@@ -97,9 +97,18 @@ namespace xxx_rhs{
             BOOST_AUTO(rhs, as2::_put( "x" ) );
             typedef boost::mpl::int_<0> int_;
             typedef std::string str_;
+            // TODO find a simpler way:
+            #if BOOST_ASSIGN_V2_ENABLE_CPP0X
+            using namespace boost::assign::v2::ref;
+            #else
             using namespace boost;
+            #endif
             BOOST_ASSIGN_V2_CHECK(
-                str_( get<0>( rhs.seq_args().get( int_() ) ) ) == "x"
+                str_(
+                    get<0>(
+                        rhs.seq_args().get( int_() )
+                    )
+                ) == "x"
             );
         }
     }

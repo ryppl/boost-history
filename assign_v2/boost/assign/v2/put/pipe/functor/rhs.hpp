@@ -136,7 +136,8 @@ namespace put_pipe_aux{
         template<typename T>
         struct modulo_result
         {
-            typedef typename modulo_traits_:: template new_pars<T>::type new_;
+            typedef typename modulo_traits_::
+                template new_pars<T>::type new_;
             typedef rhs<new_, SeqArgs> type;
         };
 
