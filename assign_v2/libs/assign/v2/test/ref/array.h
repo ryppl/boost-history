@@ -15,7 +15,7 @@ namespace xxx_ref{
 namespace xxx_array{
 
     void test();
-    
+
 }// xxx_array
 }// xxx_ref
 }// test_assign

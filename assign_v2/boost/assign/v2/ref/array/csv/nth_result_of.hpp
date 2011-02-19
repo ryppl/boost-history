@@ -26,7 +26,7 @@ namespace array_aux{
 namespace nth_result_of{
 
     template<std::size_t N, typename T>
-    struct csv_array 
+    struct csv_array
     {
         typedef ref::array_tag1_ tag1_;
 //        typedef array_aux::instant_alloc<N, tag1_, T> type;

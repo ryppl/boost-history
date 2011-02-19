@@ -23,7 +23,7 @@ namespace xxx_pipe{
         xxx_functor::test();
         xxx_range::test();
     }
-    
+
 }// xxx_pipe
 }// xxx_put
 }// xxx_test_assign

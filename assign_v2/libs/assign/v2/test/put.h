@@ -14,7 +14,7 @@ namespace test_assign_v2{
 namespace xxx_put{
 
     void test();
-    
+
 }// xxx_put
 }// test_assign_v2
 

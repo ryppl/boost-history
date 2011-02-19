@@ -36,9 +36,9 @@ namespace xxx_csv{
                 //[csv_map
                 typedef std::map<std::string, int> cont_;
                 typedef cont_::value_type type; cont_ cont;
-                as2::csv_put( cont )( 
+                as2::csv_put( cont )(
                     type("jan", 31), type("feb", 28), type("mar", 31)
-                );                
+                );
                 BOOST_ASSIGN_V2_CHECK( cont["feb"] == 28 );
                 //]
                 BOOST_ASSIGN_V2_CHECK( cont["jan"] == 31 );

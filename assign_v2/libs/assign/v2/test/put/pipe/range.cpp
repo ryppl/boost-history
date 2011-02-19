@@ -24,12 +24,12 @@ namespace xxx_range{
     void test()
     {
         namespace as2 = boost::assign::v2;
-        
+
         //[range_var
         typedef int T; T x = 1, y = 2, z = 0;
         std::vector<T> r( 3 ); r[0] = x; r[1] = y; r[2] = z;
-        //]       
-        
+        //]
+
         // Forwards to put()
         {
             //[range_array
@@ -41,10 +41,10 @@ namespace xxx_range{
         {
             //[range_stack
             typedef std::stack<T> lifo_;
-            BOOST_ASSIGN_V2_CHECK( 
-                ( 
-                    ::boost::type<lifo_>() | as2::_put_range( r ) 
-                ).top() == z 
+            BOOST_ASSIGN_V2_CHECK(
+                (
+                    ::boost::type<lifo_>() | as2::_put_range( r )
+                ).top() == z
             );
             //]
         }

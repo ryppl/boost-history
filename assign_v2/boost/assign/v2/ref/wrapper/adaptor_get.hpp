@@ -25,7 +25,7 @@
 #include <boost/assign/v2/ref/wrapper/get.hpp>
 
 namespace boost{
-namespace assign{ 
+namespace assign{
 namespace v2{
 namespace ref{
 namespace range_aux{
@@ -33,14 +33,14 @@ namespace result_of{
 
     template<typename R>
     struct range_get{
-    
+
         typedef ref::get_functor f_;
         #ifdef BOOST_MSVC
-        typedef boost::iterator_range< 
+        typedef boost::iterator_range<
             boost::transform_iterator< f_,
-                BOOST_DEDUCED_TYPENAME boost::range_iterator<R>::type 
+                BOOST_DEDUCED_TYPENAME boost::range_iterator<R>::type
             >
-        > type; 
+        > type;
         #else
         typedef boost::range_detail::transform_range<f_, R> type;
         #endif
@@ -78,7 +78,7 @@ namespace result_of{
     }
 
     struct get_adaptor{};
-    
+
     template<typename R>
     typename range_aux::result_of::range_get<R>::type
     operator|(R& r, get_adaptor){

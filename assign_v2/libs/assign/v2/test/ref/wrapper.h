@@ -15,7 +15,7 @@ namespace xxx_ref{
 namespace xxx_wrapper{
 
     void test();
-    
+
 }// xxx_wrapper
 }// xxx_ref
 }// test_assign

@@ -15,7 +15,7 @@ namespace xxx_utility{
 namespace xxx_chain{
 
     void test();
-    
+
 }// xxx_chain
 }// xxx_utility
 }// test_assign_v2

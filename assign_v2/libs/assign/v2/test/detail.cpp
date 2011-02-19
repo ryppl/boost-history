@@ -18,6 +18,6 @@ namespace xxx_detail{
         xxx_functor::test();
         xxx_traits::test();
     }
-    
+
 }// xxx_detail
 }// test_assign_v2

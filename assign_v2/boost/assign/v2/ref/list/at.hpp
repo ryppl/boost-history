@@ -25,7 +25,7 @@ namespace ref{
 namespace list_aux{
 
     template<size_type I, typename T>
-    struct is_head : 
+    struct is_head :
         ::boost::mpl::bool_< I + 1 == T::size::value>{};
 
 namespace result_of{
@@ -36,7 +36,7 @@ namespace result_of{
             ,head_reference<T>
             ,result_of::at<I, typename tail_of<T>::type>
         >{};
-                
+
 }// result_of
 
         template<size_type I, typename T>
@@ -48,7 +48,7 @@ namespace result_of{
         {
             return t.head();
         }
-        
+
         template<size_type I, typename T>
         typename boost::lazy_disable_if<
             is_head<I, T>,

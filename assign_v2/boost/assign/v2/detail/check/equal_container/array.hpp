@@ -13,14 +13,14 @@
 #include <boost/assign/v2/detail/traits/container/is_array.hpp>
 #include <boost/assign/v2/detail/check_equal_container/pp.hpp>
 
-namespace boost{                                                               
-namespace assign{ 
+namespace boost{
+namespace assign{
 namespace v2{
-namespace check_aux{ 
+namespace check_aux{
 
     template<typename C, typename R>
     void equal_container(v2::container_tag::array, C const & cont, R const& r)
-    {                                                                              
+    {
         BOOST_ASSIGN_V2_CHECK_AUX_CONTAINER_SIZE
         BOOST_ASSIGN_V2_CHECK_AUX_CONTAINER_ELEM_AT
         C cpy = cont; // becaus operator[] return a (non-const) reference
@@ -28,11 +28,11 @@ namespace check_aux{
         {
             BOOST_ASSIGN_V2_CHECK( cpy[ i ] == elem_at( i ) );
         }
-    }                                           
+    }
 
 }// check_aux
 }// v2
 }// assign
-}// boost    
-    
+}// boost
+
 #endif

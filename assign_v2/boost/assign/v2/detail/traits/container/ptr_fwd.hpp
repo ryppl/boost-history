@@ -22,33 +22,33 @@ namespace boost{
     class ptr_array;
 
     template
-    < 
-        class T, 
+    <
+        class T,
         class CloneAllocator,
         class Allocator
     >
     class ptr_circular_buffer;
 
     template
-    < 
-        class T, 
+    <
+        class T,
         class CloneAllocator,
         class Allocator
     >
     class ptr_deque;
-    
+
     template
-    < 
-        class T, 
+    <
+        class T,
         class CloneAllocator,
         class Allocator
     >
     class ptr_list;
 
     template
-    < 
-        class Key, 
-        class T, 
+    <
+        class Key,
+        class T,
         class Compare,
         class CloneAllocator,
         class Allocator
@@ -56,8 +56,8 @@ namespace boost{
     class ptr_map;
 
     template
-    < 
-        class Key, 
+    <
+        class Key,
         class Compare,
         class CloneAllocator,
         class Allocator
@@ -65,9 +65,9 @@ namespace boost{
     class ptr_set;
 
     template
-    < 
-        class Key, 
-        class T, 
+    <
+        class Key,
+        class T,
         class Hash,
         class Pred,
         class CloneAllocator,
@@ -76,8 +76,8 @@ namespace boost{
     class ptr_unordered_map;
 
     template
-    < 
-        class Key, 
+    <
+        class Key,
         class Hash,
         class Pred,
         class CloneAllocator,
@@ -87,8 +87,8 @@ namespace boost{
 
 
     template
-    < 
-        class T, 
+    <
+        class T,
         class CloneAllocator,
         class Allocator
     >

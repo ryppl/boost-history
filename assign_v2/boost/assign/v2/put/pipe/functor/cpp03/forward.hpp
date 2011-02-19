@@ -60,8 +60,8 @@ BOOST_PP_REPEAT(
 
     template<
         typename F,
-        put_pipe_aux::size_type I, 
-        put_pipe_aux::size_type N, 
+        put_pipe_aux::size_type I,
+        put_pipe_aux::size_type N,
         typename L, params(typename T)
     >
     void forward(
@@ -91,7 +91,7 @@ BOOST_PP_REPEAT(
         > const& list
     ){}
 
-    template<typename F, 
+    template<typename F,
         put_pipe_aux::size_type N, typename L, params(typename T)>
     void forward(
         F const& f,

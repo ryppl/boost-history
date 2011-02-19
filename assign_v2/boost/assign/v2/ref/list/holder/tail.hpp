@@ -27,16 +27,16 @@ namespace list_aux{
         typedef T tail_type;
         typedef ::boost::mpl::int_<T::size::value+1> size;
         tail_holder(T const& t) : tail_( t ){}
-        
+
         typedef T const& result_of_tail_type;
         result_of_tail_type tail()const{ return this->tail_; }
-        
+
         private:
         T const& tail_;
     };
 
     template<>
-    struct tail_holder<nil> 
+    struct tail_holder<nil>
     {
         typedef nil tail_type;
         typedef ::boost::mpl::int_<0> size;

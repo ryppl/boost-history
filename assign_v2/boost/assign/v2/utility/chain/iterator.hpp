@@ -22,7 +22,7 @@ namespace v2{
 namespace chain_aux{
 
     template<
-        typename It1, 
+        typename It1,
         typename It2,
         typename Tag
     >
@@ -37,17 +37,17 @@ namespace chain_aux{
             ref1_,
             ref2_
         >::type reference;
-        
+
         typedef typename boost::remove_reference<reference>::type value_type;
 
 
-    
+
         typedef boost::range_detail::join_iterator<
             It1
             ,It2
             ,value_type
             ,reference
-            // , boost::single_pass_traversal_tag  
+            // , boost::single_pass_traversal_tag
         > type;
 
     };

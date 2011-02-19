@@ -16,7 +16,7 @@ namespace xxx_traits{
 namespace xxx_has_push{
 
     void test();
-    
+
 }// xxx_has_push
 }// xxx_traits
 }// detail

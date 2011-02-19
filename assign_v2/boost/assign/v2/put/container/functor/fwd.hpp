@@ -11,12 +11,12 @@
 #define BOOST_ASSIGN_V2_PUT_CONTAINER_FUNCTOR_FWD_ER_2010_HPP
 
 namespace boost{
-namespace assign{ 
+namespace assign{
 namespace v2{
 namespace put_aux{
 
     template<typename C,typename F, typename Tag> class adapter;
-    
+
 }// put_aux
 }// v2
 }// assign

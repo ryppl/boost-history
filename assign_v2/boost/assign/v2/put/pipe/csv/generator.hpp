@@ -53,7 +53,7 @@ namespace put_pipe_aux{
         typedef modulo_traits<Pars> modulo_traits_;
 
         public:
-        
+
         typedef typename modulo_traits_::size pars_size;
         typedef typename modulo_traits_::cont_ pars_cont_type;
 

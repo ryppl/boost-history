@@ -19,10 +19,10 @@ namespace ref{
 namespace list_aux{
 
 #define SEQ (Tag)(H)(T)
-#define U container<Tag, H, T> 
+#define U container<Tag, H, T>
 BOOST_ASSIGN_V2_CONVERTER(U, SEQ)
 #undef U
-#undef SEQ    
+#undef SEQ
 
 }// list_aux
 }// ref

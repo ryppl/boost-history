@@ -21,16 +21,16 @@
 #include <boost/test/unit_test.hpp>
 using boost::unit_test::test_suite;
 test_suite* init_unit_test_suite( int argc, char* argv[] )
-{                                            
-    test_suite* test = BOOST_TEST_SUITE( "BOOST_ASSIGN_V2" ); 
-    using namespace test_assign_v2;  
+{
+    test_suite* test = BOOST_TEST_SUITE( "BOOST_ASSIGN_V2" );
+    using namespace test_assign_v2;
     {
     	using namespace xxx_detail;
 		test->add( BOOST_TEST_CASE( &xxx_traits::xxx_has_push::test ) );
 		test->add( BOOST_TEST_CASE( &xxx_traits::xxx_has_value_type::test ) );
 		test->add( BOOST_TEST_CASE( &xxx_functor::test ) );
     }
-    return test;                             
-}                                            
+    return test;
+}
 
 #endif

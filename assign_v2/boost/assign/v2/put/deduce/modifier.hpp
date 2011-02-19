@@ -49,7 +49,7 @@ namespace switch_aux{
         >{};
 
     template<>
-    struct case_<switch_tag::deduce_put, 3> : 
+    struct case_<switch_tag::deduce_put, 3> :
         switch_aux::helper<v2::modifier_tag::push_back>{};
 
 }// switch_aux
@@ -67,7 +67,7 @@ namespace put_aux{
         typedef typename put_aux::deduce_modifier_tag<C>::type found_;
         BOOST_MPL_ASSERT(( boost::is_same<found_, X> ));
     }
- 
+
 }// put_aux
 }// v2
 }// assign

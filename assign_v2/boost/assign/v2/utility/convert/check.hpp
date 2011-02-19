@@ -47,7 +47,7 @@ namespace check_aux{
     {
         namespace as2 = boost::assign::v2;
         namespace ns = check_aux;
-        
+
         typedef boost::array<int, 8> ar_;
         typedef std::deque<int> deque_;
         typedef std::list<int> list_;
@@ -55,52 +55,52 @@ namespace check_aux{
         typedef std::set<int> set_;
         typedef std::stack<int> stack_;
         typedef std::vector<int> vec_;
-        
+
         BOOST_MPL_ASSERT(( as2::convert_aux::use_put<ar_, R> ));
         BOOST_MPL_ASSERT(( as2::convert_aux::use_put<stack_, R> ));
         BOOST_MPL_ASSERT(( as2::convert_aux::use_put<queue_, R> ));
         BOOST_MPL_ASSERT_NOT(( as2::convert_aux::use_put<deque_, R> ));
         BOOST_MPL_ASSERT_NOT(( as2::convert_aux::use_put<list_, R> ));
         BOOST_MPL_ASSERT_NOT(( as2::convert_aux::use_put<set_, R> ));
-        BOOST_MPL_ASSERT_NOT(( as2::convert_aux::use_put<vec_, R> ));        
+        BOOST_MPL_ASSERT_NOT(( as2::convert_aux::use_put<vec_, R> ));
 
-        BOOST_MPL_ASSERT(( boost::is_same< 
+        BOOST_MPL_ASSERT(( boost::is_same<
                 typename as2::convert_aux::deduce_tag<ar_, R>::type,
                 convert_tag::put
             >
         ));
-        BOOST_MPL_ASSERT(( boost::is_same< 
+        BOOST_MPL_ASSERT(( boost::is_same<
                 typename as2::convert_aux::deduce_tag<stack_, R>::type,
                 convert_tag::put
             >
         ));
-        BOOST_MPL_ASSERT(( boost::is_same< 
+        BOOST_MPL_ASSERT(( boost::is_same<
                 typename as2::convert_aux::deduce_tag<queue_, R>::type,
                 convert_tag::put
             >
         ));
-        BOOST_MPL_ASSERT(( boost::is_same< 
+        BOOST_MPL_ASSERT(( boost::is_same<
                 typename as2::convert_aux::deduce_tag<deque_, R>::type,
                 convert_tag::copy
             >
         ));
-        BOOST_MPL_ASSERT(( boost::is_same< 
+        BOOST_MPL_ASSERT(( boost::is_same<
                 typename as2::convert_aux::deduce_tag<list_, R>::type,
                 convert_tag::copy
             >
         ));
-        BOOST_MPL_ASSERT(( boost::is_same< 
+        BOOST_MPL_ASSERT(( boost::is_same<
                 typename as2::convert_aux::deduce_tag<set_, R>::type,
                 convert_tag::copy
             >
         ));
-        BOOST_MPL_ASSERT(( boost::is_same< 
+        BOOST_MPL_ASSERT(( boost::is_same<
                 typename as2::convert_aux::deduce_tag<vec_, R>::type,
                 convert_tag::copy
             >
         ));
 
-        
+
         // R as 2nd arg is explicit in case it is the same as the 1st arg
         ns::equal_convert<queue_, R >( r );
         ns::equal_convert<stack_, R >( r );

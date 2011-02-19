@@ -124,7 +124,7 @@ namespace xxx_list{
                 boost::mpl::vector<r_, r_, r_>
             >::type ar_;
             ar_ ar = as2::ref::list<tag_>( as2::_nil )( a )( b )( c );
-                                     
+
             BOOST_ASSIGN_V2_CHECK( &ar[ 0 ].get() == &a );
             BOOST_ASSIGN_V2_CHECK( &ar[ 1 ].get() == &b );
             BOOST_ASSIGN_V2_CHECK( &ar[ 2 ].get() == &c );

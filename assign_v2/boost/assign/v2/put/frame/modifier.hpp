@@ -12,7 +12,7 @@
 #include <boost/concept_check.hpp>
 
 namespace boost{
-namespace assign{ 
+namespace assign{
 namespace v2{
 namespace modifier_tag{
     // add as necessary
@@ -29,7 +29,7 @@ namespace put_aux{
 }// put_aux
 namespace put_concept{
 
-    // M models ModifierImpl with respect to container V and reference 
+    // M models ModifierImpl with respect to container V and reference
     // (or pointer) type R
     template<typename M, typename C, typename R>
     struct ModifierImpl

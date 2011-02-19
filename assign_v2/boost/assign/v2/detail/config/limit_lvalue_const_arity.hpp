@@ -16,8 +16,8 @@
 
 // This constant defines the maximum arity for which functors are overloaded
 // for any combination of lvalue and const under C++03 (the restriction does
-// not apply to C++0x). Be warned, therefore, that the number of function 
-// overloads increases geometrically with this number.  
+// not apply to C++0x). Be warned, therefore, that the number of function
+// overloads increases geometrically with this number.
 
 #include <boost/assign/v2/detail/config/limit_arity.hpp>
 #if BOOST_ASSIGN_V2_LIMIT_LVALUE_CONST_ARITY >  BOOST_ASSIGN_V2_LIMIT_ARITY

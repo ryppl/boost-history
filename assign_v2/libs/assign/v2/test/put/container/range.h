@@ -16,7 +16,7 @@ namespace xxx_container{
 namespace xxx_range{
 
     void test();
-    
+
 }// xxx_range
 }// xxx_container
 }// xxx_put

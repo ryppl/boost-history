@@ -15,7 +15,7 @@ namespace xxx_ref{
 namespace xxx_convert_traits{
 
     void test();
-    
+
 }// xxx_convert_traits
 }// xxx_ref
 }// test_assign

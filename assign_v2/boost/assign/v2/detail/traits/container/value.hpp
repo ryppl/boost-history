@@ -24,7 +24,7 @@ namespace container_traits
     // TODO
     // maybe this should be
     //     remove_reference<V::reference>::type
-    // or 
+    // or
     //     range_value<V>, is available.
     // Think about ptr_container in making this change.
     template<typename V>

@@ -11,12 +11,12 @@
 #define BOOST_ASSIGN_V2_DETAIL_KEYWORD_NIL_ER_2010_HPP
 
 namespace boost{
-namespace assign{ 
+namespace assign{
 namespace v2{
 namespace keyword_aux{ struct nil{}; }
 namespace{
     const keyword_aux::nil _nil = keyword_aux::nil();
-}    
+}
 }// v2
 }// assign
 }// boost

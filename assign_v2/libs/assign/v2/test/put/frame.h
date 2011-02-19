@@ -15,7 +15,7 @@ namespace xxx_put{
 namespace xxx_frame{
 
     void test();
-    
+
 }// xxx_frame
 }// xxx_put
 }// xxx_test_assign

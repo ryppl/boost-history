@@ -17,28 +17,28 @@
 #include <boost/assign/v2/detail/check/equal_container/sorted.hpp>
 #include <boost/assign/v2/detail/check/fwd_equal_container.hpp> // consistency
 
-namespace boost{                                                               
-namespace assign{ 
+namespace boost{
+namespace assign{
 namespace v2{
-namespace check_aux{ 
+namespace check_aux{
 
     template<typename C, typename R>
     void equal_container(C & cont, R const& r)
-    {  
+    {
         typedef typename v2::check_aux::deduce_equal_container_tag<C>::type tag;
         v2::checking::equal( tag(), cont, r );
-    } 
+    }
 
     template<typename C, typename R>
     void equal_container(C const& cont, R const& r)
-    {  
+    {
         typedef typename v2::check_aux::deduce_equal_container_tag<C>::type tag;
         v2::checking::equal( tag(), cont, r );
-    } 
+    }
 
 }// check_aux
 }// v2
 }// assign
-}// boost    
-    
+}// boost
+
 #endif

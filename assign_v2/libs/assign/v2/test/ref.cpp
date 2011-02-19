@@ -19,7 +19,7 @@ namespace test_assign_v2{
 namespace xxx_ref{
 
     void test(){
-    
+
         xxx_array::test();
         xxx_convert_traits::test();
         xxx_array::test();
@@ -28,6 +28,6 @@ namespace xxx_ref{
         xxx_wrapper::test();
 
     }
-    
+
 }// xxx_ref
 }// test_assign_v2

@@ -15,7 +15,7 @@ namespace assign{
 namespace v2{
 namespace ref{
 namespace list_tuple_aux{
-    
+
     typedef int tuple_size_type;
     typedef int get_size_type;
 

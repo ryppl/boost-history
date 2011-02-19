@@ -28,8 +28,8 @@ namespace xxx_fun{
             //[fun
             typedef int T; T x = 1, y = 2, z = 0;
             std::vector<int> cont;
-            cont | ( 
-                as2::_put % ( as2::_fun = ( bl::_1 + 1 ) ) 
+            cont | (
+                as2::_put % ( as2::_fun = ( bl::_1 + 1 ) )
             )( x )( y )( z );
             BOOST_ASSIGN_V2_CHECK( cont.front() == ( x + 1 ) );
             BOOST_ASSIGN_V2_CHECK( cont.back() == ( z + 1 ) );

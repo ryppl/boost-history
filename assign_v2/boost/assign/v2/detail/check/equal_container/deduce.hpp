@@ -16,7 +16,7 @@
 #include <boost/assign/v2/detail/traits/container/is_array.hpp>
 #include <boost/assign/v2/detail/traits/container/is_range.hpp>
 #include <boost/assign/v2/detail/traits/switch.hpp>
- 
+
 namespace boost{
 namespace assign{
 namespace v2{
@@ -66,7 +66,7 @@ namespace switch_aux{
         switch_aux::helper<
             container_tag::range
         >{};
-        
+
 }// switch_aux
 namespace check_aux{
 
@@ -76,7 +76,7 @@ namespace check_aux{
         T
     >
     {};
-    
+
 }// check_aux
 }// v2
 }// assign

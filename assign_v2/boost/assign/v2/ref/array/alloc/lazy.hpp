@@ -14,65 +14,65 @@
 #include <boost/assign/v2/ref/array/alloc/lazy_fwd.hpp>
 #include <boost/assign/v2/ref/array/interface.hpp>
 #include <boost/assign/v2/ref/array/impl_traits.hpp>
- 
+
 namespace boost{
 namespace assign{
 namespace v2{
 namespace ref{
-namespace array_aux{ 
-                  
+namespace array_aux{
+
 //       template<std::size_t N,typename Tag, typename T, typename D>
        template<std::size_t N,typename T, typename D>
        class lazy_alloc : public array_aux::interface<
-           typename array_aux::impl_traits<N, T>::array_type, 
-//        lazy_alloc<N,Tag,T,D> 
-        lazy_alloc<N, T, D> 
+           typename array_aux::impl_traits<N, T>::array_type,
+//        lazy_alloc<N,Tag,T,D>
+        lazy_alloc<N, T, D>
     >
     {
         typedef typename array_aux::impl_traits<N, T>::array_type impl_;
 
         typedef ::boost::mpl::int_<N> size_;
-                
+
         void alloc_if()const{
             if(!this->ptr){
                return this->alloc();
             }
         }
 
-        void alloc()const{ 
+        void alloc()const{
             this->ptr = smart_ptr_(new impl_);
             assign_array(
                 *this->ptr,
                 static_cast<const D&>(*this)
-            );    
+            );
         }
 
         typedef array_aux::interface<impl_, lazy_alloc> super_t;
-        
+
         public:
 
-        impl_& impl(){ 
+        impl_& impl(){
             this->alloc_if();
             return (*this->ptr);
         }
 
-        impl_ const & impl()const{ 
+        impl_ const & impl()const{
             this->alloc_if();
             return (*this->ptr);
         }
-        
+
         using super_t::operator[];
-        
+
         private:
-        
+
         typedef boost::shared_ptr<impl_> smart_ptr_;
         mutable smart_ptr_ ptr;
 
     };
 
 }// array_aux
-}// ref 
-}// v2    
+}// ref
+}// v2
 }// assign
 }// boost
 

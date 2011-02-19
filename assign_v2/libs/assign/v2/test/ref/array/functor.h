@@ -16,7 +16,7 @@ namespace xxx_array{
 namespace xxx_functor{
 
     void test();
-    
+
 }// xxx_functor
 }// xxx_array
 }// xxx_ref

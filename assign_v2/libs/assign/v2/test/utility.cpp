@@ -19,7 +19,7 @@ namespace xxx_utility{
         xxx_chain::test();
         xxx_convert::test();
     }
-    
+
 }// xxx_type_traits
 }// xxx_test_assign
 

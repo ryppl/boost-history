@@ -13,46 +13,46 @@
 #include <boost/assign/v2/ref/array/interface.hpp>
 #include <boost/assign/v2/ref/array/alloc/instant_fwd.hpp>
 #include <boost/assign/v2/ref/array/impl_traits.hpp>
- 
+
 namespace boost{
 namespace assign{
 namespace v2{
 namespace ref{
-namespace array_aux{ 
+namespace array_aux{
 
 //    template<size_type N, typename Tag, typename T>
     template<size_type N, typename T>
     class instant_alloc : public array_aux::interface<
         typename array_aux::impl_traits<N, T>::array_type,
-//        instant_alloc<N, Tag, T> 
-      instant_alloc<N, T> 
+//        instant_alloc<N, Tag, T>
+      instant_alloc<N, T>
     >
     {
         typedef typename array_aux::impl_traits<N, T>::array_type impl_;
-                
+
         public:
 
-        instant_alloc(){}    
+        instant_alloc(){}
 
         template<typename L>
         instant_alloc(const L& l){
-            assign_array( 
+            assign_array(
                 this->array,
                 l
-            );    
-        }    
-        
-        impl_& impl(){ 
+            );
+        }
+
+        impl_& impl(){
             return this->array;
         }
 
-        impl_ const & impl()const{ 
+        impl_ const & impl()const{
             return this->array;
         }
-        
+
         protected:
         mutable impl_ array;
-        
+
     };
 
 }// array_aux

@@ -22,30 +22,30 @@ namespace mpg
         double clock_diff_to_sec(long clock_diff);
 
         template<class Proc>
-        double time_it_impl(Proc proc, int N=1);        
+        double time_it_impl(Proc proc, int N=1);
 
         template<class Proc, class Result>
         double time_it_impl(Proc proc, Result & result, int N=1);
     }
-        
+
     template<class Proc>
     double time_it(Proc proc);
-    
+
     template<class Proc, class Result>
     double time_it(Proc proc, Result & result);
 
     double rand_dbl();
-        
+
     double rand_dbl(double M, double N);
-    
+
     // http://www.eternallyconfuzzled.com/arts/jsw_art_rand.aspx
     int rand(int M, int N);
-    
+
     char rand_letter();
 
     std::string rand_str(int len);
 
-}   
+}
 
 
 #endif

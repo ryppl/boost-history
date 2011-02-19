@@ -18,7 +18,7 @@ namespace xxx_ptr{
     {
         xxx_functor::test();
     }// test
-  
+
 }// xxx_ptr
 }// xxx_put
 }// xxx_test_assign

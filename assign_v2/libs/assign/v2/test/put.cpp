@@ -29,9 +29,9 @@ namespace xxx_put{
         xxx_std::test();
         xxx_ext::test();
         xxx_ptr::test();
-        xxx_pipe::test();        
+        xxx_pipe::test();
     }
-    
+
 }// xxx_put
 }// test_assign_v2
 

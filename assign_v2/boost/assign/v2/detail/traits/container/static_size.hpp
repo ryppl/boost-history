@@ -20,10 +20,10 @@ namespace container_traits{
 
     template<typename V>
     struct static_size{
-    
+
         // Needed as a meta-function (indirection) bec. ptr_array
         // does not expose static_size.
-    
+
     };
 
     template<typename T,std::size_t N>

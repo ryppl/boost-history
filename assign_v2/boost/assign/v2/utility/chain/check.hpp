@@ -33,13 +33,13 @@ namespace check_chain_aux{
 template<typename cr1_, typename cr2_, bool the_value>
 void verify_use_lvalue()
 {
-    typedef v2::chain_aux::use_lvalue<cr1_, cr2_>  use_lvalue_; 
-    BOOST_STATIC_ASSERT( use_lvalue_::value == the_value ); 
-    typedef typename ::boost::mpl::eval_if_c< 
-        the_value, 
+    typedef v2::chain_aux::use_lvalue<cr1_, cr2_>  use_lvalue_;
+    BOOST_STATIC_ASSERT( use_lvalue_::value == the_value );
+    typedef typename ::boost::mpl::eval_if_c<
+        the_value,
         ::boost::mpl::identity<boost::mpl::void_>, // why?
-        v2::result_of::chain<cr1_, cr2_> 
-    >::type result_; 
+        v2::result_of::chain<cr1_, cr2_>
+    >::type result_;
 }
 
 template<bool x, typename T>
@@ -53,30 +53,30 @@ void verify_mpl()
     namespace as2 = assign::v2;
     // Value container
     typedef std::vector<T> vec_t_;
-    typedef typename add_const_if<qual_v1, vec_t_ >::type vec1_; 
+    typedef typename add_const_if<qual_v1, vec_t_ >::type vec1_;
     typedef typename as2::ref::copy_wrapper<
         typename add_const_if<qual_e2, T>::type
-    >::type w_; 
+    >::type w_;
     typedef vec1_                                            r1_; // alias
 
     // Ref-wrappers
     typedef std::vector<w_> vec_w_;
-    typedef typename add_const_if<qual_v2, vec_w_ >::type vec2_; 
+    typedef typename add_const_if<qual_v2, vec_w_ >::type vec2_;
     // Transformation through range_get (necessary)
-    typedef typename ref::result_of::range_get<vec2_>::type r2_; 
+    typedef typename ref::result_of::range_get<vec2_>::type r2_;
 
-    {  
+    {
         typedef r1_       cr1_;
         typedef r2_       cr2_;
         verify_use_lvalue<cr1_, cr2_, the_value>();
         verify_use_lvalue<cr2_, cr1_, the_value>();
-    } 
-    {  
+    }
+    {
         typedef r1_       cr1_;
         typedef r2_ const cr2_;
         verify_use_lvalue<cr1_, cr2_, the_value>();
         verify_use_lvalue<cr2_, cr1_, the_value>();
-    } 
+    }
 }
 
     template<typename T>
@@ -105,7 +105,7 @@ void verify_mpl()
         verify_mpl<T, true   , true    , true    , false    >();
 
     }
-    
+
     template<typename T>
     void exec()
     {
@@ -135,8 +135,8 @@ void verify_mpl()
                 vt,
                 boost::begin( vt1 | as2::_chain( vt2 ) | as2::_chain( vt3 ) )
             );
-            BOOST_ASSIGN_V2_CHECK( 
-                boost::equal( vt1 | as2::_chain( vt2 ) , vt ) 
+            BOOST_ASSIGN_V2_CHECK(
+                boost::equal( vt1 | as2::_chain( vt2 ) , vt )
             );
         }
         {
@@ -150,13 +150,13 @@ void verify_mpl()
 
             T x = -1, y = -1, z = -1;
             boost::array<w_, 3> vw2;
-            vw2[0].rebind( x ); 
-            vw2[1].rebind( y ); 
-            vw2[2].rebind( z ); 
+            vw2[0].rebind( x );
+            vw2[1].rebind( y );
+            vw2[2].rebind( z );
             boost::copy(
                 vt,
-                boost::begin( 
-                    vt1 | as2::_chain( 
+                boost::begin(
+                    vt1 | as2::_chain(
                         vw2 | ref::_get  // necessary
                     ) | as2::_chain( vt3 ) )
             );
@@ -171,7 +171,7 @@ void verify_mpl()
                 BOOST_ASSIGN_V2_CHECK( vt3[2] == vt[7] );
             }
             // suppresses warning unused
-            if(x && y && z){} 
+            if(x && y && z){}
         }
     }// exec
 

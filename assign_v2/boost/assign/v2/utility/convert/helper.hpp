@@ -15,20 +15,20 @@ namespace boost{
 namespace assign{
 namespace v2{
 namespace convert_aux{
-    
+
     // This is in replacement of switch_aux::helper since here we need
     // two arguments.
-    
+
     template<typename T, typename U>
     struct default_f : ::boost::mpl::true_{};
-    
-    template<typename Tag, 
+
+    template<typename Tag,
         template<typename, typename> class F = convert_aux::default_f>
     struct helper
     {
         typedef Tag tag;
         template<typename T>  // T must derive from mpl::pair<>
-        struct apply 
+        struct apply
             : F<typename T::first, typename T::second>
         {
         };

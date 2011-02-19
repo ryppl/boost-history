@@ -22,7 +22,7 @@ namespace array_aux{
 
     template<typename T>
     struct empty_array : ref::empty_list<list_aux::array_tag>{};
-         
+
     template<size_type N, typename T>
     struct recursive_result
     {

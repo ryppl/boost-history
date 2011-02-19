@@ -26,10 +26,10 @@ namespace container_traits{
         container_traits::is_set<V>,
         container_traits::is_map<V>
     >{};
-    
+
 }// container_traits
 }// v2
 }// assign
-}// boost 
+}// boost
 
 #endif

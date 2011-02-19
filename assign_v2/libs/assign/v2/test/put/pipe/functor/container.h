@@ -17,7 +17,7 @@ namespace xxx_container{
     void test();
 
 }// xxx_container
-}// xxx_functor  
+}// xxx_functor
 }// xxx_pipe
 }// xxx_put
 }// xxx_test_assign

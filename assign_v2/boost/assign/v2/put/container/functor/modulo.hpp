@@ -14,10 +14,10 @@
 #include <boost/assign/v2/put/container/functor/fwd.hpp>
 
 namespace boost{
-namespace assign{ 
+namespace assign{
 namespace v2{
 namespace result_of_modulo{
-    
+
     template<typename C,typename F, typename Tag>
     struct fun< put_aux::adapter<C, F, Tag> >
     {
@@ -31,7 +31,7 @@ namespace result_of_modulo{
         template<typename NewTag>
         struct apply{ typedef put_aux::adapter<C, F, NewTag> type; };
     };
-    
+
 }// result_of_modulo
 }// v2
 }// assign

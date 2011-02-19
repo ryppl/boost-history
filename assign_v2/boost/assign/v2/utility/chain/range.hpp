@@ -28,7 +28,7 @@ namespace chain_aux{
             Tag
         >::type iterator_t;
         typedef boost::iterator_range< iterator_t > type;
-        
+
         static type call(R1& r1, R2& r2)
         {
             BOOST_CONCEPT_ASSERT((SinglePassRangeConcept<R1>));
@@ -48,7 +48,7 @@ namespace chain_aux{
     template<typename R1, typename R2, typename Tag>
     struct range_l
         : chain_aux::range< R1, R2, boost::range_iterator,Tag>{};
-    
+
     template<typename R1, typename R2, typename Tag>
     struct range_r
         : chain_aux::range<R1, R2, boost::range_const_iterator,Tag>{};

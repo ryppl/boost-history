@@ -20,26 +20,26 @@ namespace type_traits{
 
     template<typename T>
     struct has_value_type{
-        
+
         typedef typename boost::type_traits::yes_type yes_;
         typedef typename boost::type_traits::no_type no_;
-            
-        
+
+
         template<typename U>
         static yes_ test(U*, typename U::value_type* p = 0);
         static no_ test(...);
-            
+
         BOOST_STATIC_CONSTANT(
-            bool, 
+            bool,
             value = sizeof( test((T*)0) ) == sizeof( yes_ )
         );
         typedef ::boost::mpl::bool_<value> type;
     };
 
-    
+
 }// type_traits
 }// v2
 }// assign
-}// boost 
+}// boost
 
 #endif

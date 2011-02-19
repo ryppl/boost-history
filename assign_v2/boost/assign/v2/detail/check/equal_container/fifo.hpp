@@ -13,27 +13,27 @@
 #include <boost/assign/v2/detail/traits/container/is_fifo.hpp>
 #include <boost/assign/v2/detail/check_equal_container/pp.hpp>
 
-namespace boost{                                                               
-namespace assign{ 
+namespace boost{
+namespace assign{
 namespace v2{
-namespace check_aux{ 
+namespace check_aux{
 
     template<typename C, typename R>
     void equal_container(v2::container_tag::fifo, C const & cont, R const& r)
-    {                                                                              
+    {
         BOOST_ASSIGN_V2_CHECK_AUX_CONTAINER_SIZE
         BOOST_ASSIGN_V2_CHECK_AUX_CONTAINER_ELEM_AT
-        C cpy = cont; 
+        C cpy = cont;
         for(size_type i = 0; i < n1; i++)
         {
-            BOOST_ASSIGN_V2_CHECK( cpy.front() == elem_at( i ) ); cpy.pop(); 
+            BOOST_ASSIGN_V2_CHECK( cpy.front() == elem_at( i ) ); cpy.pop();
         }
         BOOST_ASSIGN_V2_CHECK( cpy.empty() ); // consistency check
-    }                                           
+    }
 
 }// check_aux
 }// v2
 }// assign
-}// boost    
-    
+}// boost
+
 #endif

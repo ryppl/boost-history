@@ -64,7 +64,7 @@ namespace xxx_deduce{
             typedef std::map<std::string, int> cont_;
             typedef as2::put_traits< cont_ > traits_;
             BOOST_MPL_ASSERT((boost::is_same<
-                traits_::modifier_tag, 
+                traits_::modifier_tag,
                 as2::modifier_tag::insert
             >));
             //]

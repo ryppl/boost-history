@@ -14,7 +14,7 @@
 #include <libs/assign/v2/speed/tools.h>
 
 // http://code.google.com/p/truffle/source/browse/trunk/include/mpg/TimeIt.h
-// http://code.google.com/p/truffle/source/browse/trunk/include/mpg/Random.h 
+// http://code.google.com/p/truffle/source/browse/trunk/include/mpg/Random.h
 
 // http://www.eternallyconfuzzled.com/arts/jsw_art_rand.aspx
 inline double uniform_deviate ( int seed )
@@ -22,7 +22,7 @@ inline double uniform_deviate ( int seed )
     return seed * ( 1.0 / ( RAND_MAX + 1.0 ) );
 }
 inline int rand(int M, int N) // Range [M..N)
-{   
+{
     return int(M + uniform_deviate(std::rand()) * (N - M));
 }
 char rand_letter()
@@ -37,18 +37,18 @@ std::string rand_str(int len)
     return result;
 }
 
-std::vector<int> 
+std::vector<int>
 rand_vec(int max_n)
 {
     std::vector<int> result(
         (std::size_t)mpg::rand(1, max_n)
     );
     std::generate(
-        result.begin(), 
-        result.end(), 
+        result.begin(),
+        result.end(),
         boost::bind(
-            &mpg::rand, 
-            0, 
+            &mpg::rand,
+            0,
             20
         )
     );
@@ -66,60 +66,60 @@ namespace mpg
 
         template<class Proc>
         double time_it_impl(Proc proc, int N) // returns time in microseconds
-        {   
+        {
             std::clock_t const start = std::clock();
             for(int i = 0; i < N; ++i)
                 proc();
-            std::clock_t const end = std::clock(); 
-            if(clock_diff_to_sec(end - start) < .2) 
-                return time_it_impl(proc, N * 5); 
+            std::clock_t const end = std::clock();
+            if(clock_diff_to_sec(end - start) < .2)
+                return time_it_impl(proc, N * 5);
             return clock_diff_to_sec(end - start) * (1e6 / N);
-        }        
-        
+        }
+
         template<class Proc, class Result>
         double time_it_impl(Proc proc, Result & result, int N) // returns time in microseconds
-        {   
+        {
             std::clock_t const start = std::clock();
             for(int i = 0; i < N; ++i)
                 result = proc();
-            std::clock_t const end = std::clock(); 
-            if(clock_diff_to_sec(end - start) < .2) 
-                return time_it_impl(proc, result, N * 5); 
+            std::clock_t const end = std::clock();
+            if(clock_diff_to_sec(end - start) < .2)
+                return time_it_impl(proc, result, N * 5);
             return clock_diff_to_sec(end - start) * (1e6 / N);
         }
     }
-        
+
     template<class Proc>
     double time_it(Proc proc) // returns time in microseconds
-    {   
+    {
         return detail::time_it_impl(proc, 1);
-    }   
-    
+    }
+
     template<class Proc, class Result>
     double time_it(Proc proc, Result & result) // returns time in microseconds
-    {   
+    {
         return detail::time_it_impl(proc, result, 1);
-    }    
-}   
+    }
+}
 
 namespace mpg
 {
     inline double rand_dbl()
-    {   
+    {
         return double(::rand()) / RAND_MAX;
     }
-    
+
     inline double rand_dbl(double M, double N)
-    {   
+    {
         return M + rand_dbl() * (N - M);
     }
-    
+
     // http://www.eternallyconfuzzled.com/arts/jsw_art_rand.aspx
     inline int rand(int M, int N) // Range (M..N)
-    {   
+    {
         return int(M + std::rand() * ( 1.0 / ( RAND_MAX + 1.0 )) * (N - M));
     }
-    
+
     inline char rand_letter()
     {
         return char(rand('a', 'z' + 1));
@@ -133,6 +133,6 @@ namespace mpg
             result.push_back(rand_letter());
         return result;
     }
-}   
+}
 
 

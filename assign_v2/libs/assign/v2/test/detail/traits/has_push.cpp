@@ -36,7 +36,7 @@ namespace xxx_has_push{
             BOOST_MPL_ASSERT_NOT(( ns::has_push<v_> ));
          }
     }
-    
+
 }// xxx_has_push
 }// xxx_detail
 }// xxx_type_traits

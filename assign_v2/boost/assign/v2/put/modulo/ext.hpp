@@ -67,7 +67,7 @@ namespace result_of_modulo{
 
             typedef result_of_modulo::modifier<T> meta1_;
             typedef result_of_modulo::fun_modifier<T> meta2_;
-            
+
             typedef boost::is_same<fun_, old_fun_> is_same_fun_;
             typedef typename ::boost::mpl::eval_if<
                 is_same_fun_,
@@ -105,7 +105,7 @@ namespace result_of_modulo{
         };
 
     };
-    
+
 }// result_of_modulo
 }// v2
 }// assign

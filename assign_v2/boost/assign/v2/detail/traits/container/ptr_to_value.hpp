@@ -24,15 +24,15 @@ namespace container_traits{
 
     template<typename V>
     struct ptr_to_value{
-    
+
         struct is_applicable : ::boost::mpl::false_{};
-    
+
     };
 
 namespace ptr_to_value_aux{
 
     template<typename A,typename T> struct allocator{};
-    
+
     template<typename T>
     struct allocator<std::allocator<void*>, T>
     {
@@ -48,7 +48,7 @@ namespace ptr_to_value_aux{
         typedef typename boost::remove_reference<
             typename V::reference
         >::type value_type;
-        
+
         typedef typename ptr_to_value_aux::allocator<
             typename V::allocator_type,
             value_type
@@ -56,7 +56,7 @@ namespace ptr_to_value_aux{
     };
 
     template<typename V,template<typename, std::size_t> class F>
-    struct array_like{    
+    struct array_like{
 
         // there is no allocator, hence can't derive from common<V>
 
@@ -65,26 +65,26 @@ namespace ptr_to_value_aux{
         typedef typename boost::remove_reference<
             typename V::reference
         >::type value_type;
-    
+
         typedef F<
             typename array_like::value_type,
-            container_traits::static_size<V>::value 
+            container_traits::static_size<V>::value
         > container_type;
-        
+
     };
 
     template<typename V,template<typename,typename> class F>
-    struct seq_like : ptr_to_value_aux::common<V>{    
+    struct seq_like : ptr_to_value_aux::common<V>{
 
         typedef F<
             typename seq_like::value_type,
             typename seq_like::allocator_type
         > container_type;
-        
+
     };
 
     template<typename V,template<typename,typename,typename,typename> class F>
-    struct map_like : ptr_to_value_aux::common<V>{    
+    struct map_like : ptr_to_value_aux::common<V>{
 
         typedef F<
             typename V::key_type,
@@ -92,18 +92,18 @@ namespace ptr_to_value_aux{
             typename V::key_compare,
             typename map_like::allocator_type
         > container_type;
-        
+
     };
 
     template<typename V,template<typename,typename,typename> class F>
-    struct set_like : ptr_to_value_aux::common<V>{    
+    struct set_like : ptr_to_value_aux::common<V>{
 
         typedef F<
             typename V::key_type,
             typename V::key_compare,
             typename set_like::allocator_type
         > container_type;
-        
+
     };
 
     template<typename V,
@@ -117,7 +117,7 @@ namespace ptr_to_value_aux{
             typename V::key_equal,
             typename unordered_map_like::allocator_type
         > container_type;
-    
+
     };
 
     template<typename V,
@@ -130,10 +130,10 @@ namespace ptr_to_value_aux{
             typename V::key_equal,
             typename unordered_set_like::allocator_type
         > container_type;
-    
+
     };
 
-    
+
 }// ptr_to_value_aux
 
 
@@ -142,7 +142,7 @@ namespace ptr_to_value_aux{
         typename T,
         std::size_t N,
         typename A
-    > 
+    >
     struct ptr_to_value<
         boost::ptr_array<T,N,A>
     > : ptr_to_value_aux::array_like<
@@ -156,7 +156,7 @@ namespace ptr_to_value_aux{
         typename T,
         typename C,
         typename A
-    > 
+    >
     struct ptr_to_value<
         boost::ptr_deque<T,C,A>
     > : ptr_to_value_aux::seq_like<
@@ -168,7 +168,7 @@ namespace ptr_to_value_aux{
         typename T,
         typename C,
         typename A
-    > 
+    >
     struct ptr_to_value<
         boost::ptr_list<T,C,A>
     > : ptr_to_value_aux::seq_like<
@@ -180,7 +180,7 @@ namespace ptr_to_value_aux{
         typename T,
         typename C,
         typename A
-    > 
+    >
     struct ptr_to_value<
         boost::ptr_vector<T,C,A>
     > : ptr_to_value_aux::seq_like<

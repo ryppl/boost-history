@@ -28,7 +28,7 @@ namespace xxx_modulo{
             //[modulo_fun
             typedef int T; T x = 1, y = 2, z = 0;
             std::vector<int> cont;
-            ( 
+            (
                 as2::put( cont ) % ( as2::_fun = ( bl::_1 + 1 ) )
             )( x )( y )( z );
             BOOST_ASSIGN_V2_CHECK( cont.front() == ( x + 1 ) );
@@ -39,7 +39,7 @@ namespace xxx_modulo{
             //[modulo_push_front
             typedef int T; T x = 1, y = 2, z = 0;
             std::deque<int> cont;
-            ( as2::put( cont ) % ( as2::_modifier 
+            ( as2::put( cont ) % ( as2::_modifier
                 = as2::modifier_tag::push_front() ) )( x )( y )( z );
             BOOST_ASSIGN_V2_CHECK( cont.front() == z );
             BOOST_ASSIGN_V2_CHECK( cont.back() == x );

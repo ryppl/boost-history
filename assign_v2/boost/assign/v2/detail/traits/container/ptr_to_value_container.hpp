@@ -20,7 +20,7 @@ namespace container_traits{
     struct ptr_to_value_container{
         typedef typename ptr_to_value<V>::container_type type;
     };
-    
+
 }// container_traits
 }// v2
 }// assign

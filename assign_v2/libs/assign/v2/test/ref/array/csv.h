@@ -16,7 +16,7 @@ namespace xxx_array{
 namespace xxx_csv{
 
     void test();
-    
+
 }// xxx_csv
 }// xxx_array
 }// xxx_ref

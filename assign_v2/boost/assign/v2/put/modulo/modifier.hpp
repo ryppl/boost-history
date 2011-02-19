@@ -46,7 +46,7 @@ namespace put_modulo_aux{
 
     struct kwd_modifier
     {
-        template<typename Tag>        
+        template<typename Tag>
         modifier<Tag> operator=( Tag const& t)const
         {
             return modifier<Tag>( t );
@@ -55,7 +55,7 @@ namespace put_modulo_aux{
 
 }// put_modulo_aux
 namespace{
-    put_modulo_aux::kwd_modifier const _modifier 
+    put_modulo_aux::kwd_modifier const _modifier
         = put_modulo_aux::kwd_modifier();
 }
 }// v2

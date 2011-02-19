@@ -39,7 +39,7 @@ namespace xxx_ext{
             cont | (
                 as2::_csv_put % ( as2::_lookup = ( bl::_1 +=2 ) )
             )( "jan", "feb", "mar" );
-            BOOST_ASSIGN_V2_CHECK( cont["jan"] == 31 ); 
+            BOOST_ASSIGN_V2_CHECK( cont["jan"] == 31 );
             BOOST_ASSIGN_V2_CHECK( cont["feb"] == 28 );
             BOOST_ASSIGN_V2_CHECK( cont["mar"] == 31 );
             //]

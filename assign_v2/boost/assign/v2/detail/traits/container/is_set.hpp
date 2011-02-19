@@ -23,8 +23,8 @@ namespace container_traits_aux{
     struct is_set : ::boost::mpl::false_{};
 
     template<typename K,typename C,typename A>
-    struct is_set< 
-        std::set<K,C,A> 
+    struct is_set<
+        std::set<K,C,A>
     > : ::boost::mpl::true_{};
 
 }// container_traits_aux
@@ -34,6 +34,6 @@ namespace container_traits_aux{
 
 }// v2
 }// assign
-}// boost 
+}// boost
 
 #endif

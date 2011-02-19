@@ -69,7 +69,7 @@ namespace put_aux{
         public:
 
         typedef std::size_t size_type;
-        
+
         iterate():i( 0 ){}
         iterate( size_type const& i_)
            : i( i_ )

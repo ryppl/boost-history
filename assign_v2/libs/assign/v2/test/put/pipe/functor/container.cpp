@@ -29,8 +29,8 @@ namespace xxx_container{
 
     void test(){
         namespace as2 = boost::assign::v2;
-        {    
-            //[pipe_array    
+        {
+            //[pipe_array
             typedef int T;
             T x = 1, y = 2, z = 3;
             boost::array<T, 3> ar;
@@ -55,7 +55,7 @@ namespace xxx_container{
             BOOST_ASSIGN_V2_CHECK( assoc.count( x ) == 1 );
             BOOST_ASSIGN_V2_CHECK( assoc.count( z ) == 1 );
             //]
-        }                    
+        }
         {
             //[pipe_deque
             typedef int T; T x = 1, y = 2, z = 0;
@@ -104,7 +104,7 @@ namespace xxx_container{
     }// test()
 
 }// xxx_container
-}// xxx_functor  
+}// xxx_functor
 }// xxx_pipe
 }// xxx_put
 }// xxx_test_assign

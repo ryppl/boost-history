@@ -13,20 +13,20 @@
 #include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/detail/traits/container/is_range.hpp>
 
-namespace boost{                                                               
-namespace assign{ 
+namespace boost{
+namespace assign{
 namespace v2{
-namespace check_aux{ 
+namespace check_aux{
 
     template<typename C, typename R>
     void equal_container(v2::container_tag::range, C const & cont, R const& r)
-    {                                                                              
-        BOOST_ASSIGN_V2_CHECK( boost::equal( cont, r ) ); 
-    }                                           
+    {
+        BOOST_ASSIGN_V2_CHECK( boost::equal( cont, r ) );
+    }
 
 }// check_aux
 }// v2
 }// assign
-}// boost    
-    
+}// boost
+
 #endif

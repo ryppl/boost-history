@@ -34,29 +34,29 @@ namespace chain_aux{
     >
     struct adaptor2
     {
-    
+
         adaptor2(){}
-    
+
         template<typename U>
-        struct result{ 
-           typedef chain_aux::adaptor1<U, Tag1, Tag2> type; 
+        struct result{
+           typedef chain_aux::adaptor1<U, Tag1, Tag2> type;
            static type call(U& u){ return type( u ); }
         };
-    
+
         template<typename R>
         typename result<R>::type
-        operator()(R& r)const{ 
-            return result<R>::call ( r ); 
+        operator()(R& r)const{
+            return result<R>::call ( r );
         }
 
         template<typename R>
         typename result<R const>::type
-        operator()(R const& r)const{ 
-            return result<R const>::call( r ); 
+        operator()(R const& r)const{
+            return result<R const>::call( r );
         }
-        
+
     };
-    
+
 }// chain_aux
 namespace{
     const chain_aux::adaptor2<> _chain = chain_aux::adaptor2<>();

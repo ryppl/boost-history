@@ -22,16 +22,16 @@ namespace xxx_put{
 namespace xxx_deque{
 namespace xxx_modulo{
 
-    // Tests interaction between different functionalities 
+    // Tests interaction between different functionalities
 
     void test(){
-    
+
         namespace as2 = boost::assign::v2;
-    
+
         {
             //[deque_front
             BOOST_AUTO(
-                cont,  ( 
+                cont,  (
                     as2::deque<int>( as2::_nil ) % as2::_push_front
                 )( -1 )( 0 )( 1 )
             );
@@ -43,8 +43,8 @@ namespace xxx_modulo{
         {
             //[deque_repeat
             BOOST_AUTO(
-                cont,  ( 
-                    as2::deque<int>( as2::_nil ) % ( as2::_repeat = 2 ) 
+                cont,  (
+                    as2::deque<int>( as2::_nil ) % ( as2::_repeat = 2 )
                 )( -1 )( 0 )( 1 )
             );
             BOOST_ASSIGN_V2_CHECK( boost::size( cont ) == 6 );

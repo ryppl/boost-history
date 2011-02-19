@@ -16,7 +16,7 @@ namespace xxx_ext{
 namespace xxx_functor{
 
     void test();
-    
+
 }// xxx_functor
 }// xxx_ext
 }// xxx_put

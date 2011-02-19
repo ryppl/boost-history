@@ -25,14 +25,14 @@ namespace switch_tag{
 
 }//switch_tag
 namespace switch_aux{
-    
+
     // Fully specialize by inheriting from wrap<Tag,F>
     // To terminate the switch, inherit from wrap<Tag>
     template<typename SwitchTag, int k> struct case_{};
-    
+
     template<typename T>
     struct default_f : ::boost::mpl::true_{};
-    
+
     template<typename Tag, template<typename> class F = switch_aux::default_f>
     struct helper
     {

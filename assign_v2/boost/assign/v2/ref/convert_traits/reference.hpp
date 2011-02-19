@@ -13,17 +13,17 @@
 #include <boost/assign/v2/ref/convert_traits/const.hpp>
 
 namespace boost{
-namespace assign{ 
+namespace assign{
 namespace v2{
 namespace ref{
 namespace convert_traits{
 
     template<typename U1, typename U2>
     struct reference : convert_traits::const_<
-        typename boost::remove_reference<U1>::type, 
+        typename boost::remove_reference<U1>::type,
         typename boost::remove_reference<U2>::type
     >{};
-    
+
     template<typename T>
     struct reference<T&, T&>{ typedef T& type; };
 

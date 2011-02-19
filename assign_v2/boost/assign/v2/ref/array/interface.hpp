@@ -47,11 +47,11 @@ namespace array_aux{
         typedef cimpl_ crange_;
         typedef typename boost::range_iterator<range_>::type iterator;
         typedef typename boost::range_iterator<crange_>::type const_iterator;
-        
+
         typedef typename boost::range_value<range_>::type value_type;
         typedef typename boost::range_reference<range_>::type reference;
         typedef typename boost::range_reference<crange_>::type const_reference;
-        
+
         typedef typename ref::result_of::get<wrapper_>::type result_of_get_;
         typedef typename boost::call_traits<inner_type>::param_type param_type;
 

@@ -10,7 +10,7 @@
 #include <string>
 #include <boost/mpl/int.hpp>
 #include <boost/typeof/typeof.hpp>
-#include <boost/assign/v2/detail/check/equal_val.hpp> 
+#include <boost/assign/v2/detail/check/equal_val.hpp>
 #include <boost/assign/v2/detail/check/equal_ref.hpp>
 #include <boost/assign/v2/put/ext/repeat.hpp>
 #include <boost/assign/v2/put/pipe/functor.hpp>
@@ -68,11 +68,11 @@ namespace xxx_rhs{
                     ()
                 )
             );
-            
+
             namespace chk = as2::check_aux;
             typedef chk::equal_ref r_;
             typedef chk::equal_val v_;
-            
+
             xxx_assert<0, 0>( rhs, r_(), a1);
             xxx_assert<0, 1>( rhs, r_(), b1);
             xxx_assert<1, 0>( rhs, r_(), a1); xxx_assert<1, 1>( rhs, r_(), b);

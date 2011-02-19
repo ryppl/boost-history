@@ -32,7 +32,7 @@ namespace switch_aux{
         >{};
 
     template<>
-    struct case_<switch_tag::deduce_convert, 1> : 
+    struct case_<switch_tag::deduce_convert, 1> :
         convert_aux::helper<v2::convert_tag::copy>{};
 
 }// switch_aux

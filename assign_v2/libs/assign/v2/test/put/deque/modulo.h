@@ -17,7 +17,7 @@ namespace xxx_modulo{
 
     void test();
 
-}// xxx_modulo    
+}// xxx_modulo
 }// xxx_deque
 }// xxx_put
 }// test_assign_v2

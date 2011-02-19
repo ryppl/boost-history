@@ -12,13 +12,13 @@
 #include <boost/type_traits/is_convertible.hpp>
 
 namespace boost{
-namespace assign{ 
+namespace assign{
 namespace v2{
 namespace ref{
 namespace convert_traits{
 
     template<
-        typename V1, typename V2, 
+        typename V1, typename V2,
         bool is_c1 = boost::is_convertible<V1, V2>::value,
         bool is_c2 = boost::is_convertible<V2, V1>::value
     >
@@ -28,7 +28,7 @@ namespace convert_traits{
     struct value<V1, V2, false, true>{ typedef V2 type; };
 
     template<typename V1, typename V2> struct value<V1, V2, false, false>{};
-    
+
     // TODO upgrade
     //    #include <boost/type_traits/is_arithmetic.hpp>
     //  #include <boost/numeric/conversion/conversion_traits.hpp>
@@ -37,7 +37,7 @@ namespace convert_traits{
     //       boost::numeric::conversion_traits<V1, V2>::supertype.
     //        ... as above ...
     //  >{};
-        
+
 
 }// convert_traits
 }// ref

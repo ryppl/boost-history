@@ -26,8 +26,8 @@ namespace xxx_functor{
 
     void test(){
         namespace as2 = boost::assign::v2;
-        {    
-            //[array    
+        {
+            //[array
             typedef int T;
             T x = 1, y = 2, z = 3;
             boost::ptr_array<T, 3> ar;
@@ -36,7 +36,7 @@ namespace xxx_functor{
             BOOST_ASSIGN_V2_CHECK( ar[2] == z );
             //]
         }
-/*        
+/*
         {
             //[map
             boost::ptr_map<std::string, int> assoc;
@@ -53,7 +53,7 @@ namespace xxx_functor{
             BOOST_ASSIGN_V2_CHECK( assoc.count( x ) == 1 );
             BOOST_ASSIGN_V2_CHECK( assoc.count( z ) == 1 );
             //]
-        }                    
+        }
 */
         {
             //[deque

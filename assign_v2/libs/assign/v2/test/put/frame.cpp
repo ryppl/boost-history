@@ -16,7 +16,7 @@ namespace xxx_frame{
     void test()
     {
         namespace as2 = boost::assign::v2;
-        // For now nothing 
+        // For now nothing
     }
 
 }// xxx_frame

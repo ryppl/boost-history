@@ -16,7 +16,7 @@
 #include <boost/type_traits/remove_cv.hpp>
 
 namespace boost{
-namespace assign{ 
+namespace assign{
 namespace v2{
 namespace ref{
 namespace result_of{
@@ -38,20 +38,20 @@ namespace result_of{
     >::type
     get(W const& w)
     {
-        return w.get();    
+        return w.get();
     }
 
     // Functor
 
     struct get_functor
     {
-    
+
         template<typename S>
         struct result{};
-        
+
         template<typename F, typename T>
         struct result<F(T)> : ref::result_of::get<T>{};
-    
+
         template<typename W>
         typename boost::lazy_enable_if<
             boost::is_reference_wrapper<W>,
@@ -61,7 +61,7 @@ namespace result_of{
         {
             return get( w );
         }
-        
+
     };
 
 }// ref

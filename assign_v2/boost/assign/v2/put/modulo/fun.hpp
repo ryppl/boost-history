@@ -40,19 +40,19 @@ namespace put_modulo_aux{
     }
 
     struct kwd_fun{
-    
+
         template<typename F>
         put_modulo_aux::fun<F> operator=(F const& f)const
         {
             return put_modulo_aux::fun<F>( f );
         }
 
-    }; 
-    
+    };
+
 }// put_modulo_aux
 namespace{
     const put_modulo_aux::kwd_fun _fun = put_modulo_aux::kwd_fun();
-}    
+}
 }// v2
 }// assign
 }// boost

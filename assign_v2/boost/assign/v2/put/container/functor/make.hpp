@@ -14,7 +14,7 @@
 #include <boost/assign/v2/put/container/functor/adapter.hpp>
 
 namespace boost{
-namespace assign{ 
+namespace assign{
 namespace v2{
 namespace result_of{
 

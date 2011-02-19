@@ -38,7 +38,7 @@ namespace xxx_forward{
             BOOST_ASSIGN_V2_CHECK( cont[2] == z );
             BOOST_ASSIGN_V2_CHECK( cont.size() == 4 );
         }
-        {    
+        {
             typedef const char* T;
             typedef std::deque<T> cont_; cont_ cont;
             typedef as2::result_of::put<cont_>::type adapter_;

@@ -20,7 +20,7 @@ namespace assign{
 namespace v2{
 namespace put_pipe_aux{
 
-    template<typename V, 
+    template<typename V,
         typename Pars, csv_size_type N, typename U>
     V& operator|(V& v, put_pipe_aux::csv_rhs<Pars, N, U> const& c){
 

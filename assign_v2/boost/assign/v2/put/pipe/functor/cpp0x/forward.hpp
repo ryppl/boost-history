@@ -60,7 +60,7 @@ namespace put_pipe_aux{
 
     template<
         typename F,
-        put_pipe_aux::size_type I, 
+        put_pipe_aux::size_type I,
         put_pipe_aux::size_type N, typename L, typename...Args
     >
     void forward(
@@ -87,7 +87,7 @@ namespace put_pipe_aux{
         ref::list_tuple_aux::container<0, L> const& list
     ){}
 
-    template<typename F, 
+    template<typename F,
         put_pipe_aux::size_type N, typename L, typename...Args>
     void forward(
         F const& f,

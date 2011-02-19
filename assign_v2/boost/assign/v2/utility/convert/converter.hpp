@@ -23,15 +23,15 @@ namespace convert_aux{
     template<typename U>
     class converter
     {
-    
+
          typedef typename ref::copy_wrapper<
             U const
         >::type wrapper_;
-        
+
         public:
-        
+
         explicit converter(U const& u) : w( u ){}
-                
+
         template<typename T>
         operator T () const
         {
@@ -53,10 +53,10 @@ namespace convert_aux{
 }// convert_aux
 
     template<typename U>
-    convert_aux::converter<U> 
-    converter(U const& u){ 
-        typedef convert_aux::converter<U> result_; 
-        return result_( u ); 
+    convert_aux::converter<U>
+    converter(U const& u){
+        typedef convert_aux::converter<U> result_;
+        return result_( u );
     }
 
 }// v2
@@ -68,11 +68,11 @@ namespace convert_aux{
 //     template<typename A, typename B, typename C> cont;
 // }
 // is done by expanding this macro:
-// #define SEQ (A)(B)(C) 
+// #define SEQ (A)(B)(C)
 // namespace ns{
 //     BOOST_ASSIGN_V2_CONVERTER( cont<A,B,C>, SEQ )
 // }
-// 
+//
 
 #include <boost/preprocessor/seq/enum.hpp>
 #include <boost/preprocessor/seq/transform.hpp>
@@ -102,7 +102,7 @@ namespace convert_aux{
         typedef convert_aux::converter< U > result_; \
         return result_( cont );\
     }\
-/**/    
+/**/
 #endif
 
 #endif

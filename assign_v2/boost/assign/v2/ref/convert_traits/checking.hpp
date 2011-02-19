@@ -15,7 +15,7 @@
 #include <boost/assign/v2/ref/convert_traits/reference.hpp>
 
 namespace boost{
-namespace assign{ 
+namespace assign{
 namespace v2{
 namespace ref{
 namespace convert_traits{
@@ -23,9 +23,9 @@ namespace checking{
 
     template<typename T1, typename T2, typename T3>
     struct tester{
-    
+
         typedef typename convert_traits::reference<T1, T2>::type result_;
-                
+
         static void test()
         {
             BOOST_MPL_ASSERT((boost::is_same<result_,T3>));
@@ -39,25 +39,25 @@ namespace same_value_type{
     void do_check()
     {
 
-        tester<const T &, const T &, const T &>::test(); 
-        tester<const T &,       T &, const T &>::test(); 
-        tester<      T &, const T &, const T &>::test(); 
-        tester<      T &,       T &,       T &>::test(); 
+        tester<const T &, const T &, const T &>::test();
+        tester<const T &,       T &, const T &>::test();
+        tester<      T &, const T &, const T &>::test();
+        tester<      T &,       T &,       T &>::test();
 
-        tester<const T &, const T  , const T  >::test(); 
-        tester<const T &,       T  , const T  >::test(); 
-        tester<      T &, const T  , const T  >::test(); 
-        tester<      T &,       T  ,       T  >::test(); 
+        tester<const T &, const T  , const T  >::test();
+        tester<const T &,       T  , const T  >::test();
+        tester<      T &, const T  , const T  >::test();
+        tester<      T &,       T  ,       T  >::test();
 
-        tester<const T ,  const T &, const T  >::test(); 
-        tester<const T ,        T &, const T  >::test(); 
-        tester<      T ,  const T &, const T  >::test(); 
-        tester<      T ,        T &,       T  >::test(); 
+        tester<const T ,  const T &, const T  >::test();
+        tester<const T ,        T &, const T  >::test();
+        tester<      T ,  const T &, const T  >::test();
+        tester<      T ,        T &,       T  >::test();
 
-        tester<const T ,  const T  , const T  >::test(); 
-        tester<const T ,        T  , const T  >::test(); 
-        tester<      T ,  const T  , const T  >::test(); 
-        tester<      T ,        T  ,       T  >::test(); 
+        tester<const T ,  const T  , const T  >::test();
+        tester<const T ,        T  , const T  >::test();
+        tester<      T ,  const T  , const T  >::test();
+        tester<      T ,        T  ,       T  >::test();
 
     }
 
@@ -67,28 +67,28 @@ namespace same_value_type{
 namespace distinct_value_type{
 
     template<typename T1,typename T2,typename T3>
-    void do_check_impl(const T1&, const T2& ,const T3&) 
+    void do_check_impl(const T1&, const T2& ,const T3&)
     {
-        
-        tester<const T1&, const T2&, const T3 >::test(); 
-        tester<const T1&,       T2&, const T3 >::test(); 
-        tester<      T1&, const T2&, const T3 >::test(); 
-        tester<      T1&,       T2&,       T3 >::test(); 
 
-        tester<const T1&, const T2 , const T3 >::test(); 
-        tester<const T1&,       T2 , const T3 >::test(); 
-        tester<      T1&, const T2 , const T3 >::test(); 
-        tester<      T1&,       T2 ,       T3 >::test(); 
+        tester<const T1&, const T2&, const T3 >::test();
+        tester<const T1&,       T2&, const T3 >::test();
+        tester<      T1&, const T2&, const T3 >::test();
+        tester<      T1&,       T2&,       T3 >::test();
 
-        tester<const T1 ,  const T2&, const T3 >::test(); 
-        tester<const T1 ,        T2&, const T3 >::test(); 
-        tester<      T1 ,  const T2&, const T3 >::test(); 
-        tester<      T1 ,        T2&,       T3 >::test(); 
+        tester<const T1&, const T2 , const T3 >::test();
+        tester<const T1&,       T2 , const T3 >::test();
+        tester<      T1&, const T2 , const T3 >::test();
+        tester<      T1&,       T2 ,       T3 >::test();
 
-        tester<const T1 ,  const T2 , const T3 >::test(); 
-        tester<const T1 ,        T2 , const T3 >::test(); 
-           tester<      T1 ,  const T2 , const T3 >::test(); 
-        tester<      T1 ,        T2 ,       T3 >::test(); 
+        tester<const T1 ,  const T2&, const T3 >::test();
+        tester<const T1 ,        T2&, const T3 >::test();
+        tester<      T1 ,  const T2&, const T3 >::test();
+        tester<      T1 ,        T2&,       T3 >::test();
+
+        tester<const T1 ,  const T2 , const T3 >::test();
+        tester<const T1 ,        T2 , const T3 >::test();
+           tester<      T1 ,  const T2 , const T3 >::test();
+        tester<      T1 ,        T2 ,       T3 >::test();
 
     }
 
@@ -105,7 +105,7 @@ namespace distinct_value_type{
 */
 /**/
 /*
-// don't try to guess the supertype, it may vary by compiler. 
+// don't try to guess the supertype, it may vary by compiler.
 namespace supertype_{
     typedef boost::numeric::conversion_traits<short, int>::supertype a_;
     typedef boost::numeric::conversion_traits<int, long>::supertype b_;

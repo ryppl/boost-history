@@ -42,7 +42,7 @@ namespace list_aux{
     {
         // Un-defined bec. V1 and V2 must be identical
     };
-    
+
     template<typename U1, typename U2, typename V>
     struct policy_helper1<U1, U2, V, V> : boost::mpl::eval_if<
         boost::is_const<U1>
@@ -50,8 +50,8 @@ namespace list_aux{
         , ::boost::mpl::identity<U2>
     >{
         // If one const, always const.
-    }; 
-    
+    };
+
     template<typename U1 // old result
         ,typename U2, typename L // container<Tag, U2, L>
     >
@@ -64,12 +64,12 @@ namespace list_aux{
             new_u1_, prior_u2_, prior_l_
         >::type type;
     };
-    
+
     template<typename U1>
     struct policy_helper2<U1, void_, nil >
     {
         // Reached root
-        typedef U1 type;    
+        typedef U1 type;
     };
 
     template<typename U2, typename L>
@@ -89,7 +89,7 @@ namespace list_aux{
     template<>
     struct policy<array_tag>
     {
-    
+
         template<typename H = void_, typename T = nil>
         struct apply
         {
@@ -104,7 +104,7 @@ namespace list_aux{
             > type;
         };
 
-    }; 
+    };
 
 }// list_aux
 }// ref

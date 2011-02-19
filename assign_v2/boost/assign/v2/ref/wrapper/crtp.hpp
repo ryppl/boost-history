@@ -18,18 +18,18 @@
 #include <boost/call_traits.hpp>
 #include <boost/operators.hpp>
 
-// This design is an outgrowth of assign_detail::assign_reference<> by TO. 
+// This design is an outgrowth of assign_detail::assign_reference<> by TO.
 
 namespace boost{
-namespace assign{ 
+namespace assign{
 namespace v2{
 namespace ref{
-    
+
     template<typename D, typename T>
-    class wrapper_crtp 
-    : 
-        boost::less_than_comparable1< 
-            wrapper_crtp<D,T>, 
+    class wrapper_crtp
+    :
+        boost::less_than_comparable1<
+            wrapper_crtp<D,T>,
             boost::less_than_comparable2<
                 wrapper_crtp<D,T>,
                 T,
@@ -47,7 +47,7 @@ namespace ref{
         typedef typename boost::remove_const<T>::type lvalue_;
         typedef typename boost::add_const<T>::type rvalue_;
 
-        public: 
+        public:
         // protected
 
         D& derived(){ return static_cast<D&>( *this ); }
@@ -92,7 +92,7 @@ namespace ref{
         {
             return this->derived().get() > r;
         }
-        
+
         template<class CharT, class Traits>
         friend std::basic_ostream<CharT,Traits>&
         operator<<(std::basic_ostream<CharT,Traits>& os,

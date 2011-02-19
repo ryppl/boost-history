@@ -50,9 +50,9 @@
 #include <boost/test/unit_test.hpp>
 using boost::unit_test::test_suite;
 test_suite* init_unit_test_suite( int argc, char* argv[] )
-{                                            
-    test_suite* test = BOOST_TEST_SUITE( "BOOST_ASSIGN_V2" ); 
-    using namespace test_assign_v2;  
+{
+    test_suite* test = BOOST_TEST_SUITE( "BOOST_ASSIGN_V2" );
+    using namespace test_assign_v2;
     {
     	namespace ns = xxx_put;
 		test->add( BOOST_TEST_CASE( &ns::xxx_deduce::test ) );
@@ -62,7 +62,7 @@ test_suite* init_unit_test_suite( int argc, char* argv[] )
 		test->add( BOOST_TEST_CASE( &ns::xxx_container::xxx_functor::test ) );
 		test->add( BOOST_TEST_CASE( &ns::xxx_container::xxx_csv::test ) );
 		test->add( BOOST_TEST_CASE( &ns::xxx_container::xxx_range::test ) );
-        
+
 		test->add( BOOST_TEST_CASE( &ns::xxx_std::xxx_functor::test ) );
 		test->add( BOOST_TEST_CASE( &ns::xxx_ext::xxx_functor::test ) );
 		test->add( BOOST_TEST_CASE( &ns::xxx_ptr::xxx_functor::test ) );
@@ -78,14 +78,14 @@ test_suite* init_unit_test_suite( int argc, char* argv[] )
 		test->add( BOOST_TEST_CASE( &ns::xxx_pipe::xxx_functor::xxx_fun::test ) );
 		test->add( BOOST_TEST_CASE( &ns::xxx_pipe::xxx_functor::xxx_std::test ) );
 		test->add( BOOST_TEST_CASE( &ns::xxx_pipe::xxx_functor::xxx_str_literal::test ) );
-        
+
 		test->add( BOOST_TEST_CASE( &ns::xxx_pipe::xxx_csv::xxx_container::test ) );
 		test->add( BOOST_TEST_CASE( &ns::xxx_pipe::xxx_csv::xxx_rhs::test ) );
 		test->add( BOOST_TEST_CASE( &ns::xxx_pipe::xxx_csv::xxx_fun::test ) );
 		test->add( BOOST_TEST_CASE( &ns::xxx_pipe::xxx_csv::xxx_std::test ) );
 		test->add( BOOST_TEST_CASE( &ns::xxx_pipe::xxx_csv::xxx_ext::test ) );
     }
-    return test;                             
-}                                            
+    return test;
+}
 
 #endif

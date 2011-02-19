@@ -23,9 +23,9 @@ namespace v2{
 namespace convert_aux{
 
     template<typename T, typename U>
-    T dispatch(U const& u, convert_tag::put) 
+    T dispatch(U const& u, convert_tag::put)
     {
-        T t; 
+        T t;
         return (t | v2::_put_range( u ) );
 
     }

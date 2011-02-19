@@ -19,16 +19,16 @@ namespace assign{
 namespace v2{
 namespace chain_aux{
 
-    template<typename R1,typename R2,typename Tag = use_default> 
+    template<typename R1,typename R2,typename Tag = use_default>
     struct result{
         typedef typename  ::boost::mpl::eval_if<
             chain_aux::use_lvalue<R1,R2,Tag>,
             boost::mpl::identity< chain_aux::range_l<R1, R2, Tag> >,
             boost::mpl::identity< chain_aux::range_r<R1, R2, Tag> >
         >::type caller_;
-        
+
         typedef typename caller_::type type;
-        
+
         static type call(R1& r1, R2& r2)
         {
             return caller_::call( r1, r2 );

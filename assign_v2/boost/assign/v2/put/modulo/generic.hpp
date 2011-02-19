@@ -14,8 +14,8 @@
 namespace boost{
 namespace assign{
 namespace v2{
-namespace result_of_modulo{    
-    
+namespace result_of_modulo{
+
     // Is this needed?
     template<typename T>
     struct generic_
@@ -26,9 +26,9 @@ namespace result_of_modulo{
             static T t;
             static P p;
             typedef BOOST_TYPEOF_TPL( t % p ) type;
-        };    
+        };
     };
-    
+
 }// result_of_modulo
 }// v2
 }// assign

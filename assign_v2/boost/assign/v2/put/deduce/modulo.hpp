@@ -22,7 +22,7 @@ namespace assign{
 namespace v2{
 namespace put_aux{
 
-    struct kwd_deduce{}; 
+    struct kwd_deduce{};
 
     template<typename T>
     typename T::result_of_modulo::deduce::type
@@ -41,7 +41,7 @@ namespace put_aux{
 }// put_aux
 namespace{
     const put_aux::kwd_deduce _deduce = put_aux::kwd_deduce();
-}    
+}
 }// v2
 }// assign
 }// boost

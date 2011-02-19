@@ -22,6 +22,6 @@ namespace xxx_traits{
     }
 
 }// xxx_traits
-}// xxx_detail    
+}// xxx_detail
 }// xxx_test_assign
 

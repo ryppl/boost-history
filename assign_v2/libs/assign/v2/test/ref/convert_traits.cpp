@@ -15,7 +15,7 @@ namespace xxx_ref{
 namespace xxx_convert_traits{
 
     void test()
-    { 
+    {
         namespace as2 = boost::assign::v2;
         namespace ns = as2::ref::convert_traits::checking;
         {

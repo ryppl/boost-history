@@ -17,7 +17,7 @@
         size_type n1 = cont.size();\
         size_type n2 = boost::range_size( r );\
         BOOST_ASSIGN_V2_CHECK( n2 >= n1 );\
-/**/        
+/**/
 
 #include <boost/range/iterator_range.hpp>
 #define BOOST_ASSIGN_V2_CHECK_AUX_CONTAINER_ELEM_AT\

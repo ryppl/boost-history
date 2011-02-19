@@ -12,23 +12,23 @@
 #include <boost/range/algorithm/sort.hpp>
 #include <boost/assign/v2/detail/check_equal_container/range.hpp>
 
-namespace boost{                                                               
-namespace assign{ 
+namespace boost{
+namespace assign{
 namespace v2{
-namespace check_aux{ 
+namespace check_aux{
 
     template<typename C, typename R>
     void equal_container(v2::container_tag::sorted, C const & cont, R const& r)
-    {             
+    {
         typedef v2::container_tag::range tag_;
         // needed in case r is not sorted :
-        C benchmark( boost::begin( r ), boost::end( r ) ); 
+        C benchmark( boost::begin( r ), boost::end( r ) );
         equal(tag_, cont, benchmark  );
-    }                                           
+    }
 
 }// check_aux
 }// v2
 }// assign
-}// boost    
-    
+}// boost
+
 #endif

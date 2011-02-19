@@ -24,7 +24,7 @@ namespace list_aux{
 
     template<typename Tag, typename H = void_, typename T = nil>
     class container;
-    
+
 }// list_aux
 }// ref
 }// v2

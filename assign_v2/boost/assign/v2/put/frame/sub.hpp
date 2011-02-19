@@ -21,13 +21,13 @@ namespace sub{
     // X models Pre1 wrt to V
     template<typename C, typename X>
     struct Pre1{
-    
+
         BOOST_CONCEPT_USAGE(Pre1)
         {
             X x( v );
             C& ref = x.container();
         }
-        
+
         private:
         static C& v;
 
@@ -35,12 +35,12 @@ namespace sub{
 
     template<typename C, typename F, typename X>
     struct Pre2 : Pre1<C, X>{
-    
+
         BOOST_CONCEPT_USAGE(Pre2)
         {
             X x( v, f );
         }
-        
+
         private:
         static C& v;
         static F const &f;
@@ -49,14 +49,14 @@ namespace sub{
 
     template<typename C, typename F, typename Tag,typename X>
     struct Pre3 : Pre2<C, F, X>{
-    
+
         typedef put_aux::modifier<Tag> modifier_;
 
         BOOST_CONCEPT_USAGE(Pre3)
         {
             X x( v, f, m );
         }
-        
+
         private:
         static C& v;
         static F const &f;
@@ -76,7 +76,7 @@ namespace sub{
             F const& f = x.fun;
             modifier_ const& m = x.modifier;
         }
-        
+
         private:
         static X const& x;
         static C& v;

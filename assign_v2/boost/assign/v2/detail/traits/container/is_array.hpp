@@ -16,7 +16,7 @@ namespace boost{
 #if !BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x564))
     template< class T, std::size_t sz >
     class array;
-#endif    
+#endif
 
 namespace assign{
 namespace v2{
@@ -27,15 +27,15 @@ namespace container_traits_aux{
 
     template<typename V> struct is_array : ::boost::mpl::false_{};
     template<typename T, std::size_t sz> struct is_array<
-        boost::array<T, sz> 
+        boost::array<T, sz>
     > : ::boost::mpl::true_{};
-    
+
 }// containert_type_aux
 
     BOOST_ASSIGN_V2_TRAITS_CONTAINER_IS(array)
 
 }// v2
 }// assign
-}// boost 
+}// boost
 
 #endif

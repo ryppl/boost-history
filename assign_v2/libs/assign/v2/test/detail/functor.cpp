@@ -139,7 +139,7 @@ namespace xxx_functor{
 #undef BOOST_ASSIGN_V2_n
         }
     }
-    
+
 }// xxx_functor
 }// xxx_detail
 }// test_assign_v2

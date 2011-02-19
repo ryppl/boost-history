@@ -15,7 +15,7 @@ namespace xxx_put{
 namespace xxx_deduce{
 
     void test();
-    
+
 }// xxx_deduce
 }// xxx_put
 }// xxx_test_assign

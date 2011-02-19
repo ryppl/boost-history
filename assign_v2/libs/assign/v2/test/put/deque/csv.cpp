@@ -32,7 +32,7 @@ namespace xxx_csv{
         {
             //[deque_str
             typedef std::string str_;
-            BOOST_ASSIGN_V2_CHECK( 
+            BOOST_ASSIGN_V2_CHECK(
                 str_( as2::csv_deque( "x" )( "y" )( "z" )[1] ) == "y"
             );
             //]

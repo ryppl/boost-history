@@ -21,10 +21,10 @@ namespace xxx_functor{
     void test()
     {
         namespace as2 = boost::assign::v2;
-        
-        /* Only have to check those that are in /std which are not in 
+
+        /* Only have to check those that are in /std which are not in
         /deduce/dependee.hpp */
-        
+
         {
             //[std_deque
             typedef int T; T x = 0, y = 2, z = 1;

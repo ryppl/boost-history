@@ -15,13 +15,13 @@
 #include <boost/assign/v2/put/container/functor/fwd.hpp> // consistency
 
 namespace boost{
-namespace assign{ 
+namespace assign{
 namespace v2{
 namespace put_aux{
 
-    template<typename C,typename F, typename Tag> 
-    class adapter 
-        : protected ref::wrapper< ref::assign_tag::copy, C > 
+    template<typename C,typename F, typename Tag>
+    class adapter
+        : protected ref::wrapper< ref::assign_tag::copy, C >
         , public put_aux::crtp< C, F, Tag, adapter<C, F, Tag> >
     {
         typedef put_aux::crtp< C, F, Tag, adapter > super2_t;
@@ -40,22 +40,22 @@ namespace put_aux{
 
         adapter(){}
         explicit adapter( C& v ) : super1_t( v ) {}
-        explicit adapter( C& v, F const& f ) 
+        explicit adapter( C& v, F const& f )
             : super1_t( v ), super2_t( f )
             {
-                // This constructor is required by crtp 
+                // This constructor is required by crtp
                 // when Tag or F is modified.
             }
 
-        explicit adapter( C& v, F const& f, modifier_ const& m ) 
+        explicit adapter( C& v, F const& f, modifier_ const& m )
             : super1_t( v ), super2_t( f, m )
             {
-                // This constructor is required by crtp 
+                // This constructor is required by crtp
                 // when Tag or F is modified.
             }
 
-        C& container()const{ 
-            return static_cast<super1_t const&>(*this).get(); 
+        C& container()const{
+            return static_cast<super1_t const&>(*this).get();
         }
 
     };

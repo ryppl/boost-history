@@ -26,23 +26,23 @@ namespace assign{
 namespace v2{
 namespace chain_aux{
 
-    template<typename U1, typename U2, 
+    template<typename U1, typename U2,
         bool is_r = boost::is_reference<U1>::value,
         bool is_c = boost::is_const<
             typename boost::remove_reference<U1>::type
         >::value
     >
     struct use_lvalue_impl : ::boost::mpl::false_{};
-    
+
     template<typename U>
     struct use_lvalue_impl<U, U, true, false> : ::boost::mpl::true_{};
 
-    template<typename R1, typename R2, typename Tag = use_default> 
+    template<typename R1, typename R2, typename Tag = use_default>
     struct use_lvalue : use_lvalue_impl<
         typename boost::range_reference<R1>::type,
         typename boost::range_reference<R2>::type
     >{};
-   
+
 }// chain_aux
 }// v2
 }// assign

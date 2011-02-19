@@ -32,7 +32,7 @@ int main (int argc, char * const argv[])
         xxx_put_ref::run(ofs);
     }
 */
-    
+
     return 0;
 
 }

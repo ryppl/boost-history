@@ -94,7 +94,7 @@ namespace list_tuple_aux{
         struct apply : NewState::template result<params(T)>{};
     };
 
-    template<list_tuple_aux::get_size_type N, 
+    template<list_tuple_aux::get_size_type N,
         typename L, params_default(typename T, na_type)>
     class container;
 

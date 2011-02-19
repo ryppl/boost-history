@@ -16,7 +16,7 @@ namespace xxx_traits{
 namespace xxx_has_value_type{
 
     void test();
-    
+
 }// xxx_has_value_type
 }// xxx_traits
 }// xxx_detail

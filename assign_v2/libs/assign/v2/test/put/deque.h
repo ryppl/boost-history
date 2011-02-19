@@ -15,7 +15,7 @@ namespace xxx_put{
 namespace xxx_deque{
 
     void test();
-    
+
 }// xxx_deque
 }// xxx_put
 }// test_assign_v2

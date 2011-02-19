@@ -24,11 +24,11 @@
 #include <boost/test/unit_test.hpp>
 using boost::unit_test::test_suite;
 test_suite* init_unit_test_suite( int argc, char* argv[] )
-{                                            
-    test_suite* test = BOOST_TEST_SUITE( "BOOST_ASSIGN_V2" ); 
-    using namespace test_assign_v2;  
+{
+    test_suite* test = BOOST_TEST_SUITE( "BOOST_ASSIGN_V2" );
+    using namespace test_assign_v2;
     {
-    	using namespace xxx_ref; 
+    	using namespace xxx_ref;
 		test->add( BOOST_TEST_CASE( &xxx_convert_traits::test ) );
 		test->add( BOOST_TEST_CASE( &xxx_wrapper::test ) );
 		test->add( BOOST_TEST_CASE( &xxx_list::test ) );
@@ -36,7 +36,7 @@ test_suite* init_unit_test_suite( int argc, char* argv[] )
 		test->add( BOOST_TEST_CASE( &xxx_array::xxx_functor::test ) );
 		test->add( BOOST_TEST_CASE( &xxx_array::xxx_csv::test ) );
     }
-    return test;                             
-}                                            
+    return test;
+}
 
 #endif

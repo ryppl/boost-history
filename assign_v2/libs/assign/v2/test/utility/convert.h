@@ -15,7 +15,7 @@ namespace xxx_utility{
 namespace xxx_convert{
 
     void test();
-    
+
 }// xxx_convert
 }// xxx_utility
 }// xxx_test_assign

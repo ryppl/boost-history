@@ -11,7 +11,7 @@
 #include <boost/preprocessor/expr_if.hpp>
 #include <boost/mpl/int.hpp>
 #include <boost/typeof/typeof.hpp>
-#include <boost/assign/v2/detail/check/equal_val.hpp> 
+#include <boost/assign/v2/detail/check/equal_val.hpp>
 #include <boost/assign/v2/detail/check/equal_ref.hpp>
 #include <boost/assign/v2/put/pipe/csv.hpp>
 
@@ -29,16 +29,16 @@ namespace xxx_rhs{
         // TODO name lookup?
         using namespace boost;
         using namespace boost::assign::v2;
-        
+
         pred( rhs.seq_args()[ i ].get(), u );
     }
 
     void test(){
-    
+
         namespace as2 = boost::assign::v2;
         typedef boost::mpl::int_<0> zero_;
         typedef int const cint_;
-        cint_ x = -1, y = 0, z = 1; 
+        cint_ x = -1, y = 0, z = 1;
         int x1 = x + 5, y1 = y + 5, z1 = z + 5;
 
         namespace chk = as2::check_aux;

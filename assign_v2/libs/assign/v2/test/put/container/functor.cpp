@@ -29,8 +29,8 @@ namespace xxx_functor{
 
     void test(){
         namespace as2 = boost::assign::v2;
-        {    
-            //[array    
+        {
+            //[array
             typedef int T; T x = 1, y = 2, z = 3;
             boost::array<T, 3> ar; as2::put( ar )( x )( y )( z );
             BOOST_ASSIGN_V2_CHECK( ar[0] == x );
@@ -55,7 +55,7 @@ namespace xxx_functor{
             BOOST_ASSIGN_V2_CHECK( assoc.count( x ) == 1 );
             BOOST_ASSIGN_V2_CHECK( assoc.count( z ) == 1 );
             //]
-        }                    
+        }
         {
             //[deque
             typedef int T; T x = 1, y = 2, z = 0;
@@ -107,7 +107,7 @@ namespace xxx_functor{
             //[tuple
             typedef int& ref_; typedef std::string val_;
             typedef boost::tuple<ref_, val_> T;
-            int x = 31, y = 28, z = 31; std::vector<T> seq; 
+            int x = 31, y = 28, z = 31; std::vector<T> seq;
             as2::put( seq )( x, "jan" )( y, "feb" )( z, "mar" );
             BOOST_ASSIGN_V2_CHECK( &get<0>( seq[1] ) == &y );
             BOOST_ASSIGN_V2_CHECK( get<1>( seq[1] ) == "feb" );
@@ -129,9 +129,9 @@ namespace xxx_functor{
         {
             using namespace boost;
             //[default_constr2
-            typedef std::string a_; typedef int b_; 
+            typedef std::string a_; typedef int b_;
             typedef boost::tuple<a_, b_> T;
-            a_ a0 = "jan", a1 = "feb", a2 = "mar"; b_ b0 = 31, b1 = 28, b2 = 31; 
+            a_ a0 = "jan", a1 = "feb", a2 = "mar"; b_ b0 = 31, b1 = 28, b2 = 31;
             std::vector<T> seq; as2::put( seq )( a0, b0 )()( a2 );
             BOOST_ASSIGN_V2_CHECK( get<0>( seq[0] ) == a0 );
             BOOST_ASSIGN_V2_CHECK( get<1>( seq[0] ) == b0 );
@@ -143,7 +143,7 @@ namespace xxx_functor{
         }
     }// test()
 
-}// xxx_functor  
+}// xxx_functor
 }// xxx_container
 }// xxx_put
 }// xxx_test_assign

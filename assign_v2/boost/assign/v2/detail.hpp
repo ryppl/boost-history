@@ -18,6 +18,6 @@
 
 // Don't include
 // /checking/checking.hpp
-// /config/config 
+// /config/config
 
 #endif

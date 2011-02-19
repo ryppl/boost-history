@@ -38,19 +38,19 @@ namespace put_aux{
 
     template<typename F>
     struct fun_holder{
-    
+
         typedef F fun_type;
 
         fun_holder(){}
         fun_holder(fun_type const& f) : fun( f ){}
 
         fun_type fun;
-    
+
     };
-    
+
     template<typename Tag>
     struct modifier_holder{
-    
+
         typedef Tag modifier_tag;
         typedef put_aux::modifier<Tag> modifier_type;
 
@@ -60,15 +60,15 @@ namespace put_aux{
         typedef put_aux::modifier<Tag> modifier_;
 
         modifier_type modifier;
-    
+
     };
 
-    // D has to model concept_sub::Pre3, with respect to container C, functor F 
+    // D has to model concept_sub::Pre3, with respect to container C, functor F
     // and Tag. It then models concept_sub::Post
     template<typename C, typename F, typename Tag, typename D>
     class crtp :
         public put_base
-        , public fun_holder<F> 
+        , public fun_holder<F>
         , public modifier_holder<Tag>
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 //do nothing
@@ -95,7 +95,7 @@ namespace put_aux{
         D const& derived()const{ return static_cast<D const&>(*this); }
 
         //public:
-        
+
         crtp(){}
         explicit crtp( F const& f ) : fun_holder_( f ){}
         explicit crtp( F const& f, modifier_ const& m )
@@ -184,12 +184,12 @@ BOOST_PP_REPEAT_FROM_TO(
         template<typename T>
         void check_modifier( BOOST_ASSIGN_V2_forward_param(T, t) )const
         {
-            typedef put_concept::ModifierImpl<modifier_, C, 
+            typedef put_concept::ModifierImpl<modifier_, C,
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
                 T&&
 #else
                 T&
-#endif                                
+#endif
             > concept_;
             BOOST_CONCEPT_ASSERT(( concept_ ));
         }

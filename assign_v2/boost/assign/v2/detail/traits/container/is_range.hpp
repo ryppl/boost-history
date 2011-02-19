@@ -23,7 +23,7 @@ namespace container_traits{
     struct is_range{
         // purposedly left blank.
     };
-    
+
 }// container_traits
 }// v2
 }// assign

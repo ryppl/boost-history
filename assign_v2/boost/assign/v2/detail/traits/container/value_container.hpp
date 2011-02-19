@@ -25,7 +25,7 @@ namespace container_traits{
         ptr_to_value_container<V>,
         ::boost::mpl::identity<V>
     >{};
-    
+
 }// container_traits
 }// v2
 }// assign

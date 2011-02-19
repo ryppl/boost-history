@@ -17,7 +17,7 @@ namespace ref{
 namespace list_aux{
 
     typedef int size_type;
-    
+
 }// list_aux
 }// ref
 }// v2

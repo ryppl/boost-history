@@ -16,12 +16,12 @@
 
 #if BOOST_ASSIGN_V2_LIMIT_ARITY_BOUND >  BOOST_MPL_LIMIT_METAFUNCTION_ARITY
 #error
-// This is required for a metafunction class that returns the result type of a 
+// This is required for a metafunction class that returns the result type of a
 // functors.
 #endif
 
 // Functors are by default overloaded as follows:
-// 
+//
 // n = BOOST_ASSIGN_V2_LIMIT_ARITY
 // Overload                     | Arity
 // -------------------------------------

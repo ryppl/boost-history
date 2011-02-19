@@ -13,5 +13,5 @@
 #define BOOST_ASSIGN_V2_decl_params(SeqU) \
     BOOST_PP_ENUM_PARAMS(BOOST_PP_SEQ_SIZE(SeqU), typename T)\
 /**/
-#define BOOST_ASSIGN_V2_params(SeqU) BOOST_PP_SEQ_ENUM(SeqU) 
+#define BOOST_ASSIGN_V2_params(SeqU) BOOST_PP_SEQ_ENUM(SeqU)
 #endif

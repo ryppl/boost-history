@@ -20,7 +20,7 @@ namespace ref{
 
     template<typename Tag>
     struct empty_list{ typedef list_aux::container<Tag> type; };
-    
+
     template<typename Tag>
     typename empty_list<Tag>::type
     list( keyword_aux::nil )

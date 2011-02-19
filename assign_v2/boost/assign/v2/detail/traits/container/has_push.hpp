@@ -20,24 +20,24 @@ namespace assign{
 namespace v2{
 namespace container_traits{
 
-    template<typename V,typename T 
+    template<typename V,typename T
         = typename container_traits::value<V>::type>
     struct has_push{
-        
+
         typedef typename boost::type_traits::yes_type yes_;
         typedef typename boost::type_traits::no_type no_;
-            
+
         template<typename U,void (U::*fp)(T const&)>
         struct helper{
             // See http://lists.boost.org/Archives/boost/2002/03/27233.php
         };
-        
+
         template<typename U>
         static yes_ test(U*, helper<U, &U::push>* p = 0);
         static no_ test(...);
-            
+
         BOOST_STATIC_CONSTANT(
-            bool, 
+            bool,
             value = sizeof( test((V*)0) ) == sizeof( yes_ )
         );
 
@@ -47,11 +47,11 @@ namespace container_traits{
 
     template<typename V>
     struct has_push_deduced_value : v2::container_traits::has_push<V>{};
-    
+
 }// container_traits
 }// v2
 }// assign
-}// boost 
+}// boost
 
 #endif
 

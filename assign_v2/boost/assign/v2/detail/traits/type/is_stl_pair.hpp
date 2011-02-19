@@ -20,17 +20,17 @@ namespace type_traits{
 
 //    template< class T, class U >
 //    boost::type_traits::yes_type is_pair( const std::pair<T,U>* );
-//    boost::type_traits::no_type is_pair( ... ); 
+//    boost::type_traits::no_type is_pair( ... );
 
     template<typename T>
     struct is_stl_pair : ::boost::mpl::false_{};
-    
+
     template<typename T,typename U>
     struct is_stl_pair< std::pair<T, U> > : ::boost::mpl::true_{};
 
 }// type_traits
 }// v2
 }// assign
-}// boost 
+}// boost
 
 #endif

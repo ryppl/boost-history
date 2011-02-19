@@ -34,12 +34,12 @@ namespace xxx_functor{
             BOOST_ASSIGN_V2_CHECK( cont[2] == 3 );
             //]
         }
-        {    
+        {
             //[lookup
             std::map<std::string, int> cont;
             cont["jan"] = 31; cont["feb"] = 29; cont["mar"] = 32;
             (
-                as2::put( cont ) % ( as2::_lookup = ( bl::_1 -= 1 ) ) 
+                as2::put( cont ) % ( as2::_lookup = ( bl::_1 -= 1 ) )
             )( "feb" )( "mar" );
             BOOST_ASSIGN_V2_CHECK( cont["feb"] == 28 );
             BOOST_ASSIGN_V2_CHECK( cont["mar"] == 31 );

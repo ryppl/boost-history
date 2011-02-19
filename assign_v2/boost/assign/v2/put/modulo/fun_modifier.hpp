@@ -16,7 +16,7 @@
 namespace boost{
 namespace assign{
 namespace v2{
-namespace result_of_modulo{    
+namespace result_of_modulo{
 
     template<typename T> struct fun_modifier
     {
@@ -29,7 +29,7 @@ namespace result_of_modulo{
             typedef typename ::boost::mpl::apply1< modifier_, Tag>::type type;
         };
     };
-        
+
 }// result_of_modulo
 }// v2
 }// assign

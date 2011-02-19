@@ -29,8 +29,8 @@ namespace ref{
 namespace list_aux{
 
     template<typename Tag, typename H, typename T>
-    class container : 
-        public head_holder<H>, 
+    class container :
+        public head_holder<H>,
         public tail_holder<T>,
         public ::boost::mpl::apply2<policy<Tag>, H, T>::type
     {

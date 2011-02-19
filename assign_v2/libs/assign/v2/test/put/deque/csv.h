@@ -17,7 +17,7 @@ namespace xxx_csv{
 
     void test();
 
-}// xxx_csv 
+}// xxx_csv
 }// xxx_deque
 }// xxx_put
 }// test_assign_v2
