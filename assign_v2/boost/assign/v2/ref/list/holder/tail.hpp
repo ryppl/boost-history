@@ -19,12 +19,12 @@ namespace v2{
 namespace ref{
 namespace list_aux{
 
-	struct nil{ nil(){} };
+    struct nil{ nil(){} };
 
-	template<typename T>
+    template<typename T>
     struct tail_holder
     {
-		typedef T tail_type;
+        typedef T tail_type;
         typedef ::boost::mpl::int_<T::size::value+1> size;
         tail_holder(T const& t) : tail_( t ){}
         
@@ -32,18 +32,18 @@ namespace list_aux{
         result_of_tail_type tail()const{ return this->tail_; }
         
         private:
-		T const& tail_;
+        T const& tail_;
     };
 
-	template<>
+    template<>
     struct tail_holder<nil> 
     {
         typedef nil tail_type;
         typedef ::boost::mpl::int_<0> size;
-    	tail_holder(){}
+        tail_holder(){}
     };
 
-	template<typename T>
+    template<typename T>
     struct tail_of{ typedef typename T::tail_type type; };
 
 

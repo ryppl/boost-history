@@ -17,8 +17,8 @@ namespace xxx_array{
 
     void test()
     {
-		xxx_functor::test();
-		xxx_csv::test();
+        xxx_functor::test();
+        xxx_csv::test();
     }
 
 }// xxx_array

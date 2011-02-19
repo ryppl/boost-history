@@ -25,21 +25,21 @@ namespace put_aux{\
     class modifier<v2::modifier_tag::FUN>\
     {\
 \
-		typedef boost::accumulators::dont_care dont_care_;\
+        typedef boost::accumulators::dont_care dont_care_;\
 \
-		public:\
+        public:\
 \
         modifier(){}\
         modifier( dont_care_ ){}\
 \
-    	template<typename V, typename T>\
+        template<typename V, typename T>\
         void impl(V& v, BOOST_ASSIGN_V2_forward_param(T, t) )const{\
             v.FUN(\
                 BOOST_ASSIGN_V2_forward_arg(T, t)\
             );\
         }\
 \
-    	template<typename V, typename T>\
+        template<typename V, typename T>\
         void impl(V& v, T* t)const{ v.FUN( t ); }\
 \
     };\

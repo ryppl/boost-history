@@ -23,22 +23,22 @@ namespace array_aux{
     template<typename T>
     struct empty_array : ref::empty_list<list_aux::array_tag>{};
          
-	template<size_type N, typename T>
+    template<size_type N, typename T>
     struct recursive_result
     {
-    	typedef typename recursive_result<N-1, T>::type previous_;
+        typedef typename recursive_result<N-1, T>::type previous_;
         typedef typename previous_::template result<T&>::type type;
     };
 
-	template<typename T>
+    template<typename T>
     struct recursive_result<0, T> : empty_array<T>{};
 
 }// array_aux
 namespace nth_result_of{
 
     template<array_aux::size_type N, typename T>
-	struct array
-    	: array_aux::recursive_result<N, T>
+    struct array
+        : array_aux::recursive_result<N, T>
     {};
 
 }// nth_result_of

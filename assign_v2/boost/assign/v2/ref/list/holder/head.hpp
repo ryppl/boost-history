@@ -26,53 +26,53 @@ namespace list_aux{
 /* // TODO as standalone ok, but unsure effects in relation with ref-arrays
 
 #ifndef BOOST_NO_RVALUE_REFERENCES
-	template<typename T>
-	struct  head_holder{
+    template<typename T>
+    struct  head_holder{
 
-    	typedef T head_value_type;
+        typedef T head_value_type;
 
-    	explicit head_holder(T&& t)
-        	: head(
-            	std::move( t )
+        explicit head_holder(T&& t)
+            : head(
+                std::move( t )
             ){}
 
         T&& head;
 
-	};
+    };
 #else */
 
-	template<typename T> struct head_holder{
-    	// undefined
+    template<typename T> struct head_holder{
+        // undefined
     };
 //#endif
 
-	template<typename T> struct head_holder<T&>{
+    template<typename T> struct head_holder<T&>{
 
-    	typedef T head_value_type;
+        typedef T head_value_type;
 
         explicit head_holder(T& t) : head_( t ){}
 
-		typedef T& result_of_head_type;
-		result_of_head_type head()const{ return this->head_; }
+        typedef T& result_of_head_type;
+        result_of_head_type head()const{ return this->head_; }
 
-		private:
-		mutable T& head_;
+        private:
+        mutable T& head_;
 
     };
 
     template<>
     struct head_holder<void_>
     {
-		typedef void_ head_value_type;
+        typedef void_ head_value_type;
         head_holder(){}
     };
 
-	template<typename T>
+    template<typename T>
     struct head_value{ typedef typename T::head_value_type type; };
 
-	template<typename T>
+    template<typename T>
     struct head_reference
-    	: boost::add_reference<typename head_value<T>::type>
+        : boost::add_reference<typename head_value<T>::type>
     {};
 
 }// list_aux

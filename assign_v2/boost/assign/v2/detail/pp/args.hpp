@@ -14,14 +14,14 @@
 #include <boost/preprocessor/seq/for_each_i.hpp>
 #include <boost/preprocessor/seq/size.hpp>
 #define BOOST_ASSIGN_V2_decl_args_iter(r, data, i, U) \
-	BOOST_PP_COMMA_IF(i) \
-	U & \
+    BOOST_PP_COMMA_IF(i) \
+    U & \
     BOOST_PP_CAT(data, i) \
 /**/
 #define BOOST_ASSIGN_V2_decl_args(SeqU) \
-	BOOST_PP_SEQ_FOR_EACH_I(BOOST_ASSIGN_V2_decl_args_iter, _, SeqU) \
+    BOOST_PP_SEQ_FOR_EACH_I(BOOST_ASSIGN_V2_decl_args_iter, _, SeqU) \
 /**/
 #define BOOST_ASSIGN_V2_args(SeqU) \
-	BOOST_PP_ENUM_PARAMS(BOOST_PP_SEQ_SIZE(SeqU), _)
+    BOOST_PP_ENUM_PARAMS(BOOST_PP_SEQ_SIZE(SeqU), _)
 /**/
 #endif

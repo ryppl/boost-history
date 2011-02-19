@@ -18,13 +18,13 @@ namespace assign{
 namespace v2{
 namespace result_of_modulo{    
 
-	template<typename T> struct fun_modifier
+    template<typename T> struct fun_modifier
     {
-    	template<typename F, typename Tag>
+        template<typename F, typename Tag>
         struct apply
         {
-        	typedef result_of_modulo::fun<T> meta_fun_;
-        	typedef typename ::boost::mpl::apply1< meta_fun_, F>::type new_t_;
+            typedef result_of_modulo::fun<T> meta_fun_;
+            typedef typename ::boost::mpl::apply1< meta_fun_, F>::type new_t_;
             typedef result_of_modulo::modifier<new_t_> modifier_;
             typedef typename ::boost::mpl::apply1< modifier_, Tag>::type type;
         };

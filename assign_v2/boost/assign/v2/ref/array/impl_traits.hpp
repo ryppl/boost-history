@@ -23,7 +23,7 @@ namespace array_aux{
     struct impl_traits
     {
         typedef T value_type;
-    	typedef Tag assign_tag;
+        typedef Tag assign_tag;
         typedef typename ref::wrapper<assign_tag, value_type> wrapper_type;
         typedef boost::array<wrapper_type,N> array_type;
     };

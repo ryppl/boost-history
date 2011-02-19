@@ -23,14 +23,14 @@ namespace test_assign_v2{
 namespace xxx_utility{
 namespace xxx_chain{
 
-	
+    
     void test()
     {
-    	namespace as2 = boost::assign::v2;
+        namespace as2 = boost::assign::v2;
         {
-        	namespace ns = as2::check_chain_aux;
-            {	typedef int T; ns::static_<T>(); ns::static_<T>(); }
-            {	typedef double T; ns::static_<T>(); ns::static_<T>(); }
+            namespace ns = as2::check_chain_aux;
+            {    typedef int T; ns::static_<T>(); ns::static_<T>(); }
+            {    typedef double T; ns::static_<T>(); ns::static_<T>(); }
         }
         {
             //[chain_r
@@ -39,13 +39,13 @@ namespace xxx_chain{
             std::list<T> list; list.push_back( 2 ); list.push_back( 3 );
             std::vector<T> v( boost::begin( ar ), boost::end( ar ) ); 
             boost::copy( list, std::back_inserter( v ) );
-        	BOOST_ASSIGN_V2_CHECK(
-            	boost::range::equal( v, ar | as2::_chain( list ) )
+            BOOST_ASSIGN_V2_CHECK(
+                boost::range::equal( v, ar | as2::_chain( list ) )
             );
             //]
         }
         {
-        	//[chain_w
+            //[chain_w
             typedef int T; std::vector<T> v( 4 ); 
             v[0] = 1; v[1] = 2; v[2] = 0; v[3] = 5;
             boost::array<T, 2> ar; std::list<T> list( v.size() - ar.size() );
@@ -57,7 +57,7 @@ namespace xxx_chain{
             //]
         }
 
-	}// test
+    }// test
     
 }// xxx_chain
 }// xxx_utility

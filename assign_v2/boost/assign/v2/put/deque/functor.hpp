@@ -37,8 +37,8 @@ namespace result_of{
     template<typename T>
     struct deque
     {
-    	typedef typename boost::remove_cv<T>::type t_;
-    	typedef typename put_deque_aux::impl<t_>::type cont_;
+        typedef typename boost::remove_cv<T>::type t_;
+        typedef typename put_deque_aux::impl<t_>::type cont_;
         typedef result_of::put<cont_> traits_;
         typedef typename traits_::f_ f_;
         typedef typename traits_::modifier_tag_ modifier_tag_;
@@ -51,7 +51,7 @@ namespace result_of{
     typename result_of::deque<T>::type
     deque( keyword_aux::nil )
     {
-    	typedef typename result_of::deque<T>::type result_;
+        typedef typename result_of::deque<T>::type result_;
         return result_();
     }
 
@@ -60,7 +60,7 @@ namespace result_of{
     typename result_of::deque<T>::type
     deque(Args&&...args)
     {
-    	return deque<T>(v2::_nil)( std::forward<Args>(args)... );
+        return deque<T>(v2::_nil)( std::forward<Args>(args)... );
     }
 #else
 
@@ -81,12 +81,12 @@ namespace result_of{
     } \
 /**/
 #define BOOST_ASSIGN_V2_MACRO2(z, n, data) BOOST_PP_SEQ_FOR_EACH_PRODUCT(\
-	BOOST_ASSIGN_V2_MACRO1, \
+    BOOST_ASSIGN_V2_MACRO1, \
     BOOST_PP_SEQ_FIRST_N(BOOST_PP_INC(n), BOOST_ASSIGN_V2_SEQ)\
 ) \
 /**/
 BOOST_PP_REPEAT(
-	BOOST_ASSIGN_V2_LIMIT_LVALUE_CONST_ARITY,
+    BOOST_ASSIGN_V2_LIMIT_LVALUE_CONST_ARITY,
     BOOST_ASSIGN_V2_MACRO2,
     ~
 )

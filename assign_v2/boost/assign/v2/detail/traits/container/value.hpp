@@ -21,15 +21,15 @@ namespace v2{
 namespace container_traits
 {
 
-	// TODO
+    // TODO
     // maybe this should be
-    // 	remove_reference<V::reference>::type
+    //     remove_reference<V::reference>::type
     // or 
-    // 	range_value<V>, is available.
+    //     range_value<V>, is available.
     // Think about ptr_container in making this change.
     template<typename V>
     struct value : container_traits::forward_to_value<
-    	type_traits::value,
+        type_traits::value,
         V
     >{};
 

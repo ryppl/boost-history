@@ -23,19 +23,19 @@ namespace xxx_pipe{
 namespace xxx_csv{
 namespace xxx_rhs{
 
-	template<int i, typename T, typename P, typename U>
-	void xxx_assert(T& rhs, P const& pred, U const& u)
+    template<int i, typename T, typename P, typename U>
+    void xxx_assert(T& rhs, P const& pred, U const& u)
     {
         // TODO name lookup?
         using namespace boost;
         using namespace boost::assign::v2;
         
-    	pred( rhs.seq_args()[ i ].get(), u );
+        pred( rhs.seq_args()[ i ].get(), u );
     }
 
     void test(){
     
-    	namespace as2 = boost::assign::v2;
+        namespace as2 = boost::assign::v2;
         typedef boost::mpl::int_<0> zero_;
         typedef int const cint_;
         cint_ x = -1, y = 0, z = 1; 

@@ -87,7 +87,7 @@ namespace distinct_value_type{
 
         tester<const T1 ,  const T2 , const T3 >::test(); 
         tester<const T1 ,        T2 , const T3 >::test(); 
-       	tester<      T1 ,  const T2 , const T3 >::test(); 
+           tester<      T1 ,  const T2 , const T3 >::test(); 
         tester<      T1 ,        T2 ,       T3 >::test(); 
 
     }
@@ -95,8 +95,8 @@ namespace distinct_value_type{
 #define BOOST_ASSIGN_V2_MACRO(T1, T2, T3) \
     template<typename T> \
     void do_check( \
-    	typename boost::enable_if< \
-    		boost::is_same<T,T1> \
+        typename boost::enable_if< \
+            boost::is_same<T,T1> \
         >::type* = 0 \
     ) \
     { \
@@ -107,15 +107,15 @@ namespace distinct_value_type{
 /*
 // don't try to guess the supertype, it may vary by compiler. 
 namespace supertype_{
-	typedef boost::numeric::conversion_traits<short, int>::supertype a_;
-	typedef boost::numeric::conversion_traits<int, long>::supertype b_;
-	typedef boost::numeric::conversion_traits<float, double>::supertype c_;
-	typedef boost::numeric::conversion_traits<
-    	double,long double>::supertype d_;
+    typedef boost::numeric::conversion_traits<short, int>::supertype a_;
+    typedef boost::numeric::conversion_traits<int, long>::supertype b_;
+    typedef boost::numeric::conversion_traits<float, double>::supertype c_;
+    typedef boost::numeric::conversion_traits<
+        double,long double>::supertype d_;
 }// supertype_
-BOOST_ASSIGN_V2_MACRO(short  , int, 	supertype_::a_)
-BOOST_ASSIGN_V2_MACRO(int    , long,	supertype_::b_)
-BOOST_ASSIGN_V2_MACRO(float  , double,	supertype_::c_)
+BOOST_ASSIGN_V2_MACRO(short  , int,     supertype_::a_)
+BOOST_ASSIGN_V2_MACRO(int    , long,    supertype_::b_)
+BOOST_ASSIGN_V2_MACRO(float  , double,    supertype_::c_)
 typedef long double long_double_;
 BOOST_ASSIGN_V2_MACRO(double , long_double_, workaround::d_)
 #undef BOOST_ASSIGN_V2_MACRO

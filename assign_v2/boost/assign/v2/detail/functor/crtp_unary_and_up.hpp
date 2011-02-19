@@ -27,13 +27,13 @@
 // arguments, while allowing within a certain limit, any mixture of
 // lvalue and rvalues. Specifically,
 // let
-// 	m = BOOST_ASSIGN_V2_LIMIT_LVALUE_CONST_ARITY
-// 	n = BOOST_ASSIGN_V2_LIMIT_ARITY
+//     m = BOOST_ASSIGN_V2_LIMIT_LVALUE_CONST_ARITY
+//     n = BOOST_ASSIGN_V2_LIMIT_ARITY
 //
 // Given a metafunction class, F, and a derived class, D, that defines
 //  template<typename T0, ..., typename Tk>
 //  typename apply1<F, mpl::vector<T0,...,Tk> >::type
-//	impl(T0& , ..., Tk&)const;
+//    impl(T0& , ..., Tk&)const;
 // for k = 0, ..., n-1, crtp<F,D> defines, under C++03, a set of overloaded
 // operator()'s, each forwarding to impl(), for each combination of lvalues and
 // const arguments for k = 0, ..., m-1, and either only lvalues or only const
@@ -102,12 +102,12 @@ namespace functor_aux{
 
 
 #define BOOST_ASSIGN_V2_MACRO2(z, n, data) BOOST_PP_SEQ_FOR_EACH_PRODUCT(\
-	BOOST_ASSIGN_V2_MACRO1, \
+    BOOST_ASSIGN_V2_MACRO1, \
     BOOST_PP_SEQ_FIRST_N(BOOST_PP_INC(n), BOOST_ASSIGN_V2_SEQ)\
 ) \
 /**/
 BOOST_PP_REPEAT(
-	BOOST_ASSIGN_V2_LIMIT_LVALUE_CONST_ARITY,
+    BOOST_ASSIGN_V2_LIMIT_LVALUE_CONST_ARITY,
     BOOST_ASSIGN_V2_MACRO2,
     ~
 )
@@ -149,7 +149,7 @@ BOOST_PP_REPEAT_FROM_TO(
 
 #endif // #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 
-	};
+    };
 
 }// functor_aux
 }// v2

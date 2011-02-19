@@ -21,11 +21,11 @@ namespace chain_aux{
 
     template<typename R1,typename R2,typename Tag = use_default> 
     struct result{
-    	typedef typename  ::boost::mpl::eval_if<
-        	chain_aux::use_lvalue<R1,R2,Tag>,
-        	boost::mpl::identity< chain_aux::range_l<R1, R2, Tag> >,
-        	boost::mpl::identity< chain_aux::range_r<R1, R2, Tag> >
-    	>::type caller_;
+        typedef typename  ::boost::mpl::eval_if<
+            chain_aux::use_lvalue<R1,R2,Tag>,
+            boost::mpl::identity< chain_aux::range_l<R1, R2, Tag> >,
+            boost::mpl::identity< chain_aux::range_r<R1, R2, Tag> >
+        >::type caller_;
         
         typedef typename caller_::type type;
         

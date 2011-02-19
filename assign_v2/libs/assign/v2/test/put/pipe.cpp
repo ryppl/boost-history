@@ -18,10 +18,10 @@ namespace xxx_put{
 namespace xxx_pipe{
 
     void test(){
-    	xxx_modulo::test();
-    	xxx_csv::test();
-    	xxx_functor::test();
-    	xxx_range::test();
+        xxx_modulo::test();
+        xxx_csv::test();
+        xxx_functor::test();
+        xxx_range::test();
     }
     
 }// xxx_pipe

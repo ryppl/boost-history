@@ -11,15 +11,15 @@
 #define BOOST_ASSIGN_V2_REF_LIST_FWD_ER_2010_HPP
 
 namespace boost{
-	struct use_default;
+    struct use_default;
 namespace assign{
 namespace v2{
 namespace ref{
 namespace list_aux{
 
-	template<typename Tag> struct empty_list;
+    template<typename Tag> struct empty_list;
 
-	struct void_;
+    struct void_;
     struct nil;
 
     template<typename Tag, typename H = void_, typename T = nil>

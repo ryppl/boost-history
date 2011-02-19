@@ -21,7 +21,7 @@ namespace assign{
 namespace v2{
 namespace switch_tag{
 
-	// Each tag in this namespace identifies a switch statement.
+    // Each tag in this namespace identifies a switch statement.
 
 }//switch_tag
 namespace switch_aux{
@@ -39,7 +39,7 @@ namespace switch_aux{
         typedef Tag tag;
         template<typename T> struct apply : F<T>
         {
-        	// Is Tag compatible with T? Answer : F<T>::value.
+            // Is Tag compatible with T? Answer : F<T>::value.
         };
     };
 

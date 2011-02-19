@@ -24,7 +24,7 @@ namespace ref{
     // Maps T appearing in an rvalue reference T&& to the type appropriate
     // as the parameter of a reference wrapper.
 
-	template<typename T>
+    template<typename T>
     struct wrapper_param : boost::add_const<T>
     {
         // rvalue
@@ -32,10 +32,10 @@ namespace ref{
 
     // lvalue:
 
-	template<typename T>
+    template<typename T>
     struct wrapper_param<T&>
     {
-    	typedef T type;
+        typedef T type;
     };
 
 }// ref

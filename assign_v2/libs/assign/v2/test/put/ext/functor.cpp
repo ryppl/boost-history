@@ -27,15 +27,15 @@ namespace xxx_functor{
         namespace as2 = boost::assign::v2;
         namespace bl = boost::lambda;
         {
-        	//[iterate
-        	boost::array<int, 3> cont;
+            //[iterate
+            boost::array<int, 3> cont;
             ( as2::put( cont ) % as2::_iterate )( 1 )( 2 )( 3 );
             BOOST_ASSIGN_V2_CHECK( cont[0] == 1 );
             BOOST_ASSIGN_V2_CHECK( cont[2] == 3 );
             //]
         }
-        {	
-        	//[lookup
+        {    
+            //[lookup
             std::map<std::string, int> cont;
             cont["jan"] = 31; cont["feb"] = 29; cont["mar"] = 32;
             (

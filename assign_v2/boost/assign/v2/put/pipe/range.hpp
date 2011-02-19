@@ -25,7 +25,7 @@ namespace put_range_aux
 
         public:
 
-    	helper1(R const& range) : super_t( range ){}
+        helper1(R const& range) : super_t( range ){}
 
         R const& range()const{ return this->get(); }
 
@@ -35,12 +35,12 @@ namespace put_range_aux
 
     struct helper2
     {
-    	helper2(){}
+        helper2(){}
         template<typename R>
         helper1<R> operator()(const R& range)const
         {
-        	typedef helper1<R> result_;
-        	return result_( range );
+            typedef helper1<R> result_;
+            return result_( range );
         }
     };
 
@@ -53,7 +53,7 @@ namespace put_range_aux
     template<typename C, typename R>
     C operator|( ::boost::type<C>, put_range_aux::helper1<R> const& h)
     {
-		return put_range<C>( h.range() );
+        return put_range<C>( h.range() );
     }
 
 }// put_range_aux

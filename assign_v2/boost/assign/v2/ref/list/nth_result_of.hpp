@@ -23,35 +23,35 @@ namespace ref{
 namespace list_aux{
 
     template<typename Tag>
-	struct nth_result
+    struct nth_result
     {
 
-		typedef typename ref::empty_list<Tag>::type state_;
+        typedef typename ref::empty_list<Tag>::type state_;
 
-		template<typename State, typename T>
+        template<typename State, typename T>
         struct result : State::template result<T>{};
 
-		template<typename Vec>
-    	struct apply : ::boost::mpl::fold<
-        	Vec,
+        template<typename Vec>
+        struct apply : ::boost::mpl::fold<
+            Vec,
             state_,
             result< ::boost::mpl::_1, ::boost::mpl::_2>
         >{};
 
-	};
+    };
 
 }// fusion_aux
 namespace nth_result_of{
 
-	template<typename Tag>
-	struct list
+    template<typename Tag>
+    struct list
     {
         template<typename Vec>
         struct apply : ::boost::mpl::apply1<
-        	list_aux::nth_result<Tag>,
-        	Vec
+            list_aux::nth_result<Tag>,
+            Vec
         >{};
-	};
+    };
 
 }// nth_result_of
 }// ref

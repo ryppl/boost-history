@@ -18,8 +18,8 @@
 // Design:
 // - Original design was boost::chain in RangeEx
 // - ER modified as follows:
-// 	- sets the underlying iterator's Reference to one which both inputs are
-// 	convertible to, and is lvalue-preserving
+//     - sets the underlying iterator's Reference to one which both inputs are
+//     convertible to, and is lvalue-preserving
 // - Finally, MPG proposed a way to compose chains http://gist.github.com/287791
 
 namespace boost{

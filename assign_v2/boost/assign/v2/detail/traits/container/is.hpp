@@ -17,8 +17,8 @@
 namespace container_traits{\
     template<typename V>\
     struct BOOST_PP_CAT(is_,name) : forward_to_value<\
-    	container_traits_aux::BOOST_PP_CAT(is_,name),\
-    	typename boost::remove_cv<V>::type\
+        container_traits_aux::BOOST_PP_CAT(is_,name),\
+        typename boost::remove_cv<V>::type\
     >{};\
 }\
 /**/

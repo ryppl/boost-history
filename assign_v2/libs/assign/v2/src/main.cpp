@@ -16,20 +16,20 @@ int main (int argc, char * const argv[])
 {
 
     // Do not put libs/assign/v2/test/unit_testing in this project
-	{
-    	using namespace test_assign_v2;
-		xxx_detail::test();
-		xxx_put::test();
-		xxx_ref::test();
-    	xxx_utility::test();
+    {
+        using namespace test_assign_v2;
+        xxx_detail::test();
+        xxx_put::test();
+        xxx_ref::test();
+        xxx_utility::test();
         xxx_other::test();
     }
 
 /*
-	{
-    	using namespace speed_assign_v2;
+    {
+        using namespace speed_assign_v2;
         std::ofstream ofs("results");
-		xxx_put_ref::run(ofs);
+        xxx_put_ref::run(ofs);
     }
 */
     

@@ -21,17 +21,17 @@ namespace v2{
 namespace ref{
 namespace array_aux{ 
                   
-//   	template<std::size_t N,typename Tag, typename T, typename D>
-   	template<std::size_t N,typename T, typename D>
-   	class lazy_alloc : public array_aux::interface<
-   		typename array_aux::impl_traits<N, T>::array_type, 
+//       template<std::size_t N,typename Tag, typename T, typename D>
+       template<std::size_t N,typename T, typename D>
+       class lazy_alloc : public array_aux::interface<
+           typename array_aux::impl_traits<N, T>::array_type, 
 //        lazy_alloc<N,Tag,T,D> 
         lazy_alloc<N, T, D> 
-	>
+    >
     {
-		typedef typename array_aux::impl_traits<N, T>::array_type impl_;
+        typedef typename array_aux::impl_traits<N, T>::array_type impl_;
 
-		typedef ::boost::mpl::int_<N> size_;
+        typedef ::boost::mpl::int_<N> size_;
                 
         void alloc_if()const{
             if(!this->ptr){
@@ -42,13 +42,13 @@ namespace array_aux{
         void alloc()const{ 
             this->ptr = smart_ptr_(new impl_);
             assign_array(
-            	*this->ptr,
+                *this->ptr,
                 static_cast<const D&>(*this)
-            );	
+            );    
         }
 
-		typedef array_aux::interface<impl_, lazy_alloc> super_t;
-		
+        typedef array_aux::interface<impl_, lazy_alloc> super_t;
+        
         public:
 
         impl_& impl(){ 

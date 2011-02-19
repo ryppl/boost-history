@@ -16,18 +16,18 @@
 #include <boost/assign/v2/ref/array/impl_traits.hpp>
 
 namespace boost{
-	struct use_default;
+    struct use_default;
 namespace assign{
 namespace v2{
 namespace ref{
 namespace array_aux{
-	typedef boost::use_default csv_tag2_;
+    typedef boost::use_default csv_tag2_;
 }// array_aux
 namespace nth_result_of{
 
     template<std::size_t N, typename T>
     struct csv_array 
-	{
+    {
         typedef ref::array_tag1_ tag1_;
 //        typedef array_aux::instant_alloc<N, tag1_, T> type;
         typedef array_aux::instant_alloc<N, T> type;

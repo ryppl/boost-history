@@ -17,13 +17,13 @@ namespace boost{
 namespace assign{
 namespace v2{
 namespace container_tag{
-	struct associative{};
+    struct associative{};
 }// container_tag
 namespace container_traits{
 
-	template<typename V>
+    template<typename V>
     struct is_associative : ::boost::mpl::or_<
-    	container_traits::is_set<V>,
+        container_traits::is_set<V>,
         container_traits::is_map<V>
     >{};
     

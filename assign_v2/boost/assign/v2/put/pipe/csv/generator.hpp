@@ -37,34 +37,34 @@
 #endif
 
 namespace boost{
-	struct use_default;
+    struct use_default;
 namespace assign{
 namespace v2{
 namespace put_pipe_aux{
 
     template<typename Pars = ::boost::mpl::vector0<> >
-	class csv_generator
+    class csv_generator
     {
 
-    	//typedef boost::use_default tag2_;
-    	//typedef v2::ref::assign_copy::nth_result_of::fusion<tag2_> meta1_;
+        //typedef boost::use_default tag2_;
+        //typedef v2::ref::assign_copy::nth_result_of::fusion<tag2_> meta1_;
 
-		typedef ::boost::mpl::na na_;
+        typedef ::boost::mpl::na na_;
         typedef modulo_traits<Pars> modulo_traits_;
 
-		public:
+        public:
         
         typedef typename modulo_traits_::size pars_size;
         typedef typename modulo_traits_::cont_ pars_cont_type;
 
-		csv_generator(){}
-		explicit csv_generator(pars_cont_type const& p)
+        csv_generator(){}
+        explicit csv_generator(pars_cont_type const& p)
             : pars_cont( p ){}
 
         template<typename T>
         struct modulo_result
         {
-			typedef typename modulo_traits_:: template new_pars<T>::type new_;
+            typedef typename modulo_traits_:: template new_pars<T>::type new_;
             typedef csv_generator<new_> type;
         };
 
@@ -72,30 +72,30 @@ namespace put_pipe_aux{
         typename modulo_result<T>::type
         operator%(T const& t)const
         {
-        	typedef typename modulo_result<T>::type result_;
+            typedef typename modulo_result<T>::type result_;
             return result_( this->pars_cont( t ) );
         }
 
-    	template<std::size_t N, typename U = na_>
+        template<std::size_t N, typename U = na_>
         struct result{
-        	typedef put_pipe_aux::csv_rhs<Pars, N, U> type;
+            typedef put_pipe_aux::csv_rhs<Pars, N, U> type;
         };
 
-		typename result<0>::type
-    	operator()()const
-	    {
-			typedef typename result<0>::type result_;
-    		return result_(
-        		*this,
-        		ref::csv_array<na_>( _nil )
-    		);
-    	}
+        typename result<0>::type
+        operator()()const
+        {
+            typedef typename result<0>::type result_;
+            return result_(
+                *this,
+                ref::csv_array<na_>( _nil )
+            );
+        }
 
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 
     protected:
-	template<typename T, typename...Args>
-	typename result<sizeof...(Args)+1, T>::type
+    template<typename T, typename...Args>
+    typename result<sizeof...(Args)+1, T>::type
     impl(T& t, Args&...args)const
     {
         typedef typename result<sizeof...(Args)+1, T>::type result_;
@@ -108,8 +108,8 @@ namespace put_pipe_aux{
 
     public:
 
-	template<typename T, typename...Args>
-	typename boost::lazy_disable_if<
+    template<typename T, typename...Args>
+    typename boost::lazy_disable_if<
         v2::type_traits::or_const<T, Args...>,
         result<sizeof...(Args)+1, T>
     >::type
@@ -118,8 +118,8 @@ namespace put_pipe_aux{
         return this->impl(t, args...);
     }
 
-	template<typename T, typename...Args>
-	typename result<sizeof...(Args)+1, T const>::type
+    template<typename T, typename...Args>
+    typename result<sizeof...(Args)+1, T const>::type
     operator()(T const& t, Args const&...args)const
     {
         return this->impl(t, args...);
@@ -135,24 +135,24 @@ namespace put_pipe_aux{
 /**/
 
 #define BOOST_ASSIGN_V2_MACRO2(z, N, data)\
-	template<typename T>\
-	typename result<N, T>::type\
+    template<typename T>\
+    typename result<N, T>::type\
     operator()( BOOST_PP_ENUM_PARAMS(N, T &_) )const \
     { \
-    	typedef typename result<N, T>::type result_;\
+        typedef typename result<N, T>::type result_;\
         BOOST_ASSIGN_V2_MACRO1( N, T )\
     } \
-	template<typename T>\
-	typename result<N, T const>::type\
+    template<typename T>\
+    typename result<N, T const>::type\
     operator()( BOOST_PP_ENUM_PARAMS(N, T const &_) )const \
     { \
-    	typedef typename result<N, T const>::type result_;\
+        typedef typename result<N, T const>::type result_;\
         BOOST_ASSIGN_V2_MACRO1( N, T const )\
     } \
 /**/
 
 BOOST_PP_REPEAT_FROM_TO(
-	1,
+    1,
     BOOST_PP_INC(BOOST_ASSIGN_V2_LIMIT_CSV_ARITY),
     BOOST_ASSIGN_V2_MACRO2,
     ~
@@ -162,8 +162,8 @@ BOOST_PP_REPEAT_FROM_TO(
 
 #endif
 
-		protected:
-		pars_cont_type pars_cont;
+        protected:
+        pars_cont_type pars_cont;
 
     };
 

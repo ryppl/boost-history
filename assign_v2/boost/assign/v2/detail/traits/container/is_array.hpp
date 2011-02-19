@@ -21,18 +21,18 @@ namespace boost{
 namespace assign{
 namespace v2{
 namespace container_tag{
-	struct array{};
+    struct array{};
 }// container_tag
 namespace container_traits_aux{
 
-	template<typename V> struct is_array : ::boost::mpl::false_{};
-	template<typename T, std::size_t sz> struct is_array<
-    	boost::array<T, sz> 
+    template<typename V> struct is_array : ::boost::mpl::false_{};
+    template<typename T, std::size_t sz> struct is_array<
+        boost::array<T, sz> 
     > : ::boost::mpl::true_{};
     
 }// containert_type_aux
 
-	BOOST_ASSIGN_V2_TRAITS_CONTAINER_IS(array)
+    BOOST_ASSIGN_V2_TRAITS_CONTAINER_IS(array)
 
 }// v2
 }// assign

@@ -92,7 +92,7 @@ BOOST_PP_REPEAT(
     ){}
 
     template<typename F, 
-    	put_pipe_aux::size_type N, typename L, params(typename T)>
+        put_pipe_aux::size_type N, typename L, params(typename T)>
     void forward(
         F const& f,
         ref::list_tuple_aux::container<N, L, params(T)> const& list

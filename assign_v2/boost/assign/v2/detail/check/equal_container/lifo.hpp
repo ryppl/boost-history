@@ -21,13 +21,13 @@ namespace check_aux{
     template<typename C, typename R>
     void equal_container(v2::container_tag::lifo, C const & cont, R const& r)
     {                                                                              
-		BOOST_ASSIGN_V2_CHECK_AUX_CONTAINER_SIZE
-		BOOST_ASSIGN_V2_CHECK_AUX_CONTAINER_ELEM_AT
+        BOOST_ASSIGN_V2_CHECK_AUX_CONTAINER_SIZE
+        BOOST_ASSIGN_V2_CHECK_AUX_CONTAINER_ELEM_AT
         C cpy = cont;
         for(size_type i = 0; i < n1; i++)
         {
-        	BOOST_ASSIGN_V2_CHECK( 
-            	cpy.top() == elem_at( n1 - ( 1 + i ) ) 
+            BOOST_ASSIGN_V2_CHECK( 
+                cpy.top() == elem_at( n1 - ( 1 + i ) ) 
             ); cpy.pop(); 
         }
         BOOST_ASSIGN_V2_CHECK( cpy.empty() ); // consistency check

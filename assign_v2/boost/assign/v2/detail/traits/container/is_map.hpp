@@ -15,22 +15,22 @@ namespace boost{
 namespace assign{
 namespace v2{
 namespace container_tag{
-	struct map{};
+    struct map{};
 }// container_tag
 namespace container_traits_aux{
 
-	template<typename V>
+    template<typename V>
     struct is_map : ::boost::mpl::false_{};
 
-	template<typename K,typename D,typename C,typename A>
+    template<typename K,typename D,typename C,typename A>
     struct is_map< 
-    	std::map<K,D,C,A> 
+        std::map<K,D,C,A> 
     > : ::boost::mpl::true_{};
     
 }// container_traits_aux
 
 
-	BOOST_ASSIGN_V2_TRAITS_CONTAINER_IS(map)
+    BOOST_ASSIGN_V2_TRAITS_CONTAINER_IS(map)
 
 }// v2
 }// assign

@@ -19,32 +19,32 @@
 #include <boost/assign/v2/ref/list/size_type.hpp>
 
 namespace boost{
-	struct use_default;
+    struct use_default;
 namespace assign{
 namespace v2{
 namespace ref{
 namespace list_aux{
 
     template<
-    	size_type K,typename A,
+        size_type K,typename A,
         typename Tag, typename H, typename T
     >
     void assign_array(
-    	::boost::mpl::true_ /*exit*/,
-    	A& a,
+        ::boost::mpl::true_ /*exit*/,
+        A& a,
         const list_aux::container<Tag, H, T>& l
     )
     {
-    	/*exit*/
+        /*exit*/
     }
 
     template<
-    	size_type K,typename A,
+        size_type K,typename A,
         typename Tag, typename H, typename T
     >
     void assign_array(
-    	::boost::mpl::false_ /*exit*/,
-    	A& a,
+        ::boost::mpl::false_ /*exit*/,
+        A& a,
         const list_aux::container<Tag, H, T>& l
     )
     {
@@ -56,15 +56,15 @@ namespace list_aux{
         assign_array<K-1>( exit_(), a, l );
     }
 
-	// A must be a static array of reference wrappers
+    // A must be a static array of reference wrappers
     template<typename A, typename Tag, typename H, typename T>
     void assign_array(
-    	A& a,
+        A& a,
         list_aux::container<Tag, H, T> const & l
     )
     {
         typedef list_aux::container<Tag, H, T> list_;
-    	BOOST_STATIC_ASSERT( A::static_size <= list_::size::value );
+        BOOST_STATIC_ASSERT( A::static_size <= list_::size::value );
         typedef ::boost::mpl::int_<0> zero_;
         typedef ::boost::mpl::int_<A::static_size> size_;
         typedef typename ::boost::mpl::equal_to<size_, zero_>::type exit_;

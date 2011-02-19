@@ -21,21 +21,21 @@ namespace ref{
 namespace convert_traits{
 
     template<
-    	typename T1, typename T2, bool is_c 
-    		= boost::is_const<T1>::value || boost::is_const<T2>::value
+        typename T1, typename T2, bool is_c 
+            = boost::is_const<T1>::value || boost::is_const<T2>::value
     >
     struct const_
     {
-    	typedef typename convert_traits::value<	
-        	typename boost::remove_cv<T1>::type, 
-        	typename boost::remove_cv<T2>::type
+        typedef typename convert_traits::value<    
+            typename boost::remove_cv<T1>::type, 
+            typename boost::remove_cv<T2>::type
         >::type type;
         
     };
 
     template<typename T1, typename T2>
     struct const_<T1, T2, true> : boost::add_const<
-    	typename const_<T1, T2, false>::type
+        typename const_<T1, T2, false>::type
     >{};
 
 }// convert_traits

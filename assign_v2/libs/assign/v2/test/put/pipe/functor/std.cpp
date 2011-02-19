@@ -25,13 +25,13 @@ namespace xxx_std{
         namespace as2 = boost::assign::v2;
         namespace bl = boost::lambda;
         {
-        	//[push_front
+            //[push_front
             typedef int T; T x = 1, y = 2, z = 0;
-        	std::deque<int> cont;
+            std::deque<int> cont;
             cont | ( as2::_put %  as2::_push_front )( x )( y )( z );
-        	BOOST_ASSIGN_V2_CHECK( cont.front() == z );
-        	BOOST_ASSIGN_V2_CHECK( cont.back() == x );
-        	//]
+            BOOST_ASSIGN_V2_CHECK( cont.front() == z );
+            BOOST_ASSIGN_V2_CHECK( cont.back() == x );
+            //]
         }
     }
 

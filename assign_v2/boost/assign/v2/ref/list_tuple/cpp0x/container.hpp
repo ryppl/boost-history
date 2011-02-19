@@ -30,7 +30,7 @@ namespace ref{
 namespace list_tuple_aux{
 
     template<list_tuple_aux::get_size_type N, 
-    	typename L, typename...Args> class container;
+        typename L, typename...Args> class container;
 
     template<list_tuple_aux::get_size_type N, typename L, typename...Args>
     struct meta_result
@@ -38,7 +38,7 @@ namespace list_tuple_aux{
 
         typedef container<N, L, Args...> this_;
 
-		template<typename... Args1>
+        template<typename... Args1>
         struct apply
         {
             typedef container<
@@ -48,7 +48,7 @@ namespace list_tuple_aux{
             > type;
         };
 
-	};
+    };
 
     template<typename NewState>
     struct result

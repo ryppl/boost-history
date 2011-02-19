@@ -18,7 +18,7 @@ namespace assign{
 namespace v2{
 namespace result_of{
 
-	template<typename C>
+    template<typename C>
     struct put
     {
         typedef v2::put_traits<C> traits_;
@@ -29,11 +29,11 @@ namespace result_of{
 
 }// result_of
 
-	template<typename C>
+    template<typename C>
     typename result_of::put<C>::type
-	put( C& v )
+    put( C& v )
     {
-    	typedef typename result_of::put<C>::type result_;
+        typedef typename result_of::put<C>::type result_;
         return result_( v );
     }
 

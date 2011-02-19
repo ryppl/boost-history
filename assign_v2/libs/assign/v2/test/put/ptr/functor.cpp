@@ -24,10 +24,10 @@ namespace xxx_put{
 namespace xxx_ptr{
 namespace xxx_functor{
 
-	void test(){
+    void test(){
         namespace as2 = boost::assign::v2;
-        {	
-            //[array	
+        {    
+            //[array    
             typedef int T;
             T x = 1, y = 2, z = 3;
             boost::ptr_array<T, 3> ar;
@@ -38,13 +38,13 @@ namespace xxx_functor{
         }
 /*        
         {
-        	//[map
+            //[map
             boost::ptr_map<std::string, int> assoc;
             as2::put( assoc )( "jan", 31 )( "feb", 28 )( "mar", 31 );
             BOOST_ASSIGN_V2_CHECK( assoc["feb"] == 28 );
             //]
         }
-		{
+        {
             //[set
             typedef std::string T;
             boost::ptr_set<T> assoc;
@@ -53,7 +53,7 @@ namespace xxx_functor{
             BOOST_ASSIGN_V2_CHECK( assoc.count( x ) == 1 );
             BOOST_ASSIGN_V2_CHECK( assoc.count( z ) == 1 );
             //]
-		}        		    
+        }                    
 */
         {
             //[deque

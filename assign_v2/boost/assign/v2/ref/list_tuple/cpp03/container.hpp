@@ -95,7 +95,7 @@ namespace list_tuple_aux{
     };
 
     template<list_tuple_aux::get_size_type N, 
-    	typename L, params_default(typename T, na_type)>
+        typename L, params_default(typename T, na_type)>
     class container;
 
     template<list_tuple_aux::get_size_type N, typename L,
@@ -106,7 +106,7 @@ namespace list_tuple_aux{
 
         typedef list_tuple_aux::container<N, L, params(T)> this_;
 
-		template<params_default(typename U, na_type)>
+        template<params_default(typename U, na_type)>
         struct apply
         {
             typedef container<
@@ -116,7 +116,7 @@ namespace list_tuple_aux{
             > type;
         };
 
-	};
+    };
 
     template<list_tuple_aux::get_size_type N, typename L,
         params_default(typename T, na_type)>
@@ -127,9 +127,9 @@ namespace list_tuple_aux{
         typedef list_tuple_aux::extraction<N, L, tuple_, cont_> extraction_;
         typedef list_tuple_aux::meta_result<N, L, params(T)> meta_result_;
         typedef functor_aux::crtp_unary_and_up<
-        	cont_,
-        	boost::mpl::unpack_args<meta_result_>
-    	> crtp_;
+            cont_,
+            boost::mpl::unpack_args<meta_result_>
+        > crtp_;
         typedef typename ::boost::mpl::eval_if_c<
             N == 0,
             ::boost::mpl::identity< ::boost::mpl::empty_base >,
@@ -186,8 +186,8 @@ namespace list_tuple_aux{
         = boost::tuples::detail::cnull()\
 /**/
     explicit container(
-    	const L& l,
-    	BOOST_ASSIGN_V2_MACRO1(T0,_0) // (*)
+        const L& l,
+        BOOST_ASSIGN_V2_MACRO1(T0,_0) // (*)
         BOOST_PP_ENUM_TRAILING(
             BOOST_PP_DEC(BOOST_ASSIGN_V2_LIMIT_ARITY),
             BOOST_ASSIGN_V2_MACRO,
@@ -211,8 +211,8 @@ namespace list_tuple_aux{
 
         typename result<>::type
         operator()()const{
-        	typedef typename result<>::type result_;
-        	return result_( *this );
+            typedef typename result<>::type result_;
+            return result_( *this );
         }
 
 #define BOOST_ASSIGN_V2_MACRO(z, n, data)\
@@ -230,7 +230,7 @@ namespace list_tuple_aux{
         }\
 /**/
 BOOST_PP_REPEAT_FROM_TO(
-	1,
+    1,
     BOOST_PP_INC(BOOST_ASSIGN_V2_LIMIT_ARITY),
     BOOST_ASSIGN_V2_MACRO,
     ~

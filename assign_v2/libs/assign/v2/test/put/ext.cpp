@@ -16,7 +16,7 @@ namespace xxx_ext{
 
     void test()
     {
-		xxx_functor::test();
+        xxx_functor::test();
     }
 
 }// xxx_ext

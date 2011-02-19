@@ -15,13 +15,13 @@ namespace boost{
 namespace assign{
 namespace v2{
 namespace container_tag{
-	struct range{};
+    struct range{};
 }// container_tag
 namespace container_traits{
 
-	template<typename V>
+    template<typename V>
     struct is_range{
-    	// purposedly left blank.
+        // purposedly left blank.
     };
     
 }// container_traits

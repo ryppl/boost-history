@@ -29,8 +29,8 @@ namespace xxx_functor{
 
     void test(){
         namespace as2 = boost::assign::v2;
-        {	
-            //[array	
+        {    
+            //[array    
             typedef int T; T x = 1, y = 2, z = 3;
             boost::array<T, 3> ar; as2::put( ar )( x )( y )( z );
             BOOST_ASSIGN_V2_CHECK( ar[0] == x );
@@ -40,13 +40,13 @@ namespace xxx_functor{
         {
             // std::string may be replaced by const char* using a custom
             // comparator
-        	//[map
+            //[map
             std::map<std::string, int> assoc;
             as2::put( assoc )( "jan", 31 )( "feb", 28 )( "mar", 31 );
             BOOST_ASSIGN_V2_CHECK( assoc["feb"] == 28 );
             //]
         }
-		{
+        {
             //[set
             typedef std::string T;
             std::set<T> assoc;
@@ -55,7 +55,7 @@ namespace xxx_functor{
             BOOST_ASSIGN_V2_CHECK( assoc.count( x ) == 1 );
             BOOST_ASSIGN_V2_CHECK( assoc.count( z ) == 1 );
             //]
-		}        		    
+        }                    
         {
             //[deque
             typedef int T; T x = 1, y = 2, z = 0;
@@ -91,7 +91,7 @@ namespace xxx_functor{
             BOOST_ASSIGN_V2_CHECK( fifo.front() == x );
             BOOST_ASSIGN_V2_CHECK( fifo.back() == z );
             //]
-		}
+        }
         {
             //[stack
             typedef int T; T x = 8, y = 7, z = 4;
@@ -101,10 +101,10 @@ namespace xxx_functor{
             BOOST_ASSIGN_V2_CHECK( lifo.top() == y ); lifo.pop();
             BOOST_ASSIGN_V2_CHECK( lifo.top() == x ); lifo.pop();
             //]
-		}
+        }
         {
-        	using namespace boost;
-        	//[tuple
+            using namespace boost;
+            //[tuple
             typedef int& ref_; typedef std::string val_;
             typedef boost::tuple<ref_, val_> T;
             int x = 31, y = 28, z = 31; std::vector<T> seq; 
@@ -127,8 +127,8 @@ namespace xxx_functor{
             //]
         }
         {
-        	using namespace boost;
-        	//[default_constr2
+            using namespace boost;
+            //[default_constr2
             typedef std::string a_; typedef int b_; 
             typedef boost::tuple<a_, b_> T;
             a_ a0 = "jan", a1 = "feb", a2 = "mar"; b_ b0 = 31, b1 = 28, b2 = 31; 

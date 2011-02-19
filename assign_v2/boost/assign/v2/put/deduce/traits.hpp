@@ -19,12 +19,12 @@ namespace boost{
 namespace assign{
 namespace v2{
 
-	template<typename C>
+    template<typename C>
     struct put_traits
     {
         typedef typename v2::container_traits::value<C>::type value_type;
         typedef typename ::boost::mpl::eval_if<
-        	v2::container_traits::is_ptr_container<C>,
+            v2::container_traits::is_ptr_container<C>,
             functor_aux::deduce_new_<C>,
             functor_aux::deduce_constructor<C>
         >::type functor_type;

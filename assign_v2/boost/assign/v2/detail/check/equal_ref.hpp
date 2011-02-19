@@ -16,13 +16,13 @@ namespace assign{
 namespace v2{
 namespace check_aux{
 
-	struct equal_ref{
+    struct equal_ref{
 
-    	equal_ref(){}
-		template<typename T, typename U>
-    	void operator()(T const& t, U const& u)const
+        equal_ref(){}
+        template<typename T, typename U>
+        void operator()(T const& t, U const& u)const
         {
-        	BOOST_ASSIGN_V2_CHECK( &t == &u );
+            BOOST_ASSIGN_V2_CHECK( &t == &u );
         }
     };
 

@@ -24,7 +24,7 @@ namespace result_of{
     template<typename T>
     struct get : boost::add_reference<
         typename boost::unwrap_reference<
-        	// cv taken care of by unwrap_reference
+            // cv taken care of by unwrap_reference
             typename boost::remove_reference<T>::type
         >::type
     >{};
@@ -33,12 +33,12 @@ namespace result_of{
 
     template<typename W>
     typename boost::lazy_enable_if<
-    	boost::is_reference_wrapper<W>,
+        boost::is_reference_wrapper<W>,
         ref::result_of::get<W>
     >::type
     get(W const& w)
     {
-    	return w.get();	
+        return w.get();    
     }
 
     // Functor
@@ -46,21 +46,21 @@ namespace result_of{
     struct get_functor
     {
     
-    	template<typename S>
+        template<typename S>
         struct result{};
         
         template<typename F, typename T>
         struct result<F(T)> : ref::result_of::get<T>{};
     
-    	template<typename W>
-    	typename boost::lazy_enable_if<
+        template<typename W>
+        typename boost::lazy_enable_if<
             boost::is_reference_wrapper<W>,
             ref::result_of::get<W>
-    	>::type
+        >::type
         operator()(W const& w)const
         {
             return get( w );
-    	}
+        }
         
     };
 

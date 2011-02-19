@@ -14,9 +14,9 @@ namespace test_assign_v2{
 namespace xxx_put{
 namespace xxx_ptr{
 
-	void test()
+    void test()
     {
-    	xxx_functor::test();
+        xxx_functor::test();
     }// test
   
 }// xxx_ptr

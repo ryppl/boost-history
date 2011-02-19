@@ -21,7 +21,7 @@ namespace v2{
 namespace container_traits{
 
     template<typename V,typename T 
-    	= typename container_traits::value<V>::type>
+        = typename container_traits::value<V>::type>
     struct has_push{
         
         typedef typename boost::type_traits::yes_type yes_;
@@ -41,7 +41,7 @@ namespace container_traits{
             value = sizeof( test((V*)0) ) == sizeof( yes_ )
         );
 
-		typedef ::boost::mpl::bool_<value> type;
+        typedef ::boost::mpl::bool_<value> type;
 
     };
 

@@ -22,14 +22,14 @@ namespace xxx_put{
 
     void test()
     {
-    	xxx_deduce::test();
-    	xxx_container::test();
-    	xxx_modulo::test();
-    	xxx_deque::test();
-    	xxx_std::test();
-    	xxx_ext::test();
-    	xxx_ptr::test();
-    	xxx_pipe::test();        
+        xxx_deduce::test();
+        xxx_container::test();
+        xxx_modulo::test();
+        xxx_deque::test();
+        xxx_std::test();
+        xxx_ext::test();
+        xxx_ptr::test();
+        xxx_pipe::test();        
     }
     
 }// xxx_put

@@ -22,32 +22,32 @@ namespace xxx_pipe{
 namespace xxx_functor{
 namespace xxx_forward{
 
-	void test()
-	{
+    void test()
+    {
         namespace as2 = boost::assign::v2;
         namespace ppx = as2::put_pipe_aux;
         {
-	        typedef int T;
-    	    T x = 1, y = 2, z = 0;
+            typedef int T;
+            T x = 1, y = 2, z = 0;
             typedef std::vector<T> cont_; cont_ cont;
             typedef as2::result_of::put<cont_>::type adapter_;
             adapter_ adapter = as2::put( cont );
-	        ppx::forward( adapter, as2::ref::list_tuple( x )( y )( z )() );
-        	BOOST_ASSIGN_V2_CHECK( cont[0] == x );
-        	BOOST_ASSIGN_V2_CHECK( cont[1] == y );
-        	BOOST_ASSIGN_V2_CHECK( cont[2] == z );
-        	BOOST_ASSIGN_V2_CHECK( cont.size() == 4 );
-		}
-        {	
-        	typedef const char* T;
-        	typedef std::deque<T> cont_; cont_ cont;
-            typedef as2::result_of::put<cont_>::type adapter_;
-	        adapter_ adapter = as2::put( cont );
-	        ppx::forward( adapter, as2::ref::list_tuple( "x" ) );
-	        typedef std::string str_;
-        	BOOST_ASSIGN_V2_CHECK( str_( cont[0] ) == "x" );
+            ppx::forward( adapter, as2::ref::list_tuple( x )( y )( z )() );
+            BOOST_ASSIGN_V2_CHECK( cont[0] == x );
+            BOOST_ASSIGN_V2_CHECK( cont[1] == y );
+            BOOST_ASSIGN_V2_CHECK( cont[2] == z );
+            BOOST_ASSIGN_V2_CHECK( cont.size() == 4 );
         }
-	}
+        {    
+            typedef const char* T;
+            typedef std::deque<T> cont_; cont_ cont;
+            typedef as2::result_of::put<cont_>::type adapter_;
+            adapter_ adapter = as2::put( cont );
+            ppx::forward( adapter, as2::ref::list_tuple( "x" ) );
+            typedef std::string str_;
+            BOOST_ASSIGN_V2_CHECK( str_( cont[0] ) == "x" );
+        }
+    }
 
 }// xxx_forward
 }// xxx_functor

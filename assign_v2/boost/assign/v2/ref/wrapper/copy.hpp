@@ -26,7 +26,7 @@ namespace assign_copy{ typedef assign_tag::copy assign_tag_; }
     template< class T >
     struct wrapper<ref::assign_tag::copy, T>
     :
-    	public ref::wrapper_crtp< wrapper<ref::assign_tag::copy, T>, T>
+        public ref::wrapper_crtp< wrapper<ref::assign_tag::copy, T>, T>
     {
         typedef T type;
         BOOST_STATIC_CONSTANT(
@@ -40,9 +40,9 @@ namespace assign_copy{ typedef assign_tag::copy assign_tag_; }
         { }
 
         void rebind(T& r )
-    	{
+        {
             this->ref_ = &r;
-    	}
+        }
 
         // TODO a) crtp b) reference() or get()
         typedef T& get_type;
@@ -61,7 +61,7 @@ namespace assign_copy{ typedef assign_tag::copy assign_tag_; }
         }
 
         protected:
-		friend class wrapper_crtp<wrapper, T>;
+        friend class wrapper_crtp<wrapper, T>;
 
         T* ref_;
 

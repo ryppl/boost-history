@@ -34,7 +34,7 @@ namespace assign{
 namespace v2{
 namespace check_aux{
 
-	template<typename C, typename R>
+    template<typename C, typename R>
     void equal_convert(R const& r)
     {
         C cont = converter( r );
@@ -42,11 +42,11 @@ namespace check_aux{
         ns::equal_container( cont, r );
     }
 
-	template<typename R>
+    template<typename R>
     void equal_convert(R const& r)
     {
-    	namespace as2 = boost::assign::v2;
-    	namespace ns = check_aux;
+        namespace as2 = boost::assign::v2;
+        namespace ns = check_aux;
         
         typedef boost::array<int, 8> ar_;
         typedef std::deque<int> deque_;
@@ -65,37 +65,37 @@ namespace check_aux{
         BOOST_MPL_ASSERT_NOT(( as2::convert_aux::use_put<vec_, R> ));        
 
         BOOST_MPL_ASSERT(( boost::is_same< 
-        		typename as2::convert_aux::deduce_tag<ar_, R>::type,
+                typename as2::convert_aux::deduce_tag<ar_, R>::type,
                 convert_tag::put
             >
         ));
         BOOST_MPL_ASSERT(( boost::is_same< 
-        		typename as2::convert_aux::deduce_tag<stack_, R>::type,
+                typename as2::convert_aux::deduce_tag<stack_, R>::type,
                 convert_tag::put
             >
         ));
         BOOST_MPL_ASSERT(( boost::is_same< 
-        		typename as2::convert_aux::deduce_tag<queue_, R>::type,
+                typename as2::convert_aux::deduce_tag<queue_, R>::type,
                 convert_tag::put
             >
         ));
         BOOST_MPL_ASSERT(( boost::is_same< 
-        		typename as2::convert_aux::deduce_tag<deque_, R>::type,
+                typename as2::convert_aux::deduce_tag<deque_, R>::type,
                 convert_tag::copy
             >
         ));
         BOOST_MPL_ASSERT(( boost::is_same< 
-        		typename as2::convert_aux::deduce_tag<list_, R>::type,
+                typename as2::convert_aux::deduce_tag<list_, R>::type,
                 convert_tag::copy
             >
         ));
         BOOST_MPL_ASSERT(( boost::is_same< 
-        		typename as2::convert_aux::deduce_tag<set_, R>::type,
+                typename as2::convert_aux::deduce_tag<set_, R>::type,
                 convert_tag::copy
             >
         ));
         BOOST_MPL_ASSERT(( boost::is_same< 
-        		typename as2::convert_aux::deduce_tag<vec_, R>::type,
+                typename as2::convert_aux::deduce_tag<vec_, R>::type,
                 convert_tag::copy
             >
         ));

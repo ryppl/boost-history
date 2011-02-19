@@ -20,43 +20,43 @@ namespace assign{
 namespace v2{
 namespace convert_aux{
 
-	template<typename U>
+    template<typename U>
     class converter
     {
     
-     	typedef typename ref::copy_wrapper<
-        	U const
+         typedef typename ref::copy_wrapper<
+            U const
         >::type wrapper_;
         
         public:
         
-    	explicit converter(U const& u) : w( u ){}
+        explicit converter(U const& u) : w( u ){}
                 
         template<typename T>
         operator T () const
         {
-        	return this->type<T>();
+            return this->type<T>();
         }
 
-		template<typename T>
+        template<typename T>
         T type()const
         {
-        	typedef typename convert_aux::deduce_tag<T, U>::type tag_;
+            typedef typename convert_aux::deduce_tag<T, U>::type tag_;
             return convert_aux::dispatch<T>( this->w.get(), tag_() );
         }
 
-		private:
+        private:
         wrapper_ w;
 
-	};
+    };
 
 }// convert_aux
 
-	template<typename U>
-	convert_aux::converter<U> 
+    template<typename U>
+    convert_aux::converter<U> 
     converter(U const& u){ 
-    	typedef convert_aux::converter<U> result_; 
-    	return result_( u ); 
+        typedef convert_aux::converter<U> result_; 
+        return result_( u ); 
     }
 
 }// v2
@@ -65,12 +65,12 @@ namespace convert_aux{
 
 // Define name lookup for name
 // namespace ns{
-// 	template<typename A, typename B, typename C> cont;
+//     template<typename A, typename B, typename C> cont;
 // }
 // is done by expanding this macro:
 // #define SEQ (A)(B)(C) 
 // namespace ns{
-// 	BOOST_ASSIGN_V2_CONVERTER( cont<A,B,C>, SEQ )
+//     BOOST_ASSIGN_V2_CONVERTER( cont<A,B,C>, SEQ )
 // }
 // 
 
@@ -89,18 +89,18 @@ namespace convert_aux{
 // creates a name-lookup version of converter() for name ns::cont<A, B, C>
 
 #define BOOST_ASSIGN_V2_CONVERTER(U, Seq)\
-	template<BOOST_PP_SEQ_ENUM(\
-    	BOOST_PP_SEQ_TRANSFORM(\
-        	BOOST_ASSIGN_V2_CONVERTER_OP,\
+    template<BOOST_PP_SEQ_ENUM(\
+        BOOST_PP_SEQ_TRANSFORM(\
+            BOOST_ASSIGN_V2_CONVERTER_OP,\
             ~,\
             Seq\
         )\
     )>\
     ::boost::assign::v2::convert_aux::converter< U > \
-	converter( U const& cont)\
+    converter( U const& cont)\
     {\
-    	typedef convert_aux::converter< U > result_; \
-    	return result_( cont );\
+        typedef convert_aux::converter< U > result_; \
+        return result_( cont );\
     }\
 /**/    
 #endif

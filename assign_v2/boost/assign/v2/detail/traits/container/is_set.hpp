@@ -15,22 +15,22 @@ namespace boost{
 namespace assign{
 namespace v2{
 namespace container_tag{
-	struct set{};
+    struct set{};
 }// container_tag
 namespace container_traits_aux{
 
-	template<typename V>
+    template<typename V>
     struct is_set : ::boost::mpl::false_{};
 
-	template<typename K,typename C,typename A>
+    template<typename K,typename C,typename A>
     struct is_set< 
-    	std::set<K,C,A> 
+        std::set<K,C,A> 
     > : ::boost::mpl::true_{};
 
 }// container_traits_aux
 
 
-	BOOST_ASSIGN_V2_TRAITS_CONTAINER_IS(set)
+    BOOST_ASSIGN_V2_TRAITS_CONTAINER_IS(set)
 
 }// v2
 }// assign

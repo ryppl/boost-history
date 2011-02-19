@@ -15,9 +15,9 @@ namespace assign{
 namespace v2{
 namespace put_aux{
 
-	struct put_base{
-    	// This base is used in some enable_if
-	};
+    struct put_base{
+        // This base is used in some enable_if
+    };
 
 }// put_aux
 }// v2

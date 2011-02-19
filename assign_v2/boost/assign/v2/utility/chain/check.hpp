@@ -44,25 +44,25 @@ void verify_use_lvalue()
 
 template<bool x, typename T>
 struct add_const_if : ::boost::mpl::eval_if_c<
-	x, boost::add_const<T>, ::boost::mpl::identity<T>
+    x, boost::add_const<T>, ::boost::mpl::identity<T>
 >{};
 
 template<typename T, bool qual_v1, bool qual_e2, bool qual_v2, bool the_value>
 void verify_mpl()
 {
-	namespace as2 = assign::v2;
+    namespace as2 = assign::v2;
     // Value container
     typedef std::vector<T> vec_t_;
     typedef typename add_const_if<qual_v1, vec_t_ >::type vec1_; 
     typedef typename as2::ref::copy_wrapper<
-    	typename add_const_if<qual_e2, T>::type
+        typename add_const_if<qual_e2, T>::type
     >::type w_; 
-	typedef vec1_											r1_; // alias
+    typedef vec1_                                            r1_; // alias
 
     // Ref-wrappers
     typedef std::vector<w_> vec_w_;
     typedef typename add_const_if<qual_v2, vec_w_ >::type vec2_; 
-	// Transformation through range_get (necessary)
+    // Transformation through range_get (necessary)
     typedef typename ref::result_of::range_get<vec2_>::type r2_; 
 
     {  
@@ -83,60 +83,60 @@ void verify_mpl()
     void static_()
     {
         {
-        	typedef std::vector<T> vec_;
-        	typedef v2::result_of::chain<vec_, vec_> caller1_;
-        	typedef typename caller1_::type range1_;
-        	typedef typename boost::range_reference<range1_>::type ref1_;
+            typedef std::vector<T> vec_;
+            typedef v2::result_of::chain<vec_, vec_> caller1_;
+            typedef typename caller1_::type range1_;
+            typedef typename boost::range_reference<range1_>::type ref1_;
             BOOST_MPL_ASSERT(( boost::is_same<ref1_, T&> ));
-        	typedef v2::result_of::chain<range1_ const, vec_> caller2_;
-        	typedef typename caller2_::type range2_;
-        	typedef typename boost::range_reference<range2_>::type ref2_;
-        	BOOST_MPL_ASSERT(( boost::is_same<ref2_, T&> ));
-	    }
+            typedef v2::result_of::chain<range1_ const, vec_> caller2_;
+            typedef typename caller2_::type range2_;
+            typedef typename boost::range_reference<range2_>::type ref2_;
+            BOOST_MPL_ASSERT(( boost::is_same<ref2_, T&> ));
+        }
 
 //      verify_mpl<T, qual_v1, qual_e2 , qual_v2 , the_value>()
-		verify_mpl<T, false  , false   , false   , true     >();
-		verify_mpl<T, false  , false   , true    , true     >();
-		verify_mpl<T, false  , true    , false   , false    >();
-		verify_mpl<T, false  , true    , true    , false    >();
-		verify_mpl<T, true   , false   , false   , false    >();
-		verify_mpl<T, true   , false   , true    , false    >();
-		verify_mpl<T, true   , true    , false   , false    >();
-		verify_mpl<T, true   , true    , true    , false    >();
+        verify_mpl<T, false  , false   , false   , true     >();
+        verify_mpl<T, false  , false   , true    , true     >();
+        verify_mpl<T, false  , true    , false   , false    >();
+        verify_mpl<T, false  , true    , true    , false    >();
+        verify_mpl<T, true   , false   , false   , false    >();
+        verify_mpl<T, true   , false   , true    , false    >();
+        verify_mpl<T, true   , true    , false   , false    >();
+        verify_mpl<T, true   , true    , true    , false    >();
 
-	}
+    }
     
     template<typename T>
     void exec()
     {
-    	namespace as2 = boost::assign::v2;
+        namespace as2 = boost::assign::v2;
         typedef std::vector<T> vt_;
         vt_ vt1( 2 ), vt2( 3 ), vt3( 3 );
         vt_ vt;
         {
             // Value containers
-            vt.push_back( 1 );		// 1
-            vt.push_back( 2 );		// 2
+            vt.push_back( 1 );        // 1
+            vt.push_back( 2 );        // 2
 
-            vt.push_back( -5 );  	// 1
-            vt.push_back( 4 );  	// 2
-            vt.push_back( 3 );		// 3
+            vt.push_back( -5 );      // 1
+            vt.push_back( 4 );      // 2
+            vt.push_back( 3 );        // 3
 
-            vt.push_back( -7 );  	// 1
-            vt.push_back( 8 );  	// 2
-            vt.push_back( 9 );		// 3
+            vt.push_back( -7 );      // 1
+            vt.push_back( 8 );      // 2
+            vt.push_back( 9 );        // 3
             BOOST_ASSIGN_V2_CHECK( // pre-condition
                 vt1.size() + vt2.size() + vt3.size() == vt.size()
             );
         }
         {
-        	// Value container
+            // Value container
             boost::copy(
                 vt,
                 boost::begin( vt1 | as2::_chain( vt2 ) | as2::_chain( vt3 ) )
             );
             BOOST_ASSIGN_V2_CHECK( 
-            	boost::equal( vt1 | as2::_chain( vt2 ) , vt ) 
+                boost::equal( vt1 | as2::_chain( vt2 ) , vt ) 
             );
         }
         {

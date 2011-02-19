@@ -30,14 +30,14 @@ namespace result_of_modulo{
     template<typename T,typename F,typename Tag>
     struct fun<put_deque_aux::cont<T, F, Tag> >
     {
-    	template<typename F1>
+        template<typename F1>
         struct apply{ typedef put_deque_aux::cont<T, F1, Tag> type; };
     };
 
     template<typename T,typename F,typename Tag>
     struct modifier<put_deque_aux::cont<T, F, Tag> >
     {
-    	template<typename NewTag>
+        template<typename NewTag>
         struct apply{ typedef put_deque_aux::cont<T, F, NewTag> type; };
     };
 
@@ -50,7 +50,7 @@ namespace put_deque_aux{
     template<typename T, typename F, typename Tag>
     class cont :
         public put_aux::crtp<
-        	typename put_deque_aux::impl<T>::type, F, Tag,
+            typename put_deque_aux::impl<T>::type, F, Tag,
             cont<T, F, Tag>
         >
     {
@@ -60,9 +60,9 @@ namespace put_deque_aux{
 
         typedef put_aux::modifier<Tag> modifier_;
 
-    	public:
+        public:
 
-    	typedef T value_type;
+        typedef T value_type;
         typedef typename boost::range_size<impl_>::type size_type;
         typedef typename boost::range_iterator<impl_>::type iterator;
         typedef typename boost::range_iterator<cimpl_>::type const_iterator;
@@ -72,13 +72,13 @@ namespace put_deque_aux{
         explicit cont(const F& f) : put_crtp_( f ){}
         explicit cont(impl_ const& v, F const& f): put_crtp_( f ), impl( v )
         {
-        	// Required by crtp when Tag or F is modified.
+            // Required by crtp when Tag or F is modified.
         }
 
         explicit cont( impl_ const& v, F const& f, modifier_ const& m )
             : put_crtp_( f, m ), impl( v )
         {
-        	// Required by crtp when Tag or F is modified.
+            // Required by crtp when Tag or F is modified.
         }
 
         // Deque interface
@@ -92,7 +92,7 @@ namespace put_deque_aux{
             return boost::begin( this->impl );
         }
         const_iterator end()const{
-        	return boost::end( this->impl );
+            return boost::end( this->impl );
         }
 
         typedef typename impl_::reference reference;
@@ -120,8 +120,8 @@ namespace put_deque_aux{
         const_reference front()const{
             return this->container().front();
         }
-		reference back(){
-        	return this->container().back();
+        reference back(){
+            return this->container().back();
         }
         const_reference back()const{
             return this->container().back();

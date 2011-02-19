@@ -22,29 +22,29 @@
 namespace test_assign_v2{
 namespace xxx_other{
 
-	// Tests interaction between different functionalities 
+    // Tests interaction between different functionalities 
 
     void test(){
     
-    	namespace as2 = boost::assign::v2;
+        namespace as2 = boost::assign::v2;
     
-    	{	
-        	//[array_converter
-        	typedef std::pair<std::string, int> T;
-        	typedef std::vector<T> cont_;
-        	cont_ cont = converter( // name lookup
-            	as2::ref::array( T("jan", 31) )( T("feb", 28) )( T("mar", 31) ) 
+        {    
+            //[array_converter
+            typedef std::pair<std::string, int> T;
+            typedef std::vector<T> cont_;
+            cont_ cont = converter( // name lookup
+                as2::ref::array( T("jan", 31) )( T("feb", 28) )( T("mar", 31) ) 
             );
-        	BOOST_ASSIGN_V2_CHECK( cont[1].first == "feb" );
-        	BOOST_ASSIGN_V2_CHECK( cont[1].second == 28 );
+            BOOST_ASSIGN_V2_CHECK( cont[1].first == "feb" );
+            BOOST_ASSIGN_V2_CHECK( cont[1].second == 28 );
             //]
-        	BOOST_ASSIGN_V2_CHECK( cont[0].first == "jan" );
-        	BOOST_ASSIGN_V2_CHECK( cont[0].second == 31 );
-        	BOOST_ASSIGN_V2_CHECK( cont[2].first == "mar" );
-        	BOOST_ASSIGN_V2_CHECK( cont[2].second == 31 );
-    	}
+            BOOST_ASSIGN_V2_CHECK( cont[0].first == "jan" );
+            BOOST_ASSIGN_V2_CHECK( cont[0].second == 31 );
+            BOOST_ASSIGN_V2_CHECK( cont[2].first == "mar" );
+            BOOST_ASSIGN_V2_CHECK( cont[2].second == 31 );
+        }
         {
-        	//[chain_w
+            //[chain_w
             std::vector<int> v( 3 ); v[0] = -1; v[1] = 0; v[2] = 1;
             boost::array<int, 2> ar; int z; // lvalues 
             boost::copy(
@@ -52,7 +52,7 @@ namespace xxx_other{
                 boost::begin(
                     ar | as2::_chain(
                         as2::ref::csv_array( z ) // rvalue!
-                        	| as2::ref::_get 
+                            | as2::ref::_get 
                     ) 
                 )
             );
@@ -60,22 +60,22 @@ namespace xxx_other{
             BOOST_ASSIGN_V2_CHECK( ar[1] == 0 );
             BOOST_ASSIGN_V2_CHECK( z == 1 );
             //]
-		}
-		{
-        	//[array_converter
-        	typedef std::pair<std::string, int> T;
-        	typedef std::vector<T> cont_;
-        	cont_ cont = converter( // name lookup
-            	as2::ref::array( T("jan", 31) )( T("feb", 28) )( T("mar", 31) )
+        }
+        {
+            //[array_converter
+            typedef std::pair<std::string, int> T;
+            typedef std::vector<T> cont_;
+            cont_ cont = converter( // name lookup
+                as2::ref::array( T("jan", 31) )( T("feb", 28) )( T("mar", 31) )
             );
-        	BOOST_ASSIGN_V2_CHECK( cont[1].first == "feb" );
-        	BOOST_ASSIGN_V2_CHECK( cont[1].second == 28 );
+            BOOST_ASSIGN_V2_CHECK( cont[1].first == "feb" );
+            BOOST_ASSIGN_V2_CHECK( cont[1].second == 28 );
             //]
-        	BOOST_ASSIGN_V2_CHECK( cont[0].first == "jan" );
-        	BOOST_ASSIGN_V2_CHECK( cont[0].second == 31 );
-        	BOOST_ASSIGN_V2_CHECK( cont[2].first == "mar" );
-        	BOOST_ASSIGN_V2_CHECK( cont[2].second == 31 );
-		}
+            BOOST_ASSIGN_V2_CHECK( cont[0].first == "jan" );
+            BOOST_ASSIGN_V2_CHECK( cont[0].second == 31 );
+            BOOST_ASSIGN_V2_CHECK( cont[2].first == "mar" );
+            BOOST_ASSIGN_V2_CHECK( cont[2].second == 31 );
+        }
     }
 
 }// xxx_other

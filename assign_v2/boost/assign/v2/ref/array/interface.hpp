@@ -57,7 +57,7 @@ namespace array_aux{
 
         #ifndef BOOST_MSVC
             typedef typename boost::range_size<impl_>::type size_type;
-		#else
+        #else
             typedef std::size_t size_type;
         #endif
         typedef typename boost::range_difference<range_>::type difference_type;
@@ -92,72 +92,72 @@ namespace array_aux{
 
         iterator begin()
         {
-        	return boost::begin( this->wrappers() );
+            return boost::begin( this->wrappers() );
         }
         iterator end()
         {
-        	return boost::end( this->wrappers() );
+            return boost::end( this->wrappers() );
         }
         const_iterator begin()const
         {
-        	return boost::begin( this->wrappers() );
+            return boost::begin( this->wrappers() );
         }
         const_iterator end()const
         {
-        	return boost::end( this->wrappers() );
+            return boost::end( this->wrappers() );
         }
 
         size_type size() const
         {
-        	return this->wrappers().size();
+            return this->wrappers().size();
         }
         bool empty() const
         {
-        	return this->wrappers().empty();
+            return this->wrappers().empty();
         }
 
-		void rebind(size_type i, result_of_get_ t)
+        void rebind(size_type i, result_of_get_ t)
         {
-        	return (this->wrappers())[i].rebind( t );
+            return (this->wrappers())[i].rebind( t );
         }
 
         reference operator[](size_type i)
         {
-        	return this->elem_impl( this->wrappers()[i] );
+            return this->elem_impl( this->wrappers()[i] );
         }
         const_reference operator[](size_type i)const
         {
-        	return this->elem_impl( this->wrappers()[i] );
+            return this->elem_impl( this->wrappers()[i] );
         }
 
         reference front()
         {
-        	return this->elem_impl( this->wrappers().front() );
+            return this->elem_impl( this->wrappers().front() );
         }
         const_reference front() const
         {
-        	return this->elem_impl( this->wrappers().front() );
+            return this->elem_impl( this->wrappers().front() );
         }
         reference back()
         {
-        	return this->elem_impl( this->wrappers().back() );
+            return this->elem_impl( this->wrappers().back() );
         }
         const_reference back() const
         {
-        	return this->elem_impl( this->wrappers().back() );
+            return this->elem_impl( this->wrappers().back() );
         }
 
         void assign(param_type val)
         {
-        	typedef ::boost::mpl::int_<0> int_;
-        	this->assign_impl( val, int_() );
+            typedef ::boost::mpl::int_<0> int_;
+            this->assign_impl( val, int_() );
         }
 
         protected:
 
         void assign_impl(param_type val, ::boost::mpl::int_<static_size>)
         {
-        	/* exit */
+            /* exit */
         }
 
         template<int i>
@@ -171,12 +171,12 @@ namespace array_aux{
         template<typename W>
         reference elem_impl(W& w)
         {
-        	return w; // w.get()
+            return w; // w.get()
         }
         template<typename W>
         const_reference elem_impl(W & w)const
         {
-        	return w; // w.get()
+            return w; // w.get()
         }
 
         public:

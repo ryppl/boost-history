@@ -17,9 +17,9 @@ namespace assign{
 namespace v2{
 namespace type_traits{
 
-	template<typename T,typename U>
-	struct same_remove_cv : boost::is_same<
-    	typename boost::remove_cv<T>::type,
+    template<typename T,typename U>
+    struct same_remove_cv : boost::is_same<
+        typename boost::remove_cv<T>::type,
         typename boost::remove_cv<U>::type
     >{};
 

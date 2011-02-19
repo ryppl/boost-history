@@ -26,20 +26,20 @@ namespace assign{
 namespace v2{
 namespace result_of{
 
-	template<typename C>
+    template<typename C>
     struct csv_put
     {
-		typedef csv_put_aux::adapter<C> type;
-	};
+        typedef csv_put_aux::adapter<C> type;
+    };
 
 }// result_of
 
-	template<typename C>
-	typename result_of::csv_put<C>::type
-	csv_put( C& cont )
+    template<typename C>
+    typename result_of::csv_put<C>::type
+    csv_put( C& cont )
     {
-		typedef typename result_of::csv_put<C>::type result_;
-    	return result_( cont );
+        typedef typename result_of::csv_put<C>::type result_;
+        return result_( cont );
     }
 
 }// v2

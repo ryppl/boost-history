@@ -17,18 +17,18 @@ namespace boost{
 namespace assign{ 
 namespace v2{
 namespace result_of_modulo{
-	
+    
     template<typename C,typename F, typename Tag>
     struct fun< put_aux::adapter<C, F, Tag> >
     {
-    	template<typename F1>
+        template<typename F1>
         struct apply{ typedef put_aux::adapter<C, F1, Tag> type; };
     };
 
     template<typename C, typename F, typename Tag>
     struct modifier< put_aux::adapter<C, F, Tag> >
     {
-    	template<typename NewTag>
+        template<typename NewTag>
         struct apply{ typedef put_aux::adapter<C, F, NewTag> type; };
     };
     

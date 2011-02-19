@@ -15,11 +15,11 @@ namespace boost{
 namespace assign{
 namespace v2{
 namespace container_tag{
-	struct fifo{};
+    struct fifo{};
 }// container_tag
 namespace container_traits_aux{
 
-	template<typename V>
+    template<typename V>
     struct is_fifo : ::boost::mpl::false_{};
     
     template<typename T,typename A>
@@ -28,7 +28,7 @@ namespace container_traits_aux{
 }// container_traits_aux
 
 
-	BOOST_ASSIGN_V2_TRAITS_CONTAINER_IS(fifo)
+    BOOST_ASSIGN_V2_TRAITS_CONTAINER_IS(fifo)
 
 }// v2
 }// assign

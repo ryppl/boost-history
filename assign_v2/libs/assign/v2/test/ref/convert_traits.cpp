@@ -16,10 +16,10 @@ namespace xxx_convert_traits{
 
     void test()
     { 
-    	namespace as2 = boost::assign::v2;
-    	namespace ns = as2::ref::convert_traits::checking;
+        namespace as2 = boost::assign::v2;
+        namespace ns = as2::ref::convert_traits::checking;
         {
-        	ns::same_value_type::do_check<int>();
+            ns::same_value_type::do_check<int>();
         }
 // TODO, in the future
 /*
@@ -28,7 +28,7 @@ namespace xxx_convert_traits{
             namespace ari = dv::arithmetic;
             ari::do_check<short>();
             ari::do_check<int>();
-        	ari::do_check<float>();
+            ari::do_check<float>();
             ari::do_check<double>();
         }
 */

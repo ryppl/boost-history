@@ -44,8 +44,8 @@ namespace ref{
         >
     {
 
-		typedef typename boost::remove_const<T>::type lvalue_;
-		typedef typename boost::add_const<T>::type rvalue_;
+        typedef typename boost::remove_const<T>::type lvalue_;
+        typedef typename boost::add_const<T>::type rvalue_;
 
         public: 
         // protected
@@ -56,7 +56,7 @@ namespace ref{
         public:
 
         void operator=(lvalue_& r ){ this->derived().assign( r ); }
-		void operator=(rvalue_& r ){ this->derived().assign( r ); }
+        void operator=(rvalue_& r ){ this->derived().assign( r ); }
 
         void swap( wrapper_crtp& r )
         {
@@ -93,19 +93,19 @@ namespace ref{
             return this->derived().get() > r;
         }
         
-    	template<class CharT, class Traits>
-    	friend std::basic_ostream<CharT,Traits>&
-    	operator<<(std::basic_ostream<CharT,Traits>& os,
-        	       const wrapper_crtp& w)
-    	{
-        	return (os << w.derived().get() );
-    	}
+        template<class CharT, class Traits>
+        friend std::basic_ostream<CharT,Traits>&
+        operator<<(std::basic_ostream<CharT,Traits>& os,
+                   const wrapper_crtp& w)
+        {
+            return (os << w.derived().get() );
+        }
 
     };
 
 
-	template<typename D,typename T>
-	void rebind( wrapper_crtp<D,T>& a, T& r ){ a.rebind( r ); }
+    template<typename D,typename T>
+    void rebind( wrapper_crtp<D,T>& a, T& r ){ a.rebind( r ); }
 
     template<typename D,typename T>
     inline void swap( wrapper_crtp<D,T>& l, wrapper_crtp<D,T>& r )

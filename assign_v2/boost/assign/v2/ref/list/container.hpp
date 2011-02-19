@@ -30,7 +30,7 @@ namespace list_aux{
 
     template<typename Tag, typename H, typename T>
     class container : 
-    	public head_holder<H>, 
+        public head_holder<H>, 
         public tail_holder<T>,
         public ::boost::mpl::apply2<policy<Tag>, H, T>::type
     {
@@ -62,14 +62,14 @@ namespace list_aux{
         template<typename H1>
         typename result<H1>::type
         operator()(H1&& h)const{
-        	typedef typename result<H1>::type result_;
-        	return result_( std::forward<H1>( h ), *this);
+            typedef typename result<H1>::type result_;
+            return result_( std::forward<H1>( h ), *this);
         }
 
 #else */
 
         explicit container(
-        	H h,
+            H h,
             typename boost::call_traits<T>::param_type t
         )
             : head_holder_( h ), tail_holder_( t )
@@ -78,15 +78,15 @@ namespace list_aux{
         template<typename H1>
         typename result<H1&>::type
         operator()(H1& h)const{
-        	typedef typename result<H1&>::type result_;
-        	return result_( h, *this);
+            typedef typename result<H1&>::type result_;
+            return result_( h, *this);
         }
 
         template<typename H1>
         typename result<H1 const&>::type
         operator()(H1 const& h)const{
-        	typedef typename result<H1 const&>::type result_;
-        	return result_( h, *this);
+            typedef typename result<H1 const&>::type result_;
+            return result_( h, *this);
         }
 // #endif
 

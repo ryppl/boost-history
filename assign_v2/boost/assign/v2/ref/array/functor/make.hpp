@@ -18,32 +18,32 @@ namespace v2{
 namespace ref{
 namespace result_of{
 
-	template<typename T>
+    template<typename T>
     struct empty_array
-    	: nth_result_of::array<0, T>{};
+        : nth_result_of::array<0, T>{};
 
-	template<typename T>
+    template<typename T>
     struct array
-    	: nth_result_of::array<1, T>{};
+        : nth_result_of::array<1, T>{};
 
 }// result_of
 
-	template<typename T>
+    template<typename T>
     typename result_of::empty_array<T>::type
-	array( keyword_aux::nil const& )
+    array( keyword_aux::nil const& )
     {
-		return ref::list<list_aux::array_tag>( v2::_nil );
+        return ref::list<list_aux::array_tag>( v2::_nil );
     }
 
     template<typename T>
-	typename result_of::array<T>::type
+    typename result_of::array<T>::type
     array(T& t)
     {
         return array<T>( v2::_nil )( t );
     }
 
     template<typename T>
-	typename result_of::array<T const>::type
+    typename result_of::array<T const>::type
     array(T const & t)
     {
         return array<T const>( v2::_nil )( t );

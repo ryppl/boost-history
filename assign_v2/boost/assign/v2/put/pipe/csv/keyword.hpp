@@ -16,8 +16,8 @@ namespace assign{
 namespace v2{
 namespace{
 
-	put_pipe_aux::csv_generator<> const _csv_put
-    	= put_pipe_aux::csv_generator<>();
+    put_pipe_aux::csv_generator<> const _csv_put
+        = put_pipe_aux::csv_generator<>();
 
 }
 }// v2

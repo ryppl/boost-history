@@ -33,7 +33,7 @@ namespace type_traits{
             bool, 
             value = sizeof( test((T*)0) ) == sizeof( yes_ )
         );
-		typedef ::boost::mpl::bool_<value> type;
+        typedef ::boost::mpl::bool_<value> type;
     };
 
     

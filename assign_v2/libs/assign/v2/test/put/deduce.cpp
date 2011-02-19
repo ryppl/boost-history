@@ -32,9 +32,9 @@ namespace xxx_deduce{
 
     void test()
     {
-    	namespace as2 = boost::assign::v2;
+        namespace as2 = boost::assign::v2;
         {
-        	typedef as2::modifier_tag::push_back wanted_;
+            typedef as2::modifier_tag::push_back wanted_;
             as2::put_aux::check_deduce<std::deque<int>, wanted_>();
             as2::put_aux::check_deduce<std::list<int>, wanted_>();
             as2::put_aux::check_deduce<std::vector<int>, wanted_>();
@@ -44,30 +44,30 @@ namespace xxx_deduce{
             as2::put_aux::check_deduce<boost::ptr_vector<int>, wanted_>();
         }
         {
-        	typedef as2::modifier_tag::iterate wanted_;
+            typedef as2::modifier_tag::iterate wanted_;
             as2::put_aux::check_deduce<boost::array<int, 1>, wanted_>();
             as2::put_aux::check_deduce<boost::ptr_array<int, 1>, wanted_>();
         }
         {
-        	typedef as2::modifier_tag::push wanted_;
+            typedef as2::modifier_tag::push wanted_;
             as2::put_aux::check_deduce<std::queue<int>, wanted_>();
             as2::put_aux::check_deduce<std::stack<int>, wanted_>();
         }
-		{
-        	typedef as2::modifier_tag::insert wanted_;
+        {
+            typedef as2::modifier_tag::insert wanted_;
             as2::put_aux::check_deduce<std::set<int>, wanted_>();
             typedef std::string str_;
             as2::put_aux::check_deduce<std::map<str_, int>, wanted_>();
-		}
+        }
         {
-        	//[deduce_map
+            //[deduce_map
             typedef std::map<std::string, int> cont_;
-        	typedef as2::put_traits< cont_ > traits_;
+            typedef as2::put_traits< cont_ > traits_;
             BOOST_MPL_ASSERT((boost::is_same<
                 traits_::modifier_tag, 
                 as2::modifier_tag::insert
             >));
-        	//]
+            //]
         }
     }
 

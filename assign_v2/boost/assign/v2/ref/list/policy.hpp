@@ -18,9 +18,9 @@ namespace v2{
 namespace ref{
 namespace list_aux{
 
-	// --- Default policy
-	template<typename Tag> struct policy : ::boost::mpl::always<
-    	::boost::mpl::empty_base
+    // --- Default policy
+    template<typename Tag> struct policy : ::boost::mpl::always<
+        ::boost::mpl::empty_base
     >{};
 
 }// list_aux

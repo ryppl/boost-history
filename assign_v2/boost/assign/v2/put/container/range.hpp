@@ -25,7 +25,7 @@ namespace v2{
     template<typename C, typename R>
     C put_range( R const& r )
     {
-		C cont;
+        C cont;
         return put_range( cont, r );
     }
 

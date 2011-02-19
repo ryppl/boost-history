@@ -19,18 +19,18 @@ namespace xxx_traits{
 namespace xxx_has_value_type{
 
     void test(){
-    	
+        
         namespace as2 = boost::assign::v2;
         {
             typedef std::vector<int> inp_;
-        	typedef as2::type_traits::has_value_type<inp_>::type pred_;
-        	BOOST_STATIC_ASSERT(pred_::value);
-    	}
+            typedef as2::type_traits::has_value_type<inp_>::type pred_;
+            BOOST_STATIC_ASSERT(pred_::value);
+        }
         {
             typedef int inp_;
-        	typedef as2::type_traits::has_value_type<inp_>::type pred_;
-        	BOOST_STATIC_ASSERT(!pred_::value);
-    	}
+            typedef as2::type_traits::has_value_type<inp_>::type pred_;
+            BOOST_STATIC_ASSERT(!pred_::value);
+        }
     }
     
     

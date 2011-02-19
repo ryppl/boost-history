@@ -150,11 +150,11 @@ namespace xxx_list_tuple{
 
         }
 
-    	#undef A
-    	#undef B
+        #undef A
+        #undef B
 
         {
-        	// TODO
+            // TODO
             typedef const char ar_[2];
             #if BOOST_ASSIGN_V2_ENABLE_CPP0X
             typedef boost::add_reference<ar_>::type type;
@@ -172,9 +172,9 @@ namespace xxx_list_tuple{
             typedef std::string str_;
             assert( str_( get<0>( list.get( i0_() ) ) ) == "x" );
             assert( str_( get<0>( list.get( i0_() ) ) ) != "y" );
-		}
+        }
 
-	}// test
+    }// test
 
 }// xxx_list_tuple
 }// xxx_ref

@@ -13,20 +13,20 @@
 #include <boost/assign/v2/ref/list/container.hpp>
 
 namespace boost{
-	struct use_default;
+    struct use_default;
 namespace assign{
 namespace v2{
 namespace ref{
 
-	template<typename Tag>
+    template<typename Tag>
     struct empty_list{ typedef list_aux::container<Tag> type; };
     
-	template<typename Tag>
+    template<typename Tag>
     typename empty_list<Tag>::type
     list( keyword_aux::nil )
     {
-		typedef typename empty_list<Tag>::type result_;
-    	return result_();
+        typedef typename empty_list<Tag>::type result_;
+        return result_();
     }
 
 }// ref

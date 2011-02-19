@@ -23,24 +23,24 @@ namespace array_aux{
 //    template<size_type N, typename Tag, typename T>
     template<size_type N, typename T>
     class instant_alloc : public array_aux::interface<
-		typename array_aux::impl_traits<N, T>::array_type,
+        typename array_aux::impl_traits<N, T>::array_type,
 //        instant_alloc<N, Tag, T> 
       instant_alloc<N, T> 
-	>
+    >
     {
-		typedef typename array_aux::impl_traits<N, T>::array_type impl_;
+        typedef typename array_aux::impl_traits<N, T>::array_type impl_;
                 
         public:
 
-        instant_alloc(){}	
+        instant_alloc(){}    
 
         template<typename L>
         instant_alloc(const L& l){
             assign_array( 
-            	this->array,
+                this->array,
                 l
-            );	
-        }	
+            );    
+        }    
         
         impl_& impl(){ 
             return this->array;

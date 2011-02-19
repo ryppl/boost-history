@@ -18,11 +18,11 @@ namespace xxx_put{
 namespace xxx_deque{
 namespace xxx_functor{
 
-	void test()
+    void test()
     {
         namespace as2 = boost::assign::v2;
         {
-        	//[deque
+            //[deque
             typedef int T; T x = 1, z = 0;
             as2::result_of::deque<T>::type cont = as2::deque<T>( x )()( z );
             BOOST_ASSIGN_V2_CHECK( cont.front() == x );

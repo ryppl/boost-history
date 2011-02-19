@@ -33,19 +33,19 @@ namespace functor_aux{
     struct result_of_identity{
 
         template<typename V>
-		struct is_ok : ::boost::mpl::equal_to<
-       		boost::mpl::int_<1>,
-       		boost::mpl::size<V>
-    	>{};
+        struct is_ok : ::boost::mpl::equal_to<
+               boost::mpl::int_<1>,
+               boost::mpl::size<V>
+        >{};
 
-    	template<typename V>
+        template<typename V>
         struct enable
         {
-        	typedef typename ::boost::mpl::at_c<V, 0>::type t_;
+            typedef typename ::boost::mpl::at_c<V, 0>::type t_;
             typedef typename boost::add_reference<t_>::type type;
         };
 
-    	template<typename V>
+        template<typename V>
         struct disable{};
 
         template<typename V>
@@ -63,26 +63,26 @@ namespace functor_aux{
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 // do nothing
 #else
-	 : functor_aux::crtp_unary_and_up<
+     : functor_aux::crtp_unary_and_up<
         functor_aux::identity,
         functor_aux::result_of_identity
     >
 #endif
     {
-    	identity(){}
+        identity(){}
 
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
         template<typename T>
         T&& operator()(T&& t)const{ return t; }
 #else
-    	template<typename T> T& impl(T& t)const{ return t; }
-    	template<typename T> T const& impl(T const& t)const{ return t; }
+        template<typename T> T& impl(T& t)const{ return t; }
+        template<typename T> T const& impl(T const& t)const{ return t; }
 #endif
     };
 
 }// functor_aux
 namespace{
-	functor_aux::identity const _identity = functor_aux::identity();
+    functor_aux::identity const _identity = functor_aux::identity();
 }
 }// v2
 }// assigns

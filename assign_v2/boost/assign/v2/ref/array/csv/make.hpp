@@ -36,15 +36,15 @@ namespace v2{
 namespace ref{
 namespace result_of{
 
-	template<typename T>
+    template<typename T>
     struct empty_csv_array
-    	: nth_result_of::csv_array<0, T>{};
+        : nth_result_of::csv_array<0, T>{};
 
 }// result_of
 
-	template<typename T>
+    template<typename T>
     typename result_of::empty_csv_array<T>::type
-	csv_array( keyword_aux::nil )
+    csv_array( keyword_aux::nil )
     {
         typedef typename result_of::empty_csv_array<T>::type result_;
         return result_();
@@ -121,17 +121,17 @@ namespace csv_array_aux{\
     template<typename T>\
     typename nth_result_of::csv_array<n, T>::type\
     csv_array( BOOST_PP_ENUM_PARAMS(n, T& _) ){ \
-    	return csv_array_aux::csv_array<T>( BOOST_PP_ENUM_PARAMS(n, _) );\
+        return csv_array_aux::csv_array<T>( BOOST_PP_ENUM_PARAMS(n, _) );\
     }\
     template<typename T>\
     typename nth_result_of::csv_array<n, T const>::type\
     csv_array( BOOST_PP_ENUM_PARAMS(n, T const& _) ){ \
-    	return csv_array_aux::csv_array<T const>( BOOST_PP_ENUM_PARAMS(n, _) );\
+        return csv_array_aux::csv_array<T const>( BOOST_PP_ENUM_PARAMS(n, _) );\
     }\
 /**/
 
 BOOST_PP_REPEAT_FROM_TO(
-	1,
+    1,
     BOOST_PP_INC(BOOST_ASSIGN_V2_LIMIT_CSV_ARITY),
     BOOST_ASSIGN_V2_MACRO2,
     ~

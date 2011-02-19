@@ -34,16 +34,16 @@ namespace result_of{
     template<typename R>
     struct range_get{
     
-    	typedef ref::get_functor f_;
+        typedef ref::get_functor f_;
         #ifdef BOOST_MSVC
-		typedef boost::iterator_range< 
+        typedef boost::iterator_range< 
             boost::transform_iterator< f_,
                 BOOST_DEDUCED_TYPENAME boost::range_iterator<R>::type 
             >
         > type; 
         #else
-    	typedef boost::range_detail::transform_range<f_, R> type;
-		#endif
+        typedef boost::range_detail::transform_range<f_, R> type;
+        #endif
     };
 
 }// result_of
@@ -54,13 +54,13 @@ namespace result_of{
     {
         typedef typename range_aux::result_of::range_get<R>::type result_;
         #ifdef BOOST_MSVC
-		return result_(
-        	boost::make_transform_iterator( boost::begin(r), get_functor() ),
-        	boost::make_transform_iterator( boost::end(r), get_functor() )
+        return result_(
+            boost::make_transform_iterator( boost::begin(r), get_functor() ),
+            boost::make_transform_iterator( boost::end(r), get_functor() )
         );
         #else
         return result_(get_functor(), r);
-		#endif
+        #endif
     }
     template<typename R>
     typename range_aux::result_of::range_get<R const>::type
@@ -68,13 +68,13 @@ namespace result_of{
     {
         typedef typename range_aux::result_of::range_get<R const>::type result_;
         #ifdef BOOST_MSVC
-		return result_(
-        	boost::make_transform_iterator( boost::begin(r), get_functor() ),
-        	boost::make_transform_iterator( boost::end(r), get_functor() )
+        return result_(
+            boost::make_transform_iterator( boost::begin(r), get_functor() ),
+            boost::make_transform_iterator( boost::end(r), get_functor() )
         );
         #else
         return result_(get_functor(), r);
-		#endif
+        #endif
     }
 
     struct get_adaptor{};
@@ -97,7 +97,7 @@ namespace result_of{
 
     template<typename R>
     struct range_get : boost::lazy_enable_if<
-    	boost::is_reference_wrapper<
+        boost::is_reference_wrapper<
             typename boost::range_value<
                 typename boost::remove_cv<R>::type
             >::type

@@ -25,27 +25,27 @@ namespace assign{
 namespace v2{
 namespace put_parameter{
 
-	template<typename F, typename Tag>
-	struct traits{
+    template<typename F, typename Tag>
+    struct traits{
         typedef F fun_type;
         typedef Tag modifier_tag;
-		typedef traits<F, Tag> type;
-	};
+        typedef traits<F, Tag> type;
+    };
 
 }// put_parameter
 namespace put_concept{
 
-	// P models Parameter with respect to modifier M
+    // P models Parameter with respect to modifier M
     template<typename P, typename M>
-	struct ExtParam
+    struct ExtParam
     {
-		BOOST_CONCEPT_USAGE(ExtParam)
+        BOOST_CONCEPT_USAGE(ExtParam)
         {
-        	M m( p.arg() );
+            M m( p.arg() );
         }
 
         private:
-		static P & p;
+        static P & p;
     };
 
 }// put_concept
@@ -54,23 +54,23 @@ namespace result_of_modulo{
     template<typename T>
     struct ext{
 
-		template<typename FParameter>
+        template<typename FParameter>
         struct apply{
 
-        	typedef typename T::fun_type old_fun_;
-        	typedef typename T::modifier_tag old_tag;
-        	typedef typename ::boost::mpl::apply2<
-            	FParameter, old_fun_, old_tag
+            typedef typename T::fun_type old_fun_;
+            typedef typename T::modifier_tag old_tag;
+            typedef typename ::boost::mpl::apply2<
+                FParameter, old_fun_, old_tag
             >::type traits_;
             typedef typename traits_::fun_type fun_;
             typedef typename traits_::modifier_tag tag;
 
-			typedef result_of_modulo::modifier<T> meta1_;
+            typedef result_of_modulo::modifier<T> meta1_;
             typedef result_of_modulo::fun_modifier<T> meta2_;
             
             typedef boost::is_same<fun_, old_fun_> is_same_fun_;
-			typedef typename ::boost::mpl::eval_if<
-            	is_same_fun_,
+            typedef typename ::boost::mpl::eval_if<
+                is_same_fun_,
                 ::boost::mpl::apply1< meta1_, tag >,
                 ::boost::mpl::apply2< meta2_, fun_, tag>
             >::type type;

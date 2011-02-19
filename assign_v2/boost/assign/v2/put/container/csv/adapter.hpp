@@ -27,19 +27,19 @@ namespace csv_put_aux{
 
     template<typename C>
     class adapter
-    	: protected ref::copy_wrapper<C>::type
+        : protected ref::copy_wrapper<C>::type
     {
 
-		protected:
+        protected:
 
-		typedef typename ref::copy_wrapper<C>::type super1_t;
+        typedef typename ref::copy_wrapper<C>::type super1_t;
 
-		typedef typename v2::container_traits::value<C>::type value_type;
+        typedef typename v2::container_traits::value<C>::type value_type;
 
-		public:
+        public:
 
-		adapter(){} // TODO remove?
-		explicit adapter( C& v ) : super1_t( v ) {}
+        adapter(){} // TODO remove?
+        explicit adapter( C& v ) : super1_t( v ) {}
 
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 
@@ -78,7 +78,7 @@ namespace csv_put_aux{
     }\
 /**/
 BOOST_PP_REPEAT_FROM_TO(
-	1,
+    1,
     BOOST_PP_INC(BOOST_ASSIGN_V2_LIMIT_CSV_ARITY),
     BOOST_ASSIGN_V2_MACRO2,
     ~
@@ -86,8 +86,8 @@ BOOST_PP_REPEAT_FROM_TO(
 #undef BOOST_ASSIGN_V2_MACRO1
 #undef BOOST_ASSIGN_V2_MACRO2
 #endif
-		C& container()const{
-        	return static_cast<super1_t const&>(*this).get();
+        C& container()const{
+            return static_cast<super1_t const&>(*this).get();
         }
 
     };

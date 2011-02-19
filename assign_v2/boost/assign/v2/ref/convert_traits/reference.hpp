@@ -20,8 +20,8 @@ namespace convert_traits{
 
     template<typename U1, typename U2>
     struct reference : convert_traits::const_<
-    	typename boost::remove_reference<U1>::type, 
-    	typename boost::remove_reference<U2>::type
+        typename boost::remove_reference<U1>::type, 
+        typename boost::remove_reference<U2>::type
     >{};
     
     template<typename T>

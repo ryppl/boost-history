@@ -21,18 +21,18 @@ namespace xxx_has_push{
 
     void test()
     {
-		 namespace as2 = boost::assign::v2;
+         namespace as2 = boost::assign::v2;
          namespace ns = as2::container_traits;
          {
-			typedef std::queue<int> v_;
+            typedef std::queue<int> v_;
             BOOST_MPL_ASSERT(( ns::has_push<v_> ));
          }
          {
-			typedef std::queue<int> v_;
+            typedef std::queue<int> v_;
             BOOST_MPL_ASSERT(( ns::has_push<v_> ));
          }
          {
-			typedef std::vector<int> v_;
+            typedef std::vector<int> v_;
             BOOST_MPL_ASSERT_NOT(( ns::has_push<v_> ));
          }
     }

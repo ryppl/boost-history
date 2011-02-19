@@ -18,9 +18,9 @@ namespace assign{
 namespace v2{
 namespace convert_aux{
 
-	template<typename T, typename U>
+    template<typename T, typename U>
     struct use_put : ::boost::mpl::or_<
-    	v2::container_traits::is_array<T>,
+        v2::container_traits::is_array<T>,
         v2::container_traits::has_push<T>
     >{};
 

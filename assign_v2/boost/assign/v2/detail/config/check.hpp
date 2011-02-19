@@ -13,5 +13,5 @@
 #endif
 
 // In the test suite, use, instead:
-//	#include <boost/test/test_tools.hpp>
-//	#define BOOST_ASSIGN_V2_CHECK( p ) BOOST_CHECK( p )
+//    #include <boost/test/test_tools.hpp>
+//    #define BOOST_ASSIGN_V2_CHECK( p ) BOOST_CHECK( p )

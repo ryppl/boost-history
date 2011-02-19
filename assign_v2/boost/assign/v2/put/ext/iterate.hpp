@@ -33,11 +33,11 @@ namespace put_parameter{
 }// put_parameter
 namespace put_aux{
 
-	template<>
+    template<>
     class modifier<modifier_tag::iterate>
     {
 
-    	public:
+        public:
 
         typedef std::size_t size_type;
 
@@ -46,13 +46,13 @@ namespace put_aux{
            : i( i_ )
         {}
 
-    	template<typename V, typename T>
+        template<typename V, typename T>
         void impl(V& v, BOOST_ASSIGN_V2_forward_param(T, t) )const
         {
             v.at( i++ ) = BOOST_ASSIGN_V2_forward_arg(T, t);
         }
 
-    	template<typename V, typename T>
+        template<typename V, typename T>
         void impl(V& v, T* t)const
         {
             v.replace( i++ , t);
@@ -69,7 +69,7 @@ namespace put_aux{
         public:
 
         typedef std::size_t size_type;
-		
+        
         iterate():i( 0 ){}
         iterate( size_type const& i_)
            : i( i_ )
@@ -87,7 +87,7 @@ namespace put_aux{
 
         typedef iterate<> super_t;
 
-		public:
+        public:
 
         typedef std::size_t size_type;
 

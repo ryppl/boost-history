@@ -29,8 +29,8 @@ namespace xxx_container{
 
     void test(){
         namespace as2 = boost::assign::v2;
-        {	
-            //[pipe_array	
+        {    
+            //[pipe_array    
             typedef int T;
             T x = 1, y = 2, z = 3;
             boost::array<T, 3> ar;
@@ -40,13 +40,13 @@ namespace xxx_container{
             //]
         }
         {
-        	//[pipe_map
+            //[pipe_map
             std::map<std::string, int> assoc;
             assoc | as2::_put( "jan", 31 )( "feb", 28 )( "mar", 31 );
             BOOST_ASSIGN_V2_CHECK( assoc["feb"] == 28 );
             //]
         }
-		{
+        {
             //[pipe_set
             typedef std::string T;
             std::set<T> assoc;
@@ -55,7 +55,7 @@ namespace xxx_container{
             BOOST_ASSIGN_V2_CHECK( assoc.count( x ) == 1 );
             BOOST_ASSIGN_V2_CHECK( assoc.count( z ) == 1 );
             //]
-		}        		    
+        }                    
         {
             //[pipe_deque
             typedef int T; T x = 1, y = 2, z = 0;
@@ -91,7 +91,7 @@ namespace xxx_container{
             BOOST_ASSIGN_V2_CHECK( fifo.front() == x );
             BOOST_ASSIGN_V2_CHECK( fifo.back() == z );
             //]
-		}
+        }
         {
             //[pipe_stack
             typedef int T; T x = 8, y = 7, z = 4;
@@ -100,7 +100,7 @@ namespace xxx_container{
             BOOST_ASSIGN_V2_CHECK( lifo.top() == z ); lifo.pop();
             BOOST_ASSIGN_V2_CHECK( lifo.top() == y );
             //]
-		}
+        }
     }// test()
 
 }// xxx_container

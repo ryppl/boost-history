@@ -21,13 +21,13 @@ namespace assign{
 namespace v2{
 namespace chain_aux{
 
-	template<
-    	typename It1, 
+    template<
+        typename It1, 
         typename It2,
         typename Tag
     >
-	struct iterator
-	{
+    struct iterator
+    {
         typedef typename boost::iterator_reference<It1>::type ref1_;
         typedef typename boost::iterator_reference<It2>::type ref2_;
 
@@ -42,15 +42,15 @@ namespace chain_aux{
 
 
     
-    	typedef boost::range_detail::join_iterator<
-        	It1
-        	,It2
-        	,value_type
-        	,reference
+        typedef boost::range_detail::join_iterator<
+            It1
+            ,It2
+            ,value_type
+            ,reference
             // , boost::single_pass_traversal_tag  
-    	> type;
+        > type;
 
-	};
+    };
 
 }// chain_aux
 }// v2

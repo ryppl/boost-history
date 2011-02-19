@@ -20,7 +20,7 @@ namespace xxx_container{
 
     void test()
     {
-    	namespace as2 = boost::assign::v2;
+        namespace as2 = boost::assign::v2;
         //[csv_pipe_list
         typedef int T; T x = 1, y = 2, z = 0;
         std::list<T> seq;

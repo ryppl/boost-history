@@ -22,7 +22,7 @@ namespace assign{
 namespace v2{
 namespace convert_aux{
 
-	template<typename T, typename U>
+    template<typename T, typename U>
     T dispatch(U const& u, convert_tag::put) 
     {
         T t; 
@@ -30,10 +30,10 @@ namespace convert_aux{
 
     }
 
-	template<typename T, typename U>
-	T dispatch(U const& u, convert_tag::copy)
+    template<typename T, typename U>
+    T dispatch(U const& u, convert_tag::copy)
     {
-    	return T( boost::begin( u ), boost::end( u ) );
+        return T( boost::begin( u ), boost::end( u ) );
     }
 
 }// convert_aux

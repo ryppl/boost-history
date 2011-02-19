@@ -27,31 +27,31 @@ namespace chain_aux{
             typename F<R2>::type,
             Tag
         >::type iterator_t;
-	    typedef boost::iterator_range< iterator_t > type;
+        typedef boost::iterator_range< iterator_t > type;
         
         static type call(R1& r1, R2& r2)
         {
             BOOST_CONCEPT_ASSERT((SinglePassRangeConcept<R1>));
             BOOST_CONCEPT_ASSERT((SinglePassRangeConcept<R2>));
-			namespace ns = boost::range_detail;
+            namespace ns = boost::range_detail;
 //            typedef ns::chain_iterator_begin_tag begin_tag_;
 //            typedef ns::chain_iterator_end_tag end_tag_;
             typedef ns::join_iterator_begin_tag begin_tag_;
             typedef ns::join_iterator_end_tag end_tag_;
-			return type(
-				iterator_t(r1, r2, begin_tag_()),
-				iterator_t(r1, r2, end_tag_())
-        	);
+            return type(
+                iterator_t(r1, r2, begin_tag_()),
+                iterator_t(r1, r2, end_tag_())
+            );
         }
     };
 
     template<typename R1, typename R2, typename Tag>
     struct range_l
-    	: chain_aux::range< R1, R2, boost::range_iterator,Tag>{};
+        : chain_aux::range< R1, R2, boost::range_iterator,Tag>{};
     
     template<typename R1, typename R2, typename Tag>
     struct range_r
-    	: chain_aux::range<R1, R2, boost::range_const_iterator,Tag>{};
+        : chain_aux::range<R1, R2, boost::range_const_iterator,Tag>{};
 
 }// chain_aux
 }// v2

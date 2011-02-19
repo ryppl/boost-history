@@ -18,11 +18,11 @@ namespace xxx_put{
 namespace xxx_deque{
 namespace xxx_csv{
 
-	void test()
+    void test()
     {
         namespace as2 = boost::assign::v2;
         {
-        	//[csv_deque
+            //[csv_deque
             typedef int T; T x = 1, y = 2, z = 0;
             as2::result_of::deque<T>::type cont = as2::csv_deque( x, y, z );
             BOOST_ASSIGN_V2_CHECK( cont.front() == x );
@@ -30,10 +30,10 @@ namespace xxx_csv{
             //]
         }
         {
-        	//[deque_str
-        	typedef std::string str_;
+            //[deque_str
+            typedef std::string str_;
             BOOST_ASSIGN_V2_CHECK( 
-            	str_( as2::csv_deque( "x" )( "y" )( "z" )[1] ) == "y"
+                str_( as2::csv_deque( "x" )( "y" )( "z" )[1] ) == "y"
             );
             //]
         }

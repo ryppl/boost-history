@@ -18,43 +18,43 @@ namespace v2{
 namespace put_concept{
 namespace sub{
 
-	// X models Pre1 wrt to V
-	template<typename C, typename X>
-	struct Pre1{
+    // X models Pre1 wrt to V
+    template<typename C, typename X>
+    struct Pre1{
     
-		BOOST_CONCEPT_USAGE(Pre1)
+        BOOST_CONCEPT_USAGE(Pre1)
         {
-			X x( v );
+            X x( v );
             C& ref = x.container();
         }
         
         private:
         static C& v;
 
-	};
+    };
 
-	template<typename C, typename F, typename X>
-	struct Pre2 : Pre1<C, X>{
+    template<typename C, typename F, typename X>
+    struct Pre2 : Pre1<C, X>{
     
-		BOOST_CONCEPT_USAGE(Pre2)
+        BOOST_CONCEPT_USAGE(Pre2)
         {
-			X x( v, f );
+            X x( v, f );
         }
         
         private:
         static C& v;
         static F const &f;
 
-	};
+    };
 
-	template<typename C, typename F, typename Tag,typename X>
-	struct Pre3 : Pre2<C, F, X>{
+    template<typename C, typename F, typename Tag,typename X>
+    struct Pre3 : Pre2<C, F, X>{
     
         typedef put_aux::modifier<Tag> modifier_;
 
-		BOOST_CONCEPT_USAGE(Pre3)
+        BOOST_CONCEPT_USAGE(Pre3)
         {
-			X x( v, f, m );
+            X x( v, f, m );
         }
         
         private:
@@ -62,19 +62,19 @@ namespace sub{
         static F const &f;
         static modifier_ m;
 
-	};
+    };
 
-	template<typename C, typename F, typename Tag, typename X>
-	class Post : Pre3<C, F, Tag, X>
+    template<typename C, typename F, typename Tag, typename X>
+    class Post : Pre3<C, F, Tag, X>
     {
 
-		typedef Pre3<C, F, Tag, X> super_t;
+        typedef Pre3<C, F, Tag, X> super_t;
         typedef typename super_t::modifier_ modifier_;
 
-		BOOST_CONCEPT_USAGE(Post)
+        BOOST_CONCEPT_USAGE(Post)
         {
-			F const& f = x.fun;
-			modifier_ const& m = x.modifier;
+            F const& f = x.fun;
+            modifier_ const& m = x.modifier;
         }
         
         private:

@@ -30,12 +30,12 @@ namespace put_parameter{
 }// put_parameter
 namespace put_aux{
 
-	template<typename Tag>
+    template<typename Tag>
     class modifier<modifier_tag::repeat<Tag> >
     {
         typedef modifier<Tag> inner_;
 
-    	public:
+        public:
 
         typedef std::size_t size_type;
 
@@ -52,14 +52,14 @@ namespace put_aux{
             arg\
         );\
 /**/
-    	template<typename V, typename T>
+        template<typename V, typename T>
         void impl(V& v, BOOST_ASSIGN_V2_forward_param(T, t) )const
         {
 
             BOOST_ASSIGN_V2_MACRO( BOOST_ASSIGN_V2_forward_arg(T, t) )
         }
 
-    	template<typename V, typename T>
+        template<typename V, typename T>
         void impl(V& v, T* t)const
         {
             BOOST_ASSIGN_V2_MACRO( t )

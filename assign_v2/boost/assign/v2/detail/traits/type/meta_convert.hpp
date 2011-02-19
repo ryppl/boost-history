@@ -14,7 +14,7 @@
 #include <boost/assign/v2/ref/convert_traits/reference.hpp>
 
 namespace boost{
-	struct boost::use_default;
+    struct boost::use_default;
 namespace assign{
 namespace v2{
 namespace type_traits{
@@ -26,9 +26,9 @@ namespace type_traits{
 //        struct apply : ref::convert_traits::result<T1, T2>{};
         struct apply : ref::convert_traits::reference<T1, T2>{};
 
-	};
+    };
 
-	// Specialize on Tag as needed.
+    // Specialize on Tag as needed.
 
 }// type_traits
 }// v2

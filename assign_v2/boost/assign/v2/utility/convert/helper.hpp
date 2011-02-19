@@ -23,13 +23,13 @@ namespace convert_aux{
     struct default_f : ::boost::mpl::true_{};
     
     template<typename Tag, 
-    	template<typename, typename> class F = convert_aux::default_f>
+        template<typename, typename> class F = convert_aux::default_f>
     struct helper
     {
         typedef Tag tag;
         template<typename T>  // T must derive from mpl::pair<>
         struct apply 
-        	: F<typename T::first, typename T::second>
+            : F<typename T::first, typename T::second>
         {
         };
     };

@@ -27,9 +27,9 @@
 #define BOOST_ASSIGN_V2_PUT_EXT_XXX(Param)\
 namespace result_of_modulo{\
 \
-	template<typename T, typename Arg>\
-	struct Param\
-    	: ::boost::mpl::apply1<\
+    template<typename T, typename Arg>\
+    struct Param\
+        : ::boost::mpl::apply1<\
             result_of_modulo::ext<T>\
             , put_parameter::Param<Arg>\
         >\
@@ -43,12 +43,12 @@ namespace put_aux{\
         boost::is_base_of<put_aux::put_base, T>,\
         result_of_modulo::Param<T, Arg>\
     >::type\
-	operator%(\
-    	T const& t,\
+    operator%(\
+        T const& t,\
         put_aux::Param<Arg> const& p\
     )\
     {\
-    	typedef result_of_modulo::Param<T, Arg> caller_;\
+        typedef result_of_modulo::Param<T, Arg> caller_;\
         return caller_::call( t, p );\
     }\
 \

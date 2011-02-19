@@ -15,7 +15,7 @@ namespace assign{
 namespace v2{
 namespace convert_tag{
 
-	struct put{};
+    struct put{};
     struct copy{};
 
 }// convert_tag

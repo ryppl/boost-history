@@ -20,8 +20,8 @@ namespace v2{
 #define BOOST_ASSIGN_V2_MACRO(U1, U2) \
 template<typename R1,typename R2> \
 typename chain_aux::result< \
-    U1, \
-    U2  \
+    U1,\
+    U2 \
 >::type \
 operator&&(U1& r1, U2 & r2) \
 { \

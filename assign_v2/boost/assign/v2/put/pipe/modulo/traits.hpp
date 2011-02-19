@@ -18,22 +18,22 @@
 #include <boost/assign/v2/ref/list/make.hpp>
 
 namespace boost{
-	struct use_default;
+    struct use_default;
 namespace assign{
 namespace v2{
 namespace put_pipe_aux{
 
-	template<typename Pars>
-	struct modulo_traits
+    template<typename Pars>
+    struct modulo_traits
     {
-    	typedef ref::nth_result_of::list<use_default> meta_;
+        typedef ref::nth_result_of::list<use_default> meta_;
         typedef typename ::boost::mpl::apply1<meta_, Pars>::type cont_;
         typedef typename ::boost::mpl::size<Pars>::type size;
 
         template<typename T>
         struct new_pars : ::boost::mpl::push_back<Pars, T const&>{};
 
-	};
+    };
 
 }// put_pipe_aux
 }// v2

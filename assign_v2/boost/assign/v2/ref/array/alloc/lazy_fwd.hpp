@@ -16,7 +16,7 @@ namespace assign{
 namespace v2{
 namespace ref{
 namespace alloc_tag{
-	struct lazy_alloc{};
+    struct lazy_alloc{};
 }// alloc_tag
 namespace array_aux{ 
    template<size_type N, typename T, typename D>

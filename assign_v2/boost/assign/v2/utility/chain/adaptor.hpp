@@ -29,7 +29,7 @@ namespace chain_aux{
     };
 
     template<
-    	typename Tag1 = use_default,
+        typename Tag1 = use_default,
         typename Tag2 = void_
     >
     struct adaptor2
@@ -46,20 +46,20 @@ namespace chain_aux{
         template<typename R>
         typename result<R>::type
         operator()(R& r)const{ 
-        	return result<R>::call ( r ); 
+            return result<R>::call ( r ); 
         }
 
         template<typename R>
         typename result<R const>::type
         operator()(R const& r)const{ 
-        	return result<R const>::call( r ); 
+            return result<R const>::call( r ); 
         }
         
     };
     
 }// chain_aux
 namespace{
-	const chain_aux::adaptor2<> _chain = chain_aux::adaptor2<>();
+    const chain_aux::adaptor2<> _chain = chain_aux::adaptor2<>();
 }
 }// v2
 }// assign

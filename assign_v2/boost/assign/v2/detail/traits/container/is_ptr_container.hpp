@@ -18,7 +18,7 @@ namespace assign{
 namespace v2{
 namespace container_traits{
 
-	template<typename V>
+    template<typename V>
     struct is_ptr_container : ptr_to_value<V>::is_applicable{};
 
 }// container_traits

@@ -19,44 +19,44 @@ namespace assign{
 namespace v2{
 namespace result_of_modulo{
 
-	template<typename D> struct modifier /* Specialize on D(erived) */{
-    	template<typename Tag> struct apply{};
+    template<typename D> struct modifier /* Specialize on D(erived) */{
+        template<typename Tag> struct apply{};
     };
 
 }// result_of_modulo
 namespace put_modulo_aux{
 
-	template<typename Tag> struct modifier
+    template<typename Tag> struct modifier
     {
-    	modifier(){}
+        modifier(){}
         modifier(Tag const& t) : modifier_tag( t ){}
-    	Tag modifier_tag;
+        Tag modifier_tag;
     };
 
-	template<typename T, typename NewTag>
+    template<typename T, typename NewTag>
     typename ::boost::mpl::apply1<result_of_modulo::modifier<T>, NewTag>::type
     operator%(T const& t, put_modulo_aux::modifier<NewTag> const& h )
     {
-		typedef result_of_modulo::modifier<T> meta_;
+        typedef result_of_modulo::modifier<T> meta_;
 
-    	typedef typename ::boost::mpl::apply1<meta_, NewTag>::type result_;
+        typedef typename ::boost::mpl::apply1<meta_, NewTag>::type result_;
         typedef put_aux::modifier<NewTag> modifier_;
         return result_( t.container(), t.fun, modifier_( h.modifier_tag ) );
     }
 
-	struct kwd_modifier
+    struct kwd_modifier
     {
-		template<typename Tag>    	
+        template<typename Tag>        
         modifier<Tag> operator=( Tag const& t)const
         {
-        	return modifier<Tag>( t );
+            return modifier<Tag>( t );
         }
     };
 
 }// put_modulo_aux
 namespace{
-	put_modulo_aux::kwd_modifier const _modifier 
-    	= put_modulo_aux::kwd_modifier();
+    put_modulo_aux::kwd_modifier const _modifier 
+        = put_modulo_aux::kwd_modifier();
 }
 }// v2
 }// assign

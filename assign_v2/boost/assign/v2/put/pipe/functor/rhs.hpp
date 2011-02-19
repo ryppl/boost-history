@@ -36,28 +36,28 @@ namespace v2{
 namespace put_pipe_aux{
 
     template<
-    	typename Pars = ::boost::mpl::vector0<>,
-    	typename SeqArgs = ::boost::mpl::vector0<>,
+        typename Pars = ::boost::mpl::vector0<>,
+        typename SeqArgs = ::boost::mpl::vector0<>,
         bool enable_pars = (boost::mpl::size<SeqArgs>::value == 0)
     >
-	class rhs;
+    class rhs;
 
     template<typename Pars, typename SeqArgs, bool enable_pars>
     struct rhs_result_helper
     {
 
-    	template<typename V>
-    	struct apply
-    	{
-        	typedef typename ::boost::mpl::push_back<
+        template<typename V>
+        struct apply
+        {
+            typedef typename ::boost::mpl::push_back<
                 SeqArgs,
                 V
             >::type new_;
-        	typedef put_pipe_aux::rhs<
+            typedef put_pipe_aux::rhs<
                 Pars,
                 new_
             > type;
-    	};
+        };
 
     };
 
@@ -76,7 +76,7 @@ namespace put_pipe_aux{
 
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 
-    	template<typename...Args>
+        template<typename...Args>
         struct apply : helper_::template apply<
             typename ::boost::mpl::detail::variadic_vector<
                 Args...
@@ -86,7 +86,7 @@ namespace put_pipe_aux{
 
 #else
 
-    	template<typename V>
+        template<typename V>
         struct apply : helper_::template apply<V>{};
 
 #endif
@@ -94,28 +94,28 @@ namespace put_pipe_aux{
     };
 
 
-	template<typename Pars, typename SeqArgs, bool enable_pars>
-	class rhs
+    template<typename Pars, typename SeqArgs, bool enable_pars>
+    class rhs
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 //do nothing
 #else
-    	:	public functor_aux::crtp_unary_and_up<
+        :    public functor_aux::crtp_unary_and_up<
                 rhs<Pars, SeqArgs, enable_pars>,
                 rhs_result<Pars, SeqArgs, enable_pars>
-    		>
+            >
 #endif
     {
-    	typedef boost::use_default list_tag_;
+        typedef boost::use_default list_tag_;
         typedef modulo_traits<Pars> modulo_traits_;
-		typedef ref::nth_result_of::list_tuple meta2_;
+        typedef ref::nth_result_of::list_tuple meta2_;
 
         public:
 
         typedef typename modulo_traits_::size pars_size;
         typedef typename modulo_traits_::cont_ pars_cont_type;
 
-		BOOST_STATIC_CONSTANT(
-        	std::size_t,
+        BOOST_STATIC_CONSTANT(
+            std::size_t,
             seq_args_size = ::boost::mpl::size<SeqArgs>::value
         );
 
@@ -126,7 +126,7 @@ namespace put_pipe_aux{
 
         rhs(){}
         explicit rhs(
-        	pars_cont_type const& p,
+            pars_cont_type const& p,
             seq_args_cont_type const& s
         ) : pars_cont( p ),
         seq_args_cont( s ){}
@@ -136,18 +136,18 @@ namespace put_pipe_aux{
         template<typename T>
         struct modulo_result
         {
-			typedef typename modulo_traits_:: template new_pars<T>::type new_;
+            typedef typename modulo_traits_:: template new_pars<T>::type new_;
             typedef rhs<new_, SeqArgs> type;
         };
 
         template<typename T>
         typename boost::lazy_enable_if_c<
-        	enable_pars,
-        	modulo_result<T>
+            enable_pars,
+            modulo_result<T>
         >::type
         operator%(T const& t)const
         {
-        	typedef typename modulo_result<T>::type result_;
+            typedef typename modulo_result<T>::type result_;
             return result_(
                 this->pars_cont( t ),
                 this->seq_args_cont
@@ -195,10 +195,10 @@ namespace put_pipe_aux{
 #else
         protected:
 
-		typedef functor_aux::crtp_unary_and_up<
+        typedef functor_aux::crtp_unary_and_up<
             rhs,
             rhs_result<Pars, SeqArgs, enable_pars>
-    	> super_t;
+        > super_t;
 
         typedef ::boost::mpl::vector0<> v0_;
 
@@ -214,7 +214,7 @@ namespace put_pipe_aux{
             );
         }
 
-		using super_t::operator();
+        using super_t::operator();
 
 #define BOOST_ASSIGN_V2_MACRO1( z, n, data )\
  ( BOOST_PP_CAT(_,n) )\
@@ -232,13 +232,13 @@ namespace put_pipe_aux{
         > v_;\
         typedef typename result<v_>::type result_;\
         return result_(\
-        	this->pars_cont,\
+            this->pars_cont,\
             this->seq_args_cont( BOOST_PP_ENUM_PARAMS(N1, _) )\
         );\
     }\
 /**/
 BOOST_PP_REPEAT_FROM_TO(
-	1,
+    1,
     BOOST_PP_INC(BOOST_ASSIGN_V2_LIMIT_ARITY),
     BOOST_ASSIGN_V2_MACRO2,
     ~
@@ -250,11 +250,11 @@ BOOST_PP_REPEAT_FROM_TO(
 
         pars_cont_type const& pars()const
         {
-        	return this->pars_cont;
+            return this->pars_cont;
         }
         seq_args_cont_type const& seq_args()const
         {
-        	return this->seq_args_cont;
+            return this->seq_args_cont;
         }
 
         protected:

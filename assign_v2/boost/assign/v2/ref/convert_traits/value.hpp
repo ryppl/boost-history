@@ -18,7 +18,7 @@ namespace ref{
 namespace convert_traits{
 
     template<
-    	typename V1, typename V2, 
+        typename V1, typename V2, 
         bool is_c1 = boost::is_convertible<V1, V2>::value,
         bool is_c2 = boost::is_convertible<V2, V1>::value
     >
@@ -30,12 +30,12 @@ namespace convert_traits{
     template<typename V1, typename V2> struct value<V1, V2, false, false>{};
     
     // TODO upgrade
-	//	#include <boost/type_traits/is_arithmetic.hpp>
+    //    #include <boost/type_traits/is_arithmetic.hpp>
     //  #include <boost/numeric/conversion/conversion_traits.hpp>
-    //	struct value : ::boost::mpl::eval_if<
-    //		mpl::and_<is_arithmetic<V1>, is_arithmetic<V2> >,
-    //   	boost::numeric::conversion_traits<V1, V2>::supertype.
-    //		... as above ...
+    //    struct value : ::boost::mpl::eval_if<
+    //        mpl::and_<is_arithmetic<V1>, is_arithmetic<V2> >,
+    //       boost::numeric::conversion_traits<V1, V2>::supertype.
+    //        ... as above ...
     //  >{};
         
 

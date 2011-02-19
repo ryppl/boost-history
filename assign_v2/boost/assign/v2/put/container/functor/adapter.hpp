@@ -21,41 +21,41 @@ namespace put_aux{
 
     template<typename C,typename F, typename Tag> 
     class adapter 
-    	: protected ref::wrapper< ref::assign_tag::copy, C > 
+        : protected ref::wrapper< ref::assign_tag::copy, C > 
         , public put_aux::crtp< C, F, Tag, adapter<C, F, Tag> >
     {
-    	typedef put_aux::crtp< C, F, Tag, adapter > super2_t;
+        typedef put_aux::crtp< C, F, Tag, adapter > super2_t;
 
-		public:
+        public:
 
-		typedef typename super2_t::result_type result_type;
+        typedef typename super2_t::result_type result_type;
 
-		protected:
+        protected:
 
-		typedef put_aux::modifier<Tag> modifier_;
-		typedef ref::assign_tag::copy assign_tag_;
-		typedef ref::wrapper<assign_tag_,C> super1_t;
+        typedef put_aux::modifier<Tag> modifier_;
+        typedef ref::assign_tag::copy assign_tag_;
+        typedef ref::wrapper<assign_tag_,C> super1_t;
 
-		public:
+        public:
 
-		adapter(){}
-		explicit adapter( C& v ) : super1_t( v ) {}
-		explicit adapter( C& v, F const& f ) 
-        	: super1_t( v ), super2_t( f )
+        adapter(){}
+        explicit adapter( C& v ) : super1_t( v ) {}
+        explicit adapter( C& v, F const& f ) 
+            : super1_t( v ), super2_t( f )
             {
-        		// This constructor is required by crtp 
+                // This constructor is required by crtp 
                 // when Tag or F is modified.
-        	}
+            }
 
-		explicit adapter( C& v, F const& f, modifier_ const& m ) 
-        	: super1_t( v ), super2_t( f, m )
+        explicit adapter( C& v, F const& f, modifier_ const& m ) 
+            : super1_t( v ), super2_t( f, m )
             {
-        		// This constructor is required by crtp 
+                // This constructor is required by crtp 
                 // when Tag or F is modified.
-        	}
+            }
 
-		C& container()const{ 
-        	return static_cast<super1_t const&>(*this).get(); 
+        C& container()const{ 
+            return static_cast<super1_t const&>(*this).get(); 
         }
 
     };

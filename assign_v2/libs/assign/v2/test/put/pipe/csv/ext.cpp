@@ -28,12 +28,12 @@ namespace xxx_ext{
 
     void test(){
 
-    	// This test is also about string literals
+        // This test is also about string literals
 
-    	namespace as2 = boost::assign::v2;
+        namespace as2 = boost::assign::v2;
         namespace bl = boost::lambda;
-    	{
-			//[csv_lookup
+        {
+            //[csv_lookup
             std::map<std::string, int> cont;
             cont["jan"] = 29; cont["feb"] = 26; cont["mar"] = 29;
             cont | (
@@ -45,7 +45,7 @@ namespace xxx_ext{
             //]
         }
         {
-        	//[csv_repeat
+            //[csv_repeat
             typedef int T; std::deque<T> cont; T x = 1, y = 2, z = 0;
             cont | ( as2::_csv_put % ( as2::_repeat = 2  ) )( x, y, z );
             BOOST_ASSIGN_V2_CHECK( cont.size() == 6 );
@@ -58,7 +58,7 @@ namespace xxx_ext{
             BOOST_ASSIGN_V2_CHECK( cont[5] == z );
         }
         {
-			//[csv_iterate
+            //[csv_iterate
             typedef int T; T x = 1, y = 2, z = 0;
             boost::array<T, 3> ar; ar[0] = x;
             ar | (as2::_csv_put % ( as2::_iterate = 1  ) )( y, z );
@@ -67,7 +67,7 @@ namespace xxx_ext{
             BOOST_ASSIGN_V2_CHECK( ar[2] == z );
             //]
         }
-	}
+    }
 
 }// xxx_ext
 }// xxx_csv

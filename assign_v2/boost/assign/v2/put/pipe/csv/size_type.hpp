@@ -16,7 +16,7 @@ namespace assign{
 namespace v2{
 namespace put_pipe_aux{
 
-	typedef ref::list_aux::size_type csv_size_type;
+    typedef ref::list_aux::size_type csv_size_type;
     
 }// put_pipe_aux
 }// v2

@@ -16,7 +16,7 @@ namespace xxx_std{
 
     void test()
     {
-		xxx_functor::test();
+        xxx_functor::test();
     }
 
 }// xxx_std

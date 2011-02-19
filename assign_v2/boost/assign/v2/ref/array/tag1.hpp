@@ -12,11 +12,11 @@
 #include <boost/assign/v2/ref/wrapper/copy.hpp>
 
 namespace boost{
-	struct use_default;
+    struct use_default;
 namespace assign{
 namespace v2{
 namespace ref{
-	typedef assign_tag::copy array_tag1_;
+    typedef assign_tag::copy array_tag1_;
 }// ref
 }// v2
 }// assign

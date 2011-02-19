@@ -35,15 +35,15 @@ namespace functor_aux{
 // do nothing
 #else
     : public functor_aux::crtp_unary_and_up<
-    	functor_aux::new_<T>,
+        functor_aux::new_<T>,
         ::boost::mpl::always<T*>
     >
 #endif
     {
-    	typedef T* ptr_;
+        typedef T* ptr_;
         typedef functor_aux::new_<T> this_;
 
-    	public:
+        public:
 
         typedef ptr_ result_type;
 
@@ -72,7 +72,7 @@ namespace functor_aux{
     } \
 /**/
 BOOST_PP_REPEAT_FROM_TO(
-	1,
+    1,
     BOOST_PP_INC(BOOST_ASSIGN_V2_LIMIT_ARITY),
     BOOST_ASSIGN_V2_MACRO,
     ~
@@ -80,12 +80,12 @@ BOOST_PP_REPEAT_FROM_TO(
 #undef BOOST_ASSIGN_V2_MACRO
 #endif
 
-	};
+    };
 
     template<typename V>
     struct deduce_new_
     {
-    	typedef typename container_traits::value<V>::type value_;
+        typedef typename container_traits::value<V>::type value_;
         typedef functor_aux::new_<value_> type;
         static type call(){ return functor_aux::new_<value_>(); }
     };
@@ -105,8 +105,8 @@ namespace result_of{
     typename result_of::new_<T>::type
     new_()
     {
-    	typedef typename result_of::new_<T>::type result_;
-    	return result_();
+        typedef typename result_of::new_<T>::type result_;
+        return result_();
     }
 
 }// v2

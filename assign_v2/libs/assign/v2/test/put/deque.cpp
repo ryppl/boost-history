@@ -17,12 +17,12 @@ namespace test_assign_v2{
 namespace xxx_put{
 namespace xxx_deque{
 
-	void test()
+    void test()
     {
-		xxx_csv::test();
-		xxx_functor::test();
-		xxx_modulo::test();
-		xxx_std::test();
+        xxx_csv::test();
+        xxx_functor::test();
+        xxx_modulo::test();
+        xxx_std::test();
     }
 
 }// xxx_deque

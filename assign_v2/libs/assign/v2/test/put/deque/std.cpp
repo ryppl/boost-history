@@ -18,20 +18,20 @@ namespace xxx_put{
 namespace xxx_deque{
 namespace xxx_std{
 
-	void test()
+    void test()
     {
         namespace as2 = boost::assign::v2;
         {
-        	typedef int T; T x = 1, y = 2, z = 0;
+            typedef int T; T x = 1, y = 2, z = 0;
             //[deque_front
             BOOST_AUTO( 
-            	cont, 
+                cont, 
                 ( 
-                	as2::deque<T>( as2::_nil ) % as2::_push_front 
+                    as2::deque<T>( as2::_nil ) % as2::_push_front 
                 )( x )( y )( z ) 
             );
-			BOOST_ASSIGN_V2_CHECK( cont[0] == z );			
-			BOOST_ASSIGN_V2_CHECK( cont[2] == x );			
+            BOOST_ASSIGN_V2_CHECK( cont[0] == z );            
+            BOOST_ASSIGN_V2_CHECK( cont[2] == x );            
             //]
         }
     }

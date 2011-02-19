@@ -11,7 +11,7 @@
 #include <boost/preprocessor/seq/size.hpp>
 #include <boost/preprocessor/seq/enum.hpp>
 #define BOOST_ASSIGN_V2_decl_params(SeqU) \
-	BOOST_PP_ENUM_PARAMS(BOOST_PP_SEQ_SIZE(SeqU), typename T)\
+    BOOST_PP_ENUM_PARAMS(BOOST_PP_SEQ_SIZE(SeqU), typename T)\
 /**/
 #define BOOST_ASSIGN_V2_params(SeqU) BOOST_PP_SEQ_ENUM(SeqU) 
 #endif

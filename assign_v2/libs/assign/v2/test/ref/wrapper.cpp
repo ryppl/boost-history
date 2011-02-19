@@ -19,18 +19,18 @@ namespace xxx_wrapper{
 
     void test()
     {
-    	using namespace boost::assign::v2;
+        using namespace boost::assign::v2;
         typedef int val_;
-		{
-			typedef ref::copy_wrapper<val_>::type w_;
+        {
+            typedef ref::copy_wrapper<val_>::type w_;
             w_ w;
             val_ a = 1, b = 2, c = 3;
             w.rebind( a ); BOOST_ASSIGN_V2_CHECK( &w.get() == &a );
             w.assign( b ); BOOST_ASSIGN_V2_CHECK( a == b );
             w = c; BOOST_ASSIGN_V2_CHECK( a == c );
         }
-		{
-			typedef ref::copy_wrapper<val_ const>::type w_;
+        {
+            typedef ref::copy_wrapper<val_ const>::type w_;
             w_ w;
             val_ a = 1;
             w.rebind( a ); BOOST_ASSIGN_V2_CHECK( &w.get() == &a );

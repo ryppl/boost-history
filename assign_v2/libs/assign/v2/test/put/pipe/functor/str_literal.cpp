@@ -22,7 +22,7 @@ namespace xxx_str_literal{
 
     void test()
     {
-    	namespace as2 = boost::assign::v2;
+        namespace as2 = boost::assign::v2;
         typedef const char* T;
         std::deque<T> cont; typedef std::string str_;
         cont | as2::_put( "x" )( "y" )( "z" );

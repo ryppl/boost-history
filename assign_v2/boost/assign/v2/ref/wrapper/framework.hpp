@@ -15,13 +15,13 @@ namespace assign{
 namespace v2{
 namespace ref{
 
-	template<typename Tag,typename T>
+    template<typename Tag,typename T>
     struct wrapper{
         // specialize on Tag
     };
 
 namespace result_of{
-	template<typename Tag, typename T>
+    template<typename Tag, typename T>
     struct wrap{
         typedef ref::wrapper<Tag,T> type;
     };

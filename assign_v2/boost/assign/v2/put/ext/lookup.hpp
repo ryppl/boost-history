@@ -34,7 +34,7 @@ namespace put_parameter{
 }// put_parameter
 namespace put_aux{
 
-	template<typename Arg>
+    template<typename Arg>
     struct modifier<modifier_tag::lookup<Arg> >
     {
 
@@ -47,7 +47,7 @@ namespace put_aux{
         ) : ptr( new type( arg ) )
         {}
 
-    	template<typename V,typename T>
+        template<typename V,typename T>
         void impl(V& v, BOOST_ASSIGN_V2_forward_param(T, key) )const{
             v[ key ] = (*this->ptr)( v[ key ] );
         }

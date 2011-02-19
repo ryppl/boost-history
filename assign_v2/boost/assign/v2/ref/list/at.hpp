@@ -30,40 +30,40 @@ namespace list_aux{
 
 namespace result_of{
 
-		template<size_type I, typename T>
+        template<size_type I, typename T>
         struct at : ::boost::mpl::eval_if<
-        	list_aux::is_head<I, T>
+            list_aux::is_head<I, T>
             ,head_reference<T>
             ,result_of::at<I, typename tail_of<T>::type>
         >{};
                 
 }// result_of
 
-		template<size_type I, typename T>
+        template<size_type I, typename T>
         typename boost::lazy_enable_if<
-        	list_aux::is_head<I, T>,
-        	list_aux::result_of::at<I, T>
+            list_aux::is_head<I, T>,
+            list_aux::result_of::at<I, T>
         >::type
         at_helper(T const& t)
         {
-        	return t.head();
+            return t.head();
         }
         
-		template<size_type I, typename T>
+        template<size_type I, typename T>
         typename boost::lazy_disable_if<
-        	is_head<I, T>,
-        	list_aux::result_of::at<I, T>
+            is_head<I, T>,
+            list_aux::result_of::at<I, T>
         >::type
         at_helper(T const& t)
         {
-        	return at_helper<I>( t.tail() );
+            return at_helper<I>( t.tail() );
         }
 
-		template<size_type I, typename Tag, typename H, typename T>
+        template<size_type I, typename Tag, typename H, typename T>
         typename list_aux::result_of::at<I, container<Tag, H, T> >::type
         at(container<Tag, H, T> const& t)
         {
-        	return at_helper<I>( t );
+            return at_helper<I>( t );
         }
 
 }// list_aux

@@ -15,11 +15,11 @@ namespace boost{
 namespace assign{
 namespace v2{
 namespace container_tag{
-	struct sorted{};
+    struct sorted{};
 }// container_tag
 namespace container_traits_aux{
 
-	template<typename V>
+    template<typename V>
     struct is_sorted : ::boost::mpl::false_{};
     
     template<typename T,typename C,typename A>
@@ -31,7 +31,7 @@ namespace container_traits_aux{
 }// container_traits_aux
 
 
-	BOOST_ASSIGN_V2_TRAITS_CONTAINER_IS(sorted)
+    BOOST_ASSIGN_V2_TRAITS_CONTAINER_IS(sorted)
 
 }// v2
 }// assign

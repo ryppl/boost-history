@@ -30,7 +30,7 @@ namespace put_pipe_aux{
         put_pipe_aux::rhs<Pars, SeqArgs, enable_pars> const& c
     ){
         forward(
-        	forward_pars<Pars>(
+            forward_pars<Pars>(
                 put( v ),
                 c.pars()
             ),
@@ -42,7 +42,7 @@ namespace put_pipe_aux{
 }// put_pipe_aux
 namespace{
 
-	put_pipe_aux::rhs<> const _put = put_pipe_aux::rhs<>();
+    put_pipe_aux::rhs<> const _put = put_pipe_aux::rhs<>();
 
 }
 }// v2

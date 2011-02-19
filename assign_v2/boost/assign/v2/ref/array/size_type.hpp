@@ -17,7 +17,7 @@ namespace v2{
 namespace ref{
 namespace array_aux{
 
-	typedef std::size_t size_type;
+    typedef std::size_t size_type;
 
 }// array_aux
 }// ref

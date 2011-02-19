@@ -17,31 +17,31 @@
 #include <boost/assign/v2/put/deduce/modifier.hpp>
 
 namespace boost{
-	struct use_default;
+    struct use_default;
 namespace assign{
 namespace v2{
 namespace put_aux{
 
-	struct kwd_deduce{}; 
+    struct kwd_deduce{}; 
 
-	template<typename T>
+    template<typename T>
     typename T::result_of_modulo::deduce::type
-	operator%(T const& t, kwd_deduce const& kwd)
+    operator%(T const& t, kwd_deduce const& kwd)
     {
-    	return t.modulo_deduce();
+        return t.modulo_deduce();
     }
 
-	template<typename Option1, typename Option2>
-	struct deduce : ::boost::mpl::eval_if<
-    	boost::is_same<Option1, boost::use_default>,
-    	boost::mpl::identity<Option2>,
-    	boost::mpl::identity<Option1>
-	>{};
+    template<typename Option1, typename Option2>
+    struct deduce : ::boost::mpl::eval_if<
+        boost::is_same<Option1, boost::use_default>,
+        boost::mpl::identity<Option2>,
+        boost::mpl::identity<Option1>
+    >{};
 
 }// put_aux
 namespace{
-	const put_aux::kwd_deduce _deduce = put_aux::kwd_deduce();
-}	
+    const put_aux::kwd_deduce _deduce = put_aux::kwd_deduce();
+}    
 }// v2
 }// assign
 }// boost

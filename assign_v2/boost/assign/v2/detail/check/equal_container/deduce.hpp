@@ -64,7 +64,7 @@ namespace switch_aux{
     template<>
     struct case_<switch_tag::check_container, 4> :
         switch_aux::helper<
-        	container_tag::range
+            container_tag::range
         >{};
         
 }// switch_aux
@@ -72,8 +72,8 @@ namespace check_aux{
 
     template<typename T>
     struct deduce_equal_container_tag : switch_aux::result<
-    	v2::switch_tag::check_container,
-    	T
+        v2::switch_tag::check_container,
+        T
     >
     {};
     

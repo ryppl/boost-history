@@ -19,10 +19,10 @@ namespace assign{
 namespace v2{
 namespace container_traits{
 
-	template<typename V>
+    template<typename V>
     struct value_container : ::boost::mpl::eval_if<
         is_ptr_container<V>,
-    	ptr_to_value_container<V>,
+        ptr_to_value_container<V>,
         ::boost::mpl::identity<V>
     >{};
     

@@ -23,7 +23,7 @@ namespace boost{
 namespace assign{
 namespace v2{
 namespace switch_tag{
-	struct deduce_put{};
+    struct deduce_put{};
 }// switch_tag
 namespace switch_aux{
 
@@ -37,14 +37,14 @@ namespace switch_aux{
     template<>
     struct case_<switch_tag::deduce_put, 1> :
         switch_aux::helper<
-			v2::modifier_tag::iterate,
+            v2::modifier_tag::iterate,
             v2::container_traits::is_array
         >{};
 
     template<>
     struct case_<switch_tag::deduce_put, 2> :
         switch_aux::helper<
-        	v2::modifier_tag::push,
+            v2::modifier_tag::push,
             container_traits::has_push_deduced_value
         >{};
 
@@ -57,12 +57,12 @@ namespace put_aux{
 
     template<typename T>
     struct deduce_modifier_tag
-    	: switch_aux::result< switch_tag::deduce_put, T>
+        : switch_aux::result< switch_tag::deduce_put, T>
     {};
 
-	// For testing purposes
-	template<typename C, typename X>
-	void check_deduce()
+    // For testing purposes
+    template<typename C, typename X>
+    void check_deduce()
     {
         typedef typename put_aux::deduce_modifier_tag<C>::type found_;
         BOOST_MPL_ASSERT(( boost::is_same<found_, X> ));

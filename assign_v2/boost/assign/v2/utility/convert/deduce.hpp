@@ -16,11 +16,11 @@
 #include <boost/assign/v2/utility/convert/predicate.hpp>
 
 namespace boost{
-	struct use_default;
+    struct use_default;
 namespace assign{
 namespace v2{
 namespace switch_tag{
-	struct deduce_convert{};
+    struct deduce_convert{};
 }// switch_tag
 namespace switch_aux{
 
@@ -40,8 +40,8 @@ namespace convert_aux{
 
     template<typename T, typename U>
     struct deduce_tag : v2::switch_aux::result<
-    	v2::switch_tag::deduce_convert,
-    	boost::mpl::pair<T, U>
+        v2::switch_tag::deduce_convert,
+        boost::mpl::pair<T, U>
     >
     {};
 
