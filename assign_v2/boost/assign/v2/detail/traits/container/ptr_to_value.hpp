@@ -13,8 +13,8 @@
 #include <boost/preprocessor/cat.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/type_traits/remove_reference.hpp>
-#include <boost/assign/v2/detail/fwd/ptr_container.hpp>
-#include <boost/assign/v2/detail/fwd/container.hpp>
+#include <boost/assign/v2/detail/traits/container/ptr_fwd.hpp>
+#include <boost/assign/v2/detail/traits/container/fwd.hpp>
 #include <boost/assign/v2/detail/traits/container/static_size.hpp>
 
 namespace boost{

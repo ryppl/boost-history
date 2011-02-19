@@ -87,7 +87,7 @@ namespace functor_aux{
 
 #else
 
-#define MACRO1(r, SeqU) \
+#define BOOST_ASSIGN_V2_MACRO1(r, SeqU) \
     template<BOOST_ASSIGN_V2_decl_params(SeqU)> \
     typename ::boost::mpl::apply1< \
         F, \
@@ -101,21 +101,21 @@ namespace functor_aux{
 /**/
 
 
-#define MACRO2(z, n, data) BOOST_PP_SEQ_FOR_EACH_PRODUCT(\
-	MACRO1, \
+#define BOOST_ASSIGN_V2_MACRO2(z, n, data) BOOST_PP_SEQ_FOR_EACH_PRODUCT(\
+	BOOST_ASSIGN_V2_MACRO1, \
     BOOST_PP_SEQ_FIRST_N(BOOST_PP_INC(n), BOOST_ASSIGN_V2_SEQ)\
 ) \
 /**/
 BOOST_PP_REPEAT(
 	BOOST_ASSIGN_V2_LIMIT_LVALUE_CONST_ARITY,
-    MACRO2,
+    BOOST_ASSIGN_V2_MACRO2,
     ~
 )
 
-#undef MACRO1
-#undef MACRO2
+#undef BOOST_ASSIGN_V2_MACRO1
+#undef BOOST_ASSIGN_V2_MACRO2
 
-#define MACRO(z, N, data) \
+#define BOOST_ASSIGN_V2_MACRO(z, N, data) \
     template<BOOST_PP_ENUM_PARAMS(N, typename T)> \
     typename ::boost::mpl::apply1< \
         F, \
@@ -142,10 +142,10 @@ BOOST_PP_REPEAT(
 BOOST_PP_REPEAT_FROM_TO(
     BOOST_PP_INC(BOOST_ASSIGN_V2_LIMIT_LVALUE_CONST_ARITY),
     BOOST_PP_INC(BOOST_ASSIGN_V2_LIMIT_ARITY),
-    MACRO,
+    BOOST_ASSIGN_V2_MACRO,
     ~
 )
-#undef MACRO
+#undef BOOST_ASSIGN_V2_MACRO
 
 #endif // #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 

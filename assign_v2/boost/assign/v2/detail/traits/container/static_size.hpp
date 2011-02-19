@@ -10,8 +10,8 @@
 #ifndef BOOST_ASSIGN_V2_TRAITS_CONTAINER_STATIC_SIZE_ER_2010_HPP
 #define BOOST_ASSIGN_V2_TRAITS_CONTAINER_STATIC_SIZE_ER_2010_HPP
 #include <boost/mpl/size_t.hpp>
-#include <boost/assign/v2/detail/fwd/container.hpp>
-#include <boost/assign/v2/detail/fwd/ptr_container.hpp>
+#include <boost/assign/v2/detail/traits/container/fwd.hpp>
+#include <boost/assign/v2/detail/traits/container/ptr_fwd.hpp>
 
 namespace boost{
 namespace assign{

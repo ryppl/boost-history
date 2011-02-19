@@ -11,7 +11,7 @@
 #define BOOST_ASSIGN_V2_CHECKING_RELATIONAL_OP_ER_2010_HPP
 #include <boost/array.hpp>
 #include <boost/assign/v2/detail/checking/constants.hpp>
-#include <boost/assign/v2/detail/checking/check.hpp>
+#include <boost/assign/v2/detail/config/check.hpp>
 
 namespace boost{                                                               
 namespace assign{ 

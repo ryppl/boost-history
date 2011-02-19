@@ -10,7 +10,7 @@
 #ifndef BOOST_ASSIGN_V2_TRAITS_CONTAINER_IS 
 #include <boost/preprocessor/cat.hpp>
 #include <boost/type_traits/remove_cv.hpp>
-#include <boost/assign/v2/detail/fwd/container.hpp>
+#include <boost/assign/v2/detail/traits/container/fwd.hpp>
 #include <boost/assign/v2/detail/traits/container/forward_to_value.hpp>
 
 #define BOOST_ASSIGN_V2_TRAITS_CONTAINER_IS(name)\
