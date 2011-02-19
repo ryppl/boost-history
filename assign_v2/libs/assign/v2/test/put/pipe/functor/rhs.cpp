@@ -26,8 +26,11 @@ namespace xxx_rhs{
     void xxx_assert(T& rhs, P const& pred, U const& u)
     {
         // TODO name lookup?
+        #if BOOST_ASSIGN_V2_ENABLE_CPP0X
+        using namespace boost::assign::v2::ref; // tuple (cpp0x)
+        #else
         using namespace boost; // tuple<> (cpp03)
-        using namespace boost::assign::v2; // tuple (cpp0x)
+        #endif
         pred(
             get<j>(
                 rhs.seq_args().get( boost::mpl::int_<i>() )
