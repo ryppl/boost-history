@@ -138,8 +138,8 @@ namespace boost{namespace icl
 
         void reportFrequencies()
         {
-			extern boost::mutex g_Mutex; //JODO URG REV ...
-			g_Mutex.lock();
+            extern boost::mutex g_Mutex; //JODO URG REV ...
+            g_Mutex.lock();
             std::cout << "------------------------------------------------------------------------------" << std::endl;
             std::cout << "--- Successfully tested law instantiation -------------------------runs---time" << std::endl;
             int valid_count = 1;
@@ -184,7 +184,7 @@ namespace boost{namespace icl
             }
             if(!icl::is_empty(_violations))
                 std::cout << "------------------------------------------------------------------------------" << std::endl;
-			g_Mutex.unlock();
+            g_Mutex.unlock();
         }
 
         void reportFrequencies(const std::string& filename)

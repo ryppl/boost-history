@@ -31,8 +31,10 @@ typedef int boost_gregorian_date_duration;
 #else
 typedef boost::posix_time::ptime         boost_posix_time_ptime;
 typedef boost::posix_time::time_duration boost_posix_time_duration;
-typedef boost::gregorian::date           boost_gregorian_date; 
-typedef boost::gregorian::date_duration  boost_gregorian_date_duration;
+typedef int                              boost_gregorian_date; 
+typedef int                              boost_gregorian_date_duration;
+//typedef boost::gregorian::date           boost_gregorian_date; //JODO URG REV
+//typedef boost::gregorian::date_duration  boost_gregorian_date_duration;
 #endif
 
 typedef ::boost::mpl::list<
@@ -41,7 +43,7 @@ typedef ::boost::mpl::list<
     ,float, double, long double
     ,boost::rational<int>
 #ifdef BOOST_ICL_TEST_XINT
-	,boost::xint::integer
+    ,boost::xint::integer
     ,boost::rational<boost::xint::integer>
 #endif
     ,boost_posix_time_ptime
@@ -66,7 +68,7 @@ typedef ::boost::mpl::list<
     ,float, double, long double
     ,boost::rational<int>
 #ifdef BOOST_ICL_TEST_XINT
-	,boost::xint::integer
+    ,boost::xint::integer
     ,boost::rational<boost::xint::integer>
 #endif
 > signed_bicremental_types;
@@ -100,7 +102,7 @@ typedef ::boost::mpl::list<
     ,unsigned long, unsigned long long  
     ,short, int, long, long long
 #ifdef BOOST_ICL_TEST_XINT
-	,boost::xint::integer
+    ,boost::xint::integer
 #endif
 > integral_types;
 
@@ -116,7 +118,7 @@ typedef ::boost::mpl::list<
     ,unsigned long, unsigned long long  
     ,short, int, long
 #ifdef BOOST_ICL_TEST_XINT
-	,boost::xint::integer
+    ,boost::xint::integer
 #endif
     ,boost_posix_time_ptime
     ,boost_posix_time_ptime
@@ -174,7 +176,7 @@ typedef ::boost::mpl::list<
     ,float, double, long double
     ,boost::rational<int>
 #ifdef BOOST_ICL_TEST_XINT
-	,boost::xint::integer
+    ,boost::xint::integer
 #endif
     ,std::string
     ,boost_posix_time_ptime

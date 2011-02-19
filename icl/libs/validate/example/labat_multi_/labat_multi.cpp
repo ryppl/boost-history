@@ -28,7 +28,7 @@ boost::mutex g_Mutex;
 void test_abelian_monoid(int size)
 {
     abelian_monoid_driver model_tester;
-	g_Mutex.lock();
+    g_Mutex.lock();
     cout << 
     ">> ------------------------------------------------------ <<\n"
     ">> -------- Law based test automaton 'LaBatea' ---------- <<\n"
@@ -37,8 +37,8 @@ void test_abelian_monoid(int size)
     ">> ------------------------------------------------------ <<\n";
     GentorProfileSgl::it()->set_std_profile(size,1);
     GentorProfileSgl::it()->report_profile();
-	g_Mutex.unlock();
-	wait(1);
+    g_Mutex.unlock();
+    wait(1);
 
     model_tester.terminate_at_law_count(18, 100);
 
@@ -47,12 +47,12 @@ void test_abelian_monoid(int size)
 
 void tread_abelian_monoid_1()
 {
-	test_abelian_monoid(16);
+    test_abelian_monoid(16);
 }
 
 void tread_abelian_monoid_2()
 {
-	test_abelian_monoid(77);
+    test_abelian_monoid(77);
 }
 
 void thread_() 

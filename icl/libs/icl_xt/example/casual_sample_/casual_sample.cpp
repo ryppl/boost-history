@@ -16,17 +16,17 @@ using namespace std;
 
 int foo(int x)
 {
-	int bar(int x)
-	{
-		return x+x;
-	}
+    int bar(int x)
+    {
+        return x+x;
+    }
 
-	return bar(x);
+    return bar(x);
 }
 
 int main()
 {
-	cout << foo(1) << endl;
+    cout << foo(1) << endl;
     return 0;
 }
 
