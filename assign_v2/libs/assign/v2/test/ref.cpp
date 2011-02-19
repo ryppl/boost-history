@@ -9,7 +9,6 @@
 //////////////////////////////////////////////////////////////////////////////
 #include <libs/assign/v2/test/ref/array.h>
 #include <libs/assign/v2/test/ref/convert_traits.h>
-#include <libs/assign/v2/test/ref/csv_array.h>
 #include <libs/assign/v2/test/ref/list.h>
 #include <libs/assign/v2/test/ref/list_tuple.h>
 #include <libs/assign/v2/test/ref/wrapper.h>
