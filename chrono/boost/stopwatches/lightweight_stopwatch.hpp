@@ -101,30 +101,30 @@ namespace boost
 //--------------------------------------------------------------------------------------//
         std::pair<duration, time_point> restart( system::error_code & ec = BOOST_CHRONO_THROWS )
         {
-		time_point tmp=clock::now( ec );
-		if (!BOOST_CHRONO_IS_THROWS(ec)) {
-			if (ec) return time_point();
-		}
-		if (running_&&(level_==1)) {
-			partial_ += tmp - start_;
-			traits::set_duration(get_storage(),partial_);
-			partial_=duration::zero();
-		} else {
-			running_=true;
-		}
-		start_=tmp;
-		return std::make_pair(traits::get_duration(get_storage()),start_);
+        time_point tmp=clock::now( ec );
+        if (!BOOST_CHRONO_IS_THROWS(ec)) {
+            if (ec) return time_point();
+        }
+        if (running_&&(level_==1)) {
+            partial_ += tmp - start_;
+            traits::set_duration(get_storage(),partial_);
+            partial_=duration::zero();
+        } else {
+            running_=true;
+        }
+        start_=tmp;
+        return std::make_pair(traits::get_duration(get_storage()),start_);
         }
 
         time_point start( system::error_code & ec = BOOST_CHRONO_THROWS )
         {
             if (!running_) {
                 time_point tmp = clock::now( ec );
-		if (!BOOST_CHRONO_IS_THROWS(ec)) {
-			if (ec) {
-				return time_point();
-			}
-		}
+        if (!BOOST_CHRONO_IS_THROWS(ec)) {
+            if (ec) {
+                return time_point();
+            }
+        }
                 start_ = tmp;
                 ++level_;
                 running_ = true;
@@ -140,9 +140,9 @@ namespace boost
         {
             if (running_ && (--level_==0)) {
                 time_point tmp=clock::now( ec );
-		if (!BOOST_CHRONO_IS_THROWS(ec)) {
-			if (ec) return duration::zero();
-		}
+        if (!BOOST_CHRONO_IS_THROWS(ec)) {
+            if (ec) return duration::zero();
+        }
                 partial_ += tmp - start_;
                 traits::set_duration(get_storage(),partial_);
                 partial_=duration::zero();
@@ -159,9 +159,9 @@ namespace boost
             if (running_) {
                 if (!suspended_) {
                     time_point tmp=clock::now( ec );
-		    if (!BOOST_CHRONO_IS_THROWS(ec)) {
-			if (ec) return duration::zero();
-		    }
+            if (!BOOST_CHRONO_IS_THROWS(ec)) {
+            if (ec) return duration::zero();
+            }
                     ++suspend_level_;
                     partial_ += tmp - start_;
                     suspended_=true;
@@ -181,9 +181,9 @@ namespace boost
         {
             if (suspended_&&(--suspend_level_==0)) {
                 time_point tmp = clock::now( ec );
-		if (!BOOST_CHRONO_IS_THROWS(ec)) {
-			if (ec) return time_point();
-		}
+        if (!BOOST_CHRONO_IS_THROWS(ec)) {
+            if (ec) return time_point();
+        }
                 start_ = tmp;
                 suspended_=false;
                 return start_;
@@ -200,9 +200,9 @@ namespace boost
                     return traits::get_duration(get_storage());
                 else {
                     time_point tmp = clock::now( ec );
-		if (!BOOST_CHRONO_IS_THROWS(ec)) {
+        if (!BOOST_CHRONO_IS_THROWS(ec)) {
                     if (ec) return duration::zero();
-		}
+        }
                     return traits::get_duration(get_storage())+tmp - start_;
                 }
             } else {
@@ -218,9 +218,9 @@ namespace boost
         void reset( system::error_code & ec = BOOST_CHRONO_THROWS )
         {
             construction_=clock::now( ec );
-		if (!BOOST_CHRONO_IS_THROWS(ec)) {
+        if (!BOOST_CHRONO_IS_THROWS(ec)) {
             if (ec) return;
-		}
+        }
             traits::reset(get_storage());
             running_=false;
             suspended_=false;

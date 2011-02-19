@@ -45,9 +45,9 @@ namespace boost { namespace stopwatches {
                 } else {
                     time_point tmp;
                     tmp+=duration(Clock::now(ec).time_since_epoch());
-		    if (!BOOST_CHRONO_IS_THROWS(ec)) {
+            if (!BOOST_CHRONO_IS_THROWS(ec)) {
                       if (ec) return duration::zero();
-		    }
+            }
                     return suspended_duration_ + tmp - suspended_time_;
                 }
             }
@@ -56,9 +56,9 @@ namespace boost { namespace stopwatches {
                 if (!suspended_) {
                     time_point tmp;
                     tmp+=duration(Clock::now(ec).time_since_epoch());
-		    if (!BOOST_CHRONO_IS_THROWS(ec)) {
+            if (!BOOST_CHRONO_IS_THROWS(ec)) {
                       if (ec) return;
-		    }
+            }
                     ++suspend_level_;
                     suspended_time_ = tmp;
                     suspended_=true;
@@ -71,9 +71,9 @@ namespace boost { namespace stopwatches {
                 if (suspended_&&(--suspend_level_==0)) {
                     time_point tmp;
                     tmp+=duration(Clock::now(ec).time_since_epoch());
-		    if (!BOOST_CHRONO_IS_THROWS(ec)) {
+            if (!BOOST_CHRONO_IS_THROWS(ec)) {
                       if (ec) return;
-		    }
+            }
                     suspended_duration_ += tmp - suspended_time_;
                     suspended_=false;
                 } else {
@@ -126,13 +126,13 @@ namespace boost { namespace stopwatches {
         static time_point now( system::error_code & ec ) {
             time_point res;
             typename Clock::time_point t=Clock::now(ec);
-	    if (!BOOST_CHRONO_IS_THROWS(ec)) {
+        if (!BOOST_CHRONO_IS_THROWS(ec)) {
               if (ec) return time_point();
-	    }
+        }
             res+= duration(t.time_since_epoch())-suspended(ec);
-	    if (!BOOST_CHRONO_IS_THROWS(ec)) {
+        if (!BOOST_CHRONO_IS_THROWS(ec)) {
               if (ec) return time_point();
-	    }
+        }
             return res;
         }
 

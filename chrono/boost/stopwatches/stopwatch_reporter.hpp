@@ -91,55 +91,55 @@ namespace boost { namespace stopwatches  {
         explicit basic_stopwatch_reporter( ostream_type & os,
                     system::error_code & ec = BOOST_CHRONO_THROWS )
         : m_places(Formatter::default_places()), m_os(os), m_format(Formatter::default_format()), m_reported(false) {  
-		if (!BOOST_CHRONO_IS_THROWS(ec)) ec.clear();
+        if (!BOOST_CHRONO_IS_THROWS(ec)) ec.clear();
         }
 
         explicit basic_stopwatch_reporter( const string_type & format,
                     system::error_code & ec = BOOST_CHRONO_THROWS )
         : m_places(Formatter::default_places()), m_os(Formatter::default_os()), m_format(format), m_reported(false) { 
-		if (!BOOST_CHRONO_IS_THROWS(ec)) ec.clear();
+        if (!BOOST_CHRONO_IS_THROWS(ec)) ec.clear();
         }
 
         explicit basic_stopwatch_reporter( int places,
                     system::error_code & ec = BOOST_CHRONO_THROWS )
         : m_places(places), m_os(Formatter::default_os()), m_format(Formatter::default_format()), m_reported(false) {  
-		if (!BOOST_CHRONO_IS_THROWS(ec)) ec.clear();
+        if (!BOOST_CHRONO_IS_THROWS(ec)) ec.clear();
         }
 
         basic_stopwatch_reporter( ostream_type & os, const string_type & format,
                     system::error_code & ec = BOOST_CHRONO_THROWS )
         : m_places(Formatter::default_places()), m_os(os), m_format(format), m_reported(false) {  
-		if (!BOOST_CHRONO_IS_THROWS(ec)) ec.clear();
+        if (!BOOST_CHRONO_IS_THROWS(ec)) ec.clear();
         }
 
         basic_stopwatch_reporter( const string_type & format, int places,
                     system::error_code & ec = BOOST_CHRONO_THROWS )
         : m_places(places), m_os(Formatter::default_os()), m_format(format), m_reported(false) {  
-		if (!BOOST_CHRONO_IS_THROWS(ec)) ec.clear();
+        if (!BOOST_CHRONO_IS_THROWS(ec)) ec.clear();
         }
 
         basic_stopwatch_reporter( ostream_type & os, int places,
                     system::error_code & ec = BOOST_CHRONO_THROWS )
         : m_places(places), m_os(os), m_format(Formatter::default_format()), m_reported(false) {  
-		if (!BOOST_CHRONO_IS_THROWS(ec)) ec.clear();
+        if (!BOOST_CHRONO_IS_THROWS(ec)) ec.clear();
         }
 
         basic_stopwatch_reporter( int places, const string_type & format,
                     system::error_code & ec = BOOST_CHRONO_THROWS )
         : m_places(places), m_os(Formatter::default_os()), m_format(format), m_reported(false) {  
-		if (!BOOST_CHRONO_IS_THROWS(ec)) ec.clear();
+        if (!BOOST_CHRONO_IS_THROWS(ec)) ec.clear();
         }
 
         basic_stopwatch_reporter( ostream_type & os, const string_type & format, int places,
                     system::error_code & ec = BOOST_CHRONO_THROWS )
         : m_places(places), m_os(os), m_format(format), m_reported(false) {  
-		if (!BOOST_CHRONO_IS_THROWS(ec)) ec.clear();
+        if (!BOOST_CHRONO_IS_THROWS(ec)) ec.clear();
         }
 
         basic_stopwatch_reporter( ostream_type & os, int places, const string_type & format,
                     system::error_code & ec = BOOST_CHRONO_THROWS )
         : m_places(places), m_os(os), m_format(format), m_reported(false) {  
-		if (!BOOST_CHRONO_IS_THROWS(ec)) ec.clear();
+        if (!BOOST_CHRONO_IS_THROWS(ec)) ec.clear();
         }
 
         ~basic_stopwatch_reporter() {// never throws
@@ -175,9 +175,9 @@ namespace boost { namespace stopwatches  {
     template <class Stopwatch, class Formatter>
     void basic_stopwatch_reporter<Stopwatch, Formatter>::report( system::error_code & ec ) {
         stopwatches::clock_suspender<typename Stopwatch::clock> _(ec);
-	if (!BOOST_CHRONO_IS_THROWS(ec)) {
-	    if (ec) return;
-	}
+    if (!BOOST_CHRONO_IS_THROWS(ec)) {
+        if (ec) return;
+    }
         if ( m_format.empty() ) m_format = Formatter::default_format();
 
         m_reported = true;

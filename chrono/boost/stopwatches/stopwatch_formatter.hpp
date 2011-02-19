@@ -18,6 +18,7 @@
 #include <boost/io/ios_state.hpp>
 #include <cstring>
 #include <cassert>
+#include <boost/assert.hpp>
 
 #define BOOST_STOPWATCHES_STOPWATCH_FORMAT_DEFAULT "%ds\n"
 
@@ -78,7 +79,7 @@ namespace boost { namespace stopwatches  {
                         os << boost::chrono::duration<double>(d).count();
                         break;
                     default:
-                        assert(0 && "run_timer internal logic error");
+                        BOOST_ASSERT(0 && "run_timer internal logic error");
                     }
                 }
             }

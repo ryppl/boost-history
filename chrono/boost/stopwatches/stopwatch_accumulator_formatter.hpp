@@ -20,6 +20,7 @@
 #include <boost/accumulators/statistics/max.hpp>
 #include <boost/accumulators/statistics/mean.hpp>
 #include <boost/cstdint.hpp>
+#include <boost/assert.hpp>
 #include <string>
 #include <iostream>
 #include <boost/io/ios_state.hpp>
@@ -60,16 +61,16 @@ namespace boost { namespace stopwatches  {
         //  NOTE WELL: Will truncate least-significant digits to LDBL_DIG, which may
         //  be as low as 10, although will be 15 for many common platforms.
         {
-	    if (!BOOST_CHRONO_IS_THROWS(ec)) {
+        if (!BOOST_CHRONO_IS_THROWS(ec)) {
                 ec.clear();
-	    }            
+        }            
             typedef typename Stopwatch::storage_type accumulator;
             typedef typename Stopwatch::duration duration_t;
             accumulator& acc = stopwatch_.get_storage();
             duration_t lt= stopwatch_.lifetime(ec);
-	    if (!BOOST_CHRONO_IS_THROWS(ec)) {
+        if (!BOOST_CHRONO_IS_THROWS(ec)) {
                 if (ec) return;
-	    }                
+        }                
             //if ( d < duration_t::zero() ) return;
             if ( places > 9 )
                 places = 9;  // sanity check
@@ -117,7 +118,7 @@ namespace boost { namespace stopwatches  {
                         os << int(boost::chrono::duration<double>(duration_t(accumulators::sum(acc))).count()*100/boost::chrono::duration<double>(lt).count());
                         break;
                     default:
-                        assert(0 && "basic_stopwatch_accumulator_formatter internal logic error");
+                        BOOST_ASSERT(0 && "basic_stopwatch_accumulator_formatter internal logic error");
                     }
                 }
             }

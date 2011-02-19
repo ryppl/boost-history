@@ -20,6 +20,7 @@
 #include <boost/accumulators/statistics/max.hpp>
 #include <boost/accumulators/statistics/mean.hpp>
 #include <boost/cstdint.hpp>
+#include <boost/assert.hpp>
 #include <string>
 #include <iostream>
 #include <boost/io/ios_state.hpp>
@@ -62,8 +63,8 @@ namespace boost { namespace stopwatches  {
         //  NOTE WELL: Will truncate least-significant digits to LDBL_DIG, which may
         //  be as low as 10, although will be 15 for many common platforms.
         {
-	    if (!BOOST_CHRONO_IS_THROWS(ec)) 
-		ec.clear();                
+        if (!BOOST_CHRONO_IS_THROWS(ec)) 
+        ec.clear();                
             typedef typename Stopwatch::storage_type accumulator;
             typedef typename Stopwatch::duration duration_t;
             accumulator& acc = stopwatch_.get_storage();
@@ -94,25 +95,25 @@ namespace boost { namespace stopwatches  {
                     case 's':
                         //~ os << boost::chrono::duration<double>(duration_t(accumulators::sum(acc))).count();
                         time_formatter::show_time<chrono::process_cpu_clock>(accumulators::sum(acc), format2, places, os, ec);
-			if (!BOOST_CHRONO_IS_THROWS(ec)) {
-				if (ec) return;
-			}
+            if (!BOOST_CHRONO_IS_THROWS(ec)) {
+                if (ec) return;
+            }
                         //~ os << accumulators::sum(acc);
                         break;
                     case 'm':
                         //~ os << boost::chrono::duration<double>(duration_t((accumulators::min)(acc))).count();
                         time_formatter::show_time<chrono::process_cpu_clock>((accumulators::min)(acc), format2, places, os, ec);
-			if (!BOOST_CHRONO_IS_THROWS(ec)) {
-				if (ec) return;
-			}
+            if (!BOOST_CHRONO_IS_THROWS(ec)) {
+                if (ec) return;
+            }
                         //~ os << (accumulators::min)(acc);
                         break;
                     case 'M':
                         //~ os << boost::chrono::duration<double>(duration_t((accumulators::max)(acc))).count();
                         time_formatter::show_time<chrono::process_cpu_clock>((accumulators::max)(acc), format2, places, os, ec);
-			if (!BOOST_CHRONO_IS_THROWS(ec)) {
-				if (ec) return;
-			}
+            if (!BOOST_CHRONO_IS_THROWS(ec)) {
+                if (ec) return;
+            }
                         //~ os << (accumulators::max)(acc);
                         break;
                     case 'a':
@@ -120,9 +121,9 @@ namespace boost { namespace stopwatches  {
                          //? os << boost::chrono::duration<double>(duration_t(typename duration_t::rep(accumulators::mean(acc)))).count()
                                 //~ os << boost::chrono::duration<double>(duration_t(accumulators::sum(acc))).count() / accumulators::count(acc)
                             time_formatter::show_time<chrono::process_cpu_clock>(accumulators::sum(acc) / accumulators::count(acc), format2, places, os, ec);
-			    if (!BOOST_CHRONO_IS_THROWS(ec)) {
-				if (ec) return;
-			    }
+                if (!BOOST_CHRONO_IS_THROWS(ec)) {
+                if (ec) return;
+                }
                         } else {
                             os << 0;
                         }
@@ -145,7 +146,7 @@ namespace boost { namespace stopwatches  {
                         os << accumulators::sum(acc)*100 << "/" << lt.count();
                         break;
                     default:
-                        assert(0 && "basic_stopwatch_accumulator_time_formatter internal logic error");
+                        BOOST_ASSERT(0 && "basic_stopwatch_accumulator_time_formatter internal logic error");
                     }
                 }
             }

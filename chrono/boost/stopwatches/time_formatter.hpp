@@ -19,6 +19,7 @@
 #include <boost/io/ios_state.hpp>
 #include <cstring>
 #include <cassert>
+#include <boost/assert.hpp>
 
 #define BOOST_STOPWATCHES_TIME_FORMAT_DEFAULT "real %rs, cpu %cs (%p%), user %us, system %ss\n"
 
@@ -59,7 +60,7 @@ namespace boost { namespace stopwatches  {
           //  NOTE WELL: Will truncate least-significant digits to LDBL_DIG, which may
           //  be as low as 10, although will be 15 for many common platforms.
           {
-	    if (!BOOST_CHRONO_IS_THROWS(ec))  ec.clear();
+        if (!BOOST_CHRONO_IS_THROWS(ec))  ec.clear();
             typedef typename Stopwatch::duration duration;
             typedef typename duration::rep rep;
             if ( times.real < 0 ) return;
@@ -108,7 +109,7 @@ namespace boost { namespace stopwatches  {
                   }
                   break;
                 default:
-                  assert(0 && "basic_time_formatter internal logic error");
+                  BOOST_ASSERT(0 && "basic_time_formatter internal logic error");
                 }
               }
             }
@@ -124,9 +125,9 @@ namespace boost { namespace stopwatches  {
             typedef typename Stopwatch::duration duration;
             typedef typename duration::rep rep;
             duration d = stopwatch_.elapsed( ec );
-	    if (!BOOST_CHRONO_IS_THROWS(ec)) {
-		if (ec) return;
-	    }
+        if (!BOOST_CHRONO_IS_THROWS(ec)) {
+        if (ec) return;
+        }
             rep times=d.count();
             show_time<Stopwatch>(times, format, places, os, ec);
         }

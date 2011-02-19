@@ -19,6 +19,7 @@
 #include <boost/io/ios_state.hpp>
 #include <cstring>
 #include <cassert>
+#include <boost/assert.hpp>
 
 #define BOOST_STOPWATCHES_24_HOURS_FORMAT_DEFAULT "%d day(s) %h:%m:%s.%n\n"
 
@@ -60,9 +61,9 @@ namespace boost { namespace stopwatches  {
         {
             typedef typename Stopwatch::duration duration_t;
             duration_t d = stopwatch_.elapsed( ec );
-	    if (!BOOST_CHRONO_IS_THROWS(ec)) {
+        if (!BOOST_CHRONO_IS_THROWS(ec)) {
               if (ec) return;
-	    }
+        }
             if ( d < duration_t::zero() ) return;
 
             boost::io::ios_flags_saver ifs( os );
@@ -109,7 +110,7 @@ namespace boost { namespace stopwatches  {
                         break;
                     }
                     default:
-                        assert(0 && "basic_24_hours_formatter internal logic error");
+                        BOOST_ASSERT(0 && "basic_24_hours_formatter internal logic error");
                     }
                 }
             }
