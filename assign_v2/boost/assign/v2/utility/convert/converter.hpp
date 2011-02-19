@@ -81,6 +81,13 @@ namespace convert_aux{
 #define BOOST_ASSIGN_V2_CONVERTER_OP(s, data, T) typename T
 #endif
 #ifndef BOOST_ASSIGN_V2_CONVERTER
+
+// Expanding
+//  namespace ns{
+//   BOOST_ASSIGN_V2_CONVERTER( cont<A,B,C>, (A)(B)(C) )
+//  }
+// creates a name-lookup version of converter() for name ns::cont<A, B, C>
+
 #define BOOST_ASSIGN_V2_CONVERTER(U, Seq)\
 	template<BOOST_PP_SEQ_ENUM(\
     	BOOST_PP_SEQ_TRANSFORM(\

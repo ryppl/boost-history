@@ -11,7 +11,6 @@
 #define BOOST_ASSIGN_V2_UTILITY_ER_2010_HPP
 
 #include <boost/assign/v2/utility/chain.hpp>
-#include <boost/assign/v2/utility/sub_range.hpp>
 #include <boost/assign/v2/utility/convert.hpp>
 
 #endif

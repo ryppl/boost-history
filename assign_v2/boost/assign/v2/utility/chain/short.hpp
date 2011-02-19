@@ -17,7 +17,7 @@ namespace boost{
 namespace assign{
 namespace v2{
 
-#define MACRO(U1, U2) \
+#define BOOST_ASSIGN_V2_MACRO(U1, U2) \
 template<typename R1,typename R2> \
 typename chain_aux::result< \
     U1, \
@@ -28,11 +28,11 @@ operator&&(U1& r1, U2 & r2) \
     return r1 | _chain( r2 ); \
 } \
 /**/
-MACRO( R1      , R2       )
-MACRO( R1      , R2 const )
-MACRO( R1 const, R2       )
-MACRO( R1 const, R2 const )
-#undef MACRO
+BOOST_ASSIGN_V2_MACRO( R1      , R2       )
+BOOST_ASSIGN_V2_MACRO( R1      , R2 const )
+BOOST_ASSIGN_V2_MACRO( R1 const, R2       )
+BOOST_ASSIGN_V2_MACRO( R1 const, R2 const )
+#undef BOOST_ASSIGN_V2_MACRO
 
 }// v2
 }// assign

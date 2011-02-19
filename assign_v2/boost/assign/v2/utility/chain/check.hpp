@@ -11,13 +11,15 @@
 #define BOOST_ASSIGN_V2_CHAIN_CHECK_ER_2010_HPP
 #include <boost/static_assert.hpp>
 #include <vector>
+#include <boost/array.hpp>
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/identity.hpp>
 #include <boost/mpl/assert.hpp>
 #include <boost/type_traits/add_const.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/range/algorithm/copy.hpp>
-#include <boost/assign/v2/detail/checking/range.hpp>
+#include <boost/range/algorithm/equal.hpp>
+#include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/ref/wrapper/adaptor_get.hpp>
 #include <boost/assign/v2/ref/wrapper/copy.hpp>
 #include <boost/assign/v2/utility/chain/use_lvalue.hpp>
@@ -26,8 +28,7 @@
 namespace boost{
 namespace assign{
 namespace v2{
-namespace checking{
-namespace chain{
+namespace check_chain_aux{
 
 template<typename cr1_, typename cr2_, bool the_value>
 void verify_use_lvalue()
@@ -79,9 +80,8 @@ void verify_mpl()
 }
 
     template<typename T>
-    void do_check()
+    void static_()
     {
-    	// mpl checks
         {
         	typedef std::vector<T> vec_;
         	typedef v2::result_of::chain<vec_, vec_> caller1_;
@@ -104,81 +104,78 @@ void verify_mpl()
 		verify_mpl<T, true   , true    , false   , false    >();
 		verify_mpl<T, true   , true    , true    , false    >();
 
-        // runtime checks
-    	{
-            typedef std::vector<T> vt_;
-            vt_ vt1( 2 ), vt2( 3 ), vt3( 3 );
-            vt_ vt;
-    		{
-            	// Value containers
-                namespace ns = v2::checking::constants;
-                vt.push_back( ns::a );	// 1
-                vt.push_back( ns::b );	// 2
+	}
+    
+    template<typename T>
+    void exec()
+    {
+    	namespace as2 = boost::assign::v2;
+        typedef std::vector<T> vt_;
+        vt_ vt1( 2 ), vt2( 3 ), vt3( 3 );
+        vt_ vt;
+        {
+            // Value containers
+            vt.push_back( 1 );		// 1
+            vt.push_back( 2 );		// 2
 
-                vt.push_back( ns::c );  // 1
-                vt.push_back( ns::d );  // 2
-                vt.push_back( ns::e );	// 3
+            vt.push_back( -5 );  	// 1
+            vt.push_back( 4 );  	// 2
+            vt.push_back( 3 );		// 3
 
-                vt.push_back( ns::f );  // 1
-                vt.push_back( ns::g );  // 2
-                vt.push_back( ns::h );	// 3
-                {
+            vt.push_back( -7 );  	// 1
+            vt.push_back( 8 );  	// 2
+            vt.push_back( 9 );		// 3
+            BOOST_ASSIGN_V2_CHECK( // pre-condition
+                vt1.size() + vt2.size() + vt3.size() == vt.size()
+            );
+        }
+        {
+        	// Value container
+            boost::copy(
+                vt,
+                boost::begin( vt1 | as2::_chain( vt2 ) | as2::_chain( vt3 ) )
+            );
+            BOOST_ASSIGN_V2_CHECK( 
+            	boost::equal( vt1 | as2::_chain( vt2 ) , vt ) 
+            );
+        }
+        {
+            // Mix and Value and Ref-wrapper containers
+            typedef typename ref::copy_wrapper<T>::type w_;
+            typedef boost::is_reference_wrapper<w_> is_;
 
-                	BOOST_ASSIGN_V2_CHECK( // pre-condition
-                		vt1.size() + vt2.size() + vt3.size() == vt.size()
-                	);
-                    boost::copy(
-                        vt,
-                        boost::begin( vt1 | _chain( vt2 ) | _chain( vt3 ) )
-                    );
-                }
-                {
-                	typedef v2::container_tag::range tag_;
-                    v2::checking::do_check(
-                    	tag_(),
-                        vt1 | _chain( vt2 ) | _chain( vt3 )
-                    );
-                }
-            }
+            // rese to default values
+            vt1.resize( vt1.size() );
+            vt3.resize( vt3.size() );
+
+            T x = -1, y = -1, z = -1;
+            boost::array<w_, 3> vw2;
+            vw2[0].rebind( x ); 
+            vw2[1].rebind( y ); 
+            vw2[2].rebind( z ); 
+            boost::copy(
+                vt,
+                boost::begin( 
+                    vt1 | as2::_chain( 
+                        vw2 | ref::_get  // necessary
+                    ) | as2::_chain( vt3 ) )
+            );
             {
-            	// Mix and Value and Ref-wrapper containers
+                BOOST_ASSIGN_V2_CHECK( vt1[0] == vt[0] );
+                BOOST_ASSIGN_V2_CHECK( vt1[1] == vt[1] );
+                BOOST_ASSIGN_V2_CHECK( x == vt[2] );
+                BOOST_ASSIGN_V2_CHECK( y == vt[3] );
+                BOOST_ASSIGN_V2_CHECK( z == vt[4] );
+                BOOST_ASSIGN_V2_CHECK( vt3[0] == vt[5] );
+                BOOST_ASSIGN_V2_CHECK( vt3[1] == vt[6] );
+                BOOST_ASSIGN_V2_CHECK( vt3[2] == vt[7] );
+            }
+            // suppresses warning unused
+            if(x && y && z){} 
+        }
+    }// exec
 
-                typedef typename ref::copy_wrapper<T>::type w_;
-    	        typedef boost::is_reference_wrapper<w_> is_;
-
-				// rese to default values
-				vt1.resize( vt1.size() );
-				vt3.resize( vt3.size() );
-
-                T x = -1, y = -1, z = -1;
-                boost::array<w_, 3> vw2;
-                // Wrappers must bind first!
-                vw2[0].rebind( x ); 
-                vw2[1].rebind( y ); 
-                vw2[2].rebind( z ); 
-                boost::copy(
-                	vt,
-                    boost::begin( 
-                    	vt1 | _chain( 
-                            vw2 | ref::_get  // necessary
-                        ) | _chain( vt3 ) )
-                );
-                {
-                    namespace ns = v2::checking::constants;
-                    ns::do_check(
-                    	vt1[0], vt1[1],
-                        x, y, z,
-                        vt3[0], vt3[1], vt3[2]	
-                    );
-                }
-                // suppresses warning unused
-                if(x && y && z){} 
-			}
-        }// runtime checks
-    }// do_check
-
-}// chain
-}// checking
+}// check_chain_aux
 }// v2
 }// assign
 }// boost

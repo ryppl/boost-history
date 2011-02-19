@@ -23,7 +23,7 @@
 #include <boost/assign/v2/utility/convert/converter.hpp>
 #include <boost/assign/v2/utility/convert/deduce.hpp>
 #include <boost/assign/v2/utility/convert/predicate.hpp>
-#include <boost/assign/v2/detail/checking/fwd.hpp>
+#include <boost/assign/v2/detail/check/fwd_equal_container.hpp>
 
 // Don't include this file in v2/utility/convert.hpp
 // To use it, precede by
@@ -32,23 +32,21 @@
 namespace boost{
 namespace assign{
 namespace v2{
-namespace checking{
-namespace convert{
+namespace check_aux{
 
-	template<typename To, typename From>
-    void do_check(From const& from)
+	template<typename C, typename R>
+    void equal_convert(R const& r)
     {
-        namespace ns = checking::container;
-        To to = converter( from );
-        ns::do_check( to );
-        // ns::do_check( To( converter( from ) ) ); 
+        C cont = converter( r );
+        namespace ns = v2::check_aux;
+        ns::equal_container( cont, r );
     }
 
-	template<typename From>
-    void do_check(From const& from)
+	template<typename R>
+    void equal_convert(R const& r)
     {
     	namespace as2 = boost::assign::v2;
-    	namespace ns = checking::convert;
+    	namespace ns = check_aux;
         
         typedef boost::array<int, 8> ar_;
         typedef std::deque<int> deque_;
@@ -58,64 +56,63 @@ namespace convert{
         typedef std::stack<int> stack_;
         typedef std::vector<int> vec_;
         
-        BOOST_MPL_ASSERT(( as2::convert_aux::use_put<ar_, From> ));
-        BOOST_MPL_ASSERT(( as2::convert_aux::use_put<stack_, From> ));
-        BOOST_MPL_ASSERT(( as2::convert_aux::use_put<queue_, From> ));
-        BOOST_MPL_ASSERT_NOT(( as2::convert_aux::use_put<deque_, From> ));
-        BOOST_MPL_ASSERT_NOT(( as2::convert_aux::use_put<list_, From> ));
-        BOOST_MPL_ASSERT_NOT(( as2::convert_aux::use_put<set_, From> ));
-        BOOST_MPL_ASSERT_NOT(( as2::convert_aux::use_put<vec_, From> ));        
+        BOOST_MPL_ASSERT(( as2::convert_aux::use_put<ar_, R> ));
+        BOOST_MPL_ASSERT(( as2::convert_aux::use_put<stack_, R> ));
+        BOOST_MPL_ASSERT(( as2::convert_aux::use_put<queue_, R> ));
+        BOOST_MPL_ASSERT_NOT(( as2::convert_aux::use_put<deque_, R> ));
+        BOOST_MPL_ASSERT_NOT(( as2::convert_aux::use_put<list_, R> ));
+        BOOST_MPL_ASSERT_NOT(( as2::convert_aux::use_put<set_, R> ));
+        BOOST_MPL_ASSERT_NOT(( as2::convert_aux::use_put<vec_, R> ));        
 
         BOOST_MPL_ASSERT(( boost::is_same< 
-        		typename as2::convert_aux::deduce_tag<ar_, From>::type,
+        		typename as2::convert_aux::deduce_tag<ar_, R>::type,
                 convert_tag::put
             >
         ));
         BOOST_MPL_ASSERT(( boost::is_same< 
-        		typename as2::convert_aux::deduce_tag<stack_, From>::type,
+        		typename as2::convert_aux::deduce_tag<stack_, R>::type,
                 convert_tag::put
             >
         ));
         BOOST_MPL_ASSERT(( boost::is_same< 
-        		typename as2::convert_aux::deduce_tag<queue_, From>::type,
+        		typename as2::convert_aux::deduce_tag<queue_, R>::type,
                 convert_tag::put
             >
         ));
         BOOST_MPL_ASSERT(( boost::is_same< 
-        		typename as2::convert_aux::deduce_tag<deque_, From>::type,
+        		typename as2::convert_aux::deduce_tag<deque_, R>::type,
                 convert_tag::copy
             >
         ));
         BOOST_MPL_ASSERT(( boost::is_same< 
-        		typename as2::convert_aux::deduce_tag<list_, From>::type,
+        		typename as2::convert_aux::deduce_tag<list_, R>::type,
                 convert_tag::copy
             >
         ));
         BOOST_MPL_ASSERT(( boost::is_same< 
-        		typename as2::convert_aux::deduce_tag<set_, From>::type,
+        		typename as2::convert_aux::deduce_tag<set_, R>::type,
                 convert_tag::copy
             >
         ));
         BOOST_MPL_ASSERT(( boost::is_same< 
-        		typename as2::convert_aux::deduce_tag<vec_, From>::type,
+        		typename as2::convert_aux::deduce_tag<vec_, R>::type,
                 convert_tag::copy
             >
         ));
 
         
-        // From is specified in case it is either of those in the lhs below.
-        ns::do_check<queue_, From >( from );
-        ns::do_check<stack_, From >( from );
-        ns::do_check<ar_, From >( from );
+        // R as 2nd arg is explicit in case it is the same as the 1st arg
+        ns::equal_convert<queue_, R >( r );
+        ns::equal_convert<stack_, R >( r );
+        ns::equal_convert<ar_, R >( r );
 
-        ns::do_check<deque_, From >( from );
-        ns::do_check<list_, From >( from );
-        ns::do_check<set_, From >( from );
-        ns::do_check<vec_, From >( from );
+        ns::equal_convert<deque_, R >( r );
+        ns::equal_convert<list_, R >( r );
+        ns::equal_convert<set_, R >( r );
+        ns::equal_convert<vec_, R >( r );
     }
 
-}// convert
-}// checking
+}// check_aux
 }// v2
 }// assign
 }// boost
