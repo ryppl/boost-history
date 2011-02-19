@@ -21,23 +21,24 @@
 #include <boost/geometry/algorithms/area.hpp>
 #include <boost/geometry/algorithms/assign.hpp>
 #include <boost/geometry/algorithms/combine.hpp>
+#include <boost/geometry/algorithms/intersects.hpp>
 
 #include <boost/geometry/extensions/index/rtree/rtree_node.hpp>
 
 namespace boost { namespace geometry { namespace index
 {
 
-template <typename Box, typename Value, typename Translator>
-class rtree_leaf : public rtree_node<Box, Value, Translator>
+template <typename Value, typename Translator, typename Box>
+class rtree_leaf : public rtree_node<Value, Translator, Box>
 {
 public:
 
     // awulkiew - typedef added
-    typedef rtree_node<Box, Value, Translator> rtree_node;
+    typedef rtree_node<Value, Translator, Box> rtree_node;
 
     /// container type for the leaves
     typedef boost::shared_ptr<rtree_node> node_pointer;
-    typedef std::vector<std::pair<Box, Value> > leaf_map;
+    typedef std::vector<Value> leaf_map;
 
     /**
      * \brief Creates an empty leaf
@@ -59,32 +60,37 @@ public:
      *        If exact_match is true only return the elements having as
      *        key the 'box'. Otherwise return everything inside 'box'.
      */
-    virtual void find(Box const& box, std::deque<Value>& result, bool const exact_match)
+    // awulkiew - exact match case removed
+    virtual void find(Box const& box, std::deque<Value>& result, Translator const& tr)
     {
         for (typename leaf_map::const_iterator it = m_nodes.begin();
              it != m_nodes.end(); ++it)
         {
-            if (exact_match)
+            // awulkiew - commented
+            //if (exact_match)
+            //{
+            //    if (geometry::equals(it->first, box))
+            //    {
+            //        result.push_back(it->second);
+            //    }
+            //}
+            //else
+            //{
+
+            // awulkiew - is_overlapping changed to geometry::intersects
+            if (geometry::intersects(tr(*it), box))
             {
-                if (geometry::equals(it->first, box))
-                {
-                    result.push_back(it->second);
-                }
+                result.push_back(*it);
             }
-            else
-            {
-                if (is_overlapping(it->first, box))
-                {
-                    result.push_back(it->second);
-                }
-            }
+
+            //}
         }
     }
 
     /**
      * \brief Compute bounding box for this leaf
      */
-    virtual Box compute_box() const
+    virtual Box compute_box(Translator const& tr) const
     {
         if (m_nodes.empty())
         {
@@ -95,7 +101,7 @@ public:
         geometry::assign_inverse(r);
         for(typename leaf_map::const_iterator it = m_nodes.begin(); it != m_nodes.end(); ++it)
         {
-            geometry::combine(r, it->first);
+            geometry::combine(r, tr(*it));
         }
         return r;
     }
@@ -119,15 +125,15 @@ public:
     /**
      * \brief Insert a new element, with key 'box' and value 'v'
      */
-    virtual void insert(Box const& box, Value const& v)
+    virtual void insert(Value const& v)
     {
-        m_nodes.push_back(std::make_pair(box, v));
+        m_nodes.push_back(v);
     }
 
     /**
      * \brief Proyect leaves of this node.
      */
-    virtual std::vector< std::pair<Box, Value> > get_leaves() const
+    virtual std::vector<Value> get_leaves() const
     {
         return m_nodes;
     }
@@ -144,39 +150,46 @@ public:
     /**
      * \brief Add a new leaf to this node
      */
-    virtual void add_value(Box const& box, Value const& v)
+    virtual void add_value(Value const& v)
     {
-        m_nodes.push_back(std::make_pair(box, v));
+        m_nodes.push_back(v);
     }
-
 
     /**
      * \brief Proyect value in position 'index' in the nodes container
      */
     virtual Value get_value(unsigned int index) const
     {
-        return m_nodes[index].second;
+        return m_nodes[index];
     }
 
     /**
      * \brief Box projector for leaf
      */
-    virtual Box get_box(unsigned int index) const
-    {
-        return m_nodes[index].first;
-    }
+    // awulkiew - commented, not used
+    //virtual Box get_box(unsigned int index, Translator const& tr) const
+    //{
+    //    // TODO: awulkiew - get_bounding_object - add object specific behaviour
+    //    // or just base on get_value
+    //    Box box;
+    //    detail::convert_to_box(tr(m_nodes[index]), box);
+    //    return box;
+    //}
 
     /**
      * \brief Remove value with key 'box' in this leaf
      */
     // awulkiew - name changed to avoid ambiguity (Value may be of type Box)
-    virtual void remove_in(Box const& box)
+    virtual void remove_in(Box const& box, Translator const& tr)
     {
 
         for (typename leaf_map::iterator it = m_nodes.begin();
              it != m_nodes.end(); ++it)
         {
-            if (geometry::equals(it->first, box))
+            // TODO - awulkiew - implement object specific equals() function
+            Box b;
+            detail::convert_to_box(tr(*it), b);
+            if (geometry::equals(b, box))
             {
                 m_nodes.erase(it);
                 return;
@@ -196,7 +209,7 @@ public:
              it != m_nodes.end(); ++it)
         {
             // awulkiew - use of translator
-            if ( tr.equals(it->second, v) )
+            if ( tr.equals(*it, v) )
             {
                 m_nodes.erase(it);
                 return;
@@ -210,13 +223,17 @@ public:
     /**
     * \brief Proyect boxes from this node
     */
-    virtual std::vector<Box> get_boxes() const
+    virtual std::vector<Box> get_boxes(Translator const& tr) const
     {
         std::vector<Box> result;
         for (typename leaf_map::const_iterator it = m_nodes.begin();
              it != m_nodes.end(); ++it)
         {
-            result.push_back(it->first);
+            // TODO: awulkiew - implement object specific behaviour - get_bounding_objects(get boxes or points)
+            Box box;
+            detail::convert_to_box(tr(*it), box);
+
+            result.push_back(box);
         }
 
         return result;
@@ -225,20 +242,24 @@ public:
     /**
     * \brief Print leaf (mainly for debug)
     */
-    virtual void print() const
+    virtual void print(Translator const& tr) const
     {
         std::cerr << "\t" << " --> Leaf --------" << std::endl;
         std::cerr << "\t" << "  Size: " << m_nodes.size() << std::endl;
         for (typename leaf_map::const_iterator it = m_nodes.begin();
              it != m_nodes.end(); ++it)
         {
+            // TODO: awulkiew - implement object specific behaviour - display boxes or points
+            Box box;
+            detail::convert_to_box(tr(*it), box);
+
             std::cerr << "\t" << "  | ";
             std::cerr << "( " << geometry::get<min_corner, 0>
-                (it->first) << " , " << geometry::get<min_corner, 1>
-                (it->first) << " ) x ";
+                (box) << " , " << geometry::get<min_corner, 1>
+                (box) << " ) x ";
             std::cerr << "( " << geometry::get<max_corner, 0>
-                (it->first) << " , " << geometry::get<max_corner, 1>
-                (it->first) << " )";
+                (box) << " , " << geometry::get<max_corner, 1>
+                (box) << " )";
             // awulkiew - commented
             //std::cerr << " -> ";
             //std::cerr << it->second;

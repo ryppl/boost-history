@@ -51,13 +51,13 @@ namespace boost { namespace geometry { namespace index {
 /**
  * \brief Compute the area of the union of b1 and b2
  */
-template <typename Box>
-inline typename area_result<Box>::type compute_union_area(Box const& b1, Box const& b2)
+template <typename Box, typename Geometry>
+inline typename area_result<Box>::type compute_union_area(Box const& b, Geometry const& g)
 {
     //Box enlarged_box = enlarge_box(b1, b2);
     // awulkiew - changed to geometry::combine
-    Box enlarged_box(b1);
-    geometry::combine(enlarged_box, b2);
+    Box enlarged_box(b);
+    geometry::combine(enlarged_box, g);
     return geometry::area(enlarged_box);
 }
 
@@ -65,11 +65,12 @@ inline typename area_result<Box>::type compute_union_area(Box const& b1, Box con
  * \brief Checks if boxes intersects
  */
 // TODO: move to geometry::intersects
-template <typename Box>
-inline bool is_overlapping(Box const& b1, Box const& b2)
-{
-    return ! geometry::disjoint(b1, b2);
-}
+// awulkiew - geometry::intersects used
+//template <typename Geometry1, typename Geometry2>
+//inline bool is_overlapping(Geometry1 const& b1, Geometry2 const& b2)
+//{
+//    return ! geometry::disjoint(b1, b2);
+//}
 
 // awulkiew - structures and functions added below
 

@@ -41,8 +41,8 @@ class rtree
 {
 public:
     // awulkiew - typedefs added
-    typedef rtree_node<Box, Value, Translator> rtree_node;
-    typedef rtree_leaf<Box, Value, Translator> rtree_leaf;
+    typedef rtree_node<Value, Translator, Box> rtree_node;
+    typedef rtree_leaf<Value, Translator, Box> rtree_leaf;
 
     typedef boost::shared_ptr<rtree_node> node_pointer;
     typedef boost::shared_ptr<rtree_leaf> leaf_pointer;
@@ -96,20 +96,20 @@ public:
             node_pointer leaf(choose_exact_leaf(box));
             typename rtree_leaf::leaf_map q_leaves;
 
-            leaf->remove_in(box);
+            leaf->remove_in(box, m_translator);
 
             if (leaf->elements() < m_min_elems_per_node && elements() > m_min_elems_per_node)
             {
                 q_leaves = leaf->get_leaves();
 
                 // we remove the leaf_node in the parent node because now it's empty
-                leaf->get_parent()->remove_in(leaf->get_parent()->get_box(leaf));
+                leaf->get_parent()->remove_in(leaf->get_parent()->get_box(leaf), m_translator);
             }
 
             typename rtree_node::node_map q_nodes;
             condense_tree(leaf, q_nodes);
 
-            std::vector<std::pair<Box, Value> > s;
+            std::vector<Value> s;
             for (typename rtree_node::node_map::const_iterator it = q_nodes.begin();
                  it != q_nodes.end(); ++it)
             {
@@ -123,13 +123,13 @@ public:
                 }
             }
 
-            for (typename std::vector<std::pair<Box, Value> >::const_iterator it = s.begin();
+            for (typename std::vector<Value>::const_iterator it = s.begin();
                 it != s.end();
                 ++it)
             {
                 m_count--;
                 // awulkiew - changed
-                insert(it->second);
+                insert(*it);
             }
 
             // if the root has only one child and the child is not a leaf,
@@ -147,7 +147,7 @@ public:
             {
                 m_count--;
                 // awulkiew - parameters changed
-                insert(it->second);
+                insert(*it);
             }
 
             m_count--;
@@ -205,13 +205,13 @@ public:
                 q_leaves = leaf->get_leaves();
 
                 // we remove the leaf_node in the parent node because now it's empty
-                leaf->get_parent()->remove_in(leaf->get_parent()->get_box(leaf));
+                leaf->get_parent()->remove_in(leaf->get_parent()->get_box(leaf), m_translator);
             }
 
             typename rtree_node::node_map q_nodes;
             condense_tree(leaf, q_nodes);
 
-            std::vector<std::pair<Box, Value> > s;
+            std::vector<Value> s;
             for (typename rtree_node::node_map::const_iterator it = q_nodes.begin();
                  it != q_nodes.end(); ++it)
             {
@@ -225,13 +225,13 @@ public:
                 }
             }
 
-            for (typename std::vector<std::pair<Box, Value> >::const_iterator it = s.begin();
+            for (typename std::vector<Value>::const_iterator it = s.begin();
                 it != s.end(); ++it)
             {
                 m_count--;
                 // awulkiew - changed
                 //insert(it->first, it->second);
-                insert(it->second);
+                insert(*it);
             }
 
             // if the root has only one child and the child is not a leaf,
@@ -251,7 +251,7 @@ public:
                 m_count--;
                 // awulkiew - changed
                 //insert(it->first, it->second);
-                insert(it->second);
+                insert(*it);
             }
 
             m_count--;
@@ -292,7 +292,7 @@ public:
         // check if the selected leaf is full to do the split if necessary
         if (leaf->elements() >= m_max_elems_per_node)
         {
-            leaf->insert(box, value);
+            leaf->insert(value);
 
             // split!
             node_pointer n1(new rtree_leaf(leaf->get_parent()));
@@ -303,7 +303,7 @@ public:
         }
         else
         {
-            leaf->insert(box, value);
+            leaf->insert(value);
             adjust_tree(leaf);
         }
     }
@@ -327,7 +327,7 @@ public:
         std::cerr << "===================================" << std::endl;
         std::cerr << " Min/Max: " << m_min_elems_per_node << " / " << m_max_elems_per_node << std::endl;
         std::cerr << "Leaves: " << m_root->get_leaves().size() << std::endl;
-        m_root->print();
+        m_root->print(m_translator);
         std::cerr << "===================================" << std::endl;
     }
 
@@ -361,7 +361,7 @@ private:
         }
 
         node_pointer parent = leaf->get_parent();
-        parent->adjust_box(leaf);
+        parent->adjust_box(leaf, m_translator);
 
         if (parent->elements() < m_min_elems_per_node)
         {
@@ -381,7 +381,7 @@ private:
 
             // we remove the node in the parent node because now it should be
             // re inserted
-            parent->get_parent()->remove_in(parent->get_parent()->get_box(parent));
+            parent->get_parent()->remove_in(parent->get_parent()->get_box(parent), m_translator);
         }
 
         condense_tree(parent, q_nodes);
@@ -400,7 +400,7 @@ private:
 
         // as there are no splits just adjust the box of the parent and go on
         node_pointer parent = node->get_parent();
-        parent->adjust_box(node);
+        parent->adjust_box(node, m_translator);
         adjust_tree(parent);
     }
 
@@ -414,8 +414,8 @@ private:
         if (leaf.get() == m_root.get())
         {
             node_pointer new_root(new rtree_node(node_pointer(), leaf->get_level() + 1));
-            new_root->add_node(n1->compute_box(), n1);
-            new_root->add_node(n2->compute_box(), n2);
+            new_root->add_node(n1->compute_box(m_translator), n1);
+            new_root->add_node(n2->compute_box(m_translator), n2);
 
             n1->set_parent(new_root);
             n2->set_parent(new_root);
@@ -429,8 +429,8 @@ private:
 
         node_pointer parent = leaf->get_parent();
 
-        parent->replace_node(leaf, n1);
-        parent->add_node(n2->compute_box(), n2);
+        parent->replace_node(leaf, n1, m_translator);
+        parent->add_node(n2->compute_box(m_translator), n2);
 
         // if parent is full, split and readjust
         if (parent->elements() > m_max_elems_per_node)
@@ -454,17 +454,18 @@ private:
     {
         unsigned int seed1 = 0;
         unsigned int seed2 = 0;
-        std::vector<Box> boxes = n->get_boxes();
+        std::vector<Box> boxes = n->get_boxes(m_translator);
 
         n1->set_parent(n->get_parent());
         n2->set_parent(n->get_parent());
 
-        linear_pick_seeds(n, seed1, seed2);
+        // awulkiew - node_pointer parameter changed to std::vector<Box>
+        linear_pick_seeds(boxes, seed1, seed2);
 
         if (n->is_leaf())
         {
-            n1->add_value(boxes[seed1], n->get_value(seed1));
-            n2->add_value(boxes[seed2], n->get_value(seed2));
+            n1->add_value(n->get_value(seed1));
+            n2->add_value(n->get_value(seed2));
         }
         else
         {
@@ -488,12 +489,12 @@ private:
                 {
                     if (n1->elements() + remaining == m_min_elems_per_node)
                     {
-                        n1->add_value(it->first, it->second);
+                        n1->add_value(*it);
                         continue;
                     }
                     if (n2->elements() + remaining == m_min_elems_per_node)
                     {
-                        n2->add_value(it->first, it->second);
+                        n2->add_value(*it);
                         continue;
                     }
 
@@ -504,8 +505,8 @@ private:
 
                     /// enlarged boxes of each group
                     Box eb1, eb2;
-                    b1 = n1->compute_box();
-                    b2 = n2->compute_box();
+                    b1 = n1->compute_box(m_translator);
+                    b2 = n2->compute_box(m_translator);
 
                     /// areas
                     // awulkiew - areas types changed
@@ -515,36 +516,36 @@ private:
 
                     b1_area = geometry::area(b1);
                     b2_area = geometry::area(b2);
-                    eb1_area = compute_union_area(b1, it->first);
-                    eb2_area = compute_union_area(b2, it->first);
+                    eb1_area = compute_union_area(b1, m_translator(*it));
+                    eb2_area = compute_union_area(b2, m_translator(*it));
 
                     if (eb1_area - b1_area > eb2_area - b2_area)
                     {
-                        n2->add_value(it->first, it->second);
+                        n2->add_value(*it);
                     }
                     if (eb1_area - b1_area < eb2_area - b2_area)
                     {
-                        n1->add_value(it->first, it->second);
+                        n1->add_value(*it);
                     }
                     if (eb1_area - b1_area == eb2_area - b2_area)
                     {
                         if (b1_area < b2_area)
                         {
-                            n1->add_value(it->first, it->second);
+                            n1->add_value(*it);
                         }
                         if (b1_area > b2_area)
                         {
-                            n2->add_value(it->first, it->second);
+                            n2->add_value(*it);
                         }
                         if (b1_area == b2_area)
                         {
                             if (n1->elements() > n2->elements())
                             {
-                                n2->add_value(it->first, it->second);
+                                n2->add_value(*it);
                             }
                             else
                             {
-                                n1->add_value(it->first, it->second);
+                                n1->add_value(*it);
                             }
                         }
                     }
@@ -582,8 +583,8 @@ private:
 
                     /// enlarged boxes of each group
                     Box eb1, eb2;
-                    b1 = n1->compute_box();
-                    b2 = n2->compute_box();
+                    b1 = n1->compute_box(m_translator);
+                    b2 = n2->compute_box(m_translator);
 
                     /// areas
                     // awulkiew - areas types changed
@@ -635,10 +636,12 @@ private:
     /**
      * \brief Choose initial values for the split algorithm (linear version)
      */
-    void linear_pick_seeds(node_pointer const& n, unsigned int &seed1, unsigned int &seed2) const
+    // awulkiew - parameter changed from node_pointer to std::vector<Box>
+    void linear_pick_seeds(std::vector<Box> const& boxes, unsigned int &seed1, unsigned int &seed2) const
     {
         // get boxes from the node
-        std::vector<Box>boxes = n->get_boxes();
+        // awulkiew - use of passed boxes instead of retrieving them second time
+        //std::vector<Box> boxes = n->get_boxes(m_translator);
         if (boxes.size() == 0)
         {
             // TODO: mloskot - throw ggl exception
@@ -797,14 +800,17 @@ private:
         // refine the result
         for (typename node_type::const_iterator it = nodes.begin(); it != nodes.end(); ++it)
         {
-            typedef std::vector<std::pair<Box, Value> > leaves_type;
+            typedef std::vector<Value> leaves_type;
             leaves_type leaves = (*it)->get_leaves();
 
             for (typename leaves_type::const_iterator itl = leaves.begin();
                  itl != leaves.end(); ++itl)
             {
                 // awulkiew - operator== changed to geometry::equals
-                if ( geometry::equals(itl->first, e) )
+                // TODO - implement object specific equals() function
+                Box b;
+                detail::convert_to_box(m_translator(*itl), b);
+                if ( geometry::equals(b, e) )
                 {
                     return *it;
                 }

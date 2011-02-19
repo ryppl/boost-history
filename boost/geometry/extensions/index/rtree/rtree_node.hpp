@@ -28,16 +28,16 @@
 namespace boost { namespace geometry { namespace index {
 
 /// forward declaration
-template <typename Box, typename Value, typename Translator>
+template <typename Value, typename Translator, typename Box>
 class rtree_leaf;
 
-template <typename Box, typename Value, typename Translator>
+template <typename Value, typename Translator, typename Box>
 class rtree_node
 {
 public:
 
-    typedef boost::shared_ptr<rtree_node<Box, Value, Translator> > node_pointer;
-    typedef boost::shared_ptr<rtree_leaf<Box, Value, Translator> > leaf_pointer;
+    typedef boost::shared_ptr<rtree_node<Value, Translator, Box> > node_pointer;
+    typedef boost::shared_ptr<rtree_leaf<Value, Translator, Box> > leaf_pointer;
 
     /// type for the node map
     typedef std::vector<std::pair<Box, node_pointer > > node_map;
@@ -114,14 +114,15 @@ public:
      *        If exact_match is true only return the elements having as
      *        key the box 'box'. Otherwise return everything inside 'box'.
      */
-    virtual void find(Box const& box, std::deque<Value>& result, bool const exact_match)
+    virtual void find(Box const& box, std::deque<Value>& result, bool const exact_match, Translator const& tr)
     {
         for (typename node_map::const_iterator it = m_nodes.begin();
              it != m_nodes.end(); ++it)
         {
-            if (is_overlapping(it->first, box))
+            // awulkiew - is_overlapping changed to geometry::intersects
+            if (geometry::intersects(it->first, box))
             {
-                it->second->find(box, result, exact_match);
+                it->second->find(box, result, exact_match, tr);
             }
         }
     }
@@ -134,7 +135,8 @@ public:
         for (typename node_map::const_iterator it = m_nodes.begin();
              it != m_nodes.end(); ++it)
         {
-            if (is_overlapping(it->first, box))
+            // awulkiew - is_overlapping changed to geometry::intersects
+            if (geometry::intersects(it->first, box))
             {
                 if (it->second->is_leaf())
                 {
@@ -151,7 +153,7 @@ public:
     /**
     * \brief Compute bounding box for this node
     */
-    virtual Box compute_box() const
+    virtual Box compute_box(Translator const&) const
     {
         if (m_nodes.empty())
         {
@@ -171,7 +173,7 @@ public:
     /**
      * \brief Insert a value (not allowed for a node, only on leaves)
      */
-    virtual void insert(Box const&, Value const&)
+    virtual void insert(Value const&)
     {
         // TODO: mloskot - define & use GGL exception
         throw std::logic_error("Insert in node!");
@@ -180,7 +182,7 @@ public:
     /**
      * \brief Get the envelopes of a node
      */
-    virtual std::vector<Box> get_boxes() const
+    virtual std::vector<Box> get_boxes(Translator const&) const
     {
         std::vector<Box> result;
         for(typename node_map::const_iterator it = m_nodes.begin(); it != m_nodes.end(); ++it)
@@ -193,7 +195,7 @@ public:
     /**
      * \brief Recompute the bounding box
      */
-    void adjust_box(node_pointer const& node)
+    void adjust_box(node_pointer const& node, Translator const& tr)
     {
         unsigned int index = 0;
         for (typename node_map::iterator it = m_nodes.begin();
@@ -201,7 +203,7 @@ public:
         {
             if (it->second.get() == node.get())
             {
-                m_nodes[index] = std::make_pair(node->compute_box(), node);
+                m_nodes[index] = std::make_pair(node->compute_box(tr), node);
                 return;
             }
         }
@@ -211,7 +213,7 @@ public:
      * \brief Remove elements inside the 'box'
      */
     // awulkiew - name changed to avoid ambiguity (Value may be of type Box)
-    virtual void remove_in(Box const& box)
+    virtual void remove_in(Box const& box, Translator const&)
     {
         for (typename node_map::iterator it = m_nodes.begin();
              it != m_nodes.end(); ++it)
@@ -236,14 +238,14 @@ public:
     /**
      * \brief Replace the node in the m_nodes vector and recompute the box
      */
-    void replace_node(node_pointer const& leaf, node_pointer& new_leaf)
+    void replace_node(node_pointer const& leaf, node_pointer& new_leaf, Translator const& tr)
     {
         unsigned int index = 0;
         for(typename node_map::iterator it = m_nodes.begin(); it != m_nodes.end(); ++it, index++)
         {
             if (it->second.get() == leaf.get())
             {
-                m_nodes[index] = std::make_pair(new_leaf->compute_box(), new_leaf);
+                m_nodes[index] = std::make_pair(new_leaf->compute_box(tr), new_leaf);
                 new_leaf->update_parent(new_leaf);
                 return;
             }
@@ -265,7 +267,7 @@ public:
     /**
      * \brief add a value (not allowed in nodes, only on leaves)
      */
-    virtual void add_value(Box const&, Value const&)
+    virtual void add_value(Value const&)
     {
         // TODO: mloskot - define & use GGL exception
         throw std::logic_error("Can't add value to non-leaf node.");
@@ -386,14 +388,16 @@ public:
     /**
      * \brief Box projector for node 'index'
      */
-    virtual Box get_box(unsigned int index) const
+    // awulkiew - commented, not used
+    /*virtual Box get_box(unsigned int index, Translator const& tr) const
     {
         return m_nodes[index].first;
-    }
+    }*/
 
     /**
      * \brief Box projector for node pointed by 'leaf'
      */
+    // awulkiew - virtual keyword not needed
     virtual Box get_box(node_pointer const& leaf) const
     {
         for (typename node_map::const_iterator it = m_nodes.begin();
@@ -420,9 +424,9 @@ public:
     /**
     * \brief Get leaves for a node
     */
-    virtual std::vector<std::pair<Box, Value> > get_leaves() const
+    virtual std::vector<Value> get_leaves() const
     {
-        typedef std::vector<std::pair<Box, Value> > leaf_type;
+        typedef std::vector<Value> leaf_type;
         leaf_type leaf;
 
         for (typename node_map::const_iterator it = m_nodes.begin();
@@ -443,7 +447,7 @@ public:
     /**
      * \brief Print Rtree subtree (mainly for debug)
      */
-    virtual void print() const
+    virtual void print(Translator const& tr) const
     {
         std::cerr << " --> Node --------" << std::endl;
         std::cerr << "  Address: " << this << std::endl;
@@ -471,7 +475,7 @@ public:
         for (typename node_map::const_iterator it = m_nodes.begin();
              it != m_nodes.end(); ++it)
         {
-            it->second->print();
+            it->second->print(tr);
         }
     }
 

@@ -186,6 +186,19 @@ int main()
         t.print();
     }
 
+    {
+        typedef boost::geometry::model::point<float, 2, boost::geometry::cs::cartesian> P;
+        typedef boost::geometry::model::box<P> B;
+
+        boost::geometry::index::rtree<B>::rtree_leaf l;
+        boost::geometry::index::rtree<B>::rtree_node n;
+
+        std::cout << sizeof(boost::shared_ptr<int>) << '\n';
+        std::cout << sizeof(std::vector<int>) << '\n';
+        std::cout << sizeof(n) << '\n';
+        std::cout << sizeof(l) << '\n';        
+    }
+
     // ERROR!
     // remove_in expects previously inserted box - it should remove all objects inside some bigger box
 
