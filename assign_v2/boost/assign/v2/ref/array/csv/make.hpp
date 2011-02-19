@@ -105,8 +105,8 @@ namespace csv_array_aux{
 
 #else
 
-#define MACRO1(z, i, data) r.rebind(i, BOOST_PP_CAT(data, i) );
-#define MACRO2(z, n, U)\
+#define BOOST_ASSIGN_V2_MACRO1(z, i, data) r.rebind(i, BOOST_PP_CAT(data, i) );
+#define BOOST_ASSIGN_V2_MACRO2(z, n, U)\
 namespace csv_array_aux{\
     template<typename T>\
     typename nth_result_of::csv_array<n, T>::type\
@@ -114,7 +114,7 @@ namespace csv_array_aux{\
     {\
         typedef typename nth_result_of::csv_array<n, T>::type result_;\
         result_ r;\
-        BOOST_PP_REPEAT( n, MACRO1, _ )\
+        BOOST_PP_REPEAT( n, BOOST_ASSIGN_V2_MACRO1, _ )\
         return r;\
     }\
 }\
@@ -133,11 +133,11 @@ namespace csv_array_aux{\
 BOOST_PP_REPEAT_FROM_TO(
 	1,
     BOOST_PP_INC(BOOST_ASSIGN_V2_LIMIT_CSV_ARITY),
-    MACRO2,
+    BOOST_ASSIGN_V2_MACRO2,
     ~
 )
-#undef MACRO1
-#undef MACRO2
+#undef BOOST_ASSIGN_V2_MACRO1
+#undef BOOST_ASSIGN_V2_MACRO2
 #endif // BOOST_ASSIGN_V2_ENABLE_CPP0X
 
 }// ref

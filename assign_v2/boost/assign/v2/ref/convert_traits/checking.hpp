@@ -92,7 +92,7 @@ namespace distinct_value_type{
 
     }
 
-#define MACRO(T1, T2, T3)												    \
+#define BOOST_ASSIGN_V2_MACRO(T1, T2, T3)												    \
     template<typename T>													\
     void do_check(															\
     	typename boost::enable_if<											\
@@ -113,12 +113,12 @@ namespace supertype_{
 	typedef boost::numeric::conversion_traits<
     	double,long double>::supertype d_;
 }// supertype_
-MACRO(short  , int, 	supertype_::a_)
-MACRO(int    , long,	supertype_::b_)
-MACRO(float  , double,	supertype_::c_)
+BOOST_ASSIGN_V2_MACRO(short  , int, 	supertype_::a_)
+BOOST_ASSIGN_V2_MACRO(int    , long,	supertype_::b_)
+BOOST_ASSIGN_V2_MACRO(float  , double,	supertype_::c_)
 typedef long double long_double_;
-MACRO(double , long_double_, workaround::d_)
-#undef MACRO
+BOOST_ASSIGN_V2_MACRO(double , long_double_, workaround::d_)
+#undef BOOST_ASSIGN_V2_MACRO
 }// distinct_value_type
 */
 

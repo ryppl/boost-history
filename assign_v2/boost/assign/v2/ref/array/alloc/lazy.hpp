@@ -11,7 +11,6 @@
 #define BOOST_ASSIGN_V2_REF_ARRAY_ALLOC_LAZY_ER_2010_HPP
 #include <boost/shared_ptr.hpp>
 #include <boost/assign/v2/ref/wrapper.hpp>
-#include <boost/assign/v2/ref/fusion/assign_array.hpp>
 #include <boost/assign/v2/ref/array/alloc/lazy_fwd.hpp>
 #include <boost/assign/v2/ref/array/interface.hpp>
 #include <boost/assign/v2/ref/array/impl_traits.hpp>

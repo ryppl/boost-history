@@ -70,7 +70,7 @@ namespace list_tuple_aux{
     template<params( typename T )>
     struct tuple
     {
-#define MACRO(z, n, T)\
+#define BOOST_ASSIGN_V2_MACRO(z, n, T)\
     typename list_tuple_aux::tuple_value<\
         BOOST_PP_CAT(T, n)\
     >::type\
@@ -78,11 +78,11 @@ namespace list_tuple_aux{
         typedef boost::tuples::tuple<
             BOOST_PP_ENUM(
                 BOOST_ASSIGN_V2_LIMIT_ARITY,
-                MACRO,
+                BOOST_ASSIGN_V2_MACRO,
                 T
             )
         > type;
-#undef MACRO
+#undef BOOST_ASSIGN_V2_MACRO
 
 
     };
@@ -175,11 +175,11 @@ namespace list_tuple_aux{
 
     }
 
-#define MACRO1(T,R)\
+#define BOOST_ASSIGN_V2_MACRO1(T,R)\
     typename list_tuple_aux::tuple_param<T>::type R\
 /**/
-#define MACRO(z, n, T)\
-    MACRO1(\
+#define BOOST_ASSIGN_V2_MACRO(z, n, T)\
+    BOOST_ASSIGN_V2_MACRO1(\
         BOOST_PP_CAT(T,BOOST_PP_INC(n)),\
         BOOST_PP_CAT(_,BOOST_PP_INC(n))\
     )\
@@ -187,10 +187,10 @@ namespace list_tuple_aux{
 /**/
     explicit container(
     	const L& l,
-    	MACRO1(T0,_0) // (*)
+    	BOOST_ASSIGN_V2_MACRO1(T0,_0) // (*)
         BOOST_PP_ENUM_TRAILING(
             BOOST_PP_DEC(BOOST_ASSIGN_V2_LIMIT_ARITY),
-            MACRO,
+            BOOST_ASSIGN_V2_MACRO,
             T
         )
     )
@@ -201,8 +201,8 @@ namespace list_tuple_aux{
     {
         BOOST_STATIC_ASSERT( N > 0 );
     }
-#undef MACRO1
-#undef MACRO
+#undef BOOST_ASSIGN_V2_MACRO1
+#undef BOOST_ASSIGN_V2_MACRO
 
         template<params_default(typename U, na_type)>
         struct result : meta_result_::template apply<params(U)>{};
@@ -215,7 +215,7 @@ namespace list_tuple_aux{
         	return result_( *this );
         }
 
-#define MACRO(z, n, data)\
+#define BOOST_ASSIGN_V2_MACRO(z, n, data)\
         template<BOOST_PP_ENUM_PARAMS(n, typename U)>\
         typename result<BOOST_PP_ENUM_PARAMS(n, U)>::type\
         impl( BOOST_PP_ENUM_BINARY_PARAMS(n, U, &_) )const\
@@ -232,13 +232,13 @@ namespace list_tuple_aux{
 BOOST_PP_REPEAT_FROM_TO(
 	1,
     BOOST_PP_INC(BOOST_ASSIGN_V2_LIMIT_ARITY),
-    MACRO,
+    BOOST_ASSIGN_V2_MACRO,
     ~
 )
 
     };
 
-#undef MACRO
+#undef BOOST_ASSIGN_V2_MACRO
 #undef params
 #undef params_default
 
