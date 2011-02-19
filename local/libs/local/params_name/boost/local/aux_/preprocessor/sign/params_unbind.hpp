@@ -3,6 +3,7 @@
 #define BOOST_LOCAL_AUX_PP_SIGN_PARAMS_UNBIND_HPP_
 
 #include "parsed_params_/index.hpp"
+#include <boost/detail/preprocessor/keyword/default.hpp>
 #include <boost/preprocessor/tuple/elem.hpp>
 #include <boost/preprocessor/arithmetic/inc.hpp>
 #include <boost/preprocessor/control/iif.hpp>
@@ -33,6 +34,15 @@
             0 /* start with defaults_count to 0 */, \
             BOOST_PP_SEQ_TAIL(unbinds)) /* TAIL for leading NIL */
 
+// Expand to `default ... EMPTY()` if default value, `EMPTY()` otherwise.
+// Leading default is kept because default value might not be alphanumeric
+// (so failing `CAT` for `IS_EMPTY` check).
+#define BOOST_LOCAL_AUX_PP_SIGN_PARAMS_UNBIND_PARAM_DEFAULT_(param) \
+    BOOST_PP_TUPLE_ELEM( \
+            BOOST_LOCAL_AUX_PP_SIGN_PARAMS_UNBIND_PARAM_INDEX_MAX_, \
+            BOOST_LOCAL_AUX_PP_SIGN_PARAMS_UNBIND_PARAM_INDEX_DEFAULT_, param) \
+            (/* expand empty */) 
+
 // PUBLIC //
 
 // Expand to param declaration: [auto | register] type name.
@@ -43,15 +53,13 @@
 
 // Expand to param default value (empty if none).
 #define BOOST_LOCAL_AUX_PP_SIGN_PARAMS_UNBIND_PARAM_DEFAULT(param) \
-    BOOST_PP_TUPLE_ELEM( \
-            BOOST_LOCAL_AUX_PP_SIGN_PARAMS_UNBIND_PARAM_INDEX_MAX_, \
-            BOOST_LOCAL_AUX_PP_SIGN_PARAMS_UNBIND_PARAM_INDEX_DEFAULT_, param) \
-            (/* expand empty */)
+    BOOST_DETAIL_PP_KEYWORD_DEFAULT_REMOVE_FRONT( \
+            BOOST_LOCAL_AUX_PP_SIGN_PARAMS_UNBIND_PARAM_DEFAULT_(param))
 
 // Expand to 1 if param has default value, 0 otherwise.
 #define BOOST_LOCAL_AUX_PP_SIGN_PARAMS_UNBIND_PARAM_HAS_DEFAULT(param) \
     BOOST_PP_NOT(BOOST_PP_IS_EMPTY( \
-            BOOST_LOCAL_AUX_PP_SIGN_PARAMS_UNBIND_PARAM_DEFAULT(param)))
+            BOOST_LOCAL_AUX_PP_SIGN_PARAMS_UNBIND_PARAM_DEFAULT_(param)))
 
 // Expand to nil-seq of ALL unbind params.
 #define BOOST_LOCAL_AUX_PP_SIGN_PARAMS_UNBIND(params) \

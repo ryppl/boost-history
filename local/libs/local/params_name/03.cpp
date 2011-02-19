@@ -14,7 +14,7 @@ char& BOOST_LOCAL_FUNCTION_PARAMS(int x, double y WITH_DEFAULT(1.23), // C99 (ok
 
 char& BOOST_LOCAL_FUNCTION_PARAMS(void)
 char& BOOST_LOCAL_FUNCTION_PARAMS( (void) )
-//char& BOOST_LOCAL_FUNCTION_PARAMS() // C99 (not MSVC)
+char& BOOST_LOCAL_FUNCTION_PARAMS() // C99 (or trick on MSVC...)
 
 // Errors.
     
@@ -34,4 +34,5 @@ char& BOOST_LOCAL_FUNCTION_PARAMS( (bind this) (int x) (bind this)
         (bind a) (const bind this) (const bind& d) )
 char& BOOST_LOCAL_FUNCTION_PARAMS(bind this, int x, bind this,
         bind a, const bind this, const bind& d)
+
 

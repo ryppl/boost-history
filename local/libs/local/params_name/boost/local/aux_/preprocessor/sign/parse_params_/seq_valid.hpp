@@ -19,8 +19,10 @@
 
 #define BOOST_LOCAL_AUX_PP_SIGN_PARSE_PARAMS_SEQ_VALID_UNBIND_DEFAULT_( \
         params, elem) \
-    BOOST_LOCAL_AUX_PP_SIGN_PARSED_PARAMS_APPEND_UNBIND_DEFAULT(params, \
-            BOOST_DETAIL_PP_KEYWORD_DEFAULT_REMOVE_FRONT(elem))
+    /* elem is `default ...` where leading default is kept because default */ \
+    /* value might not be alphanumeric (so it fails later CAT for checks); */ \
+    /* leading default will be remove later when getting the default value */ \
+    BOOST_LOCAL_AUX_PP_SIGN_PARSED_PARAMS_APPEND_UNBIND_DEFAULT(params, elem)
 
 #define BOOST_LOCAL_AUX_PP_SIGN_PARSE_PARAMS_SEQ_VALID_UNBIND_(params, elem) \
     BOOST_LOCAL_AUX_PP_SIGN_PARSED_PARAMS_APPEND_UNBIND(params, elem)
