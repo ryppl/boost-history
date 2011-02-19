@@ -1,11 +1,3 @@
-/*
-// Example
-#include <iostream>
-#include <libs/assign/v2/example/utility.h>
-#include <libs/assign/v2/example/ref.h>
-#include <libs/assign/v2/example/put.h>
-*/
-
 
 // Test
 #include <libs/assign/v2/test/detail.h>
