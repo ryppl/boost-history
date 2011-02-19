@@ -23,6 +23,7 @@
 #include <boost/geometry/algorithms/combine.hpp>
 #include <boost/geometry/algorithms/intersects.hpp>
 
+#include <boost/geometry/extensions/index/rtree/helpers.hpp>
 #include <boost/geometry/extensions/index/rtree/rtree_node.hpp>
 
 namespace boost { namespace geometry { namespace index
@@ -36,8 +37,9 @@ public:
     // awulkiew - typedef added
     typedef rtree_node<Value, Translator, Box> rtree_node;
 
-    /// container type for the leaves
     typedef boost::shared_ptr<rtree_node> node_pointer;
+
+    /// container type for the leaves
     typedef std::vector<Value> leaf_map;
 
     /**
@@ -53,6 +55,35 @@ public:
     inline rtree_leaf(node_pointer const& parent)
         : rtree_node(parent, 0)
     {
+    }
+
+    // awulkiew - leaf methods
+
+    /**
+     * \brief Clear the node
+     */
+    // awulkiew - name changed from empty_nodes to clear_values
+    void clear_values()
+    {
+        m_nodes.clear();
+    }
+
+    // awulkiew - internal node and leaf virtual methods
+
+    /**
+     * \brief True if we are a leaf
+     */
+    virtual bool is_leaf() const
+    {
+        return true;
+    }
+
+    /**
+     * \brief Number of elements in the tree
+     */
+    virtual size_t elements() const
+    {
+        return m_nodes.size();
     }
 
     /**
@@ -107,74 +138,12 @@ public:
     }
 
     /**
-     * \brief True if we are a leaf
-     */
-    virtual bool is_leaf() const
-    {
-        return true;
-    }
-
-    /**
-     * \brief Number of elements in the tree
-     */
-    virtual unsigned int elements() const
-    {
-        return m_nodes.size();
-    }
-
-    /**
-     * \brief Insert a new element, with key 'box' and value 'v'
-     */
-    virtual void insert(Value const& v)
-    {
-        m_nodes.push_back(v);
-    }
-
-    /**
      * \brief Proyect leaves of this node.
      */
     virtual std::vector<Value> get_leaves() const
     {
         return m_nodes;
     }
-
-    /**
-     * \brief Add a new child (node) to this node
-     */
-    virtual void add_node(Box const&, node_pointer const&)
-    {
-        // TODO: mloskot - define & use GGL exception
-        throw std::logic_error("Can't add node to leaf node.");
-    }
-
-    /**
-     * \brief Add a new leaf to this node
-     */
-    virtual void add_value(Value const& v)
-    {
-        m_nodes.push_back(v);
-    }
-
-    /**
-     * \brief Proyect value in position 'index' in the nodes container
-     */
-    virtual Value get_value(unsigned int index) const
-    {
-        return m_nodes[index];
-    }
-
-    /**
-     * \brief Box projector for leaf
-     */
-    // awulkiew - commented, not used
-    //virtual Box get_box(unsigned int index, Translator const& tr) const
-    //{
-    //    // TODO: awulkiew - get_bounding_object - add object specific behaviour
-    //    // or just base on get_value
-    //    Box box;
-    //    detail::convert_to_box(tr(m_nodes[index]), box);
-    //    return box;
-    //}
 
     /**
      * \brief Remove value with key 'box' in this leaf
@@ -190,26 +159,6 @@ public:
             Box b;
             detail::convert_to_box(tr(*it), b);
             if (geometry::equals(b, box))
-            {
-                m_nodes.erase(it);
-                return;
-            }
-        }
-
-        // TODO: mloskot - use GGL exception
-        throw std::logic_error("Node not found.");
-    }
-
-    /**
-     * \brief Remove value in this leaf
-     */
-    virtual void remove(Value const& v, Translator const& tr)
-    {
-        for (typename leaf_map::iterator it = m_nodes.begin();
-             it != m_nodes.end(); ++it)
-        {
-            // awulkiew - use of translator
-            if ( tr.equals(*it, v) )
             {
                 m_nodes.erase(it);
                 return;
@@ -267,6 +216,67 @@ public:
         }
         std::cerr << "\t" << " --< Leaf --------" << std::endl;
     }
+
+    // awulkiew - leaf only virtual methods
+
+    /**
+     * \brief Insert a new element, with key 'box' and value 'v'
+     */
+    virtual void insert(Value const& v)
+    {
+        m_nodes.push_back(v);
+    }
+
+    /**
+     * \brief Add a new leaf to this node
+     */
+    virtual void add_value(Value const& v)
+    {
+        m_nodes.push_back(v);
+    }
+
+    /**
+     * \brief Proyect value in position 'index' in the nodes container
+     */
+    virtual Value get_value(unsigned int index) const
+    {
+        return m_nodes[index];
+    }
+
+    /**
+     * \brief Remove value in this leaf
+     */
+    virtual void remove(Value const& v, Translator const& tr)
+    {
+        for (typename leaf_map::iterator it = m_nodes.begin();
+             it != m_nodes.end(); ++it)
+        {
+            // awulkiew - use of translator
+            if ( tr.equals(*it, v) )
+            {
+                m_nodes.erase(it);
+                return;
+            }
+        }
+
+        // TODO: mloskot - use GGL exception
+        throw std::logic_error("Node not found.");
+    }
+
+    // awulkiew - unclassified methods
+
+    /**
+     * \brief Box projector for leaf
+     */
+    // awulkiew - commented, not used
+    //virtual Box get_box(unsigned int index, Translator const& tr) const
+    //{
+    //    // TODO: awulkiew - get_bounding_object - add object specific behaviour
+    //    // or just base on get_value
+    //    Box box;
+    //    detail::convert_to_box(tr(m_nodes[index]), box);
+    //    return box;
+    //}
 
 private:
 

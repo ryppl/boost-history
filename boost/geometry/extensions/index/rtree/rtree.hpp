@@ -21,7 +21,7 @@
 
 #include <boost/geometry/algorithms/area.hpp>
 
-#include <boost/geometry/extensions/index/rtree/rtree_node.hpp>
+#include <boost/geometry/extensions/index/rtree/rtree_internal_node.hpp>
 #include <boost/geometry/extensions/index/rtree/rtree_leaf.hpp>
 
 // awulkiew - added
@@ -43,8 +43,10 @@ public:
     // awulkiew - typedefs added
     typedef rtree_node<Value, Translator, Box> rtree_node;
     typedef rtree_leaf<Value, Translator, Box> rtree_leaf;
+    typedef rtree_internal_node<Value, Translator, Box> rtree_internal_node;
 
     typedef boost::shared_ptr<rtree_node> node_pointer;
+    typedef boost::shared_ptr<rtree_internal_node> internal_node_pointer;
     typedef boost::shared_ptr<rtree_leaf> leaf_pointer;
 
     /**
@@ -54,7 +56,7 @@ public:
         : m_count(0)
         , m_min_elems_per_node(minimum)
         , m_max_elems_per_node(maximum)
-        , m_root(new rtree_node(node_pointer(), 1))
+        , m_root(new rtree_internal_node(node_pointer(), 1))
         // awulkiew - added
         , m_translator(tr)
     {
@@ -106,11 +108,11 @@ public:
                 leaf->get_parent()->remove_in(leaf->get_parent()->get_box(leaf), m_translator);
             }
 
-            typename rtree_node::node_map q_nodes;
+            typename rtree_internal_node::node_map q_nodes;
             condense_tree(leaf, q_nodes);
 
             std::vector<Value> s;
-            for (typename rtree_node::node_map::const_iterator it = q_nodes.begin();
+            for (typename rtree_internal_node::node_map::const_iterator it = q_nodes.begin();
                  it != q_nodes.end(); ++it)
             {
                 typename rtree_leaf::leaf_map leaves = it->second->get_leaves();
@@ -208,11 +210,11 @@ public:
                 leaf->get_parent()->remove_in(leaf->get_parent()->get_box(leaf), m_translator);
             }
 
-            typename rtree_node::node_map q_nodes;
+            typename rtree_internal_node::node_map q_nodes;
             condense_tree(leaf, q_nodes);
 
             std::vector<Value> s;
-            for (typename rtree_node::node_map::const_iterator it = q_nodes.begin();
+            for (typename rtree_internal_node::node_map::const_iterator it = q_nodes.begin();
                  it != q_nodes.end(); ++it)
             {
                 typename rtree_leaf::leaf_map leaves = it->second->get_leaves();
@@ -352,7 +354,7 @@ private:
      * \brief Reorganize the tree after a removal. It tries to
      *        join nodes with less elements than m.
      */
-    void condense_tree(node_pointer const& leaf, typename rtree_node::node_map& q_nodes)
+    void condense_tree(node_pointer const& leaf, typename rtree_internal_node::node_map& q_nodes)
     {
         if (leaf.get() == m_root.get())
         {
@@ -372,8 +374,8 @@ private:
             }
 
             // get the nodes that we should reinsert
-            typename rtree_node::node_map this_nodes = parent->get_nodes();
-            for(typename rtree_node::node_map::const_iterator it = this_nodes.begin();
+            typename rtree_internal_node::node_map this_nodes = parent->get_nodes();
+            for(typename rtree_internal_node::node_map::const_iterator it = this_nodes.begin();
                 it != this_nodes.end(); ++it)
             {
                 q_nodes.push_back(*it);
@@ -413,7 +415,7 @@ private:
         // check if we are in the root and do the split
         if (leaf.get() == m_root.get())
         {
-            node_pointer new_root(new rtree_node(node_pointer(), leaf->get_level() + 1));
+            node_pointer new_root(new rtree_internal_node(node_pointer(), leaf->get_level() + 1));
             new_root->add_node(n1->compute_box(m_translator), n1);
             new_root->add_node(n2->compute_box(m_translator), n2);
 
@@ -435,8 +437,8 @@ private:
         // if parent is full, split and readjust
         if (parent->elements() > m_max_elems_per_node)
         {
-            node_pointer p1(new rtree_node(parent->get_parent(), parent->get_level()));
-            node_pointer p2(new rtree_node(parent->get_parent(), parent->get_level()));
+            node_pointer p1(new rtree_internal_node(parent->get_parent(), parent->get_level()));
+            node_pointer p2(new rtree_internal_node(parent->get_parent(), parent->get_level()));
 
             split_node(parent, p1, p2);
             adjust_tree(parent, p1, p2);

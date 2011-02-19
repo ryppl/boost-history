@@ -191,7 +191,7 @@ int main()
         typedef boost::geometry::model::box<P> B;
 
         boost::geometry::index::rtree<B>::rtree_leaf l;
-        boost::geometry::index::rtree<B>::rtree_node n;
+        boost::geometry::index::rtree<B>::rtree_internal_node n;
 
         std::cout << sizeof(boost::shared_ptr<int>) << '\n';
         std::cout << sizeof(std::vector<int>) << '\n';
