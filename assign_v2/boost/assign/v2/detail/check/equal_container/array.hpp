@@ -21,12 +21,12 @@ namespace check_aux{
     template<typename C, typename R>
     void equal_container(v2::container_tag::array, C const & cont, R const& r)
     {                                                                              
-		BOOST_ASSIGN_V2_CHECK_AUX_CONTAINER_SIZE
-		BOOST_ASSIGN_V2_CHECK_AUX_CONTAINER_ELEM_AT
+        BOOST_ASSIGN_V2_CHECK_AUX_CONTAINER_SIZE
+        BOOST_ASSIGN_V2_CHECK_AUX_CONTAINER_ELEM_AT
         C cpy = cont; // becaus operator[] return a (non-const) reference
         for(size_type i = 0; i < n1; i++)
         {
-        	BOOST_ASSIGN_V2_CHECK( cpy[ i ] == elem_at( i ) );
+            BOOST_ASSIGN_V2_CHECK( cpy[ i ] == elem_at( i ) );
         }
     }                                           
 

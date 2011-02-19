@@ -126,7 +126,7 @@ BOOST_PP_REPEAT(
             BOOST_PP_ENUM_PARAMS(N, T) \
         >( BOOST_PP_ENUM_PARAMS(N, _) ); \
     } \
-    \
+ \
     template<BOOST_PP_ENUM_PARAMS(N, typename T)> \
     typename ::boost::mpl::apply1< \
         F, \

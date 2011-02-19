@@ -92,16 +92,16 @@ namespace distinct_value_type{
 
     }
 
-#define BOOST_ASSIGN_V2_MACRO(T1, T2, T3)												    \
-    template<typename T>													\
-    void do_check(															\
-    	typename boost::enable_if<											\
-    		boost::is_same<T,T1> 											\
-        >::type* = 0														\
-    ) 																		\
-    {																		\
-        distinct_values::do_check_impl( T1(), T2(), T3() );	    			\
-    }																		\
+#define BOOST_ASSIGN_V2_MACRO(T1, T2, T3) \
+    template<typename T> \
+    void do_check( \
+    	typename boost::enable_if< \
+    		boost::is_same<T,T1> \
+        >::type* = 0 \
+    ) \
+    { \
+        distinct_values::do_check_impl( T1(), T2(), T3() ); \
+    } \
 */
 /**/
 /*
