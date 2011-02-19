@@ -1,0 +1,157 @@
+[/
+  Copyright 2011 Frédéric Bron
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+[c++]
+[def __binary_temp `< class LHS, class RHS=LHS, class RET=void >`]
+[def __prefix_temp `< class RHS, class RET=void >`]
+[def __postfix_temp `< class LHS, class RET=void >`]
+
+[section:operators Operator Type Traits]
+
+[heading Introduction]
+
+These traits are all /value traits/ inheriting from __integral_constant
+and providing a simple `true` or `false` boolean value which reflects the fact
+that given types can or not be used with given operators.
+
+For example, `has_operator_plus<int, double>::value` is a `bool`
+which value is `true` because it is possible to add a `double` to an `int` like in the following code:
+``
+int i;
+double d;
+d+i;
+``
+It is also possible to know if the result of the operator is convertible or not to a given type:
+``
+has_operator_plus<int, double, double>::value; // true: int+double is convertible to double
+has_operator_plus<int, double, char*>::value; // false: int+double is not convertible to char*
+has_operator_less<int, double, bool>::value; // true: int<double is convertible to bool
+``
+
+The syntax for binary operators is the following:
+``
+template __binary_temp has_operator_op;
+``
+where:
+
+* `LHS` is the type used at the left hand side of `operator op`,
+* `RHS` is the type used at the right hand side of `operator op`,
+* `RET` is the type for which we want to know if the result of `operator op` can be converted to.
+  Note that if `RET` is `void` (default), the return type is not checked.
+
+Similarly, the syntax for postfix and prefix operators is the following:
+``
+template __prefix_temp has_operator_prefixop;
+template __postfix_temp has_operator_postfixop;
+``
+
+The following tables give the list of supported binary, prefix and postfix operators.
+
+[table Supported binary operators
+   [[operator]                   [trait name]]
+
+   [[`==`]    [[link boost_typetraits.reference.has_operator_equal_to `has_operator_equal_to __binary_temp`]]]
+   [[`!=`]    [[link boost_typetraits.reference.has_operator_not_equal_to `has_operator_not_equal_to __binary_temp`]]]
+   [[`>`]     [[link boost_typetraits.reference.has_operator_greater `has_operator_greater __binary_temp`]]]
+   [[`>=`]    [[link boost_typetraits.reference.has_operator_greater_equal `has_operator_greater_equal __binary_temp`]]]
+   [[`<`]     [[link boost_typetraits.reference.has_operator_less `has_operator_less __binary_temp`]]]
+   [[`<=`]    [[link boost_typetraits.reference.has_operator_less_equal `has_operator_less_equal __binary_temp`]]]
+
+   [[`+`]     [[link boost_typetraits.reference.has_operator_plus `has_operator_plus __binary_temp`]]]
+   [[`-`]     [[link boost_typetraits.reference.has_operator_minus `has_operator_minus __binary_temp`]]]
+   [[`*`]     [[link boost_typetraits.reference.has_operator_multiplies `has_operator_multiplies __binary_temp`]]]
+   [[`/`]     [[link boost_typetraits.reference.has_operator_divides `has_operator_divides __binary_temp`]]]
+   [[`%`]     [[link boost_typetraits.reference.has_operator_modulus `has_operator_modulus __binary_temp`]]]
+   [[`+=`]    [[link boost_typetraits.reference.has_operator_plus_equal `has_operator_plus_equal __binary_temp`]]]
+   [[`-=`]    [[link boost_typetraits.reference.has_operator_minus_equal `has_operator_minus_equal __binary_temp`]]]
+   [[`*=`]    [[link boost_typetraits.reference.has_operator_multiplies_equal `has_operator_multiplies_equal __binary_temp`]]]
+   [[`/=`]    [[link boost_typetraits.reference.has_operator_divides_equal `has_operator_divides_equal __binary_temp`]]]
+   [[`%=`]    [[link boost_typetraits.reference.has_operator_modulus_equal `has_operator_modulus_equal __binary_temp`]]]
+
+   [[`&&`]    [[link boost_typetraits.reference.has_operator_logical_and `has_operator_logical_and __binary_temp`]]]
+   [[`||`]    [[link boost_typetraits.reference.has_operator_logical_or `has_operator_logical_or __binary_temp`]]]
+
+   [[`&`]     [[link boost_typetraits.reference.has_operator_bit_and `has_operator_bit_and __binary_temp`]]]
+   [[`|`]     [[link boost_typetraits.reference.has_operator_bit_or `has_operator_bit_or __binary_temp`]]]
+   [[`^`]     [[link boost_typetraits.reference.has_operator_bit_xor `has_operator_bit_xor __binary_temp`]]]
+   [[`<<`]    [[link boost_typetraits.reference.has_operator_left_shift `has_operator_left_shift __binary_temp`]]]
+   [[`>>`]    [[link boost_typetraits.reference.has_operator_right_shift `has_operator_right_shift __binary_temp`]]]
+   [[`&=`]    [[link boost_typetraits.reference.has_operator_bit_and_equal `has_operator_bit_and_equal __binary_temp`]]]
+   [[`|=`]    [[link boost_typetraits.reference.has_operator_bit_or_equal `has_operator_bit_or_equal __binary_temp`]]]
+   [[`^=`]    [[link boost_typetraits.reference.has_operator_bit_xor_equal `has_operator_bit_xor_equal __binary_temp`]]]
+   [[`<<=`]   [[link boost_typetraits.reference.has_operator_left_shift_equal `has_operator_left_shift_equal __binary_temp`]]]
+   [[`>>=`]   [[link boost_typetraits.reference.has_operator_right_shift_equal `has_operator_right_shift_equal __binary_temp`]]]
+]
+
+[table Supported prefix operators
+   [[operator]                   [trait name]]
+   [[`+`]   [[link boost_typetraits.reference.has_operator_unary_plus `has_operator_unary_plus __prefix_temp`]]]
+   [[`-`]   [[link boost_typetraits.reference.has_operator_unary_minus `has_operator_unary_minus __prefix_temp`]]]
+   [[`!`]   [[link boost_typetraits.reference.has_operator_logical_not `has_operator_logical_not __prefix_temp`]]]
+   [[`~`]   [[link boost_typetraits.reference.has_operator_complement `has_operator_complement __prefix_temp`]]]
+   [[`--`]   [[link boost_typetraits.reference.has_operator_prefix_decrement `has_operator_prefix_decrement __prefix_temp`]]]
+   [[`++`]   [[link boost_typetraits.reference.has_operator_prefix_increment `has_operator_prefix_increment __prefix_temp`]]]
+]
+
+[table Supported postfix operators
+   [[operator]                   [trait name]]
+   [[`--`]   [[link boost_typetraits.reference.has_operator_postfix_decrement `has_operator_postfix_decrement __postfix_temp`]]]
+   [[`++`]   [[link boost_typetraits.reference.has_operator_postfix_increment `has_operator_postfix_increment __postfix_temp`]]]
+]
+
+
+The choice of trait names may seem unconsistent but it has not been possible to propose a more consistent naming convention because the standard is itself inconsistent.
+The following table shows the names found in the standard for each operator and the corresponding trait name.
+
+[table Operator names in the standard
+[[operator] [alternative token (__std_ref 2.5)] [name in `<functionnal>` or `<iterator>` (__std_ref 20.3 and 24.2)] [trait name]]
+[[binary]]
+[[`==`]     [\u00F8]                      [`equal_to`]                                 [[link boost_typetraits.reference.has_operator_equal_to          `has_operator_equal_to`]]]
+[[`!=`]     [`not_eq`]                    [`not_equal_to`]                             [[link boost_typetraits.reference.has_operator_not_equal_to      `has_operator_not_equal_to`]]]
+[[`<`]      [\u00F8]                      [`less`]                                     [[link boost_typetraits.reference.has_operator_less              `has_operator_less`]]]
+[[`<=`]     [\u00F8]                      [`less_equal`]                               [[link boost_typetraits.reference.has_operator_less_equal        `has_operator_less_equal`]]]
+[[`>`]      [\u00F8]                      [`greater`]                                  [[link boost_typetraits.reference.has_operator_greater           `has_operator_greater`]]]
+[[`>=`]     [\u00F8]                      [`greater_equal`]                            [[link boost_typetraits.reference.has_operator_greater_equal     `has_operator_greater_equal`]]]
+[[ ]]
+[[`+`]      [\u00F8]                      [`plus`]                                     [[link boost_typetraits.reference.has_operator_plus              `has_operator_plus`]]]
+[[`-`]      [\u00F8]                      [`minus`]                                    [[link boost_typetraits.reference.has_operator_minus             `has_operator_minus`]]]
+[[`*`]      [\u00F8]                      [`multiplies`]                               [[link boost_typetraits.reference.has_operator_multiplies        `has_operator_multiplies`]]]
+[[`/`]      [\u00F8]                      [`divides`]                                  [[link boost_typetraits.reference.has_operator_divides           `has_operator_divides`]]]
+[[`%`]      [\u00F8]                      [`modulus`]                                  [[link boost_typetraits.reference.has_operator_modulus           `has_operator_modulus`]]]
+[[`+=`]     [\u00F8]                      [\u00F8]                                     [[link boost_typetraits.reference.has_operator_plus_equal        `has_operator_plus_equal`]]]
+[[`-=`]     [\u00F8]                      [\u00F8]                                     [[link boost_typetraits.reference.has_operator_minus_equal       `has_operator_minus_equal`]]]
+[[`*=`]     [\u00F8]                      [\u00F8]                                     [[link boost_typetraits.reference.has_operator_multiplies_equal  `has_operator_multiplies_equal`]]]
+[[`/=`]     [\u00F8]                      [\u00F8]                                     [[link boost_typetraits.reference.has_operator_divides_equal     `has_operator_divides_equal`]]]
+[[`%=`]     [\u00F8]                      [\u00F8]                                     [[link boost_typetraits.reference.has_operator_modulus_equal     `has_operator_modulus_equal`]]]
+[[ ]]
+[[`&`]      [`bitand`]                    [`bit_and`]                                  [[link boost_typetraits.reference.has_operator_bit_and           `has_operator_bit_and`]]]
+[[`|`]      [`bitor`]                     [`bit_or`]                                   [[link boost_typetraits.reference.has_operator_bit_or            `has_operator_bit_or`]]]
+[[`^`]      [`xor`]                       [`bit_xor`]                                  [[link boost_typetraits.reference.has_operator_bit_xor           `has_operator_bit_xor`]]]
+[[`&=`]     [`and_eq`]                    [\u00F8]                                     [[link boost_typetraits.reference.has_operator_bit_and_equal     `has_operator_bit_and_equal`]]]
+[[`|=`]     [`or_eq`]                     [\u00F8]                                     [[link boost_typetraits.reference.has_operator_bit_or_equal      `has_operator_bit_or_equal`]]]
+[[`^=`]     [`xor_eq`]                    [\u00F8]                                     [[link boost_typetraits.reference.has_operator_bit_xor_equal     `has_operator_bit_xor_equal`]]]
+[[`<<`]     [\u00F8]                      [\u00F8]                                     [[link boost_typetraits.reference.has_operator_left_shift        `has_operator_left_shift`]]]
+[[`>>`]     [\u00F8]                      [\u00F8]                                     [[link boost_typetraits.reference.has_operator_right_shift       `has_operator_right_shift`]]]
+[[`<<=`]    [\u00F8]                      [\u00F8]                                     [[link boost_typetraits.reference.has_operator_left_shift_equal  `has_operator_left_shift_equal`]]]
+[[`>>=`]    [\u00F8]                      [\u00F8]                                     [[link boost_typetraits.reference.has_operator_right_shift_equal `has_operator_right_shift_equal`]]]
+[[ ]]
+[[`&&`]     [`and`]                       [`logical_and`]                              [[link boost_typetraits.reference.has_operator_logical_and       `has_operator_logical_and`]]]
+[[`||`]     [`or`]                        [`logical_or`]                               [[link boost_typetraits.reference.has_operator_logical_or        `has_operator_logical_or`]]]
+[[prefix]]
+[[`+`]      [\u00F8]                      [\u00F8]                                     [[link boost_typetraits.reference.has_operator_unary_plus        `has_operator_unary_plus`]]]
+[[`-`]      [\u00F8]                      [`negate`]                                   [[link boost_typetraits.reference.has_operator_unary_minus       `has_operator_unary_minus`]]]
+[[`~`]      [`compl`]                     [\u00F8]                                     [[link boost_typetraits.reference.has_operator_complement        `has_operator_complement`]]]
+[[`!`]      [`not`]                       [`logical_not`]                              [[link boost_typetraits.reference.has_operator_logical_not       `has_operator_logical_not`]]]
+[[`++`]     [\u00F8]                      [`advance`]                                  [[link boost_typetraits.reference.has_operator_prefix_increment  `has_operator_prefix_increment`]]]
+[[`--`]     [\u00F8]                      [\u00F8]                                     [[link boost_typetraits.reference.has_operator_prefix_decrement  `has_operator_prefix_decrement`]]]
+[[postfix]]
+[[`++`]     [\u00F8]                      [`advance`]                                  [[link boost_typetraits.reference.has_operator_postfix_increment `has_operator_postfix_increment`]]]
+[[`--`]     [\u00F8]                      [\u00F8]                                     [[link boost_typetraits.reference.has_operator_postfix_decrement `has_operator_postfix_decrement`]]]
+]
+
+[heading Implementation]
+
+[endsect]

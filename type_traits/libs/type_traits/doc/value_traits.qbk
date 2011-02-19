@@ -191,4 +191,6 @@ between two types:
    
 [endsect]
 
+[include operators.qbk]
+
 [endsect]

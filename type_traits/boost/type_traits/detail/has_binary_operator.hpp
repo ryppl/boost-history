@@ -10,14 +10,12 @@
 #include <boost/type_traits/ice.hpp>
 #include <boost/type_traits/integral_constant.hpp>
 #include <boost/type_traits/is_base_of.hpp>
-#include <boost/type_traits/is_class.hpp>
 #include <boost/type_traits/is_const.hpp>
 #include <boost/type_traits/is_convertible.hpp>
 #include <boost/type_traits/is_fundamental.hpp>
 #include <boost/type_traits/is_integral.hpp>
 #include <boost/type_traits/is_pointer.hpp>
 #include <boost/type_traits/is_same.hpp>
-#include <boost/type_traits/is_union.hpp>
 #include <boost/type_traits/is_void.hpp>
 #include <boost/type_traits/remove_cv.hpp>
 #include <boost/type_traits/remove_pointer.hpp>
