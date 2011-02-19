@@ -9,6 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #include <libs/assign/v2/test/put/container/functor.h>
 #include <libs/assign/v2/test/put/container/csv.h>
+#include <libs/assign/v2/test/put/container/range.h>
 #include <libs/assign/v2/test/put/container.h>
 
 
@@ -20,6 +21,7 @@ namespace xxx_container{
     {
     	xxx_functor::test();
     	xxx_csv::test();
+    	xxx_range::test();
     }
     
 }// xxx_container

@@ -11,7 +11,7 @@
 #include <stack>
 #include <vector>
 #include <boost/array.hpp>
-#include <boost/assign/v2/detail/checking/check.hpp>
+#include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/put/container/range.hpp>
 #include <libs/assign/v2/test/put/container/range.h>
 
@@ -28,7 +28,6 @@ namespace xxx_range{
     	typedef int T; T x = 1, y = 2, z = 0;
         std::vector<T> r( 3 ); r[0] = x; r[1] = y; r[2] = z;
         //]       
-        
         // Forwards to put()
 		{
         	//[range_array
@@ -39,11 +38,10 @@ namespace xxx_range{
         }
 		{
         	//[range_stack
-    		typedef std::stack<T> cont_;
-    		BOOST_ASSIGN_V2_CHECK( as2::put_range<cont_>( r ).top() == x );
+    		typedef std::stack<T> lifo_;
+    		BOOST_ASSIGN_V2_CHECK( as2::put_range<lifo_>( r ).top() == z );
             //]
         }
-
         // Calls C(b, e)
 		{
         	//[range_deque

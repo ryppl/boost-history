@@ -8,20 +8,15 @@
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
 #include <utility>
-#include <deque>
-#include <map>
 #include <vector>
-#include <string>
-#include <boost/typeof/typeof.hpp>
-#include <boost/tuple/tuple.hpp>
-#include <boost/range/size.hpp>
-#include <boost/assign/v2/detail/checking/check.hpp>
-#include <boost/assign/v2/put/deque.hpp>
-#include <boost/assign/v2/put/container/functor.hpp>
-#include <boost/assign/v2/put/ext.hpp>
-#include <boost/assign/v2/ref/array.hpp>
+#include <boost/range/algorithm/copy.hpp>
+#include <boost/assign/v2/detail/config/check.hpp>
+#include <boost/assign/v2/utility/chain.hpp>
+#include <boost/assign/v2/ref/wrapper/adaptor_get.hpp>
+#include <boost/assign/v2/ref/array/csv.hpp>
+#include <boost/assign/v2/ref/array/functor.hpp>
 #include <boost/assign/v2/ref/array/functor/converter.hpp>
-
+#include <boost/assign/v2/put/deque/csv.hpp>
 #include <libs/assign/v2/test/other.h>
 
 namespace test_assign_v2{
@@ -30,42 +25,58 @@ namespace xxx_other{
 	// Tests interaction between different functionalities 
 
     void test(){
+    
     	namespace as2 = boost::assign::v2;
     
     	{	
         	//[array_converter
-        	typedef std::pair<int, int> T;
+        	typedef std::pair<std::string, int> T;
         	typedef std::vector<T> cont_;
-        	// notice name lookup
-        	cont_ cont = converter( as2::ref::array( T(0, 0) )( T(1, 2) ) );
-        	BOOST_ASSIGN_V2_CHECK( cont[1].first == 1 );
-        	BOOST_ASSIGN_V2_CHECK( cont[1].second == 2 );
+        	cont_ cont = converter( // name lookup
+            	as2::ref::array( T("jan", 31) )( T("feb", 28) )( T("mar", 31) ) 
+            );
+        	BOOST_ASSIGN_V2_CHECK( cont[1].first == "feb" );
+        	BOOST_ASSIGN_V2_CHECK( cont[1].second == 28 );
             //]
+        	BOOST_ASSIGN_V2_CHECK( cont[0].first == "jan" );
+        	BOOST_ASSIGN_V2_CHECK( cont[0].second == 31 );
+        	BOOST_ASSIGN_V2_CHECK( cont[2].first == "mar" );
+        	BOOST_ASSIGN_V2_CHECK( cont[2].second == 31 );
     	}
         {
-        	//[deque_repeat
-            BOOST_AUTO(
-            	cont,  ( 
-                	as2::deque<int>( as2::_nil ) % ( as2::_repeat = 2 ) 
-                )( -1 )( 0 )( 1 )
+        	//[chain_w
+            std::vector<int> v( 3 ); v[0] = -1; v[1] = 0; v[2] = 1;
+            boost::array<int, 2> ar; int z; // lvalues 
+            boost::copy(
+                v,
+                boost::begin(
+                    ar | as2::_chain(
+                        as2::ref::csv_array( z ) // rvalue!
+                        	| as2::ref::_get 
+                    ) 
+                )
             );
-            BOOST_ASSIGN_V2_CHECK( boost::size( cont ) == 6 );
-            BOOST_ASSIGN_V2_CHECK( cont.front() == -1 );
-            BOOST_ASSIGN_V2_CHECK( cont.back() == 1 );
-        }
-		{
-            //[ref
-            int x = -1, y = 0;
-            std::deque< boost::tuple<std::string, int&> > cont;
-            as2::put( cont )( "x" , x )( "y" , y );
-            BOOST_ASSIGN_V2_CHECK( boost::get<0>( cont[0] ) == "x" );
-            BOOST_ASSIGN_V2_CHECK( boost::get<0>( cont[1] ) == "y" );
-            BOOST_ASSIGN_V2_CHECK( &boost::get<1>( cont[0] ) == &x );
-            BOOST_ASSIGN_V2_CHECK( &boost::get<1>( cont[1] ) == &y );
+            BOOST_ASSIGN_V2_CHECK( ar[0] == -1 );
+            BOOST_ASSIGN_V2_CHECK( ar[1] == 0 );
+            BOOST_ASSIGN_V2_CHECK( z == 1 );
             //]
-
-		}        
-	}
+		}
+		{
+        	//[array_converter
+        	typedef std::pair<std::string, int> T;
+        	typedef std::vector<T> cont_;
+        	cont_ cont = converter( // name lookup
+            	as2::ref::array( T("jan", 31) )( T("feb", 28) )( T("mar", 31) )
+            );
+        	BOOST_ASSIGN_V2_CHECK( cont[1].first == "feb" );
+        	BOOST_ASSIGN_V2_CHECK( cont[1].second == 28 );
+            //]
+        	BOOST_ASSIGN_V2_CHECK( cont[0].first == "jan" );
+        	BOOST_ASSIGN_V2_CHECK( cont[0].second == 31 );
+        	BOOST_ASSIGN_V2_CHECK( cont[2].first == "mar" );
+        	BOOST_ASSIGN_V2_CHECK( cont[2].second == 31 );
+		}
+    }
 
 }// xxx_other
 }// xxx_test_assign

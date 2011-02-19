@@ -11,7 +11,7 @@
 #include <libs/assign/v2/test/put/pipe/functor.h>
 #include <libs/assign/v2/test/put/pipe/csv.h>
 #include <libs/assign/v2/test/put/pipe/range.h>
-#include <libs/assign/v2/test/put/pipe/ext.h>
+#include <libs/assign/v2/test/put/pipe.h>
 
 namespace test_assign_v2{
 namespace xxx_put{
@@ -22,7 +22,6 @@ namespace xxx_pipe{
     	xxx_csv::test();
     	xxx_functor::test();
     	xxx_range::test();
-    	xxx_ext::test();
     }
     
 }// xxx_pipe

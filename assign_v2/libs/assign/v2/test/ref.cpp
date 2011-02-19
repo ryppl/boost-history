@@ -22,7 +22,7 @@ namespace xxx_ref{
     
         xxx_array::test();
         xxx_convert_traits::test();
-        xxx_csv_array::test();
+        xxx_array::test();
         xxx_list::test();
         xxx_list_tuple::test();
         xxx_wrapper::test();

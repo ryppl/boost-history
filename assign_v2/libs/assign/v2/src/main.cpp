@@ -32,14 +32,8 @@ int main (int argc, char * const argv[])
     	xxx_utility::test();
         xxx_other::test();
     }
+
 /*
-    {
-		using namespace example_assign_v2;
-		
-		xxx_ref::run(std::cout);
-		xxx_put::run(std::cout);
-		xxx_utility::run(std::cout);
-    }
 	{
     	using namespace speed_assign_v2;
         std::ofstream ofs("results");

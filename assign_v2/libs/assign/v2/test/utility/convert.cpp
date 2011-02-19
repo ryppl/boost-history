@@ -8,7 +8,10 @@
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
 #include <vector>
-#include <boost/assign/v2/detail/checking/container.hpp>
+#include <stack>
+#include <boost/array.hpp>
+#include <boost/assign/v2/detail/config/check.hpp>
+#include <boost/assign/v2/utility/convert.hpp>
 #include <boost/assign/v2/utility/convert/check.hpp>
 #include <libs/assign/v2/test/utility/convert.h>
 
@@ -19,24 +22,34 @@ namespace xxx_convert{
     void test()
     {
     	namespace as2 = boost::assign::v2;
-        namespace ns = as2::checking::convert;
-
-		std::vector<int> v;
-		{
-        	using namespace as2::checking::constants;
-            v.push_back( a );
-            v.push_back( b );
-            v.push_back( c ); 
-            v.push_back( d ); 
-            v.push_back( e ); 
-            v.push_back( f ); 
-            v.push_back( g );
-            v.push_back( h );
+        namespace ns = as2::check_aux;
+        
+        {
+			// containers developed in this library are tested in conjunction 
+            // with converter() in their respective directories
         }
-
-		// Any range will do, so need to check, say, csv_deque
-        ns::do_check( v );
-    	
+        {
+            //[convert_inpl 
+            std::vector<int> v( 3 ); v[0] = 1; v[1] = 2; v[2] = 0;
+            typedef boost::array<int, 3> ar_;
+            BOOST_ASSIGN_V2_CHECK( 
+            	( as2::converter( v ).type<ar_>() )[1] == v[1] 
+            );
+            //]
+            BOOST_ASSIGN_V2_CHECK( 
+            	( as2::converter( v ).type<ar_>() )[0] == v[0] 
+            );
+            BOOST_ASSIGN_V2_CHECK( 
+            	( as2::converter( v ).type<ar_>() )[2] == v[2] 
+            );
+        }
+    	{
+            //[convert_copy
+            std::vector<int> v( 3 ); v[0] = -1; v[1] = 0; v[2] = 1;
+            std::stack<int> lifo = as2::converter( v ); 
+            BOOST_ASSIGN_V2_CHECK( lifo.top() == 1 );
+            //]
+        }
     }
         
 }// xxx_convert

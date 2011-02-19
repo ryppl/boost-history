@@ -11,7 +11,7 @@
 #include <stack>
 #include <vector>
 #include <boost/array.hpp>
-#include <boost/assign/v2/detail/checking/check.hpp>
+#include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/put/pipe/range.hpp>
 
 #include <libs/assign/v2/test/put/pipe/range.h>
@@ -40,11 +40,11 @@ namespace xxx_range{
         }
 		{
         	//[range_stack
-    		typedef std::stack<T> cont_;
+    		typedef std::stack<T> lifo_;
     		BOOST_ASSIGN_V2_CHECK( 
             	( 
-                	::boost::type<cont_>() | as2::_put_range( r ) 
-                ).top() == x 
+                	::boost::type<lifo_>() | as2::_put_range( r ) 
+                ).top() == z 
             );
             //]
         }

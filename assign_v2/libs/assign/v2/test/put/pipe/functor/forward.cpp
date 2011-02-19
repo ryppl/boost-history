@@ -10,7 +10,7 @@
 #include <deque>
 #include <vector>
 #include <string>
-#include <boost/assign/v2/detail/checking/check.hpp>
+#include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/ref/list_tuple/container.hpp>
 #include <boost/assign/v2/put/container/functor.hpp>
 #include <boost/assign/v2/put/pipe/functor/forward.hpp>

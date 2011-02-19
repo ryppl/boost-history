@@ -10,8 +10,8 @@
 #include <string>
 #include <boost/mpl/int.hpp>
 #include <boost/typeof/typeof.hpp>
-#include <boost/assign/v2/detail/checking/equal.hpp>
-#include <boost/assign/v2/detail/checking/constants.hpp>
+#include <boost/assign/v2/detail/check/equal_val.hpp> 
+#include <boost/assign/v2/detail/check/equal_ref.hpp>
 #include <boost/assign/v2/put/ext/repeat.hpp>
 #include <boost/assign/v2/put/pipe/functor.hpp>
 #include <libs/assign/v2/test/put/pipe/functor/rhs.h>
@@ -69,7 +69,7 @@ namespace xxx_rhs{
                 )
             );
             
-            namespace chk = as2::checking;
+            namespace chk = as2::check_aux;
             typedef chk::equal_ref r_;
             typedef chk::equal_val v_;
             

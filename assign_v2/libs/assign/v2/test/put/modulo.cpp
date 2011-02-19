@@ -9,7 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #include <vector>
 #include <deque>
-#include <boost/assign/v2/detail/checking/check.hpp>
+#include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/put/container.hpp>
 #include <boost/assign/v2/put/std/push_front.hpp>
 #include <boost/assign/v2/put/modulo/fun.hpp>
@@ -36,7 +36,7 @@ namespace xxx_modulo{
         	//]
         }
         {
-        	//[modulo_modifier
+        	//[modulo_push_front
             typedef int T; T x = 1, y = 2, z = 0;
         	std::deque<int> cont;
         	( as2::put( cont ) % ( as2::_modifier 
@@ -50,5 +50,3 @@ namespace xxx_modulo{
 }// xxx_modulo
 }// xxx_put
 }// test_assign_v2
-
-

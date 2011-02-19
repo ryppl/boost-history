@@ -10,6 +10,9 @@
 #include <libs/assign/v2/test/put/pipe/functor/container.h>
 #include <libs/assign/v2/test/put/pipe/functor/forward.h>
 #include <libs/assign/v2/test/put/pipe/functor/rhs.h>
+#include <libs/assign/v2/test/put/pipe/functor/fun.h>
+#include <libs/assign/v2/test/put/pipe/functor/std.h>
+#include <libs/assign/v2/test/put/pipe/functor/str_literal.h>
 #include <libs/assign/v2/test/put/pipe/functor.h>
 
 namespace test_assign_v2{
@@ -21,6 +24,9 @@ namespace xxx_functor{
         xxx_container::test();
         xxx_forward::test();
         xxx_rhs::test();
+        xxx_fun::test();
+        xxx_std::test();
+        xxx_str_literal::test();
     }
 
 }// xxx_functor

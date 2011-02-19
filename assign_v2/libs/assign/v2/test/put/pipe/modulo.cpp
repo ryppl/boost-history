@@ -10,7 +10,7 @@
 #include <list>
 #include <boost/mpl/vector/vector10.hpp>
 #include <boost/assign/v2/detail/functor/identity.hpp>
-#include <boost/assign/v2/detail/checking/check.hpp>
+#include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/put/std/push_front.hpp>
 #include <boost/assign/v2/put/container.hpp>
 #include <boost/assign/v2/put/modulo/fun.hpp>

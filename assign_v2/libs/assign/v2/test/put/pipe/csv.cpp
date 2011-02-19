@@ -7,7 +7,10 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
+#include <libs/assign/v2/test/put/pipe/csv/container.h>
 #include <libs/assign/v2/test/put/pipe/csv/rhs.h>
+#include <libs/assign/v2/test/put/pipe/csv/fun.h>
+#include <libs/assign/v2/test/put/pipe/csv/std.h>
 #include <libs/assign/v2/test/put/pipe/csv.h>
 
 namespace test_assign_v2{
@@ -16,7 +19,10 @@ namespace xxx_pipe{
 namespace xxx_csv{
 
     void test(){
+        xxx_container::test();
         xxx_rhs::test();
+        xxx_fun::test();
+        xxx_std::test();
     }
 
 }// xxx_csv

@@ -9,7 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #include <boost/mpl/assert.hpp>
 #include <boost/assign/v2/ref/wrapper.hpp>
-#include <boost/assign/v2/detail/checking/check.hpp>
+#include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
 #include <libs/assign/v2/test/ref/wrapper.h>
 

@@ -11,7 +11,8 @@
 #include <boost/preprocessor/expr_if.hpp>
 #include <boost/mpl/int.hpp>
 #include <boost/typeof/typeof.hpp>
-#include <boost/assign/v2/detail/checking/equal.hpp>
+#include <boost/assign/v2/detail/check/equal_val.hpp> 
+#include <boost/assign/v2/detail/check/equal_ref.hpp>
 #include <boost/assign/v2/put/pipe/csv.hpp>
 
 #include <libs/assign/v2/test/put/pipe/csv/rhs.h>
@@ -40,7 +41,7 @@ namespace xxx_rhs{
         cint_ x = -1, y = 0, z = 1; 
         int x1 = x + 5, y1 = y + 5, z1 = z + 5;
 
-        namespace chk = as2::checking;
+        namespace chk = as2::check_aux;
         typedef chk::equal_ref r_;
         typedef chk::equal_val v_;
 

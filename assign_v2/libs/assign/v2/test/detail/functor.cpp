@@ -18,7 +18,7 @@
 #include <boost/tuple/tuple.hpp>
 
 #include <boost/assign/v2/detail/config/tuple_limit_arity.hpp>
-#include <boost/assign/v2/detail/checking/check.hpp>
+#include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/detail/functor/constructor.hpp>
 
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
@@ -53,7 +53,7 @@ namespace xxx_functor{
             typedef int const& y_ref_;
             typedef int z_;
 
-#define MACRO(Z, n, data) data
+#define BOOST_ASSIGN_V2_MACRO(Z, n, data) data
 
             typedef boost::tuple<
                 BOOST_PP_EXPR_IF(
@@ -62,16 +62,16 @@ namespace xxx_functor{
                 )
                 BOOST_PP_ENUM_TRAILING(
                     BOOST_PP_IF(BOOST_PP_DEC(BOOST_ASSIGN_V2_n),1,0),
-                    MACRO,
+                    BOOST_ASSIGN_V2_MACRO,
                     y_ref_
                 )
                 BOOST_PP_ENUM_TRAILING(
                     BOOST_PP_SUB(BOOST_ASSIGN_V2_n,2),
-                    MACRO,
+                    BOOST_ASSIGN_V2_MACRO,
                     z_
                 )
             > t_;
-#undef MACRO
+#undef BOOST_ASSIGN_V2_MACRO
 
             typedef functor_aux::constructor<t_> f_;
             f_ f;
@@ -79,7 +79,7 @@ namespace xxx_functor{
             int x = -1;
             int const y = 0;
 
-#define MACRO(z, n, data) data
+#define BOOST_ASSIGN_V2_MACRO(z, n, data) data
 
             t_ t = f(
                 BOOST_PP_EXPR_IF(
@@ -88,16 +88,16 @@ namespace xxx_functor{
                 )
                 BOOST_PP_ENUM_TRAILING(
                     BOOST_PP_IF(BOOST_PP_DEC(BOOST_ASSIGN_V2_n),1,0),
-                    MACRO,
+                    BOOST_ASSIGN_V2_MACRO,
                     y
                 )
                 BOOST_PP_ENUM_TRAILING(
                     BOOST_PP_SUB(BOOST_ASSIGN_V2_n, 2),
-                    MACRO,
+                    BOOST_ASSIGN_V2_MACRO,
                     1
                 )
             );
-#undef MACRO
+#undef BOOST_ASSIGN_V2_MACRO
             BOOST_PP_EXPR_IF(
                 BOOST_ASSIGN_V2_n,
                 BOOST_ASSIGN_V2_CHECK(
@@ -111,7 +111,7 @@ namespace xxx_functor{
                 );
             )
 
-#define MACRO(z, i, data ) \
+#define BOOST_ASSIGN_V2_MACRO(z, i, data ) \
     BOOST_ASSIGN_V2_CHECK( \
         boost::get< BOOST_PP_ADD(i,2) >( t ) == 1 \
     ); \
@@ -119,10 +119,10 @@ namespace xxx_functor{
 
             BOOST_PP_REPEAT(
                 BOOST_PP_SUB(BOOST_ASSIGN_V2_n,2),
-                MACRO,
+                BOOST_ASSIGN_V2_MACRO,
                 ~
             )
-#undef MACRO
+#undef BOOST_ASSIGN_V2_MACRO
 
             typedef std::string str_;
             const str_ cpp
