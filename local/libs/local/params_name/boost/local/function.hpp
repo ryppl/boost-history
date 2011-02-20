@@ -8,6 +8,7 @@
 #define BOOST_LOCAL_FUNCTION_HPP_
 
 #include "aux_/function_macros/params.hpp"
+#include "aux_/function_macros/name.hpp"
 #include <boost/preprocessor/facilities/empty.hpp>
 #include <boost/config.hpp> // Handle variadic macros.
 
@@ -39,7 +40,7 @@
 #endif // BOOST_NO_VARIADIC_MACROS
 
 #define BOOST_LOCAL_FUNCTION_NAME(name) \
-    name
+    BOOST_LOCAL_AUX_FUNCTION_NAME(name)
 
 namespace boost { namespace local {
 

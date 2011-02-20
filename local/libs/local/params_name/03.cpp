@@ -36,3 +36,5 @@ char& BOOST_LOCAL_FUNCTION_PARAMS(bind this, int x, bind this,
         bind a, const bind this, const bind& d)
 
 
+BOOST_LOCAL_FUNCTION_NAME(l)
+

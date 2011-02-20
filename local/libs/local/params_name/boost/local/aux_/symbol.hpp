@@ -8,6 +8,8 @@
 #ifndef BOOST_LOCAL_AUX_SYMBOL_HPP_
 #define BOOST_LOCAL_AUX_SYMBOL_HPP_
 
+/** @todo Remove any macro define here that is not use anywhere. */
+
 #include "../config.hpp"
 #include <boost/preprocessor/cat.hpp>
 
@@ -53,11 +55,9 @@
 #define BOOST_LOCAL_AUX_SYMBOL_FUNCTOR_CLASS_NAME(id) \
     BOOST_LOCAL_AUX_INTERNAL_SYMBOL(BOOST_PP_CAT(functor, id))
 
-#define BOOST_LOCAL_AUX_SYMBOL_FUNCTOR_OBJECT_NAME( \
-        local_function_name) \
+#define BOOST_LOCAL_AUX_SYMBOL_FUNCTOR_OBJECT_NAME(local_function_name) \
     BOOST_LOCAL_AUX_INTERNAL_SYMBOL(BOOST_PP_CAT(BOOST_PP_CAT( \
-            object, BOOST_LOCAL_AUX_SYMBOL_INFIX), \
-            local_function_name))
+            functor, BOOST_LOCAL_AUX_SYMBOL_INFIX), local_function_name))
 
 #define BOOST_LOCAL_AUX_SYMBOL_BINDS_VARIABLE_NAME \
     BOOST_LOCAL_AUX_INTERNAL_SYMBOL(binds)

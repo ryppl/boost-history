@@ -5,10 +5,17 @@
 #include "code_/binding.hpp"
 #include "code_/functor.hpp"
 #include "code_/deduce_result_type.hpp"
+#include "../symbol.hpp"
+#include "../scope_exit/scope_exit.hpp" // Use this lib's ScopeExit impl.
 #include "../preprocessor/sign/parse_params.hpp"
 #include "../preprocessor/sign/params_error.hpp"
 #include <boost/mpl/assert.hpp>
 #include <boost/preprocessor/control/iif.hpp>
+
+// Undefine local function bound args global variable. Actual declaration of
+// this variable is made using SFINAE mechanisms by each local function macro.
+extern boost::scope_exit::aux::undeclared
+        BOOST_LOCAL_AUX_SYMBOL_ARGS_VARIABLE_NAME;
 
 // PRIVATE //
 

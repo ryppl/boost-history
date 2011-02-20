@@ -11,6 +11,7 @@
 #include <boost/preprocessor/seq.hpp>
 #include <boost/preprocessor/arithmetic/dec.hpp>
 #include <boost/preprocessor/comparison/equal.hpp>
+#include <boost/preprocessor/logical/not.hpp>
 #include <boost/preprocessor/control/iif.hpp>
 #include <boost/preprocessor/tuple/eat.hpp>
 
@@ -27,6 +28,9 @@
 
 #define BOOST_DETAIL_PP_NILSEQ_IS_NIL(nilseq) \
     BOOST_PP_EQUAL(BOOST_DETAIL_PP_NILSEQ_SIZE(nilseq), 0)
+
+#define BOOST_DETAIL_PP_NILSEQ_IS_NOT_NIL(nilseq) \
+    BOOST_PP_NOT(BOOST_DETAIL_PP_NILSEQ_IS_NIL(nilseq))
 
 // Assume nilseq is not NIL and removes leading `(NIL)`.
 #define BOOST_DETAIL_PP_NILSEQ_TO_SEQ(nilseq) \

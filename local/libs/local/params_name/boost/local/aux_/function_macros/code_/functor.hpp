@@ -21,20 +21,22 @@
 #include <boost/detail/preprocessor/nilseq.hpp>
 #include <boost/preprocessor/punctuation/comma_if.hpp>
 #include <boost/preprocessor/logical/bitand.hpp>
-#include <boost/preprocessor/logical/and.hpp>
+#include <boost/preprocessor/logical/bitand.hpp>
 #include <boost/preprocessor/logical/bitor.hpp>
 #include <boost/preprocessor/logical/or.hpp>
 #include <boost/preprocessor/arithmetic/inc.hpp>
 #include <boost/preprocessor/facilities/empty.hpp>
 #include <boost/preprocessor/control/iif.hpp>
-#include <boost/preprocessor/control/expr_if.hpp>
+#include <boost/preprocessor/control/expr_iif.hpp>
 #include <boost/preprocessor/tuple/eat.hpp>
 
 // PRIVATE //
 
 // Expand to the function type `R (A1, ...)`.
-#define BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_F_(sign_params, id) \
+#define BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_F_( \
+        sign_params, id, has_type, type_name) \
     BOOST_LOCAL_AUX_SYMBOL_RESULT_TYPE(id) \
+    BOOST_PP_EXPR_IIF(has_type, (type_name) ) \
     ( \
         BOOST_DETAIL_PP_NILSEQ_FOR_EACH_I( \
                 BOOST_LOCAL_AUX_FUNCTION_CODE_PARAM_UNBIND_DECL, ~, \
@@ -43,99 +45,122 @@
 
 #define BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_CALL_(z, \
         sign_params, \
-        unbind_params, \
-        const_bind_names, has_const_bind_this, \
-        bind_names, has_bind_this, \
+        unbinds, \
+        const_binds, has_const_bind_this, \
+        binds, has_bind_this, \
         id) \
     BOOST_LOCAL_AUX_SYMBOL_RESULT_TYPE(id) \
     operator()( \
             BOOST_DETAIL_PP_NILSEQ_FOR_EACH_I( \
                 BOOST_LOCAL_AUX_FUNCTION_CODE_PARAM_UNBIND_ARG_DECL, \
-                ~, unbind_params) \
+                ~, unbinds) \
             ) { \
         /* just forward call to member function with local func name */ \
         return BOOST_LOCAL_AUX_SYMBOL_BODY_FUNCTION_NAME( \
             BOOST_DETAIL_PP_NILSEQ_FOR_EACH_I( \
                     BOOST_LOCAL_AUX_FUNCTION_CODE_PARAM_MAYBECONST_BIND, \
                     (id, 0 /* no offset */), \
-                    const_bind_names) \
+                    const_binds) \
             /* pass plain binds */ \
-            BOOST_PP_COMMA_IF(BOOST_PP_NOT( \
-                    BOOST_DETAIL_PP_NILSEQ_IS_NIL(bind_names))) \
+            BOOST_PP_COMMA_IF( \
+                BOOST_PP_BITAND( \
+                      BOOST_DETAIL_PP_NILSEQ_IS_NOT_NIL(const_binds) \
+                    , BOOST_DETAIL_PP_NILSEQ_IS_NOT_NIL(binds) \
+                ) \
+            ) \
             BOOST_DETAIL_PP_NILSEQ_FOR_EACH_I( \
                     BOOST_LOCAL_AUX_FUNCTION_CODE_PARAM_MAYBECONST_BIND, \
                     (id \
                     /* offset param index of # of preceeding */ \
                     /* const-bind params (could be 0)*/ \
-                    , BOOST_DETAIL_PP_NILSEQ_SIZE(const_bind_names) \
+                    , BOOST_DETAIL_PP_NILSEQ_SIZE(const_binds) \
                     ), \
-                    bind_names) \
+                    binds) \
             /* pass bind `this` */ \
-            BOOST_PP_COMMA_IF(BOOST_PP_BITOR( \
-                    has_const_bind_this, has_bind_this)) \
+            BOOST_PP_COMMA_IF( \
+                BOOST_PP_BITAND( \
+                      BOOST_PP_BITOR( \
+                          BOOST_DETAIL_PP_NILSEQ_IS_NOT_NIL(const_binds) \
+                        , BOOST_DETAIL_PP_NILSEQ_IS_NOT_NIL(binds) \
+                      ) \
+                    , BOOST_PP_BITOR(has_const_bind_this, has_bind_this) \
+                ) \
+            ) \
             BOOST_PP_EXPR_IIF( \
                     BOOST_PP_BITOR(has_const_bind_this, has_bind_this), \
                 BOOST_LOCAL_AUX_SYMBOL_BINDS_VARIABLE_NAME-> \
                 BOOST_LOCAL_AUX_FUNCTION_CODE_PARAM_THIS_NAME \
             ) \
             /* pass unbind params */ \
-            BOOST_PP_COMMA_IF(BOOST_DETAIL_PP_NILSEQ_SIZE(unbind_params)) \
+            BOOST_PP_COMMA_IF( \
+                BOOST_PP_BITAND( \
+                      BOOST_PP_BITOR( \
+                          BOOST_PP_BITOR( \
+                              BOOST_DETAIL_PP_NILSEQ_IS_NOT_NIL(const_binds) \
+                            , BOOST_DETAIL_PP_NILSEQ_IS_NOT_NIL(binds) \
+                          ) \
+                        , BOOST_PP_BITOR(has_const_bind_this, has_bind_this) \
+                      ) \
+                    , BOOST_DETAIL_PP_NILSEQ_IS_NOT_NIL(unbinds) \
+                ) \
+            ) \
             BOOST_DETAIL_PP_NILSEQ_FOR_EACH_I( \
                     BOOST_LOCAL_AUX_FUNCTION_CODE_PARAM_UNBIND_ARG_NAME, \
-                    ~, unbind_params) \
+                    ~, unbinds) \
         ); \
     }
 
 // Return unbind params but without last (default) params specified by count.
 #define BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_UNBIND_REMOVE_LAST_N_(n, \
-        unbind_params) \
+        unbinds) \
     /* must use PP_SEQ instead of PP_NILSEQ so resulting seq is still nil */ \
     BOOST_PP_SEQ_FIRST_N(BOOST_PP_SUB(BOOST_PP_SEQ_SIZE( \
-            unbind_params), n), unbind_params)
+            unbinds), n), unbinds)
 
 #define BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_CALL_FOR_DEFAULTS_(z, \
-        n, params_unbind_constbind_hasconstthis_bind_hasthis_id) \
+        n, params_unbinds_constbinds_hasconstthis_binds_hasthis_id) \
     BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_CALL_(z \
         , BOOST_PP_TUPLE_ELEM(7, 0, \
-                params_unbind_constbind_hasconstthis_bind_hasthis_id) \
+                params_unbinds_constbinds_hasconstthis_binds_hasthis_id) \
         /* remove last n default params */ \
         , BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_UNBIND_REMOVE_LAST_N_( \
                 n, \
                 BOOST_PP_TUPLE_ELEM(7, 1, \
-                        params_unbind_constbind_hasconstthis_bind_hasthis_id)) \
+                    params_unbinds_constbinds_hasconstthis_binds_hasthis_id)) \
         , BOOST_PP_TUPLE_ELEM(7, 2, \
-                params_unbind_constbind_hasconstthis_bind_hasthis_id) \
+                params_unbinds_constbinds_hasconstthis_binds_hasthis_id) \
         , BOOST_PP_TUPLE_ELEM(7, 3, \
-                params_unbind_constbind_hasconstthis_bind_hasthis_id) \
+                params_unbinds_constbinds_hasconstthis_binds_hasthis_id) \
         , BOOST_PP_TUPLE_ELEM(7, 4, \
-                params_unbind_constbind_hasconstthis_bind_hasthis_id) \
+                params_unbinds_constbinds_hasconstthis_binds_hasthis_id) \
         , BOOST_PP_TUPLE_ELEM(7, 5, \
-                params_unbind_constbind_hasconstthis_bind_hasthis_id) \
+                params_unbinds_constbinds_hasconstthis_binds_hasthis_id) \
         , BOOST_PP_TUPLE_ELEM(7, 6, \
-                params_unbind_constbind_hasconstthis_bind_hasthis_id) \
+                params_unbinds_constbinds_hasconstthis_binds_hasthis_id) \
     )
 
 // Adapted from `BOOST_SCOPE_EXIT_AUX_IMPL()`.
-#define BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_( \
-        sign_params, \
-        unbind_params, defaults_count, \
-        const_bind_names, has_const_bind_this, \
-        bind_names, has_bind_this, \
+#define BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_(sign_params, \
+        unbinds, defaults_count, \
+        const_binds, has_const_bind_this, \
+        binds, has_bind_this, \
         id, typename_keyword) \
     class BOOST_LOCAL_AUX_SYMBOL_FUNCTOR_CLASS_NAME(id) :  \
             public ::boost::local::aux::abstract_function< \
-                    BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_F_(sign_params, id), \
+                    BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_F_( \
+                            sign_params, id, 0 /* no type */, ~), \
                     defaults_count> { \
-        typedef BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_F_(sign_params, id) \
-                BOOST_LOCAL_AUX_SYMBOL_FUNCTION_TYPE; \
+        typedef BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_F_(sign_params, id, \
+                1 /* has type */, BOOST_LOCAL_AUX_SYMBOL_FUNCTION_TYPE); \
     public: \
         /* constructor */ \
-        explicit BOOST_LOCAL_AUX_SYMBOL_FUNCTOR_CLASS_NAME(id)(void* binds) \
-            BOOST_PP_EXPR_IF(BOOST_LOCAL_AUX_PP_SIGN_PARAMS_HAVE_ANY_BIND( \
-                    sign_params), \
+        explicit BOOST_LOCAL_AUX_SYMBOL_FUNCTOR_CLASS_NAME(id)( \
+                void* binding_data) \
+            BOOST_PP_EXPR_IIF(BOOST_PP_EXPAND( /* expand for MSVC */ \
+                    BOOST_LOCAL_AUX_PP_SIGN_PARAMS_HAVE_ANY_BIND(sign_params)),\
                 /* member init (not a macro call) */ \
                 : BOOST_LOCAL_AUX_SYMBOL_BINDS_VARIABLE_NAME(static_cast< \
-                        BOOST_SCOPE_EXIT_AUX_PARAMS_T(id)*>(binds)) \
+                        BOOST_SCOPE_EXIT_AUX_PARAMS_T(id)*>(binding_data)) \
             ) \
         { \
             /* init needs func name so programmed later by `NAME` macro */ \
@@ -146,8 +171,8 @@
                 /* PP_INC to handle no dflt (EXPAND for MVSC) */ \
                 BOOST_PP_EXPAND(BOOST_PP_INC(defaults_count)), \
                 BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_CALL_FOR_DEFAULTS_,\
-                (sign_params, unbind_params, const_bind_names, \
-                        has_const_bind_this, bind_names, has_bind_this, id)) \
+                (sign_params, unbinds, const_binds, \
+                        has_const_bind_this, binds, has_bind_this, id)) \
     private: \
         /* this type symbol cannot have ID postfix because it is used */ \
         /* the `NAME` macro (because this symbol is within functor class */ \
@@ -163,15 +188,15 @@
         BOOST_DETAIL_PP_NILSEQ_FOR_EACH_I( \
                 BOOST_LOCAL_AUX_FUNCTION_CODE_PARAM_CONST_TYPEDEF, \
                 (id, typename_keyword, 0 /* no offset */), \
-                const_bind_names) \
+                const_binds) \
         /* bind typeof types */ \
         BOOST_DETAIL_PP_NILSEQ_FOR_EACH_I( \
                 BOOST_LOCAL_AUX_FUNCTION_CODE_PARAM_TYPEDEF, \
                 ( id, typename_keyword, \
                   /* offset param index of # of preceeding */ \
                   /* const-bindparams (could be 0)*/ \
-                  BOOST_DETAIL_PP_NILSEQ_SIZE(const_bind_names)),\
-                bind_names) \
+                  BOOST_DETAIL_PP_NILSEQ_SIZE(const_binds)),\
+                binds) \
         /* this (const or not) bind type */ \
         BOOST_PP_EXPR_IIF(has_const_bind_this, \
             typeof \
@@ -203,20 +228,31 @@
                 BOOST_DETAIL_PP_NILSEQ_FOR_EACH_I( \
                         BOOST_LOCAL_AUX_FUNCTION_CODE_PARAM_CONST_BIND_DECL, \
                         (id, typename_keyword, 0 /* no offset */), \
-                        const_bind_names) \
+                        const_binds) \
                 /* plain binds */ \
-                BOOST_PP_COMMA_IF(BOOST_PP_NOT( \
-                        BOOST_DETAIL_PP_NILSEQ_IS_NIL(bind_names))) \
+                BOOST_PP_COMMA_IF( \
+                    BOOST_PP_BITAND( \
+                          BOOST_DETAIL_PP_NILSEQ_IS_NOT_NIL(const_binds) \
+                        , BOOST_DETAIL_PP_NILSEQ_IS_NOT_NIL(binds) \
+                    ) \
+                ) \
                 BOOST_DETAIL_PP_NILSEQ_FOR_EACH_I( \
                         BOOST_LOCAL_AUX_FUNCTION_CODE_PARAM_BIND_DECL, \
                         ( id, typename_keyword, \
                           /* offset param index of # of preceeding */ \
                           /* const-bindparams (could be 0)*/ \
-                          BOOST_DETAIL_PP_NILSEQ_SIZE(const_bind_names) ),\
-                        bind_names) \
+                          BOOST_DETAIL_PP_NILSEQ_SIZE(const_binds) ),\
+                        binds) \
                 /* `this` bind */ \
-                BOOST_PP_COMMA_IF(BOOST_PP_BITOR( \
-                        has_const_bind_this, has_bind_this)) \
+                BOOST_PP_COMMA_IF( \
+                    BOOST_PP_BITAND( \
+                          BOOST_PP_BITOR( \
+                              BOOST_DETAIL_PP_NILSEQ_IS_NOT_NIL(const_binds) \
+                            , BOOST_DETAIL_PP_NILSEQ_IS_NOT_NIL(binds) \
+                          ) \
+                        , BOOST_PP_BITOR(has_const_bind_this, has_bind_this) \
+                    ) \
+                ) \
                 BOOST_PP_EXPR_IIF(has_const_bind_this, \
                     typename_keyword ::contract::detail::add_pointed_const< \
                         BOOST_LOCAL_AUX_FUNCTION_CODE_PARAM_THIS_TYPE(id) \
@@ -227,10 +263,23 @@
                     BOOST_LOCAL_CONFIG_THIS_PARAM_NAME \
                 ) \
                 /* unbind params (last because they can have defaults) */ \
-                BOOST_PP_COMMA_IF(BOOST_DETAIL_PP_NILSEQ_SIZE(unbind_params)) \
+                BOOST_PP_COMMA_IF( \
+                    BOOST_PP_BITAND( \
+                          BOOST_PP_BITOR( \
+                              BOOST_PP_BITOR( \
+                                  BOOST_DETAIL_PP_NILSEQ_IS_NOT_NIL( \
+                                        const_binds) \
+                                , BOOST_DETAIL_PP_NILSEQ_IS_NOT_NIL(binds) \
+                              ) \
+                            , BOOST_PP_BITOR(has_const_bind_this, \
+                                    has_bind_this) \
+                          ) \
+                        , BOOST_DETAIL_PP_NILSEQ_IS_NOT_NIL(unbinds) \
+                    ) \
+                ) \
                 BOOST_DETAIL_PP_NILSEQ_FOR_EACH_I( \
                         BOOST_LOCAL_AUX_FUNCTION_CODE_PARAM_UNBIND_DECL_WITH_DEFAULT, \
-                        ~, unbind_params) \
+                        ~, unbinds) \
             ) /* end body function params */ \
             /* user local function definition `{ ... }` will follow here */ \
     /* `NAME` macro will close function class decl `};` here */ 

@@ -18,11 +18,6 @@
 #include <boost/preprocessor/seq/for_each_i.hpp>
 #include <boost/preprocessor/cat.hpp>
 
-// Undefine local function bound args global variable. Actual declaration of
-// this variable is made using SFINAE mechanisms by each local function macro.
-extern boost::scope_exit::aux::undeclared
-        BOOST_LOCAL_AUX_SYMBOL_ARGS_VARIABLE_NAME;
-
 // PRIVATE //
 
 // Adapted from `BOOST_SCOPE_EXIT_AUX_IMPL()`.
@@ -36,7 +31,8 @@ extern boost::scope_exit::aux::undeclared
     BOOST_DETAIL_PP_NILSEQ_FOR_EACH_I( \
             BOOST_LOCAL_AUX_FUNCTION_CODE_PARAM_TAG_DECL, \
             id, all_bind_nilseq) \
-    BOOST_DETAIL_PP_NILSEQ_FOR_EACH_I(BOOST_SCOPE_EXIT_AUX_CAPTURE_DECL, \
+    BOOST_DETAIL_PP_NILSEQ_FOR_EACH_I( \
+            BOOST_SCOPE_EXIT_AUX_CAPTURE_DECL, \
             (id, typename_keyword), all_bind_nilseq) \
     /* binding class */ \
     struct BOOST_SCOPE_EXIT_AUX_PARAMS_T(id) { \
