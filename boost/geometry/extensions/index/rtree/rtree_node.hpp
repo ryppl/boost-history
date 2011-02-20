@@ -114,7 +114,8 @@ public:
      *        If exact_match is true only return the elements having as
      *        key the box 'box'. Otherwise return everything inside 'box'.
      */
-    virtual void find(Box const& box, std::deque<Value>& result, bool const exact_match, Translator const& tr)
+    // awulkiew - exact match case removed
+    virtual void find(Box const& box, std::deque<Value>& result, Translator const& tr)
     {
         for (typename node_map::const_iterator it = m_nodes.begin();
              it != m_nodes.end(); ++it)
@@ -122,7 +123,7 @@ public:
             // awulkiew - is_overlapping changed to geometry::intersects
             if (geometry::intersects(it->first, box))
             {
-                it->second->find(box, result, exact_match, tr);
+                it->second->find(box, result, tr);
             }
         }
     }
