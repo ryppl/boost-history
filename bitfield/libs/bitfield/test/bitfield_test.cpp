@@ -27,7 +27,7 @@ struct Register
 	uint16_t padd;
 	STR value;
    } s, sl;
-   
+
    typedef boost::integer::bitfield_traits<T, 0, 2, uint8_t>    f_type;
    typedef boost::integer::bitfield_traits<T, 3, 11>    m_type;
    typedef boost::integer::bitfield_traits<T, 12, 15, uint32_t>    l_type;
@@ -77,11 +77,11 @@ struct Register2
 	uint32_t padd;
 	STR value;
    } s, sl;
-   
+
    BOOST_BITFIELD_DCL(uint32_t, word, unsigned char, f, 0, 2);
    BOOST_BITFIELD_DCL(uint32_t, word, uint32_t, m, 3, 11);
    BOOST_BITFIELD_DCL(uint32_t, word, uint32_t, l, 12, 15);
-   
+
    typedef boost::integer::bitfield_traits<T, 0, 7>   high_type;
    typedef boost::integer::bitfield_traits<T, 4, 11>   mid_type; // Intentionally overlap
    typedef boost::integer::bitfield_traits<T, 8, 15>    low_type;
@@ -167,13 +167,13 @@ void test_get()
 void test_flags()
 {
 
-   
+
    typedef uint16_t T;
-   ASSERT_EQUALS((boost::integer::bitfield_value_to_stprage<boost::integer::bitfield<T, 8, 15>, 0x12>::value), 0x0012);
+   ASSERT_EQUALS((boost::integer::bitfield_value_to_storage<boost::integer::bitfield<T, 8, 15>, 0x12>::value), 0x0012);
    ASSERT_EQUALS((boost::integer::bitfield<T, 8, 15>::get_flags(0x12)), 0x0012);
-   ASSERT_EQUALS((boost::integer::bitfield_value_to_stprage<boost::integer::bitfield<T, 4, 11>, 0x34>::value), 0x0340);
+   ASSERT_EQUALS((boost::integer::bitfield_value_to_storage<boost::integer::bitfield<T, 4, 11>, 0x34>::value), 0x0340);
    ASSERT_EQUALS((boost::integer::bitfield<T, 4, 11>::get_flags(0x34)), 0x0340);
-   ASSERT_EQUALS((boost::integer::bitfield_value_to_stprage<boost::integer::bitfield<T, 0, 7>, 0x56>::value), 0x5600);
+   ASSERT_EQUALS((boost::integer::bitfield_value_to_storage<boost::integer::bitfield<T, 0, 7>, 0x56>::value), 0x5600);
    ASSERT_EQUALS((boost::integer::bitfield<T, 0, 7>::get_flags(0x56)), 0x5600);
    ASSERT_EQUALS((boost::integer::bitfield<T, 0, 15>::get_flags(0xabcd)), 0xabcd);
    ASSERT_EQUALS((boost::integer::bitfield<T, 4, 4>::get_flags(0)), 0);
@@ -299,7 +299,7 @@ void test_signed_unsigned() {
 }
 
 //-----------------------------------------------------------------------------
-int main(int argc, char *argv[])
+int main()
 {
     test_tt();
     test_assign();

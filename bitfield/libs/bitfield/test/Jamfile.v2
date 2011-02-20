@@ -17,27 +17,31 @@ if ! $(BOOST_ROOT)
 
 project :
     : requirements
-        <include>../../..
-        <include>$(BOOST_ROOT)
-        <include>/sandbox/endian
-        
-#       <threading>multi
-#       <target-os>cygwin
-#       <threadapi>pthread
-#       <variant>debug
-        
-        #<library>/boost/test//boost_unit_test_framework/<link>static
-        
-#        <library>/boost/test///boost_unit_test_framework/<link>static
-#        <library>/sandbox/libs/endia/build//boost_endian/<link>static
-      
+        #<include>$(BOOST_ROOT)
+
+        <warnings>all
+        <toolset>gcc:<cxxflags>-Wextra
+        <toolset>gcc:<cxxflags>-pedantic
+        <toolset>gcc:<cxxflags>-Wno-long-long
+        <toolset>darwin:<cxxflags>-Wextra
+        <toolset>darwin:<cxxflags>-pedantic
+        <toolset>darwin:<cxxflags>-Wno-long-long
+        #<toolset>pathscale:<cxxflags>-Wextra
+        <toolset>pathscale:<cxxflags>-Wno-long-long
+        <toolset>pathscale:<cxxflags>-pedantic
+        <toolset>clang:<cxxflags>-Wextra
+        <toolset>clang:<cxxflags>-pedantic
+        <toolset>clang:<cxxflags>-Wno-long-long
+        <toolset>gcc-mingw-4.5.0:<cxxflags>-Wno-missing-field-initializers
+        <toolset>gcc-mingw-4.5.0:<cxxflags>-fdiagnostics-show-option
+
 ;
 
 
 
-     
+
 test-suite "bitfield" :
      [ run bitfield_test.cpp ]
      #[ run pointer_plus_small_int_test.cpp ]
-    ; 
+    ;
 

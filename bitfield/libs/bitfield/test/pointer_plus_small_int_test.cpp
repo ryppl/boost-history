@@ -64,7 +64,7 @@ void test_tt3()
 #endif
 
 //-----------------------------------------------------------------------------
-int main(int argc, char *argv[])
+int main()
 {
     test_tt();
     test_tt2();
