@@ -317,7 +317,7 @@ public:
     inline std::deque<Value> find(Box const& box) const
     {
         std::deque<Value> result;
-        m_root->find(box, result, false);
+        m_root->find(box, result, m_translator);
         return result;
     }
 
