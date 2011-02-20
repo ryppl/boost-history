@@ -1,5 +1,5 @@
-//  Copyright (c) 2008 Oliver Kowalke. 
-//  Copyright (c) 2011 Vicente J. Botet Escriba. 
+//  Copyright (c) 2008 Oliver Kowalke.
+//  Copyright (c) 2011 Vicente J. Botet Escriba.
 //  Distributed under the Boost
 //  Software License, Version 1.0. (See accompanying file
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -77,6 +77,12 @@ thread::id worker_id()
 
 namespace tp
 {
+template<typename T>
+boost::detail::thread_move_t<boost::packaged_task<T> > move(boost::packaged_task<T>& t)
+{
+  return boost::detail::thread_move_t<boost::packaged_task<T> >(t);
+}
+
 template< typename Channel >
 class pool : private noncopyable
 {
@@ -236,9 +242,9 @@ private:
 		lk.unlock();
 		BOOST_ASSERT( i != iidx.end() );
 		detail::worker::tss_reset( new detail::worker( * i) );
-		
+
 		detail::worker * w( detail::worker::tss_get() );
-		BOOST_ASSERT( w);	
+		BOOST_ASSERT( w);
 		BOOST_ASSERT( w->get_id() == this_thread::get_id() );
 		shared_ptr< thread > thrd( w->thrd() );
 		BOOST_ASSERT( thrd);
