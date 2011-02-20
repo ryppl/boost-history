@@ -16,6 +16,7 @@ boost::mutex out_global_mutex;
 #include <iostream>
 #include <boost/interthreads/thread_specific_shared_ptr.hpp>
 #include <boost/interthreads/thread_decorator.hpp>
+#include <boost/detail/lightweight_test.hpp>
 
 void sleep(int sec)
 {
@@ -101,7 +102,7 @@ void run()
 
 }
 
-int main(int argc, char* argv[])
+int main()
 {
     int result;
 
@@ -154,6 +155,6 @@ int main(int argc, char* argv[])
         boost::mutex::scoped_lock out_guard(out_global_mutex);
         std::cout << "xxx" << cths->get_result() << " " << boost::this_thread::get_id()<<std::endl;
     }
-    return 0;
+    return boost::report_errors();
 }
 
