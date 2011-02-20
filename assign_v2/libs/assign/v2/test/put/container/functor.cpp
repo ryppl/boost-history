@@ -131,7 +131,8 @@ namespace xxx_functor{
             //[default_constr2
             typedef std::string a_; typedef int b_;
             typedef boost::tuple<a_, b_> T;
-            a_ a0 = "jan", a1 = "feb", a2 = "mar"; b_ b0 = 31, b1 = 28, b2 = 31;
+            a_ a0 = "jan", a1 = "feb", a2 = "mar";
+            b_ b0 = 31; //, b1 = 28, b2 = 31;
             std::vector<T> seq; as2::put( seq )( a0, b0 )()( a2 );
             BOOST_ASSIGN_V2_CHECK( get<0>( seq[0] ) == a0 );
             BOOST_ASSIGN_V2_CHECK( get<1>( seq[0] ) == b0 );

@@ -25,4 +25,4 @@ namespace array_aux{
 }// assign
 }// boost
 
-#endif BOOST_ASSIGN_V2_REF_ARRAY_SIZE_TYPE_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_REF_ARRAY_SIZE_TYPE_ER_2010_HPP

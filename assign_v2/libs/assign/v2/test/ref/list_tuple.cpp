@@ -11,6 +11,7 @@
 #include <string>
 #include <boost/mpl/vector/vector0.hpp>
 #include <boost/mpl/vector/vector10.hpp>
+#include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/ref/list_tuple.hpp>
 
 #include <boost/type_traits/add_reference.hpp>
@@ -21,9 +22,14 @@ namespace xxx_list_tuple{
 
     void test()
     {
-        using namespace boost;
-        using namespace assign::v2;
-        namespace ns = ref::list_tuple_aux;
+        namespace as2 = boost::assign::v2;
+
+        #if BOOST_ASSIGN_V2_ENABLE_CPP0X
+        #define BOOST_ASSIGN_V2_USING_GET using as2::ref::get;
+        #else
+        #define BOOST_ASSIGN_V2_USING_GET using boost::get;
+        #endif
+
         typedef boost::mpl::int_<0> i0_;
         typedef boost::mpl::int_<1> i1_;
         typedef boost::mpl::int_<2> i2_;
@@ -34,12 +40,10 @@ namespace xxx_list_tuple{
         int a = A;
         int b = B;
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
-            using namespace ref; //get
             typedef int& lvalue_;
             typedef int const& clvalue_;
             typedef int rvalue_;
 #else
-            using namespace boost; //get
             typedef int lvalue_;
             typedef int const clvalue_;
             typedef int const rvalue_;
@@ -47,7 +51,7 @@ namespace xxx_list_tuple{
         {
             typedef boost::mpl::vector0<> v0_;
 
-            typedef ref::nth_result_of::list_tuple meta_result_;
+            typedef as2::ref::nth_result_of::list_tuple meta_result_;
             typedef boost::mpl::vector2<
                 v0_,
                 v0_
@@ -58,14 +62,14 @@ namespace xxx_list_tuple{
                 input_
             >::type result_;
 
-            result_ list = ref::list_tuple()();
+            result_ list = as2::ref::list_tuple()();
 
         }
         {
             typedef boost::mpl::vector1<lvalue_> v0_;
             typedef boost::mpl::vector1<rvalue_> v1_;
 
-            typedef ref::nth_result_of::list_tuple meta_result_;
+            typedef as2::ref::nth_result_of::list_tuple meta_result_;
             typedef boost::mpl::vector4<
                 v0_,
                 v1_,
@@ -78,11 +82,12 @@ namespace xxx_list_tuple{
                 input_
             >::type result_;
 
-            result_ list = ref::list_tuple( a )( A )( b )( B );
-            assert( &get<0>( list.get( i0_() ) ) == &a );
-            assert(  get<0>( list.get( i1_() ) ) == A );
-            assert( &get<0>( list.get( i2_() ) ) == &b );
-            assert(  get<0>( list.get( i3_() ) ) == B );
+            result_ list = as2::ref::list_tuple( a )( A )( b )( B );
+            BOOST_ASSIGN_V2_USING_GET
+            BOOST_ASSIGN_V2_CHECK( &get<0>( list.get( i0_() ) ) == &a );
+            BOOST_ASSIGN_V2_CHECK(  get<0>( list.get( i1_() ) ) == A );
+            BOOST_ASSIGN_V2_CHECK( &get<0>( list.get( i2_() ) ) == &b );
+            BOOST_ASSIGN_V2_CHECK(  get<0>( list.get( i3_() ) ) == B );
 
         }
         {
@@ -91,7 +96,7 @@ namespace xxx_list_tuple{
             typedef boost::mpl::vector2<rvalue_, lvalue_> v2_;
             typedef boost::mpl::vector2<rvalue_, rvalue_> v3_;
 
-            typedef ref::nth_result_of::list_tuple meta_result_;
+            typedef as2::ref::nth_result_of::list_tuple meta_result_;
             typedef boost::mpl::vector4<
                 v0_,
                 v1_,
@@ -104,15 +109,17 @@ namespace xxx_list_tuple{
                 input_
             >::type result_;
 
-            result_ list = ref::list_tuple( a, b )( a, B )( A, b )( A, B );
-            assert( &get<0>( list.get( i0_() ) ) == &a );
-            assert( &get<1>( list.get( i0_() ) ) == &b );
-            assert( &get<0>( list.get( i1_() ) ) == &a );
-            assert(  get<1>( list.get( i1_() ) ) == B  );
-            assert(  get<0>( list.get( i2_() ) ) == A  );
-            assert( &get<1>( list.get( i2_() ) ) == &b );
-            assert(  get<0>( list.get( i3_() ) ) == A  );
-            assert(  get<1>( list.get( i3_() ) ) == B  );
+            result_ list
+                = as2::ref::list_tuple( a, b )( a, B )( A, b )( A, B );
+            BOOST_ASSIGN_V2_USING_GET
+            BOOST_ASSIGN_V2_CHECK( &get<0>( list.get( i0_() ) ) == &a );
+            BOOST_ASSIGN_V2_CHECK( &get<1>( list.get( i0_() ) ) == &b );
+            BOOST_ASSIGN_V2_CHECK( &get<0>( list.get( i1_() ) ) == &a );
+            BOOST_ASSIGN_V2_CHECK(  get<1>( list.get( i1_() ) ) == B  );
+            BOOST_ASSIGN_V2_CHECK(  get<0>( list.get( i2_() ) ) == A  );
+            BOOST_ASSIGN_V2_CHECK( &get<1>( list.get( i2_() ) ) == &b );
+            BOOST_ASSIGN_V2_CHECK(  get<0>( list.get( i3_() ) ) == A  );
+            BOOST_ASSIGN_V2_CHECK(  get<1>( list.get( i3_() ) ) == B  );
 
         }
         {
@@ -121,7 +128,7 @@ namespace xxx_list_tuple{
             typedef boost::mpl::vector2<clvalue_, lvalue_> v2_;
             typedef boost::mpl::vector2<clvalue_, clvalue_> v3_;
 
-            typedef ref::nth_result_of::list_tuple meta_result_;
+            typedef as2::ref::nth_result_of::list_tuple meta_result_;
             typedef boost::mpl::vector4<
                 v0_,
                 v1_,
@@ -138,16 +145,16 @@ namespace xxx_list_tuple{
             int const bb = B;
 
             result_ list
-                = ref::list_tuple( a, b )( a, bb )( aa, b )( aa, bb );
-            assert( &get<0>( list.get( i0_() ) ) == &a );
-            assert( &get<1>( list.get( i0_() ) ) == &b );
-            assert( &get<0>( list.get( i1_() ) ) == &a );
-            assert( &get<1>( list.get( i1_() ) ) == &bb );
-            assert( &get<0>( list.get( i2_() ) ) == &aa );
-            assert( &get<1>( list.get( i2_() ) ) == &b );
-            assert( &get<0>( list.get( i3_() ) ) == &aa );
-            assert( &get<1>( list.get( i3_() ) ) == &bb );
-
+                = as2::ref::list_tuple( a, b )( a, bb )( aa, b )( aa, bb );
+            BOOST_ASSIGN_V2_USING_GET
+            BOOST_ASSIGN_V2_CHECK( &get<0>( list.get( i0_() ) ) == &a );
+            BOOST_ASSIGN_V2_CHECK( &get<1>( list.get( i0_() ) ) == &b );
+            BOOST_ASSIGN_V2_CHECK( &get<0>( list.get( i1_() ) ) == &a );
+            BOOST_ASSIGN_V2_CHECK( &get<1>( list.get( i1_() ) ) == &bb );
+            BOOST_ASSIGN_V2_CHECK( &get<0>( list.get( i2_() ) ) == &aa );
+            BOOST_ASSIGN_V2_CHECK( &get<1>( list.get( i2_() ) ) == &b );
+            BOOST_ASSIGN_V2_CHECK( &get<0>( list.get( i3_() ) ) == &aa );
+            BOOST_ASSIGN_V2_CHECK( &get<1>( list.get( i3_() ) ) == &bb );
         }
 
         #undef A
@@ -163,17 +170,20 @@ namespace xxx_list_tuple{
             #endif
             typedef boost::mpl::vector1<type> v0_;
 
-            typedef ref::nth_result_of::list_tuple meta_result_;
+            typedef as2::ref::nth_result_of::list_tuple meta_result_;
             typedef boost::mpl::vector1<v0_> input_;
 
             typedef boost::mpl::apply1<meta_result_, input_>::type result_;
 
-            result_ list = ref::list_tuple( "x" );
+            result_ list = as2::ref::list_tuple( "x" );
             typedef std::string str_;
-            assert( str_( get<0>( list.get( i0_() ) ) ) == "x" );
-            assert( str_( get<0>( list.get( i0_() ) ) ) != "y" );
+            BOOST_ASSIGN_V2_USING_GET
+            BOOST_ASSIGN_V2_CHECK(
+                str_( get<0>( list.get( i0_() ) ) ) == "x" );
+            BOOST_ASSIGN_V2_CHECK(
+                str_( get<0>( list.get( i0_() ) ) ) != "y" );
         }
-
+        #undef BOOST_ASSIGN_V2_USING_GET
     }// test
 
 }// xxx_list_tuple

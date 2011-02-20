@@ -29,7 +29,7 @@ namespace put_pipe_aux{
         ::boost::mpl::er2010::indices<I, Values...>
     )
     {
-        f( get<Values>( t )... );
+        f( ref::get<Values>( t )... );
     }
 
     template<typename F, typename ...Args>

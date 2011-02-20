@@ -14,7 +14,7 @@
 #include <boost/assign/v2/ref/convert_traits/reference.hpp>
 
 namespace boost{
-    struct boost::use_default;
+//    struct boost::use_default; // according to compiler already declared
 namespace assign{
 namespace v2{
 namespace type_traits{

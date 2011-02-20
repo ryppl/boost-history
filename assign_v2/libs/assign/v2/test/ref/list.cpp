@@ -53,6 +53,8 @@ namespace xxx_list{
                 boost::mpl::vector<r0_, r1_, r2_>
             >::type ar_;
             ar_ ar = as2::ref::list<tag_>( as2::_nil )( a )( B )( c );
+            // TODO GCC4.4 wants fully qual
+            // using namespace as2::ref;
             BOOST_ASSIGN_V2_CHECK( &as2::ref::at<0>( ar ) == &a );
             BOOST_ASSIGN_V2_CHECK( as2::ref::at<1>( ar ) == B );
             BOOST_ASSIGN_V2_CHECK( str_( as2::ref::at<2>( ar ) ) == c );

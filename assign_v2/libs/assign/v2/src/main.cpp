@@ -6,11 +6,9 @@
 #include <libs/assign/v2/test/utility.h>
 #include <libs/assign/v2/test/other.h>
 
-
 // Speed
 //#include <fstream>
 //#include <libs/assign/v2/speed/put_ref.h>
-
 
 int main (int argc, char * const argv[])
 {
@@ -24,7 +22,6 @@ int main (int argc, char * const argv[])
         xxx_utility::test();
         xxx_other::test();
     }
-
 /*
     {
         using namespace speed_assign_v2;
