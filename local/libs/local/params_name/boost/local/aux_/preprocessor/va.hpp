@@ -6,8 +6,9 @@
 
 #if !defined(BOOST_NO_VARIADIC_MACROS) // If no variadics then no macros.
 
-/** @todo Move used files from VMD library into local/aux_/pp/va/vmd/... */
-#include <boost/variadic_macro_data/VariadicMacroData.hpp> // Proposed lib.
+// A local copy of Edward Diener's Variadic Macro Data proposed Boost library.
+#include "va_/variadic_macro_data/vmd.hpp"
+
 #include <boost/preprocessor/logical/not.hpp>
 #include <boost/preprocessor/comparison/greater.hpp>
 #include <boost/preprocessor/comparison/equal.hpp>
@@ -15,6 +16,14 @@
 #include <boost/preprocessor/control/if.hpp>
 #include <boost/preprocessor/facilities/empty.hpp>
 #include <boost/preprocessor/facilities/is_empty.hpp>
+
+// DATA (Internal Interface) //
+
+#define BOOST_LOCAL_AUX_PP_VA_DATA_SIZE_(...) \
+    BOOST_VMD_DATA_SIZE(__VA_ARGS__)
+
+#define BOOST_LOCAL_AUX_PP_VA_DATA_TO_SEQ_(...) \
+    BOOST_VMD_DATA_TO_PP_SEQ(__VA_ARGS__)
 
 // VA_SAME //
 
@@ -44,7 +53,8 @@
     )(__VA_ARGS__ BOOST_PP_EMPTY)
 
 #define BOOST_LOCAL_AUX_PP_VA_SIZE(...) \
-    BOOST_LOCAL_AUX_PP_VA_SIZE_(VMD_DATA_SIZE(__VA_ARGS__), __VA_ARGS__)
+    BOOST_LOCAL_AUX_PP_VA_SIZE_(BOOST_LOCAL_AUX_PP_VA_DATA_SIZE_( \
+            __VA_ARGS__), __VA_ARGS__)
 
 // VA_IS //
 
@@ -63,7 +73,7 @@
 
 #define BOOST_LOCAL_AUX_PP_VA_TO_SEQ_NOT_EMPTY_(...) \
     BOOST_PP_IIF(BOOST_LOCAL_AUX_PP_IS_VA(__VA_ARGS__), \
-        VMD_DATA_TO_PP_SEQ \
+        BOOST_LOCAL_AUX_PP_VA_DATA_TO_SEQ_ \
     , \
         BOOST_LOCAL_AUX_PP_VA_SAME \
     )(__VA_ARGS__)
