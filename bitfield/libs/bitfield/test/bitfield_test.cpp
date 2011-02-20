@@ -1,15 +1,15 @@
 #include <iostream>
-#include <cassert>
 #include <boost/integer/bitfield.hpp>
 //~ #include <boost/integer/bitfield/bitfield_dcl.hpp>
 
 #include <sys/stat.h>
 #include <errno.h>
 #include <libs/bitfield/test/endian_flip.hpp>
+#include <boost/detail/lightweight_test.hpp>
 
-#define ASSERT_EQUALS(a,b) assert((a) == (b))
-#define ASSERT_UNEQUALS(a,b) assert((a) != (b))
-#define ASSERT(a) assert((a))
+#define ASSERT_EQUALS(a,b) BOOST_TEST((a) == (b))
+#define ASSERT_UNEQUALS(a,b) BOOST_TEST((a) != (b))
+#define ASSERT(a) BOOST_TEST((a))
 
 //typedef unsigned short uint16_t;
 //typedef unsigned char uint8_t;
@@ -311,7 +311,6 @@ int main()
     test_bit_access();
     test_signed_unsigned();
 
-    std::cout << "All tests successful!\n";
-    return 0;
+    return boost::report_errors();
 }
 

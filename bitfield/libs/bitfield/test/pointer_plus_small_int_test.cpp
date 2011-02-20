@@ -7,9 +7,11 @@
 #include <unistd.h>
 #include <netinet/in.h>
 
-#define ASSERT_EQUALS(a,b) assert((a) == (b))
-#define ASSERT_UNEQUALS(a,b) assert((a) != (b))
-#define ASSERT(a) assert((a))
+#include <boost/detail/lightweight_test.hpp>
+
+#define ASSERT_EQUALS(a,b) BOOST_TEST((a) == (b))
+#define ASSERT_UNEQUALS(a,b) BOOST_TEST((a) != (b))
+#define ASSERT(a) BOOST_TEST((a))
 
 
 void test_tt()
@@ -69,7 +71,6 @@ int main()
     test_tt();
     test_tt2();
 
-    std::cout << "All tests successful!\n";
-    return 0;
+    return boost::report_errors();
 }
 
