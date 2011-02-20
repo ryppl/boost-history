@@ -23,10 +23,10 @@ namespace xxx_container{
         namespace as2 = boost::assign::v2;
         //[csv_pipe_list
         typedef int T; T x = 1, y = 2, z = 0;
-        std::list<T> seq;
-        seq | as2::_csv_put( x, y, z );
-        BOOST_ASSIGN_V2_CHECK( seq.front() == x );
-        BOOST_ASSIGN_V2_CHECK( seq.back() == z );
+        std::list<T> cont;
+        cont | as2::_csv_put( x, y, z );
+        BOOST_ASSIGN_V2_CHECK( cont.front() == x );
+        BOOST_ASSIGN_V2_CHECK( cont.back() == z );
         //]
     }
 

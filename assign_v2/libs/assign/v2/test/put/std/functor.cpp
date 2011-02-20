@@ -28,10 +28,10 @@ namespace xxx_functor{
         {
             //[std_deque
             typedef int T; T x = 0, y = 2, z = 1;
-            std::deque<T> seq;
-            ( as2::put( seq ) % as2::_push_front )( x )( y )( z );
-            BOOST_ASSIGN_V2_CHECK( seq[0] == z );
-            BOOST_ASSIGN_V2_CHECK( seq[2] == x );
+            std::deque<T> cont;
+            ( as2::put( cont ) % as2::_push_front )( x )( y )( z );
+            BOOST_ASSIGN_V2_CHECK( cont[0] == z );
+            BOOST_ASSIGN_V2_CHECK( cont[2] == x );
             //]
         }
     }

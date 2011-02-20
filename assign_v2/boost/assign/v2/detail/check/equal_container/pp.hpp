@@ -9,13 +9,14 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_DETAIL_CHECK_EQUAL_CONTAINER_PP_ER_2010_HPP
 #define BOOST_ASSIGN_V2_DETAIL_CHECK_EQUAL_CONTAINER_PP_ER_2010_HPP
+#include <boost/assign/v2/detail/config/check.hpp>
 
 #include <boost/range/size.hpp>
 #include <boost/range/size_type.hpp>
 #define BOOST_ASSIGN_V2_CHECK_AUX_CONTAINER_SIZE\
-        typedef boost::range_size<R>::type size_type;\
+        typedef typename boost::range_size<R>::type size_type;\
         size_type n1 = cont.size();\
-        size_type n2 = boost::range_size( r );\
+        size_type n2 = boost::size( r );\
         BOOST_ASSIGN_V2_CHECK( n2 >= n1 );\
 /**/
 

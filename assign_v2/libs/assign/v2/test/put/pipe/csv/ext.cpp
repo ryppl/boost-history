@@ -60,11 +60,11 @@ namespace xxx_ext{
         {
             //[csv_iterate
             typedef int T; T x = 1, y = 2, z = 0;
-            boost::array<T, 3> ar; ar[0] = x;
-            ar | (as2::_csv_put % ( as2::_iterate = 1  ) )( y, z );
-            BOOST_ASSIGN_V2_CHECK( ar[0] == x );
-            BOOST_ASSIGN_V2_CHECK( ar[1] == y );
-            BOOST_ASSIGN_V2_CHECK( ar[2] == z );
+            boost::array<T, 3> cont; cont[0] = x;
+            cont | (as2::_csv_put % ( as2::_iterate = 1  ) )( y, z );
+            BOOST_ASSIGN_V2_CHECK( cont[0] == x );
+            BOOST_ASSIGN_V2_CHECK( cont[1] == y );
+            BOOST_ASSIGN_V2_CHECK( cont[2] == z );
             //]
         }
     }

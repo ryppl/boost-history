@@ -35,25 +35,26 @@ namespace xxx_chain{
         {
             //[chain_r
             typedef int T;
-            boost::array<T, 2> ar;  ar[0] = 0; ar[1] = 1;
+            boost::array<T, 2> cont;  cont[0] = 0; cont[1] = 1;
             std::list<T> list; list.push_back( 2 ); list.push_back( 3 );
-            std::vector<T> v( boost::begin( ar ), boost::end( ar ) );
+            std::vector<T> v( boost::begin( cont ), boost::end( cont ) );
             boost::copy( list, std::back_inserter( v ) );
             BOOST_ASSIGN_V2_CHECK(
-                boost::range::equal( v, ar | as2::_chain( list ) )
+                boost::range::equal( v, cont | as2::_chain( list ) )
             );
             //]
         }
         {
             //[chain_w
-            typedef int T; std::vector<T> v( 4 );
-            v[0] = 1; v[1] = 2; v[2] = 0; v[3] = 5;
-            boost::array<T, 2> ar; std::list<T> list( v.size() - ar.size() );
-            boost::copy( v, boost::begin( ar | as2::_chain( list ) ) );
-            BOOST_ASSIGN_V2_CHECK( ar[0] == v[0] );
-            BOOST_ASSIGN_V2_CHECK( ar[1] == v[1] );
-            BOOST_ASSIGN_V2_CHECK( list.front() == v[2] );
-            BOOST_ASSIGN_V2_CHECK( list.back() == v[3] );
+            typedef int T; std::vector<T> r( 4 );
+            r[0] = 1; r[1] = 2; r[2] = 0; r[3] = 5;
+            boost::array<T, 2> cont1; 
+            std::list<T> cont2( r.size() - cont1.size() );
+            boost::copy( r, boost::begin( cont1 | as2::_chain( cont2 ) ) );
+            BOOST_ASSIGN_V2_CHECK( cont1[0] == r[0] );
+            BOOST_ASSIGN_V2_CHECK( cont1[1] == r[1] );
+            BOOST_ASSIGN_V2_CHECK( cont2.front() == r[2] );
+            BOOST_ASSIGN_V2_CHECK( cont2.back() == r[3] );
             //]
         }
 

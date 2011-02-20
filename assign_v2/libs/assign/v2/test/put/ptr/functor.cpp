@@ -30,10 +30,9 @@ namespace xxx_functor{
             //[array
             typedef int T;
             T x = 1, y = 2, z = 3;
-            boost::ptr_array<T, 3> ar;
-            as2::put( ar )( x )( y )( z );
-            BOOST_ASSIGN_V2_CHECK( ar[0] == x );
-            BOOST_ASSIGN_V2_CHECK( ar[2] == z );
+            boost::ptr_array<T, 3> cont; as2::put( cont )( x )( y )( z );
+            BOOST_ASSIGN_V2_CHECK( cont[0] == x );
+            BOOST_ASSIGN_V2_CHECK( cont[2] == z );
             //]
         }
 /*
@@ -58,28 +57,28 @@ namespace xxx_functor{
         {
             //[deque
             typedef int T; T x = 1, y = 2, z = 0;
-            boost::ptr_deque<T> seq;
-            as2::put( seq )( x )( y )( z );
-            BOOST_ASSIGN_V2_CHECK( seq.front() == x );
-            BOOST_ASSIGN_V2_CHECK( seq.back() == z );
+            boost::ptr_deque<T> cont;
+            as2::put( cont )( x )( y )( z );
+            BOOST_ASSIGN_V2_CHECK( cont.front() == x );
+            BOOST_ASSIGN_V2_CHECK( cont.back() == z );
             //]
         }
         {
             //[list
             typedef int T; T x = 1, y = 2, z = 0;
-            boost::ptr_list<T> seq;
-            ( as2::put( seq ) )( x )( y )( z );
-            BOOST_ASSIGN_V2_CHECK( seq.front() == x );
-            BOOST_ASSIGN_V2_CHECK( seq.back() == z );
+            boost::ptr_list<T> cont;
+            ( as2::put( cont ) )( x )( y )( z );
+            BOOST_ASSIGN_V2_CHECK( cont.front() == x );
+            BOOST_ASSIGN_V2_CHECK( cont.back() == z );
             //]
         }
         {
             //[vector
             typedef int T; T x = 1, y = 2, z = 0;
-            boost::ptr_vector<T> seq;
-            as2::put( seq )( x )( y )( z );
-            BOOST_ASSIGN_V2_CHECK( seq.front() == x );
-            BOOST_ASSIGN_V2_CHECK( seq.back() == z );
+            boost::ptr_vector<T> cont;
+            as2::put( cont )( x )( y )( z );
+            BOOST_ASSIGN_V2_CHECK( cont.front() == x );
+            BOOST_ASSIGN_V2_CHECK( cont.back() == z );
             //]
         }
     }// test

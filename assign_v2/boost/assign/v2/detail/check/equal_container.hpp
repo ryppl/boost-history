@@ -26,14 +26,14 @@ namespace check_aux{
     void equal_container(C & cont, R const& r)
     {
         typedef typename v2::check_aux::deduce_equal_container_tag<C>::type tag;
-        v2::checking::equal( tag(), cont, r );
+        v2::check_aux::equal_container( tag(), cont, r );
     }
 
     template<typename C, typename R>
     void equal_container(C const& cont, R const& r)
     {
         typedef typename v2::check_aux::deduce_equal_container_tag<C>::type tag;
-        v2::checking::equal( tag(), cont, r );
+        v2::check_aux::equal_container( tag(), cont, r );
     }
 
 }// check_aux

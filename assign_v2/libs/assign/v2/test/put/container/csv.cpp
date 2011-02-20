@@ -26,10 +26,10 @@ namespace xxx_csv{
             {
                 //[csv_list
                 typedef int T; T x = 1, y = 2, z = 0;
-                std::list<T> seq1, seq2;
-                ( as2::put( seq1 ) )( x )( y )( z );
-                ( as2::csv_put( seq2 ) )( x, y, z );
-                BOOST_ASSIGN_V2_CHECK( seq1 == seq2 );
+                std::list<T> cont1, cont2;
+                ( as2::put( cont1 ) )( x )( y )( z );
+                ( as2::csv_put( cont2 ) )( x, y, z );
+                BOOST_ASSIGN_V2_CHECK( cont1 == cont2 );
                 //]
             }
             {
@@ -47,10 +47,10 @@ namespace xxx_csv{
             {
                 //[ptr_vector
                 typedef int T; T x = 1, y = 2, z = 0;
-                boost::ptr_vector<T> seq1, seq2;
-                as2::csv_put( seq1 )( x, y, z );
-                as2::put( seq2 )( x )( y )( z );
-                BOOST_ASSIGN_V2_CHECK( seq1 == seq2 );
+                boost::ptr_vector<T> cont1, cont2;
+                as2::csv_put( cont1 )( x, y, z );
+                as2::put( cont2 )( x )( y )( z );
+                BOOST_ASSIGN_V2_CHECK( cont1 == cont2 );
                 //]
             }
             // TODO ptr_map
