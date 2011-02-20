@@ -1,5 +1,5 @@
-//  Copyright (c) 2008 Oliver Kowalke. 
-//  Copyright (c) 2011 Vicente J. Botet Escriba. 
+//  Copyright (c) 2008 Oliver Kowalke.
+//  Copyright (c) 2011 Vicente J. Botet Escriba.
 //  Distributed under the Boost
 //  Software License, Version 1.0. (See accompanying file
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -15,7 +15,6 @@
 #include <boost/function.hpp>
 #include <boost/thread/future.hpp>
 #include <boost/ref.hpp>
-#include <boost/test/unit_test.hpp>
 #include <boost/thread.hpp>
 #include <boost/thread/barrier.hpp>
 #include <boost/utility.hpp>
@@ -29,12 +28,15 @@
 
 #include "test_functions.hpp"
 
+#include <boost/detail/lightweight_test.hpp>
+#define BOOST_CHECK_EQUAL(A,B) BOOST_TEST((A)==(B))
+#define BOOST_CHECK(A) BOOST_TEST(A)
+
 namespace pt = boost::posix_time;
 namespace tp = boost::tp;
 
-class fixed_unbounded_channel_priority
+namespace fixed_unbounded_channel_priority
 {
-public:
 	// check size, active, idle
 	void test_case_1()
 	{
@@ -276,21 +278,19 @@ public:
 	}
 };
 
-boost::unit_test::test_suite * init_unit_test_suite( int, char* [])
+int main()
 {
-	boost::unit_test::test_suite * test( BOOST_TEST_SUITE("Boost.ThreadPool: fixed unbounded_channel< priority< int > > pool test suite") );
 
-	boost::shared_ptr< fixed_unbounded_channel_priority > instance( new fixed_unbounded_channel_priority() );
-	test->add( BOOST_CLASS_TEST_CASE( & fixed_unbounded_channel_priority::test_case_1, instance) );
-	test->add( BOOST_CLASS_TEST_CASE( & fixed_unbounded_channel_priority::test_case_2, instance) );
-	test->add( BOOST_CLASS_TEST_CASE( & fixed_unbounded_channel_priority::test_case_3, instance) );
-	test->add( BOOST_CLASS_TEST_CASE( & fixed_unbounded_channel_priority::test_case_4, instance) );
-	test->add( BOOST_CLASS_TEST_CASE( & fixed_unbounded_channel_priority::test_case_5, instance) );
-	test->add( BOOST_CLASS_TEST_CASE( & fixed_unbounded_channel_priority::test_case_6, instance) );
-	test->add( BOOST_CLASS_TEST_CASE( & fixed_unbounded_channel_priority::test_case_7, instance) );
-	test->add( BOOST_CLASS_TEST_CASE( & fixed_unbounded_channel_priority::test_case_8, instance) );
-	test->add( BOOST_CLASS_TEST_CASE( & fixed_unbounded_channel_priority::test_case_9, instance) );
+	fixed_unbounded_channel_priority::test_case_1();
+	fixed_unbounded_channel_priority::test_case_2();
+	fixed_unbounded_channel_priority::test_case_3();
+	fixed_unbounded_channel_priority::test_case_4();
+	fixed_unbounded_channel_priority::test_case_5();
+	fixed_unbounded_channel_priority::test_case_6();
+	fixed_unbounded_channel_priority::test_case_7();
+	fixed_unbounded_channel_priority::test_case_8();
+	fixed_unbounded_channel_priority::test_case_9();
 
-	return test;
+    return boost::report_errors();
 }
 

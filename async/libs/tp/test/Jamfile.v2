@@ -2,24 +2,24 @@
 
 # Copyright (C) 2008 Oliver Kowalke
 
-# Use, modification and distribution is subject to the Boost Software License, 
-# Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at 
-# http://www.boost.org/LICENSE_1_0.txt) 
+# Use, modification and distribution is subject to the Boost Software License,
+# Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+# http://www.boost.org/LICENSE_1_0.txt)
 
 # bring in rules for testing
 import testing ;
 
 project
     : requirements
-         <library>/boost/test//boost_unit_test_framework
          <library>/boost/thread//boost_thread
          <library>/boost/system//boost_system
          #<library>/boost/exception//boost_exception
-         <library>../../tp/build//boost_threadpool
-         <link>static
+         <library>/boost/tp//boost_threadpool
+         #<library>../../tp/build//boost_threadpool
+         #<link>static
          <threading>multi
-         <include>../../..
-        <include>$(BOOST_ROOT)
+         #<include>../../..
+        #<include>$(BOOST_ROOT)
     ;
 
 rule tp-test ( source )

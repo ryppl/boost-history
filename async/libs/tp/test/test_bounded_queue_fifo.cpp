@@ -1,5 +1,5 @@
-//  Copyright (c) 2008 Oliver Kowalke. 
-//  Copyright (c) 2011 Vicente J. Botet Escriba. 
+//  Copyright (c) 2008 Oliver Kowalke.
+//  Copyright (c) 2011 Vicente J. Botet Escriba.
 //  Distributed under the Boost
 //  Software License, Version 1.0. (See accompanying file
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -15,7 +15,6 @@
 #include <boost/function.hpp>
 #include <boost/thread/future.hpp>
 #include <boost/ref.hpp>
-#include <boost/test/unit_test.hpp>
 #include <boost/thread.hpp>
 #include <boost/thread/barrier.hpp>
 #include <boost/utility.hpp>
@@ -29,13 +28,15 @@
 #include <boost/tp/watermark.hpp>
 
 #include "test_functions.hpp"
+#include <boost/detail/lightweight_test.hpp>
+#define BOOST_CHECK_EQUAL(A,B) BOOST_TEST((A)==(B))
+#define BOOST_CHECK(A) BOOST_TEST(A)
 
 namespace pt = boost::posix_time;
 namespace tp = boost::tp;
 
-class fixed_bounded_channel_fifo
+namespace fixed_bounded_channel_fifo
 {
-public:
 	// check size, active, idle
 	void test_case_1()
 	{
@@ -97,8 +98,11 @@ public:
 			tp::low_watermark( 10) );
 		tp::task< void > t(
 			pool.submit(
-				boost::bind(
-					throwing_fn) ) );
+				boost::bind<void>(
+					throwing_fn
+        )
+      )
+    );
 		pool.shutdown();
 		bool thrown( false);
 		try
@@ -226,12 +230,12 @@ public:
 				boost::ref( b) ) );
 		std::vector< int > buffer;
 		pool.submit(
-			boost::bind(
+			boost::bind<void>(
 				buffer_fibonacci_fn,
 				boost::ref( buffer),
 				10) );
 		pool.submit(
-			boost::bind(
+			boost::bind<void>(
 				buffer_fibonacci_fn,
 				boost::ref( buffer),
 				0) );
@@ -265,12 +269,12 @@ public:
 		std::vector< int > buffer;
 		tp::task< void > t(
 			pool.submit(
-				boost::bind(
+				boost::bind<void>(
 					buffer_fibonacci_fn,
 					boost::ref( buffer),
 					10) ) );
 		pool.submit(
-			boost::bind(
+			boost::bind<void>(
 				buffer_fibonacci_fn,
 				boost::ref( buffer),
 				0) );
@@ -290,21 +294,19 @@ public:
 	}
 };
 
-boost::unit_test::test_suite * init_unit_test_suite( int, char* [])
+int main()
 {
-	boost::unit_test::test_suite * test( BOOST_TEST_SUITE("Boost.ThreadPool: fixed bounded_channel< fifo > pool test suite") );
 
-	boost::shared_ptr< fixed_bounded_channel_fifo > instance( new fixed_bounded_channel_fifo() );
-	test->add( BOOST_CLASS_TEST_CASE( & fixed_bounded_channel_fifo::test_case_1, instance) );
-	test->add( BOOST_CLASS_TEST_CASE( & fixed_bounded_channel_fifo::test_case_2, instance) );
-	test->add( BOOST_CLASS_TEST_CASE( & fixed_bounded_channel_fifo::test_case_3, instance) );
-	test->add( BOOST_CLASS_TEST_CASE( & fixed_bounded_channel_fifo::test_case_4, instance) );
-	test->add( BOOST_CLASS_TEST_CASE( & fixed_bounded_channel_fifo::test_case_5, instance) );
-	test->add( BOOST_CLASS_TEST_CASE( & fixed_bounded_channel_fifo::test_case_6, instance) );
-	test->add( BOOST_CLASS_TEST_CASE( & fixed_bounded_channel_fifo::test_case_7, instance) );
-	test->add( BOOST_CLASS_TEST_CASE( & fixed_bounded_channel_fifo::test_case_8, instance) );
-	test->add( BOOST_CLASS_TEST_CASE( & fixed_bounded_channel_fifo::test_case_9, instance) );
+	fixed_bounded_channel_fifo::test_case_1();
+	fixed_bounded_channel_fifo::test_case_2();
+	fixed_bounded_channel_fifo::test_case_3();
+	fixed_bounded_channel_fifo::test_case_4();
+	fixed_bounded_channel_fifo::test_case_5();
+	fixed_bounded_channel_fifo::test_case_6();
+	fixed_bounded_channel_fifo::test_case_7();
+	fixed_bounded_channel_fifo::test_case_8();
+	fixed_bounded_channel_fifo::test_case_9();
 
-	return test;
+    return boost::report_errors();
 }
 

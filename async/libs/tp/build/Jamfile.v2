@@ -10,8 +10,8 @@
 project boost/tp
     : source-location ../src
     : requirements
-          <include>../../..
-        <include>$(BOOST_ROOT)
+          #<include>../../..
+        #<include>$(BOOST_ROOT)
 
     : usage-requirements  # pass these requirement to dependents (i.e. users)
       <link>shared:<define>BOOST_THREADPOOL_DYN_LINK=1
@@ -22,8 +22,8 @@ SOURCES = callable  default_pool  guard  interrupter  poolsize  scanns  watermar
 
 static-lib boost_threadpool
    : $(SOURCES).cpp
-   : #<link>shared:<define>BOOST_THREADPOOL_DYN_LINK=1
+   : <link>shared:<define>BOOST_THREADPOOL_DYN_LINK=1
      <link>static:<define>BOOST_THREADPOOL_STATIC_LINK=1
    ;
 
-#boost-install boost_threadpool ;
+boost-install boost_threadpool ;
