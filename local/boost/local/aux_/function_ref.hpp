@@ -24,6 +24,7 @@
 #       include <boost/preprocessor/arithmetic/sub.hpp>
 #       include <boost/preprocessor/arithmetic/inc.hpp>
 #       include <boost/preprocessor/cat.hpp>
+#       include <cassert>
 
 #define BOOST_LOCAL_arg_type(z, arg_n, unused) \
     BOOST_PP_CAT(A, arg_n)
@@ -41,7 +42,8 @@
 #define BOOST_LOCAL_operator_call(z, defaults_n, arity) \
     inline R operator()(BOOST_PP_ENUM_ ## z(BOOST_PP_SUB(arity, defaults_n), \
                 BOOST_LOCAL_arg, ~)) { \
-        return ref_(BOOST_PP_ENUM_ ## z(BOOST_PP_SUB(arity, defaults_n), \
+        assert(ptr_); \
+        return (*ptr_)(BOOST_PP_ENUM_ ## z(BOOST_PP_SUB(arity, defaults_n), \
                 BOOST_LOCAL_arg_name, ~)); \
     }
 
@@ -90,10 +92,11 @@ class function_ref<
     > base;
 
 public:
-    /* implicit */ function_ref(base& ref): ref_(ref) {}
+    /* implicit */ function_ref(): ptr_(0) {}
+    /* implicit */ function_ref(base& ref): ptr_(&ref) {}
 
     function_ref& operator=(base& ref) {
-        ref_ = ref;
+        ptr_ = &ref;
         return *this;
     }
 
@@ -105,7 +108,7 @@ public:
             BOOST_LOCAL_operator_call, BOOST_LOCAL_arity)
 
 private:
-    base& ref_;
+    base* ptr_;
 };
 
 }} // namespace boost::local

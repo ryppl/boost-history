@@ -5,9 +5,10 @@
 // (see accompanying file LICENSE_1_0.txt or a copy at
 // http://www.boost.org/LICENSE_1_0.txt).
 
-// Simple parenthesized syntax example used by the documentation.
+// Simple parenthesized syntax example used by the documentation
+// (syntax for variadic macros only).
 
-//[ add_num_factor_sum_cpp
+//[ add_num_factor_sum_va_cpp
 #include <boost/local/function.hpp>
 #include <iostream>
 
@@ -15,8 +16,8 @@ int main() {
     double sum = 0.0;
     int factor = 10;
 
-    void BOOST_LOCAL_FUNCTION_PARAMS( (double num) (const bind factor)
-            (bind& sum) ) {
+    void BOOST_LOCAL_FUNCTION_PARAMS(double num, const bind factor,
+            bind& sum) {
         sum += factor * num;
         std::clog << "Summed: " << sum << std::endl;
     } BOOST_LOCAL_FUNCTION_NAME(add)

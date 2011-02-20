@@ -9,6 +9,7 @@
 
 //[ factorial_cpp
 #include <boost/local/function.hpp>
+#include <boost/type_tratis.hpp>
 #include <iostream>
 #include <sstream>
 #include <algorithm>
@@ -110,7 +111,7 @@ int main () {
                 , arg_0, arg_1 
             ); 
         }
-        // Overloading to support default parameters.
+        // Overloads to support default parameters.
         result_type_29 operator()(arg_type_0_29 arg_0) { 
             assert(binds_);
             return body(
@@ -186,11 +187,10 @@ int main () {
         // outside the expansion of the PARAMS macro (where the PARAMS symbols
         // are no longer available because of the different __LINE__ number).
         functor_type factorial;
-    } functor_factorial_31(boost_local_auxXargs.value);
+    } functor_factorial(boost_local_auxXargs.value);
     // The struct type cannot be passed as template parameter but the function
     // type `function_ref<...>` deduced here can.
-    BOOST_TYPEOF(functor_factorial_31.factorial) factorial(
-            functor_factorial_31);
+    BOOST_TYPEOF(functor_factorial.factorial) factorial(functor_factorial);
     
     // Rest of the program.
     

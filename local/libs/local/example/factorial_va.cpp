@@ -5,9 +5,10 @@
 // (see accompanying file LICENSE_1_0.txt or a copy at
 // http://www.boost.org/LICENSE_1_0.txt).
 
-// Use recursion, default parameters, and bind by non-const reference.
+// Use recursion, default parameters, and bind by non-const reference
+// (syntax for variadic macros only).
 
-//[ factorial_cpp
+//[ factorial_va_cpp
 #include <boost/local/function.hpp>
 #include <iostream>
 #include <sstream>
@@ -17,8 +18,8 @@
 int main () {
     std::ostringstream output;
 
-    int BOOST_LOCAL_FUNCTION_PARAMS( (int n) (bool recursion)(default false)
-            (bind& output) ) {
+    int BOOST_LOCAL_FUNCTION_PARAMS(int n, bool recursion, default false,
+            bind& output) {
         int result = 0;
 
         if (n < 2 ) result = 1;
