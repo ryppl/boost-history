@@ -51,21 +51,21 @@ namespace interthreads {
             return *this;
         }
 
-#if defined(BOOST_HAS_VARIADIC_TMPL)
+#if defined(BOOST_HAS_VARIADIC_TMPL2)
 #if defined(BOOST_HAS_RVALUE_REFS)
-        template <typename Callable, typename Arg...>
-        explicit basic_thread_decorator(Callable&& f, ...Arg&& args)
-            : func_(detail::make_decorator_function(boost::bind(boost::type<void>(),static_cast<F&&>(f),...args))) {};
+        template <typename Callable, typename ...Arg>
+        explicit basic_thread_decorator(Callable&& f, Arg&& ... args)
+            : func_(detail::make_decorator_function(boost::bind(boost::type<void>(),static_cast<Callable&&>(f),args...))) {};
 #else
-        template <typename Callable, typename Arg...>
-        explicit basic_thread_decorator(Callable f, ...Arg args)
-            : func_(detail::make_decorator_function(boost::bind(boost::type<void>(),f,...args))) {};
+        template <typename Callable, typename ...Arg>
+        explicit basic_thread_decorator(Callable f, Arg ... args)
+            : func_(detail::make_decorator_function(boost::bind(boost::type<void>(),f,args ...))) {};
 #endif
 #else // !defined(BOOST_HAS_VARIADIC_TMPL)
-#if defined(BOOST_HAS_RVALUE_REFS)
+#if defined(BOOST_HAS_RVALUE_REFS2)
         template <typename Callable>
         explicit basic_thread_decorator(Callable&& f)
-            : func_(detail::make_decorator_function(static_cast<F&&>(f))) {};
+            : func_(detail::make_decorator_function(static_cast<Callable&&>(f))) {};
 #else // !defined(BOOST_HAS_RVALUE_REFS)
 #ifdef BOOST_INTERTHREADS_THREAD_DECORATOR_MOVE
 #ifndef BOOST_NO_SFINAE
@@ -74,7 +74,7 @@ namespace interthreads {
 #else // BOOST_NO_SFINAE
         template <class Callable>
         explicit basic_thread_decorator(Callable f
-            ,typename disable_if<boost::is_convertible<F&,boost::detail::thread_move_t<F> >, detail::dummy* >::type=0)
+            ,typename disable_if<boost::is_convertible<F&,boost::detail::thread_move_t<Callable> >, detail::dummy* >::type=0)
             : func_(detail::make_decorator_function(f)) {}
 #endif // BOOST_NO_SFINAE
         template <class Callable>
