@@ -13,6 +13,8 @@
 
 #include <map>
 
+#include <boost/timer.hpp>
+
 void tests_rtree_native_hpp()
 {
 	std::cout << "tests\rtree_native.hpp\n";
@@ -27,16 +29,16 @@ void tests_rtree_native_hpp()
         t.insert(B(P(2, 2), P(3, 3)));
         t.insert(B(P(4, 4), P(5, 5)));
         t.insert(B(P(6, 6), P(7, 7)));
-        t.print();
+        std::cerr << t;
 
         // error
         t.remove_in(B(P(-1, -1), P(2, 2)));
         // ok
         t.remove_in(B(P(0, 0), P(1, 1)));
-        t.print();
+        std::cerr << t;
 
         t.remove(B(P(6, 6), P(7, 7)));
-        t.print();
+        std::cerr << t;
     }
 
     std::cout << "-------------------------------------------------\n";
@@ -52,16 +54,16 @@ void tests_rtree_native_hpp()
         t.insert(P(2, 2));
         t.insert(P(4, 4));
         t.insert(P(6, 6));
-        t.print();
+        std::cerr << t;
 
         // error
         t.remove_in(B(P(-1, -1), P(1, 1)));
         // ok
         t.remove_in(B(P(0, 0), P(0, 0)));
-        t.print();
+        std::cerr << t;
 
         t.remove(P(6, 6));
-        t.print();
+        std::cerr << t;
     }
 
     std::cout << "-------------------------------------------------\n";
@@ -78,16 +80,16 @@ void tests_rtree_native_hpp()
         t.insert(V(B(P(2, 2), P(3, 3)), 1));
         t.insert(V(B(P(4, 4), P(5, 5)), 2));
         t.insert(V(B(P(6, 6), P(7, 7)), 3));
-        t.print();
+        std::cerr << t;
 
         // error
         t.remove_in(B(P(0, 0), P(2, 1)));
         // ok
         t.remove_in(B(P(0, 0), P(1, 1)));
-        t.print();
+        std::cerr << t;
 
         t.remove(V(B(P(6, 6), P(7, 7)), 3));
-        t.print();
+        std::cerr << t;
     }
 
     std::cout << "-------------------------------------------------\n";
@@ -110,16 +112,16 @@ void tests_rtree_native_hpp()
         t.insert(v2);
         t.insert(v3);
         t.insert(v4);
-        t.print();
+        std::cerr << t;
 
         // error
         t.remove_in(B(P(0, 0), P(2, 1)));
         // ok
         t.remove_in(B(P(0, 0), P(1, 1)));
-        t.print();
+        std::cerr << t;
 
         t.remove(v4);
-        t.print();
+        std::cerr << t;
     }
 
     std::cout << "-------------------------------------------------\n";
@@ -144,16 +146,16 @@ void tests_rtree_native_hpp()
         t.insert(vit++);
         t.insert(vit++);
         t.insert(vit);
-        t.print();
+        std::cerr << t;
 
         // error
         t.remove_in(B(P(0, 0), P(2, 1)));
         // ok
         t.remove_in(B(P(0, 0), P(1, 1)));
-        t.print();
+        std::cerr << t;
 
         t.remove(m.find(3));
-        t.print();
+        std::cerr << t;
     }
 
     std::cout << "-------------------------------------------------\n";
@@ -179,16 +181,16 @@ void tests_rtree_native_hpp()
         t.insert(1);
         t.insert(2);
         t.insert(3);
-        t.print();
+        std::cerr << t;
 
         // error
         t.remove_in(B(P(0, 0), P(2, 1)));
         // ok
         t.remove_in(B(P(0, 0), P(1, 1)));
-        t.print();
+        std::cerr << t;
 
         t.remove(3);
-        t.print();
+        std::cerr << t;
     }
 
     {
@@ -198,10 +200,50 @@ void tests_rtree_native_hpp()
         boost::geometry::index::rtree<B>::rtree_leaf l;
         boost::geometry::index::rtree<B>::rtree_node n;
 
-        std::cout << sizeof(boost::shared_ptr<int>) << '\n';
-        std::cout << sizeof(std::vector<int>) << '\n';
-        std::cout << sizeof(n) << '\n';
-        std::cout << sizeof(l) << '\n';        
+        std::cout << "shared ptr size: " << sizeof(boost::shared_ptr<int>) << '\n';
+        std::cout << "vector size: " << sizeof(std::vector<int>) << '\n';
+        std::cout << "internal node size: " << sizeof(n) << '\n';
+        std::cout << "leaf size: " << sizeof(l) << '\n';        
+    }
+
+    {
+        typedef boost::geometry::model::point<float, 2, boost::geometry::cs::cartesian> P;
+        typedef boost::geometry::model::box<P> B;
+
+        // randomize boxes
+        const size_t n = 10000;
+        std::vector<B> v(n);
+        for ( size_t i = 0 ; i < n ; ++i )
+        {
+            float x = ( rand() % 100000 ) / 1000.0f;
+            float y = ( rand() % 100000 ) / 1000.0f;
+            float w = ::fabs(( rand() % 100000 ) / 100000.0f);
+            float h = ::fabs((rand() % 100000 ) / 100000.0f);
+            v[i] = B(P(x - w, y - h),P(x + w, y + h));
+        }
+
+        boost::geometry::index::rtree<B> t(5, 1);
+
+        std::cout << "inserting time test...\n";
+
+        boost::timer tim;
+        
+        BOOST_FOREACH(B &b, v)
+        {
+            t.insert(b);
+        }
+
+        std::cout << "time: " << tim.elapsed() << "s\n";
+        std::cout << "removing time test...\n";
+
+        tim.restart();
+
+        BOOST_FOREACH(B &b, v)
+        {
+            t.remove(b);
+        }
+
+        std::cout << "time: " << tim.elapsed() << "s\n";
     }
 
     // ERROR!

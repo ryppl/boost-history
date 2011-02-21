@@ -42,7 +42,7 @@ void tests_rtree_filters_hpp()
         t.insert(B(P(2, 2), P(3, 3)));
         t.insert(B(P(4, 4), P(5, 5)));
         t.insert(B(P(6, 6), P(7, 7)));
-        t.print();
+        std::cerr << t;
 
         std::deque<B> res = t.find(B(P(2.5f, 2.5f), P(4.5f, 4.5f)));
         tests_rtree_filters_hpp_print_range(res);

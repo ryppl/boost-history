@@ -448,35 +448,36 @@ public:
     /**
      * \brief Print Rtree subtree (mainly for debug)
      */
-    virtual void print(Translator const& tr) const
+    // awulkiew - ostream parameter added
+    virtual void print(std::ostream &os, Translator const& tr) const
     {
-        std::cerr << " --> Node --------" << std::endl;
-        std::cerr << "  Address: " << this << std::endl;
-        std::cerr << "  Level: " << m_level << std::endl;
-        std::cerr << "  Size: " << m_nodes.size() << std::endl;
-        std::cerr << "  | ";
+        os << " --> Node --------" << std::endl;
+        os << "  Address: " << this << std::endl;
+        os << "  Level: " << m_level << std::endl;
+        os << "  Size: " << m_nodes.size() << std::endl;
+        os << "  | ";
         for(typename node_map::const_iterator it = m_nodes.begin(); it != m_nodes.end(); ++it)
         {
             if (this != it->second->get_parent().get())
             {
-                std::cerr << "ERROR - " << this << " is not  " << it->second->get_parent().get() << " ";
+                os << "ERROR - " << this << " is not  " << it->second->get_parent().get() << " ";
             }
 
-            std::cerr << "( " << geometry::get<min_corner, 0>(it->first) << " , "
+            os << "( " << geometry::get<min_corner, 0>(it->first) << " , "
                 << geometry::get<min_corner, 1>(it->first) << " ) x ";
-            std::cerr << "( " << geometry::get<max_corner, 0>(it->first) << " , "
+            os << "( " << geometry::get<max_corner, 0>(it->first) << " , "
                 << geometry::get<max_corner, 1>(it->first) << " )";
-            std::cerr << " | ";
+            os << " | ";
         }
-        std::cerr << std::endl;
-        std::cerr << " --< Node --------" << std::endl;
+        os << std::endl;
+        os << " --< Node --------" << std::endl;
 
         // print child nodes
-        std::cerr << " Children: " << std::endl;
+        os << " Children: " << std::endl;
         for (typename node_map::const_iterator it = m_nodes.begin();
              it != m_nodes.end(); ++it)
         {
-            it->second->print(tr);
+            it->second->print(os, tr);
         }
     }
 

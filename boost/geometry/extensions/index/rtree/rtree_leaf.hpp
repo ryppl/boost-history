@@ -242,10 +242,11 @@ public:
     /**
     * \brief Print leaf (mainly for debug)
     */
-    virtual void print(Translator const& tr) const
+    // awulkiew - ostream parameter added
+    virtual void print(std::ostream &os, Translator const& tr) const
     {
-        std::cerr << "\t" << " --> Leaf --------" << std::endl;
-        std::cerr << "\t" << "  Size: " << m_nodes.size() << std::endl;
+        os << "\t" << " --> Leaf --------" << std::endl;
+        os << "\t" << "  Size: " << m_nodes.size() << std::endl;
         for (typename leaf_map::const_iterator it = m_nodes.begin();
              it != m_nodes.end(); ++it)
         {
@@ -253,19 +254,19 @@ public:
             Box box;
             detail::convert_to_box(tr(*it), box);
 
-            std::cerr << "\t" << "  | ";
-            std::cerr << "( " << geometry::get<min_corner, 0>
+            os << "\t" << "  | ";
+            os << "( " << geometry::get<min_corner, 0>
                 (box) << " , " << geometry::get<min_corner, 1>
                 (box) << " ) x ";
-            std::cerr << "( " << geometry::get<max_corner, 0>
+            os << "( " << geometry::get<max_corner, 0>
                 (box) << " , " << geometry::get<max_corner, 1>
                 (box) << " )";
             // awulkiew - commented
             //std::cerr << " -> ";
             //std::cerr << it->second;
-            std::cerr << " | " << std::endl;;
+            os << " | " << std::endl;;
         }
-        std::cerr << "\t" << " --< Leaf --------" << std::endl;
+        os << "\t" << " --< Leaf --------" << std::endl;
     }
 
 private:

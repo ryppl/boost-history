@@ -322,13 +322,16 @@ public:
     /**
      * \brief Print Rtree (mainly for debug)
      */
-    inline void print()
+    // awulkiew - print() method changed to operator<<
+    friend std::ostream & operator<<(std::ostream &os, rtree &r)
     {
-        std::cerr << "===================================" << std::endl;
-        std::cerr << " Min/Max: " << m_min_elems_per_node << " / " << m_max_elems_per_node << std::endl;
-        std::cerr << "Leaves: " << m_root->get_leaves().size() << std::endl;
-        m_root->print(m_translator);
-        std::cerr << "===================================" << std::endl;
+        os << "===================================" << std::endl;
+        os << " Min/Max: " << r.m_min_elems_per_node << " / " << r.m_max_elems_per_node << std::endl;
+        os << "Leaves: " << r.m_root->get_leaves().size() << std::endl;
+        r.m_root->print(os, r.m_translator);
+        os << "===================================" << std::endl;
+
+        return os;
     }
 
 private:
