@@ -138,7 +138,8 @@ public:
     /**
      * \brief Print Rtree subtree (mainly for debug)
      */
-    virtual void print(Translator const& tr) const
+    // awulkiew - ostream parameter added
+    virtual void print(std::ostream &, Translator const& tr) const
     {
         // TODO: mloskot - define & use GGL exception
         throw std::logic_error("shouldn't be here");
