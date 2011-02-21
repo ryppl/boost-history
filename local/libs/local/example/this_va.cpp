@@ -6,6 +6,7 @@
 // http://www.boost.org/LICENSE_1_0.txt).
 
 // Bind non-const object `this` (adapted from C++0x lambda paper N2529).
+// Simplified syntax for variadic macros only.
 
 #include <boost/local/function.hpp>
 #include <vector>
@@ -17,7 +18,7 @@ public:
     a(const std::vector<double>& numbers): v_(numbers) {}
 
     void change_sign_all(const std::vector<int>& indices) {
-        void BOOST_LOCAL_FUNCTION_PARAMS( (int i) (bind this) ) { // Bind this.
+        void BOOST_LOCAL_FUNCTION_PARAMS(int i, bind this) { // Bind this.
             // Local function uses special name `this_` to access bound object.
             this_->v_[i] = -this_->v_[i];
         } BOOST_LOCAL_FUNCTION_NAME(complement)

@@ -45,14 +45,10 @@
         0 \
     ))))
 
-// Expand to nil-seq `(NIL) ([&]var) ...` with all bound (const or not) and
-// including `this` if bound (const or not).
-#define BOOST_LOCAL_AUX_PP_SIGN_PARAMS_ALL_BIND(params) \
+// Expand to nil-seq `(NIL) ([&]var) ...` with all binds (const or not) but
+// excluding `this`.
+#define BOOST_LOCAL_AUX_PP_SIGN_PARAMS_ALL_BIND_WITHOUT_THIS(params) \
     (BOOST_PP_NIL) \
-    BOOST_PP_EXPR_IIF(BOOST_PP_EXPAND( /* expand for MSVC */ \
-            BOOST_LOCAL_AUX_PP_SIGN_PARAMS_HAVE_ANY_BIND_THIS(params)), \
-        (this) /* never by reference because `&this` is not valid in C++ */ \
-    ) \
     BOOST_PP_IIF(BOOST_LOCAL_AUX_PP_SIGN_PARAMS_HAVE_CONST_BIND(params), \
         BOOST_LOCAL_AUX_PP_SIGN_PARAMS_ALL_BIND_SEQ_TAIL_ \
     , \
@@ -63,6 +59,15 @@
     , \
         BOOST_PP_TUPLE_EAT(2) \
     )(params, BOOST_LOCAL_AUX_PP_SIGN_PARAMS_BIND)
+
+// Expand to nil-seq `(NIL) ([&]var) ...` with all binds (const or not) and
+// including `this` if bound (const or not).
+#define BOOST_LOCAL_AUX_PP_SIGN_PARAMS_ALL_BIND(params) \
+    BOOST_LOCAL_AUX_PP_SIGN_PARAMS_ALL_BIND(params) \
+    BOOST_PP_EXPR_IIF(BOOST_PP_EXPAND( /* expand for MSVC */ \
+            BOOST_LOCAL_AUX_PP_SIGN_PARAMS_HAVE_ANY_BIND_THIS(params)), \
+        (this) /* never by reference because `&this` is not valid in C++ */ \
+    )
 
 #endif // #include guard
 

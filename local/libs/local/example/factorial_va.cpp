@@ -5,8 +5,8 @@
 // (see accompanying file LICENSE_1_0.txt or a copy at
 // http://www.boost.org/LICENSE_1_0.txt).
 
-// Use recursion, default parameters, and bind by non-const reference
-// (syntax for variadic macros only).
+// Use recursion, default parameters, and bind by non-const reference.
+// Simplified syntax for variadic macros only.
 
 //[ factorial_va_cpp
 #include <boost/local/function.hpp>

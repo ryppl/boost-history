@@ -199,15 +199,15 @@
                 binds) \
         /* this (const or not) bind type */ \
         BOOST_PP_EXPR_IIF(has_const_bind_this, \
-            typeof \
+            typedef \
             BOOST_LOCAL_AUX_SYMBOL_TYPEOF_TYPE( \
-                typename_keyword ::contract::detail::add_pointed_const< \
+                typename_keyword ::boost::local::aux::add_pointed_const< \
                     BOOST_LOCAL_AUX_FUNCTION_CODE_PARAM_THIS_TYPE(id) \
                 >::type this /* must not use `this_` for TYPEOF_TYPE */ \
             ) ; /* end typedef */ \
         ) \
         BOOST_PP_EXPR_IIF(has_bind_this, \
-            typeof \
+            typedef \
             BOOST_LOCAL_AUX_SYMBOL_TYPEOF_TYPE( \
                 BOOST_LOCAL_AUX_FUNCTION_CODE_PARAM_THIS_TYPE(id) \
                 this /* must not use `this_` for TYPEOF_TYPE */ \
@@ -254,7 +254,7 @@
                     ) \
                 ) \
                 BOOST_PP_EXPR_IIF(has_const_bind_this, \
-                    typename_keyword ::contract::detail::add_pointed_const< \
+                    typename_keyword ::boost::local::aux::add_pointed_const< \
                         BOOST_LOCAL_AUX_FUNCTION_CODE_PARAM_THIS_TYPE(id) \
                     >::type BOOST_LOCAL_CONFIG_THIS_PARAM_NAME \
                 ) \

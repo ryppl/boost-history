@@ -58,7 +58,7 @@
         sign_params, id, typename_keyword) \
     /* has some bind param then all bind names is never empty nil-seq */ \
     BOOST_LOCAL_AUX_FUNCTION_CODE_BINDING_WITH_TAGS_SEQ_( \
-            BOOST_LOCAL_AUX_PP_SIGN_PARAMS_ALL_BIND(sign_params), \
+            BOOST_LOCAL_AUX_PP_SIGN_PARAMS_ALL_BIND_WITHOUT_THIS(sign_params), \
             BOOST_LOCAL_AUX_PP_SIGN_PARAMS_HAVE_ANY_BIND_THIS(sign_params), \
             id, typename_keyword)
 
@@ -66,16 +66,19 @@
 
 #define BOOST_LOCAL_AUX_FUNCTION_CODE_BINDING( \
         sign_params, id, typename_keyword) \
-    /* deduce bound type and stores their values/references */ \
-    BOOST_PP_IIF(BOOST_PP_EXPAND( /* expand needed on MSVC */ \
-            BOOST_LOCAL_AUX_PP_SIGN_PARAMS_HAVE_ANY_BIND(sign_params)), \
-        BOOST_LOCAL_AUX_FUNCTION_CODE_BINDING_ \
-    , \
-        BOOST_PP_TUPLE_EAT(3) \
-    )(sign_params, id, typename_keyword) \
-    /* this `declared<>` must be present also when no bind param specified */ \
-    /* because `...args.value` is ued by `NAME` macro (to constructor */ \
-    /* functor) without knowing if binds were specified or not */ \
+    /* The binding data structures must be declared and initialized (to */ \
+    /* empty structs, so hopefully the compiler will optimize away the */ \
+    /* no-op code) even when there is no bound param because these structs */ \
+    /* are used to init `...args.value` which is always used by the `NAME` */ \
+    /* macro later because this macro does not know if there are bound */ \
+    /* params or not */ \
+    BOOST_LOCAL_AUX_FUNCTION_CODE_BINDING_(sign_params, id, typename_keyword) \
+    /* this code takes advantage of the template argument list/comparison */ \
+    /* operator ambiguity to declare a variable iff it hasn't already been */ \
+    /* declared in that scope; the second occurrence is parsed as: */ \
+    /*  (boost::scope_exit::aux::declared<(boost::scope_exit::aux::resolve< */ \
+    /*  sizeof(boost_local_auxXargs)>::cmp1 < 0)>::cmp2 > ...Xargs); */ \
+    /* which is a no-op */ \
     boost::scope_exit::aux::declared< boost::scope_exit::aux::resolve< \
         /* cannot prefix with `::` as in `sizeof(:: ...` because the name */ \
         /* must refer to the local variable name to allow multiple local */ \
@@ -86,11 +89,8 @@
     >::cmp1<0>::cmp2 > BOOST_LOCAL_AUX_SYMBOL_ARGS_VARIABLE_NAME; \
     /* stores bound types/values into `...args` variable (args variable */ \
     /* can be accessed by `NAME` macro because doesn't use __LINE__ id) */ \
-    BOOST_PP_EXPR_IIF(BOOST_PP_EXPAND( /* expand needed on MSVC */ \
-            BOOST_LOCAL_AUX_PP_SIGN_PARAMS_HAVE_ANY_BIND(sign_params)), \
-        BOOST_LOCAL_AUX_SYMBOL_ARGS_VARIABLE_NAME.value = \
-                &BOOST_LOCAL_AUX_SYMBOL_PARAMS_LOCAL_VARIABLE_NAME(id); \
-    )
+    BOOST_LOCAL_AUX_SYMBOL_ARGS_VARIABLE_NAME.value = \
+            &BOOST_LOCAL_AUX_SYMBOL_PARAMS_LOCAL_VARIABLE_NAME(id);
 
 #endif // #include guard
 
