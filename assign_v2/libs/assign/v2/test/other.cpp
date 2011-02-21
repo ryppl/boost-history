@@ -83,15 +83,17 @@ namespace xxx_other{
         }
         {
         	// suggested by JB:
-        	typedef int T; std::vector<T> cont;
-   			boost::range::stable_partition(
-       			cont | as2::_csv_put(0, 1, 2, 3, 4, 5), 
+            //[motivational_ex1
+        	std::vector<int> cont;
+  			boost::range::stable_partition(
+            	cont | as2::_csv_put(0, 1, 2, 3, 4, 5)/*< Successively calls cont.push_back( t ) for t=0,...,5, and returns cont >*/, 
                 bl::_1 % 2
             );
    			BOOST_ASSIGN_V2_CHECK(boost::range::equal(
        			cont, 
-                as2::ref::csv_array(1, 3, 5, 0, 2, 4)
+                as2::ref::csv_array(1, 3, 5, 0, 2, 4) /*< Copying is avoided by keeping references to the input (1, 3, ..., 4) >*/
             ));
+            //]
         
         }
     }

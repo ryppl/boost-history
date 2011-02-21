@@ -32,15 +32,15 @@ namespace put_aux{\
         modifier(){}\
         modifier( dont_care_ ){}\
 \
-        template<typename V, typename T>\
-        void impl(V& v, BOOST_ASSIGN_V2_forward_param(T, t) )const{\
-            v.FUN(\
+        template<typename C, typename T>\
+        void impl(C& cont, BOOST_ASSIGN_V2_forward_param(T, t) )const{\
+            cont.FUN(\
                 BOOST_ASSIGN_V2_forward_arg(T, t)\
             );\
         }\
 \
-        template<typename V, typename T>\
-        void impl(V& v, T* t)const{ v.FUN( t ); }\
+        template<typename C, typename T>\
+        void impl(C& cont, T* t)const{ cont.FUN( t ); }\
 \
     };\
 \
