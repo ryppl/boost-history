@@ -7,7 +7,7 @@
  /]
 
 [article Toward Boost.Integer.Endian
-    [quickbook 1.4]
+    [quickbook 1.5]
     [version 0.2.0]
     [authors [Dawes, Beman]]
     [authors [Botet Escriba, Vicente J.]]
@@ -79,10 +79,10 @@ The original Beman's version provided through the boost::integer::endian<> class
 
 This endian aware design seems to be unappropiated to work with endian unaware types, but as we will see this is not completly true, as we can construct on top of the Beman's design endian unaware operation. Next follows some of the main critics that have been done recently.
 
-[heading Intrusive verus non-intrusive]
+[heading Intrusive versus non-intrusive]
 [/====================================]
 
-Endian conversion must be possible to any type even if you can't modify the original source code. Many people think that originel Beman's library requires the data types which need to be converted to be coded using his endian types as members. 
+Endian conversion must be possible for any type even if you can't modify the original source code. Many people think that originel Beman's library requires the data types which need to be converted to be coded using his endian types as members. 
 
 We will see that this is not true, as the user can always use casting to reinterpret a given structure on another one, as the proposed extension does with the endian_views.
 
@@ -101,7 +101,7 @@ We will see that this is not true, as the user can always use casting to reinter
 The typical use case is to use native endianness until ready to read/write using wire format.  It is only when ready to do I/O that there is a need to account for endianness.
 
 Beman's original library requires two types one to specify the physical data and the other representing the logical data.  
-Many people think that this means that the user has to maintain two separate structs/classes when only one is needed. This could be sometimes the case, but in other cases, the user will store the information elements include in the message on local variables and specific contexts that don't follow the external format.
+Many people think that this means that the user has to maintain two separate structs/classes when only one is needed. This could be sometimes the case, but in other cases, the user will store the information elements included in the message on local variables and specific contexts that don't follow the external format.
 
 Applications that don't separate the physical and the logical data structures don't scale well as any change on the external format will mean a refactoring of the whole application. Also, the wire structures cannot maintain invariants, so having a separate class is often useful even if its contents are essentially identical to the wire version.
 
@@ -122,7 +122,7 @@ The extension proposal separates the endian aware byte-holder type from the one 
     };
 
 
-Structure endian_aware_structure can not be used without converting to native types, as endian_pack don't provide other operations than conversion.
+Structure `endian_aware_structure` can not be used without converting to native types, as `endian_pack` doesn't provide other operations than conversion.
 
     endian_aware_structure st;
     // ...
@@ -144,13 +144,13 @@ Other contexts force the user to make in place conversions. While this could be 
    
     as_endian<native>(st) = as_endian<big>(st);
 
-The fact that some context need this in-place conversion doesn't mean that every application should use this approach.
+The fact that some contexts need this in-place conversion doesn't mean that every application should use this approach.
 
 
 [heading UDT endianness]
 [/=====================]
 
-boost::integer::endian class didn't accept a UDT. We have updated the library so now UDT can be used for endian aligned types.
+`boost::integer::endian` class didn't accept a UDT. We have updated the library so now UDT can be used for endian aligned types.
 
     struct UserMessage {
       endian_pack<little, system_clock::time_point > timestamp;
@@ -188,24 +188,16 @@ A functional approach means the programmer has to "know" which endianess the dat
 
 
 
-[/A real-world use-case that uses multiple endians and has 
-different protocol layers.
-That is one over-the-wire packet has several layers of headers, possibly 
-with different endian alignment than the user payload contained.  This is 
-common on PC's which often have big-endian IP headers and then have a 
-little-endian user payload.  The whole packet is read in from a socket at 
-once into a data buffer owned by a unique_ptr, so the message is not copied 
-from layer-to-layer.  I work on proprietary, non-internet networks, so I'm 
-not sure which protocol headers we should use for a use-case.  In my 
-wireless applications, the headers are usually padded to an integral number 
-of bytes, but fields within the headers are sometimes not byte-aligned.
+[/A real-world use-case that uses multiple endians and has different protocol layers.
+
+That is one over-the-wire packet has several layers of headers, possibly with different endian alignment than the user payload contained.  This is common on PC's which often have big-endian IP headers and then have a little-endian user payload.  The whole packet is read in from a socket at once into a data buffer owned by a `unique_ptr`, so the message is not copied from layer-to-layer.  I work on proprietary, non-internet networks, so I'm not sure which protocol headers we should use for a use-case.  In my wireless applications, the headers are usually padded to an integral number of bytes, but fields within the headers are sometimes not byte-aligned.
 ]
 
 
 [heading Floating point]
 [/====================================]
 
-From my understanding floating point types are not only concerned by endianness, but also by a multitude of standard on not standard formats.
+From my understanding floating point types are not only concerned by endianness, but also by a multitude of standard on not standard formats. The library doent't manage with these standards.
 
 [heading Conclusion]
 [/=================]
@@ -351,7 +343,6 @@ Ubuntu 10.10
 [section Hello Endian World! ]
 [/=============================]
 
-
     #include <boost/integer/endian/endian.hpp>
     #include <boost/integer/endian/endian_binary_stream.hpp>
     #include <boost/binary_stream.hpp>
@@ -414,7 +405,7 @@ As a practical matter, it may be easier and safer to never mix the character and
 [section Endian aware types]
 [/=========================]
 
-[heading basic endian holders]
+[section:basic basic endian holders]
 
 __Boost_Endian provides an endian aware byte-holder class template:
 
@@ -452,7 +443,9 @@ On a little-endian CPU, this program outputs:
 
     825373492 825373492 825373492
 
-[heading Binary streams]
+[endsect]
+
+[section:streams Binary streams]
 
 Header <boost/binary_stream.hpp> provides operators `<=` and `=>` for unformatted binary (as opposed to formatted character) stream insertion and extraction of built-in and std::string types.
 
@@ -488,8 +481,9 @@ On a little-endian CPU, this program outputs:
     825373492 825373492 825373492
     4321 1234 4321
 
+[endsect]
 
-[heading endian aware unaligned byte holders]
+[section:endian_pack Endian aware unaligned byte holders]
 
 
     #include <boost/integer/endian/endian_pack.hpp>
@@ -518,8 +512,9 @@ On a little-endian CPU, this program outputs:
     3224115 3224115 3224115
     123 321
 
+[endsect]
 
-[heading endian holders common typedefs]
+[section:typedefs Endian holders common typedefs]
 
 
 Sixty typedefs, such as big32_t, provide convenient naming conventions for common use cases:
@@ -576,8 +571,9 @@ On a little-endian CPU, this program outputs:
 
     825373492 825373492 825373492
     
+[endsect]
 
-[heading endian holders of UDT]
+[section:udt Endian holders of UDT]
 
 The user can define wrappers to integer types that behave as integers, as it is the case for 
 quantity<> class. This UDT can be packaged on an endian holder to take care of endian issues, as show the following example.
@@ -613,7 +609,9 @@ On a little-endian CPU, this program outputs:
     825373492 m 825373492 m 825373492 m
     1234 4321
 
-[heading Arrays of endian holders]
+[endsect]
+
+[section:array Arrays of endian holders]
 
 Up to now we have see how to work with endian aware byte holders variables. In this section we will see how to work with arrays of endian aware byte holders.
 
@@ -639,8 +637,9 @@ Up to now we have see how to work with endian aware byte holders variables. In t
         return 0;
     }
 
+[endsect]
 
-[heading Structures of endian holders]
+[section:struct Structures of endian holders]
 
     struct UdpHeader {
         ubig16_pt source_port;
@@ -655,6 +654,7 @@ Up to now we have see how to work with endian aware byte holders variables. In t
     header.length = get_length(p);
     header.checksum = checksum_of(p);
 
+[endsect]
 
 [/===========================]
 [section Endian aware integers]
@@ -707,11 +707,94 @@ As experience using these types grows, the realization creeps in that they are l
 [section Endian unaware types]
 [/===========================]
 
+
+Endian unaware types don't track the endiannes of the stored data. For example
+
+    namespace X {
+
+    struct big_c {
+        uint32_t a;
+        uint16_t b;
+    };
+
+
+    struct little_c {
+        int32_t a;
+        int16_t b;
+    };
+
+    struct mixed_c {
+        big_c a;
+        little_c b;
+    };
+
+    }
+
+
 [heading Working with third party structures]
 
 
 [heading Domain map]
 
+When we need to send the mixed_c structure through the network we need to state the endiannes of each one of the fields, so the library is able to make the adequated conversions. This is done using the domain_map metafunction, as follows:
+
+
+    struct network {};
+        
+    namespace boost { 
+    namespace integer {
+    namespace endianness {
+        
+        template <> 
+        struct domain_map <network, X::big_c> {
+        typedef mpl::vector<big,big> type;
+        };
+        template <> 
+        struct domain_map <network, X::little_c> {
+        typedef mpl::vector<little,little> type;
+        };       
+        
+    }
+    }
+    }
+
+In addition we need to see the types as fusion sequence so we can visit them in a homogeneous way.
+
+  BOOST_FUSION_ADAPT_STRUCT(
+    X::big_c,
+    (uint32_t, a)
+    (uint16_t, b)
+  )
+
+  BOOST_FUSION_ADAPT_STRUCT(
+    X::little_c,
+    (int32_t, a)
+    (int16_t, b)
+  )
+
+  BOOST_FUSION_ADAPT_STRUCT(
+    X::mixed_c,
+    (X::big_c, a)
+    (X::little_c, b)
+  )
+
+
+Now we are able to make an in-place conversion as follows:
+
+  int main( )
+  {
+    X::mixed_c m;
+    m.b.a=0x01020304;
+    m.b.b=0x0A0B;
+    m.a.a=0x04030201;
+    m.a.b=0x0B0A;    
+
+    convert_to<network>(m);
+    return 0;
+  } // main
+    
+    
+    
 [heading In-place conversions]
 
 [endsect]
@@ -956,6 +1039,7 @@ Header <boost/endian/endian/endianness.hpp> provides the endianness tags.
 [heading Synopsis]
 
     namespace boost {         
+    namespace integer {         
         namespace endianness {
             struct big;
             struct little;
@@ -963,6 +1047,7 @@ Header <boost/endian/endian/endianness.hpp> provides the endianness tags.
             struct mixed;
             typedef <platform dependent> native ;
         }
+    }
     }
 
 [/
@@ -1055,13 +1140,13 @@ This file contains the default implementation ofr the `domain_map` metafunction.
             typedef <see below> type;
         };
 
-* [*Requires:] 
+[*Requires:] 
 
-    * `Domain` any class. Can be also `endianness::big` or `endianness::little`.
+* `Domain` any class. Can be also `endianness::big` or `endianness::little`.
 
-* [*Result:] The member typedef `type` names a mpl tree of sequence of `endianness` types as view from the point of view of the `Domain`. The default definition is a mpl tree having as leaves the `Domain` class for `T` fundamental types, and fusion sequences.
+[*Result:] The member typedef `type` names a mpl tree of sequence of `endianness` types as view from the point of view of the `Domain`. The default definition is a mpl tree having as leaves the `Domain` class for `T` fundamental types, and fusion sequences.
 
-* [*Example:] 
+[*Example:] 
 
     is_same<domain_map<endianness::big, int>::type, endianness::big>::value == true
 
@@ -1155,39 +1240,37 @@ This file contains the core class template of __Boost_Endian. Provides byte-hold
         typedef endian_pack< endianness::native, uint_least64_t, 56, alignment::unaligned >     unative56_pt;
         typedef endian_pack< endianness::native, uint_least64_t, 64, alignment::unaligned >     unative64_pt;
 
-    #define BOOST_HAS_INT16_T
-    #define BOOST_HAS_INT32_T
-    #define BOOST_HAS_INT64_T
       
-      //  These types only present if platform has exact size integers:
-      //     aligned big endian_pack signed integer types
-      //     aligned big endian_pack unsigned integer types
-      //     aligned little endian_pack signed integer types
-      //     aligned little endian_pack unsigned integer types
+        //  These types only present if platform has exact size integers:
+        //     aligned big endian_pack signed integer types
+        //     aligned big endian_pack unsigned integer types
+        //     aligned little endian_pack signed integer types
+        //     aligned little endian_pack unsigned integer types
 
-      //     aligned native endian_pack typedefs are not provided because
-      //     <cstdint> types are superior for this use case
 
-    # if defined(BOOST_HAS_INT16_T)
+        # if defined(BOOST_HAS_INT16_T)
         typedef endian_pack< endianness::big, int16_t, 16, alignment::aligned >      aligned_big16_pt;
         typedef endian_pack< endianness::big, uint16_t, 16, alignment::aligned >     aligned_ubig16_pt;
         typedef endian_pack< endianness::little, int16_t, 16, alignment::aligned >   aligned_little16_pt;
         typedef endian_pack< endianness::little, uint16_t, 16, alignment::aligned >  aligned_ulittle16_pt;
-    # endif
+        # endif
 
-    # if defined(BOOST_HAS_INT32_T)
+        # if defined(BOOST_HAS_INT32_T)
         typedef endian_pack< endianness::big, int32_t, 32, alignment::aligned >      aligned_big32_pt;
         typedef endian_pack< endianness::big, uint32_t, 32, alignment::aligned >     aligned_ubig32_pt;
         typedef endian_pack< endianness::little, int32_t, 32, alignment::aligned >   aligned_little32_pt;
         typedef endian_pack< endianness::little, uint32_t, 32, alignment::aligned >  aligned_ulittle32_pt;
-    # endif
+        # endif
 
-    # if defined(BOOST_HAS_INT64_T)
+        # if defined(BOOST_HAS_INT64_T)
         typedef endian_pack< endianness::big, int64_t, 64, alignment::aligned >      aligned_big64_pt;
         typedef endian_pack< endianness::big, uint64_t, 64, alignment::aligned >     aligned_ubig64_pt;
         typedef endian_pack< endianness::little, int64_t, 64, alignment::aligned >   aligned_little64_pt;
         typedef endian_pack< endianness::little, uint64_t, 64, alignment::aligned >  aligned_ulittle64_pt;
-    # endif
+        # endif
+
+        //     aligned native endian_pack typedefs are not provided because
+        //     <cstdint> types are superior for this use case
 
     }
     }
@@ -1205,37 +1288,38 @@ An `endian_pack` is a byte-holder with user-specified endianness, value type, si
             alignment A = alignment::aligned>
         class endian_pack {
         public:
-          typedef E endian_type;
+      typedef E endian_type;
           typedef T value_type;
           static const std::size_t width = n_bits;
           static const alignment alignment_value = A;
           
-          endian_pack() = default;       // = default replaced by {} on C++03
+    #ifndef BOOST_ENDIAN_NO_CTORS
+      endian_pack() = default;       // = default replaced by {} on C++03
           explicit endian_pack(T v);
+    #endif
           endian_pack & operator=(T v);
           operator T() const;
           const char* data() const;
         };
 
 
-* [*Requires:] 
+[*Requires:] 
 
-    * `E` is one of `endianness::big` or `endianness::little`.
-    * `T` must be a POD with value semantics.
-    * `nbits` is a multiple of `8`
-    * If `A` is `alignment::aligned` then `nbits` must be equal to `8*sizeof(T)`
-
-[note if BOOST_ENDIAN_FORCE_PODNESS is defined && C++0x POD's are not
-available then these two constructors will not be present]
-
+* `E` is one of `endianness::big` or `endianness::little`.
+* `T` must be a POD with value semantics.
+* `nbits` is a multiple of `8`
+* If `A` is `alignment::aligned` then `nbits` must be equal to `8*sizeof(T)`
 
 [/==========================================================================================]
 [section:endian Default Contructor `endian_pack()`]
 [/==========================================================================================]
 
+[note if BOOST_ENDIAN_FORCE_PODNESS is defined && C++0x POD's are not
+available then this constructor will not be present]
+
     endian_pack() = default;  // C++03: endian(){}
 
-* [*Effects:] Constructs an object of type `endian<E, T, n_bits, A>`.
+[*Effects:] Constructs an object of type `endian_pack<E, T, n_bits, A>`.
 
 [endsect]
 
@@ -1243,10 +1327,14 @@ available then these two constructors will not be present]
 [section:endianT Contructor from value_type `endian_pack(T)`]
 [/==========================================================================================]
 
+[note if BOOST_ENDIAN_FORCE_PODNESS is defined && C++0x POD's are not
+available then this constructor will not be present.]
+
     explicit endian_pack(T v);
 
-* [*Effects:] Constructs an object of type `endian_pack<E, T, n_bits, A>`.
-* [*Postcondition:] `x == v`, where `x` is the constructed object.
+[*Effects:] Constructs an object of type `endian_pack<E, T, n_bits, A>`.
+
+[*Postcondition:] `x == v`, where `x` is the constructed object.
 
 [endsect]
 
@@ -1256,8 +1344,8 @@ available then these two constructors will not be present]
 
     endian & operator=(T v);
 
-* [*Postcondition:] `x == v`, where `x` is the constructed object.
-* [*Returns:] `*this`.
+[*Postcondition:] `x == v`, where `x` is the constructed object.
+[*Returns:] `*this`.
 
 [endsect]
 
@@ -1267,7 +1355,7 @@ available then these two constructors will not be present]
 
     operator T() const;
 
-* [*Returns:] The current value stored in `*this`, converted to `value_type`.
+[*Returns:] The current value stored in `*this`, converted to `value_type`.
 
 [endsect]
 
@@ -1277,7 +1365,7 @@ available then these two constructors will not be present]
 
           const char* data() const;
 
-* [*Returns:] The current value stored in `*this`, converted to `value_type`.
+[*Returns:] The current value stored in `*this`, converted to `value_type`.
 
 [endsect]
 
@@ -1388,7 +1476,6 @@ Header `<boost/integer/endian/endian.hpp>`  provides integer-like byte-holder bi
         typedef endian< endianness::little, uint32_t, 32, alignment::aligned > aligned_ulittle4_t;
         typedef endian< endianness::little, uint64_t, 64, alignment::aligned > aligned_ulittle8_t;
 
-
         // aligned native endian typedefs are not provided because
         // <cstdint> types are superior for this use case
 
@@ -1408,38 +1495,40 @@ An endian integer is an integer byte-holder with user-specified endianness, valu
             typename T, 
             std::size_t n_bits=8*sizeof(T),
             alignment A = alignment::aligned>
-        class endian : integer_cover_operators< endian<E, T, n_bits, A>, T > {
+        class endian : cover_operators< endian<E, T, n_bits, A>, T > {
         public:
           typedef E endian_type;
           typedef T value_type;
           static const std::size_t width = n_bits;
           static const alignment alignment_value = A;
           
+          #ifndef BOOST_ENDIAN_NO_CTORS
           endian() = default;       // = default replaced by {} on C++03
           explicit endian(T v);
+          #endif
           endian & operator=(T v);
           operator T() const;
           const char* data() const;
         };
 
-* [*Requires:] 
+[*Requires:] 
 
-    * `E` is one of `endianness::big` or `endianness::little`.
-    * `T` must be a POD with value semantics.
-    * `nbits` is a multiple of `8`
-    * If `A` is `alignment::aligned` then `nbits` must be equal to `8*sizeof(T)`
-
-[note if BOOST_ENDIAN_FORCE_PODNESS is defined && C++0x POD's are not
-available then these two constructors will not be present]
+* `E` is one of `endianness::big` or `endianness::little`.
+* `T` must be a POD with value semantics.
+* `nbits` is a multiple of `8`
+* If `A` is `alignment::aligned` then `nbits` must be equal to `8*sizeof(T)`
 
 
 [/==========================================================================================]
 [section:endian Default Contructor `endian()`]
 [/==========================================================================================]
 
+[note if BOOST_ENDIAN_FORCE_PODNESS is defined && C++0x POD's are not
+available then this constructor will not be present]
+
     endian() = default;  // C++03: endian(){}
 
-* [*Effects:] Constructs an object of type `endian<E, T, n_bits, A>`.
+[*Effects:] Constructs an object of type `endian<E, T, n_bits, A>`.
 
 [endsect]
 
@@ -1447,10 +1536,13 @@ available then these two constructors will not be present]
 [section:endianT Contructor from value_type `endian(T)`]
 [/==========================================================================================]
 
+[note if BOOST_ENDIAN_FORCE_PODNESS is defined && C++0x POD's are not
+available then this constructor will not be present]
+
     explicit endian(T v);
 
-* [*Effects:] Constructs an object of type `endian<E, T, n_bits, A>`.
-* [*Postcondition:] `x == v`, where `x` is the constructed object.
+[*Effects:] Constructs an object of type `endian<E, T, n_bits, A>`.
+[*Postcondition:] `x == v`, where `x` is the constructed object.
 
 [endsect]
 
@@ -1460,8 +1552,8 @@ available then these two constructors will not be present]
 
     endian & operator=(T v);
 
-* [*Postcondition:] `value_type(*this) == v`.
-* [*Returns:] `*this`.
+[*Postcondition:] `value_type(*this) == v`.
+[*Returns:] `*this`.
 
 [endsect]
 
@@ -1471,7 +1563,7 @@ available then these two constructors will not be present]
 
     operator T() const;
 
-* [*Returns:] The current value stored in `*this`, converted to `value_type`.
+[*Returns:] The current value stored in `*this`, converted to `value_type`.
 
 [endsect]
 
@@ -1481,7 +1573,7 @@ available then these two constructors will not be present]
 
           const char* data() const;
 
-* [*Returns:] The current value stored in `*this`, converted to `value_type`.
+[*Returns:] The current value stored in `*this`, converted to `value_type`.
 
 [endsect]
 
@@ -1622,7 +1714,7 @@ This file provides the `endian_view<>` class template as well as some factory he
 
             endian_view(value_type& ref);
 
-* [*Effects:] Constructs an object of type `endian_view<E, T, n_bits, A>`.
+[*Effects:] Constructs an object of type `endian_view<E, T, n_bits, A>`.
 
 [endsect]
 
@@ -1632,7 +1724,7 @@ This file provides the `endian_view<>` class template as well as some factory he
 
             operator value_type() const;
 
-* [*Returns:] The converted `value_type` of the referenced type as it was seen as an endian aware type.
+[*Returns:] The converted `value_type` of the referenced type as it was seen as an endian aware type.
 
 [endsect]
 
@@ -1642,20 +1734,20 @@ This file provides the `endian_view<>` class template as well as some factory he
 
             endian_view& operator=(endian_view const& rhs);
 
-* [*Postcondition:] `this->ref_ == rhs.ref_`.
-* [*Returns:] `*this`.
+[*Postcondition:] `this->ref_ == rhs.ref_`.
+[*Returns:] `*this`.
 
 [endsect]
 
 [/==========================================================================================]
-[section:assignement2 Assignement from different endianness`operator =(endian_view<Endian2,T> const& )`]
+[section:assignement2 Assignement from different endianness `operator =(endian_view<Endian2,T> const& )`]
 [/==========================================================================================]
 
             template <typename Endian2 >
             endian_view& operator=(endian_view<Endian2,T> const& rhs) {             
 
-* [*Postcondition:] `value_type(this->ref_) == value_type(rhs.ref_)`.
-* [*Returns:] `*this`.
+[*Postcondition:] `value_type(this->ref_) == value_type(rhs.ref_)`.
+[*Returns:] `*this`.
 
 [endsect]
 
@@ -1666,8 +1758,8 @@ This file provides the `endian_view<>` class template as well as some factory he
 
             endian_view& operator=(value_type val);
 
-* [*Postcondition:] `value_type(this->ref_) == v`.
-* [*Returns:] `*this`.
+[*Postcondition:] `value_type(this->ref_) == v`.
+[*Returns:] `*this`.
 
 [endsect]
 
@@ -1682,6 +1774,8 @@ This file provides the `endian_view<>` class template as well as some factory he
         template <typename E, typename T>    
         endian_view<endian<E,T> > as_endian(T& v);
 
+[*Returns:] An `endian_view<>` that depend on the endianness parameter `E` referencing the pararameter `v`.
+
 [endsect]
 
 [/==========================================================================================]
@@ -1690,6 +1784,8 @@ This file provides the `endian_view<>` class template as well as some factory he
 
         template <typename T>
         endian_view<endian<endian::native, T> > as(T& v);
+
+[*Returns:] A native endian `endian_view<>` referencing the pararameter `v`.
 
 [endsect]
 
@@ -1700,6 +1796,8 @@ This file provides the `endian_view<>` class template as well as some factory he
         template <typename T>
         endian_view<endian<endian::little, T> > as_little(T& v);
 
+[*Returns:] A little endian `endian_view<>` referencing the pararameter `v`.
+
 [endsect]
 
 [/==========================================================================================]
@@ -1708,6 +1806,8 @@ This file provides the `endian_view<>` class template as well as some factory he
 
         template <typename T>
         endian_view<endian<endian::big, T> > as_big(T& v);
+
+[*Returns:] A big endian `endian_view<>` referencing the pararameter `v`.
 
 [endsect]
 
@@ -1722,6 +1822,7 @@ This file provides the `endian_view<>` class template as well as some factory he
 
     namespace boost {
     namespace integer {
+    namespace endianness {
 
         template <typename TargetDomain, typename SourceDomain, typename T>
         void convert_to_from(T& r);
@@ -1734,13 +1835,14 @@ This file provides the `endian_view<>` class template as well as some factory he
         
         template <typename Endian> struct to;
         template <typename Endian> struct from;
-        template <typename Endian> struct is_to;
-        template <typename Endian> struct is_from;
+        template <typename Endian> struct is_target;
+        template <typename Endian> struct is_source;
 
         template <typename Endian1, typename Endian2, typename T>
         void convert(T& r);
         
 
+    } // namespace endianness
     } // namespace integer
     } // namespace boost
 
@@ -1753,6 +1855,8 @@ This file provides the `endian_view<>` class template as well as some factory he
         template <typename TargetDomain, typename SourceDomain, typename T>
         void convert_to_from(T& r);
 
+[*Returns:] the conversion of `v` viewed from `SourceDomain` to `TargetDomain'.
+
 [endsect]
 
 [/==========================================================================================]
@@ -1761,6 +1865,8 @@ This file provides the `endian_view<>` class template as well as some factory he
 
         template <typename SourceDomain, typename T>
         void convert_from(T& r);
+
+[*Returns:] the conversion of `v` viewed from `SourceDomain` to the native doamin.
 
 [endsect]
 
@@ -1771,6 +1877,8 @@ This file provides the `endian_view<>` class template as well as some factory he
         template <typename TargetDomain, typename T>
         void convert_to(T& r);
 
+[*Returns:] the conversion of `v` viewed from the native to `TargetDomain'.
+
 [endsect]
 
 [/==========================================================================================]
@@ -1778,16 +1886,21 @@ This file provides the `endian_view<>` class template as well as some factory he
 [/==========================================================================================]
 
 
+Tag class used to signal target conversion.
+
         template <typename Endian> 
         struct to {
             typedef Endian type;
         };
+
 
 [endsect]
 
 [/==========================================================================================]
 [section:from Class Template `from<>`]
 [/==========================================================================================]
+
+Tag class used to signal source conversion.
 
         template <typename Endian> 
         struct from {
@@ -1797,24 +1910,29 @@ This file provides the `endian_view<>` class template as well as some factory he
 [endsect]
 
 [/==========================================================================================]
-[section:is_to Class Template `is_to<>`]
+[section:is_target Class Template `is_target<>`]
 [/==========================================================================================]
 
+Template metafunction stating if the tag is a target domain.
+
         template <typename Endian> 
-        struct is_to : mpl::false_ {};
+        struct is_target : mpl::false_ {};
         template <typename Endian> 
-        struct is_to< to<Endian> > : mpl::true_ {};
+        struct is_target< to<Endian> > : mpl::true_ {};
 
 [endsect]
 
 [/==========================================================================================]
-[section:is_from Class Template `is_from<>`]
+[section:is_source Class Template `is_source<>`]
 [/==========================================================================================]
 
+Template metafunction stating if the tag is a source domain.
+
         template <typename Endian> 
-        struct is_from : mpl::false_ {};
+        struct is_source : mpl::false_ {};
         template <typename Endian> 
-        struct is_from< from<Endian> > : mpl::true_ {};
+        struct is_source< from<Endian> > : mpl::true_ {};
+
 
 [endsect]
 
@@ -1822,8 +1940,12 @@ This file provides the `endian_view<>` class template as well as some factory he
 [section:convert Non-Member Function Template `convert<>`]
 [/==========================================================================================]
 
+Coversion from source to target depending in the nature of the `Endian1` and `Endian2` template parameters. One of them must be a target domain (`to<>`) and the other a source domain (`from<>`).
+
         template <typename Endian1, typename Endian2, typename T>
         void convert(T& r);
+
+[*Returns:] the conversion of `v' viewed from source domain to the target domain'.
 
 [endsect]
 
@@ -1838,7 +1960,7 @@ This file provides the `endian_view<>` class template as well as some factory he
 [section:history Appendix A: History]
 [section [*Version 0.2.0, Febraury 15, 2011] ]
 
-Move to boost/integer/endian directory.
+Moved to boost/integer/endian directory.
 
 [endsect]
 

@@ -96,10 +96,10 @@
         Template <code class="computeroutput"><span class="identifier">to</span><span class="special">&lt;&gt;</span></code></a></span></dt>
 <dt><span class="section"><a href="reference.html#toward_boost_integer_endian.reference.integer_endian_conversion_hpp.from">Class
         Template <code class="computeroutput"><span class="identifier">from</span><span class="special">&lt;&gt;</span></code></a></span></dt>
-<dt><span class="section"><a href="reference.html#toward_boost_integer_endian.reference.integer_endian_conversion_hpp.is_to">Class
-        Template <code class="computeroutput"><span class="identifier">is_to</span><span class="special">&lt;&gt;</span></code></a></span></dt>
-<dt><span class="section"><a href="reference.html#toward_boost_integer_endian.reference.integer_endian_conversion_hpp.is_from">Class
-        Template <code class="computeroutput"><span class="identifier">is_from</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="reference.html#toward_boost_integer_endian.reference.integer_endian_conversion_hpp.is_target">Class
+        Template <code class="computeroutput"><span class="identifier">is_target</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="reference.html#toward_boost_integer_endian.reference.integer_endian_conversion_hpp.is_source">Class
+        Template <code class="computeroutput"><span class="identifier">is_source</span><span class="special">&lt;&gt;</span></code></a></span></dt>
 <dt><span class="section"><a href="reference.html#toward_boost_integer_endian.reference.integer_endian_conversion_hpp.convert">Non-Member
         Function Template <code class="computeroutput"><span class="identifier">convert</span><span class="special">&lt;&gt;</span></code></a></span></dt>
 </dl></dd>
@@ -116,7 +116,7 @@
         and std::string types.
       </p>
 <a name="toward_boost_integer_endian.reference.binary_stream_hpp.synopsis"></a><h5>
-<a name="id2914045"></a>
+<a name="id3374710"></a>
         <a class="link" href="reference.html#toward_boost_integer_endian.reference.binary_stream_hpp.synopsis">Synopsis</a>
       </h5>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span>
@@ -235,10 +235,11 @@
         tags.
       </p>
 <a name="toward_boost_integer_endian.reference.integer_endianness_hpp.synopsis"></a><h5>
-<a name="id2917200"></a>
+<a name="id3377948"></a>
         <a class="link" href="reference.html#toward_boost_integer_endian.reference.integer_endianness_hpp.synopsis">Synopsis</a>
       </h5>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>         
+<span class="keyword">namespace</span> <span class="identifier">integer</span> <span class="special">{</span>         
     <span class="keyword">namespace</span> <span class="identifier">endianness</span> <span class="special">{</span>
         <span class="keyword">struct</span> <span class="identifier">big</span><span class="special">;</span>
         <span class="keyword">struct</span> <span class="identifier">little</span><span class="special">;</span>
@@ -246,6 +247,7 @@
         <span class="keyword">struct</span> <span class="identifier">mixed</span><span class="special">;</span>
         <span class="keyword">typedef</span> <span class="special">&lt;</span><span class="identifier">platform</span> <span class="identifier">dependent</span><span class="special">&gt;</span> <span class="identifier">native</span> <span class="special">;</span>
     <span class="special">}</span>
+<span class="special">}</span>
 <span class="special">}</span>
 </pre>
 <div class="section">
@@ -316,7 +318,7 @@
         metafunction.
       </p>
 <a name="toward_boost_integer_endian.reference.endian_domain_map_hpp.synopsis"></a><h5>
-<a name="id2917763"></a>
+<a name="id3378533"></a>
         <a class="link" href="reference.html#toward_boost_integer_endian.reference.endian_domain_map_hpp.synopsis">Synopsis</a>
       </h5>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
@@ -335,28 +337,24 @@
     <span class="keyword">typedef</span> <span class="special">&lt;</span><span class="identifier">see</span> <span class="identifier">below</span><span class="special">&gt;</span> <span class="identifier">type</span><span class="special">;</span>
 <span class="special">};</span>
 </pre>
-<div class="itemizedlist"><ul class="itemizedlist" type="disc">
-<li class="listitem">
-<p class="simpara">
-              <span class="bold"><strong>Requires:</strong></span>
-            </p>
-<div class="itemizedlist"><ul class="itemizedlist" type="circle"><li class="listitem">
-                  <code class="computeroutput"><span class="identifier">Domain</span></code> any class.
-                  Can be also <code class="computeroutput"><span class="identifier">endianness</span><span class="special">::</span><span class="identifier">big</span></code>
-                  or <code class="computeroutput"><span class="identifier">endianness</span><span class="special">::</span><span class="identifier">little</span></code>.
-                </li></ul></div>
-</li>
-<li class="listitem">
-              <span class="bold"><strong>Result:</strong></span> The member typedef <code class="computeroutput"><span class="identifier">type</span></code> names a mpl tree of sequence
-              of <code class="computeroutput"><span class="identifier">endianness</span></code> types
-              as view from the point of view of the <code class="computeroutput"><span class="identifier">Domain</span></code>.
-              The default definition is a mpl tree having as leaves the <code class="computeroutput"><span class="identifier">Domain</span></code> class for <code class="computeroutput"><span class="identifier">T</span></code>
-              fundamental types, and fusion sequences.
-            </li>
-<li class="listitem">
-              <span class="bold"><strong>Example:</strong></span>
-            </li>
-</ul></div>
+<p>
+          <span class="bold"><strong>Requires:</strong></span>
+        </p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+              <code class="computeroutput"><span class="identifier">Domain</span></code> any class. Can
+              be also <code class="computeroutput"><span class="identifier">endianness</span><span class="special">::</span><span class="identifier">big</span></code>
+              or <code class="computeroutput"><span class="identifier">endianness</span><span class="special">::</span><span class="identifier">little</span></code>.
+            </li></ul></div>
+<p>
+          <span class="bold"><strong>Result:</strong></span> The member typedef <code class="computeroutput"><span class="identifier">type</span></code> names a mpl tree of sequence of
+          <code class="computeroutput"><span class="identifier">endianness</span></code> types as view
+          from the point of view of the <code class="computeroutput"><span class="identifier">Domain</span></code>.
+          The default definition is a mpl tree having as leaves the <code class="computeroutput"><span class="identifier">Domain</span></code> class for <code class="computeroutput"><span class="identifier">T</span></code>
+          fundamental types, and fusion sequences.
+        </p>
+<p>
+          <span class="bold"><strong>Example:</strong></span>
+        </p>
 <pre class="programlisting"><span class="identifier">is_same</span><span class="special">&lt;</span><span class="identifier">domain_map</span><span class="special">&lt;</span><span class="identifier">endianness</span><span class="special">::</span><span class="identifier">big</span><span class="special">,</span> <span class="keyword">int</span><span class="special">&gt;::</span><span class="identifier">type</span><span class="special">,</span> <span class="identifier">endianness</span><span class="special">::</span><span class="identifier">big</span><span class="special">&gt;::</span><span class="identifier">value</span> <span class="special">==</span> <span class="keyword">true</span>
 
 <span class="keyword">struct</span> <span class="identifier">ifA</span> <span class="special">{};</span>
@@ -396,7 +394,7 @@
         configurations.
       </p>
 <a name="toward_boost_integer_endian.reference.integer_endian_pack_hpp.synopsis"></a><h5>
-<a name="id2918396"></a>
+<a name="id3379153"></a>
         <a class="link" href="reference.html#toward_boost_integer_endian.reference.integer_endian_pack_hpp.synopsis">Synopsis</a>
       </h5>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
@@ -469,40 +467,38 @@
     <span class="keyword">typedef</span> <span class="identifier">endian_pack</span><span class="special">&lt;</span> <span class="identifier">endianness</span><span class="special">::</span><span class="identifier">native</span><span class="special">,</span> <span class="identifier">uint_least64_t</span><span class="special">,</span> <span class="number">56</span><span class="special">,</span> <span class="identifier">alignment</span><span class="special">::</span><span class="identifier">unaligned</span> <span class="special">&gt;</span>     <span class="identifier">unative56_pt</span><span class="special">;</span>
     <span class="keyword">typedef</span> <span class="identifier">endian_pack</span><span class="special">&lt;</span> <span class="identifier">endianness</span><span class="special">::</span><span class="identifier">native</span><span class="special">,</span> <span class="identifier">uint_least64_t</span><span class="special">,</span> <span class="number">64</span><span class="special">,</span> <span class="identifier">alignment</span><span class="special">::</span><span class="identifier">unaligned</span> <span class="special">&gt;</span>     <span class="identifier">unative64_pt</span><span class="special">;</span>
 
-<span class="preprocessor">#define</span> <span class="identifier">BOOST_HAS_INT16_T</span>
-<span class="preprocessor">#define</span> <span class="identifier">BOOST_HAS_INT32_T</span>
-<span class="preprocessor">#define</span> <span class="identifier">BOOST_HAS_INT64_T</span>
   
-  <span class="comment">//  These types only present if platform has exact size integers:
-</span>  <span class="comment">//     aligned big endian_pack signed integer types
-</span>  <span class="comment">//     aligned big endian_pack unsigned integer types
-</span>  <span class="comment">//     aligned little endian_pack signed integer types
-</span>  <span class="comment">//     aligned little endian_pack unsigned integer types
+    <span class="comment">//  These types only present if platform has exact size integers:
+</span>    <span class="comment">//     aligned big endian_pack signed integer types
+</span>    <span class="comment">//     aligned big endian_pack unsigned integer types
+</span>    <span class="comment">//     aligned little endian_pack signed integer types
+</span>    <span class="comment">//     aligned little endian_pack unsigned integer types
 </span>
-  <span class="comment">//     aligned native endian_pack typedefs are not provided because
-</span>  <span class="comment">//     &lt;cstdint&gt; types are superior for this use case
-</span>
-<span class="preprocessor"># if</span> <span class="identifier">defined</span><span class="special">(</span><span class="identifier">BOOST_HAS_INT16_T</span><span class="special">)</span>
+
+    <span class="preprocessor"># if</span> <span class="identifier">defined</span><span class="special">(</span><span class="identifier">BOOST_HAS_INT16_T</span><span class="special">)</span>
     <span class="keyword">typedef</span> <span class="identifier">endian_pack</span><span class="special">&lt;</span> <span class="identifier">endianness</span><span class="special">::</span><span class="identifier">big</span><span class="special">,</span> <span class="identifier">int16_t</span><span class="special">,</span> <span class="number">16</span><span class="special">,</span> <span class="identifier">alignment</span><span class="special">::</span><span class="identifier">aligned</span> <span class="special">&gt;</span>      <span class="identifier">aligned_big16_pt</span><span class="special">;</span>
     <span class="keyword">typedef</span> <span class="identifier">endian_pack</span><span class="special">&lt;</span> <span class="identifier">endianness</span><span class="special">::</span><span class="identifier">big</span><span class="special">,</span> <span class="identifier">uint16_t</span><span class="special">,</span> <span class="number">16</span><span class="special">,</span> <span class="identifier">alignment</span><span class="special">::</span><span class="identifier">aligned</span> <span class="special">&gt;</span>     <span class="identifier">aligned_ubig16_pt</span><span class="special">;</span>
     <span class="keyword">typedef</span> <span class="identifier">endian_pack</span><span class="special">&lt;</span> <span class="identifier">endianness</span><span class="special">::</span><span class="identifier">little</span><span class="special">,</span> <span class="identifier">int16_t</span><span class="special">,</span> <span class="number">16</span><span class="special">,</span> <span class="identifier">alignment</span><span class="special">::</span><span class="identifier">aligned</span> <span class="special">&gt;</span>   <span class="identifier">aligned_little16_pt</span><span class="special">;</span>
     <span class="keyword">typedef</span> <span class="identifier">endian_pack</span><span class="special">&lt;</span> <span class="identifier">endianness</span><span class="special">::</span><span class="identifier">little</span><span class="special">,</span> <span class="identifier">uint16_t</span><span class="special">,</span> <span class="number">16</span><span class="special">,</span> <span class="identifier">alignment</span><span class="special">::</span><span class="identifier">aligned</span> <span class="special">&gt;</span>  <span class="identifier">aligned_ulittle16_pt</span><span class="special">;</span>
-<span class="preprocessor"># endif</span>
+    <span class="preprocessor"># endif</span>
 
-<span class="preprocessor"># if</span> <span class="identifier">defined</span><span class="special">(</span><span class="identifier">BOOST_HAS_INT32_T</span><span class="special">)</span>
+    <span class="preprocessor"># if</span> <span class="identifier">defined</span><span class="special">(</span><span class="identifier">BOOST_HAS_INT32_T</span><span class="special">)</span>
     <span class="keyword">typedef</span> <span class="identifier">endian_pack</span><span class="special">&lt;</span> <span class="identifier">endianness</span><span class="special">::</span><span class="identifier">big</span><span class="special">,</span> <span class="identifier">int32_t</span><span class="special">,</span> <span class="number">32</span><span class="special">,</span> <span class="identifier">alignment</span><span class="special">::</span><span class="identifier">aligned</span> <span class="special">&gt;</span>      <span class="identifier">aligned_big32_pt</span><span class="special">;</span>
     <span class="keyword">typedef</span> <span class="identifier">endian_pack</span><span class="special">&lt;</span> <span class="identifier">endianness</span><span class="special">::</span><span class="identifier">big</span><span class="special">,</span> <span class="identifier">uint32_t</span><span class="special">,</span> <span class="number">32</span><span class="special">,</span> <span class="identifier">alignment</span><span class="special">::</span><span class="identifier">aligned</span> <span class="special">&gt;</span>     <span class="identifier">aligned_ubig32_pt</span><span class="special">;</span>
     <span class="keyword">typedef</span> <span class="identifier">endian_pack</span><span class="special">&lt;</span> <span class="identifier">endianness</span><span class="special">::</span><span class="identifier">little</span><span class="special">,</span> <span class="identifier">int32_t</span><span class="special">,</span> <span class="number">32</span><span class="special">,</span> <span class="identifier">alignment</span><span class="special">::</span><span class="identifier">aligned</span> <span class="special">&gt;</span>   <span class="identifier">aligned_little32_pt</span><span class="special">;</span>
     <span class="keyword">typedef</span> <span class="identifier">endian_pack</span><span class="special">&lt;</span> <span class="identifier">endianness</span><span class="special">::</span><span class="identifier">little</span><span class="special">,</span> <span class="identifier">uint32_t</span><span class="special">,</span> <span class="number">32</span><span class="special">,</span> <span class="identifier">alignment</span><span class="special">::</span><span class="identifier">aligned</span> <span class="special">&gt;</span>  <span class="identifier">aligned_ulittle32_pt</span><span class="special">;</span>
-<span class="preprocessor"># endif</span>
+    <span class="preprocessor"># endif</span>
 
-<span class="preprocessor"># if</span> <span class="identifier">defined</span><span class="special">(</span><span class="identifier">BOOST_HAS_INT64_T</span><span class="special">)</span>
+    <span class="preprocessor"># if</span> <span class="identifier">defined</span><span class="special">(</span><span class="identifier">BOOST_HAS_INT64_T</span><span class="special">)</span>
     <span class="keyword">typedef</span> <span class="identifier">endian_pack</span><span class="special">&lt;</span> <span class="identifier">endianness</span><span class="special">::</span><span class="identifier">big</span><span class="special">,</span> <span class="identifier">int64_t</span><span class="special">,</span> <span class="number">64</span><span class="special">,</span> <span class="identifier">alignment</span><span class="special">::</span><span class="identifier">aligned</span> <span class="special">&gt;</span>      <span class="identifier">aligned_big64_pt</span><span class="special">;</span>
     <span class="keyword">typedef</span> <span class="identifier">endian_pack</span><span class="special">&lt;</span> <span class="identifier">endianness</span><span class="special">::</span><span class="identifier">big</span><span class="special">,</span> <span class="identifier">uint64_t</span><span class="special">,</span> <span class="number">64</span><span class="special">,</span> <span class="identifier">alignment</span><span class="special">::</span><span class="identifier">aligned</span> <span class="special">&gt;</span>     <span class="identifier">aligned_ubig64_pt</span><span class="special">;</span>
     <span class="keyword">typedef</span> <span class="identifier">endian_pack</span><span class="special">&lt;</span> <span class="identifier">endianness</span><span class="special">::</span><span class="identifier">little</span><span class="special">,</span> <span class="identifier">int64_t</span><span class="special">,</span> <span class="number">64</span><span class="special">,</span> <span class="identifier">alignment</span><span class="special">::</span><span class="identifier">aligned</span> <span class="special">&gt;</span>   <span class="identifier">aligned_little64_pt</span><span class="special">;</span>
     <span class="keyword">typedef</span> <span class="identifier">endian_pack</span><span class="special">&lt;</span> <span class="identifier">endianness</span><span class="special">::</span><span class="identifier">little</span><span class="special">,</span> <span class="identifier">uint64_t</span><span class="special">,</span> <span class="number">64</span><span class="special">,</span> <span class="identifier">alignment</span><span class="special">::</span><span class="identifier">aligned</span> <span class="special">&gt;</span>  <span class="identifier">aligned_ulittle64_pt</span><span class="special">;</span>
-<span class="preprocessor"># endif</span>
+    <span class="preprocessor"># endif</span>
 
+    <span class="comment">//     aligned native endian_pack typedefs are not provided because
+</span>    <span class="comment">//     &lt;cstdint&gt; types are superior for this use case
+</span>
 <span class="special">}</span>
 <span class="special">}</span>
 </pre>
@@ -527,89 +523,96 @@
           An <code class="computeroutput"><span class="identifier">endian_pack</span></code> is a byte-holder
           with user-specified endianness, value type, size, and alignment.
         </p>
-<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span>
-    <span class="keyword">typename</span> <span class="identifier">E</span><span class="special">,</span> 
-    <span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> 
-    <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">n_bits</span><span class="special">=</span><span class="number">8</span><span class="special">*</span><span class="keyword">sizeof</span><span class="special">(</span><span class="identifier">T</span><span class="special">),</span>
-    <span class="identifier">alignment</span> <span class="identifier">A</span> <span class="special">=</span> <span class="identifier">alignment</span><span class="special">::</span><span class="identifier">aligned</span><span class="special">&gt;</span>
-<span class="keyword">class</span> <span class="identifier">endian_pack</span> <span class="special">{</span>
-<span class="keyword">public</span><span class="special">:</span>
+<pre class="programlisting">    <span class="keyword">template</span> <span class="special">&lt;</span>
+        <span class="keyword">typename</span> <span class="identifier">E</span><span class="special">,</span> 
+        <span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> 
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">n_bits</span><span class="special">=</span><span class="number">8</span><span class="special">*</span><span class="keyword">sizeof</span><span class="special">(</span><span class="identifier">T</span><span class="special">),</span>
+        <span class="identifier">alignment</span> <span class="identifier">A</span> <span class="special">=</span> <span class="identifier">alignment</span><span class="special">::</span><span class="identifier">aligned</span><span class="special">&gt;</span>
+    <span class="keyword">class</span> <span class="identifier">endian_pack</span> <span class="special">{</span>
+    <span class="keyword">public</span><span class="special">:</span>
   <span class="keyword">typedef</span> <span class="identifier">E</span> <span class="identifier">endian_type</span><span class="special">;</span>
-  <span class="keyword">typedef</span> <span class="identifier">T</span> <span class="identifier">value_type</span><span class="special">;</span>
-  <span class="keyword">static</span> <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">width</span> <span class="special">=</span> <span class="identifier">n_bits</span><span class="special">;</span>
-  <span class="keyword">static</span> <span class="keyword">const</span> <span class="identifier">alignment</span> <span class="identifier">alignment_value</span> <span class="special">=</span> <span class="identifier">A</span><span class="special">;</span>
-  
+      <span class="keyword">typedef</span> <span class="identifier">T</span> <span class="identifier">value_type</span><span class="special">;</span>
+      <span class="keyword">static</span> <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">width</span> <span class="special">=</span> <span class="identifier">n_bits</span><span class="special">;</span>
+      <span class="keyword">static</span> <span class="keyword">const</span> <span class="identifier">alignment</span> <span class="identifier">alignment_value</span> <span class="special">=</span> <span class="identifier">A</span><span class="special">;</span>
+      
+<span class="preprocessor">#ifndef</span> <span class="identifier">BOOST_ENDIAN_NO_CTORS</span>
   <span class="identifier">endian_pack</span><span class="special">()</span> <span class="special">=</span> <span class="keyword">default</span><span class="special">;</span>       <span class="comment">// = default replaced by {} on C++03
-</span>  <span class="keyword">explicit</span> <span class="identifier">endian_pack</span><span class="special">(</span><span class="identifier">T</span> <span class="identifier">v</span><span class="special">);</span>
-  <span class="identifier">endian_pack</span> <span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">=(</span><span class="identifier">T</span> <span class="identifier">v</span><span class="special">);</span>
-  <span class="keyword">operator</span> <span class="identifier">T</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
-  <span class="keyword">const</span> <span class="keyword">char</span><span class="special">*</span> <span class="identifier">data</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
-<span class="special">};</span>
+</span>      <span class="keyword">explicit</span> <span class="identifier">endian_pack</span><span class="special">(</span><span class="identifier">T</span> <span class="identifier">v</span><span class="special">);</span>
+<span class="preprocessor">#endif</span>
+      <span class="identifier">endian_pack</span> <span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">=(</span><span class="identifier">T</span> <span class="identifier">v</span><span class="special">);</span>
+      <span class="keyword">operator</span> <span class="identifier">T</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+      <span class="keyword">const</span> <span class="keyword">char</span><span class="special">*</span> <span class="identifier">data</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+    <span class="special">};</span>
 </pre>
-<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
-<p class="simpara">
-              <span class="bold"><strong>Requires:</strong></span>
-            </p>
-<div class="itemizedlist"><ul class="itemizedlist" type="circle">
+<p>
+          <span class="bold"><strong>Requires:</strong></span>
+        </p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
 <li class="listitem">
-                  <code class="computeroutput"><span class="identifier">E</span></code> is one of <code class="computeroutput"><span class="identifier">endianness</span><span class="special">::</span><span class="identifier">big</span></code> or <code class="computeroutput"><span class="identifier">endianness</span><span class="special">::</span><span class="identifier">little</span></code>.
-                </li>
+              <code class="computeroutput"><span class="identifier">E</span></code> is one of <code class="computeroutput"><span class="identifier">endianness</span><span class="special">::</span><span class="identifier">big</span></code> or <code class="computeroutput"><span class="identifier">endianness</span><span class="special">::</span><span class="identifier">little</span></code>.
+            </li>
 <li class="listitem">
-                  <code class="computeroutput"><span class="identifier">T</span></code> must be a POD
-                  with value semantics.
-                </li>
+              <code class="computeroutput"><span class="identifier">T</span></code> must be a POD with
+              value semantics.
+            </li>
 <li class="listitem">
-                  <code class="computeroutput"><span class="identifier">nbits</span></code> is a multiple
-                  of <code class="computeroutput"><span class="number">8</span></code>
-                </li>
+              <code class="computeroutput"><span class="identifier">nbits</span></code> is a multiple
+              of <code class="computeroutput"><span class="number">8</span></code>
+            </li>
 <li class="listitem">
-                  If <code class="computeroutput"><span class="identifier">A</span></code> is <code class="computeroutput"><span class="identifier">alignment</span><span class="special">::</span><span class="identifier">aligned</span></code> then <code class="computeroutput"><span class="identifier">nbits</span></code>
-                  must be equal to <code class="computeroutput"><span class="number">8</span><span class="special">*</span><span class="keyword">sizeof</span><span class="special">(</span><span class="identifier">T</span><span class="special">)</span></code>
-                </li>
+              If <code class="computeroutput"><span class="identifier">A</span></code> is <code class="computeroutput"><span class="identifier">alignment</span><span class="special">::</span><span class="identifier">aligned</span></code> then <code class="computeroutput"><span class="identifier">nbits</span></code>
+              must be equal to <code class="computeroutput"><span class="number">8</span><span class="special">*</span><span class="keyword">sizeof</span><span class="special">(</span><span class="identifier">T</span><span class="special">)</span></code>
+            </li>
 </ul></div>
-</li></ul></div>
+<div class="section">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_integer_endian.reference.integer_endian_pack_hpp.endian_pack.endian"></a><a class="link" href="reference.html#toward_boost_integer_endian.reference.integer_endian_pack_hpp.endian_pack.endian" title="Default Contructor endian_pack()">Default
+          Contructor <code class="computeroutput"><span class="identifier">endian_pack</span><span class="special">()</span></code></a>
+</h5></div></div></div>
 <div class="note"><table border="0" summary="Note">
 <tr>
 <td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../../../doc/src/images/note.png"></td>
 <th align="left">Note</th>
 </tr>
 <tr><td align="left" valign="top"><p>
-            if BOOST_ENDIAN_FORCE_PODNESS is defined &amp;&amp; C++0x POD's are not
-            available then these two constructors will not be present
-          </p></td></tr>
+              if BOOST_ENDIAN_FORCE_PODNESS is defined &amp;&amp; C++0x POD's are
+              not available then this constructor will not be present
+            </p></td></tr>
 </table></div>
-<div class="section">
-<div class="titlepage"><div><div><h5 class="title">
-<a name="toward_boost_integer_endian.reference.integer_endian_pack_hpp.endian_pack.endian"></a><a class="link" href="reference.html#toward_boost_integer_endian.reference.integer_endian_pack_hpp.endian_pack.endian" title="Default Contructor endian_pack()">Default
-          Contructor <code class="computeroutput"><span class="identifier">endian_pack</span><span class="special">()</span></code></a>
-</h5></div></div></div>
 <pre class="programlisting"><span class="identifier">endian_pack</span><span class="special">()</span> <span class="special">=</span> <span class="keyword">default</span><span class="special">;</span>  <span class="comment">// C++03: endian(){}
 </span></pre>
-<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
-                <span class="bold"><strong>Effects:</strong></span> Constructs an object of
-                type <code class="computeroutput"><span class="identifier">endian</span><span class="special">&lt;</span><span class="identifier">E</span><span class="special">,</span> <span class="identifier">T</span><span class="special">,</span> <span class="identifier">n_bits</span><span class="special">,</span>
-                <span class="identifier">A</span><span class="special">&gt;</span></code>.
-              </li></ul></div>
+<p>
+            <span class="bold"><strong>Effects:</strong></span> Constructs an object of type
+            <code class="computeroutput"><span class="identifier">endian_pack</span><span class="special">&lt;</span><span class="identifier">E</span><span class="special">,</span> <span class="identifier">T</span><span class="special">,</span> <span class="identifier">n_bits</span><span class="special">,</span> <span class="identifier">A</span><span class="special">&gt;</span></code>.
+          </p>
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h5 class="title">
 <a name="toward_boost_integer_endian.reference.integer_endian_pack_hpp.endian_pack.endianT"></a><a class="link" href="reference.html#toward_boost_integer_endian.reference.integer_endian_pack_hpp.endian_pack.endianT" title="Contructor from value_type endian_pack(T)">Contructor
           from value_type <code class="computeroutput"><span class="identifier">endian_pack</span><span class="special">(</span><span class="identifier">T</span><span class="special">)</span></code></a>
 </h5></div></div></div>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../../../doc/src/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+              if BOOST_ENDIAN_FORCE_PODNESS is defined &amp;&amp; C++0x POD's are
+              not available then this constructor will not be present.
+            </p></td></tr>
+</table></div>
 <pre class="programlisting"><span class="keyword">explicit</span> <span class="identifier">endian_pack</span><span class="special">(</span><span class="identifier">T</span> <span class="identifier">v</span><span class="special">);</span>
 </pre>
-<div class="itemizedlist"><ul class="itemizedlist" type="disc">
-<li class="listitem">
-                <span class="bold"><strong>Effects:</strong></span> Constructs an object of
-                type <code class="computeroutput"><span class="identifier">endian_pack</span><span class="special">&lt;</span><span class="identifier">E</span><span class="special">,</span> <span class="identifier">T</span><span class="special">,</span> <span class="identifier">n_bits</span><span class="special">,</span> <span class="identifier">A</span><span class="special">&gt;</span></code>.
-              </li>
-<li class="listitem">
-                <span class="bold"><strong>Postcondition:</strong></span> <code class="computeroutput"><span class="identifier">x</span>
-                <span class="special">==</span> <span class="identifier">v</span></code>,
-                where <code class="computeroutput"><span class="identifier">x</span></code> is the constructed
-                object.
-              </li>
-</ul></div>
+<p>
+            <span class="bold"><strong>Effects:</strong></span> Constructs an object of type
+            <code class="computeroutput"><span class="identifier">endian_pack</span><span class="special">&lt;</span><span class="identifier">E</span><span class="special">,</span> <span class="identifier">T</span><span class="special">,</span> <span class="identifier">n_bits</span><span class="special">,</span> <span class="identifier">A</span><span class="special">&gt;</span></code>.
+          </p>
+<p>
+            <span class="bold"><strong>Postcondition:</strong></span> <code class="computeroutput"><span class="identifier">x</span>
+            <span class="special">==</span> <span class="identifier">v</span></code>,
+            where <code class="computeroutput"><span class="identifier">x</span></code> is the constructed
+            object.
+          </p>
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h5 class="title">
@@ -618,17 +621,12 @@
 </h5></div></div></div>
 <pre class="programlisting"><span class="identifier">endian</span> <span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">=(</span><span class="identifier">T</span> <span class="identifier">v</span><span class="special">);</span>
 </pre>
-<div class="itemizedlist"><ul class="itemizedlist" type="disc">
-<li class="listitem">
-                <span class="bold"><strong>Postcondition:</strong></span> <code class="computeroutput"><span class="identifier">x</span>
-                <span class="special">==</span> <span class="identifier">v</span></code>,
-                where <code class="computeroutput"><span class="identifier">x</span></code> is the constructed
-                object.
-              </li>
-<li class="listitem">
-                <span class="bold"><strong>Returns:</strong></span> <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>.
-              </li>
-</ul></div>
+<p>
+            <span class="bold"><strong>Postcondition:</strong></span> <code class="computeroutput"><span class="identifier">x</span>
+            <span class="special">==</span> <span class="identifier">v</span></code>,
+            where <code class="computeroutput"><span class="identifier">x</span></code> is the constructed
+            object. <span class="bold"><strong>Returns:</strong></span> <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>.
+          </p>
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h5 class="title">
@@ -637,11 +635,11 @@
 </h5></div></div></div>
 <pre class="programlisting"><span class="keyword">operator</span> <span class="identifier">T</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
 </pre>
-<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
-                <span class="bold"><strong>Returns:</strong></span> The current value stored
-                in <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>,
-                converted to <code class="computeroutput"><span class="identifier">value_type</span></code>.
-              </li></ul></div>
+<p>
+            <span class="bold"><strong>Returns:</strong></span> The current value stored in
+            <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>,
+            converted to <code class="computeroutput"><span class="identifier">value_type</span></code>.
+          </p>
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h5 class="title">
@@ -650,11 +648,11 @@
 </h5></div></div></div>
 <pre class="programlisting"><span class="keyword">const</span> <span class="keyword">char</span><span class="special">*</span> <span class="identifier">data</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
 </pre>
-<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
-                <span class="bold"><strong>Returns:</strong></span> The current value stored
-                in <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>,
-                converted to <code class="computeroutput"><span class="identifier">value_type</span></code>.
-              </li></ul></div>
+<p>
+            <span class="bold"><strong>Returns:</strong></span> The current value stored in
+            <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>,
+            converted to <code class="computeroutput"><span class="identifier">value_type</span></code>.
+          </p>
 </div>
 </div>
 <div class="section"><div class="titlepage"><div><div><h4 class="title">
@@ -694,7 +692,7 @@
         names for common configurations.
       </p>
 <a name="toward_boost_integer_endian.reference.integer_endian_hpp.synopsis"></a><h5>
-<a name="id2925674"></a>
+<a name="id3386379"></a>
         <a class="link" href="reference.html#toward_boost_integer_endian.reference.integer_endian_hpp.synopsis">Synopsis</a>
       </h5>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
@@ -786,7 +784,6 @@
     <span class="keyword">typedef</span> <span class="identifier">endian</span><span class="special">&lt;</span> <span class="identifier">endianness</span><span class="special">::</span><span class="identifier">little</span><span class="special">,</span> <span class="identifier">uint32_t</span><span class="special">,</span> <span class="number">32</span><span class="special">,</span> <span class="identifier">alignment</span><span class="special">::</span><span class="identifier">aligned</span> <span class="special">&gt;</span> <span class="identifier">aligned_ulittle4_t</span><span class="special">;</span>
     <span class="keyword">typedef</span> <span class="identifier">endian</span><span class="special">&lt;</span> <span class="identifier">endianness</span><span class="special">::</span><span class="identifier">little</span><span class="special">,</span> <span class="identifier">uint64_t</span><span class="special">,</span> <span class="number">64</span><span class="special">,</span> <span class="identifier">alignment</span><span class="special">::</span><span class="identifier">aligned</span> <span class="special">&gt;</span> <span class="identifier">aligned_ulittle8_t</span><span class="special">;</span>
 
-
     <span class="comment">// aligned native endian typedefs are not provided because
 </span>    <span class="comment">// &lt;cstdint&gt; types are superior for this use case
 </span>
@@ -821,85 +818,89 @@
     <span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> 
     <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">n_bits</span><span class="special">=</span><span class="number">8</span><span class="special">*</span><span class="keyword">sizeof</span><span class="special">(</span><span class="identifier">T</span><span class="special">),</span>
     <span class="identifier">alignment</span> <span class="identifier">A</span> <span class="special">=</span> <span class="identifier">alignment</span><span class="special">::</span><span class="identifier">aligned</span><span class="special">&gt;</span>
-<span class="keyword">class</span> <span class="identifier">endian</span> <span class="special">:</span> <span class="identifier">integer_cover_operators</span><span class="special">&lt;</span> <span class="identifier">endian</span><span class="special">&lt;</span><span class="identifier">E</span><span class="special">,</span> <span class="identifier">T</span><span class="special">,</span> <span class="identifier">n_bits</span><span class="special">,</span> <span class="identifier">A</span><span class="special">&gt;,</span> <span class="identifier">T</span> <span class="special">&gt;</span> <span class="special">{</span>
+<span class="keyword">class</span> <span class="identifier">endian</span> <span class="special">:</span> <span class="identifier">cover_operators</span><span class="special">&lt;</span> <span class="identifier">endian</span><span class="special">&lt;</span><span class="identifier">E</span><span class="special">,</span> <span class="identifier">T</span><span class="special">,</span> <span class="identifier">n_bits</span><span class="special">,</span> <span class="identifier">A</span><span class="special">&gt;,</span> <span class="identifier">T</span> <span class="special">&gt;</span> <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
   <span class="keyword">typedef</span> <span class="identifier">E</span> <span class="identifier">endian_type</span><span class="special">;</span>
   <span class="keyword">typedef</span> <span class="identifier">T</span> <span class="identifier">value_type</span><span class="special">;</span>
   <span class="keyword">static</span> <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">width</span> <span class="special">=</span> <span class="identifier">n_bits</span><span class="special">;</span>
   <span class="keyword">static</span> <span class="keyword">const</span> <span class="identifier">alignment</span> <span class="identifier">alignment_value</span> <span class="special">=</span> <span class="identifier">A</span><span class="special">;</span>
   
+  <span class="preprocessor">#ifndef</span> <span class="identifier">BOOST_ENDIAN_NO_CTORS</span>
   <span class="identifier">endian</span><span class="special">()</span> <span class="special">=</span> <span class="keyword">default</span><span class="special">;</span>       <span class="comment">// = default replaced by {} on C++03
 </span>  <span class="keyword">explicit</span> <span class="identifier">endian</span><span class="special">(</span><span class="identifier">T</span> <span class="identifier">v</span><span class="special">);</span>
+  <span class="preprocessor">#endif</span>
   <span class="identifier">endian</span> <span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">=(</span><span class="identifier">T</span> <span class="identifier">v</span><span class="special">);</span>
   <span class="keyword">operator</span> <span class="identifier">T</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
   <span class="keyword">const</span> <span class="keyword">char</span><span class="special">*</span> <span class="identifier">data</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
 <span class="special">};</span>
 </pre>
-<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
-<p class="simpara">
-              <span class="bold"><strong>Requires:</strong></span>
-            </p>
-<div class="itemizedlist"><ul class="itemizedlist" type="circle">
+<p>
+          <span class="bold"><strong>Requires:</strong></span>
+        </p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
 <li class="listitem">
-                  <code class="computeroutput"><span class="identifier">E</span></code> is one of <code class="computeroutput"><span class="identifier">endianness</span><span class="special">::</span><span class="identifier">big</span></code> or <code class="computeroutput"><span class="identifier">endianness</span><span class="special">::</span><span class="identifier">little</span></code>.
-                </li>
+              <code class="computeroutput"><span class="identifier">E</span></code> is one of <code class="computeroutput"><span class="identifier">endianness</span><span class="special">::</span><span class="identifier">big</span></code> or <code class="computeroutput"><span class="identifier">endianness</span><span class="special">::</span><span class="identifier">little</span></code>.
+            </li>
 <li class="listitem">
-                  <code class="computeroutput"><span class="identifier">T</span></code> must be a POD
-                  with value semantics.
-                </li>
+              <code class="computeroutput"><span class="identifier">T</span></code> must be a POD with
+              value semantics.
+            </li>
 <li class="listitem">
-                  <code class="computeroutput"><span class="identifier">nbits</span></code> is a multiple
-                  of <code class="computeroutput"><span class="number">8</span></code>
-                </li>
+              <code class="computeroutput"><span class="identifier">nbits</span></code> is a multiple
+              of <code class="computeroutput"><span class="number">8</span></code>
+            </li>
 <li class="listitem">
-                  If <code class="computeroutput"><span class="identifier">A</span></code> is <code class="computeroutput"><span class="identifier">alignment</span><span class="special">::</span><span class="identifier">aligned</span></code> then <code class="computeroutput"><span class="identifier">nbits</span></code>
-                  must be equal to <code class="computeroutput"><span class="number">8</span><span class="special">*</span><span class="keyword">sizeof</span><span class="special">(</span><span class="identifier">T</span><span class="special">)</span></code>
-                </li>
+              If <code class="computeroutput"><span class="identifier">A</span></code> is <code class="computeroutput"><span class="identifier">alignment</span><span class="special">::</span><span class="identifier">aligned</span></code> then <code class="computeroutput"><span class="identifier">nbits</span></code>
+              must be equal to <code class="computeroutput"><span class="number">8</span><span class="special">*</span><span class="keyword">sizeof</span><span class="special">(</span><span class="identifier">T</span><span class="special">)</span></code>
+            </li>
 </ul></div>
-</li></ul></div>
+<div class="section">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_integer_endian.reference.integer_endian_hpp.endian.endian"></a><a class="link" href="reference.html#toward_boost_integer_endian.reference.integer_endian_hpp.endian.endian" title="Default Contructor endian()">Default
+          Contructor <code class="computeroutput"><span class="identifier">endian</span><span class="special">()</span></code></a>
+</h5></div></div></div>
 <div class="note"><table border="0" summary="Note">
 <tr>
 <td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../../../doc/src/images/note.png"></td>
 <th align="left">Note</th>
 </tr>
 <tr><td align="left" valign="top"><p>
-            if BOOST_ENDIAN_FORCE_PODNESS is defined &amp;&amp; C++0x POD's are not
-            available then these two constructors will not be present
-          </p></td></tr>
+              if BOOST_ENDIAN_FORCE_PODNESS is defined &amp;&amp; C++0x POD's are
+              not available then this constructor will not be present
+            </p></td></tr>
 </table></div>
-<div class="section">
-<div class="titlepage"><div><div><h5 class="title">
-<a name="toward_boost_integer_endian.reference.integer_endian_hpp.endian.endian"></a><a class="link" href="reference.html#toward_boost_integer_endian.reference.integer_endian_hpp.endian.endian" title="Default Contructor endian()">Default
-          Contructor <code class="computeroutput"><span class="identifier">endian</span><span class="special">()</span></code></a>
-</h5></div></div></div>
 <pre class="programlisting"><span class="identifier">endian</span><span class="special">()</span> <span class="special">=</span> <span class="keyword">default</span><span class="special">;</span>  <span class="comment">// C++03: endian(){}
 </span></pre>
-<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
-                <span class="bold"><strong>Effects:</strong></span> Constructs an object of
-                type <code class="computeroutput"><span class="identifier">endian</span><span class="special">&lt;</span><span class="identifier">E</span><span class="special">,</span> <span class="identifier">T</span><span class="special">,</span> <span class="identifier">n_bits</span><span class="special">,</span>
-                <span class="identifier">A</span><span class="special">&gt;</span></code>.
-              </li></ul></div>
+<p>
+            <span class="bold"><strong>Effects:</strong></span> Constructs an object of type
+            <code class="computeroutput"><span class="identifier">endian</span><span class="special">&lt;</span><span class="identifier">E</span><span class="special">,</span> <span class="identifier">T</span><span class="special">,</span> <span class="identifier">n_bits</span><span class="special">,</span> <span class="identifier">A</span><span class="special">&gt;</span></code>.
+          </p>
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h5 class="title">
 <a name="toward_boost_integer_endian.reference.integer_endian_hpp.endian.endianT"></a><a class="link" href="reference.html#toward_boost_integer_endian.reference.integer_endian_hpp.endian.endianT" title="Contructor from value_type endian(T)">Contructor
           from value_type <code class="computeroutput"><span class="identifier">endian</span><span class="special">(</span><span class="identifier">T</span><span class="special">)</span></code></a>
 </h5></div></div></div>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../../../doc/src/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+              if BOOST_ENDIAN_FORCE_PODNESS is defined &amp;&amp; C++0x POD's are
+              not available then this constructor will not be present
+            </p></td></tr>
+</table></div>
 <pre class="programlisting"><span class="keyword">explicit</span> <span class="identifier">endian</span><span class="special">(</span><span class="identifier">T</span> <span class="identifier">v</span><span class="special">);</span>
 </pre>
-<div class="itemizedlist"><ul class="itemizedlist" type="disc">
-<li class="listitem">
-                <span class="bold"><strong>Effects:</strong></span> Constructs an object of
-                type <code class="computeroutput"><span class="identifier">endian</span><span class="special">&lt;</span><span class="identifier">E</span><span class="special">,</span> <span class="identifier">T</span><span class="special">,</span> <span class="identifier">n_bits</span><span class="special">,</span>
-                <span class="identifier">A</span><span class="special">&gt;</span></code>.
-              </li>
-<li class="listitem">
-                <span class="bold"><strong>Postcondition:</strong></span> <code class="computeroutput"><span class="identifier">x</span>
-                <span class="special">==</span> <span class="identifier">v</span></code>,
-                where <code class="computeroutput"><span class="identifier">x</span></code> is the constructed
-                object.
-              </li>
-</ul></div>
+<p>
+            <span class="bold"><strong>Effects:</strong></span> Constructs an object of type
+            <code class="computeroutput"><span class="identifier">endian</span><span class="special">&lt;</span><span class="identifier">E</span><span class="special">,</span> <span class="identifier">T</span><span class="special">,</span> <span class="identifier">n_bits</span><span class="special">,</span> <span class="identifier">A</span><span class="special">&gt;</span></code>.
+            <span class="bold"><strong>Postcondition:</strong></span> <code class="computeroutput"><span class="identifier">x</span>
+            <span class="special">==</span> <span class="identifier">v</span></code>,
+            where <code class="computeroutput"><span class="identifier">x</span></code> is the constructed
+            object.
+          </p>
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h5 class="title">
@@ -908,14 +909,10 @@
 </h5></div></div></div>
 <pre class="programlisting"><span class="identifier">endian</span> <span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">=(</span><span class="identifier">T</span> <span class="identifier">v</span><span class="special">);</span>
 </pre>
-<div class="itemizedlist"><ul class="itemizedlist" type="disc">
-<li class="listitem">
-                <span class="bold"><strong>Postcondition:</strong></span> <code class="computeroutput"><span class="identifier">value_type</span><span class="special">(*</span><span class="keyword">this</span><span class="special">)</span> <span class="special">==</span> <span class="identifier">v</span></code>.
-              </li>
-<li class="listitem">
-                <span class="bold"><strong>Returns:</strong></span> <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>.
-              </li>
-</ul></div>
+<p>
+            <span class="bold"><strong>Postcondition:</strong></span> <code class="computeroutput"><span class="identifier">value_type</span><span class="special">(*</span><span class="keyword">this</span><span class="special">)</span> <span class="special">==</span> <span class="identifier">v</span></code>. <span class="bold"><strong>Returns:</strong></span>
+            <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>.
+          </p>
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h5 class="title">
@@ -924,11 +921,11 @@
 </h5></div></div></div>
 <pre class="programlisting"><span class="keyword">operator</span> <span class="identifier">T</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
 </pre>
-<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
-                <span class="bold"><strong>Returns:</strong></span> The current value stored
-                in <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>,
-                converted to <code class="computeroutput"><span class="identifier">value_type</span></code>.
-              </li></ul></div>
+<p>
+            <span class="bold"><strong>Returns:</strong></span> The current value stored in
+            <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>,
+            converted to <code class="computeroutput"><span class="identifier">value_type</span></code>.
+          </p>
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h5 class="title">
@@ -937,11 +934,11 @@
 </h5></div></div></div>
 <pre class="programlisting"><span class="keyword">const</span> <span class="keyword">char</span><span class="special">*</span> <span class="identifier">data</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
 </pre>
-<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
-                <span class="bold"><strong>Returns:</strong></span> The current value stored
-                in <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>,
-                converted to <code class="computeroutput"><span class="identifier">value_type</span></code>.
-              </li></ul></div>
+<p>
+            <span class="bold"><strong>Returns:</strong></span> The current value stored in
+            <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>,
+            converted to <code class="computeroutput"><span class="identifier">value_type</span></code>.
+          </p>
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h5 class="title">
@@ -971,7 +968,7 @@
         and extraction of endian types.
       </p>
 <a name="toward_boost_integer_endian.reference.integer_endian_binary_stream_hpp.synopsis"></a><h5>
-<a name="id2932802"></a>
+<a name="id3393485"></a>
         <a class="link" href="reference.html#toward_boost_integer_endian.reference.integer_endian_binary_stream_hpp.synopsis">Synopsis</a>
       </h5>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span>
@@ -1004,7 +1001,7 @@
 <div class="toc"><dl><dt><span class="section"><a href="reference.html#toward_boost_integer_endian.reference.integer_endian_type_hpp.integer_endian_type">Meta
         Function <code class="computeroutput"><span class="identifier">endian_type</span><span class="special">&lt;&gt;</span></code></a></span></dt></dl></div>
 <a name="toward_boost_integer_endian.reference.integer_endian_type_hpp.synopsis"></a><h5>
-<a name="id2933768"></a>
+<a name="id3394450"></a>
         <a class="link" href="reference.html#toward_boost_integer_endian.reference.integer_endian_type_hpp.synopsis">Synopsis</a>
       </h5>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
@@ -1039,7 +1036,7 @@
           The user can specialize this metafunction for specific clases.
         </p>
 <a name="toward_boost_integer_endian.reference.integer_endian_type_hpp.integer_endian_type.example"></a><h6>
-<a name="id2934086"></a>
+<a name="id3394768"></a>
           <a class="link" href="reference.html#toward_boost_integer_endian.reference.integer_endian_type_hpp.integer_endian_type.example">Example</a>
         </h6>
 <pre class="programlisting"><span class="identifier">is_same</span><span class="special">&lt;</span><span class="identifier">endian_type</span><span class="special">&lt;</span><span class="identifier">endian</span><span class="special">&lt;</span><span class="identifier">endianness</span><span class="special">::</span><span class="identifier">big</span><span class="special">,</span> <span class="keyword">int</span><span class="special">&gt;</span> <span class="special">&gt;::</span><span class="identifier">type</span><span class="special">,</span> <span class="identifier">endianness</span><span class="special">::</span><span class="identifier">big</span><span class="special">&gt;::</span><span class="identifier">value</span> <span class="special">==</span> <span class="keyword">true</span>
@@ -1063,7 +1060,7 @@
 <dt><span class="section"><a href="reference.html#toward_boost_integer_endian.reference.integer_endian_view_hpp.endian_view.assignement">Assignement
           <code class="computeroutput"><span class="keyword">operator</span> <span class="special">=(</span><span class="identifier">endian_view</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="special">)</span></code></a></span></dt>
 <dt><span class="section"><a href="reference.html#toward_boost_integer_endian.reference.integer_endian_view_hpp.endian_view.assignement2">Assignement
-          from different endianness<code class="computeroutput"><span class="keyword">operator</span>
+          from different endianness <code class="computeroutput"><span class="keyword">operator</span>
           <span class="special">=(</span><span class="identifier">endian_view</span><span class="special">&lt;</span><span class="identifier">Endian2</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;</span>
           <span class="keyword">const</span><span class="special">&amp;</span>
           <span class="special">)</span></code></a></span></dt>
@@ -1084,7 +1081,7 @@
         helper functions.
       </p>
 <a name="toward_boost_integer_endian.reference.integer_endian_view_hpp.synopsis"></a><h5>
-<a name="id2934391"></a>
+<a name="id3395073"></a>
         <a class="link" href="reference.html#toward_boost_integer_endian.reference.integer_endian_view_hpp.synopsis">Synopsis</a>
       </h5>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
@@ -1119,7 +1116,7 @@
 <dt><span class="section"><a href="reference.html#toward_boost_integer_endian.reference.integer_endian_view_hpp.endian_view.assignement">Assignement
           <code class="computeroutput"><span class="keyword">operator</span> <span class="special">=(</span><span class="identifier">endian_view</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="special">)</span></code></a></span></dt>
 <dt><span class="section"><a href="reference.html#toward_boost_integer_endian.reference.integer_endian_view_hpp.endian_view.assignement2">Assignement
-          from different endianness<code class="computeroutput"><span class="keyword">operator</span>
+          from different endianness <code class="computeroutput"><span class="keyword">operator</span>
           <span class="special">=(</span><span class="identifier">endian_view</span><span class="special">&lt;</span><span class="identifier">Endian2</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;</span>
           <span class="keyword">const</span><span class="special">&amp;</span>
           <span class="special">)</span></code></a></span></dt>
@@ -1146,10 +1143,10 @@
 </h5></div></div></div>
 <pre class="programlisting"><span class="identifier">endian_view</span><span class="special">(</span><span class="identifier">value_type</span><span class="special">&amp;</span> <span class="identifier">ref</span><span class="special">);</span>
 </pre>
-<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
-                <span class="bold"><strong>Effects:</strong></span> Constructs an object of
-                type <code class="computeroutput"><span class="identifier">endian_view</span><span class="special">&lt;</span><span class="identifier">E</span><span class="special">,</span> <span class="identifier">T</span><span class="special">,</span> <span class="identifier">n_bits</span><span class="special">,</span> <span class="identifier">A</span><span class="special">&gt;</span></code>.
-              </li></ul></div>
+<p>
+            <span class="bold"><strong>Effects:</strong></span> Constructs an object of type
+            <code class="computeroutput"><span class="identifier">endian_view</span><span class="special">&lt;</span><span class="identifier">E</span><span class="special">,</span> <span class="identifier">T</span><span class="special">,</span> <span class="identifier">n_bits</span><span class="special">,</span> <span class="identifier">A</span><span class="special">&gt;</span></code>.
+          </p>
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h5 class="title">
@@ -1158,10 +1155,10 @@
 </h5></div></div></div>
 <pre class="programlisting"><span class="keyword">operator</span> <span class="identifier">value_type</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
 </pre>
-<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
-                <span class="bold"><strong>Returns:</strong></span> The converted <code class="computeroutput"><span class="identifier">value_type</span></code> of the referenced type
-                as it was seen as an endian aware type.
-              </li></ul></div>
+<p>
+            <span class="bold"><strong>Returns:</strong></span> The converted <code class="computeroutput"><span class="identifier">value_type</span></code> of the referenced type as
+            it was seen as an endian aware type.
+          </p>
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h5 class="title">
@@ -1170,20 +1167,16 @@
 </h5></div></div></div>
 <pre class="programlisting"><span class="identifier">endian_view</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">=(</span><span class="identifier">endian_view</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">rhs</span><span class="special">);</span>
 </pre>
-<div class="itemizedlist"><ul class="itemizedlist" type="disc">
-<li class="listitem">
-                <span class="bold"><strong>Postcondition:</strong></span> <code class="computeroutput"><span class="keyword">this</span><span class="special">-&gt;</span><span class="identifier">ref_</span>
-                <span class="special">==</span> <span class="identifier">rhs</span><span class="special">.</span><span class="identifier">ref_</span></code>.
-              </li>
-<li class="listitem">
-                <span class="bold"><strong>Returns:</strong></span> <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>.
-              </li>
-</ul></div>
+<p>
+            <span class="bold"><strong>Postcondition:</strong></span> <code class="computeroutput"><span class="keyword">this</span><span class="special">-&gt;</span><span class="identifier">ref_</span>
+            <span class="special">==</span> <span class="identifier">rhs</span><span class="special">.</span><span class="identifier">ref_</span></code>.
+            <span class="bold"><strong>Returns:</strong></span> <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>.
+          </p>
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h5 class="title">
-<a name="toward_boost_integer_endian.reference.integer_endian_view_hpp.endian_view.assignement2"></a><a class="link" href="reference.html#toward_boost_integer_endian.reference.integer_endian_view_hpp.endian_view.assignement2" title="Assignement from different endiannessoperator =(endian_view&lt;Endian2,T&gt; const&amp; )">Assignement
-          from different endianness<code class="computeroutput"><span class="keyword">operator</span>
+<a name="toward_boost_integer_endian.reference.integer_endian_view_hpp.endian_view.assignement2"></a><a class="link" href="reference.html#toward_boost_integer_endian.reference.integer_endian_view_hpp.endian_view.assignement2" title="Assignement from different endianness operator =(endian_view&lt;Endian2,T&gt; const&amp; )">Assignement
+          from different endianness <code class="computeroutput"><span class="keyword">operator</span>
           <span class="special">=(</span><span class="identifier">endian_view</span><span class="special">&lt;</span><span class="identifier">Endian2</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;</span>
           <span class="keyword">const</span><span class="special">&amp;</span>
           <span class="special">)</span></code></a>
@@ -1191,14 +1184,10 @@
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Endian2</span> <span class="special">&gt;</span>
 <span class="identifier">endian_view</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">=(</span><span class="identifier">endian_view</span><span class="special">&lt;</span><span class="identifier">Endian2</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">rhs</span><span class="special">)</span> <span class="special">{</span>             
 </pre>
-<div class="itemizedlist"><ul class="itemizedlist" type="disc">
-<li class="listitem">
-                <span class="bold"><strong>Postcondition:</strong></span> <code class="computeroutput"><span class="identifier">value_type</span><span class="special">(</span><span class="keyword">this</span><span class="special">-&gt;</span><span class="identifier">ref_</span><span class="special">)</span> <span class="special">==</span> <span class="identifier">value_type</span><span class="special">(</span><span class="identifier">rhs</span><span class="special">.</span><span class="identifier">ref_</span><span class="special">)</span></code>.
-              </li>
-<li class="listitem">
-                <span class="bold"><strong>Returns:</strong></span> <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>.
-              </li>
-</ul></div>
+<p>
+            <span class="bold"><strong>Postcondition:</strong></span> <code class="computeroutput"><span class="identifier">value_type</span><span class="special">(</span><span class="keyword">this</span><span class="special">-&gt;</span><span class="identifier">ref_</span><span class="special">)</span> <span class="special">==</span> <span class="identifier">value_type</span><span class="special">(</span><span class="identifier">rhs</span><span class="special">.</span><span class="identifier">ref_</span><span class="special">)</span></code>.
+            <span class="bold"><strong>Returns:</strong></span> <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>.
+          </p>
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h5 class="title">
@@ -1207,14 +1196,10 @@
 </h5></div></div></div>
 <pre class="programlisting"><span class="identifier">endian_view</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">=(</span><span class="identifier">value_type</span> <span class="identifier">val</span><span class="special">);</span>
 </pre>
-<div class="itemizedlist"><ul class="itemizedlist" type="disc">
-<li class="listitem">
-                <span class="bold"><strong>Postcondition:</strong></span> <code class="computeroutput"><span class="identifier">value_type</span><span class="special">(</span><span class="keyword">this</span><span class="special">-&gt;</span><span class="identifier">ref_</span><span class="special">)</span> <span class="special">==</span> <span class="identifier">v</span></code>.
-              </li>
-<li class="listitem">
-                <span class="bold"><strong>Returns:</strong></span> <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>.
-              </li>
-</ul></div>
+<p>
+            <span class="bold"><strong>Postcondition:</strong></span> <code class="computeroutput"><span class="identifier">value_type</span><span class="special">(</span><span class="keyword">this</span><span class="special">-&gt;</span><span class="identifier">ref_</span><span class="special">)</span> <span class="special">==</span> <span class="identifier">v</span></code>. <span class="bold"><strong>Returns:</strong></span>
+            <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>.
+          </p>
 </div>
 </div>
 <div class="section">
@@ -1225,6 +1210,11 @@
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">E</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>    
 <span class="identifier">endian_view</span><span class="special">&lt;</span><span class="identifier">endian</span><span class="special">&lt;</span><span class="identifier">E</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">as_endian</span><span class="special">(</span><span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">v</span><span class="special">);</span>
 </pre>
+<p>
+          <span class="bold"><strong>Returns:</strong></span> An <code class="computeroutput"><span class="identifier">endian_view</span><span class="special">&lt;&gt;</span></code> that depend on the endianness parameter
+          <code class="computeroutput"><span class="identifier">E</span></code> referencing the pararameter
+          <code class="computeroutput"><span class="identifier">v</span></code>.
+        </p>
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h4 class="title">
@@ -1234,6 +1224,10 @@
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
 <span class="identifier">endian_view</span><span class="special">&lt;</span><span class="identifier">endian</span><span class="special">&lt;</span><span class="identifier">endian</span><span class="special">::</span><span class="identifier">native</span><span class="special">,</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">as</span><span class="special">(</span><span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">v</span><span class="special">);</span>
 </pre>
+<p>
+          <span class="bold"><strong>Returns:</strong></span> A native endian <code class="computeroutput"><span class="identifier">endian_view</span><span class="special">&lt;&gt;</span></code>
+          referencing the pararameter <code class="computeroutput"><span class="identifier">v</span></code>.
+        </p>
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h4 class="title">
@@ -1243,6 +1237,10 @@
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
 <span class="identifier">endian_view</span><span class="special">&lt;</span><span class="identifier">endian</span><span class="special">&lt;</span><span class="identifier">endian</span><span class="special">::</span><span class="identifier">little</span><span class="special">,</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">as_little</span><span class="special">(</span><span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">v</span><span class="special">);</span>
 </pre>
+<p>
+          <span class="bold"><strong>Returns:</strong></span> A little endian <code class="computeroutput"><span class="identifier">endian_view</span><span class="special">&lt;&gt;</span></code>
+          referencing the pararameter <code class="computeroutput"><span class="identifier">v</span></code>.
+        </p>
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h4 class="title">
@@ -1252,6 +1250,9 @@
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
 <span class="identifier">endian_view</span><span class="special">&lt;</span><span class="identifier">endian</span><span class="special">&lt;</span><span class="identifier">endian</span><span class="special">::</span><span class="identifier">big</span><span class="special">,</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">as_big</span><span class="special">(</span><span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">v</span><span class="special">);</span>
 </pre>
+<p>
+          <span class="bold"><strong>Returns:</strong></span> A big endian <code class="computeroutput"><span class="identifier">endian_view</span><span class="special">&lt;&gt;</span></code> referencing the pararameter <code class="computeroutput"><span class="identifier">v</span></code>.
+        </p>
 </div>
 </div>
 <div class="section">
@@ -1270,19 +1271,20 @@
         Template <code class="computeroutput"><span class="identifier">to</span><span class="special">&lt;&gt;</span></code></a></span></dt>
 <dt><span class="section"><a href="reference.html#toward_boost_integer_endian.reference.integer_endian_conversion_hpp.from">Class
         Template <code class="computeroutput"><span class="identifier">from</span><span class="special">&lt;&gt;</span></code></a></span></dt>
-<dt><span class="section"><a href="reference.html#toward_boost_integer_endian.reference.integer_endian_conversion_hpp.is_to">Class
-        Template <code class="computeroutput"><span class="identifier">is_to</span><span class="special">&lt;&gt;</span></code></a></span></dt>
-<dt><span class="section"><a href="reference.html#toward_boost_integer_endian.reference.integer_endian_conversion_hpp.is_from">Class
-        Template <code class="computeroutput"><span class="identifier">is_from</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="reference.html#toward_boost_integer_endian.reference.integer_endian_conversion_hpp.is_target">Class
+        Template <code class="computeroutput"><span class="identifier">is_target</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="reference.html#toward_boost_integer_endian.reference.integer_endian_conversion_hpp.is_source">Class
+        Template <code class="computeroutput"><span class="identifier">is_source</span><span class="special">&lt;&gt;</span></code></a></span></dt>
 <dt><span class="section"><a href="reference.html#toward_boost_integer_endian.reference.integer_endian_conversion_hpp.convert">Non-Member
         Function Template <code class="computeroutput"><span class="identifier">convert</span><span class="special">&lt;&gt;</span></code></a></span></dt>
 </dl></div>
 <a name="toward_boost_integer_endian.reference.integer_endian_conversion_hpp.synopsis"></a><h5>
-<a name="id2936924"></a>
+<a name="id3397708"></a>
         <a class="link" href="reference.html#toward_boost_integer_endian.reference.integer_endian_conversion_hpp.synopsis">Synopsis</a>
       </h5>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
 <span class="keyword">namespace</span> <span class="identifier">integer</span> <span class="special">{</span>
+<span class="keyword">namespace</span> <span class="identifier">endianness</span> <span class="special">{</span>
 
     <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TargetDomain</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">SourceDomain</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
     <span class="keyword">void</span> <span class="identifier">convert_to_from</span><span class="special">(</span><span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">r</span><span class="special">);</span>
@@ -1295,14 +1297,15 @@
     
     <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Endian</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">to</span><span class="special">;</span>
     <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Endian</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">from</span><span class="special">;</span>
-    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Endian</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">is_to</span><span class="special">;</span>
-    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Endian</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">is_from</span><span class="special">;</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Endian</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">is_target</span><span class="special">;</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Endian</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">is_source</span><span class="special">;</span>
 
     <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Endian1</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Endian2</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
     <span class="keyword">void</span> <span class="identifier">convert</span><span class="special">(</span><span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">r</span><span class="special">);</span>
     
 
-<span class="special">}</span> <span class="comment">// namespace integer
+<span class="special">}</span> <span class="comment">// namespace endianness
+</span><span class="special">}</span> <span class="comment">// namespace integer
 </span><span class="special">}</span> <span class="comment">// namespace boost
 </span></pre>
 <div class="section">
@@ -1313,6 +1316,10 @@
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TargetDomain</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">SourceDomain</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
 <span class="keyword">void</span> <span class="identifier">convert_to_from</span><span class="special">(</span><span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">r</span><span class="special">);</span>
 </pre>
+<p>
+          <span class="bold"><strong>Returns:</strong></span> the conversion of <code class="computeroutput"><span class="identifier">v</span></code> viewed from <code class="computeroutput"><span class="identifier">SourceDomain</span></code>
+          to `TargetDomain'.
+        </p>
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h4 class="title">
@@ -1322,6 +1329,10 @@
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">SourceDomain</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
 <span class="keyword">void</span> <span class="identifier">convert_from</span><span class="special">(</span><span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">r</span><span class="special">);</span>
 </pre>
+<p>
+          <span class="bold"><strong>Returns:</strong></span> the conversion of <code class="computeroutput"><span class="identifier">v</span></code> viewed from <code class="computeroutput"><span class="identifier">SourceDomain</span></code>
+          to the native doamin.
+        </p>
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h4 class="title">
@@ -1331,12 +1342,18 @@
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TargetDomain</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
 <span class="keyword">void</span> <span class="identifier">convert_to</span><span class="special">(</span><span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">r</span><span class="special">);</span>
 </pre>
+<p>
+          <span class="bold"><strong>Returns:</strong></span> the conversion of <code class="computeroutput"><span class="identifier">v</span></code> viewed from the native to `TargetDomain'.
+        </p>
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h4 class="title">
 <a name="toward_boost_integer_endian.reference.integer_endian_conversion_hpp.to"></a><a class="link" href="reference.html#toward_boost_integer_endian.reference.integer_endian_conversion_hpp.to" title="Class Template to&lt;&gt;">Class
         Template <code class="computeroutput"><span class="identifier">to</span><span class="special">&lt;&gt;</span></code></a>
 </h4></div></div></div>
+<p>
+          Tag class used to signal target conversion.
+        </p>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Endian</span><span class="special">&gt;</span> 
 <span class="keyword">struct</span> <span class="identifier">to</span> <span class="special">{</span>
     <span class="keyword">typedef</span> <span class="identifier">Endian</span> <span class="identifier">type</span><span class="special">;</span>
@@ -1348,6 +1365,9 @@
 <a name="toward_boost_integer_endian.reference.integer_endian_conversion_hpp.from"></a><a class="link" href="reference.html#toward_boost_integer_endian.reference.integer_endian_conversion_hpp.from" title="Class Template from&lt;&gt;">Class
         Template <code class="computeroutput"><span class="identifier">from</span><span class="special">&lt;&gt;</span></code></a>
 </h4></div></div></div>
+<p>
+          Tag class used to signal source conversion.
+        </p>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Endian</span><span class="special">&gt;</span> 
 <span class="keyword">struct</span> <span class="identifier">from</span> <span class="special">{</span>
     <span class="keyword">typedef</span> <span class="identifier">Endian</span> <span class="identifier">type</span><span class="special">;</span>
@@ -1356,24 +1376,30 @@
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="toward_boost_integer_endian.reference.integer_endian_conversion_hpp.is_to"></a><a class="link" href="reference.html#toward_boost_integer_endian.reference.integer_endian_conversion_hpp.is_to" title="Class Template is_to&lt;&gt;">Class
-        Template <code class="computeroutput"><span class="identifier">is_to</span><span class="special">&lt;&gt;</span></code></a>
+<a name="toward_boost_integer_endian.reference.integer_endian_conversion_hpp.is_target"></a><a class="link" href="reference.html#toward_boost_integer_endian.reference.integer_endian_conversion_hpp.is_target" title="Class Template is_target&lt;&gt;">Class
+        Template <code class="computeroutput"><span class="identifier">is_target</span><span class="special">&lt;&gt;</span></code></a>
 </h4></div></div></div>
+<p>
+          Template metafunction stating if the tag is a target domain.
+        </p>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Endian</span><span class="special">&gt;</span> 
-<span class="keyword">struct</span> <span class="identifier">is_to</span> <span class="special">:</span> <span class="identifier">mpl</span><span class="special">::</span><span class="identifier">false_</span> <span class="special">{};</span>
+<span class="keyword">struct</span> <span class="identifier">is_target</span> <span class="special">:</span> <span class="identifier">mpl</span><span class="special">::</span><span class="identifier">false_</span> <span class="special">{};</span>
 <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Endian</span><span class="special">&gt;</span> 
-<span class="keyword">struct</span> <span class="identifier">is_to</span><span class="special">&lt;</span> <span class="identifier">to</span><span class="special">&lt;</span><span class="identifier">Endian</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">:</span> <span class="identifier">mpl</span><span class="special">::</span><span class="identifier">true_</span> <span class="special">{};</span>
+<span class="keyword">struct</span> <span class="identifier">is_target</span><span class="special">&lt;</span> <span class="identifier">to</span><span class="special">&lt;</span><span class="identifier">Endian</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">:</span> <span class="identifier">mpl</span><span class="special">::</span><span class="identifier">true_</span> <span class="special">{};</span>
 </pre>
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="toward_boost_integer_endian.reference.integer_endian_conversion_hpp.is_from"></a><a class="link" href="reference.html#toward_boost_integer_endian.reference.integer_endian_conversion_hpp.is_from" title="Class Template is_from&lt;&gt;">Class
-        Template <code class="computeroutput"><span class="identifier">is_from</span><span class="special">&lt;&gt;</span></code></a>
+<a name="toward_boost_integer_endian.reference.integer_endian_conversion_hpp.is_source"></a><a class="link" href="reference.html#toward_boost_integer_endian.reference.integer_endian_conversion_hpp.is_source" title="Class Template is_source&lt;&gt;">Class
+        Template <code class="computeroutput"><span class="identifier">is_source</span><span class="special">&lt;&gt;</span></code></a>
 </h4></div></div></div>
+<p>
+          Template metafunction stating if the tag is a source domain.
+        </p>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Endian</span><span class="special">&gt;</span> 
-<span class="keyword">struct</span> <span class="identifier">is_from</span> <span class="special">:</span> <span class="identifier">mpl</span><span class="special">::</span><span class="identifier">false_</span> <span class="special">{};</span>
+<span class="keyword">struct</span> <span class="identifier">is_source</span> <span class="special">:</span> <span class="identifier">mpl</span><span class="special">::</span><span class="identifier">false_</span> <span class="special">{};</span>
 <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Endian</span><span class="special">&gt;</span> 
-<span class="keyword">struct</span> <span class="identifier">is_from</span><span class="special">&lt;</span> <span class="identifier">from</span><span class="special">&lt;</span><span class="identifier">Endian</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">:</span> <span class="identifier">mpl</span><span class="special">::</span><span class="identifier">true_</span> <span class="special">{};</span>
+<span class="keyword">struct</span> <span class="identifier">is_source</span><span class="special">&lt;</span> <span class="identifier">from</span><span class="special">&lt;</span><span class="identifier">Endian</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">:</span> <span class="identifier">mpl</span><span class="special">::</span><span class="identifier">true_</span> <span class="special">{};</span>
 </pre>
 </div>
 <div class="section">
@@ -1381,9 +1407,18 @@
 <a name="toward_boost_integer_endian.reference.integer_endian_conversion_hpp.convert"></a><a class="link" href="reference.html#toward_boost_integer_endian.reference.integer_endian_conversion_hpp.convert" title="Non-Member Function Template convert&lt;&gt;">Non-Member
         Function Template <code class="computeroutput"><span class="identifier">convert</span><span class="special">&lt;&gt;</span></code></a>
 </h4></div></div></div>
+<p>
+          Coversion from source to target depending in the nature of the <code class="computeroutput"><span class="identifier">Endian1</span></code> and <code class="computeroutput"><span class="identifier">Endian2</span></code>
+          template parameters. One of them must be a target domain (<code class="computeroutput"><span class="identifier">to</span><span class="special">&lt;&gt;</span></code>)
+          and the other a source domain (<code class="computeroutput"><span class="identifier">from</span><span class="special">&lt;&gt;</span></code>).
+        </p>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Endian1</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Endian2</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
 <span class="keyword">void</span> <span class="identifier">convert</span><span class="special">(</span><span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">r</span><span class="special">);</span>
 </pre>
+<p>
+          <span class="bold"><strong>Returns:</strong></span> the conversion of `v' viewed
+          from source domain to the target domain'.
+        </p>
 </div>
 </div>
 </div>

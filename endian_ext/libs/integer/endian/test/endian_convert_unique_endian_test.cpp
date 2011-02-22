@@ -102,13 +102,13 @@ void check_endian_send()
     //~ std::cout << std::hex << m.b.a << std::endl;
     //~ std::cout << std::hex << m.b.b << std::endl;
     
-    integer::convert_from<network>(m);
+    integer::endianness::convert_from<network>(m);
     //~ std::cout << std::hex << m.a.a << std::endl;
     //~ std::cout << std::hex << m.a.b << std::endl;
     //~ std::cout << std::hex << m.b.a << std::endl;
     //~ std::cout << std::hex << m.b.b << std::endl;
 
-    integer::convert_to<network>(m);
+    integer::endianness::convert_to<network>(m);
     //~ std::cout << std::hex << m.a.a << std::endl;
     //~ std::cout << std::hex << m.a.b << std::endl;
     //~ std::cout << std::hex << m.b.a << std::endl;

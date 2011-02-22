@@ -171,6 +171,7 @@ namespace
 void check_endian_send()
 {
 
+    using namespace boost::integer::endianness;
     
     //~ std::cout << std::hex << m.a.a << std::endl;
     //~ std::cout << std::hex << m.a.b << std::endl;
@@ -182,13 +183,13 @@ void check_endian_send()
     //~ m.a.b=htons(m.a.b);
     //~ integer::convert_from<network>(m.b);
     convert<from<network>, to<native_endian> >(m);
-    //~ convert_from<network>(m);
+    convert_from<network>(m);
     //~ std::cout << std::hex << m.a.a << std::endl;
     //~ std::cout << std::hex << m.a.b << std::endl;
     //~ std::cout << std::hex << m.b.a << std::endl;
     //~ std::cout << std::hex << m.b.b << std::endl;
 
-    //~ convert_to<network>(m);
+    convert_to<network>(m);
     //~ std::cout << std::hex << m.a.a << std::endl;
     //~ std::cout << std::hex << m.a.b << std::endl;
     //~ std::cout << std::hex << m.b.a << std::endl;
@@ -212,3 +213,4 @@ int main( )
     return boost::report_errors();
     //~ return 1;
 } // main
+

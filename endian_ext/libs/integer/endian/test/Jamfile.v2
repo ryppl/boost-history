@@ -45,8 +45,8 @@ project
          [ run endian_pack_test.cpp ]
          [ run endian_test.cpp ]
          [ run endian_operations_test.cpp
-            :  :  : <toolset>gcc:<cxxflags>-Wno-sign-compare ]
-         #[ run endian_in_union_test.cpp ]
+            :  :  : <toolset>gcc:<cxxflags>-Wno-sign-compare <define>BOOST_SHORT_ENDIAN_TEST ]
+         [ run endian_in_union_test.cpp  ]
          [ run scoped_enum_emulation_test.cpp ]
          [ run endian_flip_test.cpp 
 	 :  :  : <toolset>gcc:<cxxflags>-Wno-sign-compare ]
