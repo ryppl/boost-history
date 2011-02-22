@@ -3,7 +3,12 @@
 //  in various constructs.
 //Reference:
 //  [EBO] http://www.cantrip.org/emptyopt.html
-//
+//Dependencies:
+//  [boost.variant]
+//    http://www.boost.org/doc/libs/1_44_0/doc/html/variant.html
+//  [boost.sandbox.vrtpl.cs]
+//    https://svn.boost.org/trac/boost/browser/sandbox/variadic_templates/boost/composite_storage
+//    
 #include <boost/composite_storage/pack/container_all_of_aligned.hpp>
 #include <boost/composite_storage/pack/container_one_of_maybe.hpp>
 #include <boost/variant.hpp>
@@ -14,7 +19,7 @@
   >
 struct empty_class
 /**@brief
- *  This is an empty class, according to:
+ *  This is an empty class type, according to [EBO].
  */
 {
         friend

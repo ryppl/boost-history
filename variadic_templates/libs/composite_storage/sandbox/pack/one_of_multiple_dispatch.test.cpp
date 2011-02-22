@@ -1,4 +1,11 @@
 #include <boost/iostreams/utility/indent_scoped_ostreambuf.hpp>
+//#define MULTIPLE_DISPATCH_DEBUG
+#ifdef MULTIPLE_DISPATCH_DEBUG
+#include <boost/type_traits/is_const.hpp>
+#include <boost/type_traits/is_reference.hpp>
+#include <boost/type_traits/remove_reference.hpp>
+#include <boost/utility/demangled_type_name.hpp>
+#endif
 #include <iostream>
 #include <string>
 #include <boost/mpl/assert.hpp>
@@ -25,15 +32,19 @@ struct trace_scope
   #else
     #define FUNCTOR_CONSTANCY
   #endif
-  #if 0
+  #if 1
     #define ARG_CONSTANCY const
   #else
     #define ARG_CONSTANCY
   #endif
 #define APPLY_UNPACK_USER_CHECKED_ARGS
 #include <boost/composite_storage/pack/multiple_dispatch/reify_apply.hpp>
-#include <boost/composite_storage/pack/multiple_dispatch/reifier_switch.hpp>
-#include <boost/composite_storage/pack/multiple_dispatch/reifier_visitor.hpp>
+//#define REIFIER_VISITOR
+#ifdef REIFIER_VISITOR
+  #include <boost/composite_storage/pack/multiple_dispatch/reifier_visitor.hpp>
+#else
+  #include <boost/composite_storage/pack/multiple_dispatch/reifier_switch.hpp>
+#endif
 #include <boost/composite_storage/pack/container_one_of_maybe.hpp>
 
 namespace boost
@@ -67,12 +78,16 @@ struct host_abstract;
 
 }//exit testing namespace
 
+#ifdef REIFIER_VISITOR
 template <typename ResultType>
 struct hosts_concrete<testing::host_abstract<ResultType> >  
-  : testing::hosts_indices_concrete< mpl::package_range_c<unsigned, 0,3>::type
-    , ResultType>
+  : testing::hosts_indices_concrete
+    < mpl::package_range_c<unsigned, 0,3>::type
+    , ResultType
+    >
 {
 };
+#endif
 
 namespace testing
 {
@@ -101,11 +116,13 @@ struct host_abstract
     void operator=(host_abstract const&)
     {}
     
+  #ifdef REIFIER_VISITOR  
     typedef reifier_visit_abstract_seq< ResultType
       , typename hosts_concrete<host_abstract>::type>
     visitor_abstract;
     
     virtual ResultType accept( visitor_abstract const&)const=0;
+  #endif
 };
 
 template <unsigned I, typename ResultType>
@@ -123,7 +140,7 @@ struct host_concrete
         v[0]='a';
         v[1]='\0';
     }
-    
+  #ifdef REIFIER_VISITOR  
     typedef typename host_abstract<ResultType>::visitor_abstract
     visitor_abstract;
     
@@ -131,13 +148,22 @@ struct host_concrete
     {
         return a_visitor.visit(*this);
     }
+  #endif
 };
 
 template <unsigned I, typename ResultType>
 ind_ostream& operator<<( ind_ostream& sout
   , host_concrete<I,ResultType>const& x)
 {
-    sout<<":host_concrete<"<<I<<">(my_id="<<x.my_id<<")";
+    sout<<":host_concrete-yes-const<"<<I<<">(my_id="<<x.my_id<<")";
+    return sout;
+}
+  
+template <unsigned I, typename ResultType>
+ind_ostream& operator<<( ind_ostream& sout
+  , host_concrete<I,ResultType>& x)
+{
+    sout<<":host_concrete-non-const<"<<I<<">(my_id="<<x.my_id<<")";
     return sout;
 }
   
@@ -245,6 +271,11 @@ void test(void)
     {    
         trace_scope ts("one_of_multiple_dispatch TESTS");
         
+        host_concrete<0> hc0;
+        host_concrete<1> hc1;
+        host_concrete<2> hc2;
+      #ifdef REIFIER_VISITOR
+      #else
         typedef pack::container < tags::one_of_maybe
           , mpl::integral_c<index_numerals,index_0>, host_concrete<0>
           , host_concrete<1>, host_concrete<2> >
@@ -259,14 +290,15 @@ void test(void)
         {
             ind_out<<"v["<<i<<"].which="<<tagged_v[i].which()<<"\n";
         }
-        tagged_v[0].inject<index_0>(host_concrete<0>());
-        tagged_v[1].inject<index_1>(host_concrete<1>());
-        tagged_v[2].inject<index_2>(host_concrete<2>());
+        tagged_v[0].inject<index_0>(hc0);
+        tagged_v[1].inject<index_1>(hc1);
+        tagged_v[2].inject<index_2>(hc2);
         ind_out<<"v after inject:\n";
         for(unsigned i=0; i<arity; ++i)
         {
             ind_out<<"v["<<i<<"].which="<<tagged_v[i].which()<<"\n";
         }
+      #endif
       #define FUNCTOR_T functor3
             typedef
           FUNCTOR_T
@@ -290,11 +322,16 @@ void test(void)
           <<"\n";
       #endif
       #if 1
-        //#define REIFIER_VISITOR
         #ifdef REIFIER_VISITOR
-        ind_out<<"***  defined(REIFIER_VISITOR)\n";
+          ind_out<<"***  defined(REIFIER_VISITOR)\n";
+          ind_out<<"hc0.my_id="<<hc0.my_id<<"\n";
+          ind_out<<"hc1.my_id="<<hc1.my_id<<"\n";
+          ind_out<<"hc2.my_id="<<hc2.my_id<<"\n";
         #else
-        ind_out<<"*** !defined(REIFIER_VISITOR)\n";
+          ind_out<<"*** !defined(REIFIER_VISITOR)\n";
+          ind_out<<"tagged_v[0].my_id="<<tagged_v[0].project<index_0>().my_id<<"\n";
+          ind_out<<"tagged_v[1].my_id="<<tagged_v[1].project<index_1>().my_id<<"\n";
+          ind_out<<"tagged_v[2].my_id="<<tagged_v[2].project<index_2>().my_id<<"\n";
         #endif
         result = pack::multiple_dispatch::reify_apply
           #ifdef REIFIER_VISITOR
@@ -304,27 +341,27 @@ void test(void)
           #endif
             >( functor_v
           #ifdef REIFIER_VISITOR
-            , static_cast<host_abstract<> ARG_CONSTANCY &>(host_concrete<0>())
-            , static_cast<host_abstract<> ARG_CONSTANCY &>(host_concrete<1>())
+            , static_cast<host_abstract<> ARG_CONSTANCY &>(hc0)
+            , static_cast<host_abstract<> ARG_CONSTANCY &>(hc1)
           #else
-            , tagged_v[0]
-            //, tagged_v[1]
+            , static_cast<tagged_type ARG_CONSTANCY &>(tagged_v[0])
+            , static_cast<tagged_type ARG_CONSTANCY &>(tagged_v[1])
           #endif
           //#define FUNCTOR_INVALID_ARGS
           #if defined(FUNCTOR_INVALID_ARGS)
             //This should fail compilation with error message
             //something about invalid args.
             #ifdef REIFIER_VISITOR
-              , static_cast<host_abstract<> ARG_CONSTANCY &>(host_concrete<0>())
+              , static_cast<host_abstract<> ARG_CONSTANCY &>(hc0)
             #else        
               , tagged_v[0]
             #endif
           #endif
             );
       #ifdef FUNCTOR_INVALID_ARGS
-        ind_out<<"functor_v(v0,V1,v0).result="<<result<<"\n";
+        ind_out<<"functor_v(v0,v1,v0).result="<<result<<"\n";
       #else
-        ind_out<<"functor_v(v0,V1).result="<<result<<"\n";
+        ind_out<<"functor_v(v0,v1).result="<<result<<"\n";
       #endif
       #endif
     }

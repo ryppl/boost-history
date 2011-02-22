@@ -19,6 +19,8 @@ static std::ostream& ind_out=std::cout;
 #include "../../utility/curried_offset.hpp"
 
 #include <boost/assert.hpp>
+#include <boost/mpl/assert.hpp>
+#include <boost/type_traits/is_same.hpp>
 
 struct trace_scope
 {
@@ -145,7 +147,11 @@ void test(void)
         tagged_type
         ;
             typedef
-          tagged_type::layout_comp::scanned
+          tagged_type::layout_comp
+        layout_comp
+        ;
+            typedef
+          layout_comp::scanned
         layout_scanned
         ;
         ind_out
@@ -153,6 +159,8 @@ void test(void)
           <<":size="<<layout_scanned::comp_part::size<<"\n"
           <<":alignment="<<layout_scanned::comp_part::align<<"\n"
         ;
+        BOOST_MPL_ASSERT((is_same<layout_comp::result_type<index_0>::type,int>));
+        BOOST_MPL_ASSERT((is_same<tagged_type::result_type<index_1>::type,float>));
         {
             trace_scope ts("default CTOR");
               tagged_type 
