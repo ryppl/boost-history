@@ -43,7 +43,7 @@ struct assign_copy_visitor
           ( index
           , my_buffer_0
           , std::move
-            ( *Layout::scanned::project
+            (  Layout::scanned::project
                ( index
                , my_buffer_1
                )
@@ -87,8 +87,8 @@ struct equal_visitor
     result_type operator()( mpl::integral_c<case_type,CaseValu> index) const 
     {
         bool result =
-            (*Layout::scanned::project(index, my_buffer_0))
-          ==(*Layout::scanned::project(index, my_buffer_1)) ;
+            Layout::scanned::project(index, my_buffer_0)
+          ==Layout::scanned::project(index, my_buffer_1) ;
         return result ;
     }
     
@@ -154,7 +154,7 @@ struct destroy_visitor
 #include <boost/composite_storage/layout/operators_one_of_maybe.hpp>
 #include <boost/composite_storage/layout/operators_all_of_aligned.hpp>
 #include <boost/composite_storage/pack/layout_composite.hpp>
-#include <boost/mpl/arg.hpp>
+#include <boost/mpl/if.hpp>
 #include <boost/composite_storage/pack/container_fwd.hpp>
 #include <boost/composite_storage/buffers/char_buf.hpp>
 #include <boost/fusion/support/pair.hpp>
@@ -452,13 +452,14 @@ container
       < index_type IndexValu
       >
     struct result_type
+    : mpl::if_c
+      < index_base(IndexValu)==index_undefined::value
+      , special_components::nothing
+      , typename layout_comp::template result_type<IndexValu>::type
+      >
     {
-            typedef
-          typename mpl::arg<IndexValu-index_undefined::value+1>
-          ::template apply<special_components::nothing,Components...>::type
-        type
-        ;
     };
+    
       template
       < index_type IndexValu
       , typename TailConvertible
@@ -497,7 +498,10 @@ container
        */
     {
         mpl::integral_c<index_base,IndexValu> index;
-        return *scanned::project(index,buffer.address());
+#ifdef MULTIPLE_DISPATCH_DEBUG
+        std::cout<<__FILE__<<":project-yes-const<"<<IndexValu<<">()\n";
+#endif
+        return scanned::project(index,buffer.address());
     }        
       template
       < index_type IndexValu
@@ -510,7 +514,10 @@ container
        */
     {
         mpl::integral_c<index_base,IndexValu> index;
-        return *scanned::project(index,buffer.address());
+#ifdef MULTIPLE_DISPATCH_DEBUG
+        std::cout<<__FILE__<<":project-not-const<"<<IndexValu<<">()\n";
+#endif
+        return scanned::project(index,buffer.address());
     }
       bool
     operator==( container const& from)const

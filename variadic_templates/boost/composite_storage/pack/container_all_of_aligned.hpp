@@ -10,7 +10,6 @@
 //====================================================================
 #include <boost/composite_storage/layout/operators_all_of_aligned.hpp>
 #include <boost/composite_storage/pack/layout_composite.hpp>
-#include <boost/mpl/arg.hpp>
 #include <boost/composite_storage/pack/container_fwd.hpp>
 #include <boost/composite_storage/methods/all_of.hpp>
 #include <boost/composite_storage/buffers/layout_buf.hpp>
@@ -126,12 +125,10 @@ container
       < index_type IndexValu
       >
     struct result_type
+    : layout_comp::template result_type<IndexValu>
     {
-            typedef
-          typename mpl::arg<IndexValu-Index0::value+1>::template apply<Components...>::type
-        type
-        ;
     };
+    
       template
       < index_type IndexValu
       >

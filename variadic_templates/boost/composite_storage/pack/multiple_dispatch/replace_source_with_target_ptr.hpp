@@ -74,22 +74,57 @@ void_ptr_array
         ptr_type
       my_ptrs[size]
         ;
+    #define VOID_PTR_ARRAY_NO_INIT_LIST defined(__clang__)
+    #if VOID_PTR_ARRAY_NO_INIT_LIST
+        template
+        < typename... Refs
+        >
+        void
+      assign_ptrs
+        ( Refs&...refs
+        )
+      ;
+        template
+        < typename RefHead
+        , typename... RefsTail
+        >
+        void
+      assign_ptrs
+        ( RefHead& ref_head
+        , RefsTail&... refs_tail
+        )
+      {
+          my_ptrs[sizeof...(Types)-sizeof...(RefsTail)-1]=remove_cv_ptr(ref_head);
+          assign_ptrs(refs_tail...);
+      }
+        void
+      assign_ptrs()
+      {
+      }
+    #endif
         //@CTOR
       void_ptr_array
         (   Types&... 
           refs
         )
+        #if VOID_PTR_ARRAY_NO_INIT_LIST
+        #else
+          //g++
         : my_ptrs
-          { remove_cv_ptr(refs)...
-          }
+          ( { remove_cv_ptr(refs)... }
+          )
+        #endif
         {
+        #if VOID_PTR_ARRAY_NO_INIT_LIST
+            assign_ptrs(refs...);
+        #endif
         }
-        
+    
         template
         < unsigned Index
         >
         struct 
-      result_type
+      result_type      
         : mpl::at_c
           < mpl::package<Types...>
           , Index
@@ -100,13 +135,27 @@ void_ptr_array
         template
         < unsigned Index
         >
-        typename result_type<Index>::type&
+        typename result_type
+        < Index
+        >::type&
       project(void)const
         {
             ptr_type vp=my_ptrs[Index];
                 typedef
               typename result_type<Index>::type
             arg_type;
+          #ifdef MULTIPLE_DISPATCH_DEBUG
+            result_type<Index>();
+            std::cout
+              <<"project.\n"
+              <<":Index="
+              <<Index
+              <<"\n"
+              <<":arg_type="
+              <<utility::demangled_type_name<arg_type>()
+              <<"\n"
+              ;
+          #endif
             arg_type*ap=static_cast<arg_type*>(vp);
             return *ap;
         }
@@ -204,15 +253,31 @@ ptrs_target_source
         {}
   };
 
+  
   template
   < typename... ArgsSource
   >
-  ptrs_target_source
-  < mpl::package
-    < //No target pointers.
-    >
-  , ArgsSource...
+struct ptrs_target0_source
+  /**@brief
+   *  Metafunction returning ptrs_target_source
+   *  with empty targets
+   */
+{
+        typedef
+      ptrs_target_source
+      < mpl::package<>
+      , ArgsSource...
+      >
+    type
+    ;
+};
+
+  template
+  < typename... ArgsSource
   >
+  typename ptrs_target0_source
+  < ArgsSource...
+  >::type
 mk_ptrs_source
   (   ArgsSource&... 
     a_args
@@ -236,11 +301,9 @@ mk_ptrs_source
      return result_args;
   }   
 
-  ptrs_target_source
-  < mpl::package
-    < //No target pointers.
-    >
-  >
+  typename ptrs_target0_source
+  <
+  >::type
 mk_ptrs_source
   ( void
   )
@@ -309,15 +372,17 @@ replace_source_with_target_ptr
     tail_target
   )
   /**@brief
-   *  Replaces HeadSource pointer with TailTarget pointer
-   *  and returns pointer to new type of ptrs_target_source
-   *  reflecting that replacement.
+   *  Replaces the:
+   *    HeadSource* 
+   *  value within old_ptrs with a:
+   *    TailTarget* 
+   *  and coerce old_ptr to a pointer to a new
+   *  type reflecting that replacement.
    */
   {
       std::size_t const index=sizeof...(HeadTarget);
-      typedef typename remove_cv<TailTarget>::type target_rm_cv;
-      old_ptrs->my_ptrs[index]=const_cast<target_rm_cv*>(&tail_target);
-      void*old_pp=old_ptrs;
+      old_ptrs->my_ptrs[index]=remove_cv_ptr(tail_target);//replacement
+      void*old_pp=old_ptrs;//begin coercion of old_ptrs
           typedef
         ptrs_target_source
         < mpl::package
@@ -326,8 +391,8 @@ replace_source_with_target_ptr
           >
         , TailSource...
         >
-      new_p; 
-      return static_cast<new_p*>(old_pp);
+      new_p;//new type reflecting replacement.
+      return static_cast<new_p*>(old_pp);//returned completed coercion of old_ptrs
   }
     
 }//exit multiple_dispatch namespace

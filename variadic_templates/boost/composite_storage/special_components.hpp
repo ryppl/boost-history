@@ -27,12 +27,16 @@ namespace special_components
     template<special_id Id>
     struct special_type
     {
+            typedef
+          special_type
+        type
+        ;
             static
-          special_type*
+          special_type&
         _(void)
         {
             static special_type a;
-            return &a;
+            return a;
         }
         special_type(void)
         {}

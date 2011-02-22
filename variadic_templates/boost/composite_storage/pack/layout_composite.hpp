@@ -12,6 +12,7 @@
 #include <boost/composite_storage/enum_base.hpp>
 #include <boost/mpl/fold_assoc_pack.hpp>
 #include <boost/mpl/next.hpp>
+#include <boost/type_traits/remove_reference.hpp>
 
 namespace boost
 {
@@ -55,6 +56,30 @@ struct layout_composite
       typename mpl::next<typename scanned::index_part>::type
     index_end
     ;
+      template
+      < index_type IndexValu
+      >
+    struct result_type
+    {
+            typedef
+          mpl::integral_c<index_base,IndexValu>
+        index_value
+        ;
+            typedef
+          decltype
+          ( scanned::project
+            ( index_value()
+            , static_cast<char*>(0)
+            )
+          )
+        ref
+        ;
+            typedef
+              typename
+          remove_reference<ref>::type
+        type
+        ;
+    };
 };
 
 }//exit pack

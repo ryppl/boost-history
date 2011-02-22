@@ -8,7 +8,6 @@
 //  This software is provided "as is" without express or implied
 //  warranty, and with no claim as to its suitability for any purpose.
 //
-#include <boost/composite_storage/functor_indexed.hpp>
 #include <boost/composite_storage/pack/multiple_dispatch/replace_source_with_target_ptr.hpp>
 #include <boost/mpl/pair.hpp>
 
@@ -253,13 +252,8 @@ struct reifier_visitor
     >::type
   >
 {
-        typedef 
-      typename ReifyApply::result_type 
-    result_type
-    ;
-        typedef
-      HeadAbstract
-    head_abstract_type
+      ReifyApply const&
+    my_reify
     ;
         typedef
       ptrs_target_source
@@ -271,11 +265,11 @@ struct reifier_visitor
       >
     now_tar_src_type
     ;
-      ReifyApply const&
-    my_reify
-    ;
       now_tar_src_type*
     my_tar_src
+    ;
+      HeadAbstract&
+    my_head_abstract
     ;
     reifier_visitor
       ( ReifyApply const& a_reify
@@ -283,8 +277,17 @@ struct reifier_visitor
       )
     : my_reify(a_reify)
     , my_tar_src(a_ptrs_tar_src)
+    , my_head_abstract
+      ( my_tar_src->template project
+        < sizeof...(HeadConcrete)
+        >()
+      )
     {
     }
+        typedef 
+      typename ReifyApply::result_type 
+    result_type
+    ;
       template
       < typename TailConcrete
       >
@@ -312,14 +315,9 @@ struct reifier_visitor
       ( void
       )const
     {
-          head_abstract_type&
-        my_head_abstract
-          = my_tar_src->template project
-            < sizeof...(HeadConcrete)
-            >()
-        ;
         return my_head_abstract.accept(*this);
     }
+
 };
 
 }//exit namespace multiple_dispatch

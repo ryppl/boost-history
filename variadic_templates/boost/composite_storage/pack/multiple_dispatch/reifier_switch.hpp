@@ -128,7 +128,10 @@ struct reifier_switch
       )const
     {
         index_type const index_concrete=index_type(CaseValue);
-        auto& a_tail_concrete=my_head_abstract.template project<index_concrete>();
+            typedef 
+          decltype(my_head_abstract.template project<index_concrete>()) 
+        tail_type;
+        tail_type a_tail_concrete=my_head_abstract.template project<index_concrete>();
         return this->push_back_concrete(a_tail_concrete);
     }
         

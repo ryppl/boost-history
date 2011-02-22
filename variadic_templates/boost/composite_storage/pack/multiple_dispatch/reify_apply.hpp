@@ -1,14 +1,7 @@
 //
 #ifndef BOOST_COMPOSITE_STORAGE_PACK_MULTIPLE_DISPATCH_REIFY_APPLY_HPP_INCLUDED
 #define BOOST_COMPOSITE_STORAGE_PACK_MULTIPLE_DISPATCH_REIFY_APPLY_HPP_INCLUDED
-//  (C) Copyright Larry Evans 2010.
-//
-//  Permission to copy, use, modify, sell and distribute this software
-//  is granted provided this copyright notice appears in all copies.
-//  This software is provided "as is" without express or implied
-//  warranty, and with no claim as to its suitability for any purpose.
-//====================================================================
-#include <boost/mpl/assert.hpp>
+//#include <boost/mpl/assert.hpp>
 #include <boost/composite_storage/pack/multiple_dispatch/replace_source_with_target_ptr.hpp>
 #include <boost/composite_storage/pack/multiple_dispatch/apply_unpack.hpp>
 
@@ -22,19 +15,12 @@ namespace multiple_dispatch
 {
   template
   < template
-    < typename ReifyApply //this type
-    , typename ArgsConcreteAbstract //container concrete followed by abstract args.
-    >class Reifier //converter from abstract to concrete arg.
-  , typename Functor //Functor on concrete args.
+    < typename ReifyApply
+    , typename ArgsConcreteAbstract
+    >class Reifier
+  , typename Functor
   >
 struct reify_apply_impl
-  /**@brief
-   *  A functor, whose operator()(ArgsConcreteAbstract*p_args),
-   *  recursively applies Reifier to each "abstract" argument in *p_args,
-   *  accummulating the resulting "concrete" arguments in same p_args, 
-   *  until no more abstract arguments are available, and then
-   *  applies Functor to the accummulated "concrete" arguments.
-   */
 {
     typedef typename Functor::result_type result_type;
     typedef reify_apply_impl<Reifier,Functor> this_type;
@@ -55,12 +41,6 @@ struct reify_apply_impl
         , TailAbstract...
         >* tar_src_p
       )const
-      /**@brief
-       *  Applies conversion, Reifier, to HeadAbstract argument
-       *  in *tar_src_p, converting it to a concrete argument
-       *  appended to the end of ArgsConcrete, which replaces
-       *  the HeadAbstract argument.
-       */
     {
             typedef
           ptrs_target_source
@@ -98,6 +78,13 @@ struct reify_apply_impl
        *  ) apply my_functor to *tar_src_p.
        */
     {
+        #ifdef MULTIPLE_DISPATCH_DEBUG
+          std::cout
+            <<"package<ArgsConcrete...>="
+            <<utility::demangled_type_name<mpl::package<ArgsConcrete...> >()
+            <<"\n";
+          return result_type();
+        #else
             apply_unpack
             < typename mpl::package_range_c
               < unsigned
@@ -107,6 +94,7 @@ struct reify_apply_impl
             >
           uapp;
           return uapp(my_functor,*tar_src_p);
+        #endif
     }
 
 };    
@@ -122,19 +110,27 @@ struct reify_apply_impl
   typename Functor::result_type
 reify_apply
   ( Functor & a_functor
-  , ArgsAbstract const&... a_args_abstract
+  , ArgsAbstract&... a_args_abstract
   )
   /**@brief
-   *  Applies a Reifier to each "abstract" argument in
-   *  a_args_abstract... to produce a container of 
-   *  concrete arguments, which are then passed to a_functor.
+   *  Applies Reifier to each argument in a_args_abstract 
+   *  to produce a list of concrete arguments, which 
+   *  are then passed to a_functor.
    */  
 {
-      auto
-    ptrs_target_src_v(mk_ptrs_source(a_args_abstract...))
-    //creates container of pointers to a_args_abstract...
+      typename ptrs_target0_source
+      < ArgsAbstract...
+      >::type
+    ptrs_target_src_v(a_args_abstract...)
+    //creates container of void pointers to a_args_abstract...
     ;
     reify_apply_impl<Reifier,Functor> rai(a_functor); 
+  #ifdef MULTIPLE_DISPATCH_DEBUG
+    std::cout
+      <<"reify_apply::ptrs_target_src_v="
+      <<utility::demangled_type_name(ptrs_target_src_v)
+      <<"\n";
+  #endif
     return rai(&ptrs_target_src_v);
 }
 
