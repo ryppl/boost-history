@@ -21,7 +21,7 @@
 //  Definition of native depending on BOOST_BIG_ENDIAN to big or little done by Vicente J. Botet Escriba.
 //  Change the definition of endian_pack using types instead of enum endianness done by Vicente J. Botet Escriba.
 
-// TODO: When a compiler supporting constexpr becomes available, try possible uses.
+
 #define BOOST_ENDIAN_ALLOWS_UDT
 
 #ifndef BOOST_INTEGER_ENDIAN_PACK_HPP
@@ -37,12 +37,10 @@
 
 #include <boost/config.hpp>
 #include <boost/type_traits/is_signed.hpp>
-//#include <climits>
 #include <boost/integer_traits.hpp>
 #include <boost/cstdint.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/detail/scoped_enum_emulation.hpp>
-//~ #include <iosfwd>
 #include <climits>
 #include <algorithm>
 
@@ -58,7 +56,7 @@
 #   define BOOST_ENDIAN_DEFAULT_CONSTRUCT = default;  // C++0x
 # endif
 
-# if defined(BOOST_NO_DEFAULTED_FUNCTIONS) && defined(BOOST_ENDIAN_FORCE_PODNESS)
+# if defined(BOOST_ENDIAN_FORCE_PODNESS)
 #   define BOOST_ENDIAN_NO_CTORS
 # endif
 
@@ -75,9 +73,9 @@ namespace boost
     {
       typedef unrolled_byte_loops<T, n_bytes - 1, sign> next;
 
-      static T load_big(const unsigned char* bytes)
+      static BOOST_CONSTEXPR T load_big(const unsigned char* bytes)
         { return *(bytes - 1) | (next::load_big(bytes - 1) << 8); }
-      static T load_little(const unsigned char* bytes)
+      static BOOST_CONSTEXPR T load_little(const unsigned char* bytes)
         { return *bytes | (next::load_little(bytes + 1) << 8); }
 
       static void store_big(char* bytes, T value)
@@ -95,9 +93,9 @@ namespace boost
     template <typename T>
     struct unrolled_byte_loops<T, 1, false>
     {
-      static T load_big(const unsigned char* bytes)
+      static BOOST_CONSTEXPR T load_big(const unsigned char* bytes)
         { return *(bytes - 1); }
-      static T load_little(const unsigned char* bytes)
+      static BOOST_CONSTEXPR T load_little(const unsigned char* bytes)
         { return *bytes; }
       static void store_big(char* bytes, T value)
         { *(bytes - 1) = static_cast<char>(value); }
@@ -109,9 +107,9 @@ namespace boost
     template <typename T>
     struct unrolled_byte_loops<T, 1, true>
     {
-      static T load_big(const unsigned char* bytes)
+      static BOOST_CONSTEXPR T load_big(const unsigned char* bytes)
         { return *reinterpret_cast<const signed char*>(bytes - 1); }
-      static T load_little(const unsigned char* bytes)
+      static BOOST_CONSTEXPR T load_little(const unsigned char* bytes)
         { return *reinterpret_cast<const signed char*>(bytes); }
       static void store_big(char* bytes, T value)
         { *(bytes - 1) = static_cast<char>(value); }
@@ -213,8 +211,8 @@ namespace boost
       public:
         typedef big_endian endian_type;
         typedef T value_type;
-        static const std::size_t width = n_bits;
-        static const BOOST_SCOPED_ENUM(alignment) alignment_value = alignment::unaligned;
+        BOOST_STATIC_CONSTEXPR std::size_t width = n_bits;
+        BOOST_STATIC_CONSTEXPR BOOST_SCOPED_ENUM(alignment) alignment_value = alignment::unaligned;
 #     ifndef BOOST_ENDIAN_NO_CTORS
         endian_pack() BOOST_ENDIAN_DEFAULT_CONSTRUCT
         template <typename T2>
@@ -250,8 +248,8 @@ namespace boost
       public:
         typedef little_endian endian_type;
         typedef T value_type;
-        static const std::size_t width = n_bits;
-        static const BOOST_SCOPED_ENUM(alignment) alignment_value = alignment::unaligned;
+        BOOST_STATIC_CONSTEXPR std::size_t width = n_bits;
+        BOOST_STATIC_CONSTEXPR BOOST_SCOPED_ENUM(alignment) alignment_value = alignment::unaligned;
 #     ifndef BOOST_ENDIAN_NO_CTORS
         endian_pack() BOOST_ENDIAN_DEFAULT_CONSTRUCT
         explicit endian_pack(T val)
@@ -298,8 +296,8 @@ namespace boost
       void retrieve(value_type* result) const
         { detail::reverse_copy<sizeof(value_type)>(result, m_value); }
       public:
-        static const std::size_t width = n_bits;
-        static const BOOST_SCOPED_ENUM(alignment) alignment_value = alignment::aligned;
+        BOOST_STATIC_CONSTEXPR std::size_t width = n_bits;
+        BOOST_STATIC_CONSTEXPR BOOST_SCOPED_ENUM(alignment) alignment_value = alignment::aligned;
 #   ifndef BOOST_ENDIAN_NO_CTORS
         endian_pack() BOOST_ENDIAN_DEFAULT_CONSTRUCT
         explicit endian_pack(T val)    { store(val); }
@@ -322,8 +320,8 @@ namespace boost
       public:
         typedef native_endian endian_type;
         typedef T value_type;
-        static const std::size_t width = n_bits;
-        static const BOOST_SCOPED_ENUM(alignment) alignment_value = alignment::aligned;
+        BOOST_STATIC_CONSTEXPR std::size_t width = n_bits;
+        BOOST_STATIC_CONSTEXPR BOOST_SCOPED_ENUM(alignment) alignment_value = alignment::aligned;
 #   ifndef BOOST_ENDIAN_NO_CTORS
         endian_pack() BOOST_ENDIAN_DEFAULT_CONSTRUCT
         explicit endian_pack(T val) : m_value(val) { }
@@ -334,7 +332,7 @@ namespace boost
       private:
           T m_value;
     };    
-#else    
+#else   // defined(BOOST_ENDIAN_ALLOWS_UDT) 
     //  aligned big endian specialization
     template <typename T, std::size_t n_bits>
     class endian_pack< big_endian, T, n_bits, alignment::aligned  >
@@ -344,8 +342,8 @@ namespace boost
       public:
         typedef big_endian endian_type;
         typedef T value_type;
-        static const std::size_t width = n_bits;
-        static const BOOST_SCOPED_ENUM(alignment) alignment_value = alignment::aligned;
+        BOOST_STATIC_CONSTEXPR std::size_t width = n_bits;
+        BOOST_STATIC_CONSTEXPR BOOST_SCOPED_ENUM(alignment) alignment_value = alignment::aligned;
 #   ifndef BOOST_ENDIAN_NO_CTORS
         endian_pack() BOOST_ENDIAN_DEFAULT_CONSTRUCT
 #     ifdef BOOST_BIG_ENDIAN
@@ -375,8 +373,8 @@ namespace boost
       public:
         typedef little_endian endian_type;
         typedef T value_type;
-        static const std::size_t width = n_bits;
-        static const BOOST_SCOPED_ENUM(alignment) alignment_value = alignment::aligned;
+        BOOST_STATIC_CONSTEXPR std::size_t width = n_bits;
+        BOOST_STATIC_CONSTEXPR BOOST_SCOPED_ENUM(alignment) alignment_value = alignment::aligned;
 #   ifndef BOOST_ENDIAN_NO_CTORS
         endian_pack() BOOST_ENDIAN_DEFAULT_CONSTRUCT
 #     ifdef BOOST_LITTLE_ENDIAN
@@ -396,7 +394,7 @@ namespace boost
       private:
           T m_value;
     };
-#endif    
+#endif // defined(BOOST_ENDIAN_ALLOWS_UDT)
 
   //  naming convention typedefs  ------------------------------------------------------//
 

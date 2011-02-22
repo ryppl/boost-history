@@ -32,7 +32,7 @@
 
 namespace boost {
 namespace integer {
-
+namespace endianness {
     template <typename EndianTarget, typename EndianSource, typename T>
     inline void convert_to_from(T& r);
 
@@ -52,7 +52,7 @@ namespace integer {
         struct convert_to_from_seq_loop {
             template <typename It, typename End>
             static void apply(It& it, End& end) {
-                boost::integer::convert_to_from_impl<
+                boost::integer::endianness::convert_to_from_impl<
                     typename mpl::deref<ItTarget>::type, 
                     typename mpl::deref<ItSource>::type, 
                     typename remove_reference<typename remove_cv<typename fusion::result_of::deref<It>::type>::type >::type
@@ -220,6 +220,7 @@ void convert_to(T& r) {
         T>::apply(r);
 }
 
+} // namespace endianness
 } // namespace integer
 } // namespace boost
 

@@ -18,8 +18,8 @@
 #include <boost/type_traits/is_fundamental.hpp>
 
 namespace boost {
-
 namespace integer {
+namespace endianness {
 
     template <typename EndianSource, typename T>
     void convert_from(T& r);
@@ -27,7 +27,7 @@ namespace integer {
     void convert_to(T& r);
     template <typename EndianTarget, typename EndianSource, typename T>
     void convert_to_from(T& r);
-    
+}
     template <typename Endian, typename T,
                     bool IsFundamental  = is_fundamental<T>::value,
                     bool IsSeq          = fusion::traits::is_sequence<T>::value
@@ -79,12 +79,12 @@ namespace integer {
         endian_view(value_type& ref) : ref_(ref) {};
         operator value_type() const { 
             value_type res=ref_;
-            convert_from<Endian>(res);
+            endianness::convert_from<Endian>(res);
             return res; 
         }
         endian_view& operator=(value_type val) {             
             ref_=val;
-            convert_to<Endian>(ref_);
+            endianness::convert_to<Endian>(ref_);
             return *this; 
         }
         endian_view& operator=(endian_view const& rhs) { 
@@ -96,7 +96,7 @@ namespace integer {
         template <typename Endian2 >
         endian_view& operator=(endian_view<Endian2,T,true,false> const& rhs) { 
             ref_=rhs.ref_;
-            convert_to_from<Endian2,Endian>(ref_);
+            endianness::convert_to_from<Endian2,Endian>(ref_);
             return *this; 
         }
     };

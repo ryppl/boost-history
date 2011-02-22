@@ -60,12 +60,15 @@ namespace boost
       endian_pack<E, T, n_bits, A> pack_;
         
       public:
+        typedef E endian_type;
         typedef T value_type;
+        BOOST_STATIC_CONSTEXPR std::size_t width = n_bits;
+        BOOST_STATIC_CONSTEXPR BOOST_SCOPED_ENUM(alignment) alignment_value = A;
+        
 #     ifndef BOOST_ENDIAN_NO_CTORS
         endian() BOOST_ENDIAN_DEFAULT_CONSTRUCT
         template <typename T2>
         explicit endian(T2 val)
-        //~ explicit endian(T val)
             : pack_(val)
         { 
         }
