@@ -39,7 +39,7 @@ struct trace_scope
   #endif
 #define APPLY_UNPACK_USER_CHECKED_ARGS
 #include <boost/composite_storage/pack/multiple_dispatch/reify_apply.hpp>
-//#define REIFIER_VISITOR
+#define REIFIER_VISITOR
 #ifdef REIFIER_VISITOR
   #include <boost/composite_storage/pack/multiple_dispatch/reifier_visitor.hpp>
 #else
