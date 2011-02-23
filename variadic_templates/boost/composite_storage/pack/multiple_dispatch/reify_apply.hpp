@@ -110,7 +110,7 @@ struct reify_apply_impl
   typename Functor::result_type
 reify_apply
   ( Functor & a_functor
-  , ArgsAbstract&... a_args_abstract
+  , ArgsAbstract&&... a_args_abstract
   )
   /**@brief
    *  Applies Reifier to each argument in a_args_abstract 
