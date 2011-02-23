@@ -325,7 +325,7 @@ public:
      * \brief Print Rtree (mainly for debug)
      */
     // awulkiew - print() method changed to operator<<
-    friend std::ostream & operator<<(std::ostream &os, rtree &r)
+    friend std::ostream & operator<<(std::ostream &os, rtree const& r)
     {
         os << "===================================" << std::endl;
         os << " Min/Max: " << r.m_min_elems_per_node << " / " << r.m_max_elems_per_node << std::endl;
@@ -335,6 +335,19 @@ public:
 
         return os;
     }
+
+#ifdef BOOST_GEOMETRY_INDEX_RTREE_ENABLE_GL_DRAW
+
+    void gl_draw() const
+    {
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        m_root->gl_draw(m_translator);
+
+        glFlush();
+    }
+
+#endif // BOOST_GEOMETRY_INDEX_RTREE_ENABLE_GL_DRAW
 
 private:
 

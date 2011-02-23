@@ -139,11 +139,24 @@ public:
      * \brief Print Rtree subtree (mainly for debug)
      */
     // awulkiew - ostream parameter added
-    virtual void print(std::ostream &, Translator const& tr) const
+    virtual void print(std::ostream &, Translator const&) const
     {
         // TODO: mloskot - define & use GGL exception
         throw std::logic_error("shouldn't be here");
     }
+
+#ifdef BOOST_GEOMETRY_INDEX_RTREE_ENABLE_GL_DRAW
+
+    /**
+     * \brief Draw Rtree subtree using OpenGL (mainly for debug)
+     */
+    virtual void gl_draw(Translator const&) const
+    {
+        // TODO: mloskot - define & use GGL exception
+        throw std::logic_error("shouldn't be here");
+    }
+
+#endif // BOOST_GEOMETRY_INDEX_RTREE_ENABLE_GL_DRAW
 
     // awulkiew - leaf only virtual methods
 

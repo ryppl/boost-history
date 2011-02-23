@@ -218,6 +218,44 @@ public:
         os << "\t" << " --< Leaf --------" << std::endl;
     }
 
+#ifdef BOOST_GEOMETRY_INDEX_RTREE_ENABLE_GL_DRAW
+
+    /**
+     * \brief Draw leaf using OpenGL (mainly for debug)
+     */
+    virtual void gl_draw(Translator const& tr) const
+    {
+        // TODO: awulkiew - implement 3d version
+        if ( traits::dimension<traits::point_type<Box>::type>::value == 2 )
+        {
+            for (typename leaf_map::const_iterator it = m_nodes.begin();
+                it != m_nodes.end(); ++it)
+            {
+                glColor3f(1.0f, 1.0f, 1.0f);
+
+                Box box;
+                detail::convert_to_box(tr(*it), box);
+
+                glBegin(GL_LINE_LOOP);
+                glVertex2f(
+                    geometry::get<min_corner, 0>(box),
+                    geometry::get<min_corner, 1>(box));
+                glVertex2f(
+                    geometry::get<max_corner, 0>(box),
+                    geometry::get<min_corner, 1>(box));
+                glVertex2f(
+                    geometry::get<max_corner, 0>(box),
+                    geometry::get<max_corner, 1>(box));
+                glVertex2f(
+                    geometry::get<min_corner, 0>(box),
+                    geometry::get<max_corner, 1>(box));
+                glEnd();
+            }
+        }
+    }
+
+#endif // BOOST_GEOMETRY_INDEX_RTREE_ENABLE_GL_DRAW
+
     // awulkiew - leaf only virtual methods
 
     /**

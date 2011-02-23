@@ -214,6 +214,57 @@ public:
         }
     }
 
+#ifdef BOOST_GEOMETRY_INDEX_RTREE_ENABLE_GL_DRAW
+
+    /**
+     * \brief Draw Rtree subtree using OpenGL (mainly for debug)
+     */
+    virtual void gl_draw(Translator const& tr) const
+    {
+        // TODO: awulkiew - implement 3d version
+        if ( traits::dimension<traits::point_type<Box>::type>::value == 2 )
+        {
+            for (typename node_map::const_iterator it = m_nodes.begin();
+                it != m_nodes.end(); ++it)
+            {
+                size_t lvl = this->get_level();
+                if ( lvl == 0 )
+                    glColor3f(1.0f, 0.0f, 0.0f);
+                else if ( lvl == 1 )
+                    glColor3f(0.0f, 1.0f, 0.0f);
+                else if ( lvl == 2 )
+                    glColor3f(0.0f, 0.0f, 1.0f);
+                else if ( lvl == 3 )
+                    glColor3f(1.0f, 1.0f, 0.0f);
+                else if ( lvl == 4 )
+                    glColor3f(1.0f, 0.0f, 1.0f);
+                else if ( lvl == 5 )
+                    glColor3f(0.0f, 1.0f, 1.0f);
+                else
+                    glColor3f(0.5f, 0.5f, 0.5f);
+
+                glBegin(GL_LINE_LOOP);
+                glVertex2f(
+                    geometry::get<min_corner, 0>(it->first),
+                    geometry::get<min_corner, 1>(it->first));
+                glVertex2f(
+                    geometry::get<max_corner, 0>(it->first),
+                    geometry::get<min_corner, 1>(it->first));
+                glVertex2f(
+                    geometry::get<max_corner, 0>(it->first),
+                    geometry::get<max_corner, 1>(it->first));
+                glVertex2f(
+                    geometry::get<min_corner, 0>(it->first),
+                    geometry::get<max_corner, 1>(it->first));
+                glEnd();
+
+                it->second->gl_draw(tr);
+            }
+        }
+    }
+
+#endif // BOOST_GEOMETRY_INDEX_RTREE_ENABLE_GL_DRAW
+
     // awulkiew - internal node only virtual methods
 
     /**
