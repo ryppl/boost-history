@@ -195,6 +195,24 @@ struct hosts_concrete
    */
 ;
   template
+  < typename HostConcrete
+  >
+struct host_abstract
+  /**@brief
+   *  Metafunction returning Abstract class
+   *  of which HostConcrete is a member.
+   *  IOW, does inverse of hosts_concrete.
+   */
+{
+        typedef 
+      HostConcrete 
+    type
+    //By default, HostConcrete is member
+    //of a type hierarchy starting at
+    //HostConcrete.
+    ;   
+};
+  template
   < typename ReifyApply
   , typename ArgsConcreteAbstract
   >
@@ -246,8 +264,10 @@ struct reifier_visitor
       >
     >
   , typename hosts_concrete
-    < typename remove_cv
-      < HeadAbstract
+    < typename host_abstract
+      < typename remove_cv
+        < HeadAbstract
+        >::type
       >::type
     >::type
   >
