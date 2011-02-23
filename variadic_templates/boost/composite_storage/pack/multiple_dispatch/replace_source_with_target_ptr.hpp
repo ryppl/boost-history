@@ -74,7 +74,8 @@ void_ptr_array
         ptr_type
       my_ptrs[size]
         ;
-    #define VOID_PTR_ARRAY_NO_INIT_LIST defined(__clang__)
+    //#define VOID_PTR_ARRAY_NO_INIT_LIST defined(__clang__)
+    #define VOID_PTR_ARRAY_NO_INIT_LIST 1
     #if VOID_PTR_ARRAY_NO_INIT_LIST
         template
         < typename... Refs
@@ -288,12 +289,10 @@ mk_ptrs_source
    *  one that contains no Target pointers.
    */
   {
-       ptrs_target_source
-       < mpl::package
-         <
-         >
-       , ArgsSource...
-       >
+         typename
+       ptrs_target0_source
+       < ArgsSource...
+       >::type
      result_args
        ( a_args...
        )
@@ -301,7 +300,7 @@ mk_ptrs_source
      return result_args;
   }   
 
-  typename ptrs_target0_source
+  ptrs_target0_source
   <
   >::type
 mk_ptrs_source
@@ -313,11 +312,9 @@ mk_ptrs_source
    *  one that contains no Target pointers.
    */
   {
-       ptrs_target_source
-       < mpl::package
-         <
-         >
-       >
+       ptrs_target0_source
+       <
+       >::type
      result_args
        ;
      return result_args;
