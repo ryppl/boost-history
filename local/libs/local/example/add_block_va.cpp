@@ -6,6 +6,7 @@
 // http://www.boost.org/LICENSE_1_0.txt).
 
 // Simple local block used by the documentation.
+// Simplified syntax for variadic macros.
 
 //[ add_block_cpp
 #include <boost/local/block.hpp>
@@ -15,7 +16,7 @@
 int main() {
     double sum = 1975.0;
 
-    BOOST_LOCAL_BLOCK( (const bind& sum) ) {
+    BOOST_LOCAL_BLOCK(const bind& sum) {
         assert(sum == 1975.0); // OK: Complier error if `==` confused with `=`.
         std::clog << "Asserted summation: " << sum << std::endl;
 

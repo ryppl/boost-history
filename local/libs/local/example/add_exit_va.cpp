@@ -6,8 +6,9 @@
 // http://www.boost.org/LICENSE_1_0.txt).
 
 // Simple local exit used by the documentation.
+// Simplified syntax for variadic macros only.
 
-//[ add_exit_cpp
+//[ add_exit_va_cpp
 #include <boost/local/exit.hpp>
 #include <iostream>
 #include <cassert>
@@ -16,7 +17,7 @@ int main() {
     size_t size = 2;
     double* nums = new double[size];
     
-    BOOST_LOCAL_EXIT( (const bind& size) (bind nums) ) {
+    BOOST_LOCAL_EXIT(const bind& size, bind nums) {
         if (size && nums) delete[] nums;
         std::clog << "Freed array: " << nums << std::endl;
 

@@ -6,6 +6,7 @@
 // http://www.boost.org/LICENSE_1_0.txt).
 
 // Use local functions, blocks, and exits from template scope.
+// Simplified syntax for variadic macros only.
 
 //[add_except_cpp
 #include <boost/local/function.hpp>
@@ -19,8 +20,8 @@ int main() {
     double sum = 0.0;
     int factor = 10;
 
-    void BOOST_LOCAL_FUNCTION_PARAMS( (double num)
-            (const bind factor) (bind& sum) )
+    void BOOST_LOCAL_FUNCTION_PARAMS(double num,
+            const bind factor, bind& sum)
             throw (std::runtime_error, std::logic_error) { // Throw two except.
         sum += factor * num;
     } BOOST_LOCAL_FUNCTION_NAME(add)
@@ -28,14 +29,14 @@ int main() {
 
     size_t size = 2;
     double* nums = new double[size];
-    BOOST_LOCAL_EXIT( (const bind& size) (bind nums) ) throw() { // Throw none.
+    BOOST_LOCAL_EXIT(const bind& size, bind nums) throw() { // Throw none.
         if (size && nums) delete[] nums;
     } BOOST_LOCAL_EXIT_END
 
     nums[0] = 90.5; nums[1] = 7.0;
     std::for_each(nums, nums + size, add);
 
-    BOOST_LOCAL_BLOCK( (const bind& sum) ) throw(std::exception) { // Thow one.
+    BOOST_LOCAL_BLOCK(const bind& sum) throw(std::exception) { // Thow one.
         assert(sum == 1975.0);
     } BOOST_LOCAL_BLOCK_END
 
