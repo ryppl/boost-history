@@ -66,9 +66,7 @@ void world::add_person(person const& a_person) {
     person& p = persons_.back();
     person::evolution_t checkpoint = p.evolution_;
 
-    BOOST_LOCAL_EXIT(
-        (const bind)( (checkpoint) (&p) ) (bind)( (this) )
-    ) {
+    BOOST_LOCAL_EXIT( (const bind checkpoint) (const bind& p) (bind this) ) {
         if (checkpoint == p.evolution_) this_->persons_.pop_back();
         std::cout << "1st local exit" << std::endl;
         return; // Exit local scope (not enclosing function).
@@ -82,9 +80,8 @@ void world::add_person(person const& a_person) {
     // Assign new id to the person.
     world::id_t const prev_id = p.id_;
     p.id_ = next_id_++;
-    BOOST_LOCAL_EXIT(
-        (const bind)( (checkpoint) (prev_id) ) (bind)( (&p) (&next_id_) )
-    ) {
+    BOOST_LOCAL_EXIT( (const bind checkpoint) (const bind prev_id)
+            (bind& p) (bind& next_id_) ) {
         if (checkpoint == p.evolution_) {
             next_id_ = p.id_;
             p.id_ = prev_id;

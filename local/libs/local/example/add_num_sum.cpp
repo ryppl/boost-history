@@ -14,15 +14,12 @@
 int main() {
     double sum = 0.0;
 
-    BOOST_LOCAL_FUNCTION(
-    (void) (add)( (double)(num) (bind)((&sum)) )
-    ) {
+    void BOOST_LOCAL_FUNCTION_PARAMS( (double num) (bind& sum) ) {
         sum += num;
         std::clog << "Summed: " << sum << std::endl;
-    } BOOST_LOCAL_FUNCTION_END(add)
+    } BOOST_LOCAL_FUNCTION_NAME(add)
 
     add(100.0);
-
     return 0;
 }
 //]

@@ -34,7 +34,35 @@ Variables in scope are bound to the local function by both constant value and no
 * A local exit is used to automatically release the array's memory at scope exit.
 * A local block is used to assert the correct final value of the summation in a constant-correct context (therefore preventing the assertion from mistakenly changing any of the variables in scope).
 
-[add_cpp]
+[table
+[ [Notes] [Variadic Macro Syntax (C99 and later compilers)] [Sequencing Macro Syntax (all C++ compilers)] ]
+[ [ [add_line_numbers_cpp] ] [ [add_va_cpp] ] [ [add_cpp] ] ]
+]
+
+Where the notes refer to the following comments:
+
+# Include the header files for this library local functions, local blocks, and local exits.
+# The *local function* parameter macro takes a __Boost_Preprocessor__ sequence of tokens listing each parameter type and name wrapped within round parenthesis [^(['parameter-type parameter-name])['...]] (default parameter values can also specified using a special syntax, see the __Tutorial__ section).
+On C99 and later preprocessors which support variadic macros, the same parameter macro also allows to specify the parameters separated by commas instead that wrapped within parenthesis [^['parameter-type parameter-name],['...]] so to provide a syntax more similar to the normal C++ syntax for function parameter lists.
+The local function result type is specified just before the parameter macro.
+# This library macros introduce the special "keyword" `bind` which can be used instead of the parameter type to bind variables in scope.
+Variables can be bound by value, reference, constant value, and constant reference plus the object `this` can be bound from within a non-static member function scope (see the __Tutorial__ section).
+For example, the variable `factor` is bound by constant value so it cannot be mistakenly modified by the local function body.
+The variable `sum` is instead bound by non-constant reference because the local function needs to change its value to report the summation result to the enclosing scope.
+# The local function body is programmed outside the macros and using normal C++ syntax.
+Eventual compiler error messages and line numbers retain their usual meaning.
+Exceptions specifications can be programmed outside the macro and just before the body code block `{...}` as usual (see the __Tutorial__ section).
+# The macro ending the local function definition specifies the local function name.
+# The local function macros declare a functor object local to the enclosing scope named `add`. The functor `add` has `void` result type, it can be called by specifying one parameter of type `double`, and it has access to the variables in scope `factor` (by constant value) and `sum` (by reference).
+# The *local exit* declaration macro only specifies the variables in scope to bind (by reference or value and eventually as constants).
+Exceptions specifications can be programmed outside the macro and just before the body code block `{...}` as usual (see the __Tutorial__ section).
+# The local exit code will be automatically executed when the enclosing scope is exited.
+# Local exits are anonymous so their ending macro takes no argument.
+# The local function `add` can also be passed as a template parameter (for example, to the STL `std::for_each` algorithm).
+# The *local block* declaration macro only specifies the variables in scope to bind (by reference or value and eventually as constants).
+# The local block code is executed "in place" where it is programmed like a usual C++ block of code `{ ... }`.
+In this example, the compiler will correctly generate an error if the assignment operator `=` is mistakenly used instead of the equality operator `==` because the variable `sum` is bound by constant reference so it cannot be modified.
+# Local blocks are anonymous so their ending macro takes no argument.
 
 [endsect]
 

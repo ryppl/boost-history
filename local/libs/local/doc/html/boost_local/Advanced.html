@@ -194,7 +194,7 @@
 </span>    <span class="special">)</span>
 </pre>
 <p>
-        Consider the following complete example: <sup>[<a name="id875947" href="#ftn.id875947" class="footnote">15</a>]</sup>
+        Consider the following complete example: <sup>[<a name="id876719" href="#ftn.id876719" class="footnote">15</a>]</sup>
       </p>
 <p>
         
@@ -213,24 +213,20 @@
 <span class="keyword">typedef</span> <span class="keyword">int</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">sign_t</span><span class="special">;</span>
 
 <span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
-    <span class="identifier">BOOST_LOCAL_FUNCTION</span><span class="special">(</span>
-    <span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">(</span><span class="identifier">print</span><span class="special">)(</span>
+    <span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span>
             <span class="comment">// Identity macors handle commas.
-</span>            <span class="special">(</span><span class="identifier">BOOST_IDENTITY_TYPE</span><span class="special">((</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">,</span> <span class="identifier">size_t</span><span class="special">&gt;&amp;)))(</span><span class="identifier">m</span><span class="special">)</span>
-            <span class="special">(</span><span class="keyword">const</span> <span class="identifier">size_t</span><span class="special">&amp;)(</span><span class="identifier">factor</span><span class="special">)(</span><span class="keyword">default</span><span class="special">)</span>
-                    <span class="special">(</span><span class="identifier">BOOST_IDENTITY_VALUE</span><span class="special">((</span><span class="identifier">key_size</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">,</span> <span class="identifier">size_t</span><span class="special">&gt;::</span><span class="identifier">value</span><span class="special">)))</span>
-            <span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;)(</span><span class="identifier">separator</span><span class="special">)(</span><span class="keyword">default</span><span class="special">)(</span><span class="identifier">cat</span><span class="special">(</span><span class="string">":"</span><span class="special">,</span> <span class="string">" "</span><span class="special">))</span>
+</span>            <span class="special">(</span><span class="identifier">BOOST_IDENTITY_TYPE</span><span class="special">((</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">,</span> <span class="identifier">size_t</span><span class="special">&gt;))&amp;</span> <span class="identifier">m</span><span class="special">)</span>
+            <span class="special">(</span><span class="keyword">const</span> <span class="identifier">size_t</span><span class="special">&amp;</span> <span class="identifier">factor</span><span class="special">)(</span><span class="keyword">default</span> <span class="comment">// Or just use `(default (...))`.
+</span>                    <span class="identifier">BOOST_IDENITY_VALUE</span><span class="special">((</span><span class="identifier">key_size</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">,</span> <span class="identifier">size_t</span><span class="special">&gt;::</span><span class="identifier">value</span><span class="special">)))</span>
+            <span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;</span> <span class="identifier">separator</span><span class="special">)(</span><span class="keyword">default</span> <span class="identifier">cat</span><span class="special">(</span><span class="string">":"</span><span class="special">,</span> <span class="string">" "</span><span class="special">))</span>
             <span class="comment">// Also, identity macors handle leading symbols.
-</span>            <span class="special">(</span><span class="identifier">BOOST_IDENTITY_TYPE</span><span class="special">((::</span><span class="identifier">sign_t</span><span class="special">)))(</span><span class="identifier">sign</span><span class="special">)(</span><span class="keyword">default</span><span class="special">)</span>
-                    <span class="special">(</span><span class="identifier">BOOST_IDENTITY_VALUE</span><span class="special">((-</span><span class="number">1</span><span class="special">)))</span>
-        <span class="special">)</span>
-    <span class="special">)</span> <span class="special">{</span>
+</span>            <span class="special">(</span><span class="identifier">BOOST_IDENTITY_TYPE</span><span class="special">((::</span><span class="identifier">sign_t</span><span class="special">))</span> <span class="identifier">sign</span><span class="special">)(</span><span class="keyword">default</span> <span class="special">-</span><span class="number">1</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span>
         <span class="keyword">for</span> <span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">,</span> <span class="identifier">size_t</span><span class="special">&gt;::</span><span class="identifier">const_iterator</span> <span class="identifier">i</span> <span class="special">=</span> <span class="identifier">m</span><span class="special">.</span><span class="identifier">begin</span><span class="special">();</span>
                 <span class="identifier">i</span> <span class="special">!=</span> <span class="identifier">m</span><span class="special">.</span><span class="identifier">end</span><span class="special">();</span> <span class="special">++</span><span class="identifier">i</span><span class="special">)</span> <span class="special">{</span>
             <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">i</span><span class="special">-&gt;</span><span class="identifier">first</span> <span class="special">&lt;&lt;</span> <span class="identifier">separator</span> <span class="special">&lt;&lt;</span>
                     <span class="identifier">sign</span> <span class="special">*</span> <span class="keyword">int</span><span class="special">(</span><span class="identifier">i</span><span class="special">-&gt;</span><span class="identifier">second</span><span class="special">)</span> <span class="special">*</span> <span class="keyword">int</span><span class="special">(</span><span class="identifier">factor</span><span class="special">)</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
         <span class="special">}</span>
-    <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_END</span><span class="special">(</span><span class="identifier">print</span><span class="special">)</span>
+    <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">print</span><span class="special">)</span>
 
     <span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">,</span> <span class="identifier">size_t</span><span class="special">&gt;</span> <span class="identifier">sizes</span><span class="special">;</span>
     <span class="identifier">sizes</span><span class="special">[</span><span class="string">"a"</span><span class="special">]</span> <span class="special">=</span> <span class="number">1</span><span class="special">;</span> <span class="identifier">sizes</span><span class="special">[</span><span class="string">"ab"</span><span class="special">]</span> <span class="special">=</span> <span class="number">2</span><span class="special">;</span> <span class="identifier">sizes</span><span class="special">[</span><span class="string">"abc"</span><span class="special">]</span> <span class="special">=</span> <span class="number">3</span><span class="special">;</span>
@@ -264,30 +260,24 @@
 <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">vector</span><span class="special">&gt;</span>
 
 <span class="keyword">int</span> <span class="identifier">main</span> <span class="special">()</span> <span class="special">{</span>
-    <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">v</span><span class="special">;</span>
-    <span class="identifier">v</span><span class="special">.</span><span class="identifier">resize</span><span class="special">(</span><span class="number">3</span><span class="special">);</span>
-    <span class="identifier">v</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="number">1</span><span class="special">;</span> <span class="identifier">v</span><span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">=</span> <span class="number">4</span><span class="special">;</span> <span class="identifier">v</span><span class="special">[</span><span class="number">2</span><span class="special">]</span> <span class="special">=</span> <span class="number">7</span><span class="special">;</span>
-    <span class="identifier">std</span><span class="special">::</span><span class="identifier">ostringstream</span> <span class="identifier">factorials</span><span class="special">;</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">ostringstream</span> <span class="identifier">output</span><span class="special">;</span>
 
-    <span class="identifier">BOOST_LOCAL_FUNCTION</span><span class="special">(</span>
-    <span class="special">(</span><span class="keyword">int</span><span class="special">)</span> <span class="special">(</span><span class="identifier">factorial</span><span class="special">)(</span>
-            <span class="special">(</span><span class="keyword">int</span><span class="special">)(</span><span class="identifier">n</span><span class="special">)</span>
-            <span class="special">(</span><span class="keyword">bool</span><span class="special">)(</span><span class="identifier">recursion</span><span class="special">)(</span><span class="keyword">default</span><span class="special">)(</span><span class="keyword">false</span><span class="special">)</span>
-            <span class="special">(</span><span class="identifier">bind</span><span class="special">)((&amp;</span><span class="identifier">factorials</span><span class="special">))</span>
-        <span class="special">)</span>
-    <span class="special">)</span> <span class="special">{</span>
+    <span class="keyword">int</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">n</span><span class="special">)</span> <span class="special">(</span><span class="keyword">bool</span> <span class="identifier">recursion</span><span class="special">)(</span><span class="keyword">default</span> <span class="keyword">false</span><span class="special">)</span>
+            <span class="special">(</span><span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">output</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span>
         <span class="keyword">int</span> <span class="identifier">result</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
 
         <span class="keyword">if</span> <span class="special">(</span><span class="identifier">n</span> <span class="special">&lt;</span> <span class="number">2</span> <span class="special">)</span> <span class="identifier">result</span> <span class="special">=</span> <span class="number">1</span><span class="special">;</span>
         <span class="keyword">else</span> <span class="identifier">result</span> <span class="special">=</span> <span class="identifier">n</span> <span class="special">*</span> <span class="identifier">factorial</span><span class="special">(</span><span class="identifier">n</span> <span class="special">-</span> <span class="number">1</span><span class="special">,</span> <span class="keyword">true</span><span class="special">);</span> <span class="comment">// Recursive call.
 </span>
-        <span class="keyword">if</span> <span class="special">(!</span><span class="identifier">recursion</span><span class="special">)</span> <span class="identifier">factorials</span> <span class="special">&lt;&lt;</span> <span class="identifier">result</span> <span class="special">&lt;&lt;</span> <span class="string">" "</span><span class="special">;</span>
+        <span class="keyword">if</span> <span class="special">(!</span><span class="identifier">recursion</span><span class="special">)</span> <span class="identifier">output</span> <span class="special">&lt;&lt;</span> <span class="identifier">result</span> <span class="special">&lt;&lt;</span> <span class="string">" "</span><span class="special">;</span>
         <span class="keyword">return</span> <span class="identifier">result</span><span class="special">;</span>
-    <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_END</span><span class="special">(</span><span class="identifier">factorial</span><span class="special">)</span>
+    <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">factorial</span><span class="special">)</span>
 
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">v</span><span class="special">(</span><span class="number">3</span><span class="special">);</span>
+    <span class="identifier">v</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="number">1</span><span class="special">;</span> <span class="identifier">v</span><span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">=</span> <span class="number">4</span><span class="special">;</span> <span class="identifier">v</span><span class="special">[</span><span class="number">2</span><span class="special">]</span> <span class="special">=</span> <span class="number">7</span><span class="special">;</span>
     <span class="identifier">std</span><span class="special">::</span><span class="identifier">for_each</span><span class="special">(</span><span class="identifier">v</span><span class="special">.</span><span class="identifier">begin</span><span class="special">(),</span> <span class="identifier">v</span><span class="special">.</span><span class="identifier">end</span><span class="special">(),</span> <span class="identifier">factorial</span><span class="special">);</span>
-    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">factorials</span><span class="special">.</span><span class="identifier">str</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
 
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">output</span><span class="special">.</span><span class="identifier">str</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
     <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
 <span class="special">}</span>
 </pre>
@@ -295,9 +285,9 @@
       </p>
 <p>
         The original local function name as specified in the parenthesized signature
-        passed to <code class="computeroutput"><a class="link" href="../BOOST_LOCAL_FUNCTION.html" title="Macro BOOST_LOCAL_FUNCTION">BOOST_LOCAL_FUNCTION</a></code>
+        passed to <code class="computeroutput">BOOST_LOCAL_FUNCTION</code>
         must always be used for recursive calls even when the function is renamed
-        using <code class="computeroutput"><a class="link" href="../BOOST_LOCAL_FUNCTION_END_RENAME.html" title="Macro BOOST_LOCAL_FUNCTION_END_RENAME">BOOST_LOCAL_FUNCTION_END_RENAME</a></code>
+        using <code class="computeroutput">BOOST_LOCAL_FUNCTION_END_RENAME</code>
         (see renamed local functions later in this section).
       </p>
 </div>
@@ -391,14 +381,9 @@
 <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
 
 <span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
-    <span class="identifier">BOOST_LOCAL_FUNCTION</span><span class="special">(</span>
-    <span class="special">(</span><span class="keyword">inline</span><span class="special">)</span> <span class="special">(</span><span class="keyword">int</span><span class="special">)</span> <span class="special">(</span><span class="identifier">add</span><span class="special">)(</span>           <span class="comment">// Inlined local function.
-</span>            <span class="special">(</span><span class="keyword">auto</span><span class="special">)(</span><span class="keyword">int</span><span class="special">)(</span><span class="identifier">x</span><span class="special">)</span>          <span class="comment">// Auto parameter.
-</span>            <span class="special">(</span><span class="keyword">register</span><span class="special">)(</span><span class="keyword">int</span><span class="special">)(</span><span class="identifier">y</span><span class="special">)</span>      <span class="comment">// Register parameter.
-</span>        <span class="special">)</span>
-    <span class="special">)</span> <span class="special">{</span>
+    <span class="keyword">int</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span> <span class="special">(</span><span class="keyword">auto</span> <span class="keyword">int</span> <span class="identifier">x</span><span class="special">)</span> <span class="special">(</span><span class="keyword">register</span> <span class="keyword">int</span> <span class="identifier">y</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span>
         <span class="keyword">return</span> <span class="identifier">x</span> <span class="special">+</span> <span class="identifier">y</span><span class="special">;</span>
-    <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_END</span><span class="special">(</span><span class="identifier">add</span><span class="special">)</span>
+    <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">add</span><span class="special">)</span>
 
     <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">add</span><span class="special">(</span><span class="number">3</span><span class="special">,</span> <span class="number">5</span><span class="special">)</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
 
@@ -426,22 +411,22 @@
           Local functions are never copied by value. You can only obtain a reference
           to a local function therefore you need to make sure that the <span class="bold"><strong>local function survives the scope of its reference</strong></span>
           otherwise the reference will be invalid and its use will generate a run-time
-          error (as usual with C++ references). <sup>[<a name="id880468" href="#ftn.id880468" class="footnote">16</a>]</sup>
+          error (as usual with C++ references). <sup>[<a name="id881035" href="#ftn.id881035" class="footnote">16</a>]</sup>
         </p></td></tr>
 </table></div>
 <p>
         For this purpose, it is possible to assign a <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">function</span></code>
         functor to a local function (see also <a href="http://www.boost.org/doc/libs/release/doc/html/function.html" target="_top">Boost.Function</a>).
-        However, it is in general preferable to use the <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">local</span><span class="special">::</span><a class="link" href="../boost/local/function_ref.html" title="Struct template function_ref">function_ref</a></code>
+        However, it is in general preferable to use the <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">local</span><span class="special">::</span>function_ref</code>
         functor instead because its API also supports default parameters.
       </p>
 <p>
-        The <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">local</span><span class="special">::</span><a class="link" href="../boost/local/function_ref.html" title="Struct template function_ref">function_ref</a></code> template
+        The <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">local</span><span class="special">::</span>function_ref</code> template
         takes two parameters (see the <a href="../reference.html" target="_top">Reference</a>
         section):
       </p>
 <pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">F</span><span class="special">,</span> <span class="identifier">size_t</span> <span class="identifier">defaults</span> <span class="special">=</span> <span class="number">0</span><span class="special">&gt;</span>
-<span class="keyword">class</span> <code class="computeroutput"><a class="link" href="../boost/local/function_ref.html" title="Struct template function_ref">function_ref</a></code> <span class="special">{</span> <span class="special">...</span> <span class="special">};</span>
+<span class="keyword">class</span> <code class="computeroutput">function_ref</code> <span class="special">{</span> <span class="special">...</span> <span class="special">};</span>
 </pre>
 <p>
         Where:
@@ -451,8 +436,8 @@
             specifies the function signature using the same syntax as <a href="http://www.boost.org/doc/libs/release/doc/html/function.html" target="_top">Boost.Function</a>'s
             preferred syntax. For example:
           </li></ul></div>
-<pre class="programlisting"><code class="computeroutput"><a class="link" href="../boost/local/function_ref.html" title="Struct template function_ref">function_ref</a></code><span class="special">&lt;</span> <span class="keyword">int</span><span class="special">()</span> <span class="special">&gt;</span>                   <span class="comment">// Returns `int` and takes no parameter.
-</span><code class="computeroutput"><a class="link" href="../boost/local/function_ref.html" title="Struct template function_ref">function_ref</a></code><span class="special">&lt;</span> <span class="keyword">int</span><span class="special">(</span><span class="keyword">double</span><span class="special">,</span> <span class="keyword">char</span><span class="special">)</span> <span class="special">&gt;</span>       <span class="comment">// Returns `int`and takes two parameters: a `double` followed by a `char`.
+<pre class="programlisting"><code class="computeroutput">function_ref</code><span class="special">&lt;</span> <span class="keyword">int</span><span class="special">()</span> <span class="special">&gt;</span>                   <span class="comment">// Returns `int` and takes no parameter.
+</span><code class="computeroutput">function_ref</code><span class="special">&lt;</span> <span class="keyword">int</span><span class="special">(</span><span class="keyword">double</span><span class="special">,</span> <span class="keyword">char</span><span class="special">)</span> <span class="special">&gt;</span>       <span class="comment">// Returns `int`and takes two parameters: a `double` followed by a `char`.
 </span></pre>
 <div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
             The template parameter <code class="computeroutput"><span class="identifier">defaults</span></code>
@@ -466,9 +451,9 @@
             This template parameter is optional and it is <code class="computeroutput"><span class="number">0</span></code>
             by default. For example:
           </li></ul></div>
-<pre class="programlisting"><code class="computeroutput"><a class="link" href="../boost/local/function_ref.html" title="Struct template function_ref">function_ref</a></code><span class="special">&lt;</span> <span class="keyword">int</span><span class="special">(</span><span class="keyword">double</span><span class="special">,</span> <span class="keyword">char</span><span class="special">)</span> <span class="special">&gt;</span>       <span class="comment">// No default: All parameters must be specified.
-</span><code class="computeroutput"><a class="link" href="../boost/local/function_ref.html" title="Struct template function_ref">function_ref</a></code><span class="special">&lt;</span> <span class="keyword">int</span><span class="special">(</span><span class="keyword">double</span><span class="special">,</span> <span class="keyword">char</span><span class="special">),</span> <span class="number">1</span> <span class="special">&gt;</span>    <span class="comment">// 1 default: The last `char` parameter is optional.
-</span><code class="computeroutput"><a class="link" href="../boost/local/function_ref.html" title="Struct template function_ref">function_ref</a></code><span class="special">&lt;</span> <span class="keyword">int</span><span class="special">(</span><span class="keyword">double</span><span class="special">,</span> <span class="keyword">char</span><span class="special">),</span> <span class="number">2</span> <span class="special">&gt;</span>    <span class="comment">// 2 defaults: All parameters are optional.
+<pre class="programlisting"><code class="computeroutput">function_ref</code><span class="special">&lt;</span> <span class="keyword">int</span><span class="special">(</span><span class="keyword">double</span><span class="special">,</span> <span class="keyword">char</span><span class="special">)</span> <span class="special">&gt;</span>       <span class="comment">// No default: All parameters must be specified.
+</span><code class="computeroutput">function_ref</code><span class="special">&lt;</span> <span class="keyword">int</span><span class="special">(</span><span class="keyword">double</span><span class="special">,</span> <span class="keyword">char</span><span class="special">),</span> <span class="number">1</span> <span class="special">&gt;</span>    <span class="comment">// 1 default: The last `char` parameter is optional.
+</span><code class="computeroutput">function_ref</code><span class="special">&lt;</span> <span class="keyword">int</span><span class="special">(</span><span class="keyword">double</span><span class="special">,</span> <span class="keyword">char</span><span class="special">),</span> <span class="number">2</span> <span class="special">&gt;</span>    <span class="comment">// 2 defaults: All parameters are optional.
 </span></pre>
 <p>
         For example:
@@ -476,14 +461,13 @@
 <p>
         
 </p>
-<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">local</span><span class="special">/</span><span class="identifier">function_ref</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
-<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">local</span><span class="special">/</span><span class="identifier">function</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">local</span><span class="special">/</span><span class="identifier">function</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">function</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
 
-<span class="comment">// Using `function_ref` allows to use the same functor for all calls
-</span><span class="comment">// (regardless of which set of default parameters is specified).
-</span><span class="keyword">void</span> <span class="identifier">doit</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">local</span><span class="special">::</span><span class="identifier">function_ref</span><span class="special">&lt;</span> <span class="keyword">int</span> <span class="special">(</span><span class="keyword">int</span><span class="special">,</span> <span class="keyword">int</span><span class="special">),</span> <span class="number">2</span> <span class="special">&gt;</span> <span class="identifier">l</span><span class="special">)</span> <span class="special">{</span>
+<span class="comment">// Using `function` allows to use the same functor for all calls (regardless of
+</span><span class="comment">// which set of default parameters is specified).
+</span><span class="keyword">void</span> <span class="identifier">doit</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">local</span><span class="special">::</span><span class="identifier">function</span><span class="special">&lt;</span> <span class="keyword">int</span> <span class="special">(</span><span class="keyword">int</span><span class="special">,</span> <span class="keyword">int</span><span class="special">),</span> <span class="number">2</span> <span class="special">&gt;</span> <span class="identifier">l</span><span class="special">)</span> <span class="special">{</span>
     <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">l</span><span class="special">(</span><span class="number">1</span><span class="special">,</span> <span class="number">2</span><span class="special">)</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
     <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">l</span><span class="special">(</span><span class="number">1</span><span class="special">)</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
     <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">l</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
@@ -502,15 +486,13 @@
     <span class="special">{</span>
         <span class="keyword">int</span> <span class="identifier">i</span> <span class="special">=</span> <span class="number">2</span><span class="special">;</span>
     
-        <span class="identifier">BOOST_LOCAL_FUNCTION</span><span class="special">(</span>
-        <span class="special">(</span><span class="keyword">int</span><span class="special">)</span> <span class="special">(</span><span class="identifier">linear</span><span class="special">)(</span> <span class="special">(</span><span class="keyword">int</span><span class="special">)(</span><span class="identifier">x</span><span class="special">)(</span><span class="keyword">default</span><span class="special">)(</span><span class="number">1</span><span class="special">)</span> <span class="special">(</span><span class="keyword">int</span><span class="special">)(</span><span class="identifier">y</span><span class="special">)(</span><span class="keyword">default</span><span class="special">)(</span><span class="number">2</span><span class="special">)</span>
-                <span class="special">(</span><span class="identifier">bind</span><span class="special">)(</span> <span class="special">(</span><span class="identifier">i</span><span class="special">)</span> <span class="special">)</span> <span class="special">)</span>
-        <span class="special">)</span> <span class="special">{</span>
+        <span class="keyword">int</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">x</span><span class="special">)(</span><span class="keyword">default</span> <span class="number">1</span><span class="special">)</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">y</span><span class="special">)(</span><span class="keyword">default</span> <span class="number">2</span><span class="special">)</span>
+                <span class="special">(</span><span class="identifier">bind</span> <span class="identifier">i</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span>
             <span class="keyword">return</span> <span class="identifier">x</span> <span class="special">+</span> <span class="identifier">i</span> <span class="special">*</span> <span class="identifier">y</span><span class="special">;</span>
-        <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_END</span><span class="special">(</span><span class="identifier">linear</span><span class="special">)</span>
+        <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">linear</span><span class="special">)</span>
 
         <span class="comment">// Assign local functions variables.
-</span>        <span class="identifier">boost</span><span class="special">::</span><span class="identifier">local</span><span class="special">::</span><span class="identifier">function_ref</span><span class="special">&lt;</span> <span class="keyword">int</span> <span class="special">(</span><span class="keyword">int</span><span class="special">,</span> <span class="keyword">int</span><span class="special">),</span> <span class="number">2</span> <span class="special">&gt;</span> <span class="identifier">l</span> <span class="special">=</span> <span class="identifier">linear</span><span class="special">;</span>
+</span>        <span class="identifier">boost</span><span class="special">::</span><span class="identifier">local</span><span class="special">::</span><span class="identifier">function</span><span class="special">&lt;</span> <span class="keyword">int</span> <span class="special">(</span><span class="keyword">int</span><span class="special">,</span> <span class="keyword">int</span><span class="special">),</span> <span class="number">2</span> <span class="special">&gt;</span> <span class="identifier">l</span> <span class="special">=</span> <span class="identifier">linear</span><span class="special">;</span>
         <span class="identifier">l</span><span class="special">(</span><span class="number">1</span><span class="special">,</span> <span class="number">2</span><span class="special">);</span> <span class="identifier">l</span><span class="special">(</span><span class="number">1</span><span class="special">);</span> <span class="identifier">l</span><span class="special">();</span> <span class="comment">// All calls because of default parameters.
 </span>        <span class="identifier">l2</span> <span class="special">=</span> <span class="identifier">linear</span><span class="special">;</span>
         <span class="identifier">l2</span><span class="special">(</span><span class="number">1</span><span class="special">,</span> <span class="number">2</span><span class="special">);</span> <span class="comment">// Only one call operation (without default parameters).
@@ -539,33 +521,33 @@
       Local Functions</a>
 </h3></div></div></div>
 <p>
-        Local functions can be renamed using the <code class="computeroutput"><a class="link" href="../BOOST_LOCAL_FUNCTION_END_RENAME.html" title="Macro BOOST_LOCAL_FUNCTION_END_RENAME">BOOST_LOCAL_FUNCTION_END_RENAME</a></code>
-        macro instead of <code class="computeroutput"><a class="link" href="../BOOST_LOCAL_FUNCTION_END.html" title="Macro BOOST_LOCAL_FUNCTION_END">BOOST_LOCAL_FUNCTION_END</a></code>:
+        Local functions can be renamed using the <code class="computeroutput">BOOST_LOCAL_FUNCTION_END_RENAME</code>
+        macro instead of <code class="computeroutput">BOOST_LOCAL_FUNCTION_END</code>:
       </p>
-<pre class="programlisting"><code class="computeroutput"><a class="link" href="../BOOST_LOCAL_FUNCTION_END_RENAME.html" title="Macro BOOST_LOCAL_FUNCTION_END_RENAME">BOOST_LOCAL_FUNCTION_END_RENAME</a></code><span class="special">(</span><span class="emphasis"><em>new-local-function-name</em></span><span class="special">)</span>
+<pre class="programlisting"><code class="computeroutput">BOOST_LOCAL_FUNCTION_END_RENAME</code><span class="special">(</span><span class="emphasis"><em>new-local-function-name</em></span><span class="special">)</span>
 </pre>
 <p>
         Where the <span class="emphasis"><em>new-local-function-name</em></span> no longer has to match
         the local function name as originally specified in the parenthesized signature
-        passed to <code class="computeroutput"><a class="link" href="../BOOST_LOCAL_FUNCTION.html" title="Macro BOOST_LOCAL_FUNCTION">BOOST_LOCAL_FUNCTION</a></code>.
-        For example: <sup>[<a name="id883170" href="#ftn.id883170" class="footnote">17</a>]</sup>
+        passed to <code class="computeroutput">BOOST_LOCAL_FUNCTION</code>.
+        For example: <sup>[<a name="id883549" href="#ftn.id883549" class="footnote">17</a>]</sup>
       </p>
 <pre class="programlisting"><span class="special">{</span>
-    <code class="computeroutput"><a class="link" href="../BOOST_LOCAL_FUNCTION.html" title="Macro BOOST_LOCAL_FUNCTION">BOOST_LOCAL_FUNCTION</a></code><span class="special">(</span>
+    <code class="computeroutput">BOOST_LOCAL_FUNCTION</code><span class="special">(</span>
     <span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">(</span><span class="identifier">l</span><span class="special">)(</span> <span class="special">(</span><span class="keyword">int</span><span class="special">)(</span><span class="identifier">x</span><span class="special">)</span> <span class="special">)</span>
     <span class="special">)</span> <span class="special">{</span>
         <span class="special">...</span> <span class="comment">// Body uses original name `l`.
-</span>    <span class="special">}</span> <code class="computeroutput"><a class="link" href="../BOOST_LOCAL_FUNCTION_END_RENAME.html" title="Macro BOOST_LOCAL_FUNCTION_END_RENAME">BOOST_LOCAL_FUNCTION_END_RENAME</a></code><span class="special">(</span><span class="identifier">m</span><span class="special">)</span> <span class="comment">// Renamed to `m`.
+</span>    <span class="special">}</span> <code class="computeroutput">BOOST_LOCAL_FUNCTION_END_RENAME</code><span class="special">(</span><span class="identifier">m</span><span class="special">)</span> <span class="comment">// Renamed to `m`.
 </span>    
     <span class="special">...</span> <span class="comment">// Enclosing scope uses new name `m`.
 </span><span class="special">}</span>
 </pre>
 <p>
-        Note that the local function is renamed only after the call to <code class="computeroutput"><a class="link" href="../BOOST_LOCAL_FUNCTION_END_RENAME.html" title="Macro BOOST_LOCAL_FUNCTION_END_RENAME">BOOST_LOCAL_FUNCTION_END_RENAME</a></code>.
+        Note that the local function is renamed only after the call to <code class="computeroutput">BOOST_LOCAL_FUNCTION_END_RENAME</code>.
         Therefore, within the local function body the original local function name
-        as specified by <code class="computeroutput"><a class="link" href="../BOOST_LOCAL_FUNCTION.html" title="Macro BOOST_LOCAL_FUNCTION">BOOST_LOCAL_FUNCTION</a></code>
+        as specified by <code class="computeroutput">BOOST_LOCAL_FUNCTION</code>
         must be used (e.g., to recursively call the local function). However, within
-        the enclosing scope only the new local function name as specified by <code class="computeroutput"><a class="link" href="../BOOST_LOCAL_FUNCTION_END_RENAME.html" title="Macro BOOST_LOCAL_FUNCTION_END_RENAME">BOOST_LOCAL_FUNCTION_END_RENAME</a></code>
+        the enclosing scope only the new local function name as specified by <code class="computeroutput">BOOST_LOCAL_FUNCTION_END_RENAME</code>
         is available.
       </p>
 <p>
@@ -605,7 +587,7 @@
 <p>
       </p>
 <a name="boost_local.Advanced.renaming_local_functions.motivation"></a><h6>
-<a name="id884117"></a>
+<a name="id884469"></a>
         <a class="link" href="Advanced.html#boost_local.Advanced.renaming_local_functions.motivation">Motivation</a>
       </h6>
 <p>
@@ -672,70 +654,70 @@
         to usual features of C++ functions.
       </p>
 <a name="boost_local.Advanced.limitations__overloading__nesting__operators__etc.overloading"></a><h6>
-<a name="id885108"></a>
+<a name="id885459"></a>
         <a class="link" href="Advanced.html#boost_local.Advanced.limitations__overloading__nesting__operators__etc.overloading">Overloading</a>
       </h6>
 <p>
         It is not possible to overload local functions. Declaring multiple local
         functions with the same name within the same enclosing scope generates a
         compile-time error (even if the different declarations specify different
-        parameters). <sup>[<a name="id885128" href="#ftn.id885128" class="footnote">18</a>]</sup>
+        parameters). <sup>[<a name="id885479" href="#ftn.id885479" class="footnote">18</a>]</sup>
       </p>
 <p>
         For example, the following code will <span class="bold"><strong>not</strong></span>
         compile:
       </p>
 <pre class="programlisting"><span class="keyword">void</span> <span class="identifier">f</span><span class="special">()</span> <span class="special">{</span>
-    <code class="computeroutput"><a class="link" href="../BOOST_LOCAL_FUNCTION.html" title="Macro BOOST_LOCAL_FUNCTION">BOOST_LOCAL_FUNCTION</a></code><span class="special">(</span>
+    <code class="computeroutput">BOOST_LOCAL_FUNCTION</code><span class="special">(</span>
     <span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">(</span><span class="identifier">l</span><span class="special">)(</span> <span class="special">(</span><span class="keyword">const</span> <span class="keyword">int</span><span class="special">&amp;)(</span><span class="identifier">i</span><span class="special">)</span> <span class="special">)</span>
     <span class="special">)</span> <span class="special">{</span>
         <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">i</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
-    <span class="special">}</span> <code class="computeroutput"><a class="link" href="../BOOST_LOCAL_FUNCTION_END.html" title="Macro BOOST_LOCAL_FUNCTION_END">BOOST_LOCAL_FUNCTION_END</a></code><span class="special">(</span><span class="identifier">l</span><span class="special">)</span>
+    <span class="special">}</span> <code class="computeroutput">BOOST_LOCAL_FUNCTION_END</code><span class="special">(</span><span class="identifier">l</span><span class="special">)</span>
 
-    <code class="computeroutput"><a class="link" href="../BOOST_LOCAL_FUNCTION.html" title="Macro BOOST_LOCAL_FUNCTION">BOOST_LOCAL_FUNCTION</a></code><span class="special">(</span>
+    <code class="computeroutput">BOOST_LOCAL_FUNCTION</code><span class="special">(</span>
     <span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">(</span><span class="identifier">l</span><span class="special">)(</span> <span class="special">(</span><span class="keyword">const</span> <span class="keyword">double</span><span class="special">&amp;)(</span><span class="identifier">d</span><span class="special">)</span> <span class="special">)</span>
     <span class="special">)</span> <span class="special">{</span>
         <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">d</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
-    <span class="special">}</span> <code class="computeroutput"><a class="link" href="../BOOST_LOCAL_FUNCTION_END.html" title="Macro BOOST_LOCAL_FUNCTION_END">BOOST_LOCAL_FUNCTION_END</a></code><span class="special">(</span><span class="identifier">l</span><span class="special">)</span> <span class="comment">// Error: Cannot overload.
+    <span class="special">}</span> <code class="computeroutput">BOOST_LOCAL_FUNCTION_END</code><span class="special">(</span><span class="identifier">l</span><span class="special">)</span> <span class="comment">// Error: Cannot overload.
 </span>
     <span class="special">...</span>
 <span class="special">}</span>
 </pre>
 <a name="boost_local.Advanced.limitations__overloading__nesting__operators__etc.nesting"></a><h6>
-<a name="id885592"></a>
+<a name="id885921"></a>
         <a class="link" href="Advanced.html#boost_local.Advanced.limitations__overloading__nesting__operators__etc.nesting">Nesting</a>
       </h6>
 <p>
         It is not possible to nest local functions, local blocks, or local exits
-        within each other. Nesting will generate a compile-time error. <sup>[<a name="id885614" href="#ftn.id885614" class="footnote">19</a>]</sup>
+        within each other. Nesting will generate a compile-time error. <sup>[<a name="id885943" href="#ftn.id885943" class="footnote">19</a>]</sup>
       </p>
 <p>
         For example, the following code will <span class="bold"><strong>not</strong></span>
         compile:
       </p>
 <pre class="programlisting"><span class="keyword">void</span> <span class="identifier">f</span><span class="special">()</span> <span class="special">{</span>
-    <code class="computeroutput"><a class="link" href="../BOOST_LOCAL_FUNCTION.html" title="Macro BOOST_LOCAL_FUNCTION">BOOST_LOCAL_FUNCTION</a></code><span class="special">(</span>
+    <code class="computeroutput">BOOST_LOCAL_FUNCTION</code><span class="special">(</span>
     <span class="special">(</span><span class="keyword">int</span><span class="special">)</span> <span class="special">(</span><span class="identifier">l</span><span class="special">)(</span> <span class="special">(</span><span class="keyword">int</span><span class="special">)(</span><span class="identifier">i</span><span class="special">)</span> <span class="special">)</span>
     <span class="special">)</span> <span class="special">{</span>
-        <code class="computeroutput"><a class="link" href="../BOOST_LOCAL_FUNCTION.html" title="Macro BOOST_LOCAL_FUNCTION">BOOST_LOCAL_FUNCTION</a></code><span class="special">(</span> <span class="comment">// Error: Cannot nest.
+        <code class="computeroutput">BOOST_LOCAL_FUNCTION</code><span class="special">(</span> <span class="comment">// Error: Cannot nest.
 </span>        <span class="special">(</span><span class="keyword">int</span><span class="special">)</span> <span class="special">(</span><span class="identifier">m</span><span class="special">)(</span> <span class="special">(</span><span class="keyword">int</span><span class="special">)(</span><span class="identifier">j</span><span class="special">)</span> <span class="special">)</span>
         <span class="special">)</span> <span class="special">{</span>
             <span class="keyword">return</span> <span class="identifier">j</span> <span class="special">*</span> <span class="number">10</span><span class="special">;</span>
-        <span class="special">}</span> <code class="computeroutput"><a class="link" href="../BOOST_LOCAL_FUNCTION_END.html" title="Macro BOOST_LOCAL_FUNCTION_END">BOOST_LOCAL_FUNCTION_END</a></code><span class="special">(</span><span class="identifier">m</span><span class="special">)</span>
+        <span class="special">}</span> <code class="computeroutput">BOOST_LOCAL_FUNCTION_END</code><span class="special">(</span><span class="identifier">m</span><span class="special">)</span>
 
         <span class="keyword">return</span> <span class="identifier">m</span><span class="special">(</span><span class="identifier">i</span><span class="special">)</span> <span class="special">*</span> <span class="number">10</span><span class="special">;</span>
-    <span class="special">}</span> <code class="computeroutput"><a class="link" href="../BOOST_LOCAL_FUNCTION_END.html" title="Macro BOOST_LOCAL_FUNCTION_END">BOOST_LOCAL_FUNCTION_END</a></code><span class="special">(</span><span class="identifier">l</span><span class="special">)</span>
+    <span class="special">}</span> <code class="computeroutput">BOOST_LOCAL_FUNCTION_END</code><span class="special">(</span><span class="identifier">l</span><span class="special">)</span>
 
     <span class="special">...</span>
 <span class="special">}</span>
 </pre>
 <a name="boost_local.Advanced.limitations__overloading__nesting__operators__etc.operators"></a><h6>
-<a name="id886036"></a>
+<a name="id886343"></a>
         <a class="link" href="Advanced.html#boost_local.Advanced.limitations__overloading__nesting__operators__etc.operators">Operators</a>
       </h6>
 <p>
         Local functions cannot be operators. Naming a local function <code class="computeroutput"><span class="keyword">operator</span><span class="special">...</span></code>
-        will generate a compile-time error. <sup>[<a name="id886073" href="#ftn.id886073" class="footnote">20</a>]</sup>
+        will generate a compile-time error. <sup>[<a name="id886380" href="#ftn.id886380" class="footnote">20</a>]</sup>
       </p>
 <p>
         For example, the following code will <span class="bold"><strong>not</strong></span>
@@ -747,17 +729,17 @@
         <span class="keyword">double</span> <span class="identifier">y</span><span class="special">;</span>
     <span class="special">};</span>
 
-    <code class="computeroutput"><a class="link" href="../BOOST_LOCAL_FUNCTION.html" title="Macro BOOST_LOCAL_FUNCTION">BOOST_LOCAL_FUNCTION</a></code><span class="special">(</span> <span class="comment">// Error: Cannot be `operator==`.
+    <code class="computeroutput">BOOST_LOCAL_FUNCTION</code><span class="special">(</span> <span class="comment">// Error: Cannot be `operator==`.
 </span>    <span class="special">(</span><span class="keyword">bool</span><span class="special">)</span> <span class="special">(</span><span class="keyword">operator</span><span class="special">==)(</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">point</span><span class="special">&amp;)(</span><span class="identifier">p</span><span class="special">)</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">point</span><span class="special">&amp;)(</span><span class="identifier">q</span><span class="special">)</span> <span class="special">)</span>
     <span class="special">)</span> <span class="special">{</span>
         <span class="keyword">return</span> <span class="identifier">p</span><span class="special">.</span><span class="identifier">x</span> <span class="special">==</span> <span class="identifier">q</span><span class="special">.</span><span class="identifier">x</span> <span class="special">&amp;&amp;</span> <span class="identifier">p</span><span class="special">.</span><span class="identifier">y</span> <span class="special">==</span> <span class="identifier">q</span><span class="special">.</span><span class="identifier">y</span><span class="special">;</span>
-    <span class="special">)</span> <code class="computeroutput"><a class="link" href="../BOOST_LOCAL_FUNCTION_END.html" title="Macro BOOST_LOCAL_FUNCTION_END">BOOST_LOCAL_FUNCTION_END</a></code><span class="special">(</span><span class="keyword">operator</span><span class="special">==)</span>
+    <span class="special">)</span> <code class="computeroutput">BOOST_LOCAL_FUNCTION_END</code><span class="special">(</span><span class="keyword">operator</span><span class="special">==)</span>
 
     <span class="special">...</span>
 <span class="special">}</span>
 </pre>
 <a name="boost_local.Advanced.limitations__overloading__nesting__operators__etc.etc"></a><h6>
-<a name="id886479"></a>
+<a name="id886775"></a>
         <a class="link" href="Advanced.html#boost_local.Advanced.limitations__overloading__nesting__operators__etc.etc">Etc</a>
       </h6>
 <p>
@@ -1062,39 +1044,39 @@
 </div>
 <div class="footnotes">
 <br><hr width="100" align="left">
-<div class="footnote"><p><sup>[<a id="ftn.id875947" href="#id875947" class="para">15</a>] </sup>
+<div class="footnote"><p><sup>[<a id="ftn.id876719" href="#id876719" class="para">15</a>] </sup>
           We recognize that the use of the <span class="emphasis"><em>identity macros</em></span> adds
           extra parenthesis to the already significant number of parenthesis required
           by the parenthesized syntax. However, parenthesized signatures usually
           do not contain unwrapped commas "<code class="computeroutput"><span class="special">,</span></code>"
           (unless template metaprogramming is being used).
         </p></div>
-<div class="footnote"><p><sup>[<a id="ftn.id880468" href="#id880468" class="para">16</a>] </sup>
-            The suffix <code class="computeroutput"><span class="identifier">ref</span></code> of <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">local</span><span class="special">::</span><a class="link" href="../boost/local/function_ref.html" title="Struct template function_ref">function_ref</a></code> is meant
+<div class="footnote"><p><sup>[<a id="ftn.id881035" href="#id881035" class="para">16</a>] </sup>
+            The suffix <code class="computeroutput"><span class="identifier">ref</span></code> of <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">local</span><span class="special">::</span>function_ref</code> is meant
             to help programmers remember that they are dealing with references to
             (and not copies of) local functions.
           </p></div>
-<div class="footnote"><p><sup>[<a id="ftn.id883170" href="#id883170" class="para">17</a>] </sup>
+<div class="footnote"><p><sup>[<a id="ftn.id883549" href="#id883549" class="para">17</a>] </sup>
           <span class="bold"><strong>Rationale.</strong></span> Local functions are often named
           <code class="computeroutput"><span class="identifier">l</span></code> in the casual examples
           of this documentation because the name of the author starts with the letter
           "<code class="computeroutput"><span class="identifier">l</span></code>". <span class="inlinemediaobject"><img src="../../images/smiley.png" alt="smiley"></span>
         </p></div>
-<div class="footnote"><p><sup>[<a id="ftn.id885128" href="#id885128" class="para">18</a>] </sup>
+<div class="footnote"><p><sup>[<a id="ftn.id885479" href="#id885479" class="para">18</a>] </sup>
           <span class="bold"><strong>Rationale.</strong></span> This is because a local function
           is a functor object declared as a local variable within the enclosing scope.
           Therefore, declaring two local functions with the same name within the
           same enclosing scope declares two local variables with the same name within
           the same scope and that is not allowed in C++.
         </p></div>
-<div class="footnote"><p><sup>[<a id="ftn.id885614" href="#id885614" class="para">19</a>] </sup>
+<div class="footnote"><p><sup>[<a id="ftn.id885943" href="#id885943" class="para">19</a>] </sup>
           <span class="bold"><strong>Rationale.</strong></span> This is because within a nested
           code block only global or static variables can be accessed while <a href="http://www.boost.org/doc/libs/release/libs/scope_exit/doc/html/index.html" target="_top">Boost.ScopeExit</a>
           variable <a href="http://lists.boost.org/Archives/boost/2006/11/113658.php" target="_top">binding
           mechanism</a> requires to access local variables that hold the bound
           variables.
         </p></div>
-<div class="footnote"><p><sup>[<a id="ftn.id886073" href="#id886073" class="para">20</a>] </sup>
+<div class="footnote"><p><sup>[<a id="ftn.id886380" href="#id886380" class="para">20</a>] </sup>
           <span class="bold"><strong>Rationale.</strong></span> This is the because a local
           function name must be a valid local variable name (the local variable to
           hold the local functor object) and operators cannot be used as local variable

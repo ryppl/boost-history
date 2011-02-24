@@ -9,14 +9,13 @@
 // Adapted from C++0x lambda papaer N2529 (added default parameters).
 
 //[ doit_cpp
-#include <boost/local/function_ref.hpp>
 #include <boost/local/function.hpp>
 #include <boost/function.hpp>
 #include <iostream>
 
-// Using `function_ref` allows to use the same functor for all calls
-// (regardless of which set of default parameters is specified).
-void doit(boost::local::function_ref< int (int, int), 2 > l) {
+// Using `function` allows to use the same functor for all calls (regardless of
+// which set of default parameters is specified).
+void doit(boost::local::function< int (int, int), 2 > l) {
     std::cout << l(1, 2) << std::endl;
     std::cout << l(1) << std::endl;
     std::cout << l() << std::endl;
@@ -35,15 +34,13 @@ int main() {
     {
         int i = 2;
     
-        BOOST_LOCAL_FUNCTION(
-        (int) (linear)( (int)(x)(default)(1) (int)(y)(default)(2)
-                (bind)( (i) ) )
-        ) {
+        int BOOST_LOCAL_FUNCTION_PARAMS( (int x)(default 1) (int y)(default 2)
+                (bind i) ) {
             return x + i * y;
-        } BOOST_LOCAL_FUNCTION_END(linear)
+        } BOOST_LOCAL_FUNCTION_NAME(linear)
 
         // Assign local functions variables.
-        boost::local::function_ref< int (int, int), 2 > l = linear;
+        boost::local::function< int (int, int), 2 > l = linear;
         l(1, 2); l(1); l(); // All calls because of default parameters.
         l2 = linear;
         l2(1, 2); // Only one call operation (without default parameters).

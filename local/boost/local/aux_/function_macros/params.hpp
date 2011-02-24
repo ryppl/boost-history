@@ -47,10 +47,10 @@ extern boost::scope_exit::aux::undeclared
 // typename_keyword: `typename` in type depended context (i.e., templates),
 //  `EMPTY()` otherwise.
 #define BOOST_LOCAL_AUX_FUNCTION_PARAMS( \
-            parenthesized_params, typename_keyword) \
+        parenthesized_params, id, typename_keyword) \
     BOOST_LOCAL_AUX_FUNCTION_PARAMS_( \
             BOOST_LOCAL_AUX_PP_SIGN_PARSE_PARAMS(parenthesized_params), \
-            __LINE__, typename_keyword)
+            id, typename_keyword)
 
 #endif // #include guard
 

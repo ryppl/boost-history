@@ -9,6 +9,8 @@
 
 * Rename function_ref to function (because it now has a default constructor so it's not a reference anymore).
 
+* Document that PARAMS cannot appear on same line because they use __LINE__ to generate unique IDs (there's no way around this because this macro doesn't know the function name).
+
 
 * Double check all local function syntax elements (from Grammar) -- auto, register, etc.
 

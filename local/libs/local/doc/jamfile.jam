@@ -11,9 +11,9 @@ using boostbook ;
 doxygen reference
     :
         ../../../boost/local/function.hpp
-        ../../../boost/local/block.hpp
-        ../../../boost/local/exit.hpp
-        ../../../boost/local/function_ref.hpp
+        #../../../boost/local/block.hpp
+        #../../../boost/local/exit.hpp
+        ../../../boost/local/function.hpp
         ../../../boost/local/config.hpp
         ../../../boost/utility/identity.hpp
     :

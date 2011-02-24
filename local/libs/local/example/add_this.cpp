@@ -19,13 +19,11 @@ public:
     adder(): sum_(0.0) {}
 
     double sum(const std::vector<double>& nums, const int& factor = 10) {
-
-        BOOST_LOCAL_FUNCTION(
-        (void) (add)( (double)(num) (const bind)((factor)) (bind)((this)) )
-        ) {
+        void BOOST_LOCAL_FUNCTION_PARAMS( (double num) (const bind factor)
+                (bind this) ) {
             this_->sum_ += factor * num; // Use `this_` instead of `this`.
             std::clog << "Summed: " << this_->sum_ << std::endl;
-        } BOOST_LOCAL_FUNCTION_END(add)
+        } BOOST_LOCAL_FUNCTION_NAME(add)
 
         std::for_each(nums.begin(), nums.end(), add);
         return sum_;

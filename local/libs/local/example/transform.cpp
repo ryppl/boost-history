@@ -22,26 +22,19 @@ int main () {
     w.resize(v.size());
 
     // w = ++v + 5 = 16 26 36 46 56
-    BOOST_LOCAL_FUNCTION(
-    (int) (inc)( (int)(i) (const bind)( (&offset) ) )
-    ) {
+    int BOOST_LOCAL_FUNCTION_PARAMS( (int i) (const bind& offset) ) {
         // Compiler error if const `offset` modified here by mistake.
         return ++i + offset;
-    } BOOST_LOCAL_FUNCTION_END(inc)
+    } BOOST_LOCAL_FUNCTION_NAME(inc)
     std::transform(v.begin(), v.end(), w.begin(), inc);
 
     offset = 0;
 
     // v = ++(v + w) + 0 = 27 47 67 87 107
-    BOOST_LOCAL_FUNCTION(
-    (int) (inc_sum)(
-            (int)(i)
-            (int)(j)
-            (bind)( (inc) ) // Bind another local function.
-        )
-    ) {
+    int BOOST_LOCAL_FUNCTION_PARAMS( (int i) (int j)
+            (bind inc) ) { // Bind another local function.
         return inc(i + j); // Call the bound local function.
-    } BOOST_LOCAL_FUNCTION_END(inc_sum)
+    } BOOST_LOCAL_FUNCTION_NAME(inc_sum)
     std::transform(v.begin(), v.end(), w.begin(), v.begin(), inc_sum);
 
     for (std::vector<int>::iterator i = v.begin(); i != v.end(); ++i)

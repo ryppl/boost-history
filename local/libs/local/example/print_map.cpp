@@ -22,24 +22,20 @@ std::string cat(const std::string& a, const std::string& b) { return a + b; }
 typedef int const& sign_t;
 
 int main() {
-    BOOST_LOCAL_FUNCTION(
-    (void) (print)(
+    void BOOST_LOCAL_FUNCTION_NAME(
             // Identity macors handle commas.
-            (BOOST_IDENTITY_TYPE((const std::map<std::string, size_t>&)))(m)
-            (const size_t&)(factor)(default)
-                    (BOOST_IDENTITY_VALUE((key_size<std::string, size_t>::value)))
-            (const std::string&)(separator)(default)(cat(":", " "))
+            (BOOST_IDENTITY_TYPE((const std::map<std::string, size_t>))& m)
+            (const size_t& factor)(default // Or just use `(default (...))`.
+                    BOOST_IDENITY_VALUE((key_size<std::string, size_t>::value)))
+            (const std::string& separator)(default cat(":", " "))
             // Also, identity macors handle leading symbols.
-            (BOOST_IDENTITY_TYPE((::sign_t)))(sign)(default)
-                    (BOOST_IDENTITY_VALUE((-1)))
-        )
-    ) {
+            (BOOST_IDENTITY_TYPE((::sign_t)) sign)(default -1) ) {
         for (std::map<std::string, size_t>::const_iterator i = m.begin();
                 i != m.end(); ++i) {
             std::cout << i->first << separator <<
                     sign * int(i->second) * int(factor) << std::endl;
         }
-    } BOOST_LOCAL_FUNCTION_END(print)
+    } BOOST_LOCAL_FUNCTION_NAME(print)
 
     std::map<std::string, size_t> sizes;
     sizes["a"] = 1; sizes["ab"] = 2; sizes["abc"] = 3;

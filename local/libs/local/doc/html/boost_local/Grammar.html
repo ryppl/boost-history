@@ -70,9 +70,9 @@
       Macros using the parenthesized syntax (see the <a href="../reference.html" target="_top">Reference</a>
       section):
     </p>
-<pre class="programlisting"><code class="computeroutput"><a class="link" href="../BOOST_LOCAL_FUNCTION.html" title="Macro BOOST_LOCAL_FUNCTION">BOOST_LOCAL_FUNCTION</a></code><span class="special">(</span> <span class="emphasis"><em>parenthesized-signature</em></span> <span class="special">)</span>
-<code class="computeroutput"><a class="link" href="../BOOST_LOCAL_BLOCK.html" title="Macro BOOST_LOCAL_BLOCK">BOOST_LOCAL_BLOCK</a></code><span class="special">(</span> <span class="emphasis"><em>parenthesized-binding</em></span> <span class="special">)</span>
-<code class="computeroutput"><a class="link" href="../BOOST_LOCAL_EXIT.html" title="Macro BOOST_LOCAL_EXIT">BOOST_LOCAL_EXIT</a></code><span class="special">(</span> <span class="emphasis"><em>parenthesized-binding</em></span> <span class="special">)</span>
+<pre class="programlisting"><code class="computeroutput">BOOST_LOCAL_FUNCTION</code><span class="special">(</span> <span class="emphasis"><em>parenthesized-signature</em></span> <span class="special">)</span>
+<code class="computeroutput">BOOST_LOCAL_BLOCK</code><span class="special">(</span> <span class="emphasis"><em>parenthesized-binding</em></span> <span class="special">)</span>
+<code class="computeroutput">BOOST_LOCAL_EXIT</code><span class="special">(</span> <span class="emphasis"><em>parenthesized-binding</em></span> <span class="special">)</span>
 </pre>
 <p>
       Additional "keywords":
@@ -132,7 +132,7 @@
         <span class="special">(</span><span class="keyword">default</span><span class="special">)(</span><span class="bold"><strong>parameter-default</strong></span><span class="special">)</span>       <span class="comment">// Default value for this optional parameter.
 </span></pre>
 <p>
-      Binding variables in scope: <sup>[<a name="id892436" href="#ftn.id892436" class="footnote">21</a>]</sup> <sup>[<a name="id892741" href="#ftn.id892741" class="footnote">22</a>]</sup>
+      Binding variables in scope: <sup>[<a name="id890813" href="#ftn.id890813" class="footnote">21</a>]</sup> <sup>[<a name="id891118" href="#ftn.id891118" class="footnote">22</a>]</sup>
     </p>
 <pre class="programlisting"><span class="emphasis"><em>bindings:</em></span>
           <span class="emphasis"><em>const-bindings</em></span>                   <span class="comment">// Only constant binding.
@@ -151,7 +151,7 @@
 </span></pre>
 <div class="footnotes">
 <br><hr width="100" align="left">
-<div class="footnote"><p><sup>[<a id="ftn.id892436" href="#id892436" class="para">21</a>] </sup>
+<div class="footnote"><p><sup>[<a id="ftn.id890813" href="#id890813" class="para">21</a>] </sup>
         <span class="bold"><strong>Rationale.</strong></span> The alternative syntax <code class="computeroutput"><span class="special">(</span><span class="identifier">bind</span><span class="special">)((</span><span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">x</span><span class="special">)...)</span></code>
         would have been preferred because <code class="computeroutput"><span class="keyword">const</span></code>
         appears before the reference as usual in C++ and because a single <code class="computeroutput"><span class="identifier">bind</span></code> sequence is used for both plain and
@@ -172,7 +172,7 @@
         symbol <code class="computeroutput"><span class="special">&amp;</span></code> never appears in
         the back).
       </p></div>
-<div class="footnote"><p><sup>[<a id="ftn.id892741" href="#id892741" class="para">22</a>] </sup>
+<div class="footnote"><p><sup>[<a id="ftn.id891118" href="#id891118" class="para">22</a>] </sup>
         <span class="bold"><strong>Rationale.</strong></span> Binding is used within the function
         parameter list because this syntax seemed natural given that the bound variables
         are used by the function body as if they were function parameters (only their

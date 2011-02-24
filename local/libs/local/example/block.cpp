@@ -15,7 +15,7 @@ struct c {
 
     void f(int& x) { // Non-const member function so `this` is not const.
         // Non-const `this` but const `x`.
-        BOOST_LOCAL_BLOCK( (const bind)((&x)) (bind)((this)) ) {
+        BOOST_LOCAL_BLOCK( (const bind& x) (bind this) ) {
             this_->x_ = x; // Non-const `this` cant be modified.
             assert(x == this_->x_); // Compiler error if `=` instead of `==`.
             

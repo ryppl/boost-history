@@ -30,14 +30,10 @@ int main() {
     double min_salary = 100000.00;
     double u_limit = 1.1 * min_salary;
 
-    BOOST_LOCAL_FUNCTION(
-    (bool) (between)(
-            (const employee&)(e)
-            (const bind)( (&min_salary) (&u_limit) )
-        )
-    ) {
+    bool BOOST_LOCAL_FUNCTION_PARAMS( (const employee& e)
+            (const bind& min_salary) (const bind& u_limit) ) {
         return e.salary() >= min_salary && e.salary() < u_limit;
-    } BOOST_LOCAL_FUNCTION_END(between)
+    } BOOST_LOCAL_FUNCTION_NAME(between)
     
     // Pass local function to an STL algorithm as a template paramter (this
     // cannot be done with plain member funcitons of local classes).
@@ -45,7 +41,6 @@ int main() {
             employees.begin(), employees.end(), between);
 
     if (i != employees.end()) { std::cout << i->salary() << std::endl; }
-    
     return 0;
 }
 
