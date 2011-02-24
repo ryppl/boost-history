@@ -11,8 +11,8 @@
 #define BOOST_LOCAL_AUX_FUNCTION_CODE_DEDUCE_RESULT_TYPE( \
         id, typename_keyword) \
     /* declare function expr with preceeding result type and no param */ \
-    /* result type here */ BOOST_LOCAL_AUX_SYMBOL_DEDUCE_RESULT_TYPE(id)(); \
-    typedef ::boost::function_traits<BOOST_TYPEOF( \
+    /* result type here */ (BOOST_LOCAL_AUX_SYMBOL_DEDUCE_RESULT_TYPE(id))();\
+    typedef typename_keyword ::boost::function_traits<BOOST_TYPEOF( \
             BOOST_LOCAL_AUX_SYMBOL_DEDUCE_RESULT_TYPE(id))>::result_type \
             BOOST_LOCAL_AUX_SYMBOL_RESULT_TYPE(id);
 

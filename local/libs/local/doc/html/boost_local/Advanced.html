@@ -194,7 +194,7 @@
 </span>    <span class="special">)</span>
 </pre>
 <p>
-        Consider the following complete example: <sup>[<a name="id876719" href="#ftn.id876719" class="footnote">15</a>]</sup>
+        Consider the following complete example: <sup>[<a name="id876783" href="#ftn.id876783" class="footnote">15</a>]</sup>
       </p>
 <p>
         
@@ -318,26 +318,24 @@
     <span class="keyword">double</span> <span class="identifier">sum</span> <span class="special">=</span> <span class="number">0.0</span><span class="special">;</span>
     <span class="keyword">int</span> <span class="identifier">factor</span> <span class="special">=</span> <span class="number">10</span><span class="special">;</span>
 
-    <span class="identifier">BOOST_LOCAL_FUNCTION</span><span class="special">(</span>
-    <span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">(</span><span class="identifier">add</span><span class="special">)(</span> <span class="special">(</span><span class="keyword">double</span><span class="special">)(</span><span class="identifier">num</span><span class="special">)</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">)((</span><span class="identifier">factor</span><span class="special">))</span> <span class="special">(</span><span class="identifier">bind</span><span class="special">)((&amp;</span><span class="identifier">sum</span><span class="special">))</span> <span class="special">)</span>
-    <span class="special">)</span> <span class="keyword">throw</span> <span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">runtime_error</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">logic_error</span><span class="special">)</span> <span class="special">{</span> <span class="comment">// Throw two exceptions.
+    <span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span> <span class="special">(</span><span class="keyword">double</span> <span class="identifier">num</span><span class="special">)</span>
+            <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">factor</span><span class="special">)</span> <span class="special">(</span><span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">sum</span><span class="special">)</span> <span class="special">)</span>
+            <span class="keyword">throw</span> <span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">runtime_error</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">logic_error</span><span class="special">)</span> <span class="special">{</span> <span class="comment">// Throw two except.
 </span>        <span class="identifier">sum</span> <span class="special">+=</span> <span class="identifier">factor</span> <span class="special">*</span> <span class="identifier">num</span><span class="special">;</span>
-    <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_END</span><span class="special">(</span><span class="identifier">add</span><span class="special">)</span>
+    <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">add</span><span class="special">)</span>
     <span class="identifier">add</span><span class="special">(</span><span class="number">100.0</span><span class="special">);</span>
 
     <span class="identifier">size_t</span> <span class="identifier">size</span> <span class="special">=</span> <span class="number">2</span><span class="special">;</span>
     <span class="keyword">double</span><span class="special">*</span> <span class="identifier">nums</span> <span class="special">=</span> <span class="keyword">new</span> <span class="keyword">double</span><span class="special">[</span><span class="identifier">size</span><span class="special">];</span>
-    <span class="comment">// Throw nothing.
-</span>    <span class="identifier">BOOST_LOCAL_EXIT</span><span class="special">(</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">)((&amp;</span><span class="identifier">size</span><span class="special">))</span> <span class="special">(</span><span class="identifier">bind</span><span class="special">)((</span><span class="identifier">nums</span><span class="special">))</span> <span class="special">)</span> <span class="keyword">throw</span><span class="special">()</span> <span class="special">{</span>
-        <span class="keyword">if</span> <span class="special">(</span><span class="identifier">size</span> <span class="special">&amp;&amp;</span> <span class="identifier">nums</span><span class="special">)</span> <span class="keyword">delete</span><span class="special">[]</span> <span class="identifier">nums</span><span class="special">;</span>
+    <span class="identifier">BOOST_LOCAL_EXIT</span><span class="special">(</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">size</span><span class="special">)</span> <span class="special">(</span><span class="identifier">bind</span> <span class="identifier">nums</span><span class="special">)</span> <span class="special">)</span> <span class="keyword">throw</span><span class="special">()</span> <span class="special">{</span> <span class="comment">// Throw none.
+</span>        <span class="keyword">if</span> <span class="special">(</span><span class="identifier">size</span> <span class="special">&amp;&amp;</span> <span class="identifier">nums</span><span class="special">)</span> <span class="keyword">delete</span><span class="special">[]</span> <span class="identifier">nums</span><span class="special">;</span>
     <span class="special">}</span> <span class="identifier">BOOST_LOCAL_EXIT_END</span>
 
     <span class="identifier">nums</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="number">90.5</span><span class="special">;</span> <span class="identifier">nums</span><span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">=</span> <span class="number">7.0</span><span class="special">;</span>
     <span class="identifier">std</span><span class="special">::</span><span class="identifier">for_each</span><span class="special">(</span><span class="identifier">nums</span><span class="special">,</span> <span class="identifier">nums</span> <span class="special">+</span> <span class="identifier">size</span><span class="special">,</span> <span class="identifier">add</span><span class="special">);</span>
 
-    <span class="comment">// Throw one exception.
-</span>    <span class="identifier">BOOST_LOCAL_BLOCK</span><span class="special">(</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">)((&amp;</span><span class="identifier">sum</span><span class="special">))</span> <span class="special">)</span> <span class="keyword">throw</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">exception</span><span class="special">)</span> <span class="special">{</span>
-        <span class="identifier">assert</span><span class="special">(</span><span class="identifier">sum</span> <span class="special">==</span> <span class="number">1975.0</span><span class="special">);</span>
+    <span class="identifier">BOOST_LOCAL_BLOCK</span><span class="special">(</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">sum</span><span class="special">)</span> <span class="special">)</span> <span class="keyword">throw</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">exception</span><span class="special">)</span> <span class="special">{</span> <span class="comment">// Thow one.
+</span>        <span class="identifier">assert</span><span class="special">(</span><span class="identifier">sum</span> <span class="special">==</span> <span class="number">1975.0</span><span class="special">);</span>
     <span class="special">}</span> <span class="identifier">BOOST_LOCAL_BLOCK_END</span>
 
     <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
@@ -411,7 +409,7 @@
           Local functions are never copied by value. You can only obtain a reference
           to a local function therefore you need to make sure that the <span class="bold"><strong>local function survives the scope of its reference</strong></span>
           otherwise the reference will be invalid and its use will generate a run-time
-          error (as usual with C++ references). <sup>[<a name="id881035" href="#ftn.id881035" class="footnote">16</a>]</sup>
+          error (as usual with C++ references). <sup>[<a name="id881059" href="#ftn.id881059" class="footnote">16</a>]</sup>
         </p></td></tr>
 </table></div>
 <p>
@@ -530,7 +528,7 @@
         Where the <span class="emphasis"><em>new-local-function-name</em></span> no longer has to match
         the local function name as originally specified in the parenthesized signature
         passed to <code class="computeroutput">BOOST_LOCAL_FUNCTION</code>.
-        For example: <sup>[<a name="id883549" href="#ftn.id883549" class="footnote">17</a>]</sup>
+        For example: <sup>[<a name="id883574" href="#ftn.id883574" class="footnote">17</a>]</sup>
       </p>
 <pre class="programlisting"><span class="special">{</span>
     <code class="computeroutput">BOOST_LOCAL_FUNCTION</code><span class="special">(</span>
@@ -587,7 +585,7 @@
 <p>
       </p>
 <a name="boost_local.Advanced.renaming_local_functions.motivation"></a><h6>
-<a name="id884469"></a>
+<a name="id884494"></a>
         <a class="link" href="Advanced.html#boost_local.Advanced.renaming_local_functions.motivation">Motivation</a>
       </h6>
 <p>
@@ -654,14 +652,14 @@
         to usual features of C++ functions.
       </p>
 <a name="boost_local.Advanced.limitations__overloading__nesting__operators__etc.overloading"></a><h6>
-<a name="id885459"></a>
+<a name="id885485"></a>
         <a class="link" href="Advanced.html#boost_local.Advanced.limitations__overloading__nesting__operators__etc.overloading">Overloading</a>
       </h6>
 <p>
         It is not possible to overload local functions. Declaring multiple local
         functions with the same name within the same enclosing scope generates a
         compile-time error (even if the different declarations specify different
-        parameters). <sup>[<a name="id885479" href="#ftn.id885479" class="footnote">18</a>]</sup>
+        parameters). <sup>[<a name="id885504" href="#ftn.id885504" class="footnote">18</a>]</sup>
       </p>
 <p>
         For example, the following code will <span class="bold"><strong>not</strong></span>
@@ -684,12 +682,12 @@
 <span class="special">}</span>
 </pre>
 <a name="boost_local.Advanced.limitations__overloading__nesting__operators__etc.nesting"></a><h6>
-<a name="id885921"></a>
+<a name="id885946"></a>
         <a class="link" href="Advanced.html#boost_local.Advanced.limitations__overloading__nesting__operators__etc.nesting">Nesting</a>
       </h6>
 <p>
         It is not possible to nest local functions, local blocks, or local exits
-        within each other. Nesting will generate a compile-time error. <sup>[<a name="id885943" href="#ftn.id885943" class="footnote">19</a>]</sup>
+        within each other. Nesting will generate a compile-time error. <sup>[<a name="id885968" href="#ftn.id885968" class="footnote">19</a>]</sup>
       </p>
 <p>
         For example, the following code will <span class="bold"><strong>not</strong></span>
@@ -712,12 +710,12 @@
 <span class="special">}</span>
 </pre>
 <a name="boost_local.Advanced.limitations__overloading__nesting__operators__etc.operators"></a><h6>
-<a name="id886343"></a>
+<a name="id886368"></a>
         <a class="link" href="Advanced.html#boost_local.Advanced.limitations__overloading__nesting__operators__etc.operators">Operators</a>
       </h6>
 <p>
         Local functions cannot be operators. Naming a local function <code class="computeroutput"><span class="keyword">operator</span><span class="special">...</span></code>
-        will generate a compile-time error. <sup>[<a name="id886380" href="#ftn.id886380" class="footnote">20</a>]</sup>
+        will generate a compile-time error. <sup>[<a name="id886406" href="#ftn.id886406" class="footnote">20</a>]</sup>
       </p>
 <p>
         For example, the following code will <span class="bold"><strong>not</strong></span>
@@ -739,7 +737,7 @@
 <span class="special">}</span>
 </pre>
 <a name="boost_local.Advanced.limitations__overloading__nesting__operators__etc.etc"></a><h6>
-<a name="id886775"></a>
+<a name="id886800"></a>
         <a class="link" href="Advanced.html#boost_local.Advanced.limitations__overloading__nesting__operators__etc.etc">Etc</a>
       </h6>
 <p>
@@ -1044,39 +1042,39 @@
 </div>
 <div class="footnotes">
 <br><hr width="100" align="left">
-<div class="footnote"><p><sup>[<a id="ftn.id876719" href="#id876719" class="para">15</a>] </sup>
+<div class="footnote"><p><sup>[<a id="ftn.id876783" href="#id876783" class="para">15</a>] </sup>
           We recognize that the use of the <span class="emphasis"><em>identity macros</em></span> adds
           extra parenthesis to the already significant number of parenthesis required
           by the parenthesized syntax. However, parenthesized signatures usually
           do not contain unwrapped commas "<code class="computeroutput"><span class="special">,</span></code>"
           (unless template metaprogramming is being used).
         </p></div>
-<div class="footnote"><p><sup>[<a id="ftn.id881035" href="#id881035" class="para">16</a>] </sup>
+<div class="footnote"><p><sup>[<a id="ftn.id881059" href="#id881059" class="para">16</a>] </sup>
             The suffix <code class="computeroutput"><span class="identifier">ref</span></code> of <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">local</span><span class="special">::</span>function_ref</code> is meant
             to help programmers remember that they are dealing with references to
             (and not copies of) local functions.
           </p></div>
-<div class="footnote"><p><sup>[<a id="ftn.id883549" href="#id883549" class="para">17</a>] </sup>
+<div class="footnote"><p><sup>[<a id="ftn.id883574" href="#id883574" class="para">17</a>] </sup>
           <span class="bold"><strong>Rationale.</strong></span> Local functions are often named
           <code class="computeroutput"><span class="identifier">l</span></code> in the casual examples
           of this documentation because the name of the author starts with the letter
           "<code class="computeroutput"><span class="identifier">l</span></code>". <span class="inlinemediaobject"><img src="../../images/smiley.png" alt="smiley"></span>
         </p></div>
-<div class="footnote"><p><sup>[<a id="ftn.id885479" href="#id885479" class="para">18</a>] </sup>
+<div class="footnote"><p><sup>[<a id="ftn.id885504" href="#id885504" class="para">18</a>] </sup>
           <span class="bold"><strong>Rationale.</strong></span> This is because a local function
           is a functor object declared as a local variable within the enclosing scope.
           Therefore, declaring two local functions with the same name within the
           same enclosing scope declares two local variables with the same name within
           the same scope and that is not allowed in C++.
         </p></div>
-<div class="footnote"><p><sup>[<a id="ftn.id885943" href="#id885943" class="para">19</a>] </sup>
+<div class="footnote"><p><sup>[<a id="ftn.id885968" href="#id885968" class="para">19</a>] </sup>
           <span class="bold"><strong>Rationale.</strong></span> This is because within a nested
           code block only global or static variables can be accessed while <a href="http://www.boost.org/doc/libs/release/libs/scope_exit/doc/html/index.html" target="_top">Boost.ScopeExit</a>
           variable <a href="http://lists.boost.org/Archives/boost/2006/11/113658.php" target="_top">binding
           mechanism</a> requires to access local variables that hold the bound
           variables.
         </p></div>
-<div class="footnote"><p><sup>[<a id="ftn.id886380" href="#id886380" class="para">20</a>] </sup>
+<div class="footnote"><p><sup>[<a id="ftn.id886406" href="#id886406" class="para">20</a>] </sup>
           <span class="bold"><strong>Rationale.</strong></span> This is the because a local
           function name must be a valid local variable name (the local variable to
           hold the local functor object) and operators cannot be used as local variable

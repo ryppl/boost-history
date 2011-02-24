@@ -66,7 +66,7 @@
 [def __BOOST_IDENTITY_VALUE__ [macroref BOOST_IDENTITY_VALUE]]
 [def __function_ref__ [classref boost::local::function_ref function_ref]]
 
-[import ../../example/add_line_numbers.cpp]
+[import ../../example/add_callouts.cpp]
 [import ../../example/add.cpp]
 [import ../../example/add_va.cpp]
 [import ../../example/add_num.cpp]

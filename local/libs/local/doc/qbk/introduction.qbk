@@ -36,7 +36,7 @@ Variables in scope are bound to the local function by both constant value and no
 
 [table
 [ [Notes] [Variadic Macro Syntax (C99 and later compilers)] [Sequencing Macro Syntax (all C++ compilers)] ]
-[ [ [add_line_numbers_cpp] ] [ [add_va_cpp] ] [ [add_cpp] ] ]
+[ [ [add_callouts_cpp] ] [ [add_va_cpp] ] [ [add_cpp] ] ]
 ]
 
 Where the notes refer to the following comments:

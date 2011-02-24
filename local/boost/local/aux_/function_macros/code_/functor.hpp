@@ -48,12 +48,12 @@
         unbinds, \
         const_binds, has_const_bind_this, \
         binds, has_bind_this, \
-        id) \
+        id, typename_keyword) \
     BOOST_LOCAL_AUX_SYMBOL_RESULT_TYPE(id) \
     operator()( \
             BOOST_DETAIL_PP_NILSEQ_FOR_EACH_I( \
                 BOOST_LOCAL_AUX_FUNCTION_CODE_PARAM_UNBIND_ARG_DECL, \
-                ~, unbinds) \
+                typename_keyword, unbinds) \
             ) { \
         /* just forward call to member function with local func name */ \
         return BOOST_LOCAL_AUX_SYMBOL_BODY_FUNCTION_NAME( \
@@ -118,25 +118,27 @@
             unbinds), n), unbinds)
 
 #define BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_CALL_FOR_DEFAULTS_(z, \
-        n, params_unbinds_constbinds_hasconstthis_binds_hasthis_id) \
+        n, params_unbinds_constbinds_hasconstthis_binds_hasthis_id_typename) \
     BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_CALL_(z \
-        , BOOST_PP_TUPLE_ELEM(7, 0, \
-                params_unbinds_constbinds_hasconstthis_binds_hasthis_id) \
+        , BOOST_PP_TUPLE_ELEM(8, 0, \
+            params_unbinds_constbinds_hasconstthis_binds_hasthis_id_typename) \
         /* remove last n default params */ \
-        , BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_UNBIND_REMOVE_LAST_N_( \
-                n, \
-                BOOST_PP_TUPLE_ELEM(7, 1, \
-                    params_unbinds_constbinds_hasconstthis_binds_hasthis_id)) \
-        , BOOST_PP_TUPLE_ELEM(7, 2, \
-                params_unbinds_constbinds_hasconstthis_binds_hasthis_id) \
-        , BOOST_PP_TUPLE_ELEM(7, 3, \
-                params_unbinds_constbinds_hasconstthis_binds_hasthis_id) \
-        , BOOST_PP_TUPLE_ELEM(7, 4, \
-                params_unbinds_constbinds_hasconstthis_binds_hasthis_id) \
-        , BOOST_PP_TUPLE_ELEM(7, 5, \
-                params_unbinds_constbinds_hasconstthis_binds_hasthis_id) \
-        , BOOST_PP_TUPLE_ELEM(7, 6, \
-                params_unbinds_constbinds_hasconstthis_binds_hasthis_id) \
+        , BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_UNBIND_REMOVE_LAST_N_(n, \
+            BOOST_PP_TUPLE_ELEM(8, 1, \
+            params_unbinds_constbinds_hasconstthis_binds_hasthis_id_typename) \
+        ) \
+        , BOOST_PP_TUPLE_ELEM(8, 2, \
+            params_unbinds_constbinds_hasconstthis_binds_hasthis_id_typename) \
+        , BOOST_PP_TUPLE_ELEM(8, 3, \
+            params_unbinds_constbinds_hasconstthis_binds_hasthis_id_typename) \
+        , BOOST_PP_TUPLE_ELEM(8, 4, \
+            params_unbinds_constbinds_hasconstthis_binds_hasthis_id_typename) \
+        , BOOST_PP_TUPLE_ELEM(8, 5, \
+            params_unbinds_constbinds_hasconstthis_binds_hasthis_id_typename) \
+        , BOOST_PP_TUPLE_ELEM(8, 6, \
+            params_unbinds_constbinds_hasconstthis_binds_hasthis_id_typename) \
+        , BOOST_PP_TUPLE_ELEM(8, 7, \
+            params_unbinds_constbinds_hasconstthis_binds_hasthis_id_typename) \
     )
 
 // Adapted from `BOOST_SCOPE_EXIT_AUX_IMPL()`.
@@ -171,8 +173,8 @@
                 /* PP_INC to handle no dflt (EXPAND for MVSC) */ \
                 BOOST_PP_EXPAND(BOOST_PP_INC(defaults_count)), \
                 BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_CALL_FOR_DEFAULTS_,\
-                (sign_params, unbinds, const_binds, \
-                        has_const_bind_this, binds, has_bind_this, id)) \
+                (sign_params, unbinds, const_binds, has_const_bind_this, \
+                 binds, has_bind_this, id, typename_keyword) ) \
     private: \
         /* this type symbol cannot have ID postfix because it is used */ \
         /* the `NAME` macro (because this symbol is within functor class */ \

@@ -82,7 +82,7 @@
             BOOST_LOCAL_AUX_PP_VA_TO_SEQ( \
                     (void) /* for empty seq */, __VA_ARGS__))
 
-#define BOOST_LOCAL_EXIT_TPL(binding_list) \
+#define BOOST_LOCAL_EXIT_TPL(...) \
     BOOST_LOCAL_AUX_EXIT(BOOST_LOCAL_FUNCTION_PARAMS_TPL, \
             BOOST_LOCAL_AUX_PP_VA_TO_SEQ( \
                     (void) /* for empty seq */, __VA_ARGS__))

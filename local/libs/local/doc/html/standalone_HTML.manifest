@@ -3,8 +3,14 @@ boost_local/Starting.html
 boost_local/Tutorial.html
 boost_local/Advanced.html
 reference.html
+BOOST_LOCAL_BLOCK.html
+BOOST_LOCAL_BLOCK_TPL.html
+BOOST_LOCAL_BLOCK_END.html
 BOOST_LOCAL_CONFIG_FUNCTION_ARITY_MAX.html
 BOOST_LOCAL_CONFIG_THIS_PARAM_NAME.html
+BOOST_LOCAL_EXIT.html
+BOOST_LOCAL_EXIT_TPL.html
+BOOST_LOCAL_EXIT_END.html
 boost/local/function.html
 BOOST_LOCAL_FUNCTION_PARAMS.html
 BOOST_LOCAL_FUNCTION_PARAMS_TPL.html

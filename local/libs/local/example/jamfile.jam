@@ -6,26 +6,62 @@
 # http://www.boost.org/LICENSE_1_0.txt).
 
 exe add : add.cpp ;
+exe add_va : add_va.cpp ;
+
 exe add_block : add_block.cpp ;
+exe add_block_va : add_block_va.cpp ;
+
 exe add_except : add_except.cpp ;
+exe add_except_va : add_except_va.cpp ;
+
 exe add_exit : add_exit.cpp ;
+exe add_exit_va : add_exit_va.cpp ;
+
 exe add_num : add_num.cpp ;
+exe add_num_va : add_num_va.cpp ;
+
 exe add_num_factor_sum : add_num_factor_sum.cpp ;
+exe add_num_factor_sum_va : add_num_factor_sum_va.cpp ;
+
 exe add_num_sum : add_num_sum.cpp ;
+exe add_num_sum_va : add_num_sum_va.cpp ;
+
 exe add_optimizers : add_optimizers.cpp ;
+exe add_optimizers_va : add_optimizers_va.cpp ;
+
 exe add_template : add_template.cpp ;
+exe add_template_va : add_template_va.cpp ;
+
 exe add_this : add_this.cpp ;
+exe add_this_va : add_this_va.cpp ;
 
 exe block : block.cpp ;
+exe block_va : block_va.cpp ;
+
 exe doit : doit.cpp ;
+exe doit_va : doit_va.cpp ;
+
 exe exit : exit.cpp ;
+exe exit_va : exit_va.cpp ;
+
 exe factorial : factorial.cpp ;
+exe factorial_va : factorial_va.cpp ;
+
 exe find_if : find_if.cpp ;
-exe params : params.cpp ;
+exe find_if_va : find_if_va.cpp ;
+
+exe params_all : params_all.cpp ;
+exe params_all_va : params_all_va.cpp ;
+
+exe params_none : params_none.cpp ;
+exe params_none_ep : params_none_ep.cpp ;
+
 exe print_map : print_map.cpp ;
-exe renamed_exit : renamed_exit.cpp ;
-exe renamed_print : renamed_print.cpp ;
+exe print_map_va : print_map_va.cpp ;
+
 exe this : this.cpp ;
+exe this_va : this_va.cpp ;
+
 exe transform : transform.cpp ;
-exe same_line : same_line.cpp ;
+exe transform_va : transform_va.cpp ;
 

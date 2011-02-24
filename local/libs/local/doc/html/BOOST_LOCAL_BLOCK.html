@@ -26,45 +26,12 @@
 <a name="BOOST_LOCAL_BLOCK"></a><div class="titlepage"></div>
 <div class="refnamediv">
 <h2><span class="refentrytitle">Macro BOOST_LOCAL_BLOCK</span></h2>
-<p>BOOST_LOCAL_BLOCK &#8212; This macro starts the declaration of a local block. </p>
+<p>BOOST_LOCAL_BLOCK</p>
 </div>
 <h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
 <div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="comment">// In header: &lt;<a class="link" href="reference.html#header.boost.local.block_hpp" title="Header &lt;boost/local/block.hpp&gt;">boost/local/block.hpp</a>&gt;
 
-</span>BOOST_LOCAL_BLOCK(parenthesized_binding)</pre></div>
-<div class="refsect1">
-<a name="id887883"></a><h2>Description</h2>
-<p>This macro must be used within a declarative context, it must be followed by the local block body code <code class="computeroutput">{ ... }</code> and then by the  <code class="computeroutput"><a class="link" href="BOOST_LOCAL_BLOCK_END.html" title="Macro BOOST_LOCAL_BLOCK_END">BOOST_LOCAL_BLOCK_END</a></code> macro (see the Tutorial section): </p>
-<pre class="programlisting">  <span class="special">{</span> <span class="comment">// Some declarative context.</span>
-      <span class="special">...</span>
-
-      <span class="identifier">BOOST_LOCAL_BLOCK</span><span class="special">(</span>
-      <span class="identifier">parenthesized_binding</span>
-      <span class="special">)</span> <span class="identifier">exception_specifications_optional</span> <span class="special">{</span>
-          <span class="special">...</span> <span class="comment">// Block body.</span>
-      <span class="special">}</span> <span class="identifier">BOOST_LOCAL_BLOCK_END</span>
-
-      <span class="special">...</span>
-  <span class="special">}</span>
-</pre>
-<p>Within templates, the special macro  <code class="computeroutput"><a class="link" href="BOOST_LOCAL_BLOCK_TPL.html" title="Macro BOOST_LOCAL_BLOCK_TPL">BOOST_LOCAL_BLOCK_TPL</a></code> must be used instead of  <code class="computeroutput"><a class="link" href="BOOST_LOCAL_BLOCK.html" title="Macro BOOST_LOCAL_BLOCK">BOOST_LOCAL_BLOCK</a></code>.</p>
-<p><span class="bold"><strong>Note:</strong></span> A <code class="computeroutput">return;</code> instruction from within a local block body jumps to the end of the local block body and it does not return the enclosing scope.</p>
-<p><span class="bold"><strong>Parameters:</strong></span> </p>
-<div class="informaltable"><table class="table">
-<colgroup>
-<col>
-<col>
-</colgroup>
-<tbody><tr>
-<td><span class="bold"><strong><code class="computeroutput">parenthesized_binding</code></strong></span></td>
-<td>A Boost.Preprocessor sequence that uses the parenthesized syntax to specify the variables in scope to bind (see the Grammar section).  </td>
-</tr></tbody>
-</table></div>
-<p>
-</p>
-<p>As usual, exception specifications can be optionally programmed before the body code block (see the Advanced section).</p>
-<p><span class="bold"><strong>See:</strong></span>  <a class="link" href="boost_local/Tutorial.html" title="Tutorial">Tutorial</a> section,  <a class="link" href="boost_local/Advanced.html" title="Advanced">Advanced</a> section,  <a class="link" href="boost_local/Grammar.html" title="Appendix: Grammar">Grammar</a> section,  <code class="computeroutput"><a class="link" href="BOOST_LOCAL_BLOCK_TPL.html" title="Macro BOOST_LOCAL_BLOCK_TPL">BOOST_LOCAL_BLOCK_TPL</a></code>,  <code class="computeroutput"><a class="link" href="BOOST_LOCAL_BLOCK_END.html" title="Macro BOOST_LOCAL_BLOCK_END">BOOST_LOCAL_BLOCK_END</a></code>. </p>
-</div>
+</span>BOOST_LOCAL_BLOCK(...)</pre></div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>

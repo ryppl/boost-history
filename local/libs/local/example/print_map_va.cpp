@@ -6,6 +6,7 @@
 // http://www.boost.org/LICENSE_1_0.txt).
 
 // Show how to handle commas and symbols in macro parameters.
+// Simplified syntax for variadic macros only.
 
 //[ print_map_cpp
 #include <boost/local/function.hpp>
@@ -24,12 +25,12 @@ typedef int const& sign_t;
 int main() {
     void BOOST_LOCAL_FUNCTION_PARAMS(
             // Identity macors handle commas.
-            (BOOST_IDENTITY_TYPE((const std::map<std::string, size_t>))& m)
-            (const size_t& factor)(default // Or just use `(default (...))`.
-                BOOST_IDENTITY_VALUE((key_size<std::string, size_t>::value)))
-            (const std::string& separator)(default cat(":", " "))
+            BOOST_IDENTITY_TYPE((const std::map<std::string, size_t>))& m,
+            const size_t& factor, default // Or just use `(default (...))`.
+                BOOST_IDENTITY_VALUE((key_size<std::string, size_t>::value)),
+            const std::string& separator, default cat(":", " "),
             // Also, identity macors handle leading symbols.
-            (BOOST_IDENTITY_TYPE((::sign_t)) sign)(default -1) ) {
+            BOOST_IDENTITY_TYPE((::sign_t)) sign, default -1) {
         for (std::map<std::string, size_t>::const_iterator i = m.begin();
                 i != m.end(); ++i) {
             std::cout << i->first << separator <<
