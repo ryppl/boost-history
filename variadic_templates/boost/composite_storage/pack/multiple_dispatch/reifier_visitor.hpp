@@ -10,6 +10,10 @@
 //
 #include <boost/composite_storage/pack/multiple_dispatch/replace_source_with_target_ptr.hpp>
 #include <boost/mpl/pair.hpp>
+#include <boost/mpl/eval_if.hpp>
+#include <boost/mpl/identity.hpp>
+#include <boost/mpl/has_xxx.hpp>
+BOOST_MPL_HAS_XXX_TRAIT_DEF(type)
 
 namespace boost
 {
@@ -155,10 +159,21 @@ struct reifier_visit_concrete_pack
 };
   template
   < typename ReifierVisitor
-  , typename ConcreteHosts
+  , typename ConcreteHead
   >
 struct reifier_visit_concrete_seq
-;  
+{
+      typename ReifierVisitor::first
+    visit(ConcreteHead const&a_host)const
+    {
+            typedef
+          typename ReifierVisitor::second
+        self_derived;
+          self_derived  const&
+        self_value=static_cast<self_derived const&>(*this);
+        return self_value.push_back_concrete(a_host);
+    }
+};  
   template
   < typename ReifierVisitor
   , typename... ConcreteHosts
@@ -185,7 +200,7 @@ struct reifier_visit_concrete_seq
 {
 };  
   template
-  < typename HostAbsract
+  < typename HostAbstract
   >
 struct hosts_concrete
   /**@brief
@@ -194,24 +209,7 @@ struct hosts_concrete
    *  to the HostAbstract abstract class.
    */
 ;
-  template
-  < typename HostConcrete
-  >
-struct host_abstract
-  /**@brief
-   *  Metafunction returning Abstract class
-   *  of which HostConcrete is a member.
-   *  IOW, does inverse of hosts_concrete.
-   */
-{
-        typedef 
-      HostConcrete 
-    type
-    //By default, HostConcrete is member
-    //of a type hierarchy starting at
-    //HostConcrete.
-    ;   
-};
+
   template
   < typename ReifyApply
   , typename ArgsConcreteAbstract
@@ -264,10 +262,8 @@ struct reifier_visitor
       >
     >
   , typename hosts_concrete
-    < typename host_abstract
-      < typename remove_cv
-        < HeadAbstract
-        >::type
+    < typename remove_cv
+      < HeadAbstract
       >::type
     >::type
   >
