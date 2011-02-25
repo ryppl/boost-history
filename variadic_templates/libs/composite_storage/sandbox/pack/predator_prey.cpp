@@ -12,18 +12,12 @@ Message-ID: <3f848282-d123-408d-8d25-de12b0f2eca7@u6g2000vbh.googlegroups.com>
 //
 #include <boost/composite_storage/pack/multiple_dispatch/reify_apply.hpp>
 #include <boost/composite_storage/pack/multiple_dispatch/reifier_visitor.hpp>
+#include <boost/bind.hpp>
 #include <iostream>
 
-namespace boost
-{
-namespace composite_storage
-{
-namespace pack
-{
-namespace multiple_dispatch
-{
-namespace testing
-{
+namespace bmpl = boost::mpl;
+namespace mdis = boost::composite_storage::pack::multiple_dispatch;
+using namespace mdis;
 
 typedef void ResultType; 
 
@@ -38,11 +32,14 @@ struct object
   ;
   object()
   {}
+#define OBJECT_IS_COPYABLE
+#ifndef OBJECT_IS_COPYABLE
  private:
   object(object const&)
   //Ensure that no copies are made when calling
   //functions. with object as arg.
   {}
+#endif  
 }; 
 
 //Predators:
@@ -51,68 +48,62 @@ struct object
   struct Bear;
 
 struct Predator_abstract;
-}//exit testing namespace
+
+//Preys:
+  struct Gazelle;
+  struct Girrafe;
+  
+struct Prey_abstract;  
+
+#define ACCEPT_CONSTANCY
+#define VISIT_CONSTANCY const
+
+namespace boost{
+namespace composite_storage{
+namespace pack{
+namespace multiple_dispatch{
 
 template<>
 struct hosts_concrete
-  < testing::Predator_abstract
+  < Predator_abstract
   >
-  : mpl::package
-    < testing::Lion
-    , testing::Bear 
-    , testing::Anaconda
+  : bmpl::package
+    < Lion
+    , Bear
+    , Anaconda
     >
 {
 };
 
 template<>
-struct host_abstract
-  < testing::Lion
+struct hosts_concrete
+  < Prey_abstract
   >
+  : bmpl::package
+    < Gazelle
+    , Girrafe
+    >
 {
-      typedef
-    testing::Predator_abstract
-  type
-  ;
 };
 
-template<>
-struct host_abstract
-  < testing::Bear
-  >
-{
-      typedef
-    testing::Predator_abstract
-  type
-  ;
-};
-
-template<>
-struct host_abstract
-  < testing::Anaconda
-  >
-{
-      typedef
-    testing::Predator_abstract
-  type
-  ;
-};
-
-namespace testing
-{
+}}}}//exit boost::composite_storage::pack::multiple_dispatch namespace
 
 struct Predator_abstract: object
 {
-  typedef reifier_visit_abstract_seq< ResultType
-    , hosts_concrete<Predator_abstract>::type>
-  visitor_abstract;
+      typedef 
+    reifier_visit_abstract_seq
+    < ResultType
+    , hosts_concrete<Predator_abstract>::type
+    >
+  visitor_abstract
+  ;
 
-  virtual ResultType accept( visitor_abstract const&)const=0;
+  virtual ResultType accept( visitor_abstract VISIT_CONSTANCY& a_visitor)ACCEPT_CONSTANCY=0;
 };
 
 struct Lion: public Predator_abstract
 {
-  ResultType accept( visitor_abstract const& a_visitor)const
+  ResultType accept( visitor_abstract VISIT_CONSTANCY& a_visitor)ACCEPT_CONSTANCY
   {
     return a_visitor.visit(*this);
   }
@@ -125,7 +116,7 @@ struct Lion: public Predator_abstract
 
 struct Anaconda: public Predator_abstract
 {
-  ResultType accept( visitor_abstract const& a_visitor)const
+  ResultType accept( visitor_abstract VISIT_CONSTANCY& a_visitor)ACCEPT_CONSTANCY
   {
     return a_visitor.visit(*this);
   }
@@ -137,7 +128,7 @@ struct Anaconda: public Predator_abstract
 
 struct Bear: public Predator_abstract
 {
-  ResultType accept( visitor_abstract const& a_visitor)const
+  ResultType accept( visitor_abstract VISIT_CONSTANCY& a_visitor)ACCEPT_CONSTANCY
   {
     return a_visitor.visit(*this);
   }
@@ -146,62 +137,23 @@ struct Bear: public Predator_abstract
   { return "Bear"
   ;}
 };
-
-//Preys:
-  struct Gazelle;
-  struct Girrafe;
-  
-struct Prey_abstract;  
-}//exit namespace testing
-
-template<>
-struct hosts_concrete
-  < testing::Prey_abstract
-  >
-  : mpl::package
-    < testing::Gazelle
-    , testing::Girrafe 
-    >
-{
-};
-
-template<>
-struct host_abstract
-  < testing::Gazelle
-  >
-{
-      typedef
-    testing::Prey_abstract
-  type
-  ;
-};
-
-template<>
-struct host_abstract
-  < testing::Girrafe
-  >
-{
-      typedef
-    testing::Prey_abstract
-  type
-  ;
-};
-
-namespace testing
-{
-
+//--------------------------
 struct Prey_abstract: object
 {
-  typedef reifier_visit_abstract_seq< ResultType
-    , hosts_concrete<Prey_abstract>::type>
-  visitor_abstract;
+      typedef 
+    reifier_visit_abstract_seq
+    < ResultType
+    , hosts_concrete<Prey_abstract>::type
+    >
+  visitor_abstract
+  ;
 
-  virtual ResultType accept( visitor_abstract const&)const=0;
+  virtual ResultType accept( visitor_abstract VISIT_CONSTANCY& a_visitor)ACCEPT_CONSTANCY=0;
 };
 
 struct Gazelle: public Prey_abstract
 {
-  ResultType accept( visitor_abstract const& a_visitor)const
+  ResultType accept( visitor_abstract VISIT_CONSTANCY& a_visitor)ACCEPT_CONSTANCY
   {
     return a_visitor.visit(*this);
   }
@@ -214,7 +166,7 @@ struct Gazelle: public Prey_abstract
 
 struct Girrafe: public Prey_abstract
 {
-  ResultType accept( visitor_abstract const& a_visitor)const
+  ResultType accept( visitor_abstract VISIT_CONSTANCY& a_visitor)ACCEPT_CONSTANCY
   {
     return a_visitor.visit(*this);
   }
@@ -223,7 +175,7 @@ struct Girrafe: public Prey_abstract
   { return "Gazelle"
   ;}
 };
-
+//----------------------
 struct hunt_functor
 {
   hunt_functor(){}
@@ -265,23 +217,21 @@ void test()
     hunt_functor const huntor;
     Lion lion;
     Girrafe girrafe;
-  #if 0
-    Predator_abstract const& pred1=lion;
-    Prey_abstract const& prey1=girrafe;
+    Predator_abstract ACCEPT_CONSTANCY& pred1=lion;
+    Prey_abstract ACCEPT_CONSTANCY& prey1=girrafe;
     reify_apply<reifier_visitor>(huntor, pred1, prey1);
-  #else
-    reify_apply<reifier_visitor>(huntor, Lion(), Girrafe());
+  #ifdef OBJECT_IS_COPYABLE
+    auto huntor_lion_prey=boost::bind<hunt_functor::result_type>(huntor,Anaconda(),_1);
+    reify_apply<reifier_visitor>(huntor_lion_prey,prey1);
+    auto huntor_lion_girrafe=boost::bind<hunt_functor::result_type>(huntor,Bear(),Girrafe());
+    reify_apply<reifier_visitor>(huntor_lion_girrafe);
+    auto huntor_pred_girrafe=boost::bind<hunt_functor::result_type>(huntor,_1,Gazelle());
+    reify_apply<reifier_visitor>(huntor_pred_girrafe,pred1);
   #endif
 }
 
-}//exit testing namespace
-}//exit multiple_dispatch namespace
-}//exit pack namespace
-}//exit composite_storage namespace
-}//exit boost namespace
-
 int main(void)
 {
-    boost::composite_storage::pack::multiple_dispatch::testing::test();
+    test();
     return 0;
 }    
