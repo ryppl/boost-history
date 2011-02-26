@@ -6,8 +6,8 @@
 //
 //  See http://www.boost.org/libs/type_traits for most recent version including documentation.
 
-#ifndef BOOST_TT_bit_or_equal_HPP_INCLUDED
-#define BOOST_TT_bit_or_equal_HPP_INCLUDED
+#ifndef BOOST_TT_HAS_OPERATOR_BIT_OR_EQUAL_HPP_INCLUDED
+#define BOOST_TT_HAS_OPERATOR_BIT_OR_EQUAL_HPP_INCLUDED
 
 #define BOOST_TT_TRAIT_NAME has_operator_bit_or_equal
 #define BOOST_TT_TRAIT_OP |=
@@ -21,7 +21,7 @@
          ::boost::type_traits::ice_or<\
             ::boost::type_traits::ice_not< ::boost::is_integral< lhs_noref >::value >::value,\
             ::boost::type_traits::ice_not< ::boost::is_integral< rhs_noref >::value >::value,\
-         	::boost::is_const< lhs_noref >::value\
+            ::boost::is_const< lhs_noref >::value\
          >::value\
       >::value,\
       /* one fundamental, one pointer */\

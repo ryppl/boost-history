@@ -6,8 +6,8 @@
 //
 //  See http://www.boost.org/libs/type_traits for most recent version including documentation.
 
-#ifndef BOOST_TT_logical_and_HPP_INCLUDED
-#define BOOST_TT_logical_and_HPP_INCLUDED
+#ifndef BOOST_TT_HAS_OPERATOR_LOGICAL_AND_HPP_INCLUDED
+#define BOOST_TT_HAS_OPERATOR_LOGICAL_AND_HPP_INCLUDED
 
 #define BOOST_TT_TRAIT_NAME has_operator_logical_and
 #define BOOST_TT_TRAIT_OP &&

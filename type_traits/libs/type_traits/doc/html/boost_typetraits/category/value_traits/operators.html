@@ -21,7 +21,7 @@
         Operator Type Traits</a>
 </h4></div></div></div>
 <a name="boost_typetraits.category.value_traits.operators.introduction"></a><h6>
-<a name="id3198436"></a>
+<a name="id3226425"></a>
           <a class="link" href="operators.html#boost_typetraits.category.value_traits.operators.introduction">Introduction</a>
         </h6>
 <p>
@@ -73,11 +73,25 @@
 <li class="listitem">
               <code class="computeroutput"><span class="identifier">RET</span></code> is the type for
               which we want to know if the result of <code class="computeroutput"><span class="keyword">operator</span>
-              <span class="identifier">op</span></code> can be converted to. Note
-              that if <code class="computeroutput"><span class="identifier">RET</span></code> is <code class="computeroutput"><span class="keyword">void</span></code> (default), the return type is not
-              checked.
+              <span class="identifier">op</span></code> can be converted to.
             </li>
 </ul></div>
+<p>
+          The default behaviour (<code class="computeroutput"><span class="identifier">RET</span><span class="special">=</span><span class="keyword">void</span></code>) is
+          to not check for the return value of the operator. If <code class="computeroutput"><span class="identifier">RET</span></code>
+          is different from the default <code class="computeroutput"><span class="keyword">void</span></code>,
+          the return value is checked to be convertible to <code class="computeroutput"><span class="identifier">RET</span></code>.
+          Convertible to <code class="computeroutput"><span class="identifier">RET</span></code> means
+          that the return value can be used as argument to a function expecting
+          <code class="computeroutput"><span class="identifier">RET</span></code>: 
+</p>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">f</span><span class="special">(</span><span class="identifier">RET</span><span class="special">);</span>
+<span class="identifier">LHS</span> <span class="identifier">lhs</span><span class="special">;</span>
+<span class="identifier">RHS</span> <span class="identifier">rhs</span><span class="special">;</span>
+<span class="identifier">f</span><span class="special">(</span><span class="identifier">lhs</span><span class="special">+</span><span class="identifier">rhs</span><span class="special">);</span> <span class="comment">// is valid if has_operator_plus&lt;LHS, RHS, RET&gt;::value==true
+</span></pre>
+<p>
+        </p>
 <p>
           Similarly, the syntax for postfix and prefix operators is the following:
           
@@ -92,7 +106,7 @@
           operators.
         </p>
 <div class="table">
-<a name="id3199113"></a><p class="title"><b>Table&#160;1.4.&#160;Supported binary operators</b></p>
+<a name="id3227241"></a><p class="title"><b>Table&#160;1.4.&#160;Supported binary operators</b></p>
 <div class="table-contents"><table class="table" summary="Supported binary operators">
 <colgroup>
 <col>
@@ -144,36 +158,6 @@
 <tr>
 <td>
                   <p>
-                    <code class="computeroutput"><span class="special">&gt;</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <a class="link" href="../../reference/has_operator_greater.html" title="has_operator_greater"><code class="computeroutput"><span class="identifier">has_operator_greater</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span>
-                    <span class="identifier">LHS</span><span class="special">,</span>
-                    <span class="keyword">class</span> <span class="identifier">RHS</span><span class="special">=</span><span class="identifier">LHS</span><span class="special">,</span> <span class="keyword">class</span>
-                    <span class="identifier">RET</span><span class="special">=</span><span class="keyword">void</span> <span class="special">&gt;</span></code></code></a>
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="special">&gt;=</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <a class="link" href="../../reference/has_operator_greater_equal.html" title="has_operator_greater_equal"><code class="computeroutput"><span class="identifier">has_operator_greater_equal</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span>
-                    <span class="identifier">LHS</span><span class="special">,</span>
-                    <span class="keyword">class</span> <span class="identifier">RHS</span><span class="special">=</span><span class="identifier">LHS</span><span class="special">,</span> <span class="keyword">class</span>
-                    <span class="identifier">RET</span><span class="special">=</span><span class="keyword">void</span> <span class="special">&gt;</span></code></code></a>
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                  <p>
                     <code class="computeroutput"><span class="special">&lt;</span></code>
                   </p>
                 </td>
@@ -196,6 +180,36 @@
 <td>
                   <p>
                     <a class="link" href="../../reference/has_operator_less_equal.html" title="has_operator_less_equal"><code class="computeroutput"><span class="identifier">has_operator_less_equal</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span>
+                    <span class="identifier">LHS</span><span class="special">,</span>
+                    <span class="keyword">class</span> <span class="identifier">RHS</span><span class="special">=</span><span class="identifier">LHS</span><span class="special">,</span> <span class="keyword">class</span>
+                    <span class="identifier">RET</span><span class="special">=</span><span class="keyword">void</span> <span class="special">&gt;</span></code></code></a>
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="special">&gt;</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <a class="link" href="../../reference/has_operator_greater.html" title="has_operator_greater"><code class="computeroutput"><span class="identifier">has_operator_greater</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span>
+                    <span class="identifier">LHS</span><span class="special">,</span>
+                    <span class="keyword">class</span> <span class="identifier">RHS</span><span class="special">=</span><span class="identifier">LHS</span><span class="special">,</span> <span class="keyword">class</span>
+                    <span class="identifier">RET</span><span class="special">=</span><span class="keyword">void</span> <span class="special">&gt;</span></code></code></a>
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="special">&gt;=</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <a class="link" href="../../reference/has_operator_greater_equal.html" title="has_operator_greater_equal"><code class="computeroutput"><span class="identifier">has_operator_greater_equal</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span>
                     <span class="identifier">LHS</span><span class="special">,</span>
                     <span class="keyword">class</span> <span class="identifier">RHS</span><span class="special">=</span><span class="identifier">LHS</span><span class="special">,</span> <span class="keyword">class</span>
                     <span class="identifier">RET</span><span class="special">=</span><span class="keyword">void</span> <span class="special">&gt;</span></code></code></a>
@@ -538,7 +552,7 @@
 </table></div>
 </div>
 <br class="table-break"><div class="table">
-<a name="id3202188"></a><p class="title"><b>Table&#160;1.5.&#160;Supported prefix operators</b></p>
+<a name="id3230316"></a><p class="title"><b>Table&#160;1.5.&#160;Supported prefix operators</b></p>
 <div class="table-contents"><table class="table" summary="Supported prefix operators">
 <colgroup>
 <col>
@@ -557,6 +571,36 @@
                 </th>
 </tr></thead>
 <tbody>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="special">++</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <a class="link" href="../../reference/has_operator_prefix_increment.html" title="has_operator_prefix_increment"><code class="computeroutput"><span class="identifier">has_operator_prefix_increment</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span>
+                    <span class="identifier">RHS</span><span class="special">,</span>
+                    <span class="keyword">class</span> <span class="identifier">RET</span><span class="special">=</span><span class="keyword">void</span>
+                    <span class="special">&gt;</span></code></code></a>
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="special">--</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <a class="link" href="../../reference/has_operator_prefix_decrement.html" title="has_operator_prefix_decrement"><code class="computeroutput"><span class="identifier">has_operator_prefix_decrement</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span>
+                    <span class="identifier">RHS</span><span class="special">,</span>
+                    <span class="keyword">class</span> <span class="identifier">RET</span><span class="special">=</span><span class="keyword">void</span>
+                    <span class="special">&gt;</span></code></code></a>
+                  </p>
+                </td>
+</tr>
 <tr>
 <td>
                   <p>
@@ -620,27 +664,12 @@
 <tr>
 <td>
                   <p>
-                    <code class="computeroutput"><span class="special">--</span></code>
+                    <code class="computeroutput"><span class="special">*</span></code>
                   </p>
                 </td>
 <td>
                   <p>
-                    <a class="link" href="../../reference/has_operator_prefix_decrement.html" title="has_operator_prefix_decrement"><code class="computeroutput"><span class="identifier">has_operator_prefix_decrement</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span>
-                    <span class="identifier">RHS</span><span class="special">,</span>
-                    <span class="keyword">class</span> <span class="identifier">RET</span><span class="special">=</span><span class="keyword">void</span>
-                    <span class="special">&gt;</span></code></code></a>
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="special">++</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <a class="link" href="../../reference/has_operator_prefix_increment.html" title="has_operator_prefix_increment"><code class="computeroutput"><span class="identifier">has_operator_prefix_increment</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span>
+                    <a class="link" href="../../reference/has_operator_dereference.html" title="has_operator_dereference"><code class="computeroutput"><span class="identifier">has_operator_dereference</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span>
                     <span class="identifier">RHS</span><span class="special">,</span>
                     <span class="keyword">class</span> <span class="identifier">RET</span><span class="special">=</span><span class="keyword">void</span>
                     <span class="special">&gt;</span></code></code></a>
@@ -651,7 +680,7 @@
 </table></div>
 </div>
 <br class="table-break"><div class="table">
-<a name="id3202740"></a><p class="title"><b>Table&#160;1.6.&#160;Supported postfix operators</b></p>
+<a name="id3230954"></a><p class="title"><b>Table&#160;1.6.&#160;Supported postfix operators</b></p>
 <div class="table-contents"><table class="table" summary="Supported postfix operators">
 <colgroup>
 <col>
@@ -673,12 +702,12 @@
 <tr>
 <td>
                   <p>
-                    <code class="computeroutput"><span class="special">--</span></code>
+                    <code class="computeroutput"><span class="special">++</span></code>
                   </p>
                 </td>
 <td>
                   <p>
-                    <a class="link" href="../../reference/has_operator_postfix_decrement.html" title="has_operator_postfix_decrement"><code class="computeroutput"><span class="identifier">has_operator_postfix_decrement</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span>
+                    <a class="link" href="../../reference/has_operator_postfix_increment.html" title="has_operator_postfix_increment"><code class="computeroutput"><span class="identifier">has_operator_postfix_increment</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span>
                     <span class="identifier">LHS</span><span class="special">,</span>
                     <span class="keyword">class</span> <span class="identifier">RET</span><span class="special">=</span><span class="keyword">void</span>
                     <span class="special">&gt;</span></code></code></a>
@@ -688,12 +717,12 @@
 <tr>
 <td>
                   <p>
-                    <code class="computeroutput"><span class="special">++</span></code>
+                    <code class="computeroutput"><span class="special">--</span></code>
                   </p>
                 </td>
 <td>
                   <p>
-                    <a class="link" href="../../reference/has_operator_postfix_increment.html" title="has_operator_postfix_increment"><code class="computeroutput"><span class="identifier">has_operator_postfix_increment</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span>
+                    <a class="link" href="../../reference/has_operator_postfix_decrement.html" title="has_operator_postfix_decrement"><code class="computeroutput"><span class="identifier">has_operator_postfix_decrement</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span>
                     <span class="identifier">LHS</span><span class="special">,</span>
                     <span class="keyword">class</span> <span class="identifier">RET</span><span class="special">=</span><span class="keyword">void</span>
                     <span class="special">&gt;</span></code></code></a>
@@ -710,7 +739,7 @@
           for each operator and the corresponding trait name.
         </p>
 <div class="table">
-<a name="id3202960"></a><p class="title"><b>Table&#160;1.7.&#160;Operator names in the standard</b></p>
+<a name="id3231174"></a><p class="title"><b>Table&#160;1.7.&#160;Operator names in the standard</b></p>
 <div class="table-contents"><table class="table" summary="Operator names in the standard">
 <colgroup>
 <col>
@@ -1123,6 +1152,57 @@
 <tr>
 <td>
                   <p>
+                    <code class="computeroutput"><span class="special">&amp;&amp;</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="keyword">and</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">logical_and</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <a class="link" href="../../reference/has_operator_logical_and.html" title="has_operator_logical_and"><code class="computeroutput"><span class="identifier">has_operator_logical_and</span></code></a>
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="special">||</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="keyword">or</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">logical_or</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <a class="link" href="../../reference/has_operator_logical_or.html" title="has_operator_logical_or"><code class="computeroutput"><span class="identifier">has_operator_logical_or</span></code></a>
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                </td>
+<td class="auto-generated">&#160;</td>
+<td class="auto-generated">&#160;</td>
+<td class="auto-generated">&#160;</td>
+</tr>
+<tr>
+<td>
+                  <p>
                     <code class="computeroutput"><span class="special">&amp;</span></code>
                   </p>
                 </td>
@@ -1183,6 +1263,50 @@
 <td>
                   <p>
                     <a class="link" href="../../reference/has_operator_bit_xor.html" title="has_operator_bit_xor"><code class="computeroutput"><span class="identifier">has_operator_bit_xor</span></code></a>
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="special">&lt;&lt;</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    &#248;
+                  </p>
+                </td>
+<td>
+                  <p>
+                    &#248;
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <a class="link" href="../../reference/has_operator_left_shift.html" title="has_operator_left_shift"><code class="computeroutput"><span class="identifier">has_operator_left_shift</span></code></a>
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="special">&gt;&gt;</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    &#248;
+                  </p>
+                </td>
+<td>
+                  <p>
+                    &#248;
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <a class="link" href="../../reference/has_operator_right_shift.html" title="has_operator_right_shift"><code class="computeroutput"><span class="identifier">has_operator_right_shift</span></code></a>
                   </p>
                 </td>
 </tr>
@@ -1255,50 +1379,6 @@
 <tr>
 <td>
                   <p>
-                    <code class="computeroutput"><span class="special">&lt;&lt;</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    &#248;
-                  </p>
-                </td>
-<td>
-                  <p>
-                    &#248;
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <a class="link" href="../../reference/has_operator_left_shift.html" title="has_operator_left_shift"><code class="computeroutput"><span class="identifier">has_operator_left_shift</span></code></a>
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="special">&gt;&gt;</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    &#248;
-                  </p>
-                </td>
-<td>
-                  <p>
-                    &#248;
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <a class="link" href="../../reference/has_operator_right_shift.html" title="has_operator_right_shift"><code class="computeroutput"><span class="identifier">has_operator_right_shift</span></code></a>
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                  <p>
                     <code class="computeroutput"><span class="special">&lt;&lt;=</span></code>
                   </p>
                 </td>
@@ -1342,57 +1422,6 @@
 </tr>
 <tr>
 <td>
-                </td>
-<td class="auto-generated">&#160;</td>
-<td class="auto-generated">&#160;</td>
-<td class="auto-generated">&#160;</td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="special">&amp;&amp;</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="keyword">and</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="identifier">logical_and</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <a class="link" href="../../reference/has_operator_logical_and.html" title="has_operator_logical_and"><code class="computeroutput"><span class="identifier">has_operator_logical_and</span></code></a>
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="special">||</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="keyword">or</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="identifier">logical_or</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <a class="link" href="../../reference/has_operator_logical_or.html" title="has_operator_logical_or"><code class="computeroutput"><span class="identifier">has_operator_logical_or</span></code></a>
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
                   <p>
                     prefix
                   </p>
@@ -1400,6 +1429,50 @@
 <td class="auto-generated">&#160;</td>
 <td class="auto-generated">&#160;</td>
 <td class="auto-generated">&#160;</td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="special">++</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    &#248;
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">advance</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <a class="link" href="../../reference/has_operator_prefix_increment.html" title="has_operator_prefix_increment"><code class="computeroutput"><span class="identifier">has_operator_prefix_increment</span></code></a>
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="special">--</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    &#248;
+                  </p>
+                </td>
+<td>
+                  <p>
+                    &#248;
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <a class="link" href="../../reference/has_operator_prefix_decrement.html" title="has_operator_prefix_decrement"><code class="computeroutput"><span class="identifier">has_operator_prefix_decrement</span></code></a>
+                  </p>
+                </td>
 </tr>
 <tr>
 <td>
@@ -1448,28 +1521,6 @@
 <tr>
 <td>
                   <p>
-                    <code class="computeroutput"><span class="special">~</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="keyword">compl</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    &#248;
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <a class="link" href="../../reference/has_operator_complement.html" title="has_operator_complement"><code class="computeroutput"><span class="identifier">has_operator_complement</span></code></a>
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                  <p>
                     <code class="computeroutput"><span class="special">!</span></code>
                   </p>
                 </td>
@@ -1492,7 +1543,12 @@
 <tr>
 <td>
                   <p>
-                    <code class="computeroutput"><span class="special">++</span></code>
+                    <code class="computeroutput"><span class="special">~</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="keyword">compl</span></code>
                   </p>
                 </td>
 <td>
@@ -1502,19 +1558,14 @@
                 </td>
 <td>
                   <p>
-                    <code class="computeroutput"><span class="identifier">advance</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <a class="link" href="../../reference/has_operator_prefix_increment.html" title="has_operator_prefix_increment"><code class="computeroutput"><span class="identifier">has_operator_prefix_increment</span></code></a>
+                    <a class="link" href="../../reference/has_operator_complement.html" title="has_operator_complement"><code class="computeroutput"><span class="identifier">has_operator_complement</span></code></a>
                   </p>
                 </td>
 </tr>
 <tr>
 <td>
                   <p>
-                    <code class="computeroutput"><span class="special">--</span></code>
+                    <code class="computeroutput"><span class="special">*</span></code>
                   </p>
                 </td>
 <td>
@@ -1529,7 +1580,7 @@
                 </td>
 <td>
                   <p>
-                    <a class="link" href="../../reference/has_operator_prefix_decrement.html" title="has_operator_prefix_decrement"><code class="computeroutput"><span class="identifier">has_operator_prefix_decrement</span></code></a>
+                    <a class="link" href="../../reference/has_operator_dereference.html" title="has_operator_dereference"><code class="computeroutput"><span class="identifier">has_operator_dereference</span></code></a>
                   </p>
                 </td>
 </tr>
@@ -1591,7 +1642,7 @@
 </table></div>
 </div>
 <br class="table-break"><a name="boost_typetraits.category.value_traits.operators.implementation"></a><h6>
-<a name="id3205404"></a>
+<a name="id3233700"></a>
           <a class="link" href="operators.html#boost_typetraits.category.value_traits.operators.implementation">Implementation</a>
         </h6>
 </div>

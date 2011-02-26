@@ -37,6 +37,15 @@
         to not check for the return value of prefix <code class="computeroutput"><span class="keyword">operator</span><span class="special">--</span></code>. If <code class="computeroutput"><span class="identifier">RET</span></code>
         is different from the default <code class="computeroutput"><span class="keyword">void</span></code>
         type, the return value is checked to be convertible to <code class="computeroutput"><span class="identifier">RET</span></code>.
+        Convertible to <code class="computeroutput"><span class="identifier">RET</span></code> means
+        that the return value of the operator can be used as argument to a function
+        expecting <code class="computeroutput"><span class="identifier">RET</span></code>: 
+</p>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">f</span><span class="special">(</span><span class="identifier">RET</span><span class="special">);</span>
+<span class="identifier">RHS</span> <span class="identifier">rhs</span><span class="special">;</span>
+<span class="identifier">f</span><span class="special">(--</span><span class="identifier">rhs</span><span class="special">);</span> <span class="comment">// is valid if has_operator_prefix_decrement&lt;RHS, RET&gt;::value==true
+</span></pre>
+<p>
       </p>
 <p>
         This trait can not detect whether prefix <code class="computeroutput"><span class="keyword">operator</span><span class="special">--</span></code> is public or not: if <code class="computeroutput"><span class="keyword">operator</span><span class="special">--</span></code> is defined as a private member of <code class="computeroutput"><span class="identifier">RHS</span></code> then instantiating <code class="computeroutput"><span class="identifier">has_operator_prefix_decrement</span><span class="special">&lt;</span><span class="identifier">RHS</span><span class="special">&gt;</span></code> will produce a compiler error. For this

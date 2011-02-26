@@ -6,8 +6,8 @@
 //
 //  See http://www.boost.org/libs/type_traits for most recent version including documentation.
 
-#ifndef BOOST_TT_bit_xor_HPP_INCLUDED
-#define BOOST_TT_bit_xor_HPP_INCLUDED
+#ifndef BOOST_TT_HAS_OPERATOR_BIT_XOR_HPP_INCLUDED
+#define BOOST_TT_HAS_OPERATOR_BIT_XOR_HPP_INCLUDED
 
 #define BOOST_TT_TRAIT_NAME has_operator_bit_xor
 #define BOOST_TT_TRAIT_OP ^

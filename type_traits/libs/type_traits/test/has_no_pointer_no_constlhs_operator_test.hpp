@@ -67,6 +67,7 @@ bool operator BOOST_TT_TRAIT_OP (const C&, const D&) { return true; }
 
 void run() {
    // test with only one template parameter
+   TEST_T(void, false);
    TEST_T(bool, true);
    TEST_T(char, true);
    TEST_T(signed char, true);
@@ -114,6 +115,9 @@ void run() {
    TEST_T(CV(double), false);
 
    // test with only two template parameters
+   TEST_TT(void, int, false);
+   TEST_TT(int, void, false);
+   TEST_TT(void, void, false);
    TEST_TT(bool, bool, true);
    TEST_TT(bool, char, true);
    TEST_TT(bool, signed char, true);
