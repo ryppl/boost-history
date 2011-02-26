@@ -23,7 +23,7 @@ namespace xxx_std{
     void test()
     {
         namespace as2 = boost::assign::v2;
-        namespace bl = boost::lambda;
+        namespace lambda = boost::lambda;
         {
             //[push_front
             typedef int T; T x = 1, y = 2, z = 0;

@@ -8,10 +8,8 @@
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
 #include <libs/assign/v2/test/put/container/functor.h>
-#include <libs/assign/v2/test/put/container/csv.h>
 #include <libs/assign/v2/test/put/container/range.h>
 #include <libs/assign/v2/test/put/container.h>
-
 
 namespace test_assign_v2{
 namespace xxx_put{
@@ -20,7 +18,6 @@ namespace xxx_container{
     void test()
     {
         xxx_functor::test();
-        xxx_csv::test();
         xxx_range::test();
     }
 

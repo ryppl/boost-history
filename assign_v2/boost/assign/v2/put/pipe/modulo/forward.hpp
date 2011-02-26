@@ -62,10 +62,7 @@ namespace result_of{
 
     template<typename Pars, typename T,typename C>
     typename result_of::forward_pars<0, Pars, T>::type
-    forward_pars(
-        T const& object,
-        C const& c
-    )
+    forward_pars( T const& object, C const& c )
     {
         typedef result_of::forward_pars<0, Pars, T> caller_;
         return caller_::call( c, object );

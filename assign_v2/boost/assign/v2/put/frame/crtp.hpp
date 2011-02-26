@@ -11,13 +11,13 @@
 #define BOOST_ASSIGN_V2_PUT_FRAME_CRTP_ER_2010_HPP
 #include <boost/mpl/always.hpp>
 #include <boost/mpl/apply.hpp>
-
-#include <boost/assign/v2/detail/functor/constructor.hpp>
+#include <boost/utility/enable_if.hpp>
 #include <boost/assign/v2/detail/pp/forward.hpp>
-
+#include <boost/assign/v2/detail/traits/container/is_ptr_container.hpp>
 #include <boost/assign/v2/put/frame/base.hpp>
 #include <boost/assign/v2/put/frame/modifier.hpp>
 #include <boost/assign/v2/put/modulo/fun.hpp>
+#include <boost/assign/v2/put/deduce/fun.hpp>
 
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
@@ -150,10 +150,9 @@ BOOST_PP_REPEAT_FROM_TO(
 
             struct deduce
             {
-                typedef functor_aux::deduce_constructor<C> caller_;
-                typedef typename caller_::type cons_;
+                typedef typename put_aux::deduce_fun<C>::type f_;
                 typedef v2::result_of_modulo::fun<D> meta_;
-                typedef typename ::boost::mpl::apply1<meta_, cons_>::type type;
+                typedef typename ::boost::mpl::apply1<meta_, f_>::type type;
             };
 
         };
@@ -161,19 +160,23 @@ BOOST_PP_REPEAT_FROM_TO(
         typename result_of_modulo::deduce::type
         modulo_deduce()const
         {
-            typedef functor_aux::deduce_constructor<C> caller_;
-            typedef typename caller_::type cons_;
+            typedef typename put_aux::deduce_fun<C>::type f_;
             typedef typename result_of_modulo::deduce::type result_;
             return result_(
                 this->derived().container(),
-                 caller_::call()
+                f_()
             );
         }
 
         protected:
 
-        template<typename T>
-        result_type modify(T* t)const
+		template<typename T>
+        struct ptr_enabler : boost::enable_if< 
+        	container_traits::is_ptr_container<C> 
+        >{};
+        
+		template<typename T>
+        result_type modify(T* t,typename ptr_enabler<T>::type* = 0)const
         {
             typedef put_concept::ModifierImpl<modifier_, C, T*> concept_;
             BOOST_CONCEPT_ASSERT(( concept_ ));

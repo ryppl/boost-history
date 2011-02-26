@@ -9,7 +9,8 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_PUT_CONTAINER_FUNCTOR_MAKE_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_CONTAINER_FUNCTOR_MAKE_ER_2010_HPP
-#include <boost/assign/v2/put/deduce/traits.hpp>
+#include <boost/assign/v2/put/deduce/fun.hpp>
+#include <boost/assign/v2/put/deduce/modifier.hpp>
 #include <boost/assign/v2/put/deduce/dependee.hpp>
 #include <boost/assign/v2/put/container/functor/adapter.hpp>
 
@@ -21,9 +22,11 @@ namespace result_of{
     template<typename C>
     struct put
     {
-        typedef v2::put_traits<C> traits_;
-        typedef typename traits_::functor_type f_;
-        typedef typename traits_::modifier_tag modifier_tag_;
+//        typedef v2::put_traits<C> traits_;
+//        typedef typename traits_::functor_type f_;
+//        typedef typename traits_::modifier_tag modifier_tag_;
+		typedef typename put_aux::deduce_fun<C>::type f_;
+		typedef typename put_aux::deduce_modifier_tag<C>::type modifier_tag_;
         typedef put_aux::adapter<C, f_, modifier_tag_> type;
     };
 

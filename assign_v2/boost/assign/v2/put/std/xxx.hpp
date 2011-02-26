@@ -7,12 +7,52 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
+#include <iostream> // TODO remove
+
 #ifndef BOOST_ASSIGN_V2_PUT_STD_XXX
 #include <boost/preprocessor/cat.hpp>
 #include <boost/accumulators/framework/accumulator_base.hpp>
-#include <boost/assign/v2/detail/pp/forward.hpp>
 #include <boost/assign/v2/put/frame/modifier.hpp>
 #include <boost/assign/v2/put/modulo/modifier.hpp>
+
+#define BOOST_ASSIGN_V2_PUT_STD_IMPL_PTR(FUN)\
+    template<typename C, typename T>\
+    void impl(C& cont, T* t)const{\
+        cont.FUN( t );\
+    }\
+/**/
+#define BOOST_ASSIGN_V2_PUT_STD_IMPL_LVALUE(FUN)\
+    template<typename C, typename T>\
+    void impl(C& cont, T& t)const{\
+        cont.FUN( t );\
+    }\
+/**/
+
+#include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
+#if BOOST_ASSIGN_V2_ENABLE_CPP0X
+#include <utility>
+#include <boost/utility/enable_if.hpp>
+#include <boost/type_traits/is_reference.hpp>
+// disable_if necessary to avoid ambiguity resolution with GCC4.4
+#define BOOST_ASSIGN_V2_PUT_STD_IMPL_RVALUE(FUN)\
+    template<typename C, typename T>\
+    typename boost::disable_if<\
+        boost::is_reference<T>,\
+        void\
+    >::type\
+    impl(C& cont, T&& t)const{\
+        cont.FUN( std::move( t ) );\
+    }\
+/**/
+#define BOOST_ASSIGN_V2_PUT_STD_IMPL(FUN)\
+        BOOST_ASSIGN_V2_PUT_STD_IMPL_LVALUE(FUN)\
+        BOOST_ASSIGN_V2_PUT_STD_IMPL_RVALUE(FUN)\
+/**/
+#else
+#define BOOST_ASSIGN_V2_PUT_STD_IMPL(FUN)\
+        BOOST_ASSIGN_V2_PUT_STD_IMPL_LVALUE(FUN)\
+/**/
+#endif // BOOST_ASSIGN_V2_ENABLE_CPP0X
 
 #define BOOST_ASSIGN_V2_PUT_STD_XXX(FUN)\
 namespace boost{\
@@ -24,24 +64,11 @@ namespace put_aux{\
     template<>\
     class modifier<v2::modifier_tag::FUN>\
     {\
-\
         typedef boost::accumulators::dont_care dont_care_;\
-\
         public:\
-\
         modifier(){}\
         modifier( dont_care_ ){}\
-\
-        template<typename C, typename T>\
-        void impl(C& cont, BOOST_ASSIGN_V2_forward_param(T, t) )const{\
-            cont.FUN(\
-                BOOST_ASSIGN_V2_forward_arg(T, t)\
-            );\
-        }\
-\
-        template<typename C, typename T>\
-        void impl(C& cont, T* t)const{ cont.FUN( t ); }\
-\
+        BOOST_ASSIGN_V2_PUT_STD_IMPL(FUN)\
     };\
 \
 }\

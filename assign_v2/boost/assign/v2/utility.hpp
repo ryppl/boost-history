@@ -12,5 +12,6 @@
 
 #include <boost/assign/v2/utility/chain.hpp>
 #include <boost/assign/v2/utility/convert.hpp>
+#include <boost/assign/v2/utility/csv.hpp>
 
 #endif

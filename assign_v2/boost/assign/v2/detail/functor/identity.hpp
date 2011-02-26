@@ -12,6 +12,8 @@
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 #include <utility>
+//#include <boost/type_traits/is_reference.hpp>
+//#include <boost/utility/enable_if.hpp>
 #else
 #include <boost/mpl/equal_to.hpp>
 #include <boost/mpl/at.hpp>
@@ -73,7 +75,7 @@ namespace functor_aux{
 
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
         template<typename T>
-        T&& operator()(T&& t)const{ return t; }
+        T&& operator()(T&& t)const{ return std::forward<T>( t ); }
 #else
         template<typename T> T& impl(T& t)const{ return t; }
         template<typename T> T const& impl(T const& t)const{ return t; }

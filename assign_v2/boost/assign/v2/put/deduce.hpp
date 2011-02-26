@@ -12,9 +12,10 @@
 
 #include <boost/assign/v2/put/deduce/dependee.hpp>
 #include <boost/assign/v2/put/deduce/fwd.hpp>
+#include <boost/assign/v2/put/deduce/fun.hpp>
 #include <boost/assign/v2/put/deduce/modifier.hpp>
 #include <boost/assign/v2/put/deduce/modulo.hpp>
-#include <boost/assign/v2/put/deduce/traits.hpp>
+//#include <boost/assign/v2/put/deduce/traits.hpp>
 
 
 #endif

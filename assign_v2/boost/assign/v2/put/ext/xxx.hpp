@@ -26,7 +26,6 @@
 
 #define BOOST_ASSIGN_V2_PUT_EXT_XXX(Param)\
 namespace result_of_modulo{\
-\
     template<typename T, typename Arg>\
     struct Param\
         : ::boost::mpl::apply1<\
@@ -34,7 +33,6 @@ namespace result_of_modulo{\
             , put_parameter::Param<Arg>\
         >\
     {};\
-\
 }\
 namespace put_aux{\
 \

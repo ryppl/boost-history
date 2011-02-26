@@ -9,7 +9,6 @@
 //////////////////////////////////////////////////////////////////////////////
 #include <libs/assign/v2/test/put/pipe/modulo.h>
 #include <libs/assign/v2/test/put/pipe/functor.h>
-#include <libs/assign/v2/test/put/pipe/csv.h>
 #include <libs/assign/v2/test/put/pipe/range.h>
 #include <libs/assign/v2/test/put/pipe.h>
 
@@ -19,7 +18,6 @@ namespace xxx_pipe{
 
     void test(){
         xxx_modulo::test();
-        xxx_csv::test();
         xxx_functor::test();
         xxx_range::test();
     }

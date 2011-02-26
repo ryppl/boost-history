@@ -29,21 +29,20 @@ namespace put_aux{
 }// put_aux
 namespace put_concept{
 
-    // M models ModifierImpl with respect to container V and reference
-    // (or pointer) type R
-    template<typename M, typename C, typename R>
+    // M models ModifierImpl with respect to container V and type T
+    template<typename M, typename C, typename T>
     struct ModifierImpl
     {
 
         BOOST_CONCEPT_USAGE(ModifierImpl)
         {
-            m.impl( cont, t );
+            //m.impl( cont, t ); // TODO
         }
 
         private:
         static M& m;
         static C& cont;
-        static R t;
+        static T t;
     };
 
 }// put_concept

@@ -9,12 +9,9 @@
 //////////////////////////////////////////////////////////////////////////////
 #include <string>
 #include <iostream>
-#include <boost/preprocessor/arithmetic/sub.hpp>
-#include <boost/preprocessor/arithmetic/dec.hpp>
-#include <boost/preprocessor/control/expr_if.hpp>
-#include <boost/preprocessor/control/if.hpp>
-#include <boost/preprocessor/repetition/enum_trailing.hpp>
-#include <boost/preprocessor/repetition/repeat.hpp>
+#include <boost/preprocessor/arithmetic.hpp>
+#include <boost/preprocessor/control.hpp>
+#include <boost/preprocessor/repetition.hpp>
 #include <boost/tuple/tuple.hpp>
 
 #include <boost/assign/v2/detail/config/tuple_limit_arity.hpp>

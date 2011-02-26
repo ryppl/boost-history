@@ -10,6 +10,7 @@
 #ifndef BOOST_ASSIGN_V2_DETAIL_FUNCTOR_NEW_ER_2010_HPP
 #define BOOST_ASSIGN_V2_DETAIL_FUNCTOR_NEW_ER_2010_HPP
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
+//#include <boost/assign/v2/detail/traits/container/value.hpp>//TODO remove
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 #include <utility>
 #else
@@ -19,7 +20,6 @@
 #include <boost/mpl/always.hpp>
 #include <boost/range/reference.hpp>
 #include <boost/type_traits/remove_cv.hpp>
-#include <boost/assign/v2/detail/traits/container/value.hpp>
 #include <boost/assign/v2/detail/config/limit_arity.hpp>
 #include <boost/assign/v2/detail/functor/crtp_unary_and_up.hpp>
 #endif
@@ -82,6 +82,8 @@ BOOST_PP_REPEAT_FROM_TO(
 
     };
 
+/*
+	TODO remove
     template<typename V>
     struct deduce_new_
     {
@@ -89,7 +91,7 @@ BOOST_PP_REPEAT_FROM_TO(
         typedef functor_aux::new_<value_> type;
         static type call(){ return functor_aux::new_<value_>(); }
     };
-
+*/
 }// functor_aux
 namespace result_of{
 
