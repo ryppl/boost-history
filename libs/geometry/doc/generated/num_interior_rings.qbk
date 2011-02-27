@@ -18,7 +18,7 @@
 Calculates the number of interior rings of a geometry. 
 
 [heading Description]
-The free function num_interior_rings calculates the number of interior rings of a geometry. 
+The free function num\u005finterior\u005frings calculates the number of interior rings of a geometry. 
 
 [heading Synopsis]
 ``template<typename Geometry>
@@ -44,7 +44,7 @@ Or
 
 `#include <boost/geometry/algorithms/num_interior_rings.hpp>`
 
-[include ref/algorithms/num_interior_rings.qbk]
+[include reference/algorithms/num_interior_rings.qbk]
 
 
 [endsect]

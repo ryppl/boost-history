@@ -17,6 +17,9 @@
 
 Combines two geometries which each other. 
 
+[heading Description]
+The free function union calculates the spatial set theoretic union of two geometries. 
+
 [heading Synopsis]
 ``template<typename Geometry1, typename Geometry2, typename Collection>
 void union_(Geometry1 const & geometry1, Geometry2 const & geometry2, Collection & output_collection)``
@@ -40,14 +43,19 @@ Or
 
 `#include <boost/geometry/algorithms/union.hpp>`
 
-[include ref/algorithms/union.qbk]
+[include reference/algorithms/union.qbk]
 
 
 [endsect]
 
 [section:union_inserter_3 union_inserter]
 
-Combines two geometries which each other. 
+
+
+[heading Description]
+Calculate the union of two geometries
+
+The free function union\u005finserter calculates the spatial set theoretic union of two geometries. This version with the \u005finserter suffix outputs the union to an output iterator, and a template parameter must therefore be specified in the call. 
 
 [heading Synopsis]
 ``template<typename GeometryOut, typename Geometry1, typename Geometry2, typename OutputIterator>
@@ -60,12 +68,12 @@ OutputIterator union_inserter(Geometry1 const & geometry1, Geometry2 const & geo
 [[GeometryOut] [output geometry type, must be specified ] [ - ] [Must be specified]]
 [[Geometry1 const &] [Any type fulfilling a Geometry Concept ] [geometry1] [A model of the specified concept ]]
 [[Geometry2 const &] [Any type fulfilling a Geometry Concept ] [geometry2] [A model of the specified concept ]]
-[[OutputIterator] [output iterator ] [out] [the output iterator, outputting polygons ]]
+[[OutputIterator] [output iterator ] [out] [The output iterator, to which union geometries are feeded ]]
 ]
 
 
 [heading Returns]
-the output iterator 
+The output iterator 
 
 [heading Header]
 Either
@@ -79,9 +87,14 @@ Or
 
 [endsect]
 
-[section:union_inserter_4 union_inserter]
+[section:union_inserter_4_with_strategy union_inserter (with strategy)]
 
-Combines two geometries which each other. 
+
+
+[heading Description]
+Calculate the union of two geometries using the specified strategy
+
+The free function union\u005finserter calculates the spatial set theoretic union of two geometries using the specified strategy. details\u005finserter{union} 
 
 [heading Synopsis]
 ``template<typename GeometryOut, typename Geometry1, typename Geometry2, typename OutputIterator, typename Strategy>
@@ -94,13 +107,13 @@ OutputIterator union_inserter(Geometry1 const & geometry1, Geometry2 const & geo
 [[GeometryOut] [output geometry type, must be specified ] [ - ] [Must be specified]]
 [[Geometry1 const &] [Any type fulfilling a Geometry Concept ] [geometry1] [A model of the specified concept ]]
 [[Geometry2 const &] [Any type fulfilling a Geometry Concept ] [geometry2] [A model of the specified concept ]]
-[[OutputIterator] [output iterator ] [out] [the output iterator, outputting polygons ]]
-[[Strategy const &] [compound strategy for intersection ] [strategy] [the strategy ]]
+[[OutputIterator] [output iterator ] [out] [The output iterator, to which union geometries are feeded ]]
+[[Strategy const &] [Compound strategy for segment intersection ] [strategy] [The strategy which will be used for union calculations ]]
 ]
 
 
 [heading Returns]
-the output iterator 
+The output iterator
 
 [heading Header]
 Either

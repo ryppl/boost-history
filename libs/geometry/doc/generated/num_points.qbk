@@ -18,7 +18,7 @@
 Calculates the number of points of a geometry. 
 
 [heading Description]
-The free function num_points calculates the number of points of a geometry. 
+The free function num\u005fpoints calculates the number of points of a geometry. 
 
 [heading Synopsis]
 ``template<typename Geometry>
@@ -45,7 +45,7 @@ Or
 
 `#include <boost/geometry/algorithms/num_points.hpp>`
 
-[include ref/algorithms/num_points.qbk]
+[include reference/algorithms/num_points.qbk]
 
 
 [endsect]
