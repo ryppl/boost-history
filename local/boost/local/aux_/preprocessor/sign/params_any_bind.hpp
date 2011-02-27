@@ -5,18 +5,9 @@
 #include "params_const_bind.hpp"
 #include "params_bind.hpp"
 #include <boost/preprocessor/logical/bitor.hpp>
-#include <boost/preprocessor/seq.hpp> // For `PP_SEQ_TAIL`.
 #include <boost/preprocessor/control/iif.hpp>
-#include <boost/preprocessor/control/expr_iif.hpp>
 #include <boost/preprocessor/tuple/eat.hpp>
-
-// Private //
-
-// Return nil-seq with any bind (const or not) but not unbind.
-#define BOOST_LOCAL_AUX_PP_SIGN_PARAMS_ALL_BIND_SEQ_TAIL_(params, seq_macro) \
-    BOOST_PP_SEQ_TAIL(seq_macro(params))
-
-// Public //
+#include <boost/preprocessor/list/append.hpp>
 
 // Expand to 1 iff `this` is bound (const or not).
 #define BOOST_LOCAL_AUX_PP_SIGN_PARAMS_HAVE_ANY_BIND_THIS(params) \
@@ -48,25 +39,19 @@
 // Expand to nil-seq `(NIL) ([&]var) ...` with all binds (const or not) but
 // excluding `this`.
 #define BOOST_LOCAL_AUX_PP_SIGN_PARAMS_ALL_BIND_WITHOUT_THIS(params) \
-    (BOOST_PP_NIL) \
-    BOOST_PP_IIF(BOOST_LOCAL_AUX_PP_SIGN_PARAMS_HAVE_CONST_BIND(params), \
-        BOOST_LOCAL_AUX_PP_SIGN_PARAMS_ALL_BIND_SEQ_TAIL_ \
-    , \
-        BOOST_PP_TUPLE_EAT(2) \
-    )(params, BOOST_LOCAL_AUX_PP_SIGN_PARAMS_CONST_BIND) \
-    BOOST_PP_IIF(BOOST_LOCAL_AUX_PP_SIGN_PARAMS_HAVE_BIND(params), \
-        BOOST_LOCAL_AUX_PP_SIGN_PARAMS_ALL_BIND_SEQ_TAIL_ \
-    , \
-        BOOST_PP_TUPLE_EAT(2) \
-    )(params, BOOST_LOCAL_AUX_PP_SIGN_PARAMS_BIND)
+    BOOST_PP_LIST_APPEND(BOOST_LOCAL_AUX_PP_SIGN_PARAMS_CONST_BIND(params), \
+            BOOST_LOCAL_AUX_PP_SIGN_PARAMS_BIND(params))
 
 // Expand to nil-seq `(NIL) ([&]var) ...` with all binds (const or not) and
 // including `this` if bound (const or not).
 #define BOOST_LOCAL_AUX_PP_SIGN_PARAMS_ALL_BIND(params) \
-    BOOST_LOCAL_AUX_PP_SIGN_PARAMS_ALL_BIND(params) \
-    BOOST_PP_EXPR_IIF(BOOST_PP_EXPAND( /* expand for MSVC */ \
-            BOOST_LOCAL_AUX_PP_SIGN_PARAMS_HAVE_ANY_BIND_THIS(params)), \
-        (this) /* never by reference because `&this` is not valid in C++ */ \
+    BOOST_PP_LIST_APPEND(BOOST_LOCAL_AUX_PP_SIGN_PARAMS_ALL_BIND(params), \
+        BOOST_PP_IIF(BOOST_LOCAL_AUX_PP_SIGN_PARAMS_HAVE_ANY_BIND_THIS( \
+                params), \
+            (this, BOOST_PP_NIL) /* `this` never by ref because in C++ */ \
+        , \
+            BOOST_PP_NIL \
+        ) \
     )
 
 #endif // #include guard

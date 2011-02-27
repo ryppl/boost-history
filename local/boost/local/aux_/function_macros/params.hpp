@@ -19,38 +19,39 @@ extern boost::scope_exit::aux::undeclared
 
 // PRIVATE //
 
-#define BOOST_LOCAL_AUX_FUNCTION_PARAMS_OK_(sign_params, id, typename_keyword) \
-    BOOST_LOCAL_AUX_FUNCTION_CODE_BINDING(sign_params, id, typename_keyword) \
-    BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR(sign_params, id, typename_keyword)
+#define BOOST_LOCAL_AUX_FUNCTION_PARAMS_TYPENAME_KEYWORD_(is_template) \
+    BOOST_PP_IIF(is_template, BOOST_PP_IDENTITY(typename), BOOST_PP_EMPTY)()
 
-#define BOOST_LOCAL_AUX_FUNCTION_PARAMS_ERROR_( \
-        sign_params, id, typename_keyword) \
+#define BOOST_LOCAL_AUX_FUNCTION_PARAMS_OK_(sign_params, id, is_template) \
+    BOOST_LOCAL_AUX_FUNCTION_CODE_BINDING(sign_params, id, \
+            BOOST_LOCAL_AUX_FUNCTION_PARAMS_TYPENAME_KEYWORD_(is_template)) \
+    BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR(sign_params, id, \
+            BOOST_LOCAL_AUX_FUNCTION_PARAMS_TYPENAME_KEYWORD_(is_template))
+
+#define BOOST_LOCAL_AUX_FUNCTION_PARAMS_ERROR_(sign_params, id, is_template) \
     ; /* close eventual previous statements, otherwise it has no effect */ \
     BOOST_MPL_ASSERT_MSG(false, /* always fails (there's an error) */ \
             BOOST_LOCAL_AUX_PP_SIGN_PARAMS_ERROR_MSG(sign_params), ()) \
     ; /* must close ASSERT macro for eventual use within class scope */
 
 // sign_params: parsed parenthesized params.
-#define BOOST_LOCAL_AUX_FUNCTION_PARAMS_(sign_params, id, typename_keyword) \
+#define BOOST_LOCAL_AUX_FUNCTION_PARAMS_(sign_params, id, is_template) \
     /* this must follow the result type (this code must be always present */ \
     /* even if there's an error because result type always present) */ \
-    BOOST_LOCAL_AUX_FUNCTION_CODE_DEDUCE_RESULT_TYPE(id, typename_keyword) \
+    BOOST_LOCAL_AUX_FUNCTION_CODE_DEDUCE_RESULT_TYPE(id, is_template) \
     /* rest of the code */ \
     BOOST_PP_IIF(BOOST_LOCAL_AUX_PP_SIGN_PARAMS_HAVE_ERROR(sign_params), \
         BOOST_LOCAL_AUX_FUNCTION_PARAMS_ERROR_ \
     , \
         BOOST_LOCAL_AUX_FUNCTION_PARAMS_OK_ \
-    )(sign_params, id, typename_keyword)
+    )(sign_params, id, is_template)
 
 // PUBLIC //
 
-// typename_keyword: `typename` in type depended context (i.e., templates),
-//  `EMPTY()` otherwise.
-#define BOOST_LOCAL_AUX_FUNCTION_PARAMS( \
-        parenthesized_params, id, typename_keyword) \
+#define BOOST_LOCAL_AUX_FUNCTION_PARAMS(parenthesized_params, id, is_template) \
     BOOST_LOCAL_AUX_FUNCTION_PARAMS_( \
             BOOST_LOCAL_AUX_PP_SIGN_PARSE_PARAMS(parenthesized_params), \
-            id, typename_keyword)
+            id, is_template)
 
 #endif // #include guard
 

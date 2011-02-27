@@ -12,45 +12,43 @@
 #include "../../symbol.hpp"
 #include "../../scope_exit/scope_exit.hpp" // Use this lib's ScopeExit impl.
 #include "../../preprocessor/sign/params_any_bind.hpp"
-#include <boost/detail/preprocessor/nilseq.hpp>
 #include <boost/preprocessor/control/iif.hpp>
 #include <boost/preprocessor/control/expr_iif.hpp>
-#include <boost/preprocessor/seq/for_each_i.hpp>
+#include <boost/preprocessor/list/adt.hpp> // For `IS_CONS`.
+#include <boost/preprocessor/list/for_each_i.hpp>
 #include <boost/preprocessor/cat.hpp>
 
 // PRIVATE //
 
 // Adapted from `BOOST_SCOPE_EXIT_AUX_IMPL()`.
 #define BOOST_LOCAL_AUX_FUNCTION_CODE_BINDING_WITH_TAGS_SEQ_( \
-        all_bind_nilseq, has_any_bind_this, id, typename_keyword) \
+        all_binds, has_any_bind_this, id, typename_keyword) \
     /* binding tags */ \
     BOOST_PP_EXPR_IIF(has_any_bind_this, \
         BOOST_SCOPE_EXIT_TYPEDEF_TYPEOF_THIS() \
         BOOST_LOCAL_AUX_FUNCTION_CODE_PARAM_THIS_TYPE(id); \
     ) \
-    BOOST_DETAIL_PP_NILSEQ_FOR_EACH_I( \
-            BOOST_LOCAL_AUX_FUNCTION_CODE_PARAM_TAG_DECL, \
-            id, all_bind_nilseq) \
-    BOOST_DETAIL_PP_NILSEQ_FOR_EACH_I( \
-            BOOST_SCOPE_EXIT_AUX_CAPTURE_DECL, \
-            (id, typename_keyword), all_bind_nilseq) \
+    BOOST_PP_LIST_FOR_EACH_I(BOOST_LOCAL_AUX_FUNCTION_CODE_PARAM_TAG_DECL, \
+            id, all_binds) \
+    BOOST_PP_LIST_FOR_EACH_I(BOOST_SCOPE_EXIT_AUX_CAPTURE_DECL, \
+            (id, typename_keyword), all_binds) \
     /* binding class */ \
     struct BOOST_SCOPE_EXIT_AUX_PARAMS_T(id) { \
         BOOST_PP_EXPR_IIF(has_any_bind_this, \
             BOOST_LOCAL_AUX_FUNCTION_CODE_PARAM_THIS_TYPE(id) \
             BOOST_LOCAL_AUX_FUNCTION_CODE_PARAM_THIS_NAME; \
         ) \
-        BOOST_DETAIL_PP_NILSEQ_FOR_EACH_I(BOOST_SCOPE_EXIT_AUX_PARAM_DECL, \
-                (id, typename_keyword), all_bind_nilseq) \
-        BOOST_DETAIL_PP_NILSEQ_FOR_EACH_I(BOOST_SCOPE_EXIT_AUX_MEMBER, \
-                id, all_bind_nilseq) \
+        BOOST_PP_LIST_FOR_EACH_I(BOOST_SCOPE_EXIT_AUX_PARAM_DECL, \
+                (id, typename_keyword), all_binds) \
+        BOOST_PP_LIST_FOR_EACH_I(BOOST_SCOPE_EXIT_AUX_MEMBER, \
+                id, all_binds) \
     } BOOST_LOCAL_AUX_SYMBOL_PARAMS_LOCAL_VARIABLE_NAME(id) = { \
         /* initialize the struct with param values to bind */ \
         BOOST_PP_EXPR_IIF(has_any_bind_this, this) \
-        BOOST_PP_COMMA_IF(BOOST_PP_BITAND(has_any_bind_this, BOOST_PP_NOT( \
-                BOOST_DETAIL_PP_NILSEQ_IS_NIL(all_bind_nilseq)))) \
-        BOOST_DETAIL_PP_NILSEQ_FOR_EACH_I( \
-                BOOST_SCOPE_EXIT_AUX_PARAM_INIT, id, all_bind_nilseq) \
+        BOOST_PP_COMMA_IF(BOOST_PP_BITAND(has_any_bind_this, \
+                BOOST_PP_LIST_IS_CONS(all_binds))) \
+        BOOST_PP_LIST_FOR_EACH_I(BOOST_SCOPE_EXIT_AUX_PARAM_INIT, \
+                id, all_binds) \
     };
 
 // Assume has some bind param.

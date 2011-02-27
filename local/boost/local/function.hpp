@@ -20,10 +20,12 @@
 #if defined(BOOST_NO_VARIADIC_MACROS)
 
 #define BOOST_LOCAL_FUNCTION_PARAMS(parameter_list) \
-    BOOST_LOCAL_AUX_FUNCTION_PARAMS(parameter_list, __LINE__, BOOST_PP_EMPTY())
+    BOOST_LOCAL_AUX_FUNCTION_PARAMS(parameter_list, \
+            __LINE__, 0 /* no template */)
 
 #define BOOST_LOCAL_FUNCTION_PARAMS_TPL(parameter_list) \
-    BOOST_LOCAL_AUX_FUNCTION_PARAMS(parameter_list, __LINE__, typename)
+    BOOST_LOCAL_AUX_FUNCTION_PARAMS(parameter_list, \
+            __LINE__, 1 /* template */)
 
 #else // BOOST_NO_VARIADIC_MACROS
 
@@ -32,12 +34,12 @@
 #define BOOST_LOCAL_FUNCTION_PARAMS(...) \
     BOOST_LOCAL_AUX_FUNCTION_PARAMS(BOOST_LOCAL_AUX_PP_VA_TO_SEQ( \
             (void) /* for empty seq */, __VA_ARGS__), \
-            __LINE__, BOOST_PP_EMPTY())
+            __LINE__, 0 /* no template */)
 
 #define BOOST_LOCAL_FUNCTION_PARAMS_TPL(...) \
     BOOST_LOCAL_AUX_FUNCTION_PARAMS(BOOST_LOCAL_AUX_PP_VA_TO_SEQ( \
             (void) /* for empty seq */, __VA_ARGS__), \
-            __LINE__, typename)
+            __LINE__, 1 /* template */)
 
 #endif // BOOST_NO_VARIADIC_MACROS
 

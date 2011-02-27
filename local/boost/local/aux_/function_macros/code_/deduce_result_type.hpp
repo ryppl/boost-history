@@ -9,34 +9,34 @@
 #include <boost/preprocessor/facilities/is_empty.hpp>
 
 // This must follow the result type.
-#define BOOST_LOCAL_AUX_FUNCTION_CODE_DEDUCE_RESULT_TYPE( \
-        id, typename_keyword) \
+#define BOOST_LOCAL_AUX_FUNCTION_CODE_DEDUCE_RESULT_TYPE(id, is_template) \
     /* result type here */ (*BOOST_LOCAL_AUX_SYMBOL_DEDUCE_RESULT_FUNC(id))(); \
     /* the many tagging, wrapping, etc that follow are taken from */ \
     /* Boost.ScopeExit type deduction mechanism and they are necessary */ \
     /* within template on GCC to work around a compiler internal error */ \
     typedef void (*BOOST_LOCAL_AUX_SYMBOL_DEDUCE_RESULT_TAG(id))( \
             int BOOST_LOCAL_AUX_SYMBOL_DEDUCE_RESULT_FUNC(id)); \
-    typedef BOOST_PP_IIF(BOOST_PP_IS_EMPTY(typename_keyword), \
-                BOOST_TYPEOF \
-            , \
+    typedef BOOST_PP_IIF(is_template, \
                 BOOST_TYPEOF_TPL \
+            , \
+                BOOST_TYPEOF \
             )(boost::scope_exit::aux::wrap( \
             boost::scope_exit::aux::deref( \
                     BOOST_LOCAL_AUX_SYMBOL_DEDUCE_RESULT_FUNC(id), \
                     (BOOST_LOCAL_AUX_SYMBOL_DEDUCE_RESULT_TAG(id))0))) \
             BOOST_LOCAL_AUX_SYMBOL_DEDUCE_RESULT_WRAP(id); \
-    typedef typename_keyword BOOST_LOCAL_AUX_SYMBOL_DEDUCE_RESULT_WRAP(id):: \
-            type BOOST_LOCAL_AUX_SYMBOL_DEDUCE_RESULT_CAPTURE(id); \
+    typedef BOOST_PP_EXPR_IIF(is_template, typename) \
+            BOOST_LOCAL_AUX_SYMBOL_DEDUCE_RESULT_WRAP(id)::type \
+            BOOST_LOCAL_AUX_SYMBOL_DEDUCE_RESULT_CAPTURE(id); \
     struct BOOST_LOCAL_AUX_SYMBOL_DEDUCE_RESULT_PARAMS(id) { \
         typedef BOOST_LOCAL_AUX_SYMBOL_DEDUCE_RESULT_CAPTURE(id) \
                 function_ptr_type;\
     }; \
-    typedef typename_keyword boost::remove_pointer<typename_keyword \
-            BOOST_LOCAL_AUX_SYMBOL_DEDUCE_RESULT_PARAMS(id):: \
-            function_ptr_type>::type \
-            BOOST_LOCAL_AUX_SYMBOL_DEDUCE_RESULT_FUNC_TYPE(id); \
-    typedef typename_keyword boost::function_traits< \
+    typedef BOOST_PP_EXPR_IIF(is_template, typename) boost::remove_pointer< \
+            BOOST_PP_EXPR_IIF(is_template, typename) \
+            BOOST_LOCAL_AUX_SYMBOL_DEDUCE_RESULT_PARAMS(id)::function_ptr_type \
+            >::type BOOST_LOCAL_AUX_SYMBOL_DEDUCE_RESULT_FUNC_TYPE(id); \
+    typedef BOOST_PP_EXPR_IIF(is_template, typename) boost::function_traits< \
             BOOST_LOCAL_AUX_SYMBOL_DEDUCE_RESULT_FUNC_TYPE(id)>::result_type \
             BOOST_LOCAL_AUX_SYMBOL_RESULT_TYPE(id);
 

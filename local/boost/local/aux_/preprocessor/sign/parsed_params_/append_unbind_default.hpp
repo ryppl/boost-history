@@ -6,29 +6,37 @@
 #include "../params_bind.hpp"
 #include "../params_const_bind.hpp"
 #include <boost/preprocessor/facilities/empty.hpp>
-#include <boost/preprocessor/seq/pop_back.hpp>
-#include <boost/preprocessor/seq/elem.hpp>
-#include <boost/preprocessor/seq/size.hpp>
+#include <boost/preprocessor/list/size.hpp>
+#include <boost/preprocessor/list/at.hpp>
+#include <boost/preprocessor/list/append.hpp>
+#include <boost/preprocessor/list/first_n.hpp>
 
 // Private API.
 
 #define BOOST_LOCAL_AUX_PP_SIGN_PARSED_PARAMS_APPEND_UNBIND_DEFAULT_( \
-        unbind_nilseq, default_value) \
-    BOOST_PP_SEQ_POP_BACK(unbind_nilseq) \
-    (( /* seq of 2-tuple params */ \
-        /* last appended classifier type and name */ \
-        BOOST_LOCAL_AUX_PP_SIGN_PARAMS_UNBIND_PARAM_DECL(BOOST_PP_SEQ_ELEM( \
-                /* nil-seq so can always safely decrement size */ \
-                BOOST_PP_DEC(BOOST_PP_SEQ_SIZE(unbind_nilseq)), \
-                unbind_nilseq)) \
+        unbinds, default_value) \
+    /* `DEC` ok because precondition that unbinds are not nil-list */ \
+    BOOST_PP_LIST_APPEND( \
+        BOOST_PP_LIST_FIRST_N(BOOST_PP_DEC(BOOST_PP_LIST_SIZE(unbinds)), \
+                unbinds) \
     , \
-        /* trailing EMPTY because defaults are optional */ \
-        default_value BOOST_PP_EMPTY \
-    ))
+        ( /* list 2-tuple */ \
+            ( /* (param_decl, default) 2-tuple */ \
+                BOOST_LOCAL_AUX_PP_SIGN_PARAMS_UNBIND_PARAM_DECL( \
+                        BOOST_PP_LIST_AT(unbinds, BOOST_PP_DEC( \
+                                BOOST_PP_LIST_SIZE(unbinds)))) \
+            , \
+                default_value BOOST_PP_EMPTY \
+            ) \
+        , \
+            BOOST_PP_NIL \
+        ) \
+    )
 
 // Public API.
 
 // default_value: a valid parameter default value (`-1`, etc)
+// Precondition: already added unbinds are not nil-list.
 #define BOOST_LOCAL_AUX_PP_SIGN_PARSED_PARAMS_APPEND_UNBIND_DEFAULT( \
         params, default_value) \
     ( /* unbind params and defaults */ \
