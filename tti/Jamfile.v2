@@ -7,8 +7,7 @@
 
 project tti
     : requirements
-        <include>.
-        <include>$(BOOST_ROOT)
+        <include>.&&$(BOOST_ROOT)
     :
         build-dir bin.v2
     ;
