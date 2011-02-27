@@ -80,8 +80,6 @@
 [import ../../example/factorial.cpp]
 [import ../../example/doit.cpp]
 [import ../../example/add_except.cpp]
-[import ../../example/renamed_print.cpp]
-[import ../../example/renamed_exit.cpp]
 [import ../../example/add_optimizers.cpp]
 
 The Boost Local library implements local functions, local blocks, and local exits for the C++ programming language.

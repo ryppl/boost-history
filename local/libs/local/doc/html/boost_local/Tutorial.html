@@ -812,27 +812,27 @@
     <span class="identifier">T</span> <span class="identifier">sum</span> <span class="special">=</span> <span class="identifier">T</span><span class="special">();</span>
     <span class="keyword">int</span> <span class="identifier">factor</span> <span class="special">=</span> <span class="number">10</span><span class="special">;</span>
 
-    <span class="identifier">BOOST_LOCAL_FUNCTION_TPL</span><span class="special">(</span> <span class="comment">// Use `..._TPL()` macros in templates.
-</span>    <span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">(</span><span class="identifier">add</span><span class="special">)(</span> <span class="special">(</span><span class="identifier">T</span><span class="special">)(</span><span class="identifier">num</span><span class="special">)</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">)((</span><span class="identifier">factor</span><span class="special">))</span> <span class="special">(</span><span class="identifier">bind</span><span class="special">)((&amp;</span><span class="identifier">sum</span><span class="special">))</span> <span class="special">)</span>
-    <span class="special">)</span> <span class="special">{</span>
-        <span class="identifier">sum</span> <span class="special">+=</span> <span class="identifier">factor</span> <span class="special">*</span> <span class="identifier">num</span><span class="special">;</span>
-    <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_END</span><span class="special">(</span><span class="identifier">add</span><span class="special">)</span>
+    <span class="comment">// Use `..._TPL()` macros within templates.
+</span>    <span class="identifier">T</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS_TPL</span><span class="special">(</span> <span class="special">(</span><span class="identifier">T</span> <span class="identifier">num</span><span class="special">)</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">factor</span><span class="special">)</span>
+            <span class="special">(</span><span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">sum</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span>
+        <span class="keyword">return</span> <span class="identifier">sum</span> <span class="special">+=</span> <span class="identifier">factor</span> <span class="special">*</span> <span class="identifier">num</span><span class="special">;</span>
+    <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">add</span><span class="special">)</span>
     <span class="identifier">add</span><span class="special">(</span><span class="identifier">x</span><span class="special">);</span>
 
-    <span class="identifier">size_t</span> <span class="identifier">size</span> <span class="special">=</span> <span class="number">2</span><span class="special">;</span>
-    <span class="identifier">T</span><span class="special">*</span> <span class="identifier">nums</span> <span class="special">=</span> <span class="keyword">new</span> <span class="identifier">T</span><span class="special">[</span><span class="identifier">size</span><span class="special">];</span>
-    <span class="identifier">BOOST_LOCAL_EXIT_TPL</span><span class="special">(</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">)((&amp;</span><span class="identifier">size</span><span class="special">))</span> <span class="special">(</span><span class="identifier">bind</span><span class="special">)((</span><span class="identifier">nums</span><span class="special">))</span> <span class="special">)</span> <span class="special">{</span>
-        <span class="keyword">if</span> <span class="special">(</span><span class="identifier">size</span> <span class="special">&amp;&amp;</span> <span class="identifier">nums</span><span class="special">)</span> <span class="keyword">delete</span><span class="special">[]</span> <span class="identifier">nums</span><span class="special">;</span>
-    <span class="special">}</span> <span class="identifier">BOOST_LOCAL_EXIT_END</span>
-
-    <span class="identifier">nums</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="identifier">y</span><span class="special">;</span> <span class="identifier">nums</span><span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">=</span> <span class="identifier">z</span><span class="special">;</span>
-    <span class="identifier">std</span><span class="special">::</span><span class="identifier">for_each</span><span class="special">(</span><span class="identifier">nums</span><span class="special">,</span> <span class="identifier">nums</span> <span class="special">+</span> <span class="identifier">size</span><span class="special">,</span> <span class="identifier">add</span><span class="special">);</span>
-
-    <span class="identifier">BOOST_LOCAL_BLOCK_TPL</span><span class="special">(</span>
-            <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">)((&amp;</span><span class="identifier">sum</span><span class="special">)(&amp;</span><span class="identifier">factor</span><span class="special">)(&amp;</span><span class="identifier">x</span><span class="special">)(&amp;</span><span class="identifier">y</span><span class="special">)(&amp;</span><span class="identifier">z</span><span class="special">))</span> <span class="special">)</span> <span class="special">{</span>
-        <span class="identifier">assert</span><span class="special">(</span><span class="identifier">sum</span> <span class="special">==</span> <span class="identifier">factor</span> <span class="special">*</span> <span class="special">(</span><span class="identifier">x</span> <span class="special">+</span> <span class="identifier">y</span> <span class="special">+</span> <span class="identifier">z</span><span class="special">));</span>
-    <span class="special">}</span> <span class="identifier">BOOST_LOCAL_BLOCK_END</span>
-
+<span class="comment">//    size_t size = 2;
+</span><span class="comment">//    T* nums = new T[size];
+</span><span class="comment">//    BOOST_LOCAL_EXIT_TPL( (const bind&amp; size) (bind nums) ) {
+</span><span class="comment">//        if (size &amp;&amp; nums) delete[] nums;
+</span><span class="comment">//    } BOOST_LOCAL_EXIT_END
+</span>
+<span class="comment">//    nums[0] = y; nums[1] = z;
+</span><span class="comment">//    std::for_each(nums, nums + size, add);
+</span>
+<span class="comment">//    BOOST_LOCAL_BLOCK_TPL( (const bind &amp;sum) (const bind&amp; factor)
+</span><span class="comment">//            (const bind&amp; x) (const bind&amp; y) (const bind&amp; z) ) {
+</span><span class="comment">//        assert(sum == factor * (x + y + z));
+</span><span class="comment">//    } BOOST_LOCAL_BLOCK_END
+</span>
     <span class="keyword">return</span> <span class="identifier">sum</span><span class="special">;</span>
 <span class="special">}</span>
 

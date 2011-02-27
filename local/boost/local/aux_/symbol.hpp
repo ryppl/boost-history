@@ -36,9 +36,25 @@
     BOOST_PP_CAT(BOOST_PP_CAT(name, BOOST_LOCAL_AUX_SYMBOL_INFIX), \
             BOOST_LOCAL_AUX_INTERNAL_SYMBOL(typeof_type))
 
-#define BOOST_LOCAL_AUX_SYMBOL_DEDUCE_RESULT_TYPE(id) \
+#define BOOST_LOCAL_AUX_SYMBOL_DEDUCE_RESULT_FUNC(id) \
     /* symbol (not internal) also gives error if missing result type */ \
     BOOST_PP_CAT(ERROR_missing_result_type_before_the_local_function_parameter_macro_id, id)
+
+#define BOOST_LOCAL_AUX_SYMBOL_DEDUCE_RESULT_TAG(id) \
+    BOOST_LOCAL_AUX_INTERNAL_SYMBOL(BOOST_PP_CAT(deduce_result_tag, id))
+
+#define BOOST_LOCAL_AUX_SYMBOL_DEDUCE_RESULT_WRAP(id) \
+    BOOST_LOCAL_AUX_INTERNAL_SYMBOL(BOOST_PP_CAT(deduce_result_wrap, id))
+
+#define BOOST_LOCAL_AUX_SYMBOL_DEDUCE_RESULT_CAPTURE(id) \
+    BOOST_LOCAL_AUX_INTERNAL_SYMBOL(BOOST_PP_CAT(deduce_result_capture, id))
+
+#define BOOST_LOCAL_AUX_SYMBOL_DEDUCE_RESULT_PARAMS(id) \
+    BOOST_LOCAL_AUX_INTERNAL_SYMBOL(BOOST_PP_CAT(deduce_result_params, id))
+
+#define BOOST_LOCAL_AUX_SYMBOL_DEDUCE_RESULT_FUNC_TYPE(id) \
+    BOOST_LOCAL_AUX_INTERNAL_SYMBOL(BOOST_PP_CAT(deduce_result_function_type, \
+            id))
 
 #define BOOST_LOCAL_AUX_SYMBOL_RESULT_TYPE(id) \
     BOOST_LOCAL_AUX_INTERNAL_SYMBOL(BOOST_PP_CAT(result_type, id))

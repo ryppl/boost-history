@@ -1018,7 +1018,7 @@
               Default parameter values are not part of the type so it is not possible
               to program a metafunction that counts the number of default parameter
               values at compile-time but such information is also needed by the local
-              functions in order to properly support default parameters. <sup>[<a name="id899668" href="#ftn.id899668" class="footnote">23</a>]</sup>
+              functions in order to properly support default parameters. <sup>[<a name="id897512" href="#ftn.id897512" class="footnote">23</a>]</sup>
             </li>
 </ol></div>
 <p>
@@ -1037,7 +1037,7 @@
           Note that the <code class="computeroutput"><span class="special">=</span></code> symbol needs
           to be replaced with the alphanumeric keyword <code class="computeroutput"><span class="keyword">default</span></code>
           because parenthesized syntax elements cannot start with a non alphanumeric
-          symbol like <code class="computeroutput"><span class="special">=</span></code>. <sup>[<a name="id900067" href="#ftn.id900067" class="footnote">24</a>]</sup>
+          symbol like <code class="computeroutput"><span class="special">=</span></code>. <sup>[<a name="id897911" href="#ftn.id897911" class="footnote">24</a>]</sup>
         </p>
 <p>
           For C99, some or all the parenthesis can be replaced by commas.
@@ -1215,7 +1215,7 @@
 </div>
 <div class="footnotes">
 <br><hr width="100" align="left">
-<div class="footnote"><p><sup>[<a id="ftn.id899668" href="#id899668" class="para">23</a>] </sup>
+<div class="footnote"><p><sup>[<a id="ftn.id897512" href="#id897512" class="para">23</a>] </sup>
                 Specifically, the number of default parameter value is needed at
                 compile-time to instantiate the proper <code class="computeroutput"><span class="identifier">function_ref</span><span class="special">&lt;</span><span class="keyword">typename</span>
                 <span class="identifier">F</span><span class="special">,</span>
@@ -1224,7 +1224,7 @@
                 functor is needed to implement the trick that allows local functions
                 to be passed as template parameters (see <a href="http://lists.boost.org/Archives/boost/2010/09/170888.php" target="_top">http://lists.boost.org/Archives/boost/2010/09/170888.php</a>).
               </p></div>
-<div class="footnote"><p><sup>[<a id="ftn.id900067" href="#id900067" class="para">24</a>] </sup>
+<div class="footnote"><p><sup>[<a id="ftn.id897911" href="#id897911" class="para">24</a>] </sup>
             This is because the parenthesized syntax needs to check if its token
             matches a keyword like <code class="computeroutput"><span class="keyword">void</span></code>,
             <code class="computeroutput"><span class="keyword">inline</span></code>, etc. This checking

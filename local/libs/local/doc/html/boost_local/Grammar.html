@@ -132,7 +132,7 @@
         <span class="special">(</span><span class="keyword">default</span><span class="special">)(</span><span class="bold"><strong>parameter-default</strong></span><span class="special">)</span>       <span class="comment">// Default value for this optional parameter.
 </span></pre>
 <p>
-      Binding variables in scope: <sup>[<a name="id891280" href="#ftn.id891280" class="footnote">21</a>]</sup> <sup>[<a name="id891585" href="#ftn.id891585" class="footnote">22</a>]</sup>
+      Binding variables in scope: <sup>[<a name="id889233" href="#ftn.id889233" class="footnote">21</a>]</sup> <sup>[<a name="id889538" href="#ftn.id889538" class="footnote">22</a>]</sup>
     </p>
 <pre class="programlisting"><span class="emphasis"><em>bindings:</em></span>
           <span class="emphasis"><em>const-bindings</em></span>                   <span class="comment">// Only constant binding.
@@ -151,7 +151,7 @@
 </span></pre>
 <div class="footnotes">
 <br><hr width="100" align="left">
-<div class="footnote"><p><sup>[<a id="ftn.id891280" href="#id891280" class="para">21</a>] </sup>
+<div class="footnote"><p><sup>[<a id="ftn.id889233" href="#id889233" class="para">21</a>] </sup>
         <span class="bold"><strong>Rationale.</strong></span> The alternative syntax <code class="computeroutput"><span class="special">(</span><span class="identifier">bind</span><span class="special">)((</span><span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">x</span><span class="special">)...)</span></code>
         would have been preferred because <code class="computeroutput"><span class="keyword">const</span></code>
         appears before the reference as usual in C++ and because a single <code class="computeroutput"><span class="identifier">bind</span></code> sequence is used for both plain and
@@ -172,7 +172,7 @@
         symbol <code class="computeroutput"><span class="special">&amp;</span></code> never appears in
         the back).
       </p></div>
-<div class="footnote"><p><sup>[<a id="ftn.id891585" href="#id891585" class="para">22</a>] </sup>
+<div class="footnote"><p><sup>[<a id="ftn.id889538" href="#id889538" class="para">22</a>] </sup>
         <span class="bold"><strong>Rationale.</strong></span> Binding is used within the function
         parameter list because this syntax seemed natural given that the bound variables
         are used by the function body as if they were function parameters (only their
