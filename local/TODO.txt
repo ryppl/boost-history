@@ -1,77 +1,17 @@
 
 
-* Rework a no-macro version of the factorial example.
-    >>  Ask boost about inline -- is it useful?
-    >>  Tell boost that split-macros can support recursion at the cost of
-        allowing `this` within the function body (so no error if used instead
-        of `this_`).
+* Docs: The simplified syntax removes the function name repetition. However, to supoprt recursion the body cannot be static (to access the member functor variable with the local function name defined by the NAME macro). Therefore the limitation that no compiler error if `this` is used instead of `this_` as a pointer within the body (if not used as pointer, compiler will most likely error because `this` is the functor which has a rather different structure than the user's object `this_`).
 
+* Docs: `inline` does not apply to local function which are already inlined (because they are defined where they are declared).
 
-* Rename function_ref to function (because it now has a default constructor so it's not a reference anymore).
+* Docs: PARAMS cannot appear on same line because they use __LINE__ to generate unique IDs (there's no way around this because this macro doesn't know the function name).
 
-* Document that PARAMS cannot appear on same line because they use __LINE__ to generate unique IDs (there's no way around this because this macro doesn't know the function name).
+* Docs: `this` can never be bound by ref (as usual in C++).
 
-
-* Double check all local function syntax elements (from Grammar) -- auto, register, etc.
-
-* Provide bound parameter types within the body (via private typdefs in the functor class) as `BOUND_PARAM_NAME>_type` -- these can be used for concept checking, etc. Actually, provide access to the bind types via a macro BOOST_LOCAL_TYPEOF() so to hide the type name and to strip eventual const& (Vicente's idea).
-
-* In docs that local functions cannot appear on same line (because __LINE__ is used to generate unique symbols).
-
-* Ask Paul why nil-seq are not part of pp-lib.
-
-* Try to use PP_LIST instead of nil-seq.
-
-* Ask (Paul) for interest in addition PP_KEYWORD to pp-lib.
-
-* Rename is_xxx.hpp to xxx.hpp for all PP_KEYWORD and add REMOVE and ADD macros:
-> #include <boost/preprocessor.hpp>
-> #include <boost/preprocessor/detail/is_unary.hpp>
->
-> #define IS_AUTO_auto (1) /* must expand to unary */
-> #define IS_AUTO(tokens) BOOST_PP_IS_UNARY(BOOST_PP_CAT(IS_AUTO_, tokens))
->
-> #define REMOVE_AUTO_STRIP_auto /* must expand to nothing */
-> #define REMOVE_AUTO_(tokens) BOOST_PP_CAT(REMOVE_AUTO_STRIP_, tokens)
-> #define REMOVE_AUTO(tokens) \
->     BOOST_PP_IIF(IS_AUTO(tokens), \
->         REMOVE_AUTO_ \
->     , \
->         tokens BOOST_PP_TUPLE_EAT(1) \
->     )(tokens)
->
-> #define ADD_AUTO(tokens) \
->     BOOST_PP_EXPR_IIF(BOOST_PP_NOT(IS_AUTO(tokens)), auto) tokens
->
-> IS_AUTO(auto int x) // 1
-> IS_AUTO(int x) // 0
->
-> REMOVE_AUTO(auto int x) // int x
-> REMOVE_AUTO(int x) // int x
->
-> ADD_AUTO(auto int x) // auto int x
-> ADD_AUTO(int x) // auto int x
-The names should actually be AUTO_IN_FRONT, AUTO_ADD_FRONT, AUTO_REMOVE_FRONT, AUTO_IN_BACK, AUTO_ADD_BACK, AUTO_REMOVE_BACK (the general stuff could go into keyword/utility/in.hpp, add.hpp, remove.hpp).
-
-* Add to docs that this can never be bound by ref (as in C++).
-
-* Add to docs that MSVC is not C99 because it does not support empty params (so `()` can't be used for empty params and `void` -- or `(void)` -- should be used. However, MSVC supports variadics you can use `..., ...` to separate params instead of parenthesis `(...)...`.
-
-* Add to docs that if `, default ...` syntax seems strange for C99, programmers can always #define and use the following macro (or somenthing similar).
-> #define WITH_DEFAULT(x) , default x
-
+* Docs: If `, default ...` syntax seems strange for C99, programmers can always use `#define WITH_DEFAULT(x) , default x` or similar macro instead.
 
 
 * Try seriously to make nested locals to work...
-
-* Add to docs that object `this` can never be bound by reference `&this` (as usual in C++ it is not legal to get a reference to the `this` pointer).
-
-* Make sure that non of the binding (outside and inside the functor) code is generated when no param is bound.
-
-* Rename `function_base` to `abstract_function` (because it's abstract) and `function_ref` to `function` (as for Boost.Function because it's no longer a ref since it can be init empty and uses ptr internally).
-
-
-* Send comments on variadic_macro_data:
 
 * Optimize macro expansion code for C++0x, C++03, etc. From John Bytheway:
 > Yes, in C++0x local structs can be passed as template parameters.
@@ -82,14 +22,5 @@ The names should actually be AUTO_IN_FRONT, AUTO_ADD_FRONT, AUTO_REMOVE_FRONT, A
 > Also, your macros would allow writing code that worked in C++0x and
 > C++03, with the virtual function business in only those compilers/modes
 > where it is necessary.
-
-* See if the two local functors `functor_factorial` and `factorial` can be declared `const`.
-
-* Make sure that when no bound params, none of the binding overhead code is generated by the macro expansion.
-
-* Add comparison with Look at Alex-Steven's syntax to docs:
-    http://thread.gmane.org/gmane.comp.lib.boost.devel/168612/focus=168694
-    >> This syntax uses same typeof trick to deduce result type.
-    >> This syntax uses a strange macro-into-macro for bind. I don't.
 
 
