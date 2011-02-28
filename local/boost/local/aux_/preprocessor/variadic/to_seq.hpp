@@ -9,6 +9,7 @@
 #include "is.hpp"
 #include "same.hpp"
 #include "eat.hpp"
+#include <boost/detail/preprocessor/variadic_macro_data/vmd.hpp>
 #include <boost/preprocessor/control/iif.hpp>
 #include <boost/preprocessor/control/if.hpp>
 
