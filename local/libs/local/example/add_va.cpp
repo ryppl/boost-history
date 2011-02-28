@@ -1,23 +1,8 @@
 
 // Copyright (C) 2009-2011 Lorenzo Caminiti
-// Use, modification, and distribution is subject to the
-// Boost Software License, Version 1.0
-// (see accompanying file LICENSE_1_0.txt or a copy at
-// http://www.boost.org/LICENSE_1_0.txt).
-
-// Use all local constructs -- main motivating example for the documentation.
-// Adapted from C++0x lambda paper N2529 (added local blocks and exits).
-// Simplified syntax for variadic macros only.
-    
-// NOTE: In this example `factor` is bound as const reference so to prevent
-// the local function to modify it. Alternatively, it could have been bound by
-// value as in `(bind)( (&sum) (factor) )` so to prevent modifications of
-// `factor` from within the local function to affect `factor` values outside
-// the local function scope (as done in N2529). However, binding `factor` by
-// value instead that as const reference would have introduced an extra copy
-// operation and, more importantly, it would have not enforced the logical
-// constraint that `factor` should not be modified at all from within the local
-// function body.
+// Use, modification, and distribution is subject to the Boost Software
+// License, Version 1.0 (see accompanying file LICENSE_1_0.txt or a
+// copy at http://www.boost.org/LICENSE_1_0.txt).
 
 //[ add_va_cpp
 #include <boost/local/function.hpp>

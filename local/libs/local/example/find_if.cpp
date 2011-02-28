@@ -1,12 +1,8 @@
 
 // Copyright (C) 2009-2011 Lorenzo Caminiti
-// Use, modification, and distribution is subject to the
-// Boost Software License, Version 1.0
-// (see accompanying file LICENSE_1_0.txt or a copy at
-// http://www.boost.org/LICENSE_1_0.txt).
-
-// Pass local function to STL algorithm.
-// Adapted from C++0x lambda paper N2550.
+// Use, modification, and distribution is subject to the Boost Software
+// License, Version 1.0 (see accompanying file LICENSE_1_0.txt or a
+// copy at http://www.boost.org/LICENSE_1_0.txt).
 
 #include <boost/local/function.hpp>
 #include <list>

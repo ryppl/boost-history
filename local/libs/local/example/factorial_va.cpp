@@ -1,12 +1,8 @@
 
 // Copyright (C) 2009-2011 Lorenzo Caminiti
-// Use, modification, and distribution is subject to the
-// Boost Software License, Version 1.0
-// (see accompanying file LICENSE_1_0.txt or a copy at
-// http://www.boost.org/LICENSE_1_0.txt).
-
-// Use recursion, default parameters, and bind by non-const reference.
-// Simplified syntax for variadic macros only.
+// Use, modification, and distribution is subject to the Boost Software
+// License, Version 1.0 (see accompanying file LICENSE_1_0.txt or a
+// copy at http://www.boost.org/LICENSE_1_0.txt).
 
 //[ factorial_va_cpp
 #include <boost/local/function.hpp>

@@ -1,14 +1,8 @@
 
 // Copyright (C) 2009-2011 Lorenzo Caminiti
-// Use, modification, and distribution is subject to the
-// Boost Software License, Version 1.0
-// (see accompanying file LICENSE_1_0.txt or a copy at
-// http://www.boost.org/LICENSE_1_0.txt).
-
-// IMPORTANT: Even if this file is in the "aux_" directory, its macro names
-// must NOT be prefixed by "AUX" or be within the "aux" namespace. This is
-// because this file is an helper to automatically implement all `function`
-// template specializations which must leave outside the "aux" namespace.
+// Use, modification, and distribution is subject to the Boost Software
+// License, Version 1.0 (see accompanying file LICENSE_1_0.txt or a
+// copy at http://www.boost.org/LICENSE_1_0.txt).
 
 #if !BOOST_PP_IS_ITERATING
 #   ifndef BOOST_LOCAL_AUX_FUNCTION_HPP_

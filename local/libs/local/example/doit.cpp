@@ -1,12 +1,8 @@
 
 // Copyright (C) 2009-2011 Lorenzo Caminiti
-// Use, modification, and distribution is subject to the
-// Boost Software License, Version 1.0
-// (see accompanying file LICENSE_1_0.txt or a copy at
-// http://www.boost.org/LICENSE_1_0.txt).
-
-// Pass local function as a parameter.
-// Adapted from C++0x lambda papaer N2529 (added default parameters).
+// Use, modification, and distribution is subject to the Boost Software
+// License, Version 1.0 (see accompanying file LICENSE_1_0.txt or a
+// copy at http://www.boost.org/LICENSE_1_0.txt).
 
 //[ doit_cpp
 #include <boost/local/function.hpp>
