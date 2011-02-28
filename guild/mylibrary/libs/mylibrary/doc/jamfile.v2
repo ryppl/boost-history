@@ -40,6 +40,7 @@ if --enable-index in  [ modules.peek : ARGV ]
         # Without this would need !scan-path "../../../boost/mylibrary"
         
         <quickbook-define>enable_index ;
+        # Used by Quickbook to invoke indexing.
 }
 else
 {
@@ -159,10 +160,26 @@ boostbook standalone
 		<format>pdf:<xsl:param>draft.mode="no"
 		<format>pdf:<xsl:param>boost.url.prefix=I:/boost-sandbox/guild/mylibrary/libs/mylibrary/doc/html
 		
-		<dependency>autodoc #
-
+		<dependency>autodoc # 
+		<dependency>css-install
+		<dependency>png-install
+		<dependency>svg-install
    ;
 
-#install pdf-install : standalone : <install-type>PDF <location>. ;
+# Install (copy) the 'master' copy of boostbook Cascading Style sheet from your current Boost-root.
+path-constant boost-root : [ modules.peek : BOOST ] ;
+install css-install : $(boost-root)/doc/src/boostbook.css : <location>html ;
+
+# Install (copy) the 'master' copies of all icon images (both PNG and SVG)
+# and the Boost logo from your current Boost-root
+# to the local /doc/html/images folder so that html is complete and standalone. 
+install png-install : [ glob $(boost-root)/doc/src/images/*.png $(boost-root)/boost.png ] : <location>html/images ;
+install svg-install : [ glob $(boost-root)/doc/src/images/*.svg ] : <location>html/images ;
+
+# install pdf-install : standalone : <install-type>PDF <location>. ;
+# Effectively copies the file from \bin folder to the \doc folder.
+# But will not work as expected if doxygen and/or autoindex is used
+# because a modified pdf file is created, so 
+# this command  will rename the file to the expected filename, here mylibrary.pdf.
 
 install pdf-install : standalone : <install-type>PDF <location>. <name>mylibrary.pdf ;

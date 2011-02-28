@@ -1,4 +1,4 @@
-[article Creating Boost HTML and PDF documentation using Quickbook, Doxygen and Auto-Indexing.
+[article mylibrary - a template for Creating Boost HTML and PDF documentation using Quickbook, Doxygen and Auto-Indexing.
     [quickbook 1.5]
     [id my_library_template]
     [copyright 2011 Paul A. Bristow]
@@ -53,9 +53,9 @@
 [important This is a template, NOT an official Boost library.]
 
 [/ Examples of links to classes in own files.]
-[note Comments and suggestions (even bugs!) to Paul.A.Bristow (at) hetp (dot) u-net (dot) com]
+[note Comments and suggestions (even bugs!) to Paul.A.Bristow (at) hetp (dot) u-net (dot) com.]
 
-A printer-friendly PDF version of this manual is also available.
+[note A printer-friendly PDF version of this manual is also available.]
 
 [section:intro Introduction]
 [/ It is a good idea to give *all* sections an id - which must follow section: with *no* space(s).]
@@ -124,7 +124,7 @@ a [@http://en.wikipedia.org/wiki/Wikiwiki Wiki-Wiki-style language].
 
 __alert
 But to allow a standalone zipped version of html,
- all images must be copied (installed) into the `doc\html\images` sub-directory.
+all images must be copied (installed) into the `doc\html\images` sub-directory.
 
 This document is intended to provide a sort of template to help new writers get started,
 with some handy hints and tips (based on the many pitfalls discovered en route).
@@ -181,32 +181,6 @@ Step 1 is not really optional - the indexing process is slow, even with explicit
 specification of the auto-index.exe.  So follow these instructions carefully,
 including essential changes to your user-config.jam.
 
-[xinclude autodoc.xml] [/ Using Doxygen reference documentation.]
-[/ The position of this in the Quickbook determines the location of the Doxygen references section.]
-
-[/Include the class, function, typedef, and macro indexes, and also a full index with <index/>]
-'''
-  
-  <index type="class_name">
-   <title>Class Index</title>
-  </index>
-  
-  <index type="function_name">
-   <title>Function Index</title>
-  </index>
-  
-  <index type="typedef_name">
-  <title>Typedef Index</title>
-  </index>
-  
-  <index type="macro_name">
-  <title>Macro Index</title>
-  </index>
-
-  <index/>
-
-'''
-
 This is some ['junk] that should [*never] be indexed!
 (because it is excluded in the index script file mylibrary.idx).
 
@@ -227,7 +201,7 @@ hierarchical names for section IDs(as Quickbook generates, for example),
 you can easily place a constraint on which sections are examined for a particular term.
 
 For example, if you want to index occurrences of Lord Kelvin's name,
-but only in the idols section,  and Voltaire only in the indexing section,
+but only in the idols section, and Voltaire only in the indexing section,
 but Twain in all sections, you might then add:
 
 [pre
@@ -262,7 +236,7 @@ we don't want a index entry every time we state a temperature in degrees kelvin!
 
 Mark Twain [*should] get an index entry both here and in the idols section.
 
-Voltaire should only get an index entry here, and [*not] in idols section.
+Voltaire should (perversely) only get an "how to get indexes.. " index entry, and [*not] in idols section.
 
 [endsect] [/section:idols Idols]
 
@@ -271,10 +245,20 @@ Voltaire should only get an index entry here, and [*not] in idols section.
 Last edit to Quickbook file __FILENAME__ was at __TIME__ on __DATE__.
 
 [tip This should appear on the pdf version 
-(but may be redundant on html where the last edit date is on the first page).]
+(but may be redundant on a html version where the last edit date is on the first (home) page).]
 [/See also Adobe Reader pdf File Properties for creation date, and PDF producer, version and page count.]
 
 [endsect] [/section:version_id Version Info]
+
+[xinclude autodoc.xml] [/ Using Doxygen reference documentation.]
+[/ The position of this in the Quickbook determines the location of the Doxygen references section.]
+[/ Index(es) should be invoked in the main module, not within a section.]
+
+[? enable_index
+'''
+  <index/>
+'''
+]
 
 [/ All your .qbk documentation files should append a copyright claim and license like this (with your name of course).]
 [/ mylibrary.qbk

@@ -7,8 +7,6 @@
 # License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 # http://www.boost.org/LICENSE_1_0.txt)
 
-# Diagnostic output - useful during refinement of the index.
-!debug regular-expression
 
 #  All header files, recursing down to include sub-folders.
 !scan-path "boost/mylibrary" ".*\.hpp" true 
@@ -16,10 +14,29 @@
 # All example source files, assuming no sub-folders.
 !scan-path "libs/mylibrary/example" ".*\.cpp" 
 
+# Diagnostic output - useful during refinement of the index.
 # Terms that you want to appear in the Index.
 # Term to display in index, and word(s) that are to be matched (as a regular expression).
+#  \<index\w*\> for example, should show all matches to index, indexes, indexed, indexing and indexation.
+# !debug \<index\w*\> 
 
-!debug regular-expression
+# Indexing section: Creating Boost HTML and PDF documentation using Quickbook, Doxygen and Auto-Indexing.
+# Debug term found, in block with ID: my_library_template
+# Current section title is: Creating Boost HTML and PDF documentation using Quickbook, Doxygen and Auto-Indexing.
+# The main index entry will be : Creating Boost HTML and PDF documentation using Quickbook, Doxygen and Auto-Indexing.
+# The indexed term is: index
+# The search regex is: \<index\w*\>
+# The section constraint is: 
+# The index type for this entry is: 
+
+#!debug "\<\w*\>" 
+# Will produce a massive amount of output??
+
+#  This may produce a lot of diagnostic information, so you may also find it useful to restrict to a single section.
+#  (or multiple sub-sections)  
+#!debug "\<kelvin\w*\>" ".*idols.*"
+# Error: Unable to process line: !debug "\<kelvin\w*\>" ".*idols.*"
+
 
 Quickbook
 Doxygen
@@ -69,6 +86,9 @@ trivial
 mainpage
 
 # Several warnings in \warnings comments
+#  the index term is only found when the word "warning" is the in the text of the warning.
+# \warning This says warning so IS indexed.
+# The Doxygen command \warning itself does NOT create an indexable item.
 warning
 # Mentioned in Doxygen \details comment in my_library_example.cpp
 markup
