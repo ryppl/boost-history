@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeLite_Project Name="XInt" InternalType="Console">
+  <Plugins>
+    <Plugin Name="qmake">
+      <![CDATA[00040001N0005Debug0000000000000001N0018Debug, Header Only0000000000000001N0007Release0000000000000001N0020Release, Header Only000000000000]]>
+    </Plugin>
+  </Plugins>
+  <Description/>
+  <Dependencies/>
+  <VirtualDirectory Name="other">
+    <File Name="../.gitignore"/>
+    <File Name="../README.TXT"/>
+    <File Name="../../test/Jamfile"/>
+  </VirtualDirectory>
+  <VirtualDirectory Name="include">
+    <File Name="../../../../boost/xint/exceptions.hpp"/>
+    <File Name="../../../../boost/xint/integer.hpp"/>
+    <File Name="../../../../boost/xint/random.hpp"/>
+    <File Name="../../../../boost/xint/xint.hpp"/>
+    <VirtualDirectory Name="detail">
+      <File Name="../../../../boost/xint/detail/addsubtract.hpp"/>
+      <File Name="../../../../boost/xint/detail/andorxor.hpp"/>
+      <File Name="../../../../boost/xint/detail/basic_types_and_includes.hpp"/>
+      <File Name="../../../../boost/xint/detail/bitfunctions.hpp"/>
+      <File Name="../../../../boost/xint/detail/bitqueue.hpp"/>
+      <File Name="../../../../boost/xint/detail/compare.hpp"/>
+      <File Name="../../../../boost/xint/detail/convert.hpp"/>
+      <File Name="../../../../boost/xint/detail/divide.hpp"/>
+      <File Name="../../../../boost/xint/detail/gcd.hpp"/>
+      <File Name="../../../../boost/xint/detail/internals.hpp"/>
+      <File Name="../../../../boost/xint/detail/log2.hpp"/>
+      <File Name="../../../../boost/xint/detail/magnitude_manager.hpp"/>
+      <File Name="../../../../boost/xint/detail/modular.hpp"/>
+      <File Name="../../../../boost/xint/detail/monty.hpp"/>
+      <File Name="../../../../boost/xint/detail/multiply.hpp"/>
+      <File Name="../../../../boost/xint/detail/options.hpp"/>
+      <File Name="../../../../boost/xint/detail/policies.hpp"/>
+      <File Name="../../../../boost/xint/detail/powers.hpp"/>
+      <File Name="../../../../boost/xint/detail/prime.hpp"/>
+      <File Name="../../../../boost/xint/detail/random_by_size.hpp"/>
+      <File Name="../../../../boost/xint/detail/randomgen.hpp"/>
+      <File Name="../../../../boost/xint/detail/raw_integer.hpp"/>
+      <File Name="../../../../boost/xint/detail/roots.hpp"/>
+      <File Name="../../../../boost/xint/detail/shift.hpp"/>
+      <File Name="../../../../boost/xint/detail/streams.hpp"/>
+    </VirtualDirectory>
+  </VirtualDirectory>
+  <VirtualDirectory Name="test">
+    <File Name="../../test/test_add.cpp"/>
+    <File Name="../../test/test_bit_manipulations.cpp"/>
+    <File Name="../../test/test_compare.cpp"/>
+    <File Name="../../test/test_convert.cpp"/>
+    <File Name="../../test/test_divide.cpp"/>
+    <File Name="../../test/test_fixed.cpp"/>
+    <File Name="../../test/test_main.cpp"/>
+    <File Name="../../test/test_misc.cpp"/>
+    <File Name="../../test/test_modular.cpp"/>
+    <File Name="../../test/test_monty.cpp"/>
+    <File Name="../../test/test_multiply.cpp"/>
+    <File Name="../../test/test_nothrow.cpp"/>
+    <File Name="../../test/test_powers.cpp"/>
+    <File Name="../../test/test_streams.cpp"/>
+  </VirtualDirectory>
+  <Dependencies Name="Debug"/>
+  <Dependencies Name="Debug, Header Only"/>
+  <Dependencies Name="Release"/>
+  <Dependencies Name="Release, Header Only"/>
+  <Settings Type="Executable">
+    <Configuration Name="Debug" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
+      <Compiler Options="-g;-pedantic;-Wall" Required="yes" PreCompiledHeader="/home/chad/projects/xint/boost/xint/integer.hpp">
+        <IncludePath Value="."/>
+        <Preprocessor Value="BOOST_XINT_SINGLE_TEST_PROGRAM"/>
+        <Preprocessor Value="BOOST_TEST_DYN_LINK"/>
+        <Preprocessor Value="BOOST_XINT_COMPILED_LIB"/>
+      </Compiler>
+      <Linker Options="" Required="yes"/>
+      <ResourceCompiler Options="" Required="no"/>
+      <General OutputFile="$(IntermediateDirectory)/$(ProjectName)" IntermediateDirectory="./Debug" Command="./$(ProjectName)" CommandArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes"/>
+      <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="">
+        <PostConnectCommands/>
+        <StartupCommands/>
+      </Debugger>
+      <PreBuild/>
+      <PostBuild/>
+      <CustomBuild Enabled="no">
+        <RebuildCommand/>
+        <CleanCommand/>
+        <BuildCommand/>
+        <PreprocessFileCommand/>
+        <SingleFileCommand/>
+        <MakefileGenerationCommand/>
+        <ThirdPartyToolName>None</ThirdPartyToolName>
+        <WorkingDirectory/>
+      </CustomBuild>
+      <AdditionalRules>
+        <CustomPostBuild/>
+        <CustomPreBuild/>
+      </AdditionalRules>
+    </Configuration>
+    <Configuration Name="Debug, Header Only" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
+      <Compiler Options="-g;-Wall" Required="yes" PreCompiledHeader="/home/chad/projects/xint/boost/xint/integer.hpp">
+        <IncludePath Value="."/>
+        <Preprocessor Value="BOOST_XINT_SINGLE_TEST_PROGRAM"/>
+        <Preprocessor Value="BOOST_TEST_DYN_LINK"/>
+      </Compiler>
+      <Linker Options="" Required="yes"/>
+      <ResourceCompiler Options="" Required="no"/>
+      <General OutputFile="$(IntermediateDirectory)/$(ProjectName)" IntermediateDirectory="./Debug" Command="./$(ProjectName)" CommandArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes"/>
+      <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="">
+        <PostConnectCommands/>
+        <StartupCommands/>
+      </Debugger>
+      <PreBuild/>
+      <PostBuild/>
+      <CustomBuild Enabled="no">
+        <RebuildCommand/>
+        <CleanCommand/>
+        <BuildCommand/>
+        <PreprocessFileCommand/>
+        <SingleFileCommand/>
+        <MakefileGenerationCommand/>
+        <ThirdPartyToolName>None</ThirdPartyToolName>
+        <WorkingDirectory/>
+      </CustomBuild>
+      <AdditionalRules>
+        <CustomPostBuild/>
+        <CustomPreBuild/>
+      </AdditionalRules>
+    </Configuration>
+    <Configuration Name="Release" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
+      <Compiler Options="-O2;-Wall" Required="yes" PreCompiledHeader="/home/chad/projects/xint/boost/xint/integer.hpp">
+        <IncludePath Value="."/>
+        <Preprocessor Value="BOOST_XINT_SINGLE_TEST_PROGRAM"/>
+        <Preprocessor Value="BOOST_TEST_DYN_LINK"/>
+        <Preprocessor Value="BOOST_XINT_COMPILED_LIB"/>
+      </Compiler>
+      <Linker Options="-O2" Required="yes"/>
+      <ResourceCompiler Options="" Required="no"/>
+      <General OutputFile="$(IntermediateDirectory)/$(ProjectName)" IntermediateDirectory="./Release" Command="./$(ProjectName)" CommandArguments="x" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes"/>
+      <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="">
+        <PostConnectCommands/>
+        <StartupCommands/>
+      </Debugger>
+      <PreBuild/>
+      <PostBuild/>
+      <CustomBuild Enabled="no">
+        <RebuildCommand/>
+        <CleanCommand/>
+        <BuildCommand/>
+        <PreprocessFileCommand/>
+        <SingleFileCommand/>
+        <MakefileGenerationCommand/>
+        <ThirdPartyToolName>None</ThirdPartyToolName>
+        <WorkingDirectory/>
+      </CustomBuild>
+      <AdditionalRules>
+        <CustomPostBuild/>
+        <CustomPreBuild/>
+      </AdditionalRules>
+    </Configuration>
+    <Configuration Name="Release, Header Only" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
+      <Compiler Options="-O2;-Wall" Required="yes" PreCompiledHeader="/home/chad/projects/xint/boost/xint/integer.hpp">
+        <IncludePath Value="."/>
+        <Preprocessor Value="BOOST_XINT_SINGLE_TEST_PROGRAM"/>
+        <Preprocessor Value="BOOST_TEST_DYN_LINK"/>
+      </Compiler>
+      <Linker Options="-O2" Required="yes"/>
+      <ResourceCompiler Options="" Required="no"/>
+      <General OutputFile="$(IntermediateDirectory)/$(ProjectName)" IntermediateDirectory="./Release" Command="./$(ProjectName)" CommandArguments="x" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes"/>
+      <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="">
+        <PostConnectCommands/>
+        <StartupCommands/>
+      </Debugger>
+      <PreBuild/>
+      <PostBuild/>
+      <CustomBuild Enabled="no">
+        <RebuildCommand/>
+        <CleanCommand/>
+        <BuildCommand/>
+        <PreprocessFileCommand/>
+        <SingleFileCommand/>
+        <MakefileGenerationCommand/>
+        <ThirdPartyToolName>None</ThirdPartyToolName>
+        <WorkingDirectory/>
+      </CustomBuild>
+      <AdditionalRules>
+        <CustomPostBuild/>
+        <CustomPreBuild/>
+      </AdditionalRules>
+    </Configuration>
+    <GlobalSettings>
+      <Compiler Options="">
+        <IncludePath Value="."/>
+        <IncludePath Value="/home/chad/projects/xint"/>
+      </Compiler>
+      <Linker Options="">
+        <LibraryPath Value="."/>
+        <Library Value="boost_unit_test_framework"/>
+      </Linker>
+      <ResourceCompiler Options=""/>
+    </GlobalSettings>
+  </Settings>
+</CodeLite_Project>
