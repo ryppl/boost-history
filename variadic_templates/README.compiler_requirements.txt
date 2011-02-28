@@ -1,6 +1,5 @@
-As of Date=2011-02-27:
 
-  There's two compilers, that I(Larry Evans) know of that can compiler
+  There's two compilers, that I(Larry Evans) know of that can compile
   variadic templates.  The first is gcc.  Recently (2011 Jan), clang
   has been able to compile variadic templates; however, it still has
   some problems, unrelated to variadic templates, on linux:
@@ -12,11 +11,11 @@ As of Date=2011-02-27:
     The tests in libs/composite_storage/sandbox/pack were compiled and
     run with:
      
-    ftp://gcc.gnu.org/pub/gcc/snapshots/4.5-20100408/gcc-g++-4.5-20100408.tar.bz2
+      ftp://gcc.gnu.org/pub/gcc/snapshots/4.5-20100408/gcc-g++-4.5-20100408.tar.bz2
     
     An earlier version:
     
-    ftp://gcc.gnu.org/pub/gcc/snapshots/4.4-20090630/gcc-4.4-20090630.tar.bz2
+      ftp://gcc.gnu.org/pub/gcc/snapshots/4.4-20090630/gcc-4.4-20090630.tar.bz2
     
     failed to compile one test and gave error message:
     
@@ -25,7 +24,14 @@ As of Date=2011-02-27:
     error: incompatible types in assignment of '<brace-enclosed
     initializer list>' to 'void* [2]'
     
-  In addition, the compiler needs to be called with the:
+  To use the g++ variadic templates extension, the:
+  
+    -std=gnu++0x
+    
+  option must be used.
+    
+  In addition, to avoid problems with some boost header files, the
+  compiler needs to be called with the:
   
    -DBOOST_MPL_CFG_NO_PREPROCESSED_HEADERS
    
@@ -40,5 +46,15 @@ As of Date=2011-02-27:
 /home/evansl/prog_dev/boost-svn/ro/boost_1_46_0/boost/mpl/aux_/preprocessed/gcc/bind.hpp:50:33: error: expected unqualified-id before '<' token
 /home/evansl/prog_dev/boost-svn/ro/boost_1_46_0/boost/mpl/aux_/preprocessed/gcc/bind.hpp:61:22: error: expected nested-name-specifier before 'apply_wrap5'
 /  
+
+  Unfortunately, compiling *with*:
+  
+   -DBOOST_MPL_CFG_NO_PREPROCESSED_HEADERS
+   
+  will cause failure when compiling other files not in the
+  variadic_templates sandbox:
+  
+http://article.gmane.org/gmane.comp.lib.boost.user/66098
+    
   
     
