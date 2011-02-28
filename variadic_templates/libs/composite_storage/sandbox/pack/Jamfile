@@ -12,3 +12,6 @@ run composite_storage.leaf.test.cpp
 run one_of_multiple_dispatch.test.cpp
   ;
 
+run predator_prey.cpp
+  ;
+
