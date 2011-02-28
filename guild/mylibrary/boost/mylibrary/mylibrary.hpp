@@ -129,5 +129,4 @@ namespace boost
 
 } // namespace boost
 
-#endif
-#define BOOST_MYLIBRARY_HPP
+#endif // #define BOOST_MYLIBRARY_HPP
