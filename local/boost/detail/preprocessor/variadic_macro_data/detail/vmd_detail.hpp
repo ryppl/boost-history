@@ -11,6 +11,9 @@
 
 #if !defined(BOOST_NO_VARIADIC_MACROS)
 
+// The author and owner of the VMD library (proposed to Boost) is Edward Diener.
+// The original code is modified here simply adding `BOOST_DETAIL_...` prefixes.
+
 #include <boost/preprocessor/tuple/elem.hpp>
 #include <boost/preprocessor/tuple/reverse.hpp>
 #include <boost/preprocessor/tuple/to_list.hpp>

@@ -17,6 +17,9 @@
 #include <boost/preprocessor/repetition/repeat.hpp>
 #include "detail/vmd_detail.hpp"
 
+// The author and owner of the VMD library (proposed to Boost) is Edward Diener.
+// The original code is modified here simply adding `BOOST_DETAIL_...` prefixes.
+
 /*
 
   The succeeding comments in this file are in doxygen format.
