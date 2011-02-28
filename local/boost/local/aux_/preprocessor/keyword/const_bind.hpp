@@ -10,7 +10,7 @@
 
 #include "bind.hpp"
 #include <boost/detail/preprocessor/keyword/const.hpp>
-#include <boost/detail/preprocessor/keyword/utility/add.hpp>
+#include <boost/detail/preprocessor/keyword/facility/add.hpp>
 #include <boost/preprocessor/control/iif.hpp>
 #include <boost/preprocessor/tuple/eat.hpp>
 
@@ -57,14 +57,12 @@
 // Add.
 
 #define BOOST_LOCAL_AUX_PP_KEYWORD_CONST_BIND_ADD_FRONT(tokens) \
-    BOOST_DETAIL_PP_KEYWORD_UTILITY_ADD_FRONT(tokens, \
-            BOOST_LOCAL_AUX_PP_KEYWORD_IS_CONST_BIND_FRONT, \
-            const bind)
+    BOOST_DETAIL_PP_KEYWORD_FACILITY_ADD_FRONT(tokens, \
+            BOOST_LOCAL_AUX_PP_KEYWORD_IS_CONST_BIND_FRONT, const bind)
 
 #define BOOST_LOCAL_AUX_PP_KEYWORD_CONST_BIND_ADD_BACK(tokens) \
-    BOOST_DETAIL_PP_KEYWORD_UTILITY_ADD_BACK(tokens, \
-            BOOST_LOCAL_AUX_PP_KEYWORD_IS_CONST_BIND_BACK, \
-            const bind)
+    BOOST_DETAIL_PP_KEYWORD_FACILITY_ADD_BACK(tokens, \
+            BOOST_LOCAL_AUX_PP_KEYWORD_IS_CONST_BIND_BACK, const bind)
 
 #endif // #include guard
 

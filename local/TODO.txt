@@ -11,9 +11,9 @@
 * Docs: If `, default ...` syntax seems strange for C99, programmers can always use `#define WITH_DEFAULT(x) , default x` or similar macro instead.
 
 
-* Try seriously to make nested locals to work...
+* Code: Try seriously to make nested locals to work...
 
-* Optimize macro expansion code for C++0x, C++03, etc. From John Bytheway:
+* Code: Optimize macro expansion code for C++0x, C++03, etc. From John Bytheway:
 > Yes, in C++0x local structs can be passed as template parameters.
 > Obviously, in C++0x there are lambdas too, so you might think your
 > library is useless, but I'd expect most compilers to support passing

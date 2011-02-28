@@ -8,9 +8,9 @@
 #ifndef BOOST_LOCAL_AUX_PP_KEYWORD_BIND_HPP_
 #define BOOST_LOCAL_AUX_PP_KEYWORD_BIND_HPP_
 
-#include <boost/detail/preprocessor/keyword/utility/is.hpp>
-#include <boost/detail/preprocessor/keyword/utility/add.hpp>
-#include <boost/detail/preprocessor/keyword/utility/remove.hpp>
+#include <boost/detail/preprocessor/keyword/facility/is.hpp>
+#include <boost/detail/preprocessor/keyword/facility/add.hpp>
+#include <boost/detail/preprocessor/keyword/facility/remove.hpp>
 
 // These are not local macros -- DO NOT #UNDEF.
 #define BOOST_LOCAL_AUX_PP_KEYWORD_BIND_IS_bind (1) /* unary */
@@ -21,36 +21,34 @@
 // Is.
 
 #define BOOST_LOCAL_AUX_PP_KEYWORD_IS_BIND_FRONT(tokens) \
-    BOOST_DETAIL_PP_KEYWORD_UTILITY_IS_FRONT(tokens, \
+    BOOST_DETAIL_PP_KEYWORD_FACILITY_IS_FRONT(tokens, \
             BOOST_LOCAL_AUX_PP_KEYWORD_BIND_IS_)
 
 #define BOOST_LOCAL_AUX_PP_KEYWORD_IS_BIND_BACK(tokens) \
-    BOOST_DETAIL_PP_KEYWORD_UTILITY_IS_BACK(tokens, \
+    BOOST_DETAIL_PP_KEYWORD_FACILITY_IS_BACK(tokens, \
             _BOOST_LOCAL_AUX_PP_KEYWORD_BIND_IS)
 
 // Rremove.
 
 #define BOOST_LOCAL_AUX_PP_KEYWORD_BIND_REMOVE_FRONT(tokens) \
-    BOOST_DETAIL_PP_KEYWORD_UTILITY_REMOVE_FRONT(tokens, \
+    BOOST_DETAIL_PP_KEYWORD_FACILITY_REMOVE_FRONT(tokens, \
             BOOST_LOCAL_AUX_PP_KEYWORD_IS_BIND_FRONT, \
             BOOST_LOCAL_AUX_PP_KEYWORD_BIND_REMOVE_)
 
 #define BOOST_LOCAL_AUX_PP_KEYWORD_BIND_REMOVE_BACK(tokens) \
-    BOOST_DETAIL_PP_KEYWORD_UTILITY_REMOVE_BACK(tokens, \
+    BOOST_DETAIL_PP_KEYWORD_FACILITY_REMOVE_BACK(tokens, \
             BOOST_LOCAL_AUX_PP_KEYWORD_IS_BIND_BACK, \
             _BOOST_LOCAL_AUX_PP_KEYWORD_BIND_REMOVE)
 
 // Add.
 
 #define BOOST_LOCAL_AUX_PP_KEYWORD_BIND_ADD_FRONT(tokens) \
-    BOOST_DETAIL_PP_KEYWORD_UTILITY_ADD_FRONT(tokens, \
-            BOOST_LOCAL_AUX_PP_KEYWORD_IS_BIND_FRONT, \
-            bind)
+    BOOST_DETAIL_PP_KEYWORD_FACILITY_ADD_FRONT(tokens, \
+            BOOST_LOCAL_AUX_PP_KEYWORD_IS_BIND_FRONT, bind)
 
 #define BOOST_LOCAL_AUX_PP_KEYWORD_BIND_ADD_BACK(tokens) \
-    BOOST_DETAIL_PP_KEYWORD_UTILITY_ADD_BACK(tokens, \
-            BOOST_LOCAL_AUX_PP_KEYWORD_IS_BIND_BACK, \
-            bind)
+    BOOST_DETAIL_PP_KEYWORD_FACILITY_ADD_BACK(tokens, \
+            BOOST_LOCAL_AUX_PP_KEYWORD_IS_BIND_BACK, bind)
 
 #endif // #include guard
 
