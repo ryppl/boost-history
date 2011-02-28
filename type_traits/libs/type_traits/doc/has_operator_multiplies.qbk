@@ -36,20 +36,16 @@ __examples
 
 
 [:`has_operator_multiplies<LHS, RHS, RET>::value_type` is the type `bool`.]
-
-[:`has_operator_multiplies<int>` inherits from `__true_type`.]
+[:`has_operator_multiplies<LHS, RHS, RET>::value` is a `bool` integral constant expression.]
+[:`has_operator_multiplies<int>::value` is a `bool` integral constant expression that evaluates to `true`.]
+[:`has_operator_multiplies<long>` inherits from `__true_type`.]
 
 [:`has_operator_multiplies<int, int, int>` inherits from `__true_type`.]
-
 [:`has_operator_multiplies<int, int, long>` inherits from `__true_type`.]
-
 [:`has_operator_multiplies<int, double, double>` inherits from `__true_type`.]
-
 [:`has_operator_multiplies<int, double, int>` inherits from `__true_type`.]
+[:`has_operator_multiplies<const int, int>::value` inherits from `__true_type`.]
 
 [:`has_operator_multiplies<int, int, std::string>` inherits from `__false_type`.]
-
-[:`has_operator_multiplies<long>::value` is a `bool` integral constant
-expression that evaluates to /true/.]
 
 [endsect]

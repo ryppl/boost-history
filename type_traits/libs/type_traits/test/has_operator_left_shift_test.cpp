@@ -15,4 +15,42 @@
 #define BOOST_TT_TRAIT_NAME has_operator_left_shift
 #define BOOST_TT_TRAIT_OP <<
 
+#include "has_binary_operator_test.hpp"
 #include "has_integral_operator_test.hpp"
+
+#include <ostream>
+#include <string>
+
+#define TEST_SPECIFIC(T) TEST_TTR(std::ostream, T, std::ostream, true)
+namespace {
+
+void specific() {
+   TEST_SPECIFIC(long);
+   TEST_SPECIFIC(unsigned long);
+   TEST_SPECIFIC(bool);
+   TEST_SPECIFIC(short);
+   TEST_SPECIFIC(unsigned short);
+   TEST_SPECIFIC(int);
+   TEST_SPECIFIC(unsigned int);
+   TEST_SPECIFIC(double);
+   TEST_SPECIFIC(float);
+   TEST_SPECIFIC(void*);
+   TEST_SPECIFIC(char);
+   TEST_SPECIFIC(signed char);
+   TEST_SPECIFIC(unsigned char);
+   TEST_SPECIFIC(const char*);
+   TEST_SPECIFIC(char*);
+   TEST_SPECIFIC(const signed char*);
+   TEST_SPECIFIC(signed char*);
+   TEST_SPECIFIC(const unsigned char*);
+   TEST_SPECIFIC(unsigned char*);
+   TEST_SPECIFIC(std::string);
+}
+}
+
+
+TT_TEST_BEGIN(BOOST_TT_TRAIT_NAME)
+   run1();
+   run2();
+   specific();
+TT_TEST_END

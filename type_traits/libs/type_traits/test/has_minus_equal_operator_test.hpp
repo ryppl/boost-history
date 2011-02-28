@@ -3,11 +3,9 @@
 //  Boost Software License, Version 1.0. (See accompanying file
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-#include "has_binary_operator_test.hpp"
-
 namespace {
 
-void run() {
+void run2() {
    // test with only one template parameter
    TEST_T(void, false);
    TEST_T(bool, true);
@@ -1146,42 +1144,6 @@ void run() {
    TEST_TTR(CV1(double), CV2(bool), tag, false);
    TEST_TTR(CV1(double), CV2(int), tag, false);
 
-
-   TEST_T(without, false);
-   TEST_T(internal, true);
-   TEST_T(external, true);
-// compile time error
-// TEST_T(internal_private, false);
-   TEST_T(returns_int, true);
-   TEST_T(returns_void, true);
-   TEST_T(returns_void_star, true);
-   TEST_T(returns_double, true);
-   TEST_T(returns_string, true);
-   TEST_T(returns_convertible_to_bool, true);
-   TEST_T(Base1, true);
-   TEST_T(Derived1, true);
-   TEST_T(Base2, false);
-   TEST_T(Derived2, true);
-
-   TEST_TR(without, bool, false);
-   TEST_TR(internal, bool, false);
-   TEST_TR(internal, ret, true);
-   TEST_TR(external, bool, false);
-   TEST_TR(external, ret, true);
-   TEST_TR(returns_int, bool, true);
-   TEST_TR(returns_int, int, true);
-   TEST_TR(returns_void, void, true);
-   TEST_TR(returns_void, bool, false);
-   TEST_TR(returns_void_star, bool, true);
-   TEST_TR(returns_double, bool, true);
-   TEST_TR(returns_double, double, true);
-   TEST_TR(returns_string, bool, false);
-   TEST_TR(returns_string, std::string, true);
-   TEST_TR(returns_convertible_to_bool, bool, true);
-   TEST_TR(Base1, bool, true);
-   TEST_TR(Derived1, bool, true);
-   TEST_TR(Base2, bool, false);
-   TEST_TR(Derived2, bool, true);
    // pointers
    TEST_TT(void*, bool, false);
    TEST_TT(void*, int, false);
@@ -1286,7 +1248,3 @@ void run() {
    TEST_TT(C, D, true);
 }
 }
-
-TT_TEST_BEGIN(BOOST_TT_TRAIT_NAME)
-   run();
-TT_TEST_END

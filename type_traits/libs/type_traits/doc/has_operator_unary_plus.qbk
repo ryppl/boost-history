@@ -35,8 +35,9 @@ __examples
 
 
 [:`has_operator_unary_plus<RHS, RET>::value_type` is the type `bool`.]
-
-[:`has_operator_unary_plus<int>` inherits from `__true_type`.]
+[:`has_operator_unary_plus<RHS, RET>::value` is a `bool` integral constant expression.]
+[:`has_operator_unary_plus<int>::value` is a `bool` integral constant expression that evaluates to `true`.]
+[:`has_operator_unary_plus<long>` inherits from `__true_type`.]
 
 [:`has_operator_unary_plus<int, int>` inherits from `__true_type`.]
 
@@ -47,8 +48,5 @@ __examples
 [:`has_operator_unary_plus<double, int>` inherits from `__true_type`.]
 
 [:`has_operator_unary_plus<int, std::string>` inherits from `__false_type`.]
-
-[:`has_operator_unary_plus<long>::value` is a `bool` integral constant
-expression that evaluates to /true/.]
 
 [endsect]

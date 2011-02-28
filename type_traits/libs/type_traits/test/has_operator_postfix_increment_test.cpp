@@ -15,4 +15,19 @@
 #define BOOST_TT_TRAIT_NAME has_operator_postfix_increment
 #define BOOST_TT_TRAIT_OP ++
 
+#include "has_postfix_operator_test.hpp"
 #include "has_postfix_increment_operator_test.hpp"
+
+namespace {
+void specific() {
+   /* nothing specific */
+}
+}
+
+
+
+TT_TEST_BEGIN(BOOST_TT_TRAIT_NAME)
+   run1();
+   run2();
+   specific();
+TT_TEST_END

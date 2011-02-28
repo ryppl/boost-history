@@ -36,20 +36,16 @@ __examples
 
 
 [:`has_operator_plus<LHS, RHS, RET>::value_type` is the type `bool`.]
-
-[:`has_operator_plus<int>` inherits from `__true_type`.]
+[:`has_operator_plus<LHS, RHS, RET>::value` is a `bool` integral constant expression.]
+[:`has_operator_plus<int>::value` is a `bool` integral constant expression that evaluates to `true`.]
+[:`has_operator_plus<long>` inherits from `__true_type`.]
 
 [:`has_operator_plus<int, int, int>` inherits from `__true_type`.]
-
 [:`has_operator_plus<int, int, long>` inherits from `__true_type`.]
-
 [:`has_operator_plus<int, double, double>` inherits from `__true_type`.]
-
 [:`has_operator_plus<int, double, int>` inherits from `__true_type`.]
+[:`has_operator_plus<const int, int>::value` inherits from `__true_type`.]
 
 [:`has_operator_plus<int, int, std::string>` inherits from `__false_type`.]
-
-[:`has_operator_plus<long>::value` is a `bool` integral constant
-expression that evaluates to /true/.]
 
 [endsect]

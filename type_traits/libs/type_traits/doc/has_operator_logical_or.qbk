@@ -36,7 +36,8 @@ __examples
 
 
 [:`has_operator_logical_or<LHS, RHS, RET>::value_type` is the type `bool`.]
-
+[:`has_operator_logical_or<LHS, RHS, RET>::value` is a `bool` integral constant expression.]
+[:`has_operator_logical_or<int>::value` is a `bool` integral constant expression that evaluates to `true`.]
 [:`has_operator_logical_or<bool>` inherits from `__true_type`.]
 
 [:`has_operator_logical_or<int, int, bool>` inherits from `__true_type`.]
@@ -44,8 +45,5 @@ __examples
 [:`has_operator_logical_or<int, double, bool>` inherits from `__true_type`.]
 
 [:`has_operator_logical_or<int, int, std::string>` inherits from `__false_type`.]
-
-[:`has_operator_logical_or<long>::value` is a `bool` integral constant
-expression that evaluates to /true/.]
 
 [endsect]

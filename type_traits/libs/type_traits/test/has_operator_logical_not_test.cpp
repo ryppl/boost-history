@@ -15,4 +15,21 @@
 #define BOOST_TT_TRAIT_NAME has_operator_logical_not
 #define BOOST_TT_TRAIT_OP !
 
+#include "has_prefix_operator_test.hpp"
 #include "has_prefix_plus_not_operator_test.hpp"
+
+#include <iostream>
+
+namespace {
+void specific() {
+   TEST_TR(std::ostream, bool, true);
+   TEST_TR(std::istream, bool, true);
+}
+}
+
+
+TT_TEST_BEGIN(BOOST_TT_TRAIT_NAME)
+   run1();
+   run2();
+   specific();
+TT_TEST_END

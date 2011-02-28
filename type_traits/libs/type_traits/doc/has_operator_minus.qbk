@@ -36,20 +36,16 @@ __examples
 
 
 [:`has_operator_minus<LHS, RHS, RET>::value_type` is the type `bool`.]
-
-[:`has_operator_minus<int>` inherits from `__true_type`.]
+[:`has_operator_minus<LHS, RHS, RET>::value` is a `bool` integral constant expression.]
+[:`has_operator_minus<int>::value` is a `bool` integral constant expression that evaluates to `true`.]
+[:`has_operator_minus<long>` inherits from `__true_type`.]
 
 [:`has_operator_minus<int, int, int>` inherits from `__true_type`.]
-
 [:`has_operator_minus<int, int, long>` inherits from `__true_type`.]
-
 [:`has_operator_minus<int, double, double>` inherits from `__true_type`.]
-
 [:`has_operator_minus<int, double, int>` inherits from `__true_type`.]
+[:`has_operator_minus<const int, int>::value` inherits from `__true_type`.]
 
 [:`has_operator_minus<int, int, std::string>` inherits from `__false_type`.]
-
-[:`has_operator_minus<long>::value` is a `bool` integral constant
-expression that evaluates to /true/.]
 
 [endsect]

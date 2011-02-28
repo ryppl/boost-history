@@ -35,8 +35,9 @@ __examples
 
 
 [:`has_operator_prefix_increment<RHS, RET>::value_type` is the type `bool`.]
-
-[:`has_operator_prefix_increment<int>` inherits from `__true_type`.]
+[:`has_operator_prefix_increment<RHS, RET>::value` is a `bool` integral constant expression.]
+[:`has_operator_prefix_increment<int>::value` is a `bool` integral constant expression that evaluates to `true`.]
+[:`has_operator_prefix_increment<long>` inherits from `__true_type`.]
 
 [:`has_operator_prefix_increment<int, int>` inherits from `__true_type`.]
 
@@ -47,8 +48,5 @@ __examples
 [:`has_operator_prefix_increment<double, int>` inherits from `__true_type`.]
 
 [:`has_operator_prefix_increment<int, std::string>` inherits from `__false_type`.]
-
-[:`has_operator_prefix_increment<long>::value` is a `bool` integral constant
-expression that evaluates to /true/.]
 
 [endsect]
