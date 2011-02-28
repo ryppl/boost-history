@@ -1,18 +1,25 @@
+*.gch
+
+libs/xint/doc/*.html
+libs/xint/doc/*.gif
+libs/xint/doc/*.png
+libs/xint/doc/*.css
+
 libs/xint/test/bin/*
 
-dev/Debug/*
-dev/Release/*
-dev/*.mk
-dev/*.tags
-dev/tags
-dev/*.session
-dev/*.depend
-dev/*.layout
+libs/xint/build/codelite/Debug/*
+libs/xint/build/codelite/Release/*
+libs/xint/build/codelite/*.mk
+libs/xint/build/codelite/*.tags
+libs/xint/build/codelite/tags
+libs/xint/build/codelite/*.session
+libs/xint/build/codelite/*.depend
+libs/xint/build/codelite/*.layout
 
-dev-ms/Debug/*
-dev-ms/Release/*
-dev-ms/*.ncb
-dev-ms/*.suo
-dev-ms/*.user
+libs/xint/build/msvc/Debug/*
+libs/xint/build/msvc/Release/*
+libs/xint/build/msvc/*.ncb
+libs/xint/build/msvc/*.suo
+libs/xint/build/msvc/*.user
 
 dev-cb/*
