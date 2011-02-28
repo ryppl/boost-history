@@ -8,11 +8,12 @@
 
 #include "eat.hpp"
 #include <boost/detail/preprocessor/variadic_macro_data/vmd.hpp>
-#include <boost/preprcoessor/control/iif.hpp>
-#include <boost/preprcoessor/comparison/equal.hpp>
-#include <boost/preprcoessor/facilities/empty.hpp>
-#include <boost/preprcoessor/facilities/is_empty.hpp>
-#include <boost/preprcoessor/facilities/is_empty.hpp>
+#include <boost/preprocessor/control/iif.hpp>
+#include <boost/preprocessor/comparison/equal.hpp>
+#include <boost/preprocessor/facilities/empty.hpp>
+#include <boost/preprocessor/facilities/is_empty.hpp>
+// `IS_UNARY` not working on Borland and other pp which have no variadic anyway.
+#include <boost/preprocessor/detail/is_unary.hpp>
 
 // PRIVATE //
 

@@ -11,7 +11,8 @@
 #include <boost/preprocessor/logical/not.hpp>
 #include <boost/preprocessor/control/if.hpp>
 #include <boost/preprocessor/comparison/greater.hpp>
-#include <boost/preprocessor/facilities/is_unary.hpp>
+// `IS_UNARY` not working on Borland and other pp which have no variadic anyway.
+#include <boost/preprocessor/detail/is_unary.hpp>
 
 // PRIVATE //
 

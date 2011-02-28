@@ -75,16 +75,16 @@
 
 #else // BOOST_NO_VARIADIC_MACROS
 
-#include "aux_/preprocessor/va.hpp"
+#include "aux_/preprocessor/variadic/to_seq.hpp"
 
 #define BOOST_LOCAL_EXIT(...) \
     BOOST_LOCAL_AUX_EXIT(BOOST_LOCAL_FUNCTION_PARAMS, \
-            BOOST_LOCAL_AUX_PP_VA_TO_SEQ( \
+            BOOST_LOCAL_AUX_PP_VARIADIC_TO_SEQ( \
                     (void) /* for empty seq */, __VA_ARGS__))
 
 #define BOOST_LOCAL_EXIT_TPL(...) \
     BOOST_LOCAL_AUX_EXIT(BOOST_LOCAL_FUNCTION_PARAMS_TPL, \
-            BOOST_LOCAL_AUX_PP_VA_TO_SEQ( \
+            BOOST_LOCAL_AUX_PP_VARIADIC_TO_SEQ( \
                     (void) /* for empty seq */, __VA_ARGS__))
 
 #endif // BOOST_NO_VARIADIC_MACROS
