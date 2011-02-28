@@ -6,7 +6,7 @@
 #  http://www.boost.org/LICENSE_1_0.txt)
 
 path-constant nav_images :  html/images/ ; # png and svg images for home, next, note, tip...
-path-constant images_location : html ; # location of SVG and PNG images referenced by Quickbook.
+path-constant images_location : html ; # location of my SVG and PNG images referenced by Quickbook.
 
 echo "images_location" $(images_location) ; # \guild\my_library\libs\mylibrary\doc\html
 echo "nav_images" $(nav_images) ; # \guild\mylibrary\libs\my_library\doc\html\images
