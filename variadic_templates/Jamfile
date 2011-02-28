@@ -1,6 +1,8 @@
+path-constant sandbox_path : .. ;
+
 project boost
     : requirements 
-#      <include>.
+      <include>.
     : usage-requirements 
-#      <include>.
+      <include>.
     ;
