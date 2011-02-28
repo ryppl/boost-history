@@ -24,6 +24,18 @@
     error: incompatible types in assignment of '<brace-enclosed
     initializer list>' to 'void* [2]'
     
+    In addition, if using bjam, then at least one target:
+    
+      libs/composite_storage/sandbox/pack/predator_prey.cpp
+      
+    even a later compiler, such as:
+    
+      ftp://gcc.gnu.org/pub/gcc/snapshots/4.6-20110129/gcc-4.6-20110129.tar.bz2
+    
+    is required.  For some strange reason, the use of the 4.5.1
+    compile, *only with bjam*, gives some error about "conversion from
+    'void' to non-scalar type '...' requested.
+    
   To use the g++ variadic templates extension, the:
   
     -std=gnu++0x
