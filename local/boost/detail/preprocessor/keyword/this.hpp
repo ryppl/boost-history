@@ -8,9 +8,9 @@
 #ifndef BOOST_DETAIL_PP_KEYWORD_THIS_HPP_
 #define BOOST_DETAIL_PP_KEYWORD_THIS_HPP_
 
-#include "utility/is.hpp"
-#include "utility/add.hpp"
-#include "utility/remove.hpp"
+#include "facility/is.hpp"
+#include "facility/add.hpp"
+#include "facility/remove.hpp"
 
 // These are not local macros -- DO NOT #UNDEF.
 #define BOOST_DETAIL_PP_KEYWORD_THIS_IS_this (1) /* unary */
@@ -21,36 +21,34 @@
 // Is.
 
 #define BOOST_DETAIL_PP_KEYWORD_IS_THIS_FRONT(tokens) \
-    BOOST_DETAIL_PP_KEYWORD_UTILITY_IS_FRONT(tokens, \
+    BOOST_DETAIL_PP_KEYWORD_FACILITY_IS_FRONT(tokens, \
             BOOST_DETAIL_PP_KEYWORD_THIS_IS_)
 
 #define BOOST_DETAIL_PP_KEYWORD_IS_THIS_BACK(token) \
-    BOOST_DETAIL_PP_KEYWORD_UTILITY_IS_BACK(token, \
+    BOOST_DETAIL_PP_KEYWORD_FACILITY_IS_BACK(token, \
             _BOOST_DETAIL_PP_KEYWORD_THIS_IS)
 
 // Rremove.
 
 #define BOOST_DETAIL_PP_KEYWORD_THIS_REMOVE_FRONT(tokens) \
-    BOOST_DETAIL_PP_KEYWORD_UTILITY_REMOVE_FRONT(tokens, \
+    BOOST_DETAIL_PP_KEYWORD_FACILITY_REMOVE_FRONT(tokens, \
             BOOST_DETAIL_PP_KEYWORD_IS_THIS_FRONT, \
             BOOST_DETAIL_PP_KEYWORD_THIS_REMOVE_)
 
 #define BOOST_DETAIL_PP_KEYWORD_THIS_REMOVE_BACK(tokens) \
-    BOOST_DETAIL_PP_KEYWORD_UTILITY_REMOVE_BACK(tokens, \
+    BOOST_DETAIL_PP_KEYWORD_FACILITY_REMOVE_BACK(tokens, \
             BOOST_DETAIL_PP_KEYWORD_IS_THIS_BACK, \
             _BOOST_DETAIL_PP_KEYWORD_THIS_REMOVE)
 
 // Add.
 
 #define BOOST_DETAIL_PP_KEYWORD_THIS_ADD_FRONT(tokens) \
-    BOOST_DETAIL_PP_KEYWORD_UTILITY_ADD_FRONT(tokens, \
-            BOOST_DETAIL_PP_KEYWORD_IS_THIS_FRONT, \
-            this)
+    BOOST_DETAIL_PP_KEYWORD_FACILITY_ADD_FRONT(tokens, \
+            BOOST_DETAIL_PP_KEYWORD_IS_THIS_FRONT, this)
 
 #define BOOST_DETAIL_PP_KEYWORD_THIS_ADD_BACK(tokens) \
-    BOOST_DETAIL_PP_KEYWORD_UTILITY_ADD_BACK(tokens, \
-            BOOST_DETAIL_PP_KEYWORD_IS_THIS_BACK, \
-            this)
+    BOOST_DETAIL_PP_KEYWORD_FACILITY_ADD_BACK(tokens, \
+            BOOST_DETAIL_PP_KEYWORD_IS_THIS_BACK, this)
 
 #endif // #include guard
 
