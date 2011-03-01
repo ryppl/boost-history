@@ -9,11 +9,11 @@
 //////////////////////////////////////////////////////////////////////////////
 #include <string>
 #include <boost/typeof/typeof.hpp>
+#include <boost/lambda/lambda.hpp>
 #include <boost/range/size.hpp>
 #include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/put/deque.hpp>
-#include <boost/assign/v2/put/std/push_front.hpp>
-#include <boost/assign/v2/put/ext.hpp>
+#include <boost/assign/v2/put/modulo/fun.hpp>
 
 #include <libs/assign/v2/test/put/deque/modulo.h>
 
@@ -22,35 +22,23 @@ namespace xxx_put{
 namespace xxx_deque{
 namespace xxx_modulo{
 
-    // Tests interaction between different functionalities
-
     void test(){
 
         namespace as2 = boost::assign::v2;
+		namespace lambda = boost::lambda;
 
         {
-            //[put_deque_modulo_front
+            //[put_deque_modulo
+            typedef int T; T x = 1, y = 2, z = 0;
             BOOST_AUTO(
-                cont,  (
-                    as2::deque<int>( as2::_nil ) % as2::_push_front
-                )( -1 )( 0 )( 1 )
+            	cont,
+                (
+                	as2::deque<T>( as2::_nil ) % ( as2::_fun = ( lambda::_1 + 1 ) )
+                )( x )( y )( z )
             );
-            BOOST_ASSIGN_V2_CHECK( cont.front() == 1 );
-            BOOST_ASSIGN_V2_CHECK( cont.back() == -1 );
+            BOOST_ASSIGN_V2_CHECK( cont.front() == ( x + 1 ) );
+            BOOST_ASSIGN_V2_CHECK( cont.back() == ( z + 1 ) );
             //]
-            BOOST_ASSIGN_V2_CHECK( boost::size( cont ) == 3 );
-        }
-        {
-            //[put_deque_modulo_repeat
-            BOOST_AUTO(
-                cont,  (
-                    as2::deque<int>( as2::_nil ) % ( as2::_repeat = 2 )
-                )( -1 )( 0 )( 1 )
-            );
-            BOOST_ASSIGN_V2_CHECK( boost::size( cont ) == 6 );
-            //]
-            BOOST_ASSIGN_V2_CHECK( cont.front() == -1 );
-            BOOST_ASSIGN_V2_CHECK( cont.back() == 1 );
         }
     }
 

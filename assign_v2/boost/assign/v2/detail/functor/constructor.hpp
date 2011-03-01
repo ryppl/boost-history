@@ -46,7 +46,6 @@ namespace functor_aux{
 
         constructor(){}
 
-        T operator()()const{ return T(); }
 
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
         template<typename... Args>
@@ -62,6 +61,7 @@ namespace functor_aux{
         public:
 
         using super_::operator();
+        T operator()()const{ return T(); }
 
 #define BOOST_ASSIGN_V2_MACRO(z,N,data) \
     template<BOOST_PP_ENUM_PARAMS(N,typename T)> \
