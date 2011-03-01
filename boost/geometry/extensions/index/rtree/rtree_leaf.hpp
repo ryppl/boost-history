@@ -7,6 +7,12 @@
 // Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+// awulkiew 2011
+//   typedefs added
+//   nodes hierarchy changed
+//   inconsistent names changed - leafs to values, leaf_map to values_map, get_leafs to get_values
+//   gl_draw added - temporary
+
 #ifndef BOOST_GEOMETRY_EXTENSIONS_INDEX_RTREE_RTREE_LEAF_HPP
 #define BOOST_GEOMETRY_EXTENSIONS_INDEX_RTREE_RTREE_LEAF_HPP
 
@@ -40,7 +46,7 @@ public:
     typedef boost::shared_ptr<rtree_node> node_pointer;
 
     /// container type for the leaves
-    typedef std::vector<Value> leaf_map;
+    typedef std::vector<Value> values_map;
 
     /**
      * \brief Creates an empty leaf
@@ -65,7 +71,7 @@ public:
     // awulkiew - name changed from empty_nodes to clear_values
     void clear_values()
     {
-        m_nodes.clear();
+        m_values.clear();
     }
 
     // awulkiew - internal node and leaf virtual methods
@@ -83,7 +89,7 @@ public:
      */
     virtual size_t elements() const
     {
-        return m_nodes.size();
+        return m_values.size();
     }
 
     /**
@@ -94,8 +100,8 @@ public:
     // awulkiew - exact match case removed
     virtual void find(Box const& box, std::deque<Value>& result, Translator const& tr)
     {
-        for (typename leaf_map::const_iterator it = m_nodes.begin();
-             it != m_nodes.end(); ++it)
+        for (typename values_map::const_iterator it = m_values.begin();
+             it != m_values.end(); ++it)
         {
             // awulkiew - commented
             //if (exact_match)
@@ -123,14 +129,14 @@ public:
      */
     virtual Box compute_box(Translator const& tr) const
     {
-        if (m_nodes.empty())
+        if (m_values.empty())
         {
             return Box ();
         }
 
         Box r;
         geometry::assign_inverse(r);
-        for(typename leaf_map::const_iterator it = m_nodes.begin(); it != m_nodes.end(); ++it)
+        for(typename values_map::const_iterator it = m_values.begin(); it != m_values.end(); ++it)
         {
             geometry::combine(r, tr(*it));
         }
@@ -140,9 +146,9 @@ public:
     /**
      * \brief Proyect leaves of this node.
      */
-    virtual std::vector<Value> get_leaves() const
+    virtual std::vector<Value> get_values() const
     {
-        return m_nodes;
+        return m_values;
     }
 
     /**
@@ -152,15 +158,15 @@ public:
     virtual void remove_in(Box const& box, Translator const& tr)
     {
 
-        for (typename leaf_map::iterator it = m_nodes.begin();
-             it != m_nodes.end(); ++it)
+        for (typename values_map::iterator it = m_values.begin();
+             it != m_values.end(); ++it)
         {
             // TODO - awulkiew - implement object specific equals() function
             Box b;
             detail::convert_to_box(tr(*it), b);
             if (geometry::equals(b, box))
             {
-                m_nodes.erase(it);
+                m_values.erase(it);
                 return;
             }
         }
@@ -175,8 +181,8 @@ public:
     virtual std::vector<Box> get_boxes(Translator const& tr) const
     {
         std::vector<Box> result;
-        for (typename leaf_map::const_iterator it = m_nodes.begin();
-             it != m_nodes.end(); ++it)
+        for (typename values_map::const_iterator it = m_values.begin();
+             it != m_values.end(); ++it)
         {
             // TODO: awulkiew - implement object specific behaviour - get_bounding_objects(get boxes or points)
             Box box;
@@ -195,9 +201,9 @@ public:
     virtual void print(std::ostream &os, Translator const& tr) const
     {
         os << "\t" << " --> Leaf --------" << std::endl;
-        os << "\t" << "  Size: " << m_nodes.size() << std::endl;
-        for (typename leaf_map::const_iterator it = m_nodes.begin();
-            it != m_nodes.end(); ++it)
+        os << "\t" << "  Size: " << m_values.size() << std::endl;
+        for (typename values_map::const_iterator it = m_values.begin();
+            it != m_values.end(); ++it)
         {
             // TODO: awulkiew - implement object specific behaviour - display boxes or points
             Box box;
@@ -228,8 +234,8 @@ public:
         // TODO: awulkiew - implement 3d version
         if ( traits::dimension<traits::point_type<Box>::type>::value == 2 )
         {
-            for (typename leaf_map::const_iterator it = m_nodes.begin();
-                it != m_nodes.end(); ++it)
+            for (typename values_map::const_iterator it = m_values.begin();
+                it != m_values.end(); ++it)
             {
                 glColor3f(1.0f, 1.0f, 1.0f);
 
@@ -263,7 +269,7 @@ public:
      */
     virtual void insert(Value const& v)
     {
-        m_nodes.push_back(v);
+        m_values.push_back(v);
     }
 
     /**
@@ -271,7 +277,7 @@ public:
      */
     virtual void add_value(Value const& v)
     {
-        m_nodes.push_back(v);
+        m_values.push_back(v);
     }
 
     /**
@@ -279,7 +285,7 @@ public:
      */
     virtual Value get_value(unsigned int index) const
     {
-        return m_nodes[index];
+        return m_values[index];
     }
 
     /**
@@ -287,13 +293,13 @@ public:
      */
     virtual void remove(Value const& v, Translator const& tr)
     {
-        for (typename leaf_map::iterator it = m_nodes.begin();
-             it != m_nodes.end(); ++it)
+        for (typename values_map::iterator it = m_values.begin();
+             it != m_values.end(); ++it)
         {
             // awulkiew - use of translator
             if ( tr.equals(*it, v) )
             {
-                m_nodes.erase(it);
+                m_values.erase(it);
                 return;
             }
         }
@@ -313,14 +319,14 @@ public:
     //    // TODO: awulkiew - get_bounding_object - add object specific behaviour
     //    // or just base on get_value
     //    Box box;
-    //    detail::convert_to_box(tr(m_nodes[index]), box);
+    //    detail::convert_to_box(tr(m_values[index]), box);
     //    return box;
     //}
 
 private:
 
     /// leaves of this node
-    leaf_map m_nodes;
+    values_map m_values;
 };
 
 }}} // namespace boost::geometry::index

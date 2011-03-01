@@ -7,6 +7,11 @@
 // Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+// awulkiew 2011
+//   enlarge_box, is_overlapping removed (functions from boost::geometry used)
+//   compute_union_area changed
+//   other helpers added - some of them temporary
+
 #ifndef BOOST_GEOMETRY_EXTENSIONS_INDEX_RTREE_HELPERS_HPP
 #define BOOST_GEOMETRY_EXTENSIONS_INDEX_RTREE_HELPERS_HPP
 

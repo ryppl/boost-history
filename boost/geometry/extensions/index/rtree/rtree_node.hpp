@@ -7,6 +7,11 @@
 // Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+// awulkiew 2011
+//   nodes hierarchy changed, rtree_node changed to rtree_internal_node
+//   inconsistent names changed - get_leafs to get_values
+//   gl_draw added - temporary
+
 #ifndef BOOST_GEOMETRY_EXTENSIONS_INDEX_RTREE_RTREE_NODE_HPP
 #define BOOST_GEOMETRY_EXTENSIONS_INDEX_RTREE_RTREE_NODE_HPP
 
@@ -106,7 +111,7 @@ public:
     /**
     * \brief Get leaves for a node
     */
-    virtual std::vector<Value> get_leaves() const
+    virtual std::vector<Value> get_values() const
     {
         // TODO: mloskot - define & use GGL exception
         throw std::logic_error("shouldn't be here");

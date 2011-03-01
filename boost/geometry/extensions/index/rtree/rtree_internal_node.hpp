@@ -7,6 +7,12 @@
 // Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+// awulkiew 2011
+//   typedefs added
+//   nodes hierarchy changed, rtree_node changed to rtree_internal_node
+//   inconsistent names changed - get_leafs to get_values
+//   gl_draw added - temporary
+
 #ifndef BOOST_GEOMETRY_EXTENSIONS_INDEX_RTREE_RTREE_INTERNAL_NODE_HPP
 #define BOOST_GEOMETRY_EXTENSIONS_INDEX_RTREE_RTREE_INTERNAL_NODE_HPP
 
@@ -128,24 +134,26 @@ public:
     /**
     * \brief Get leaves for a node
     */
-    virtual std::vector<Value> get_leaves() const
+    virtual std::vector<Value> get_values() const
     {
-        typedef std::vector<Value> leaf_type;
-        leaf_type leaf;
+        typedef typename rtree_leaf::values_map values_map;
+        values_map values;
 
         for (typename node_map::const_iterator it = m_nodes.begin();
              it != m_nodes.end(); ++it)
         {
-            leaf_type this_leaves = it->second->get_leaves();
+            values_map this_values = it->second->get_values();
 
-            for (typename leaf_type::iterator it_leaf = this_leaves.begin();
-                it_leaf != this_leaves.end(); ++it_leaf)
+            //TODO:
+            // awulkiew - reserve/resize, std::copy may be used here
+            for (typename values_map::iterator it_leaf = this_values.begin();
+                it_leaf != this_values.end(); ++it_leaf)
             {
-                leaf.push_back(*it_leaf);
+                values.push_back(*it_leaf);
             }
         }
 
-        return leaf;
+        return values;
     }
 
     /**

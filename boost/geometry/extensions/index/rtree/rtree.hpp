@@ -7,6 +7,14 @@
 // Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+// awulkiew 2011
+//   typedefs added
+//   nodes hierarchy changed
+//   gl_draw added - temporary
+//   coordinate_type changed to area_result<Box>::type in areas calculation
+
+// TODO: awulkiew - implement different method of drawing tree
+
 #ifndef BOOST_GEOMETRY_EXTENSIONS_INDEX_RTREE_RTREE_HPP
 #define BOOST_GEOMETRY_EXTENSIONS_INDEX_RTREE_RTREE_HPP
 
@@ -27,8 +35,7 @@
 // awulkiew - added
 #include <boost/geometry/extensions/index/translator/def.hpp>
 
-namespace boost { namespace geometry { namespace index
-{
+namespace boost { namespace geometry { namespace index {
 
 // awulkiew - template parameters changed
 template <
@@ -41,6 +48,8 @@ class rtree
 {
 public:
     // awulkiew - typedefs added
+    typedef Value value_type;
+
     typedef rtree_node<Value, Translator, Box> rtree_node;
     typedef rtree_leaf<Value, Translator, Box> rtree_leaf;
     typedef rtree_internal_node<Value, Translator, Box> rtree_internal_node;
@@ -96,13 +105,13 @@ public:
 // remember that remove_in() function is used in remove() so changing it may corrupt the other one
 
             node_pointer leaf(choose_exact_leaf(box));
-            typename rtree_leaf::leaf_map q_leaves;
+            typename rtree_leaf::values_map q_values;
 
             leaf->remove_in(box, m_translator);
 
             if (leaf->elements() < m_min_elems_per_node && elements() > m_min_elems_per_node)
             {
-                q_leaves = leaf->get_leaves();
+                q_values = leaf->get_values();
 
                 // we remove the leaf_node in the parent node because now it's empty
                 leaf->get_parent()->remove_in(leaf->get_parent()->get_box(leaf), m_translator);
@@ -115,11 +124,11 @@ public:
             for (typename rtree_internal_node::node_map::const_iterator it = q_nodes.begin();
                  it != q_nodes.end(); ++it)
             {
-                typename rtree_leaf::leaf_map leaves = it->second->get_leaves();
+                typename rtree_leaf::values_map values = it->second->get_values();
 
-                // reinserting leaves from nodes
-                for (typename rtree_leaf::leaf_map::const_iterator itl = leaves.begin();
-                     itl != leaves.end(); ++itl)
+                // reinserting values from nodes
+                for (typename rtree_leaf::values_map::const_iterator itl = values.begin();
+                     itl != values.end(); ++itl)
                 {
                     s.push_back(*itl);
                 }
@@ -144,8 +153,8 @@ public:
                 }
             }
             // reinserting leaves
-            for (typename rtree_leaf::leaf_map::const_iterator it = q_leaves.begin();
-                 it != q_leaves.end(); ++it)
+            for (typename rtree_leaf::values_map::const_iterator it = q_values.begin();
+                 it != q_values.end(); ++it)
             {
                 m_count--;
                 // awulkiew - parameters changed
@@ -200,11 +209,11 @@ public:
             if (!leaf)
                 return;
 
-            typename rtree_leaf::leaf_map q_leaves;
+            typename rtree_leaf::values_map q_values;
 
             if (leaf->elements() < m_min_elems_per_node && elements() > m_min_elems_per_node)
             {
-                q_leaves = leaf->get_leaves();
+                q_values = leaf->get_values();
 
                 // we remove the leaf_node in the parent node because now it's empty
                 leaf->get_parent()->remove_in(leaf->get_parent()->get_box(leaf), m_translator);
@@ -217,11 +226,11 @@ public:
             for (typename rtree_internal_node::node_map::const_iterator it = q_nodes.begin();
                  it != q_nodes.end(); ++it)
             {
-                typename rtree_leaf::leaf_map leaves = it->second->get_leaves();
+                typename rtree_leaf::values_map values = it->second->get_values();
 
                 // reinserting leaves from nodes
-                for (typename rtree_leaf::leaf_map::const_iterator itl = leaves.begin();
-                     itl != leaves.end(); ++itl)
+                for (typename rtree_leaf::values_map::const_iterator itl = values.begin();
+                     itl != values.end(); ++itl)
                 {
                     s.push_back(*itl);
                 }
@@ -247,8 +256,8 @@ public:
             }
 
             // reinserting leaves
-            for (typename rtree_leaf::leaf_map::const_iterator it = q_leaves.begin();
-                 it != q_leaves.end(); ++it)
+            for (typename rtree_leaf::values_map::const_iterator it = q_values.begin();
+                 it != q_values.end(); ++it)
             {
                 m_count--;
                 // awulkiew - changed
@@ -329,7 +338,7 @@ public:
     {
         os << "===================================" << std::endl;
         os << " Min/Max: " << r.m_min_elems_per_node << " / " << r.m_max_elems_per_node << std::endl;
-        os << "Leaves: " << r.m_root->get_leaves().size() << std::endl;
+        os << "Leaves: " << r.m_root->get_values().size() << std::endl;
         r.m_root->print(os, r.m_translator);
         os << "===================================" << std::endl;
 
@@ -497,11 +506,11 @@ private:
         {
             // TODO: mloskot - add assert(node.size() >= 2); or similar
 
-            typename rtree_leaf::leaf_map nodes = n->get_leaves();
-            unsigned int remaining = nodes.size() - 2;
+            typename rtree_leaf::values_map values = n->get_values();
+            unsigned int remaining = values.size() - 2;
 
-            for (typename rtree_leaf::leaf_map::const_iterator it = nodes.begin();
-                 it != nodes.end(); ++it, index++)
+            for (typename rtree_leaf::values_map::const_iterator it = values.begin();
+                 it != values.end(); ++it, index++)
             {
                 if (index != seed1 && index != seed2)
                 {
@@ -818,11 +827,11 @@ private:
         // refine the result
         for (typename node_type::const_iterator it = nodes.begin(); it != nodes.end(); ++it)
         {
-            typedef std::vector<Value> leaves_type;
-            leaves_type leaves = (*it)->get_leaves();
+            typedef typename rtree_leaf::values_map values_map;
+            values_map values = (*it)->get_values();
 
-            for (typename leaves_type::const_iterator itl = leaves.begin();
-                 itl != leaves.end(); ++itl)
+            for (typename values_map::const_iterator itl = values.begin();
+                 itl != values.end(); ++itl)
             {
                 // awulkiew - operator== changed to geometry::equals
                 // TODO - implement object specific equals() function
