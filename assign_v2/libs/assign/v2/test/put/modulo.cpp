@@ -25,7 +25,7 @@ namespace xxx_modulo{
         namespace as2 = boost::assign::v2;
         namespace lambda = boost::lambda;
         {
-            //[modulo_fun
+            //[put_modulo_fun
             typedef int T; T x = 1, y = 2, z = 0;
             std::vector<int> cont;
             (
@@ -36,7 +36,7 @@ namespace xxx_modulo{
             //]
         }
         {
-            //[modulo_push_front
+            //[put_modulo_modifier
             typedef int T; T x = 1, y = 2, z = 0;
             std::deque<int> cont;
             ( as2::put( cont ) % ( as2::_modifier

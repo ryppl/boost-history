@@ -30,7 +30,7 @@ namespace xxx_functor{
     void test(){
         namespace as2 = boost::assign::v2;
         {
-            //[array
+            //[put_cont_functor_array
             typedef int T; T x = 1, y = 2, z = 3;
             boost::array<T, 3> cont; as2::put( cont )( x )( y )( z );
             BOOST_ASSIGN_V2_CHECK( cont[0] == x );
@@ -40,7 +40,7 @@ namespace xxx_functor{
         {
             // std::string may be replaced by const char* using a custom
             // comparator
-            //[map
+            //[put_cont_functor_map
             typedef std::map<std::string, int> C; C cont;
             as2::put( cont )( "jan", 31 )( "feb", 28 )( "mar", 31 );
             BOOST_ASSIGN_V2_CHECK( cont["feb"] == 28 );
@@ -50,7 +50,7 @@ namespace xxx_functor{
         }
         {
         	// Used in intro (same as above but different naming)
-            //[cal
+            //[put_cont_functor_cal
             typedef std::map<std::string, int> C; C cal;
             /*<< Calls `cal.insert( C::value_type(x, y) )` for [^(x,y)=( "jan", 31 ),( "feb", 28 ),( "mar", 31 )] >>*/
             as2::put( cal )( "jan", 31 )( "feb", 28 )( "mar", 31 );
@@ -58,7 +58,7 @@ namespace xxx_functor{
             //]
         }
         {
-            //[set
+            //[put_cont_functor_set
             typedef std::string T;
             std::set<T> cont;
             T x = "isomer", y = "ephemeral", z = "prosaic";
@@ -68,7 +68,7 @@ namespace xxx_functor{
             //]
         }
         {
-            //[deque
+            //[put_cont_functor_deque
             typedef int T; T x = 1, y = 2, z = 0;
             std::deque<T> cont; as2::put( cont )( x )( y )( z );
             BOOST_ASSIGN_V2_CHECK( cont.front() == x );
@@ -76,7 +76,7 @@ namespace xxx_functor{
             //]
         }
         {
-            //[list
+            //[put_cont_functor_list
             typedef int T; T x = 1, y = 2, z = 0;
             std::list<T> cont; ( as2::put( cont ) )( x )( y )( z );
             BOOST_ASSIGN_V2_CHECK( cont.front() == x );
@@ -84,7 +84,7 @@ namespace xxx_functor{
             //]
         }
         {
-            //[vector
+            //[put_cont_functor_vector
             typedef int T; T x = 1, y = 2, z = 0;
             std::vector<T> cont; as2::put( cont )( x )( y )( z );
             BOOST_ASSIGN_V2_CHECK( cont.front() == x );
@@ -92,7 +92,7 @@ namespace xxx_functor{
             //]
         }
         {
-            //[queue
+            //[put_cont_functor_queue
             typedef int T; T x = 8, y = 7, z = 4;
             std::queue<T> fifo; as2::put( fifo )( x )( y )( z );
             BOOST_ASSIGN_V2_CHECK( fifo.front() == x );
@@ -100,7 +100,7 @@ namespace xxx_functor{
             //]
         }
         {
-            //[stack
+            //[put_cont_functor_stack
             typedef int T; T x = 8, y = 7, z = 4;
             std::stack<T> lifo; as2::put( lifo )( x )( y )( z );
             BOOST_ASSIGN_V2_CHECK( lifo.top() == z ); lifo.pop();
@@ -110,42 +110,16 @@ namespace xxx_functor{
         }
         {
             using namespace boost;
-            //[tuple
-            typedef int& ref_; typedef std::string val_;
-            typedef boost::tuple<ref_, val_> T;
-            int x = 31, y = 28, z = 31; std::vector<T> cont;
-            as2::put( cont )( x, "jan" )( y, "feb" )( z, "mar" );
-            BOOST_ASSIGN_V2_CHECK( &get<0>( cont[1] ) == &y );
-            BOOST_ASSIGN_V2_CHECK( get<1>( cont[1] ) == "feb" );
-            //]
-            BOOST_ASSIGN_V2_CHECK( &get<0>( cont[0] ) == &x );
-            BOOST_ASSIGN_V2_CHECK( get<1>( cont[0] ) == "jan" );
-            BOOST_ASSIGN_V2_CHECK( &get<0>( cont[2] ) == &z );
-            BOOST_ASSIGN_V2_CHECK( get<1>( cont[2] ) == "mar" );
-        }
-        {
-            //[default_constr1
-            typedef int T; T x = 1, z = 0;
-            std::vector<T> cont; as2::put( cont )( x )()( z );
-            BOOST_ASSIGN_V2_CHECK( cont[0] == x );
-            BOOST_ASSIGN_V2_CHECK( cont[1] == T() );
-            BOOST_ASSIGN_V2_CHECK( cont[2] == z );
-            //]
-        }
-        {
-            using namespace boost;
-            //[default_constr2
-            typedef std::string a_; typedef int b_;
-            typedef boost::tuple<a_, b_> T;
-            a_ a0 = "jan", a1 = "feb", a2 = "mar";
-            b_ b0 = 31; //, b1 = 28, b2 = 31;
-            std::vector<T> cont; as2::put( cont )( a0, b0 )()( a2 );
-            BOOST_ASSIGN_V2_CHECK( get<0>( cont[0] ) == a0 );
-            BOOST_ASSIGN_V2_CHECK( get<1>( cont[0] ) == b0 );
-            BOOST_ASSIGN_V2_CHECK( get<0>( cont[1] ) == get<0>( T() ) );
-            BOOST_ASSIGN_V2_CHECK( get<1>( cont[1] ) == get<1>( T() ) );
-            BOOST_ASSIGN_V2_CHECK( get<0>( cont[2] ) == a2 );
-            BOOST_ASSIGN_V2_CHECK( get<1>( cont[2] ) == b_() );
+            //[put_cont_functor_tuple
+            typedef int i_; typedef double d_;
+            typedef boost::tuple</*<< Notice this is a reference >>*/ d_&, i_> T;
+            d_ w = 2.7,  x = 2.71, y = 2.718, z = 0.0; std::vector<T> cont;
+            as2::put( cont )/*<< Notice the binary calls >>*/( w, 1 )( x, 2 )( y, 3 )/*<< Notice the unary call >>*/( z );
+            BOOST_ASSIGN_V2_CHECK( &get<0>( cont[1] ) == &x );
+            BOOST_ASSIGN_V2_CHECK( get<1>( cont[1] ) == 2 );
+            T t3( z );
+            BOOST_ASSIGN_V2_CHECK( &get<0>( cont[3] ) == &z );
+            BOOST_ASSIGN_V2_CHECK( get<1>( cont[3] ) == get<1>( t3 ) );
             //]
         }
     }// test()

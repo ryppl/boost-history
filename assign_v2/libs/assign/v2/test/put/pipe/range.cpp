@@ -25,21 +25,21 @@ namespace xxx_range{
     {
         namespace as2 = boost::assign::v2;
 
-        //[range_var
-        typedef int T; T x = 1, y = 2, z = 0;
-        std::vector<T> r( 3 ); r[0] = x; r[1] = y; r[2] = z;
-        //]
 
         // Forwards to put()
         {
-            //[range_array
+            //[put_pipe_range_array
+            typedef int T; T x = 1, y = 2, z = 0;
+            std::vector<T> r( 3 ); r[0] = x; r[1] = y; r[2] = z;
             boost::array<T, 3> cont; cont | as2::_put_range( r );
             BOOST_ASSIGN_V2_CHECK( cont.front() == x );
             BOOST_ASSIGN_V2_CHECK( cont.back() == z );
             //]
         }
         {
-            //[range_stack
+            //[put_pipe_range_stack
+            typedef int T; T x = 1, y = 2, z = 0;
+            std::vector<T> r( 3 ); r[0] = x; r[1] = y; r[2] = z;
             typedef std::stack<T> lifo_;
             BOOST_ASSIGN_V2_CHECK(
                 (
@@ -48,10 +48,10 @@ namespace xxx_range{
             );
             //]
         }
-
-        // Calls C(b, e)
         {
-            //[range_deque
+            //[put_pipe_range_deque
+            typedef int T; T x = 1, y = 2, z = 0;
+            std::vector<T> r( 3 ); r[0] = x; r[1] = y; r[2] = z;
             std::deque<T> cont; cont | as2::_put_range( r );
             BOOST_ASSIGN_V2_CHECK( cont.front() == x );
             BOOST_ASSIGN_V2_CHECK( cont.back() == z );

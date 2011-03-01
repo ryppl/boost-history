@@ -29,7 +29,7 @@ namespace xxx_modulo{
         namespace as2 = boost::assign::v2;
 
         {
-            //[deque_front
+            //[put_deque_modulo_front
             BOOST_AUTO(
                 cont,  (
                     as2::deque<int>( as2::_nil ) % as2::_push_front
@@ -41,7 +41,7 @@ namespace xxx_modulo{
             BOOST_ASSIGN_V2_CHECK( boost::size( cont ) == 3 );
         }
         {
-            //[deque_repeat
+            //[put_deque_modulo_repeat
             BOOST_AUTO(
                 cont,  (
                     as2::deque<int>( as2::_nil ) % ( as2::_repeat = 2 )

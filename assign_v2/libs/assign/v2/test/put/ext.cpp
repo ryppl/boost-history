@@ -26,7 +26,7 @@ namespace xxx_ext{
         namespace as2 = boost::assign::v2;
         namespace lambda = boost::lambda;
         {
-            //[iterate
+            //[put_ext_iterate
             boost::array<int, 3> cont;
             ( as2::put( cont ) % as2::_iterate )( 1 )( 2 )( 3 );
             BOOST_ASSIGN_V2_CHECK( cont[0] == 1 );
@@ -34,7 +34,7 @@ namespace xxx_ext{
             //]
         }
         {
-            //[lookup
+            //[put_ext_lookup
             std::map<std::string, int> cont;
             cont["jan"] = 31; cont["feb"] = 29; cont["mar"] = 32;
             (
@@ -45,7 +45,7 @@ namespace xxx_ext{
             //]
         }
         {
-            //[repeat
+            //[put_ext_repeat
             std::vector<int> cont;
             ( as2::put( cont ) % ( as2::_repeat = 2  ) )( -1 )( 0 )( 1 );
             BOOST_ASSIGN_V2_CHECK( cont.size() == 6 );

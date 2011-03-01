@@ -26,7 +26,7 @@ namespace xxx_ptr{
     void test(){
         namespace as2 = boost::assign::v2;
         {
-            //[array
+            //[put_ptr_array
             typedef int T;
             T x = 1, y = 2, z = 3;
             boost::ptr_array<T, 3> cont; as2::put( cont )( x )( y )( z );
@@ -38,14 +38,14 @@ namespace xxx_ptr{
 /*
 		// These are not yet available (TODO)
         {
-            //[map
+            //[put_ptr_map
             boost::ptr_map<std::string, int> assoc;
             as2::put( assoc )( "jan", 31 )( "feb", 28 )( "mar", 31 );
             BOOST_ASSIGN_V2_CHECK( assoc["feb"] == 28 );
             //]
         }
         {
-            //[set
+            //[put_ptr_set
             typedef std::string T;
             boost::ptr_set<T> assoc;
             T x = "isomer", y = "ephemeral", z = "prosaic";
@@ -56,7 +56,7 @@ namespace xxx_ptr{
         }
 */
         {
-            //[deque
+            //[put_ptr_deque
             typedef int T; T x = 1, y = 2, z = 0;
             boost::ptr_deque<T> cont;
             as2::put( cont )( x )( y )( z );
@@ -65,7 +65,7 @@ namespace xxx_ptr{
             //]
         }
         {
-            //[list
+            //[put_ptr_list
             typedef int T; T x = 1, y = 2, z = 0;
             boost::ptr_list<T> cont;
             ( as2::put( cont ) )( x )( y )( z );
@@ -74,7 +74,7 @@ namespace xxx_ptr{
             //]
         }
         {
-            //[vector
+            //[put_ptr_vector
             typedef int T; T x = 1, y = 2, z = 0;
             boost::ptr_vector<T> cont;
             as2::put( cont )( x )( y )( z );

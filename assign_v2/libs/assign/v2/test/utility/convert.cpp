@@ -63,9 +63,6 @@ namespace xxx_convert{
         	typedef int T;
         	typedef std::vector<int> R; R r( 3 ); r[0] = 1; r[1] = 2; r[2] = 0; 
                         
-			// TODO figure out why
-            // C(as2::converter( ar ) ); // Call of overloaded C() ambig
-            
             {
         		typedef std::vector<T> C; f<C>( as2::converter( r ), r );
             }

@@ -23,7 +23,7 @@ namespace xxx_std{
         namespace as2 = boost::assign::v2;
         {
             typedef int T; T x = 1, y = 2, z = 0;
-            //[deque_front
+            //[put_deque_std_front
             BOOST_AUTO(
                 cont,
                 (

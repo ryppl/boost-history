@@ -8,10 +8,11 @@
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
 #include <deque>
+#include <boost/lambda/lambda.hpp>
 #include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/put/std/push_front.hpp>
 #include <boost/assign/v2/put/pipe/functor.hpp>
-#include <boost/lambda/lambda.hpp>
+#include <boost/assign/v2/put/pipe/csv.hpp>
 #include <libs/assign/v2/test/put/pipe/functor/std.h>
 
 namespace test_assign_v2{
@@ -25,10 +26,19 @@ namespace xxx_std{
         namespace as2 = boost::assign::v2;
         namespace lambda = boost::lambda;
         {
-            //[push_front
+            //[put_pipe_functor_push_front
             typedef int T; T x = 1, y = 2, z = 0;
             std::deque<int> cont;
             cont | ( as2::_put %  as2::_push_front )( x )( y )( z );
+            BOOST_ASSIGN_V2_CHECK( cont.front() == z );
+            BOOST_ASSIGN_V2_CHECK( cont.back() == x );
+            //]
+        }
+        {
+            //[put_pipe_csv_push_front
+            typedef int T; T x = 1, y = 2, z = 0;
+            std::deque<int> cont;
+            cont | ( as2::_csv_put %  as2::_push_front )( x, y, z );
             BOOST_ASSIGN_V2_CHECK( cont.front() == z );
             BOOST_ASSIGN_V2_CHECK( cont.back() == x );
             //]

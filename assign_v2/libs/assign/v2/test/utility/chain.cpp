@@ -35,12 +35,12 @@ namespace xxx_chain{
         {
             //[chain_r
             typedef int T;
-            boost::array<T, 2> cont;  cont[0] = 0; cont[1] = 1;
-            std::list<T> list; list.push_back( 2 ); list.push_back( 3 );
-            std::vector<T> v( boost::begin( cont ), boost::end( cont ) );
-            boost::copy( list, std::back_inserter( v ) );
+            boost::array<T, 2> cont1;  cont1[0] = 0; cont1[1] = 1;
+            std::list<T> cont2; cont2.push_back( 2 ); cont2.push_back( 3 );
+            std::vector<T> joined( boost::begin( cont1 ), boost::end( cont1 ) );
+            boost::copy( cont2, std::back_inserter( joined ) );
             BOOST_ASSIGN_V2_CHECK(
-                boost::range::equal( v, cont | as2::_chain( list ) )
+                boost::range::equal( joined, cont1 | as2::_chain( cont2 ) )
             );
             //]
         }
