@@ -14,7 +14,7 @@
 #include <boost/mpl/identity.hpp>
 #include <boost/type_traits/is_same.hpp>
 
-#include <boost/assign/v2/put/deduce/modifier.hpp>
+#include <boost/assign/v2/put/deduce/modifier_tag.hpp>
 
 namespace boost{
     struct use_default;

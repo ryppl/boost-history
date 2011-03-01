@@ -13,12 +13,14 @@
 namespace boost{
 namespace assign{
 namespace v2{
+//[convert_tag
 namespace convert_tag{
 
     struct put{};
     struct copy{};
 
 }// convert_tag
+//]
 }// v2
 }// assign
 }// boost

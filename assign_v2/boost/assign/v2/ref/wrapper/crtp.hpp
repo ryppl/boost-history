@@ -55,12 +55,12 @@ namespace ref{
 
         public:
 
-        void operator=(lvalue_& r ){ this->derived().assign( r ); }
-        void operator=(rvalue_& r ){ this->derived().assign( r ); }
+        void operator=(lvalue_& t ){ this->derived().assign( t ); }
+        void operator=(rvalue_& t ){ this->derived().assign( t ); }
 
-        void swap( wrapper_crtp& r )
+        void swap( wrapper_crtp& that )
         {
-            return this->derived().swap( r );
+            return this->derived().swap( that );
         }
 
         operator T&() const
@@ -68,29 +68,29 @@ namespace ref{
             return this->derived().get();
         }
 
-        bool operator==( const wrapper_crtp& r )const
+        bool operator==( const wrapper_crtp& that )const
         {
-            return this->derived().get() == r.derived().get();
+            return this->derived().get() == that.derived().get();
         }
 
-        bool operator<( const wrapper_crtp& r )const
+        bool operator<( const wrapper_crtp& that )const
         {
-            return this->derived().get() < r.derived().get();
+            return this->derived().get() < that.derived().get();
         }
 
-        bool operator==( typename boost::call_traits<T>::param_type r )const
+        bool operator==( typename boost::call_traits<T>::param_type t )const
         {
-            return this->derived().get() == r;
+            return this->derived().get() == t;
         }
 
-        bool operator<( typename boost::call_traits<T>::param_type r )const
+        bool operator<( typename boost::call_traits<T>::param_type t )const
         {
-            return this->derived().get() < r;
+            return this->derived().get() < t;
         }
 
-        bool operator>( typename boost::call_traits<T>::param_type r )const
+        bool operator>( typename boost::call_traits<T>::param_type t )const
         {
-            return this->derived().get() > r;
+            return this->derived().get() > t;
         }
 
         template<class CharT, class Traits>
@@ -105,7 +105,7 @@ namespace ref{
 
 
     template<typename D,typename T>
-    void rebind( wrapper_crtp<D,T>& a, T& r ){ a.rebind( r ); }
+    void rebind( wrapper_crtp<D,T>& a, T& t ){ a.rebind( t ); }
 
     template<typename D,typename T>
     inline void swap( wrapper_crtp<D,T>& l, wrapper_crtp<D,T>& r )

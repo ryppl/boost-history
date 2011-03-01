@@ -10,7 +10,7 @@
 #ifndef BOOST_ASSIGN_V2_PUT_CONTAINER_FUNCTOR_MAKE_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_CONTAINER_FUNCTOR_MAKE_ER_2010_HPP
 #include <boost/assign/v2/put/deduce/fun.hpp>
-#include <boost/assign/v2/put/deduce/modifier.hpp>
+#include <boost/assign/v2/put/deduce/modifier_tag.hpp>
 #include <boost/assign/v2/put/deduce/dependee.hpp>
 #include <boost/assign/v2/put/container/functor/adapter.hpp>
 

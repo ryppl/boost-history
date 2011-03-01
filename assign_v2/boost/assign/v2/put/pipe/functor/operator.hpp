@@ -20,23 +20,23 @@ namespace v2{
 namespace put_pipe_aux{
 
     template<
-        typename V,
+        typename C,
         typename Pars,
         typename SeqArgs,
         bool enable_pars
     >
-    V& operator|(
-        V& v,
+    C& operator|(
+        C& cont,
         put_pipe_aux::rhs<Pars, SeqArgs, enable_pars> const& c
     ){
         forward(
             forward_pars<Pars>(
-                put( v ),
+                put( cont ),
                 c.pars()
             ),
             c.seq_args()
         );
-        return v;
+        return cont;
     }
 
 }// put_pipe_aux

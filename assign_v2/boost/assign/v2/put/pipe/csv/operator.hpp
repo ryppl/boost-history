@@ -20,18 +20,18 @@ namespace assign{
 namespace v2{
 namespace put_pipe_aux{
 
-    template<typename V,
+    template<typename C,
         typename Pars, csv_size_type N, typename U>
-    V& operator|(V& v, put_pipe_aux::csv_rhs<Pars, N, U> const& c){
+    C& operator|(C& cont, put_pipe_aux::csv_rhs<Pars, N, U> const& c){
 
         csv_forward(
             forward_pars<Pars>(
-                put( v ),
+                put( cont ),
                 c.pars()
             ),
             c.seq_args()
         );
-        return v;
+        return cont;
 
     }
 

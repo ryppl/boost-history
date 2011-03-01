@@ -20,7 +20,7 @@
 #include <boost/range/algorithm/copy.hpp>
 #include <boost/range/algorithm/equal.hpp>
 #include <boost/assign/v2/detail/config/check.hpp>
-#include <boost/assign/v2/ref/wrapper/adaptor_get.hpp>
+#include <boost/assign/v2/ref/wrapper/range_get.hpp>
 #include <boost/assign/v2/ref/wrapper/copy.hpp>
 #include <boost/assign/v2/utility/chain/use_lvalue.hpp>
 #include <boost/assign/v2/utility/chain/pipe.hpp>

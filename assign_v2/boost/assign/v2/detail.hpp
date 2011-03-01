@@ -16,8 +16,7 @@
 #include <boost/assign/v2/detail/keyword.hpp>
 #include <boost/assign/v2/detail/traits.hpp>
 
-// Don't include
-// /checking/checking.hpp
-// /config/config
+// /config.hpp is not to be defined
+// Don't include /checking/checking.hpp
 
 #endif

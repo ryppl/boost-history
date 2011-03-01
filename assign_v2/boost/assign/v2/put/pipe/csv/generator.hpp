@@ -46,9 +46,6 @@ namespace put_pipe_aux{
     class csv_generator
     {
 
-        //typedef boost::use_default tag2_;
-        //typedef v2::ref::assign_copy::nth_result_of::fusion<tag2_> meta1_;
-
         typedef ::boost::mpl::na na_;
         typedef modulo_traits<Pars> modulo_traits_;
 
@@ -133,7 +130,6 @@ namespace put_pipe_aux{
         ref::csv_array<U>( BOOST_PP_ENUM_PARAMS(N, _) ) \
     );\
 /**/
-
 #define BOOST_ASSIGN_V2_MACRO2(z, N, data)\
     template<typename T>\
     typename result<N, T>::type\

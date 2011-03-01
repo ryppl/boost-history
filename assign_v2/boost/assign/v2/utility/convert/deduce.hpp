@@ -38,10 +38,10 @@ namespace switch_aux{
 }// switch_aux
 namespace convert_aux{
 
-    template<typename T, typename U>
+    template<typename C, typename R>
     struct deduce_tag : v2::switch_aux::result<
         v2::switch_tag::deduce_convert,
-        boost::mpl::pair<T, U>
+        boost::mpl::pair<C, R>
     >
     {};
 

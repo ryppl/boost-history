@@ -12,6 +12,7 @@
 #include <boost/mpl/apply.hpp>
 #include <boost/mpl/size.hpp>
 #include <boost/mpl/push_back.hpp>
+#include <boost/mpl/vector/vector0.hpp>
 #include <boost/assign/v2/ref/list/at.hpp>
 #include <boost/assign/v2/ref/list/container.hpp>
 #include <boost/assign/v2/ref/list/nth_result_of.hpp>
@@ -22,6 +23,8 @@ namespace boost{
 namespace assign{
 namespace v2{
 namespace put_pipe_aux{
+
+	typedef ::boost::mpl::vector0<> empty_pars_;
 
     template<typename Pars>
     struct modulo_traits

@@ -20,23 +20,25 @@
 namespace boost{
 namespace assign{
 namespace v2{
+//[convert_dispatch
 namespace convert_aux{
 
-    template<typename T, typename U>
-    T dispatch(U const& u, convert_tag::put)
+    template<typename C, typename R>
+    C dispatch(R const& r, convert_tag::put)
     {
-        T t;
-        return (t | v2::_put_range( u ) );
+        C cont;
+        return (cont | v2::_put_range( r ) );
 
     }
 
-    template<typename T, typename U>
-    T dispatch(U const& u, convert_tag::copy)
+    template<typename C, typename R>
+    C dispatch(R const& r, convert_tag::copy)
     {
-        return T( boost::begin( u ), boost::end( u ) );
+        return C( boost::begin( r ), boost::end( r ) );
     }
 
 }// convert_aux
+//]
 }// v2
 }// assign
 }// boost

@@ -9,7 +9,9 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_PUT_PIPE_FUNCTOR_RHS_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_PIPE_FUNCTOR_RHS_ER_2010_HPP
+#include <iostream>
 #include <boost/mpl/vector/vector0.hpp>
+#include <boost/mpl/int.hpp>
 #include <boost/mpl/size.hpp>
 #include <boost/mpl/apply.hpp>
 
@@ -35,9 +37,11 @@ namespace assign{
 namespace v2{
 namespace put_pipe_aux{
 
+	typedef ::boost::mpl::vector0<> empty_seq_args_;
+
     template<
-        typename Pars = ::boost::mpl::vector0<>,
-        typename SeqArgs = ::boost::mpl::vector0<>,
+        typename Pars = empty_pars_,
+        typename SeqArgs = empty_seq_args_,
         bool enable_pars = (boost::mpl::size<SeqArgs>::value == 0)
     >
     class rhs;
@@ -264,6 +268,29 @@ BOOST_PP_REPEAT_FROM_TO(
         seq_args_cont_type seq_args_cont;
 
     };
+
+	// For testing purposes
+    template<int i, int j, typename T, typename P, typename U>
+    void check_rhs(T const& rhs, P const& pred, U const& u)
+    {
+        #if BOOST_ASSIGN_V2_ENABLE_CPP0X
+        using namespace boost::assign::v2::ref; // tuple (cpp0x)
+        #else
+        using namespace boost; // tuple<> (cpp03)
+        #endif
+        
+        //std::cout << "(i,j)->" << get<j>(
+        //        rhs.seq_args().get( boost::mpl::int_<i>() )
+        //    ) << std::endl;
+        
+        pred(
+            get<j>(
+                rhs.seq_args().get( boost::mpl::int_<i>() )
+            ),
+            u
+        );
+    }
+
 
 }// put_pipe_aux
 }// v2

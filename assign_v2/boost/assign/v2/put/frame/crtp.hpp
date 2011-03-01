@@ -178,7 +178,7 @@ BOOST_PP_REPEAT_FROM_TO(
 		template<typename T>
         result_type modify(T* t,typename ptr_enabler<T>::type* = 0)const
         {
-            typedef put_concept::ModifierImpl<modifier_, C, T*> concept_;
+            typedef put_concept::Modifier<Tag, C, T*> concept_;
             BOOST_CONCEPT_ASSERT(( concept_ ));
             this->modifier.impl( this->derived().container(), t );
             return this->derived();
@@ -187,7 +187,7 @@ BOOST_PP_REPEAT_FROM_TO(
         template<typename T>
         void check_modifier( BOOST_ASSIGN_V2_forward_param(T, t) )const
         {
-            typedef put_concept::ModifierImpl<modifier_, C,
+            typedef put_concept::Modifier<Tag, C,
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
                 T&&
 #else
