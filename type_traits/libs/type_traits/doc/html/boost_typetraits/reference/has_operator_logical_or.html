@@ -34,9 +34,13 @@
       </p>
 <p>
         The default behaviour (<code class="computeroutput"><span class="identifier">RET</span><span class="special">=</span><span class="keyword">void</span></code>) is
-        to not check for the return value of binary <code class="computeroutput"><span class="keyword">operator</span><span class="special">||</span></code>. If <code class="computeroutput"><span class="identifier">RET</span></code>
-        is different from the default <code class="computeroutput"><span class="keyword">void</span></code>
-        type, the return value is checked to be convertible to <code class="computeroutput"><span class="identifier">RET</span></code>.
+        to not check for the return value of binary <code class="computeroutput"><span class="keyword">operator</span><span class="special">||</span></code>. Be careful that it does not mean that
+        <code class="computeroutput"><span class="keyword">operator</span><span class="special">||</span></code>
+        must return <code class="computeroutput"><span class="keyword">void</span></code> to have the
+        trait derive from <a class="link" href="integral_constant.html" title="integral_constant">true_type</a>.
+        If <code class="computeroutput"><span class="identifier">RET</span></code> is different from
+        the default <code class="computeroutput"><span class="keyword">void</span></code> type, the return
+        value is checked to be convertible to <code class="computeroutput"><span class="identifier">RET</span></code>.
         Convertible to <code class="computeroutput"><span class="identifier">RET</span></code> means
         that the return value of the operator can be used as argument to a function
         expecting <code class="computeroutput"><span class="identifier">RET</span></code>: 
@@ -49,14 +53,14 @@
 <p>
       </p>
 <p>
-        This trait can not detect whether binary <code class="computeroutput"><span class="keyword">operator</span><span class="special">||</span></code> is public or not: if <code class="computeroutput"><span class="keyword">operator</span><span class="special">||</span></code> is defined as a private member of <code class="computeroutput"><span class="identifier">LHS</span></code> then instantiating <code class="computeroutput"><span class="identifier">has_operator_logical_or</span><span class="special">&lt;</span><span class="identifier">LHS</span><span class="special">&gt;</span></code> will produce a compiler error. For this
+        This trait cannot detect whether binary <code class="computeroutput"><span class="keyword">operator</span><span class="special">||</span></code> is public or not: if <code class="computeroutput"><span class="keyword">operator</span><span class="special">||</span></code> is defined as a private member of <code class="computeroutput"><span class="identifier">LHS</span></code> then instantiating <code class="computeroutput"><span class="identifier">has_operator_logical_or</span><span class="special">&lt;</span><span class="identifier">LHS</span><span class="special">&gt;</span></code> will produce a compiler error. For this
         reason <code class="computeroutput"><span class="identifier">has_operator_logical_or</span></code>
-        can not be used to determine whether a type has a public <code class="computeroutput"><span class="keyword">operator</span><span class="special">||</span></code> or not.
+        cannot be used to determine whether a type has a public <code class="computeroutput"><span class="keyword">operator</span><span class="special">||</span></code> or not.
       </p>
 <p>
         <span class="bold"><strong>Header:</strong></span> <code class="computeroutput"><span class="preprocessor">#include</span>
         <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">type_traits</span><span class="special">/</span><span class="identifier">has_operator_logical_or</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code>
-        or <code class="computeroutput"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">type_traits</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code>
+        or <code class="computeroutput"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">type_traits</span><span class="special">/</span><span class="identifier">operators</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code>
       </p>
 <p>
         <span class="bold"><strong>Examples:</strong></span>
@@ -84,7 +88,16 @@
           inherits from <code class="computeroutput"><a class="link" href="integral_constant.html" title="integral_constant">true_type</a></code>.
         </p></blockquote></div>
 <div class="blockquote"><blockquote class="blockquote"><p>
+          <code class="computeroutput"><span class="identifier">has_operator_logical_or</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="keyword">int</span><span class="special">,</span>
+          <span class="keyword">long</span><span class="special">&gt;</span></code>
+          inherits from <code class="computeroutput"><a class="link" href="integral_constant.html" title="integral_constant">true_type</a></code>.
+        </p></blockquote></div>
+<div class="blockquote"><blockquote class="blockquote"><p>
           <code class="computeroutput"><span class="identifier">has_operator_logical_or</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="keyword">double</span><span class="special">,</span> <span class="keyword">bool</span><span class="special">&gt;</span></code>
+          inherits from <code class="computeroutput"><a class="link" href="integral_constant.html" title="integral_constant">true_type</a></code>.
+        </p></blockquote></div>
+<div class="blockquote"><blockquote class="blockquote"><p>
+          <code class="computeroutput"><span class="identifier">has_operator_logical_or</span><span class="special">&lt;</span><span class="keyword">const</span> <span class="keyword">int</span><span class="special">,</span> <span class="keyword">int</span><span class="special">&gt;::</span><span class="identifier">value</span></code>
           inherits from <code class="computeroutput"><a class="link" href="integral_constant.html" title="integral_constant">true_type</a></code>.
         </p></blockquote></div>
 <div class="blockquote"><blockquote class="blockquote"><p>

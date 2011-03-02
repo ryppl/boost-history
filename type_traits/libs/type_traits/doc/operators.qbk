@@ -18,13 +18,15 @@ and providing a simple `true` or `false` boolean value which reflects the fact
 that given types can or not be used with given operators.
 
 For example, `has_operator_plus<int, double>::value` is a `bool`
-which value is `true` because it is possible to add a `double` to an `int` like in the following code:
+which value is `true` because it is possible to add a `double` to an `int` like
+in the following code:
 ``
 int i;
 double d;
 d+i;
 ``
-It is also possible to know if the result of the operator is convertible or not to a given type:
+It is also possible to know if the result of the operator is convertible or not
+to a given type:
 ``
 has_operator_plus<int, double, double>::value; // true: int+double is convertible to double
 has_operator_plus<int, double, char*>::value; // false: int+double is not convertible to char*
@@ -39,11 +41,15 @@ where:
 
 * `LHS` is the type used at the left hand side of `operator op`,
 * `RHS` is the type used at the right hand side of `operator op`,
-* `RET` is the type for which we want to know if the result of `operator op` can be converted to.
+* `RET` is the type for which we want to know if the result of `operator op` can
+  be converted to.
 
-The default behaviour (`RET=void`) is to not check for the return value of the operator.
-If `RET` is different from the default `void`, the return value is checked to be convertible to `RET`.
-Convertible to `RET` means that the return value can be used as argument to a function expecting `RET`:
+The default behaviour (`RET=void`) is to not check for the return value of the
+operator. Be careful that it does not mean that the operator must return `void`
+to have the trait value to be `true`.
+If `RET` is different from the default `void`, the return value is checked to be
+convertible to `RET`. Convertible to `RET` means that the return value can be
+used as argument to a function expecting `RET`:
 ``
 void f(RET);
 LHS lhs;
@@ -57,7 +63,8 @@ template __prefix_temp has_operator_prefixop;
 template __postfix_temp has_operator_postfixop;
 ``
 
-The following tables give the list of supported binary, prefix and postfix operators.
+The following tables give the list of supported binary, prefix and postfix
+operators.
 
 [table Supported binary operators
    [[operator]                   [trait name]]
@@ -165,4 +172,190 @@ The following table shows the names found in the standard for each operator and 
 
 [heading Implementation]
 
+The implementation consists in only header files. The following headers should
+included first:
+``#include <boost/type_traits/operators.hpp>``
+or
+``#include <boost/type_traits/has_operator_name.hpp>``
+where [^name] is the textual name chosen for the wanted operator. The first
+method includes all operator traits.
+
+All traits are implemented the same way using preprocessor macros to avoid code
+duplication.
+The main files are in [^boost/type_traits/detail]: [^has_binary_operator.hpp],
+[^has_prefix_operator.hpp] and [^has_postfix_operator.hpp].
+The example of prefix `operator-` is presented below:
+
+``
+namespace boost {
+namespace detail {
+namespace has_operator_unary_minus_impl {
+
+// 1. a function to have an instance of type T without requiring T to be default
+// constructible
+namespace {
+   template <typename T> T &make();
+}
+
+// 2. we provide operator- for types that do not have one already
+
+// a type returned from operator- when no such operator is found in the type's
+// own namespace so that we have a means to know that our operator was used
+struct tag { };
+
+// this class allows implicit conversions and makes the following operator
+// definition less-preferred than any other such operators that might be found
+// via argument-dependent name lookup
+struct any { template <class T> any(T const&); };
+
+// when operator- is not available, this one is used
+tag operator-(const any&);
+
+// 3. if the return type has to be checked, we need to determine if operator-
+// returns void or not
+
+// we first redefine "operator," so that we have no compilation error if
+// operator- returns void and we can use the return type of
+// (-rhs, returns_void_t()) to deduce if operator- returns void or not:
+// - operator- returns void   -> (-rhs, returns_void_t()) returns returns_void_t
+// - operator- returns !=void -> (-rhs, returns_void_t()) returns int
+struct returns_void_t {};
+template <typename T>
+int operator,(T const &, returns_void_t);
+
+// this intermediate trait has member value of type bool:
+// - value==true -> operator- returns void
+// - value==false -> operator- does not return void
+template < typename RHS >
+struct operator_unary_minus_returns_void {
+   // overloads of function returns_void make the difference
+   // yes_type and no_type have different size by construction
+   static ::boost::type_traits::yes_type returns_void(returns_void_t);
+   static ::boost::type_traits::no_type returns_void(int);
+   static const bool value=(sizeof(::boost::type_traits::yes_type)==sizeof(returns_void((-make<RHS>(),returns_void_t()))));
+};
+
+// 4. check for return type when RET is non void
+
+// this class is used only when RET is non void, therefore it is specialized to
+// have its value==false when the operator returns void
+template < typename RHS, typename RET, typename RETURNS_VOID >
+struct has_operator_unary_minus_impl2;
+
+// operator- does not return void, checks if it is convertible to RET using the
+// sizeof trick based on overload resolution
+template < typename RHS, typename RET >
+struct has_operator_unary_minus_impl2< RHS, RET, ::boost::false_type > {
+   static ::boost::type_traits::yes_type is_convertible_to_RET(RET);
+   static ::boost::type_traits::no_type is_convertible_to_RET(...);
+   static const bool value=(sizeof(is_convertible_to_RET(- make<RHS>()))==sizeof(::boost::type_traits::yes_type));
+};
+
+// operator- returns void!=RET -> specialization to return value==false
+template < typename RHS, typename RET >
+struct has_operator_unary_minus_impl2< RHS, RET, ::boost::true_type > {
+   static const bool value=false;
+};
+
+// 5. main struct: to avoid any compilation error, this struct behaves
+// differently when:
+// - RET is void or non void
+// - operator-(RHS) is forbidden by the standard
+// forbidden_if is a bool that is:
+// - true when the operator-(RHS) is forbidden by the standard (would yield
+//   compilation error if used)
+// - false otherwise
+template < typename RHS, typename RET, bool forbidden_if >
+struct has_operator_unary_minus_impl1;
+
+// specialization to avoid compilation error when forbidden by the standard
+template < typename RHS, typename RET >
+struct has_operator_unary_minus_impl1 < RHS, RET, true > {
+   static const bool value=false;
+};
+
+// checks for return type if template parameter RET is non void: use previously
+// defined struct
+template < typename RHS, typename RET >
+struct has_operator_unary_minus_impl1 < RHS, RET, false > {
+   static const bool value=(has_operator_unary_minus_impl2< RHS, RET, typename ::boost::integral_constant< bool, operator_unary_minus_returns_void< RHS >::value > >::value);
+};
+
+// in case we do not want to check for return type, we still need to know if our
+// definition of operator BOOST_TT_TRAIT_OP is used or an other existing one;
+// this is done with redefinition of "operator," that returns tag or int
+tag operator,(tag, int);
+
+// do not check for return type if 2nd template parameter RET is void
+template < typename RHS >
+struct has_operator_unary_minus_impl1< RHS, void, false > {
+   static ::boost::type_traits::yes_type check(int);
+   static ::boost::type_traits::no_type check(tag);
+
+   static const bool value=(sizeof(check(((- make<RHS>()),0)))==sizeof(::boost::type_traits::yes_type));
+};
+
+// some specializations needs to be declared for the special void case
+template < typename RET >
+struct has_operator_unary_minus_impl1< void, RET, false > {
+   static const bool value=false;
+};
+
+template <>
+struct has_operator_unary_minus_impl1< void, void, false > {
+   static const bool value=false;
+};
+
+// defines some typedef for convenience
+template < typename RHS, typename RET >
+struct has_operator_unary_minus_impl {
+   typedef typename ::boost::remove_reference<RHS>::type rhs_noref;
+   typedef typename ::boost::remove_cv<rhs_noref>::type rhs_nocv;
+   static const bool value=(has_operator_unary_minus_impl1 < rhs_noref, RET, ::boost::is_pointer< rhs_noref >::value >::value);
+};
+} // namespace has_operator_unary_minus_impl
+} // namespace detail
+
+// this is the accessible definition of the trait to end user
+template < typename RHS, typename RET=void >
+struct has_operator_unary_minus : ::boost::integral_constant< bool, (::boost::detail::has_operator_unary_minus_impl::has_operator_unary_minus_impl< RHS, RET >::value)> {
+};
+} // namespace boost
+``
+
+[heading Known issues]
+
+These traits cannot detect whether the operators are public or not:
+if an operator is defined as a private member of type `T` then
+the instantiation of the corresponding trait will produce a compiler error.
+For this reason these traits cannot be used to determine whether a type has a
+public operator or not.
+
+There is an issue if the operator exists only for type `U` and `T` is
+convertible to `U`. In this case, the compiler will report an ambigous overload
+because both the existing operator and the one we provide (with argument of type
+`any`) need type conversion, so that none is preferred.
+
+Example 1:
+``
+struct A { };
+void operator-(const A&);
+struct B { operator A(); };
+boost::has_operator_unary_minus<A>::value; // this is fine
+boost::has_operator_unary_minus<B>::value; // error: ambigous overload between
+                                           // operator-(const any&) and
+                                           // operator-(const A&)
+                                           // both need type conversion
+``
+Example 2:
+``
+struct B { };
+struct A { A(const B&) { } };
+void operator-(const A&);
+boost::has_operator_unary_minus<A>::value; // this is fine
+boost::has_operator_unary_minus<B>::value; // error: ambigous overload between
+                                           // operator-(const any&) and
+                                           // operator-(const A&)
+                                           // both need type conversion
+``
 [endsect]
