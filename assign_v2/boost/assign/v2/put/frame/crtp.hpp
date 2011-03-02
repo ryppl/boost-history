@@ -101,19 +101,14 @@ namespace put_aux{
         explicit crtp( F const& f, modifier_ const& m )
             : fun_holder_( f ), modifier_holder_( m ){}
 
-        result_type operator()()const
-        {
-            return this->modify( this->fun() );
-        }
-
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 
-        //[crtp_functor
+        //[frame_crtp_functor
         template<typename...Args>
         result_type operator()( Args&&...args )const
         {
-            return this->modify(
-                this->fun( std::forward<Args>(args)... )
+            return  this->modify( 
+                /*<< Instance of F >>*/ this->fun( std::forward<Args>(args)... )
             );
         }
         //]
@@ -127,6 +122,11 @@ namespace put_aux{
 
         public:
         using super_t::operator();
+
+        result_type operator()()const
+        {
+            return this->modify( this->fun() );
+        }
 
 #define BOOST_ASSIGN_V2_MACRO(z, N, data) \
     template<BOOST_PP_ENUM_PARAMS(N, typename T)> \
@@ -199,13 +199,13 @@ BOOST_PP_REPEAT_FROM_TO(
 
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 
-        //[crtp_modify
+        //[frame_crtp_modify
         template<typename T>
         result_type modify(T&& t)const
         {
             check_modifier( t );
-            this->modifier.impl(
-                this->derived().container(),
+            /*<< Instance of put_aux::modifier<Tag> >>*/this->modifier.impl(
+                /*<< Reference to C >>*/this->derived().container(),
                 std::forward<T>( t )
             );
             return this->derived();

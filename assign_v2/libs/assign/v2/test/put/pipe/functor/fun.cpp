@@ -27,19 +27,19 @@ namespace xxx_fun{
         namespace lambda = boost::lambda;
         {
             //[put_pipe_functor_fun
-            typedef int T; T x = 1, y = 2, z = 0;
-            std::vector<int> cont;
-            cont | (
-                as2::_put % ( as2::_fun = ( lambda::_1 + 1 ) )
-            )( x )( y )( z );
-            BOOST_ASSIGN_V2_CHECK( cont.front() == ( x + 1 ) );
+            typedef int T; T x = 1, y = 2, z = 0; std::vector<T> cont;
+            BOOST_ASSIGN_V2_CHECK( 
+            	( 
+                	cont | (
+                		as2::_put % ( as2::_fun = ( lambda::_1 + 1 ) )
+            		)( x )( y )( z ) 
+                ).front() == ( x + 1 ) );
             BOOST_ASSIGN_V2_CHECK( cont.back() == ( z + 1 ) );
             //]
         }
         {
             //[put_pipe_csv_fun
-            typedef int T; T x = 1, y = 2, z = 0;
-            std::vector<int> cont;
+            typedef int T; T x = 1, y = 2, z = 0; std::vector<T> cont;
             BOOST_ASSIGN_V2_CHECK( 
             	( 
                 	cont | ( as2::_csv_put % ( as2::_fun = ( lambda::_1 + 1 ) )

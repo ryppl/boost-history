@@ -44,8 +44,8 @@ namespace ref{
         >
     {
 
-        typedef typename boost::remove_const<T>::type lvalue_;
-        typedef typename boost::add_const<T>::type rvalue_;
+        typedef typename boost::remove_const<T>::type non_const;
+        typedef typename boost::add_const<T>::type const_;
 
         public:
         // protected
@@ -55,8 +55,8 @@ namespace ref{
 
         public:
 
-        void operator=(lvalue_& t ){ this->derived().assign( t ); }
-        void operator=(rvalue_& t ){ this->derived().assign( t ); }
+        void operator=(non_const& t ){ this->derived().assign( t ); }
+        void operator=(const_& t ){ this->derived().assign( t ); }
 
         void swap( wrapper_crtp& that )
         {

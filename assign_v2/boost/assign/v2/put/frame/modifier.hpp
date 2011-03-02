@@ -14,23 +14,17 @@
 namespace boost{
 namespace assign{
 namespace v2{
-namespace modifier_tag{
-    // add as necessary
-}
+//[frame_modifier
+namespace /*<< Template arguments to put_aux::modifier<> are declared within >>*/modifier_tag{}
 namespace put_aux{
 
     template<typename Tag>
-    struct modifier{
-     /* Specialize on Tag:
-        template<typename V, typename T>
-        void impl(V& v, T& t)const; */
-    };
+    struct /*<< Specialize on Tag >>*/ modifier{};
 
-}// put_aux
+}
 namespace put_concept{
 
-    //[concept_modifier
-    template<typename Tag, typename C, typename T>
+    template<typename Tag, /*<< Container >>*/ typename C, /*<< Input >>*/ typename T>
     struct Modifier
     {
 
@@ -44,9 +38,9 @@ namespace put_concept{
         static C& cont;
         static T t;
     };
-	//]
 
-}// put_concept
+}
+//]
 }// v2
 }// assign
 }// boost

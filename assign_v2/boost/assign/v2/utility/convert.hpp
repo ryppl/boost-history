@@ -10,6 +10,9 @@
 #ifndef BOOST_ASSIGN_V2_UTILITY_CONVERT_ER_2010_HPP
 #define BOOST_ASSIGN_V2_UTILITY_CONVERT_ER_2010_HPP
 
+#include <boost/assign/v2/utility/convert/deduce_tag.hpp>
+#include <boost/assign/v2/utility/convert/dispatch.hpp>
+#include <boost/assign/v2/utility/convert/predicate.hpp>
 #include <boost/assign/v2/utility/convert/converter.hpp>
 
 #endif

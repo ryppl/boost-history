@@ -75,10 +75,11 @@ namespace xxx_other{
         {
             //[other_convert_ref_array
             typedef std::pair<std::string, int> T;
-            typedef std::vector<T> cont_;
-            cont_ cont = converter( // name lookup
+            typedef std::vector<T> C;
+            C cont = converter( // name lookup
                 as2::ref::array( T("jan", 31) )( T("feb", 28) )( T("mar", 31) )
             );
+            
             BOOST_ASSIGN_V2_CHECK( cont[1].first == "feb" );
             BOOST_ASSIGN_V2_CHECK( cont[1].second == 28 );
             //]
@@ -99,6 +100,7 @@ namespace xxx_other{
                     cont && (/*<< rvalue >>*/ as2::ref::csv_array( z ) | as2::ref::_get )
                 )
             );
+            
             BOOST_ASSIGN_V2_CHECK( cont[0] == r[0] );
             BOOST_ASSIGN_V2_CHECK( cont[1] == r[1] );
             BOOST_ASSIGN_V2_CHECK( z == r[2] );
@@ -108,9 +110,9 @@ namespace xxx_other{
         // container.hpp
         {
             //[other_csv_put
-            typedef int T; T x = 1, y = 2, z = 0;
-            std::list<T> cont; 
+            typedef int T; T x = 1, y = 2, z = 0; std::list<T> cont; 
             as2::csv( as2::put( cont ) , x, y, z );
+            
             BOOST_ASSIGN_V2_CHECK( cont.front() == x );
             BOOST_ASSIGN_V2_CHECK( cont.back() == z );
             //]
@@ -119,16 +121,16 @@ namespace xxx_other{
         // modulo.hpp
         {
             //[other_put_modulo
-            typedef int T; T x = 1, y = 2, z = 0;
-            std::list<T> cont; 
+            typedef int T; std::list<T> cont; 
             as2::csv( 
-            	/*<< Might be more efficient than as2::put( cont ) >>*/as2::put( cont ) % ( as2::_fun = as2::_identity ), 
-                x, y, z 
+            	as2::put( cont ) % ( as2::_fun = as2::_identity ), 
+                1, 2, 0 
             );
-            BOOST_ASSIGN_V2_CHECK( cont.front() == x );
-            BOOST_ASSIGN_V2_CHECK( cont.back() == z );
+            
+            BOOST_ASSIGN_V2_CHECK( cont.front() == 1 );
+            BOOST_ASSIGN_V2_CHECK( cont.back() == 0 );
             //]
-            BOOST_ASSIGN_V2_CHECK( *boost::next( boost::begin( cont ) ) == y );
+            BOOST_ASSIGN_V2_CHECK( *boost::next( boost::begin( cont ) ) == 2 );
         }
     }
 

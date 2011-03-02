@@ -29,8 +29,8 @@ namespace xxx_forward{
         {
             typedef int T;
             T x = 1, y = 2, z = 0;
-            typedef std::vector<T> cont_; cont_ cont;
-            typedef as2::result_of::put<cont_>::type adapter_;
+            typedef std::vector<T> C; C cont;
+            typedef as2::result_of::put<C>::type adapter_;
             adapter_ adapter = as2::put( cont );
             ppx::forward( adapter, as2::ref::list_tuple( x )( y )( z )() );
             BOOST_ASSIGN_V2_CHECK( cont[0] == x );
@@ -40,8 +40,8 @@ namespace xxx_forward{
         }
         {
             typedef const char* T;
-            typedef std::deque<T> cont_; cont_ cont;
-            typedef as2::result_of::put<cont_>::type adapter_;
+            typedef std::deque<T> C; C cont;
+            typedef as2::result_of::put<C>::type adapter_;
             adapter_ adapter = as2::put( cont );
             ppx::forward( adapter, as2::ref::list_tuple( "x" ) );
             typedef std::string str_;

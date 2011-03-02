@@ -32,6 +32,7 @@ namespace xxx_range{
             typedef int T; T x = 1, y = 2, z = 0;
             std::vector<T> r( 3 ); r[0] = x; r[1] = y; r[2] = z;
             boost::array<T, 3> cont; as2::put_range( cont, r );
+
             BOOST_ASSIGN_V2_CHECK( cont.front() == x );
             BOOST_ASSIGN_V2_CHECK( cont.back() == z );
             //]
@@ -41,6 +42,7 @@ namespace xxx_range{
             typedef int T; T x = 1, y = 2, z = 0;
             std::vector<T> r( 3 ); r[0] = x; r[1] = y; r[2] = z;
             typedef std::stack<T> lifo_;
+
             BOOST_ASSIGN_V2_CHECK( as2::put_range<lifo_>( r ).top() == z );
             //]
         }
@@ -49,6 +51,7 @@ namespace xxx_range{
             typedef int T; T x = 1, y = 2, z = 0;
             std::vector<T> r( 3 ); r[0] = x; r[1] = y; r[2] = z;
             std::deque<T> cont; as2::put_range( cont, r );
+
             BOOST_ASSIGN_V2_CHECK( cont.front() == x );
             BOOST_ASSIGN_V2_CHECK( cont.back() == z );
             //]

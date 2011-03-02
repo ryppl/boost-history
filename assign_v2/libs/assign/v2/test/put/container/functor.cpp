@@ -43,6 +43,7 @@ namespace xxx_functor{
             //[put_cont_functor_map
             typedef std::map<std::string, int> C; C cont;
             as2::put( cont )( "jan", 31 )( "feb", 28 )( "mar", 31 );
+            
             BOOST_ASSIGN_V2_CHECK( cont["feb"] == 28 );
             //]
             BOOST_ASSIGN_V2_CHECK( cont["jan"] == 31 );
@@ -54,6 +55,7 @@ namespace xxx_functor{
             typedef std::map<std::string, int> C; C cal;
             /*<< Calls `cal.insert( C::value_type(x, y) )` for [^(x,y)=( "jan", 31 ),( "feb", 28 ),( "mar", 31 )] >>*/
             as2::put( cal )( "jan", 31 )( "feb", 28 )( "mar", 31 );
+
             BOOST_ASSIGN_V2_CHECK( cal["feb"] == 28 );
             //]
         }
@@ -63,6 +65,7 @@ namespace xxx_functor{
             std::set<T> cont;
             T x = "isomer", y = "ephemeral", z = "prosaic";
             as2::put( cont )( x )( y )( z );
+
             BOOST_ASSIGN_V2_CHECK( cont.count( x ) == 1 );
             BOOST_ASSIGN_V2_CHECK( cont.count( z ) == 1 );
             //]
@@ -71,6 +74,7 @@ namespace xxx_functor{
             //[put_cont_functor_deque
             typedef int T; T x = 1, y = 2, z = 0;
             std::deque<T> cont; as2::put( cont )( x )( y )( z );
+
             BOOST_ASSIGN_V2_CHECK( cont.front() == x );
             BOOST_ASSIGN_V2_CHECK( cont.back() == z );
             //]
@@ -79,6 +83,7 @@ namespace xxx_functor{
             //[put_cont_functor_list
             typedef int T; T x = 1, y = 2, z = 0;
             std::list<T> cont; ( as2::put( cont ) )( x )( y )( z );
+
             BOOST_ASSIGN_V2_CHECK( cont.front() == x );
             BOOST_ASSIGN_V2_CHECK( cont.back() == z );
             //]
@@ -87,6 +92,7 @@ namespace xxx_functor{
             //[put_cont_functor_vector
             typedef int T; T x = 1, y = 2, z = 0;
             std::vector<T> cont; as2::put( cont )( x )( y )( z );
+
             BOOST_ASSIGN_V2_CHECK( cont.front() == x );
             BOOST_ASSIGN_V2_CHECK( cont.back() == z );
             //]
@@ -95,6 +101,7 @@ namespace xxx_functor{
             //[put_cont_functor_queue
             typedef int T; T x = 8, y = 7, z = 4;
             std::queue<T> fifo; as2::put( fifo )( x )( y )( z );
+
             BOOST_ASSIGN_V2_CHECK( fifo.front() == x );
             BOOST_ASSIGN_V2_CHECK( fifo.back() == z );
             //]
@@ -103,6 +110,7 @@ namespace xxx_functor{
             //[put_cont_functor_stack
             typedef int T; T x = 8, y = 7, z = 4;
             std::stack<T> lifo; as2::put( lifo )( x )( y )( z );
+
             BOOST_ASSIGN_V2_CHECK( lifo.top() == z ); lifo.pop();
             BOOST_ASSIGN_V2_CHECK( lifo.top() == y ); lifo.pop();
             BOOST_ASSIGN_V2_CHECK( lifo.top() == x ); lifo.pop();
@@ -115,6 +123,7 @@ namespace xxx_functor{
             typedef boost::tuple</*<< Notice this is a reference >>*/ d_&, i_> T;
             d_ w = 2.7,  x = 2.71, y = 2.718, z = 0.0; std::vector<T> cont;
             as2::put( cont )/*<< Notice the binary calls >>*/( w, 1 )( x, 2 )( y, 3 )/*<< Notice the unary call >>*/( z );
+
             BOOST_ASSIGN_V2_CHECK( &get<0>( cont[1] ) == &x );
             BOOST_ASSIGN_V2_CHECK( get<1>( cont[1] ) == 2 );
             T t3( z );

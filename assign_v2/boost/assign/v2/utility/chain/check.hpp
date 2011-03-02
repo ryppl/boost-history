@@ -22,7 +22,7 @@
 #include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/ref/wrapper/range_get.hpp>
 #include <boost/assign/v2/ref/wrapper/copy.hpp>
-#include <boost/assign/v2/utility/chain/use_lvalue.hpp>
+#include <boost/assign/v2/utility/chain/use_const.hpp>
 #include <boost/assign/v2/utility/chain/pipe.hpp>
 
 namespace boost{
@@ -31,10 +31,10 @@ namespace v2{
 namespace check_chain_aux{
 
 template<typename cr1_, typename cr2_, bool the_value>
-void verify_use_lvalue()
+void verify_dont_use_const()
 {
-    typedef v2::chain_aux::use_lvalue<cr1_, cr2_>  use_lvalue_;
-    BOOST_STATIC_ASSERT( use_lvalue_::value == the_value );
+    typedef v2::chain_aux::dont_use_const<cr1_, cr2_>  dont_use_const_;
+    BOOST_STATIC_ASSERT( dont_use_const_::value == the_value );
     typedef typename ::boost::mpl::eval_if_c<
         the_value,
         ::boost::mpl::identity<boost::mpl::void_>, // why?
@@ -68,14 +68,14 @@ void verify_mpl()
     {
         typedef r1_       cr1_;
         typedef r2_       cr2_;
-        verify_use_lvalue<cr1_, cr2_, the_value>();
-        verify_use_lvalue<cr2_, cr1_, the_value>();
+        verify_dont_use_const<cr1_, cr2_, the_value>();
+        verify_dont_use_const<cr2_, cr1_, the_value>();
     }
     {
         typedef r1_       cr1_;
         typedef r2_ const cr2_;
-        verify_use_lvalue<cr1_, cr2_, the_value>();
-        verify_use_lvalue<cr2_, cr1_, the_value>();
+        verify_dont_use_const<cr1_, cr2_, the_value>();
+        verify_dont_use_const<cr2_, cr1_, the_value>();
     }
 }
 

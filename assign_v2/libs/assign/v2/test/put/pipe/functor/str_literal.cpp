@@ -25,8 +25,9 @@ namespace xxx_str_literal{
         namespace as2 = boost::assign::v2;
         typedef const char* T;
         std::deque<T> cont; typedef std::string str_;
-        cont | as2::_put( "x" )( "y" )( "z" );
-        BOOST_ASSIGN_V2_CHECK( str_( cont[0] ) == "x" );
+        BOOST_ASSIGN_V2_CHECK( str_( 
+        	( cont | as2::_put( "x" )( "y" )( "z" ) )[0] 
+        ) == "x" );
         BOOST_ASSIGN_V2_CHECK( str_( cont[1] ) == "y" );
         BOOST_ASSIGN_V2_CHECK( str_( cont[2] ) == "z" );
     }

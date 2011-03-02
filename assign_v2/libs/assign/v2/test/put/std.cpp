@@ -26,8 +26,7 @@ namespace xxx_std{
 
         {
             //[put_std_push_front
-            typedef int T; T x = 0, y = 2, z = 1;
-            std::deque<T> cont;
+            typedef int T; T x = 0, y = 2, z = 1; std::deque<T> cont;
             ( as2::put( cont ) % as2::_push_front )( x )( y )( z );
             BOOST_ASSIGN_V2_CHECK( cont[0] == z );
             BOOST_ASSIGN_V2_CHECK( cont[2] == x );

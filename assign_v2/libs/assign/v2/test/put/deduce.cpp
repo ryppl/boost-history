@@ -60,11 +60,11 @@ namespace xxx_deduce{
             as2::put_aux::check_deduce<std::map<str_, int>, answer_>();
         }
         {
-            //[deduce_map
-            typedef std::map<std::string, int> cont_;
-            typedef as2::put_aux::deduce_modifier_tag<cont_>::type found_;
+            //[put_deduce_map
+            typedef std::map<std::string, int> C;
+            typedef as2::put_aux::deduce_modifier_tag<C>::type found_;
             typedef as2::modifier_tag::insert answer_;
-            BOOST_MPL_ASSERT((boost::is_same<found_, answer_>));
+            BOOST_MPL_ASSERT(( boost::is_same<found_, answer_> ));
             //]
         }
     }

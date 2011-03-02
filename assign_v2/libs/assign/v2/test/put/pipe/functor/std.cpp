@@ -27,19 +27,21 @@ namespace xxx_std{
         namespace lambda = boost::lambda;
         {
             //[put_pipe_functor_push_front
-            typedef int T; T x = 1, y = 2, z = 0;
-            std::deque<int> cont;
-            cont | ( as2::_put %  as2::_push_front )( x )( y )( z );
-            BOOST_ASSIGN_V2_CHECK( cont.front() == z );
+            typedef int T; T x = 1, y = 2, z = 0; std::deque<int> cont;
+            BOOST_ASSIGN_V2_CHECK( 
+            	( 
+                	cont | ( as2::_put %  as2::_push_front )( x )( y )( z ) 
+                ).front() == z 
+            );
             BOOST_ASSIGN_V2_CHECK( cont.back() == x );
             //]
         }
         {
             //[put_pipe_csv_push_front
-            typedef int T; T x = 1, y = 2, z = 0;
-            std::deque<int> cont;
-            cont | ( as2::_csv_put %  as2::_push_front )( x, y, z );
-            BOOST_ASSIGN_V2_CHECK( cont.front() == z );
+            typedef int T; T x = 1, y = 2, z = 0; std::deque<int> cont;
+            BOOST_ASSIGN_V2_CHECK( 
+            	( cont | ( as2::_csv_put %  as2::_push_front )( x, y, z ) 
+            ).front() == z );
             BOOST_ASSIGN_V2_CHECK( cont.back() == x );
             //]
         }

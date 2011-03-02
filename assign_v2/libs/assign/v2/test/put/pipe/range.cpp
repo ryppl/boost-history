@@ -31,8 +31,10 @@ namespace xxx_range{
             //[put_pipe_range_array
             typedef int T; T x = 1, y = 2, z = 0;
             std::vector<T> r( 3 ); r[0] = x; r[1] = y; r[2] = z;
-            boost::array<T, 3> cont; cont | as2::_put_range( r );
-            BOOST_ASSIGN_V2_CHECK( cont.front() == x );
+            boost::array<T, 3> cont; 
+            BOOST_ASSIGN_V2_CHECK( ( 
+            	cont | as2::_put_range( r ) 
+            ).front() == x );
             BOOST_ASSIGN_V2_CHECK( cont.back() == z );
             //]
         }

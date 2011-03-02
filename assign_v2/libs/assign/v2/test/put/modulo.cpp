@@ -31,6 +31,7 @@ namespace xxx_modulo{
             (
                 as2::put( cont ) % ( as2::_fun = ( lambda::_1 + 1 ) )
             )( x )( y )( z );
+            
             BOOST_ASSIGN_V2_CHECK( cont.front() == ( x + 1 ) );
             BOOST_ASSIGN_V2_CHECK( cont.back() == ( z + 1 ) );
             //]
@@ -41,6 +42,7 @@ namespace xxx_modulo{
             std::deque<int> cont;
             ( as2::put( cont ) % ( as2::_modifier
                 = as2::modifier_tag::push_front() ) )( x )( y )( z );
+                
             BOOST_ASSIGN_V2_CHECK( cont.front() == z );
             BOOST_ASSIGN_V2_CHECK( cont.back() == x );
             //]

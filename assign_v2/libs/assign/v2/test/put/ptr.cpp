@@ -28,8 +28,8 @@ namespace xxx_ptr{
         {
             //[put_ptr_array
             typedef int T;
-            T x = 1, y = 2, z = 3;
-            boost::ptr_array<T, 3> cont; as2::put( cont )( x )( y )( z );
+            T x = 1, y = 2, z = 3; boost::ptr_array<T, 3> cont;
+            as2::put( cont )( x )( y )( z );
             BOOST_ASSIGN_V2_CHECK( cont[0] == x );
             BOOST_ASSIGN_V2_CHECK( cont[2] == z );
             //]
@@ -57,8 +57,7 @@ namespace xxx_ptr{
 */
         {
             //[put_ptr_deque
-            typedef int T; T x = 1, y = 2, z = 0;
-            boost::ptr_deque<T> cont;
+            typedef int T; T x = 1, y = 2, z = 0; boost::ptr_deque<T> cont;
             as2::put( cont )( x )( y )( z );
             BOOST_ASSIGN_V2_CHECK( cont.front() == x );
             BOOST_ASSIGN_V2_CHECK( cont.back() == z );
@@ -66,17 +65,15 @@ namespace xxx_ptr{
         }
         {
             //[put_ptr_list
-            typedef int T; T x = 1, y = 2, z = 0;
-            boost::ptr_list<T> cont;
-            ( as2::put( cont ) )( x )( y )( z );
+            typedef int T; T x = 1, y = 2, z = 0; boost::ptr_list<T> cont;
+            as2::put( cont )( x )( y )( z );
             BOOST_ASSIGN_V2_CHECK( cont.front() == x );
             BOOST_ASSIGN_V2_CHECK( cont.back() == z );
             //]
         }
         {
             //[put_ptr_vector
-            typedef int T; T x = 1, y = 2, z = 0;
-            boost::ptr_vector<T> cont;
+            typedef int T; T x = 1, y = 2, z = 0; boost::ptr_vector<T> cont;
             as2::put( cont )( x )( y )( z );
             BOOST_ASSIGN_V2_CHECK( cont.front() == x );
             BOOST_ASSIGN_V2_CHECK( cont.back() == z );

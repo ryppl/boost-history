@@ -11,38 +11,40 @@
 #define BOOST_ASSIGN_V2_CONVERT_CONVERTER_ER_2010_HPP
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
+#include <boost/type_traits/add_const.hpp>
 #include <boost/assign/v2/ref/wrapper.hpp>
 #include <boost/assign/v2/utility/convert/dispatch.hpp>
-#include <boost/assign/v2/utility/convert/deduce.hpp>
+#include <boost/assign/v2/utility/convert/deduce_tag.hpp>
 
 namespace boost{
 namespace assign{
 namespace v2{
 namespace convert_aux{
 
-    template<typename U>
-    class converter
+    template<typename R>
+    class adapter
     {
 
+		typedef typename boost::add_const<R>::type const_;
+
          typedef typename ref::copy_wrapper<
-            U const
+            const_
         >::type wrapper_;
 
         public:
 
-        explicit converter(U const& u) : w( u ){}
+        explicit adapter(const_& r) : w( r ){}
 
-        template<typename T>
-        operator T () const
+        template<typename C>
+        operator C () const
         {
-            return this->type<T>();
+            return this->type<C>();
         }
 
-        template<typename T>
-        T type()const
+        template<typename C>
+        C type()const
         {
-            typedef typename convert_aux::deduce_tag<T, U>::type tag_;
-            return convert_aux::dispatch<T>( this->w.get(), tag_() );
+            return convert_aux::dispatch<C>( this->w.get() );
         }
 
         private:
@@ -51,12 +53,22 @@ namespace convert_aux{
     };
 
 }// convert_aux
+namespace result_of{
 
-    template<typename U>
-    convert_aux::converter<U>
-    converter(U const& u){
-        typedef convert_aux::converter<U> result_;
-        return result_( u );
+	template<typename R>
+    struct converter
+    {
+    	typedef convert_aux::adapter<R> type;
+    };
+
+}//result_of
+
+
+    template<typename R>
+    typename result_of::converter<R>::type
+    converter(R const& r){
+        typedef typename result_of::converter<R>::type result_;
+        return result_( r );
     }
 
 }// v2
@@ -96,10 +108,10 @@ namespace convert_aux{
             Seq\
         )\
     )>\
-    ::boost::assign::v2::convert_aux::converter< U > \
+    typename ::boost::assign::v2::result_of::converter< U >::type \
     converter( U const& cont)\
     {\
-        typedef convert_aux::converter< U > result_; \
+        typedef typename ::boost::assign::v2::result_of::converter< U >::type result_; \
         return result_( cont );\
     }\
 /**/

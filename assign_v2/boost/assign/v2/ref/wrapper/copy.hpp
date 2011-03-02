@@ -34,7 +34,7 @@ namespace assign_copy{ typedef assign_tag::copy assign_tag_; }
             is_const = boost::is_const<T>::value
         );
 
-        wrapper(){}
+        wrapper(){/*TODO or null pointer?*/}
 
         explicit wrapper( T& r ) : ref_(&r)
         { }

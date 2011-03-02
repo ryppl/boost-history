@@ -15,6 +15,7 @@
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 #include <utility>
+#include <boost/assign/v2/temporary/variadic_vector.hpp>
 #else
 #include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/repetition.hpp>
@@ -27,6 +28,8 @@ namespace v2{
 
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 
+	// TODO
+
 	template<typename F, typename T>
     typename result_of::csv<F const&, 
     	::boost::mpl::vector<T>
@@ -38,7 +41,7 @@ namespace v2{
 
 	template<typename F, typename T, typename Args>
     typename result_of::csv<F const&, 
-    	::boost::mpl::vector<T, Args...>
+        typename ::boost::mpl::detail::variadic_vector<T, Args...>::type
     >::type
     csv( F const& functor, T&& t, Args&&... args )
     {

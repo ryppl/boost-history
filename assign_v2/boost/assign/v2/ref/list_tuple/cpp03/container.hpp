@@ -122,12 +122,12 @@ namespace list_tuple_aux{
         params_default(typename T, na_type)>
     struct traits
     {
-        typedef list_tuple_aux::container<N, L, params(T)> cont_;
+        typedef list_tuple_aux::container<N, L, params(T)> C;
         typedef typename list_tuple_aux::tuple<params(T)>::type tuple_;
-        typedef list_tuple_aux::extraction<N, L, tuple_, cont_> extraction_;
+        typedef list_tuple_aux::extraction<N, L, tuple_, C> extraction_;
         typedef list_tuple_aux::meta_result<N, L, params(T)> meta_result_;
         typedef functor_aux::crtp_unary_and_up<
-            cont_,
+            C,
             boost::mpl::unpack_args<meta_result_>
         > crtp_;
         typedef typename ::boost::mpl::eval_if_c<

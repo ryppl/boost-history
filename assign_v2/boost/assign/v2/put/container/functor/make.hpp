@@ -22,9 +22,6 @@ namespace result_of{
     template<typename C>
     struct put
     {
-//        typedef v2::put_traits<C> traits_;
-//        typedef typename traits_::functor_type f_;
-//        typedef typename traits_::modifier_tag modifier_tag_;
 		typedef typename put_aux::deduce_fun<C>::type f_;
 		typedef typename put_aux::deduce_modifier_tag<C>::type modifier_tag_;
         typedef put_aux::adapter<C, f_, modifier_tag_> type;

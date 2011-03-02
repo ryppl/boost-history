@@ -28,8 +28,7 @@ namespace xxx_modulo{
     void test()
     {
         using namespace  boost::assign::v2;
-        typedef std::list<int> cont_;
-        cont_ cont;
+        typedef std::list<int> C; C cont;
         typedef modifier_tag::push_front modifier_tag_;
         typedef functor_aux::identity identity_;
         typedef put_modulo_aux::fun<identity_> fun_;
