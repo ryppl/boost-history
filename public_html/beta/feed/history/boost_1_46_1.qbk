@@ -1,7 +1,10 @@
-[article Version 1.xx.x
+[article Version 1.46.1
     [quickbook 1.5]
     [source-mode c++]
-    [purpose New Libraries: Updated Libraries: ]
+    [purpose
+        Bug fix release.
+        Updated Libraries: Fusion, Proto, Unordered.
+    ]
     [authors [Dawes, Beman]]
     [last-revision ]
 ]
@@ -9,52 +12,30 @@
 [include ext.qbk]
 
 [/ TODO: Check download link on release.
-[download http://sourceforge.net/projects/boost/files/boost/1.xx.x/]
+[download http://sourceforge.net/projects/boost/files/boost/1.46.1/]
 ]
-
-[/
-    When adding libraries:
-
-    1. Libraries are listed in alphabetical order.
-    2. Besides the dedicated entry, the lib name should be added to the
-       [purpose] section at the beginning of the page.
-
-    Example new libraries message:
-
-* [phrase library..[@/libs/accumulators/index.html Accumulators]:] Framework for
-  incremental calculation, and collection of statistical accumulators, from Eric Niebler.
-
-    Example update message:
-
-* [phrase library..[@/libs/interprocess/index.html Interprocess]:]
-  * Added anonymous shared memory for UNIX systems.
-  * Fixed missing move semantics on managed memory classes.
-  * Added copy_on_write and open_read_only options for shared memory
-    and mapped file managed classes.
-  * `shared_ptr` is movable and supports aliasing.
-]
-
-[section New Libraries]
-
-* /TODO/
-
-[endsect]
 
 [section Updated Libraries]
 
-* /TODO/
+* [phrase library..[@/libs/fusion/ Fusion]:]
+  - Fix `disable_if` for Visual C++ 7.1/8.0
 
-[/ TODO: Check Spirit for changes.
-* [phrase library..[@/libs/spirit/index.html Spirit]:]
-  * Spirit Vx.x, see the
-    '[@/doc/libs/1_xx_x/libs/spirit/doc/html/spirit/what_s_new/spirit_x_x.html What's New]'
-    section for details.
-]
+* [phrase library..[@/libs/proto/ Proto]:]
+  - Make `display_expr` copyable
+    ([@https://svn.boost.org/trac/boost/ticket/5096 #5096]).
+  - Fix const correctness problem in `pass_through`.
 
-[/ TODO: Check Wave for changes.
-* [phrase library..[@/libs/wave/index.html Wave]:]
-  * See the [@/libs/wave/ChangeLog Changelog] for details.
-]
+* [phrase library..[@/libs/unordered/ Unordered]:]
+  - Add missing copy constructors and assignment operators when using
+    rvalue references
+    ([@https://svn.boost.org/trac/boost/ticket/5119 #5119]).
+
+[endsect]
+
+[section Other changes]
+
+* Update getting started guide to reflect changes to boost build.
+* In quickbook, workaround optimization bug in g++ 4.4.
 
 [endsect]
 
