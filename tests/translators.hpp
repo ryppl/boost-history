@@ -1,3 +1,6 @@
+#ifndef TESTS_TRANSLATORS_HPP
+#define TESTS_TRANSLATORS_HPP
+
 #include <boost/geometry/geometry.hpp>
 #include <boost/geometry/extensions/index/rtree/rtree.hpp>
 
@@ -10,11 +13,13 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/scoped_ptr.hpp>
 
-int main()
+void tests_translators_hpp()
 {
+	std::cout << "tests/translators.hpp\n";
+
     typedef boost::geometry::model::point<float, 2, boost::geometry::cs::cartesian> P;
     typedef boost::geometry::model::box<P> B;
-    typedef boost::geometry::index::rtree<B, size_t> I;
+    typedef boost::geometry::index::rtree<B> I;
 
     using namespace boost::geometry;
 
@@ -62,6 +67,6 @@ int main()
     B tmp_b;
     tmp_b = d( std::pair<model::polygon<P>, B>() );
     tmp_b = dd( std::pair<B, model::polygon<P> >() );
-
-    return 0;
 }
+
+#endif // TESTS_TRANSLATORS_HPP

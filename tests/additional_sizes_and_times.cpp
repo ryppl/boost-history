@@ -38,7 +38,7 @@ int main()
             v[i] = B(P(x - w, y - h),P(x + w, y + h));
         }
 
-        boost::geometry::index::rtree<B> t(5, 1);
+        boost::geometry::index::rtree<B> t(10, 0);
 
         std::cout << "inserting time test...\n";
 
@@ -61,6 +61,10 @@ int main()
 
         std::cout << "time: " << tim.elapsed() << "s\n";
     }
+
+#ifdef _MSC_VER
+    std::cin.get();
+#endif
 
     return 0;
 }

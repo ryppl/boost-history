@@ -10,10 +10,11 @@
 // awulkiew 2011
 //   typedefs added
 //   nodes hierarchy changed
-//   gl_draw added - temporary
 //   coordinate_type changed to area_result<Box>::type in areas calculation
+//   translator added
+//   gl_draw added - temporary
 
-// TODO: awulkiew - implement different method of drawing tree
+// TODO: awulkiew - implement different method of tree drawing algorithm
 
 #ifndef BOOST_GEOMETRY_EXTENSIONS_INDEX_RTREE_RTREE_HPP
 #define BOOST_GEOMETRY_EXTENSIONS_INDEX_RTREE_RTREE_HPP
@@ -50,9 +51,9 @@ public:
     // awulkiew - typedefs added
     typedef Value value_type;
 
-    typedef rtree_node<Value, Translator, Box> rtree_node;
-    typedef rtree_leaf<Value, Translator, Box> rtree_leaf;
-    typedef rtree_internal_node<Value, Translator, Box> rtree_internal_node;
+    typedef geometry::index::rtree_node<Value, Translator, Box> rtree_node;
+    typedef geometry::index::rtree_leaf<Value, Translator, Box> rtree_leaf;
+    typedef geometry::index::rtree_internal_node<Value, Translator, Box> rtree_internal_node;
 
     typedef boost::shared_ptr<rtree_node> node_pointer;
     typedef boost::shared_ptr<rtree_internal_node> internal_node_pointer;
@@ -176,11 +177,11 @@ public:
     /**
      * \brief Remove element inside the box with value
      */
-    // awulkiew - added conversion to Box
     void remove(Value const& value)
     {
         try
         {
+            // awulkiew - added conversion to Box
             Box box;
             detail::convert_to_box(m_translator(value), box);
             
@@ -197,6 +198,8 @@ public:
                 leaf = *it;
                 try
                 {
+                    // TODO: awulkiew - exception shouldn't be used as a way to check if value wasn't removed from leaf
+
                     // awulkiew - translator passed
                     leaf->remove(value, m_translator);
                     break;
@@ -274,6 +277,8 @@ public:
 
             // not found
             std::cerr << e.what() << std::endl;
+            
+            // awulkiew - not needed
             return;
         }
     }
@@ -290,9 +295,9 @@ public:
     /**
      * \brief Inserts an element with 'box' as key with value.
      */
-    // awulkiew - added conversion to Box
     inline void insert(Value const& value)
     {
+        // awulkiew - added conversion to Box
         Box box;
         detail::convert_to_box(m_translator(value), box);
 
@@ -357,6 +362,11 @@ public:
     }
 
 #endif // BOOST_GEOMETRY_INDEX_RTREE_ENABLE_GL_DRAW
+
+    std::vector<Box> get_level_boxes(size_t level) const
+    {
+        m_root->get_level_boxes(level, m_translator);
+    }
 
 private:
 
@@ -447,8 +457,8 @@ private:
             n1->set_parent(new_root);
             n2->set_parent(new_root);
 
-            n1->update_parent(n1);
-            n2->update_parent(n2);
+            n1->set_children_parent(n1);
+            n2->set_children_parent(n2);
 
             m_root = new_root;
             return;

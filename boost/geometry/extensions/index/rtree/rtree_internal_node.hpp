@@ -10,7 +10,9 @@
 // awulkiew 2011
 //   typedefs added
 //   nodes hierarchy changed, rtree_node changed to rtree_internal_node
-//   inconsistent names changed - get_leafs to get_values
+//   inconsistent names changed - get_leafs to get_values, update_parent to set_children_parent
+//   translator added
+//   exact match case removed
 //   gl_draw added - temporary
 
 #ifndef BOOST_GEOMETRY_EXTENSIONS_INDEX_RTREE_RTREE_INTERNAL_NODE_HPP
@@ -39,8 +41,8 @@ class rtree_internal_node : public rtree_node<Value, Translator, Box>
 {
 public:
 
-    typedef rtree_node<Value, Translator, Box> rtree_node;
-    typedef rtree_leaf<Value, Translator, Box> rtree_leaf;
+    typedef geometry::index::rtree_node<Value, Translator, Box> rtree_node;
+    typedef geometry::index::rtree_leaf<Value, Translator, Box> rtree_leaf;
 
     typedef boost::shared_ptr<rtree_node> node_pointer;
     typedef boost::shared_ptr<rtree_leaf> leaf_pointer;
@@ -65,14 +67,14 @@ public:
 
     // awulkiew - internal node methods
 
-    /**
-     * \brief Clear the node
-     */
-    // awulkiew - name changed from empty_nodes to clear_nodes
-    void clear_nodes()
-    {
-        m_nodes.clear();
-    }
+    ///**
+    // * \brief Clear the node
+    // */
+    //// awulkiew - name changed from empty_nodes to clear_nodes
+    //void clear_nodes()
+    //{
+    //    m_nodes.clear();
+    //}
 
     // awulkiew - internal node and leaf virtual methods
 
@@ -146,7 +148,7 @@ public:
 
             //TODO:
             // awulkiew - reserve/resize, std::copy may be used here
-            for (typename values_map::iterator it_leaf = this_values.begin();
+            for (typename values_map::const_iterator it_leaf = this_values.begin();
                 it_leaf != this_values.end(); ++it_leaf)
             {
                 values.push_back(*it_leaf);
@@ -184,6 +186,17 @@ public:
             result.push_back(it->first);
         }
         return result;
+    }
+
+    /**
+     * \brief Update the parent of all children nodes
+     */
+    virtual void set_children_parent(node_pointer const& node)
+    {
+        for (typename node_map::iterator it = m_nodes.begin(); it != m_nodes.end(); ++it)
+        {
+            it->second->set_parent(node);
+        }
     }
 
     /**
@@ -273,6 +286,32 @@ public:
 
 #endif // BOOST_GEOMETRY_INDEX_RTREE_ENABLE_GL_DRAW
 
+    typename std::vector<Box> get_level_boxes(size_t level, Translator const& tr) const
+    {
+        typename std::vector<Box> boxes;
+
+        if (level == this->get_level())
+        {
+            for (typename node_map::const_iterator it = m_nodes.begin();
+                it != m_nodes.end(); ++it)
+                boxes.push_back(it->first);
+        }
+        else
+        {
+            for (typename node_map::const_iterator it = m_nodes.begin();
+                it != m_nodes.end(); ++it)
+            {
+            	typename std::vector<Box> current_boxes = it->second->get_level_boxes(level, tr);
+
+                for (typename std::vector<Box>::const_iterator box_it = current_boxes.begin();
+                    box_it != current_boxes.end(); ++box_it)
+                    boxes.push_back(*box_it);
+            }
+        }
+
+        return boxes;
+    }
+
     // awulkiew - internal node only virtual methods
 
     /**
@@ -281,7 +320,9 @@ public:
     virtual void add_node(Box const& box, node_pointer const& node)
     {
         m_nodes.push_back(std::make_pair(box, node));
-        node->update_parent(node);
+        // TODO: awulkiew - is this required?
+        // it updates the parent of all children nodes of a node which isn't changed
+        node->set_children_parent(node);
     }
 
     /**
@@ -356,7 +397,7 @@ public:
             if (it->second.get() == leaf.get())
             {
                 m_nodes[index] = std::make_pair(new_leaf->compute_box(tr), new_leaf);
-                new_leaf->update_parent(new_leaf);
+                new_leaf->set_children_parent(new_leaf);
                 return;
             }
         }
@@ -431,17 +472,6 @@ public:
         }
 
         return chosen_node;
-    }
-
-    /**
-     * \brief Update the parent of all the childs
-     */
-    virtual void update_parent(node_pointer const& node)
-    {
-        for (typename node_map::iterator it = m_nodes.begin(); it != m_nodes.end(); ++it)
-        {
-            it->second->set_parent(node);
-        }
     }
 
     /**

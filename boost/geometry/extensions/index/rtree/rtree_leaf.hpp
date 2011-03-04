@@ -10,7 +10,8 @@
 // awulkiew 2011
 //   typedefs added
 //   nodes hierarchy changed
-//   inconsistent names changed - leafs to values, leaf_map to values_map, get_leafs to get_values
+//   inconsistent names changed - leafs to values, leaf_map to values_map, get_leafs to get_values, update_parent to set_children_parent
+//   exact match case removed
 //   gl_draw added - temporary
 
 #ifndef BOOST_GEOMETRY_EXTENSIONS_INDEX_RTREE_RTREE_LEAF_HPP
@@ -41,7 +42,7 @@ class rtree_leaf : public rtree_node<Value, Translator, Box>
 public:
 
     // awulkiew - typedef added
-    typedef rtree_node<Value, Translator, Box> rtree_node;
+    typedef geometry::index::rtree_node<Value, Translator, Box> rtree_node;
 
     typedef boost::shared_ptr<rtree_node> node_pointer;
 
@@ -65,14 +66,14 @@ public:
 
     // awulkiew - leaf methods
 
-    /**
-     * \brief Clear the node
-     */
-    // awulkiew - name changed from empty_nodes to clear_values
-    void clear_values()
-    {
-        m_values.clear();
-    }
+    ///**
+    // * \brief Clear the node
+    // */
+    //// awulkiew - name changed from empty_nodes to clear_values
+    //void clear_values()
+    //{
+    //    m_values.clear();
+    //}
 
     // awulkiew - internal node and leaf virtual methods
 
@@ -97,30 +98,16 @@ public:
      *        If exact_match is true only return the elements having as
      *        key the 'box'. Otherwise return everything inside 'box'.
      */
-    // awulkiew - exact match case removed
     virtual void find(Box const& box, std::deque<Value>& result, Translator const& tr)
     {
         for (typename values_map::const_iterator it = m_values.begin();
              it != m_values.end(); ++it)
         {
-            // awulkiew - commented
-            //if (exact_match)
-            //{
-            //    if (geometry::equals(it->first, box))
-            //    {
-            //        result.push_back(it->second);
-            //    }
-            //}
-            //else
-            //{
-
             // awulkiew - is_overlapping changed to geometry::intersects
             if (geometry::intersects(tr(*it), box))
             {
                 result.push_back(*it);
             }
-
-            //}
         }
     }
 
@@ -195,6 +182,15 @@ public:
     }
 
     /**
+     * \brief Update the parent of all children nodes
+     */
+    virtual void set_children_parent(node_pointer const& node)
+    {
+        // TODO: awulkiew - should this method exist in leaf?
+        // Do nothing
+    }
+
+    /**
     * \brief Print leaf (mainly for debug)
     */
     // awulkiew - ostream parameter added
@@ -261,6 +257,27 @@ public:
     }
 
 #endif // BOOST_GEOMETRY_INDEX_RTREE_ENABLE_GL_DRAW
+
+    /**
+     * \brief Get boxes of objects if level is equal to leaf's level
+     */
+    std::vector<Box> get_level_boxes(size_t level, Translator const& tr) const
+    {
+        std::vector<Box> boxes;
+
+        /*if ( level == this->get_level())
+        {
+            for (typename values_map::const_iterator it = m_values.begin();
+                it != m_values.end(); ++it)
+            {            
+                Box box;
+                detail::convert_to_box(tr(*it), box);
+                boxes.push_back(box);
+            }
+        }*/
+
+        return boxes;
+    }
 
     // awulkiew - leaf only virtual methods
 

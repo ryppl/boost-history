@@ -15,7 +15,7 @@
 
 void tests_rtree_native_hpp()
 {
-	std::cout << "tests\rtree_native.hpp\n";
+	std::cout << "tests/rtree_native.hpp\n";
 	
     // Box
     {

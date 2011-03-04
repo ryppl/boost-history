@@ -9,7 +9,9 @@
 
 // awulkiew 2011
 //   nodes hierarchy changed, rtree_node changed to rtree_internal_node
-//   inconsistent names changed - get_leafs to get_values
+//   inconsistent names changed - get_leafs to get_values, update_parent to set_children_parent
+//   translator added
+//   exact match case removed
 //   gl_draw added - temporary
 
 #ifndef BOOST_GEOMETRY_EXTENSIONS_INDEX_RTREE_RTREE_NODE_HPP
@@ -141,6 +143,15 @@ public:
     }
 
     /**
+     * \brief Update the parent of all children nodes
+     */
+    virtual void set_children_parent(node_pointer const& node)
+    {
+        // TODO: mloskot - define & use GGL exception
+        throw std::logic_error("shouldn't be here.");
+    }
+
+    /**
      * \brief Print Rtree subtree (mainly for debug)
      */
     // awulkiew - ostream parameter added
@@ -162,6 +173,12 @@ public:
     }
 
 #endif // BOOST_GEOMETRY_INDEX_RTREE_ENABLE_GL_DRAW
+
+    std::vector<Box> get_level_boxes(size_t, Translator const&) const
+    {
+        // TODO: mloskot - define & use GGL exception
+        throw std::logic_error("shouldn't be here");
+    }
 
     // awulkiew - leaf only virtual methods
 
@@ -272,14 +289,6 @@ public:
     {
         // TODO: mloskot - define & use GGL exception
         throw std::logic_error("shouldn't be here.");
-    }
-
-    /**
-     * \brief Update the parent of all the childs
-     */
-    virtual void update_parent(node_pointer const& node)
-    {
-        // In case of leaf do nothing
     }
 
     /**
