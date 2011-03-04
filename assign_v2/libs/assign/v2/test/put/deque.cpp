@@ -7,11 +7,7 @@
 //  Boost Software License, Version 1.0. (See accompanying file           //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)      //
 ////////////////////////////////////////////////////////////////////////////
-#include <libs/assign/v2/test/put/deque/csv.h>
 #include <libs/assign/v2/test/put/deque/functor.h>
-#include <libs/assign/v2/test/put/deque/modulo.h>
-#include <libs/assign/v2/test/put/deque/std.h>
-#include <libs/assign/v2/test/put/deque/ext.h>
 #include <libs/assign/v2/test/put/deque.h>
 
 namespace test_assign_v2{
@@ -20,11 +16,7 @@ namespace xxx_deque{
 
     void test()
     {
-        xxx_csv::test();
         xxx_functor::test();
-        xxx_modulo::test();
-        xxx_std::test();
-        xxx_ext::test();
     }
 
 }// xxx_deque

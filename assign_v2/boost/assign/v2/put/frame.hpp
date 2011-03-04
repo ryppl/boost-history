@@ -10,7 +10,6 @@
 #ifndef BOOST_ASSIGN_V2_PUT_FRAME_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_FRAME_ER_2010_HPP
 
-#include <boost/assign/v2/put/frame/base.hpp>
 #include <boost/assign/v2/put/frame/crtp.hpp>
 #include <boost/assign/v2/put/frame/modifier.hpp>
 #include <boost/assign/v2/put/frame/sub.hpp>

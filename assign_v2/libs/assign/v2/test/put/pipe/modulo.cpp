@@ -14,7 +14,7 @@
 #include <boost/assign/v2/put/std/push_front.hpp>
 #include <boost/assign/v2/put/container.hpp>
 #include <boost/assign/v2/put/modulo/fun.hpp>
-#include <boost/assign/v2/put/modulo/modifier.hpp>
+#include <boost/assign/v2/put/modulo/std.hpp>
 #include <boost/assign/v2/put/pipe/functor.hpp>
 #include <boost/assign/v2/put/pipe/modulo/forward.hpp>
 
@@ -31,8 +31,8 @@ namespace xxx_modulo{
         typedef std::list<int> C; C cont;
         typedef modifier_tag::push_front modifier_tag_;
         typedef functor_aux::identity identity_;
-        typedef put_modulo_aux::fun<identity_> fun_;
-        typedef put_modulo_aux::modifier<modifier_tag_> modifier_;
+        typedef put_aux::modulo_fun<identity_> fun_;
+        typedef put_aux::modulo_std<modifier_tag_> modifier_;
         typedef boost::mpl::vector2<fun_, modifier_> pars_;
         typedef int T;
         T x = 1, y = 2, z = 3;
@@ -41,7 +41,7 @@ namespace xxx_modulo{
             (
                 _put %  (
                     _fun = _identity
-                ) % ( _modifier = modifier_tag_() )
+                ) % ( _std = modifier_tag_() )
             ).pars()
         )( x )( y )( z );
         BOOST_ASSIGN_V2_CHECK( cont.size() == 3 );

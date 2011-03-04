@@ -10,6 +10,7 @@
 #ifndef BOOST_ASSIGN_V2_PUT_MODULO_FUN_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_MODULO_FUN_ER_2010_HPP
 #include <boost/mpl/apply.hpp>
+#include <boost/assign/v2/put/frame/fwd.hpp>
 
 namespace boost{
 namespace assign{
@@ -21,37 +22,40 @@ namespace result_of_modulo{
     };
 
 }// result_of_modulo
-namespace put_modulo_aux{
+namespace put_aux{
 
     template<typename F>
-    struct fun
+    struct modulo_fun
     {
-        fun(const F& f) : value(f){}
+        modulo_fun(const F& f) : value(f){}
         F value;
     };
 
-    template<typename T, typename F1>
-    typename ::boost::mpl::apply1<result_of_modulo::fun<T>, F1>::type
-    operator%(T const& t, put_modulo_aux::fun<F1> const& h)
+    template<typename C, typename F, typename Tag, typename D, typename F1>
+    typename ::boost::mpl::apply1<result_of_modulo::fun<D>, F1>::type
+    operator%(
+        crtp<C, F, Tag, D> const& lhs,
+        modulo_fun<F1> const& rhs
+    )
     {
-        typedef result_of_modulo::fun<T> meta_;
+        typedef result_of_modulo::fun<D> meta_;
         typedef typename ::boost::mpl::apply1<meta_, F1>::type result_;
-        return result_( t.container(), h.value, t.modifier );
+        return result_( lhs.container(), rhs.value, lhs.modifier );
     }
 
     struct kwd_fun{
 
         template<typename F>
-        put_modulo_aux::fun<F> operator=(F const& f)const
+        modulo_fun<F> operator=(F const& f)const
         {
-            return put_modulo_aux::fun<F>( f );
+            return put_aux::modulo_fun<F>( f );
         }
 
     };
 
-}// put_modulo_aux
+}// put_aux
 namespace{
-    const put_modulo_aux::kwd_fun _fun = put_modulo_aux::kwd_fun();
+    const put_aux::kwd_fun _fun = put_aux::kwd_fun();
 }
 }// v2
 }// assign

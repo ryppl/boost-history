@@ -9,8 +9,8 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_PUT_STD_PUSH_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_STD_PUSH_ER_2010_HPP
-#include <boost/assign/v2/put/std/xxx.hpp>
+#include <boost/assign/v2/put/modulo/std/xxx.hpp>
 
-BOOST_ASSIGN_V2_PUT_STD_XXX(push)
+BOOST_ASSIGN_V2_PUT_MODULO_STD_XXX(push)
 
 #endif

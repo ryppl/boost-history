@@ -28,54 +28,54 @@ namespace v2{
 
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 
-	// TODO
+    // TODO
 
-	template<typename F, typename T>
-    typename result_of::csv<F const&, 
-    	::boost::mpl::vector<T>
+    template<typename F, typename T>
+    typename result_of::csv<F const&,
+        ::boost::mpl::vector<T>
     >::type
     csv( F const& functor, T&& t )
     {
-    	return functor( t );
+        return functor( t );
     }
 
-	template<typename F, typename T, typename Args>
-    typename result_of::csv<F const&, 
+    template<typename F, typename T, typename... Args>
+    typename result_of::csv<F const&,
         typename ::boost::mpl::detail::variadic_vector<T, Args...>::type
     >::type
     csv( F const& functor, T&& t, Args&&... args )
     {
-    	return csv( functor( t ), std::forward<Args>( args )... );
-	}
+        return csv( functor( t ), std::forward<Args>( args )... );
+    }
 
 #else
 #define BOOST_ASSIGN_V2_MACRO1(z, i, data) BOOST_PP_CAT(T, i) data
 #define BOOST_ASSIGN_V2_MACRO2(z, i, data) ( BOOST_PP_CAT(_, i) )
 #define BOOST_ASSIGN_V2_MACRO3(z, N, data)\
 \
-	template<typename F BOOST_PP_ENUM_TRAILING_PARAMS(N, typename T)>\
+    template<typename F BOOST_PP_ENUM_TRAILING_PARAMS(N, typename T)>\
     typename result_of::csv<F const&, \
-    	::boost::mpl::vector<BOOST_PP_ENUM(N, BOOST_ASSIGN_V2_MACRO1, &)>\
+        ::boost::mpl::vector<BOOST_PP_ENUM(N, BOOST_ASSIGN_V2_MACRO1, &)>\
     >::type\
     csv( \
-    	F const& functor\
-    	BOOST_PP_ENUM_TRAILING_BINARY_PARAMS(N, T, & _)\
+        F const& functor\
+        BOOST_PP_ENUM_TRAILING_BINARY_PARAMS(N, T, & _)\
     )\
     {\
-    	return functor BOOST_PP_REPEAT(N, BOOST_ASSIGN_V2_MACRO2, ~ );\
-	}\
+        return functor BOOST_PP_REPEAT(N, BOOST_ASSIGN_V2_MACRO2, ~ );\
+    }\
 \
-	template<typename F BOOST_PP_ENUM_TRAILING_PARAMS(N, typename T)>\
+    template<typename F BOOST_PP_ENUM_TRAILING_PARAMS(N, typename T)>\
     typename result_of::csv<F const&,\
-    	::boost::mpl::vector<BOOST_PP_ENUM(N, BOOST_ASSIGN_V2_MACRO1, const &)>\
+        ::boost::mpl::vector<BOOST_PP_ENUM(N, BOOST_ASSIGN_V2_MACRO1, const &)>\
     >::type\
     csv( \
-    	F const& functor\
-    	BOOST_PP_ENUM_TRAILING_BINARY_PARAMS(N, T, const & _)\
+        F const& functor\
+        BOOST_PP_ENUM_TRAILING_BINARY_PARAMS(N, T, const & _)\
     )\
     {\
-    	return functor BOOST_PP_REPEAT(N, BOOST_ASSIGN_V2_MACRO2, ~ );\
-	}\
+        return functor BOOST_PP_REPEAT(N, BOOST_ASSIGN_V2_MACRO2, ~ );\
+    }\
 \
 /**/
 BOOST_PP_REPEAT_FROM_TO(
@@ -87,7 +87,7 @@ BOOST_PP_REPEAT_FROM_TO(
 #undef BOOST_ASSIGN_V2_MACRO1
 #undef BOOST_ASSIGN_V2_MACRO2
 #undef BOOST_ASSIGN_V2_MACRO3
-#endif BOOST_ASSIGN_V2_ENABLE_CPP0X
+#endif // BOOST_ASSIGN_V2_ENABLE_CPP0X
 
 }// v2
 }// assign

@@ -19,7 +19,6 @@ namespace xxx_ref{
 
     void test(){
 
-        xxx_array::test();
         xxx_convert_traits::test();
         xxx_array::test();
         xxx_list::test();

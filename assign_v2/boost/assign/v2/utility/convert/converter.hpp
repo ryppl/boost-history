@@ -25,7 +25,7 @@ namespace convert_aux{
     class adapter
     {
 
-		typedef typename boost::add_const<R>::type const_;
+        typedef typename boost::add_const<R>::type const_;
 
          typedef typename ref::copy_wrapper<
             const_
@@ -55,10 +55,10 @@ namespace convert_aux{
 }// convert_aux
 namespace result_of{
 
-	template<typename R>
+    template<typename R>
     struct converter
     {
-    	typedef convert_aux::adapter<R> type;
+        typedef convert_aux::adapter<R> type;
     };
 
 }//result_of

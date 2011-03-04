@@ -7,14 +7,9 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#include <vector>
-#include <deque>
-#include <boost/assign/v2/detail/config/check.hpp>
-#include <boost/assign/v2/put/container.hpp>
-#include <boost/assign/v2/put/std/push_front.hpp>
-#include <boost/assign/v2/put/modulo/fun.hpp>
-#include <boost/lambda/lambda.hpp>
-#include <libs/assign/v2/test/put/modulo.h>
+#include <libs/assign/v2/test/put/modulo/fun.h>
+#include <libs/assign/v2/test/put/modulo/std.h>
+#include <libs/assign/v2/test/put/modulo/ext.h>
 
 namespace test_assign_v2{
 namespace xxx_put{
@@ -22,31 +17,9 @@ namespace xxx_modulo{
 
     void test()
     {
-        namespace as2 = boost::assign::v2;
-        namespace lambda = boost::lambda;
-        {
-            //[put_modulo_fun
-            typedef int T; T x = 1, y = 2, z = 0;
-            std::vector<int> cont;
-            (
-                as2::put( cont ) % ( as2::_fun = ( lambda::_1 + 1 ) )
-            )( x )( y )( z );
-            
-            BOOST_ASSIGN_V2_CHECK( cont.front() == ( x + 1 ) );
-            BOOST_ASSIGN_V2_CHECK( cont.back() == ( z + 1 ) );
-            //]
-        }
-        {
-            //[put_modulo_modifier
-            typedef int T; T x = 1, y = 2, z = 0;
-            std::deque<int> cont;
-            ( as2::put( cont ) % ( as2::_modifier
-                = as2::modifier_tag::push_front() ) )( x )( y )( z );
-                
-            BOOST_ASSIGN_V2_CHECK( cont.front() == z );
-            BOOST_ASSIGN_V2_CHECK( cont.back() == x );
-            //]
-        }
+        xxx_fun::test();
+        xxx_std::test();
+        xxx_ext::test();
     }
 
 }// xxx_modulo

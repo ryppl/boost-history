@@ -9,7 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_PUT_EXT_REPEAT_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_EXT_REPEAT_ER_2010_HPP
-#include <boost/assign/v2/put/ext/xxx.hpp>
+#include <boost/assign/v2/put/modulo/ext/xxx.hpp>
 
 namespace boost{
 namespace assign{
@@ -112,7 +112,7 @@ namespace put_aux{
 
 }// put_aux
 
-BOOST_ASSIGN_V2_PUT_EXT_XXX(repeat)
+BOOST_ASSIGN_V2_PUT_MODULO_EXT_XXX(repeat)
 
 }// v2
 }// assign

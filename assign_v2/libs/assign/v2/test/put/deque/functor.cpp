@@ -20,13 +20,14 @@ namespace xxx_functor{
 
     void test()
     {
-        namespace as2 = boost::assign::v2;
+        namespace as2 = boost::assign::v2;    
         {
             //[put_deque_functor
             typedef int T; T x = 1, z = 0;
-            as2::result_of::deque<T>::type cont = as2::deque<T>/*<<k = 1, 0, 1, respectively>>*/( x )()( z );
-            BOOST_ASSIGN_V2_CHECK( cont.front() == x );
-            BOOST_ASSIGN_V2_CHECK( cont[1] == T() );
+            as2::result_of::deque<T>::type cont = as2::deque<T>/*<<T( x ), T(), T( z )>>*/( x )()( z );
+
+            BOOST_ASSIGN_V2_CHECK( cont.front() == x ); T t1 = T();
+            BOOST_ASSIGN_V2_CHECK( cont[1] == t1 );
             BOOST_ASSIGN_V2_CHECK( cont.back() == z );
             //]
         }

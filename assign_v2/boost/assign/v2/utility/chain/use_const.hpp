@@ -45,7 +45,7 @@ namespace chain_aux{
 
     template<typename R1, typename R2, typename Tag = use_default>
     struct use_const : ::boost::mpl::bool_<
-    	!dont_use_const<R1, R2, Tag>::value
+        !dont_use_const<R1, R2, Tag>::value
     >{};
 
 }// chain_aux

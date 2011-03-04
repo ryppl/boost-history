@@ -33,7 +33,7 @@ namespace xxx_range{
             std::vector<T> r( 3 ); r[0] = x; r[1] = y; r[2] = z;
             boost::array<T, 3> cont; 
             BOOST_ASSIGN_V2_CHECK( ( 
-            	cont | as2::_put_range( r ) 
+                cont | as2::_put_range( r ) 
             ).front() == x );
             BOOST_ASSIGN_V2_CHECK( cont.back() == z );
             //]

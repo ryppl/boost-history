@@ -9,8 +9,11 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_PUT_PIPE_CSV_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_PIPE_CSV_ER_2010_HPP
-#include <boost/assign/v2/put/pipe/csv/operator.hpp> 
-#include <boost/assign/v2/put/pipe/csv/generator.hpp> 
-#include <boost/assign/v2/put/pipe/csv/keyword.hpp> 
+#include <boost/assign/v2/put/pipe/csv/forward.hpp>
+#include <boost/assign/v2/put/pipe/csv/generator.hpp>
+#include <boost/assign/v2/put/pipe/csv/keyword.hpp>
+#include <boost/assign/v2/put/pipe/csv/operator.hpp>
+#include <boost/assign/v2/put/pipe/csv/rhs.hpp>
+#include <boost/assign/v2/put/pipe/csv/size_type.hpp>
 
 #endif

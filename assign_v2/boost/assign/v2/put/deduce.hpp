@@ -14,8 +14,6 @@
 #include <boost/assign/v2/put/deduce/fwd.hpp>
 #include <boost/assign/v2/put/deduce/fun.hpp>
 #include <boost/assign/v2/put/deduce/modifier_tag.hpp>
-#include <boost/assign/v2/put/deduce/modulo.hpp>
-//#include <boost/assign/v2/put/deduce/traits.hpp>
 
 
 #endif

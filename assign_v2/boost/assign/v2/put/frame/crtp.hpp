@@ -14,7 +14,7 @@
 #include <boost/utility/enable_if.hpp>
 #include <boost/assign/v2/detail/pp/forward.hpp>
 #include <boost/assign/v2/detail/traits/container/is_ptr_container.hpp>
-#include <boost/assign/v2/put/frame/base.hpp>
+#include <boost/assign/v2/put/frame/fwd.hpp>
 #include <boost/assign/v2/put/frame/modifier.hpp>
 #include <boost/assign/v2/put/modulo/fun.hpp>
 #include <boost/assign/v2/put/deduce/fun.hpp>
@@ -67,8 +67,7 @@ namespace put_aux{
     // and Tag. It then models concept_sub::Post
     template<typename C, typename F, typename Tag, typename D>
     class crtp :
-        public put_base
-        , public fun_holder<F>
+        public fun_holder<F>
         , public modifier_holder<Tag>
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 //do nothing
@@ -107,7 +106,7 @@ namespace put_aux{
         template<typename...Args>
         result_type operator()( Args&&...args )const
         {
-            return  this->modify( 
+            return  this->modify(
                 /*<< Instance of F >>*/ this->fun( std::forward<Args>(args)... )
             );
         }
@@ -170,12 +169,12 @@ BOOST_PP_REPEAT_FROM_TO(
 
         protected:
 
-		template<typename T>
-        struct ptr_enabler : boost::enable_if< 
-        	container_traits::is_ptr_container<C> 
+        template<typename T>
+        struct ptr_enabler : boost::enable_if<
+            container_traits::is_ptr_container<C>
         >{};
-        
-		template<typename T>
+
+        template<typename T>
         result_type modify(T* t,typename ptr_enabler<T>::type* = 0)const
         {
             typedef put_concept::Modifier<Tag, C, T*> concept_;

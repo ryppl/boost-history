@@ -14,7 +14,7 @@
 
 int main (int argc, char * const argv[])
 {
-    
+
     // Do not put libs/assign/v2/test/unit_testing in this project
     {
         using namespace test_assign_v2;
@@ -24,7 +24,7 @@ int main (int argc, char * const argv[])
         xxx_utility::test();
         xxx_other::test();
     }
-    
+
     /*
      {
      using namespace speed_assign_v2;
@@ -32,7 +32,7 @@ int main (int argc, char * const argv[])
      xxx_put_ref::run(ofs);
      }
      */
-    
+
     return 0;
-    
+
 }

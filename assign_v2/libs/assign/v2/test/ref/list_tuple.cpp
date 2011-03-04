@@ -89,7 +89,7 @@ namespace xxx_list_tuple{
             BOOST_ASSIGN_V2_CHECK( &get<0>( list.get( i2_() ) ) == &b );
             BOOST_ASSIGN_V2_CHECK(  get<0>( list.get( i3_() ) ) == B );
 
-			result_ list2 = list;
+            result_ list2 = list;
             BOOST_ASSIGN_V2_CHECK( &get<0>( list2.get( i0_() ) ) == &a );
             BOOST_ASSIGN_V2_CHECK(  get<0>( list2.get( i1_() ) ) == A );
             BOOST_ASSIGN_V2_CHECK( &get<0>( list2.get( i2_() ) ) == &b );

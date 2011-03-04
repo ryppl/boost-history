@@ -36,4 +36,3 @@ namespace result_of_modulo{
 }// boost
 
 #endif
-

@@ -37,7 +37,7 @@ namespace assign{
 namespace v2{
 namespace put_pipe_aux{
 
-	typedef ::boost::mpl::vector0<> empty_seq_args_;
+    typedef ::boost::mpl::vector0<> empty_seq_args_;
 
     template<
         typename Pars = empty_pars_,
@@ -269,7 +269,7 @@ BOOST_PP_REPEAT_FROM_TO(
 
     };
 
-	// For testing purposes
+    // For testing purposes
     template<int i, int j, typename T, typename P, typename U>
     void check_rhs(T const& rhs, P const& pred, U const& u)
     {

@@ -46,21 +46,25 @@ namespace xxx_functor{
 #endif // BOOST_ASSIGN_V2_ENABLE_CPP0X
 
         {
-            typedef int& x_ref_;
-            typedef int const& y_ref_;
-            typedef int z_;
+            // value-type   // var-type  // tuple_param
+            typedef int val_;
+            typedef int const cval_;
+
+            typedef val_& x_;
+            typedef cval_& y_;
+            typedef val_ z_;
 
 #define BOOST_ASSIGN_V2_MACRO(Z, n, data) data
 
             typedef boost::tuple<
                 BOOST_PP_EXPR_IF(
                     BOOST_ASSIGN_V2_n,
-                    x_ref_
+                    x_
                 )
                 BOOST_PP_ENUM_TRAILING(
                     BOOST_PP_IF(BOOST_PP_DEC(BOOST_ASSIGN_V2_n),1,0),
                     BOOST_ASSIGN_V2_MACRO,
-                    y_ref_
+                    y_
                 )
                 BOOST_PP_ENUM_TRAILING(
                     BOOST_PP_SUB(BOOST_ASSIGN_V2_n,2),
@@ -73,8 +77,8 @@ namespace xxx_functor{
             typedef functor_aux::constructor<t_> f_;
             f_ f;
 
-            int x = -1;
-            int const y = 0;
+            val_ x = -1;
+            cval_ y = 0;
 
 #define BOOST_ASSIGN_V2_MACRO(z, n, data) data
 

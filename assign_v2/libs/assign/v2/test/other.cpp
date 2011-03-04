@@ -48,71 +48,71 @@ namespace xxx_other{
     void test(){
 
         namespace as2 = boost::assign::v2;
-		namespace lambda = boost::lambda;
+        namespace lambda = boost::lambda;
 
 
-		// INTRODUCTION
+        // INTRODUCTION
         {
-        	// suggested by JB:
-            
+            // suggested by JB:
+
             //[other_put_pipe_csv
             std::deque<int> cont;
             boost::range::stable_partition(
                 /*<< Calls `cont.push_back( t )` for [^t=0,...,5], and returns `cont` >>*/
-                cont | as2::_csv_put( 0, 1, 2, 3, 4, 5 ), 
+                cont | as2::_csv_put( 0, 1, 2, 3, 4, 5 ),
                 lambda::_1 % 2
             );
             //]
             //[other_ref_csv_array
             BOOST_ASSIGN_V2_CHECK(boost::range::equal(
-                cont, 
+                cont,
                 /*<< The input [^1, 3, ..., 4] is held by reference (not copies) >>*/
                 as2::ref::csv_array(1, 3, 5, 0, 2, 4)
             ));
             //]
         }
-		// REF + CONVERTER
+        // REF + CONVERTER
         {
             //[other_convert_ref_array
-            typedef std::pair<std::string, int> T;
+            typedef std::pair<std::string, double> T;
             typedef std::vector<T> C;
-            C cont = converter( // name lookup
-                as2::ref::array( T("jan", 31) )( T("feb", 28) )( T("mar", 31) )
+            C cont = /*<< Name lookup >>*/ converter(
+                as2::ref::array( T("pi", 3.14) )( T("e", 2.71) )( T("log2", 0.69) )
             );
-            
-            BOOST_ASSIGN_V2_CHECK( cont[1].first == "feb" );
-            BOOST_ASSIGN_V2_CHECK( cont[1].second == 28 );
+
+            BOOST_ASSIGN_V2_CHECK( cont[1].first == "e" );
+            BOOST_ASSIGN_V2_CHECK( cont[1].second == 2.71 );
             //]
-            BOOST_ASSIGN_V2_CHECK( cont[0].first == "jan" );
-            BOOST_ASSIGN_V2_CHECK( cont[0].second == 31 );
-            BOOST_ASSIGN_V2_CHECK( cont[2].first == "mar" );
-            BOOST_ASSIGN_V2_CHECK( cont[2].second == 31 );
+            BOOST_ASSIGN_V2_CHECK( cont[0].first == "pi" );
+            BOOST_ASSIGN_V2_CHECK( cont[0].second == 3.14 );
+            BOOST_ASSIGN_V2_CHECK( cont[2].first == "log2" );
+            BOOST_ASSIGN_V2_CHECK( cont[2].second == 0.69 );
         }
-		// CHAIN + REF
+        // CHAIN + REF
         {
             //[other_chain_write
             /*<< Needed to bring && into scope >>*/ using namespace boost::assign::v2;
             std::vector<int> r( 3 ); r[0] = 1; r[1] = 2; r[2] = 0;
-            /*<< lvalue >>*/boost::array<int, 2> cont; /*<< lvalue >>*/ int z; 
+            /*<< lvalue >>*/boost::array<int, 2> cont; /*<< lvalue >>*/ int z;
             boost::copy(
                 r,
                 boost::begin(
                     cont && (/*<< rvalue >>*/ as2::ref::csv_array( z ) | as2::ref::_get )
                 )
             );
-            
+
             BOOST_ASSIGN_V2_CHECK( cont[0] == r[0] );
             BOOST_ASSIGN_V2_CHECK( cont[1] == r[1] );
             BOOST_ASSIGN_V2_CHECK( z == r[2] );
             //]
         }
-		// PUT + CSV
+        // PUT + CSV
         // container.hpp
         {
             //[other_csv_put
-            typedef int T; T x = 1, y = 2, z = 0; std::list<T> cont; 
+            typedef int T; T x = 1, y = 2, z = 0; std::list<T> cont;
             as2::csv( as2::put( cont ) , x, y, z );
-            
+
             BOOST_ASSIGN_V2_CHECK( cont.front() == x );
             BOOST_ASSIGN_V2_CHECK( cont.back() == z );
             //]
@@ -121,12 +121,12 @@ namespace xxx_other{
         // modulo.hpp
         {
             //[other_put_modulo
-            typedef int T; std::list<T> cont; 
-            as2::csv( 
-            	as2::put( cont ) % ( as2::_fun = as2::_identity ), 
-                1, 2, 0 
+            typedef int T; std::list<T> cont;
+            as2::csv(
+                as2::put( cont ) % ( as2::_fun = as2::_identity ),
+                1, 2, 0
             );
-            
+
             BOOST_ASSIGN_V2_CHECK( cont.front() == 1 );
             BOOST_ASSIGN_V2_CHECK( cont.back() == 0 );
             //]

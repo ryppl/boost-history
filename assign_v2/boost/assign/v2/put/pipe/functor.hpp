@@ -10,8 +10,9 @@
 #ifndef BOOST_ASSIGN_V2_PUT_PIPE_FUNCTOR_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_PIPE_FUNCTOR_ER_2010_HPP
 
-#include <boost/assign/v2/put/pipe/functor/rhs.hpp>
 #include <boost/assign/v2/put/pipe/functor/forward.hpp>
 #include <boost/assign/v2/put/pipe/functor/operator.hpp>
+#include <boost/assign/v2/put/pipe/functor/rhs.hpp>
+#include <boost/assign/v2/put/pipe/functor/size_type.hpp>
 
 #endif // BOOST_ASSIGN_V2_PUT_PIPE_FUNCTOR_ER_2010_HPP

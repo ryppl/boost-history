@@ -16,27 +16,24 @@
 #define BOOST_ASSIGN_V2_CHECK( p ) BOOST_CHECK( p )
 
 #include <libs/assign/v2/test/put/deduce.cpp>
-#include <libs/assign/v2/test/put/modulo.cpp>
 
 #include <libs/assign/v2/test/put/container/functor.cpp>
 #include <libs/assign/v2/test/put/container/range.cpp>
+#include <libs/assign/v2/test/put/deque/functor.cpp>
 
-#include <libs/assign/v2/test/put/std.cpp>
-#include <libs/assign/v2/test/put/ext.cpp>
+#include <libs/assign/v2/test/put/modulo/fun.cpp>
+#include <libs/assign/v2/test/put/modulo/std.cpp>
+#include <libs/assign/v2/test/put/modulo/ext.cpp>
+
 #include <libs/assign/v2/test/put/ptr.cpp>
 
-#include <libs/assign/v2/test/put/deque/modulo.cpp>
-#include <libs/assign/v2/test/put/deque/functor.cpp>
-#include <libs/assign/v2/test/put/deque/std.cpp>
-
-#include <libs/assign/v2/test/put/pipe/functor/container.cpp>
 #include <libs/assign/v2/test/put/pipe/functor/forward.cpp>
 #include <libs/assign/v2/test/put/pipe/functor/rhs.cpp>
-#include <libs/assign/v2/test/put/pipe/functor/fun.cpp>
-#include <libs/assign/v2/test/put/pipe/functor/std.cpp>
 #include <libs/assign/v2/test/put/pipe/functor/str_literal.cpp>
-
-#include <libs/assign/v2/test/put/pipe/modulo.cpp>
+#include <libs/assign/v2/test/put/pipe/container.cpp>
+#include <libs/assign/v2/test/put/pipe/modulo/forward.cpp>
+#include <libs/assign/v2/test/put/pipe/modulo/fun.cpp>
+#include <libs/assign/v2/test/put/pipe/modulo/std.cpp>
 #include <libs/assign/v2/test/put/pipe/range.cpp>
 
 #include <boost/test/unit_test.hpp>
@@ -46,28 +43,23 @@ test_suite* init_unit_test_suite( int argc, char* argv[] )
     test_suite* test = BOOST_TEST_SUITE( "BOOST_ASSIGN_V2" );
     using namespace test_assign_v2;
     {
+
     	namespace ns = xxx_put;
 		test->add( BOOST_TEST_CASE( &ns::xxx_deduce::test ) );
-		test->add( BOOST_TEST_CASE( &ns::xxx_modulo::test ) );
-
-
 		test->add( BOOST_TEST_CASE( &ns::xxx_container::xxx_functor::test ) );
 		test->add( BOOST_TEST_CASE( &ns::xxx_container::xxx_range::test ) );
-
-		test->add( BOOST_TEST_CASE( &ns::xxx_std::test ) );
-		test->add( BOOST_TEST_CASE( &ns::xxx_ext::test ) );
-		test->add( BOOST_TEST_CASE( &ns::xxx_ptr::test ) );
-
-		test->add( BOOST_TEST_CASE( &ns::xxx_deque::xxx_modulo::test ) );
 		test->add( BOOST_TEST_CASE( &ns::xxx_deque::xxx_functor::test ) );
-		test->add( BOOST_TEST_CASE( &ns::xxx_deque::xxx_std::test ) );
+		test->add( BOOST_TEST_CASE( &ns::xxx_modulo::xxx_fun::test ) );
+		test->add( BOOST_TEST_CASE( &ns::xxx_modulo::xxx_std::test ) );
+		test->add( BOOST_TEST_CASE( &ns::xxx_modulo::xxx_ext::test ) );
 
-		test->add( BOOST_TEST_CASE( &ns::xxx_pipe::xxx_functor::xxx_container::test ) );
 		test->add( BOOST_TEST_CASE( &ns::xxx_pipe::xxx_functor::xxx_forward::test ) );
 		test->add( BOOST_TEST_CASE( &ns::xxx_pipe::xxx_functor::xxx_rhs::test ) );
-		test->add( BOOST_TEST_CASE( &ns::xxx_pipe::xxx_functor::xxx_fun::test ) );
-		test->add( BOOST_TEST_CASE( &ns::xxx_pipe::xxx_functor::xxx_std::test ) );
 		test->add( BOOST_TEST_CASE( &ns::xxx_pipe::xxx_functor::xxx_str_literal::test ) );
+		test->add( BOOST_TEST_CASE( &ns::xxx_pipe::xxx_container::test ) );
+		test->add( BOOST_TEST_CASE( &ns::xxx_pipe::xxx_modulo::xxx_fun::test ) );
+		test->add( BOOST_TEST_CASE( &ns::xxx_pipe::xxx_modulo::xxx_std::test ) );
+		test->add( BOOST_TEST_CASE( &ns::xxx_pipe::xxx_range::test ) );
 
     }
     return test;

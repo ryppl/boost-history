@@ -80,7 +80,7 @@ namespace xxx_rhs{
 #undef B
         }
         {
-        	// str_literal
+            // str_literal
             BOOST_AUTO(rhs, as2::_put( "x" ) );
             typedef boost::mpl::int_<0> int_;
             typedef std::string str_;

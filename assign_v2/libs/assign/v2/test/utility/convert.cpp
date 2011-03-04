@@ -22,10 +22,10 @@ namespace xxx_utility{
 namespace xxx_convert{
 
     // suggested by JB:
-	template<typename C, typename R>
+    template<typename C, typename R>
     void f(C cont, R const& r){
-    	namespace as2 = boost::assign::v2;
-    	as2::check_aux::equal_container( cont, r );
+        namespace as2 = boost::assign::v2;
+        as2::check_aux::equal_container( cont, r );
     }
 
     void test()
@@ -60,23 +60,23 @@ namespace xxx_convert{
             //]
         }
         {
-        	typedef int T;
-        	typedef std::vector<int> R; R r( 3 ); r[0] = 1; r[1] = 2; r[2] = 0; 
+            typedef int T;
+            typedef std::vector<int> R; R r( 3 ); r[0] = 1; r[1] = 2; r[2] = 0; 
                         
             {
-        		typedef std::vector<T> C; f<C>( as2::converter( r ), r );
+                typedef std::vector<T> C; f<C>( as2::converter( r ), r );
             }
             {
-        		typedef std::deque<T> C; f<C>( as2::converter( r ), r );
+                typedef std::deque<T> C; f<C>( as2::converter( r ), r );
             }
             {
-        		typedef std::list<T> C; f<C>( as2::converter( r ), r );
+                typedef std::list<T> C; f<C>( as2::converter( r ), r );
             }
             {
-        		typedef std::stack<T> C; f<C>( as2::converter( r ), r );
+                typedef std::stack<T> C; f<C>( as2::converter( r ), r );
             }
             {
-        		typedef std::queue<T> C; f<C>( as2::converter( r ), r );
+                typedef std::queue<T> C; f<C>( as2::converter( r ), r );
             }
         }
     }

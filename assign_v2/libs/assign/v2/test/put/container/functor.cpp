@@ -20,6 +20,8 @@
 #include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/put/container/functor.hpp>
 
+#include <boost/assign/v2/detail/functor/identity.hpp>
+
 #include <libs/assign/v2/test/put/container/functor.h>
 
 namespace test_assign_v2{
@@ -42,19 +44,20 @@ namespace xxx_functor{
             // comparator
             //[put_cont_functor_map
             typedef std::map<std::string, int> C; C cont;
-            as2::put( cont )( "jan", 31 )( "feb", 28 )( "mar", 31 );
-            
+            as2::put( cont )( "jan", 31 )( "feb", 28 )( "mar", 31 )("apr", 30);
+
             BOOST_ASSIGN_V2_CHECK( cont["feb"] == 28 );
+            BOOST_ASSIGN_V2_CHECK( cont["apr"] == 30 );
             //]
             BOOST_ASSIGN_V2_CHECK( cont["jan"] == 31 );
             BOOST_ASSIGN_V2_CHECK( cont["mar"] == 31 );
         }
         {
-        	// Used in intro (same as above but different naming)
+            // Used in intro (same as above but different naming)
             //[put_cont_functor_cal
             typedef std::map<std::string, int> C; C cal;
-            /*<< Calls `cal.insert( C::value_type(x, y) )` for [^(x,y)=( "jan", 31 ),( "feb", 28 ),( "mar", 31 )] >>*/
-            as2::put( cal )( "jan", 31 )( "feb", 28 )( "mar", 31 );
+            /*<< Calls `cal.insert( C::value_type(x, y) )` for [^(x,y)=( "jan", 31 ),( "feb", 28 ),( "mar", 31 ),("apr", 30)] >>*/
+            as2::put( cal )( "jan", 31 )( "feb", 28 )( "mar", 31 )("apr", 30);
 
             BOOST_ASSIGN_V2_CHECK( cal["feb"] == 28 );
             //]
@@ -80,8 +83,9 @@ namespace xxx_functor{
             //]
         }
         {
+            //http://science.nasa.gov/science-news/science-at-nasa/2010/17dec_solsticeeclipse/
             //[put_cont_functor_list
-            typedef int T; T x = 1, y = 2, z = 0;
+            typedef int T; /*<<Lunar eclipse years falling on winter solstice>>*/T x = 1638, y = 2010, z = 2094;
             std::list<T> cont; ( as2::put( cont ) )( x )( y )( z );
 
             BOOST_ASSIGN_V2_CHECK( cont.front() == x );
@@ -118,18 +122,22 @@ namespace xxx_functor{
         }
         {
             using namespace boost;
+            //Reminder : cont cannot be say a std::vector<> as
+            // cont.push_back( T( pi, "pi" ) );
+            // causes assignment read only error.
             //[put_cont_functor_tuple
-            typedef int i_; typedef double d_;
-            typedef boost::tuple</*<< Notice this is a reference >>*/ d_&, i_> T;
-            d_ w = 2.7,  x = 2.71, y = 2.718, z = 0.0; std::vector<T> cont;
-            as2::put( cont )/*<< Notice the binary calls >>*/( w, 1 )( x, 2 )( y, 3 )/*<< Notice the unary call >>*/( z );
+            typedef double const ct_;
+            typedef boost::tuple<ct_/*<<Notice>>*/&, std::string> T;
+            ct_ const pi = 3.14,  e = 2.71, log2 = 0.69, na = 0.0;
+            std::deque<T> cont; as2::put( cont )/*<< Notice the binary calls >>*/( pi, "pi" )( e, "e" )( log2, "log2" )/*<< Notice the unary call >>*/( na );
 
-            BOOST_ASSIGN_V2_CHECK( &get<0>( cont[1] ) == &x );
-            BOOST_ASSIGN_V2_CHECK( get<1>( cont[1] ) == 2 );
-            T t3( z );
-            BOOST_ASSIGN_V2_CHECK( &get<0>( cont[3] ) == &z );
-            BOOST_ASSIGN_V2_CHECK( get<1>( cont[3] ) == get<1>( t3 ) );
+            BOOST_ASSIGN_V2_CHECK( &get<0>( cont[0] ) == &pi );
+            BOOST_ASSIGN_V2_CHECK(  get<1>( cont[0] ) == "pi" );
+            BOOST_ASSIGN_V2_CHECK( &get<0>( cont[3] ) == &na );
+            T t3 = T( na ); BOOST_ASSIGN_V2_CHECK( get<1>( cont[3] ) == get<1>( t3 ) );
             //]
+            BOOST_ASSIGN_V2_CHECK( &get<0>( cont[1] ) == &e );
+            BOOST_ASSIGN_V2_CHECK( &get<0>( cont[2] ) == &log2 );
         }
     }// test()
 

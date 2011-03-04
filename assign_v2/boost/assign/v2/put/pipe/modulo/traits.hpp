@@ -24,7 +24,7 @@ namespace assign{
 namespace v2{
 namespace put_pipe_aux{
 
-	typedef ::boost::mpl::vector0<> empty_pars_;
+    typedef ::boost::mpl::vector0<> empty_pars_;
 
     template<typename Pars>
     struct modulo_traits

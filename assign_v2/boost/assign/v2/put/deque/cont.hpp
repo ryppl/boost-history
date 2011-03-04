@@ -16,32 +16,13 @@
 #include <boost/range/size.hpp>
 #include <boost/range/size_type.hpp>
 
-#include <boost/assign/v2/put/modulo/fun.hpp>
-#include <boost/assign/v2/put/modulo/modifier.hpp>
 #include <boost/assign/v2/put/frame/crtp.hpp>
-
 #include <boost/assign/v2/put/deque/fwd.hpp>
+#include <boost/assign/v2/put/deque/modulo.hpp>
 
 namespace boost{
 namespace assign{
 namespace v2{
-namespace result_of_modulo{
-
-    template<typename T,typename F,typename Tag>
-    struct fun<put_deque_aux::cont<T, F, Tag> >
-    {
-        template<typename F1>
-        struct apply{ typedef put_deque_aux::cont<T, F1, Tag> type; };
-    };
-
-    template<typename T,typename F,typename Tag>
-    struct modifier<put_deque_aux::cont<T, F, Tag> >
-    {
-        template<typename NewTag>
-        struct apply{ typedef put_deque_aux::cont<T, F, NewTag> type; };
-    };
-
-}//result_of_modulo
 namespace put_deque_aux{
 
     template<typename T>

@@ -8,7 +8,7 @@
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
 #ifndef LIBS_ASSIGN_V2_TEST_PUT_PIPE_FUNCTOR_STR_LITERAL_ER_2010_H
-#define LIBS_ASSIGN_V2_TEST_PUT_PIPE_FUNCTOR_STD_LITERAL_2010_H
+#define LIBS_ASSIGN_V2_TEST_PUT_PIPE_FUNCTOR_STD_LITERAL_ER_2010_H
 
 namespace test_assign_v2{
 namespace xxx_put{

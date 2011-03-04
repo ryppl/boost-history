@@ -36,7 +36,7 @@ namespace xxx_ptr{
             
         }
 /*
-		// These are not yet available (TODO)
+        // These are not yet available (TODO)
         {
             //[put_ptr_map
             boost::ptr_map<std::string, int> assoc;

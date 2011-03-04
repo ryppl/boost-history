@@ -47,7 +47,7 @@ namespace result_of{
 
     template<typename F, typename V>
     struct csv : ::boost::mpl::apply1<
-    	csv_aux::result<F>,
+        csv_aux::result<F>,
         V
     >{};
 

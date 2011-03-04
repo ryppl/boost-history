@@ -35,7 +35,7 @@ namespace convert_aux{
         return C( boost::begin( r ), boost::end( r ) );
     }
 
-	template<typename C, typename R>
+    template<typename C, typename R>
     C dispatch(R const& r)
     {
         typedef typename convert_aux::deduce_tag<C, R>::type tag_;

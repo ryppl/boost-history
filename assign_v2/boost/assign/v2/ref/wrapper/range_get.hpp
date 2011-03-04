@@ -94,7 +94,6 @@ namespace result_of{
 }// range_aux
 namespace result_of{
 
-
     template<typename R>
     struct range_get : boost::lazy_enable_if<
         boost::is_reference_wrapper<

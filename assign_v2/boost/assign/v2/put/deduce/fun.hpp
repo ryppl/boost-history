@@ -34,7 +34,7 @@ namespace put_aux{
         typedef functor_aux::constructor<value_type> type;
     };
 
-	template<typename C>
+    template<typename C>
     struct deduce_fun :  boost::mpl::eval_if<
         container_traits::is_ptr_container<C>,
         deduce_fun_pointer<C>,
