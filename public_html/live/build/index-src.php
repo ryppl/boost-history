@@ -1,8 +1,8 @@
 <?php
-require_once(dirname(__FILE__) . '/common/code/boost_feed.php');
-$_news = new boost_feed(dirname(__FILE__) . '/feed/news.rss', '/users/news');
+require_once(dirname(__FILE__) . '/../common/code/boost_feed.php');
+$_news = new boost_feed(dirname(__FILE__) . '/../feed/news.rss', '/users/news');
 $_news->sort_by('pubdate');
-$_downloads = new boost_feed(dirname(__FILE__) . '/feed/downloads.rss', '/users/download');
+$_downloads = new boost_feed(dirname(__FILE__) . '/../feed/downloads.rss', '/users/download');
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -17,12 +17,17 @@ $_downloads = new boost_feed(dirname(__FILE__) . '/feed/downloads.rss', '/users/
   <link rel="icon" href="/favicon.ico" type="image/ico" />
   <link rel="stylesheet" type="text/css" href="/style-v2/section-welcome.css" />
   <!--[if IE 7]> <style type="text/css"> body { behavior: url(/style-v2/csshover3.htc); } </style> <![endif]-->
+  <meta name="google-site-verification" content="mpr2HgFpodnbF_8fv4qXd9roIClVwtX3C-Kd3F6r61w" />
 </head>
 
 <!--
 Note: Editing website content is documented at:
 http://www.boost.org/development/website_updating.html
 -->
+<?php
+    /* Obviously doesn't apply here. */
+    echo "<!-- Don't edit this page! It's generated from build/index-src.php -->\n";
+?>
 
 <body>
   <div id="heading">
