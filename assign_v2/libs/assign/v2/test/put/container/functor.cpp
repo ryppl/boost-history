@@ -64,8 +64,7 @@ namespace xxx_functor{
         }
         {
             //[put_cont_functor_set
-            typedef std::string T;
-            std::set<T> cont;
+            typedef std::string T; std::set<T> cont;
             T x = "isomer", y = "ephemeral", z = "prosaic";
             as2::put( cont )( x )( y )( z );
 
@@ -83,9 +82,9 @@ namespace xxx_functor{
             //]
         }
         {
-            //http://science.nasa.gov/science-news/science-at-nasa/2010/17dec_solsticeeclipse/
+            // Lunar eclipse years falling on winter solstice
             //[put_cont_functor_list
-            typedef int T; /*<<Lunar eclipse years falling on winter solstice>>*/T x = 1638, y = 2010, z = 2094;
+            typedef int T; T x = 1638, y = 2010, z = 2094;
             std::list<T> cont; ( as2::put( cont ) )( x )( y )( z );
 
             BOOST_ASSIGN_V2_CHECK( cont.front() == x );

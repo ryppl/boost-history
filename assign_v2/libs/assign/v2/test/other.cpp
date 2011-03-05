@@ -13,6 +13,7 @@
 #include <map>
 #include <vector>
 #include <boost/mpl/assert.hpp>
+#include <boost/mpl/vector.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/array.hpp>
 #include <boost/lambda/lambda.hpp>
@@ -31,7 +32,7 @@
 #include <boost/assign/v2/ref/array/functor.hpp>
 #include <boost/assign/v2/ref/array/functor/converter.hpp>
 #include <boost/assign/v2/put/container.hpp>
-#include <boost/assign/v2/put/deque/csv.hpp>
+#include <boost/assign/v2/put/deque.hpp>
 #include <boost/assign/v2/put/container/functor.hpp>
 #include <boost/assign/v2/put/pipe/functor.hpp>
 #include <boost/assign/v2/put/pipe/csv.hpp>
@@ -118,9 +119,20 @@ namespace xxx_other{
             //]
             BOOST_ASSIGN_V2_CHECK( *boost::next( boost::begin( cont ) ) == y );
         }
+        // deque.hpp
+        {
+            //[other_csv_deque
+            typedef int T; T x = 1, y = 2, z = 0;
+            as2::result_of::deque<T>::type cont 
+                = as2::csv( as2::deque<T>( as2::_nil ), x, y, z );
+
+            BOOST_ASSIGN_V2_CHECK( cont.front() == x );
+            BOOST_ASSIGN_V2_CHECK( cont.back() == z );
+            //]
+        }
         // modulo.hpp
         {
-            //[other_put_modulo
+            //[other_csv_put_modulo
             typedef int T; std::list<T> cont;
             as2::csv(
                 as2::put( cont ) % ( as2::_fun = as2::_identity ),

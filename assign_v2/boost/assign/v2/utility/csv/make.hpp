@@ -28,8 +28,6 @@ namespace v2{
 
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 
-    // TODO
-
     template<typename F, typename T>
     typename result_of::csv<F const&,
         ::boost::mpl::vector<T>

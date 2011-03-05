@@ -17,7 +17,7 @@
 #include <boost/assign/v2/put/ext.hpp>
 #include <boost/assign/v2/put/container/functor.hpp>
 #include <boost/assign/v2/put/deque/functor.hpp>
-#include <libs/assign/v2/test/put/ext.h>
+#include <libs/assign/v2/test/put/modulo/ext.h>
 
 namespace test_assign_v2{
 namespace xxx_put{

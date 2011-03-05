@@ -167,7 +167,6 @@ namespace xxx_list_tuple{
         #undef B
 
         {
-            // TODO
             typedef const char ar_[2];
             #if BOOST_ASSIGN_V2_ENABLE_CPP0X
             typedef boost::add_reference<ar_>::type type;
