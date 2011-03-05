@@ -73,14 +73,6 @@ namespace xxx_std{
             //]
         }
         {
-            //[put_std_push_front
-            typedef int T; T x = 1, y = 2, z = 0; std::deque<T> cont;
-            ( as2::put( cont ) % as2::_push_front )( z )( y )( x );
-            BOOST_ASSIGN_V2_CHECK( cont[0] == x );
-            BOOST_ASSIGN_V2_CHECK( cont[2] == z );
-            //]
-        }
-        {
             typedef int T; T x = 1, y = 2, z = 0;
             //[put_deque_std_front
             BOOST_AUTO(
