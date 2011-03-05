@@ -1,0 +1,288 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Deque</title>
+<link rel="stylesheet" href="../../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="../../index.html" title="Chapter&#160;1.&#160;Boost.Assign 2.0">
+<link rel="up" href="../put.html" title="Put">
+<link rel="prev" href="cont.html" title="Container">
+<link rel="next" href="modulo.html" title="Modulo">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../boost.png"></td>
+<td align="center"><a href="../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="cont.html"><img src="../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../put.html"><img src="../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="modulo.html"><img src="../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_assign_v2.put.deque"></a><a class="link" href="deque.html" title="Deque">Deque</a>
+</h3></div></div></div>
+<a name="boost_assign_v2.put.deque.header"></a><h5>
+<a name="id36338599"></a>
+        <a class="link" href="deque.html#boost_assign_v2.put.deque.header">Header</a>
+      </h5>
+<p>
+        
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><a href="../../../../../../../boost/assign/v2/put/deque.hpp" target="_top">boost/assign/v2/put/deque.hpp</a><span class="special">&gt;</span>
+</pre>
+<p>
+      </p>
+<a name="boost_assign_v2.put.deque.description"></a><h5>
+<a name="id36338639"></a>
+        <a class="link" href="deque.html#boost_assign_v2.put.deque.description">Description</a>
+      </h5>
+<p>
+        Interface for in place construction of a <a href="http://www.sgi.com/tech/stl/Deque.html" target="_top"><code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">deque</span><span class="special">&lt;&gt;</span></code></a>-like container.
+      </p>
+<a name="boost_assign_v2.put.deque.syntax"></a><h5>
+<a name="id36338679"></a>
+        <a class="link" href="deque.html#boost_assign_v2.put.deque.syntax">Syntax</a>
+      </h5>
+<p>
+        
+</p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">put_deque_aux</span><span class="special">{</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">impl</span><span class="special">{</span> <span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">deque</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">type</span><span class="special">;</span> <span class="special">};</span> <span class="comment">/* Internal implementation */</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">F</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Tag</span><span class="special">&gt;</span>
+    <span class="keyword">class</span> <span class="identifier">cont</span> <span class="special">:</span>
+        <span class="keyword">public</span> <span class="identifier">put_aux</span><span class="special">::</span><span class="identifier">crtp</span><span class="special">&lt;</span><em class="replaceable"><code>unspecified</code></em><span class="special">,</span> <span class="identifier">F</span><span class="special">,</span> <span class="identifier">Tag</span><span class="special">,</span> <span class="identifier">cont</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">,</span> <span class="identifier">F</span><span class="special">,</span> <span class="identifier">Tag</span><span class="special">&gt;</span> <span class="special">&gt;</span>
+    <span class="special">{</span>
+
+        <span class="keyword">public</span><span class="special">:</span>
+
+        <span class="keyword">typedef</span> <span class="identifier">T</span> <span class="identifier">value_type</span><span class="special">;</span>
+        <span class="keyword">typedef</span> <em class="replaceable"><code>unspecified</code></em> <span class="identifier">size_type</span><span class="special">;</span>
+        <span class="keyword">typedef</span> <em class="replaceable"><code>unspecified</code></em> <span class="identifier">iterator</span><span class="special">;</span>
+        <span class="keyword">typedef</span> <em class="replaceable"><code>unspecified</code></em> <span class="identifier">const_iterator</span><span class="special">;</span>
+
+        <span class="identifier">cont</span><span class="special">(){}</span>
+        <span class="keyword">explicit</span> <span class="identifier">cont</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">F</span><span class="special">&amp;</span> <span class="identifier">f</span><span class="special">);</span>
+        <span class="keyword">explicit</span> <span class="identifier">cont</span><span class="special">(</span><em class="replaceable"><code>unspecified</code></em> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">v</span><span class="special">,</span> <span class="identifier">F</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">f</span><span class="special">);</span>
+        <span class="keyword">explicit</span> <span class="identifier">cont</span><span class="special">(</span><em class="replaceable"><code>unspecified</code></em> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">v</span><span class="special">,</span> <span class="identifier">F</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">f</span><span class="special">,</span> <span class="identifier">modifier</span><span class="special">&lt;</span><span class="identifier">Tag</span><span class="special">&gt;</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">m</span> <span class="special">);</span>
+
+        <span class="identifier">iterator</span> <span class="identifier">begin</span><span class="special">();</span>
+        <span class="identifier">iterator</span> <span class="identifier">end</span><span class="special">();</span>
+        <span class="identifier">const_iterator</span> <span class="identifier">begin</span><span class="special">()</span><span class="keyword">const</span><span class="special">;</span>
+        <span class="identifier">const_iterator</span> <span class="identifier">end</span><span class="special">()</span><span class="keyword">const</span><span class="special">;</span>
+
+        <span class="keyword">typedef</span> <em class="replaceable"><code>unspecified</code></em> <span class="identifier">reference</span><span class="special">;</span>
+        <span class="keyword">typedef</span> <em class="replaceable"><code>unspecified</code></em> <span class="identifier">const_reference</span><span class="special">;</span>
+        <span class="keyword">typedef</span> <em class="replaceable"><code>unspecified</code></em> <span class="identifier">difference_type</span><span class="special">;</span>
+
+        <span class="identifier">size_type</span> <span class="identifier">size</span><span class="special">()</span><span class="keyword">const</span><span class="special">;</span>
+        <span class="identifier">size_type</span> <span class="identifier">max_size</span><span class="special">()</span><span class="keyword">const</span><span class="special">;</span>
+        <span class="keyword">bool</span> <span class="identifier">empty</span><span class="special">()</span><span class="keyword">const</span><span class="special">;</span>
+        <span class="identifier">reference</span> <span class="keyword">operator</span><span class="special">[](</span><span class="identifier">size_type</span> <span class="identifier">n</span><span class="special">);</span>
+        <span class="identifier">const_reference</span> <span class="keyword">operator</span><span class="special">[](</span><span class="identifier">size_type</span> <span class="identifier">n</span><span class="special">)</span><span class="keyword">const</span><span class="special">;</span>
+        <span class="identifier">reference</span> <span class="identifier">front</span><span class="special">();</span>
+        <span class="identifier">const_reference</span> <span class="identifier">front</span><span class="special">()</span><span class="keyword">const</span><span class="special">;</span>
+        <span class="identifier">reference</span> <span class="identifier">back</span><span class="special">();</span>
+        <span class="identifier">const_reference</span> <span class="identifier">back</span><span class="special">()</span><span class="keyword">const</span><span class="special">;</span>
+        <span class="keyword">void</span> <span class="identifier">pop_front</span><span class="special">();</span>
+        <span class="keyword">void</span> <span class="identifier">pop_back</span><span class="special">();</span>
+        <span class="keyword">void</span> <span class="identifier">swap</span><span class="special">(</span><span class="identifier">cont</span><span class="special">&amp;</span> <span class="identifier">that</span><span class="special">);</span>
+        <em class="replaceable"><code>unspecified</code></em><span class="special">&amp;</span> <span class="identifier">container</span><span class="special">()</span><span class="keyword">const</span><span class="special">;</span>
+
+    <span class="special">};</span>
+
+<span class="special">}//</span> <span class="identifier">put_deque_aux</span>
+
+</pre>
+<p>
+      </p>
+<a name="boost_assign_v2.put.deque.meta"></a><h5>
+<a name="id36339660"></a>
+        <a class="link" href="deque.html#boost_assign_v2.put.deque.meta">Meta</a>
+      </h5>
+<p>
+        <span class="bold"><strong>Notation</strong></span>
+      </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Symbol
+                </p>
+              </th>
+<th>
+                <p>
+                  Value
+                </p>
+              </th>
+</tr></thead>
+<tbody><tr>
+<td>
+                <p>
+                  <code class="computeroutput">C</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">put_deque_aux</span><span class="special">::</span><span class="identifier">impl</span><span class="special">&lt;</span>T<span class="special">&gt;::</span><span class="identifier">type</span></code>
+                </p>
+              </td>
+</tr></tbody>
+</table></div>
+<p>
+        <span class="bold"><strong>Expressions</strong></span>
+      </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Expression
+                </p>
+              </th>
+<th>
+                <p>
+                  Value
+                </p>
+              </th>
+</tr></thead>
+<tbody><tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">result_of</span><span class="special">::</span><span class="identifier">deque</span><span class="special">&lt;</span>T<span class="special">&gt;::</span><span class="identifier">type</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">put_deque_aux</span><span class="special">::</span><span class="identifier">cont</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">,</span>
+                  <a class="link" href="deduce.html" title="Deduce"><code class="computeroutput"><span class="identifier">put_aux</span><span class="special">::</span><span class="identifier">deduce_fun</span><span class="special">&lt;</span>C<span class="special">&gt;::</span><span class="identifier">type</span></code></a><span class="special">,</span>
+                  <a class="link" href="deduce.html" title="Deduce"><code class="computeroutput"><span class="identifier">put_aux</span><span class="special">::</span><span class="identifier">deduce_modifier_tag</span><span class="special">&lt;</span>C<span class="special">&gt;::</span><span class="identifier">type</span></code></a><span class="special">&gt;</span></code>
+                </p>
+              </td>
+</tr></tbody>
+</table></div>
+<a name="boost_assign_v2.put.deque.make"></a><h5>
+<a name="id36339951"></a>
+        <a class="link" href="deque.html#boost_assign_v2.put.deque.make">Make</a>
+      </h5>
+<p>
+        <span class="bold"><strong>Syntax</strong></span> 
+</p>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="keyword">typename</span> <span class="identifier">result_of</span><span class="special">::</span><span class="identifier">deque</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">type</span>
+<span class="identifier">deque</span><span class="special">(</span> <span class="identifier">keyword_aux</span><span class="special">::</span><span class="identifier">nil</span> <span class="special">);</span>
+
+<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span><span class="special">...</span><span class="identifier">Args</span><span class="special">&gt;</span>
+<span class="keyword">typename</span> <span class="identifier">result_of</span><span class="special">::</span><span class="identifier">deque</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">type</span>
+<span class="identifier">deque</span><span class="special">(</span><span class="identifier">Args</span><span class="special">&amp;&amp;...</span><span class="identifier">args</span><span class="special">);</span>
+</pre>
+<p>
+      </p>
+<p>
+        <span class="bold"><strong>Semantics</strong></span>
+      </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Expression
+                </p>
+              </th>
+<th>
+                <p>
+                  Result
+                </p>
+              </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                <p>
+                  
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">deque</span><span class="special">&lt;</span>T<span class="special">&gt;(</span> _nil <span class="special">)</span>
+</pre>
+<p>
+                </p>
+              </td>
+<td>
+                <p>
+                  Empty instance of <code class="computeroutput"><span class="identifier">result_of</span><span class="special">::</span><span class="identifier">deque</span><span class="special">&lt;</span>T<span class="special">&gt;::</span><span class="identifier">type</span></code>
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">deque</span><span class="special">&lt;</span>T<span class="special">&gt;(</span> arg<span class="special">[</span><span class="number">0</span><span class="special">],</span> <span class="special">...,</span> arg<span class="special">[</span>k <span class="special">-</span> <span class="number">1</span><span class="special">]</span> <span class="special">)</span>
+</pre>
+<p>
+                </p>
+              </td>
+<td>
+                <p>
+                  Equivalent to <code class="computeroutput"><span class="identifier">deque</span><span class="special">&lt;</span>T<span class="special">&gt;(</span>
+                  _nil <span class="special">)(</span> arg<span class="special">[</span><span class="number">0</span><span class="special">],</span> <span class="special">...,</span> arg<span class="special">[</span>k
+                  <span class="special">-</span> <span class="number">1</span><span class="special">]</span> <span class="special">)</span></code>
+                </p>
+              </td>
+</tr>
+</tbody>
+</table></div>
+<a name="boost_assign_v2.put.deque.example"></a><h5>
+<a name="id36340409"></a>
+        <a class="link" href="deque.html#boost_assign_v2.put.deque.example">Example</a>
+      </h5>
+<p>
+        
+</p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="keyword">int</span> <span class="identifier">T</span><span class="special">;</span> <span class="identifier">T</span> <span class="identifier">x</span> <span class="special">=</span> <span class="number">1</span><span class="special">,</span> <span class="identifier">z</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+<span class="identifier">as2</span><span class="special">::</span><span class="identifier">result_of</span><span class="special">::</span><span class="identifier">deque</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">cont</span> <span class="special">=</span> <span class="identifier">as2</span><span class="special">::</span><span class="identifier">deque</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span><a class="co" name="boost_assign_v210co" href="deque.html#boost_assign_v210"><img src="../../../../doc/src/images/callouts/1.png" alt="1" border="0"></a><span class="special">(</span> <span class="identifier">x</span> <span class="special">)()(</span> <span class="identifier">z</span> <span class="special">);</span>
+
+<span class="identifier">BOOST_ASSIGN_V2_CHECK</span><span class="special">(</span> <span class="identifier">cont</span><span class="special">.</span><span class="identifier">front</span><span class="special">()</span> <span class="special">==</span> <span class="identifier">x</span> <span class="special">);</span> <span class="identifier">T</span> <span class="identifier">t1</span> <span class="special">=</span> <span class="identifier">T</span><span class="special">();</span>
+<span class="identifier">BOOST_ASSIGN_V2_CHECK</span><span class="special">(</span> <span class="identifier">cont</span><span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">==</span> <span class="identifier">t1</span> <span class="special">);</span>
+<span class="identifier">BOOST_ASSIGN_V2_CHECK</span><span class="special">(</span> <span class="identifier">cont</span><span class="special">.</span><span class="identifier">back</span><span class="special">()</span> <span class="special">==</span> <span class="identifier">z</span> <span class="special">);</span>
+</pre>
+<p>
+      </p>
+<div class="calloutlist"><table border="0" summary="Callout list"><tr>
+<td width="5%" valign="top" align="left"><p><a name="boost_assign_v210"></a><a href="#boost_assign_v210co"><img src="../../../../doc/src/images/callouts/1.png" alt="1" border="0"></a> </p></td>
+<td valign="top" align="left"><p>
+            T( x ), T(), T( z )
+          </p></td>
+</tr></table></div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2003 -2004 Thorsten Ottosen, 2010 Erwann Rogard<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="cont.html"><img src="../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../put.html"><img src="../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="modulo.html"><img src="../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>
