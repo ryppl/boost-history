@@ -10,9 +10,16 @@
 #ifndef BOOST_ASSIGN_V2_PUT_DEDUCE_DEPENDEE_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_DEDUCE_DEPENDEE_ER_2010_HPP
 
+/*
 #include <boost/assign/v2/put/std/insert.hpp>
 #include <boost/assign/v2/put/std/push.hpp>
 #include <boost/assign/v2/put/std/push_back.hpp>
 #include <boost/assign/v2/put/ext/iterate.hpp>
+*/
+
+#include <boost/assign/v2/put/modifier/insert.hpp>
+#include <boost/assign/v2/put/modifier/iterate.hpp>
+#include <boost/assign/v2/put/modifier/push.hpp>
+#include <boost/assign/v2/put/modifier/push_back.hpp>
 
 #endif
