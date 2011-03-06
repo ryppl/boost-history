@@ -12,11 +12,12 @@
 #ifndef BOOST_LOCAL_BLOCK_HPP_
 #define BOOST_LOCAL_BLOCK_HPP_
 
+#include "config.hpp"
 #include "function.hpp"
 #include "aux_/block.hpp"
 #include <boost/config.hpp> // For variadic macros.
 
-#if defined(BOOST_NO_VARIADIC_MACROS)
+#if defined(BOOST_NO_VARIADIC_MACROS) || defined(BOOST_LOCAL_CONFIG_COMPLIANT)
 
 /**
  * @brief This macro starts the declaration of a local block.

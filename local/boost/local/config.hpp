@@ -13,6 +13,24 @@
 #define BOOST_LOCAL_CONFIG_HPP_
 
 /**
+ * @brief Force to use C++ standard feature only.
+ *
+ * @Note If programmers leave this macro #undefined, its default value is
+ *  undefined.
+ *
+ * If this macro is defined, variadic macros and empty macro parameters are not
+ * supported.
+ * Variadic macros, are supported by most recent compilers (like MSVC and GCC)
+ * and they were first introduced by the C99 preprocessor.
+ * However, they are not part of the official ISO C++ standard.
+ * 
+ * @See @RefSect{Tutorial} section.
+ */
+#ifndef BOOST_LOCAL_CONFIG_COMPLIANT
+#undef BOOST_LOCAL_CONFIG_COMPLIANT
+#endif
+
+/**
  * @brief Maximum number of function parameters supported for the local
  *  functions.
  *

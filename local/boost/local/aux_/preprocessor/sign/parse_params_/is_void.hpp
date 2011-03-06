@@ -7,6 +7,7 @@
 #ifndef BOOST_LOCAL_AUX_PP_SIGN_PARSE_PARAMS_IS_VOID_HPP_
 #define BOOST_LOCAL_AUX_PP_SIGN_PARSE_PARAMS_IS_VOID_HPP_
 
+#include "../../../config.hpp"
 #include <boost/detail/preprocessor/keyword/void.hpp>
 #include <boost/preprocessor/detail/is_unary.hpp>
 #include <boost/preprocessor/control/iif.hpp>
@@ -16,9 +17,16 @@
 
 // Private API.
 
+#if defined(BOOST_LOCAL_CONFIG_COMPLIANT)
+#   define BOOST_LOCAL_AUX_PP_SIGN_PARASE_PARAMS_IS_VOID_TOKEN_ALLOW_EMPTY_ 0
+#else
+#   define BOOST_LOCAL_AUX_PP_SIGN_PARASE_PARAMS_IS_VOID_TOKEN_ALLOW_EMPTY_ 1
+#endif
+
 #define BOOST_LOCAL_AUX_PP_SIGN_PARSE_PARAMS_IS_VOID_TOKEN_(token) \
     BOOST_PP_IIF(BOOST_PP_IS_EMPTY(token), \
-        1 /* handles empty params `()` as no params (C99 only) */ \
+        /* handles empty params `()` as no params (C99 only) */ \
+        BOOST_LOCAL_AUX_PP_SIGN_PARASE_PARAMS_IS_VOID_TOKEN_ALLOW_EMPTY_ \
         BOOST_PP_EMPTY \
     , \
         BOOST_DETAIL_PP_KEYWORD_IS_VOID_FRONT \

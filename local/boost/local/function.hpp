@@ -12,6 +12,7 @@
 #ifndef BOOST_LOCAL_FUNCTION_HPP_
 #define BOOST_LOCAL_FUNCTION_HPP_
 
+#include "config.hpp"
 #include "aux_/function_macros/params.hpp"
 #include "aux_/function_macros/name.hpp"
 #include <boost/preprocessor/facilities/empty.hpp>
@@ -22,7 +23,7 @@
 // Pass a parenthesized params seq `()()...` on C++. If variadic macros (C99, 
 // GCC, MVSC, etc) you can also pass a variable length tuple `..., ...` for
 // params and nothing `` for no params.
-#if defined(BOOST_NO_VARIADIC_MACROS)
+#if defined(BOOST_NO_VARIADIC_MACROS) || defined(BOOST_LOCAL_CONFIG_COMPLIANT)
 
 #define BOOST_LOCAL_FUNCTION_PARAMS(parameter_list) \
     BOOST_LOCAL_AUX_FUNCTION_PARAMS(parameter_list, \

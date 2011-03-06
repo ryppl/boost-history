@@ -15,10 +15,6 @@
 
 * Code: Try seriously to make nested locals to work...
 
-* Code: Add `BOOST_LOCAL_CONFIG_COMPLIANT` macro (#undef by default) that forces 100% C++ standard compliant if #defined -- no variadic and no empy macro params. Similar to Boost.Typeof COMPLIANT -- but programmers must also #define Boost.Typeof COMPLIANT separately if they wish to do so.
-
-* Code: Make the member variable with the local function name used for recursion const so body cannot change it -- or better, make the body funciton const so it cannot change anything about the object (if possible)...
-
 * Code: Optimize macro expansion code for C++0x, C++03, etc. From John Bytheway:
 > Yes, in C++0x local structs can be passed as template parameters.
 > Obviously, in C++0x there are lambdas too, so you might think your
