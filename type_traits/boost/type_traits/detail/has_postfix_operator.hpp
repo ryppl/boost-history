@@ -122,15 +122,16 @@ struct BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl1) < LHS, RET, false > {
 // in case we do not want to check for return type, we still need to know if our
 // definition of operator BOOST_TT_TRAIT_OP is used or an other existing one;
 // this is done with redefinition of "operator," that returns tag or int
-tag operator,(tag, int);
+struct tag2 { };
+tag operator,(tag, tag2);
 
 // do not check for return type if template parameter RET is void
 template < typename LHS >
 struct BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl1)< LHS, void, false > {
-   static ::boost::type_traits::yes_type check(int); // this version is preferred when operator exists
+   static ::boost::type_traits::yes_type check(tag2); // this version is preferred when operator exists
    static ::boost::type_traits::no_type check(tag); // this version is used otherwise
 
-   BOOST_STATIC_CONSTANT(bool, value = (sizeof(check(((make<LHS>() BOOST_TT_TRAIT_OP),0)))==sizeof(::boost::type_traits::yes_type)));
+   BOOST_STATIC_CONSTANT(bool, value = (sizeof(check(((make<LHS>() BOOST_TT_TRAIT_OP),tag2())))==sizeof(::boost::type_traits::yes_type)));
 };
 
 // some specializations needs to be declared for the special void case

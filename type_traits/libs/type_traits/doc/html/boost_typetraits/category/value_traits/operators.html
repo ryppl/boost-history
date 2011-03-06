@@ -21,7 +21,7 @@
         Operator Type Traits</a>
 </h4></div></div></div>
 <a name="boost_typetraits.category.value_traits.operators.introduction"></a><h6>
-<a name="id3296808"></a>
+<a name="id3014389"></a>
           <a class="link" href="operators.html#boost_typetraits.category.value_traits.operators.introduction">Introduction</a>
         </h6>
 <p>
@@ -109,7 +109,7 @@
           operators.
         </p>
 <div class="table">
-<a name="id3297644"></a><p class="title"><b>Table&#160;1.4.&#160;Supported binary operators</b></p>
+<a name="id3015225"></a><p class="title"><b>Table&#160;1.4.&#160;Supported binary operators</b></p>
 <div class="table-contents"><table class="table" summary="Supported binary operators">
 <colgroup>
 <col>
@@ -555,7 +555,7 @@
 </table></div>
 </div>
 <br class="table-break"><div class="table">
-<a name="id3300719"></a><p class="title"><b>Table&#160;1.5.&#160;Supported prefix operators</b></p>
+<a name="id3018300"></a><p class="title"><b>Table&#160;1.5.&#160;Supported prefix operators</b></p>
 <div class="table-contents"><table class="table" summary="Supported prefix operators">
 <colgroup>
 <col>
@@ -683,7 +683,7 @@
 </table></div>
 </div>
 <br class="table-break"><div class="table">
-<a name="id3301357"></a><p class="title"><b>Table&#160;1.6.&#160;Supported postfix operators</b></p>
+<a name="id3018938"></a><p class="title"><b>Table&#160;1.6.&#160;Supported postfix operators</b></p>
 <div class="table-contents"><table class="table" summary="Supported postfix operators">
 <colgroup>
 <col>
@@ -742,7 +742,7 @@
           for each operator and the corresponding trait name.
         </p>
 <div class="table">
-<a name="id3301577"></a><p class="title"><b>Table&#160;1.7.&#160;Operator names in the standard</b></p>
+<a name="id3019157"></a><p class="title"><b>Table&#160;1.7.&#160;Operator names in the standard</b></p>
 <div class="table-contents"><table class="table" summary="Operator names in the standard">
 <colgroup>
 <col>
@@ -1645,7 +1645,7 @@
 </table></div>
 </div>
 <br class="table-break"><a name="boost_typetraits.category.value_traits.operators.implementation"></a><h6>
-<a name="id3304106"></a>
+<a name="id3021687"></a>
           <a class="link" href="operators.html#boost_typetraits.category.value_traits.operators.implementation">Implementation</a>
         </h6>
 <p>
@@ -1810,27 +1810,34 @@
 <p>
         </p>
 <a name="boost_typetraits.category.value_traits.operators.known_issues"></a><h6>
-<a name="id3307261"></a>
+<a name="id3024842"></a>
           <a class="link" href="operators.html#boost_typetraits.category.value_traits.operators.known_issues">Known
           issues</a>
         </h6>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+              These traits cannot detect whether the operators are public or not:
+              if an operator is defined as a private member of type <code class="computeroutput"><span class="identifier">T</span></code> then the instantiation of the corresponding
+              trait will produce a compiler error. For this reason these traits cannot
+              be used to determine whether a type has a public operator or not.
+            </li></ul></div>
 <p>
-          These traits cannot detect whether the operators are public or not: if
-          an operator is defined as a private member of type <code class="computeroutput"><span class="identifier">T</span></code>
-          then the instantiation of the corresponding trait will produce a compiler
-          error. For this reason these traits cannot be used to determine whether
-          a type has a public operator or not.
+          
+</p>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">A</span> <span class="special">{</span> <span class="keyword">private</span><span class="special">:</span> <span class="identifier">A</span> <span class="keyword">operator</span><span class="special">-();</span> <span class="special">};</span>
+<span class="identifier">boost</span><span class="special">::</span><span class="identifier">has_operator_unary_minus</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">&gt;::</span><span class="identifier">value</span><span class="special">;</span> <span class="comment">// error: A::operator-() is private
+</span></pre>
+<p>
         </p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+              There is an issue if the operator exists only for type <code class="computeroutput"><span class="identifier">A</span></code> and <code class="computeroutput"><span class="identifier">B</span></code>
+              is convertible to <code class="computeroutput"><span class="identifier">A</span></code>.
+              In this case, the compiler will report an ambigous overload because
+              both the existing operator and the one we provide (with argument of
+              type <code class="computeroutput"><span class="identifier">any</span></code>) need type
+              conversion, so that none is preferred.
+            </li></ul></div>
 <p>
-          There is an issue if the operator exists only for type <code class="computeroutput"><span class="identifier">U</span></code>
-          and <code class="computeroutput"><span class="identifier">T</span></code> is convertible to
-          <code class="computeroutput"><span class="identifier">U</span></code>. In this case, the compiler
-          will report an ambigous overload because both the existing operator and
-          the one we provide (with argument of type <code class="computeroutput"><span class="identifier">any</span></code>)
-          need type conversion, so that none is preferred.
-        </p>
-<p>
-          Example 1: 
+          
 </p>
 <pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">A</span> <span class="special">{</span> <span class="special">};</span>
 <span class="keyword">void</span> <span class="keyword">operator</span><span class="special">-(</span><span class="keyword">const</span> <span class="identifier">A</span><span class="special">&amp;);</span>
@@ -1842,7 +1849,7 @@
 </span>                                           <span class="comment">// both need type conversion
 </span></pre>
 <p>
-          Example 2: 
+          
 </p>
 <pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">B</span> <span class="special">{</span> <span class="special">};</span>
 <span class="keyword">struct</span> <span class="identifier">A</span> <span class="special">{</span> <span class="identifier">A</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">B</span><span class="special">&amp;)</span> <span class="special">{</span> <span class="special">}</span> <span class="special">};</span>
@@ -1854,6 +1861,17 @@
 </span>                                           <span class="comment">// both need type conversion
 </span></pre>
 <p>
+        </p>
+<a name="boost_typetraits.category.value_traits.operators.acknowledgments"></a><h6>
+<a name="id3025474"></a>
+          <a class="link" href="operators.html#boost_typetraits.category.value_traits.operators.acknowledgments">Acknowledgments</a>
+        </h6>
+<p>
+          Fr&#233;d&#233;ric Bron is very thankful to numerous people from the boost mailing
+          list for their kind help and patience. In particular, the following persons
+          have been very helpful for the implementation: Edward Diener, Eric Niebler,
+          Jeffrey Lee Hellrung (Jr.), Robert Stewart, Roman Perepelitsa, Steven Watanabe,
+          Vicente Botet.
         </p>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>

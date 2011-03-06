@@ -10,14 +10,29 @@
 
 namespace {
 
-struct ret { };
-
 struct without { };
+
+struct ret { };
 
 struct internal { ret operator BOOST_TT_TRAIT_OP (int) const; };
 
 struct external { };
 ret operator BOOST_TT_TRAIT_OP (const external&, int);
+
+struct comma1_ret { };
+struct ret_with_comma1 { comma1_ret operator,(int); };
+
+struct internal_comma1 { ret_with_comma1 operator BOOST_TT_TRAIT_OP (int) const; };
+
+struct external_comma1 { };
+ret_with_comma1 operator BOOST_TT_TRAIT_OP (const external_comma1&, int);
+
+struct ret_with_comma2 { void operator,(int); };
+
+struct internal_comma2 { ret_with_comma2 operator BOOST_TT_TRAIT_OP (int) const; };
+
+struct external_comma2 { };
+ret_with_comma2 operator BOOST_TT_TRAIT_OP (const external_comma2&, int);
 
 struct returns_int { int operator BOOST_TT_TRAIT_OP (int); };
 
@@ -55,6 +70,10 @@ void run1() {
    TEST_T(without, false);
    TEST_T(internal, true);
    TEST_T(external, true);
+   TEST_T(internal_comma1, true);
+   TEST_T(external_comma1, true);
+   TEST_T(internal_comma2, true);
+   TEST_T(external_comma2, true);
    TEST_T(returns_int, true);
    TEST_T(returns_void, true);
    TEST_T(returns_void_star, true);
@@ -69,6 +88,10 @@ void run1() {
    TEST_TR(without, bool, false);
    TEST_TR(internal, bool, false);
    TEST_TR(internal, ret, true);
+   TEST_TR(internal_comma1, bool, false);
+   TEST_TR(internal_comma1, ret_with_comma1, true);
+   TEST_TR(internal_comma2, bool, false);
+   TEST_TR(internal_comma2, ret_with_comma2, true);
    TEST_TR(external, bool, false);
    TEST_TR(external, ret, true);
    TEST_TR(returns_int, bool, true);

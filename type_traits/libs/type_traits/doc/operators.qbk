@@ -325,18 +325,22 @@ struct has_operator_unary_minus : ::boost::integral_constant< bool, (::boost::de
 
 [heading Known issues]
 
-These traits cannot detect whether the operators are public or not:
+* These traits cannot detect whether the operators are public or not:
 if an operator is defined as a private member of type `T` then
 the instantiation of the corresponding trait will produce a compiler error.
 For this reason these traits cannot be used to determine whether a type has a
 public operator or not.
 
-There is an issue if the operator exists only for type `U` and `T` is
-convertible to `U`. In this case, the compiler will report an ambigous overload
+``
+struct A { private: A operator-(); };
+boost::has_operator_unary_minus<A>::value; // error: A::operator-() is private
+``
+
+* There is an issue if the operator exists only for type `A` and `B` is
+convertible to `A`. In this case, the compiler will report an ambigous overload
 because both the existing operator and the one we provide (with argument of type
 `any`) need type conversion, so that none is preferred.
 
-Example 1:
 ``
 struct A { };
 void operator-(const A&);
@@ -347,7 +351,6 @@ boost::has_operator_unary_minus<B>::value; // error: ambigous overload between
                                            // operator-(const A&)
                                            // both need type conversion
 ``
-Example 2:
 ``
 struct B { };
 struct A { A(const B&) { } };
@@ -358,4 +361,10 @@ boost::has_operator_unary_minus<B>::value; // error: ambigous overload between
                                            // operator-(const A&)
                                            // both need type conversion
 ``
+
+[heading Acknowledgments]
+
+Frédéric Bron is very thankful to numerous people from the boost mailing list for their kind help and patience.
+In particular, the following persons have been very helpful for the implementation: Edward Diener, Eric Niebler, Jeffrey Lee Hellrung (Jr.), Robert Stewart, Roman Perepelitsa, Steven Watanabe, Vicente Botet.
+
 [endsect]

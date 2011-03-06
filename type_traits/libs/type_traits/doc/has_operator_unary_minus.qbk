@@ -25,15 +25,9 @@ RHS rhs;
 f(-rhs); // is valid if has_operator_unary_minus<RHS, RET>::value==true
 ``
 
-This trait cannot detect whether prefix `operator-` is public or not:
-if `operator-` is defined as a private member of `RHS` then
-instantiating `has_operator_unary_minus<RHS>` will produce a compiler error.
-For this reason `has_operator_unary_minus` cannot be used to determine whether a type has a public `operator-` or not.
-
 __header `#include <boost/type_traits/has_operator_unary_minus.hpp>` or `#include <boost/type_traits/operators.hpp>`
 
 __examples
-
 
 [:`has_operator_unary_minus<RHS, RET>::value_type` is the type `bool`.]
 [:`has_operator_unary_minus<RHS, RET>::value` is a `bool` integral constant expression.]
@@ -48,4 +42,27 @@ __examples
 
 [:`has_operator_unary_minus<int, std::string>` inherits from `__false_type`.]
 
+
+[*Known issues:]
+
+This trait cannot detect whether prefix `operator-` is public or not:
+if `operator-` is defined as a private member of `RHS` then
+instantiating `has_operator_unary_minus<RHS>` will produce a compiler error.
+For this reason `has_operator_unary_minus` cannot be used to determine whether a type has a public `operator-` or not.
+``
+struct A { private: void operator-(); };
+boost::has_operator_unary_minus<A>::value; // error: A::operator-() is private
+``
+
+There is an issue if the operator exists only for type `A` and `B` is
+convertible to `A`. In this case, the compiler will report an ambigous overload.
+``
+struct A { };
+void operator-(const A&);
+struct B { operator A(); };
+boost::has_operator_unary_minus<A>::value; // this is fine
+boost::has_operator_unary_minus<B>::value; // error: ambigous overload
+``
+
 [endsect]
+

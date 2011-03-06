@@ -52,11 +52,6 @@
 <p>
       </p>
 <p>
-        This trait cannot detect whether prefix <code class="computeroutput"><span class="keyword">operator</span><span class="special">-</span></code> is public or not: if <code class="computeroutput"><span class="keyword">operator</span><span class="special">-</span></code> is defined as a private member of <code class="computeroutput"><span class="identifier">RHS</span></code> then instantiating <code class="computeroutput"><span class="identifier">has_operator_unary_minus</span><span class="special">&lt;</span><span class="identifier">RHS</span><span class="special">&gt;</span></code> will produce a compiler error. For this
-        reason <code class="computeroutput"><span class="identifier">has_operator_unary_minus</span></code>
-        cannot be used to determine whether a type has a public <code class="computeroutput"><span class="keyword">operator</span><span class="special">-</span></code> or not.
-      </p>
-<p>
         <span class="bold"><strong>Header:</strong></span> <code class="computeroutput"><span class="preprocessor">#include</span>
         <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">type_traits</span><span class="special">/</span><span class="identifier">has_operator_unary_minus</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code>
         or <code class="computeroutput"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">type_traits</span><span class="special">/</span><span class="identifier">operators</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code>
@@ -103,6 +98,33 @@
 <div class="blockquote"><blockquote class="blockquote"><p>
           <code class="computeroutput"><span class="identifier">has_operator_unary_minus</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&gt;</span></code> inherits from <code class="computeroutput"><a class="link" href="integral_constant.html" title="integral_constant">false_type</a></code>.
         </p></blockquote></div>
+<p>
+        <span class="bold"><strong>Known issues:</strong></span>
+      </p>
+<p>
+        This trait cannot detect whether prefix <code class="computeroutput"><span class="keyword">operator</span><span class="special">-</span></code> is public or not: if <code class="computeroutput"><span class="keyword">operator</span><span class="special">-</span></code> is defined as a private member of <code class="computeroutput"><span class="identifier">RHS</span></code> then instantiating <code class="computeroutput"><span class="identifier">has_operator_unary_minus</span><span class="special">&lt;</span><span class="identifier">RHS</span><span class="special">&gt;</span></code> will produce a compiler error. For this
+        reason <code class="computeroutput"><span class="identifier">has_operator_unary_minus</span></code>
+        cannot be used to determine whether a type has a public <code class="computeroutput"><span class="keyword">operator</span><span class="special">-</span></code> or not. 
+</p>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">A</span> <span class="special">{</span> <span class="keyword">private</span><span class="special">:</span> <span class="keyword">void</span> <span class="keyword">operator</span><span class="special">-();</span> <span class="special">};</span>
+<span class="identifier">boost</span><span class="special">::</span><span class="identifier">has_operator_unary_minus</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">&gt;::</span><span class="identifier">value</span><span class="special">;</span> <span class="comment">// error: A::operator-() is private
+</span></pre>
+<p>
+      </p>
+<p>
+        There is an issue if the operator exists only for type <code class="computeroutput"><span class="identifier">A</span></code>
+        and <code class="computeroutput"><span class="identifier">B</span></code> is convertible to
+        <code class="computeroutput"><span class="identifier">A</span></code>. In this case, the compiler
+        will report an ambigous overload. 
+</p>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">A</span> <span class="special">{</span> <span class="special">};</span>
+<span class="keyword">void</span> <span class="keyword">operator</span><span class="special">-(</span><span class="keyword">const</span> <span class="identifier">A</span><span class="special">&amp;);</span>
+<span class="keyword">struct</span> <span class="identifier">B</span> <span class="special">{</span> <span class="keyword">operator</span> <span class="identifier">A</span><span class="special">();</span> <span class="special">};</span>
+<span class="identifier">boost</span><span class="special">::</span><span class="identifier">has_operator_unary_minus</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">&gt;::</span><span class="identifier">value</span><span class="special">;</span> <span class="comment">// this is fine
+</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">has_operator_unary_minus</span><span class="special">&lt;</span><span class="identifier">B</span><span class="special">&gt;::</span><span class="identifier">value</span><span class="special">;</span> <span class="comment">// error: ambigous overload
+</span></pre>
+<p>
+      </p>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>

@@ -25,15 +25,9 @@ LHS lhs;
 f(lhs--); // is valid if has_operator_postfix_decrement<LHS, RET>::value==true
 ``
 
-This trait cannot detect whether postfix `operator--` is public or not:
-if `operator--` is defined as a private member of `LHS` then
-instantiating `has_operator_postfix_decrement<LHS>` will produce a compiler error.
-For this reason `has_operator_postfix_decrement` cannot be used to determine whether a type has a public `operator--` or not.
-
 __header `#include <boost/type_traits/has_operator_postfix_decrement.hpp>` or `#include <boost/type_traits/operators.hpp>`
 
 __examples
-
 
 [:`has_operator_postfix_decrement<LHS, RET>::value_type` is the type `bool`.]
 [:`has_operator_postfix_decrement<LHS, RET>::value` is a `bool` integral constant expression.]
@@ -50,4 +44,27 @@ __examples
 [:`has_operator_postfix_decrement<void*>` inherits from `__false_type`.]
 [:`has_operator_postfix_decrement<int, std::string>` inherits from `__false_type`.]
 
+
+[*Known issues:]
+
+This trait cannot detect whether postfix `operator--` is public or not:
+if `operator--` is defined as a private member of `LHS` then
+instantiating `has_operator_postfix_decrement<LHS>` will produce a compiler error.
+For this reason `has_operator_postfix_decrement` cannot be used to determine whether a type has a public `operator--` or not.
+``
+struct A { private: void operator--(int); };
+boost::has_operator_postfix_decrement<A>::value; // error: A::operator--(int) is private
+``
+
+There is an issue if the operator exists only for type `A` and `B` is
+convertible to `A`. In this case, the compiler will report an ambigous overload.
+``
+struct A { };
+void operator--(const A&, int);
+struct B { operator A(); };
+boost::has_operator_postfix_decrement<A>::value; // this is fine
+boost::has_operator_postfix_decrement<B>::value; // error: ambigous overload
+``
+
 [endsect]
+
