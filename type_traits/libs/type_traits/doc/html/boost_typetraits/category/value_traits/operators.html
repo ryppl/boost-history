@@ -21,7 +21,7 @@
         Operator Type Traits</a>
 </h4></div></div></div>
 <a name="boost_typetraits.category.value_traits.operators.introduction"></a><h6>
-<a name="id3014389"></a>
+<a name="id3177000"></a>
           <a class="link" href="operators.html#boost_typetraits.category.value_traits.operators.introduction">Introduction</a>
         </h6>
 <p>
@@ -109,7 +109,7 @@
           operators.
         </p>
 <div class="table">
-<a name="id3015225"></a><p class="title"><b>Table&#160;1.4.&#160;Supported binary operators</b></p>
+<a name="id3177836"></a><p class="title"><b>Table&#160;1.4.&#160;Supported binary operators</b></p>
 <div class="table-contents"><table class="table" summary="Supported binary operators">
 <colgroup>
 <col>
@@ -555,7 +555,7 @@
 </table></div>
 </div>
 <br class="table-break"><div class="table">
-<a name="id3018300"></a><p class="title"><b>Table&#160;1.5.&#160;Supported prefix operators</b></p>
+<a name="id3180911"></a><p class="title"><b>Table&#160;1.5.&#160;Supported prefix operators</b></p>
 <div class="table-contents"><table class="table" summary="Supported prefix operators">
 <colgroup>
 <col>
@@ -683,7 +683,7 @@
 </table></div>
 </div>
 <br class="table-break"><div class="table">
-<a name="id3018938"></a><p class="title"><b>Table&#160;1.6.&#160;Supported postfix operators</b></p>
+<a name="id3181549"></a><p class="title"><b>Table&#160;1.6.&#160;Supported postfix operators</b></p>
 <div class="table-contents"><table class="table" summary="Supported postfix operators">
 <colgroup>
 <col>
@@ -742,7 +742,7 @@
           for each operator and the corresponding trait name.
         </p>
 <div class="table">
-<a name="id3019157"></a><p class="title"><b>Table&#160;1.7.&#160;Operator names in the standard</b></p>
+<a name="id3181769"></a><p class="title"><b>Table&#160;1.7.&#160;Operator names in the standard</b></p>
 <div class="table-contents"><table class="table" summary="Operator names in the standard">
 <colgroup>
 <col>
@@ -1645,7 +1645,7 @@
 </table></div>
 </div>
 <br class="table-break"><a name="boost_typetraits.category.value_traits.operators.implementation"></a><h6>
-<a name="id3021687"></a>
+<a name="id3184298"></a>
           <a class="link" href="operators.html#boost_typetraits.category.value_traits.operators.implementation">Implementation</a>
         </h6>
 <p>
@@ -1705,8 +1705,7 @@
 </span><span class="comment">// - operator- returns void   -&gt; (-rhs, returns_void_t()) returns returns_void_t
 </span><span class="comment">// - operator- returns !=void -&gt; (-rhs, returns_void_t()) returns int
 </span><span class="keyword">struct</span> <span class="identifier">returns_void_t</span> <span class="special">{};</span>
-<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
-<span class="keyword">int</span> <span class="keyword">operator</span><span class="special">,(</span><span class="identifier">T</span> <span class="keyword">const</span> <span class="special">&amp;,</span> <span class="identifier">returns_void_t</span><span class="special">);</span>
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="keyword">int</span> <span class="keyword">operator</span><span class="special">,(</span><span class="identifier">T</span> <span class="keyword">const</span> <span class="special">&amp;,</span> <span class="identifier">returns_void_t</span><span class="special">);</span>
 
 <span class="comment">// this intermediate trait has member value of type bool:
 </span><span class="comment">// - value==true -&gt; operator- returns void
@@ -1768,16 +1767,17 @@
 
 <span class="comment">// in case we do not want to check for return type, we still need to know if our
 </span><span class="comment">// definition of operator BOOST_TT_TRAIT_OP is used or an other existing one;
-</span><span class="comment">// this is done with redefinition of "operator," that returns tag or int
-</span><span class="identifier">tag</span> <span class="keyword">operator</span><span class="special">,(</span><span class="identifier">tag</span><span class="special">,</span> <span class="keyword">int</span><span class="special">);</span>
+</span><span class="comment">// this is done with redefinition of "operator," that returns tag or tag2
+</span><span class="keyword">struct</span> <span class="identifier">tag2</span> <span class="special">{</span> <span class="special">};</span>
+<span class="identifier">tag</span> <span class="keyword">operator</span><span class="special">,(</span><span class="identifier">tag</span><span class="special">,</span> <span class="identifier">tag2</span><span class="special">);</span>
 
 <span class="comment">// do not check for return type if 2nd template parameter RET is void
 </span><span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">RHS</span> <span class="special">&gt;</span>
 <span class="keyword">struct</span> <span class="identifier">has_operator_unary_minus_impl1</span><span class="special">&lt;</span> <span class="identifier">RHS</span><span class="special">,</span> <span class="keyword">void</span><span class="special">,</span> <span class="keyword">false</span> <span class="special">&gt;</span> <span class="special">{</span>
-   <span class="keyword">static</span> <span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">type_traits</span><span class="special">::</span><span class="identifier">yes_type</span> <span class="identifier">check</span><span class="special">(</span><span class="keyword">int</span><span class="special">);</span>
-   <span class="keyword">static</span> <span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">type_traits</span><span class="special">::</span><span class="identifier">no_type</span> <span class="identifier">check</span><span class="special">(</span><span class="identifier">tag</span><span class="special">);</span>
-
-   <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">bool</span> <span class="identifier">value</span><span class="special">=(</span><span class="keyword">sizeof</span><span class="special">(</span><span class="identifier">check</span><span class="special">(((-</span> <span class="identifier">make</span><span class="special">&lt;</span><span class="identifier">RHS</span><span class="special">&gt;()),</span><span class="number">0</span><span class="special">)))==</span><span class="keyword">sizeof</span><span class="special">(::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">type_traits</span><span class="special">::</span><span class="identifier">yes_type</span><span class="special">));</span>
+   <span class="keyword">static</span> <span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">type_traits</span><span class="special">::</span><span class="identifier">yes_type</span> <span class="identifier">check</span><span class="special">(</span><span class="identifier">tag2</span><span class="special">);</span> <span class="comment">// this version is preferred when operator exists
+</span>   <span class="keyword">static</span> <span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">type_traits</span><span class="special">::</span><span class="identifier">no_type</span> <span class="identifier">check</span><span class="special">(</span><span class="identifier">tag</span><span class="special">);</span> <span class="comment">// this version is used otherwise
+</span>
+   <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">bool</span> <span class="identifier">value</span><span class="special">=(</span><span class="keyword">sizeof</span><span class="special">(</span><span class="identifier">check</span><span class="special">(((-</span><span class="identifier">make</span><span class="special">&lt;</span><span class="identifier">RHS</span><span class="special">&gt;()),</span><span class="identifier">make</span><span class="special">&lt;</span><span class="identifier">tag2</span><span class="special">&gt;())))==</span><span class="keyword">sizeof</span><span class="special">(::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">type_traits</span><span class="special">::</span><span class="identifier">yes_type</span><span class="special">));</span>
 <span class="special">};</span>
 
 <span class="comment">// some specializations needs to be declared for the special void case
@@ -1810,7 +1810,7 @@
 <p>
         </p>
 <a name="boost_typetraits.category.value_traits.operators.known_issues"></a><h6>
-<a name="id3024842"></a>
+<a name="id3187497"></a>
           <a class="link" href="operators.html#boost_typetraits.category.value_traits.operators.known_issues">Known
           issues</a>
         </h6>
@@ -1863,7 +1863,7 @@
 <p>
         </p>
 <a name="boost_typetraits.category.value_traits.operators.acknowledgments"></a><h6>
-<a name="id3025474"></a>
+<a name="id3188130"></a>
           <a class="link" href="operators.html#boost_typetraits.category.value_traits.operators.acknowledgments">Acknowledgments</a>
         </h6>
 <p>

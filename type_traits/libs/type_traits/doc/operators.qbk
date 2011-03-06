@@ -220,8 +220,7 @@ tag operator-(const any&);
 // - operator- returns void   -> (-rhs, returns_void_t()) returns returns_void_t
 // - operator- returns !=void -> (-rhs, returns_void_t()) returns int
 struct returns_void_t {};
-template <typename T>
-int operator,(T const &, returns_void_t);
+template <typename T> int operator,(T const &, returns_void_t);
 
 // this intermediate trait has member value of type bool:
 // - value==true -> operator- returns void
@@ -283,16 +282,17 @@ struct has_operator_unary_minus_impl1 < RHS, RET, false > {
 
 // in case we do not want to check for return type, we still need to know if our
 // definition of operator BOOST_TT_TRAIT_OP is used or an other existing one;
-// this is done with redefinition of "operator," that returns tag or int
-tag operator,(tag, int);
+// this is done with redefinition of "operator," that returns tag or tag2
+struct tag2 { };
+tag operator,(tag, tag2);
 
 // do not check for return type if 2nd template parameter RET is void
 template < typename RHS >
 struct has_operator_unary_minus_impl1< RHS, void, false > {
-   static ::boost::type_traits::yes_type check(int);
-   static ::boost::type_traits::no_type check(tag);
+   static ::boost::type_traits::yes_type check(tag2); // this version is preferred when operator exists
+   static ::boost::type_traits::no_type check(tag); // this version is used otherwise
 
-   static const bool value=(sizeof(check(((- make<RHS>()),0)))==sizeof(::boost::type_traits::yes_type));
+   static const bool value=(sizeof(check(((-make<RHS>()),make<tag2>())))==sizeof(::boost::type_traits::yes_type));
 };
 
 // some specializations needs to be declared for the special void case
