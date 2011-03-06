@@ -64,3 +64,6 @@ exe this_va : this_va.cpp ;
 exe transform : transform.cpp ;
 exe transform_va : transform_va.cpp ;
 
+exe nesting : nesting.cpp ;
+exe nesting_va : nesting_va.cpp ;
+

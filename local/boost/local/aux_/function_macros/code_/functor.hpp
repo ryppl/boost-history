@@ -175,6 +175,12 @@
                 (sign_params, unbinds, const_binds, has_const_bind_this, \
                  binds, has_bind_this, id, typename_keyword) ) \
     private: \
+        /* this allows for nesting (local functions, blocks, and exits) as */ \
+        /* it makes the args variable visible within the body code (which */ \
+        /* cannot be static); this is for compilation only as the args */ \
+        /* variable is actually declared by the 1st enclosing local func */ \
+        boost::scope_exit::aux::undeclared \
+                BOOST_LOCAL_AUX_SYMBOL_ARGS_VARIABLE_NAME; \
         /* this type symbol cannot have ID postfix because it is used */ \
         /* the `NAME` macro (because this symbol is within functor class */ \
         /* it doesn't have to have ID postfix). */ \

@@ -12,8 +12,8 @@
 
 * Docs: Add D-Stype Scope Guards examples to docs.
 
+* Docs: Document that nesting is (now) possible.
 
-* Code: Try seriously to make nested locals to work...
 
 * Code: Optimize macro expansion code for C++0x, C++03, etc. From John Bytheway:
 > Yes, in C++0x local structs can be passed as template parameters.
