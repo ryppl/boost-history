@@ -281,6 +281,9 @@
                         BOOST_LOCAL_AUX_FUNCTION_CODE_PARAM_UNBIND_DECL_WITH_DEFAULT, \
                         ~, unbinds) \
             ) /* end body function params */ \
+            /* const member func so it cannot change obj (reassign member */ \
+            /* var with local function name, etc) */ \
+            const \
             /* user local function definition `{ ... }` will follow here */ \
     /* `NAME` macro will close function class decl `};` here */ 
 
