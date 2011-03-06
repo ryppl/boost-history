@@ -19,6 +19,7 @@
 #include "has_integral_operator_test.hpp"
 
 #include <istream>
+#include <string>
 
 #define TEST_SPECIFIC(T) TEST_TTR(std::istream&, T, std::istream&, true)
 namespace {
