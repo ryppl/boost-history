@@ -1,6 +1,6 @@
 
 
-* Docs: The simplified syntax removes the function name repetition. However, to supoprt recursion the body cannot be static (to access the member functor variable with the local function name defined by the NAME macro). Therefore the limitation that no compiler error if `this` is used instead of `this_` as a pointer within the body (if not used as pointer, compiler will most likely error because `this` is the functor which has a rather different structure than the user's object `this_`).
+* Docs: The simplified syntax removes the function name repetition. However, to supoprt recursion (and nesting) the body cannot be static (to access the member functor variable with the local function name defined by the NAME macro). Therefore the limitation that no compiler error if `this` is used instead of `this_` as a pointer within the body (if not used as pointer, compiler will most likely error because `this` is the functor which has a rather different structure than the user's object `this_`).
 
 * Docs: `inline` does not apply to local function which are already inlined (because they are defined where they are declared).
 

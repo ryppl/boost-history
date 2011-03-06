@@ -22,6 +22,10 @@ exe add_num_va : add_num_va.cpp ;
 exe add_num_factor_sum : add_num_factor_sum.cpp ;
 exe add_num_factor_sum_va : add_num_factor_sum_va.cpp ;
 
+exe add_num_factor_sum_default : add_num_factor_sum_default.cpp ;
+exe add_num_factor_sum_default_va : add_num_factor_sum_default_va.cpp ;
+exe add_num_factor_sum_with_default_va : add_num_factor_sum_with_default_va.cpp ;
+
 exe add_num_sum : add_num_sum.cpp ;
 exe add_num_sum_va : add_num_sum_va.cpp ;
 
