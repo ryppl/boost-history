@@ -7,7 +7,7 @@
 #ifndef BOOST_LOCAL_AUX_PP_SIGN_PARSE_PARAMS_IS_VOID_HPP_
 #define BOOST_LOCAL_AUX_PP_SIGN_PARSE_PARAMS_IS_VOID_HPP_
 
-#include "../../../config.hpp"
+#include "../../../../config.hpp"
 #include <boost/detail/preprocessor/keyword/void.hpp>
 #include <boost/preprocessor/detail/is_unary.hpp>
 #include <boost/preprocessor/control/iif.hpp>
