@@ -20,7 +20,7 @@
 
 #include <istream>
 
-#define TEST_SPECIFIC(T) TEST_TTR(std::istream, T, std::istream, true)
+#define TEST_SPECIFIC(T) TEST_TTR(std::istream&, T, std::istream&, true)
 namespace {
 
 void specific() {

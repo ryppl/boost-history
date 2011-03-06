@@ -21,7 +21,7 @@
 #include <ostream>
 #include <string>
 
-#define TEST_SPECIFIC(T) TEST_TTR(std::ostream, T, std::ostream, true)
+#define TEST_SPECIFIC(T) TEST_TTR(std::ostream&, T, std::ostream&, true)
 namespace {
 
 void specific() {
