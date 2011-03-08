@@ -1,11 +1,13 @@
 #if !defined(TEST_VM_MF_HAS_TEMPLATE_CHECK_PARAMS_HPP)
 #define TEST_VM_MF_HAS_TEMPLATE_CHECK_PARAMS_HPP
 
+#include <boost/config.hpp>
+
 #if !defined(BOOST_NO_VARIADIC_MACROS)
 
 #include "test_structs.hpp"
 #include <boost/tti/vm_template_params.hpp>
-#include <boost/tti/member_type.hpp>
+#include <boost/tti/mem_type.hpp>
 
 BOOST_TTI_VM_TRAIT_HAS_TEMPLATE_CHECK_PARAMS(HT_Str,MStrMemberTemplate,class)
 BOOST_TTI_VM_HAS_TEMPLATE_CHECK_PARAMS(AnotherMemberTemplate,int,int)

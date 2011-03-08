@@ -1,10 +1,9 @@
-#if !defined(TTI_DETAIL_STATIC_MEMBER_FUNCTION_HPP)
-#define TTI_DETAIL_STATIC_MEMBER_FUNCTION_HPP
+#if !defined(TTI_DETAIL_STATIC_MEM_FUN_HPP)
+#define TTI_DETAIL_STATIC_MEM_FUN_HPP
 
 #include <boost/config.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/type_traits/detail/yes_no_type.hpp>
-#include "dtfunction.hpp"
 
 #if defined(BOOST_NO_NULLPTR)
 
@@ -50,4 +49,4 @@
 
 #endif // defined(BOOST_NO_NULLPTR)
 
-#endif // TTI_DETAIL_STATIC_MEMBER_FUNCTION_HPP
+#endif // TTI_DETAIL_STATIC_MEM_FUN_HPP
