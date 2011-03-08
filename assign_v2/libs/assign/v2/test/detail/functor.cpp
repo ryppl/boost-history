@@ -34,12 +34,12 @@ namespace xxx_functor{
         using namespace boost::assign::v2;
 
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
-#define BOOST_ASSIGN_V2_n BOOST_ASSIGN_V2_CPP03_TUPLE_LIMIT_ARITY
+#define BOOST_ASSIGN_V2_n BOOST_ASSIGN_V2_LIMIT_CPP03_TUPLE_ARITY
 // That's because we are constructing a boost::tuple<>.
 #else
 #define BOOST_ASSIGN_V2_n BOOST_ASSIGN_V2_LIMIT_LVALUE_CONST_ARITY
 
-#if BOOST_ASSIGN_V2_n > BOOST_ASSIGN_V2_CPP03_TUPLE_LIMIT_ARITY
+#if BOOST_ASSIGN_V2_n > BOOST_ASSIGN_V2_LIMIT_CPP03_TUPLE_ARITY
 #error
 #endif
 
