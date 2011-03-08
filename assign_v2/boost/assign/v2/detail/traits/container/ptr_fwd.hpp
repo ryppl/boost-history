@@ -96,4 +96,4 @@ namespace boost{
 
 }// boost
 
-#endif
+#endif // BOOST_ASSIGN_V2_DETAIL_TRAITS_CONTAINER_FWD_PTR_ER_2010_HPP

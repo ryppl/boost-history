@@ -42,4 +42,4 @@ namespace type_traits{
 }// assign
 }// boost
 
-#endif
+#endif // BOOST_ASSIGN_V2_TRAITS_TYPE_HAS_VALUE_TYPE_ER_2010_HPP

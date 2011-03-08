@@ -21,4 +21,4 @@ namespace{
 }// assign
 }// boost
 
-#endif
+#endif // BOOST_ASSIGN_V2_DETAIL_KEYWORD_NIL_ER_2010_HPP

@@ -23,4 +23,4 @@ namespace container_traits{\
 }\
 /**/
 
-#endif
+#endif // BOOST_ASSIGN_V2_TRAITS_CONTAINER_IS

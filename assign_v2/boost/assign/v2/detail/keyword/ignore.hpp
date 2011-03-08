@@ -29,4 +29,4 @@ namespace{
 }// assign
 }// boost
 
-#endif
+#endif // BOOST_ASSIGN_V2_DETAIL_KEYWORD_IGNORE_ER_2010_HPP

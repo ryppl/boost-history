@@ -41,4 +41,4 @@ namespace{
 }// assign
 }// boost
 
-#endif
+#endif // BOOST_ASSIGN_V2_DETAIL_FUNCTOR_POST_INCREMENT_ER_2010_HPP

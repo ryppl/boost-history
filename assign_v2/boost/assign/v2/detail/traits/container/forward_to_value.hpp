@@ -26,4 +26,4 @@ namespace container_traits{
 }// assign
 }// boost
 
-#endif
+#endif // BOOST_ASSIGN_V2_TRAITS_CONTAINER_FWD_TO_VALUE_ER_2010_HPP

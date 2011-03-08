@@ -27,4 +27,4 @@
 #include <boost/assign/v2/detail/traits/container/value.hpp>
 #include <boost/assign/v2/detail/traits/container/value_container.hpp>
 
-#endif
+#endif // BOOST_ASSIGN_V2_TRAITS_CONTAINER_ER_2010_HPP

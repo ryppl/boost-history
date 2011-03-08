@@ -32,4 +32,4 @@ namespace container_traits{
 }// assign
 }// boost
 
-#endif
+#endif // BOOST_ASSIGN_V2_TRAITS_CONTAINER_IS_ASSOCIATIVE_ER_2010_HPP

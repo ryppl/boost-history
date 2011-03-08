@@ -90,4 +90,4 @@ namespace{
 }// assigns
 }// boost
 
-#endif
+#endif // BOOST_ASSIGN_V2_DETAIL_FUNCTOR_IDENTITY_ER_2010_HPP

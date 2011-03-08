@@ -193,4 +193,4 @@ namespace ptr_to_value_aux{
 }// assign
 }// boost
 
-#endif
+#endif // BOOST_ASSIGN_V2_TRAITS_CONTAINER_PTR_TO_VALUE_ER_2010_HPP

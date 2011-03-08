@@ -114,4 +114,4 @@ namespace result_of{
 }// assign
 }// boost
 
-#endif
+#endif // BOOST_ASSIGN_V2_DETAIL_FUNCTOR_CONSTRUCTOR_ER_2010_HPP

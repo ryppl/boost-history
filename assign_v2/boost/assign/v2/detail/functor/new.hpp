@@ -115,4 +115,4 @@ namespace result_of{
 }// assign
 }// boost
 
-#endif
+#endif // BOOST_ASSIGN_V2_DETAIL_FUNCTOR_NEW_ER_2010_HPP
