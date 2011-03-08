@@ -7,6 +7,7 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
+/*
 #include <string>
 #include <boost/ptr_container/ptr_array.hpp>
 #include <boost/ptr_container/ptr_deque.hpp>
@@ -16,7 +17,7 @@
 #include <boost/ptr_container/ptr_vector.hpp>
 #include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/put/container/functor.hpp>
-
+*/
 #include <libs/assign/v2/test/put/ptr.h>
 
 namespace test_assign_v2{
@@ -24,6 +25,8 @@ namespace xxx_put{
 namespace xxx_ptr{
 
     void test(){
+// TODO         
+/*
         namespace as2 = boost::assign::v2;
         {
             //[put_ptr_array
@@ -33,28 +36,7 @@ namespace xxx_ptr{
             BOOST_ASSIGN_V2_CHECK( cont[0] == x );
             BOOST_ASSIGN_V2_CHECK( cont[2] == z );
             //]
-            
         }
-/*
-        // These are not yet available (TODO)
-        {
-            //[put_ptr_map
-            boost::ptr_map<std::string, int> assoc;
-            as2::put( assoc )( "jan", 31 )( "feb", 28 )( "mar", 31 );
-            BOOST_ASSIGN_V2_CHECK( assoc["feb"] == 28 );
-            //]
-        }
-        {
-            //[put_ptr_set
-            typedef std::string T;
-            boost::ptr_set<T> assoc;
-            T x = "isomer", y = "ephemeral", z = "prosaic";
-            as2::put( assoc )( x )( y )( z );
-            BOOST_ASSIGN_V2_CHECK( assoc.count( x ) == 1 );
-            BOOST_ASSIGN_V2_CHECK( assoc.count( z ) == 1 );
-            //]
-        }
-*/
         {
             //[put_ptr_deque
             typedef int T; T x = 1, y = 2, z = 0; boost::ptr_deque<T> cont;
@@ -79,7 +61,29 @@ namespace xxx_ptr{
             BOOST_ASSIGN_V2_CHECK( cont.back() == z );
             //]
         }
+*/            
 
+
+/*
+        // These are not yet available (TODO)
+        {
+            //[put_ptr_map
+            boost::ptr_map<std::string, int> assoc;
+            as2::put( assoc )( "jan", 31 )( "feb", 28 )( "mar", 31 );
+            BOOST_ASSIGN_V2_CHECK( assoc["feb"] == 28 );
+            //]
+        }
+        {
+            //[put_ptr_set
+            typedef std::string T;
+            boost::ptr_set<T> assoc;
+            T x = "isomer", y = "ephemeral", z = "prosaic";
+            as2::put( assoc )( x )( y )( z );
+            BOOST_ASSIGN_V2_CHECK( assoc.count( x ) == 1 );
+            BOOST_ASSIGN_V2_CHECK( assoc.count( z ) == 1 );
+            //]
+        }
+*/
     }// test
 
 }// xxx_ptr
