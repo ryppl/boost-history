@@ -164,8 +164,12 @@ BOOST_PP_REPEAT_FROM_TO(
     };
 
 }// put_pipe_aux
+
+    put_pipe_aux::csv_generator<> const _csv_put
+        = put_pipe_aux::csv_generator<>();
+
 }// v2
 }// assign
 }// boost
 
-#endif // BOOST_ASSIGN_V2_PUT_PIPE_CSV_CONTAINER_HPP_ER_2010
+#endif // BOOST_ASSIGN_V2_PUT_PIPE_CSV_GENERATOR_HPP_ER_2010

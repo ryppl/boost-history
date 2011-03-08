@@ -9,7 +9,8 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_PUT_PIPE_CSV_OPERATOR_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_PIPE_CSV_OPERATOR_ER_2010_HPP
-#include <boost/assign/v2/put/pipe/modulo/forward.hpp>
+//#include <boost/assign/v2/put/pipe/modulo/forward.hpp>
+#include <boost/assign/v2/ref/array/as_arglist.hpp>
 #include <boost/assign/v2/put/pipe/csv/rhs.hpp>
 #include <boost/assign/v2/put/pipe/csv/size_type.hpp>
 #include <boost/assign/v2/put/pipe/csv/forward.hpp>
@@ -24,7 +25,7 @@ namespace put_pipe_aux{
         typename Pars, csv_size_type N, typename U>
     C& operator|(C& cont, put_pipe_aux::csv_rhs<Pars, N, U> const& c){
 
-        csv_forward(
+		v2::ref::as_arglist(
             forward_pars<Pars>(
                 put( cont ),
                 c.pars()
@@ -40,4 +41,4 @@ namespace put_pipe_aux{
 }// assign
 }// boost
 
-#endif
+#endif // BOOST_ASSIGN_V2_PUT_PIPE_CSV_OPERATOR_ER_2010_HPP

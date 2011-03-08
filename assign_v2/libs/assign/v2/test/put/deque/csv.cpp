@@ -23,17 +23,26 @@ namespace xxx_csv{
         namespace as2 = boost::assign::v2;
         {
             //[csv_deque
-            typedef int T; T x = 1, y = 2, z = 0;
-            as2::result_of::deque<T>::type cont = as2::csv_deque( x, y, z );
-            BOOST_ASSIGN_V2_CHECK( cont.front() == x );
-            BOOST_ASSIGN_V2_CHECK( cont.back() == z );
+            typedef as2::result_of::csv_deque<int>::type C;
+            {
+            	C cont = as2::csv_deque( 72, 31, 48 );
+
+            	BOOST_ASSIGN_V2_CHECK( cont.front() == 72 );
+            	BOOST_ASSIGN_V2_CHECK( cont.back() == 48 );
+            }
+            {
+            	C cont = as2::csv_deque( 72, 31 )/* This oddity is possible due to `result_of::csv_deque<int>::type == result_of::deque<int>::type`*/( 48 );
+            
+            	BOOST_ASSIGN_V2_CHECK( cont.front() == 72 );
+            	BOOST_ASSIGN_V2_CHECK( cont.back() == 48 );
+			}
             //]
         }
         {
-            //[deque_str
+            //[csv_deque_str
             typedef std::string str_;
             BOOST_ASSIGN_V2_CHECK(
-                str_( as2::csv_deque( "x" )( "y" )( "z" )[1] ) == "y"
+                str_( as2::csv_deque( "x", "y", "z" )[1] ) == "y"
             );
             //]
         }

@@ -94,11 +94,11 @@ namespace list_tuple_aux{
         struct apply : NewState::template result<params(T)>{};
     };
 
-    template<list_tuple_aux::get_size_type N,
+    template<list_size_type N,
         typename L, params_default(typename T, na_type)>
     class container;
 
-    template<list_tuple_aux::get_size_type N, typename L,
+    template<list_size_type N, typename L,
         params_default(typename T, na_type)
     >
     struct meta_result
@@ -118,7 +118,7 @@ namespace list_tuple_aux{
 
     };
 
-    template<list_tuple_aux::get_size_type N, typename L,
+    template<list_size_type N, typename L,
         params_default(typename T, na_type)>
     struct traits
     {
@@ -137,7 +137,7 @@ namespace list_tuple_aux{
         >::type link_;
     };
 
-    template<list_tuple_aux::get_size_type N, typename L, params(typename T)>
+    template<list_size_type N, typename L, params(typename T)>
     class container :
         public list_tuple_aux::traits<N, L, params(T)>::link_,
         public list_tuple_aux::traits<N, L, params(T)>::crtp_,
@@ -155,9 +155,9 @@ namespace list_tuple_aux{
         tuple_ const& get_tuple()const{ return this->tuple; }
         link_ const& get_link()const{ return (*this); }
 
-        typedef list_tuple_aux::get_size_type get_size_type;
+        typedef list_tuple_aux::list_size_type list_size_type;
         typedef list_tuple_aux::tuple_size_type tuple_size_type;
-        BOOST_STATIC_CONSTANT( get_size_type, static_get_size = N );
+        BOOST_STATIC_CONSTANT( list_size_type, static_get_size = N );
         BOOST_STATIC_CONSTANT(
             tuple_size_type,
             static_tuple_size = ::boost::tuples::length<tuple_>::value

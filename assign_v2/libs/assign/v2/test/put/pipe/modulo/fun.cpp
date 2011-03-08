@@ -8,7 +8,7 @@
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
 #include <vector>
-#include <boost/lambda/lambda.hpp>
+#include <boost/spirit/home/phoenix.hpp>
 #include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/put/modulo/fun.hpp>
 #include <boost/assign/v2/put/pipe/functor.hpp>
@@ -24,31 +24,29 @@ namespace xxx_fun{
     void test()
     {
         namespace as2 = boost::assign::v2;
-        namespace lambda = boost::lambda;
+        namespace lambda = boost::phoenix;
         {
-            //[put_pipe_functor_fun
-            typedef int T; T x = 1, y = 2, z = 0; std::vector<T> cont;
-
-            BOOST_ASSIGN_V2_CHECK(
-                (
-                    cont | (
-                        as2::_put % ( as2::_fun = ( lambda::_1 + 1 ) )
-                    )( x )( y )( z )
-                ).front() == ( x + 1 ) );
-            BOOST_ASSIGN_V2_CHECK( cont.back() == ( z + 1 ) );
+            //[pipe_modulo_fun
+            typedef int int_; std::vector<int_> incr_fact;
+            int_ front = ( 
+            	incr_fact | ( as2::_put % ( as2::_fun = lambda::arg_names::arg1 + 1 ) )/*<<1!, 2!, 3!, 4!, 5!>>*/( 1 )( 2 )( 6 )( 24 )( 120 ) 
+            ).front(); 
+		
+            BOOST_ASSIGN_V2_CHECK( front == 2  );
+            BOOST_ASSIGN_V2_CHECK( incr_fact.back() == 121 );
             //]
         }
         {
-            //[put_pipe_csv_fun
-            typedef int T; T x = 1, y = 2, z = 0; std::vector<T> cont;
-            BOOST_ASSIGN_V2_CHECK(
-                (
-                    cont | ( as2::_csv_put % ( as2::_fun = ( lambda::_1 + 1 ) )
-                )( x, y, z ) ).front() == ( x + 1 )
-            );
-            BOOST_ASSIGN_V2_CHECK( cont.back() == ( z + 1 ) );
+            //[csv_pipe_modulo_fun
+            typedef int int_; std::vector<int_> incr_fact;
+            int_ front = ( 
+            	incr_fact | ( as2::_csv_put % ( as2::_fun = lambda::arg_names::arg1 + 1 ) )/*<<1!, 2!, 3!, 4!, 5!>>*/( 1, 2, 6, 24, 120 ) 
+            ).front(); 
+		
+            BOOST_ASSIGN_V2_CHECK( front == 2 );
+            BOOST_ASSIGN_V2_CHECK( incr_fact.back() == 121 );
             //]
-        }
+		}
     }
 
 }// xxx_fun

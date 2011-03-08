@@ -11,10 +11,9 @@
 #include <boost/mpl/vector/vector10.hpp>
 #include <boost/assign/v2/detail/functor/identity.hpp>
 #include <boost/assign/v2/detail/config/check.hpp>
-#include <boost/assign/v2/put/std/push_front.hpp>
 #include <boost/assign/v2/put/container.hpp>
 #include <boost/assign/v2/put/modulo/fun.hpp>
-#include <boost/assign/v2/put/modulo/std.hpp>
+#include <boost/assign/v2/put/modifier/push_front.hpp>
 #include <boost/assign/v2/put/pipe/functor.hpp>
 #include <boost/assign/v2/put/pipe/modulo/forward.hpp>
 
@@ -28,27 +27,25 @@ namespace xxx_forward{
 
     void test()
     {
-        using namespace  boost::assign::v2;
-        typedef std::list<int> C; C cont;
-        typedef modifier_tag::push_front modifier_tag_;
-        typedef functor_aux::identity identity_;
-        typedef put_aux::modulo_fun<identity_> fun_;
-        typedef put_aux::modulo_std<modifier_tag_> modifier_;
-        typedef boost::mpl::vector2<fun_, modifier_> pars_;
-        typedef int T;
-        T x = 1, y = 2, z = 3;
-        put_pipe_aux::forward_pars<pars_>(
-            put( cont ),
-            (
-                _put %  (
-                    _fun = _identity
-                ) % ( _std = modifier_tag_() )
-            ).pars()
-        )( x )( y )( z );
+        namespace as2 = boost::assign::v2;
+        typedef int T; typedef std::list<T> C; C cont;
+        
+        typedef as2::functor_aux::identity f_;
+        typedef as2::put_aux::modulo_fun<f_> par1_;
+        typedef as2::put_aux::modulo_modifier<
+        	as2::put_aux::keyword_modifier, 
+            as2::modifier_tag::push_front
+        > par2_;
+        typedef ::boost::mpl::vector2<par1_, par2_> pars_;
+        
+        as2::put_pipe_aux::forward_pars<pars_>(
+            as2::put( cont ),
+            ( as2::_put %  ( as2::_fun = as2::_identity ) % ( as2::_push_front ) ).pars()
+        )( 1 )( 2 )( 3 );
         BOOST_ASSIGN_V2_CHECK( cont.size() == 3 );
-        BOOST_ASSIGN_V2_CHECK( cont.front() == z ); cont.pop_front();
-        BOOST_ASSIGN_V2_CHECK( cont.front() == y ); cont.pop_front();
-        BOOST_ASSIGN_V2_CHECK( cont.front() == x ); cont.pop_front();
+        BOOST_ASSIGN_V2_CHECK( cont.front() == 3 ); cont.pop_front();
+        BOOST_ASSIGN_V2_CHECK( cont.front() == 2 ); cont.pop_front();
+        BOOST_ASSIGN_V2_CHECK( cont.front() == 1 ); cont.pop_front();
     }
 
 }// xxx_forward

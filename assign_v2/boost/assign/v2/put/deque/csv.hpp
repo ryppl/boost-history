@@ -10,6 +10,7 @@
 #ifndef BOOST_ASSIGN_V2_PUT_DEQUE_CSV_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_DEQUE_CSV_ER_2010_HPP
 #include <boost/type_traits/decay.hpp>
+#include <boost/type_traits/remove_cv.hpp>
 #include <boost/assign/v2/detail/keyword/nil.hpp>
 #include <boost/assign/v2/put/deque/cont.hpp>
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
@@ -27,6 +28,17 @@
 namespace boost{
 namespace assign{
 namespace v2{
+namespace result_of{
+
+	template<typename /*<<First argument>>*/T>
+    struct csv_deque : result_of::deque<
+        typename boost::decay<
+        	typename boost::remove_cv<T>::type
+        >::type
+    >{};
+
+
+}// result_of
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 namespace put_csv_deque_aux{
 

@@ -16,8 +16,8 @@ namespace v2{
 namespace ref{
 namespace list_tuple_aux{
 
+    typedef int list_size_type;
     typedef int tuple_size_type;
-    typedef int get_size_type;
 
 }// list_tuple_aux
 }// ref

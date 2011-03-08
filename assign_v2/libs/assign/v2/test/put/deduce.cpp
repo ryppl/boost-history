@@ -44,7 +44,7 @@ namespace xxx_deduce{
             as2::put_aux::check_deduce<boost::ptr_vector<int>, answer_>();
         }
         {
-            typedef as2::modifier_tag::iterate answer_;
+            typedef as2::modifier_tag::iterate<> answer_;
             as2::put_aux::check_deduce<boost::array<int, 1>, answer_>();
             as2::put_aux::check_deduce<boost::ptr_array<int, 1>, answer_>();
         }

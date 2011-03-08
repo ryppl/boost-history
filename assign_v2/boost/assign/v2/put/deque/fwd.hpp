@@ -13,9 +13,9 @@
 namespace boost{
 namespace assign{
 namespace v2{
-namespace put_deque_aux{
+namespace put_aux{
 
-    template<typename T, typename F, typename Tag> class cont;
+    template<typename T, typename F, typename Tag> class deque_cont;
 
 }// put_deque_aux
 }// v2

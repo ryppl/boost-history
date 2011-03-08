@@ -11,7 +11,9 @@
 #define BOOST_ASSIGN_V2_PUT_PIPE_FUNCTOR_OPERATOR_ER_2010_HPP
 #include <boost/assign/v2/put/pipe/modulo/forward.hpp>
 #include <boost/assign/v2/put/pipe/functor/rhs.hpp>
-#include <boost/assign/v2/put/pipe/functor/forward.hpp>
+//#include <boost/assign/v2/put/pipe/functor/forward.hpp>
+#include <boost/assign/v2/ref/tuple/cpp03/as_arglist.hpp> // ?
+#include <boost/assign/v2/ref/list_tuple/cpp03/as_arglist.hpp>
 #include <boost/assign/v2/put/container/functor.hpp>
 
 namespace boost{
@@ -29,7 +31,8 @@ namespace put_pipe_aux{
         C& cont,
         put_pipe_aux::rhs<Pars, SeqArgs, enable_pars> const& c
     ){
-        forward(
+		v2::ref::as_arglist(
+        //forward(
             forward_pars<Pars>(
                 put( cont ),
                 c.pars()

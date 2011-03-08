@@ -7,7 +7,6 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#include <libs/assign/v2/test/put/pipe/functor/forward.h>
 #include <libs/assign/v2/test/put/pipe/functor/rhs.h>
 #include <libs/assign/v2/test/put/pipe/functor/str_literal.h>
 #include <libs/assign/v2/test/put/pipe/functor.h>
@@ -18,7 +17,6 @@ namespace xxx_pipe{
 namespace xxx_functor{
 
     void test(){
-        xxx_forward::test();
         xxx_rhs::test();
         xxx_str_literal::test();
     }

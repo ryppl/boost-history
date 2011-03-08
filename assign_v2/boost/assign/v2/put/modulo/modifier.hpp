@@ -10,20 +10,9 @@
 #ifndef BOOST_ASSIGN_V2_PUT_MODULO_MODIFIER_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_MODULO_MODIFIER_ER_2010_HPP
 
-namespace boost{
-namespace assign{
-namespace v2{
-//[result_of_modulo_modifier
-namespace result_of_modulo{
-
-    template<typename /*<<Inherits from put_aux::crtp\<\>>>*/D> struct /*<<Specialize on D>>*/modifier{
-        template<typename Tag> struct apply{};
-    };
-
-}// result_of_modulo
-//]
-}// v2
-}// assign
-}// boost
+#include <boost/assign/v2/put/modulo/modifier/keyword.hpp>
+#include <boost/assign/v2/put/modulo/modifier/meta.hpp>
+#include <boost/assign/v2/put/modulo/modifier/make.hpp>
+#include <boost/assign/v2/put/modulo/modifier/standard.hpp>
 
 #endif

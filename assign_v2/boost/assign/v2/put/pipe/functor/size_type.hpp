@@ -16,7 +16,7 @@ namespace assign{
 namespace v2{
 namespace put_pipe_aux{
 
-    typedef ref::list_tuple_aux::get_size_type size_type;
+    typedef ref::list_tuple_aux::list_size_type size_type;
 
 }// put_pipe_aux
 }// v2

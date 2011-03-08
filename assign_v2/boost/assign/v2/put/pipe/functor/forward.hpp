@@ -12,9 +12,9 @@
 
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
-#include <boost/assign/v2/put/pipe/functor/cpp0x/forward.hpp>
+//#include <boost/assign/v2/put/pipe/functor/cpp0x/forward.hpp>
 #else
-#include <boost/assign/v2/put/pipe/functor/cpp03/forward.hpp>
+//#include <boost/assign/v2/put/pipe/functor/cpp03/forward.hpp>
 #endif
 
 #endif // BOOST_ASSIGN_V2_ADAPTOR_FUNCTOR_FORWARD_ER_2010_HPP

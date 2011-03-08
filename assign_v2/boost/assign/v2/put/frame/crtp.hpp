@@ -16,8 +16,9 @@
 #include <boost/assign/v2/detail/traits/container/is_ptr_container.hpp>
 #include <boost/assign/v2/put/frame/fwd.hpp>
 #include <boost/assign/v2/put/frame/modifier.hpp>
-#include <boost/assign/v2/put/modulo/fun.hpp>
-#include <boost/assign/v2/put/deduce/fun.hpp>
+
+//#include <boost/assign/v2/put/modulo/fun.hpp>
+//#include <boost/assign/v2/put/deduce/fun.hpp>
 
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
@@ -26,6 +27,7 @@
 #include <boost/preprocessor/arithmetic.hpp>
 #include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/repetition.hpp>
+#include <boost/assign/v2/detail/functor/crtp_unary_and_up.hpp>
 #include <boost/assign/v2/detail/config/limit_csv_arity.hpp>
 #include <boost/assign/v2/detail/config/limit_arity.hpp>
 
@@ -143,29 +145,22 @@ BOOST_PP_REPEAT_FROM_TO(
 )
 #undef BOOST_ASSIGN_V2_MACRO
 #endif
+		// must be mutable
         C& container()const{ return this->derived().container(); }
 
+// TODO remove
+/*
         struct result_of_modulo{
 
             struct deduce
             {
                 typedef typename put_aux::deduce_fun<C>::type f_;
-                typedef v2::result_of_modulo::fun<D> meta_;
+                typedef v2::result_of::modulo_fun<D> meta_;
                 typedef typename ::boost::mpl::apply1<meta_, f_>::type type;
             };
 
         };
-
-        typename result_of_modulo::deduce::type
-        modulo_deduce()const
-        {
-            typedef typename put_aux::deduce_fun<C>::type f_;
-            typedef typename result_of_modulo::deduce::type result_;
-            return result_(
-                this->derived().container(),
-                f_()
-            );
-        }
+*/
 
         protected:
 
@@ -184,7 +179,7 @@ BOOST_PP_REPEAT_FROM_TO(
         }
 
         template<typename T>
-        void check_modifier( BOOST_ASSIGN_V2_forward_param(T, t) )const
+        void check_modifier( BOOST_ASSIGN_V2_FORWARD_PARAM(T, t) )const
         {
             typedef put_concept::Modifier<Tag, C,
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X

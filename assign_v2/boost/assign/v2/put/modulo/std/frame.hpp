@@ -1,3 +1,5 @@
+// TODO remove file
+/*
 //////////////////////////////////////////////////////////////////////////////
 //  Boost.Assign v2                                                         //
 //                                                                          //
@@ -25,7 +27,7 @@ namespace put_aux{
     struct modulo_std
     {
         modulo_std(){}
-        modulo_std(Tag const& t) : modifier_tag( t ){}
+        modulo_std(Tag const& t){}// : modifier_tag( t ){}
         Tag modifier_tag;
     };
 
@@ -43,7 +45,7 @@ namespace put_aux{
         return result_(
             lhs.container(),
             lhs.fun,
-            modifier_( rhs.modifier_tag )
+            modifier_() // rhs.modifier_tag )
         );
     }
 
@@ -65,3 +67,4 @@ namespace{
 }// boost
 
 #endif
+*/

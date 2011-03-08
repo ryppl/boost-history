@@ -12,7 +12,7 @@
 #include <boost/typeof/typeof.hpp>
 #include <boost/assign/v2/detail/check/equal_val.hpp>
 #include <boost/assign/v2/detail/check/equal_ref.hpp>
-#include <boost/assign/v2/put/ext/repeat.hpp>
+#include <boost/assign/v2/put/modifier/repeat.hpp>
 #include <boost/assign/v2/put/pipe/functor.hpp> // rhs?
 #include <boost/assign/v2/utility/csv.hpp>
 #include <libs/assign/v2/test/put/pipe/functor/rhs.h>

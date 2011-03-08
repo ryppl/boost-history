@@ -27,7 +27,8 @@ namespace put_range_aux
 
         helper1(R const& range) : super_t( range ){}
 
-        R const& range()const{ return this->get(); }
+        typename super_t::result_of_get_type 
+        range()const{ return this->get(); }
 
         private:
         helper1();

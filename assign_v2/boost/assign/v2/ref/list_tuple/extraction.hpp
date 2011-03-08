@@ -22,7 +22,7 @@ namespace v2{
 namespace ref{
 namespace list_tuple_aux{
 
-    template<list_tuple_aux::get_size_type N,
+    template<list_size_type N,
         typename L, typename T, typename D>
     class extraction
     {
@@ -36,13 +36,13 @@ namespace list_tuple_aux{
 
         public:
 
-        template<list_tuple_aux::get_size_type I>
+        template<list_size_type I>
         struct is_head : ::boost::mpl::bool_< I + 1 == N >{};
 
-        template<list_tuple_aux::get_size_type I>
+        template<list_size_type I>
         struct link_get_result : L::template get_result<I>{};
 
-        template<list_tuple_aux::get_size_type I>
+        template<list_size_type I>
         struct get_result : ::boost::mpl::eval_if<
             is_head<I>,
             ::boost::mpl::identity<
@@ -51,7 +51,7 @@ namespace list_tuple_aux{
             link_get_result<I>
         >{};
 
-        template<list_tuple_aux::get_size_type I>
+        template<list_size_type I>
         typename boost::lazy_enable_if<
             is_head<I>,
             get_result<I>
@@ -61,7 +61,7 @@ namespace list_tuple_aux{
             return this->derived().get_tuple();
         }
 
-        template<list_tuple_aux::get_size_type I>
+        template<list_size_type I>
         typename boost::lazy_disable_if<
             is_head<I>,
             get_result<I>

@@ -8,6 +8,8 @@
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)      //
 ////////////////////////////////////////////////////////////////////////////
 #include <string>
+#include <boost/array.hpp>
+#include <boost/tuple/tuple.hpp>
 #include <boost/assign/v2/put/deque/csv.hpp>
 #include <boost/assign/v2/put/deque/functor.hpp>
 #include <boost/assign/v2/detail/config/check.hpp>
@@ -23,15 +25,22 @@ namespace xxx_functor{
     {
         namespace as2 = boost::assign::v2;    
         {
-            //[put_deque_functor
-            typedef int T; T x = 1, z = 0;
-            as2::result_of::deque<T>::type cont = as2::deque<T>/*<<T( x ), T(), T( z )>>*/( x )()( z );
+            //[deque_ref_tuple
+            typedef const char state_ [3]; state_ ct = "CT", nj = "NJ", ny = "NY";
+            typedef int code_; typedef boost::tuple<state_/*<<Notice the reference>>*/&,  code_> area_code_; 
+            typedef as2::result_of::deque<area_code_>::type states_;
+            states_ tri_state = as2::deque<area_code_>( nj, 201 )( ct, 203 )( ny, 212 );
 
-            BOOST_ASSIGN_V2_CHECK( cont.front() == x ); T t1 = T();
-            BOOST_ASSIGN_V2_CHECK( cont[1] == t1 );
-            BOOST_ASSIGN_V2_CHECK( cont.back() == z );
+			using namespace boost;
+            BOOST_ASSIGN_V2_CHECK( get<0>( tri_state.front() ) == nj );
+            BOOST_ASSIGN_V2_CHECK( get<1>( tri_state.front() ) == 201 );
+
+			states_ tri_state2 = tri_state( ny, 315 )( ny, 347 )( nj, 551 );
+
+            BOOST_ASSIGN_V2_CHECK( get<0>( tri_state2.back()  ) == nj );
+            BOOST_ASSIGN_V2_CHECK( get<1>( tri_state2.back()  ) == 551 );
             //]
-        }
+		}
         {
         	//[deque_str
             typedef std::string str_;

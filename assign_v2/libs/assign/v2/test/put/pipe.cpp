@@ -8,7 +8,7 @@
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
 #include <libs/assign/v2/test/put/pipe/functor.h>
-#include <libs/assign/v2/test/put/pipe/container.h>
+#include <libs/assign/v2/test/put/pipe/modifier.h>
 #include <libs/assign/v2/test/put/pipe/modulo.h>
 #include <libs/assign/v2/test/put/pipe/range.h>
 #include <libs/assign/v2/test/put/pipe.h>
@@ -19,7 +19,7 @@ namespace xxx_pipe{
 
     void test(){
         xxx_functor::test();
-        xxx_container::test();
+        xxx_modifier::test();
         xxx_modulo::test();
         xxx_range::test();
     }

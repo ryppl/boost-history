@@ -10,7 +10,7 @@
 #include <vector>
 #include <deque>
 #include <boost/typeof/typeof.hpp>
-#include <boost/lambda/lambda.hpp>
+#include <boost/spirit/home/phoenix.hpp>
 #include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/put/container.hpp>
 #include <boost/assign/v2/put/deque.hpp>
@@ -22,47 +22,70 @@ namespace xxx_put{
 namespace xxx_modulo{
 namespace xxx_fun{
 
+#ifdef __llvm__ 
+
+    struct f{
+        
+        typedef int result_type;
+        
+        template<typename T>
+        result_type operator()(T const& i)const{ return i + 1; };
+        
+    };
+    
     void test()
     {
         namespace as2 = boost::assign::v2;
-        namespace lambda = boost::lambda;
         {
-            //[put_cont_modulo_fun
-            typedef int T; T x = 1, y = 2, z = 0;
-            std::vector<int> cont;
-
-            // TODO fix BUG >
+            std::vector<int> incr_fact;
             (
-                as2::put( cont ) % ( as2::_fun = ( lambda::_1 + 1 ) )
-            )( x )( y )( z ); 
-            // < LLVM 1.5 - Release mode, EXC_BAD_ACCESS, stl_vector.h #602
-            // not for only ( x )!
+             as2::put( cont ) % ( as2::_fun = f() )
+             )( 1 )( 2 )( 6 )( 24 )( 120 ); 
+            
+            BOOST_ASSIGN_V2_CHECK( incr_fact.front() == ( 2 ) );
+            BOOST_ASSIGN_V2_CHECK( incr_fact.back() == ( 121 ) );
+            // TODO fix Bug :
+            // LLVM 1.5 - Release mode, EXC_BAD_ACCESS, stl_vector.h #602
+        }        
+        
+    }
+    
+#else
 
-            //BOOST_ASSIGN_V2_CHECK( cont.front() == ( x + 1 ) );
-            //BOOST_ASSIGN_V2_CHECK( cont.back() == ( z + 1 ) );
+    void test()
+    {
+        namespace as2 = boost::assign::v2;
+        namespace lambda = boost::phoenix;
+        {
+            //[modulo_fun
+            std::vector<int> incr_fact;
+            (
+            	as2::put( incr_fact ) % ( as2::_fun = lambda::arg_names::arg1 + 1 )
+            )/*<<1!, 2!, 3!, 4!, 5!>>*/( 1 )( 2 )( 6 )( 24 )( 120 ); 
+
+            BOOST_ASSIGN_V2_CHECK( incr_fact.front() == ( 2 ) );
+            BOOST_ASSIGN_V2_CHECK( incr_fact.back() == ( 121 ) );
             //]
         }
-        
-// TODO uncomment when bug above is fixed
-/*        
         {
-            //[put_deque_modulo_fun
-            typedef int T; T x = 1, y = 2, z = 0;
+            //[modulo_fun_deque
             BOOST_AUTO(
-                cont, (
-                    as2::deque<T>( as2::_nil ) % (
-                        as2::_fun = ( lambda::_1 + 1 )
+                incr_fact, (
+                    as2::deque<int>( as2::_nil ) % (
+                        as2::_fun = ( lambda::arg_names::arg1 + 1 )
                     )
-                )( x )( y )( z )
+                )/*<<1!, 2!, 3!, 4!, 5!>>*/( 1 )( 2 )( 6 )( 24 )( 120 )
             );
 
-            BOOST_ASSIGN_V2_CHECK( cont.front() == ( x + 1 ) );
-            BOOST_ASSIGN_V2_CHECK( cont.back() == ( z + 1 ) );
+            BOOST_ASSIGN_V2_CHECK( incr_fact.front() == ( 2 ) );
+            BOOST_ASSIGN_V2_CHECK( incr_fact.back() == ( 121 ) );
             //]
         }
- */
 
     }
+
+#endif
+
 
 }// xxx_fun
 }// xxx_modulo

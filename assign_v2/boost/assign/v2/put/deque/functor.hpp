@@ -14,7 +14,9 @@
 #include <boost/type_traits/remove_cv.hpp>
 #include <boost/assign/v2/detail/keyword/nil.hpp>
 #include <boost/assign/v2/put/deque/cont.hpp>
-#include <boost/assign/v2/put/container/functor.hpp>
+#include <boost/assign/v2/put/deduce/fun.hpp>
+#include <boost/assign/v2/put/deduce/modifier_tag.hpp>
+#include <boost/assign/v2/put/deduce/modifier_dependee.hpp>
 
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 #include <utility>
@@ -24,9 +26,7 @@
 #include <boost/preprocessor/seq.hpp>
 #include <boost/assign/v2/detail/config/limit_arity.hpp>
 #include <boost/assign/v2/detail/config/limit_lvalue_const_arity.hpp>
-#include <boost/assign/v2/detail/pp/args.hpp>
-#include <boost/assign/v2/detail/pp/params.hpp>
-#include <boost/assign/v2/detail/pp/seq.hpp>
+#include <boost/assign/v2/detail/pp/parameter_list.hpp>
 #endif
 
 namespace boost{
@@ -38,11 +38,10 @@ namespace result_of{
     struct deque
     {
         typedef typename boost::remove_cv<T>::type t_;
-        typedef typename put_deque_aux::impl<t_>::type cont_;
-        typedef result_of::put<cont_> traits_;
-        typedef typename traits_::f_ f_;
-        typedef typename traits_::modifier_tag_ modifier_tag_;
-        typedef put_deque_aux::cont<t_,f_,modifier_tag_> type;
+        typedef typename put_aux::deque_impl<t_>::type impl_;
+        typedef typename put_aux::deduce_fun<impl_>::type f_;
+        typedef typename put_aux::deduce_modifier_tag<impl_>::type modifier_tag_;
+        typedef put_aux::deque_cont<t_,f_,modifier_tag_> type;
     };
 
 }// result_of
@@ -72,17 +71,17 @@ namespace result_of{
     }
 
 #define BOOST_ASSIGN_V2_MACRO1(r, SeqU) \
-    template<typename T, BOOST_ASSIGN_V2_decl_params(SeqU)> \
+    template<typename T, BOOST_ASSIGN_V2_TPL_PARAMETER_LIST(SeqU)> \
     typename result_of::deque<T>::type\
-    deque( BOOST_ASSIGN_V2_decl_args(SeqU) ){ \
+    deque( BOOST_ASSIGN_V2_PARAMETER_LIST(SeqU, _) ){ \
         return deque<T>(v2::_nil)( \
-            BOOST_ASSIGN_V2_args(SeqU) \
+            BOOST_ASSIGN_V2_ARG_LIST(SeqU, _) \
         ); \
     } \
 /**/
 #define BOOST_ASSIGN_V2_MACRO2(z, n, data) BOOST_PP_SEQ_FOR_EACH_PRODUCT(\
     BOOST_ASSIGN_V2_MACRO1, \
-    BOOST_PP_SEQ_FIRST_N(BOOST_PP_INC(n), BOOST_ASSIGN_V2_SEQ)\
+    BOOST_PP_SEQ_FIRST_N(BOOST_PP_INC(n), BOOST_ASSIGN_V2_SEQ_TPL_BINARY_ARG_LIST)\
 ) \
 /**/
 BOOST_PP_REPEAT(

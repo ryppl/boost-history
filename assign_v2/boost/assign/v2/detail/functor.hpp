@@ -14,5 +14,6 @@
 #include <boost/assign/v2/detail/functor/constructor.hpp>
 #include <boost/assign/v2/detail/functor/identity.hpp>
 #include <boost/assign/v2/detail/functor/new.hpp>
+#include <boost/assign/v2/detail/functor/post_increment.hpp>
 
 #endif

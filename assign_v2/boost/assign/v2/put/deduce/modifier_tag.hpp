@@ -17,7 +17,10 @@
 #include <boost/assign/v2/detail/traits/container/has_push.hpp>
 #include <boost/assign/v2/detail/traits/container/is_associative.hpp>
 
-#include <boost/assign/v2/put/deduce/fwd.hpp>
+#include <boost/assign/v2/put/modifier/insert/tag.hpp>
+#include <boost/assign/v2/put/modifier/iterate/tag.hpp>
+#include <boost/assign/v2/put/modifier/push/tag.hpp>
+#include <boost/assign/v2/put/modifier/push_back/tag.hpp>
 
 namespace boost{
 namespace assign{
@@ -37,7 +40,7 @@ namespace switch_aux{
     template<>
     struct case_<switch_tag::deduce_put, 1> :
         switch_aux::helper<
-            v2::modifier_tag::iterate,
+            v2::modifier_tag::iterate<>,
             v2::container_traits::is_array
         >{};
 

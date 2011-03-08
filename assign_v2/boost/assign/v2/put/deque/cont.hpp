@@ -17,27 +17,27 @@
 #include <boost/range/size_type.hpp>
 
 #include <boost/assign/v2/put/frame/crtp.hpp>
+#include <boost/assign/v2/put/frame/modifier.hpp>
 #include <boost/assign/v2/put/deque/fwd.hpp>
-#include <boost/assign/v2/put/deque/modulo.hpp>
 
 namespace boost{
 namespace assign{
 namespace v2{
-namespace put_deque_aux{
+namespace put_aux{
 
     template<typename T>
-    struct impl{ typedef std::deque<T> type; };
+    struct deque_impl{ typedef std::deque<T> type; };
 
     template<typename T, typename F, typename Tag>
-    class cont :
+    class deque_cont :
         public put_aux::crtp<
-            typename put_deque_aux::impl<T>::type, F, Tag,
-            cont<T, F, Tag>
+            typename put_aux::deque_impl<T>::type, F, Tag,
+            deque_cont<T, F, Tag>
         >
     {
-        typedef typename put_deque_aux::impl<T>::type impl_;
+        typedef typename deque_impl<T>::type impl_;
         typedef impl_ const cimpl_;
-        typedef put_aux::crtp<impl_, F, Tag, cont> put_crtp_;
+        typedef put_aux::crtp<impl_, F, Tag, deque_cont> put_crtp_;
 
         typedef put_aux::modifier<Tag> modifier_;
 
@@ -49,14 +49,14 @@ namespace put_deque_aux{
         typedef typename boost::range_iterator<cimpl_>::type const_iterator;
 
         // Construct
-        cont(){}
-        explicit cont(const F& f) : put_crtp_( f ){}
-        explicit cont(impl_ const& v, F const& f): put_crtp_( f ), impl( v )
+        deque_cont(){}
+        explicit deque_cont(const F& f) : put_crtp_( f ){}
+        explicit deque_cont(impl_ const& v, F const& f): put_crtp_( f ), impl( v )
         {
             // Required by crtp when Tag or F is modified.
         }
 
-        explicit cont( impl_ const& v, F const& f, modifier_ const& m )
+        explicit deque_cont( impl_ const& v, F const& f, modifier_ const& m )
             : put_crtp_( f, m ), impl( v )
         {
             // Required by crtp when Tag or F is modified.
@@ -113,20 +113,20 @@ namespace put_deque_aux{
         void pop_back(){
             this->container().pop_back();
         }
-        void swap(cont& that){
+        void swap(deque_cont& that){
             this->container().swap( that.container() );
         }
 
         // Note : the modifiers such as push_back() are ommitted as they
         // accessible through the put interface.
 
-       impl_& container()const{ return this->impl; }
+       	impl_& container()const{ return this->impl; }
         protected:
         mutable impl_ impl;
 
     };
 
-}// put_deque_aux
+}// put_aux
 }// v2
 }// assign
 }// boost

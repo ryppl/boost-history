@@ -40,12 +40,8 @@
 // for k = m, ..., n-1.
 
 #include <boost/preprocessor/arithmetic/inc.hpp>
-#include <boost/preprocessor/repetition/repeat_from_to.hpp>
-#include <boost/preprocessor/repetition/enum_binary_params.hpp>
-#include <boost/preprocessor/repetition/enum_params.hpp>
-#include <boost/preprocessor/repetition/repeat.hpp>
-#include <boost/preprocessor/seq/for_each_product.hpp>
-#include <boost/preprocessor/seq/first_n.hpp>
+#include <boost/preprocessor/repetition.hpp>
+#include <boost/preprocessor/seq.hpp>
 
 #include <boost/mpl/apply.hpp>
 #include <boost/mpl/assert.hpp>
@@ -62,9 +58,7 @@
 
 #include <boost/assign/v2/detail/config/limit_arity.hpp>
 #include <boost/assign/v2/detail/config/limit_lvalue_const_arity.hpp>
-#include <boost/assign/v2/detail/pp/args.hpp>
-#include <boost/assign/v2/detail/pp/params.hpp>
-#include <boost/assign/v2/detail/pp/seq.hpp>
+#include <boost/assign/v2/detail/pp/parameter_list.hpp>
 
 namespace boost{
 namespace assign{
@@ -88,22 +82,21 @@ namespace functor_aux{
 #else
 
 #define BOOST_ASSIGN_V2_MACRO1(r, SeqU) \
-    template<BOOST_ASSIGN_V2_decl_params(SeqU)> \
+    template<BOOST_ASSIGN_V2_TPL_PARAMETER_LIST(SeqU)> \
     typename ::boost::mpl::apply1< \
         F, \
-        ::boost::mpl::vector<BOOST_ASSIGN_V2_params(SeqU)> \
+        ::boost::mpl::vector<BOOST_ASSIGN_V2_TPL_ARG_LIST(SeqU)> \
     >::type \
-    operator()( BOOST_ASSIGN_V2_decl_args(SeqU) )const{ \
-        return this->derived().template impl<BOOST_ASSIGN_V2_params(SeqU)>( \
-            BOOST_ASSIGN_V2_args(SeqU) \
+    operator()( BOOST_ASSIGN_V2_PARAMETER_LIST(SeqU, _) )const{ \
+        return this->derived().template impl<BOOST_ASSIGN_V2_TPL_ARG_LIST(SeqU)>( \
+            BOOST_ASSIGN_V2_ARG_LIST(SeqU, _) \
         ); \
     } \
 /**/
 
-
 #define BOOST_ASSIGN_V2_MACRO2(z, n, data) BOOST_PP_SEQ_FOR_EACH_PRODUCT(\
     BOOST_ASSIGN_V2_MACRO1, \
-    BOOST_PP_SEQ_FIRST_N(BOOST_PP_INC(n), BOOST_ASSIGN_V2_SEQ)\
+    BOOST_PP_SEQ_FIRST_N(BOOST_PP_INC(n), BOOST_ASSIGN_V2_SEQ_TPL_BINARY_ARG_LIST)\
 ) \
 /**/
 BOOST_PP_REPEAT(

@@ -12,10 +12,10 @@
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 #include <utility>
-#define BOOST_ASSIGN_V2_forward_param(T, t) T&& t
-#define BOOST_ASSIGN_V2_forward_arg(T, t) std::forward<T>( t )
+#define BOOST_ASSIGN_V2_FORWARD_PARAM(T, t) T&& t
+#define BOOST_ASSIGN_V2_FORWARD_ARG(T, t) std::forward<T>( t )
 #else
-#define BOOST_ASSIGN_V2_forward_param(T, t) T& t
-#define BOOST_ASSIGN_V2_forward_arg(T, t) t
+#define BOOST_ASSIGN_V2_FORWARD_PARAM(T, t) T& t
+#define BOOST_ASSIGN_V2_FORWARD_ARG(T, t) t
 #endif
 #endif
