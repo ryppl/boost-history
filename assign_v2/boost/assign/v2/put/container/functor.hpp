@@ -12,7 +12,7 @@
 
 #include <boost/assign/v2/put/container/functor/adapter.hpp>
 #include <boost/assign/v2/put/container/functor/make.hpp>
-#include <boost/assign/v2/put/container/functor/replace.hpp>
+#include <boost/assign/v2/put/container/functor/replace_parameter.hpp>
 #include <boost/assign/v2/put/container/functor/result_of.hpp>
 
 #endif // BOOST_ASSIGN_V2_PUT_CONTAINER_FUNCTOR_ER_2010_HPP

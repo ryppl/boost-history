@@ -11,7 +11,7 @@
 #define BOOST_ASSIGN_V2_PUT_MODULO_MODIFIER_META_ER_2010_HPP
 #include <boost/preprocessor/cat.hpp>
 #include <boost/mpl/apply.hpp>
-#include <boost/assign/v2/put/frame/replace.hpp>
+#include <boost/assign/v2/put/frame/replace_parameter.hpp>
 
 namespace boost{
 namespace assign{

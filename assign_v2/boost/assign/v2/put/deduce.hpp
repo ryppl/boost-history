@@ -16,4 +16,4 @@
 // Derived of crtp<> have to include this file:
 // #include <boost/assign/v2/put/deduce/modifier/dependee.hpp>
 
-#endif
+#endif // BOOST_ASSIGN_V2_PUT_DEDUCE_ER_2010_HPP

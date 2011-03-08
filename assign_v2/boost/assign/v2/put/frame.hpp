@@ -13,6 +13,6 @@
 #include <boost/assign/v2/put/frame/crtp.hpp>
 #include <boost/assign/v2/put/frame/modifier.hpp>
 #include <boost/assign/v2/put/frame/sub.hpp>
-#include <boost/assign/v2/put/frame/replace.hpp>
+#include <boost/assign/v2/put/frame/replace_parameter.hpp>
 
 #endif
