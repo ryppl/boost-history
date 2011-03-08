@@ -76,4 +76,4 @@ namespace put_aux{
 }// assign
 }// boost
 
-#endif
+#endif // BOOST_ASSIGN_V2_PUT_DEDUCE_MODIFIER_TAG_ER_2010_HPP

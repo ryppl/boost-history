@@ -13,4 +13,4 @@
 #include <boost/assign/v2/put/modifier/tag.hpp>
 #include <boost/assign/v2/put/modifier/dependee.hpp>
 
-#endif
+#endif // BOOST_ASSIGN_V2_PUT_DEDUCE_MODIFIER_ER_2010_HPP

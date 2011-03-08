@@ -15,4 +15,4 @@
 #include <boost/assign/v2/put/modifier/push.hpp>
 #include <boost/assign/v2/put/modifier/push_back.hpp>
 
-#endif
+#endif // BOOST_ASSIGN_V2_PUT_DEDUCE_MODIFIER_DEPENDEE_ER_2010_HPP
