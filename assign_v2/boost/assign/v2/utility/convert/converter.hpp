@@ -7,14 +7,13 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_CONVERT_CONVERTER_ER_2010_HPP
-#define BOOST_ASSIGN_V2_CONVERT_CONVERTER_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_UTILITY_CONVERSION_CONVERTER_ER_2010_HPP
+#define BOOST_ASSIGN_V2_UTILITY_CONVERSION_CONVERTER_ER_2010_HPP
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
 #include <boost/type_traits/add_const.hpp>
 #include <boost/assign/v2/ref/wrapper.hpp>
-#include <boost/assign/v2/utility/convert/dispatch.hpp>
-#include <boost/assign/v2/utility/convert/deduce_tag.hpp>
+#include <boost/assign/v2/utility/conversion/convert.hpp>
 
 namespace boost{
 namespace assign{
@@ -44,7 +43,7 @@ namespace convert_aux{
         template<typename C>
         C type()const
         {
-            return convert_aux::dispatch<C>( this->w.get() );
+            return convert_aux::convert<C>( this->w.get() );
         }
 
         private:
@@ -75,44 +74,28 @@ namespace result_of{
 }// assign
 }// boost
 
-// Define name lookup for name
-// namespace ns{
-//     template<typename A, typename B, typename C> cont;
-// }
-// is done by expanding this macro:
-// #define SEQ (A)(B)(C)
-// namespace ns{
-//     BOOST_ASSIGN_V2_CONVERTER( cont<A,B,C>, SEQ )
-// }
-//
+
+#if defined( BOOST_ASSIGN_V2_UTILITY_CONVERSION_CONVERTER_NAME_LOOKUP_PARAM ) || defined ( BOOST_ASSIGN_V2_UTILITY_CONVERSION_CONVERTER_NAME_LOOKUP )
+#error
+#endif
 
 #include <boost/preprocessor/seq/enum.hpp>
 #include <boost/preprocessor/seq/transform.hpp>
 
-#ifndef BOOST_ASSIGN_V2_CONVERTER_OP
-#define BOOST_ASSIGN_V2_CONVERTER_OP(s, data, T) typename T
-#endif
-#ifndef BOOST_ASSIGN_V2_CONVERTER
-
-// Expanding
-//  namespace ns{
-//   BOOST_ASSIGN_V2_CONVERTER( (A)(B)(C), cont<A,B,C> )
-//  }
-// creates a name-lookup version of converter() for name ns::cont<A, B, C>
-
-#define BOOST_ASSIGN_V2_CONVERTER(Seq, U)\
+#define BOOST_ASSIGN_V2_UTILITY_CONVERSION_CONVERTER_NAME_LOOKUP_PARAM(s, data, T) typename T
+#define BOOST_ASSIGN_V2_UTILITY_CONVERSION_CONVERTER(Seq, R)\
     template<BOOST_PP_SEQ_ENUM(\
         BOOST_PP_SEQ_TRANSFORM(\
-            BOOST_ASSIGN_V2_CONVERTER_OP,\
+            BOOST_ASSIGN_V2_UTILITY_CONVERSION_CONVERTER_NAME_LOOKUP_PARAM,\
             ~,\
             Seq\
         )\
     )>\
-    typename ::boost::assign::v2::result_of::converter< U >::type \
-    converter( U const& cont)\
+    typename ::boost::assign::v2::result_of::converter< R >::type \
+    converter( R const& range)\
     {\
-        typedef typename ::boost::assign::v2::result_of::converter< U >::type result_; \
-        return result_( cont );\
+        typedef typename ::boost::assign::v2::result_of::converter< R >::type result_; \
+        return result_( range );\
     }\
 /**/
 #endif

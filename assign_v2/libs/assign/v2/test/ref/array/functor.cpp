@@ -26,34 +26,39 @@ namespace xxx_functor{
     {
         namespace as2 = boost::assign::v2;
         {
-            //[ref_array_functor_r
+            //[ref_array_r
             typedef int const T;
-            T x = 1, y = 2, z = 0;
-            typedef as2::ref::nth_result_of::array<3, T>::type ar_;
-            ar_ ar = as2::ref::array( x )( y )( z );
+            T w = 11, x = 72, y = 31, z = 48;
+            as2::ref::nth_result_of::array<3, T>::type ar3 = as2::ref::array( w )( x )( y );
             {
-                T& rx = ar.front(); T& rz = ar.back();
-                BOOST_ASSIGN_V2_CHECK( &rx == &x );
+                T& rw = ar3.front(); T& ry = ar3.back();
+                BOOST_ASSIGN_V2_CHECK( &rw == &w );
+                BOOST_ASSIGN_V2_CHECK( &ry == &y );
+            }
+            as2::ref::nth_result_of::array<4, T>::type ar4 = ar3( z );
+            {
+                T& rw = ar4.front(); T& rz = ar4.back();
+                BOOST_ASSIGN_V2_CHECK( &rw == &w );
                 BOOST_ASSIGN_V2_CHECK( &rz == &z );
             }
             //]
             {
-                T& rx = ar[0]; T& rz = ar[2];
+                T& rx = ar4[0]; T& rz = ar4[2];
                 BOOST_ASSIGN_V2_CHECK( &rx == &x );
                 BOOST_ASSIGN_V2_CHECK( &rz == &z );
                 //]
             }
             {
-                T& rx = ( *boost::begin( ar ) );
-                T& rz = *boost::next( boost::begin( ar ), 2 );
+                T& rx = ( *boost::begin( ar4 ) );
+                T& rz = *boost::next( boost::begin( ar4 ), 2 );
                 BOOST_ASSIGN_V2_CHECK( &rx == &x );
                 BOOST_ASSIGN_V2_CHECK( &rz == &z );
             }
         }
         {
-            //[ref_array_functor_w
+            //[ref_array_w
             typedef int T; T x, y, z;
-            std::vector<T> r( 3 ); r[0] = 1; r[1] = 2; r[2] = 0;
+            std::vector<T> r( 3 ); r[0] = 72; r[1] = 31; r[2] = 48;
             boost::copy( r, boost::begin(
                     as2::ref::array( x )( y )( z ) | as2::ref::_get
                 )
@@ -63,7 +68,7 @@ namespace xxx_functor{
             //]
         }
         {
-            //[ref_array_functor_as
+            //[ref_array_assign
             typedef int T; T x, y, z;
             as2::ref::array( x )( y )( z ).assign( -1 );
             BOOST_ASSIGN_V2_CHECK( x == -1 );

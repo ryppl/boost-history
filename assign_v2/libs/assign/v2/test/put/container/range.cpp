@@ -26,7 +26,7 @@ namespace xxx_range{
         namespace as2 = boost::assign::v2;
 
             //[range_assign
-            typedef const char state_ [3]; state_ ct = "CT", nj = "NJ", ny = "NY", ca = "CA", ore = "OR", wa = "WA";
+            typedef const char state_ [3]; state_ ct = "CT", nj = "NJ", ny = "NY", ca = "CA", /*ore = "OR",*/ wa = "WA";
             typedef int code_; typedef boost::tuple<state_/*<<Notice the reference>>*/&,  code_> area_code_; 
             std::deque< area_code_ > tri_state; as2::put( tri_state )( nj, 201 )( ct, 203 )( ny, 212 )( ny, 315 )( ny, 347 )( nj, 551 );
             std::deque< area_code_ > pacific ; as2::put( pacific )( wa, 206 )( ca, 209 )( ca, 213 )( wa, 253 );
@@ -43,9 +43,8 @@ namespace xxx_range{
         {
             //[range_constr
             std::vector<int> r( 3 ); r[0] = 72; r[1] = 31; r[2] = 48;
-            typedef std::stack<int> lifo_;
 
-            BOOST_ASSIGN_V2_CHECK( as2::put_range<lifo_>( r ).top() == 48 );
+            BOOST_ASSIGN_V2_CHECK( as2::put_range< std:: stack<int> >( r ).top() == 48 );
             //]
         }
     }

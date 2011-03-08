@@ -15,8 +15,10 @@
 #include <boost/range/end.hpp>
 #include <boost/range/algorithm/copy.hpp>
 #include <boost/range/algorithm/equal.hpp>
+#include <boost/assign/v2/ref/array/csv.hpp>
 #include <boost/assign/v2/utility/chain/check.hpp>
 #include <boost/assign/v2/utility/chain.hpp>
+#include <boost/assign/v2/utility/chain/alias.hpp>
 #include <libs/assign/v2/test/utility/chain.h>
 
 namespace test_assign_v2{
@@ -32,6 +34,7 @@ namespace xxx_chain{
             {    typedef int T; ns::static_<T>(); ns::static_<T>(); }
             {    typedef double T; ns::static_<T>(); ns::static_<T>(); }
         }
+        // Non-Boost.Assign.v2 containers
         {
             //[chain_r
             typedef int T;
@@ -57,6 +60,27 @@ namespace xxx_chain{
             BOOST_ASSIGN_V2_CHECK( cont2.back() == r[3] );
             //]
         }
+		// Boost.Assign.v2 containers
+        {
+            //[chain_ref_array
+            /*<< Needed to bring && into scope >>*/ using namespace boost::assign::v2;
+            std::vector<int> powers( 3 ); powers[0] = 1;
+            for(int i = 1; i < 8; i++){ powers[i] = powers[ i - 1 ] * 2; }
+            boost::array<int, 5> first5; int x, y, z;
+            boost::copy(
+                powers,
+                boost::begin(
+                    first5 && (/*<< rvalue! >>*/ as2::ref::csv_array( x, y, z ) | as2::ref::_get )
+                )
+            );
+
+            BOOST_ASSIGN_V2_CHECK( first5.front() == powers.front()          );
+            BOOST_ASSIGN_V2_CHECK( first5.back()  == powers[first5.size()-1] );
+            BOOST_ASSIGN_V2_CHECK( x              == powers[first5.size()]   );
+            BOOST_ASSIGN_V2_CHECK( z              == powers.back()           );
+            //]
+        }
+
 
     }// test
 

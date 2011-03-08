@@ -39,17 +39,19 @@ namespace xxx_standard{
 
         {
             //[pipe_modifier_push_front
-            std::deque<int> powers;
-            powers | ( as2::_put % as2::_push_front )( 16 )( 8 )( 4 )( 2 )( 1 );
+            std::deque<int> powers; int front = (
+            	powers | ( as2::_put % as2::_push_front )( 16 )( 8 )( 4 )( 2 )( 1 )
+            ).front();
 
-            BOOST_ASSIGN_V2_CHECK( powers[0] == 1  );
+            BOOST_ASSIGN_V2_CHECK( front == 1  );
             BOOST_ASSIGN_V2_CHECK( powers[4] == 16 );
             //]
         }
         {
             //[pipe_modifier_push
-            typedef int int_; std::queue<int_> fifo; 
-            int_ front = ( fifo | ( as2::_put % as2::_push )( 72 )( 31 )( 48 ) ).front();
+            typedef int int_; std::queue<int_> fifo; int_ front = ( 
+            	fifo | ( as2::_put % as2::_push )( 72 )( 31 )( 48 ) 
+            ).front();
                 
             BOOST_ASSIGN_V2_CHECK( front == 72 );
             BOOST_ASSIGN_V2_CHECK( fifo.back() == 48 );

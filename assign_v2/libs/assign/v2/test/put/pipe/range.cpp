@@ -37,21 +37,20 @@ namespace xxx_range{
 
 			using namespace boost;
             BOOST_ASSIGN_V2_CHECK( get<0>( states.front()             ) == nj );
-            BOOST_ASSIGN_V2_CHECK( get<0>( states[tri_state.size()-1] ) == nj );
-            BOOST_ASSIGN_V2_CHECK( get<0>( states[tri_state.size()]   ) == wa );
-            BOOST_ASSIGN_V2_CHECK( get<0>( states.back()              ) == wa );
             BOOST_ASSIGN_V2_CHECK( get<1>( states.front()             ) == 201 );
+            BOOST_ASSIGN_V2_CHECK( get<0>( states[tri_state.size()-1] ) == nj );
             BOOST_ASSIGN_V2_CHECK( get<1>( states[tri_state.size()-1] ) == 551 );
+            BOOST_ASSIGN_V2_CHECK( get<0>( states[tri_state.size()]   ) == wa );
             BOOST_ASSIGN_V2_CHECK( get<1>( states[tri_state.size()]   ) == 206 );
+            BOOST_ASSIGN_V2_CHECK( get<0>( states.back()              ) == wa );
             BOOST_ASSIGN_V2_CHECK( get<1>( states.back()              ) == 253 );
             //]
         }
         {
             //[pipe_range_constr
             std::vector<int> r( 3 ); r[0] = 72; r[1] = 31; r[2] = 48;
-            typedef std::stack<int> lifo_;
 
-            BOOST_ASSIGN_V2_CHECK( ( ::boost::type<lifo_>() | as2::_put_range( r ) ).top() == 48 );
+            BOOST_ASSIGN_V2_CHECK( ( ::boost::type< std::stack<int> >() | as2::_put_range( r ) ).top() == 48 );
             //]
         }
     }

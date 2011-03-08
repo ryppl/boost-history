@@ -20,12 +20,12 @@
 #include <boost/type.hpp>
 #include <boost/array.hpp>
 #include <boost/type_traits/is_same.hpp>
-#include <boost/assign/v2/utility/convert/converter.hpp>
-#include <boost/assign/v2/utility/convert/deduce_tag.hpp>
-#include <boost/assign/v2/utility/convert/predicate.hpp>
+#include <boost/assign/v2/utility/conversion/converter.hpp>
+#include <boost/assign/v2/utility/conversion/deduce_tag.hpp>
+#include <boost/assign/v2/utility/conversion/predicate.hpp>
 #include <boost/assign/v2/detail/check/fwd_equal_container.hpp>
 
-// Don't include this file in v2/utility/convert.hpp
+// Don't include this file in v2/utility/conversion.hpp
 
 namespace boost{
 namespace assign{

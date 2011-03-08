@@ -9,6 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_PUT_MODULO_FUN_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_MODULO_FUN_ER_2010_HPP
+#include <boost/assign/v2/put/modulo/fun/keyword.hpp>
 #include <boost/assign/v2/put/modulo/fun/make.hpp>
 #include <boost/assign/v2/put/modulo/fun/meta.hpp>
 #endif

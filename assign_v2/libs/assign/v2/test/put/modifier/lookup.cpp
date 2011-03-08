@@ -19,7 +19,7 @@
 
 #include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/detail/functor/identity.hpp>
-#include <boost/assign/v2/put/modulo/fun.hpp>
+#include <boost/assign/v2/put/fun/identity.hpp>
 #include <boost/assign/v2/put/modifier/lookup.hpp>
 #include <boost/assign/v2/put/container/functor.hpp>
 #include <boost/assign/v2/put/deque.hpp>
@@ -53,7 +53,7 @@ namespace xxx_lookup{
             //[lookup
             typedef std::map<std::string, int> C; C cal;
             ( 
-            	/*Input is by default mapped to C::value_type but, here, we need C::key_type*/as2::put( cal ) /*Makes the input convertible to C::key_type*/% ( as2::_fun = as2::_identity ) %  ( as2::_lookup = (lambda::_1 = 31) ) 
+            	/*Input is by default mapped to C::value_type but, here, we need C::key_type*/as2::put( cal ) /*Makes the input convertible to C::key_type*/% as2::_identity %  ( as2::_lookup = (lambda::_1 = 31) ) 
             )( "jan" )( "mar" )( "may" )( "jul" )( "aug" )( "oct" )( "dec" );
             BOOST_ASSIGN_V2_CHECK( cal["jan"] == 31 );
             BOOST_ASSIGN_V2_CHECK( cal["dec"] == 31 );

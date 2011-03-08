@@ -9,7 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_PUT_PIPE_CSV_OPERATOR_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_PIPE_CSV_OPERATOR_ER_2010_HPP
-//#include <boost/assign/v2/put/pipe/modulo/forward.hpp>
+#include <boost/assign/v2/put/pipe/modulo/forward.hpp>
 #include <boost/assign/v2/ref/array/as_arglist.hpp>
 #include <boost/assign/v2/put/pipe/csv/rhs.hpp>
 #include <boost/assign/v2/put/pipe/csv/size_type.hpp>

@@ -11,7 +11,7 @@
 #define BOOST_ASSIGN_V2_UTILITY_ER_2010_HPP
 
 #include <boost/assign/v2/utility/chain.hpp>
-#include <boost/assign/v2/utility/convert.hpp>
+#include <boost/assign/v2/utility/conversion.hpp>
 #include <boost/assign/v2/utility/csv.hpp>
 
 #endif

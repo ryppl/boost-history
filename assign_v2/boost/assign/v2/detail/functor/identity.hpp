@@ -84,7 +84,7 @@ namespace functor_aux{
 
 }// functor_aux
 namespace{
-    functor_aux::identity const _identity = functor_aux::identity();
+    functor_aux::identity const _functor_identity = functor_aux::identity();
 }
 }// v2
 }// assigns

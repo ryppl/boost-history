@@ -11,12 +11,11 @@
 #include <string>
 #include <cmath>
 #include <boost/lambda/lambda.hpp>
-#include <boost/typeof/typeof.hpp>
 #include <boost/tuple/tuple.hpp>
 
 #include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/detail/functor/identity.hpp>
-#include <boost/assign/v2/put/modulo/fun.hpp>
+#include <boost/assign/v2/put/fun/identity.hpp>
 #include <boost/assign/v2/put/modifier/lookup.hpp>
 #include <boost/assign/v2/put/pipe/functor.hpp>
 #include <libs/assign/v2/test/put/pipe/modifier/lookup.h>
@@ -34,11 +33,10 @@ namespace xxx_lookup{
         {
             //[lookup
             typedef std::map<std::string, int> C; C cal; 
-            BOOST_AUTO( _id, ( as2::_fun = as2::_identity ) );
             C::mapped_type n_mar = (
             	cal | as2::_put( "feb", 28 )
-                	| ( /*Input is by default mapped to C::value_type but, here, we need C::key_type*/ as2::_put % /*Makes the input convertible to C::key_type*/_id %  ( as2::_lookup = (lambda::_1 = 31) ) )( "jan" )( "mar" )( "may" )( "jul" )( "aug" )( "oct" )( "dec" )
-                	| ( as2::_put % _id %  ( as2::_lookup = (lambda::_1 = 30) ) )( "apr" )( "jun" )( "sep" )( "nov" )
+                	| ( /*Input is by default mapped to C::value_type but, here, we need C::key_type*/ as2::_put % /*Makes the input convertible to C::key_type*/as2::_identity %  ( as2::_lookup = (lambda::_1 = 31) ) )( "jan" )( "mar" )( "may" )( "jul" )( "aug" )( "oct" )( "dec" )
+                	| ( as2::_put % as2::_identity %  ( as2::_lookup = (lambda::_1 = 30) ) )( "apr" )( "jun" )( "sep" )( "nov" )
             )["mar"];
             
             BOOST_ASSIGN_V2_CHECK( n_mar == 31 );

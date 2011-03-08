@@ -12,6 +12,6 @@
 
 #include <boost/assign/v2/ref/array/csv.hpp>
 #include <boost/assign/v2/ref/array/functor.hpp>
-#include <boost/assign/v2/ref/array/converter.hpp>
+#include <boost/assign/v2/ref/array/conversion.hpp>
 
 #endif

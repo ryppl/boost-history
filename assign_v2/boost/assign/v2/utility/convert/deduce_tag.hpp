@@ -7,12 +7,12 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_CONVERT_DEDUCE_TAG_ER_2010_HPP
-#define BOOST_ASSIGN_V2_CONVERT_DEDUCE_TAG_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_UTILITY_CONVERSION_DEDUCE_TAG_ER_2010_HPP
+#define BOOST_ASSIGN_V2_UTILITY_CONVERSION_DEDUCE_TAG_ER_2010_HPP
 #include <boost/mpl/pair.hpp>
 #include <boost/assign/v2/detail/traits/switch.hpp>
-#include <boost/assign/v2/utility/convert/helper.hpp>
-#include <boost/assign/v2/utility/convert/predicate.hpp>
+#include <boost/assign/v2/utility/conversion/helper.hpp>
+#include <boost/assign/v2/utility/conversion/predicate.hpp>
 
 namespace boost{
     struct use_default;
