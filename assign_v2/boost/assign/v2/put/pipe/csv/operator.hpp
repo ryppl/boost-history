@@ -13,7 +13,6 @@
 #include <boost/assign/v2/ref/array/as_arglist.hpp>
 #include <boost/assign/v2/put/pipe/csv/rhs.hpp>
 #include <boost/assign/v2/put/pipe/csv/size_type.hpp>
-#include <boost/assign/v2/put/pipe/csv/forward.hpp>
 #include <boost/assign/v2/put/container/functor.hpp>
 
 namespace boost{

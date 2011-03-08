@@ -8,7 +8,6 @@
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
 #include <libs/assign/v2/test/put/pipe/modulo/fun.h>
-#include <libs/assign/v2/test/put/pipe/modulo/forward.h>
 #include <libs/assign/v2/test/put/pipe/modulo.h>
 
 namespace test_assign_v2{
@@ -19,7 +18,6 @@ namespace xxx_modulo{
     void test()
     {
 		xxx_fun::test();
-		xxx_forward::test();
     }
 
 }// xxx_modulo
