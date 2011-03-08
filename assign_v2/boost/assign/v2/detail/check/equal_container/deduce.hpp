@@ -39,7 +39,7 @@ namespace switch_aux{
             v2::container_traits::is_lifo
         >{};
 
-    // TODO remove bec. map is taken care of by sorted
+    // Uncommented bec. map is taken care of by sorted
     //template<>
     //struct case_<switch_tag::check_container, 2> :
     //    switch_aux::helper<
@@ -82,4 +82,4 @@ namespace check_aux{
 }// assign
 }// boost
 
-#endif
+#endif // BOOST_ASSIGN_V2_DETAIL_CHECK_EQUAL_CONTAINER_DEDUCE_ER_2010_HPP

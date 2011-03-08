@@ -11,13 +11,15 @@
 #include <boost/mpl/limits/arity.hpp>
 
 #ifndef BOOST_ASSIGN_V2_LIMIT_LVALUE_CONST_ARITY
+//[limit_lvalue_const_arity
+/*<<
+   Maximum arity for which functors are overloaded for any combination of const 
+   and non-const lvalues under C++03. Be warned that the number of function
+   overloads increases geometrically with this number.
+*>>/
 #define BOOST_ASSIGN_V2_LIMIT_LVALUE_CONST_ARITY 2
-#endif
-
-// This constant defines the maximum arity for which functors are overloaded
-// for any combination of lvalue and const under C++03 (the restriction does
-// not apply to C++0x). Be warned, therefore, that the number of function
-// overloads increases geometrically with this number.
+//]
+#endif // BOOST_ASSIGN_V2_LIMIT_LVALUE_CONST_ARITY
 
 #include <boost/assign/v2/detail/config/limit_arity.hpp>
 #if BOOST_ASSIGN_V2_LIMIT_LVALUE_CONST_ARITY >  BOOST_ASSIGN_V2_LIMIT_ARITY

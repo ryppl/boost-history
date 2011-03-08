@@ -10,13 +10,14 @@
 #ifndef BOOST_ASSIGN_V2_ENABLE_CPP0X
 #include <boost/preprocessor/logical/or.hpp>
 #include <boost/config.hpp>
+//[enable_cpp0x
 #if defined(BOOST_NO_RVALUE_REFERENCES) || defined(BOOST_NO_VARIADIC_TEMPLATES) || defined(BOOST_NO_0X_HDR_TUPLE)
 #define BOOST_ASSIGN_V2_ENABLE_CPP0X 0
 #else
 #define BOOST_ASSIGN_V2_ENABLE_CPP0X 1
 #endif
-#endif
-
+#endif // BOOST_ASSIGN_V2_ENABLE_CPP0X
+//]
 
 /*
  -- Previously,

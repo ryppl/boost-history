@@ -9,5 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #ifndef BOOST_ASSIGN_V2_LIMIT_CSV_ARITY
+//[limit_csv_arity
 #define BOOST_ASSIGN_V2_LIMIT_CSV_ARITY 20
-#endif
+//]
+#endif // BOOST_ASSIGN_V2_LIMIT_CSV_ARITY

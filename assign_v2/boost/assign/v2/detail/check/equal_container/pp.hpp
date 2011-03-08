@@ -28,4 +28,4 @@
         elem_at_ elem_at = boost::make_iterator_range( r );\
 /**/
 
-#endif
+#endif // BOOST_ASSIGN_V2_DETAIL_CHECK_EQUAL_CONTAINER_PP_ER_2010_HPP

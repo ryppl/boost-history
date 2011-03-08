@@ -10,7 +10,7 @@
 #ifndef BOOST_ASSIGN_V2_CHECK
 #include <boost/assert.hpp>
 #define BOOST_ASSIGN_V2_CHECK( p ) BOOST_ASSERT( p )
-#endif
+#endif // BOOST_ASSIGN_V2_CHECK
 
 // In the test suite, use, instead:
 //    #include <boost/test/test_tools.hpp>

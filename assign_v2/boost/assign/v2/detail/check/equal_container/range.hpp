@@ -29,4 +29,4 @@ namespace check_aux{
 }// assign
 }// boost
 
-#endif
+#endif // BOOST_ASSIGN_V2_DETAIL_CHECK_EQUAL_CONTAINER_RANGE_ER_2010_HPP
