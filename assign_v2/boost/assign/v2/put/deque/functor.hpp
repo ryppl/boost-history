@@ -15,8 +15,8 @@
 #include <boost/assign/v2/detail/keyword/nil.hpp>
 #include <boost/assign/v2/put/deque/cont.hpp>
 #include <boost/assign/v2/put/deduce/fun.hpp>
-#include <boost/assign/v2/put/deduce/modifier_tag.hpp>
-#include <boost/assign/v2/put/deduce/modifier_dependee.hpp>
+#include <boost/assign/v2/put/deduce/modifier/tag.hpp>
+#include <boost/assign/v2/put/deduce/modifier/dependee.hpp>
 
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 #include <utility>
@@ -123,4 +123,4 @@ BOOST_PP_REPEAT_FROM_TO(
 }// assign
 }// boost
 
-#endif
+#endif // BOOST_ASSIGN_V2_PUT_DEQUE_FUNCTOR_ER_2010_HPP
