@@ -13,4 +13,4 @@
 #include <boost/assign/v2/put/container/functor.hpp>
 #include <boost/assign/v2/put/container/range.hpp>
 
-#endif
+#endif // BOOST_ASSIGN_V2_PUT_CONTAINER_ER_2010_HPP

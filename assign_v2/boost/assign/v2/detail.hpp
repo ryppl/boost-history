@@ -19,4 +19,4 @@
 // /config.hpp is not to be defined
 // Don't include /checking/checking.hpp
 
-#endif
+#endif // BOOST_ASSIGN_V2_DETAIL_ER_2010_HPP

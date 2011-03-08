@@ -15,4 +15,4 @@
 #include <boost/assign/v2/put/modifier/push_back.hpp>
 #include <boost/assign/v2/put/modifier/push_front.hpp>
 
-#endif
+#endif // BOOST_ASSIGN_V2_PUT_MODIFIER_STANDARD_ER_2010_HPP

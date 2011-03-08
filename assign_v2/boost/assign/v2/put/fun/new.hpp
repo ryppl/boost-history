@@ -14,4 +14,4 @@
 
 BOOST_ASSIGN_V2_MODULO_FUN_KEYWORD(new, keyword_aux::new_<T>)
 
-#endif
+#endif // BOOST_ASSIGN_V2_PUT_FUN_NEW_ER_2010_HPP

@@ -15,4 +15,5 @@
 #include <boost/assign/v2/put/container/functor/replace.hpp>
 #include <boost/assign/v2/put/container/functor/result_of.hpp>
 
-#endif
+#endif // BOOST_ASSIGN_V2_PUT_CONTAINER_FUNCTOR_ER_2010_HPP
+

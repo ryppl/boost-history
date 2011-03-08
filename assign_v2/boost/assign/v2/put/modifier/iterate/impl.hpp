@@ -72,4 +72,4 @@ namespace put_aux{
 }// assign
 }// boost
 
-#endif
+#endif // BOOST_ASSIGN_V2_PUT_MODIFIER_ITERATE_IMPL_ER_2010_HPP

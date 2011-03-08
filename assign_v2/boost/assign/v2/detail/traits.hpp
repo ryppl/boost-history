@@ -12,5 +12,6 @@
 
 #include <boost/assign/v2/detail/traits/type.hpp>
 #include <boost/assign/v2/detail/traits/container.hpp>
+#include <bosot/assign/v2/detail/traits/type/or_const.hpp>
 
-#endif
+#endif // BOOST_ASSIGN_V2_DETAIL_TRAITS_ER_2010_HPP

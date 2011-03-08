@@ -23,4 +23,4 @@ namespace {
 }// assign
 }// boost
 
-#endif
+#endif // BOOST_ASSIGN_V2_PUT_FUN_IDENTITY_ER_2010_HPP

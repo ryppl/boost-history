@@ -31,4 +31,4 @@ namespace result_of{
 }// assign
 }// boost
 
-#endif
+#endif // BOOST_ASSIGN_V2_PUT_CONTAINER_FUNCTOR_RESULT_OF_ER_2010_HPP

@@ -62,4 +62,4 @@ namespace v2{namespace put_aux{
 }// assign
 }// boost
 
-#endif
+#endif // BOOST_ASSIGN_V2_PUT_MODIFIER_LOOKUP_IMPL_ER_2010_HPP

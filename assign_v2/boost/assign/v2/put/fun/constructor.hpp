@@ -14,4 +14,4 @@
 
 BOOST_ASSIGN_V2_MODULO_FUN_KEYWORD(constructor, keyword_aux::constructor<T>)
 
-#endif
+#endif // BOOST_ASSIGN_V2_PUT_FUN_CONSTRUCTOR_ER_2010_HPP

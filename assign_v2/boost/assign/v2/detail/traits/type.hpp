@@ -14,4 +14,4 @@
 #include <boost/assign/v2/detail/traits/type/meta_convert.hpp>
 #include <boost/assign/v2/detail/traits/type/value.hpp>
 
-#endif
+#endif // BOOST_ASSIGN_V2_TRAITS_TYPE_ER_2010_HPP

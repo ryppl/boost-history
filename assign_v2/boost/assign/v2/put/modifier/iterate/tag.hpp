@@ -23,4 +23,4 @@ namespace modifier_tag{
 }// assign
 }// boost
 
-#endif
+#endif // BOOST_ASSIGN_V2_PUT_MODIFIER_ITERATE_TAG_ER_2010_HPP

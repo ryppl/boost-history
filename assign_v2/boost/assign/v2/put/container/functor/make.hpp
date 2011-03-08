@@ -29,4 +29,4 @@ namespace v2{
 }// assign
 }// boost
 
-#endif
+#endif // BOOST_ASSIGN_V2_PUT_CONTAINER_FUNCTOR_MAKE_ER_2010_HPP

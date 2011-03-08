@@ -9,6 +9,8 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_DETAIL_TYPE_TRAITS_OR_CONST_ER_2010_HPP
 #define BOOST_ASSIGN_V2_DETAIL_TYPE_TRAITS_OR_CONST_ER_2010_HPP
+#include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
+#if BOOST_ASSIGN_V2_ENABLE_CPP0X
 #include <boost/mpl/or.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/type_traits/is_const.hpp>
@@ -33,5 +35,7 @@ struct or_const<T const, Args...> : ::boost::mpl::true_{};
 }// v2
 }// assign
 }// boost
+
+#endif // BOOST_ASSIGN_V2_ENABLE_CPP0X
 
 #endif // BOOST_ASSIGN_V2_DETAIL_TYPE_TRAITS_OR_CONST_ER_2010_HPP
