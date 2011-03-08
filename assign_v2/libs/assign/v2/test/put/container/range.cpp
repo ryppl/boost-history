@@ -31,9 +31,7 @@ namespace xxx_range{
             std::deque< area_code_ > tri_state; as2::put( tri_state )( nj, 201 )( ct, 203 )( ny, 212 )( ny, 315 )( ny, 347 )( nj, 551 );
             std::deque< area_code_ > pacific ; as2::put( pacific )( wa, 206 )( ca, 209 )( ca, 213 )( wa, 253 );
 
-			std::deque< area_code_ > states; 
-            as2::put_range( tri_state, states );
-            as2::put_range( pacific, states );
+			std::deque< area_code_ > states;  as2::put_range( tri_state, states ); as2::put_range( pacific, states );
 
 			using namespace boost;
             BOOST_ASSIGN_V2_CHECK( get<0>( states.front()                                 )  == nj );
