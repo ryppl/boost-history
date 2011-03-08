@@ -82,13 +82,11 @@ namespace xxx_operator{
                 	( )
             )[2];
 
-			elem_ eps = boost::numeric::bounds<elem_>::smallest();
-
             BOOST_ASSIGN_V2_CHECK( ragged_array[0].size() == a.size() );
             BOOST_ASSIGN_V2_CHECK( ragged_array[1].size() == b.size() );
             BOOST_ASSIGN_V2_CHECK( ragged_array[2].size() == 1        );
             BOOST_ASSIGN_V2_CHECK( ragged_array[3].size() == 0        );
-
+			elem_ eps = boost::numeric::bounds<elem_>::smallest();
             BOOST_ASSIGN_V2_CHECK( abs( front - 0.71 ) < eps );
             BOOST_ASSIGN_V2_CHECK( abs( back - 0.85 )  < eps );
             BOOST_ASSIGN_V2_CHECK( abs( r.front() + 99.0 ) < eps ); 

@@ -19,7 +19,4 @@
 #include <boost/assign/v2/ref/list/size_type.hpp>
 #include <boost/assign/v2/ref/list/make.hpp>
 
-// Must remain commented out
-// #include <boost/assign/v2/ref/list/converter.hpp>
-
 #endif

@@ -62,18 +62,18 @@ namespace xxx_functor{
 				/*<<Calls `ragged_array.push_back( r_( 1, -99.99 ) )`>>*/( 1, -99.99 )
                 /*<<Calls `ragged_array.push_back( r_( ) )`>>*/( );
 
-			elem_ eps = boost::numeric::bounds<elem_>::smallest();
             BOOST_ASSIGN_V2_CHECK( ragged_array[0].size() == a.size() );
             BOOST_ASSIGN_V2_CHECK( ragged_array[1].size() == b.size() );
             BOOST_ASSIGN_V2_CHECK( ragged_array[2].size() == 1        );
             BOOST_ASSIGN_V2_CHECK( ragged_array[3].size() == 0        );
+            //]
+			elem_ eps = boost::numeric::bounds<elem_>::smallest();
             BOOST_ASSIGN_V2_CHECK( abs( ragged_array[0].front() - a.front() ) < eps );
             BOOST_ASSIGN_V2_CHECK( abs( ragged_array[0].back()  - a.back()  ) < eps );
             BOOST_ASSIGN_V2_CHECK( abs( ragged_array[1].front() - b.front() ) < eps );
             BOOST_ASSIGN_V2_CHECK( abs( ragged_array[1].back()  - b.back()  ) < eps );
             BOOST_ASSIGN_V2_CHECK( abs( ragged_array[2].front() + 99.9      ) < eps );
             BOOST_ASSIGN_V2_CHECK( abs( ragged_array[2].back()  + 99.9      ) < eps );
-            //]
 		}
         {
             //[adapter

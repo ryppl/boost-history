@@ -11,6 +11,7 @@
 #define BOOST_ASSIGN_V2_PUT_DEQUE_ER_2010_HPP
 
 #include <boost/assign/v2/put/deque/cont.hpp>
+#include <boost/assign/v2/put/deque/converter.hpp>
 #include <boost/assign/v2/put/deque/csv.hpp>
 #include <boost/assign/v2/put/deque/functor.hpp>
 #include <boost/assign/v2/put/deque/replace.hpp>

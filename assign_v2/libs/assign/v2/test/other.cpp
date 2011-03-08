@@ -30,14 +30,12 @@
 #include <boost/assign/v2/ref/wrapper/range_get.hpp>
 #include <boost/assign/v2/ref/array/csv.hpp>
 #include <boost/assign/v2/ref/array/functor.hpp>
-#include <boost/assign/v2/ref/array/functor/converter.hpp>
+#include <boost/assign/v2/ref/array/converter.hpp>
 #include <boost/assign/v2/put/container.hpp>
 #include <boost/assign/v2/put/deque.hpp>
 #include <boost/assign/v2/put/container/functor.hpp>
 #include <boost/assign/v2/put/pipe/functor.hpp>
 #include <boost/assign/v2/put/pipe/csv.hpp>
-#include <boost/assign/v2/put/std.hpp>
-#include <boost/assign/v2/put/ext.hpp>
 #include <boost/assign/v2/utility/csv.hpp>
 #include <libs/assign/v2/test/other.h>
 
@@ -106,43 +104,6 @@ namespace xxx_other{
             BOOST_ASSIGN_V2_CHECK( cont[1] == r[1] );
             BOOST_ASSIGN_V2_CHECK( z == r[2] );
             //]
-        }
-        // PUT + CSV
-        // container.hpp
-        {
-            //[other_csv_put
-            typedef int T; T x = 1, y = 2, z = 0; std::list<T> cont;
-            as2::csv( as2::put( cont ) , x, y, z );
-
-            BOOST_ASSIGN_V2_CHECK( cont.front() == x );
-            BOOST_ASSIGN_V2_CHECK( cont.back() == z );
-            //]
-            BOOST_ASSIGN_V2_CHECK( *boost::next( boost::begin( cont ) ) == y );
-        }
-        // deque.hpp
-        {
-            //[other_csv_deque
-            typedef int T; T x = 1, y = 2, z = 0;
-            as2::result_of::deque<T>::type cont 
-                = as2::csv( as2::deque<T>( as2::_nil ), x, y, z );
-
-            BOOST_ASSIGN_V2_CHECK( cont.front() == x );
-            BOOST_ASSIGN_V2_CHECK( cont.back() == z );
-            //]
-        }
-        // modulo.hpp
-        {
-            //[other_csv_put_modulo
-            typedef int T; std::list<T> cont;
-            as2::csv(
-                as2::put( cont ) % ( as2::_fun = as2::_identity ),
-                1, 2, 0
-            );
-
-            BOOST_ASSIGN_V2_CHECK( cont.front() == 1 );
-            BOOST_ASSIGN_V2_CHECK( cont.back() == 0 );
-            //]
-            BOOST_ASSIGN_V2_CHECK( *boost::next( boost::begin( cont ) ) == 2 );
         }
     }
 

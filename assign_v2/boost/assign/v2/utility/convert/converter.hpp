@@ -96,11 +96,11 @@ namespace result_of{
 
 // Expanding
 //  namespace ns{
-//   BOOST_ASSIGN_V2_CONVERTER( cont<A,B,C>, (A)(B)(C) )
+//   BOOST_ASSIGN_V2_CONVERTER( (A)(B)(C), cont<A,B,C> )
 //  }
 // creates a name-lookup version of converter() for name ns::cont<A, B, C>
 
-#define BOOST_ASSIGN_V2_CONVERTER(U, Seq)\
+#define BOOST_ASSIGN_V2_CONVERTER(Seq, U)\
     template<BOOST_PP_SEQ_ENUM(\
         BOOST_PP_SEQ_TRANSFORM(\
             BOOST_ASSIGN_V2_CONVERTER_OP,\
