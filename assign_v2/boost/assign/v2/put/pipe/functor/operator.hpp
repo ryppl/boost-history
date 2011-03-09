@@ -12,8 +12,7 @@
 #include <boost/assign/v2/ref/list/as_modulo_list.hpp>
 #include <boost/assign/v2/ref/list_tuple/as_args_list.hpp>
 #include <boost/assign/v2/put/container/functor.hpp>
-#include <boost/assign/v2/put/pipe/functor/rhs.hpp>
-#include <boost/assign/v2/put/pipe/modulo/forward.hpp>
+#include <boost/assign/v2/put/pipe/functor/args_list.hpp>
 
 namespace boost{
 namespace assign{
@@ -28,11 +27,15 @@ namespace put_pipe_aux{
     >
     C& operator|(
         C& cont,
-        put_pipe_aux::rhs<ParList, ArgsList, enable_pars> const& rhs_
+        put_pipe_aux::args_list<
+        	ParList, ArgsList, enable_pars
+        > const& args_list_
     ){
 		ref::as_args_list(
-            ref::as_modulo_list<ParList>( put( cont ), rhs_.par_list_cont() ),
-            rhs_.args_list_cont()
+            ref::as_modulo_list<ParList>( 
+            	put( cont ), args_list_.par_list_cont() 
+            ),
+            args_list_.args_list_cont()
         );
         return cont;
     }
@@ -40,7 +43,7 @@ namespace put_pipe_aux{
 }// put_pipe_aux
 namespace{
 
-    put_pipe_aux::rhs<> const _put = put_pipe_aux::rhs<>();
+    put_pipe_aux::args_list<> const _put = put_pipe_aux::args_list<>();
 
 }
 }// v2
