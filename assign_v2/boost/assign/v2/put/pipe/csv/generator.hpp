@@ -11,7 +11,7 @@
 #define BOOST_ASSIGN_V2_PUT_PIPE_CSV_GENERATOR_HPP_ER_2010
 #include <boost/assign/v2/ref/array/csv.hpp>
 #include <boost/assign/v2/ref/wrapper/copy.hpp>
-#include <boost/assign/v2/put/pipe/csv/rhs.hpp>
+#include <boost/assign/v2/put/pipe/csv/arg_list.hpp>
 #include <boost/assign/v2/put/pipe/modulo_traits.hpp>
 #include <boost/mpl/apply.hpp>
 #include <boost/mpl/vector/vector0.hpp>
@@ -65,7 +65,7 @@ namespace put_pipe_aux{
 
         template<std::size_t N, typename U = na_> // size?
         struct result{
-            typedef put_pipe_aux::csv_rhs<ParList, N, U> type;
+            typedef put_pipe_aux::arg_list<ParList, N, U> type;
         };
 
         typename result<0>::type
