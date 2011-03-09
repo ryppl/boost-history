@@ -12,14 +12,10 @@
 #include <deque>
 #include <string>
 
-#include <boost/preprocessor/control/if.hpp>
-#include <boost/preprocessor/control/expr_if.hpp>
-#include <boost/preprocessor/comparison/less_equal.hpp>
-#include <boost/preprocessor/comparison/greater.hpp>
-#include <boost/preprocessor/repetition/enum_params.hpp>
-#include <boost/preprocessor/seq/first_n.hpp>
-#include <boost/preprocessor/repetition/enum_params_with_a_default.hpp>
-#include <boost/preprocessor/seq/for_each.hpp>
+#include <boost/preprocessor/comparison.hpp>
+#include <boost/preprocessor/control.hpp>
+#include <boost/preprocessor/repetition.hpp>
+#include <boost/preprocessor/seq.hpp>
 
 #include <boost/format.hpp>
 #include <boost/progress.hpp>

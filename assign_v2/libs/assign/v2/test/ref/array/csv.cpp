@@ -31,21 +31,24 @@ namespace xxx_csv{
             typedef as2::ref::nth_result_of::csv_array<3, T>::type ar_;
             ar_ ar = as2::ref::csv_array( x, y, z );
             {
-                T& rx = ar[0]; T& rz = ar[2];
-                BOOST_ASSIGN_V2_CHECK( &rx == &x );
-                BOOST_ASSIGN_V2_CHECK( &rz == &z );
+                T& a = ar[0]; T& b = ar[2];
+
+                BOOST_ASSIGN_V2_CHECK( &a == &x );
+                BOOST_ASSIGN_V2_CHECK( &b == &z );
             }
             //]
             {
-                T& rx = ar.front(); T& rz = ar.back();
-                BOOST_ASSIGN_V2_CHECK( &rx == &x );
-                BOOST_ASSIGN_V2_CHECK( &rz == &z );
+                T& a = ar.front(); T& b = ar.back();
+
+                BOOST_ASSIGN_V2_CHECK( &a == &x );
+                BOOST_ASSIGN_V2_CHECK( &b == &z );
             }
             {
-                T& rx = (*boost::begin( ar ) );
-                T& rz = *boost::next( boost::begin( ar ), 2 );
-                BOOST_ASSIGN_V2_CHECK( &rx == &x );
-                BOOST_ASSIGN_V2_CHECK( &rz == &z );
+                T& a = (*boost::begin( ar ) );
+                T& b = *boost::next( boost::begin( ar ), 2 );
+
+                BOOST_ASSIGN_V2_CHECK( &a == &x );
+                BOOST_ASSIGN_V2_CHECK( &b == &z );
             }
         }
         {
@@ -56,6 +59,7 @@ namespace xxx_csv{
                     as2::ref::csv_array( x, y, z ) | as2::ref::_get
                 )
             );
+
             BOOST_ASSIGN_V2_CHECK( x == r[0] );
             BOOST_ASSIGN_V2_CHECK( z == r[2] );
             //]
@@ -64,6 +68,7 @@ namespace xxx_csv{
             //[ref_csv_array_assign
             typedef int T; T x, y, z;
             as2::ref::csv_array( x, y, z ).assign( -1 );
+
             BOOST_ASSIGN_V2_CHECK( x == -1 );
             BOOST_ASSIGN_V2_CHECK( z == -1 );
             //]

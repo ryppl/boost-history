@@ -66,7 +66,6 @@ namespace xxx_csv{
             BOOST_ASSIGN_V2_CHECK( powers[0] == 1 );
             BOOST_ASSIGN_V2_CHECK( powers[4] == 16 );
             //]
-            //]
         }
     }
 

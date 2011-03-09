@@ -7,137 +7,79 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#include <string>
-#include <iostream>
-#include <boost/preprocessor/arithmetic.hpp>
-#include <boost/preprocessor/control.hpp>
-#include <boost/preprocessor/repetition.hpp>
-#include <boost/tuple/tuple.hpp>
-
-#include <boost/assign/v2/detail/config/tuple_limit_arity.hpp>
 #include <boost/assign/v2/detail/config/check.hpp>
-#include <boost/assign/v2/detail/functor/constructor.hpp>
-
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
-#if BOOST_ASSIGN_V2_ENABLE_CPP0X
-// do nothing
-#else
-#include <boost/assign/v2/detail/config/limit_lvalue_const_arity.hpp>
-#endif // BOOST_ASSIGN_V2_ENABLE_CPP0X
+#include <boost/assign/v2/detail/functor/constructor.hpp>
+#include <boost/tuple/tuple.hpp>
 #include <libs/assign/v2/test/detail/functor.h>
 
 namespace test_assign_v2{
 namespace xxx_detail{
 namespace xxx_functor{
 
+
     void test(){
-        using namespace boost::assign::v2;
-
-#if BOOST_ASSIGN_V2_ENABLE_CPP0X
-#define BOOST_ASSIGN_V2_n BOOST_ASSIGN_V2_LIMIT_CPP03_TUPLE_ARITY
-// That's because we are constructing a boost::tuple<>.
-#else
-#define BOOST_ASSIGN_V2_n BOOST_ASSIGN_V2_LIMIT_LVALUE_CONST_ARITY
-
-#if BOOST_ASSIGN_V2_n > BOOST_ASSIGN_V2_LIMIT_CPP03_TUPLE_ARITY
+        using namespace boost;
+        namespace as2 = assign::v2;
+#if !BOOST_ASSIGN_V2_ENABLE_CPP0X
+// Requirement specific to this test file
+#if BOOST_ASSIGN_V2_LIMIT_LVALUE_CONST_ARITY != 2
 #error
 #endif
+#endif
 
-#endif // BOOST_ASSIGN_V2_ENABLE_CPP0X
+		// Primarily tests whether a functor is overloaded on any combination of 
+        // non-const/cont within BOOST_ASSIGN_V2_LIMIT_LVALUE_CONST_ARITY
+        // (relevant only for CPP03) and on all-non-const and all-const above
+        // this limit.
 
-        {
-            // value-type   // var-type  // tuple_param
-            typedef int val_;
-            typedef int const cval_;
+		{
+        	typedef int e_; e_ x = -1, y = 1;
+            typedef boost::tuple<e_&, e_&> tuple_;
 
-            typedef val_& x_;
-            typedef cval_& y_;
-            typedef val_ z_;
+			BOOST_ASSIGN_V2_CHECK( &get<0>( as2::constructor<tuple_>()( x, y ) ) == &x );
+			BOOST_ASSIGN_V2_CHECK( &get<1>( as2::constructor<tuple_>()( x, y ) ) == &y );
 
-#define BOOST_ASSIGN_V2_MACRO(Z, n, data) data
+        }
+		{
+        	typedef int e_; e_ x = -1;
+            {
+            	typedef boost::tuple<e_&, e_ const&> tuple_;
 
-            typedef boost::tuple<
-                BOOST_PP_EXPR_IF(
-                    BOOST_ASSIGN_V2_n,
-                    x_
-                )
-                BOOST_PP_ENUM_TRAILING(
-                    BOOST_PP_IF(BOOST_PP_DEC(BOOST_ASSIGN_V2_n),1,0),
-                    BOOST_ASSIGN_V2_MACRO,
-                    y_
-                )
-                BOOST_PP_ENUM_TRAILING(
-                    BOOST_PP_SUB(BOOST_ASSIGN_V2_n,2),
-                    BOOST_ASSIGN_V2_MACRO,
-                    z_
-                )
-            > t_;
-#undef BOOST_ASSIGN_V2_MACRO
+				BOOST_ASSIGN_V2_CHECK( &get<0>( as2::constructor<tuple_>()( x, 1 ) ) == &x );
+				BOOST_ASSIGN_V2_CHECK(  get<1>( as2::constructor<tuple_>()( x, 1 ) ) == 1  );
+			}
+            {
+            	typedef boost::tuple< e_ const&, e_&> tuple_;
 
-            typedef functor_aux::constructor<t_> f_;
-            f_ f;
+				BOOST_ASSIGN_V2_CHECK(  get<0>( as2::constructor<tuple_>()( 1, x ) ) == 1 );
+				BOOST_ASSIGN_V2_CHECK( &get<1>( as2::constructor<tuple_>()( 1, x ) ) == &x  );
+			}
+        }
+		{
+        	typedef int e_; e_ x = -1, y = 0, z = 1;
+            typedef boost::tuple<e_&, e_&, e_&> tuple_;
 
-            val_ x = -1;
-            cval_ y = 0;
+			BOOST_ASSIGN_V2_CHECK( &get<0>( as2::constructor<tuple_>()( x, y, z ) ) == &x );
+			BOOST_ASSIGN_V2_CHECK( &get<1>( as2::constructor<tuple_>()( x, y, z ) ) == &y );
+        }
+#if BOOST_ASSIGN_V2_ENABLE_CPP0X
+		{
+        	typedef int e_; int y = 0;
+            typedef boost::tuple<e_ const&, e_ &, e_ const&> tuple_;
 
-#define BOOST_ASSIGN_V2_MACRO(z, n, data) data
+			BOOST_ASSIGN_V2_CHECK(  get<0>( as2::constructor<tuple_>()( -1, y, 1 ) ) == -1 );
+			BOOST_ASSIGN_V2_CHECK( &get<1>( as2::constructor<tuple_>()( -1, y, 1 ) ) == &y );
+			BOOST_ASSIGN_V2_CHECK(  get<2>( as2::constructor<tuple_>()( -1, y, 1 ) ) == 1 );
+        }
+#endif
+		{
+        	typedef int e_; 
+            typedef boost::tuple<e_ const&, e_ const&, e_ const&> tuple_;
 
-            t_ t = f(
-                BOOST_PP_EXPR_IF(
-                    BOOST_ASSIGN_V2_n,
-                    x
-                )
-                BOOST_PP_ENUM_TRAILING(
-                    BOOST_PP_IF(BOOST_PP_DEC(BOOST_ASSIGN_V2_n),1,0),
-                    BOOST_ASSIGN_V2_MACRO,
-                    y
-                )
-                BOOST_PP_ENUM_TRAILING(
-                    BOOST_PP_SUB(BOOST_ASSIGN_V2_n, 2),
-                    BOOST_ASSIGN_V2_MACRO,
-                    1
-                )
-            );
-#undef BOOST_ASSIGN_V2_MACRO
-            BOOST_PP_EXPR_IF(
-                BOOST_ASSIGN_V2_n,
-                BOOST_ASSIGN_V2_CHECK(
-                    &boost::get<0>( t ) == &x
-                );
-            )
-            BOOST_PP_EXPR_IF(
-                BOOST_PP_DEC(BOOST_ASSIGN_V2_n),
-                BOOST_ASSIGN_V2_CHECK(
-                    &boost::get<1>( t ) == &y
-                );
-            )
-
-#define BOOST_ASSIGN_V2_MACRO(z, i, data ) \
-    BOOST_ASSIGN_V2_CHECK( \
-        boost::get< BOOST_PP_ADD(i,2) >( t ) == 1 \
-    ); \
-/**/
-
-            BOOST_PP_REPEAT(
-                BOOST_PP_SUB(BOOST_ASSIGN_V2_n,2),
-                BOOST_ASSIGN_V2_MACRO,
-                ~
-            )
-#undef BOOST_ASSIGN_V2_MACRO
-
-            typedef std::string str_;
-            const str_ cpp
-                = BOOST_ASSIGN_V2_ENABLE_CPP0X ? "C++0x" : "C++03";
-            const str_ str = str_("test_assign_v2::xxx_detail::xxx_functor")
-                + "{ " + cpp + ", arity = ";
-
-            std::cout
-                << str
-                << BOOST_ASSIGN_V2_n
-                << " }"
-                << std::endl;
-
-#undef BOOST_ASSIGN_V2_n
+			BOOST_ASSIGN_V2_CHECK( get<0>( as2::constructor<tuple_>()( -1, 0, 1 ) ) == -1 );
+			BOOST_ASSIGN_V2_CHECK( get<1>( as2::constructor<tuple_>()( -1, 0, 1 ) ) == 0 );
+			BOOST_ASSIGN_V2_CHECK( get<2>( as2::constructor<tuple_>()( -1, 0, 1 ) ) == 1 );
         }
     }
 

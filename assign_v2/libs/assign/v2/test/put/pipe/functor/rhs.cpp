@@ -13,7 +13,7 @@
 #include <boost/assign/v2/detail/check/equal_val.hpp>
 #include <boost/assign/v2/detail/check/equal_ref.hpp>
 #include <boost/assign/v2/put/modifier/repeat.hpp>
-#include <boost/assign/v2/put/pipe/functor.hpp> // rhs?
+#include <boost/assign/v2/put/pipe/functor.hpp> 
 #include <boost/assign/v2/utility/csv.hpp>
 #include <libs/assign/v2/test/put/pipe/functor/rhs.h>
 
@@ -31,7 +31,7 @@ namespace xxx_rhs{
             typedef as2::put_pipe_aux::rhs<> rhs_;
             int x = -1;
             BOOST_AUTO( rhs, ( ( rhs_() %  ( as2::_repeat = 3 ) )( x ) ) );
-            int n = as2::ref::at<0>( rhs.pars() ).arg();
+            int n = as2::ref::at<0>( rhs.par_list_cont() ).arg();
             BOOST_ASSIGN_V2_CHECK( n == 3 );
         }
         namespace chk = as2::check_aux;

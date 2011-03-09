@@ -1,16 +1,10 @@
 
 // Test
-//#include <libs/assign/v2/test/detail.h>
-//#include <libs/assign/v2/test/ref.h>
+#include <libs/assign/v2/test/detail.h>
+#include <libs/assign/v2/test/ref.h>
 //#include <libs/assign/v2/test/put.h>
 //#include <libs/assign/v2/test/utility.h>
 //#include <libs/assign/v2/test/other.h>
-
-#include <libs/assign/v2/test/put/container/functor.h>
-#include <libs/assign/v2/test/put/modifier/standard.h>
-#include <libs/assign/v2/test/put/modifier/iterate.h>
-#include <libs/assign/v2/test/put/modifier/lookup.h>
-#include <libs/assign/v2/test/put/modifier/repeat.h>
 
 // Speed
 //#include <fstream>
@@ -50,19 +44,13 @@ int main (int argc, char * const argv[])
 		std::cout << cpp0x << std::endl;
 	}
     {
-        /*
         using namespace test_assign_v2;
-        xxx_detail::test();
+        /*
         xxx_put::test();
         xxx_ref::test();
         xxx_utility::test();
         xxx_other::test();
         */
-        using namespace test_assign_v2;
-        xxx_put::xxx_container::xxx_functor::test();
-        xxx_put::xxx_modifier::xxx_standard::test();
-        xxx_put::xxx_modifier::xxx_iterate::test();
-        xxx_put::xxx_modifier::xxx_repeat::test();
     }
 
     /*

@@ -10,7 +10,7 @@
 #include <libs/assign/v2/test/put/container.h>
 #include <libs/assign/v2/test/put/deduce.h>
 #include <libs/assign/v2/test/put/deque.h>
-#include <libs/assign/v2/test/put/modulo.h>
+#include <libs/assign/v2/test/put/fun.h>
 #include <libs/assign/v2/test/put/pipe.h>
 #include <libs/assign/v2/test/put/ptr.h>
 #include <libs/assign/v2/test/put.h>
@@ -23,7 +23,7 @@ namespace xxx_put{
         xxx_container::test();
         xxx_deduce::test();
         xxx_deque::test();
-        xxx_modulo::test();
+        xxx_fun::test();
         xxx_pipe::test();
         xxx_ptr::test();
     }
