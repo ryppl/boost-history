@@ -12,7 +12,6 @@
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
 #include <boost/assign/v2/ref/array/csv_array.hpp>
 #include <boost/assign/v2/ref/wrapper/copy.hpp>
-#include <boost/assign/v2/put/pipe/csv/arg_list.hpp>
 #include <boost/assign/v2/put/pipe/modulo_traits.hpp>
 #include <boost/mpl/apply.hpp>
 #include <boost/mpl/vector/vector0.hpp>
