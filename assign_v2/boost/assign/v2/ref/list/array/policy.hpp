@@ -12,7 +12,6 @@
 #include <boost/assign/v2/ref/array/alloc/lazy.hpp>
 #include <boost/assign/v2/ref/list/fwd.hpp>
 #include <boost/assign/v2/ref/list/holder.hpp>
-#include <boost/assign/v2/ref/list/size_type.hpp>
 #include <boost/assign/v2/ref/list/policy.hpp>
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/identity.hpp>

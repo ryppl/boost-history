@@ -12,14 +12,15 @@
 #include <queue>
 #include <set>
 #include <string>
-#include <boost/mpl/assert.hpp>
-#include <boost/typeof/typeof.hpp>
-#include <boost/lambda/lambda.hpp>
-#include <boost/type_traits/is_same.hpp>
 #include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/put/modifier/standard.hpp>
-#include <boost/assign/v2/put/container/functor.hpp>
+#include <boost/assign/v2/put/container/put.hpp>
 #include <boost/assign/v2/put/deque.hpp>
+#include <boost/lambda/lambda.hpp>
+#include <boost/mpl/apply.hpp>
+#include <boost/mpl/assert.hpp>
+#include <boost/type_traits/is_same.hpp>
+#include <boost/typeof/typeof.hpp>
 #include <libs/assign/v2/test/put/modifier/standard.h>
 
 namespace test_assign_v2{

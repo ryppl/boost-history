@@ -11,7 +11,6 @@
 #define BOOST_ASSIGN_V2_REF_LIST_ARRAY_REBIND_ER_2010_HPP
 #include <boost/assign/v2/ref/list/fwd.hpp>
 #include <boost/assign/v2/ref/list/at.hpp>
-#include <boost/assign/v2/ref/list/size_type.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/equal_to.hpp>
 #include <boost/mpl/int.hpp>

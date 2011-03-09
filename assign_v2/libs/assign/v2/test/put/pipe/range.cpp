@@ -14,6 +14,7 @@
 #include <boost/tuple/tuple.hpp>
 #include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/put/pipe/range.hpp>
+#include <boost/assign/v2/put/container/put.hpp>
 #include <libs/assign/v2/test/put/pipe/range.h>
 
 namespace test_assign_v2{

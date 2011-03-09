@@ -11,8 +11,8 @@
 #include <boost/spirit/home/phoenix.hpp>
 #include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/put/modulo/fun.hpp>
-#include <boost/assign/v2/put/pipe/functor.hpp>
-#include <boost/assign/v2/put/pipe/csv.hpp>
+#include <boost/assign/v2/put/pipe/put.hpp>
+#include <boost/assign/v2/put/pipe/csv_put.hpp>
 #include <libs/assign/v2/test/put/pipe/fun.h>
 
 namespace test_assign_v2{

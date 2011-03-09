@@ -17,7 +17,7 @@
 #include <boost/assign/v2/detail/functor/identity.hpp>
 #include <boost/assign/v2/put/fun/identity.hpp>
 #include <boost/assign/v2/put/modifier/lookup.hpp>
-#include <boost/assign/v2/put/pipe/functor.hpp>
+#include <boost/assign/v2/put/pipe/put.hpp>
 #include <libs/assign/v2/test/put/pipe/modifier/lookup.h>
 
 namespace test_assign_v2{

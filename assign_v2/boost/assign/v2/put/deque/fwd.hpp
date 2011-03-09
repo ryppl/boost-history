@@ -15,9 +15,11 @@ namespace assign{
 namespace v2{
 namespace put_aux{
 
-    template<typename T, typename F, typename Tag> class deque_cont;
+    template<typename T> struct deque_impl;
 
-}// put_deque_aux
+    template<typename T, typename F, typename Tag> class deque_adapter;
+
+}// put_aux
 }// v2
 }// assign
 }// boost

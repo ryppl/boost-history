@@ -17,6 +17,8 @@ namespace v2{
 namespace ref{
 namespace list_aux{
 
+    typedef int size_type;
+
     template<typename Tag> struct empty_list;
 
     struct void_;

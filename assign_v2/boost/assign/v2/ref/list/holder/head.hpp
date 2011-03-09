@@ -13,41 +13,13 @@
 #include <boost/config.hpp>
 #include <boost/type_traits/add_reference.hpp>
 
-/* 
-// TODO possible extension
-#include <boost/config.hpp>
-#ifndef BOOST_NO_RVALUE_REFERENCES
-#include <utility>
-#endif */
-
 namespace boost{
 namespace assign{
 namespace v2{
 namespace ref{
 namespace list_aux{
 
-/* // TODO possible extension, but unsure effects in relation with ref-arrays
-
-#ifndef BOOST_NO_RVALUE_REFERENCES
-    template<typename T>
-    struct  head_holder{
-
-        typedef T head_value_type;
-
-        explicit head_holder(T&& t)
-            : head(
-                std::move( t )
-            ){}
-
-        T&& head;
-
-    };
-#else */
-
-    template<typename T> struct head_holder{
-        // undefined
-    };
-//#endif
+    template<typename T> struct head_holder{};
 
     template<typename T> struct head_holder<T&>{
 

@@ -16,7 +16,7 @@
 
 #include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/put/modifier/iterate.hpp>
-#include <boost/assign/v2/put/container/functor.hpp>
+#include <boost/assign/v2/put/container/put.hpp>
 #include <boost/assign/v2/put/deque.hpp>
 #include <libs/assign/v2/test/put/modifier/iterate.h>
 

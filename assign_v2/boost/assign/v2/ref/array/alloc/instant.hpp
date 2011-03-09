@@ -9,8 +9,8 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_REF_ARRAY_ALLOC_INSTANT_ER_2010_HPP
 #define BOOST_ASSIGN_V2_REF_ARRAY_ALLOC_INSTANT_ER_2010_HPP
+#include <boost/assign/v2/ref/array/alloc/impl_traits.hpp>
 #include <boost/assign/v2/ref/array/alloc/instant_fwd.hpp>
-#include <boost/assign/v2/ref/array/impl_traits.hpp>
 #include <boost/assign/v2/ref/array/interface.hpp>
 #include <boost/assign/v2/ref/wrapper.hpp>
 

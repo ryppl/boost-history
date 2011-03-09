@@ -9,7 +9,12 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_REF_ARRAY_CSV_ER_2010_HPP
 #define BOOST_ASSIGN_V2_REF_ARRAY_CSV_ER_2010_HPP
-#include <boost/assign/v2/ref/array/csv/make.hpp>
-#include <boost/assign/v2/ref/array/csv/nth_result_of.hpp>
+#include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
+#include <boost/assign/v2/ref/array/csv/common.hpp>
+#if BOOST_ASSIGN_V2_ENABLE_CPP0X
+#include <boost/assign/v2/ref/array/csv/cpp0x.hpp>
+#else
+#include <boost/assign/v2/ref/array/csv/cpp03.hpp>
+#endif
 
 #endif // BOOST_ASSIGN_V2_REF_ARRAY_CSV_ER_2010_HPP

@@ -13,10 +13,9 @@
 #include <boost/assign/v2/ref/list/as_modulo_list.hpp>
 #include <boost/assign/v2/ref/list/at.hpp>
 #include <boost/assign/v2/ref/list/container.hpp>
+#include <boost/assign/v2/ref/list/fwd.hpp>
 #include <boost/assign/v2/ref/list/holder.hpp>
-#include <boost/assign/v2/ref/list/make.hpp>
-#include <boost/assign/v2/ref/list/nth_result_of.hpp>
+#include <boost/assign/v2/ref/list/list.hpp>
 #include <boost/assign/v2/ref/list/policy.hpp>
-#include <boost/assign/v2/ref/list/size_type.hpp>
 
 #endif // BOOST_ASSIGN_V2_REF_LIST_ER_2010_HPP

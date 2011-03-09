@@ -11,7 +11,7 @@
 #include <boost/typeof/typeof.hpp>
 #include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/put/modifier/repeat.hpp>
-#include <boost/assign/v2/put/pipe/functor.hpp>
+#include <boost/assign/v2/put/pipe/put.hpp>
 #include <libs/assign/v2/test/put/pipe/modifier/repeat.h>
 
 namespace test_assign_v2{

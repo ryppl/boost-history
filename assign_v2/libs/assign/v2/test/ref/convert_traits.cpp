@@ -21,7 +21,7 @@ namespace xxx_convert_traits{
         {
             ns::same_value_type::do_check<int>();
         }
-// TODO, in the future
+// TODO, possible extension
 /*
         {
             namespace dv = ns::distinct_values;

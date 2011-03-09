@@ -13,7 +13,7 @@
 #include <boost/assign/v2/detail/check/equal_val.hpp>
 #include <boost/assign/v2/detail/check/equal_ref.hpp>
 #include <boost/assign/v2/put/modifier/repeat.hpp>
-#include <boost/assign/v2/put/pipe/functor.hpp> 
+#include <boost/assign/v2/put/pipe/put.hpp> 
 #include <boost/assign/v2/utility/csv.hpp>
 #include <libs/assign/v2/test/put/pipe/args_list.h>
 
@@ -29,7 +29,10 @@ namespace xxx_args_list{
         {
             typedef as2::put_pipe_aux::args_list<> args_list_;
             int x = -1;
-            BOOST_AUTO( args_list, ( ( args_list_() %  ( as2::_repeat = 3 ) )( x ) ) );
+            BOOST_AUTO( 
+            	args_list, 
+                ( ( args_list_() %  ( as2::_repeat = 3 ) )( x ) ) 
+            );
             int n = as2::ref::at<0>( args_list.par_list_cont() ).arg();
             BOOST_ASSIGN_V2_CHECK( n == 3 );
         }

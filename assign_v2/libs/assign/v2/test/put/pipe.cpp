@@ -18,7 +18,8 @@ namespace test_assign_v2{
 namespace xxx_put{
 namespace xxx_pipe{
 
-    void test(){
+    void test()
+    {
         xxx_args_list::test();
         xxx_modifier::test();
         xxx_fun::test();

@@ -10,7 +10,7 @@
 #ifndef BOOST_ASSIGN_V2_PUT_PIPE_MODULO_TRAITS_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_PIPE_MODULO_TRAITS_ER_2010_HPP
 #include <boost/assign/v2/ref/list/as_modulo_list.hpp>
-#include <boost/assign/v2/ref/list/nth_result_of.hpp>
+#include <boost/assign/v2/ref/list/list.hpp>
 #include <boost/mpl/apply.hpp>
 #include <boost/mpl/push_back.hpp>
 #include <boost/mpl/size.hpp>

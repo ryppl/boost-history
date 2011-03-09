@@ -13,13 +13,7 @@
 #include <boost/assign/v2/ref/list/holder/tail.hpp>
 #include <boost/assign/v2/ref/list/holder/head.hpp>
 #include <boost/assign/v2/ref/list/policy.hpp>
-/* // TODO possible extension
-#include <boost/config.hpp>
-#ifndef BOOST_NO_RVALUE_REFERENCES
-#include <utility>
-#else */
 #include <boost/call_traits.hpp>
-//#endif
 #include <boost/mpl/apply.hpp>
 #include <boost/type_traits/is_same.hpp>
 
@@ -49,26 +43,6 @@ namespace list_aux{
             typedef container<Tag, H1, this_> type;
         };
 
-/* // TODO possible extension
-#ifndef BOOST_NO_RVALUE_REFERENCES
-        explicit container(
-            H&& h,
-            typename boost::call_traits<T>::param_type  t
-        )
-            : head_holder_( std::forward<H>( h ) ),
-            tail_holder_( t )
-        {
-        }
-
-        template<typename H1>
-        typename result<H1>::type
-        operator()(H1&& h)const{
-            typedef typename result<H1>::type result_;
-            return result_( std::forward<H1>( h ), *this);
-        }
-
-#else */
-
         explicit container(
             H h,
             typename boost::call_traits<T>::param_type t
@@ -90,8 +64,6 @@ namespace list_aux{
             return result_( h, *this);
         }
         
-// #endif
-
 
     };
 

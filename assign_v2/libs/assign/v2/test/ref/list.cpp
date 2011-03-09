@@ -8,15 +8,14 @@
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
 #include <string>
-#include <boost/mpl/assert.hpp>
-#include <boost/mpl/int.hpp>
-#include <boost/mpl/apply.hpp>
-#include <boost/mpl/vector/vector0.hpp>
-#include <boost/mpl/vector/vector10.hpp>
 #include <boost/array.hpp>
 #include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/ref/wrapper/copy.hpp>
 #include <boost/assign/v2/ref/list.hpp>
+#include <boost/mpl/apply.hpp>
+#include <boost/mpl/assert.hpp>
+#include <boost/mpl/int.hpp>
+#include <boost/mpl/vector.hpp>
 #include <boost/type_traits/add_reference.hpp>
 #include <libs/assign/v2/test/ref/list.h>
 
@@ -36,7 +35,7 @@ namespace xxx_list{
             typedef boost::add_reference<t0_>::type r0_;
 
 
-/* // TODO see head_holder
+/* // TODO possible extension
 #ifndef BOOST_NO_RVALUE_REFERENCES
             typedef int r1_;
 #else*/

@@ -20,6 +20,9 @@ namespace array_aux{
     typedef std::size_t size_type;
 
 }// array_aux
+
+	typedef array_aux::size_type array_size_type;
+
 }// ref
 }// v2
 }// assign

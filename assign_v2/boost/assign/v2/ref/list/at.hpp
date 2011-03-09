@@ -10,7 +10,6 @@
 #ifndef BOOST_ASSIGN_V2_REF_LIST_AT_ER_2010_HPP
 #define BOOST_ASSIGN_V2_REF_LIST_AT_ER_2010_HPP
 #include <boost/assign/v2/ref/list/fwd.hpp>
-#include <boost/assign/v2/ref/list/size_type.hpp>
 #include <boost/assign/v2/ref/list/holder.hpp>
 #include <boost/call_traits.hpp>
 #include <boost/mpl/bool.hpp>
@@ -26,17 +25,16 @@ namespace list_aux{
 
     template<size_type I, typename T>
     struct is_head :
-        ::boost::mpl::bool_< I + 1 == T::static_size::value>{};
-//        ::boost::mpl::bool_< I + 1 == T::size::value>{};
+        ::boost::mpl::bool_<I + 1 == T::static_size::value>{};
 
 namespace result_of{
 
-        template<size_type I, typename T>
-        struct at : ::boost::mpl::eval_if<
-            list_aux::is_head<I, T>
-            ,head_reference<T>
-            ,result_of::at<I, typename tail_of<T>::type>
-        >{};
+    template<size_type I, typename T>
+    struct at : ::boost::mpl::eval_if<
+        list_aux::is_head<I, T>
+        ,head_reference<T>
+        ,result_of::at<I, typename tail_of<T>::type>
+    >{};
 
 }// result_of
 
@@ -70,6 +68,8 @@ namespace result_of{
 }// list_aux
 using list_aux::at;
 namespace result_of{
+
+	// TODO rename at_list
 
     template<list_aux::size_type I, typename T>
     struct at : list_aux::result_of::at<I, T>{};
