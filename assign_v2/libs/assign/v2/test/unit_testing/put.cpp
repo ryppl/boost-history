@@ -21,19 +21,11 @@
 #include <libs/assign/v2/test/put/container/range.cpp>
 #include <libs/assign/v2/test/put/deque/functor.cpp>
 
-#include <libs/assign/v2/test/put/modulo/fun.cpp>
-#include <libs/assign/v2/test/put/modulo/std.cpp>
-#include <libs/assign/v2/test/put/modulo/ext.cpp>
 
 #include <libs/assign/v2/test/put/ptr.cpp>
 
-#include <libs/assign/v2/test/put/pipe/functor/forward.cpp>
 #include <libs/assign/v2/test/put/pipe/functor/rhs.cpp>
 #include <libs/assign/v2/test/put/pipe/functor/str_literal.cpp>
-#include <libs/assign/v2/test/put/pipe/container.cpp>
-#include <libs/assign/v2/test/put/pipe/modulo/forward.cpp>
-#include <libs/assign/v2/test/put/pipe/modulo/fun.cpp>
-#include <libs/assign/v2/test/put/pipe/modulo/std.cpp>
 #include <libs/assign/v2/test/put/pipe/range.cpp>
 
 #include <boost/test/unit_test.hpp>

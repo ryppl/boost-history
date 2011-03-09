@@ -8,7 +8,7 @@
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
 #include <libs/assign/v2/test/utility/chain.h>
-#include <libs/assign/v2/test/utility/convert.h>
+#include <libs/assign/v2/test/utility/conversion.h>
 #include <libs/assign/v2/test/utility.h>
 
 namespace test_assign_v2{
@@ -17,7 +17,7 @@ namespace xxx_utility{
     void test()
     {
         xxx_chain::test();
-        xxx_convert::test();
+        xxx_conversion::test();
     }
 
 }// xxx_type_traits
