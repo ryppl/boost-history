@@ -50,10 +50,11 @@ namespace array_aux{
 
     };
 
+//[array_interface
     template<typename Impl, typename D>
     class interface
     {
-
+//<-
         typedef interface_traits<Impl> traits_;
         typedef typename traits_::wrapper_ wrapper_;
         typedef typename traits_::impl_ impl_;
@@ -61,7 +62,7 @@ namespace array_aux{
         typedef interface<Impl, D> this_;
         typedef typename traits_::result_of_get_ result_of_get_;
         typedef typename traits_::param_type param_type;
-
+//->
         public:
 
         typedef wrapper_ wrapper_type;
@@ -76,69 +77,69 @@ namespace array_aux{
 
         BOOST_STATIC_CONSTANT(size_type, static_size = Impl::static_size);
 
-        iterator begin()
+        iterator begin()//<-
         {
             return boost::begin( this->wrappers() );
-        }
-        iterator end()
+        }//->
+        iterator end()//<-
         {
             return boost::end( this->wrappers() );
-        }
-        const_iterator begin()const
+        }//->
+        const_iterator begin()const//<-
         {
             return boost::begin( this->wrappers() );
-        }
-        const_iterator end()const
+        }//->
+        const_iterator end()const//<-
         {
             return boost::end( this->wrappers() );
-        }
+        }//->
 
-        size_type size() const
+        size_type size() const//<-
         {
             return this->wrappers().size();
-        }
-        bool empty() const
+        }//->
+        bool empty() const//<-
         {
             return this->wrappers().empty();
-        }
+        }//->
 
-        void rebind(size_type i, result_of_get_ t)
+        void rebind(size_type i, result_of_get_ t)//<-
         {
             return (this->wrappers())[i].rebind( t );
-        }
+        }//->
 
-        reference operator[](size_type i)
+        reference operator[](size_type i)//<-
         {
             return this->elem_impl( this->wrappers()[i] );
-        }
-        const_reference operator[](size_type i)const
+        }//->
+        const_reference operator[](size_type i)const//<-
         {
             return this->elem_impl( this->wrappers()[i] );
-        }
+        }//->
 
-        reference front()
+        reference front()//<-
         {
             return this->elem_impl( this->wrappers().front() );
-        }
-        const_reference front() const
+        }//->
+        const_reference front() const//<-
         {
             return this->elem_impl( this->wrappers().front() );
-        }
-        reference back()
+        }//->
+        reference back()//<-
         {
             return this->elem_impl( this->wrappers().back() );
-        }
-        const_reference back() const
+        }//->
+        const_reference back() const//<-
         {
             return this->elem_impl( this->wrappers().back() );
-        }
+        }//->
 
-        void assign(param_type val)
+        void assign(param_type val)//<-
         {
             typedef ::boost::mpl::int_<0> int_;
             this->assign_impl( val, int_() );
-        }
-
+        }//->
+//<-
         protected:
 
         void assign_impl(param_type val, ::boost::mpl::int_<static_size>)
@@ -167,11 +168,13 @@ namespace array_aux{
 
         public:
 
-        impl_& wrappers(){
+        impl_& wrappers()//<-
+        {
             return static_cast<D&>(*this).impl();
         }
 
-        cimpl_& wrappers()const{
+        cimpl_& wrappers()const//<-
+        {
             return static_cast<const D&>(*this).impl();
         }
 
