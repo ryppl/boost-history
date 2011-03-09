@@ -27,21 +27,17 @@ namespace list_aux{
     struct is_head :
         ::boost::mpl::bool_<I + 1 == T::static_size::value>{};
 
-namespace result_of{
-
     template<size_type I, typename T>
-    struct at : ::boost::mpl::eval_if<
+    struct at_list : ::boost::mpl::eval_if<
         list_aux::is_head<I, T>
         ,head_reference<T>
-        ,result_of::at<I, typename tail_of<T>::type>
+        ,at_list<I, typename tail_of<T>::type>
     >{};
-
-}// result_of
 
         template<size_type I, typename T>
         typename boost::lazy_enable_if<
             list_aux::is_head<I, T>,
-            list_aux::result_of::at<I, T>
+            list_aux::at_list<I, T>
         >::type
         at_helper(T const& t)
         {
@@ -51,7 +47,7 @@ namespace result_of{
         template<size_type I, typename T>
         typename boost::lazy_disable_if<
             is_head<I, T>,
-            list_aux::result_of::at<I, T>
+            list_aux::at_list<I, T>
         >::type
         at_helper(T const& t)
         {
@@ -59,7 +55,7 @@ namespace result_of{
         }
 
         template<size_type I, typename Tag, typename H, typename T>
-        typename list_aux::result_of::at<I, container<Tag, H, T> >::type
+        typename list_aux::at_list<I, container<Tag, H, T> >::type
         at(container<Tag, H, T> const& t)
         {
             return at_helper<I>( t );
@@ -67,14 +63,10 @@ namespace result_of{
 
 }// list_aux
 using list_aux::at;
-namespace result_of{
-
-	// TODO rename at_list
 
     template<list_aux::size_type I, typename T>
-    struct at : list_aux::result_of::at<I, T>{};
+    struct list_at : list_aux::at_list<I, T>{};
 
-}// result_of
 }// ref
 }// v2
 }// assign

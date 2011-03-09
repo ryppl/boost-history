@@ -21,17 +21,6 @@ namespace xxx_convert_traits{
         {
             ns::same_value_type::do_check<int>();
         }
-// TODO, possible extension
-/*
-        {
-            namespace dv = ns::distinct_values;
-            namespace ari = dv::arithmetic;
-            ari::do_check<short>();
-            ari::do_check<int>();
-            ari::do_check<float>();
-            ari::do_check<double>();
-        }
-*/
     }
 
 }// convert_traits
