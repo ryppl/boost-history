@@ -9,16 +9,13 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_PUT_PIPE_FUNCTOR_RHS_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_PIPE_FUNCTOR_RHS_ER_2010_HPP
-#include <iostream>
-#include <boost/mpl/vector/vector0.hpp>
+#include <boost/mpl/apply.hpp>
 #include <boost/mpl/int.hpp>
 #include <boost/mpl/size.hpp>
-#include <boost/mpl/apply.hpp>
-
-#include <boost/assign/v2/put/pipe/modulo/size_type.hpp>
-#include <boost/assign/v2/put/pipe/modulo/traits.hpp>
+#include <boost/mpl/vector/vector0.hpp>
 
 #include <boost/assign/v2/ref/list_tuple.hpp>
+#include <boost/assign/v2/put/pipe/modulo_traits.hpp>
 
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
@@ -37,51 +34,32 @@ namespace assign{
 namespace v2{
 namespace put_pipe_aux{
 
-    typedef ::boost::mpl::vector0<> empty_seq_args_;
-
-    template<
-        typename Pars = empty_pars_,
-        typename SeqArgs = empty_seq_args_,
-        bool enable_pars = (boost::mpl::size<SeqArgs>::value == 0)
-    >
-    class rhs;
-
-    template<typename Pars, typename SeqArgs, bool enable_pars>
-    struct rhs_result_helper
-    {
-
-        template<typename V>
-        struct apply
-        {
-            typedef typename ::boost::mpl::push_back<
-                SeqArgs,
-                V
-            >::type new_;
-            typedef put_pipe_aux::rhs<
-                Pars,
-                new_
-            > type;
-        };
-
-    };
+    typedef ::boost::mpl::vector0<> empty_args_list_;
 
 #if! BOOST_ASSIGN_V2_ENABLE_CPP0X
     typedef ref::list_tuple_aux::na_type na_type;
 #endif
 
-    template<typename Pars, typename SeqArgs, bool enable_pars>
+    template<typename ParList = empty_par_list_, typename ArgsList = empty_args_list_, bool enable_pars = ::boost::mpl::size<ArgsList>::value == 0>
+    class rhs;
+
+    template<typename ParList, typename ArgsList, bool enable_pars>
     struct rhs_result
     {
-        typedef rhs_result_helper<
-            Pars,
-            SeqArgs,
-            enable_pars
-        > helper_;
+
+        template<typename V>
+        struct next_helper
+        {
+        	typedef typename ::boost::mpl::push_back<
+            	ArgsList, V
+            >::type next_args_list_;
+        	typedef rhs<ParList,  next_args_list_,  enable_pars> type;
+        };
 
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 
         template<typename...Args>
-        struct apply : helper_::template apply<
+        struct apply : next_helper<
             typename ::boost::mpl::detail::variadic_vector<
                 Args...
             >::type
@@ -91,71 +69,65 @@ namespace put_pipe_aux{
 #else
 
         template<typename V>
-        struct apply : helper_::template apply<V>{};
+        struct apply : next_helper<V>{};
 
 #endif
 
     };
 
 
-    template<typename Pars, typename SeqArgs, bool enable_pars>
+    template<typename ParList, typename ArgsList, bool enable_pars>
     class rhs
-#if BOOST_ASSIGN_V2_ENABLE_CPP0X
-//do nothing
-#else
+#if !BOOST_ASSIGN_V2_ENABLE_CPP0X
         :    public functor_aux::crtp_unary_and_up<
-                rhs<Pars, SeqArgs, enable_pars>,
-                rhs_result<Pars, SeqArgs, enable_pars>
+                rhs<ParList, ArgsList, enable_pars>,
+                rhs_result<ParList, ArgsList, enable_pars>
             >
-#endif
+#endif // BOOST_ASSIGN_V2_ENABLE_CPP0X
     {
         typedef boost::use_default list_tag_;
-        typedef modulo_traits<Pars> modulo_traits_;
-        typedef ref::nth_result_of::list_tuple meta2_;
+        typedef modulo_traits<ParList> modulo_traits_;
+        typedef ref::nth_result_of::list_tuple meta_;
 
         public:
 
-        typedef typename modulo_traits_::size pars_size;
-        typedef typename modulo_traits_::cont_ pars_cont_type;
+        typedef typename modulo_traits_::size par_list_size;
+        typedef typename modulo_traits_::cont_ par_list_cont_type;
 
         BOOST_STATIC_CONSTANT(
-            std::size_t,
-            seq_args_size = ::boost::mpl::size<SeqArgs>::value
-        );
-
+            std::size_t, // size_type?
+            args_list_size = ::boost::mpl::size<ArgsList>::value
+        ); 
+    
         typedef typename ::boost::mpl::apply1<
-            meta2_,
-            SeqArgs
-        >::type seq_args_cont_type;
+        	meta_, ArgsList
+        >::type args_list_cont_type;
 
         rhs(){}
-        explicit rhs(
-            pars_cont_type const& p,
-            seq_args_cont_type const& s
-        ) : pars_cont( p ),
-        seq_args_cont( s ){}
+        explicit rhs(par_list_cont_type const& a, args_list_cont_type const& b) 
+        	: par_list_cont_( a ), args_list_cont_( b ){}
 
         // operator%
 
-        template<typename T>
+        template<typename P>
         struct modulo_result
         {
-            typedef typename modulo_traits_::
-                template new_pars<T>::type new_;
-            typedef rhs<new_, SeqArgs> type;
+            typedef typename modulo_traits_::template 
+            	next_par_list<P>::type par_list_;
+            typedef rhs<par_list_, ArgsList> type;
         };
 
-        template<typename T>
+        template<typename P>
         typename boost::lazy_enable_if_c<
             enable_pars,
-            modulo_result<T>
+            modulo_result<P>
         >::type
-        operator%(T const& t)const
+        operator%(P const& p)const
         {
-            typedef typename modulo_result<T>::type result_;
+            typedef typename modulo_result<P>::type result_;
             return result_(
-                this->pars_cont( t ),
-                this->seq_args_cont
+                this->par_list_cont()( p ),
+                this->args_list_cont()
             );
         }
 
@@ -166,18 +138,18 @@ namespace put_pipe_aux{
             typename...Args
 #else
             typename VArgs
-#endif
+#endif // BOOST_ASSIGN_V2_ENABLE_CPP0X
         >
         struct result : rhs_result<
-            Pars,
-            SeqArgs,
+            ParList,
+            ArgsList,
             enable_pars
         >::template apply<
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
             Args...
 #else
             VArgs
-#endif
+#endif // BOOST_ASSIGN_V2_ENABLE_CPP0X
         >{};
 
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
@@ -190,8 +162,8 @@ namespace put_pipe_aux{
         {
             typedef typename result<Args...>::type result_;
             return result_(
-                this->pars_cont,
-                this->seq_args_cont(
+                this->par_list_cont(),
+                this->args_list_cont()(
                     std::forward<Args>( args )...
                 )
             );
@@ -202,24 +174,24 @@ namespace put_pipe_aux{
 
         typedef functor_aux::crtp_unary_and_up<
             rhs,
-            rhs_result<Pars, SeqArgs, enable_pars>
+            rhs_result<ParList, ArgsList, enable_pars>
         > super_t;
 
         typedef ::boost::mpl::vector0<> v0_;
 
         public:
 
+        using super_t::operator();
+
         typename result<v0_>::type
         operator()()const
         {
             typedef typename result<v0_>::type result_;
             return result_(
-                this->pars_cont,
-                this->seq_args_cont()
+                this->par_list_cont(),
+                this->args_list_cont()()
             );
         }
-
-        using super_t::operator();
 
 #define BOOST_ASSIGN_V2_MACRO1( z, n, data )\
  ( BOOST_PP_CAT(_,n) )\
@@ -237,8 +209,8 @@ namespace put_pipe_aux{
         > v_;\
         typedef typename result<v_>::type result_;\
         return result_(\
-            this->pars_cont,\
-            this->seq_args_cont( BOOST_PP_ENUM_PARAMS(N1, _) )\
+            this->par_list_cont(),\
+            this->args_list_cont()( BOOST_PP_ENUM_PARAMS(N1, _) )\
         );\
     }\
 /**/
@@ -253,19 +225,19 @@ BOOST_PP_REPEAT_FROM_TO(
 
 #endif // BOOST_ASSIGN_V2_ENABLE_CPP0X
 
-        pars_cont_type const& pars()const
+        par_list_cont_type const& par_list_cont()const
         {
-            return this->pars_cont;
+            return this->par_list_cont_;
         }
-        seq_args_cont_type const& seq_args()const
+        args_list_cont_type const& args_list_cont()const
         {
-            return this->seq_args_cont;
+            return this->args_list_cont_;
         }
 
         protected:
 
-        pars_cont_type pars_cont;
-        seq_args_cont_type seq_args_cont;
+        par_list_cont_type par_list_cont_;
+        args_list_cont_type args_list_cont_;
 
     };
 
@@ -280,12 +252,12 @@ BOOST_PP_REPEAT_FROM_TO(
         #endif
         
         //std::cout << "(i,j)->" << get<j>(
-        //        rhs.seq_args().get( boost::mpl::int_<i>() )
+        //        rhs.args_list().get( boost::mpl::int_<i>() )
         //    ) << std::endl;
         
         pred(
             get<j>(
-                rhs.seq_args().get( boost::mpl::int_<i>() )
+                rhs.args_list_cont().get( boost::mpl::int_<i>() )
             ),
             u
         );

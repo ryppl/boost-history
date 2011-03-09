@@ -9,23 +9,25 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_PUT_MODULO_MODIFIER_META_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_MODULO_MODIFIER_META_ER_2010_HPP
-#include <boost/preprocessor/cat.hpp>
-#include <boost/mpl/apply.hpp>
 #include <boost/assign/v2/put/frame/replace_parameter.hpp>
+#include <boost/mpl/apply.hpp>
+#include <boost/preprocessor/cat.hpp>
 
 namespace boost{
 namespace assign{
 namespace v2{
+//[meta_modifier_tag
 namespace put_aux{
     
 	template<typename Keyword, typename Arg>
 	struct /*<<Meta-function class to be specialized on Keyword>>*/ meta_modifier_tag
 	{
         template<typename /*<<Inherits crtp\<\> >>*/ D> 
-    	struct apply;
+    	struct /*<<Returns a modifier-tag>>*/ apply;
 	};
         
 }// put_aux
+//]
 #ifndef BOOST_ASSIGN_V2_PUT_MODULO_MODIFIER_META_MODIFIER_TAG
 #define BOOST_ASSIGN_V2_PUT_MODULO_MODIFIER_META_MODIFIER_TAG(NAME, Result)\
 namespace boost{\
@@ -69,5 +71,5 @@ namespace result_of{
 }// assign
 }// boost
 
-#endif
+#endif // BOOST_ASSIGN_V2_PUT_MODULO_MODIFIER_META_ER_2010_HPP
 

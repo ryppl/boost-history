@@ -9,11 +9,11 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_UTILITY_CONVERSION_CONVERTER_ER_2010_HPP
 #define BOOST_ASSIGN_V2_UTILITY_CONVERSION_CONVERTER_ER_2010_HPP
+#include <boost/assign/v2/ref/wrapper.hpp>
+#include <boost/assign/v2/utility/conversion/convert.hpp>
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
 #include <boost/type_traits/add_const.hpp>
-#include <boost/assign/v2/ref/wrapper.hpp>
-#include <boost/assign/v2/utility/conversion/convert.hpp>
 
 namespace boost{
 namespace assign{
@@ -62,7 +62,6 @@ namespace result_of{
 
 }//result_of
 
-
     template<typename R>
     typename result_of::converter<R>::type
     converter(R const& r){
@@ -83,7 +82,7 @@ namespace result_of{
 #include <boost/preprocessor/seq/transform.hpp>
 
 #define BOOST_ASSIGN_V2_UTILITY_CONVERSION_CONVERTER_NAME_LOOKUP_PARAM(s, data, T) typename T
-#define BOOST_ASSIGN_V2_UTILITY_CONVERSION_CONVERTER(Seq, R)\
+#define BOOST_ASSIGN_V2_UTILITY_CONVERSION_CONVERTER_NAME_LOOKUP(Seq, R)\
     template<BOOST_PP_SEQ_ENUM(\
         BOOST_PP_SEQ_TRANSFORM(\
             BOOST_ASSIGN_V2_UTILITY_CONVERSION_CONVERTER_NAME_LOOKUP_PARAM,\
@@ -91,13 +90,12 @@ namespace result_of{
             Seq\
         )\
     )>\
-    typename ::boost::assign::v2::result_of::converter< R >::type \
-    converter( R const& range)\
+    typename ::boost::assign::v2::result_of::converter<R>::type \
+    converter( R const& range )\
     {\
-        typedef typename ::boost::assign::v2::result_of::converter< R >::type result_; \
-        return result_( range );\
+        return ::boost::assign::v2::converter( range );\
     }\
 /**/
-#endif
 
-#endif
+
+#endif // BOOST_ASSIGN_V2_UTILITY_CONVERSION_CONVERTER_ER_2010_HPP

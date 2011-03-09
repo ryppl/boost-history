@@ -18,7 +18,7 @@ namespace assign{
 namespace v2{
 
 #define BOOST_ASSIGN_V2_MACRO(U1, U2) \
-template<typename R1,typename R2> \
+template<typename R1, typename R2> \
 typename chain_aux::result< \
     U1,\
     U2 \
@@ -38,4 +38,4 @@ BOOST_ASSIGN_V2_MACRO( R1 const, R2 const )
 }// assign
 }// boost
 
-#endif
+#endif // BOOST_ASSIGN_V2_CHAIN_ALIAS_ER_2010_HPP

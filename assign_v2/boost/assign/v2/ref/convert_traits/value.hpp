@@ -29,7 +29,7 @@ namespace convert_traits{
 
     template<typename V1, typename V2> struct value<V1, V2, false, false>{};
 
-    // TODO upgrade
+    // TODO possible extension
     //    #include <boost/type_traits/is_arithmetic.hpp>
     //  #include <boost/numeric/conversion/conversion_traits.hpp>
     //    struct value : ::boost::mpl::eval_if<
@@ -45,4 +45,4 @@ namespace convert_traits{
 }// assign
 }// boost
 
-#endif
+#endif // BOOST_ASSIGN_V2_REF_CONVERT_TRAITS_VALUE_ER_2010_HPP

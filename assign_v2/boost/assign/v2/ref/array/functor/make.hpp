@@ -9,8 +9,8 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_REF_ARRAY_FUNCTOR_MAKE_ER_2010_HPP
 #define BOOST_ASSIGN_V2_REF_ARRAY_FUNCTOR_MAKE_ER_2010_HPP
-#include <boost/assign/v2/ref/array/functor/nth_result_of.hpp>
 #include <boost/assign/v2/ref/array/alloc/lazy.hpp>
+#include <boost/assign/v2/ref/array/functor/nth_result_of.hpp>
 
 namespace boost{
 namespace assign{
@@ -54,4 +54,4 @@ namespace result_of{
 }// assign
 }// boost
 
-#endif
+#endif // BOOST_ASSIGN_V2_REF_ARRAY_FUNCTOR_MAKE_ER_2010_HPP

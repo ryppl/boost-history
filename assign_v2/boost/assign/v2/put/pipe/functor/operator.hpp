@@ -9,12 +9,11 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_PUT_PIPE_FUNCTOR_OPERATOR_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_PIPE_FUNCTOR_OPERATOR_ER_2010_HPP
-#include <boost/assign/v2/put/pipe/modulo/forward.hpp>
-#include <boost/assign/v2/put/pipe/functor/rhs.hpp>
-//#include <boost/assign/v2/put/pipe/functor/forward.hpp>
-#include <boost/assign/v2/ref/tuple/cpp03/as_arglist.hpp> // ?
-#include <boost/assign/v2/ref/list_tuple/cpp03/as_arglist.hpp>
+#include <boost/assign/v2/ref/list/as_modulo_list.hpp>
+#include <boost/assign/v2/ref/list_tuple/as_args_list.hpp>
 #include <boost/assign/v2/put/container/functor.hpp>
+#include <boost/assign/v2/put/pipe/functor/rhs.hpp>
+#include <boost/assign/v2/put/pipe/modulo/forward.hpp>
 
 namespace boost{
 namespace assign{
@@ -23,21 +22,17 @@ namespace put_pipe_aux{
 
     template<
         typename C,
-        typename Pars,
-        typename SeqArgs,
+        typename ParList,
+        typename ArgsList,
         bool enable_pars
     >
     C& operator|(
         C& cont,
-        put_pipe_aux::rhs<Pars, SeqArgs, enable_pars> const& c
+        put_pipe_aux::rhs<ParList, ArgsList, enable_pars> const& rhs_
     ){
-		v2::ref::as_arglist(
-        //forward(
-            forward_pars<Pars>(
-                put( cont ),
-                c.pars()
-            ),
-            c.seq_args()
+		ref::as_args_list(
+            ref::as_modulo_list<ParList>( put( cont ), rhs_.par_list_cont() ),
+            rhs_.args_list_cont()
         );
         return cont;
     }
@@ -52,4 +47,4 @@ namespace{
 }// assign
 }// boost
 
-#endif
+#endif // BOOST_ASSIGN_V2_PUT_PIPE_FUNCTOR_OPERATOR_ER_2010_HPP

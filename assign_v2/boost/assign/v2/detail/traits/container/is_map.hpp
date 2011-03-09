@@ -22,7 +22,7 @@ namespace container_traits_aux{
     template<typename V>
     struct is_map : ::boost::mpl::false_{};
 
-    template<typename K,typename D,typename C,typename A>
+    template<typename K, typename D, typename C, typename A>
     struct is_map<
         std::map<K,D,C,A>
     > : ::boost::mpl::true_{};

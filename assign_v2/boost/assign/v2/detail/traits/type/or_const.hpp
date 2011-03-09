@@ -37,5 +37,4 @@ struct or_const<T const, Args...> : ::boost::mpl::true_{};
 }// boost
 
 #endif // BOOST_ASSIGN_V2_ENABLE_CPP0X
-
 #endif // BOOST_ASSIGN_V2_DETAIL_TYPE_TRAITS_OR_CONST_ER_2010_HPP

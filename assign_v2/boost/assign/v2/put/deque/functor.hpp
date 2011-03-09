@@ -9,24 +9,23 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_PUT_DEQUE_FUNCTOR_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_DEQUE_FUNCTOR_ER_2010_HPP
-#include <boost/mpl/bool.hpp>
-#include <boost/mpl/assert.hpp>
-#include <boost/type_traits/remove_cv.hpp>
 #include <boost/assign/v2/detail/keyword/nil.hpp>
 #include <boost/assign/v2/put/deque/cont.hpp>
 #include <boost/assign/v2/put/deduce/fun.hpp>
-#include <boost/assign/v2/put/deduce/modifier/tag.hpp>
 #include <boost/assign/v2/put/deduce/modifier/dependee.hpp>
-
+#include <boost/assign/v2/put/deduce/modifier/tag.hpp>
+#include <boost/mpl/assert.hpp>
+#include <boost/mpl/bool.hpp>
+#include <boost/type_traits/remove_cv.hpp>
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 #include <utility>
 #else
-#include <boost/preprocessor/arithmetic.hpp>
-#include <boost/preprocessor/repetition.hpp>
-#include <boost/preprocessor/seq.hpp>
 #include <boost/assign/v2/detail/config/limit_arity.hpp>
 #include <boost/assign/v2/detail/config/limit_lvalue_const_arity.hpp>
 #include <boost/assign/v2/detail/pp/parameter_list.hpp>
+#include <boost/preprocessor/arithmetic.hpp>
+#include <boost/preprocessor/repetition.hpp>
+#include <boost/preprocessor/seq.hpp>
 #endif
 
 namespace boost{
@@ -117,7 +116,6 @@ BOOST_PP_REPEAT_FROM_TO(
 #undef BOOST_ASSIGN_V2_MACRO
 
 #endif // BOOST_ASSIGN_V2_ENABLE_CPP0X
-
 
 }// v2
 }// assign

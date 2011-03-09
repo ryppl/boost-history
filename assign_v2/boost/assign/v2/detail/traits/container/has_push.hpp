@@ -9,18 +9,18 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_TRAITS_CONTAINER_HAS_PUSH_ER_2010_HPP
 #define BOOST_ASSIGN_V2_TRAITS_CONTAINER_HAS_PUSH_ER_2010_HPP
+#include <boost/assign/v2/detail/traits/container/value.hpp>
+#include <boost/config.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/type_traits/add_const.hpp>
-#include <boost/config.hpp>
 #include <boost/type_traits/detail/yes_no_type.hpp>
-#include <boost/assign/v2/detail/traits/container/value.hpp>
 
 namespace boost{
 namespace assign{
 namespace v2{
 namespace container_traits{
 
-    template<typename V,typename T
+    template<typename V, typename T
         = typename container_traits::value<V>::type>
     struct has_push{
 

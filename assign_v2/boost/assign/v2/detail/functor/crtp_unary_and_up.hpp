@@ -9,19 +9,13 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_DETAIL_FUNCTOR_CRTP_UNARY_AND_UP_ER_2010_HPP
 #define BOOST_ASSIGN_V2_DETAIL_FUNCTOR_CRTP_UNARY_AND_UP_ER_2010_HPP
+
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
-
-#include <iostream> // TODO remove
-
 #ifndef BOOST_ASSIGN_V2_ENABLE_CPP0X
 #error
 #endif
 
-#if BOOST_ASSIGN_V2_ENABLE_CPP0X
-
-// There should be no use for this file under CPP0x
-
-#else
+#if !BOOST_ASSIGN_V2_ENABLE_CPP0X
 
 // The crtp defined below makes it easy to overload on the number of
 // arguments, while allowing within a certain limit, any mixture of
@@ -65,7 +59,7 @@ namespace assign{
 namespace v2{
 namespace functor_aux{
 
-    template<typename D,typename F>
+    template<typename D, typename F>
     class crtp_unary_and_up
     {
         protected:
@@ -75,11 +69,7 @@ namespace functor_aux{
 
         public:
 
-#if BOOST_ASSIGN_V2_ENABLE_CPP0X
-
-// do nothing
-
-#else
+// Non-const/const overloads :
 
 #define BOOST_ASSIGN_V2_MACRO1(r, SeqU) \
     template<BOOST_ASSIGN_V2_TPL_PARAMETER_LIST(SeqU)> \
@@ -99,6 +89,7 @@ namespace functor_aux{
     BOOST_PP_SEQ_FIRST_N(BOOST_PP_INC(n), BOOST_ASSIGN_V2_SEQ_TPL_BINARY_ARG_LIST)\
 ) \
 /**/
+
 BOOST_PP_REPEAT(
     BOOST_ASSIGN_V2_LIMIT_LVALUE_CONST_ARITY,
     BOOST_ASSIGN_V2_MACRO2,
@@ -108,11 +99,13 @@ BOOST_PP_REPEAT(
 #undef BOOST_ASSIGN_V2_MACRO1
 #undef BOOST_ASSIGN_V2_MACRO2
 
+// Non-const only / const-only overloads :
+
 #define BOOST_ASSIGN_V2_MACRO(z, N, data) \
     template<BOOST_PP_ENUM_PARAMS(N, typename T)> \
     typename ::boost::mpl::apply1< \
         F, \
-        BOOST_PP_CAT(boost::mpl::vector,N)<BOOST_PP_ENUM_PARAMS(N, T)> \
+        BOOST_PP_CAT(::boost::mpl::vector, N)<BOOST_PP_ENUM_PARAMS(N, T)> \
     >::type \
     operator()( BOOST_PP_ENUM_BINARY_PARAMS(N, T, &_) )const{ \
         return this->derived().template impl< \
@@ -138,9 +131,8 @@ BOOST_PP_REPEAT_FROM_TO(
     BOOST_ASSIGN_V2_MACRO,
     ~
 )
-#undef BOOST_ASSIGN_V2_MACRO
 
-#endif // #if BOOST_ASSIGN_V2_ENABLE_CPP0X
+#undef BOOST_ASSIGN_V2_MACRO
 
     };
 
@@ -149,7 +141,5 @@ BOOST_PP_REPEAT_FROM_TO(
 }// assign
 }// boost
 
-
-#endif // BOOST_ASSIGN_V2_ENABLE_CPP0X
-
+#endif // !BOOST_ASSIGN_V2_ENABLE_CPP0X
 #endif // BOOST_ASSIGN_V2_DETAIL_FUNCTOR_CRTP_UNARY_AND_UP_ER_2010_HPP

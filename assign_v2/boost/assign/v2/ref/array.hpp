@@ -9,9 +9,9 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_REF_ARRAY_ER_2010_HPP
 #define BOOST_ASSIGN_V2_REF_ARRAY_ER_2010_HPP
-
+#include <boost/assign/v2/ref/array/as_arg_list.hpp>
+#include <boost/assign/v2/ref/array/conversion.hpp>
 #include <boost/assign/v2/ref/array/csv.hpp>
 #include <boost/assign/v2/ref/array/functor.hpp>
-#include <boost/assign/v2/ref/array/conversion.hpp>
 
-#endif
+#endif // BOOST_ASSIGN_V2_REF_ARRAY_ER_2010_HPP

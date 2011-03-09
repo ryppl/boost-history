@@ -9,8 +9,8 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_DETAIL_CHECK_EQUAL_CONTAINER_SORTED_ER_2010_HPP
 #define BOOST_ASSIGN_V2_DETAIL_CHECK_EQUAL_CONTAINER_SORTED_ER_2010_HPP
-#include <boost/range/algorithm/sort.hpp>
 #include <boost/assign/v2/detail/check/equal_container/range.hpp>
+#include <boost/range/algorithm/sort.hpp>
 
 namespace boost{
 namespace assign{

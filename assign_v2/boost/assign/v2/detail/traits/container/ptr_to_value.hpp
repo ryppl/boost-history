@@ -31,7 +31,7 @@ namespace container_traits{
 
 namespace ptr_to_value_aux{
 
-    template<typename A,typename T> struct allocator{};
+    template<typename A, typename T> struct allocator{};
 
     template<typename T>
     struct allocator<std::allocator<void*>, T>
@@ -73,7 +73,7 @@ namespace ptr_to_value_aux{
 
     };
 
-    template<typename V,template<typename,typename> class F>
+    template<typename V,template<typename, typename> class F>
     struct seq_like : ptr_to_value_aux::common<V>{
 
         typedef F<
@@ -83,7 +83,7 @@ namespace ptr_to_value_aux{
 
     };
 
-    template<typename V,template<typename,typename,typename,typename> class F>
+    template<typename V,template<typename, typename, typename, typename> class F>
     struct map_like : ptr_to_value_aux::common<V>{
 
         typedef F<
@@ -95,7 +95,7 @@ namespace ptr_to_value_aux{
 
     };
 
-    template<typename V,template<typename,typename,typename> class F>
+    template<typename V,template<typename, typename, typename> class F>
     struct set_like : ptr_to_value_aux::common<V>{
 
         typedef F<
@@ -107,7 +107,7 @@ namespace ptr_to_value_aux{
     };
 
     template<typename V,
-        template<typename,typename,typename,typename,typename> class F>
+        template<typename, typename, typename, typename, typename> class F>
     class unordered_map_like : ptr_to_value_aux::common<V>{
 
         typedef F<
@@ -121,7 +121,7 @@ namespace ptr_to_value_aux{
     };
 
     template<typename V,
-        template<typename,typename,typename,typename> class F>
+        template<typename, typename, typename, typename> class F>
     class unordered_set_like : ptr_to_value_aux::common<V>{
 
         typedef F<

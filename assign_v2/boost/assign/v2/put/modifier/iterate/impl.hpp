@@ -16,8 +16,8 @@
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 #include <utility>
-#include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/is_reference.hpp>
+#include <boost/utility/enable_if.hpp>
 #endif
 
 namespace boost{

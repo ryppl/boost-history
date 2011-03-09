@@ -10,18 +10,14 @@
 #ifndef BOOST_ASSIGN_V2_DETAIL_FUNCTOR_CONSTRUCTOR_ER_2010_HPP
 #define BOOST_ASSIGN_V2_DETAIL_FUNCTOR_CONSTRUCTOR_ER_2010_HPP
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
-//#include <boost/assign/v2/detail/traits/container/value.hpp>// TODO remove
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 #include <utility>
 #else
-#include <boost/preprocessor/repetition/repeat_from_to.hpp>
-#include <boost/preprocessor/repetition/enum_params.hpp>
-#include <boost/preprocessor/repetition/enum_binary_params.hpp>
-#include <boost/range/reference.hpp>
-#include <boost/type_traits/remove_cv.hpp>
-#include <boost/mpl/always.hpp>
 #include <boost/assign/v2/detail/config/limit_arity.hpp>
 #include <boost/assign/v2/detail/functor/crtp_unary_and_up.hpp>
+#include <boost/mpl/always.hpp>
+#include <boost/preprocessor/arithmetic.hpp>
+#include <boost/preprocessor/repetition.hpp>
 #endif
 
 namespace boost{
@@ -31,9 +27,7 @@ namespace functor_aux{
 
     template<typename T>
     class constructor
-#if BOOST_ASSIGN_V2_ENABLE_CPP0X
-// do nothing
-#else
+#if !BOOST_ASSIGN_V2_ENABLE_CPP0X
     : public functor_aux::crtp_unary_and_up<
         functor_aux::constructor<T>,
         ::boost::mpl::always<T>
@@ -63,8 +57,8 @@ namespace functor_aux{
         using super_::operator();
         T operator()()const{ return T(); }
 
-#define BOOST_ASSIGN_V2_MACRO(z,N,data) \
-    template<BOOST_PP_ENUM_PARAMS(N,typename T)> \
+#define BOOST_ASSIGN_V2_MACRO(z, N,data) \
+    template<BOOST_PP_ENUM_PARAMS(N, typename T)> \
     T impl( BOOST_PP_ENUM_BINARY_PARAMS(N, T, &_) )const{ \
         return T( BOOST_PP_ENUM_PARAMS(N, _) ); \
     } \
@@ -77,19 +71,8 @@ BOOST_PP_REPEAT_FROM_TO(
 )
 #undef BOOST_ASSIGN_V2_MACRO
 
-#endif
+#endif // BOOST_ASSIGN_V2_ENABLE_CPP0X
     };
-
-/*
-    TODO remove
-    template<typename V>
-    struct deduce_constructor
-    {
-        typedef typename container_traits::value<V>::type value_;
-        typedef functor_aux::constructor<value_> type;
-        static type call(){ return functor_aux::constructor<value_>(); }
-    };
-*/
 
 }// functor_aux
 namespace result_of{

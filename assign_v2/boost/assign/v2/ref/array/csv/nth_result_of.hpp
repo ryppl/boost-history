@@ -9,11 +9,9 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_REF_ARRAY_CSV_NTH_RESULT_OF_ER_2010_HPP
 #define BOOST_ASSIGN_V2_REF_ARRAY_CSV_NTH_RESULT_OF_ER_2010_HPP
-#include <boost/mpl/empty_base.hpp>
 #include <boost/assign/v2/ref/array/alloc/instant_fwd.hpp>
-#include <boost/assign/v2/ref/array/tag1.hpp>
-
 #include <boost/assign/v2/ref/array/impl_traits.hpp>
+#include <boost/assign/v2/ref/array/tag1.hpp>
 
 namespace boost{
     struct use_default;
@@ -21,7 +19,9 @@ namespace assign{
 namespace v2{
 namespace ref{
 namespace array_aux{
+
     typedef boost::use_default csv_tag2_;
+
 }// array_aux
 namespace nth_result_of{
 
@@ -29,7 +29,6 @@ namespace nth_result_of{
     struct csv_array
     {
         typedef ref::array_tag1_ tag1_;
-//        typedef array_aux::instant_alloc<N, tag1_, T> type;
         typedef array_aux::instant_alloc<N, T> type;
     };
 

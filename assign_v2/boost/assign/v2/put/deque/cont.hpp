@@ -10,15 +10,14 @@
 #ifndef BOOST_ASSIGN_V2_PUT_DEQUE_CONT_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_DEQUE_CONT_ER_2010_HPP
 #include <deque>
+#include <boost/assign/v2/put/frame/crtp.hpp>
+#include <boost/assign/v2/put/frame/modifier.hpp>
+#include <boost/assign/v2/put/deque/fwd.hpp>
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
 #include <boost/range/iterator.hpp>
 #include <boost/range/size.hpp>
 #include <boost/range/size_type.hpp>
-
-#include <boost/assign/v2/put/frame/crtp.hpp>
-#include <boost/assign/v2/put/frame/modifier.hpp>
-#include <boost/assign/v2/put/deque/fwd.hpp>
 
 namespace boost{
 namespace assign{

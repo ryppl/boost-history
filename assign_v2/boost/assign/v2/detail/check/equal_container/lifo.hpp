@@ -9,9 +9,9 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_DETAIL_CHECK_EQUAL_CONTAINER_LIFO_ER_2010_HPP
 #define BOOST_ASSIGN_V2_DETAIL_CHECK_EQUAL_CONTAINER_LIFO_ER_2010_HPP
+#include <boost/assign/v2/detail/check/equal_container/pp.hpp>
 #include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/detail/traits/container/is_lifo.hpp>
-#include <boost/assign/v2/detail/check/equal_container/pp.hpp>
 
 namespace boost{
 namespace assign{

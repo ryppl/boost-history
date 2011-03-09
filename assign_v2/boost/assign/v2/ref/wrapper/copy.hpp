@@ -9,12 +9,12 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_REF_WRAPPER_COPY_ER_2010_HPP
 #define BOOST_ASSIGN_V2_REF_WRAPPER_COPY_ER_2010_HPP
-#include <boost/config.hpp>
+#include <boost/assign/v2/ref/wrapper/crtp.hpp>
+#include <boost/assign/v2/ref/wrapper/framework.hpp>
 #include <boost/call_traits.hpp>
+#include <boost/config.hpp>
 #include <boost/type_traits/is_const.hpp>
 #include <boost/type_traits/remove_cv.hpp>
-#include <boost/assign/v2/ref/wrapper/framework.hpp>
-#include <boost/assign/v2/ref/wrapper/crtp.hpp>
 
 namespace boost{
 namespace assign{
@@ -29,10 +29,7 @@ namespace assign_copy{ typedef assign_tag::copy assign_tag_; }
         public ref::wrapper_crtp< wrapper<ref::assign_tag::copy, T>, T>
     {
         typedef T type;
-        BOOST_STATIC_CONSTANT(
-            bool,
-            is_const = boost::is_const<T>::value
-        );
+        BOOST_STATIC_CONSTANT( bool, is_const = boost::is_const<T>::value );
 
         wrapper(){/*TODO or null pointer?*/}
 
@@ -44,7 +41,6 @@ namespace assign_copy{ typedef assign_tag::copy assign_tag_; }
             this->ref_ = &r;
         }
 
-        // TODO a) crtp b) reference() or get()
         typedef T& result_of_get_type;
         T& get() const
         {
@@ -82,4 +78,4 @@ namespace assign_copy{ typedef assign_tag::copy assign_tag_; }
 }// assign
 }// boost
 
-#endif
+#endif // BOOST_ASSIGN_V2_REF_WRAPPER_COPY_ER_2010_HPP

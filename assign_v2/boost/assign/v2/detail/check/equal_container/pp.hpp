@@ -10,7 +10,6 @@
 #ifndef BOOST_ASSIGN_V2_DETAIL_CHECK_EQUAL_CONTAINER_PP_ER_2010_HPP
 #define BOOST_ASSIGN_V2_DETAIL_CHECK_EQUAL_CONTAINER_PP_ER_2010_HPP
 #include <boost/assign/v2/detail/config/check.hpp>
-
 #include <boost/range/size.hpp>
 #include <boost/range/size_type.hpp>
 #define BOOST_ASSIGN_V2_CHECK_AUX_CONTAINER_SIZE\
@@ -19,7 +18,6 @@
         size_type n2 = boost::size( r );\
         BOOST_ASSIGN_V2_CHECK( n2 >= n1 );\
 /**/
-
 #include <boost/range/iterator_range.hpp>
 #define BOOST_ASSIGN_V2_CHECK_AUX_CONTAINER_ELEM_AT\
         typedef typename boost::iterator_range<\
@@ -27,5 +25,4 @@
         >::type elem_at_;\
         elem_at_ elem_at = boost::make_iterator_range( r );\
 /**/
-
 #endif // BOOST_ASSIGN_V2_DETAIL_CHECK_EQUAL_CONTAINER_PP_ER_2010_HPP

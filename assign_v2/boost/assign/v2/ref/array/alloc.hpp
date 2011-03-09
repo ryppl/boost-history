@@ -9,7 +9,6 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_REF_ARRAY_ALLOC_ER_2010_HPP
 #define BOOST_ASSIGN_V2_REF_ARRAY_ALLOC_ER_2010_HPP
-
 #include <boost/assign/v2/ref/array/alloc/fast_alloc.hpp>
 #include <boost/assign/v2/ref/array/alloc/lazy_alloc.hpp>
 

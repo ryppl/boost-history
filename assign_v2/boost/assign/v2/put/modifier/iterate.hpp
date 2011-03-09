@@ -9,9 +9,8 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_PUT_MODIFIER_ITERATE_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_MODIFIER_ITERATE_ER_2010_HPP
-#include <boost/assign/v2/put/modifier/iterate/tag.hpp>
 #include <boost/assign/v2/put/modifier/iterate/impl.hpp>
-
+#include <boost/assign/v2/put/modifier/iterate/tag.hpp>
 #include <boost/assign/v2/put/modulo/modifier/keyword.hpp>
 BOOST_ASSIGN_V2_PUT_MODULO_MODIFIER_KEYWORD(iterate)
 

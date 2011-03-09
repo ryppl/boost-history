@@ -23,4 +23,4 @@ namespace put_pipe_aux{
 }// assign
 }// boost
 
-#endif
+#endif // BOOST_ASSIGN_V2_PUT_PIPE_FUNCTOR_SIZE_TYPE_ER_2010_HPP

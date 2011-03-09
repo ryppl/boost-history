@@ -9,17 +9,17 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_CHAIN_RESULT_ER_2010_HPP
 #define BOOST_ASSIGN_V2_CHAIN_RESULT_ER_2010_HPP
-#include <boost/mpl/eval_if.hpp>
-#include <boost/mpl/identity.hpp>
 #include <boost/assign/v2/utility/chain/use_const.hpp>
 #include <boost/assign/v2/utility/chain/range.hpp>
+#include <boost/mpl/eval_if.hpp>
+#include <boost/mpl/identity.hpp>
 
 namespace boost{
 namespace assign{
 namespace v2{
 namespace chain_aux{
 
-    template<typename R1,typename R2,typename Tag = use_default>
+    template<typename R1, typename R2, typename Tag = use_default>
     struct result{
         typedef typename  ::boost::mpl::eval_if<
             chain_aux::use_const<R1, R2, Tag>,
@@ -40,4 +40,4 @@ namespace chain_aux{
 }// assign
 }// boost
 
-#endif
+#endif // BOOST_ASSIGN_V2_CHAIN_RESULT_ER_2010_HPP

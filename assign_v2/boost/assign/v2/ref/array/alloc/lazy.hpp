@@ -9,11 +9,11 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_REF_ARRAY_ALLOC_LAZY_ER_2010_HPP
 #define BOOST_ASSIGN_V2_REF_ARRAY_ALLOC_LAZY_ER_2010_HPP
-#include <boost/shared_ptr.hpp>
-#include <boost/assign/v2/ref/wrapper.hpp>
 #include <boost/assign/v2/ref/array/alloc/lazy_fwd.hpp>
-#include <boost/assign/v2/ref/array/interface.hpp>
 #include <boost/assign/v2/ref/array/impl_traits.hpp>
+#include <boost/assign/v2/ref/array/interface.hpp>
+#include <boost/assign/v2/ref/wrapper.hpp>
+#include <boost/shared_ptr.hpp>
 
 namespace boost{
 namespace assign{
@@ -21,11 +21,9 @@ namespace v2{
 namespace ref{
 namespace array_aux{
 
-//       template<std::size_t N,typename Tag, typename T, typename D>
-       template<std::size_t N,typename T, typename D>
+       template<std::size_t N, typename T, typename D>
        class lazy_alloc : public array_aux::interface<
            typename array_aux::impl_traits<N, T>::array_type,
-//        lazy_alloc<N,Tag,T,D>
         lazy_alloc<N, T, D>
     >
     {
@@ -76,4 +74,4 @@ namespace array_aux{
 }// assign
 }// boost
 
-#endif
+#endif // BOOST_ASSIGN_V2_REF_ARRAY_ALLOC_LAZY_ER_2010_HPP

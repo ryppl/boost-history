@@ -9,9 +9,8 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_PUT_MODIFIER_LOOKUP_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_MODIFIER_LOOKUP_ER_2010_HPP
-#include <boost/assign/v2/put/modifier/lookup/tag.hpp>
 #include <boost/assign/v2/put/modifier/lookup/impl.hpp>
-
+#include <boost/assign/v2/put/modifier/lookup/tag.hpp>
 #include <boost/assign/v2/put/modulo/modifier/keyword.hpp>
 BOOST_ASSIGN_V2_PUT_MODULO_MODIFIER_KEYWORD(lookup)
 

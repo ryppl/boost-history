@@ -9,9 +9,9 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_TRAITS_CONTAINER_IS_ASSOCIATIVE_ER_2010_HPP
 #define BOOST_ASSIGN_V2_TRAITS_CONTAINER_IS_ASSOCIATIVE_ER_2010_HPP
-#include <boost/mpl/or.hpp>
 #include <boost/assign/v2/detail/traits/container/is_map.hpp>
 #include <boost/assign/v2/detail/traits/container/is_set.hpp>
+#include <boost/mpl/or.hpp>
 
 namespace boost{
 namespace assign{

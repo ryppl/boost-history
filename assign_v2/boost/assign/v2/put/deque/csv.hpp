@@ -9,20 +9,18 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_PUT_DEQUE_CSV_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_DEQUE_CSV_ER_2010_HPP
+#include <boost/assign/v2/detail/keyword/nil.hpp>
+#include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
+#include <boost/assign/v2/put/deque/cont.hpp>
+#include <boost/assign/v2/put/deque/functor.hpp>
 #include <boost/type_traits/decay.hpp>
 #include <boost/type_traits/remove_cv.hpp>
-#include <boost/assign/v2/detail/keyword/nil.hpp>
-#include <boost/assign/v2/put/deque/cont.hpp>
-#include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
-#include <boost/assign/v2/put/deque/functor.hpp>
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 #include <utility>
 #else
-#include <boost/preprocessor/repetition/enum_params.hpp>
-#include <boost/preprocessor/repetition/repeat.hpp>
-#include <boost/preprocessor/repetition/repeat_from_to.hpp>
-#include <boost/preprocessor/arithmetic/inc.hpp>
 #include <boost/assign/v2/detail/config/limit_csv_arity.hpp>
+#include <boost/preprocessor/arithmetic/inc.hpp>
+#include <boost/preprocessor/repetition.hpp>
 #endif
 
 namespace boost{

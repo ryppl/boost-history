@@ -15,7 +15,6 @@ namespace assign{
 namespace v2{
 namespace put_aux{
 
-
     template<typename C, typename F, typename Tag, typename D> class crtp;
 
 }// put_aux
@@ -23,5 +22,5 @@ namespace put_aux{
 }// assign
 }// boost
 
-#endif
+#endif // BOOST_ASSIGN_V2_PUT_FRAME_FWD_ER_2010_HPP
 

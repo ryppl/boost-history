@@ -25,7 +25,8 @@ namespace list_aux{
     struct tail_holder
     {
         typedef T tail_type;
-        typedef ::boost::mpl::int_<T::size::value+1> size;
+        typedef ::boost::mpl::int_<T::static_size::value + 1> static_size;
+
         tail_holder(T const& t) : tail_( t ){}
 
         typedef T const& result_of_tail_type;
@@ -39,7 +40,7 @@ namespace list_aux{
     struct tail_holder<nil>
     {
         typedef nil tail_type;
-        typedef ::boost::mpl::int_<0> size;
+        typedef ::boost::mpl::int_<0> static_size;
         tail_holder(){}
     };
 
@@ -53,4 +54,4 @@ namespace list_aux{
 }// assign
 }// boost
 
-#endif
+#endif // BOOST_ASSIGN_V2_REF_LIST_HOLDER_TAIL_ER_2010_HPP

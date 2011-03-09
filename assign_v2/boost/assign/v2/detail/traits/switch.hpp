@@ -9,12 +9,9 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_DETAIL_TRAITS_SWITCH_ER_2010_HPP
 #define BOOST_ASSIGN_V2_DETAIL_TRAITS_SWITCH_ER_2010_HPP
+#include <boost/mpl/apply.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/eval_if.hpp>
-#include <boost/mpl/identity.hpp>
-#include <boost/mpl/apply.hpp>
-//#include <boost/mpl/always.hpp>
-#include <boost/mpl/placeholders.hpp>
 
 namespace boost{
 namespace assign{

@@ -10,8 +10,8 @@
 #ifndef BOOST_ASSIGN_V2_REF_ARRAY_IMPL_TRAITS_ER_2010_HPP
 #define BOOST_ASSIGN_V2_REF_ARRAY_IMPL_TRAITS_ER_2010_HPP
 #include <boost/array.hpp>
-#include <boost/assign/v2/ref/wrapper.hpp>
 #include <boost/assign/v2/ref/array/size_type.hpp>
+#include <boost/assign/v2/ref/wrapper.hpp>
 
 namespace boost{
 namespace assign{
@@ -34,4 +34,4 @@ namespace array_aux{
 }// assign
 }// boost
 
-#endif
+#endif // BOOST_ASSIGN_V2_REF_ARRAY_IMPL_TRAITS_ER_2010_HPP

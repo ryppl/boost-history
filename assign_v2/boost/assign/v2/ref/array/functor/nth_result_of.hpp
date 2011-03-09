@@ -9,10 +9,10 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_REF_ARRAY_FUNCTOR_NTH_RESULT_OF_ER_2010_HPP
 #define BOOST_ASSIGN_V2_REF_ARRAY_FUNCTOR_NTH_RESULT_OF_ER_2010_HPP
-#include <boost/assign/v2/ref/list/make.hpp>
-#include <boost/assign/v2/ref/list/container.hpp>
-#include <boost/assign/v2/ref/list/array.hpp>
 #include <boost/assign/v2/ref/array/size_type.hpp>
+#include <boost/assign/v2/ref/list/array.hpp>
+#include <boost/assign/v2/ref/list/container.hpp>
+#include <boost/assign/v2/ref/list/make.hpp>
 
 namespace boost{
 namespace assign{

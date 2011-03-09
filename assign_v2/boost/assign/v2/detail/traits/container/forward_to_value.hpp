@@ -16,7 +16,7 @@ namespace assign{
 namespace v2{
 namespace container_traits{
 
-    template<template<typename T> class F,typename V>
+    template<template<typename T> class F, typename V>
     struct forward_to_value: F<
         typename value_container<V>::type
     >{};

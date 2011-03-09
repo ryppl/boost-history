@@ -10,18 +10,16 @@
 #ifndef BOOST_ASSIGN_V2_REF_LIST_TUPLE_CPP0X_CONTAINER_ER_2010_HPP
 #define BOOST_ASSIGN_V2_REF_LIST_TUPLE_CPP0X_CONTAINER_ER_2010_HPP
 #include <utility>
-
-#include <boost/mpl/identity.hpp>
-#include <boost/mpl/empty_base.hpp>
-#include <boost/mpl/eval_if.hpp>
-#include <boost/static_assert.hpp>
-#include <boost/config.hpp>
-#include <boost/utility/enable_if.hpp>
-
-#include <boost/assign/v2/ref/tuple/cpp0x.hpp>
 #include <boost/assign/v2/ref/list_tuple/extraction.hpp>
 #include <boost/assign/v2/ref/list_tuple/common.hpp>
 #include <boost/assign/v2/ref/list_tuple/size_type.hpp>
+#include <boost/assign/v2/ref/tuple/cpp0x/data.hpp>
+#include <boost/config.hpp>
+#include <boost/mpl/empty_base.hpp>
+#include <boost/mpl/eval_if.hpp>
+#include <boost/mpl/identity.hpp>
+#include <boost/static_assert.hpp>
+#include <boost/utility/enable_if.hpp>
 
 namespace boost{
 namespace assign{
@@ -66,14 +64,14 @@ namespace list_tuple_aux{
     >::type,
     public list_tuple_aux::extraction<
         N, L,
-        tuple_aux::container<Args...>,
+        tuple_aux::data<Args...>,
         list_tuple_aux::container<N, L, Args...>
     >
     {
         typedef link<L> link_;
         typedef meta_result<N, L, Args...> meta_result_;
 
-        typedef tuple_aux::container<Args...> tuple_;
+        typedef tuple_aux::data<Args...> tuple_;
         tuple_ tuple;
 
         public:
@@ -82,6 +80,7 @@ namespace list_tuple_aux{
 
         typedef list_tuple_aux::list_size_type list_size_type;
         typedef list_tuple_aux::tuple_size_type tuple_size_type;
+        
         BOOST_STATIC_CONSTANT( list_size_type, static_get_size = N );
         BOOST_STATIC_CONSTANT(
             tuple_size_type,

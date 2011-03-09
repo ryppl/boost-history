@@ -9,8 +9,8 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_PUT_FRAME_SUB_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_FRAME_SUB_ER_2010_HPP
-#include <boost/concept_check.hpp>
 #include <boost/assign/v2/put/frame/modifier.hpp>
+#include <boost/concept_check.hpp>
 
 namespace boost{
 namespace assign{
@@ -47,7 +47,7 @@ namespace sub{
 
     };
 
-    template<typename C, typename F, typename Tag,typename X>
+    template<typename C, typename F, typename Tag, typename X>
     struct Pre3 : Pre2<C, F, X>{
 
         typedef put_aux::modifier<Tag> modifier_;
@@ -91,4 +91,4 @@ namespace sub{
 }// assign
 }// boost
 
-#endif
+#endif // BOOST_ASSIGN_V2_PUT_FRAME_SUB_ER_2010_HPP

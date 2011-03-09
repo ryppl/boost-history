@@ -9,12 +9,12 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_REF_LIST_NTH_RESULT_OF_ER_2010_HPP
 #define BOOST_ASSIGN_V2_REF_LIST_NTH_RESULT_OF_ER_2010_HPP
-#include <boost/mpl/fold.hpp>
-#include <boost/mpl/placeholders.hpp>
-#include <boost/mpl/apply.hpp>
-#include <boost/mpl/vector.hpp> //user
 #include <boost/assign/v2/ref/list/fwd.hpp>
 #include <boost/assign/v2/ref/list/make.hpp>
+#include <boost/mpl/apply.hpp>
+#include <boost/mpl/fold.hpp>
+#include <boost/mpl/placeholders.hpp>
+#include <boost/mpl/vector.hpp> // Convenience header for the client of nth_result
 
 namespace boost{
 namespace assign{
@@ -41,7 +41,7 @@ namespace list_aux{
     };
 
 }// fusion_aux
-namespace nth_result_of{
+namespace nth_result_of{ // TODO this should be result_of
 
     template<typename Tag>
     struct list
@@ -59,4 +59,4 @@ namespace nth_result_of{
 }// assign
 }// boost
 
-#endif
+#endif // BOOST_ASSIGN_V2_REF_LIST_NTH_RESULT_OF_ER_2010_HPP

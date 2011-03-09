@@ -9,12 +9,12 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_DETAIL_CHECK_EQUAL_CONTAINER_DEDUCE_ER_2010_HPP
 #define BOOST_ASSIGN_V2_DETAIL_CHECK_EQUAL_CONTAINER_DEDUCE_ER_2010_HPP
+#include <boost/assign/v2/detail/traits/container/is_array.hpp>
 #include <boost/assign/v2/detail/traits/container/is_fifo.hpp>
 #include <boost/assign/v2/detail/traits/container/is_lifo.hpp>
 #include <boost/assign/v2/detail/traits/container/is_map.hpp>
-#include <boost/assign/v2/detail/traits/container/is_sorted.hpp>
-#include <boost/assign/v2/detail/traits/container/is_array.hpp>
 #include <boost/assign/v2/detail/traits/container/is_range.hpp>
+#include <boost/assign/v2/detail/traits/container/is_sorted.hpp>
 #include <boost/assign/v2/detail/traits/switch.hpp>
 
 namespace boost{

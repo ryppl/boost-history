@@ -11,12 +11,12 @@
 #ifndef BOOST_ASSIGN_V2_REF_WRAPPER_CRTP_ER_MPG_2010_HPP
 #define BOOST_ASSIGN_V2_REF_WRAPPER_CRTP_ER_MPG_2010_HPP
 #include <iosfwd>
-#include <boost/utility/enable_if.hpp>
+#include <boost/call_traits.hpp>
+#include <boost/operators.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/type_traits/remove_const.hpp>
 #include <boost/type_traits/add_const.hpp>
-#include <boost/call_traits.hpp>
-#include <boost/operators.hpp>
+#include <boost/utility/enable_if.hpp>
 
 // This design is an outgrowth of assign_detail::assign_reference<> by TO.
 
@@ -48,7 +48,6 @@ namespace ref{
         typedef typename boost::add_const<T>::type const_;
 
         public:
-        // protected
 
         D& derived(){ return static_cast<D&>( *this ); }
         D const & derived()const{ return static_cast<D const&>( *this ); }
@@ -104,10 +103,10 @@ namespace ref{
     };
 
 
-    template<typename D,typename T>
+    template<typename D, typename T>
     void rebind( wrapper_crtp<D,T>& a, T& t ){ a.rebind( t ); }
 
-    template<typename D,typename T>
+    template<typename D, typename T>
     inline void swap( wrapper_crtp<D,T>& l, wrapper_crtp<D,T>& r )
     {
         l.swap( r );
@@ -118,4 +117,4 @@ namespace ref{
 }// assign
 }// boost
 
-#endif
+#endif // BOOST_ASSIGN_V2_REF_WRAPPER_CRTP_ER_MPG_2010_HPP

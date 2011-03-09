@@ -9,8 +9,8 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_REF_CONVERT_TRAITS_REFERENCE_ER_2010_HPP
 #define BOOST_ASSIGN_V2_REF_CONVERT_TRAITS_REFERENCE_ER_2010_HPP
-#include <boost/type_traits/remove_reference.hpp>
 #include <boost/assign/v2/ref/convert_traits/const.hpp>
+#include <boost/type_traits/remove_reference.hpp>
 
 namespace boost{
 namespace assign{
@@ -39,5 +39,5 @@ namespace convert_traits{
 }// assign
 }// boost
 
-#endif
+#endif // BOOST_ASSIGN_V2_REF_CONVERT_TRAITS_REFERENCE_ER_2010_HPP
 

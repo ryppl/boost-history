@@ -10,16 +10,16 @@
 #ifndef BOOST_ASSIGN_V2_PUT_CONTAINER_FUNCTOR_ADAPTER_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_CONTAINER_FUNCTOR_ADAPTER_ER_2010_HPP
 #include <boost/assign/v2/ref/wrapper/copy.hpp>
+#include <boost/assign/v2/put/container/functor/fwd.hpp> // consistency
 #include <boost/assign/v2/put/frame/crtp.hpp>
 #include <boost/assign/v2/put/frame/modifier.hpp>
-#include <boost/assign/v2/put/container/functor/fwd.hpp> // consistency
 
 namespace boost{
 namespace assign{
 namespace v2{
 namespace put_aux{
 
-    template<typename C,typename F, typename Tag>
+    template<typename C, typename F, typename Tag>
     class adapter
         : protected ref::wrapper< ref::assign_tag::copy, C >
         , public put_aux::crtp< C, F, Tag, adapter<C, F, Tag> >
@@ -39,16 +39,18 @@ namespace put_aux{
         public:
 
         adapter(){}
-        explicit adapter( C& v ) : super1_t( v ) {}
-        explicit adapter( C& v, F const& f )
-            : super1_t( v ), super2_t( f )
-            {
-                // This constructor is required by crtp
-                // when Tag or F is modified.
-            }
+        explicit adapter( C& cont ) : super1_t( cont ) {}
 
-        explicit adapter( C& v, F const& f, modifier_ const& m )
-            : super1_t( v ), super2_t( f, m )
+		// TODO remove un-necessary constructor
+//        explicit adapter( C& cont, F const& f )
+//            : super1_t( cont ), super2_t( f )
+//            {
+//                // This constructor is required by crtp
+//                // when Tag or F is modified.
+//            }
+
+        explicit adapter( C& cont, F const& f, modifier_ const& m )
+            : super1_t( cont ), super2_t( f, m )
             {
                 // This constructor is required by crtp
                 // when Tag or F is modified.

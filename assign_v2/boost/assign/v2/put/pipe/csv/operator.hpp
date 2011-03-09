@@ -9,11 +9,11 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_PUT_PIPE_CSV_OPERATOR_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_PIPE_CSV_OPERATOR_ER_2010_HPP
-#include <boost/assign/v2/put/pipe/modulo/forward.hpp>
-#include <boost/assign/v2/ref/array/as_arglist.hpp>
+#include <boost/assign/v2/ref/array/as_arg_list.hpp>
+#include <boost/assign/v2/ref/list/as_modulo_list.hpp>
+#include <boost/assign/v2/put/container/functor.hpp>
 #include <boost/assign/v2/put/pipe/csv/rhs.hpp>
 #include <boost/assign/v2/put/pipe/csv/size_type.hpp>
-#include <boost/assign/v2/put/container/functor.hpp>
 
 namespace boost{
 namespace assign{
@@ -21,15 +21,12 @@ namespace v2{
 namespace put_pipe_aux{
 
     template<typename C,
-        typename Pars, csv_size_type N, typename U>
-    C& operator|(C& cont, put_pipe_aux::csv_rhs<Pars, N, U> const& c){
+        typename ParList, csv_size_type N, typename U>
+    C& operator|(C& cont, put_pipe_aux::csv_rhs<ParList, N, U> const& rhs_){
 
-		v2::ref::as_arglist(
-            forward_pars<Pars>(
-                put( cont ),
-                c.pars()
-            ),
-            c.seq_args()
+		v2::ref::as_arg_list(
+            v2::ref::as_modulo_list<ParList>( put( cont ), rhs_.par_list_cont() ),
+            rhs_.arg_list_cont()
         );
         return cont;
 

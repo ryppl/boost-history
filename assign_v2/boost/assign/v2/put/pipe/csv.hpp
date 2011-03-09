@@ -14,4 +14,4 @@
 #include <boost/assign/v2/put/pipe/csv/rhs.hpp>
 #include <boost/assign/v2/put/pipe/csv/size_type.hpp>
 
-#endif
+#endif // BOOST_ASSIGN_V2_PUT_PIPE_CSV_ER_2010_HPP

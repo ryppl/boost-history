@@ -9,27 +9,23 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_REF_LIST_TUPLE_CPP03_CONTAINER_ER_2010_HPP
 #define BOOST_ASSIGN_V2_REF_LIST_TUPLE_CPP03_CONTAINER_ER_2010_HPP
-#include <boost/preprocessor/arithmetic/dec.hpp>
-#include <boost/preprocessor/arithmetic/inc.hpp>
-#include <boost/preprocessor/cat.hpp>
-#include <boost/preprocessor/repetition.hpp>
-
-#include <boost/mpl/identity.hpp>
-#include <boost/mpl/empty_base.hpp>
-#include <boost/mpl/eval_if.hpp>
-#include <boost/mpl/unpack_args.hpp>
-#include <boost/mpl/aux_/na.hpp>
-#include <boost/config.hpp>
-#include <boost/type_traits/add_reference.hpp>
-#include <boost/tuple/tuple.hpp>
-#include <boost/utility/enable_if.hpp>
-#include <boost/static_assert.hpp>
-
 #include <boost/assign/v2/detail/config/limit_arity.hpp>
 #include <boost/assign/v2/detail/functor/crtp_unary_and_up.hpp>
-#include <boost/assign/v2/ref/list_tuple/extraction.hpp>
 #include <boost/assign/v2/ref/list_tuple/common.hpp>
+#include <boost/assign/v2/ref/list_tuple/extraction.hpp>
 #include <boost/assign/v2/ref/list_tuple/size_type.hpp>
+#include <boost/config.hpp>
+#include <boost/mpl/aux_/na.hpp>
+#include <boost/mpl/empty_base.hpp>
+#include <boost/mpl/eval_if.hpp>
+#include <boost/mpl/identity.hpp>
+#include <boost/mpl/unpack_args.hpp>
+#include <boost/preprocessor/arithmetic.hpp>
+#include <boost/preprocessor/cat.hpp>
+#include <boost/preprocessor/repetition.hpp>
+#include <boost/tuple/tuple.hpp>
+#include <boost/type_traits/add_reference.hpp>
+#include <boost/utility/enable_if.hpp>
 
 namespace boost{
 namespace assign{
@@ -248,4 +244,4 @@ BOOST_PP_REPEAT_FROM_TO(
 }// assign
 }// boost
 
-#endif
+#endif // BOOST_ASSIGN_V2_REF_LIST_TUPLE_CPP03_CONTAINER_ER_2010_HPP

@@ -69,4 +69,4 @@ namespace result_of{
 }// assign
 }// boost
 
-#endif
+#endif // BOOST_ASSIGN_V2_REF_WRAPPER_GET_ER_2010_HPP

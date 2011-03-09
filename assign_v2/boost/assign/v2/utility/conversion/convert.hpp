@@ -9,8 +9,8 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_UTILITY_CONVERSION_CONVERT_ER_2010_HPP
 #define BOOST_ASSIGN_V2_UTILITY_CONVERSION_CONVERT_ER_2010_HPP
+#include <boost/assign/v2/put/container/range.hpp>
 #include <boost/assign/v2/utility/conversion/deduce_tag.hpp>
-#include <boost/assign/v2/utility/conversion/dispatch.hpp>
 
 namespace boost{
 namespace assign{
@@ -21,8 +21,7 @@ namespace convert_aux{
     C convert(R const& r, convert_tag::put)
     {
         C cont;
-        return (cont | v2::_put_range( r ) );
-
+        return v2::put_range( cont, r );
     }
 
     template<typename C, typename R>
@@ -31,15 +30,6 @@ namespace convert_aux{
         return C( boost::begin( r ), boost::end( r ) );
     }
 
-
-}// convert_aux
-namespace result_of{
-
-	template<typename /*<<Container>>*/ C, typename /*<<Range>>*/R>
-    struct convert{ typedef C type; };
-
-}//result_of
-
     template<typename C, typename R>
     C convert(R const& r)
     {
@@ -47,6 +37,14 @@ namespace result_of{
         return convert_aux::convert<C>( r, tag_() );
     }
 
+}// convert_aux
+using convert_aux::convert;
+namespace result_of{
+
+	template<typename /*<<Container>>*/ C, typename /*<<Range>>*/R>
+    struct convert{ typedef C type; };
+
+}//result_of
 }// v2
 }// assign
 }// boost
@@ -60,19 +58,18 @@ namespace result_of{
 
 #define BOOST_ASSIGN_V2_UTILITY_CONVERSION_CONVERT_NAME_LOOKUP_PARAM(s, data, T) typename T
 #define BOOST_ASSIGN_V2_UTILITY_CONVERSION_CONVERT_NAME_LOOKUP(Seq, R)\
-    template<BOOST_PP_SEQ_ENUM(\
+    template<typename C, BOOST_PP_SEQ_ENUM(\
         BOOST_PP_SEQ_TRANSFORM(\
-            BOOST_ASSIGN_V2_UTILITY_CONVERSION_NAME_LOOKUP_PARAM,\
+            BOOST_ASSIGN_V2_UTILITY_CONVERSION_CONVERT_NAME_LOOKUP_PARAM,\
             ~,\
             Seq\
         )\
     )>\
     typename ::boost::assign::v2::result_of::convert<C, R>::type \
-    convert( R const& range)\
+    convert( R const& range )\
     {\
         return ::boost::assign::v2::convert<C>( range );\
     }\
 /**/
-#endif
 
-#endif
+#endif //  BOOST_ASSIGN_V2_UTILITY_CONVERSION_CONVERT_ER_2010_HPP

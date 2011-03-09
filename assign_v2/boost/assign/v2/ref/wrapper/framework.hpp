@@ -15,7 +15,7 @@ namespace assign{
 namespace v2{
 namespace ref{
 
-    template<typename Tag,typename T>
+    template<typename Tag, typename T>
     struct wrapper{
         // specialize on Tag
     };
@@ -57,7 +57,7 @@ wrap(T const & t)
 namespace boost{
 
 #  define AUX_REFERENCE_WRAPPER_METAFUNCTIONS_DEF(U) \
-template<typename Tag,typename T> \
+template<typename Tag, typename T> \
 class is_reference_wrapper<U> \
     : public mpl::true_ \
 { \
@@ -85,4 +85,4 @@ AUX_REFERENCE_WRAPPER_METAFUNCTIONS_DEF(u const volatile )
 
 }// boost
 
-#endif
+#endif // BOOST_ASSIGN_V2_REF_WRAPPER_FRAMEWORK_ER_2010_HPP

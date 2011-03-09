@@ -25,4 +25,4 @@ namespace list_tuple_aux{
 }// assign
 }// boost
 
-#endif
+#endif // BOOST_ASSIGN_V2_REF_LIST_TUPLE_SIZE_TYPE_ER_2010_HPP

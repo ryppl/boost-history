@@ -13,4 +13,4 @@
 #include <boost/assign/v2/ref/list/array/policy.hpp>
 #include <boost/assign/v2/ref/list/array/rebind.hpp>
 
-#endif
+#endif // BOOST_ASSIGN_V2_REF_LIST_ARRAY_ER_2010_HPP

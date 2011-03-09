@@ -34,4 +34,4 @@ namespace ref{
 }// assign
 }// boost
 
-#endif
+#endif // BOOST_ASSIGN_V2_REF_LIST_MAKE_ER_2010_HPP

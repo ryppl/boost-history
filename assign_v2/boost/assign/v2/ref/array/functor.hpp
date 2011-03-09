@@ -9,12 +9,8 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_REF_ARRAY_FUNCTOR_ER_2010_HPP
 #define BOOST_ASSIGN_V2_REF_ARRAY_FUNCTOR_ER_2010_HPP
-
 #include <boost/assign/v2/ref/array/functor/make.hpp>
 #include <boost/assign/v2/ref/array/functor/nth_result_of.hpp>
-
-// Remains commented out
-// #include <boost/assign/v2/ref/array/functor/converter.hpp>
 
 #endif
 

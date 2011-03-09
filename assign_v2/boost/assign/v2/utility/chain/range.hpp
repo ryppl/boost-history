@@ -9,10 +9,10 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_CHAIN_RANGE_ER_2010_HPP
 #define BOOST_ASSIGN_V2_CHAIN_RANGE_ER_2010_HPP
+#include <boost/assign/v2/utility/chain/iterator.hpp>
 #include <boost/concept/assert.hpp>
 #include <boost/range/iterator_range.hpp>
 #include <boost/range/iterator.hpp>
-#include <boost/assign/v2/utility/chain/iterator.hpp>
 
 namespace boost{
 namespace assign{
@@ -58,4 +58,4 @@ namespace chain_aux{
 }// assign
 }// boost
 
-#endif
+#endif // BOOST_ASSIGN_V2_CHAIN_RANGE_ER_2010_HPP

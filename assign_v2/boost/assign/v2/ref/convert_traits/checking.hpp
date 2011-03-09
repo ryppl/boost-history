@@ -9,10 +9,9 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_REF_CONVERT_TRAITS_CHECKING_ER_2010_HPP
 #define BOOST_ASSIGN_V2_REF_CONVERT_TRAITS_CHECKING_ER_2010_HPP
-#include <boost/mpl/assert.hpp>
-//#include <boost/utility/enable_if.hpp>
-#include <boost/type_traits/is_same.hpp>
 #include <boost/assign/v2/ref/convert_traits/reference.hpp>
+#include <boost/mpl/assert.hpp>
+#include <boost/type_traits/is_same.hpp>
 
 namespace boost{
 namespace assign{
@@ -62,11 +61,12 @@ namespace same_value_type{
     }
 
 }// twin_values
-// TODO upgrade
+
+// TODO possible extension
 /*
 namespace distinct_value_type{
 
-    template<typename T1,typename T2,typename T3>
+    template<typename T1, typename T2, typename T3>
     void do_check_impl(const T1&, const T2& ,const T3&)
     {
 
@@ -104,6 +104,7 @@ namespace distinct_value_type{
     } \
 */
 /**/
+
 /*
 // don't try to guess the supertype, it may vary by compiler.
 namespace supertype_{
@@ -129,4 +130,4 @@ BOOST_ASSIGN_V2_MACRO(double , long_double_, workaround::d_)
 }// assign
 }// boost
 
-#endif
+#endif // BOOST_ASSIGN_V2_REF_CONVERT_TRAITS_CHECKING_ER_2010_HPP

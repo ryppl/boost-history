@@ -9,25 +9,11 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_REF_ARRAY_INTERFACE_ER_2010_HPP
 #define BOOST_ASSIGN_V2_REF_ARRAY_INTERFACE_ER_2010_HPP
-#include <algorithm>
+#include <boost/assign/v2/ref/wrapper.hpp>
+#include <boost/call_traits.hpp>
 #include <boost/config.hpp>
-#include <boost/mpl/bool.hpp>
 #include <boost/mpl/int.hpp>
-
-#include <boost/utility/enable_if.hpp>
-#include <boost/type_traits/is_same.hpp>
-#include <boost/type_traits/remove_const.hpp>
-#include <boost/type_traits/add_const.hpp>
-#include <boost/call_traits.hpp>
-
 #include <boost/range.hpp>
-#include <boost/call_traits.hpp>
-#include <boost/range/algorithm/for_each.hpp>
-#include <boost/range/iterator_range.hpp> //iterator_range_detail::
-
-#include <boost/assign/v2/ref/wrapper/framework.hpp>
-#include <boost/assign/v2/ref/wrapper/crtp.hpp>
-#include <boost/assign/v2/ref/wrapper/get.hpp>
 
 namespace boost{
 namespace assign{
@@ -171,12 +157,12 @@ namespace array_aux{
         template<typename W>
         reference elem_impl(W& w)
         {
-            return w; // w.get()
+            return w; 
         }
         template<typename W>
         const_reference elem_impl(W & w)const
         {
-            return w; // w.get()
+            return w;
         }
 
         public:
@@ -197,4 +183,4 @@ namespace array_aux{
 }// assign
 }// boost
 
-#endif
+#endif // BOOST_ASSIGN_V2_REF_ARRAY_INTERFACE_ER_2010_HPP

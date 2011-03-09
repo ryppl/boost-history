@@ -10,10 +10,10 @@
 #ifndef BOOST_ASSIGN_V2_REF_TUPLE_CPP0X_DATA_ER_2010_HPP
 #define BOOST_ASSIGN_V2_REF_TUPLE_CPP0X_DATA_ER_2010_HPP
 #include <utility>
-#include <boost/type_traits/is_reference.hpp>
+#include <boost/assign/v2/ref/tuple/cpp0x.hpp>
 #include <boost/type_traits/add_const.hpp>
 #include <boost/type_traits/add_reference.hpp>
-#include <boost/assign/v2/ref/tuple/cpp0x.hpp>
+#include <boost/type_traits/is_reference.hpp>
 
 // This tuple variant keeps a copy of rvalue reference. Expression templates
 // involving references to tuples otheriwse cause runtime errors in Release mode under OS X.

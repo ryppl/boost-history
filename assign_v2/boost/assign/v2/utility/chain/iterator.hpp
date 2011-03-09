@@ -9,12 +9,12 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_CHAIN_ITERATOR_ER_2010_HPP
 #define BOOST_ASSIGN_V2_CHAIN_ITERATOR_ER_2010_HPP
-#include <boost/mpl/apply.hpp>
-#include <boost/type_traits/remove_reference.hpp>
-#include <boost/iterator/iterator_traits.hpp>
-#include <boost/range/detail/join_iterator.hpp>
-#include <boost/range/detail/demote_iterator_traversal_tag.hpp>
 #include <boost/assign/v2/detail/traits/type/meta_convert.hpp>
+#include <boost/iterator/iterator_traits.hpp>
+#include <boost/mpl/apply.hpp>
+#include <boost/range/detail/demote_iterator_traversal_tag.hpp>
+#include <boost/range/detail/join_iterator.hpp>
+#include <boost/type_traits/remove_reference.hpp>
 
 namespace boost{
 namespace assign{
@@ -57,4 +57,4 @@ namespace chain_aux{
 }// assign
 }// boost
 
-#endif
+#endif // BOOST_ASSIGN_V2_CHAIN_ITERATOR_ER_2010_HPP

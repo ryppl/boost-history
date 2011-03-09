@@ -9,9 +9,9 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_TRAITS_CONTAINER_STATIC_SIZE_ER_2010_HPP
 #define BOOST_ASSIGN_V2_TRAITS_CONTAINER_STATIC_SIZE_ER_2010_HPP
-#include <boost/mpl/size_t.hpp>
 #include <boost/assign/v2/detail/traits/container/fwd.hpp>
 #include <boost/assign/v2/detail/traits/container/ptr_fwd.hpp>
+#include <boost/mpl/size_t.hpp>
 
 namespace boost{
 namespace assign{
@@ -26,13 +26,13 @@ namespace container_traits{
 
     };
 
-    template<typename T,std::size_t N>
+    template<typename T, std::size_t N>
     struct static_size< boost::array<T,N> >
         : ::boost::mpl::size_t<
             boost::array<T,N>::static_size
         >{};
 
-    template<typename T,std::size_t N,typename C>
+    template<typename T, std::size_t N, typename C>
     struct static_size< boost::ptr_array<T, N, C> >
         : ::boost::mpl::size_t<
             N

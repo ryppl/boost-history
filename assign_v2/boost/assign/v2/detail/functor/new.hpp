@@ -10,19 +10,16 @@
 #ifndef BOOST_ASSIGN_V2_DETAIL_FUNCTOR_NEW_ER_2010_HPP
 #define BOOST_ASSIGN_V2_DETAIL_FUNCTOR_NEW_ER_2010_HPP
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
-//#include <boost/assign/v2/detail/traits/container/value.hpp>//TODO remove
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 #include <utility>
 #else
-#include <boost/preprocessor/repetition/repeat_from_to.hpp>
-#include <boost/preprocessor/repetition/enum_params.hpp>
-#include <boost/preprocessor/repetition/enum_binary_params.hpp>
-#include <boost/mpl/always.hpp>
-#include <boost/range/reference.hpp>
-#include <boost/type_traits/remove_cv.hpp>
 #include <boost/assign/v2/detail/config/limit_arity.hpp>
 #include <boost/assign/v2/detail/functor/crtp_unary_and_up.hpp>
-#endif
+#include <boost/mpl/always.hpp>
+#include <boost/preprocessor/repetition.hpp>
+#include <boost/range/reference.hpp>
+#include <boost/type_traits/remove_cv.hpp>
+#endif // BOOST_ASSIGN_V2_ENABLE_CPP0X
 
 namespace boost{
 namespace assign{
@@ -38,7 +35,7 @@ namespace functor_aux{
         functor_aux::new_<T>,
         ::boost::mpl::always<T*>
     >
-#endif
+#endif // BOOST_ASSIGN_V2_ENABLE_CPP0X
     {
         typedef T* ptr_;
         typedef functor_aux::new_<T> this_;
@@ -78,20 +75,10 @@ BOOST_PP_REPEAT_FROM_TO(
     ~
 )
 #undef BOOST_ASSIGN_V2_MACRO
-#endif
+#endif // BOOST_ASSIGN_V2_ENABLE_CPP0X
 
     };
 
-/*
-    TODO remove
-    template<typename V>
-    struct deduce_new_
-    {
-        typedef typename container_traits::value<V>::type value_;
-        typedef functor_aux::new_<value_> type;
-        static type call(){ return functor_aux::new_<value_>(); }
-    };
-*/
 }// functor_aux
 namespace result_of{
 

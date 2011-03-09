@@ -22,11 +22,11 @@ namespace container_traits_aux{
     template<typename V>
     struct is_sorted : ::boost::mpl::false_{};
 
-    template<typename T,typename C,typename A>
-    struct is_sorted< std::set<T,C,A> > : ::boost::mpl::true_{};
+    template<typename T, typename C, typename A>
+    struct is_sorted< std::set<T, C, A> > : ::boost::mpl::true_{};
 
-    template<typename K,typename T,typename C,typename A>
-    struct is_sorted< std::map<K,T,C,A> > : ::boost::mpl::true_{};
+    template<typename K, typename T, typename C, typename A>
+    struct is_sorted< std::map<K, T, C, A> > : ::boost::mpl::true_{};
 
 }// container_traits_aux
 

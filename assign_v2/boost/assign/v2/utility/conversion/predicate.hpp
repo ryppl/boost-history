@@ -9,9 +9,9 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_UTILITY_CONVERSION_TRAITS_ER_2010_HPP
 #define BOOST_ASSIGN_V2_UTILITY_CONVERSION_TRAITS_ER_2010_HPP
-#include <boost/mpl/or.hpp>
 #include <boost/assign/v2/detail/traits/container/is_array.hpp>
 #include <boost/assign/v2/detail/traits/container/has_push.hpp>
+#include <boost/mpl/or.hpp>
 
 namespace boost{
 namespace assign{
@@ -29,4 +29,4 @@ namespace convert_aux{
 }// assign
 }// boost
 
-#endif
+#endif // BOOST_ASSIGN_V2_UTILITY_CONVERSION_TRAITS_ER_2010_HPP

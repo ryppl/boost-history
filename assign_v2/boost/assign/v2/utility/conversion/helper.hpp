@@ -39,4 +39,4 @@ namespace convert_aux{
 }// assign
 }// boost
 
-#endif
+#endif // BOOST_ASSIGN_V2_UTILITY_CONVERSION_HELPER_ER_2010_HPP

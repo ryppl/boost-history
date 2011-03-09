@@ -9,14 +9,14 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_REF_LIST_AT_ER_2010_HPP
 #define BOOST_ASSIGN_V2_REF_LIST_AT_ER_2010_HPP
-#include <boost/mpl/bool.hpp>
-#include <boost/mpl/eval_if.hpp>
-#include <boost/mpl/identity.hpp>
-#include <boost/call_traits.hpp>
-#include <boost/utility/enable_if.hpp>
 #include <boost/assign/v2/ref/list/fwd.hpp>
 #include <boost/assign/v2/ref/list/size_type.hpp>
 #include <boost/assign/v2/ref/list/holder.hpp>
+#include <boost/call_traits.hpp>
+#include <boost/mpl/bool.hpp>
+#include <boost/mpl/eval_if.hpp>
+#include <boost/mpl/identity.hpp>
+#include <boost/utility/enable_if.hpp>
 
 namespace boost{
 namespace assign{
@@ -26,7 +26,8 @@ namespace list_aux{
 
     template<size_type I, typename T>
     struct is_head :
-        ::boost::mpl::bool_< I + 1 == T::size::value>{};
+        ::boost::mpl::bool_< I + 1 == T::static_size::value>{};
+//        ::boost::mpl::bool_< I + 1 == T::size::value>{};
 
 namespace result_of{
 
@@ -79,4 +80,4 @@ namespace result_of{
 }// assign
 }// boost
 
-#endif
+#endif // BOOST_ASSIGN_V2_REF_LIST_AT_ER_2010_HPP

@@ -19,12 +19,12 @@ namespace /*<< Template arguments to put_aux::modifier<> are declared within >>*
 namespace put_aux{
 
     template<typename Tag>
-    struct /*<< Specialize on Tag >>*/ modifier{};
+    struct /*<<Specialize on Tag>>*/ modifier{};
 
 }
 namespace put_concept{
 
-    template<typename Tag, /*<< Container >>*/ typename C, /*<< Input >>*/ typename T>
+    template<typename Tag, /*<<Container>>*/ typename C, /*<<Input>>*/ typename T>
     struct Modifier
     {
 
@@ -45,4 +45,4 @@ namespace put_concept{
 }// assign
 }// boost
 
-#endif
+#endif // BOOST_ASSIGN_V2_PUT_FRAME_MODIFIER_ER_2010_HPP

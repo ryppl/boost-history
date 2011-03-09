@@ -9,10 +9,10 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_REF_ARRAY_ALLOC_INSTANT_ER_2010_HPP
 #define BOOST_ASSIGN_V2_REF_ARRAY_ALLOC_INSTANT_ER_2010_HPP
-#include <boost/assign/v2/ref/wrapper.hpp>
-#include <boost/assign/v2/ref/array/interface.hpp>
 #include <boost/assign/v2/ref/array/alloc/instant_fwd.hpp>
 #include <boost/assign/v2/ref/array/impl_traits.hpp>
+#include <boost/assign/v2/ref/array/interface.hpp>
+#include <boost/assign/v2/ref/wrapper.hpp>
 
 namespace boost{
 namespace assign{
@@ -20,11 +20,9 @@ namespace v2{
 namespace ref{
 namespace array_aux{
 
-//    template<size_type N, typename Tag, typename T>
     template<size_type N, typename T>
     class instant_alloc : public array_aux::interface<
         typename array_aux::impl_traits<N, T>::array_type,
-//        instant_alloc<N, Tag, T>
       instant_alloc<N, T>
     >
     {
@@ -61,4 +59,4 @@ namespace array_aux{
 }// assign
 }// boost
 
-#endif
+#endif // BOOST_ASSIGN_V2_REF_ARRAY_ALLOC_INSTANT_ER_2010_HPP

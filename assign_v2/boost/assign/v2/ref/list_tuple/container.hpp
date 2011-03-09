@@ -14,5 +14,5 @@
 #include <boost/assign/v2/ref/list_tuple/cpp0x/container.hpp>
 #else
 #include <boost/assign/v2/ref/list_tuple/cpp03/container.hpp>
-#endif
+#endif // BOOST_ASSIGN_V2_ENABLE_CPP0X
 #endif // BOOST_ASSIGN_V2_REF_LIST_TUPLE_CONTAINER_ER_2010_HPP

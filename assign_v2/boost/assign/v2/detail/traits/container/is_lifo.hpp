@@ -22,7 +22,7 @@ namespace container_traits_aux{
     template<typename V>
     struct is_lifo : ::boost::mpl::false_{};
 
-    template<typename T,typename A>
+    template<typename T, typename A>
     struct is_lifo< std::stack<T,A> > : ::boost::mpl::true_{};
 
 }// container_traits_aux

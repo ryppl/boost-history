@@ -9,9 +9,9 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_PUT_CONTAINER_FUNCTOR_RESULT_OF_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_CONTAINER_FUNCTOR_RESULT_OF_ER_2010_HPP
+#include <boost/assign/v2/put/container/functor/fwd.hpp>
 #include <boost/assign/v2/put/deduce/fun.hpp>
 #include <boost/assign/v2/put/deduce/modifier/tag.hpp>
-#include <boost/assign/v2/put/container/functor/fwd.hpp>
 
 namespace boost{
 namespace assign{

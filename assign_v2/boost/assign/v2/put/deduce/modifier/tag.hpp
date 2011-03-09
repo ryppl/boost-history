@@ -9,18 +9,16 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_PUT_DEDUCE_MODIFIER_TAG_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_DEDUCE_MODIFIER_TAG_ER_2010_HPP
-#include <boost/mpl/assert.hpp>
-#include <boost/type_traits/is_same.hpp>
-
-#include <boost/assign/v2/detail/traits/switch.hpp>
-#include <boost/assign/v2/detail/traits/container/is_array.hpp>
-#include <boost/assign/v2/detail/traits/container/has_push.hpp>
-#include <boost/assign/v2/detail/traits/container/is_associative.hpp>
-
 #include <boost/assign/v2/put/modifier/insert/tag.hpp>
 #include <boost/assign/v2/put/modifier/iterate/tag.hpp>
 #include <boost/assign/v2/put/modifier/push/tag.hpp>
 #include <boost/assign/v2/put/modifier/push_back/tag.hpp>
+#include <boost/assign/v2/detail/traits/container/has_push.hpp>
+#include <boost/assign/v2/detail/traits/container/is_associative.hpp>
+#include <boost/assign/v2/detail/traits/container/is_array.hpp>
+#include <boost/assign/v2/detail/traits/switch.hpp>
+#include <boost/mpl/assert.hpp>
+#include <boost/type_traits/is_same.hpp>
 
 namespace boost{
 namespace assign{

@@ -9,14 +9,12 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_REF_LIST_ARRAY_REBIND_ER_2010_HPP
 #define BOOST_ASSIGN_V2_REF_LIST_ARRAY_REBIND_ER_2010_HPP
-#include <boost/static_assert.hpp>
-#include <boost/config.hpp>
-#include <boost/mpl/bool.hpp>
-#include <boost/mpl/int.hpp>
-#include <boost/mpl/equal_to.hpp>
 #include <boost/assign/v2/ref/list/fwd.hpp>
 #include <boost/assign/v2/ref/list/at.hpp>
 #include <boost/assign/v2/ref/list/size_type.hpp>
+#include <boost/mpl/bool.hpp>
+#include <boost/mpl/equal_to.hpp>
+#include <boost/mpl/int.hpp>
 
 namespace boost{
     struct use_default;
@@ -26,7 +24,7 @@ namespace ref{
 namespace list_aux{
 
     template<
-        size_type K,typename A,
+        size_type K, typename A,
         typename Tag, typename H, typename T
     >
     void assign_array(
@@ -39,7 +37,7 @@ namespace list_aux{
     }
 
     template<
-        size_type K,typename A,
+        size_type K, typename A,
         typename Tag, typename H, typename T
     >
     void assign_array(
@@ -65,7 +63,7 @@ namespace list_aux{
     )
     {
         typedef list_aux::container<Tag, H, T> list_;
-        BOOST_STATIC_ASSERT( A::static_size <= list_::size::value );
+        BOOST_STATIC_ASSERT( A::static_size <= list_::static_size::value );
         typedef ::boost::mpl::int_<0> zero_;
         typedef ::boost::mpl::int_<A::static_size> size_;
         typedef typename ::boost::mpl::equal_to<size_, zero_>::type exit_;

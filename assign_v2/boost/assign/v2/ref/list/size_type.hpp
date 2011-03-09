@@ -24,4 +24,5 @@ namespace list_aux{
 }// assign
 }// boost
 
-#endif
+#endif // BOOST_ASSIGN_V2_REF_LIST_SIZE_TYPE_ER_2010_HPP
+

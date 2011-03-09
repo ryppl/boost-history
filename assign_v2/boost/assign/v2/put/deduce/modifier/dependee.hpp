@@ -9,7 +9,6 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_PUT_DEDUCE_MODIFIER_DEPENDEE_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_DEDUCE_MODIFIER_DEPENDEE_ER_2010_HPP
-
 #include <boost/assign/v2/put/modifier/insert.hpp>
 #include <boost/assign/v2/put/modifier/iterate.hpp>
 #include <boost/assign/v2/put/modifier/push.hpp>

@@ -10,7 +10,8 @@
 #ifndef BOOST_ASSIGN_V2_REF_ARRAY_CONVERSION_ER_2010_HPP
 #define BOOST_ASSIGN_V2_REF_ARRAY_CONVERSION_ER_2010_HPP
 #include <boost/assign/v2/ref/array/interface.hpp>
-#include <boost/assign/v2/utility/conversion/name_lookup.hpp>
+#include <boost/assign/v2/utility/conversion/convert.hpp>
+#include <boost/assign/v2/utility/conversion/converter.hpp>
 
 namespace boost{
 namespace assign{
@@ -20,7 +21,8 @@ namespace array_aux{
 
 #define BOOST_ASSIGN_V2_SEQ (Impl)(D)
 #define BOOST_ASSIGN_V2_R interface<Impl, D>
-BOOST_ASSIGN_V2_UTILITY_CONVERSION_NAME_LOOKUP(BOOST_ASSIGN_V2_SEQ, BOOST_ASSIGN_V2_R)
+BOOST_ASSIGN_V2_UTILITY_CONVERSION_CONVERT_NAME_LOOKUP(BOOST_ASSIGN_V2_SEQ, BOOST_ASSIGN_V2_R)
+BOOST_ASSIGN_V2_UTILITY_CONVERSION_CONVERTER_NAME_LOOKUP(BOOST_ASSIGN_V2_SEQ, BOOST_ASSIGN_V2_R)
 #undef BOOST_ASSIGN_V2_SEQ
 #undef BOOST_ASSIGN_V2_R
 

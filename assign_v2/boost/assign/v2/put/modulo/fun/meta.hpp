@@ -10,11 +10,12 @@
 #ifndef BOOST_ASSIGN_V2_PUT_MODULO_FUN_META_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_MODULO_FUN_META_ER_2010_HPP
 #include <boost/mpl/apply.hpp>
-#include <boost/assign/v2/put/frame/replace.hpp>
+#include <boost/assign/v2/put/frame/replace_parameter.hpp>
 
 namespace boost{
 namespace assign{
 namespace v2{
+//[result_of_modulo_fun
 namespace result_of{
         
     template<typename /*<<Inherits crtp\<\> >>*/D>
@@ -28,8 +29,9 @@ namespace result_of{
     };
             
 }// result_of
+//]
 }// v2
 }// assign
 }// boost
 
-#endif
+#endif // BOOST_ASSIGN_V2_PUT_MODULO_FUN_META_ER_2010_HPP

@@ -19,7 +19,7 @@ namespace type_traits{
     template<typename Tag = boost::use_default>
     struct meta_convert{
 
-        template<typename T1,typename T2>
+        template<typename T1, typename T2>
         struct apply : ref::convert_traits::reference<T1, T2>{};
 
     };

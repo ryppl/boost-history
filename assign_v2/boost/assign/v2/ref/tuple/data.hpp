@@ -14,5 +14,5 @@
 #include <boost/assign/v2/ref/tuple/cpp0x/data.hpp>
 #else
 #include <boost/tuple/tuple.hpp>
-#endif
+#endif // BOOST_ASSIGN_V2_ENABLE_CPP0X
 #endif // BOOST_ASSIGN_V2_REF_TUPLE_DATA_ER_2010_HPP

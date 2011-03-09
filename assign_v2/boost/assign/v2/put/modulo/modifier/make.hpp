@@ -19,9 +19,10 @@
 namespace boost{
 namespace assign{
 namespace v2{
+//[modulo_modifier
 namespace put_aux{
 
-	template<typename Keyword, typename Arg = keyword_aux::ignore>
+	template<typename /*<<A class of modifiers>>*/ Keyword, typename /*<<A part of the modifier's implementation>>*/Arg = keyword_aux::ignore>
 	struct modulo_modifier
 	{
         
@@ -39,6 +40,9 @@ namespace put_aux{
         protected:
         Arg arg_;
 	};
+}//put_aux
+//]
+namespace put_aux{
 
 	template<typename C, typename F, typename Tag, typename D, 
 		typename Keyword, typename Arg>
@@ -72,4 +76,4 @@ namespace put_aux{
 }// assign
 }// boost
 
-#endif
+#endif // BOOST_ASSIGN_V2_PUT_MODULO_MODIFIER_MAKE_ER_2010_HPP

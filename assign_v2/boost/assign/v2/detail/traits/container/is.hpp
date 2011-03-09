@@ -7,12 +7,12 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_TRAITS_CONTAINER_IS
-#include <boost/preprocessor/cat.hpp>
-#include <boost/type_traits/remove_cv.hpp>
+#ifndef BOOST_ASSIGN_V2_TRAITS_CONTAINER_IS_ER_2010_HPP
+#define BOOST_ASSIGN_V2_TRAITS_CONTAINER_IS_ER_2010_HPP
 #include <boost/assign/v2/detail/traits/container/fwd.hpp>
 #include <boost/assign/v2/detail/traits/container/forward_to_value.hpp>
-
+#include <boost/preprocessor/cat.hpp>
+#include <boost/type_traits/remove_cv.hpp>
 #define BOOST_ASSIGN_V2_TRAITS_CONTAINER_IS(name)\
 namespace container_traits{\
     template<typename V>\
@@ -22,5 +22,4 @@ namespace container_traits{\
     >{};\
 }\
 /**/
-
-#endif // BOOST_ASSIGN_V2_TRAITS_CONTAINER_IS
+#endif // BOOST_ASSIGN_V2_TRAITS_CONTAINER_IS_ER_2010_HPP

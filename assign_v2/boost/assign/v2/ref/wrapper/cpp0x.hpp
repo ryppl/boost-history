@@ -9,11 +9,8 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_TRAITS_TYPE_CPP0X_ER_2010_HPP
 #define BOOST_ASSIGN_V2_TRAITS_TYPE_CPP0X_ER_2010_HPP
-
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
-
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
-
 #include <boost/type_traits/add_const.hpp>
 
 namespace boost{
@@ -43,6 +40,6 @@ namespace ref{
 }// assign
 }// boost
 
-#endif
+#endif // BOOST_ASSIGN_V2_ENABLE_CPP0X
 
 #endif // BOOST_ASSIGN_V2_TRAITS_TYPE_CPP0X_ER_2010_HPP

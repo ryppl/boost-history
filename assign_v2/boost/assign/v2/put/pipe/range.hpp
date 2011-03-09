@@ -9,9 +9,9 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_PUT_PIPE_RANGE_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_PIPE_RANGE_ER_2010_HPP
-#include <boost/type.hpp>
 #include <boost/assign/v2/put/container/range.hpp>
 #include <boost/assign/v2/ref/wrapper/copy.hpp>
+#include <boost/type.hpp>
 
 namespace boost{
 namespace assign{
@@ -45,7 +45,7 @@ namespace put_range_aux
         }
     };
 
-    template<typename C,typename R>
+    template<typename C, typename R>
     C& operator|(C& cont, put_range_aux::helper1<R> const& h)
     {
         return put_range( cont, h.range() );
@@ -65,4 +65,4 @@ namespace{
 }// assign
 }// boost
 
-#endif
+#endif // BOOST_ASSIGN_V2_PUT_PIPE_RANGE_ER_2010_HPP

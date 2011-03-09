@@ -11,9 +11,9 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_CHAIN_PIPE_ER_2010_HPP
 #define BOOST_ASSIGN_V2_CHAIN_PIPE_ER_2010_HPP
-#include <boost/mpl/void.hpp>
-#include <boost/assign/v2/utility/chain/result.hpp>
 #include <boost/assign/v2/utility/chain/adaptor.hpp>
+#include <boost/assign/v2/utility/chain/result.hpp>
+#include <boost/mpl/void.hpp>
 
 // Design:
 // - Original design was boost::chain in RangeEx
@@ -54,4 +54,4 @@ BOOST_ASSIGN_V2_FRAMEWORK_CHAIN(R1 const)
 }// assign
 }// boost
 
-#endif
+#endif // BOOST_ASSIGN_V2_CHAIN_PIPE_ER_2010_HPP

@@ -9,7 +9,6 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_DETAIL_ER_2010_HPP
 #define BOOST_ASSIGN_V2_DETAIL_ER_2010_HPP
-
 #include <boost/assign/v2/detail/checking.hpp>
 #include <boost/assign/v2/detail/functor.hpp>
 #include <boost/assign/v2/detail/fwd.hpp>
@@ -17,6 +16,6 @@
 #include <boost/assign/v2/detail/traits.hpp>
 
 // /config.hpp is not to be defined
-// Don't include /checking/checking.hpp
+// /checking/checking.hpp has to be explicitly included
 
 #endif // BOOST_ASSIGN_V2_DETAIL_ER_2010_HPP

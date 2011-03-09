@@ -9,15 +9,15 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_PUT_CONTAINER_FUNCTOR_REPLACE_PARAMETER_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_CONTAINER_FUNCTOR_REPLACE_PARAMETER_ER_2010_HPP
-#include <boost/assign/v2/put/frame/replace_parameter.hpp>
 #include <boost/assign/v2/put/container/functor/fwd.hpp>
+#include <boost/assign/v2/put/frame/replace_parameter.hpp>
 
 namespace boost{
 namespace assign{
 namespace v2{
 namespace put_aux{
 
-    template<typename C,typename F, typename Tag>
+    template<typename C, typename F, typename Tag>
     struct replace_fun< put_aux::adapter<C, F, Tag> >
     {
         template<typename F1>

@@ -16,7 +16,7 @@ namespace boost{
     template
     <
         class T,
-        std::size_t N, // TODO verify
+        std::size_t N, 
         class CloneAllocator
     >
     class ptr_array;

@@ -9,7 +9,6 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_TRAITS_CONTAINER_IS_RANGE_ER_2010_HPP
 #define BOOST_ASSIGN_V2_TRAITS_CONTAINER_IS_RANGE_ER_2010_HPP
-#include <boost/mpl/bool.hpp>
 
 namespace boost{
 namespace assign{

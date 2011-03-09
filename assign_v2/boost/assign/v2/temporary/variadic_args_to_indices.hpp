@@ -15,7 +15,7 @@ namespace impl{
 
 template<typename ...Args> struct pack_holder{};
 
-template<typename Indices,typename Pack> struct args_to_indices{};
+template<typename Indices, typename Pack> struct args_to_indices{};
 
 template<typename I, I...Tail, typename T, typename... Rest>
 struct args_to_indices<
@@ -39,7 +39,7 @@ struct args_to_indices<
 
 }// impl
 
-template<typename I,typename...Args>
+template<typename I, typename...Args>
 struct args_to_indices : impl::args_to_indices<
     indices<I>,
     impl::pack_holder<Args...>

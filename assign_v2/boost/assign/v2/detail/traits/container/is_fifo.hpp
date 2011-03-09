@@ -22,7 +22,7 @@ namespace container_traits_aux{
     template<typename V>
     struct is_fifo : ::boost::mpl::false_{};
 
-    template<typename T,typename A>
+    template<typename T, typename A>
     struct is_fifo< std::queue<T,A> > : ::boost::mpl::true_{};
 
 }// container_traits_aux

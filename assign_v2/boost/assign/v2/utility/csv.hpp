@@ -10,7 +10,7 @@
 #ifndef BOOST_ASSIGN_V2_UTILITY_CSV_ER_2010_HPP
 #define BOOST_ASSIGN_V2_UTILITY_CSV_ER_2010_HPP
 
-#include <boost/assign/v2/utility/csv/result.hpp>
 #include <boost/assign/v2/utility/csv/make.hpp>
+#include <boost/assign/v2/utility/csv/result.hpp>
 
-#endif
+#endif // BOOST_ASSIGN_V2_UTILITY_CSV_ER_2010_HPP

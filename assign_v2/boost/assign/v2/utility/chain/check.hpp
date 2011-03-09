@@ -9,21 +9,21 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_CHAIN_CHECK_ER_2010_HPP
 #define BOOST_ASSIGN_V2_CHAIN_CHECK_ER_2010_HPP
-#include <boost/static_assert.hpp>
 #include <vector>
 #include <boost/array.hpp>
-#include <boost/mpl/eval_if.hpp>
-#include <boost/mpl/identity.hpp>
-#include <boost/mpl/assert.hpp>
-#include <boost/type_traits/add_const.hpp>
-#include <boost/type_traits/is_same.hpp>
-#include <boost/range/algorithm/copy.hpp>
-#include <boost/range/algorithm/equal.hpp>
 #include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/ref/wrapper/range_get.hpp>
 #include <boost/assign/v2/ref/wrapper/copy.hpp>
-#include <boost/assign/v2/utility/chain/use_const.hpp>
 #include <boost/assign/v2/utility/chain/pipe.hpp>
+#include <boost/assign/v2/utility/chain/use_const.hpp>
+#include <boost/mpl/eval_if.hpp>
+#include <boost/mpl/identity.hpp>
+#include <boost/mpl/assert.hpp>
+#include <boost/range/algorithm/copy.hpp>
+#include <boost/range/algorithm/equal.hpp>
+#include <boost/static_assert.hpp>
+#include <boost/type_traits/add_const.hpp>
+#include <boost/type_traits/is_same.hpp>
 
 namespace boost{
 namespace assign{
@@ -180,4 +180,4 @@ void verify_mpl()
 }// assign
 }// boost
 
-#endif
+#endif // BOOST_ASSIGN_V2_CHAIN_CHECK_ER_2010_HPP

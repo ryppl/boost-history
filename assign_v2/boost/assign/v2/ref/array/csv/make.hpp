@@ -12,23 +12,20 @@
 #include <boost/assign/v2/detail/keyword/nil.hpp>
 #include <boost/assign/v2/ref/array/alloc/instant.hpp>
 #include <boost/assign/v2/ref/array/csv/nth_result_of.hpp>
-
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
-#if BOOST_ASSIGN_V2_ENABLE_CPP0X
-#include <utility>
-#include <boost/config.hpp>
-#include <boost/utility/enable_if.hpp>
-#include <boost/assign/v2/detail/traits/type/or_const.hpp>
-#else
-#include <boost/preprocessor/cat.hpp>
-#include <boost/preprocessor/arithmetic/inc.hpp>
-#include <boost/preprocessor/repetition/repeat_from_to.hpp>
-#include <boost/preprocessor/repetition/enum_params.hpp>
-#include <boost/assign/v2/detail/config/limit_csv_arity.hpp>
-#endif
-
 #include <boost/mpl/assert.hpp>
 #include <boost/type_traits/is_same.hpp>
+#if BOOST_ASSIGN_V2_ENABLE_CPP0X
+#include <utility>
+#include <boost/assign/v2/detail/traits/type/or_const.hpp>
+#include <boost/config.hpp>
+#include <boost/utility/enable_if.hpp>
+#else
+#include <boost/assign/v2/detail/config/limit_csv_arity.hpp>
+#include <boost/preprocessor/arithmetic/inc.hpp>
+#include <boost/preprocessor/cat.hpp>
+#include <boost/preprocessor/repetition.hpp>
+#endif // BOOST_ASSIGN_V2_ENABLE_CPP0X
 
 namespace boost{
 namespace assign{
@@ -53,7 +50,9 @@ namespace result_of{
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 namespace csv_array_aux{
 
-    template<std::size_t n,typename R>
+
+	// TODO size_type?
+    template<std::size_t n, typename R>
     void assign(R& r){}
 
     template<std::size_t n, typename U, typename R, typename... Args>
@@ -84,7 +83,7 @@ namespace csv_array_aux{
 
 }// csv_array_aux
 
-    template<typename T,typename...TArgs>
+    template<typename T, typename...TArgs>
     typename boost::lazy_disable_if<
         v2::type_traits::or_const<T, TArgs...>,
         csv_array_aux::result<T, TArgs...>
@@ -145,4 +144,4 @@ BOOST_PP_REPEAT_FROM_TO(
 }// assign
 }// boost
 
-#endif
+#endif // BOOST_ASSIGN_V2_REF_ARRAY_CSV_MAKE_ER_2010_HPP

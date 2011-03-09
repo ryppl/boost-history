@@ -9,16 +9,16 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_REF_LIST_ARRAY_POLICY_ER_2010_HPP
 #define BOOST_ASSIGN_V2_REF_LIST_ARRAY_POLICY_ER_2010_HPP
-#include <boost/mpl/eval_if.hpp>
-#include <boost/mpl/identity.hpp>
-#include <boost/type_traits/remove_reference.hpp>
-#include <boost/type_traits/remove_cv.hpp>
-#include <boost/type_traits/is_const.hpp>
 #include <boost/assign/v2/ref/array/alloc/lazy.hpp>
 #include <boost/assign/v2/ref/list/fwd.hpp>
 #include <boost/assign/v2/ref/list/holder.hpp>
 #include <boost/assign/v2/ref/list/size_type.hpp>
 #include <boost/assign/v2/ref/list/policy.hpp>
+#include <boost/mpl/eval_if.hpp>
+#include <boost/mpl/identity.hpp>
+#include <boost/type_traits/is_const.hpp>
+#include <boost/type_traits/remove_reference.hpp>
+#include <boost/type_traits/remove_cv.hpp>
 
 namespace boost{
 namespace assign{
@@ -30,7 +30,7 @@ namespace list_aux{
 
     typedef alloc_tag::lazy_alloc array_tag;
 
-    // policy_helperx<> extracts from the list the value-type for the array
+    // policy_helperX<> extracts from the list the value-type for the array
 
     template<
         typename U1 // old result
@@ -53,7 +53,7 @@ namespace list_aux{
     };
 
     template<typename U1 // old result
-        ,typename U2, typename L // container<Tag, U2, L>
+        , typename U2, typename L // container<Tag, U2, L>
     >
     struct policy_helper2
     {
@@ -98,7 +98,7 @@ namespace list_aux{
             typedef typename boost::remove_reference<H>::type u1_;
             typedef typename list_aux::policy_helper3<u1_, T>::type value_;
             typedef array_aux::lazy_alloc<
-                tail_holder<T>::size::value
+                tail_holder<T>::static_size::value
                 ,value_
                 ,derived_
             > type;
@@ -112,4 +112,4 @@ namespace list_aux{
 }// assign
 }// boost
 
-#endif
+#endif // BOOST_ASSIGN_V2_REF_LIST_ARRAY_POLICY_ER_2010_HPP

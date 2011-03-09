@@ -9,10 +9,10 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_PUT_MODULO_FUN_MAKE_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_MODULO_FUN_MAKE_ER_2010_HPP
-#include <boost/mpl/apply.hpp>
 #include <boost/assign/v2/detail/keyword/ignore.hpp>
 #include <boost/assign/v2/put/frame/fwd.hpp>
 #include <boost/assign/v2/put/modulo/fun/meta.hpp>
+#include <boost/mpl/apply.hpp>
 
 namespace boost{
 namespace assign{
@@ -61,4 +61,4 @@ namespace{
 }// assign
 }// boost
 
-#endif
+#endif // BOOST_ASSIGN_V2_PUT_MODULO_FUN_MAKE_ER_2010_HPP

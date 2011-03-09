@@ -9,9 +9,9 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_TRAITS_CONTAINER_IS_PTR_CONTAINER_ER_2010_HPP
 #define BOOST_ASSIGN_V2_TRAITS_CONTAINER_IS_PTR_CONTAINER_ER_2010_HPP
-#include <boost/mpl/identity.hpp>
-#include <boost/mpl/eval_if.hpp>
 #include <boost/assign/v2/detail/traits/container/ptr_to_value.hpp>
+#include <boost/mpl/eval_if.hpp>
+#include <boost/mpl/identity.hpp>
 
 namespace boost{
 namespace assign{

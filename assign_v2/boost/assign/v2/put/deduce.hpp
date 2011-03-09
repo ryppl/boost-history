@@ -9,10 +9,8 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_PUT_DEDUCE_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_DEDUCE_ER_2010_HPP
-
 #include <boost/assign/v2/put/deduce/fun.hpp>
 #include <boost/assign/v2/put/deduce/modifier/tag.hpp>
-
 // Derived of crtp<> have to include this file:
 // #include <boost/assign/v2/put/deduce/modifier/dependee.hpp>
 

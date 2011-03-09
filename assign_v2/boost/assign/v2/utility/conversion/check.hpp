@@ -16,14 +16,14 @@
 #include <set>
 #include <stack>
 #include <vector>
-#include <boost/mpl/assert.hpp>
-#include <boost/type.hpp>
 #include <boost/array.hpp>
-#include <boost/type_traits/is_same.hpp>
 #include <boost/assign/v2/utility/conversion/converter.hpp>
 #include <boost/assign/v2/utility/conversion/deduce_tag.hpp>
 #include <boost/assign/v2/utility/conversion/predicate.hpp>
 #include <boost/assign/v2/detail/check/fwd_equal_container.hpp>
+#include <boost/mpl/assert.hpp>
+#include <boost/type.hpp>
+#include <boost/type_traits/is_same.hpp>
 
 // Don't include this file in v2/utility/conversion.hpp
 
@@ -115,4 +115,4 @@ namespace check_aux{
 }// assign
 }// boost
 
-#endif
+#endif // BOOST_ASSIGN_V2_UTILITY_CONVERSION_CHECK_ER_2010_HPP

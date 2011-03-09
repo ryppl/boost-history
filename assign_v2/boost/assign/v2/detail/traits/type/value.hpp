@@ -9,8 +9,8 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_TRAITS_TYPE_VALUE_ER_2010_HPP
 #define BOOST_ASSIGN_V2_TRAITS_TYPE_VALUE_ER_2010_HPP
-#include <boost/type_traits/remove_cv.hpp>
 #include <boost/mpl/identity.hpp>
+#include <boost/type_traits/remove_cv.hpp>
 
 namespace boost{
 namespace assign{

@@ -9,18 +9,19 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_REF_LIST_CONTAINER_ER_2010_HPP
 #define BOOST_ASSIGN_V2_REF_LIST_CONTAINER_ER_2010_HPP
-#include <boost/mpl/apply.hpp>
-#include <boost/type_traits/is_same.hpp>
-
-/* #ifndef BOOST_NO_RVALUE_REFERENCES
-#include <utility>
-#else*/
-#include <boost/call_traits.hpp>
-//#endif
 #include <boost/assign/v2/ref/list/fwd.hpp> // consistency
 #include <boost/assign/v2/ref/list/holder/tail.hpp>
 #include <boost/assign/v2/ref/list/holder/head.hpp>
 #include <boost/assign/v2/ref/list/policy.hpp>
+/* // TODO possible extension
+#include <boost/config.hpp>
+#ifndef BOOST_NO_RVALUE_REFERENCES
+#include <utility>
+#else */
+#include <boost/call_traits.hpp>
+//#endif
+#include <boost/mpl/apply.hpp>
+#include <boost/type_traits/is_same.hpp>
 
 namespace boost{
 namespace assign{
@@ -48,7 +49,7 @@ namespace list_aux{
             typedef container<Tag, H1, this_> type;
         };
 
-/* // TODO see head_holder
+/* // TODO possible extension
 #ifndef BOOST_NO_RVALUE_REFERENCES
         explicit container(
             H&& h,
@@ -88,6 +89,7 @@ namespace list_aux{
             typedef typename result<H1 const&>::type result_;
             return result_( h, *this);
         }
+        
 // #endif
 
 
@@ -99,4 +101,4 @@ namespace list_aux{
 }// assign
 }// boost
 
-#endif
+#endif // BOOST_ASSIGN_V2_REF_LIST_CONTAINER_ER_2010_HPP

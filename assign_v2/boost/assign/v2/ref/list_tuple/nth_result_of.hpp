@@ -9,16 +9,16 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_REF_LIST_TUPLE_NTH_RESULT_OF_ER_2010_HPP
 #define BOOST_ASSIGN_V2_REF_LIST_TUPLE_NTH_RESULT_OF_ER_2010_HPP
-#include <boost/mpl/unpack_args.hpp>
+#include <boost/assign/v2/ref/list_tuple/container.hpp>
 #include <boost/mpl/apply.hpp>
 #include <boost/mpl/fold.hpp>
-#include <boost/assign/v2/ref/list_tuple/container.hpp>
+#include <boost/mpl/unpack_args.hpp>
 
 namespace boost{
 namespace assign{
 namespace v2{
 namespace ref{
-namespace nth_result_of{
+namespace nth_result_of{ // TODO this should be result_of
 
     class list_tuple
     {

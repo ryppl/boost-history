@@ -14,11 +14,11 @@
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/identity.hpp>
-#include <boost/type_traits/remove_reference.hpp>
+#include <boost/range/reference.hpp>
+#include <boost/type_traits/is_const.hpp>
 #include <boost/type_traits/is_reference.hpp>
 #include <boost/type_traits/is_same.hpp>
-#include <boost/type_traits/is_const.hpp>
-#include <boost/range/reference.hpp>
+#include <boost/type_traits/remove_reference.hpp>
 
 namespace boost{
     struct use_default;
@@ -53,4 +53,5 @@ namespace chain_aux{
 }// assign
 }// boost
 
-#endif
+#endif // BOOST_ASSIGN_V2_CHAIN_USE_CONST_ER_2010_HPP
+

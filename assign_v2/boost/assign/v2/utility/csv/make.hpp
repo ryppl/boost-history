@@ -9,18 +9,17 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_UTILITY_CSV_MAKE_ER_2010_HPP
 #define BOOST_ASSIGN_V2_UTILITY_CSV_MAKE_ER_2010_HPP
-#include <boost/mpl/vector.hpp>
 #include <boost/assign/v2/utility/csv/result.hpp>
-
+#include <boost/mpl/vector.hpp>
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 #include <utility>
 #include <boost/assign/v2/temporary/variadic_vector.hpp>
 #else
+#include <boost/assign/v2/detail/config/limit_csv_arity.hpp>
 #include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/repetition.hpp>
-#include <boost/assign/v2/detail/config/limit_csv_arity.hpp>
-#endif
+#endif // BOOST_ASSIGN_V2_ENABLE_CPP0X
 
 namespace boost{
 namespace assign{
@@ -91,4 +90,4 @@ BOOST_PP_REPEAT_FROM_TO(
 }// assign
 }// boost
 
-#endif
+#endif // BOOST_ASSIGN_V2_ENABLE_CPP0X

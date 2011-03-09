@@ -65,4 +65,4 @@ namespace{
 }// assign
 }// boost
 
-#endif
+#endif // BOOST_ASSIGN_V2_CHAIN_ADAPTOR_ER_2010_HPP

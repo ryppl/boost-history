@@ -9,8 +9,8 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_PUT_MODULO_FUN_KEYWORD_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_MODULO_FUN_KEYWORD_ER_2010_HPP
-#include <boost/preprocessor/cat.hpp>
 #include <boost/assign/v2/put/modulo/fun/make.hpp>
+#include <boost/preprocessor/cat.hpp>
 
 #define BOOST_ASSIGN_V2_MODULO_FUN_KEYWORD(NAME, FUN)\
 namespace boost{\
@@ -43,4 +43,4 @@ namespace {\
 }\
 /**/
 
-#endif
+#endif // BOOST_ASSIGN_V2_PUT_MODULO_FUN_KEYWORD_ER_2010_HPP

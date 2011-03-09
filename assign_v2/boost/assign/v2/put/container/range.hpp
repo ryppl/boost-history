@@ -9,8 +9,8 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_PUT_RANGE_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_RANGE_ER_2010_HPP
-#include <boost/range/algorithm/for_each.hpp>
 #include <boost/assign/v2/put/container/functor.hpp>
+#include <boost/range/algorithm/for_each.hpp>
 
 namespace boost{
 namespace assign{

@@ -9,8 +9,8 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_PUT_MODULO_MODIFIER_KEYWORD_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_MODULO_MODIFIER_KEYWORD_ER_2010_HPP
-#include <boost/preprocessor/cat.hpp>
 #include <boost/assign/v2/put/modulo/modifier/make.hpp>
+#include <boost/preprocessor/cat.hpp>
 
 #ifndef BOOST_ASSIGN_V2_PUT_MODULO_MODIFIER_PARAM
 #define BOOST_ASSIGN_V2_PUT_MODULO_MODIFIER_PARAM(NAME)\
@@ -46,6 +46,5 @@ namespace {\
 BOOST_ASSIGN_V2_PUT_MODULO_MODIFIER_KEYWORD(modifier)    
 BOOST_ASSIGN_V2_PUT_MODULO_MODIFIER_META_MODIFIER_TAG(modifier, Arg)
 
-#endif
-
+#endif // BOOST_ASSIGN_V2_PUT_MODULO_MODIFIER_KEYWORD_ER_2010_HPP
 

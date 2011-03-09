@@ -14,21 +14,23 @@
 namespace boost{
 namespace assign{
 namespace v2{
+//[replace_parameter
 namespace put_aux{
                 
     template<typename /*<<Inherits crtp\<\> >>*/D> 
     struct /*<<Meta-function class to be specialized on D>>*/replace_fun{
         template<typename F> 
-        struct /*<<Transforms D by replacing F for D::fun_type>>*/apply{};
+        struct /*<<Transforms D by replacing D::fun_type with F>>*/apply{};
     };
 
     template<typename /*<<Inherits crtp\<\> >>*/ D> 
     struct /*<<Meta-function class to be specialized on D>>*/ replace_modifier_tag{
         template<typename Tag> 
-        struct /*<<Transforms D by replacing Tag for D::modifier_tag>>*/ apply{};
+        struct /*<<Transforms D by replacing Tag D::modifier_tag with Tag>>*/ apply{};
     };
     
 }// put_aux
+//]
 }// v2
 }// assign
 }// boost

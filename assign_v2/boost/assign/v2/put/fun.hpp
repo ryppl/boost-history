@@ -9,9 +9,8 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_PUT_FUN_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_FUN_ER_2010_HPP
-
 #include <boost/assign/v2/put/fun/constructor.hpp>
 #include <boost/assign/v2/put/fun/identity.hpp>
 #include <boost/assign/v2/put/fun/new.hpp>
 
-#endif
+#endif // BOOST_ASSIGN_V2_PUT_FUN_ER_2010_HPP

@@ -9,11 +9,11 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_PUT_DEDUCE_FUN_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_DEDUCE_FUN_ER_2010_HPP
-#include <boost/mpl/eval_if.hpp>
-#include <boost/assign/v2/detail/traits/container/value.hpp>
 #include <boost/assign/v2/detail/traits/container/is_ptr_container.hpp>
+#include <boost/assign/v2/detail/traits/container/value.hpp>
 #include <boost/assign/v2/detail/functor/constructor.hpp>
 #include <boost/assign/v2/detail/functor/new.hpp>
+#include <boost/mpl/eval_if.hpp>
 
 namespace boost{
 namespace assign{

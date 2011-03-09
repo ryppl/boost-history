@@ -9,29 +9,24 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_PUT_FRAME_CRTP_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_FRAME_CRTP_ER_2010_HPP
-#include <boost/mpl/always.hpp>
-#include <boost/mpl/apply.hpp>
-#include <boost/utility/enable_if.hpp>
 #include <boost/assign/v2/detail/pp/forward.hpp>
 #include <boost/assign/v2/detail/traits/container/is_ptr_container.hpp>
 #include <boost/assign/v2/put/frame/fwd.hpp>
 #include <boost/assign/v2/put/frame/modifier.hpp>
-
-//#include <boost/assign/v2/put/modulo/fun.hpp>
-//#include <boost/assign/v2/put/deduce/fun.hpp>
-
+#include <boost/mpl/always.hpp>
+#include <boost/mpl/apply.hpp>
+#include <boost/utility/enable_if.hpp>
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 #include <utility>
 #else
+#include <boost/assign/v2/detail/config/limit_arity.hpp>
+#include <boost/assign/v2/detail/config/limit_csv_arity.hpp>
+#include <boost/assign/v2/detail/functor/crtp_unary_and_up.hpp>
 #include <boost/preprocessor/arithmetic.hpp>
 #include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/repetition.hpp>
-#include <boost/assign/v2/detail/functor/crtp_unary_and_up.hpp>
-#include <boost/assign/v2/detail/config/limit_csv_arity.hpp>
-#include <boost/assign/v2/detail/config/limit_arity.hpp>
-
-#endif
+#endif // BOOST_ASSIGN_V2_ENABLE_CPP0X
 
 namespace boost{
 namespace assign{
@@ -71,14 +66,12 @@ namespace put_aux{
     class crtp :
         public fun_holder<F>
         , public modifier_holder<Tag>
-#if BOOST_ASSIGN_V2_ENABLE_CPP0X
-//do nothing
-#else
+#if !BOOST_ASSIGN_V2_ENABLE_CPP0X
         , public functor_aux::crtp_unary_and_up<
             crtp<C, F, Tag, D>,
             ::boost::mpl::always< D const& >
         >
-#endif
+#endif // BOOST_ASSIGN_V2_ENABLE_CPP0X
     {
 
         public:
@@ -94,8 +87,6 @@ namespace put_aux{
 
         D & derived(){ return static_cast<D&>(*this); }
         D const& derived()const{ return static_cast<D const&>(*this); }
-
-        //public:
 
         crtp(){}
         explicit crtp( F const& f ) : fun_holder_( f ){}
@@ -144,23 +135,10 @@ BOOST_PP_REPEAT_FROM_TO(
     ~
 )
 #undef BOOST_ASSIGN_V2_MACRO
-#endif
+#endif // BOOST_ASSIGN_V2_ENABLE_CPP0X
+
 		// must be mutable
         C& container()const{ return this->derived().container(); }
-
-// TODO remove
-/*
-        struct result_of_modulo{
-
-            struct deduce
-            {
-                typedef typename put_aux::deduce_fun<C>::type f_;
-                typedef v2::result_of::modulo_fun<D> meta_;
-                typedef typename ::boost::mpl::apply1<meta_, f_>::type type;
-            };
-
-        };
-*/
 
         protected:
 
@@ -170,7 +148,7 @@ BOOST_PP_REPEAT_FROM_TO(
         >{};
 
         template<typename T>
-        result_type modify(T* t,typename ptr_enabler<T>::type* = 0)const
+        result_type modify(T* t, typename ptr_enabler<T>::type* = 0)const
         {
             typedef put_concept::Modifier<Tag, C, T*> concept_;
             BOOST_CONCEPT_ASSERT(( concept_ ));
@@ -186,7 +164,7 @@ BOOST_PP_REPEAT_FROM_TO(
                 T&&
 #else
                 T&
-#endif
+#endif // BOOST_ASSIGN_V2_ENABLE_CPP0X
             > concept_;
             BOOST_CONCEPT_ASSERT(( concept_ ));
         }
@@ -222,7 +200,7 @@ BOOST_PP_REPEAT_FROM_TO(
             return this->derived();
         }
 
-#endif
+#endif // BOOST_ASSIGN_V2_ENABLE_CPP0X
 
     };
 
@@ -231,4 +209,5 @@ BOOST_PP_REPEAT_FROM_TO(
 }// assign
 }// boost
 
-#endif
+#endif // BOOST_ASSIGN_V2_PUT_FRAME_CRTP_ER_2010_HPP
+

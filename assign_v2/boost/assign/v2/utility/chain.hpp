@@ -12,7 +12,7 @@
 
 #include <boost/assign/v2/utility/chain/pipe.hpp>
 
-// While && is convenient it's safer not to include it by default
-//     #include <boost/assign/v2/utility/chain/short.hpp>
+// This has to be included explicitly (it's convenient, but some may object to operator overloading)
+//     #include <boost/assign/v2/utility/chain/alias.hpp>
 
-#endif
+#endif // BOOST_ASSIGN_V2_UTILITY_CHAIN_ER_2010_HPP

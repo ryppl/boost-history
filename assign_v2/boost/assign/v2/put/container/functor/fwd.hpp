@@ -15,7 +15,7 @@ namespace assign{
 namespace v2{
 namespace put_aux{
 
-    template<typename C,typename F, typename Tag> class adapter;
+    template<typename C, typename F, typename Tag> class adapter;
 
 }// put_aux
 }// v2

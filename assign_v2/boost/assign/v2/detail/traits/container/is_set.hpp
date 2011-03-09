@@ -22,7 +22,7 @@ namespace container_traits_aux{
     template<typename V>
     struct is_set : ::boost::mpl::false_{};
 
-    template<typename K,typename C,typename A>
+    template<typename K, typename C, typename A>
     struct is_set<
         std::set<K,C,A>
     > : ::boost::mpl::true_{};

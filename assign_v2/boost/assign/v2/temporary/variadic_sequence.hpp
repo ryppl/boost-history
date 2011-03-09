@@ -62,4 +62,4 @@ struct TO \
 }; \
 /**/
 
-#endif
+#endif // BOOST_MPL_DETAIL_VARIADIC_SEQUENCE_HPP_ER_2010

@@ -7,11 +7,10 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_TRAITS_TYPE_ER_2010_HPP
-#define BOOST_ASSIGN_V2_TRAITS_TYPE_ER_2010_HPP
-
+#ifndef BOOST_ASSIGN_V2_DETAIL_TRAITS_TYPE_ER_2010_HPP
+#define BOOST_ASSIGN_V2_DETAIL_TRAITS_TYPE_ER_2010_HPP
 #include <boost/assign/v2/detail/traits/type/has_value_type.hpp>
 #include <boost/assign/v2/detail/traits/type/meta_convert.hpp>
 #include <boost/assign/v2/detail/traits/type/value.hpp>
 
-#endif // BOOST_ASSIGN_V2_TRAITS_TYPE_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_DETAIL_TRAITS_TYPE_ER_2010_HPP

@@ -16,11 +16,14 @@ namespace assign{
 namespace v2{
 namespace ref{
 namespace alloc_tag{
+
     struct instant_alloc{};
+
 }// alloc_tag
 namespace array_aux{
-   // template<size_type N, typename Tag, typename T> class instant_alloc;
+
    template<size_type N, typename T> class instant_alloc;
+
 }// array_aux
 }// ref
 }// v2

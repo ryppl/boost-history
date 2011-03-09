@@ -115,4 +115,4 @@ namespace{
 }// assign
 }// boost
 
-#endif
+#endif // BOOST_ASSIGN_V2_REF_WRAPPER_RANGE_GET_ER_2010_HPP

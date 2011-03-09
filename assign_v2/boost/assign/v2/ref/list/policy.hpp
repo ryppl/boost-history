@@ -9,8 +9,8 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_REF_LIST_POLICY_ER_2010_HPP
 #define BOOST_ASSIGN_V2_REF_LIST_POLICY_ER_2010_HPP
-#include <boost/mpl/empty_base.hpp>
 #include <boost/mpl/always.hpp>
+#include <boost/mpl/empty_base.hpp>
 
 namespace boost{
 namespace assign{
@@ -29,4 +29,4 @@ namespace list_aux{
 }// assign
 }// boost
 
-#endif
+#endif // BOOST_ASSIGN_V2_REF_LIST_POLICY_ER_2010_HPP

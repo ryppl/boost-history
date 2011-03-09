@@ -9,11 +9,14 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_REF_LIST_HOLDER_HEAD_ER_2010_HPP
 #define BOOST_ASSIGN_V2_REF_LIST_HOLDER_HEAD_ER_2010_HPP
-#include <boost/config.hpp>
 #include <boost/assign/v2/ref/list/fwd.hpp>
+#include <boost/config.hpp>
 #include <boost/type_traits/add_reference.hpp>
 
-/* #ifndef BOOST_NO_RVALUE_REFERENCES
+/* 
+// TODO possible extension
+#include <boost/config.hpp>
+#ifndef BOOST_NO_RVALUE_REFERENCES
 #include <utility>
 #endif */
 
@@ -23,7 +26,7 @@ namespace v2{
 namespace ref{
 namespace list_aux{
 
-/* // TODO as standalone ok, but unsure effects in relation with ref-arrays
+/* // TODO possible extension, but unsure effects in relation with ref-arrays
 
 #ifndef BOOST_NO_RVALUE_REFERENCES
     template<typename T>
@@ -81,4 +84,4 @@ namespace list_aux{
 }// assign
 }// boost
 
-#endif
+#endif // BOOST_ASSIGN_V2_REF_LIST_HOLDER_HEAD_ER_2010_HPP

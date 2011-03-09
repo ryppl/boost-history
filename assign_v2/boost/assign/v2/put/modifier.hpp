@@ -9,10 +9,9 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_PUT_MODIFIER_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_MODIFIER_ER_2010_HPP
-
-#include <boost/assign/v2/put/modifier/standard.hpp>
 #include <boost/assign/v2/put/modifier/iterate.hpp>
 #include <boost/assign/v2/put/modifier/lookup.hpp>
-// TODO repeat
+#include <boost/assign/v2/put/modifier/repeat.hpp>
+#include <boost/assign/v2/put/modifier/standard.hpp>
 
-#endif
+#endif // BOOST_ASSIGN_V2_PUT_MODIFIER_ER_2010_HPP
