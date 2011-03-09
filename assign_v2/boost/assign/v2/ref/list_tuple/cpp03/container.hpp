@@ -11,7 +11,6 @@
 #define BOOST_ASSIGN_V2_REF_LIST_TUPLE_CPP03_CONTAINER_ER_2010_HPP
 #include <boost/assign/v2/detail/config/limit_arity.hpp>
 #include <boost/assign/v2/detail/functor/crtp_unary_and_up.hpp>
-#include <boost/assign/v2/ref/list_tuple/size_type.hpp>
 #include <boost/config.hpp>
 #include <boost/mpl/aux_/na.hpp>
 #include <boost/mpl/empty_base.hpp>
