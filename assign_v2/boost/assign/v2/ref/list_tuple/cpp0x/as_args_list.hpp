@@ -9,8 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_REF_LIST_TUPLE_CPP0X_AS_ARGS_LIST_ER_2010_HPP
 #define BOOST_ASSIGN_V2_REF_LIST_TUPLE_CPP0X_AS_ARGS_LIST_ER_2010_HPP
-#include <boost/assign/v2/ref/list_tuple/container.hpp>
-#include <boost/assign/v2/ref/list_tuple/size_type.hpp>
+#include <boost/assign/v2/ref/list_tuple/list_tuple.hpp>
 #include <boost/assign/v2/ref/tuple/cpp0x/as_arglist.hpp>
 #include <boost/assign/v2/temporary/variadic_args_to_indices.hpp>
 #include <boost/mpl/size.hpp>

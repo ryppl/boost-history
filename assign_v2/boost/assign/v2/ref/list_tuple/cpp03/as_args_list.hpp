@@ -10,8 +10,7 @@
 #ifndef BOOST_ASSIGN_V2_REF_LIST_TUPLE_CPP03_AS_ARGS_LIST_ER_2010_HPP
 #define BOOST_ASSIGN_V2_REF_LIST_TUPLE_CPP03_AS_ARGS_LIST_ER_2010_HPP
 #include <boost/assign/v2/detail/config/limit_arity.hpp>
-#include <boost/assign/v2/ref/list_tuple/container.hpp>
-#include <boost/assign/v2/ref/list_tuple/size_type.hpp>
+#include <boost/assign/v2/ref/list_tuple/list_tuple.hpp>
 #include <boost/assign/v2/ref/tuple/cpp03/as_arg_list.hpp>
 #include <boost/mpl/int.hpp>
 #include <boost/preprocessor/repetition.hpp>

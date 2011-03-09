@@ -18,7 +18,7 @@ namespace boost{
 namespace assign{
 namespace v2{
 namespace ref{
-namespace nth_result_of{ // TODO this should be result_of
+namespace nth_result_of{ 
 
     class list_tuple
     {

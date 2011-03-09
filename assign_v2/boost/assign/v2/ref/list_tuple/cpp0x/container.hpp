@@ -10,8 +10,6 @@
 #ifndef BOOST_ASSIGN_V2_REF_LIST_TUPLE_CPP0X_CONTAINER_ER_2010_HPP
 #define BOOST_ASSIGN_V2_REF_LIST_TUPLE_CPP0X_CONTAINER_ER_2010_HPP
 #include <utility>
-#include <boost/assign/v2/ref/list_tuple/extraction.hpp>
-#include <boost/assign/v2/ref/list_tuple/common.hpp>
 #include <boost/assign/v2/ref/list_tuple/size_type.hpp>
 #include <boost/assign/v2/ref/tuple/cpp0x/data.hpp>
 #include <boost/config.hpp>

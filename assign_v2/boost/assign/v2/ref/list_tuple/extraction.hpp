@@ -9,7 +9,6 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_REF_LIST_TUPLE_EXTRACTION_ER_2010_HPP
 #define BOOST_ASSIGN_V2_REF_LIST_TUPLE_EXTRACTION_ER_2010_HPP
-#include <boost/assign/v2/ref/list_tuple/size_type.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/identity.hpp>
