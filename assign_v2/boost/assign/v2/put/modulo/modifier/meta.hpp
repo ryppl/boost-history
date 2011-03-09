@@ -28,6 +28,41 @@ namespace put_aux{
         
 }// put_aux
 //]
+namespace put_aux{
+namespace result_of{
+        
+    template<typename D>
+    struct modulo_modifier{
+            
+        typedef put_aux::replace_modifier_tag<D> meta_;
+            
+        template<typename Keyword, typename Arg>
+        struct apply : ::boost::mpl::apply1<
+        	meta_, 
+            typename ::boost::mpl::apply1<
+                put_aux::meta_modifier_tag<Keyword, Arg>, 
+                D
+            >::type
+        >{};
+        
+    };
+            
+}// result_of
+}// put_aux
+//[result_of_modulo_modifier
+namespace result_of{
+
+	template<typename /*<<Inherits crtp\<\> >>*/ D>
+    struct /*<<Meta-function class>>*/ modulo_modifier 
+    	: put_aux::result_of::modulo_modifier<D>
+    {};
+
+}// result_of
+//]
+}// v2
+}// assign
+}// boost
+
 #ifndef BOOST_ASSIGN_V2_PUT_MODULO_MODIFIER_META_MODIFIER_TAG
 #define BOOST_ASSIGN_V2_PUT_MODULO_MODIFIER_META_MODIFIER_TAG(NAME, Result)\
 namespace boost{\
@@ -48,28 +83,6 @@ namespace put_aux{\
 }\
 /**/
 #endif
-namespace result_of{
-        
-    template<typename /*<<Inherits crtp\<\> >>*/D>
-    struct /*<<Meta-function class>>*/ modulo_modifier{
-            
-        typedef put_aux::replace_modifier_tag<D> meta_;
-            
-        template<typename Keyword, typename Arg>
-        struct apply : ::boost::mpl::apply1<
-        	meta_, 
-            typename ::boost::mpl::apply1<
-                put_aux::meta_modifier_tag<Keyword, Arg>, 
-                D
-            >::type
-        >{};
-        
-    };
-            
-}// result_of
-}// v2
-}// assign
-}// boost
 
 #endif // BOOST_ASSIGN_V2_PUT_MODULO_MODIFIER_META_ER_2010_HPP
 

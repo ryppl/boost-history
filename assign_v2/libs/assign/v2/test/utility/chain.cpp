@@ -15,7 +15,7 @@
 #include <boost/range/end.hpp>
 #include <boost/range/algorithm/copy.hpp>
 #include <boost/range/algorithm/equal.hpp>
-#include <boost/assign/v2/ref/array/csv.hpp>
+#include <boost/assign/v2/ref/array/csv_array.hpp>
 #include <boost/assign/v2/utility/chain/check.hpp>
 #include <boost/assign/v2/utility/chain.hpp>
 #include <boost/assign/v2/utility/chain/alias.hpp>

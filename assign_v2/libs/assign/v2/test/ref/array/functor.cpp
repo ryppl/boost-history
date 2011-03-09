@@ -14,7 +14,7 @@
 
 #include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/range/algorithm/copy.hpp>
-#include <boost/assign/v2/ref/array/functor.hpp>
+#include <boost/assign/v2/ref/array/array.hpp>
 #include <libs/assign/v2/test/ref/array/functor.h>
 
 namespace test_assign_v2{

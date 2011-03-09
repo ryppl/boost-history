@@ -18,8 +18,8 @@
 #include <boost/range/algorithm/stable_partition.hpp>
 #include <boost/typeof/typeof.hpp>
 #include <boost/assign/v2/detail/config/check.hpp>
-#include <boost/assign/v2/put/pipe/csv.hpp>
-#include <boost/assign/v2/put/pipe/functor.hpp>
+#include <boost/assign/v2/put/pipe/csv_put.hpp>
+#include <boost/assign/v2/put/pipe/put.hpp>
 #include <boost/assign/v2/put/deque.hpp>
 #include <boost/assign/v2/ref/array.hpp>
 #include <boost/assign/v2/utility/chain/alias.hpp>

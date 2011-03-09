@@ -11,8 +11,8 @@
 #define BOOST_ASSIGN_V2_REF_ARRAY_ER_2010_HPP
 #include <boost/assign/v2/ref/array/as_arg_list.hpp>
 #include <boost/assign/v2/ref/array/conversion.hpp>
-#include <boost/assign/v2/ref/array/csv.hpp>
-#include <boost/assign/v2/ref/array/functor.hpp>
+#include <boost/assign/v2/ref/array/array.hpp>
+#include <boost/assign/v2/ref/array/csv_array.hpp>
 #include <boost/assign/v2/ref/array/size_type.hpp>
 
 #endif // BOOST_ASSIGN_V2_REF_ARRAY_ER_2010_HPP
