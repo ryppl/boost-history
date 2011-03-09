@@ -191,7 +191,7 @@ namespace cgi {
                                 , boost::match_default
                                 | boost::match_partial))
         {
-          return boost::system::error_code(345, boost::system::system_category);
+          return boost::system::error_code(345, boost::system::system_category());
         }
         else
         {
@@ -424,7 +424,7 @@ namespace cgi {
       boost::regex re("; ?boundary=\"?([^\"\n\r]+)\"?");
       boost::smatch match_results;
       if (!boost::regex_search(content_type_, match_results, re))
-        return boost::system::error_code(666, boost::system::system_category);
+        return boost::system::error_code(666, boost::system::system_category());
 
       boundary_marker = match_results[1].str();
       // New boundary markers are added to the front of the list.
