@@ -92,7 +92,6 @@ namespace list_tuple_aux{
 }// assign
 }// boost
 
-#include <boost/assign/v2/ref/list_tuple/extraction.hpp>
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 #include <boost/assign/v2/ref/list_tuple/cpp0x/container.hpp>

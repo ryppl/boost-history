@@ -10,7 +10,6 @@
 #ifndef BOOST_ASSIGN_V2_REF_LIST_TUPLE_ER_2010_HPP
 #define BOOST_ASSIGN_V2_REF_LIST_TUPLE_ER_2010_HPP
 #include <boost/assign/v2/ref/list_tuple/list_tuple.hpp>
-#include <boost/assign/v2/ref/list_tuple/nth_result_of.hpp>
 #include <boost/assign/v2/ref/list_tuple/as_args_list.hpp>
 
 #endif // BOOST_ASSIGN_V2_REF_LIST_TUPLE_ER_2010_HPP

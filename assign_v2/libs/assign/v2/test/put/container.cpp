@@ -23,7 +23,7 @@
 #include <boost/assign/v2/detail/functor/identity.hpp>
 #include <boost/assign/v2/put/container/put.hpp>
 #include <boost/assign/v2/put/container/put_range.hpp>
-#include <libs/assign/v2/test/put/container/functor.h>
+#include <libs/assign/v2/test/put/container.h>
 
 namespace test_assign_v2{
 namespace xxx_put{
