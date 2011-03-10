@@ -7,12 +7,17 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
+#include <cmath>
+#include <list>
 #include <vector>
-#include <boost/spirit/home/phoenix.hpp>
 #include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/put/modulo/fun.hpp>
 #include <boost/assign/v2/put/pipe/put.hpp>
 #include <boost/assign/v2/put/pipe/csv_put.hpp>
+#include <boost/function.hpp>
+#include <boost/lambda/lambda.hpp>
+#include <boost/numeric/conversion/bounds.hpp>
+#include <boost/range/algorithm/equal.hpp>
 #include <libs/assign/v2/test/put/pipe/fun.h>
 
 namespace test_assign_v2{
@@ -49,6 +54,7 @@ namespace xxx_fun{
                     	as2::_csv_put % ( as2::_fun = ( lambda::var(k) *= ( lambda::var(i)++ ) ) ) 
                     )()()()()(),
                     as2::csv_deque<int>( 2 )( 6 )( 24 )( 120 )
+                )
             );
             //]
 		}
