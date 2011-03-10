@@ -7,14 +7,23 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#include <vector>
+#include <bitset>
+#include <cmath> // MSVC #include <math.h>
 #include <deque>
-#include <boost/typeof/typeof.hpp>
-#include <boost/spirit/home/phoenix.hpp>
+#include <list>
+#include <vector>
+#include <boost/array.hpp>
 #include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/put/container.hpp>
 #include <boost/assign/v2/put/deque.hpp>
 #include <boost/assign/v2/put/modulo/fun.hpp>
+#include <boost/function.hpp>
+#include <boost/lambda/bind.hpp>
+#include <boost/lambda/lambda.hpp>
+#include <boost/lambda/construct.hpp>
+#include <boost/numeric/conversion/bounds.hpp>
+#include <boost/typeof/typeof.hpp>
+#include <boost/spirit/home/phoenix.hpp>
 #include <libs/assign/v2/test/put/fun.h>
 
 namespace test_assign_v2{
@@ -54,30 +63,48 @@ namespace xxx_fun{
     void test()
     {
         namespace as2 = boost::assign::v2;
-        namespace lambda = boost::phoenix;
+        namespace lambda = boost::lambda;
         {
-            //[modulo_fun
-            std::vector<int> incr_fact;
+            //[modulo_fun_math
+            std::vector<double> exponent;
+            typedef boost::function<double(double)> f_;
             (
-            	as2::put( incr_fact ) % ( as2::_fun = lambda::arg_names::arg1 + 1 )
-            )/*<<1!, 2!, 3!, 4!, 5!>>*/( 1 )( 2 )( 6 )( 24 )( 120 ); 
+            	as2::put( exponent ) % ( as2::_fun = f_( log10 ) )
+            )( 1000.0 )( 10.0 )( 10000.0 )( 1.0 )( 100.0 ); 
 
-            BOOST_ASSIGN_V2_CHECK( incr_fact.front() == ( 2 ) );
-            BOOST_ASSIGN_V2_CHECK( incr_fact.back() == ( 121 ) );
+
+			double eps = boost::numeric::bounds<double>::smallest();
+            BOOST_ASSIGN_V2_CHECK( abs( exponent.front() - 3.0 ) < eps );
+            BOOST_ASSIGN_V2_CHECK( abs( exponent.back() - 2.0 ) < eps );
+            //]
+        }
+		{
+         	//[modulo_fun_bitset
+            typedef std::bitset<3> data_; typedef const char str_lit_ [4]; /*<<`data_( "011" )`, for instance, is not valid, but `data_( str_( "011" ) )` is valid (GCC 4.2)>>*/typedef std::string str_; 
+            /*<<Neither `consecutive[i] = ( "011" )`, nor `consecutive[i] = str_( "011" ) )`, for instance, are valid, but `consecutive[i] = ( data_( str_( "011" ) ) );` is valid (GCC4.2)>>*/boost::array<data_, 8> consecutive; 
+            typedef lambda::constructor<data_> f_; typedef lambda::constructor<str_> g_; BOOST_AUTO( f_of_g, lambda::bind( f_(), lambda::bind( g_(), lambda::_1 ) ) );
+            ( as2::put( consecutive ) % ( as2::_fun = f_of_g ) )( "000" )( "001" )( "010" )( "011" )( "100" )( "101" )( "110" )( "110" );
+        
+            for(int i = 0; i < consecutive.size(); i++)
+            {
+            	std::cout << consecutive[i].to_ulong() << ' ';
+            	BOOST_ASSIGN_V2_CHECK( consecutive[i].to_ulong() == i );
+            }
             //]
         }
         {
             //[modulo_fun_deque
+            int i = 0, k = 1;
             BOOST_AUTO(
-                incr_fact, (
+                factorials, (
                     as2::deque<int>( as2::_nil ) % (
-                        as2::_fun = ( lambda::arg_names::arg1 + 1 )
+                        as2::_fun = ( lambda::var(k) *= ( lambda::var(i)++ ) )
                     )
-                )/*<<1!, 2!, 3!, 4!, 5!>>*/( 1 )( 2 )( 6 )( 24 )( 120 )
+                )()()()()()
             );
 
-            BOOST_ASSIGN_V2_CHECK( incr_fact.front() == ( 2 ) );
-            BOOST_ASSIGN_V2_CHECK( incr_fact.back() == ( 121 ) );
+            BOOST_ASSIGN_V2_CHECK( factorials.front() == ( 2 ) );
+            BOOST_ASSIGN_V2_CHECK( factorials.back() == ( 121 ) );
             //]
         }
 

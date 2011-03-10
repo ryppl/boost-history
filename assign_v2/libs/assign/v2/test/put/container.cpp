@@ -8,6 +8,7 @@
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
 #include <boost/array.hpp>
+#include <bitset>
 #include <deque>
 #include <map>
 #include <list>
@@ -15,15 +16,18 @@
 #include <stack>
 #include <string>
 #include <utility>
-#include <boost/tuple/tuple.hpp>
-#include <boost/range/begin.hpp>
-#include <boost/range/end.hpp>
-#include <boost/numeric/conversion/bounds.hpp>
 #include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/detail/functor/identity.hpp>
 #include <boost/assign/v2/put/container/put.hpp>
-#include <boost/assign/v2/put/container/put_range.hpp>
+#include <boost/tuple/tuple.hpp>
+#include <boost/range/algorithm_ext/iota.hpp>
+#include <boost/range/begin.hpp>
+#include <boost/range/end.hpp>
+#include <boost/numeric/conversion/bounds.hpp>
+#include <boost/variant.hpp>
 #include <libs/assign/v2/test/put/container.h>
+
+#include <iostream>
 
 namespace test_assign_v2{
 namespace xxx_put{
@@ -32,49 +36,55 @@ namespace xxx_container{
     void test(){
     
         namespace as2 = boost::assign::v2;
-        
-        {
-            //[put_array
-            const int sz = 3;
-    		typedef boost::array<int, sz>  r_;
-    		boost::array<r_, sz>  matrix3x3;
+
+		{
+         	//[put_bitset
+			typedef std::string str_; typedef /*<<`data_( "011" )`, for instance, is not valid, but `data_( str_( "011" ) )` is valid (GCC 4.2)>>*/ std::bitset<3> data_; 
+            /*<<Neither `consecutive.push_back( "011" )`, nor `consecutive.push_back( str_( "011" ) )`, for instance, are valid, but `consecutive.push_back( data_( str_( "011" ) ) );` is valid (GCC4.2)>>*/ std::vector<data_> consecutive; /*<<Calls `consecutive.push_back( data_( t ) );` for [^t = str_( "000" ), str_( "001" ), str_( "010" ), str_( "011" ), str_( "100" ), str_( "101" ), str_( "110" ), str_( "111" )]`>>*/as2::put( consecutive )( str_( "000" ) )( str_( "001" ) )( str_( "010" ) )( str_( "011" ) )( str_( "100" ) )( str_( "101" ) )( str_( "110" ) )( str_( "111" ) );
+		
+            for(int i = 0; i < consecutive.size(); i++)
             {
-            	r_ r0, r1, r2;
-            	/*<<Calls `r[i] = j` for [^( i, j ) = ( 0, 1 ), ( 1, 2 ), ( 2, 3 )]>>*/as2::put( r0 )( 1 )( 2 )( 3 );
-            	as2::put( r1 )( 4 )( 5 )( 6 );
-            	as2::put( r2 )( 7 )( 8 )( 9 );
-			    /*<<Calls `matrix3x3[i] = r`, for [^( i, r ) = ( 0, r0 ), ( 1, r1 ), ( 2, r2 )]>>*/as2::put( matrix3x3 )( r0 )( r1 )( r2 );
-			}
-            for(int i = 0; i < 9; i++)
-            {
-            	BOOST_ASSIGN_V2_CHECK( matrix3x3[ i / 3 ][ i % 3 ] == i + 1 );
+            	std::cout << consecutive[i].to_ulong() << ' ';
+            	BOOST_ASSIGN_V2_CHECK( consecutive[i].to_ulong() == i );
             }
-			//]
+            //]
+        }
+        {
+         	//[put_as_arg_list
+            std::vector<int> numeric( 10 ); boost::iota( numeric, 0 ); typedef std::string str_;
+            typedef boost::variant< int, str_ > data_; boost::array<data_, 10 + 4> numeric_kb;
+            as2::put( numeric_kb )/*<<Calls `numeric_kb.push_back( data_( *( i + boost::begin( numeric ) ) ) )` for [^i = 0,...,9 ]``>>*/( as2::as_arg_list( numeric ) )( "+" )( "-" )( "*" )( "/" );
+            
+			using namespace boost;
+            for(int i = 0; i< numeric.size(); i++){ BOOST_ASSIGN_V2_CHECK( get<int>( numeric_kb[i] ) == i ); }
+            BOOST_ASSIGN_V2_CHECK( get<str_>( numeric_kb[ numeric.size()     ] ) == "+" );
+            BOOST_ASSIGN_V2_CHECK( get<str_>( numeric_kb[ numeric.size() + 3 ] ) == "/" );
+            //]
         }
 		{
-        	//[put_seq_var_args
-            typedef double elem_; typedef std::list<elem_> r_; typedef std::vector<r_> ragged_array_;
-			r_ a; /* Calls `a.push_back( t )` for [^t = 0.71, 0.63, 0.85] */ as2::put( a )( 0.71 )( 0.63 )( 0.85 );
-			r_ b; as2::put( b )( 0.61 )( 0.69 )( 0.92 )( 0.55 );
-			ragged_array_ ragged_array; 
-            as2::put( ragged_array )
-				/*<<Calls `ragged_array.push_back( r_( boost::begin( a ), boost::end( a ) ) )`>>*/( boost::begin( a ), boost::end( a ) )
-				/*<<Calls `ragged_array.push_back( r_( b ) )`>>*/( b )
-				/*<<Calls `ragged_array.push_back( r_( 1, -99.99 ) )`>>*/( 1, -99.99 )
-                /*<<Calls `ragged_array.push_back( r_( ) )`>>*/( );
+        	//[put_variable_args_size
+            typedef double data_; typedef std::vector<data_> variable_size_; 
+			variable_size_ a( 3 ); a[0] = 0.71; a[1] = 0.63; a[2] = 0.85;
+			variable_size_ b; as2::put( b )( 0.61 )( 0.69 )( 0.92 )( 0.55 );
+	        boost::array<variable_size_, 4> ragged; 
+            as2::put( ragged )
+				/*<<Calls `ragged.push_back( variable_size_( boost::begin( a ), boost::end( a ) ) )`>>*/( boost::begin( a ), boost::end( a ) )
+				/*<<Calls `ragged.push_back( variable_size_( b ) )`>>*/( b )
+				/*<<Calls `ragged.push_back( variable_size_( 1, -99.99 ) )`>>*/( 1, -99.99 )
+                /*<<Calls `ragged.push_back( variable_size_( ) )`>>*/( );
 
-            BOOST_ASSIGN_V2_CHECK( ragged_array[0].size() == a.size() );
-            BOOST_ASSIGN_V2_CHECK( ragged_array[1].size() == b.size() );
-            BOOST_ASSIGN_V2_CHECK( ragged_array[2].size() == 1        );
-            BOOST_ASSIGN_V2_CHECK( ragged_array[3].size() == 0        );
+            BOOST_ASSIGN_V2_CHECK( ragged[0].size() == a.size() );
+            BOOST_ASSIGN_V2_CHECK( ragged[1].size() == b.size() );
+            BOOST_ASSIGN_V2_CHECK( ragged[2].size() == 1        );
+            BOOST_ASSIGN_V2_CHECK( ragged[3].size() == 0        );
             //]
-			elem_ eps = boost::numeric::bounds<elem_>::smallest();
-            BOOST_ASSIGN_V2_CHECK( abs( ragged_array[0].front() - a.front() ) < eps );
-            BOOST_ASSIGN_V2_CHECK( abs( ragged_array[0].back()  - a.back()  ) < eps );
-            BOOST_ASSIGN_V2_CHECK( abs( ragged_array[1].front() - b.front() ) < eps );
-            BOOST_ASSIGN_V2_CHECK( abs( ragged_array[1].back()  - b.back()  ) < eps );
-            BOOST_ASSIGN_V2_CHECK( abs( ragged_array[2].front() + 99.9      ) < eps );
-            BOOST_ASSIGN_V2_CHECK( abs( ragged_array[2].back()  + 99.9      ) < eps );
+			data_ eps = boost::numeric::bounds<data_>::smallest();
+            BOOST_ASSIGN_V2_CHECK( abs( ragged[0].front() - a.front() ) < eps );
+            BOOST_ASSIGN_V2_CHECK( abs( ragged[0].back()  - a.back()  ) < eps );
+            BOOST_ASSIGN_V2_CHECK( abs( ragged[1].front() - b.front() ) < eps );
+            BOOST_ASSIGN_V2_CHECK( abs( ragged[1].back()  - b.back()  ) < eps );
+            BOOST_ASSIGN_V2_CHECK( abs( ragged[2].front() + 99.9      ) < eps );
+            BOOST_ASSIGN_V2_CHECK( abs( ragged[2].back()  + 99.9      ) < eps );
 		}
         {
             //[put_adapter
@@ -86,42 +96,19 @@ namespace xxx_container{
         }
         {
             using namespace boost;
-            //[put_seq_ref_tuple
-            typedef const char state_ [3]; state_ ct = "CT", nj = "NJ", ny = "NY";
-            typedef int code_; typedef boost::tuple<state_/*<<Notice the reference>>*/&,  code_> area_code_; 
-            std::deque< area_code_ > tri_state; /*Calls `tri_state.push_back( area_code_( s, c ) )` for [^( s, c ) = ( nj, 201 )( ct, 203 )( ny, 212 )( ny, 315 )( ny, 347 )( nj, 551 )]*/as2::put( tri_state )( nj, 201 )( ct, 203 )( ny, 212 )( ny, 315 )( ny, 347 )( nj, 551 );
+			// http://bioinfo.mbb.yale.edu/~mbg/dom/fun3/area-codes/            
+            //[put_seq_tuple_ref
+            typedef const char us_state_ [3]; us_state_ ct = "CT", nj = "NJ", ny = "NY";
+            typedef int area_code_; typedef boost::tuple<us_state_/*<<Notice the reference>>*/&,  area_code_> data_; 
+            std::deque< data_ > tri_state_area; /*Calls `tri_state.push_back( data_( s, c ) )` for [^( s, c ) = ( ny, 212 )( ny, 718 )( ny, 516 )( ny, 914 )( nj, 210 )( nj, 908 )( nj, 609 )( ct, 203 ) ]*/
+            as2::put( tri_state_area )( ny, 212 )( ny, 718 )( ny, 516 )( ny, 914 )( nj, 210 )( nj, 908 )( nj, 609 )( ct, 203 );
 
-            BOOST_ASSIGN_V2_CHECK( get<0>( tri_state.front() ) == nj );
-            BOOST_ASSIGN_V2_CHECK( get<0>( tri_state.back()  ) == nj );
-            BOOST_ASSIGN_V2_CHECK( get<1>( tri_state.front() ) == 201 );
-            BOOST_ASSIGN_V2_CHECK( get<1>( tri_state.back()  ) == 551 );
+            BOOST_ASSIGN_V2_CHECK( get<0>( tri_state_area.front() ) == ny );
+            BOOST_ASSIGN_V2_CHECK( get<1>( tri_state_area.front() ) == 212 );
+            BOOST_ASSIGN_V2_CHECK( get<0>( tri_state_area.back()  ) == ct );
+            BOOST_ASSIGN_V2_CHECK( get<1>( tri_state_area.back()  ) == 203 );
             //]
         }
-		{
-            //[put_range_assign
-            typedef const char state_ [3]; state_ ct = "CT", nj = "NJ", ny = "NY", ca = "CA", /*ore = "OR",*/ wa = "WA";
-            typedef int code_; typedef boost::tuple<state_/*<<Notice the reference>>*/&,  code_> area_code_; 
-            std::deque< area_code_ > tri_state; as2::put( tri_state )( nj, 201 )( ct, 203 )( ny, 212 )( ny, 315 )( ny, 347 )( nj, 551 );
-            std::deque< area_code_ > pacific ; as2::put( pacific )( wa, 206 )( ca, 209 )( ca, 213 )( wa, 253 );
-
-			std::deque< area_code_ > states;  as2::put_range( tri_state, states ); as2::put_range( pacific, states );
-
-			using namespace boost;
-            BOOST_ASSIGN_V2_CHECK( get<0>( states.front()                                 ) == nj );
-            BOOST_ASSIGN_V2_CHECK( get<0>( states[tri_state.size()-1]                     ) == nj );
-            BOOST_ASSIGN_V2_CHECK( get<0>( states.front()                                 ) == nj );
-            BOOST_ASSIGN_V2_CHECK( get<0>( states[tri_state.size()]                       ) == wa );
-            BOOST_ASSIGN_V2_CHECK( get<0>( states[tri_state.size() + pacific.size() - 1 ] ) == wa );
-			//]
-        }
-        {
-            //[put_range_constr
-            std::vector<int> r( 3 ); r[0] = 72; r[1] = 31; r[2] = 48;
-
-            BOOST_ASSIGN_V2_CHECK( as2::put_range< std:: stack<int> >( r ).top() == 48 );
-            //]
-        }
-        
     }// test()
 
 }// xxx_container

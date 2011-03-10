@@ -1,8 +1,9 @@
 
 // Test
-#include <libs/assign/v2/test/detail.h>
-#include <libs/assign/v2/test/ref.h>
-//#include <libs/assign/v2/test/put.h>
+//#include <libs/assign/v2/test/detail.h>
+//#include <libs/assign/v2/test/ref.h>
+#include <libs/assign/v2/test/mix.h>
+#include <libs/assign/v2/test/put.h>
 //#include <libs/assign/v2/test/utility.h>
 //#include <libs/assign/v2/test/other.h>
 
@@ -45,6 +46,8 @@ int main (int argc, char * const argv[])
 	}
     {
         using namespace test_assign_v2;
+        xxx_put::test();
+        xxx_mix::test();
         /*
         xxx_put::test();
         xxx_ref::test();

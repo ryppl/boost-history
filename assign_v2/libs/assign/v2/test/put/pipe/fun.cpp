@@ -20,30 +20,36 @@ namespace xxx_put{
 namespace xxx_pipe{
 namespace xxx_fun{
 
+	// TODO check headers
+
     void test()
     {
         namespace as2 = boost::assign::v2;
-        namespace lambda = boost::phoenix;
+        namespace lambda = boost::lambda;
         {
-            //[pipe_modulo_fun
-            typedef int int_; std::vector<int_> incr_fact;
-            int_ front = ( 
-            	incr_fact | ( as2::_put % ( as2::_fun = lambda::arg_names::arg1 + 1 ) )/*<<1!, 2!, 3!, 4!, 5!>>*/( 1 )( 2 )( 6 )( 24 )( 120 ) 
-            ).front(); 
-		
-            BOOST_ASSIGN_V2_CHECK( front == 2  );
-            BOOST_ASSIGN_V2_CHECK( incr_fact.back() == 121 );
+         	//[pipe_modulo_fun_math
+            std::vector<double> exponent; typedef boost::function<double(double)> f_;
+            typedef boost::function<bool(double, double)> g_;
+			double eps = boost::numeric::bounds<double>::smallest();
+            BOOST_ASSIGN_V2_CHECK(
+            	boost::range_equal(
+            		exponent | ( as2::_put % ( as2::_fun = f_( log10 ) ) )( 1000.0 )( 10.0 )( 10000.0 )( 1.0 )( 100.0 ),
+              		as2::csv_deque<double>( 3.0 )( 1.0 )( 4.0 )( 1.0 )( 2.0 ),
+                	g_( abs( lambda::_1 - lambda::_2 ) < eps  )
+                )
+            );
             //]
         }
         {
             //[csv_pipe_modulo_fun
-            typedef int int_; std::vector<int_> incr_fact;
-            int_ front = ( 
-            	incr_fact | ( as2::_csv_put % ( as2::_fun = lambda::arg_names::arg1 + 1 ) )/*<<1!, 2!, 3!, 4!, 5!>>*/( 1, 2, 6, 24, 120 ) 
-            ).front(); 
-		
-            BOOST_ASSIGN_V2_CHECK( front == 2 );
-            BOOST_ASSIGN_V2_CHECK( incr_fact.back() == 121 );
+            int i = 0, k = 1; std::list<int> factorials;
+            BOOST_ASSIGN_V2_CHECK(
+            	boost::range_equal(
+	                factorials | ( 
+                    	as2::_csv_put % ( as2::_fun = ( lambda::var(k) *= ( lambda::var(i)++ ) ) ) 
+                    )()()()()(),
+                    as2::csv_deque<int>( 2 )( 6 )( 24 )( 120 )
+            );
             //]
 		}
     }

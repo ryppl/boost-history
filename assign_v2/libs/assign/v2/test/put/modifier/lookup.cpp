@@ -53,8 +53,9 @@ namespace xxx_lookup{
             //[lookup
             typedef std::map<std::string, int> C; C cal;
             ( 
-            	/*Input is by default mapped to C::value_type but, here, we need C::key_type*/as2::put( cal ) /*Makes the input convertible to C::key_type*/% as2::_identity %  ( as2::_lookup = (lambda::_1 = 31) ) 
-            )( "jan" )( "mar" )( "may" )( "jul" )( "aug" )( "oct" )( "dec" );
+            	as2::put( cal )/*<<Calls `cal.insert( C::value_type( "feb", 28 )  )`>>*/( "feb", 28 )( "apr", 30 )( "jun", 30 )( "sep", 30 )( "nov", 30 )/*<<Without this parameter, the compiler would complain that the subsequent argument (`"jan"`) is not convertible to `C::key_type`>>*/% ( as2::_fun = lambda::_1 ) %  ( as2::_lookup = (lambda::_1 = 31) ) 
+            )/*<<Calls `cal["jan"] = 31`>>*/( "jan" )( "mar" )( "may" )( "jul" )( "aug" )( "oct" )( "dec" );
+            
             BOOST_ASSIGN_V2_CHECK( cal["jan"] == 31 );
             BOOST_ASSIGN_V2_CHECK( cal["dec"] == 31 );
 			//]        

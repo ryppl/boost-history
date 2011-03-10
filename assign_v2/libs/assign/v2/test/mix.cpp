@@ -7,6 +7,9 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
+#include <iostream>
+
+
 #include <cmath>
 #include <list>
 #include <vector>
@@ -18,6 +21,9 @@
 #include <boost/range/algorithm/stable_partition.hpp>
 #include <boost/typeof/typeof.hpp>
 #include <boost/assign/v2/detail/config/check.hpp>
+#include <boost/assign/v2/put/container.hpp>
+#include <boost/assign/v2/put/modulo/fun.hpp>
+#include <boost/assign/v2/put/modifier/repeat.hpp>
 #include <boost/assign/v2/put/pipe/csv_put.hpp>
 #include <boost/assign/v2/put/pipe/put.hpp>
 #include <boost/assign/v2/put/deque.hpp>
@@ -71,9 +77,9 @@ namespace xxx_mix{
         }
 		{
         	//[mix_deque_csv_array
-            typedef double elem_; typedef std::list<elem_> r_; typedef std::vector<r_> ragged_array_;
+            typedef double elem_; typedef std::list<elem_> r_; typedef std::vector<r_> ragged_;
             
-			ragged_array_ ragged_array = /*<<Using `converter` is a good practice, bearing in mind it may work without it>>*/converter( 
+			ragged_ ragged = /*<<Using `converter` is a good practice, bearing in mind it may work without it>>*/converter( 
             	as2::deque<r_>
             		( converter( as2::ref::csv_array( 0.71, 0.63, 0.85 ) ).type<r_>() ) 
                 	( converter( as2::ref::csv_array( 0.61, 0.69, 0.92, 0.55 ) ).type<r_>() )
@@ -81,16 +87,31 @@ namespace xxx_mix{
                 	( )
             );
 
-            BOOST_ASSIGN_V2_CHECK( ragged_array[0].size() == 3 );
-            BOOST_ASSIGN_V2_CHECK( ragged_array[1].size() == 4 );
-            BOOST_ASSIGN_V2_CHECK( ragged_array[2].size() == 1 );
-            BOOST_ASSIGN_V2_CHECK( ragged_array[3].size() == 0 );
+            BOOST_ASSIGN_V2_CHECK( ragged[0].size() == 3 );
+            BOOST_ASSIGN_V2_CHECK( ragged[1].size() == 4 );
+            BOOST_ASSIGN_V2_CHECK( ragged[2].size() == 1 );
+            BOOST_ASSIGN_V2_CHECK( ragged[3].size() == 0 );
             //]
 			elem_ eps = boost::numeric::bounds<elem_>::smallest();
-            BOOST_ASSIGN_V2_CHECK( abs( ragged_array.front().front() - 0.71 ) < eps );
-            BOOST_ASSIGN_V2_CHECK( abs( ragged_array.front().back() - 0.85  ) < eps );
-            BOOST_ASSIGN_V2_CHECK( abs( ragged_array[2].front() + 99.0      ) < eps ); 
-            BOOST_ASSIGN_V2_CHECK( abs( ragged_array[2].back() + 99.0       ) < eps ); 
+            BOOST_ASSIGN_V2_CHECK( abs( ragged.front().front() - 0.71 ) < eps );
+            BOOST_ASSIGN_V2_CHECK( abs( ragged.front().back() - 0.85  ) < eps );
+            BOOST_ASSIGN_V2_CHECK( abs( ragged[2].front() + 99.0      ) < eps ); 
+            BOOST_ASSIGN_V2_CHECK( abs( ragged[2].back() + 99.0       ) < eps ); 
+        }
+		{
+        
+            //[iterate
+            typedef int T; boost::array<T, 5> powers; powers[0] = 1; powers[1] = 10;
+            int i = 2, k = powers[ i - 1 ];   
+			/*<<Calls `powers[i] = ( k *= 10 )` for [^ i  = 2, 3, 4 ] >>*/
+            ( as2::put( powers ) % ( as2::_fun = lambda::var( k ) *= 10 ) % ( as2::_iterate = lambda::var( i )++ ) )()()();
+
+            BOOST_ASSIGN_V2_CHECK( powers[0] == 1 );
+            BOOST_ASSIGN_V2_CHECK( powers[1] == 10 );
+            BOOST_ASSIGN_V2_CHECK( powers[2] == 100 );
+            BOOST_ASSIGN_V2_CHECK( powers[3] == 1000 );
+            BOOST_ASSIGN_V2_CHECK( powers[4] == 10000 );
+            //]
 		}
 		{
             //[deque_chain_put

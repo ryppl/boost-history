@@ -29,16 +29,16 @@ namespace xxx_iterate{
         
         	// TODO construct arg_ with phoenix and perhaps skip
             //[iterate
-            typedef as2::functor_aux::post_increment<> arg_;
-            typedef int T; boost::array<T, 4> powers; powers[0] = 1; powers[1] = 10;
-            T front = ( 
-            	powers | ( as2::_put % ( as2::_iterate = arg_( 2 ) ) )( 100 )( 1000 )
-            ).front();
+            //typedef as2::functor_aux::post_increment<> arg_;
+            //typedef int T; boost::array<T, 4> powers; powers[0] = 1; powers[1] = 10;
+            //T front = ( 
+            //	powers | ( as2::_put % ( as2::_iterate = arg_( 2 ) ) )( 100 )( 1000 )
+            //).front();
 
-            BOOST_ASSIGN_V2_CHECK( front == 1 );
-            BOOST_ASSIGN_V2_CHECK( powers[1] == 10 );
-            BOOST_ASSIGN_V2_CHECK( powers[2] == 100 );
-            BOOST_ASSIGN_V2_CHECK( powers[3] == 1000 );
+            //BOOST_ASSIGN_V2_CHECK( front == 1 );
+            //BOOST_ASSIGN_V2_CHECK( powers[1] == 10 );
+            //BOOST_ASSIGN_V2_CHECK( powers[2] == 100 );
+            //BOOST_ASSIGN_V2_CHECK( powers[3] == 1000 );
             //]
         }
     }

@@ -27,13 +27,12 @@ namespace xxx_repeat{
         {
             //[repeat
             std::vector<int> cont;
-            int front = (
-            	cont | ( as2::_put % ( as2::_repeat = 2  ) )( 72 )( 31 )( 48 )
-            ).front();
-
-            BOOST_ASSIGN_V2_CHECK( cont.size() == 6 );
-            BOOST_ASSIGN_V2_CHECK( front == 72 );
-            BOOST_ASSIGN_V2_CHECK( cont.back() == 48 );
+            BOOST_ASSIGN_V2_CHECK(
+            	boost::range_equal(
+            		cont | ( as2::_put % ( as2::_repeat = 2  ) )( 72 )( 31 )( 48 )
+            	),
+                as2::csv_deque<int>( 72, 72, 31, 31, 48, 48 )
+			);
             //]
         }
 	}

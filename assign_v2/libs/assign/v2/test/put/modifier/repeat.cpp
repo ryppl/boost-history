@@ -25,7 +25,7 @@ namespace xxx_repeat{
 
 		namespace as2 = boost::assign::v2;
         {
-            //[repeat
+            //[repeat_simple
             std::vector<int> cont;
             ( as2::put( cont ) % ( as2::_repeat = 2  ) )( 72 )( 31 )( 48 );
 
@@ -35,7 +35,7 @@ namespace xxx_repeat{
             //]
         }
         {
-            //[repeat_deque
+            //[repeat_simple_deque
             BOOST_AUTO(
                 cont,  (
                     as2::deque<int>( as2::_nil ) % ( as2::_repeat = 2 )

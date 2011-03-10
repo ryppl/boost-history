@@ -9,9 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #include <map>
 #include <string>
-#include <cmath>
 #include <boost/lambda/lambda.hpp>
-#include <boost/tuple/tuple.hpp>
 
 #include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/detail/functor/identity.hpp>
@@ -32,18 +30,15 @@ namespace xxx_lookup{
         namespace lambda = boost::lambda;
         {
             //[lookup
-            typedef std::map<std::string, int> C; C cal; 
-            C::mapped_type n_mar = (
-            	cal | as2::_put( "feb", 28 )
-                	| ( /*Input is by default mapped to C::value_type but, here, we need C::key_type*/ as2::_put % /*Makes the input convertible to C::key_type*/as2::_identity %  ( as2::_lookup = (lambda::_1 = 31) ) )( "jan" )( "mar" )( "may" )( "jul" )( "aug" )( "oct" )( "dec" )
-                	| ( as2::_put % as2::_identity %  ( as2::_lookup = (lambda::_1 = 30) ) )( "apr" )( "jun" )( "sep" )( "nov" )
-            )["mar"];
-            
-            BOOST_ASSIGN_V2_CHECK( n_mar == 31 );
-            BOOST_ASSIGN_V2_CHECK( cal["jan"] == 31 );
-            BOOST_ASSIGN_V2_CHECK( cal["dec"] == 31 );
-            BOOST_ASSIGN_V2_CHECK( cal["apr"] == 30 );
-            BOOST_ASSIGN_V2_CHECK( cal["nov"] == 30 );
+            typedef std::string str_; std::map<std::string, int> C; C cal; 
+            BOOST_AUTO( _local,  ( as2::_csv_put % ( as2::_fun = lambda::_1 ) ) );
+            BOOST_ASSIGN_V2_CHECK(
+            	(
+            		cal | as2::_put( "feb", 28 ) | ( _local % as2::_lookup = (lambda::_1 = 30)  )( "apr" )( "jun" )( "sep" )( "nov" )
+                    	| ( _local % as2::_lookup = (lambda::_1 = 31)  )( "jan" )( "mar" )( "may" )( "jul" )( "aug" )( "oct" )( "dec" )
+            	)[ "mar" ] == 31
+            );
+            BOOST_ASSIGN_V2_CHECK( cal[ "jun" ] == 30 );
 			//] 
         }    
     }

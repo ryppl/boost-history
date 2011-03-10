@@ -18,6 +18,7 @@
 #include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/put/pipe/put.hpp>
 #include <boost/assign/v2/put/pipe/csv_put.hpp> 
+#include <boost/range/algorithm/for_each.hpp>
 
 #include <libs/assign/v2/test/put/pipe/put.h>
 
@@ -38,61 +39,25 @@ namespace xxx_put{
         	BOOST_ASSIGN_V2_CHECK( str_( cont[1] ) == "y" );
         	BOOST_ASSIGN_V2_CHECK( str_( cont[2] ) == "z" );
     	}
+/*
 		{
+        	// TODO put in mix or chain
             //[pipe_array
-            const int sz = 3;
-    		typedef boost::array<int, sz>  r_;
-    		boost::array<r_, sz>  matrix3x3;
-            
-            {
-            	r_ r0, r1, r2;
-                int front = ( /*Calls [^r0[i] = j] for [^( i, j ) = ( 0, 1 ), ( 1, 2 ), ( 2, 3 ) ] and returns r0*/ r0 | as2::_put( 1 )( 2 )( 3 ) ).front();
-                int back = r0.back();
-                r2 | as2::_put( 7 )( 8 )( 9 );
-            	r_ r = ( 
-                	matrix3x3 | as2::_put
-                		( r0 )  
-                    	( /*<<`r1` modified on the fly>>*/r1 | as2::_put( 4 )( 5 )( 6 ) ) 
-                    	( r2 )
-                )[1];
+			boost::array<int, 3> first3;
+            boost::array<int, 5> all5;
+            int i = first3.size() - 1;
+            ( 	
+            	put( all5 )( 
+            		as_arg_list( first3 | _csv_put( v, w ) ) 
+            	) % _iterate = var(i)++
+            )( x, y, z );
 
-                BOOST_ASSIGN_V2_CHECK( front == 1    );
-                BOOST_ASSIGN_V2_CHECK( back  == 3    );
-                BOOST_ASSIGN_V2_CHECK( r   == r1 );
-			}
-            for(int i = 0; i < 9; i++)
-            {
-            	BOOST_ASSIGN_V2_CHECK( matrix3x3[ i / 3 ][ i % 3 ] == i + 1 );
-            }
+            put( all5 )( 
+                as_arg_list( first3 | _csv_put( v, w ) && csv_array( x, y, z ) )
+			);
 			//]
         }
-		{
-        	//[pipe_seq_var_args
-            typedef double elem_; typedef std::list<elem_> r_; typedef std::vector<r_> ragged_array_;
-			r_ a, b; elem_ front, back;
-            front = ( a | as2::_put( 0.71 )( 0.63 )( 0.85 ) ).front();
-            back = a.back();
-            
-			ragged_array_ ragged_array; 
-            r_ r = (
-            	ragged_array | as2::_put
-            		( a ) 
-                	( /*<<`b` modified on the fly>>*/ b | as2::_put( 0.61 )( 0.69 )( 0.92 )( 0.55 ) )
-					( 1, -99.99 )
-                	( )
-            )[2];
-
-			elem_ eps = boost::numeric::bounds<elem_>::smallest();
-            BOOST_ASSIGN_V2_CHECK( abs( front - 0.71     ) < eps );
-            BOOST_ASSIGN_V2_CHECK( abs( back - 0.85      ) < eps );
-            BOOST_ASSIGN_V2_CHECK( abs( r.front() + 99.0 ) < eps ); 
-            BOOST_ASSIGN_V2_CHECK( abs( r.back() + 99.0  ) < eps ); 
-            //]
-            BOOST_ASSIGN_V2_CHECK( ragged_array[0].size() == a.size() );
-            BOOST_ASSIGN_V2_CHECK( ragged_array[1].size() == b.size() );
-            BOOST_ASSIGN_V2_CHECK( ragged_array[2].size() == 1        );
-            BOOST_ASSIGN_V2_CHECK( ragged_array[3].size() == 0        );
-		}
+*/
 		{
             using namespace boost;
             //[pipe_seq_ref_tuple
