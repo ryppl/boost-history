@@ -73,7 +73,6 @@ namespace result_of{
 }// assign
 }// boost
 
-
 #if defined( BOOST_ASSIGN_V2_UTILITY_CONVERSION_CONVERTER_NAME_LOOKUP_PARAM ) || defined ( BOOST_ASSIGN_V2_UTILITY_CONVERSION_CONVERTER_NAME_LOOKUP )
 #error
 #endif

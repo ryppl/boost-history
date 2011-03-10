@@ -9,14 +9,17 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_PUT_FRAME_CRTP_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_FRAME_CRTP_ER_2010_HPP
+#include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
 #include <boost/assign/v2/detail/pp/forward.hpp>
 #include <boost/assign/v2/detail/traits/container/is_ptr_container.hpp>
+#include <boost/assign/v2/put/frame/as_arg_list.hpp>
 #include <boost/assign/v2/put/frame/fwd.hpp>
 #include <boost/assign/v2/put/frame/modifier.hpp>
 #include <boost/mpl/always.hpp>
 #include <boost/mpl/apply.hpp>
+#include <boost/range/algorithm/for_each.hpp>
+#include <boost/ref.hpp>
 #include <boost/utility/enable_if.hpp>
-#include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 #include <utility>
 #else
@@ -60,6 +63,46 @@ namespace put_aux{
 
     };
 
+	template<typename D>
+    struct wrapper
+    {
+
+        wrapper(D const& d):d_( d ){}
+            
+        operator D const&()const{ return this->d_; }
+			        
+        typedef wrapper const& result_type;            
+        
+#if BOOST_ASSIGN_V2_ENABLE_CPP0X
+        template<typename T>
+        result_type operator()( T&& t )const
+        {
+            this->d_(
+                /*<< Instance of F >>*/ this->fun( std::forward<Args>(args)... )
+            );
+            return (*this);
+        }
+#else
+        
+        template<typename T>
+        result_type operator()(T& t)const
+        {
+            this->d_( t ); return (*this);
+        }
+        
+        template<typename T>
+        result_type operator()(T const & t)const
+        {
+            this->d_( t ); return (*this);
+        }
+#endif
+                 
+        private:
+        D const& d_;
+        
+    };
+
+
     // D has to model concept_sub::Pre3, with respect to container C, functor F
     // and Tag. It then models concept_sub::Post
     template<typename C, typename F, typename Tag, typename D>
@@ -92,6 +135,14 @@ namespace put_aux{
         explicit crtp( F const& f ) : fun_holder_( f ){}
         explicit crtp( F const& f, modifier_ const& m )
             : fun_holder_( f ), modifier_holder_( m ){}
+
+		template<typename R>
+        result_type 
+        operator()( as_arg_list_adapter<R> range )const
+        {
+             return ::boost::for_each( range(), wrapper<D>( this->derived() ) ); 
+        }
+
 
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 

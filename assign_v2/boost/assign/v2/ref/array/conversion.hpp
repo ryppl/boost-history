@@ -27,6 +27,9 @@ BOOST_ASSIGN_V2_UTILITY_CONVERSION_CONVERTER_NAME_LOOKUP(BOOST_ASSIGN_V2_SEQ, BO
 #undef BOOST_ASSIGN_V2_R
 
 }// array_aux
+
+using array_aux::convert;
+
 }// ref
 }// v2
 }// assign

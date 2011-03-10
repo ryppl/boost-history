@@ -36,8 +36,7 @@ namespace put_aux{
         modifier() : n_( 0 ){}
         explicit modifier( inner_type inner, size_type n )
             : inner_( inner ), n_( n )
-        {
-        }
+        {}
 
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 		template<typename C, typename T>

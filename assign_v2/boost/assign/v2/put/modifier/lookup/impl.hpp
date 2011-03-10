@@ -24,13 +24,13 @@ namespace v2{namespace put_aux{
     {
 
         typedef Arg arg_;
-        // storing a copy of Arg has caused problems with lambda::, hence ptr
+        // storing a copy of lambda::something has caused pbs, hence ptr
         typedef boost::shared_ptr<arg_> ptr_; 
 		typedef keyword_aux::ignore ignore_;
 		
         public:
 
-        modifier(){}
+        modifier() : ptr( new arg_() ){}
         explicit modifier(
         	ignore_,
             typename boost::call_traits<arg_>::param_type arg

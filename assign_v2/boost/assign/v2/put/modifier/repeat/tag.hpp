@@ -16,7 +16,8 @@ namespace assign{
 namespace v2{
 namespace modifier_tag{ 
 
-	template<typename /*<<Arg is the modifier-tag of the implementation to override>>*/> struct repeat{}; 
+	template<typename /*<<Arg is the modifier-tag of the implementation to override>>*/ Arg> 
+    struct repeat{}; 
 
 }// modifier_tag
 }// v2

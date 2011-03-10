@@ -11,6 +11,7 @@
 #define BOOST_ASSIGN_V2_UTILITY_CONVERSION_CONVERT_ER_2010_HPP
 #include <boost/assign/v2/put/container/put_range.hpp>
 #include <boost/assign/v2/utility/conversion/deduce_tag.hpp>
+#include <boost/range/algorithm/for_each.hpp>
 
 namespace boost{
 namespace assign{
@@ -21,7 +22,7 @@ namespace convert_aux{
     C convert(R const& r, convert_tag::put)
     {
         C cont;
-        return v2::put_range( cont, r );
+        return ::boost::for_each( r, put( cont ) ).container();
     }
 
     template<typename C, typename R>
@@ -45,6 +46,7 @@ namespace result_of{
     struct convert{ typedef C type; };
 
 }//result_of
+
 }// v2
 }// assign
 }// boost

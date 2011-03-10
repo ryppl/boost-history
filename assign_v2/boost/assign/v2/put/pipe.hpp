@@ -11,6 +11,6 @@
 #define BOOST_ASSIGN_V2_PUT_PIPE_ER_2010_HPP
 #include <boost/assign/v2/put/pipe/csv_put.hpp>
 #include <boost/assign/v2/put/pipe/put.hpp>
-#include <boost/assign/v2/put/pipe/range.hpp>
+//#include <boost/assign/v2/put/pipe/range.hpp>
 
 #endif // BOOST_ASSIGN_V2_PUT_PIPE_ER_2010_HPP

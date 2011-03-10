@@ -1,3 +1,5 @@
+// TODO keep in working copy
+/*
 //////////////////////////////////////////////////////////////////////////////
 //  Boost.Assign v2                                                         //
 //                                                                          //
@@ -66,3 +68,4 @@ namespace{
 }// boost
 
 #endif // BOOST_ASSIGN_V2_PUT_PIPE_RANGE_ER_2010_HPP
+*/

@@ -10,10 +10,11 @@
 #ifndef BOOST_ASSIGN_V2_PUT_MODIFIER_ITERATE_IMPL_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_MODIFIER_ITERATE_IMPL_ER_2010_HPP
 #include <boost/assign/v2/detail/keyword/ignore.hpp>
+#include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
 #include <boost/assign/v2/put/frame/modifier.hpp>
 #include <boost/assign/v2/put/modifier/iterate/tag.hpp>
-
-#include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
+#include <boost/call_traits.hpp>
+#include <boost/shared_ptr.hpp>
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 #include <utility>
 #include <boost/type_traits/is_reference.hpp>
@@ -30,12 +31,17 @@ namespace put_aux{
     {
 
 		typedef keyword_aux::ignore ignore_;
+        typedef Arg arg_;
+        // storing a copy of lambda::something has caused pbs, hence ptr
+        typedef boost::shared_ptr<arg_> ptr_; 
                     
         public:
                     
-        modifier(){}
-        explicit modifier( ignore_, Arg arg )
-            : arg_( arg )
+        modifier(): ptr( new arg_() ){}
+        explicit modifier( 
+        	ignore_,  
+        	typename boost::call_traits<arg_>::param_type arg 
+        ) : ptr( new arg_( arg ) )
         {}
 
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
@@ -46,7 +52,7 @@ namespace put_aux{
 		>::type
         impl(C& cont, T&& t )const
         {
-            cont.at( this->arg_() ) = std::move( t ); // TODO ?
+			cont.at( (*this->ptr)() ) = std::move( t ); 
         }
 
 #endif
@@ -54,17 +60,19 @@ namespace put_aux{
         template<typename C, typename T>
         void impl(C& cont, T& t )const
         {
-            cont.at( this->arg_() ) = t;
+            cont.at( (*this->ptr)() ) = t;
         }
-
+        
+		// TODO verify
         template<typename C, typename T>
         void impl(C& cont, T* t)const
         {
-            cont.replace( this->arg_() , t);
+			cont.replace( this->arg_() , t);
         }
                     
         protected:
-        mutable Arg arg_;
+        ptr_ ptr;
+
     };
 
 }// put_aux
