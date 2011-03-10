@@ -4,7 +4,7 @@
 // License, Version 1.0 (see accompanying file LICENSE_1_0.txt or a
 // copy at http://www.boost.org/LICENSE_1_0.txt).
 
-//[ add_block_cpp
+//[ add_block_va_cpp
 #include <boost/local/block.hpp>
 #include <iostream>
 #include <cassert>

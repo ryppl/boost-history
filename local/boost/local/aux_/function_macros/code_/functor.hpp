@@ -189,7 +189,7 @@
         /* these types are qualified with extra eventual const and/or & if */ \
         /* their variables are bound by const and/or & (this is because */ \
         /* it is difficult strip the eventual & given that the var name is */ \
-        /* alwasy attached to the & symbol plus programmers can always */ \
+        /* always attached to the & symbol plus programmers can always */ \
         /* remove const& using type traits) */ \
         /* const bind typeof types */ \
         BOOST_PP_LIST_FOR_EACH_I( \

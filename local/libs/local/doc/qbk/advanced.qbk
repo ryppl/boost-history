@@ -6,89 +6,250 @@
 
 [section:Advanced Advanced]
 
-This section illustrates advanced usages of this library.
-At the end of this section there is also a list of limitations of this library.
+This section illustrates advanced usage of this library.
+At the end of this section there is also a list of knwon limitations of this library.
 
-[section Commas in Macro Parameters]
+[section Commas and Symbols in Macro Parameters]
 
 The C++ preprocessor does not allow commas "`,`" within macro parameters unless they are wrapped by the round parenthesis `()`.
-The elements of the parenthesized signature are internally used as macro parameters while they are being processed by the parsing macros.
-Therefore, commas within parenthesized signature elements will generate (cryptic) preprocessor errors unless they are wrapped within extra round parenthesis `()` as explained here.
+Therefore, using commas the local function parameters and bindings passed to this library macros ill generate (cryptic) preprocessor errors unless they are wrapped within extra round parenthesis `()` as explained here.
 
 [note
 *Macro parameters with commas* which are already wrapped by round parenthesis `()` are fine (function calls, etc).
 However, macro parameters with commas that are not wrapped by round parenthesis need to be wrapped by an extra set of round parenthesis `()` as described here.
-Therefore, also macro parameters with commas wrapped by angular parenthesis `<>` (templates, etc) or square parenthesis `[]` (multidimensional array access, etc) need to be wrapped by the extra round parenthesis `()` as explained here (this is because the preprocessor only recognizes the round parenthesis and it does not recognize angular, square, or any other type of parenthesis).
+Also macro parameters with commas wrapped by angular parenthesis `<>` (templates, etc) or square parenthesis `[]` (multidimensional array access, etc) need to be wrapped by the extra round parenthesis `()` as explained here (this is because the preprocessor only recognizes the round parenthesis and it does not recognize angular, square, or any other type of parenthesis).
 ]
 
-For example, let's consider the following parenthesized signature (see the complete example code later in this section):
+In addition, local function parameter types cannot start with non-alphanumeric symbols (alphanumeric symbols are `A-Z`, `a-z`, and `0-9`).
+[footnote
+*Rationale.*
+This limitation cames from the implementation of the library parsing macros that use preprocessor token concatenation to inspect the parameter type token to see if the token is a parameter or a bound variable.
+The C++ preprocessor does not allow to concatenate non-alphanumeric tokens.
+]
+The library will generate (cryptic) preprocessor errors if a parameter type starts with a non-alphanumeric symbol.
 
-    (void) (print)(
-            (const std::map<std::string, size_t>&)(m)               // (1) Error.
-            (const size_t&)(factor)(default)
-                    (key_size<std::string, size_t>::value)          // (2) Error.
-            (const std::string&)(separator)(default)(cat(":", " ")) // (3) OK.
-            (::sign_t)(sign)(default)(-1)                           // (4) Error.
-        )
+Let's consider the following example:
 
-[*(1)] The parenthesized signature element `const std::map<std::string, size_t>&` contains a comma "`,`" after the first template parameter `std::string`.
-This comma is not wrapped by any round parenthesis `()` (the outer parenthesis `()` that make this a parenthesized signature element do not count) thus it will cause a preprocessor error.
+[table
+[ [Variadic Macro Syntax (C99 and later compilers)] [Sequencing Macro Syntax (all C++ compilers)] ]
+[ [``
+    __BOOST_LOCAL_FUNCTION_PARAMS__(
+        const std::map<std::string, size_t>& m,                 // (1) Error.
+        ::sign_t sign,                                          // (2) Error.
+        const size_t& factor, default
+                key_size<std::string, size_t>::value,           // (3) Error.
+        const std::string& separator, default cat(":", " "),    // (4) OK.
+    )
+``] [``
+    __BOOST_LOCAL_FUNCTION_PARAMS__(
+        (const std::map<std::string, size_t>& m)                // (1) Error.
+        (::sign_t sign)                                         // (2) Error.
+        (const size_t& factor)(default
+                key_size<std::string, size_t>::value)           // (3) Error.
+        (const std::string& separator)(default cat(":", " "))   // (4) OK.
+    )
+``] ]
+]
+
+[*(1)] The parameter type `const std::map<std::string, size_t>&` contains a comma "`,`" after the first template parameter `std::string`.
+This comma is not wrapped by any round parenthesis `()` (the outer parenthesis `()` that make the sequencing macro syntax do not count) thus it will cause a preprocessor error.
 The macro `__BOOST_IDENTITY_TYPE__(`/parenthesized-type/`)` can be used to wrap a type within extra parenthesis `()` so to overcome this issue:
 
-    (void) (print)(
-            ``*(*``__BOOST_IDENTITY_TYPE__``*((*``const std::map<std::string, size_t>&``*)))*``(m) // OK.
-            ...
-        )
+[table
+[ [Variadic Macro Syntax (C99 and later compilers)] [Sequencing Macro Syntax (all C++ compilers)] ]
+[ [``
+    __BOOST_LOCAL_FUNCTION_PARAMS__(
+        __BOOST_IDENTITY_TYPE__((const std::map<std::string, size_t>&)) m,  // OK.
+        ...
+    )
+``] [``
+    __BOOST_LOCAL_FUNCTION_PARAMS__(
+        (__BOOST_IDENTITY_TYPE__((const std::map<std::string, size_t>&)) m) // OK.
+        ...
+    )
+``] ]
+]
 
 This macro expands to an expression that evaluates (at compile-time) exactly to the specified type.
-Note that a total of three set of parenthesis `()` are needed:
+Note that a total of two set of parenthesis `()` are added:
 
-# Parenthesis to wrap the parenthesized signature element.
-# Parenthesis to call the `__BOOST_IDENTITY_TYPE__` macro.
+# Parenthesis to invoke the `__BOOST_IDENTITY_TYPE__` macro.
 # Parenthesis to wrap the type expression (and therefore any commas "`,`" that it contains) passed as parameter to the `__BOOST_IDENTITY_TYPE__` macro.
+[footnote
+*Rationale.*
+Using variadic macros, this extra set of parenthesis could be eliminated requiring only the parenthesis to invoke the `__BOOST_IDENTITY_TYPE__` macro.
+This feature is currently not implemented and the double parenthesis are always needed when invoking this macro.
+]
 
-[*(2)] The parenthesized signature element `key_size<std::string, size_t>::value` contains a comma "`,`" after the first template parameter `std::string`.
-Again, this comma is not wrapped by any parenthesis `()` so it will cause a preprocessor error.
-Because this is a value expression (and not a type expression), the macro `__BOOST_IDENTITY_VALUE__(`/parenthesized-value/`)` is used to overcome this issue:
+[*(2)] The parameter type `::sign_t` start with the non-alphanumeric symbols "`::`" thus it cannot be used by the parenthesized syntax.
+The macros `__BOOST_IDENTITY_TYPE__` can also be used to overcome these issue:
 
-    (void) (print)(
-            ...
-            (const size_t&)(factor)(default)
-                    ``*(*``__BOOST_IDENTITY_VALUE__``*((*``key_size<std::string, size_t>::value``*)))*`` // OK.
-            ...
-        )
-
-This macro expands to an expression that evaluates (at run-time) exactly to the specified value.
-Note again that a total of three set of parenthesis `()` are needed similarly to `__BOOST_IDENTITY_TYPE__`.
-
-[*(3)] The parenthesized signature element `cat(':', ' ')` is instead fine because it contains a comma "`,`" which is already wrapped by the parenthesis `()` of the function call `cat(...)`.
-
-[*(4)] The parenthesized signature elements `::sign_t` and `-1` (the type and default value of the `sign` parameter) start with the non-alphanumeric symbols "`::`" and "`-`" respectively thus they cannot be used by the parenthesized syntax.
-The macros `__BOOST_IDENTITY_TYPE__` and `__BOOST_IDENTITY_VALUE__` can also be used to overcome these issues:
-
-    (void) (print)(
-            ...
-            (__BOOST_IDENTITY_TYPE__((::sign_t)))(sign)(default)
-                    (__BOOST_IDENTITY_VALUE__((-1))) // OK.
-        )
-
-This way the parenthesized signature elements became `(__BOOST_IDENTITY_TYPE__((::sign_t)))` and `(__BOOST_IDENTITY_VALUE__((-1)))` which start with the alphanumeric symbols of the macro names and they can be used by the parenthesized syntax.
+[table
+[ [Variadic Macro Syntax (C99 and later compilers)] [Sequencing Macro Syntax (all C++ compilers)] ]
+[ [``
+    __BOOST_LOCAL_FUNCTION_PARAMS__(
+        ...
+        __BOOST_IDENTITY_TYPE__((::sign_t)) sign,  // OK.
+        ...
+    )
+``] [``
+    __BOOST_LOCAL_FUNCTION_PARAMS__(
+        ...
+        (__BOOST_IDENTITY_TYPE__((::sign_t)) sign) // OK.
+        ...
+    )
+``] ]
+]
 
 Often, there might be better ways to overcome this limitation that lead to code which is more readable than the one using these macros.
-For example, in this case the symbol "`::`" could be dropped and `-1` could be wrapped within `int(...)` to obtain the following, more readable, and still valid parenthesized signature code:
+For example, in this case the symbol "`::`" could be simply dropped to obtain the following and more readable code:
 
-    (void) (print)(
-            ...
-            (sign_t)(sign)(default)(int(-1)) // OK.
-        )
+[table
+[ [Variadic Macro Syntax (C99 and later compilers)] [Sequencing Macro Syntax (all C++ compilers)] ]
+[ [``
+    __BOOST_LOCAL_FUNCTION_PARAMS__(
+        ...
+        sign_t sign, // OK.
+        ...
+    )
+``] [``
+    __BOOST_LOCAL_FUNCTION_PARAMS__(
+        ...
+        (sign_t sign) // OK.
+        ...
+    )
+``] ]
+]
+
+[*(3)] The default parameter value `key_size<std::string, size_t>::value` contains a comma "`,`" after the first template parameter `std::string`.
+Again, this comma is not wrapped by any parenthesis `()` so it will cause a preprocessor error.
+Because this is a value expression (and not a type expression), it can simply be wrapped within an extra set of round parenthesis `()`:
+
+[table
+[ [Variadic Macro Syntax (C99 and later compilers)] [Sequencing Macro Syntax (all C++ compilers)] ]
+[ [``
+    __BOOST_LOCAL_FUNCTION_PARAMS__(
+        ...
+        const size_t& factor, default
+                (key_size<std::string, size_t>::value), // OK.
+        ...
+    )
+``] [``
+    __BOOST_LOCAL_FUNCTION_PARAMS__(
+        ...
+        (const size_t& factor)(default
+                (key_size<std::string, size_t>::value)) // OK.
+        ...
+    )
+``] ]
+]
+
+
+[note
+Alternatively, the macro `__BOOST_IDENTITY_VALUE__(`/parenthesized-value/`)` could have been equivalently used.
+This macro expands to an expression that evaluates (at run-time) exactly to the specified value (but it adds overhead compared with simply using the extra parenthesis `()`).
+Note that, similarly to `__BOOST_IDENTITY_TYPE__`, the `__BOOST_IDENTITY_VALUE__` macro also requires two sets of extra parenthesis one set for invoking the macro and another set to wrap the value.
+]
+
+[*(4)] The default parameter value `cat(':', ' ')` is instead fine because it contains a comma "`,`" which is already wrapped by the parenthesis `()` of the function call `cat(...)`.
 
 Consider the following complete example:
 [footnote
-We recognize that the use of the /identity macros/ adds extra parenthesis to the already significant number of parenthesis required by the parenthesized syntax.
-However, parenthesized signatures usually do not contain unwrapped commas "`,`" (unless template metaprogramming is being used).
+The authors recognize that the use of the /identity macros/ adds extra parenthesis to the already significant number of parenthesis required by the parenthesized syntax.
+However, macro parameters usually do not contain unwrapped commas "`,`" (unless template metaprogramming is being used).
 ]
 
-[print_map_cpp]
+[table
+[ [Variadic Macro Syntax (C99 and later compilers)] [Sequencing Macro Syntax (all C++ compilers)] ]
+[ [ [print_map_va_cpp] ] [ [print_map_cpp] ] ]
+]
+
+The `__BOOST_IDENTITY_TYPE__` macro must be prefixed by the `typename` keyword when used within templates.
+
+[endsect]
+
+[section Deducing Bound Types]
+
+[endsect]
+
+[section Passing Local Functions]
+
+It is possible to obtain a reference to a local function so to assign it to a variable, to pass it as a function parameter, etc.
+
+[important
+Local functions are never copied by value.
+You can only obtain a reference to a local function therefore you need to make sure that the *local function survives the scope of its reference* otherwise the reference will be invalid and its use will generate a run-time error (as usual with C++ references).
+[footnote
+The suffix `ref` of `boost::local::__function__` is meant to help programmers remember that they are dealing with references to (and not copies of) local functions.
+]
+]
+
+For this purpose, it is possible to assign a `boost::function` functor to a local function (see also __Boost_Function__).
+However, it is in general preferable to use the `boost::local::__function__` functor instead because its API also supports default parameters.
+
+The `boost::local::__function__` template takes two parameters (see the __Reference__ section):
+
+    template< typename F, size_t defaults = 0 > class __function__;
+
+[variablelist
+[ [F] [
+The template parameter `F` specifies the function signature using the same
+syntax as __Boost_Function__'s preferred syntax.
+For example:``
+    __function__< int() >                   // Returns `int` and takes no parameter.
+    __function__< int(double, char) >       // Returns `int`and takes two parameters: a `double` followed by a `char`.
+``] ]
+[ [defaults] [
+The template parameter `defaults` specifies the number of defaults parameters counting from the last parameter: `0` if no parameter is optional, `1` if the last parameter is optional, `2` if the last two parameters are optional, etc.
+This template parameter must be between `0` and the total number of parameters as specified by `F`.
+This template parameter is optional and it is `0` by default.
+For example:``  
+    __function__< int(double, char) >       // No default: All parameters must be specified.
+    __function__< int(double, char), 1 >    // 1 default: The last `char` parameter is optional.
+    __function__< int(double, char), 2 >    // 2 defaults: All parameters are optional.
+``] ]
+]
+
+For example:
+
+[table
+[ [Variadic Macro Syntax (C99 and later compilers)] [Sequencing Macro Syntax (all C++ compilers)] ]
+[ [ [doit_va_cpp] ] [ [doit_cpp] ] ]
+]
+
+In addition, a local function can bind and call another local function.
+For example, the following local function `inc_sum` binds the local function `inc` so `inc_sum` can call `inc`:
+
+[table
+[ [Variadic Macro Syntax (C99 and later compilers)] [Sequencing Macro Syntax (all C++ compilers)] ]
+[ [ [transform_va_cpp] ] [ [transform_cpp] ] ]
+]
+
+[endsect]
+
+[section Exception Specifications]
+
+It is possible to program exception specifications for local functions, local blocks, and local exits.
+
+Exception specifications are programmed just before the body (and outside the macros).
+For example:
+
+[add_except_cpp]
+
+[endsect]
+
+[section Storage Classifiers `auto` and `register`]
+
+As specified in the __Grammar__ section, the parenthesized signature also supports `inline`d local functions, and the `auto` and `register` classifiers for local function parameters.
+
+[note
+However, note that local functions will always add some overhead because of the functor object used to internally implement them.
+Compilers might not be able to optimize away the local function overhead even when `inline`, `auto`, and `register` are used.
+]
+
+For example:
+
+[add_optimizers_cpp]
 
 [endsect]
 
@@ -104,122 +265,11 @@ The original local function name as specified in the parenthesized signature pas
 
 [endsect]
 
-[section Exception Specifications]
-
-It is possible to program exception specifications for local functions, local blocks, and local exits.
-
-Exception specifications are programmed just before the body (and outside the macros).
-For example:
-
-[add_except_cpp]
+[section Nested Declarations]
 
 [endsect]
 
-[section Optimizers: `inline`, `auto`, and `register`]
-
-As specified in the __Grammar__ section, the parenthesized signature also supports `inline`d local functions, and the `auto` and `register` classifiers for local function parameters.
-
-[note
-However, note that local functions will always add some overhead because of the functor object used to internally implement them.
-Compilers might not be able to optimize away the local function overhead even when `inline`, `auto`, and `register` are used.
-]
-
-For example:
-
-[add_optimizers_cpp]
-
-[endsect]
-
-[section References to Local Functions]
-
-It is possible to obtain a reference to a local function so to assign it to a variable, to pass it as a function parameter, etc.
-
-[important
-Local functions are never copied by value.
-You can only obtain a reference to a local function therefore you need to make sure that the *local function survives the scope of its reference* otherwise the reference will be invalid and its use will generate a run-time error (as usual with C++ references).
-[footnote
-The suffix `ref` of `boost::local::__function_ref__` is meant to help programmers remember that they are dealing with references to (and not copies of) local functions.
-]
-]
-
-For this purpose, it is possible to assign a `boost::function` functor to a local function (see also __Boost_Function__).
-However, it is in general preferable to use the `boost::local::__function_ref__` functor instead because its API also supports default parameters.
-
-The `boost::local::__function_ref__` template takes two parameters (see the __Reference__ section):
-
-    template<typename F, size_t defaults = 0>
-    class __function_ref__ { ... };
-
-Where:
-
-* The template parameter `F` specifies the function signature using the same
-syntax as __Boost_Function__'s preferred syntax.
-For example:
-
-    __function_ref__< int() >                   // Returns `int` and takes no parameter.
-    __function_ref__< int(double, char) >       // Returns `int`and takes two parameters: a `double` followed by a `char`.
-
-* The template parameter `defaults` specifies the number of defaults parameters counting from the last parameter: `0` if no parameter is optional, `1` if the last parameter is optional, `2` if the last two parameters are optional, etc.
-This template parameter must be between `0` and the total number of parameters as specified by `F`.
-This template parameter is optional and it is `0` by default.
-For example:
-    
-    __function_ref__< int(double, char) >       // No default: All parameters must be specified.
-    __function_ref__< int(double, char), 1 >    // 1 default: The last `char` parameter is optional.
-    __function_ref__< int(double, char), 2 >    // 2 defaults: All parameters are optional.
-
-For example:
-
-[doit_cpp]
-
-[endsect]
-
-[section Renaming Local Functions]
-
-Local functions can be renamed using the `__BOOST_LOCAL_FUNCTION_END_RENAME__` macro instead of `__BOOST_LOCAL_FUNCTION_END__`:
-
-    __BOOST_LOCAL_FUNCTION_END_RENAME__(``/new-local-function-name/``)
-
-Where the /new-local-function-name/ no longer has to match the local function name as originally specified in the parenthesized signature passed to `__BOOST_LOCAL_FUNCTION__`.
-For example: 
-[footnote
-*Rationale.*
-Local functions are often named `l` in the casual examples of this documentation because the name of the author starts with the letter "`l`". [$../images/smiley.png]
-]
-
-    {
-        __BOOST_LOCAL_FUNCTION__(
-        (void) (l)( (int)(x) )
-        ) {
-            ... // Body uses original name `l`.
-        } __BOOST_LOCAL_FUNCTION_END_RENAME__(m) // Renamed to `m`.
-        
-        ... // Enclosing scope uses new name `m`.
-    }
-
-Note that the local function is renamed only after the call to `__BOOST_LOCAL_FUNCTION_END_RENAME__`.
-Therefore, within the local function body the original local function name as specified by `__BOOST_LOCAL_FUNCTION__` must be used (e.g., to recursively call the local function).
-However, within the enclosing scope only the new local function name as specified by `__BOOST_LOCAL_FUNCTION_END_RENAME__` is available.
-
-A limitation is that renamed local functions cannot be directly passed as template parameters (e.g., they cannot be passed to STL algorithms like `std::for_each`).
-However, it is possible to workaround this limitation by obtaining a reference of the renamed local function and then passing the reference as template parameter.
-For example:
-
-[renamed_print_cpp]
-
-[h5 Motivation]
-
-The motivation for renaming a local function might not be obvious at first.
-In fact, in most cases programmers will not need to rename local functions.
-
-Renaming local functions might be useful at least to program macros that expand using local functions and that do not want to pass the local function body as a macro parameter (so to retain the usual meaning of compiler error line numbers for the body code).
-Consider the following example that implements a simple version of the local exit macros using a renamed local function:
-
-[renamed_exit_cpp]
-
-[endsect]
-
-[section Limitations: Overloading, Nesting, Operators, Etc]
+[section Limitations: Overloading and Operators]
 
 This is a list of limitations of this library's local functions compared to usual features of C++ functions.
 

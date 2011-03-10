@@ -1,4 +1,5 @@
 
+//[scope_guards_errno_cpp
 #include <boost/local/exit.hpp>
 #include <iostream>
 
@@ -17,14 +18,11 @@ int f() {
         if (error) std::cout << "failure" << std::endl;
     } BOOST_LOCAL_EXIT_END
     
-    // Cannot use `return <NUMBER>` otherwise scope exits do not know the
-    // error number. Set error and exit using `return error` instead.
-    error = -2; return error;
-    error = -1; return error;
+    return error = -1; // Must set error.
 }
 
 int main() {
-    std::cout << "error number: " << f() << std::endl;
-    return 0;
+    return f();
 }
+//]
 

@@ -4,6 +4,7 @@
 // License, Version 1.0 (see accompanying file LICENSE_1_0.txt or a
 // copy at http://www.boost.org/LICENSE_1_0.txt).
 
+//[transform_cpp
 #include <boost/local/function.hpp>
 #include <iostream>
 #include <algorithm>
@@ -29,7 +30,7 @@ int main () {
 
     // v = ++(v + w) + 0 = 27 47 67 87 107
     int BOOST_LOCAL_FUNCTION_PARAMS( (int i) (int j)
-            (bind inc) ) { // Bind another local function.
+            (const bind& inc) ) { // Bind another local function.
         return inc(i + j); // Call the bound local function.
     } BOOST_LOCAL_FUNCTION_NAME(inc_sum)
     std::transform(v.begin(), v.end(), w.begin(), v.begin(), inc_sum);
@@ -40,4 +41,5 @@ int main () {
     
     return 0;
 }
+//]
 

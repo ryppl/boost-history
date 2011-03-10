@@ -20,9 +20,8 @@ The following sections could be consulted at a later point to gain a more in-dep
 
 * The __Advanced__ section explains advanced usages of the library.
 * The __Reference__ section is the reference manual of the library public API.
-* The __Grammar__ section formally describes the parenthesized syntax used by this library to specify the local function signatures.
-* The __Alternatives__ section describes alternatives to this library to implement local functions.
 * The __Examples__ section lists the source code of a few additional examples that use this library.
+* The __Alternatives__ section describes alternatives to this library to implement local functions.
 
 The following sections are for reference only:
 
@@ -66,7 +65,9 @@ The header files of this library are divided as follow:
     ``[headerref boost/local/function.hpp]        /local functions/``
     ``[headerref boost/local/block.hpp]           /local blocks/``
     ``[headerref boost/local/exit.hpp]            /local exits/``
-    ``[headerref boost/local/function_ref.hpp]    /references to local functions/``
+    ``[headerref boost/local/typeof.hpp]          /bound variable type deduction/``
+    ``[headerref boost/local/function.hpp]        /local functors/``
+    ``[headerref boost/local/config.hpp]          /configuration macros/``
 
 [endsect]
 
@@ -77,7 +78,7 @@ The following symbols are part of the library private API, they are not document
 *Rationale.*
 This library concatenates symbols specified by the programmers (e.g., the local function name) with other symbols (e.g., special prefixes or preprocessor line numbers) to make internal symbols with unique names to avoid name clashes.
 These symbols are separated by the letter "`X`" when they are concatenated so they can be read more easily while debugging the library.
-The underscore character "`_`" could not be used instead of the letter "`X`" because if the original symbols already contain a leading or trailing underscore the concatenation would result in a symbol with double underscores "`__`" which is reserved by the C++ standard.
+The underscore character "`_`" could not be used instead of the letter "`X`" because if the original symbols already contained a leading or trailing underscore, the concatenation would result in a symbol with double underscores "`__`" which is reserved by the C++ standard.
 ]
 
 * Any symbol defined by files within the `"boost/local/aux_/"` directory (these header files should not be directly included by programmers).
@@ -93,7 +94,7 @@ Some of the library behaviour can be changed at compile-time by defining special
 If a configuration macro is left undefined, the library will use an appropriate default value for it.
 
 All configuration macros have names prefixed by `BOOST_LOCAL_CONFIG` (see __Reference__ section).
-It is strongly recommended not to change this library configuration macros unless strictly necessary.
+It is strongly recommended not to change the library configuration macro definitions unless strictly necessary.
 
 [endsect]
 

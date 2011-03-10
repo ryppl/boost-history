@@ -30,10 +30,9 @@ xml doc
         <dependency>qbk/tutorial.qbk
         <dependency>qbk/advanced.qbk
         <dependency>reference
-        <dependency>qbk/grammar.qbk
-        <dependency>qbk/alternatives.qbk
         <dependency>qbk/examples.qbk
-        <dependency>qbk/rationale.qbk
+        <dependency>qbk/alternatives.qbk
+        <dependency>qbk/implementation.qbk
         <dependency>qbk/releases.qbk
         <dependency>qbk/bibliography.qbk
         <dependency>qbk/acknowledgements.qbk

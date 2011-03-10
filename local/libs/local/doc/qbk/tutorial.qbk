@@ -1,184 +1,143 @@
 
 [/ Copyright (C) 2009-2011 Lorenzo Caminiti ]
-[/ Use, modification, and distribution is subject to the Boost Software ]
-[/ License, Version 1.0 (see accompanying file LICENSE_1_0.txt or a ]
-[/ copy at http://www.boost.org/LICENSE_1_0.txt). ]
+[/ Use, modification, and distribution is subject to the ]
+[/ Boost Software License, Version 1.0 ]
+[/ (see accompanying file LICENSE_1_0.txt or a copy at ]
+[/ http://www.boost.org/LICENSE_1_0.txt). ]
 
 [section:Tutorial Tutorial]
 
-This section illustrates basic usages of local functions, local blocks, and local exits.
-
-[section Parenthesized Syntax]
-
-The /parenthesized syntax/ is used to pass the syntactic elements of a function signature as macro parameters in a way that resembles the usual C++ syntax.
-All the function signature elements are wrapped within round parenthesis `()` to form a __Boost_Preprocessor__ sequence called /parenthesized signature/.
-This allows to program preprocessor macros that can parse the parenthesized syntax expanding differently based on the different elements that are specified in the signature (if the function has parameters or not, if the result type token matches the `void` keyword or not, etc).
-
-[important
-The *general rules to program the parenthesized signature* are:
-
-1. Wrap all the signature syntactic elements within parenthesis `()`.
-[footnote
-The parenthesized syntax owes its name to the indeed large number of parenthesis `()` that are required to wrap its elements.
-Programmers might notice some similarities between the parenthesized syntax and the syntax of the __LISP__ programming language.
-However, these similarities are not intentional in that they were not a design choice but rather a consequence of the fact that both __LISP__ sequences and __Boost_Preprocessor__ sequences are formed by wrapping tokens within round parenthesis `()`.
-]
-
-2. If a token does not start with an alphanumeric symbol (i.e., `a-z`, `A-Z`, or `0-9`), replace the token with its alphanumeric equivalent (as indicated in the __Grammar__ section).
-[footnote
-*Rationale.*
-This constraint comes form the fact that the C++ preprocessor can only concatenate =##= alphanumeric symbols.
-]
-
-3. Empty parenthesis `()` are not allowed.
-[footnote
-*Rationale.*
-This constraint comes from the fact that the ISO C++ standard preprocessor forbids empty macro parameters (this is different for C99 and other more recent preprocessors).
-]
-
-4. Spaces and newlines do not matter and they can be used anywhere.
-]
-
-For example, let's rewrite the following C++ function signature using the parenthesized syntax:
-
-    int l(double& y, const double& x = 0.0)
-
-[*Step 1.]
-We start by wrapping all the syntactic elements within round parenthesis `()`:
-
-    (int) (l)( (double&)(y) (,) (const double&)(x)(=)(0.0) ) ``[*=/* wrap all elements within parenthesis `()` */=]``
-
-Note how parameter types are wrapped within parenthesis separately from parameter names.
-However, all the tokens of a parameter type are wrapped together within a single set of parenthesis because the parameter type is one single syntactic element of the function signature.
-For example, `x`'s type is specified by `(const double&)` and not by `(const)(double)(&)`.
-
-[*Step 2.]
-We note that the element `(,)` wraps the non-alphanumeric symbol "`,`" so it needs to be replaced.
-The parenthesized syntax requires no special delimiter to separate function parameters (see the __Grammar__ section) so `(,)` can simply be removed (if you like, you can use a space or a newline to separate the function parameters):
-
-    (int) (l)( (double&)(y) ``[*=/* use spaces or newlines instead of commas to separate parameters */=]`` (const double&)(x)(=)(0.0) )
-
-[*Step 3.]
-We note also that the element `(=)` wraps the non-alphanumeric symbol "`=`" so it also needs to be replaced.
-The parenthesized syntax uses the keyword `default` to specify a parameter default value (see the __Grammar__ section) so `(=)` is replaced by `(default)`:
-
-    (int) (l)( (double&)(y) (const double&)(x)``*(default)*``(0.0) )
-
-We are done.
-The following is the valid parenthesized signature:
-
-    (int) (l)( (double&)(y) (const double&)(x)(default)(0.0) )
-
-for a function:
-
-* With `int` result type.
-* Named `l`.
-* With one required parameter of type `double&` and named `y`.
-* With an optional parameter of type `const double&`, named `x`, and with default value `0.0`.
-
-[warning
-Unfortunately, there are intrinsic limitations to the amount of syntactic error checking that can be done by the parsing macros implemented using the preprocessor.
-As a consequence, an error in using the parenthesized syntax might result in *cryptic preprocessor errors*.
-The best way to identify and correct these errors is usually to visually inspect the signature comparing it with the parenthesized syntax grammar (see the __Grammar__ section).
-When syntactic errors can be detected by the parsing macros, they are raised at compile-time using error messages of the form `ERROR_`/description_text/.
-[footnote
-While there are fundamental limitations to the amount of parenthesized syntax error checking that can be done using the preprocessor (e.g., there is no way to gracefully detect and report a missing parenthesis "`)`"), the current implementation of the parsing macros does not perform all the error checking that could be done.
-Improving the parenthesized syntax error checking is a work in progress.
-Programmers are encouraged to report cryptic error messages they experience because of parenthesized syntax errors so to help this development effort.
-]
-]
-
-[h5 Functions With No Parameters]
-
-Let's rewrite the following C++ signature for a function with no parameters using the parenthesized syntax:
-
-    int l()
-
-If we wrap all the elements within parenthesis we have:
-
-    (int) (l)``*()*`` // Error: Empty parenthesis `()` cannot be used.
-
-However, this is not a valid parenthesized signature because it contains the empty parenthesis `()`.
-
-[note
-This limitation applies to the ISO C++ standard preprocessor but it does not apply to the C99 and other more recent preprocessors.
-This library allows the *use of empty parenthesis* `()` if the preprocessor used supports empty macro parameters.
-However, programmers should be well aware that if they use empty parenthesis in the parenthesized syntax, the code is not C++ ISO standard compliant and it will be less portable (that is why the use of empty parenthesis is excluded by the __Grammar__ section).
-]
-
-C++ also allows to use the keyword `void` to specify empty parameter lists.
-Therefore, the original C++ function signature can be equivalently rewritten as:
-
-    int l(void)
-
-If we now wrap all the elements within parenthesis we obtain the valid parenthesized signature:
-
-    (int) (l)( (void) ) // OK: Use `(void)` for empty parameter lists.
-
-In conclusion, the parenthesized syntax requires to use `(void)` to indicate an empty parameter list (see the __Grammar__ section).
-
-[endsect]
+This section illustrates basic usage of local functions, local blocks, and local exits.
 
 [section Local Functions]
 
-Local functions are defined using the following macros (see the __Reference__ section) from within a declarative context (this is a limitation with respect to __CPP0x_lambda__ functions which can instead appear within expressions):
+Local functions are defined using the following macros (see the __Reference__ section) from within a declarative context (this is a limitation with respect to __CPP0x_lambda__ functions which can instead be declared within expressions):
 
     { // Some declarative context.
         ...
 
-        __BOOST_LOCAL_FUNCTION__(
-        ``/parenthesized-signature/``
-        ) {
-            ``/local-function-body/``
-        } __BOOST_LOCAL_FUNCTION_END__(``/local-function-name/``)
+        ``/result-type/`` __BOOST_LOCAL_FUNCTION_PARAMS__(``/parameters/``) {
+            ``/body-code/``
+        } __BOOST_LOCAL_FUNCTION_NAME__(``/name/``)
 
         ...
     }
 
-This creates a functor object with the local function name that can be called from the enclosing scope.
-Note that:
+The expansion of this macros declares a functor object with the local function name that can be called from the enclosing scope.
+The usual C++ scope visibility rules apply to local functions for which a local function is visible and can be called only within the enclosing scope in which it is declared.
 
-* The usual C++ scope visibility rules apply to local functions for which a local function is visible and can be called only within the enclosing scope in which it is defined.
-* The local function signature is expressed using the parenthesized syntax and passed to the `__BOOST_LOCAL_FUNCTION__` macro.
-* The local function body is defined in a code block `{ ... }` using the usual C++ syntax.
+The local function parameters are passed to the `__BOOST_LOCAL_FUNCTION_PARAMS__` macro either using the /sequencing macro syntax/ (which separates the parameters by wrapping them within round parenthesis `()` and it is supported on all C++ compilers) or using the /variadic macro syntax/ (which separates the parameters using a comma `,` but it is supported only on C99 and later compilers):
+
+[table
+[ [Variadic Macro Syntax (C99 and later compilers)] [Sequencing Macro Syntax (all C++ compilers)] ]
+[ [
+`__BOOST_LOCAL_FUNCTION_PARAMS__(`[^/parameter-type1 parameter-name1/]`,` [^/parameter-type2 parameter-name2 .../]`)`
+] [
+`__BOOST_LOCAL_FUNCTION_PARAMS__( (`[^/parameter-type1 parameter-name1/]`) (`[^/parameter-type2 parameter-name2/]`)` [^/.../]`)`
+] ]
+]
+
+The local function body is specified in a code block `{ ... }` using the usual C++ syntax.
 The body is specified outside any of the macros so eventual compiler error messages and line numbers retain their usual meaning.
 [footnote
 *Rationale.*
 If the local function body were instead passed as a macro parameter, it would be expanded on a single line of code (because macros always expand as a single line of code).
 Therefore, eventual compiler error line numbers would all have the same value and would no longer be useful to pinpoint the error.
 ]
-* The macro `__BOOST_LOCAL_FUNCTION_END__` is used to end the local function definition and it must repeat the local function name.
+
+The macro `__BOOST_LOCAL_FUNCTION_NAME__` is used to end the local function definition and to specify the local function name.
 [footnote
 *Rationale.*
-The local function name must be passed to the ending macro `__BOOST_LOCAL_FUNCTION_END__` so this macro can declare a local variable with the local function name to hold the local functor object.
-At the same time, the local function name must also be passed to the declaration macro `__BOOST_LOCAL_FUNCTION__` to allow the local function to recursively call itself.
-The local function declaration and ending macros are kept as two separate macros so that the local function body does not have to be passed as a macro parameter (otherwise, the compiler error line numbers will all appear on the same line and they will no longer be useful to pinpoint the errors).
+The local function name must be passed to the macro `__BOOST_LOCAL_FUNCTION_NAME__` ending the function definition so this macro can declare a local variable with the local function name to hold the local functor object.
 ]
-The compiler will generate an error if the name specified by this macro does not match the one from the local function signature (see `__BOOST_LOCAL_FUNCTION_END_RENAME__` to remove this constraint).
 
-For example, let's program a local function `add` similar to the one in the example from the __Introduction__ section.
-We start by rewriting its signature:
+For example, let's program a local function named `add` that takes two integer numbers `x` and `y`, and adds them together -- for simplicity, we will not bind any of the variables in scope just yet (binding is explained later in this section):
 
-    void add(double num)
+[table
+[ [Variadic Macro Syntax (C99 and later compilers)] [Sequencing Macro Syntax (all C++ compilers)] ]
+[ [ [add_x_y_va_cpp] ] [ [add_x_y_cpp] ] ]
+]
 
-using the parenthesized syntax:
-
-    (void) (add)( (double)(num) )
-
-For simplicity, we will not bind any of the variables in scope just yet (binding is explained later in this section).
-
-Then we pass the parenthesized signature to the `__BOOST_LOCAL_FUNCTION__` macro, we implement a simple body that prints the number, and we pass the local function name `add` to the `__BOOST_LOCAL_FUNCTION_END__` macro:
-
-[add_num_cpp]
-
-This creates a local function `add` that can be called from within the enclosing scope as for example by the `add(100.0);` instruction.
+Note that not all compilers that support variadic macros also support empty macro parameters.
 
 [endsect]
 
-[section Binding]
+[section:Empty_Parameters Empty Parameters]
+
+C++ allows to specify a function with no parameters using the empty parenthesis `()`.
+For example, let's program a function `ten` which takes no parameter and returns the integer number `10`:
+
+    int ten() {
+        return 10;
+    }
+
+The ISO C++ standard does not allow pass empty parameters to a macro so the macro `__BOOST_LOCAL_FUNCTION_PARAMS__` cannot be invoked with an empty set of parenthesis `()` unless programmers use compiler extensions that support empty macro parameters (e.g., C99 and later compilers).
+However, C++ also allows to specify an empty parameter list using the keyword `void`:
+
+    int ten(void) {
+        return 10;
+    }
+
+Therefore, on all C++ compilers the macro `__BOOST_LOCAL_FUNCTION_PARAMS__` can be invoked passing one parameter `(void)` to specify an empty parameter list.
+In addition, on compilers that support variadic macros, the macro `__BOOST_LOCAL_FUNCTION_PARAMS__` can be invoked passing one parameter `void` (without the extra parenthesis).
+In summary, depending on your compiler support for empty macro parameters and variadic macros, this library accepts any of the following syntaxes to specify an empty parameter list:
+
+[table
+[ [Empty Macro Syntax (C99 and later compilers)] [Variadic Macro Syntax (C99 and later compilers)] [Sequencing Macro Syntax (all C++ compilers)] ]
+[ [
+`__BOOST_LOCAL_FUNCTION_PARAMS__()`
+] [
+`__BOOST_LOCAL_FUNCTION_PARAMS__(void)`
+] [
+`__BOOST_LOCAL_FUNCTION_PARAMS__( (void) )`
+] ]
+]
+
+For example, let's program the function `ten` as a local function:
+
+[table
+[ [Empty Macro Syntax (C99 and later compilers)] [Variadic Macro Syntax (C99 and later compilers)] [Sequencing Macro Syntax (all C++ compilers)] ]
+[ [ [ten_ep_cpp] ] [ [ten_va_cpp] ] [ [ten_cpp] ] ]
+]
+
+[endsect]
+
+[section Default Parameters]
+
+This library also allows to specify default values for the local function parameters.
+However, the usual C++ syntax for default parameters that uses the assignment symbol `=` cannot be used.
+[footnote
+[*Rationale.] The assignment symbol `=` cannot be used to specify default parameter values because default values are not part of the parameter type so they cannot be handled using template metaprogamming.
+Default parameter values need to be separated from the rest of the parameter declaration using the preprocessor.
+Specifically, this library needs to use preprocessor mataprogramming to remove default values when constructing the local function type and it counts the number of default values to provide the correct set of call operators for the local functor object.
+]
+The keyword `default` is used instead:
+
+[table
+[ [Variadic Macro Syntax (C99 and later compilers)] [Sequencing Macro Syntax (all C++ compilers)] ]
+[ [
+[^/parameter-type parameter-name/]`, default` [^/parameter-default-value/]`,` [^/.../]
+] [
+`(`[^/parameter-type parameter-name/]`)(default` [^/parameter-default-value/]`)` [^/.../]
+] ]
+]
+
+For example, let's assume that the we want to program a local function `add(x, y)` similar to the one programmed above but where the second parameter `y` is optional and has a default value of `2`:
+
+[table
+[ [Variadic Macro Syntax (C99 and later compilers)] [Sequencing Macro Syntax (all C++ compilers)] ]
+[ [ [add_x_y_default_va_cpp] ] [ [add_x_y_default_cpp] ] ]
+]
+
+If this variadic macro syntax seems strange, programmers could define a `WITH_DEFAULT` macro similar to the following if they think it improves readability:
+
+[add_x_y_default_with_va_cpp]
+
+[endsect]
+
+[section:Binding Binding]
 
 Variables in scope (local variables, enclosing function parameters, member variables, the object `this`, etc) can be bound to a local function declaration.
-Variables in scope can be bound by reference, by constant reference, by value, or by constant value.
 The types of bound variables are automatically deduced by this library using __Boost_Typeof__.
 [footnote
 *Rationale.*
@@ -192,104 +151,93 @@ This is especially useful for maintenance so if a bound variable type is changed
 User defined *types need to be manually registered* as usual when using __Boost_Typeof__ (see __Boost_Typeof__ documentation and the Local Exit example from the __Examples__ section).
 ]
 
-The parenthesized syntax introduces the additional "keyword" `bind` which is used to list all the bound variable names wrapped within parenthesis at the end of the local function parameter list (see the __Grammar__ section):
+This library introduces the new "keyword" `bind`
+[footnote
+The token `bind` is not a real keyword of the C++ language.
+This library parses `bind` during macro expansion using preprocessor metaprogramming.
+Therefore, `bind` can be considered a new "keyword" only at the preprocessor metaprogramming level within the syntax defined by the macros of this library -- thus it is referred to as a "keyword" only within quotes.
+]
+which is used in place of the parameter type to specify the name of a variable in scope to bind.
+The variable can be bound by value:
+    
+    bind ``/variable-name/`` // Bind by value.
+    
+Or by reference if the variable name is prefixed by `&`:
 
-    (``/result-type/``) (``function-name``)( ``/parameters/`` ``*(bind)(*``(``/var1/``)(``/var2/``)``/.../``(``/varN/``)``*)*`` )
+    bind& ``/variable-name/`` // Bind by reference.
+    
+Furthermore, the "keyword" `bind` can be prefixed by `const` to bind the variable by constant value:
+    
+    const bind ``/variable-name/`` // Bind by constant value.
 
-Where /var/ is the name of the variable in scope to bind and it is prefixed by `&` if the variable is bound by reference, otherwise is it bound by value.
-
-For example, let's assume we want to bind two variables in scope `a` and `b` to the local function `l` shown before.
-Let's also assume we want to bind `a` by value and `b` by reference.
-Then we use the following parenthesized signature for the local function:
-
-    (int) (l)( (double&)(y) (const double&)(x)(default)(0.0) (bind)((a)(&b)) )
-
+Or by constant reference:
+    
+    const bind& ``/variable-name/`` // Bind by constant value.
+    
 If a variable is bound by value, then a copy of the variable value is taken at the point of the local function declaration.
 If a variable is bound by reference instead, the variable will refer to the value it has at the point of the local function call.
-Furthermore, it is the programmers' responsibility to ensure that variables bound by reference survive the scope of declaration of the local function otherwise the bound references will be invalid causing run-time errors (in other words, the usual care in using C++ references must be used for variables in scope bound by reference).
-It is also possible to bind a local function to another local function as shown in the STL Transform example from the __Examples__ section (note that local functions cannot be copied so they are always bound by reference even if `&` is not specified).
+Furthermore, it is the programmers' responsibility to ensure that variables bound by reference survive the scope of declaration of the local function otherwise the bound references will be invalid causing run-time errors (in other words, the usual care in using C++ references must be used for variables bound by reference).
 
 The type of bound variables is automatically deduced and it is the exact same type used to declare such variables in the enclosing scope.
-Therefore:
-
-* If a bound variable was declared constant using the `const` qualifier then it will be bound by constant value or reference.
-* If a bound variable was not declared constant then it will not be bound as constant.
-This library allows to force constant biding even for variables that are not originally declared constant using `(const bind)(...)` as explained below.
-* You might want to bind variables of complex types by (constant) reference instead than by value to avoid expensive copy operations when these variables are automatically passed to the local function (as usual with C++ function parameter passing).
-
-For example, let's continue to program a local function `add` similar to the one from the example in __Introduction__ section.
-We bind the local variable `sum` by (non-constant) reference and update the body to perform the summation:
-
-[add_num_sum_cpp]
-
-[h5 Constant Binding]
-
-Constant binding allows to bind variables in scope by constant reference or constant value (constant binding is not supported by __CPP0x_lambda__ functions).
+Therefore, if a bound variable was declared constant using the `const` qualifier then it will be bound by constant value or reference and if a bound variable was not declared constant then it will not be bound as constant unless constant binding is forced using `const bind ...` (note that binding by constant reference is not supported by __CPP0x_lambda__ functions).
 [footnote
 An historical note: Constant binding of variables in scope was the main use case that originally motivated the authors in developing this library.
 The authors needed to locally create a chuck of code to assert some correctness conditions while these assertions were not supposed to modify any of the variables they were using (see the __Contractpp__ library).
 This was achieved by binding by constant reference the variables needed by the assertions and then by programming the local function body to check the assertions (or more conveniently by using `__BOOST_LOCAL_BLOCK__`).
 This way if any of the assertions mistakenly changes a bound variable (for example confusing the operator `==` with `=`), the compiler correctly generates an error because the bound variable is of `const` type within the local function body.
 ]
+Programmers might want to bind variables of complex types by (constant) reference instead than by value to avoid expensive copy operations when these variables are automatically passed to the local function (as usual with C++ function parameter passing).
 
-The parenthesized syntax uses the "keywords" `const bind` to list constant bound variables wrapped within parenthesis at the end of the function parameter list (see the __Grammar__ section):
+For example, let's program a local function `add` similar to the one in the example from the __Introduction__ section.
+We bind the local variable `factor` by constant value, the local variable `sum` by (non-constant) reference, and program the body to perform the summation:
 
-    (``/result-type/``) (``function-name``)( ``/parameters/`` ``*(const bind)(*``(``/cvar1/``)(``/cvar2/``)``/.../``(``/cvarM/``)``*)*`` )
-
-Where /cvar/ is the name of the variable in scope to bind by constant and it is prefixed by `&` if the variable is bound by constant reference, otherwise it is bound by constant value.
-If both constant and plain bindings are used, constant bindings must be specified before plain bindings (see the __Grammar__ section):
-
-    (``/result-type/``) (``function-name``)( ``/parameters/`` (const bind)((``/cvar1/``)(``/cvar2/``)``/.../``(``/cvarM/``)) (bind)((``/var1/``)(``/var2/``)``/.../``(``/varN/``)) ) /* `(const bind)(...)` before `(bind)(...)` */
-
-For example, let's assume we want to bind two variables in scope `c` and `d` to the local function `l` shown before.
-Let's also assume we want to bind `c` by constant value and `b` by costant reference.
-Then we use the following parenthesized signature for the local function:
-
-    (int) (l)( (double&)(y) (const double&)(x)(default)(0.0) (const bind)((c)(&d)) )
-    
-If the variables in scope `a` and `b` are also bound but by (plain) value and reference respectively then the parenthesized signature becomes:
-    
-    (int) (l)( (double&)(y) (const double&)(x)(default)(0.0) (const bind)((c)(&d)) (bind)((a)(&b)) )
-
-Note how `(const bind)(...)` must always be used before `(bind)(...)` when they are both present.
-
-For example, let's continue to program a local function `add` similar to the one in the example from the __Introduction__ section.
-We bind the local variable `factor` by constant value and update the body to perform the factor scaling:
-
-[add_num_factor_sum_cpp]
+[table
+[ [Variadic Macro Syntax (C99 and later compilers)] [Sequencing Macro Syntax (all C++ compilers)] ]
+[ [ [add_num_factor_sum_va_cpp] ] [ [add_num_factor_sum_cpp] ] ]
+]
 
 [h5 Binding the Object `this`]
 
-It is also possible to bind the object `this` when it is in scope (from enclosing member functions, etc).
+It is also possible to bind the object `this` when it is in scope (e.g., from an enclosing member function).
 This is done by using `this` as the name of the variable to bind and by using the special symbol `this_` (instead of `this`) to access the object within the local function body.
-Note that:
 
-* The object `this` can be bound by value using `(bind)((this)...)`.
-In this case the local function will be able to modify the object when the enclosing scope is a non-constant member, or it will not be able to modify the object when the enclosing scope is a constant member.
-* The object `this` can be bound by constant value `(const bind)((this)...)`.
+The object `this` can be bound by value:
+
+    bind this // Bind the object `this` by value.
+
+In this case the local function will be able to modify the object when the enclosing scope is not a constant member, or it will not be able to modify the object when the enclosing scope is a constant member.
+Otherwise, the object `this` can be bound by constant value:
+
+    const bind this // Bind the object `this` by constant value.
+
 In this case the local function will never be able to modify the object (regardless of whether the enclosing scope is a constant member or not).
-* Finally, the object `this` can never be bound by reference because C++ does not allow to get a reference to `this`.
-You will get a compile-time error if you try to use `(bind)((&this)...)` or `(const bind)((&this)...)`.
-However, `this` is a pointer so the object is not copied even if it is bound by value.
-(Note that it is not possible to bind `*this` because it starts with `*` and it is not a variable name.)
 
-[important
+Note that the object `this` can never be bound by reference because C++ does not allow to obtain a reference to `this` (the library will generate a compile-time error if programmers try to use `bind& this` or `const bind& this`).
+Note that `this` is a pointer so the object is not copied even if it is bound by value (it is not possible to bind `*this` because `*this` is an expression and not a valid name of a variable in scope).
+
+[warning
 When the object `this` is bound to a local function, the local function *body must use the special symbol* `this_` (instead of `this`) to access the bound object.
 [footnote
 *Rationale.*
 This limitation comes from the fact that `this` is a reserved C++ keyword so it cannot be used as the name of the internal parameter passing the bound object to the local function body.
 It would be possible to use `this` (instead of `this_`) within the local function body either at the expenses of copying the bound object (which would introduce run-time overhead and also the stringent requirement that the bound object must have a deep copy constructor) or by relying on an [@http://groups.google.com/group/comp.lang.c++.moderated/browse_thread/thread/d3a86f27277f713b undefined behaviour of `static_cast`] (which might not work on all platforms at the cost of portability).
 ]
-Using `this` within the local function body will generate a compile-time error so programmers cannot mistakenly confuse the use of `this_` with `this`.
+
+Unfortunately, mistakenly using `this` within the local function body instead of `this_` will not necessarily generate a compile-time error.
 [footnote
 *Rationale.*
-This is because the body function is implemented as static function of the local functor class.
+The local function body cannot be a static member function of the local functor object in order to support recursion (because the local function name is specified by the `__BOOST_LOCAL_FUNCTION_NAME__` macro only after the body so it must be make available via a functor member variable named after the local function and local classes cannot have static member variables in C++) and nesting (because the argument binding variable must be declared as a member function so it is visible in a local function nested within another local function body).
+Therefore, from within the local function body the variable `this` is visible but it refers to the local functor object and not to the bound object.
 ]
+Programmers are responsible to make sure that `this` is never used within a local function body which should only use the special symbol `this_`.
 ]
 
 For example, let's rewrite a local function `add` similar to the one in the example from the __Introduction__ section but using a member function to illustrate how to bind the object `this`:
 
-[add_this_cpp]
+[table
+[ [Variadic Macro Syntax (C99 and later compilers)] [Sequencing Macro Syntax (all C++ compilers)] ]
+[ [ [add_this_va_cpp] ] [ [add_this_cpp] ] ]
+]
 
 [endsect]
 
@@ -300,48 +248,34 @@ Local blocks are defined using the following macros within a declarative context
     { // Some declarative context.
         ...
 
-        __BOOST_LOCAL_BLOCK__( ``/parenthesized-binding/`` ) {
-            ``/block-body/``
+        __BOOST_LOCAL_BLOCK__(``/bindings/``) {
+            ``/body-code/``
         } __BOOST_LOCAL_BLOCK_END__
 
         ...
     }
 
-This expands to code that executes the body instructions in place where the block is defined.
-However, only bound variables specified by the /parenthesized-binding/ are accessible from within the local block body.
+These macros expand to code that executes the body instructions "in place" where the block is defined.
 
-Adopting a parenthesized syntax similar to the one used for local functions (see the __Grammar__ section), the /parenthesized-binding/ can specify to bind no variable:
-
-    (void)
-
-Or, to bind variables by constant type only:
-
-    (const bind)((``/cvar1/``)(``/cvar2/``)``/.../``(``/cvarM/``))
-
-Or, to bind variables by plain type only:
-
-    (bind)((``/var1/``)(``/var2/``)``/.../``(``/varN/``))
-
-Or, to bind variables by both constant and plain types:
-
-    (const bind)((``/cvar1/``)(``/cvar2/``)``/.../``(``/cvarM/``)) (bind)((``/var1/``)(``/var2/``)``/.../``(``/varN/``))
-
-Where /cvar/ and /var/ are the names of the variables in scope to bind.
-They can be prefixed by `&` to bind by reference instead of by value, and one of them can be `this` to bind the object when it is in scope.
+Only bound variables specified bu [^/bindings/] are accessible from within the local block body.
+Following the same syntax used for local functions, [^['bindings]] can either be empty (using `(void)`, `void`, or an empty macro parameter depending on your compiler extensions, see __Tutorial_Empty_Parameters__), or they can list the variables to bind using the "keyword" `bind` in place of the parameter type, using `const bind` for constant binding, prefixing the bound variable name with `&` to bind by reference, and using `this` to bind the object in scope (see __Tutorial_Binding__).
 
 [important
-A `return;` instruction from within a local block jumps to the end of the local block body and *it does not return the enclosing scope*.
+A `return;` instruction from within a local block jumps to the end of the local block body and *it does not return the enclosing function*.
 [footnote
 *Rationale.*
 Programmers might expect `return;` to exit the enclosing function instead of the local block (or local exit), especially if the enclosing function has a `void` result type.
-However, using `return;` to exit local blocks (and local exits) seemed to follow a more natural syntax and also it is the same syntax already provided by __Boost_ScopeExit__ (in fact, `return;` is used by __Boost_ScopeExit__ to exit the local scope and not to exit the enclosing scope).
-However, if programmers were to find this use of `return;` confusing, this library API could be changed to forbid the use of `return` from within local blocks (and local exits) generating a compile-time error, and to use a different instruction (e.g., `break;` or a special macro instruction like `BOOST_LOCAL_RETURN;`) to exit local blocks (and local exits).
+However, using `return;` to exit local blocks (and local exits) seemed to follow a natural syntax and also it is the same syntax already provided by __Boost_ScopeExit__ (in fact, `return;` is used by __Boost_ScopeExit__ to exit the local scope and not to exit the enclosing scope).
+If programmers were to find this use of `return;` confusing, this library API could be changed to forbid the use of `return` from within local blocks (and local exits) generating a compile-time error, and to use a different instruction (e.g., `break;` or a special macro instruction like `BOOST_LOCAL_RETURN;`) to exit local blocks (and local exits).
 ]
 ]
 
 For example, let's program a local block similar to the one in the example from the __Introduction__ section:
 
-[add_block_cpp]
+[table
+[ [Variadic Macro Syntax (C99 and later compilers)] [Sequencing Macro Syntax (all C++ compilers)] ]
+[ [ [add_block_va_cpp] ] [ [add_block_cpp] ] ]
+]
 
 [endsect]
 
@@ -352,38 +286,60 @@ Local exits are defined using the following macros within a declarative context 
     { // Some declarative context.
         ...
 
-        __BOOST_LOCAL_EXIT__( ``/parenthesized-binding/`` ) {
+        __BOOST_LOCAL_EXIT__(``/bindings/``) {
             ``/exit-body/``
         } __BOOST_LOCAL_EXIT_END__
 
         ...
     }
 
-This expands to code that executes the body instructions when the enclosing scope is exited (i.e., at the very end of the enclosing scope).
-If multiple local exits are defined within the same scope, their bodies will be executed in the reverse order in which they have been defined.
-Only bound variables specified by /parenthesized-binding/ are accessible from within the local exit body.
-The /parenthesized-biding/ is specified following the exact same syntax as for the one used by local blocks.
+These macros expand to code that executes the body instructions when the enclosing scope is exited (i.e., at the very end of the enclosing scope).
+If multiple local exits are declared within the same scope, their bodies will be executed in the reverse order in which they have been declared.
+The execution of the local exit code can be guaranteed only if the program does not terminate because of an uncaught exception.
+[footnote
+*Rationale.*
+This library (as well as __Boost_ScopeExit__) uses the destructor of a local variable to automatically execute the local exit code upon exit of the enclosing scope.
+However, in C++ it is no possible to (portably) ensure the execution of the destructor of all objects if the main program terminates because of an uncaught exception.
+(This is different from the D programming language which executes the scope exit code even if the main program terminates because of an uncaught exception.)
+]
 
-[note
-A `return;` instruction from within a local exit jumps to the end of the local exit body and *it does not return the enclosing scope*.
+Only bound variables specified by [^['bindings]] are accessible from within the local exit body.
+Following the same syntax used for local functions, [^['bindings]] can either be empty (using `(void)`, `void`, or an empty macro parameter depending on your compiler extensions, see __Tutorial_Empty_Parameters__), or they can list the variables to bind using the "keyword" `bind` in place of the parameter type, using `const bind` for constant binding, prefixing the bound variable name with `&` to bind by reference, and using `this` to bind the object in scope (see __Tutorial_Binding__).
+
+[important
+A `return;` instruction from within a local exit jumps to the end of the local exit body and *it does not return the enclosing function*.
 ]
 
 For example, let's program a local exit similar to the one in the example from the __Introduction__ section:
 
-[add_exit_cpp]
+[table
+[ [Variadic Macro Syntax (C99 and later compilers)] [Sequencing Macro Syntax (all C++ compilers)] ]
+[ [ [add_exit_va_cpp] ] [ [add_exit_cpp] ] ]
+]
 
-Local exits are very similar to the functionality already provided by __Boost_ScopeExit__ with the addition that they also support constant binding and the binding of the object `this`.
+Local exits are very similar to the /scope exits/ provided by __Boost_ScopeExit__ with the addition that they also support constant binding and binding of the object `this`.
 [footnote
 *Rationale.*
 This library could be merged together with __Boost_ScopeExit__ into a new library named Boost.Scope (from the meaning of the word "[@http://en.wikipedia.org/wiki/Scope_(programming) scope]" in computer programming).
 This would be justified by the fact that `__BOOST_LOCAL_EXIT__` simply extends the functionality already provided by `BOOST_SCOPE_EXIT`.
-The headers will be `"boost/scope/function.hpp"`, `"boost/scope/block.hpp"`, and `"boost/scope/exit.hpp"`.
-For backward compatibility with __Boost_ScopeExit__, the header `"boost/scope_exit.hpp"` could also be kept and it would be equivalent to including `"boost/scope/exit.hpp"`.
-In addition and again for backward compatibility, the `BOOST_SCOPE_EXIT` macro could be extended to accept either the original __Boost_ScopeExit__ sequence of `(var1)...(varN)` without the `bind` "keyword" (which would be equivalent to plain binding) or the parenthesized binding sequence with the `(bind)(...)` and `(const bind)(...)` "keywords" plus the binding of the object `this`.
-Local blocks would be named "scope blocks" and they would be provided by the `BOOST_SCOPE_BLOCK...` macros.
+The headers will be `"boost/scope/function.hpp"`, `"boost/scope/block.hpp"`, and `"boost/scope/exit.hpp"` (for backward compatibility with __Boost_ScopeExit__, the header `"boost/scope_exit.hpp"` could also be kept and it would be equivalent to including `"boost/scope/exit.hpp"`).
+However, the new `BOOST_SCOPE_EXIT` macro will not be backward compatible with the current __Boost_ScopeExit__ macro because it will require to prefix the bound variable with `bind` or `const bind` (in order to differentiate from constant and non-constant binding).
+Local blocks would be named "scope blocks" and they would be provided by the `BOOST_SCOPE_BLOCK...` macros (the "scope block" names seem reasonably expressive).
 However, local functions would have to be named "scope functions" and they would be provided by the `BOOST_SCOPE_FUNCTION...` macros.
-This might not be ideal because local functions are not known under the name of "scope functions" (they are indeed known by the name of "local functions" or "[@http://gcc.gnu.org/onlinedocs/gcc/Nested-Functions.html nested functions]").
+These names might not expressive enough because local functions are not known under the name of "scope functions" -- they are indeed known by either the name of "local functions" or by the name of "[@http://gcc.gnu.org/onlinedocs/gcc/Nested-Functions.html nested functions]".
 ]
+
+[h5 D's Scope Guards]
+
+Local exits are very similar to the [@http://www.digitalmars.com/d/2.0/statement.html scope exit] statements provided by the D programming language.
+Local exits can be used also to emulate D's [@http://www.digitalmars.com/d/2.0/statement.html scope success] and [@http://www.digitalmars.com/d/2.0/statement.html scope failure] statements using a local variable that is set when an error occurs.
+For example, using error codes:
+
+[scope_guards_errno_cpp]
+
+Or similarly but using exceptions:
+
+[scope_guards_except_cpp]
 
 [endsect]
 
@@ -396,16 +352,18 @@ Within templates, this library needs to use `typename` to explicitly indicate th
 Because C++ does not allow this use of `typename` outside templates, the special `TPL` macros are used to indicate that the enclosing scope is a template so this library can safety use `typename` to resolve expression type ambiguities.
 ]
 
-    __BOOST_LOCAL_FUNCTION_TPL__( ``/parenthesized-signature/`` )
-    __BOOST_LOCAL_BLOCK_TPL__( ``/parenthesized-binding/`` )
-    __BOOST_LOCAL_EXIT_TPL__( ``/parenthesized-binding/`` )
+    __BOOST_LOCAL_FUNCTION_PARAMS_TPL__(``/parameters/``)
+    __BOOST_LOCAL_BLOCK_TPL__(``/bindings/``)
+    __BOOST_LOCAL_EXIT_TPL__(``/bindings/``)
 
-These macros have the exact same API as their equivalents without the `TPL` postfix that we have seen so far.
-The local function, local block, and local exit ending macros (with the `END` postfix) can be used unchanged within templates.
+These macros have the exact same API as their equivalent macros without the `TPL` postfix that we have seen so far.
 
-For example, let's rewrite an example similar to the one from the __Introduction__ section but wrapped within a template:
+For example, let's rewrite a local function, a local exit, and a local block similar to the ones from the __Introduction__ section but wrapped within a template:
 
-[add_template_cpp]
+[table
+[ [Variadic Macro Syntax (C99 and later compilers)] [Sequencing Macro Syntax (all C++ compilers)] ]
+[ [ [add_template_va_cpp] ] [ [add_template_cpp] ] ]
+]
 
 [endsect]
 

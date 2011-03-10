@@ -8,13 +8,6 @@
 
 * Docs: `this` can never be bound by ref (as usual in C++).
 
-* Docs: If `, default ...` syntax seems strange for C99, programmers can always use `#define WITH_DEFAULT(x) , default x` or similar macro instead.
-
-* Docs: Add D-Stype Scope Guards examples to docs.
-
-* Docs: Document that nesting is (now) possible.
-
-
 * Code: Optimize macro expansion code for C++0x, C++03, etc. From John Bytheway:
 > Yes, in C++0x local structs can be passed as template parameters.
 > Obviously, in C++0x there are lambdas too, so you might think your

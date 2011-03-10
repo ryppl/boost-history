@@ -76,17 +76,12 @@
             manual of the library public API.
           </li>
 <li class="listitem">
-            The <a class="link" href="Grammar.html" title="Appendix: Grammar">Grammar</a> section formally
-            describes the parenthesized syntax used by this library to specify the
-            local function signatures.
+            The <a class="link" href="Examples.html" title="Appendix: Examples">Examples</a> section lists
+            the source code of a few additional examples that use this library.
           </li>
 <li class="listitem">
             The <a class="link" href="Alternatives.html" title="Appendix: Alternatives">Alternatives</a> section
             describes alternatives to this library to implement local functions.
-          </li>
-<li class="listitem">
-            The <a class="link" href="Examples.html" title="Appendix: Examples">Examples</a> section lists
-            the source code of a few additional examples that use this library.
           </li>
 </ul></div>
 <p>
@@ -177,7 +172,9 @@
 <pre class="programlisting"><code class="computeroutput"><a class="link" href="../reference.html#header.boost.local.function_hpp" title="Header &lt;boost/local/function.hpp&gt;">boost/local/function.hpp</a></code>        <span class="emphasis"><em>local functions</em></span>
 <code class="computeroutput"><a class="link" href="../reference.html#header.boost.local.block_hpp" title="Header &lt;boost/local/block.hpp&gt;">boost/local/block.hpp</a></code>           <span class="emphasis"><em>local blocks</em></span>
 <code class="computeroutput"><a class="link" href="../reference.html#header.boost.local.exit_hpp" title="Header &lt;boost/local/exit.hpp&gt;">boost/local/exit.hpp</a></code>            <span class="emphasis"><em>local exits</em></span>
-<code class="computeroutput">boost/local/function_ref.hpp</code>    <span class="emphasis"><em>references to local functions</em></span>
+<code class="computeroutput">boost/local/typeof.hpp</code>          <span class="emphasis"><em>bound variable type deduction</em></span>
+<code class="computeroutput"><a class="link" href="../reference.html#header.boost.local.function_hpp" title="Header &lt;boost/local/function.hpp&gt;">boost/local/function.hpp</a></code>        <span class="emphasis"><em>local functors</em></span>
+<code class="computeroutput"><a class="link" href="../reference.html#header.boost.local.config_hpp" title="Header &lt;boost/local/config.hpp&gt;">boost/local/config.hpp</a></code>          <span class="emphasis"><em>configuration macros</em></span>
 </pre>
 </div>
 <div class="section">
@@ -186,7 +183,7 @@
 </h3></div></div></div>
 <p>
         The following symbols are part of the library private API, they are not documented,
-        and they should not be directly used by programmers: <sup>[<a name="id865081" href="#ftn.id865081" class="footnote">1</a>]</sup>
+        and they should not be directly used by programmers: <sup>[<a name="id865347" href="#ftn.id865347" class="footnote">2</a>]</sup>
       </p>
 <div class="itemizedlist"><ul class="itemizedlist" type="disc">
 <li class="listitem">
@@ -220,13 +217,13 @@
 <p>
         All configuration macros have names prefixed by <code class="computeroutput"><span class="identifier">BOOST_LOCAL_CONFIG</span></code>
         (see <a href="../reference.html" target="_top">Reference</a> section). It is strongly
-        recommended not to change this library configuration macros unless strictly
-        necessary.
+        recommended not to change the library configuration macro definitions unless
+        strictly necessary.
       </p>
 </div>
 <div class="footnotes">
 <br><hr width="100" align="left">
-<div class="footnote"><p><sup>[<a id="ftn.id865081" href="#id865081" class="para">1</a>] </sup>
+<div class="footnote"><p><sup>[<a id="ftn.id865347" href="#id865347" class="para">2</a>] </sup>
           <span class="bold"><strong>Rationale.</strong></span> This library concatenates symbols
           specified by the programmers (e.g., the local function name) with other
           symbols (e.g., special prefixes or preprocessor line numbers) to make internal
@@ -235,9 +232,10 @@
           when they are concatenated so they can be read more easily while debugging
           the library. The underscore character "<code class="computeroutput"><span class="identifier">_</span></code>"
           could not be used instead of the letter "<code class="computeroutput"><span class="identifier">X</span></code>"
-          because if the original symbols already contain a leading or trailing underscore
-          the concatenation would result in a symbol with double underscores "<code class="computeroutput"><span class="identifier">__</span></code>" which is reserved by the C++
-          standard.
+          because if the original symbols already contained a leading or trailing
+          underscore, the concatenation would result in a symbol with double underscores
+          "<code class="computeroutput"><span class="identifier">__</span></code>" which is
+          reserved by the C++ standard.
         </p></div>
 </div>
 </div>

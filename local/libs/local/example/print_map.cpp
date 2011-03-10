@@ -20,13 +20,13 @@ typedef int const& sign_t;
 
 int main() {
     void BOOST_LOCAL_FUNCTION_PARAMS(
-            // Identity macors handle commas.
+            // Identity macros handle commas.
             (BOOST_IDENTITY_TYPE((const std::map<std::string, size_t>))& m)
-            (const size_t& factor)(default // Or just use `(default (...))`.
-                BOOST_IDENTITY_VALUE((key_size<std::string, size_t>::value)))
-            (const std::string& separator)(default cat(":", " "))
-            // Also, identity macors handle leading symbols.
-            (BOOST_IDENTITY_TYPE((::sign_t)) sign)(default -1) ) {
+            // Also, identity macros handle leading symbols.
+            (BOOST_IDENTITY_TYPE((::sign_t)) sign)(default -1) 
+            (const size_t& factor)(default // Or use `BOOST_IDENTITY_VALUE`.
+                    (key_size<std::string, size_t>::value))
+            (const std::string& separator)(default cat(":", " ")) ) {
         for (std::map<std::string, size_t>::const_iterator i = m.begin();
                 i != m.end(); ++i) {
             std::cout << i->first << separator <<
