@@ -1,0 +1,23 @@
+
+[section:Implementation Appendix: Implementation]
+
+[section Local Functions]
+
+[factorial_impl_cpp]
+
+[endsect]
+
+[section Local Blocks]
+
+[add_block_impl_cpp]
+
+[endsect]
+
+[section Local Exits]
+
+[add_exit_impl_cpp]
+
+[endsect]
+
+[endsect]
+
