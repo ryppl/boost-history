@@ -17,7 +17,7 @@
       /* void* with fundamental or pointer */\
       ::boost::type_traits::ice_and<\
          ::boost::is_pointer< lhs_noref >::value,\
-         ::boost::is_void< typename ::boost::remove_pointer< lhs_noref >::type >::value,\
+         ::boost::is_void< lhs_noptr >::value,\
          ::boost::type_traits::ice_or<\
             ::boost::is_fundamental< rhs_nocv >::value,\
             ::boost::is_pointer< rhs_noref >::value\
@@ -25,7 +25,7 @@
       >::value,\
       ::boost::type_traits::ice_and<\
          ::boost::is_pointer< rhs_noref >::value,\
-         ::boost::is_void< typename ::boost::remove_pointer< rhs_noref >::type >::value,\
+         ::boost::is_void< rhs_noptr >::value,\
          ::boost::type_traits::ice_or<\
             ::boost::is_fundamental< lhs_nocv >::value,\
             ::boost::is_pointer< lhs_noref >::value\
@@ -34,7 +34,7 @@
       /* LHS==pointer!=void* and RHS==fundamental non integral */\
       ::boost::type_traits::ice_and<\
          ::boost::is_pointer< lhs_noref >::value,\
-         ::boost::type_traits::ice_not< ::boost::is_void< typename ::boost::remove_pointer< lhs_noref >::type >::value >::value,\
+         ::boost::type_traits::ice_not< ::boost::is_void< lhs_noptr >::value >::value,\
          ::boost::is_fundamental< rhs_nocv >::value,\
          ::boost::type_traits::ice_not< ::boost::is_integral< rhs_noref >::value >::value\
       >::value,\

@@ -167,6 +167,7 @@ template < typename RHS, typename RET >
 struct BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl) {
    typedef typename ::boost::remove_reference<RHS>::type rhs_noref;
    typedef typename ::boost::remove_cv<rhs_noref>::type rhs_nocv;
+   typedef typename ::boost::remove_cv< typename ::boost::remove_reference< typename ::boost::remove_pointer<rhs_noref>::type >::type >::type rhs_noptr;
    BOOST_STATIC_CONSTANT(bool, value = (BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl1) < rhs_noref, RET, BOOST_TT_FORBIDDEN_IF >::value));
 };
 

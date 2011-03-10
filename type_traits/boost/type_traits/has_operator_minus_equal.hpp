@@ -33,7 +33,7 @@
          ::boost::is_pointer< lhs_noref >::value,\
          ::boost::is_fundamental< rhs_nocv >::value,\
          ::boost::type_traits::ice_or<\
-            ::boost::is_void< typename ::boost::remove_pointer< lhs_noref >::type >::value,\
+            ::boost::is_void< lhs_noptr >::value,\
             ::boost::type_traits::ice_not< ::boost::is_integral< rhs_noref >::value >::value\
          >::value\
       >::value\

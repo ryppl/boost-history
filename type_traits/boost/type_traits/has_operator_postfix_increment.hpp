@@ -17,7 +17,7 @@
    ::boost::type_traits::ice_or<\
       ::boost::type_traits::ice_and<\
          ::boost::is_pointer< lhs_noref >::value,\
-         ::boost::is_void< typename ::boost::remove_pointer< lhs_noref >::type >::value\
+         ::boost::is_void< lhs_noptr >::value\
       >::value,\
       ::boost::type_traits::ice_and<\
          ::boost::is_fundamental< lhs_nocv >::value,\

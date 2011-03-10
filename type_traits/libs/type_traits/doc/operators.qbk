@@ -309,8 +309,10 @@ struct has_operator_unary_minus_impl1< void, void, false > {
 // defines some typedef for convenience
 template < typename RHS, typename RET >
 struct has_operator_unary_minus_impl {
+   // shortcuts for writing forbidden_if
    typedef typename ::boost::remove_reference<RHS>::type rhs_noref;
    typedef typename ::boost::remove_cv<rhs_noref>::type rhs_nocv;
+   typedef typename ::boost::remove_cv< typename ::boost::remove_reference< typename ::boost::remove_pointer<rhs_noref>::type >::type >::type rhs_noptr;
    static const bool value=(has_operator_unary_minus_impl1 < rhs_noref, RET, ::boost::is_pointer< rhs_noref >::value >::value);
 };
 } // namespace has_operator_unary_minus_impl

@@ -23,16 +23,17 @@
          ::boost::is_pointer< rhs_noref >::value,\
          ::boost::is_fundamental< lhs_nocv >::value\
       >::value,\
-      /* two pointers but no inheritance */\
+      /* two pointers but no inheritance or no void* */\
       ::boost::type_traits::ice_and<\
          ::boost::is_pointer< lhs_noref >::value,\
          ::boost::is_pointer< rhs_noref >::value,\
          ::boost::type_traits::ice_not<\
             ::boost::type_traits::ice_or<\
-               ::boost::is_base_of< typename ::boost::remove_reference< typename ::boost::remove_pointer< lhs_noref >::type >::type, typename ::boost::remove_reference< typename ::boost::remove_pointer< rhs_noref >::type >::type >::value,\
-               ::boost::is_base_of< typename ::boost::remove_reference< typename ::boost::remove_pointer< rhs_noref >::type >::type, typename ::boost::remove_reference< typename ::boost::remove_pointer< lhs_noref >::type >::type >::value,\
-               ::boost::is_void< typename ::boost::remove_pointer< lhs_noref >::type >::value,\
-               ::boost::is_void< typename ::boost::remove_pointer< rhs_noref >::type >::value\
+               ::boost::is_base_of< lhs_noptr, rhs_noptr >::value,\
+               ::boost::is_base_of< rhs_noptr, lhs_noptr >::value,\
+               ::boost::is_same< lhs_noptr, rhs_noptr >::value,\
+               ::boost::is_void< lhs_noptr >::value,\
+               ::boost::is_void< rhs_noptr >::value\
             >::value\
          >::value\
       >::value\
