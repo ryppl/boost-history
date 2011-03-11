@@ -23,33 +23,38 @@ namespace test_assign_v2{
 namespace xxx_ref{
 namespace xxx_list{
 
+	// --User may skip this file-- //
+    // It checks internal details. //
+    // --------------------------- //        
+
     void test()
     {
-        namespace as2 = boost::assign::v2;
-        typedef boost::use_default tag_;
+    	using namespace boost;
+        namespace as2 = assign::v2;
+        typedef use_default tag_;
         typedef std::string str_;
         {
             typedef int t0_;
             typedef int const t1_;
             typedef const char t2_ [2];
-            typedef boost::add_reference<t0_>::type r0_;
+            typedef add_reference<t0_>::type r0_;
 
 
 /* // TODO possible extension
 #ifndef BOOST_NO_RVALUE_REFERENCES
             typedef int r1_;
 #else*/
-            typedef boost::add_reference<t1_>::type r1_;
+            typedef add_reference<t1_>::type r1_;
 //#endif
-            typedef boost::add_reference<t2_>::type r2_;
+            typedef add_reference<t2_>::type r2_;
 
             t0_ a = 0;
 #define B 2
             t2_ c = "c";
 
             typedef as2::ref::nth_result_of::list<tag_> result_;
-            typedef boost::mpl::apply1<result_,
-                boost::mpl::vector<r0_, r1_, r2_>
+            typedef mpl::apply1<result_,
+                mpl::vector<r0_, r1_, r2_>
             >::type ar_;
             ar_ ar = as2::ref::list<tag_>( as2::_nil )( a )( B )( c );
             // TODO GCC4.4 wants fully qual
@@ -60,15 +65,15 @@ namespace xxx_list{
 #undef B
         }
         {
-            typedef int t_; typedef boost::add_reference<t_>::type r_;
+            typedef int t_; typedef add_reference<t_>::type r_;
             t_ a = 0;
             t_ b = 1;
             t_ c = 2;
             typedef as2::ref::copy_wrapper<t_>::type w_;
-            typedef boost::array<w_,3> arw_;
+            typedef array<w_,3> arw_;
             typedef as2::ref::nth_result_of::list<tag_> result_;
-            typedef boost::mpl::apply1<result_,
-                boost::mpl::vector<r_, r_, r_>
+            typedef mpl::apply1<result_,
+                mpl::vector<r_, r_, r_>
             >::type ar_;
             ar_ ar = as2::ref::list<tag_>( as2::_nil )( a )( b )( c );
             arw_ arw;
@@ -87,8 +92,8 @@ namespace xxx_list{
                 typedef as2::ref::list_aux::policy_helper3<
                     u1_, l_
                 >::type value_;
-                BOOST_MPL_ASSERT((boost::is_same<value_, u1_>));
-                typedef boost::mpl::apply2<
+                BOOST_MPL_ASSERT((is_same<value_, u1_>));
+                typedef mpl::apply2<
                     as2::ref::list_aux::policy<tag_>,
                     as2::ref::list_aux::void_,
                     as2::ref::list_aux::nil
@@ -102,27 +107,27 @@ namespace xxx_list{
                     typedef as2::ref::list_aux::policy_helper3<
                         u1_, l_
                     >::type val_;
-                    BOOST_MPL_ASSERT(( boost::is_same<val_, int> ));
+                    BOOST_MPL_ASSERT(( is_same<val_, int> ));
                 }
                 {
                     typedef int const u1_;
                     typedef as2::ref::list_aux::policy_helper3<
                         u1_, l_
                     >::type val_;
-                    BOOST_MPL_ASSERT(( boost::is_same<val_, int const> ));
+                    BOOST_MPL_ASSERT(( is_same<val_, int const> ));
                 }
             }
 
         }
         {
-            typedef int t_; typedef boost::add_reference<t_>::type r_;
+            typedef int t_; typedef add_reference<t_>::type r_;
             t_ a = 0;
             t_ b = 1;
             t_ c = 2;
             typedef as2::ref::alloc_tag::lazy_alloc tag_;
             typedef as2::ref::nth_result_of::list<tag_> result_;
-            typedef boost::mpl::apply1<result_,
-                boost::mpl::vector<r_, r_, r_>
+            typedef mpl::apply1<result_,
+                mpl::vector<r_, r_, r_>
             >::type ar_;
             ar_ ar = as2::ref::list<tag_>( as2::_nil )( a )( b )( c );
 

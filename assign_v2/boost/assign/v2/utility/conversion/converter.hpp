@@ -21,7 +21,7 @@ namespace v2{
 namespace convert_aux{
 
     template<typename R>
-    class adapter
+    class converter
     {
 
         typedef typename boost::add_const<R>::type const_;
@@ -32,7 +32,7 @@ namespace convert_aux{
 
         public:
 
-        explicit adapter(const_& r) : w( r ){}
+        explicit converter(const_& r) : w( r ){}
 
         template<typename C>
         operator C () const
@@ -51,13 +51,25 @@ namespace convert_aux{
 
     };
 
+    struct converter_adapter{};
+
+    template<typename R>
+    converter<R> operator|( R const& r, converter_adapter )
+    {
+    	return converter<R>( r );
+    }
+
 }// convert_aux
+namespace{
+	convert_aux::converter_adapter const _converter 
+    	= convert_aux::converter_adapter();
+}
 namespace result_of{
 
     template<typename R>
     struct converter
     {
-        typedef convert_aux::adapter<R> type;
+        typedef convert_aux::converter<R> type;
     };
 
 }//result_of

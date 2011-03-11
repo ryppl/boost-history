@@ -7,13 +7,12 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#include <boost/array.hpp>
-#include <boost/lambda/lambda.hpp>
-
 #include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/put/modifier/iterate.hpp>
 #include <boost/assign/v2/put/pipe/csv_put.hpp>
 #include <boost/assign/v2/put/deque/csv_deque.hpp>
+#include <boost/array.hpp>
+#include <boost/lambda/lambda.hpp>
 #include <libs/assign/v2/test/put/pipe/modifier/iterate.h>
 
 namespace test_assign_v2{
@@ -24,8 +23,10 @@ namespace xxx_iterate{
 
     void test()
     {
-        namespace as2 = boost::assign::v2;
-        namespace lambda = boost::lambda;
+        using namespace boost;
+        using namespace lambda;
+        namespace as2 = assign::v2;
+        
         {
         
             //[pipe_iterate
@@ -33,7 +34,7 @@ namespace xxx_iterate{
             int i = 2; 
             BOOST_ASSIGN_V2_CHECK(
             	boost::range::equal(
-            		powers | ( as2::_csv_put % ( as2::_iterate = lambda::var( i )++ ) )( 100, 1000 ),
+            		powers | ( as2::_csv_put % ( as2::_iterate = var( i )++ ) )( 100, 1000 ),
                 	as2::csv_deque<T>( 1, 10, 100, 1000 )    
                 )
 			);

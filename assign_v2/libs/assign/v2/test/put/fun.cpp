@@ -7,14 +7,13 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#include <bitset>
 #include <cmath> // MSVC #include <math.h>
 #include <deque>
 #include <list>
 #include <vector>
 #include <boost/array.hpp>
 #include <boost/assign/v2/detail/config/check.hpp>
-#include <boost/assign/v2/put/container.hpp>
+#include <boost/assign/v2/put/container/put.hpp>
 #include <boost/assign/v2/put/deque.hpp>
 #include <boost/assign/v2/put/modulo/fun.hpp>
 #include <boost/function.hpp>
@@ -23,7 +22,6 @@
 #include <boost/lambda/construct.hpp>
 #include <boost/numeric/conversion/bounds.hpp>
 #include <boost/typeof/typeof.hpp>
-#include <boost/spirit/home/phoenix.hpp>
 #include <libs/assign/v2/test/put/fun.h>
 
 #include <boost/lexical_cast.hpp>
@@ -45,15 +43,15 @@ namespace xxx_fun{
     
     void test()
     {
-        namespace as2 = boost::assign::v2;
+        namespace as2 = assign::v2;
         {
-            std::vector<int> incr_fact;
+            std::vector<int> incr;
             (
-             as2::put( cont ) % ( as2::_fun = f() )
-             )( 1 )( 2 )( 6 )( 24 )( 120 ); 
+             as2::put( incr ) % ( as2::_fun = f() )
+             )( 1 )( 2 )( 3 )( 4 )( 5 ); 
             
-            BOOST_ASSIGN_V2_CHECK( incr_fact.front() == ( 2 ) );
-            BOOST_ASSIGN_V2_CHECK( incr_fact.back() == ( 121 ) );
+            BOOST_ASSIGN_V2_CHECK( incr.front() == ( 2 ) );
+            BOOST_ASSIGN_V2_CHECK( incr.back() == ( 6 ) );
             // TODO fix Bug :
             // LLVM 1.5 - Release mode, EXC_BAD_ACCESS, stl_vector.h #602
         }        
@@ -64,40 +62,21 @@ namespace xxx_fun{
 
     void test()
     {
-        namespace as2 = boost::assign::v2;
-        namespace lambda = boost::lambda;
+		using namespace boost;
+        using namespace lambda;
+        namespace as2 = assign::v2;
         {
             //[modulo_fun_math
             std::vector<double> exponent;
-            typedef boost::function<double(double)> f_;
+            typedef function<double(double)> f_;
             (
             	as2::put( exponent ) % ( as2::_fun = f_( log10 ) )
-            )( 1000.0 )( 10.0 )( 10000.0 )( 1.0 )( 100.0 ); 
+            )/*<<Calls `exponent.push_back( log10( 1000.0 ) )`>>*/( 1000.0 )( 10.0 )( 10000.0 )( 1.0 )( 100.0 ); 
 
 
-			double eps = boost::numeric::bounds<double>::smallest();
+			double eps = numeric::bounds<double>::smallest();
             BOOST_ASSIGN_V2_CHECK( fabs( exponent.front() - 3.0 ) < eps );
             BOOST_ASSIGN_V2_CHECK( fabs( exponent.back() - 2.0 ) < eps );
-            //]
-        }
-        {
-            //[modulo_fun_char
-			int i = 65; std::cout << " static_cast<char>( i )  = " << static_cast<char>( i ) << std::endl;
-	
-            //]
-        }
-		{
-        	// TODO easier way? deque
-         	//[modulo_fun_bitset
-            typedef std::bitset<3> data_; typedef const char str_lit_ [4]; /*<<`data_( "011" )`, for instance, is not valid, but `data_( str_( "011" ) )` is valid (GCC 4.2)>>*/typedef std::string str_; 
-            /*<<Neither `consecutive[i] = ( "011" )`, nor `consecutive[i] = str_( "011" ) )`, for instance, are valid, but `consecutive[i] = ( data_( str_( "011" ) ) );` is valid (GCC4.2)>>*/boost::array<data_, 8> consecutive; 
-            typedef lambda::constructor<data_> f_; typedef lambda::constructor<str_> g_; BOOST_AUTO( f_of_g, lambda::bind( f_(), lambda::bind( g_(), lambda::_1 ) ) );
-            ( as2::put( consecutive ) % ( as2::_fun = f_of_g ) )( "000" )( "001" )( "010" )( "011" )( "100" )( "101" )( "110" )( "111" );
-
-            for(int i = 0; i < consecutive.size(); i++)
-            {
-            	BOOST_ASSIGN_V2_CHECK( consecutive[i].to_ulong() == i );
-            }
             //]
         }
         {
@@ -106,7 +85,7 @@ namespace xxx_fun{
             BOOST_AUTO(
                 factorials, (
                     as2::deque<int>( as2::_nil ) % (
-                        as2::_fun = ( lambda::var(k) *= ( lambda::var(i)++ ) )
+                        as2::_fun = ( var(k) *= ( var(i)++ ) )
                     )
                 )()()()()()
             );

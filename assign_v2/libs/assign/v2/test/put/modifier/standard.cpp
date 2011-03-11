@@ -34,11 +34,12 @@ namespace xxx_standard{
 
     void test()
     {
-        namespace as2 = boost::assign::v2;
+    	using namespace boost;
+        namespace as2 = assign::v2;
 
 		// ------------------------------ WARNING ---------------------------- //
         // Don't misconstrue the commands in the tests below as *necessary* to //
-        // obtain particular implementation. Most of the time the default is   //
+        // obtain particular implementation. In most cases, the default is     //
         // already set at that invoked with operator% 	                       //
         // ------------------------------------------------------------------- //
 

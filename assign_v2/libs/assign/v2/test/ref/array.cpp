@@ -23,7 +23,8 @@ namespace xxx_array{
 
     void test()
     {
-        namespace as2 = boost::assign::v2;
+    	using namespace boost;
+        namespace as2 = assign::v2;
         {
             //[ref_array_r
             typedef int const T;
@@ -44,8 +45,8 @@ namespace xxx_array{
             }
             //]
             {
-                T& a = ( *boost::begin( ar4 ) );
-                T& b = *boost::next( boost::begin( ar4 ), ar4.size() - 1 );
+                T& a = ( *begin( ar4 ) );
+                T& b = *next( begin( ar4 ), ar4.size() - 1 );
                 
                 BOOST_ASSIGN_V2_CHECK( &a == &w );
                 BOOST_ASSIGN_V2_CHECK( &b == &z );
@@ -55,7 +56,7 @@ namespace xxx_array{
             //[ref_array_w
             typedef int T; T x, y, z;
             std::vector<T> r( 3 ); r[0] = 72; r[1] = 31; r[2] = 48;
-            boost::copy( r, boost::begin(
+            boost::copy( r, begin(
                     as2::ref::array( x )( y )( z ) | as2::ref::_get
                 )
             );

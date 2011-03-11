@@ -19,10 +19,10 @@ namespace xxx_wrapper{
 
     void test()
     {
-        using namespace boost::assign::v2;
+        namespace as2 = boost::assign::v2;
         typedef int val_;
         {
-            typedef ref::copy_wrapper<val_>::type w_;
+            typedef as2::ref::copy_wrapper<val_>::type w_;
             w_ w;
             val_ a = 1, b = 2, c = 3;
             w.rebind( a ); BOOST_ASSIGN_V2_CHECK( &w.get() == &a );
@@ -30,7 +30,7 @@ namespace xxx_wrapper{
             w = c; BOOST_ASSIGN_V2_CHECK( a == c );
         }
         {
-            typedef ref::copy_wrapper<val_ const>::type w_;
+            typedef as2::ref::copy_wrapper<val_ const>::type w_;
             w_ w;
             val_ a = 1;
             w.rebind( a ); BOOST_ASSIGN_V2_CHECK( &w.get() == &a );
@@ -38,9 +38,9 @@ namespace xxx_wrapper{
         #if BOOST_ASSIGN_V2_ENABLE_CPP0X
         {
             typedef val_ const cval_;
-            typedef ref::wrapper_param<val_>::type param_;
+            typedef as2::ref::wrapper_param<val_>::type param_;
             BOOST_MPL_ASSERT(( boost::is_same<param_, cval_> ));
-            typedef ref::copy_wrapper<param_>::type w_;
+            typedef as2::ref::copy_wrapper<param_>::type w_;
             {
                 val_&& a = 1;
                 w_ w( a );

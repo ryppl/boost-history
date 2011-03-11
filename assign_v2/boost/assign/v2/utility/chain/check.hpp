@@ -109,7 +109,7 @@ void verify_mpl()
     template<typename T>
     void exec()
     {
-        namespace as2 = boost::assign::v2;
+        namespace as2 = assign::v2;
         typedef std::vector<T> vt_;
         vt_ vt1( 2 ), vt2( 3 ), vt3( 3 );
         vt_ vt;

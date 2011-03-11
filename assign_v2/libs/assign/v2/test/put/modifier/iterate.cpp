@@ -32,33 +32,34 @@ namespace xxx_iterate{
 
     void test()
     {
-        namespace as2 = boost::assign::v2;
-        namespace lambda = boost::lambda;
+		using namespace boost;
+        using namespace lambda;
+        namespace as2 = assign::v2;
         {
         	//[iterate_meta
             typedef as2::put_aux::keyword_iterate keyword_;
 			typedef as2::modifier_tag::iterate_arg arg_;
             typedef as2::put_aux::modulo_modifier<keyword_, arg_> modulo_;
-            typedef boost::array<int, 4> cont_;
+            typedef array<int, 4> cont_;
             typedef as2::result_of::put<cont_>::type put_;
             typedef as2::result_of::modulo_modifier<put_> meta1_;
             typedef ::boost::mpl::apply2<meta1_, keyword_, arg_>::type result1_;
             typedef as2::modifier_tag::iterate<arg_> tag1_;
             typedef as2::put_aux::replace_modifier_tag<put_> meta2_;
             typedef ::boost::mpl::apply1<meta2_, tag1_>::type result2_;
-            BOOST_MPL_ASSERT((boost::is_same<result1_, result2_>));
+            BOOST_MPL_ASSERT((is_same<result1_, result2_>));
             //]
         }
         {
         
             //[iterate
-            typedef int T; boost::array<T, 4> consecutive_powers; consecutive_powers[0] = 1; consecutive_powers[1] = 10;
-            int i = 2; ( as2::put( consecutive_powers ) % ( as2::_iterate = lambda::var( i )++ ) )( 100 )( 1000 );
+            typedef int T; array<T, 4> powers; powers[0] = 1; powers[1] = 10;
+            int i = 2; ( as2::put( powers ) % ( as2::_iterate = var( i )++ ) )( 100 )( 1000 );
 
-            BOOST_ASSIGN_V2_CHECK( consecutive_powers[0] == 1 );
-            BOOST_ASSIGN_V2_CHECK( consecutive_powers[1] == 10 );
-            BOOST_ASSIGN_V2_CHECK( consecutive_powers[2] == 100 );
-            BOOST_ASSIGN_V2_CHECK( consecutive_powers[3] == 1000 );
+            BOOST_ASSIGN_V2_CHECK( powers[0] == 1 );
+            BOOST_ASSIGN_V2_CHECK( powers[1] == 10 );
+            BOOST_ASSIGN_V2_CHECK( powers[2] == 100 );
+            BOOST_ASSIGN_V2_CHECK( powers[3] == 1000 );
             //]
         }
         {
@@ -72,7 +73,7 @@ namespace xxx_iterate{
             typedef as2::modifier_tag::iterate<arg_> tag1_;
             typedef as2::put_aux::replace_modifier_tag<put_> meta2_;
             typedef ::boost::mpl::apply1<meta2_, tag1_>::type result2_;
-            BOOST_MPL_ASSERT((boost::is_same<result1_, result2_>));
+            BOOST_MPL_ASSERT((is_same<result1_, result2_>));
             //]
         }
         {
@@ -81,14 +82,14 @@ namespace xxx_iterate{
             int i = 2; 
             
             BOOST_AUTO(
-            	consecutive_powers,
-            	( missing_tail % ( as2::_iterate = lambda::var( i )++ ) )( 100 )( 1000 )
+            	powers,
+            	( missing_tail % ( as2::_iterate = var( i )++ ) )( 100 )( 1000 )
             );
 
-            BOOST_ASSIGN_V2_CHECK( consecutive_powers[0] == 1 );
-            BOOST_ASSIGN_V2_CHECK( consecutive_powers[1] == 10 );
-            BOOST_ASSIGN_V2_CHECK( consecutive_powers[2] == 100 );
-            BOOST_ASSIGN_V2_CHECK( consecutive_powers[3] == 1000 );
+            BOOST_ASSIGN_V2_CHECK( powers[0] == 1 );
+            BOOST_ASSIGN_V2_CHECK( powers[1] == 10 );
+            BOOST_ASSIGN_V2_CHECK( powers[2] == 100 );
+            BOOST_ASSIGN_V2_CHECK( powers[3] == 1000 );
             //]
         }
     }

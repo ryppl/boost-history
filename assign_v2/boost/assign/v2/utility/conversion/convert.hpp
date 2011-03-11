@@ -38,6 +38,15 @@ namespace convert_aux{
         return convert_aux::convert<C>( r, tag_() );
     }
 
+	template<typename C>
+	struct convert_adapter{};
+    
+    template<typename R, typename C>
+    C operator|( R const& r, convert_adapter<C> )
+    {
+    	return convert<C>( r );
+    }
+
 }// convert_aux
 using convert_aux::convert;
 namespace result_of{
@@ -46,6 +55,12 @@ namespace result_of{
     struct convert{ typedef C type; };
 
 }//result_of
+
+template<typename C>
+convert_aux::convert_adapter<C> _convert()
+{
+	return convert_aux::convert_adapter<C>();
+}
 
 }// v2
 }// assign

@@ -28,7 +28,8 @@ namespace xxx_chain{
 
     void test()
     {
-        namespace as2 = boost::assign::v2;
+        using namespace boost;
+        namespace as2 = assign::v2;
         {
             namespace ns = as2::check_chain_aux;
             {    typedef int T; ns::static_<T>(); ns::static_<T>(); }
@@ -37,47 +38,45 @@ namespace xxx_chain{
         // Non-Boost.Assign.v2 containers
         {
             //[chain_r
-            typedef int T;
-            boost::array<T, 2> cont1;  cont1[0] = 0; cont1[1] = 1;
-            std::list<T> cont2; cont2.push_back( 2 ); cont2.push_back( 3 );
-            std::vector<T> joined( boost::begin( cont1 ), boost::end( cont1 ) );
-            boost::copy( cont2, std::back_inserter( joined ) );
+            typedef std::string T;
+            array<T, 2> head;  head[0] = "A"; head[1] = "B";
+            std::list<T> tail; tail.push_back( "Y" ); tail.push_back( "Z" );
+            std::vector<T> joined( begin( head ), end( head ) ); copy( tail, std::back_inserter( joined ) );
             BOOST_ASSIGN_V2_CHECK(
-                boost::range::equal( joined, cont1 | as2::_chain( cont2 ) )
+                range::equal( joined, head | as2::_chain( tail ) )
             );
             //]
         }
         {
             //[chain_w
-            typedef int T; std::vector<T> r( 4 );
-            r[0] = 1; r[1] = 2; r[2] = 0; r[3] = 5;
-            boost::array<T, 2> cont1; 
-            std::list<T> cont2( r.size() - cont1.size() );
-            boost::copy( r, boost::begin( cont1 | as2::_chain( cont2 ) ) );
-            BOOST_ASSIGN_V2_CHECK( cont1[0] == r[0] );
-            BOOST_ASSIGN_V2_CHECK( cont1[1] == r[1] );
-            BOOST_ASSIGN_V2_CHECK( cont2.front() == r[2] );
-            BOOST_ASSIGN_V2_CHECK( cont2.back() == r[3] );
+            typedef std::string note; std::vector<note> scale( 4 );
+            scale[0] = "do"; scale[1] = "re"; scale[2] = "mi"; 
+            scale[3] = "fa"; scale[4] = "so"; scale[5] = "la"; scale[6] = "si";
+            array<note, 2> do_mi; std::list<note> fa_si( 4 );
+            copy( scale, begin( do_mi | as2::_chain( fa_si ) ) );
+            BOOST_ASSIGN_V2_CHECK( do_mi[0] == "do" );
+            BOOST_ASSIGN_V2_CHECK( do_mi[1] == "mi" );
+            BOOST_ASSIGN_V2_CHECK( fa_si.front() == "fa" );
+            BOOST_ASSIGN_V2_CHECK( fa_si.back() == "si" );
             //]
         }
 		// Boost.Assign.v2 containers
         {
             //[chain_ref_array
-            /*<< Needed to bring && into scope >>*/ using namespace boost::assign::v2;
-            std::vector<int> powers( 3 ); powers[0] = 1;
-            for(int i = 1; i < 8; i++){ powers[i] = powers[ i - 1 ] * 2; }
-            boost::array<int, 5> first5; int x, y, z;
+            /*<< Needed to bring && into scope >>*/ using namespace assign::v2;
+            std::vector<int> consecutive8( 8 ); for(int i = 1; i < 8; i++){ consecutive8[i] = 1 + i; }
+            array<int, 5> consecutive5; int six, seven, eight;
             boost::copy(
-                powers,
-                boost::begin(
-                    first5 && (/*<< rvalue! >>*/ as2::ref::csv_array( x, y, z ) | as2::ref::_get )
+                consecutive8,
+                begin(
+                    consecutive5 && (/*<< rvalue! >>*/ as2::ref::csv_array( six, seven, eight ) | as2::ref::_get )
                 )
             );
 
-            BOOST_ASSIGN_V2_CHECK( first5.front() == powers.front()          );
-            BOOST_ASSIGN_V2_CHECK( first5.back()  == powers[first5.size()-1] );
-            BOOST_ASSIGN_V2_CHECK( x              == powers[first5.size()]   );
-            BOOST_ASSIGN_V2_CHECK( z              == powers.back()           );
+            BOOST_ASSIGN_V2_CHECK( consecutive5.front() == 1 );
+            BOOST_ASSIGN_V2_CHECK( consecutive5.back()  == 5 );
+            BOOST_ASSIGN_V2_CHECK( six                  == 6 );
+            BOOST_ASSIGN_V2_CHECK( eight                == 8 );
             //]
         }
 

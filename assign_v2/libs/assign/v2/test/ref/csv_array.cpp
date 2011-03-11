@@ -22,7 +22,8 @@ namespace xxx_csv_array{
 
     void test()
     {
-        namespace as2 = boost::assign::v2;
+    	using namespace boost;
+        namespace as2 = assign::v2;
         {
             //[ref_csv_array
             typedef int const T;
@@ -43,8 +44,8 @@ namespace xxx_csv_array{
                 BOOST_ASSIGN_V2_CHECK( &b == &z );
             }
             {
-                T& a = (*boost::begin( ar ) );
-                T& b = *boost::next( boost::begin( ar ), 2 );
+                T& a = (*begin( ar ) );
+                T& b = *next( begin( ar ), 2 );
 
                 BOOST_ASSIGN_V2_CHECK( &a == &x );
                 BOOST_ASSIGN_V2_CHECK( &b == &z );
@@ -54,7 +55,7 @@ namespace xxx_csv_array{
             //[ref_csv_array_w
             typedef int T; T x, y, z;
             std::vector<T> r( 3 ); r[0] = 72; r[1] = 31; r[2] = 48;
-            boost::copy( r, boost::begin(
+            boost::copy( r, begin(
                     as2::ref::csv_array( x, y, z ) | as2::ref::_get
                 )
             );

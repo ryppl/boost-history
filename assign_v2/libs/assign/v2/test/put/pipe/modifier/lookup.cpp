@@ -27,18 +27,19 @@ namespace xxx_lookup{
 
     void test()
     {
-        namespace as2 = boost::assign::v2;
-        namespace lambda = boost::lambda;
+		using namespace boost;
+        using namespace lambda;
+        namespace as2 = assign::v2;
         {
             //[pipe_lookup
             std::map<std::string, int> cal;
-            BOOST_AUTO( _local, ( as2::_fun = lambda::_1 ) );
+            BOOST_AUTO( _local, ( as2::_fun = _1 ) );
             BOOST_ASSIGN_V2_CHECK(
             	(
                 	cal 
                     	| as2::_put( "feb", 28 ) 
-                        | ( as2::_csv_put % _local % ( as2::_lookup = (lambda::_1 = 30) ) )( "apr", "jun", "sep", "nov" )
-                        | ( as2::_csv_put % _local % ( as2::_lookup = (lambda::_1 = 31) ) )( "jan", "mar", "may", "jul", "aug", "oct", "dec" )
+                        | ( as2::_csv_put % _local % ( as2::_lookup = (_1 = 30) ) )( "apr", "jun", "sep", "nov" )
+                        | ( as2::_csv_put % _local % ( as2::_lookup = (_1 = 31) ) )( "jan", "mar", "may", "jul", "aug", "oct", "dec" )
  
                 )["feb"] == 28
             );

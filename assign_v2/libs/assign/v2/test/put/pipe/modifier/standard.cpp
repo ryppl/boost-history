@@ -29,7 +29,8 @@ namespace xxx_standard{
 
     void test()
     {
-        namespace as2 = boost::assign::v2;
+    	using namespace boost;
+        namespace as2 = assign::v2;
 
 		// ------------------------------ WARNING ---------------------------- //
         // Don't misconstrue the commands in the tests below as *necessary* to //
@@ -60,12 +61,12 @@ namespace xxx_standard{
         {
             //[pipe_modifier_insert
 			typedef std::set<double> doubles_; doubles_ sqrt2;
-            boost::range_iterator<doubles_>::type lower = ( 
+            range_iterator<doubles_>::type lower = ( 
             	sqrt2 | ( as2::_put % as2::_insert )( 1.414 )( 1.41421 )( 1.41 )( 1.4142 ) 
             ).lower_bound( 1.41 );
         
-            BOOST_ASSIGN_V2_CHECK( lower == boost::begin( sqrt2 ) );
-            BOOST_ASSIGN_V2_CHECK( sqrt2.upper_bound( 1.41421 ) == boost::end( sqrt2 ) );
+            BOOST_ASSIGN_V2_CHECK( lower == begin( sqrt2 ) );
+            BOOST_ASSIGN_V2_CHECK( sqrt2.upper_bound( 1.41421 ) == end( sqrt2 ) );
             //]
         }
     }

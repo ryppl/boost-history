@@ -22,7 +22,8 @@ namespace xxx_deque{
 
     void test()
     {
-        namespace as2 = boost::assign::v2;    
+    	using namespace boost;
+        namespace as2 = assign::v2;    
         {
 			// http://bioinfo.mbb.yale.edu/~mbg/dom/fun3/area-codes/            
             //[deque_tuple_ref

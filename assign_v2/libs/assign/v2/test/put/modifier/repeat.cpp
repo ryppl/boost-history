@@ -23,8 +23,8 @@ namespace xxx_repeat{
 
     void test()
     {
-
-		namespace as2 = boost::assign::v2;
+		using namespace boost;
+		namespace as2 = assign::v2;
         {
             //[repeat_simple
             std::vector<int> cont;
@@ -39,7 +39,7 @@ namespace xxx_repeat{
             //[repeat_compose_deque
             BOOST_AUTO(
                 cont, (
-                    /*<<Notice that `_repeat` can be combined with another modifier, `_push_front`, in this case>>*/as2::deque<int>( as2::_nil ) % as2::_push_front % ( as2::_repeat = 2 )
+                    as2::deque<int>( as2::_nil ) % as2::_push_front % ( as2::_repeat = 2 )
                 )( 72 )( 31 )( 48 )
             );
             BOOST_ASSIGN_V2_CHECK( boost::size( cont ) == 6 );

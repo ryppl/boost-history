@@ -43,7 +43,7 @@ namespace check_aux{
     template<typename R>
     void equal_convert(R const& r)
     {
-        namespace as2 = boost::assign::v2;
+        namespace as2 = assign::v2;
         namespace ns = check_aux;
 
         typedef boost::array<int, 8> ar_;

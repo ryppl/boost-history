@@ -22,13 +22,14 @@ namespace xxx_put{
 namespace xxx_pipe{
 namespace xxx_args_list{
 
-	// -----User may skip this file----- //
-    // It checks internal details.       //
-    // --------------------------------- //        
+	// --User may skip this file-- //
+    // It checks internal details. //
+    // --------------------------- //        
 
     void test()
     {
-        namespace as2 = boost::assign::v2;
+    	using namespace boost;
+        namespace as2 = assign::v2;
         typedef boost::mpl::int_<0> zero_;
         {
             typedef as2::put_pipe_aux::args_list<> args_list_;

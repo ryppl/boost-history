@@ -8,8 +8,6 @@
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
 #include <deque>
-#include <boost/typeof/typeof.hpp>
-#include <boost/lambda/lambda.hpp>
 #include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/utility/csv.hpp>
 #include <boost/assign/v2/put/deque.hpp>
@@ -21,39 +19,37 @@ namespace test_assign_v2{
 namespace xxx_utiliy{
 namespace xxx_csv{
 
-    // Tests interaction between different functionalities
-
     void test(){
 
-        namespace as2 = boost::assign::v2;
-        namespace lambda = boost::lambda;
+		using namespace boost;
+        namespace as2 = assign::v2;
         {
             //[csv_put
-            std::deque<int> powers;
-            as2::csv( as2::put( powers ), 16, 8, 4, 2, 1 );
+            std::deque<int> cont;
+            as2::csv( as2::put( cont ), 72, 31, 48 );
 
-            BOOST_ASSIGN_V2_CHECK( powers[0] == 6 );
-            BOOST_ASSIGN_V2_CHECK( powers[4] == 1 );
+            BOOST_ASSIGN_V2_CHECK( cont.front() == 6 );
+            BOOST_ASSIGN_V2_CHECK( cont.back() == 48 );
             //]
         }
         {
             //[csv_put_modulo
-            std::deque<int> powers;
-            as2::csv( as2::put( powers ) % as2::_push_front, 16, 8, 4, 2, 1 );
+            std::deque<int> cont;
+            as2::csv( as2::put( cont ) % as2::_push_front, 72, 31, 48 );
 
-            BOOST_ASSIGN_V2_CHECK( powers[0] == 1 );
-            BOOST_ASSIGN_V2_CHECK( powers[4] == 16 );
+            BOOST_ASSIGN_V2_CHECK( cont.front() == 48 );
+            BOOST_ASSIGN_V2_CHECK( cont.back() == 72 );
             //]
         }
         {
             //[csv_deque_modulo
             BOOST_AUTO(
-            	powers,
-            	as2::csv( as2::deque<int>( as2::_nil ) % as2::_push_front, 16, 8, 4, 2, 1 )
+            	cont,
+            	as2::csv( as2::deque<int>( as2::_nil ) % as2::_push_front, 72, 31, 48 )
             );
 
-            BOOST_ASSIGN_V2_CHECK( powers[0] == 1 );
-            BOOST_ASSIGN_V2_CHECK( powers[4] == 16 );
+            BOOST_ASSIGN_V2_CHECK( cont.front() == 48 );
+            BOOST_ASSIGN_V2_CHECK( cont.back() == 72 );
             //]
         }
     }

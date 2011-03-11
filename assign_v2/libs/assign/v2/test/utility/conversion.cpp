@@ -34,14 +34,15 @@ namespace xxx_conversion{
     
     void test()
     {
-        namespace as2 = boost::assign::v2;
+    	using namespace boost;
+        namespace as2 = assign::v2;
         namespace ns = as2::check_aux;
 
         // Non-Boost.Assign.2.0 containers - fully qualified as2::converter()
         {
             //[convert_inpl
-            std::vector<int> v( 3 ); v[0] = 1; v[1] = 2; v[2] = 0;
-            typedef boost::array<int, 3> ar_;
+            std::vector<int> v( 3 ); v[0] = 72; v[1] = 31; v[2] = 48;
+            typedef array<int, 3> ar_;
             BOOST_ASSIGN_V2_CHECK(
                 ( as2::converter( v ).type<ar_>() )[1] == v[1]
             );

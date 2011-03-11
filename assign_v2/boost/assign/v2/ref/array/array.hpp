@@ -75,6 +75,7 @@ namespace result_of{
         return array<T const>( v2::_nil )( t );
     }
 
+
 }// ref
 }// v2
 }// assign

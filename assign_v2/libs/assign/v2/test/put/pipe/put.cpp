@@ -13,9 +13,6 @@
 #include <list>
 #include <string>
 #include <boost/array.hpp>
-#include <boost/lambda/lambda.hpp>
-#include <boost/lambda/construct.hpp>
-#include <boost/numeric/conversion/bounds.hpp>
 #include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/put/deque/csv_deque.hpp>
 #include <boost/assign/v2/put/pipe/put.hpp>
@@ -30,8 +27,8 @@ namespace xxx_pipe{
 namespace xxx_put{ 
 
     void test(){
-        namespace as2 = boost::assign::v2;
-        namespace lambda = boost::lambda;
+		using namespace boost;
+        namespace as2 = assign::v2;
     	{
         	//pipe_put_str_literal
 	        typedef const char* T; typedef std::string str_; std::deque<T> cont;

@@ -30,9 +30,15 @@ namespace test_assign_v2{
 namespace xxx_put{
 namespace xxx_deduce{
 
+	// --User may skip this file-- //
+    // It checks internal details. //
+    // --------------------------- //        
+
     void test()
     {
-        namespace as2 = boost::assign::v2;
+    	using namespace boost;
+        namespace as2 = assign::v2;
+
         {
             typedef as2::modifier_tag::push_back answer_;
             as2::put_aux::check_deduce<std::deque<int>, answer_>();

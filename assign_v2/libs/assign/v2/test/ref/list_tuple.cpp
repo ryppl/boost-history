@@ -20,6 +20,10 @@ namespace test_assign_v2{
 namespace xxx_ref{
 namespace xxx_list_tuple{
 
+	// --User may skip this file-- //
+    // It checks internal details. //
+    // --------------------------- //        
+
     void test()
     {
         namespace as2 = boost::assign::v2;
