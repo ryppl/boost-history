@@ -34,7 +34,7 @@
     typename BOOST_LOCAL_AUX_arg_type(z, arg_n, unused)
                 
 #define BOOST_LOCAL_AUX_concrete_operator_call(z, defaults_n, arity) \
-    inline R operator()(BOOST_PP_ENUM_ ## z(BOOST_PP_SUB(arity, defaults_n), \
+    R operator()(BOOST_PP_ENUM_ ## z(BOOST_PP_SUB(arity, defaults_n), \
                 BOOST_LOCAL_AUX_arg, ~)) const { \
         assert(ptr_); \
         return (*ptr_)(BOOST_PP_ENUM_ ## z(BOOST_PP_SUB(arity, defaults_n), \

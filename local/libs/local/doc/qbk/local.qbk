@@ -96,6 +96,10 @@
 [import ../../example/doit_va.cpp]
 [import ../../example/transform.cpp]
 [import ../../example/transform_va.cpp]
+[import ../../example/typeof.cpp]
+[import ../../example/typeof_va.cpp]
+[import ../../example/typeof_tpl.cpp]
+[import ../../example/typeof_tpl_va.cpp]
 
 [import ../../example/add_num_sum.cpp]
 [import ../../example/factorial.cpp]

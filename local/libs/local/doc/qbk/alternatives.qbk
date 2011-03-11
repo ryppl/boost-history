@@ -12,6 +12,11 @@ This section compares the features offered by this library with similar features
 
 The following table compares local function features.
 
+@todo From Mathias: Minus of Local compared to Lambdas:
+  - creating a local can only be done at statement scope. 
+  - locals may not automatically capture all context 
+  - size of a local function cannot be optimized to be two words. 
+
 [table
 [
     [ Local Function Feature ]

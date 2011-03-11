@@ -13,13 +13,14 @@ This section illustrates basic usage of local functions, local blocks, and local
 
 Local functions are defined using the following macros (see the __Reference__ section) from within a declarative context (this is a limitation with respect to __CPP0x_lambda__ functions which can instead be declared within expressions):
 
+    #include <boost/local/function.hpp>
+
+    ...
     { // Some declarative context.
         ...
-
         ``/result-type/`` __BOOST_LOCAL_FUNCTION_PARAMS__(``/parameters/``) {
             ``/body-code/``
         } __BOOST_LOCAL_FUNCTION_NAME__(``/name/``)
-
         ...
     }
 
@@ -131,7 +132,10 @@ For example, let's assume that the we want to program a local function `add(x, y
 
 If this variadic macro syntax seems strange, programmers could define a `WITH_DEFAULT` macro similar to the following if they think it improves readability:
 
-[add_x_y_default_with_va_cpp]
+[table
+[ [Variadic Macro Syntax (C99 and later compilers)] ]
+[ [ [add_x_y_default_with_va_cpp] ] ]
+]
 
 [endsect]
 
@@ -245,13 +249,14 @@ For example, let's rewrite a local function `add` similar to the one in the exam
 
 Local blocks are defined using the following macros within a declarative context (see the __Reference__ section):
 
+    #include <boost/local/block.hpp>
+
+    ...
     { // Some declarative context.
         ...
-
         __BOOST_LOCAL_BLOCK__(``/bindings/``) {
             ``/body-code/``
         } __BOOST_LOCAL_BLOCK_END__
-
         ...
     }
 
@@ -283,13 +288,14 @@ For example, let's program a local block similar to the one in the example from 
 
 Local exits are defined using the following macros within a declarative context (see the __Reference__ section):
 
+    #include <boost/local/exit.hpp>
+
+    ...
     { // Some declarative context.
         ...
-
         __BOOST_LOCAL_EXIT__(``/bindings/``) {
-            ``/exit-body/``
+            ``/body-code/``
         } __BOOST_LOCAL_EXIT_END__
-
         ...
     }
 
