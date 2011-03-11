@@ -8,7 +8,7 @@
 #include <boost/mpl/placeholders.hpp>
 #include <boost/mpl/transform.hpp>
 #include <boost/mpl/vector.hpp>
-#include "detail/dtself.hpp"
+#include "../detail/dtself.hpp"
 
 /*
 
@@ -61,7 +61,7 @@ namespace boost
         HasStaticMemberFunctionTemplate,
         typename T::type,
         typename R::type,
-        typename boost::mpl::transform<FS,detail::tself<boost::mpl::_1> >::type,
+        typename boost::mpl::transform<FS,boost::tti::detail::tself<boost::mpl::_1> >::type,
         TAG
         >::type
       {
