@@ -10,12 +10,13 @@
 #include <map>
 #include <string>
 #include <boost/lambda/lambda.hpp>
-
+#include <boost/typeof/typeof.hpp>
 #include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/detail/functor/identity.hpp>
-#include <boost/assign/v2/put/fun/identity.hpp>
+#include <boost/assign/v2/put/modulo/fun.hpp>
 #include <boost/assign/v2/put/modifier/lookup.hpp>
 #include <boost/assign/v2/put/pipe/put.hpp>
+#include <boost/assign/v2/put/pipe/csv_put.hpp>
 #include <libs/assign/v2/test/put/pipe/modifier/lookup.h>
 
 namespace test_assign_v2{
@@ -29,16 +30,20 @@ namespace xxx_lookup{
         namespace as2 = boost::assign::v2;
         namespace lambda = boost::lambda;
         {
-            //[lookup
-            typedef std::string str_; std::map<std::string, int> C; C cal; 
-            BOOST_AUTO( _local,  ( as2::_csv_put % ( as2::_fun = lambda::_1 ) ) );
+            //[pipe_lookup
+            std::map<std::string, int> cal;
+            BOOST_AUTO( _local, ( as2::_fun = lambda::_1 ) );
             BOOST_ASSIGN_V2_CHECK(
             	(
-            		cal | as2::_put( "feb", 28 ) | ( _local % as2::_lookup = (lambda::_1 = 30)  )( "apr" )( "jun" )( "sep" )( "nov" )
-                    	| ( _local % as2::_lookup = (lambda::_1 = 31)  )( "jan" )( "mar" )( "may" )( "jul" )( "aug" )( "oct" )( "dec" )
-            	)[ "mar" ] == 31
+                	cal 
+                    	| as2::_put( "feb", 28 ) 
+                        | ( as2::_csv_put % _local % ( as2::_lookup = (lambda::_1 = 30) ) )( "apr", "jun", "sep", "nov" )
+                        | ( as2::_csv_put % _local % ( as2::_lookup = (lambda::_1 = 31) ) )( "jan", "mar", "may", "jul", "aug", "oct", "dec" )
+ 
+                )["feb"] == 28
             );
-            BOOST_ASSIGN_V2_CHECK( cal[ "jun" ] == 30 );
+            BOOST_ASSIGN_V2_CHECK( cal["jun"] == 30 );
+            BOOST_ASSIGN_V2_CHECK( cal["mar"] == 31 );
 			//] 
         }    
     }

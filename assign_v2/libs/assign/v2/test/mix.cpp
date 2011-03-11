@@ -43,27 +43,25 @@ namespace xxx_mix{
 
         {
             // suggested by JB:
-            //[mix_csv_put_csv_array
+            //[mix_stable_partition
             std::deque<int> cont;
             boost::range::stable_partition(
                 /*<< Calls `cont.push_back( t )` for [^t=0,...,5], and returns `cont` >>*/
                 cont | as2::_csv_put( 0, 1, 2, 3, 4, 5 ),
                 lambda::_1 % 2
             );
-            //]
-            //[other_ref_csv_array
             BOOST_ASSIGN_V2_CHECK(boost::range::equal(
                 cont,
-                /*<< The input [^1, 3, ..., 4] is held by reference (not copies) >>*/
+                /*<< [^1, 3, ..., 4] are held by reference (not copies) >>*/
                 as2::ref::csv_array(1, 3, 5, 0, 2, 4)
             ));
             //]
         } 
         {
-            //[mix_array_csv_array
+            //[mix_maxtrix3x3
             const int sz = 3;
     		typedef boost::array<int, sz>  r_;
-    		boost::array<r_, sz>  matrix3x3 = /*<<Using `converter` is a good practice, bearing in mind it may work without it>>*/converter(
+    		boost::array<r_, sz>  matrix3x3 = /*<<Using `converter`, here, is optional>>*/converter(
             	as2::ref::array
                 	( converter( as2::ref::csv_array( 1, 2, 3 ) ).type<r_>() )
                 	( converter( as2::ref::csv_array( 4, 5, 6 ) ).type<r_>() )
@@ -93,10 +91,10 @@ namespace xxx_mix{
             BOOST_ASSIGN_V2_CHECK( ragged[3].size() == 0 );
             //]
 			elem_ eps = boost::numeric::bounds<elem_>::smallest();
-            BOOST_ASSIGN_V2_CHECK( abs( ragged.front().front() - 0.71 ) < eps );
-            BOOST_ASSIGN_V2_CHECK( abs( ragged.front().back() - 0.85  ) < eps );
-            BOOST_ASSIGN_V2_CHECK( abs( ragged[2].front() + 99.0      ) < eps ); 
-            BOOST_ASSIGN_V2_CHECK( abs( ragged[2].back() + 99.0       ) < eps ); 
+            BOOST_ASSIGN_V2_CHECK( fabs( ragged.front().front() - 0.71 ) < eps );
+            BOOST_ASSIGN_V2_CHECK( fabs( ragged.front().back() - 0.85  ) < eps );
+            BOOST_ASSIGN_V2_CHECK( fabs( ragged[2].front() + 99.99     ) < eps ); 
+            BOOST_ASSIGN_V2_CHECK( fabs( ragged[2].back() + 99.99      ) < eps ); 
         }
 		{
         

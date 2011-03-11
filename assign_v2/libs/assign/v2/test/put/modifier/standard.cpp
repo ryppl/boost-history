@@ -16,6 +16,10 @@
 #include <boost/assign/v2/put/modifier/standard.hpp>
 #include <boost/assign/v2/put/container/put.hpp>
 #include <boost/assign/v2/put/deque.hpp>
+#include <boost/range/begin.hpp>
+#include <boost/range/end.hpp>
+#include <boost/range/algorithm/lower_bound.hpp>
+#include <boost/range/algorithm/upper_bound.hpp>
 #include <boost/lambda/lambda.hpp>
 #include <boost/mpl/apply.hpp>
 #include <boost/mpl/assert.hpp>
@@ -53,11 +57,11 @@ namespace xxx_standard{
         }
         {
             //[modifier_push_front
-            std::deque<int> powers;
-            ( as2::put( powers ) % as2::_push_front )( 16 )( 8 )( 4 )( 2 )( 1 );
-
-            BOOST_ASSIGN_V2_CHECK( powers[0] == 1 );
-            BOOST_ASSIGN_V2_CHECK( powers[4] == 16 );
+            std::deque<double> sqrt2;
+            ( as2::put( sqrt2 ) % as2::_push_front )( 1.41421 )( 1.4142 )( 1.414 )( 1.41 );
+        
+            BOOST_ASSIGN_V2_CHECK( boost::lower_bound( sqrt2, 1.41 ) == boost::begin( sqrt2 ) );
+            BOOST_ASSIGN_V2_CHECK( boost::upper_bound( sqrt2, 1.41421 ) == boost::end( sqrt2 ) );
             //]
         }
         {
@@ -70,10 +74,10 @@ namespace xxx_standard{
         }
         {
             //[modifier_insert
-            std::set<double> sqrt2; ( as2::put( sqrt2 ) % as2::_insert )( 1.414 )( 1.41421 )( 1.41 )( 1.4142 );
+            std::set<std::string> letters; ( as2::put( letters ) % as2::_insert )( "d" )( "a" )( "c" )( "b" );
         
-            BOOST_ASSIGN_V2_CHECK( sqrt2.lower_bound( 1.41 ) == boost::begin( sqrt2 ) );
-            BOOST_ASSIGN_V2_CHECK( sqrt2.upper_bound( 1.41421 ) == boost::end( sqrt2 ) );
+            BOOST_ASSIGN_V2_CHECK( letters.lower_bound( "a" ) == boost::begin( letters ) );
+            BOOST_ASSIGN_V2_CHECK( letters.upper_bound( "d" ) == boost::end( letters ) );
             //]
         }
         {

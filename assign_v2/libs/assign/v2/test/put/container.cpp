@@ -9,6 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #include <boost/array.hpp>
 #include <bitset>
+#include <cmath>
 #include <deque>
 #include <map>
 #include <list>
@@ -44,7 +45,6 @@ namespace xxx_container{
 		
             for(int i = 0; i < consecutive.size(); i++)
             {
-            	std::cout << consecutive[i].to_ulong() << ' ';
             	BOOST_ASSIGN_V2_CHECK( consecutive[i].to_ulong() == i );
             }
             //]
@@ -53,12 +53,14 @@ namespace xxx_container{
          	//[put_as_arg_list
             std::vector<int> numeric( 10 ); boost::iota( numeric, 0 ); typedef std::string str_;
             typedef boost::variant< int, str_ > data_; boost::array<data_, 10 + 4> numeric_kb;
-            as2::put( numeric_kb )/*<<Calls `numeric_kb.push_back( data_( *( i + boost::begin( numeric ) ) ) )` for [^i = 0,...,9 ]``>>*/( as2::as_arg_list( numeric ) )( "+" )( "-" )( "*" )( "/" );
+            as2::put( numeric_kb )/*<<Calls `numeric_kb[0] = "+"`>>*/( "+" )/*<<Calls `numeric_kb[1] = "-"`>>*/( "-" )/*<<Calls `numeric_kb[2] = "*"`>>*/( "*" )/*<<Calls `numeric_kb[3] = "/"`>>*/( "/" )/*<<Equivalent to calling `( *( boost::begin( numeric ) ) )( *( 1 + boost::begin( numeric ) ) )`[^...]`( *( 9 + boost::begin( numeric ) ) )`>>*/( as2::as_arg_list( numeric ) );
             
 			using namespace boost;
-            for(int i = 0; i< numeric.size(); i++){ BOOST_ASSIGN_V2_CHECK( get<int>( numeric_kb[i] ) == i ); }
-            BOOST_ASSIGN_V2_CHECK( get<str_>( numeric_kb[ numeric.size()     ] ) == "+" );
-            BOOST_ASSIGN_V2_CHECK( get<str_>( numeric_kb[ numeric.size() + 3 ] ) == "/" );
+            BOOST_ASSIGN_V2_CHECK( get<str_>( numeric_kb[ 0 ] ) == "+" );
+            BOOST_ASSIGN_V2_CHECK( get<str_>( numeric_kb[ 3 ] ) == "/" );
+            for(int i = 0; i< numeric.size(); i++){ 
+            	BOOST_ASSIGN_V2_CHECK( get<int>( numeric_kb[ i + 4 ] ) == i ); 
+            }
             //]
         }
 		{
@@ -79,12 +81,12 @@ namespace xxx_container{
             BOOST_ASSIGN_V2_CHECK( ragged[3].size() == 0        );
             //]
 			data_ eps = boost::numeric::bounds<data_>::smallest();
-            BOOST_ASSIGN_V2_CHECK( abs( ragged[0].front() - a.front() ) < eps );
-            BOOST_ASSIGN_V2_CHECK( abs( ragged[0].back()  - a.back()  ) < eps );
-            BOOST_ASSIGN_V2_CHECK( abs( ragged[1].front() - b.front() ) < eps );
-            BOOST_ASSIGN_V2_CHECK( abs( ragged[1].back()  - b.back()  ) < eps );
-            BOOST_ASSIGN_V2_CHECK( abs( ragged[2].front() + 99.9      ) < eps );
-            BOOST_ASSIGN_V2_CHECK( abs( ragged[2].back()  + 99.9      ) < eps );
+            BOOST_ASSIGN_V2_CHECK( fabs( ragged[0].front() - a.front() ) < eps );
+            BOOST_ASSIGN_V2_CHECK( fabs( ragged[0].back()  - a.back()  ) < eps );
+            BOOST_ASSIGN_V2_CHECK( fabs( ragged[1].front() - b.front() ) < eps );
+            BOOST_ASSIGN_V2_CHECK( fabs( ragged[1].back()  - b.back()  ) < eps );
+            BOOST_ASSIGN_V2_CHECK( fabs( ragged[2].front() + 99.99     ) < eps );
+            BOOST_ASSIGN_V2_CHECK( fabs( ragged[2].back()  + 99.99     ) < eps );
 		}
         {
             //[put_adapter

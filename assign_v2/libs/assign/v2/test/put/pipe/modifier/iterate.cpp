@@ -12,7 +12,8 @@
 
 #include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/put/modifier/iterate.hpp>
-#include <boost/assign/v2/put/pipe/put.hpp>
+#include <boost/assign/v2/put/pipe/csv_put.hpp>
+#include <boost/assign/v2/put/deque/csv_deque.hpp>
 #include <libs/assign/v2/test/put/pipe/modifier/iterate.h>
 
 namespace test_assign_v2{
@@ -27,18 +28,15 @@ namespace xxx_iterate{
         namespace lambda = boost::lambda;
         {
         
-        	// TODO construct arg_ with phoenix and perhaps skip
-            //[iterate
-            //typedef as2::functor_aux::post_increment<> arg_;
-            //typedef int T; boost::array<T, 4> powers; powers[0] = 1; powers[1] = 10;
-            //T front = ( 
-            //	powers | ( as2::_put % ( as2::_iterate = arg_( 2 ) ) )( 100 )( 1000 )
-            //).front();
-
-            //BOOST_ASSIGN_V2_CHECK( front == 1 );
-            //BOOST_ASSIGN_V2_CHECK( powers[1] == 10 );
-            //BOOST_ASSIGN_V2_CHECK( powers[2] == 100 );
-            //BOOST_ASSIGN_V2_CHECK( powers[3] == 1000 );
+            //[pipe_iterate
+            typedef int T; boost::array<T, 4> powers; powers[0] = 1; powers[1] = 10;
+            int i = 2; 
+            BOOST_ASSIGN_V2_CHECK(
+            	boost::range::equal(
+            		powers | ( as2::_csv_put % ( as2::_iterate = lambda::var( i )++ ) )( 100, 1000 ),
+                	as2::csv_deque<T>( 1, 10, 100, 1000 )    
+                )
+			);
             //]
         }
     }

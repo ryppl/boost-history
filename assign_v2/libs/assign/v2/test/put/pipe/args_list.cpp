@@ -22,6 +22,10 @@ namespace xxx_put{
 namespace xxx_pipe{
 namespace xxx_args_list{
 
+	// -----User may skip this file----- //
+    // It checks internal details.       //
+    // --------------------------------- //        
+
     void test()
     {
         namespace as2 = boost::assign::v2;

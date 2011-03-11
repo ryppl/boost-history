@@ -47,7 +47,7 @@ int main (int argc, char * const argv[])
     {
         using namespace test_assign_v2;
         xxx_put::test();
-        xxx_mix::test();
+        //xxx_mix::test();
         /*
         xxx_put::test();
         xxx_ref::test();

@@ -26,6 +26,8 @@
 #include <boost/spirit/home/phoenix.hpp>
 #include <libs/assign/v2/test/put/fun.h>
 
+#include <boost/lexical_cast.hpp>
+
 namespace test_assign_v2{
 namespace xxx_put{
 namespace xxx_fun{
@@ -74,27 +76,33 @@ namespace xxx_fun{
 
 
 			double eps = boost::numeric::bounds<double>::smallest();
-            BOOST_ASSIGN_V2_CHECK( abs( exponent.front() - 3.0 ) < eps );
-            BOOST_ASSIGN_V2_CHECK( abs( exponent.back() - 2.0 ) < eps );
+            BOOST_ASSIGN_V2_CHECK( fabs( exponent.front() - 3.0 ) < eps );
+            BOOST_ASSIGN_V2_CHECK( fabs( exponent.back() - 2.0 ) < eps );
+            //]
+        }
+        {
+            //[modulo_fun_char
+			int i = 65; std::cout << " static_cast<char>( i )  = " << static_cast<char>( i ) << std::endl;
+	
             //]
         }
 		{
+        	// TODO easier way? deque
          	//[modulo_fun_bitset
             typedef std::bitset<3> data_; typedef const char str_lit_ [4]; /*<<`data_( "011" )`, for instance, is not valid, but `data_( str_( "011" ) )` is valid (GCC 4.2)>>*/typedef std::string str_; 
             /*<<Neither `consecutive[i] = ( "011" )`, nor `consecutive[i] = str_( "011" ) )`, for instance, are valid, but `consecutive[i] = ( data_( str_( "011" ) ) );` is valid (GCC4.2)>>*/boost::array<data_, 8> consecutive; 
             typedef lambda::constructor<data_> f_; typedef lambda::constructor<str_> g_; BOOST_AUTO( f_of_g, lambda::bind( f_(), lambda::bind( g_(), lambda::_1 ) ) );
-            ( as2::put( consecutive ) % ( as2::_fun = f_of_g ) )( "000" )( "001" )( "010" )( "011" )( "100" )( "101" )( "110" )( "110" );
-        
+            ( as2::put( consecutive ) % ( as2::_fun = f_of_g ) )( "000" )( "001" )( "010" )( "011" )( "100" )( "101" )( "110" )( "111" );
+
             for(int i = 0; i < consecutive.size(); i++)
             {
-            	std::cout << consecutive[i].to_ulong() << ' ';
             	BOOST_ASSIGN_V2_CHECK( consecutive[i].to_ulong() == i );
             }
             //]
         }
         {
             //[modulo_fun_deque
-            int i = 0, k = 1;
+            int i = 1, k = 1;
             BOOST_AUTO(
                 factorials, (
                     as2::deque<int>( as2::_nil ) % (
@@ -103,8 +111,8 @@ namespace xxx_fun{
                 )()()()()()
             );
 
-            BOOST_ASSIGN_V2_CHECK( factorials.front() == ( 2 ) );
-            BOOST_ASSIGN_V2_CHECK( factorials.back() == ( 121 ) );
+            BOOST_ASSIGN_V2_CHECK( factorials.front() == ( 1 ) );
+            BOOST_ASSIGN_V2_CHECK( factorials.back() == ( 120 ) );
             //]
         }
 

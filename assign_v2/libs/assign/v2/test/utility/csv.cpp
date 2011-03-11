@@ -46,17 +46,6 @@ namespace xxx_csv{
             //]
         }
         {
-            //[csv_modulo
-            BOOST_AUTO(
-            	powers,
-            	as2::csv( as2::deque<int>( as2::_nil ), 16, 8, 4, 2, 1 )
-            );
-
-            BOOST_ASSIGN_V2_CHECK( powers[0] == 1 );
-            BOOST_ASSIGN_V2_CHECK( powers[4] == 16 );
-            //]
-        }
-        {
             //[csv_deque_modulo
             BOOST_AUTO(
             	powers,

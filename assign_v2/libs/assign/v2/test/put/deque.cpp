@@ -24,13 +24,13 @@ namespace xxx_deque{
     {
         namespace as2 = boost::assign::v2;    
         {
-            using namespace boost;
 			// http://bioinfo.mbb.yale.edu/~mbg/dom/fun3/area-codes/            
             //[deque_tuple_ref
             typedef const char us_state_ [3]; us_state_ ct = "CT", nj = "NJ", ny = "NY";
             typedef int area_code_; typedef boost::tuple<us_state_/*<<Notice the reference>>*/&,  area_code_> data_; 
-            as2::result_of::deque< data_ > tri_state_area = /*Calls `tri_state.push_back( data_( s, c ) )` for [^( s, c ) = ( ny, 212 )( ny, 718 )( ny, 516 )( ny, 914 )( nj, 210 )( nj, 908 )( nj, 609 )( ct, 203 ) ]*/as2::deque<data_>( ny, 212 )( ny, 718 )( ny, 516 )( ny, 914 )( nj, 210 )( nj, 908 )( nj, 609 )( ct, 203 );
+            as2::result_of::deque< data_ >::type tri_state_area = /*Calls `tri_state.push_back( data_( s, c ) )` for [^( s, c ) = ( ny, 212 )( ny, 718 )( ny, 516 )( ny, 914 )( nj, 210 )( nj, 908 )( nj, 609 )( ct, 203 ) ]*/as2::deque<data_>( ny, 212 )( ny, 718 )( ny, 516 )( ny, 914 )( nj, 210 )( nj, 908 )( nj, 609 )( ct, 203 );
 
+            using namespace boost;
             BOOST_ASSIGN_V2_CHECK( get<0>( tri_state_area.front() ) == ny );
             BOOST_ASSIGN_V2_CHECK( get<1>( tri_state_area.front() ) == 212 );
             BOOST_ASSIGN_V2_CHECK( get<0>( tri_state_area.back()  ) == ct );

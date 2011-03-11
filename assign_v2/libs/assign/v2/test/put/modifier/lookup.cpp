@@ -18,8 +18,7 @@
 #include <boost/tuple/tuple.hpp>
 
 #include <boost/assign/v2/detail/config/check.hpp>
-#include <boost/assign/v2/detail/functor/identity.hpp>
-#include <boost/assign/v2/put/fun/identity.hpp>
+#include <boost/assign/v2/put/modulo/fun.hpp>
 #include <boost/assign/v2/put/modifier/lookup.hpp>
 #include <boost/assign/v2/put/container/put.hpp>
 #include <boost/assign/v2/put/deque.hpp>
@@ -36,7 +35,7 @@ namespace xxx_lookup{
         namespace lambda = boost::lambda;
         {
         	//[lookup_meta
-            typedef as2::functor_aux::identity arg_;
+            typedef BOOST_TYPEOF(lambda::_1) arg_;
             typedef as2::put_aux::keyword_lookup keyword_;
             typedef as2::put_aux::modulo_modifier<keyword_, arg_> modulo_;
             typedef std::map<std::string, int> cont_;
@@ -62,7 +61,7 @@ namespace xxx_lookup{
         }
         {
         	//[lookup_meta_deque
-            typedef as2::functor_aux::identity arg_;
+            typedef BOOST_TYPEOF(lambda::_1) arg_;
             typedef as2::put_aux::keyword_lookup keyword_;
             typedef as2::put_aux::modulo_modifier<keyword_, arg_> modulo_;
             typedef as2::result_of::deque<int>::type put_;
