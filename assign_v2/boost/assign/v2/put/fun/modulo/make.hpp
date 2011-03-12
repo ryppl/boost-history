@@ -10,7 +10,7 @@
 #ifndef BOOST_ASSIGN_V2_PUT_FUN_MODULO_MAKE_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_FUN_MODULO_MAKE_ER_2010_HPP
 #include <boost/assign/v2/detail/keyword/ignore.hpp>
-#include <boost/assign/v2/put/frame/fwd.hpp>
+#include <boost/assign/v2/put/adapter/fwd.hpp>
 #include <boost/assign/v2/put/fun/modulo/meta.hpp>
 #include <boost/mpl/apply.hpp>
 

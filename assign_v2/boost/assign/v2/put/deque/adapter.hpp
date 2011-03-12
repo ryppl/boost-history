@@ -10,9 +10,9 @@
 #ifndef BOOST_ASSIGN_V2_PUT_DEQUE_ADAPTER_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_DEQUE_ADAPTER_ER_2010_HPP
 #include <deque>
-#include <boost/assign/v2/put/frame/crtp.hpp>
-#include <boost/assign/v2/put/frame/modifier.hpp>
-#include <boost/assign/v2/put/frame/replace_parameter.hpp>
+#include <boost/assign/v2/put/adapter/crtp.hpp>
+#include <boost/assign/v2/put/adapter/modifier.hpp>
+#include <boost/assign/v2/put/adapter/replace_parameter.hpp>
 #include <boost/assign/v2/put/deque/fwd.hpp>
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>

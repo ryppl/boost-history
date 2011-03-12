@@ -9,7 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_PUT_MODIFIER_MODULO_META_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_MODIFIER_MODULO_META_ER_2010_HPP
-#include <boost/assign/v2/put/frame/replace_parameter.hpp>
+#include <boost/assign/v2/put/adapter/replace_parameter.hpp>
 #include <boost/mpl/apply.hpp>
 #include <boost/preprocessor/cat.hpp>
 

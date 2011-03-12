@@ -10,7 +10,7 @@
 #ifndef BOOST_ASSIGN_V2_PUT_MODIFIER_LOOKUP_IMPL_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_MODIFIER_LOOKUP_IMPL_ER_2010_HPP
 #include <boost/assign/v2/detail/keyword/ignore.hpp>
-#include <boost/assign/v2/put/frame/modifier.hpp>
+#include <boost/assign/v2/put/adapter/modifier.hpp>
 #include <boost/assign/v2/put/modifier/lookup/tag.hpp>
 #include <boost/call_traits.hpp>
 #include <boost/shared_ptr.hpp>

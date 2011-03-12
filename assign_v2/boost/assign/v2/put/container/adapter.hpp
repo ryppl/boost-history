@@ -11,9 +11,9 @@
 #define BOOST_ASSIGN_V2_PUT_CONTAINER_ADAPTER_ER_2010_HPP
 #include <boost/assign/v2/ref/wrapper/copy.hpp>
 #include <boost/assign/v2/put/container/fwd.hpp> // consistency
-#include <boost/assign/v2/put/frame/crtp.hpp>
-#include <boost/assign/v2/put/frame/modifier.hpp>
-#include <boost/assign/v2/put/frame/replace_parameter.hpp>
+#include <boost/assign/v2/put/adapter/crtp.hpp>
+#include <boost/assign/v2/put/adapter/modifier.hpp>
+#include <boost/assign/v2/put/adapter/replace_parameter.hpp>
 
 namespace boost{
 namespace assign{

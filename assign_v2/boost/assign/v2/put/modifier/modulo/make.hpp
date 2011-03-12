@@ -12,8 +12,8 @@
 #include <boost/preprocessor/cat.hpp>
 #include <boost/mpl/apply.hpp>
 #include <boost/assign/v2/detail/keyword/ignore.hpp>
-#include <boost/assign/v2/put/frame/fwd.hpp>
-#include <boost/assign/v2/put/frame/modifier.hpp>
+#include <boost/assign/v2/put/adapter/fwd.hpp>
+#include <boost/assign/v2/put/adapter/modifier.hpp>
 #include <boost/assign/v2/put/modifier/modulo/meta.hpp>
 
 namespace boost{

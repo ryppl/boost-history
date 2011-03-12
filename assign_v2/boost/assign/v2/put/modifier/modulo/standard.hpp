@@ -10,7 +10,7 @@
 #ifndef BOOST_ASSIGN_V2_PUT_MODIFIER_MODULO_STANDARD_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_MODIFIER_MODULO_STANDARD_ER_2010_HPP
 #include <boost/assign/v2/detail/keyword/ignore.hpp>
-#include <boost/assign/v2/put/frame/modifier.hpp>
+#include <boost/assign/v2/put/adapter/modifier.hpp>
 #include <boost/assign/v2/put/modifier/modulo/keyword.hpp>
 #include <boost/preprocessor/cat.hpp>
 

@@ -16,7 +16,7 @@
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/is_reference.hpp>
 #endif
-#include <boost/assign/v2/put/frame/modifier.hpp>
+#include <boost/assign/v2/put/adapter/modifier.hpp>
 #include <boost/assign/v2/put/modifier/repeat/tag.hpp>
 
 namespace boost{

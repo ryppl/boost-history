@@ -12,9 +12,9 @@
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
 #include <boost/assign/v2/detail/pp/forward.hpp>
 #include <boost/assign/v2/detail/traits/container/is_ptr_container.hpp>
-#include <boost/assign/v2/put/frame/as_arg_list.hpp>
-#include <boost/assign/v2/put/frame/fwd.hpp>
-#include <boost/assign/v2/put/frame/modifier.hpp>
+#include <boost/assign/v2/put/adapter/as_arg_list.hpp>
+#include <boost/assign/v2/put/adapter/fwd.hpp>
+#include <boost/assign/v2/put/adapter/modifier.hpp>
 #include <boost/mpl/always.hpp>
 #include <boost/mpl/apply.hpp>
 #include <boost/range/algorithm/for_each.hpp>
