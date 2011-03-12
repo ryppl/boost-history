@@ -7,8 +7,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_PUT_FRAME_MODIFIER_ER_2010_HPP
-#define BOOST_ASSIGN_V2_PUT_FRAME_MODIFIER_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_PUT_ADAPTER_MODIFIER_ER_2010_HPP
+#define BOOST_ASSIGN_V2_PUT_ADAPTER_MODIFIER_ER_2010_HPP
 #include <boost/concept_check.hpp>
 
 namespace boost{
@@ -45,4 +45,4 @@ namespace put_concept{
 }// assign
 }// boost
 
-#endif // BOOST_ASSIGN_V2_PUT_FRAME_MODIFIER_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_PUT_ADAPTER_MODIFIER_ER_2010_HPP
