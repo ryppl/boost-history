@@ -12,8 +12,8 @@
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
 #include <boost/assign/v2/detail/keyword/nil.hpp>
 #include <boost/assign/v2/put/deduce/fun.hpp>
-#include <boost/assign/v2/put/deduce/modifier/tag.hpp>
-#include <boost/assign/v2/put/deduce/modifier/dependee.hpp>
+#include <boost/assign/v2/put/modifier/deduce/tag.hpp>
+#include <boost/assign/v2/put/modifier/deduce/dependee.hpp>
 //#include <boost/assign/v2/put/deque/fwd.hpp>
 #include <boost/assign/v2/put/deque/adapter.hpp>
 #include <boost/type_traits/remove_cv.hpp>

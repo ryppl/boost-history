@@ -12,8 +12,8 @@
 #include <boost/assign/v2/put/container/fwd.hpp>
 #include <boost/assign/v2/put/container/adapter.hpp>
 #include <boost/assign/v2/put/deduce/fun.hpp>
-#include <boost/assign/v2/put/deduce/modifier/tag.hpp>
-#include <boost/assign/v2/put/deduce/modifier/dependee.hpp>
+#include <boost/assign/v2/put/modifier/deduce/tag.hpp>
+#include <boost/assign/v2/put/modifier/deduce/dependee.hpp>
 
 namespace boost{
 namespace assign{
