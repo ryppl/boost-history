@@ -18,7 +18,7 @@
 namespace boost{
 namespace assign{
 namespace v2{
-namespace convert_aux{
+namespace conversion_aux{
 
     template<typename R>
     class converter
@@ -43,7 +43,7 @@ namespace convert_aux{
         template<typename C>
         C type()const
         {
-            return convert_aux::convert<C>( this->w.get() );
+            return conversion_aux::convert<C>( this->w.get() );
         }
 
         private:
@@ -56,20 +56,20 @@ namespace convert_aux{
     template<typename R>
     converter<R> operator|( R const& r, converter_adapter )
     {
-    	return converter<R>( r );
+        return converter<R>( r );
     }
 
-}// convert_aux
+}// conversion_aux
 namespace{
-	convert_aux::converter_adapter const _converter 
-    	= convert_aux::converter_adapter();
+    conversion_aux::converter_adapter const _converter 
+        = conversion_aux::converter_adapter();
 }
 namespace result_of{
 
     template<typename R>
     struct converter
     {
-        typedef convert_aux::converter<R> type;
+        typedef conversion_aux::converter<R> type;
     };
 
 }//result_of

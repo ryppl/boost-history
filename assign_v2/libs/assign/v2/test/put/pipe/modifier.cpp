@@ -20,10 +20,10 @@ namespace xxx_modifier{
 
     void test()
     {
-		xxx_iterate::test();
-		xxx_lookup::test();
-		xxx_repeat::test();
-		xxx_standard::test();
+        xxx_iterate::test();
+        xxx_lookup::test();
+        xxx_repeat::test();
+        xxx_standard::test();
     }
 
 }// xxx_modifier

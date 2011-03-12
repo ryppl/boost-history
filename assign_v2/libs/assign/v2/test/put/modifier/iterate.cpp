@@ -16,7 +16,6 @@
 #include <boost/type_traits/is_same.hpp>
 #include <boost/typeof/typeof.hpp>
 
-#include <boost/assign/v2/detail/functor/post_increment.hpp>
 #include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/put/modifier/iterate.hpp>
 #include <boost/assign/v2/put/container/put.hpp>
@@ -32,13 +31,13 @@ namespace xxx_iterate{
 
     void test()
     {
-		using namespace boost;
+        using namespace boost;
         using namespace lambda;
         namespace as2 = assign::v2;
         {
-        	//[iterate_meta
+            //[iterate_meta
             typedef as2::put_aux::keyword_iterate keyword_;
-			typedef as2::modifier_tag::iterate_arg arg_;
+            typedef as2::modifier_tag::iterate_arg arg_;
             typedef as2::put_aux::modulo_modifier<keyword_, arg_> modulo_;
             typedef array<int, 4> cont_;
             typedef as2::result_of::put<cont_>::type put_;
@@ -63,9 +62,9 @@ namespace xxx_iterate{
             //]
         }
         {
-        	//[iterate_meta_deque
+            //[iterate_meta_deque
             typedef as2::put_aux::keyword_iterate keyword_;
-			typedef as2::modifier_tag::iterate_arg arg_;
+            typedef as2::modifier_tag::iterate_arg arg_;
             typedef as2::put_aux::modulo_modifier<keyword_, arg_> modulo_;
             typedef as2::result_of::deque<int>::type put_;
             typedef as2::result_of::modulo_modifier<put_> meta1_;
@@ -78,12 +77,12 @@ namespace xxx_iterate{
         }
         {
             //[iterate_deque
-			as2::result_of::deque<int>::type missing_tail = as2::deque<int>( 1 )( 10 )( -1 )( -1 );
+            as2::result_of::deque<int>::type missing_tail = as2::deque<int>( 1 )( 10 )( -1 )( -1 );
             int i = 2; 
             
             BOOST_AUTO(
-            	powers,
-            	( missing_tail % ( as2::_iterate = var( i )++ ) )( 100 )( 1000 )
+                powers,
+                ( missing_tail % ( as2::_iterate = var( i )++ ) )( 100 )( 1000 )
             );
 
             BOOST_ASSIGN_V2_CHECK( powers[0] == 1 );

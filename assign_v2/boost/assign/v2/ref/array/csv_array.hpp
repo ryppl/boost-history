@@ -32,7 +32,7 @@ namespace nth_result_of{
     typename nth_result_of::csv_array<0, U>::type
     csv_array( keyword_aux::nil )
     {
-		typedef typename nth_result_of::csv_array<0, U>::type result_;
+        typedef typename nth_result_of::csv_array<0, U>::type result_;
         return result_();
     }
 
@@ -44,7 +44,7 @@ namespace nth_result_of{
     template<array_size_type N, typename /*<<U& has to be a reference>>*/U>
     struct /*<<Meta-function>>*/csv_array 
     //<-
-    	: array_aux::nth_result_of::csv_array<N, U>
+        : array_aux::nth_result_of::csv_array<N, U>
     //->
     {};
 

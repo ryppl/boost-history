@@ -14,7 +14,7 @@
 namespace boost{
 namespace assign{
 namespace v2{
-namespace convert_aux{
+namespace conversion_aux{
 
     // This is in replacement of switch_aux::helper since here we need
     // two arguments.
@@ -23,7 +23,7 @@ namespace convert_aux{
     struct default_f : ::boost::mpl::true_{};
 
     template<typename Tag,
-        template<typename, typename> class F = convert_aux::default_f>
+        template<typename, typename> class F = conversion_aux::default_f>
     struct helper
     {
         typedef Tag tag;
@@ -34,7 +34,7 @@ namespace convert_aux{
         };
     };
 
-}// convert_aux
+}// conversion_aux
 }// v2
 }// assign
 }// boost

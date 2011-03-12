@@ -22,10 +22,10 @@ namespace xxx_deque{
 
     void test()
     {
-    	using namespace boost;
+        using namespace boost;
         namespace as2 = assign::v2;    
         {
-			// http://bioinfo.mbb.yale.edu/~mbg/dom/fun3/area-codes/            
+            // http://bioinfo.mbb.yale.edu/~mbg/dom/fun3/area-codes/            
             //[deque_tuple_ref
             typedef const char us_state_ [3]; us_state_ ct = "CT", nj = "NJ", ny = "NY";
             typedef int area_code_; typedef boost::tuple<us_state_/*<<Notice the reference>>*/&,  area_code_> data_; 
@@ -37,9 +37,9 @@ namespace xxx_deque{
             BOOST_ASSIGN_V2_CHECK( get<0>( tri_state_area.back()  ) == ct );
             BOOST_ASSIGN_V2_CHECK( get<1>( tri_state_area.back()  ) == 203 );
             //]
-		}
+        }
         {
-        	//[deque_str
+            //[deque_str
             typedef std::string str_;
             BOOST_ASSIGN_V2_CHECK(
                 str_( as2::deque<const char*>( "x" )( "y" )( "z" )[1] ) == "y"
@@ -50,17 +50,17 @@ namespace xxx_deque{
             //[csv_deque
             typedef as2::result_of::csv_deque<int>::type C;
             {
-            	C cont = as2::csv_deque( 72, 31, 48 );
+                C cont = as2::csv_deque( 72, 31, 48 );
 
-            	BOOST_ASSIGN_V2_CHECK( cont.front() == 72 );
-            	BOOST_ASSIGN_V2_CHECK( cont.back() == 48 );
+                BOOST_ASSIGN_V2_CHECK( cont.front() == 72 );
+                BOOST_ASSIGN_V2_CHECK( cont.back() == 48 );
             }
             {
-            	C cont = as2::csv_deque( 72, 31 )/* Thanks to `result_of::csv_deque<int>::type == result_of::deque<int>::type`*/( 48 );
+                C cont = as2::csv_deque( 72, 31 )/* Thanks to `result_of::csv_deque<int>::type == result_of::deque<int>::type`*/( 48 );
             
-            	BOOST_ASSIGN_V2_CHECK( cont.front() == 72 );
-            	BOOST_ASSIGN_V2_CHECK( cont.back() == 48 );
-			}
+                BOOST_ASSIGN_V2_CHECK( cont.front() == 72 );
+                BOOST_ASSIGN_V2_CHECK( cont.back() == 48 );
+            }
             //]
         }
         {

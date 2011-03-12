@@ -38,7 +38,7 @@ namespace xxx_mix{
 
     void test(){
 
-		using namespace boost;
+        using namespace boost;
         using namespace lambda;
         namespace as2 = assign::v2;
 
@@ -58,43 +58,43 @@ namespace xxx_mix{
             ));
             //]
         } 
-		{
-         	//[mix_bitset_revisited
-			typedef std::string str_; typedef std::bitset<3> data_; 
+        {
+             //[mix_bitset_revisited
+            typedef std::string str_; typedef std::bitset<3> data_; 
             std::vector<data_> consecutive; as2::put( consecutive )( as2::as_arg_list( as2::csv_deque</*Explicit template argument `std::string` is required, because the deduced argument would be `const char*`, and only the former is a valid argument to `data_`'s constructor*/std::string>( "000", "001", "010", "011", "100", "101", "110", "111" ) ) );
-		
+        
             for(int i = 0; i < consecutive.size(); i++)
             {
-            	BOOST_ASSIGN_V2_CHECK( consecutive[i].to_ulong() == i );
+                BOOST_ASSIGN_V2_CHECK( consecutive[i].to_ulong() == i );
             }
             //]
         }
         {
             //[mix_maxtrix3x3
             const int sz = 3;
-    		typedef array<int, sz>  row_;
-    		array<row_, sz>  matrix3x3 = converter(
-            	as2::ref::array
-                	( as2::ref::csv_array( 1, 2, 3 ) | as2::_convert<row_>() )
-                	( as2::ref::csv_array( 4, 5, 6 ) | as2::_convert<row_>() )
-                	( as2::ref::csv_array( 7, 8, 9 ) | as2::_convert<row_>() )
+            typedef array<int, sz>  row_;
+            array<row_, sz>  matrix3x3 = converter(
+                as2::ref::array
+                    ( as2::ref::csv_array( 1, 2, 3 ) | as2::_convert<row_>() )
+                    ( as2::ref::csv_array( 4, 5, 6 ) | as2::_convert<row_>() )
+                    ( as2::ref::csv_array( 7, 8, 9 ) | as2::_convert<row_>() )
             );
             for(int i = 0; i < 9; i++)
             {
-            	BOOST_ASSIGN_V2_CHECK( matrix3x3[ i / 3 ][ i % 3 ] == i + 1 );
+                BOOST_ASSIGN_V2_CHECK( matrix3x3[ i / 3 ][ i % 3 ] == i + 1 );
             }
-			//]
+            //]
         }
-		{
-        	//[mix_ragged
+        {
+            //[mix_ragged
             typedef double data_; typedef std::list<data_> variable_size_; typedef std::vector<variable_size_> ragged_;
             
-			ragged_ ragged = converter( 
-            	as2::deque<variable_size_>
-            		( as2::ref::csv_array( 0.71, 0.63, 0.85 ) | as2::_convert<variable_size_>() ) 
-                	( as2::ref::csv_array( 0.61, 0.69, 0.92, 0.55 ) | as2::_convert<variable_size_>() )
-					( 1, -99.99 )
-                	( )
+            ragged_ ragged = converter( 
+                as2::deque<variable_size_>
+                    ( as2::ref::csv_array( 0.71, 0.63, 0.85 ) | as2::_convert<variable_size_>() ) 
+                    ( as2::ref::csv_array( 0.61, 0.69, 0.92, 0.55 ) | as2::_convert<variable_size_>() )
+                    ( 1, -99.99 )
+                    ( )
             );
 
             BOOST_ASSIGN_V2_CHECK( ragged[0].size() == 3 );
@@ -102,18 +102,18 @@ namespace xxx_mix{
             BOOST_ASSIGN_V2_CHECK( ragged[2].size() == 1 );
             BOOST_ASSIGN_V2_CHECK( ragged[3].size() == 0 );
             //]
-			data_ eps = numeric::bounds<data_>::smallest();
+            data_ eps = numeric::bounds<data_>::smallest();
             BOOST_ASSIGN_V2_CHECK( fabs( ragged.front().front() - 0.71 ) < eps );
             BOOST_ASSIGN_V2_CHECK( fabs( ragged.front().back() - 0.85  ) < eps );
             BOOST_ASSIGN_V2_CHECK( fabs( ragged[2].front() + 99.99     ) < eps ); 
             BOOST_ASSIGN_V2_CHECK( fabs( ragged[2].back() + 99.99      ) < eps ); 
         }
-		{
+        {
         
             //[mix_fun_iterate
             typedef int T; array<T, 5> powers; powers[0] = 1; powers[1] = 10;
             int i = 2, k = powers[ i - 1 ];   
-			/*<<Calls `powers[i] = ( k *= 10 )` for [^ i  = 2, 3, 4 ] >>*/
+            /*<<Calls `powers[i] = ( k *= 10 )` for [^ i  = 2, 3, 4 ] >>*/
             ( as2::put( powers ) % ( as2::_fun = var( k ) *= 10 ) % ( as2::_iterate = var( i )++ ) )()()();
 
             BOOST_ASSIGN_V2_CHECK( powers[0] == 1 );
@@ -122,22 +122,7 @@ namespace xxx_mix{
             BOOST_ASSIGN_V2_CHECK( powers[3] == 1000 );
             BOOST_ASSIGN_V2_CHECK( powers[4] == 10000 );
             //]
-		}
-		{
-            //[deque_chain_put
-            typedef const char state_ [3]; state_ ct = "CT", nj = "NJ", ny = "NY", ca = "CA", /* ore = "OR",*/ wa = "WA";
-            typedef int code_; typedef tuple<state_/*<<Notice the reference>>*/&,  code_> area_code_;
-            /*<<Brings && for chaining into scope>>*/using namespace assign::v2;
-            std::deque<area_code_> pacific; 
-            
-            //copy(
-                as2::deque<area_code_>( nj, 201 )( ct, 203 )( ny, 212 )( ny, 315 )( ny, 347 )( nj, 551 ) 
-                	&&  ( pacific | as2::_put( wa, 206 )( ca, 209 )( ca, 213 )( wa, 253 ) );//,
-                //std::cout << get<1>( _1 ) << std::endl;
-            //); 
-            //]
-
-		}
+        }
     }
 
 }// xxx_mix

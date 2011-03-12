@@ -23,13 +23,13 @@ namespace test_assign_v2{
 namespace xxx_ref{
 namespace xxx_list{
 
-	// --User may skip this file-- //
+    // --User may skip this file-- //
     // It checks internal details. //
     // --------------------------- //        
 
     void test()
     {
-    	using namespace boost;
+        using namespace boost;
         namespace as2 = assign::v2;
         typedef use_default tag_;
         typedef std::string str_;

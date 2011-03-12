@@ -16,7 +16,7 @@
 namespace boost{
 namespace assign{
 namespace v2{
-namespace convert_aux{
+namespace conversion_aux{
 
     template<typename C, typename R>
     struct use_put : ::boost::mpl::or_<
@@ -24,7 +24,7 @@ namespace convert_aux{
         v2::container_traits::has_push<C>
     >{};
 
-}// convert_aux
+}// conversion_aux
 }// v2
 }// assign
 }// boost

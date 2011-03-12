@@ -63,14 +63,14 @@ namespace put_aux{
 
     };
 
-	template<typename D>
+    template<typename D>
     struct wrapper
     {
 
         wrapper(D const& d):d_( d ){}
             
         operator D const&()const{ return this->d_; }
-			        
+                    
         typedef wrapper const& result_type;            
         
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
@@ -102,12 +102,11 @@ namespace put_aux{
         
     };
 
-
     // D has to model concept_sub::Pre3, with respect to container C, functor F
     // and Tag. It then models concept_sub::Post
     template<typename C, typename F, typename Tag, typename D>
-    class crtp :
-        public fun_holder<F>
+    class crtp 
+    	: public fun_holder<F>
         , public modifier_holder<Tag>
 #if !BOOST_ASSIGN_V2_ENABLE_CPP0X
         , public functor_aux::crtp_unary_and_up<
@@ -118,7 +117,9 @@ namespace put_aux{
     {
 
         public:
-        typedef D const& result_type;
+
+        D & derived(){ return static_cast<D&>(*this); }
+        D const& derived()const{ return static_cast<D const&>(*this); }
 
         protected:
 
@@ -128,15 +129,15 @@ namespace put_aux{
 
         public:
 
-        D & derived(){ return static_cast<D&>(*this); }
-        D const& derived()const{ return static_cast<D const&>(*this); }
 
         crtp(){}
         explicit crtp( F const& f ) : fun_holder_( f ){}
         explicit crtp( F const& f, modifier_ const& m )
             : fun_holder_( f ), modifier_holder_( m ){}
 
-		template<typename R>
+        typedef D const& result_type;
+
+        template<typename R>
         result_type 
         operator()( as_arg_list_adapter<R> range )const
         {
@@ -146,7 +147,6 @@ namespace put_aux{
 
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 
-        //[frame_crtp_functor
         template<typename...Args>
         result_type operator()( Args&&...args )const
         {
@@ -154,7 +154,6 @@ namespace put_aux{
                 /*<< Instance of F >>*/ this->fun( std::forward<Args>(args)... )
             );
         }
-        //]
 
 #else
         protected:
@@ -188,7 +187,7 @@ BOOST_PP_REPEAT_FROM_TO(
 #undef BOOST_ASSIGN_V2_MACRO
 #endif // BOOST_ASSIGN_V2_ENABLE_CPP0X
 
-		// must be mutable
+        // must be mutable
         C& container()const{ return this->derived().container(); }
 
         protected:
@@ -222,7 +221,6 @@ BOOST_PP_REPEAT_FROM_TO(
 
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 
-        //[frame_crtp_modify
         template<typename T>
         result_type modify(T&& t)const
         {
@@ -233,7 +231,6 @@ BOOST_PP_REPEAT_FROM_TO(
             );
             return this->derived();
         }
-        //]
 #else
         template<typename T>
         result_type modify(T& t)const

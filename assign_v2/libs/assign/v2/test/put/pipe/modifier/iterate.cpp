@@ -33,11 +33,11 @@ namespace xxx_iterate{
             typedef int T; boost::array<T, 4> powers; powers[0] = 1; powers[1] = 10;
             int i = 2; 
             BOOST_ASSIGN_V2_CHECK(
-            	boost::range::equal(
-            		powers | ( as2::_csv_put % ( as2::_iterate = var( i )++ ) )( 100, 1000 ),
-                	as2::csv_deque<T>( 1, 10, 100, 1000 )    
+                boost::range::equal(
+                    powers | ( as2::_csv_put % ( as2::_iterate = var( i )++ ) )( 100, 1000 ),
+                    as2::csv_deque<T>( 1, 10, 100, 1000 )    
                 )
-			);
+            );
             //]
         }
     }

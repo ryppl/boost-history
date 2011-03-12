@@ -51,10 +51,10 @@ namespace put_pipe_aux{
         template<typename V>
         struct next_helper
         {
-        	typedef typename ::boost::mpl::push_back<
-            	ArgsList, V
+            typedef typename ::boost::mpl::push_back<
+                ArgsList, V
             >::type next_args_list_;
-        	typedef args_list<ParList,  next_args_list_,  enable_pars> type;
+            typedef args_list<ParList,  next_args_list_,  enable_pars> type;
         };
 
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
@@ -101,12 +101,12 @@ namespace put_pipe_aux{
         ); 
     
         typedef typename ::boost::mpl::apply1<
-        	meta_, ArgsList
+            meta_, ArgsList
         >::type args_list_cont_type;
 
         args_list(){}
         explicit args_list(par_list_cont_type const& a, args_list_cont_type const& b) 
-        	: par_list_cont_( a ), args_list_cont_( b ){}
+            : par_list_cont_( a ), args_list_cont_( b ){}
 
         // operator%
 
@@ -114,7 +114,7 @@ namespace put_pipe_aux{
         struct modulo_result
         {
             typedef typename modulo_traits_::template 
-            	next_par_list<P>::type par_list_;
+                next_par_list<P>::type par_list_;
             typedef args_list<par_list_, ArgsList> type;
         };
 

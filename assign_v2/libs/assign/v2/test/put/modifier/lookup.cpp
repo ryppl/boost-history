@@ -31,11 +31,11 @@ namespace xxx_lookup{
 
     void test()
     {
-		using namespace boost;
+        using namespace boost;
         using namespace lambda;
         namespace as2 = assign::v2;
         {
-        	//[lookup_meta
+            //[lookup_meta
             typedef BOOST_TYPEOF(_1) arg_;
             typedef as2::put_aux::keyword_lookup keyword_;
             typedef as2::put_aux::modulo_modifier<keyword_, arg_> modulo_;
@@ -53,15 +53,15 @@ namespace xxx_lookup{
             //[lookup
             typedef std::map<std::string, int> C; C cal;
             ( 
-            	as2::put( cal )/*<<Calls `cal.insert( C::value_type( "feb", 28 )  )`>>*/( "feb", 28 )( "apr", 30 )( "jun", 30 )( "sep", 30 )( "nov", 30 )/*<<Without this parameter, the compiler would complain that the subsequent argument (`"jan"`) is not convertible to `C::key_type`>>*/% ( as2::_fun = _1 ) %  ( as2::_lookup = (_1 = 31) ) 
+                as2::put( cal )/*<<Calls `cal.insert( C::value_type( "feb", 28 )  )`>>*/( "feb", 28 )( "apr", 30 )( "jun", 30 )( "sep", 30 )( "nov", 30 )/*<<Without this parameter, the compiler would complain that the subsequent argument (`"jan"`) is not convertible to `C::key_type`>>*/% ( as2::_fun = _1 ) %  ( as2::_lookup = (_1 = 31) ) 
             )/*<<Calls `cal["jan"] = 31`>>*/( "jan" )( "mar" )( "may" )( "jul" )( "aug" )( "oct" )( "dec" );
             
             BOOST_ASSIGN_V2_CHECK( cal["jan"] == 31 );
             BOOST_ASSIGN_V2_CHECK( cal["dec"] == 31 );
-			//]        
+            //]        
         }
         {
-        	//[lookup_meta_deque
+            //[lookup_meta_deque
             typedef BOOST_TYPEOF(_1) arg_;
             typedef as2::put_aux::keyword_lookup keyword_;
             typedef as2::put_aux::modulo_modifier<keyword_, arg_> modulo_;
@@ -77,10 +77,10 @@ namespace xxx_lookup{
         {
             //[lookup_deque
             BOOST_AUTO(
-            	days_in_first_quater,
-            	( 
-            		as2::deque<int>( 31 )( 31 )( 31 ) % ( as2::_lookup = ( _1 -= 3 ) ) 
-            	)( 1 ) 
+                days_in_first_quater,
+                ( 
+                    as2::deque<int>( 31 )( 31 )( 31 ) % ( as2::_lookup = ( _1 -= 3 ) ) 
+                )( 1 ) 
             );
             BOOST_ASSIGN_V2_CHECK( days_in_first_quater[0] == 31 );
             BOOST_ASSIGN_V2_CHECK( days_in_first_quater[1] == 28 );

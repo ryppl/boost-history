@@ -26,19 +26,19 @@ namespace v2{namespace put_aux{
         typedef Arg arg_;
         // storing a copy of lambda::something has caused pbs, hence ptr
         typedef boost::shared_ptr<arg_> ptr_; 
-		typedef keyword_aux::ignore ignore_;
-		
+        typedef keyword_aux::ignore ignore_;
+        
         public:
 
         modifier() : ptr( new arg_() ){}
         explicit modifier(
-        	ignore_,
+            ignore_,
             typename boost::call_traits<arg_>::param_type arg
         ) : ptr( new arg_( arg ) )
         {}
 
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
-		template<typename C, typename T>
+        template<typename C, typename T>
         void impl(C& cont, T&& t )const
         {
             cont[ key ] = (*this->ptr)( cont[ std::forward<T>( key ) ] );

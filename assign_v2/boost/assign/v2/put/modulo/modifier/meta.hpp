@@ -19,12 +19,12 @@ namespace v2{
 //[meta_modifier_tag
 namespace put_aux{
     
-	template<typename Keyword, typename Arg>
-	struct /*<<Meta-function class to be specialized on Keyword>>*/ meta_modifier_tag
-	{
+    template<typename Keyword, typename Arg>
+    struct /*<<Meta-function class to be specialized on Keyword>>*/ meta_modifier_tag
+    {
         template<typename /*<<Inherits crtp\<\> >>*/ D> 
-    	struct /*<<Returns a modifier-tag>>*/ apply;
-	};
+        struct /*<<Returns a modifier-tag>>*/ apply;
+    };
         
 }// put_aux
 //]
@@ -38,7 +38,7 @@ namespace result_of{
             
         template<typename Keyword, typename Arg>
         struct apply : ::boost::mpl::apply1<
-        	meta_, 
+            meta_, 
             typename ::boost::mpl::apply1<
                 put_aux::meta_modifier_tag<Keyword, Arg>, 
                 D
@@ -52,9 +52,9 @@ namespace result_of{
 //[result_of_modulo_modifier
 namespace result_of{
 
-	template<typename /*<<Inherits crtp\<\> >>*/ D>
+    template<typename /*<<Inherits crtp\<\> >>*/ D>
     struct /*<<Meta-function class>>*/ modulo_modifier 
-    	: put_aux::result_of::modulo_modifier<D>
+        : put_aux::result_of::modulo_modifier<D>
     {};
 
 }// result_of
@@ -70,12 +70,12 @@ namespace assign{\
 namespace v2{\
 namespace put_aux{\
 \
-	template<typename Arg>\
-	struct meta_modifier_tag<BOOST_PP_CAT(keyword_,NAME), Arg>\
-	{\
+    template<typename Arg>\
+    struct meta_modifier_tag<BOOST_PP_CAT(keyword_,NAME), Arg>\
+    {\
         template<typename D>\
-    	struct apply{ typedef Result type; };\
-	};\
+        struct apply{ typedef Result type; };\
+    };\
 \
 }\
 }\

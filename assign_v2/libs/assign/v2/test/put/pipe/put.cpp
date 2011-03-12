@@ -27,33 +27,33 @@ namespace xxx_pipe{
 namespace xxx_put{ 
 
     void test(){
-		using namespace boost;
+        using namespace boost;
         namespace as2 = assign::v2;
-    	{
-        	//pipe_put_str_literal
-	        typedef const char* T; typedef std::string str_; std::deque<T> cont;
-        	BOOST_ASSIGN_V2_CHECK( 
-            	boost::range::equal(
-            		cont | as2::_put( "x" )( "y" )( "z" ),
+        {
+            //pipe_put_str_literal
+            typedef const char* T; typedef std::string str_; std::deque<T> cont;
+            BOOST_ASSIGN_V2_CHECK( 
+                boost::range::equal(
+                    cont | as2::_put( "x" )( "y" )( "z" ),
                     as2::csv_deque( "x" )( "y" )( "z" )
                 )
-        	);
-        	BOOST_ASSIGN_V2_CHECK( str_( cont[1] ) == "y" );
-        	BOOST_ASSIGN_V2_CHECK( str_( cont[2] ) == "z" );
-    	}
-		{
+            );
+            BOOST_ASSIGN_V2_CHECK( str_( cont[1] ) == "y" );
+            BOOST_ASSIGN_V2_CHECK( str_( cont[2] ) == "z" );
+        }
+        {
             //[pipe_put_as_arg_list
-			boost::array<int, 2> interval; boost::array<int, 6> all6;
-			BOOST_ASSIGN_V2_CHECK(
-            	boost::range::equal(
-            		all6 | as2::_put( 1 )( 2 )( as2::as_arg_list( interval | as2::_csv_put( 3, 4 ) ) )( 5 )( 6 ),
+            boost::array<int, 2> interval; boost::array<int, 6> all6;
+            BOOST_ASSIGN_V2_CHECK(
+                boost::range::equal(
+                    all6 | as2::_put( 1 )( 2 )( as2::as_arg_list( interval | as2::_csv_put( 3, 4 ) ) )( 5 )( 6 ),
                     as2::csv_deque( 1, 2, 3, 4, 5, 6 )
                 )
             );
-			BOOST_ASSIGN_V2_CHECK(
-            	boost::range::equal( interval, as2::csv_deque( 3, 4 ) )
+            BOOST_ASSIGN_V2_CHECK(
+                boost::range::equal( interval, as2::csv_deque( 3, 4 ) )
             );
-			//]
+            //]
         }
 
     }// test()

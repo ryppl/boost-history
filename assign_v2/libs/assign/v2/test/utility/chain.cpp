@@ -60,7 +60,7 @@ namespace xxx_chain{
             BOOST_ASSIGN_V2_CHECK( fa_si.back() == "si" );
             //]
         }
-		// Boost.Assign.v2 containers
+        // Boost.Assign.v2 containers
         {
             //[chain_ref_array
             /*<< Needed to bring && into scope >>*/ using namespace assign::v2;

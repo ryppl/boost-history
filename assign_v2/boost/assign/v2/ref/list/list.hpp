@@ -48,17 +48,17 @@ namespace nth_result_of{
 
 }// result_of
 
-	template<typename Tag>
-	typename ::boost::mpl::apply1<
-    	nth_result_of::list<Tag>, 
+    template<typename Tag>
+    typename ::boost::mpl::apply1<
+        nth_result_of::list<Tag>, 
         ::boost::mpl::vector0<>
     >::type
     list( keyword_aux::nil )
     {
-		return typename ::boost::mpl::apply1<
-    		nth_result_of::list<Tag>, 
-        	::boost::mpl::vector0<>
-    	>::type();
+        return typename ::boost::mpl::apply1<
+            nth_result_of::list<Tag>, 
+            ::boost::mpl::vector0<>
+        >::type();
     }
 
 }// list_aux
@@ -71,8 +71,8 @@ namespace nth_result_of{
 
     template<typename Tag>
     struct list 
-    	: list_aux::nth_result_of::list<Tag>
-	{};
+        : list_aux::nth_result_of::list<Tag>
+    {};
 
 }// nth_result_of
 }// ref

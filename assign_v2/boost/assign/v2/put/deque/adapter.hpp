@@ -120,7 +120,7 @@ namespace put_aux{
         // Note : the modifiers such as push_back() are ommitted as they
         // accessible through the put interface.
 
-       	impl_& container()const{ return this->impl; }
+           impl_& container()const{ return this->impl; }
         protected:
         mutable impl_ impl;
 

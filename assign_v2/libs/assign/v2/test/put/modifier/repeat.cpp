@@ -23,8 +23,8 @@ namespace xxx_repeat{
 
     void test()
     {
-		using namespace boost;
-		namespace as2 = assign::v2;
+        using namespace boost;
+        namespace as2 = assign::v2;
         {
             //[repeat_simple
             std::vector<int> cont;
@@ -47,7 +47,7 @@ namespace xxx_repeat{
             BOOST_ASSIGN_V2_CHECK( cont.front() == 48 );
             BOOST_ASSIGN_V2_CHECK( cont.back() == 72 );
         }
-	}
+    }
 
 
 }// xxx_repeat

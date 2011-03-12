@@ -62,7 +62,7 @@ namespace xxx_fun{
 
     void test()
     {
-		using namespace boost;
+        using namespace boost;
         using namespace lambda;
         namespace as2 = assign::v2;
         {
@@ -70,11 +70,11 @@ namespace xxx_fun{
             std::vector<double> exponent;
             typedef function<double(double)> f_;
             (
-            	as2::put( exponent ) % ( as2::_fun = f_( log10 ) )
+                as2::put( exponent ) % ( as2::_fun = f_( log10 ) )
             )/*<<Calls `exponent.push_back( log10( 1000.0 ) )`>>*/( 1000.0 )( 10.0 )( 10000.0 )( 1.0 )( 100.0 ); 
 
 
-			double eps = numeric::bounds<double>::smallest();
+            double eps = numeric::bounds<double>::smallest();
             BOOST_ASSIGN_V2_CHECK( fabs( exponent.front() - 3.0 ) < eps );
             BOOST_ASSIGN_V2_CHECK( fabs( exponent.back() - 2.0 ) < eps );
             //]

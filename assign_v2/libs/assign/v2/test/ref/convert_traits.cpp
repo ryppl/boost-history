@@ -14,13 +14,13 @@ namespace test_assign_v2{
 namespace xxx_ref{
 namespace xxx_convert_traits{
 
-	// --User may skip this file-- //
+    // --User may skip this file-- //
     // It checks internal details. //
     // --------------------------- //        
 
     void test()
     {
-    	using namespace boost;
+        using namespace boost;
         namespace as2 = assign::v2;
         namespace ns = as2::ref::convert_traits::checking;
         {

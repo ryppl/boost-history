@@ -15,8 +15,8 @@
 /*<<
 For unit-testing, do, instead,
 ``
-	#include <boost/test/test_tools.hpp>
-	#define BOOST_ASSIGN_V2_CHECK( p ) BOOST_CHECK( p )
+    #include <boost/test/test_tools.hpp>
+    #define BOOST_ASSIGN_V2_CHECK( p ) BOOST_CHECK( p )
 ``
 <<*/
 #define BOOST_ASSIGN_V2_CHECK( p ) BOOST_ASSERT( p )

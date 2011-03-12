@@ -21,29 +21,29 @@ int main (int argc, char * const argv[])
 {
 
     // Do not put libs/assign/v2/test/unit_testing in this project
-	{
+    {
         std::string cpp0x = "RVALUE_REFERENCES : ";
-		#ifdef BOOST_NO_RVALUE_REFERENCES
-		cpp0x += "NO";
-		#else
-		cpp0x += "YES";
-		#endif
+        #ifdef BOOST_NO_RVALUE_REFERENCES
+        cpp0x += "NO";
+        #else
+        cpp0x += "YES";
+        #endif
         cpp0x += ", VARIADIC_TEMPLATES : ";
-		#ifdef BOOST_NO_VARIADIC_TEMPLATES
-		cpp0x += "NO";
+        #ifdef BOOST_NO_VARIADIC_TEMPLATES
+        cpp0x += "NO";
         #else
-		cpp0x += "YES";
-		#endif
+        cpp0x += "YES";
+        #endif
         cpp0x += ", 0X_HDR_TUPLE : ";
-		#ifdef BOOST_NO_0X_HDR_TUPLE
-		cpp0x += "NO";
+        #ifdef BOOST_NO_0X_HDR_TUPLE
+        cpp0x += "NO";
         #else
-		cpp0x += "YES";
-		#endif
+        cpp0x += "YES";
+        #endif
         cpp0x += ", ENABLE_CPP0X : " + std::string(BOOST_ASSIGN_V2_ENABLE_CPP0X ? "YES" : "NO");
 
-		std::cout << cpp0x << std::endl;
-	}
+        std::cout << cpp0x << std::endl;
+    }
     {
         using namespace test_assign_v2;
         xxx_put::test();

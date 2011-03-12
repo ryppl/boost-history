@@ -65,14 +65,14 @@ namespace list_aux{
 
 namespace result_of{
 
-	// ParList could, in principle, be specified in terms (Tag, H, T), but we 
+    // ParList could, in principle, be specified in terms (Tag, H, T), but we 
     // chose not to (that would be less practical in client code).
     template<typename Lhs, typename ParList>
     struct as_modulo_list : as_modulo_list_impl<0, Lhs, ParList>{};
     
 }// result_of
 
-	// Warning Parlist is first argument, here, whereas second in result_of::
+    // Warning Parlist is first argument, here, whereas second in result_of::
     template<typename ParList, typename Lhs, typename Tag, typename H, typename T>
     typename result_of::as_modulo_list<Lhs, ParList>::type
     as_modulo_list( Lhs const& lhs, container<Tag, H, T> const& rhs_list )

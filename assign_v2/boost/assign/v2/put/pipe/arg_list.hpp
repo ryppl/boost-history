@@ -29,7 +29,7 @@ namespace assign{
 namespace v2{
 namespace put_pipe_aux{
 
-	typedef ref::array_aux::size_type arg_list_size_type;
+    typedef ref::array_aux::size_type arg_list_size_type;
 
     template<typename Pars, arg_list_size_type N, typename U>
     struct arg_list
@@ -87,7 +87,7 @@ namespace put_pipe_aux{
         struct modulo_result
         {
             typedef typename modulo_traits_:: template next_par_list<
-            	P
+                P
             >::type par_list_;
             typedef arg_list_generator<par_list_> type;
         };
@@ -185,9 +185,9 @@ BOOST_PP_REPEAT_FROM_TO(
 
 #endif // BOOST_ASSIGN_V2_ENABLE_CPP0X
 
-		par_list_cont_type const& par_list_cont()const
+        par_list_cont_type const& par_list_cont()const
         {
-        	return this->par_list_cont_;
+            return this->par_list_cont_;
         }
 
         protected:

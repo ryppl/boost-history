@@ -24,20 +24,20 @@ namespace xxx_repeat{
     void test()
     {
 
-		using namespace boost;
-		namespace as2 = assign::v2;
+        using namespace boost;
+        namespace as2 = assign::v2;
         {
             //[pipe_repeat
             std::vector<int> cont;
             BOOST_ASSIGN_V2_CHECK(
-            	range::equal(
-            		cont | ( as2::_put % ( as2::_repeat = 2  ) )( 72 )( 31 )( 48 ),
-                	as2::csv_deque<int>( 72, 72, 31, 31, 48, 48 )
-            	)
-			);
+                range::equal(
+                    cont | ( as2::_put % ( as2::_repeat = 2  ) )( 72 )( 31 )( 48 ),
+                    as2::csv_deque<int>( 72, 72, 31, 31, 48, 48 )
+                )
+            );
             //]
         }
-	}
+    }
 
 
 }// xxx_repeat

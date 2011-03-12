@@ -21,7 +21,7 @@ namespace array_aux{
 
 }// array_aux
 
-	typedef array_aux::size_type array_size_type;
+    typedef array_aux::size_type array_size_type;
 
 }// ref
 }// v2

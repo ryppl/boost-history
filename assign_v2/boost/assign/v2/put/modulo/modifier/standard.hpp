@@ -15,15 +15,15 @@
 #include <boost/preprocessor/cat.hpp>
 
 #define BOOST_ASSIGN_V2_PUT_MODULO_MODIFIER_STANDARD_IMPL_PTR(FUN)\
-	template<typename C, typename T>\
-	void impl(C& cont, T* t)const{\
-	cont.FUN( t );\
+    template<typename C, typename T>\
+    void impl(C& cont, T* t)const{\
+    cont.FUN( t );\
 }\
 /**/
 #define BOOST_ASSIGN_V2_PUT_MODULO_MODIFIER_STANDARD_IMPL_LVALUE(FUN)\
-	template<typename C, typename T>\
-	void impl(C& cont, T& t)const{\
-	cont.FUN( t );\
+    template<typename C, typename T>\
+    void impl(C& cont, T& t)const{\
+    cont.FUN( t );\
 }\
 /**/
 
@@ -34,14 +34,14 @@
 #include <boost/type_traits/is_reference.hpp>
 // disable_if necessary to avoid ambiguity resolution with GCC4.4
 #define BOOST_ASSIGN_V2_PUT_MODULO_MODIFIER_STANDARD_IMPL_RVALUE(FUN)\
-	template<typename C, typename T>\
-		typename boost::disable_if<\
-		boost::is_reference<T>,\
-    	void\
-	>::type\
-	impl(C& cont, T&& t)const{\
-		cont.FUN( std::move( t ) );\
-	}\
+    template<typename C, typename T>\
+        typename boost::disable_if<\
+        boost::is_reference<T>,\
+        void\
+    >::type\
+    impl(C& cont, T&& t)const{\
+        cont.FUN( std::move( t ) );\
+    }\
 /**/
 #define BOOST_ASSIGN_V2_PUT_MODULO_MODIFIER_STANDARD_IMPL(FUN)\
 BOOST_ASSIGN_V2_PUT_MODULO_MODIFIER_STANDARD_IMPL_LVALUE(FUN)\
@@ -70,23 +70,23 @@ namespace assign{\
 namespace v2{\
 namespace put_aux{\
 \
-	template<>\
-	class modifier<modifier_tag::FUN>\
-	{\
-		typedef keyword_aux::ignore ignore_;\
-		public:\
-		modifier(){}\
-		modifier( ignore_, ignore_ ){}\
-		BOOST_ASSIGN_V2_PUT_MODULO_MODIFIER_STANDARD_IMPL(FUN)\
-	};\
+    template<>\
+    class modifier<modifier_tag::FUN>\
+    {\
+        typedef keyword_aux::ignore ignore_;\
+        public:\
+        modifier(){}\
+        modifier( ignore_, ignore_ ){}\
+        BOOST_ASSIGN_V2_PUT_MODULO_MODIFIER_STANDARD_IMPL(FUN)\
+    };\
 \
 }\
 namespace{\
 \
-	put_aux::modulo_modifier<put_aux::keyword_modifier, modifier_tag::FUN> const\
-		BOOST_PP_CAT(_,FUN) = ( \
-		_modifier = modifier_tag::FUN() \
-	);\
+    put_aux::modulo_modifier<put_aux::keyword_modifier, modifier_tag::FUN> const\
+        BOOST_PP_CAT(_,FUN) = ( \
+        _modifier = modifier_tag::FUN() \
+    );\
 \
 }\
 }\

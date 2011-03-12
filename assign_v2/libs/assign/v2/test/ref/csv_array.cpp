@@ -22,7 +22,7 @@ namespace xxx_csv_array{
 
     void test()
     {
-    	using namespace boost;
+        using namespace boost;
         namespace as2 = assign::v2;
         {
             //[ref_csv_array

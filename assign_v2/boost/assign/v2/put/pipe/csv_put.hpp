@@ -22,14 +22,14 @@ namespace put_pipe_aux{
     template<typename C,
         typename ParList, arg_list_size_type N, typename U>
     C& operator|(C& cont, put_pipe_aux::arg_list<
-    		ParList, N, U
+            ParList, N, U
         > const& arg_list
     )
     {
 
-		v2::ref::as_arg_list(
+        v2::ref::as_arg_list(
             v2::ref::as_modulo_list<ParList>( 
-            	put( cont ), 
+                put( cont ), 
                 arg_list.par_list_cont() 
             ),
             arg_list.arg_list_cont()
@@ -40,8 +40,8 @@ namespace put_pipe_aux{
 
 }// put_pipe_aux
 
-	put_pipe_aux::arg_list_generator<> const _csv_put 
-    	= put_pipe_aux::arg_list_generator<>();
+    put_pipe_aux::arg_list_generator<> const _csv_put 
+        = put_pipe_aux::arg_list_generator<>();
 
 }// v2
 }// assign

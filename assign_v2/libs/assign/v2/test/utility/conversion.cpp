@@ -30,11 +30,11 @@ namespace xxx_conversion{
         namespace as2 = boost::assign::v2;
         as2::check_aux::equal_container( cont, r );
     }
-	//]
+    //]
     
     void test()
     {
-    	using namespace boost;
+        using namespace boost;
         namespace as2 = assign::v2;
         namespace ns = as2::check_aux;
 
@@ -63,30 +63,30 @@ namespace xxx_conversion{
         }
         {
             {
-            	typedef int T;
-            	typedef std::vector<T> R; R r( 3 ); r[0] = 72; r[1] = 31; r[2] = 48; 
+                typedef int T;
+                typedef std::vector<T> R; R r( 3 ); r[0] = 72; r[1] = 31; r[2] = 48; 
                 typedef std::vector<T> C; f<C>( as2::converter( r ), r );
             }
             {
-            	typedef int T;
-            	typedef std::vector<T> R; R r( 3 ); r[0] = 72; r[1] = 31; r[2] = 48; 
+                typedef int T;
+                typedef std::vector<T> R; R r( 3 ); r[0] = 72; r[1] = 31; r[2] = 48; 
                 typedef std::deque<T> C; f<C>( as2::converter( r ), r );
             }
             {
-            	typedef int T;
-            	typedef std::vector<T> R; R r( 3 ); r[0] = 72; r[1] = 31; r[2] = 48; 
+                typedef int T;
+                typedef std::vector<T> R; R r( 3 ); r[0] = 72; r[1] = 31; r[2] = 48; 
                 typedef std::list<T> C; f<C>( as2::converter( r ), r );
             }
             {
-            	//[convert_f_invoke
-            	typedef int T;
-            	typedef std::vector<T> R; R r( 3 ); r[0] = 72; r[1] = 31; r[2] = 48; 
+                //[convert_f_invoke
+                typedef int T;
+                typedef std::vector<T> R; R r( 3 ); r[0] = 72; r[1] = 31; r[2] = 48; 
                 typedef std::stack<T> C; f<C>( as2::converter( r ), r );
                 //]
             }
             {
-            	typedef int T;
-            	typedef std::vector<T> R; R r( 3 ); r[0] = 72; r[1] = 31; r[2] = 48; 
+                typedef int T;
+                typedef std::vector<T> R; R r( 3 ); r[0] = 72; r[1] = 31; r[2] = 48; 
                 typedef std::queue<T> C; f<C>( as2::converter( r ), r );
             }
         }

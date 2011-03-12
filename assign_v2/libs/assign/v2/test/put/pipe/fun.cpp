@@ -20,7 +20,7 @@
 
 #include <boost/range/algorithm/for_each.hpp>
 
-
+    
 #include <iostream>
 
 namespace test_assign_v2{
@@ -30,22 +30,22 @@ namespace xxx_fun{
 
     void test()
     {
-    	using namespace boost;
+        using namespace boost;
         using namespace lambda;
         namespace as2 = assign::v2;
         {
             //[csv_pipe_modulo_fun_math
             int i = 0, k = 1; std::list<int> factorials;
             BOOST_ASSIGN_V2_CHECK(
-            	range::equal(
-	                factorials | ( 
-                    	as2::_put % ( as2::_fun = ( var(k) *= ( ++var(i) ) ) ) 
+                range::equal(
+                    factorials | ( 
+                        as2::_put % ( as2::_fun = ( var(k) *= ( ++var(i) ) ) ) 
                     )/*Equivalent to calling `factorials.push_back( k *= ++i )`*/()()()()(),
                     as2::csv_deque<int>( 1 )( 2 )( 6 )( 24 )( 120 )
                 )
             );
             //]
-		}
+        }
     }
 
 }// xxx_fun

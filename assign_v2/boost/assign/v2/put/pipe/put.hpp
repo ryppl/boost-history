@@ -28,12 +28,12 @@ namespace put_pipe_aux{
     C& operator|(
         C& cont,
         put_pipe_aux::args_list<
-        	ParList, ArgsList, enable_pars
+            ParList, ArgsList, enable_pars
         > const& args_list_
     ){
-		ref::as_args_list(
+        ref::as_args_list(
             ref::as_modulo_list<ParList>( 
-            	put( cont ), args_list_.par_list_cont() 
+                put( cont ), args_list_.par_list_cont() 
             ),
             args_list_.args_list_cont()
         );

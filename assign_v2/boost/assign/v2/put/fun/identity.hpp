@@ -9,15 +9,22 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_PUT_FUN_IDENTITY_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_FUN_IDENTITY_ER_2010_HPP
-#include <boost/assign/v2/detail/functor/identity.hpp>
+#include <boost/lambda/lambda.hpp>
+#include <boost/typeof/typeof.hpp>
 #include <boost/assign/v2/put/modulo/fun.hpp>
 
 namespace boost{
 namespace assign{
 namespace v2{
+namespace put_aux{
+
+	typedef BOOST_TYPEOF( ( _fun = ::boost::lambda::_1 ) ) result_of_identity;
+
+}// put_aux
 namespace {
-	put_aux::modulo_fun<functor_aux::identity> const _identity
-    	= ( _fun = _functor_identity );
+	
+    put_aux::result_of_identity const _identity 
+    	= ( _fun = ::boost::lambda::_1 );
 }
 }// v2
 }// assign

@@ -39,31 +39,31 @@ namespace put_aux{
         {}
 
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
-		template<typename C, typename T>
-			typename boost::disable_if<
-			boost::is_reference<T>,
-    		void
-		>::type
+        template<typename C, typename T>
+            typename boost::disable_if<
+            boost::is_reference<T>,
+            void
+        >::type
         impl(C& cont, T&& t )const
         {
-        	size_type m = this->size();\
-        	while(m--) this->inner_.impl( cont, std::move( t ) /* TODO ? */ );
+            size_type m = this->size();\
+            while(m--) this->inner_.impl( cont, std::move( t ) /* TODO ? */ );
         }
 
 #endif
 
-		template<typename C, typename T>
-		void impl(C& cont, T& t )const
+        template<typename C, typename T>
+        void impl(C& cont, T& t )const
         {
-        	size_type m = this->size();
-        	while(m--) this->inner_.impl( cont, t );
+            size_type m = this->size();
+            while(m--) this->inner_.impl( cont, t );
         }
 
         template<typename C, typename T>
         void impl(C& cont, T* t)const
         {
-        	size_type m = this->size();
-        	while(m--) this->inner_.impl( cont, t );
+            size_type m = this->size();
+            while(m--) this->inner_.impl( cont, t );
         }
 
         size_type const& size()const{ return this->n_; }

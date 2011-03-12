@@ -22,20 +22,20 @@ namespace xxx_put{
 namespace xxx_pipe{
 namespace xxx_args_list{
 
-	// --User may skip this file-- //
+    // --User may skip this file-- //
     // It checks internal details. //
     // --------------------------- //        
 
     void test()
     {
-    	using namespace boost;
+        using namespace boost;
         namespace as2 = assign::v2;
         typedef boost::mpl::int_<0> zero_;
         {
             typedef as2::put_pipe_aux::args_list<> args_list_;
             int x = -1;
             BOOST_AUTO( 
-            	args_list, 
+                args_list, 
                 ( ( args_list_() %  ( as2::_repeat = 3 ) )( x ) ) 
             );
             int n = as2::ref::at<0>( args_list.par_list_cont() ).arg();

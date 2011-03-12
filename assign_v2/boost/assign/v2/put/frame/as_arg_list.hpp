@@ -17,58 +17,58 @@ namespace assign{
 namespace v2{
 namespace put_aux{
                 
-	template<typename R>
+    template<typename R>
     class as_arg_list_adapter
     {
-    	
+        
         typedef typename boost::range_iterator<R>::type ri_;
         typedef boost::iterator_range<ri_> ir_;
         
         public:
         
         as_arg_list_adapter(R& range):ir( 
-        	boost::make_iterator_range( range )
+            boost::make_iterator_range( range )
         ){}
         
         typedef ir_ result_type;
         
         result_type operator()()const{ return this->ir; }
 
-		private:
+        private:
         as_arg_list_adapter();      
         ir_ ir;  
     };
 
 namespace result_of{
 
-	template<typename R>
+    template<typename R>
     struct as_arg_list{ 
-    	typedef as_arg_list_adapter<R> type; 
+        typedef as_arg_list_adapter<R> type; 
     };
 
 }// result_of
 
-	template<typename R>
-	typename result_of::as_arg_list<R>::type
-	as_arg_list(R& range)
+    template<typename R>
+    typename result_of::as_arg_list<R>::type
+    as_arg_list(R& range)
     {
-		return typename result_of::as_arg_list<R>::type( range );
+        return typename result_of::as_arg_list<R>::type( range );
     }
     
-	template<typename R>
-	typename result_of::as_arg_list<R const>::type
-	as_arg_list(R const& range)
+    template<typename R>
+    typename result_of::as_arg_list<R const>::type
+    as_arg_list(R const& range)
     {
-		return typename result_of::as_arg_list<R const>::type( range );
+        return typename result_of::as_arg_list<R const>::type( range );
     }
 
 }// put_aux
-	using put_aux::as_arg_list;
+    using put_aux::as_arg_list;
 namespace result_of{
 
-	template<typename R>
+    template<typename R>
     struct as_arg_list 
-    	: put_aux::result_of::as_arg_list<R>
+        : put_aux::result_of::as_arg_list<R>
     {};
 
 }// result_of

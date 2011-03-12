@@ -30,7 +30,7 @@ namespace put_aux{
     class modifier< modifier_tag::iterate<Arg> >
     {
 
-		typedef keyword_aux::ignore ignore_;
+        typedef keyword_aux::ignore ignore_;
         typedef Arg arg_;
         // storing a copy of lambda::something has caused pbs, hence ptr
         typedef boost::shared_ptr<arg_> ptr_; 
@@ -39,20 +39,20 @@ namespace put_aux{
                     
         modifier(): ptr( new arg_() ){}
         explicit modifier( 
-        	ignore_,  
-        	typename boost::call_traits<arg_>::param_type arg 
+            ignore_,  
+            typename boost::call_traits<arg_>::param_type arg 
         ) : ptr( new arg_( arg ) )
         {}
 
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
-		template<typename C, typename T>
-			typename boost::disable_if<
-			boost::is_reference<T>,
-    		void
-		>::type
+        template<typename C, typename T>
+            typename boost::disable_if<
+            boost::is_reference<T>,
+            void
+        >::type
         impl(C& cont, T&& t )const
         {
-			cont.at( (*this->ptr)() ) = std::move( t ); 
+            cont.at( (*this->ptr)() ) = std::move( t ); 
         }
 
 #endif
@@ -63,11 +63,11 @@ namespace put_aux{
             cont.at( (*this->ptr)() ) = t;
         }
         
-		// TODO verify
+        // TODO verify
         template<typename C, typename T>
         void impl(C& cont, T* t)const
         {
-			cont.replace( this->arg_() , t);
+            cont.replace( this->arg_() , t);
         }
                     
         protected:

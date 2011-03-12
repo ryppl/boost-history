@@ -34,27 +34,27 @@ namespace xxx_standard{
 
     void test()
     {
-    	using namespace boost;
+        using namespace boost;
         namespace as2 = assign::v2;
 
-		// ------------------------------ WARNING ---------------------------- //
+        // ------------------------------ WARNING ---------------------------- //
         // Don't misconstrue the commands in the tests below as *necessary* to //
         // obtain particular implementation. In most cases, the default is     //
-        // already set at that invoked with operator% 	                       //
+        // already set at that invoked with operator%                            //
         // ------------------------------------------------------------------- //
 
-		// PUT
-		{
-        	//[modifier_meta
-        	typedef as2::result_of::put<std::vector<int> >::type put_;
+        // PUT
+        {
+            //[modifier_meta
+            typedef as2::result_of::put<std::vector<int> >::type put_;
             typedef as2::put_aux::keyword_modifier keyword_;
             typedef as2::modifier_tag::push_front tag_;
             typedef as2::result_of::modulo_modifier<put_> meta1_;
-			typedef ::boost::mpl::apply2<meta1_, keyword_, tag_>::type result1_;
+            typedef ::boost::mpl::apply2<meta1_, keyword_, tag_>::type result1_;
             typedef as2::put_aux::replace_modifier_tag<put_> meta2_;
             typedef ::boost::mpl::apply1<meta2_, tag_>::type result2_;
             BOOST_MPL_ASSERT(( boost::is_same<result1_, result2_> ));
-        	//]
+            //]
         }
         {
             //[modifier_push_front
@@ -90,19 +90,19 @@ namespace xxx_standard{
             BOOST_ASSIGN_V2_CHECK( list.back() == 48 );
             //]
         }
-		// DEQUE
-		{
-        	//[modifier_meta_deque
-        	typedef as2::result_of::deque<int>::type put_;
+        // DEQUE
+        {
+            //[modifier_meta_deque
+            typedef as2::result_of::deque<int>::type put_;
             typedef as2::put_aux::keyword_modifier keyword_;
             typedef as2::modifier_tag::push_front tag_;
             typedef as2::result_of::modulo_modifier<put_> meta1_;
-			typedef ::boost::mpl::apply2<meta1_, keyword_, tag_>::type result1_;
+            typedef ::boost::mpl::apply2<meta1_, keyword_, tag_>::type result1_;
             typedef as2::put_aux::replace_modifier_tag<put_> meta2_;
             typedef ::boost::mpl::apply1<meta2_, tag_>::type result2_;
 
             BOOST_MPL_ASSERT(( boost::is_same<result1_, result2_> ));
-        	//]
+            //]
         }
         {
             //[modifier_push_front_deque

@@ -33,9 +33,9 @@ namespace result_of{
 //[result_of_modulo_fun
 namespace result_of{
 
-	template<typename /*<<Inherits crtp\<\> >>*/ D>
+    template<typename /*<<Inherits crtp\<\> >>*/ D>
     struct /*<<Meta-function class>>*/ modulo_fun 
-    	: put_aux::result_of::modulo_fun<D>
+        : put_aux::result_of::modulo_fun<D>
     {};
 
 }// result_of

@@ -31,17 +31,17 @@ namespace switch_aux{
 
     template<>
     struct case_<switch_tag::deduce_convert, 0> :
-        convert_aux::helper<
+        conversion_aux::helper<
             v2::convert_tag::put,
-            v2::convert_aux::use_put
+            v2::conversion_aux::use_put
         >{};
 
     template<>
     struct case_<switch_tag::deduce_convert, 1> :
-        convert_aux::helper<v2::convert_tag::copy>{};
+        conversion_aux::helper<v2::convert_tag::copy>{};
 
 }// switch_aux
-namespace convert_aux{
+namespace conversion_aux{
 
     template<typename C, typename R>
     struct deduce_tag : v2::switch_aux::result<
@@ -50,7 +50,7 @@ namespace convert_aux{
     >
     {};
 
-}// convert_aux
+}// conversion_aux
 }// v2
 }// assign
 }// boost

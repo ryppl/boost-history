@@ -21,7 +21,7 @@ namespace xxx_csv{
 
     void test(){
 
-		using namespace boost;
+        using namespace boost;
         namespace as2 = assign::v2;
         {
             //[csv_put
@@ -44,8 +44,8 @@ namespace xxx_csv{
         {
             //[csv_deque_modulo
             BOOST_AUTO(
-            	cont,
-            	as2::csv( as2::deque<int>( as2::_nil ) % as2::_push_front, 72, 31, 48 )
+                cont,
+                as2::csv( as2::deque<int>( as2::_nil ) % as2::_push_front, 72, 31, 48 )
             );
 
             BOOST_ASSIGN_V2_CHECK( cont.front() == 48 );

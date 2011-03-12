@@ -20,7 +20,7 @@ namespace test_assign_v2{
 namespace xxx_ref{
 namespace xxx_list_tuple{
 
-	// --User may skip this file-- //
+    // --User may skip this file-- //
     // It checks internal details. //
     // --------------------------- //        
 

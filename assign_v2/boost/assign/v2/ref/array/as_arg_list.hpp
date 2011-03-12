@@ -19,7 +19,7 @@ namespace v2{
 namespace ref{
 namespace array_aux{
 
-	// --- Implementation --- //
+    // --- Implementation --- //
 
     template<size_type I, typename F, typename Impl, typename D>
     typename boost::enable_if_c<
@@ -27,7 +27,7 @@ namespace array_aux{
     >::type
     as_arg_list(
         F const& f ,
-    	interface<Impl, D> const& array
+        interface<Impl, D> const& array
     )
     {}
 
@@ -37,19 +37,19 @@ namespace array_aux{
     >::type
     as_arg_list(
         F const& f ,
-    	interface<Impl, D> const& array
+        interface<Impl, D> const& array
     )
     {
         f( array[ I ].get() );
         as_arg_list<I + 1>( f, array );
     }
 
-	// --- User interface --- //
+    // --- User interface --- //
 
     template<typename F, typename Impl, typename D>
     void as_arg_list(
         F const& f ,
-    	interface<Impl, D> const& array
+        interface<Impl, D> const& array
     ){
         as_arg_list<0>( f, array );
     }

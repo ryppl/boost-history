@@ -43,15 +43,15 @@ namespace result_of{
     typename result_of::deque<T>::type
     deque( keyword_aux::nil )
     {
-    	return typename result_of::deque<T>::type();
+        return typename result_of::deque<T>::type();
     }
 
 }// put_aux
 namespace result_of{
 
-	template<typename T>
+    template<typename T>
     struct deque 
-    	: put_aux::result_of::deque<T>
+        : put_aux::result_of::deque<T>
     {};
 
 }// result_of

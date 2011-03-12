@@ -23,10 +23,10 @@ namespace v2{
 namespace put_aux{
 namespace result_of{
 
-	template<typename T>
+    template<typename T>
     struct csv_deque : result_of::deque<
         typename boost::decay<
-        	typename boost::remove_cv<T>::type
+            typename boost::remove_cv<T>::type
         >::type
     >{};
 
@@ -34,7 +34,7 @@ namespace result_of{
 }// put_aux
 namespace result_of{
 
-	template<typename T>
+    template<typename T>
     struct csv_deque : put_aux::result_of::deque<T>{};
 
 }// result_of

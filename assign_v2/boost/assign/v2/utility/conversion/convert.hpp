@@ -16,7 +16,7 @@
 namespace boost{
 namespace assign{
 namespace v2{
-namespace convert_aux{
+namespace conversion_aux{
 
     template<typename C, typename R>
     C convert(R const& r, convert_tag::put)
@@ -34,32 +34,32 @@ namespace convert_aux{
     template<typename C, typename R>
     C convert(R const& r)
     {
-		typedef typename convert_aux::deduce_tag<C, R>::type tag_;
-        return convert_aux::convert<C>( r, tag_() );
+        typedef typename conversion_aux::deduce_tag<C, R>::type tag_;
+        return conversion_aux::convert<C>( r, tag_() );
     }
 
-	template<typename C>
-	struct convert_adapter{};
+    template<typename C>
+    struct convert_adapter{};
     
     template<typename R, typename C>
     C operator|( R const& r, convert_adapter<C> )
     {
-    	return convert<C>( r );
+        return convert<C>( r );
     }
 
-}// convert_aux
-using convert_aux::convert;
+}// conversion_aux
+using conversion_aux::convert;
 namespace result_of{
 
-	template<typename /*<<Container>>*/ C, typename /*<<Range>>*/R>
+    template<typename /*<<Container>>*/ C, typename /*<<Range>>*/R>
     struct convert{ typedef C type; };
 
 }//result_of
 
 template<typename C>
-convert_aux::convert_adapter<C> _convert()
+conversion_aux::convert_adapter<C> _convert()
 {
-	return convert_aux::convert_adapter<C>();
+    return conversion_aux::convert_adapter<C>();
 }
 
 }// v2

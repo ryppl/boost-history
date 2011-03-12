@@ -18,11 +18,11 @@ namespace assign{
 namespace v2{
 namespace modifier_tag{ 
 
-	// TODO think of lambda expression
-	struct iterate_arg
+    // TODO think of lambda expression
+    struct iterate_arg
     {
         
-		typedef std::size_t result_type;
+        typedef std::size_t result_type;
         
         iterate_arg():i( 0 ){}
         iterate_arg( result_type i_ ):i( i_ ){}
@@ -36,7 +36,7 @@ namespace modifier_tag{
     };
 
 
-	template<typename Arg = iterate_arg::type > struct iterate{}; 
+    template<typename Arg = iterate_arg::type > struct iterate{}; 
 
 }// modifier_tag
 }// v2

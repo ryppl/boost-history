@@ -20,14 +20,14 @@ namespace put_aux{\
 \
     struct BOOST_PP_CAT(keyword_,NAME){\
 \
-    	BOOST_PP_CAT(keyword_,NAME)(){}\
+        BOOST_PP_CAT(keyword_,NAME)(){}\
 \
-		template<typename T>\
+        template<typename T>\
         struct result{\
-        	typedef modulo_fun< FUN > type;\
+            typedef modulo_fun< FUN > type;\
         };\
 \
-		template<typename T>\
+        template<typename T>\
         typename result<T>::type\
         operator()()const{ return ( v2::_fun = FUN() ); }\
 \
@@ -35,8 +35,8 @@ namespace put_aux{\
 \
 }\
 namespace {\
-	put_aux::BOOST_PP_CAT(keyword_,NAME) const BOOST_PP_CAT(_,NAME)\
-    	= put_aux::BOOST_PP_CAT(keyword_,NAME);\
+    put_aux::BOOST_PP_CAT(keyword_,NAME) const BOOST_PP_CAT(_,NAME)\
+        = put_aux::BOOST_PP_CAT(keyword_,NAME);\
 }\
 }\
 }\

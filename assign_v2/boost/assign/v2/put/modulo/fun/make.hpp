@@ -22,20 +22,20 @@ namespace put_aux{
     template<typename F = keyword_aux::ignore>
     struct modulo_fun
     {
-		modulo_fun(){}
+        modulo_fun(){}
         modulo_fun(F f) : f_( f ){}
 
-		F const& fun()const{ return this->f_; }
+        F const& fun()const{ return this->f_; }
         
-		private:
+        private:
         F f_;
     };
 
-	struct keyword_fun{
+    struct keyword_fun{
     
-    	template<typename F>
+        template<typename F>
         modulo_fun<F> operator=(F const& f)const{ 
-        	return modulo_fun<F>( f ); 
+            return modulo_fun<F>( f ); 
         }
     
     };

@@ -35,7 +35,7 @@ namespace put_pipe_aux{
 
         template<typename P>
         struct next_par_list : ::boost::mpl::push_back<
-        	ParList, 
+            ParList, 
             P const&
         >{};
 

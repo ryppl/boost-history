@@ -30,13 +30,13 @@ namespace test_assign_v2{
 namespace xxx_put{
 namespace xxx_deduce{
 
-	// --User may skip this file-- //
+    // --User may skip this file-- //
     // It checks internal details. //
     // --------------------------- //        
 
     void test()
     {
-    	using namespace boost;
+        using namespace boost;
         namespace as2 = assign::v2;
 
         {
