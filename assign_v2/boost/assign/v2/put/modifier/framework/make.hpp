@@ -14,7 +14,7 @@
 #include <boost/assign/v2/detail/keyword/ignore.hpp>
 #include <boost/assign/v2/put/frame/fwd.hpp>
 #include <boost/assign/v2/put/frame/modifier.hpp>
-#include <boost/assign/v2/put/modulo/modifier/meta.hpp>
+#include <boost/assign/v2/put/modifier/framework/meta.hpp>
 
 namespace boost{
 namespace assign{

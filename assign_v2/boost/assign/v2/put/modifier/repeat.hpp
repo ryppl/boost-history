@@ -11,10 +11,10 @@
 #define BOOST_ASSIGN_V2_PUT_MODIFIER_REPEAT_ER_2010_HPP
 #include <boost/assign/v2/put/modifier/repeat/impl.hpp>
 #include <boost/assign/v2/put/modifier/repeat/tag.hpp>
-#include <boost/assign/v2/put/modulo/modifier/keyword.hpp>
+#include <boost/assign/v2/put/modifier/framework/keyword.hpp>
 BOOST_ASSIGN_V2_PUT_MODULO_MODIFIER_KEYWORD(repeat)
 
-#include <boost/assign/v2/put/modulo/modifier/meta.hpp>
+#include <boost/assign/v2/put/modifier/framework/meta.hpp>
 #define BOOST_ASSIGN_V2_TAG modifier_tag::repeat<typename D::modifier_tag>
 BOOST_ASSIGN_V2_PUT_MODULO_MODIFIER_META_MODIFIER_TAG(repeat, BOOST_ASSIGN_V2_TAG)
 #undef BOOST_ASSIGN_V2_TAG
