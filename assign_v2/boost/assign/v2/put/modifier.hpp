@@ -11,6 +11,7 @@
 #define BOOST_ASSIGN_V2_PUT_MODIFIER_ER_2010_HPP
 #include <boost/assign/v2/put/modifier/iterate.hpp>
 #include <boost/assign/v2/put/modifier/lookup.hpp>
+#include <boost/assign/v2/put/modifier/modulo.hpp>
 #include <boost/assign/v2/put/modifier/repeat.hpp>
 #include <boost/assign/v2/put/modifier/standard.hpp>
 
