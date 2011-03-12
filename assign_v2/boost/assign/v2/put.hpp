@@ -9,12 +9,11 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_PUT_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_ER_2010_HPP
+#include <boost/assign/v2/put/adapter.hpp>
 #include <boost/assign/v2/put/container.hpp>
-#include <boost/assign/v2/put/deduce.hpp>
 #include <boost/assign/v2/put/deque.hpp>
-#include <boost/assign/v2/put/frame.hpp>
+#include <boost/assign/v2/put/fun.hpp>
 #include <boost/assign/v2/put/modifier.hpp>
-#include <boost/assign/v2/put/modulo.hpp>
 #include <boost/assign/v2/put/pipe.hpp>
 
 #endif // BOOST_ASSIGN_V2_PUT_ER_2010_HPP
