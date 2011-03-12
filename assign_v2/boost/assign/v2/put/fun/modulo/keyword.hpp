@@ -7,9 +7,9 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_PUT_MODULO_FUN_KEYWORD_ER_2010_HPP
-#define BOOST_ASSIGN_V2_PUT_MODULO_FUN_KEYWORD_ER_2010_HPP
-#include <boost/assign/v2/put/modulo/fun/make.hpp>
+#ifndef BOOST_ASSIGN_V2_PUT_FUN_MODULO_KEYWORD_ER_2010_HPP
+#define BOOST_ASSIGN_V2_PUT_FUN_MODULO_KEYWORD_ER_2010_HPP
+#include <boost/assign/v2/put/fun/modulo/make.hpp>
 #include <boost/preprocessor/cat.hpp>
 
 #define BOOST_ASSIGN_V2_MODULO_FUN_KEYWORD(NAME, FUN)\
@@ -43,4 +43,4 @@ namespace {\
 }\
 /**/
 
-#endif // BOOST_ASSIGN_V2_PUT_MODULO_FUN_KEYWORD_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_PUT_FUN_MODULO_KEYWORD_ER_2010_HPP

@@ -12,11 +12,11 @@
 #include <boost/assign/v2/put/modifier/lookup/impl.hpp>
 #include <boost/assign/v2/put/modifier/lookup/tag.hpp>
 #include <boost/assign/v2/put/modifier/modulo/keyword.hpp>
-BOOST_ASSIGN_V2_PUT_MODULO_MODIFIER_KEYWORD(lookup)
+BOOST_ASSIGN_V2_PUT_MODIFIER_MODULO_KEYWORD(lookup)
 
 #include <boost/assign/v2/put/modifier/modulo/meta.hpp>
 #define BOOST_ASSIGN_V2_TAG modifier_tag::lookup<Arg>
-BOOST_ASSIGN_V2_PUT_MODULO_MODIFIER_META_MODIFIER_TAG(lookup, BOOST_ASSIGN_V2_TAG)
+BOOST_ASSIGN_V2_PUT_MODIFIER_MODULO_META_MODIFIER_TAG(lookup, BOOST_ASSIGN_V2_TAG)
 #undef BOOST_ASSIGN_V2_TAG
 
 #endif // BOOST_ASSIGN_V2_PUT_MODIFIER_LOOKUP_ER_2010_HPP

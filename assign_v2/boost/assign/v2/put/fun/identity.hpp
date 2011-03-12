@@ -11,7 +11,7 @@
 #define BOOST_ASSIGN_V2_PUT_FUN_IDENTITY_ER_2010_HPP
 #include <boost/lambda/lambda.hpp>
 #include <boost/typeof/typeof.hpp>
-#include <boost/assign/v2/put/modulo/fun.hpp>
+#include <boost/assign/v2/put/fun/modulo.hpp>
 
 namespace boost{
 namespace assign{

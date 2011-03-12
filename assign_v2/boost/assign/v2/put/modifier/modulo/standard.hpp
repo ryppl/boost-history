@@ -7,20 +7,20 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_PUT_MODULO_MODIFIER_STANDARD_ER_2010_HPP
-#define BOOST_ASSIGN_V2_PUT_MODULO_MODIFIER_STANDARD_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_PUT_MODIFIER_MODULO_STANDARD_ER_2010_HPP
+#define BOOST_ASSIGN_V2_PUT_MODIFIER_MODULO_STANDARD_ER_2010_HPP
 #include <boost/assign/v2/detail/keyword/ignore.hpp>
 #include <boost/assign/v2/put/frame/modifier.hpp>
 #include <boost/assign/v2/put/modifier/modulo/keyword.hpp>
 #include <boost/preprocessor/cat.hpp>
 
-#define BOOST_ASSIGN_V2_PUT_MODULO_MODIFIER_STANDARD_IMPL_PTR(FUN)\
+#define BOOST_ASSIGN_V2_PUT_MODIFIER_MODULO_STANDARD_IMPL_PTR(FUN)\
     template<typename C, typename T>\
     void impl(C& cont, T* t)const{\
     cont.FUN( t );\
 }\
 /**/
-#define BOOST_ASSIGN_V2_PUT_MODULO_MODIFIER_STANDARD_IMPL_LVALUE(FUN)\
+#define BOOST_ASSIGN_V2_PUT_MODIFIER_MODULO_STANDARD_IMPL_LVALUE(FUN)\
     template<typename C, typename T>\
     void impl(C& cont, T& t)const{\
     cont.FUN( t );\
@@ -33,7 +33,7 @@
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/is_reference.hpp>
 // disable_if necessary to avoid ambiguity resolution with GCC4.4
-#define BOOST_ASSIGN_V2_PUT_MODULO_MODIFIER_STANDARD_IMPL_RVALUE(FUN)\
+#define BOOST_ASSIGN_V2_PUT_MODIFIER_MODULO_STANDARD_IMPL_RVALUE(FUN)\
     template<typename C, typename T>\
         typename boost::disable_if<\
         boost::is_reference<T>,\
@@ -43,17 +43,17 @@
         cont.FUN( std::move( t ) );\
     }\
 /**/
-#define BOOST_ASSIGN_V2_PUT_MODULO_MODIFIER_STANDARD_IMPL(FUN)\
-BOOST_ASSIGN_V2_PUT_MODULO_MODIFIER_STANDARD_IMPL_LVALUE(FUN)\
-BOOST_ASSIGN_V2_PUT_MODULO_MODIFIER_STANDARD_IMPL_RVALUE(FUN)\
+#define BOOST_ASSIGN_V2_PUT_MODIFIER_MODULO_STANDARD_IMPL(FUN)\
+BOOST_ASSIGN_V2_PUT_MODIFIER_MODULO_STANDARD_IMPL_LVALUE(FUN)\
+BOOST_ASSIGN_V2_PUT_MODIFIER_MODULO_STANDARD_IMPL_RVALUE(FUN)\
 /**/
 #else
-#define BOOST_ASSIGN_V2_PUT_MODULO_MODIFIER_STANDARD_IMPL(FUN)\
-BOOST_ASSIGN_V2_PUT_MODULO_MODIFIER_STANDARD_IMPL_LVALUE(FUN)\
+#define BOOST_ASSIGN_V2_PUT_MODIFIER_MODULO_STANDARD_IMPL(FUN)\
+BOOST_ASSIGN_V2_PUT_MODIFIER_MODULO_STANDARD_IMPL_LVALUE(FUN)\
 /**/
 #endif // BOOST_ASSIGN_V2_ENABLE_CPP0X
 
-#define BOOST_ASSIGN_V2_PUT_MODULO_MODIFIER_STANDARD_TAG(FUN)\
+#define BOOST_ASSIGN_V2_PUT_MODIFIER_MODULO_STANDARD_TAG(FUN)\
 namespace boost{\
 namespace assign{\
 namespace v2{\
@@ -63,8 +63,8 @@ namespace modifier_tag{ struct FUN{}; }\
 }\
 /**/
 
-// Must be preceded by BOOST_ASSIGN_V2_PUT_MODULO_MODIFIER_STANDARD_TAG(FUN)
-#define BOOST_ASSIGN_V2_PUT_MODULO_MODIFIER_STANDARD(FUN)\
+// Must be preceded by BOOST_ASSIGN_V2_PUT_MODIFIER_MODULO_STANDARD_TAG(FUN)
+#define BOOST_ASSIGN_V2_PUT_MODIFIER_MODULO_STANDARD(FUN)\
 namespace boost{\
 namespace assign{\
 namespace v2{\
@@ -77,7 +77,7 @@ namespace put_aux{\
         public:\
         modifier(){}\
         modifier( ignore_, ignore_ ){}\
-        BOOST_ASSIGN_V2_PUT_MODULO_MODIFIER_STANDARD_IMPL(FUN)\
+        BOOST_ASSIGN_V2_PUT_MODIFIER_MODULO_STANDARD_IMPL(FUN)\
     };\
 \
 }\
@@ -94,4 +94,4 @@ namespace{\
 }\
 /**/
 
-#endif // BOOST_ASSIGN_V2_PUT_MODULO_MODIFIER_STANDARD_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_PUT_MODIFIER_MODULO_STANDARD_ER_2010_HPP

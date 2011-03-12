@@ -10,7 +10,7 @@
 #ifndef BOOST_ASSIGN_V2_PUT_FUN_NEW_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_FUN_NEW_ER_2010_HPP
 #include <boost/assign/v2/detail/functor/new.hpp>
-#include <boost/assign/v2/put/modulo/fun/keyword.hpp>
+#include <boost/assign/v2/put/fun/modulo/keyword.hpp>
 
 BOOST_ASSIGN_V2_MODULO_FUN_KEYWORD(new, keyword_aux::new_<T>)
 

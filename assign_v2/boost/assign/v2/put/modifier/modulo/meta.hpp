@@ -7,8 +7,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_PUT_MODULO_MODIFIER_META_ER_2010_HPP
-#define BOOST_ASSIGN_V2_PUT_MODULO_MODIFIER_META_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_PUT_MODIFIER_MODULO_META_ER_2010_HPP
+#define BOOST_ASSIGN_V2_PUT_MODIFIER_MODULO_META_ER_2010_HPP
 #include <boost/assign/v2/put/frame/replace_parameter.hpp>
 #include <boost/mpl/apply.hpp>
 #include <boost/preprocessor/cat.hpp>
@@ -63,8 +63,8 @@ namespace result_of{
 }// assign
 }// boost
 
-#ifndef BOOST_ASSIGN_V2_PUT_MODULO_MODIFIER_META_MODIFIER_TAG
-#define BOOST_ASSIGN_V2_PUT_MODULO_MODIFIER_META_MODIFIER_TAG(NAME, Result)\
+#ifndef BOOST_ASSIGN_V2_PUT_MODIFIER_MODULO_META_MODIFIER_TAG
+#define BOOST_ASSIGN_V2_PUT_MODIFIER_MODULO_META_MODIFIER_TAG(NAME, Result)\
 namespace boost{\
 namespace assign{\
 namespace v2{\
@@ -84,5 +84,5 @@ namespace put_aux{\
 /**/
 #endif
 
-#endif // BOOST_ASSIGN_V2_PUT_MODULO_MODIFIER_META_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_PUT_MODIFIER_MODULO_META_ER_2010_HPP
 
