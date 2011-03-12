@@ -11,7 +11,7 @@
 #define BOOST_ASSIGN_V2_PUT_MODULO_MODIFIER_STANDARD_ER_2010_HPP
 #include <boost/assign/v2/detail/keyword/ignore.hpp>
 #include <boost/assign/v2/put/frame/modifier.hpp>
-#include <boost/assign/v2/put/modifier/framework/keyword.hpp>
+#include <boost/assign/v2/put/modifier/modulo/keyword.hpp>
 #include <boost/preprocessor/cat.hpp>
 
 #define BOOST_ASSIGN_V2_PUT_MODULO_MODIFIER_STANDARD_IMPL_PTR(FUN)\
