@@ -8,7 +8,6 @@
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
 #include <libs/assign/v2/test/put/container.h>
-#include <libs/assign/v2/test/put/deduce.h>
 #include <libs/assign/v2/test/put/deque.h>
 #include <libs/assign/v2/test/put/modifier.h>
 #include <libs/assign/v2/test/put/fun.h>

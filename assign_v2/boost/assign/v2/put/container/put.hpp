@@ -11,7 +11,7 @@
 #define BOOST_ASSIGN_V2_PUT_CONTAINER_PUT_ER_2010_HPP
 #include <boost/assign/v2/put/container/fwd.hpp>
 #include <boost/assign/v2/put/container/adapter.hpp>
-#include <boost/assign/v2/put/deduce/fun.hpp>
+#include <boost/assign/v2/put/fun/deduce.hpp>
 #include <boost/assign/v2/put/modifier/deduce/tag.hpp>
 #include <boost/assign/v2/put/modifier/deduce/dependee.hpp>
 

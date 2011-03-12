@@ -9,7 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_PUT_MODIFIER_DEDUCE_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_MODIFIER_DEDUCE_ER_2010_HPP
-#include <boost/assign/v2/put/modifier/dependee.hpp>
-#include <boost/assign/v2/put/modifier/tag.hpp>
+#include <boost/assign/v2/put/modifier/deduce/dependee.hpp>
+#include <boost/assign/v2/put/modifier/deduce/tag.hpp>
 
 #endif // BOOST_ASSIGN_V2_PUT_MODIFIER_DEDUCE_ER_2010_HPP

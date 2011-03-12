@@ -11,7 +11,7 @@
 #define BOOST_ASSIGN_V2_PUT_DEQUE_DEQUE_ER_2010_HPP
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
 #include <boost/assign/v2/detail/keyword/nil.hpp>
-#include <boost/assign/v2/put/deduce/fun.hpp>
+#include <boost/assign/v2/put/fun/deduce.hpp>
 #include <boost/assign/v2/put/modifier/deduce/tag.hpp>
 #include <boost/assign/v2/put/modifier/deduce/dependee.hpp>
 //#include <boost/assign/v2/put/deque/fwd.hpp>
