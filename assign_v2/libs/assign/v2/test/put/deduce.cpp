@@ -23,11 +23,12 @@
 #include <boost/ptr_container/ptr_list.hpp>
 #include <boost/ptr_container/ptr_vector.hpp>
 
-#include <boost/assign/v2/put/deduce.hpp>
-#include <libs/assign/v2/test/put/deduce.h>
+#include <boost/assign/v2/put/modifier/deduce.hpp>
+#include <libs/assign/v2/test/put/modifier/deduce.h>
 
 namespace test_assign_v2{
 namespace xxx_put{
+namespace xxx_modifier{
 namespace xxx_deduce{
 
     // --User may skip this file-- //
@@ -77,5 +78,6 @@ namespace xxx_deduce{
 
 
 }// xxx_deduce
+}// xxx_modifier
 }// xxx_put
 }// test_assign_v2

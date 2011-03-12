@@ -15,7 +15,7 @@
 #include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/put/container/put.hpp>
 #include <boost/assign/v2/put/deque.hpp>
-#include <boost/assign/v2/put/modulo/fun.hpp>
+#include <boost/assign/v2/put/fun/modulo.hpp>
 #include <boost/function.hpp>
 #include <boost/lambda/bind.hpp>
 #include <boost/lambda/lambda.hpp>

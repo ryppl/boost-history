@@ -12,7 +12,7 @@
 #include <vector>
 #include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/put/deque/csv_deque.hpp>
-#include <boost/assign/v2/put/modulo/fun.hpp>
+#include <boost/assign/v2/put/fun/modulo.hpp>
 #include <boost/assign/v2/put/pipe/put.hpp>
 #include <boost/lambda/lambda.hpp>
 #include <boost/range/algorithm/equal.hpp>
