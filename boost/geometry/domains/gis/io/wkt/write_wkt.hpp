@@ -5,8 +5,8 @@
 // Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_GEOMETRY_EXTENSIONS_GIS_IO_WKT_WRITE_WKT_HPP
-#define BOOST_GEOMETRY_EXTENSIONS_GIS_IO_WKT_WRITE_WKT_HPP
+#ifndef BOOST_GEOMETRY_DOMAINS_GIS_IO_WKT_WRITE_WKT_HPP
+#define BOOST_GEOMETRY_DOMAINS_GIS_IO_WKT_WRITE_WKT_HPP
 
 #include <ostream>
 #include <string>
@@ -26,7 +26,7 @@
 #include <boost/geometry/geometries/concepts/check.hpp>
 #include <boost/geometry/geometries/ring.hpp>
 
-#include <boost/geometry/extensions/gis/io/wkt/detail/wkt.hpp>
+#include <boost/geometry/domains/gis/io/wkt/detail/wkt.hpp>
 
 
 namespace boost { namespace geometry
@@ -225,8 +225,8 @@ struct wkt_segment
         assign_point_from_index<0>(segment, points[0]);
         assign_point_from_index<1>(segment, points[1]);
 
-        // In Boost.Geometry a segment is represented 
-        // in WKT-format like (for 2D): LINESTRING(x y,x y) 
+        // In Boost.Geometry a segment is represented
+        // in WKT-format like (for 2D): LINESTRING(x y,x y)
         os << "LINESTRING";
         wkt_sequence<sequence>::apply(os, points);
     }
@@ -395,4 +395,4 @@ inline wkt_manipulator<Geometry> make_wkt(Geometry const& geometry)
 
 }} // namespace boost::geometry
 
-#endif // BOOST_GEOMETRY_EXTENSIONS_GIS_IO_WKT_WRITE_WKT_HPP
+#endif // BOOST_GEOMETRY_DOMAINS_GIS_IO_WKT_WRITE_WKT_HPP
