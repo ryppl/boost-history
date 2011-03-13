@@ -27,13 +27,13 @@
 #include <boost/range/end.hpp>
 #include <boost/numeric/conversion/bounds.hpp>
 #include <boost/variant.hpp>
-#include <libs/assign/v2/test/put/container.h>
+#include <libs/assign/v2/test/put/put.h>
 
 #include <iostream>
 
 namespace test_assign_v2{
 namespace xxx_put{
-namespace xxx_container{
+namespace xxx_put{
 
     void test(){
     
@@ -130,6 +130,6 @@ namespace xxx_container{
         }
     }// test()
 
-}// xxx_container
+}// xxx_put
 }// xxx_put
 }// xxx_test_assign

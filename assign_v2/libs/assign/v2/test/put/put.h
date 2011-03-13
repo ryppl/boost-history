@@ -12,11 +12,11 @@
 
 namespace test_assign_v2{
 namespace xxx_put{
-namespace xxx_container{
+namespace xxx_put{
 
     void test();
 
-}// xxx_container
+}// xxx_put
 }// xxx_put
 }// xxx_test_assign
 
