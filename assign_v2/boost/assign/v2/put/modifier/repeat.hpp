@@ -82,7 +82,6 @@ namespace put_aux{
 }// v2
 }// assign
 }// boost
-#include <boost/assign/v2/put/modifier/repeat/tag.hpp>
 #include <boost/assign/v2/put/modifier/modulo.hpp>
 BOOST_ASSIGN_V2_PUT_MODIFIER_MODULO_KEYWORD(repeat)
 #define BOOST_ASSIGN_V2_TAG modifier_tag::repeat<typename D::modifier_tag>
