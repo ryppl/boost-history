@@ -5,8 +5,8 @@
 // Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_GEOMETRY_ALGORITHMS_DETAIL_OVERLAY_SPLIT_RINGS_HPP
-#define BOOST_GEOMETRY_ALGORITHMS_DETAIL_OVERLAY_SPLIT_RINGS_HPP
+#ifndef BOOST_GEOMETRY_EXTENSIONS_ALGORITHMS_DETAIL_OVERLAY_SPLIT_RINGS_HPP
+#define BOOST_GEOMETRY_EXTENSIONS_ALGORITHMS_DETAIL_OVERLAY_SPLIT_RINGS_HPP
 
 #define BOOST_GEOMETRY_CHECK_SPLIT_RINGS
 
@@ -31,7 +31,7 @@
 
 
 #if defined(BOOST_GEOMETRY_DEBUG_SPLIT_RINGS) || defined(BOOST_GEOMETRY_CHECK_SPLIT_RINGS)
-#  include <boost/geometry/extensions/gis/io/wkt/wkt.hpp>
+#  include <boost/geometry/domains/gis/io/wkt/wkt.hpp>
 #endif
 
 
@@ -559,4 +559,4 @@ inline void split_rings(Geometry const& geometry, RingCollection& out)
 }} // namespace boost::geometry
 
 
-#endif // BOOST_GEOMETRY_ALGORITHMS_DETAIL_OVERLAY_SPLIT_RINGS_HPP
+#endif // BOOST_GEOMETRY_EXTENSIONS_ALGORITHMS_DETAIL_OVERLAY_SPLIT_RINGS_HPP
