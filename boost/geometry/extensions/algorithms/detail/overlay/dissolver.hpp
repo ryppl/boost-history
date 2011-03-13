@@ -5,8 +5,8 @@
 // Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_GEOMETRY_ALGORITHMS_DETAIL_OVERLAY_DISSOLVER_HPP
-#define BOOST_GEOMETRY_ALGORITHMS_DETAIL_OVERLAY_DISSOLVER_HPP
+#ifndef BOOST_GEOMETRY_EXTENSIONS_ALGORITHMS_DETAIL_OVERLAY_DISSOLVER_HPP
+#define BOOST_GEOMETRY_EXTENSIONS_ALGORITHMS_DETAIL_OVERLAY_DISSOLVER_HPP
 
 
 #include <deque>
@@ -22,6 +22,7 @@
 #include <boost/geometry/core/interior_rings.hpp>
 
 #include <boost/geometry/algorithms/disjoint.hpp>
+#include <boost/geometry/algorithms/expand.hpp>
 #include <boost/geometry/algorithms/detail/disjoint.hpp>
 
 #include <boost/geometry/algorithms/detail/overlay/get_turns.hpp>
@@ -506,7 +507,7 @@ struct dissolver_generic
             ++it, ++index)
         {
             index_vector.push_back(index);
-            geometry::combine(total_box, it->box);
+            geometry::expand(total_box, it->box);
         }
 
         std::vector<output_type> unioned_collection;
@@ -635,4 +636,4 @@ inline void dissolver(InputRange const& input_range,
 }} // namespace boost::geometry
 
 
-#endif // BOOST_GEOMETRY_ALGORITHMS_DETAIL_OVERLAY_DISSOLVER_HPP
+#endif // BOOST_GEOMETRY_EXTENSIONS_ALGORITHMS_DETAIL_OVERLAY_DISSOLVER_HPP
