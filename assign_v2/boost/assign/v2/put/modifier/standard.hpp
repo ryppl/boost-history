@@ -10,9 +10,6 @@
 #ifndef BOOST_ASSIGN_V2_PUT_MODIFIER_STANDARD_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_MODIFIER_STANDARD_ER_2010_HPP
 #include <boost/assign/v2/put/modifier/standard/modifier.hpp>
-#include <boost/assign/v2/put/modifier/insert.hpp>
-#include <boost/assign/v2/put/modifier/push.hpp>
-#include <boost/assign/v2/put/modifier/push_back.hpp>
-#include <boost/assign/v2/put/modifier/push_front.hpp>
+#include <boost/assign/v2/put/modifier/standard/include.hpp>
 
 #endif // BOOST_ASSIGN_V2_PUT_MODIFIER_STANDARD_ER_2010_HPP
