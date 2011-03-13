@@ -5,8 +5,8 @@
 // Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_GEOMETRY_MULTI_ALGORITHMS_DETAIL_SECTIONS_GET_FULL_SECTION_HPP
-#define BOOST_GEOMETRY_MULTI_ALGORITHMS_DETAIL_SECTIONS_GET_FULL_SECTION_HPP
+#ifndef BOOST_GEOMETRY_MULTI_ALGORITHMS_DETAIL_SECTIONS_RANGE_BY_SECTION_HPP
+#define BOOST_GEOMETRY_MULTI_ALGORITHMS_DETAIL_SECTIONS_RANGE_BY_SECTION_HPP
 
 
 #include <boost/assert.hpp>
@@ -14,7 +14,7 @@
 
 #include <boost/geometry/multi/core/tags.hpp>
 #include <boost/geometry/multi/core/ring_type.hpp>
-#include <boost/geometry/algorithms/detail/sections/get_full_section.hpp>
+#include <boost/geometry/algorithms/detail/sections/range_by_section.hpp>
 
 
 namespace boost { namespace geometry
@@ -39,11 +39,11 @@ struct full_section_multi
     {
         BOOST_ASSERT
             (
-                section.multi_index >= 0
-                && section.multi_index < boost::size(multi)
+                section.ring_id.multi_index >= 0
+                && section.ring_id.multi_index < boost::size(multi)
             );
 
-        return Policy::apply(multi[section.multi_index], section);
+        return Policy::apply(multi[section.ring_id.multi_index], section);
     }
 };
 
@@ -81,4 +81,4 @@ struct range_by_section<multi_polygon_tag, MultiPolygon, Section>
 
 }} // namespace boost::geometry
 
-#endif // BOOST_GEOMETRY_MULTI_ALGORITHMS_DETAIL_SECTIONS_GET_FULL_SECTION_HPP
+#endif // BOOST_GEOMETRY_MULTI_ALGORITHMS_DETAIL_SECTIONS_RANGE_BY_SECTION_HPP
