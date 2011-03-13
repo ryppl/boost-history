@@ -11,7 +11,7 @@
 #define BOOST_ASSIGN_V2_PUT_MODIFIER_REPEAT_ER_2010_HPP
 #include <boost/assign/v2/put/modifier/repeat/impl.hpp>
 #include <boost/assign/v2/put/modifier/repeat/tag.hpp>
-#include <boost/assign/v2/put/modifier/modulo/modifier.hpp>
+#include <boost/assign/v2/put/modifier/modulo.hpp>
 BOOST_ASSIGN_V2_PUT_MODIFIER_MODULO_KEYWORD(repeat)
 
 #define BOOST_ASSIGN_V2_TAG modifier_tag::repeat<typename D::modifier_tag>
