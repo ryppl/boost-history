@@ -11,7 +11,7 @@
 #define BOOST_ASSIGN_V2_PUT_PIPE_CSV_PUT_ER_2010_HPP
 #include <boost/assign/v2/ref/array/as_arg_list.hpp>
 #include <boost/assign/v2/ref/list/as_modulo_list.hpp>
-#include <boost/assign/v2/put/container/put.hpp>
+#include <boost/assign/v2/put/put.hpp>
 #include <boost/assign/v2/put/pipe/arg_list.hpp>
 
 namespace boost{

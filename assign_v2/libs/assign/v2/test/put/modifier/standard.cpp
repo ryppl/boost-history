@@ -14,7 +14,7 @@
 #include <string>
 #include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/put/modifier/standard.hpp>
-#include <boost/assign/v2/put/container/put.hpp>
+#include <boost/assign/v2/put/put.hpp>
 #include <boost/assign/v2/put/deque.hpp>
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>

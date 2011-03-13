@@ -19,7 +19,7 @@
 #include <string>
 #include <utility>
 #include <boost/assign/v2/detail/config/check.hpp>
-#include <boost/assign/v2/put/container/put.hpp>
+#include <boost/assign/v2/put/put.hpp>
 #include <boost/assign/v2/put/deque/csv_deque.hpp>
 #include <boost/tuple/tuple.hpp>
 #include <boost/range/algorithm_ext/iota.hpp>

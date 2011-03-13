@@ -11,7 +11,7 @@
 #include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/utility/csv.hpp>
 #include <boost/assign/v2/put/deque.hpp>
-#include <boost/assign/v2/put/container/put.hpp>
+#include <boost/assign/v2/put/put.hpp>
 #include <boost/assign/v2/put/modifier/push_front.hpp>
 #include <libs/assign/v2/test/utility/csv.h>
 

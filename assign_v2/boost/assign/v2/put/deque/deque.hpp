@@ -13,7 +13,6 @@
 #include <boost/assign/v2/detail/keyword/nil.hpp>
 #include <boost/assign/v2/put/fun/deduce.hpp>
 #include <boost/assign/v2/put/modifier/deduce.hpp>
-#include <boost/assign/v2/put/modifier/deduce/dependee.hpp>
 //#include <boost/assign/v2/put/deque/fwd.hpp>
 #include <boost/assign/v2/put/deque/adapter.hpp>
 #include <boost/type_traits/remove_cv.hpp>
