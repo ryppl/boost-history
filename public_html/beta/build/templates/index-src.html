@@ -2,8 +2,7 @@ ${
 # TODO: This is duplicated from other places, should only be set once?
 news = pages.match_pages(['feed/news/*.qbk', 'feed/history/*.qbk'], 3)
 
-downloads = pages.match_pages(['feed/history/*.qbk'], 1)
-downloads.extend(pages.match_pages(['feed/downloads/*.qbk'], 1))
+downloads = pages.match_pages(['feed/history/boost_1_46_1.qbk'], 1)
 }$<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
@@ -151,10 +150,6 @@ for entry in news:
 
   <div id="footer">
     <div id="footer-left">
-      <div id="revised">
-        <p>Revised $Date$</p>
-      </div>
-
       <div id="copyright">
         <p>Copyright Beman Dawes, David Abrahams, 1998-2005.</p>
 
