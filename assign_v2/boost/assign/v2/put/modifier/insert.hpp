@@ -12,7 +12,6 @@
 //[put_modifier_insert
 #include <boost/assign/v2/put/modifier/standard/modifier.hpp>
 BOOST_ASSIGN_V2_PUT_MODIFIER_MODULO_STANDARD_TAG(insert)
-#include <boost/assign/v2/put/modifier/insert/tag.hpp>
 BOOST_ASSIGN_V2_PUT_MODIFIER_MODULO_STANDARD(insert)
 //]
 

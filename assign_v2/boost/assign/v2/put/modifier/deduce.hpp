@@ -9,21 +9,15 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_PUT_MODIFIER_DEDUCE_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_MODIFIER_DEDUCE_ER_2010_HPP
-#include <boost/assign/v2/put/modifier/insert/tag.hpp>
-#include <boost/assign/v2/put/modifier/iterate/tag.hpp>
-#include <boost/assign/v2/put/modifier/push/tag.hpp>
-#include <boost/assign/v2/put/modifier/push_back/tag.hpp>
-
-#include <boost/assign/v2/put/modifier/insert.hpp>
-#include <boost/assign/v2/put/modifier/iterate.hpp>
-#include <boost/assign/v2/put/modifier/push.hpp>
-#include <boost/assign/v2/put/modifier/push_back.hpp>
-
 #include <boost/assign/v2/detail/pp/ignore.hpp>
 #include <boost/assign/v2/detail/traits/container/has_push.hpp>
 #include <boost/assign/v2/detail/traits/container/is_associative.hpp>
 #include <boost/assign/v2/detail/traits/container/is_array.hpp>
 #include <boost/assign/v2/detail/traits/switch.hpp>
+#include <boost/assign/v2/put/modifier/insert.hpp>
+#include <boost/assign/v2/put/modifier/iterate.hpp>
+#include <boost/assign/v2/put/modifier/push.hpp>
+#include <boost/assign/v2/put/modifier/push_back.hpp>
 #include <boost/mpl/assert.hpp>
 #include <boost/preprocessor/cat.hpp>
 #include <boost/type_traits/is_same.hpp>
