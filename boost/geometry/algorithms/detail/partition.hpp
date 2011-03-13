@@ -1,12 +1,12 @@
 // Boost.Geometry (aka GGL, Generic Geometry Library)
 //
-// Copyright Barend Gehrels 2010, Geodan, Amsterdam, the Netherlands.
+// Copyright Barend Gehrels 2011, Geodan, Amsterdam, the Netherlands.
 // Use, modification and distribution is subject to the Boost Software License,
 // Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_GEOMETRY_ALGORITHMS_DETAIL_DIVIDE_AND_CONQUER_HPP
-#define BOOST_GEOMETRY_ALGORITHMS_DETAIL_DIVIDE_AND_CONQUER_HPP
+#ifndef BOOST_GEOMETRY_ALGORITHMS_DETAIL_PARTITION_HPP
+#define BOOST_GEOMETRY_ALGORITHMS_DETAIL_PARTITION_HPP
 
 #include <vector>
 #include <boost/range/algorithm/copy.hpp>
@@ -19,91 +19,168 @@ namespace boost { namespace geometry
 namespace detail
 {
 
-// Helper structure
-struct dac_index
+template <int Dimension, typename Box>
+inline void divide_box(Box const& box, Box& lower_box, Box& upper_box)
 {
-    int index; // in original vector
-    bool is_quad_exceeding;
+    typedef typename coordinate_type<Box>::type ctype;
 
-    dac_index(int i = 0)
-        : index(i)
-        , is_quad_exceeding(false)
-    {}
-};
+    // Divide input box into two parts, e.g. left/right
+    ctype two = 2;
+    ctype mid = (geometry::get<min_corner, Dimension>(box)
+            + geometry::get<max_corner, Dimension>(box)) / two;
 
+    lower_box = box;
+    upper_box = box;
+    geometry::set<max_corner, Dimension>(lower_box, mid);
+    geometry::set<min_corner, Dimension>(upper_box, mid);
+}
 
-class avoid_duplicates_helper
+template
+<
+    typename Box,
+    typename OverlapsPolicy
+>
+class partition_generic
 {
-    std::set<std::pair<int,int> > processed;
+    typedef std::vector<std::size_t> index_vector_type;
+protected :
+    typedef boost::range_iterator<index_vector_type const>::type index_iterator_type;
 
-public :
-    template <typename Item>
-    inline bool apply(Item const& item1, Item const& item2)
+    // Divide collection into three subsets: lower, upper and oversized (not-fitting)
+    // (lower == left or bottom, upper == right or top)
+    template <typename InputCollection>
+    static inline void divide_into_subsets(Box const& lower_box, Box const& upper_box,
+            InputCollection const& collection,
+            index_vector_type const& input,
+            index_vector_type& lower, index_vector_type& upper, index_vector_type& exceeding)
     {
-        bool done = false;
-        if (item1.is_quad_exceeding && item2.is_quad_exceeding)
+        for(index_iterator_type it = boost::begin(input);
+            it != boost::end(input);
+            ++it)
         {
-            std::pair<int,int> p;
-            if (item1.index < item2.index)
-            {
-                p.first = item1.index;
-                p.second = item2.index;
-            }
-            else
-            {
-                p.first = item2.index;
-                p.second = item1.index;
-            }
+            bool const lower_overlapping = OverlapsPolicy::apply(lower_box, collection[*it]);
+            bool const upper_overlapping = OverlapsPolicy::apply(upper_box, collection[*it]);
 
-            BOOST_AUTO(sit, processed.find(p));
-            if (sit == boost::end(processed))
+            if (lower_overlapping && upper_overlapping)
             {
-                processed.insert(p);
+                exceeding.push_back(*it);
+            }
+            else if (lower_overlapping)
+            {
+                lower.push_back(*it);
+            }
+            else if (upper_overlapping)
+            {
+                upper.push_back(*it);
             }
             else
             {
-                done = true;
+                // Is nowhere! Should not occur!
+                BOOST_ASSERT(true);
             }
         }
-        return !done;
+    }
+
+    // Match collection 1 with collection 2
+    template <typename InputCollection, typename Policy>
+    static inline void handle_one(InputCollection const& collection,
+            index_vector_type const& input,
+            Policy& policy)
+    {
+        // Quadratic behaviour at lowest level (lowest quad, or all exceeding)
+        for(index_iterator_type it1 = boost::begin(input); it1 != boost::end(input); ++it1)
+        {
+            index_iterator_type it2 = it1;
+            for(++it2; it2 != boost::end(input); ++it2)
+            {
+                policy.apply(collection[*it1], collection[*it2]);
+            }
+        }
+    }
+
+    // Match collection 1 with collection 2
+    template <typename InputCollection, typename Policy>
+    static inline void handle_two(
+            InputCollection const& collection1, index_vector_type const& input1,
+            InputCollection const& collection2, index_vector_type const& input2,
+            Policy& policy)
+    {
+        for(index_iterator_type it1 = boost::begin(input1); it1 != boost::end(input1); ++it1)
+        {
+            for(index_iterator_type it2 = boost::begin(input2); it2 != boost::end(input2); ++it2)
+            {
+                policy.apply(collection1[*it1], collection2[*it2]);
+            }
+        }
     }
 };
 
-template <typename Visitor>
-class dac_static_visitor_avoiding_duplicates
+
+
+template
+<
+    int Dimension,
+    typename Box,
+    typename OverlapsPolicy
+>
+class partition_one_collection : public partition_generic<Box, OverlapsPolicy>
 {
-    typedef std::vector<dac_index> dac_vector_type;
-    typedef boost::range_iterator<dac_vector_type const>::type dac_iterator_type;
+    typedef std::vector<std::size_t> index_vector_type;
+    typedef typename coordinate_type<Box>::type ctype;
+    typedef partition_one_collection
+            <
+                1 - Dimension,
+                Box,
+                OverlapsPolicy
+            > sub_divide;
 
-    avoid_duplicates_helper avoid_duplicates;
-    Visitor& m_visitor;
-
-public :
-    dac_static_visitor_avoiding_duplicates(Visitor& visitor)
-        : m_visitor(visitor)
-    {}
-
-    template <typename InputCollection>
-    inline void apply(InputCollection const& collection, 
-        dac_vector_type const& indexes) 
+    template <typename InputCollection, typename Policy>
+    static inline void next_level(Box const& box,
+            InputCollection const& collection,
+            index_vector_type const& input,
+            int level, int min_elements,
+            Policy& policy)
     {
-        // Quadratic loop over the lowest quad
-        for(dac_iterator_type it1 = boost::begin(indexes); it1 != boost::end(indexes); ++it1)
+        if (boost::size(input) > 0)
         {
-            for(dac_iterator_type it2 = boost::begin(indexes); it2 != boost::end(indexes); ++it2)
+            if (boost::size(input) > min_elements && level < 100)
             {
-                // This policy always calls in order of original colection
-                if (it1->index < it2->index)
-                {
-                    // This policy avoids handlig duplicates
-                    if (avoid_duplicates.apply(*it1, *it2))
-                    {
-                        m_visitor.apply(collection[it1->index], collection[it2->index], 
-                                it1->is_quad_exceeding, it2->is_quad_exceeding);
-                    }
-                }
+                sub_divide::apply(box, collection, input, level + 1, min_elements, policy);
+            }
+            else
+            {
+                handle_one(collection, input, policy);
             }
         }
+    }
+
+public :
+    template <typename InputCollection, typename Policy>
+    static inline void apply(Box const& box,
+            InputCollection const& collection,
+            index_vector_type const& input,
+            int level,
+            int min_elements,
+            Policy& policy)
+    {
+        Box lower_box, upper_box;
+        divide_box<Dimension>(box, lower_box, upper_box);
+
+        index_vector_type lower, upper, exceeding;
+        divide_into_subsets(lower_box, upper_box, collection, input, lower, upper, exceeding);
+
+        if (boost::size(exceeding) > 0)
+        {
+            // All what is not fitting a partition should be combined
+            // with each other, and with all which is fitting.
+            handle_one(collection, exceeding, policy);
+            handle_two(collection, exceeding, collection, lower, policy);
+            handle_two(collection, exceeding, collection, upper, policy);
+        }
+
+        // Recursively call operation both parts
+        next_level(lower_box, collection, lower, level, min_elements, policy);
+        next_level(upper_box, collection, upper, level, min_elements, policy);
     }
 };
 
@@ -114,109 +191,78 @@ template
     typename Box,
     typename OverlapsPolicy
 >
-struct divide_and_conquer
+class partition_two_collections : public partition_generic<Box, OverlapsPolicy>
 {
+    typedef std::vector<std::size_t> index_vector_type;
     typedef typename coordinate_type<Box>::type ctype;
+    typedef partition_two_collections
+            <
+                1 - Dimension,
+                Box,
+                OverlapsPolicy
+            > sub_divide;
 
     template <typename InputCollection, typename Policy>
-    static inline void next_level(Box const& box, 
-            InputCollection const& collection,
-            std::vector<dac_index> const& fitting_in_quad,
-            std::vector<dac_index> exceeding_quad, // effectively const
+    static inline void next_level(Box const& box,
+            InputCollection const& collection1, index_vector_type const& input1,
+            InputCollection const& collection2, index_vector_type const& input2,
             int level, int min_elements,
             Policy& policy)
     {
-        typedef divide_and_conquer
-                <
-                    1 - Dimension,
-                    Box,
-                    OverlapsPolicy
-                > sub_divide;
-
-        if (level < 50
-            && boost::size(fitting_in_quad) > min_elements
-            && boost::size(fitting_in_quad) > boost::size(exceeding_quad)
-            )
+        if (boost::size(input1) > 0 && boost::size(input2) > 0)
         {
-            sub_divide::apply(box, collection, fitting_in_quad, exceeding_quad, level + 1, min_elements, policy);
-        }
-        else
-        {
-            boost::copy(fitting_in_quad, std::back_inserter(exceeding_quad));
-            policy.apply(collection, exceeding_quad);
-        }
-    }
-
-    template <typename InputCollection, typename Policy>
-    static inline void apply(Box const& box,
-            InputCollection const& collection,
-            std::vector<dac_index> const& fitting_in_quad,
-            std::vector<dac_index>& exceeding_quad, // by value is intentional
-            int level,
-            int min_elements,
-            Policy& policy,
-            int size = -1)
-    {
-
-        typedef typename boost::range_value<InputCollection>::type item_type;
-
-        if (size == -1)
-        {
-            size = boost::size(collection);
-        }
-
-        // Divide input box into two parts, e.g. left/right
-        ctype two = 2;
-        ctype mid = (geometry::get<min_corner, Dimension>(box)
-                + geometry::get<max_corner, Dimension>(box)) / two;
-
-        Box lower = box, upper = box;
-        geometry::set<max_corner, Dimension>(lower, mid);
-        geometry::set<min_corner, Dimension>(upper, mid);
-
-        // Divide collection into three subsets: lower, upper and oversized (not-fitting)
-        // (lower == left or bottom, upper == right or top)
-        std::vector<dac_index> lower_index, upper_index;
-        bool has_exceeding = false;
-        for(std::vector<dac_index>::const_iterator it = boost::begin(fitting_in_quad); it != boost::end(fitting_in_quad); ++it)
-        {
-            bool const overlaps_lower = OverlapsPolicy::apply(lower, collection[it->index]);
-            bool const overlaps_upper = OverlapsPolicy::apply(upper, collection[it->index]);
-
-            if (overlaps_lower && overlaps_upper)
+            if (boost::size(input1) > min_elements 
+                && boost::size(input2) > min_elements 
+                && level < 100)
             {
-                dac_index oversized = *it;
-                oversized.is_quad_exceeding = true;
-                has_exceeding = true;
-                exceeding_quad.push_back(oversized);
-            }
-            else if (overlaps_lower)
-            {
-                lower_index.push_back(*it);
-            }
-            else if (overlaps_upper)
-            {
-                upper_index.push_back(*it);
+                sub_divide::apply(box, collection1, input1, collection2, input2, level + 1, min_elements, policy);
             }
             else
             {
-                // Is nowhere! Should not occur!
-                BOOST_ASSERT(true);
+                handle_two(collection1, input1, collection2, input2, policy);
             }
         }
+    }
 
-        // Recursively call operation both halves
-        if (boost::size(lower_index) > 0 || has_exceeding)
+public :
+    template <typename InputCollection, typename Policy>
+    static inline void apply(Box const& box,
+            InputCollection const& collection1, index_vector_type const& input1,
+            InputCollection const& collection2, index_vector_type const& input2,
+            int level,
+            int min_elements,
+            Policy& policy)
+    {
+        Box lower_box, upper_box;
+        divide_box<Dimension>(box, lower_box, upper_box);
+
+        index_vector_type lower1, upper1, exceeding1;
+        index_vector_type lower2, upper2, exceeding2;
+        divide_into_subsets(lower_box, upper_box, collection1, input1, lower1, upper1, exceeding1);
+        divide_into_subsets(lower_box, upper_box, collection2, input2, lower2, upper2, exceeding2);
+
+        if (boost::size(exceeding1) > 0)
         {
-            next_level(lower, collection, lower_index, exceeding_quad, level, min_elements, policy);
+            // All exceeding from 1 with 2:
+            handle_two(collection1, exceeding1, collection2, exceeding2, policy);
+
+            // All exceeding from 1 with lower and upper of 2:
+            handle_two(collection1, exceeding1, collection2, lower2, policy);
+            handle_two(collection1, exceeding1, collection2, upper2, policy);
         }
-        if (boost::size(upper_index) > 0)
+        if (boost::size(exceeding2) > 0)
         {
-            next_level(upper, collection, upper_index, exceeding_quad, level, min_elements, policy);
+            // All exceeding from 2 with lower and upper of 1:
+            handle_two(collection1, lower1, collection2, exceeding2, policy);
+            handle_two(collection1, upper1, collection2, exceeding2, policy);
         }
+
+        next_level(lower_box, collection1, lower1, collection2, lower2, level, min_elements, policy);
+        next_level(upper_box, collection1, upper1, collection2, upper2, level, min_elements, policy);
     }
 };
-}
+
+} // namespace detail
 
 
 template
@@ -225,35 +271,58 @@ template
     typename ExpandPolicy,
     typename OverlapsPolicy
 >
-struct divide_and_conquer
+class partition
 {
+    typedef std::vector<std::size_t> index_vector_type;
 
-    template <typename InputCollection, typename Visitor>
-    static inline void apply(InputCollection const& collection, Visitor& visitor, int min_elements = 16)
+    template <typename InputCollection>
+    static inline void expand_to_collection(InputCollection const& collection, Box& total, index_vector_type& index_vector)
     {
-        std::vector<detail::dac_index> index_vector, empty;
-
-
-        // Determine total box
-        Box total;
-        assign_inverse(total);
-        int index = 0;
+        std::size_t index = 0;
         for(typename boost::range_iterator<InputCollection const>::type it
             = boost::begin(collection);
             it != boost::end(collection);
             ++it, ++index)
         {
             ExpandPolicy::apply(total, *it);
-            index_vector.push_back(detail::dac_index(index));
+            index_vector.push_back(index);
         }
+    }
 
-        // First call to recursive function
-        detail::dac_static_visitor_avoiding_duplicates<Visitor> policy(visitor);
-        detail::divide_and_conquer
+
+public :
+    template <typename InputCollection, typename Visitor>
+    static inline void apply(InputCollection const& collection, Visitor& visitor, int min_elements = 16)
+    {
+        index_vector_type index_vector;
+        Box total;
+        assign_inverse(total);
+        expand_to_collection(collection, total, index_vector);
+
+        detail::partition_one_collection
             <
                 0, Box, OverlapsPolicy
-            >::apply(total, collection, index_vector, empty, 0, min_elements, policy);
+            >::apply(total, collection, index_vector, 0, min_elements, visitor);
     }
+
+    template <typename InputCollection, typename Visitor>
+    static inline void apply(InputCollection const& collection1, InputCollection const& collection2, Visitor& visitor, int min_elements = 16)
+    {
+        index_vector_type index_vector1, index_vector2;
+        Box total;
+        assign_inverse(total);
+        expand_to_collection(collection1, total, index_vector1);
+        expand_to_collection(collection2, total, index_vector2);
+
+        detail::partition_two_collections
+            <
+                0, Box, OverlapsPolicy
+            >::apply(total, 
+                collection1, index_vector1, 
+                collection2, index_vector2, 
+                0, min_elements, visitor);
+    }
+
 };
 
 
