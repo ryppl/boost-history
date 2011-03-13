@@ -9,17 +9,18 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_PUT_ADAPTER_MODIFIER_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_ADAPTER_MODIFIER_ER_2010_HPP
+#include <boost/assign/v2/detail/pp/ignore.hpp>
 #include <boost/concept_check.hpp>
 
 namespace boost{
 namespace assign{
 namespace v2{
-//[frame_modifier
-namespace /*<< Template arguments to put_aux::modifier<> are declared within >>*/modifier_tag{}
+//[syntax_put_adapter_modifier
+namespace /*<< Template arguments to `put_aux::adapter_modifier<>` have to be declared within this `namespace`>>*/modifier_tag{}
 namespace put_aux{
 
     template<typename Tag>
-    struct /*<<Specialize on Tag>>*/ modifier{};
+    struct /*<<Specialize on Tag>>*/ adapter_modifier{};
 
 }
 namespace put_concept{
@@ -34,7 +35,7 @@ namespace put_concept{
         }
 
         private:
-        static put_aux::modifier<Tag>& m;
+        static put_aux::adapter_modifier<Tag>& m;
         static C& cont;
         static T t;
     };

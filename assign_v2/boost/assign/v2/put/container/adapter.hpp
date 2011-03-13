@@ -33,7 +33,7 @@ namespace put_aux{
 
         protected:
 
-        typedef put_aux::modifier<Tag> modifier_;
+        typedef put_aux::adapter_modifier<Tag> modifier_;
         typedef ref::assign_tag::copy assign_tag_;
         typedef ref::wrapper<assign_tag_,C> super1_t;
 

@@ -20,7 +20,7 @@ namespace assign{
 namespace v2{namespace put_aux{
                 
     template<typename Arg>
-    class modifier<modifier_tag::lookup<Arg> >
+    class adapter_modifier<modifier_tag::lookup<Arg> >
     {
 
         typedef Arg arg_;
@@ -30,8 +30,8 @@ namespace v2{namespace put_aux{
         
         public:
 
-        modifier() : ptr( new arg_() ){}
-        explicit modifier(
+        adapter_modifier() : ptr( new arg_() ){}
+        explicit adapter_modifier(
             ignore_,
             typename boost::call_traits<arg_>::param_type arg
         ) : ptr( new arg_( arg ) )

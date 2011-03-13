@@ -11,10 +11,12 @@
 #define BOOST_ASSIGN_V2_PUT_ADAPTER_CRTP_ER_2010_HPP
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
 #include <boost/assign/v2/detail/pp/forward.hpp>
+#include <boost/assign/v2/detail/pp/ignore.hpp>
 #include <boost/assign/v2/detail/traits/container/is_ptr_container.hpp>
 #include <boost/assign/v2/put/adapter/as_arg_list.hpp>
 #include <boost/assign/v2/put/adapter/fwd.hpp>
 #include <boost/assign/v2/put/adapter/modifier.hpp>
+#include <boost/concept_check.hpp>
 #include <boost/mpl/always.hpp>
 #include <boost/mpl/apply.hpp>
 #include <boost/range/algorithm/for_each.hpp>
@@ -52,12 +54,10 @@ namespace put_aux{
     struct modifier_holder{
 
         typedef Tag modifier_tag;
-        typedef put_aux::modifier<Tag> modifier_type;
+        typedef put_aux::adapter_modifier<Tag> modifier_type;
 
         modifier_holder(){}
         modifier_holder(modifier_type const& m) : modifier( m ){}
-
-        typedef put_aux::modifier<Tag> modifier_;
 
         modifier_type modifier;
 
@@ -78,7 +78,7 @@ namespace put_aux{
         result_type operator()( T&& t )const
         {
             this->d_(
-                /*<< Instance of F >>*/ this->fun( std::forward<Args>(args)... )
+                this->fun( std::forward<Args>(args)... )
             );
             return (*this);
         }
@@ -101,12 +101,45 @@ namespace put_aux{
         D const& d_;
         
     };
+}//put_aux
+//[syntax_put_adapter_crtp
+namespace put_aux{
 
-    // D has to model concept_sub::Pre3, with respect to container C, functor F
-    // and Tag. It then models concept_sub::Post
+    template<typename C, typename D>
+    struct ConceptAdapter1{
+
+        BOOST_CONCEPT_USAGE(ConceptAdapter1)
+        {
+            D derived( cont );
+            C& ref = derived.container();
+        }
+
+        private:
+        static C& cont;
+
+    };
+
     template<typename C, typename F, typename Tag, typename D>
+    struct ConceptAdapter2 : ConceptAdapter1<C, D>{
+
+        typedef put_aux::adapter_modifier<Tag> modifier_;
+
+        BOOST_CONCEPT_USAGE(ConceptAdapter2)
+        {
+            D derived( cont, f, m );
+        }
+
+        private:
+        static C& cont;
+        static F const &f;
+        static modifier_ m;
+
+    };
+
+    template<typename /*<<Container>>*/C, typename /*<<Functor>>*/F, typename /*<<Modifier tag>>*/Tag, typename /*<<Derived type>>*/D>
     class crtp 
-    	: public fun_holder<F>
+//<-
+        : public fun_holder<F>
         , public modifier_holder<Tag>
 #if !BOOST_ASSIGN_V2_ENABLE_CPP0X
         , public functor_aux::crtp_unary_and_up<
@@ -114,10 +147,10 @@ namespace put_aux{
             ::boost::mpl::always< D const& >
         >
 #endif // BOOST_ASSIGN_V2_ENABLE_CPP0X
+//->
     {
-
+//<-
         public:
-
         D & derived(){ return static_cast<D&>(*this); }
         D const& derived()const{ return static_cast<D const&>(*this); }
 
@@ -125,36 +158,42 @@ namespace put_aux{
 
         typedef fun_holder<F> fun_holder_;
         typedef modifier_holder<Tag> modifier_holder_;
-        typedef typename modifier_holder_::modifier_type modifier_;
+//->
 
         public:
 
+        typedef 
+        	/*<-*/BOOST_ASSIGN_V2_IGNORE(/*->*/ adapter_modifier<Tag> /*<-*/)
+            	typename modifier_holder_::modifier_type /*->*/
+        modifier_type;
 
         crtp(){}
-        explicit crtp( F const& f ) : fun_holder_( f ){}
-        explicit crtp( F const& f, modifier_ const& m )
-            : fun_holder_( f ), modifier_holder_( m ){}
+        explicit crtp( F const& f )/*<-*/ : fun_holder_( f ){}BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
+        explicit crtp( F const& f, modifier_type const& m )/*<-*/
+            : fun_holder_( f ), modifier_holder_( m ){}BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
         typedef D const& result_type;
 
         template<typename R>
         result_type 
-        operator()( as_arg_list_adapter<R> range )const
+        operator()( as_arg_list_adapter<R> range )const/*<-*/
         {
              return ::boost::for_each( range(), wrapper<D>( this->derived() ) ); 
-        }
+        }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
-
+//<-
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
+//->
 
         template<typename...Args>
-        result_type operator()( Args&&...args )const
+        result_type operator()( Args&&...args )const/*<-*/
         {
             return  this->modify(
                 /*<< Instance of F >>*/ this->fun( std::forward<Args>(args)... )
             );
-        }
+        }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
+//<-
 #else
         protected:
         typedef functor_aux::crtp_unary_and_up<
@@ -225,7 +264,7 @@ BOOST_PP_REPEAT_FROM_TO(
         result_type modify(T&& t)const
         {
             check_modifier( t );
-            /*<< Instance of put_aux::modifier<Tag> >>*/this->modifier.impl(
+            /*<< Instance of put_aux::adapter_modifier<Tag> >>*/this->modifier.impl(
                 /*<< Reference to C >>*/this->derived().container(),
                 std::forward<T>( t )
             );
@@ -250,12 +289,57 @@ BOOST_PP_REPEAT_FROM_TO(
 
 #endif // BOOST_ASSIGN_V2_ENABLE_CPP0X
 
+//->
+
     };
 
 }// put_aux
+//]
 }// v2
 }// assign
 }// boost
 
 #endif // BOOST_ASSIGN_V2_PUT_ADAPTER_CRTP_ER_2010_HPP
+
+//[semantics_put_adapter_crtp
+/*`
+[*Notation]
+
+[variablelist 
+    [
+        [`cont`]
+        [ Instance of `C`, supplied by the derived class  ]
+    ]
+    [
+        [`f`]
+        [ Internal copy of instance of type `F`]
+    ]
+    [
+        [`__put_modifier__`]
+        [ Internal copy of instance of type `put_aux::adapter_modifier<Tag>`]
+    ]
+    [
+        [`__put_adapter__`]
+        [ Instance of `D`  ]
+    ]
+]
+
+[*Expressions]
+
+[table
+    [[Expression][Side effect][Result]]
+    [    
+        [ `__put_adapter__( args... ) ` ]
+        [ `__put_modifier__.impl( cont, f( args... ) )` ]
+        [ A reference to `__put_adapter__` ]
+    ]
+    [    
+        [ `__put_adapter__( as_arg_list( range ) ) ` ]
+        [ `__put_adapter__( arg )` for each `arg` in `range` ]
+        [ A reference to `__put_adapter__`]
+    ]
+]
+
+*/
+//]
 

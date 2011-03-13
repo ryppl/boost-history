@@ -39,7 +39,7 @@ namespace put_aux{
         typedef impl_ const cimpl_;
         typedef crtp<impl_, F, Tag, deque_adapter> put_crtp_;
 
-        typedef put_aux::modifier<Tag> modifier_;
+        typedef put_aux::adapter_modifier<Tag> modifier_;
 
         public:
 

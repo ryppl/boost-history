@@ -20,7 +20,7 @@
 #include <boost/typeof/typeof.hpp>
 #include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/put/container.hpp>
-#include <boost/assign/v2/put/fun/modulo.hpp>
+#include <boost/assign/v2/put/fun.hpp>
 #include <boost/assign/v2/put/modifier/repeat.hpp>
 #include <boost/assign/v2/put/pipe/csv_put.hpp>
 #include <boost/assign/v2/put/pipe/put.hpp>

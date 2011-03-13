@@ -9,12 +9,13 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_PUT_ADAPTER_REPLACE_PARAMETER_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_ADAPTER_REPLACE_PARAMETER_ER_2010_HPP
+#include <boost/assign/v2/detail/pp/ignore.hpp>
 #include <boost/mpl/apply.hpp>
 
 namespace boost{
 namespace assign{
 namespace v2{
-//[replace_parameter
+//[syntax_put_adapter_replace_parameter
 namespace put_aux{
                 
     template<typename /*<<Inherits crtp\<\> >>*/D> 

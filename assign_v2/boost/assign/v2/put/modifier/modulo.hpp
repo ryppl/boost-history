@@ -9,9 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_PUT_MODIFIER_MODULO_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_MODIFIER_MODULO_ER_2010_HPP
-#include <boost/assign/v2/put/modifier/modulo/keyword.hpp>
-#include <boost/assign/v2/put/modifier/modulo/make.hpp>
-#include <boost/assign/v2/put/modifier/modulo/meta.hpp>
-#include <boost/assign/v2/put/modifier/modulo/standard.hpp>
+#include <boost/assign/v2/put/modifier/modulo/modifier.hpp>
+#include <boost/assign/v2/put/modifier/standard/modifier.hpp>
 
 #endif

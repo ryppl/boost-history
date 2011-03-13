@@ -25,16 +25,16 @@ namespace v2{
 namespace put_aux{
 
     template<typename Arg>
-    class modifier<modifier_tag::repeat<Arg> >
+    class adapter_modifier<modifier_tag::repeat<Arg> >
     {
-        typedef modifier<Arg> inner_type;
+        typedef adapter_modifier<Arg> inner_type;
 
         public:
 
         typedef std::size_t size_type;
 
-        modifier() : n_( 0 ){}
-        explicit modifier( inner_type inner, size_type n )
+        adapter_modifier() : n_( 0 ){}
+        explicit adapter_modifier( inner_type inner, size_type n )
             : inner_( inner ), n_( n )
         {}
 

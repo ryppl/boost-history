@@ -40,14 +40,14 @@ namespace xxx_standard{
         // ------------------------------ WARNING ---------------------------- //
         // Don't misconstrue the commands in the tests below as *necessary* to //
         // obtain particular implementation. In most cases, the default is     //
-        // already set at that invoked with operator%                            //
+        // already set at that invoked with operator%                          //
         // ------------------------------------------------------------------- //
 
         // PUT
         {
-            //[modifier_meta
+            //[test_put_modifier_standard_meta
             typedef as2::result_of::put<std::vector<int> >::type put_;
-            typedef as2::put_aux::keyword_modifier keyword_;
+            typedef as2::put_aux::keyword_standard_modifier keyword_;
             typedef as2::modifier_tag::push_front tag_;
             typedef as2::result_of::modulo_modifier<put_> meta1_;
             typedef ::boost::mpl::apply2<meta1_, keyword_, tag_>::type result1_;
@@ -57,16 +57,18 @@ namespace xxx_standard{
             //]
         }
         {
-            //[modifier_push_front
+            //[test_put_modifier_push_front
             std::deque<double> sqrt2;
             ( as2::put( sqrt2 ) % as2::_push_front )( 1.41421 )( 1.4142 )( 1.414 )( 1.41 );
         
+        
+            // TODO abs()<eps
             BOOST_ASSIGN_V2_CHECK( boost::lower_bound( sqrt2, 1.41 ) == boost::begin( sqrt2 ) );
             BOOST_ASSIGN_V2_CHECK( boost::upper_bound( sqrt2, 1.41421 ) == boost::end( sqrt2 ) );
             //]
         }
         {
-            //[modifier_push
+            //[test_put_modifier_push
             std::queue<int> fifo; ( as2::put( fifo ) % as2::_push )( 72 )( 31 )( 48 );
                 
             BOOST_ASSIGN_V2_CHECK( fifo.front() == 72 );
@@ -74,7 +76,7 @@ namespace xxx_standard{
             //]
         }
         {
-            //[modifier_insert
+            //[test_put_modifier_insert
             std::set<std::string> letters; ( as2::put( letters ) % as2::_insert )( "d" )( "a" )( "c" )( "b" );
         
             BOOST_ASSIGN_V2_CHECK( letters.lower_bound( "a" ) == boost::begin( letters ) );
@@ -82,7 +84,7 @@ namespace xxx_standard{
             //]
         }
         {
-            //[modifier_push_back
+            //[test_put_modifier_push_back
             typedef int int_; std::list<int> list; 
             ( as2::put( list ) % as2::_push_back )( 72 )( 31 )( 48 );
                 
@@ -92,9 +94,9 @@ namespace xxx_standard{
         }
         // DEQUE
         {
-            //[modifier_meta_deque
+            //[test_put_modifier_meta_deque
             typedef as2::result_of::deque<int>::type put_;
-            typedef as2::put_aux::keyword_modifier keyword_;
+            typedef as2::put_aux::keyword_standard_modifier keyword_;
             typedef as2::modifier_tag::push_front tag_;
             typedef as2::result_of::modulo_modifier<put_> meta1_;
             typedef ::boost::mpl::apply2<meta1_, keyword_, tag_>::type result1_;
@@ -105,7 +107,7 @@ namespace xxx_standard{
             //]
         }
         {
-            //[modifier_push_front_deque
+            //[test_put_modifier_push_front_deque
             BOOST_AUTO(
                 powers,
                 ( as2::deque<int>( as2::_nil ) % as2::_push_front )( 16 )( 8 )( 4 )( 2 )( 1 )

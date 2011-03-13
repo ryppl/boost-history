@@ -12,12 +12,13 @@
 #include <boost/assign/v2/put/container/fwd.hpp>
 #include <boost/assign/v2/put/container/adapter.hpp>
 #include <boost/assign/v2/put/fun/deduce.hpp>
-#include <boost/assign/v2/put/modifier/deduce/tag.hpp>
+#include <boost/assign/v2/put/modifier/deduce.hpp>
 #include <boost/assign/v2/put/modifier/deduce/dependee.hpp>
 
 namespace boost{
 namespace assign{
 namespace v2{
+//synopsis_put_container
 namespace result_of{
 
     template<typename C>
@@ -38,6 +39,7 @@ namespace result_of{
         return result_( cont );
     }
 
+//]
 }// v2
 }// assign
 }// boost

@@ -18,7 +18,7 @@
 #include <boost/tuple/tuple.hpp>
 
 #include <boost/assign/v2/detail/config/check.hpp>
-#include <boost/assign/v2/put/fun/modulo.hpp>
+#include <boost/assign/v2/put/fun.hpp>
 #include <boost/assign/v2/put/modifier/lookup.hpp>
 #include <boost/assign/v2/put/container/put.hpp>
 #include <boost/assign/v2/put/deque.hpp>

@@ -12,7 +12,7 @@
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
 #include <boost/assign/v2/detail/keyword/nil.hpp>
 #include <boost/assign/v2/put/fun/deduce.hpp>
-#include <boost/assign/v2/put/modifier/deduce/tag.hpp>
+#include <boost/assign/v2/put/modifier/deduce.hpp>
 #include <boost/assign/v2/put/modifier/deduce/dependee.hpp>
 //#include <boost/assign/v2/put/deque/fwd.hpp>
 #include <boost/assign/v2/put/deque/adapter.hpp>

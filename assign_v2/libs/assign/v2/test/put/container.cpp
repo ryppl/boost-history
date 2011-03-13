@@ -59,7 +59,7 @@ namespace xxx_container{
              //[put_as_arg_list
             std::vector<int> numeric( 10 ); iota( numeric, 0 ); typedef std::string str_;
             typedef variant< int, str_ > data_; array<data_, 16> numeric_kb;
-            as2::put( numeric_kb )/*<<[^{`numeric_kb[ i ] = data_( t )` : ( i, t ) = ( 0, "+" ), ..., ( 5, "." )}]>>*/( "+" )( "-" )( "*" )( "/" )( "=" )( "." )/*<<[^{`numeric_kb[ 6 + i ] = data_( *( b + i ) )` : i = 0, ..., 9; b = `boost::begin( numeric )` }]>>*/( as2::as_arg_list( numeric ) );
+            as2::put( numeric_kb )/*<<Calls [^{`numeric_kb[ i ] = data_( t )` : ( i, t ) = ( 0, "+" ), ..., ( 5, "." )}]>>*/( "+" )( "-" )( "*" )( "/" )( "=" )( "." )/*<<Calls [^{`numeric_kb[ 6 + i ] = data_( *( b + i ) )` : i = 0, ..., 9; b = `boost::begin( numeric )` }]>>*/( as2::as_arg_list( numeric ) );
 
             assert( get<str_>( numeric_kb.front() ) == "+" );
             assert( get<int>( numeric_kb.back()  ) == 9 );
@@ -81,11 +81,13 @@ namespace xxx_container{
                 /*<<Calls `ragged.push_back( variable_size_( 1, -99.99 ) )`>>*/( 1, -99.99 )
                 /*<<Calls `ragged.push_back( variable_size_( ) )`>>*/( );
 
+            assert( ragged[0].size() == a.size() );
+            assert( ragged[3].size() == 0        );
+            //]
             BOOST_ASSIGN_V2_CHECK( ragged[0].size() == a.size() );
             BOOST_ASSIGN_V2_CHECK( ragged[1].size() == b.size() );
             BOOST_ASSIGN_V2_CHECK( ragged[2].size() == 1        );
             BOOST_ASSIGN_V2_CHECK( ragged[3].size() == 0        );
-            //]
             data_ eps = numeric::bounds<data_>::smallest();
             BOOST_ASSIGN_V2_CHECK( fabs( ragged[0].front() - a.front() ) < eps );
             BOOST_ASSIGN_V2_CHECK( fabs( ragged[0].back()  - a.back()  ) < eps );
@@ -114,15 +116,17 @@ namespace xxx_container{
             // http://bioinfo.mbb.yale.edu/~mbg/dom/fun3/area-codes/            
             //[put_seq_tuple_ref
             typedef const char us_state_ [3]; us_state_ ct = "CT", nj = "NJ", ny = "NY";
-            typedef int area_code_; typedef tuple<us_state_/*<<Notice the reference>>*/&,  area_code_> data_; 
-            std::deque< data_ > tri_state_area; /*Calls `tri_state.push_back( data_( s, c ) )` for [^( s, c ) = ( ny, 212 )( ny, 718 )( ny, 516 )( ny, 914 )( nj, 210 )( nj, 908 )( nj, 609 )( ct, 203 ) ]*/
+            typedef int area_code_; typedef tuple<us_state_/*<<Notice the [*reference]>>*/&,  area_code_> data_; std::deque< data_ > tri_state_area; 
+            /*<<Calls `tri_state.push_back( data_( s, c ) )` for [^( s, c ) = ( ny, 212 )...( ct, 203 ) ]>>*/
             as2::put( tri_state_area )( ny, 212 )( ny, 718 )( ny, 516 )( ny, 914 )( nj, 210 )( nj, 908 )( nj, 609 )( ct, 203 );
 
+            assert( get<0>( tri_state_area.front() ) == ny );
+            assert( get<1>( tri_state_area.back()  ) == 203 );
+            //]
             BOOST_ASSIGN_V2_CHECK( get<0>( tri_state_area.front() ) == ny );
             BOOST_ASSIGN_V2_CHECK( get<1>( tri_state_area.front() ) == 212 );
             BOOST_ASSIGN_V2_CHECK( get<0>( tri_state_area.back()  ) == ct );
             BOOST_ASSIGN_V2_CHECK( get<1>( tri_state_area.back()  ) == 203 );
-            //]
         }
     }// test()
 
