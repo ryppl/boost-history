@@ -1,0 +1,191 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Chapter&#160;1.&#160;Boost.Assign 2.0</title>
+<link rel="stylesheet" href="../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="index.html" title="Chapter&#160;1.&#160;Boost.Assign 2.0">
+<link rel="next" href="boost_assign_v2/tutorial.html" title="Tutorial">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../boost.png"></td>
+<td align="center"><a href="../../index.html">Home</a></td>
+<td align="center"><a href="../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav"><a accesskey="n" href="boost_assign_v2/tutorial.html"><img src="../../doc/src/images/next.png" alt="Next"></a></div>
+<div class="chapter">
+<div class="titlepage"><div>
+<div><h2 class="title">
+<a name="boost_assign_v2"></a>Chapter&#160;1.&#160;Boost.Assign 2.0</h2></div>
+<div><div class="author"><h3 class="author">
+<span class="firstname">Ottosen</span> <span class="surname">Thorsten</span>
+</h3></div></div>
+<div><div class="author"><h3 class="author">
+<span class="firstname">Erwann</span> <span class="surname">Rogard</span>
+</h3></div></div>
+<div><p class="copyright">Copyright &#169; 2003 -2004 Thorsten Ottosen, 2010 Erwann Rogard</p></div>
+<div><div class="legalnotice">
+<a name="id36330860"></a><p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></div>
+</div></div>
+<div class="toc">
+<p><b>Table of Contents</b></p>
+<dl>
+<dt><span class="section"><a href="index.html#boost_assign_v2.intro">Introduction</a></span></dt>
+<dt><span class="section"><a href="boost_assign_v2/tutorial.html">Tutorial</a></span></dt>
+<dt><span class="section"><a href="boost_assign_v2/put.html">Put</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="boost_assign_v2/put.html#boost_assign_v2.put.adapter">Adapter</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="boost_assign_v2/put.html#boost_assign_v2.put.adapter.as_arg_list">As_arg_list</a></span></dt>
+<dt><span class="section"><a href="boost_assign_v2/put.html#boost_assign_v2.put.adapter.crtp">Crtp</a></span></dt>
+<dt><span class="section"><a href="boost_assign_v2/put.html#boost_assign_v2.put.adapter.modifier">Modifier</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="boost_assign_v2/put/deque.html">Deque</a></span></dt>
+<dt><span class="section"><a href="boost_assign_v2/put/fun.html">Fun</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="boost_assign_v2/put/fun.html#boost_assign_v2.put.fun.deduce">Deduce</a></span></dt>
+<dt><span class="section"><a href="boost_assign_v2/put/fun.html#boost_assign_v2.put.fun.modulo">Modulo</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="boost_assign_v2/put/modifier.html">Modifier</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="boost_assign_v2/put/modifier.html#boost_assign_v2.put.modifier.deduce">Deduce</a></span></dt>
+<dt><span class="section"><a href="boost_assign_v2/put/modifier.html#boost_assign_v2.put.modifier.modulo">Modulo</a></span></dt>
+<dt><span class="section"><a href="boost_assign_v2/put/modifier.html#boost_assign_v2.put.modifier.insert">Insert</a></span></dt>
+<dt><span class="section"><a href="boost_assign_v2/put/modifier.html#boost_assign_v2.put.modifier.iterate">Iterate</a></span></dt>
+<dt><span class="section"><a href="boost_assign_v2/put/modifier.html#boost_assign_v2.put.modifier.lookup">Lookup</a></span></dt>
+<dt><span class="section"><a href="boost_assign_v2/put/modifier.html#boost_assign_v2.put.modifier.push">Push</a></span></dt>
+<dt><span class="section"><a href="boost_assign_v2/put/modifier.html#boost_assign_v2.put.modifier.push_back">Push_back</a></span></dt>
+<dt><span class="section"><a href="boost_assign_v2/put/modifier.html#boost_assign_v2.put.modifier.push_front">Push_front</a></span></dt>
+<dt><span class="section"><a href="boost_assign_v2/put/modifier.html#boost_assign_v2.put.modifier.repeat">Repeat</a></span></dt>
+<dt><span class="section"><a href="boost_assign_v2/put/modifier.html#boost_assign_v2.put.modifier.standard">Standard</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="boost_assign_v2/put/pipe.html">Pipe</a></span></dt>
+<dt><span class="section"><a href="boost_assign_v2/put/put.html">Put</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="boost_assign_v2/ref.html">Ref</a></span></dt>
+<dt><span class="section"><a href="boost_assign_v2/utility.html">Utility</a></span></dt>
+</dl>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="boost_assign_v2.intro"></a><a class="link" href="index.html#boost_assign_v2.intro" title="Introduction">Introduction</a>
+</h2></div></div></div>
+<p>
+      This library builds upon <a href="../../../../../libs/assign/doc/index.html" target="_top">Boost.Assign
+      1.0</a>'s design, but is functionally independent of it. It can be broadly
+      characterized as providing a compact interface for carrying out operations
+      involving containers, which would ordinarily require repetitive statements.
+      Here's an example:
+    </p>
+<p>
+      
+</p>
+<pre class="programlisting"><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">numeric</span><span class="special">(</span> <span class="number">10</span> <span class="special">);</span> <span class="identifier">iota</span><span class="special">(</span> <span class="identifier">numeric</span><span class="special">,</span> <span class="number">0</span> <span class="special">);</span> <span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">str_</span><span class="special">;</span>
+<span class="keyword">typedef</span> <span class="identifier">variant</span><span class="special">&lt;</span> <span class="keyword">int</span><span class="special">,</span> <span class="identifier">str_</span> <span class="special">&gt;</span> <span class="identifier">data_</span><span class="special">;</span> <span class="identifier">array</span><span class="special">&lt;</span><span class="identifier">data_</span><span class="special">,</span> <span class="number">16</span><span class="special">&gt;</span> <span class="identifier">numeric_kb</span><span class="special">;</span>
+<span class="identifier">as2</span><span class="special">::</span><span class="identifier">put</span><span class="special">(</span> <span class="identifier">numeric_kb</span> <span class="special">)</span><a class="co" name="boost_assign_v20co" href="index.html#boost_assign_v20"><img src="../../doc/src/images/callouts/1.png" alt="1" border="0"></a><span class="special">(</span> <span class="string">"+"</span> <span class="special">)(</span> <span class="string">"-"</span> <span class="special">)(</span> <span class="string">"*"</span> <span class="special">)(</span> <span class="string">"/"</span> <span class="special">)(</span> <span class="string">"="</span> <span class="special">)(</span> <span class="string">"."</span> <span class="special">)</span><a class="co" name="boost_assign_v21co" href="index.html#boost_assign_v21"><img src="../../doc/src/images/callouts/2.png" alt="2" border="0"></a><span class="special">(</span> <span class="identifier">as2</span><span class="special">::</span><span class="identifier">as_arg_list</span><span class="special">(</span> <span class="identifier">numeric</span> <span class="special">)</span> <span class="special">);</span>
+
+<span class="identifier">assert</span><span class="special">(</span> <span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">str_</span><span class="special">&gt;(</span> <span class="identifier">numeric_kb</span><span class="special">.</span><span class="identifier">front</span><span class="special">()</span> <span class="special">)</span> <span class="special">==</span> <span class="string">"+"</span> <span class="special">);</span>
+<span class="identifier">assert</span><span class="special">(</span> <span class="identifier">get</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;(</span> <span class="identifier">numeric_kb</span><span class="special">.</span><span class="identifier">back</span><span class="special">()</span>  <span class="special">)</span> <span class="special">==</span> <span class="number">9</span> <span class="special">);</span>
+</pre>
+<p>
+    </p>
+<div class="calloutlist"><table border="0" summary="Callout list">
+<tr>
+<td width="5%" valign="top" align="left"><p><a name="boost_assign_v20"></a><a href="#boost_assign_v20co"><img src="../../doc/src/images/callouts/1.png" alt="1" border="0"></a> </p></td>
+<td valign="top" align="left"><p>
+          Calls <code class="computeroutput"><span class="identifier">numeric_kb</span><span class="special">[</span>
+          <span class="identifier">i</span> <span class="special">]</span>
+          <span class="special">=</span> <span class="identifier">data_</span><span class="special">(</span> <span class="identifier">t</span> <span class="special">)</span></code> for <code class="literal">( i, t ) = ( 0, "+"
+          ), ..., ( 5, "." )</code>
+        </p></td>
+</tr>
+<tr>
+<td width="5%" valign="top" align="left"><p><a name="boost_assign_v21"></a><a href="#boost_assign_v21co"><img src="../../doc/src/images/callouts/2.png" alt="2" border="0"></a> </p></td>
+<td valign="top" align="left"><p>
+          Calls <code class="literal">{<code class="computeroutput"><span class="identifier">numeric_kb</span><span class="special">[</span> <span class="number">6</span> <span class="special">+</span>
+          <span class="identifier">i</span> <span class="special">]</span>
+          <span class="special">=</span> <span class="identifier">data_</span><span class="special">(</span> <span class="special">*(</span> <span class="identifier">b</span>
+          <span class="special">+</span> <span class="identifier">i</span>
+          <span class="special">)</span> <span class="special">)</span></code>
+          : i = 0, ..., 9; b = <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">begin</span><span class="special">(</span> <span class="identifier">numeric</span> <span class="special">)</span></code> }</code>
+        </p></td>
+</tr>
+</table></div>
+<p>
+      Header <a class="link" href="boost_assign_v2/put.html" title="Put"><code class="literal"><span class="bold"><strong>boost/assign/v2/put.hpp</strong></span></code></a>
+      revolves around putting a sequence of values in a container. Notable features
+      include:
+    </p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+          A functor interface, supplied by <a class="link" href="boost_assign_v2/put/put.html" title="Put"><code class="computeroutput">put<span class="special">()</span></code></a>, that forwards arguments to the
+          constructor of the container's value-type (<code class="computeroutput"><span class="identifier">data_</span></code>,
+          in the above example) and passes the result, <code class="computeroutput">t</code>, to a container-deduced
+          modifier (<code class="computeroutput"><span class="identifier">numeric_kb</span><span class="special">[</span><span class="identifier">i</span><span class="special">++]</span> <span class="special">=</span> t</code>, in the same example).
+        </li>
+<li class="listitem">
+          Optionally, either of the above two components can be overriden via a parameter
+          passing mechanism expressed by the modulo operator. Common parameters are
+          provided, and the repertoire can be arbitrarily extended through the use
+          of macros.
+        </li>
+<li class="listitem">
+          A variant of the above in which the container is constructed in place,
+          by invoking <a class="link" href="boost_assign_v2/put/deque.html" title="Deque"><code class="computeroutput"><span class="identifier">deque</span><span class="special">&lt;&gt;()</span></code></a>. The relevant sections
+          are <a class="link" href="boost_assign_v2/put/fun.html#boost_assign_v2.put.fun.modulo" title="Modulo">here</a> and <a class="link" href="boost_assign_v2/put/modifier.html#boost_assign_v2.put.modifier.modulo" title="Modulo">here</a>
+        </li>
+<li class="listitem">
+          A <a class="link" href="boost_assign_v2/put/pipe.html" title="Pipe"><span class="emphasis"><em>piping</em></span>
+          </a> mechanism to facilitate integration of <a class="link" href="boost_assign_v2/put/put.html" title="Put"><code class="computeroutput">put<span class="special">()</span></code></a> with <a href="http://svn.boost.org/svn/boost/trunk/libs/range/doc/html/range/reference/algorithms.html" target="_top">range
+          algorithms</a>
+        </li>
+</ul></div>
+<p>
+      Header <a class="link" href="boost_assign_v2/ref.html" title="Ref"><code class="literal"><span class="bold"><strong>boost/assign/v2/ref.hpp</strong></span></code></a>
+      pertains to treating a set of references as a <a href="http://svn.boost.org/svn/boost/trunk/libs/range/doc/html/range/concepts/overview.html" target="_top">range-like</a>
+      interface.
+    </p>
+<p>
+      Header <a class="link" href="boost_assign_v2/utility.html" title="Utility"><code class="literal"><span class="bold"><strong>boost/assign/v2/utility.hpp</strong></span></code></a>
+      contains functionality that is adjunct to either of the above <span class="emphasis"><em>put</em></span>
+      and <span class="emphasis"><em>ref</em></span> frameworks.
+    </p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+          Chaining ranges, with special consideration for those created using the
+          <span class="emphasis"><em>ref</em></span> functionaltiy
+        </li>
+<li class="listitem">
+          Conversion from ranges to containers
+        </li>
+<li class="listitem">
+          A function, <code class="computeroutput"><span class="identifier">csv</span><span class="special">()</span></code>,
+          to be used primarily in conjunction with <code class="computeroutput">put<span class="special">()</span></code>,
+          that, given a functor and a sequence of values as its arguments, is equivalent
+          to successive unary functor calls over that sequence.
+        </li>
+</ul></div>
+<p>
+      If <a href="http://www2.research.att.com/~bs/C++0xFAQ.html" target="_top">C++0x</a>'s
+      capabilities are detecte (specifically variadic templates and move semantics),
+      they are incorporated into the libraries's implementation.
+    </p>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"><p><small>Last revised: March 14, 2011 at 02:36:14 GMT</small></p></td>
+<td align="right"><div class="copyright-footer"></div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav"><a accesskey="n" href="boost_assign_v2/tutorial.html"><img src="../../doc/src/images/next.png" alt="Next"></a></div>
+</body>
+</html>
