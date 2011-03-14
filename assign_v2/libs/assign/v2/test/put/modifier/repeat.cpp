@@ -10,6 +10,7 @@
 #include <vector>
 #include <boost/typeof/typeof.hpp>
 #include <boost/assign/v2/detail/config/check.hpp>
+#include <boost/assign/v2/detail/pp/ignore.hpp>
 #include <boost/assign/v2/put/modifier/push_front.hpp>
 #include <boost/assign/v2/put/modifier/repeat.hpp>
 #include <boost/assign/v2/put/put.hpp>
@@ -26,26 +27,26 @@ namespace xxx_repeat{
         using namespace boost;
         namespace as2 = assign::v2;
         {
-            //[repeat_simple
+            //[test_put_modifier_repeat_simple
             std::vector<int> cont;
             ( as2::put( cont ) % ( as2::_repeat = 2  ) )( 72 )( 31 )( 48 );
 
-            BOOST_ASSIGN_V2_CHECK( cont.size() == 6 );
-            BOOST_ASSIGN_V2_CHECK( cont.front() == 72 );
-            BOOST_ASSIGN_V2_CHECK( cont.back() == 48 );
+            /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/cont.size() == 6 );
+            /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/cont.front() == 72 );
+            /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/cont.back() == 48 );
             //]
         }
         {
-            //[repeat_compose_deque
+            //[test_put_modifier_repeat_compose
             BOOST_AUTO(
                 cont, (
                     as2::deque<int>( as2::_nil ) % as2::_push_front % ( as2::_repeat = 2 )
                 )( 72 )( 31 )( 48 )
             );
-            BOOST_ASSIGN_V2_CHECK( boost::size( cont ) == 6 );
+            /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/boost::size( cont ) == 6 );
             //]
-            BOOST_ASSIGN_V2_CHECK( cont.front() == 48 );
-            BOOST_ASSIGN_V2_CHECK( cont.back() == 72 );
+            /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/cont.front() == 48 );
+            /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/cont.back() == 72 );
         }
     }
 

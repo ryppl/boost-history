@@ -9,6 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_PUT_PIPE_PUT_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_PIPE_PUT_ER_2010_HPP
+#include <boost/assign/v2/detail/pp/ignore.hpp>
 #include <boost/assign/v2/ref/list/as_modulo_list.hpp>
 #include <boost/assign/v2/ref/list_tuple/as_args_list.hpp>
 #include <boost/assign/v2/put/put.hpp>
@@ -17,6 +18,7 @@
 namespace boost{
 namespace assign{
 namespace v2{
+//[syntax_put_pipe_put
 namespace put_pipe_aux{
 
     template<
@@ -30,7 +32,7 @@ namespace put_pipe_aux{
         put_pipe_aux::args_list<
             ParList, ArgsList, enable_pars
         > const& args_list_
-    ){
+    )/*<-*/{
         ref::as_args_list(
             ref::as_modulo_list<ParList>( 
                 put( cont ), args_list_.par_list_cont() 
@@ -38,14 +40,19 @@ namespace put_pipe_aux{
             args_list_.args_list_cont()
         );
         return cont;
-    }
+    }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
 }// put_pipe_aux
+//<-
 namespace{
+//->
 
-    put_pipe_aux::args_list<> const _put = put_pipe_aux::args_list<>();
+    put_pipe_aux::args_list<> const _put /*<-*/= put_pipe_aux::args_list<>()/*->*/;
 
+//<-
 }
+//->
+//]
 }// v2
 }// assign
 }// boost

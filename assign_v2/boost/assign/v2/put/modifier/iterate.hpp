@@ -12,6 +12,7 @@
 #include <cstddef>
 #include <boost/assign/v2/detail/keyword/ignore.hpp>
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
+#include <boost/assign/v2/detail/pp/ignore.hpp>
 #include <boost/assign/v2/put/adapter/modifier.hpp>
 #include <boost/call_traits.hpp>
 #include <boost/shared_ptr.hpp>
@@ -26,7 +27,6 @@ namespace assign{
 namespace v2{
 namespace modifier_tag{ 
 
-    // TODO think of lambda expression
     struct iterate_arg
     {
         
@@ -38,11 +38,11 @@ namespace modifier_tag{
         result_type operator()()const{ return this->i++; }
 
         typedef iterate_arg type;
-        
+
         private:
         mutable result_type i;
-    };
 
+    };
 
     template<typename Arg = iterate_arg::type > struct iterate{}; 
 
@@ -57,7 +57,7 @@ namespace put_aux{
         typedef Arg arg_;
         // storing a copy of lambda::something has caused pbs, hence ptr
         typedef boost::shared_ptr<arg_> ptr_; 
-                    
+
         public:
                     
         adapter_modifier(): ptr( new arg_() ){}
@@ -68,6 +68,7 @@ namespace put_aux{
         {}
 
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
+
         template<typename C, typename T>
             typename boost::disable_if<
             boost::is_reference<T>,
@@ -76,7 +77,7 @@ namespace put_aux{
         impl(C& cont, T&& t )const
         {
             cont.at( (*this->ptr)() ) = std::move( t ); 
-        }
+        }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
 #endif
                     
@@ -92,7 +93,7 @@ namespace put_aux{
         {
             cont.replace( this->arg_() , t);
         }
-                    
+
         protected:
         ptr_ ptr;
 

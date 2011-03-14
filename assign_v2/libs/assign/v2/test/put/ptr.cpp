@@ -18,6 +18,7 @@
 #include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/put/put.hpp>
 */
+#include <boost/assign/v2/detail/pp/ignore.hpp>
 #include <libs/assign/v2/test/put/ptr.h>
 
 namespace test_assign_v2{
@@ -33,32 +34,32 @@ namespace xxx_ptr{
             typedef int T;
             T x = 1, y = 2, z = 3; boost::ptr_array<T, 3> cont;
             as2::put( cont )( x )( y )( z );
-            BOOST_ASSIGN_V2_CHECK( cont[0] == x );
-            BOOST_ASSIGN_V2_CHECK( cont[2] == z );
+            /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert(/*<-*/))/*->*/cont[0] == x );
+            /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert(/*<-*/))/*->*/cont[2] == z );
             //]
         }
         {
             //[put_ptr_deque
             typedef int T; T x = 1, y = 2, z = 0; boost::ptr_deque<T> cont;
             as2::put( cont )( x )( y )( z );
-            BOOST_ASSIGN_V2_CHECK( cont.front() == x );
-            BOOST_ASSIGN_V2_CHECK( cont.back() == z );
+            /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert(/*<-*/))/*->*/cont.front() == x );
+            /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert(/*<-*/))/*->*/cont.back() == z );
             //]
         }
         {
             //[put_ptr_list
             typedef int T; T x = 1, y = 2, z = 0; boost::ptr_list<T> cont;
             as2::put( cont )( x )( y )( z );
-            BOOST_ASSIGN_V2_CHECK( cont.front() == x );
-            BOOST_ASSIGN_V2_CHECK( cont.back() == z );
+            /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert(/*<-*/))/*->*/cont.front() == x );
+            /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert(/*<-*/))/*->*/cont.back() == z );
             //]
         }
         {
             //[put_ptr_vector
             typedef int T; T x = 1, y = 2, z = 0; boost::ptr_vector<T> cont;
             as2::put( cont )( x )( y )( z );
-            BOOST_ASSIGN_V2_CHECK( cont.front() == x );
-            BOOST_ASSIGN_V2_CHECK( cont.back() == z );
+            /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert(/*<-*/))/*->*/cont.front() == x );
+            /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert(/*<-*/))/*->*/cont.back() == z );
             //]
         }
 */            
@@ -70,7 +71,7 @@ namespace xxx_ptr{
             //[put_ptr_map
             boost::ptr_map<std::string, int> assoc;
             as2::put( assoc )( "jan", 31 )( "feb", 28 )( "mar", 31 );
-            BOOST_ASSIGN_V2_CHECK( assoc["feb"] == 28 );
+            /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert(/*<-*/))/*->*/assoc["feb"] == 28 );
             //]
         }
         {
@@ -79,8 +80,8 @@ namespace xxx_ptr{
             boost::ptr_set<T> assoc;
             T x = "isomer", y = "ephemeral", z = "prosaic";
             as2::put( assoc )( x )( y )( z );
-            BOOST_ASSIGN_V2_CHECK( assoc.count( x ) == 1 );
-            BOOST_ASSIGN_V2_CHECK( assoc.count( z ) == 1 );
+            /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert(/*<-*/))/*->*/assoc.count( x ) == 1 );
+            /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert(/*<-*/))/*->*/assoc.count( z ) == 1 );
             //]
         }
 */

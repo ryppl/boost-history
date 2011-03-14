@@ -137,13 +137,13 @@ namespace put_aux{
     };
 
     template<typename /*<<Container>>*/C, typename /*<<Functor>>*/F, typename /*<<Modifier tag>>*/Tag, typename /*<<Derived type>>*/D>
-    class crtp 
+    class adapter_crtp 
 //<-
         : public fun_holder<F>
         , public modifier_holder<Tag>
 #if !BOOST_ASSIGN_V2_ENABLE_CPP0X
         , public functor_aux::crtp_unary_and_up<
-            crtp<C, F, Tag, D>,
+            adapter_crtp<C, F, Tag, D>,
             ::boost::mpl::always< D const& >
         >
 #endif // BOOST_ASSIGN_V2_ENABLE_CPP0X
@@ -162,14 +162,12 @@ namespace put_aux{
 
         public:
 
-        typedef 
-        	/*<-*/BOOST_ASSIGN_V2_IGNORE(/*->*/ adapter_modifier<Tag> /*<-*/)
-            	typename modifier_holder_::modifier_type /*->*/
+        typedef /*<-*/ typename modifier_holder_::modifier_type BOOST_ASSIGN_V2_IGNORE(/*->*/ adapter_modifier<Tag> /*<-*/)/*->*/
         modifier_type;
 
-        crtp(){}
-        explicit crtp( F const& f )/*<-*/ : fun_holder_( f ){}BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
-        explicit crtp( F const& f, modifier_type const& m )/*<-*/
+        adapter_crtp(){}
+        explicit adapter_crtp( F const& f )/*<-*/ : fun_holder_( f ){}BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
+        explicit adapter_crtp( F const& f, modifier_type const& m )/*<-*/
             : fun_holder_( f ), modifier_holder_( m ){}BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
         typedef D const& result_type;
@@ -197,7 +195,7 @@ namespace put_aux{
 #else
         protected:
         typedef functor_aux::crtp_unary_and_up<
-            crtp,
+            adapter_crtp,
             ::boost::mpl::always<result_type>
         > super_t;
 
@@ -300,46 +298,3 @@ BOOST_PP_REPEAT_FROM_TO(
 }// boost
 
 #endif // BOOST_ASSIGN_V2_PUT_ADAPTER_CRTP_ER_2010_HPP
-
-//[semantics_put_adapter_crtp
-/*`
-[*Notation]
-
-[variablelist 
-    [
-        [`cont`]
-        [ Instance of `C`, supplied by the derived class  ]
-    ]
-    [
-        [`f`]
-        [ Internal copy of instance of type `F`]
-    ]
-    [
-        [`__put_modifier__`]
-        [ Internal copy of instance of type `put_aux::adapter_modifier<Tag>`]
-    ]
-    [
-        [`__put_adapter__`]
-        [ Instance of `D`  ]
-    ]
-]
-
-[*Expressions]
-
-[table
-    [[Expression][Side effect][Result]]
-    [    
-        [ `__put_adapter__( args... ) ` ]
-        [ `__put_modifier__.impl( cont, f( args... ) )` ]
-        [ A reference to `__put_adapter__` ]
-    ]
-    [    
-        [ `__put_adapter__( as_arg_list( range ) ) ` ]
-        [ `__put_adapter__( arg )` for each `arg` in `range` ]
-        [ A reference to `__put_adapter__`]
-    ]
-]
-
-*/
-//]
-

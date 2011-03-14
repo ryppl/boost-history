@@ -12,6 +12,7 @@
 #include <boost/lambda/lambda.hpp>
 #include <boost/typeof/typeof.hpp>
 #include <boost/assign/v2/detail/config/check.hpp>
+#include <boost/assign/v2/detail/pp/ignore.hpp>
 #include <boost/assign/v2/put/fun.hpp>
 #include <boost/assign/v2/put/modifier/lookup.hpp>
 #include <boost/assign/v2/put/pipe/put.hpp>
@@ -42,8 +43,8 @@ namespace xxx_lookup{
  
                 )["feb"] == 28
             );
-            BOOST_ASSIGN_V2_CHECK( cal["jun"] == 30 );
-            BOOST_ASSIGN_V2_CHECK( cal["mar"] == 31 );
+            /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/cal["jun"] == 30 );
+            /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/cal["mar"] == 31 );
             //] 
         }    
     }

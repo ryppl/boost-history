@@ -15,7 +15,8 @@ namespace assign{
 namespace v2{
 namespace put_aux{
 
-    template<typename C, typename F, typename Tag, typename D> class crtp;
+    template<typename C, typename F, typename Tag, typename D> 
+    class adapter_crtp;
 
 }// put_aux
 }// v2

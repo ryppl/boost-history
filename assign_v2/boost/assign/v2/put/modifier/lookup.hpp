@@ -10,6 +10,7 @@
 #ifndef BOOST_ASSIGN_V2_PUT_MODIFIER_LOOKUP_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_MODIFIER_LOOKUP_ER_2010_HPP
 #include <boost/assign/v2/detail/keyword/ignore.hpp>
+#include <boost/assign/v2/detail/pp/ignore.hpp>
 #include <boost/assign/v2/put/adapter/modifier.hpp>
 #include <boost/call_traits.hpp>
 #include <boost/shared_ptr.hpp>
@@ -44,7 +45,7 @@ namespace put_aux{
 
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
         template<typename C, typename T>
-        void impl(C& cont, T&& t )const
+        void impl(C& cont, T&& key )const
         {
             cont[ key ] = (*this->ptr)( cont[ std::forward<T>( key ) ] );
         }

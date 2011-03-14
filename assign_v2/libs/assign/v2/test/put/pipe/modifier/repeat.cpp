@@ -9,6 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #include <vector>
 #include <boost/assign/v2/detail/config/check.hpp>
+#include <boost/assign/v2/detail/pp/ignore.hpp>
 #include <boost/assign/v2/put/modifier/repeat.hpp>
 #include <boost/assign/v2/put/pipe/put.hpp>
 #include <boost/assign/v2/put/deque.hpp>

@@ -10,9 +10,10 @@
 #include <string>
 #include <boost/array.hpp>
 #include <boost/tuple/tuple.hpp>
+#include <boost/assign/v2/detail/config/check.hpp>
+#include <boost/assign/v2/detail/pp/ignore.hpp>
 #include <boost/assign/v2/put/deque/csv_deque.hpp>
 #include <boost/assign/v2/put/deque/deque.hpp>
-#include <boost/assign/v2/detail/config/check.hpp>
 
 #include <libs/assign/v2/test/put/deque.h>
 
@@ -22,51 +23,40 @@ namespace xxx_deque{
 
     void test()
     {
+
         using namespace boost;
         namespace as2 = assign::v2;    
         {
-            // http://bioinfo.mbb.yale.edu/~mbg/dom/fun3/area-codes/            
-            //[deque_tuple_ref
-            typedef const char us_state_ [3]; us_state_ ct = "CT", nj = "NJ", ny = "NY";
-            typedef int area_code_; typedef boost::tuple<us_state_/*<<Notice the reference>>*/&,  area_code_> data_; 
-            as2::result_of::deque< data_ >::type tri_state_area = /*Calls `tri_state.push_back( data_( s, c ) )` for [^( s, c ) = ( ny, 212 )( ny, 718 )( ny, 516 )( ny, 914 )( nj, 210 )( nj, 908 )( nj, 609 )( ct, 203 ) ]*/as2::deque<data_>( ny, 212 )( ny, 718 )( ny, 516 )( ny, 914 )( nj, 210 )( nj, 908 )( nj, 609 )( ct, 203 );
+            //[test_put_deque_ints
+            {
+                typedef as2::result_of::deque<int>::type C;
+                C empty_cont = as2::deque<int>( as2::_nil );
 
-            using namespace boost;
-            BOOST_ASSIGN_V2_CHECK( get<0>( tri_state_area.front() ) == ny );
-            BOOST_ASSIGN_V2_CHECK( get<1>( tri_state_area.front() ) == 212 );
-            BOOST_ASSIGN_V2_CHECK( get<0>( tri_state_area.back()  ) == ct );
-            BOOST_ASSIGN_V2_CHECK( get<1>( tri_state_area.back()  ) == 203 );
-            //]
-        }
-        {
-            //[deque_str
-            typedef std::string str_;
-            BOOST_ASSIGN_V2_CHECK(
-                str_( as2::deque<const char*>( "x" )( "y" )( "z" )[1] ) == "y"
-            );
-            //]
-        }
-        {
-            //[csv_deque
+                /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/ empty_cont( 72 )( 31 )( 48 ).front() == 72 );
+                /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/ as2::deque<int>( 72 )( 31 )( 48 ).back() == 48 );
+            }
             typedef as2::result_of::csv_deque<int>::type C;
             {
                 C cont = as2::csv_deque( 72, 31, 48 );
 
-                BOOST_ASSIGN_V2_CHECK( cont.front() == 72 );
-                BOOST_ASSIGN_V2_CHECK( cont.back() == 48 );
+                /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/ cont.front() == 72 );
+                /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/ cont.back() == 48 );
             }
             {
-                C cont = as2::csv_deque( 72, 31 )/* Thanks to `result_of::csv_deque<int>::type == result_of::deque<int>::type`*/( 48 );
+                C cont = as2::csv_deque( 72, 31 )/*<<This seeming oddity is possible thanks to `result_of::csv_deque<int>::type == result_of::deque<int>::type`>>*/( 48 );
             
-                BOOST_ASSIGN_V2_CHECK( cont.front() == 72 );
-                BOOST_ASSIGN_V2_CHECK( cont.back() == 48 );
+                /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/ cont.front() == 72 );
+                /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/ cont.back() == 48 );
             }
             //]
         }
         {
-            //[csv_deque_str
+            //[test_put_deque_str_literal
             typedef std::string str_;
-            BOOST_ASSIGN_V2_CHECK(
+            /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/
+                str_( as2::deque<const char*>( "x" )( "y" )( "z" )[1] ) == "y"
+            );
+            /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/
                 str_( as2::csv_deque( "x", "y", "z" )[1] ) == "y"
             );
             //]

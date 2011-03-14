@@ -16,6 +16,7 @@
 #include <boost/range/begin.hpp>
 #include <boost/range/iterator.hpp>
 #include <boost/assign/v2/detail/config/check.hpp>
+#include <boost/assign/v2/detail/pp/ignore.hpp>
 #include <boost/assign/v2/put/modifier/standard.hpp>
 #include <boost/assign/v2/put/pipe/put.hpp>
 #include <boost/assign/v2/put/deque.hpp>
@@ -39,34 +40,34 @@ namespace xxx_standard{
         // ------------------------------------------------------------------- //
 
         {
-            //[pipe_modifier_push_front
+            //[test_put_pipe_modifier_push_front
             std::deque<int> powers; int front = (
                 powers | ( as2::_put % as2::_push_front )( 16 )( 8 )( 4 )( 2 )( 1 )
             ).front();
 
-            BOOST_ASSIGN_V2_CHECK( front == 1  );
-            BOOST_ASSIGN_V2_CHECK( powers[4] == 16 );
+            /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/front == 1  );
+            /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/powers[4] == 16 );
             //]
         }
         {
-            //[pipe_modifier_push
+            //[test_put_pipe_modifier_push
             typedef int int_; std::queue<int_> fifo; int_ front = ( 
                 fifo | ( as2::_put % as2::_push )( 72 )( 31 )( 48 ) 
             ).front();
                 
-            BOOST_ASSIGN_V2_CHECK( front == 72 );
-            BOOST_ASSIGN_V2_CHECK( fifo.back() == 48 );
+            /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/front == 72 );
+            /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/fifo.back() == 48 );
             //]
         }
         {
-            //[pipe_modifier_insert
+            //[test_put_pipe_modifier_insert
             typedef std::set<double> doubles_; doubles_ sqrt2;
             range_iterator<doubles_>::type lower = ( 
                 sqrt2 | ( as2::_put % as2::_insert )( 1.414 )( 1.41421 )( 1.41 )( 1.4142 ) 
             ).lower_bound( 1.41 );
         
-            BOOST_ASSIGN_V2_CHECK( lower == begin( sqrt2 ) );
-            BOOST_ASSIGN_V2_CHECK( sqrt2.upper_bound( 1.41421 ) == end( sqrt2 ) );
+            /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/lower == begin( sqrt2 ) );
+            /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/sqrt2.upper_bound( 1.41421 ) == end( sqrt2 ) );
             //]
         }
     }

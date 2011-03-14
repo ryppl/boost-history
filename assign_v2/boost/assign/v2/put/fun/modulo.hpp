@@ -48,7 +48,7 @@ namespace result_of{
     template<typename C, typename F, typename Tag, typename D, typename F1>
     typename ::boost::mpl::apply1<result_of::modulo_fun<D>, F1>::type
     operator%(
-        crtp<C, F, Tag, D> const& lhs,
+        adapter_crtp<C, F, Tag, D> const& lhs,
         modulo_fun<F1> const& rhs
     )
     {
@@ -70,7 +70,7 @@ namespace result_of{
 namespace{
     const put_aux::keyword_fun _fun = put_aux::keyword_fun();
 }
-//[syntax_put_fun
+//[syntax_put_fun_modulo
 namespace result_of{
 
     template<typename D>
@@ -96,8 +96,8 @@ namespace assign{\
 namespace v2{\
 namespace put_aux{\
 \
-	template<typename T>\
-	modulo_fun< FUN > BOOST_PP_CAT(_,NAME)(){ return v2::_fun = FUN(); }\
+    template<typename T>\
+    modulo_fun< FUN > BOOST_PP_CAT(_,NAME)(){ return v2::_fun = FUN(); }\
 \
 }\
 using put_aux::BOOST_PP_CAT(_,NAME);\

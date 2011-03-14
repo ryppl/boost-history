@@ -29,12 +29,12 @@ namespace put_aux{
         
         modulo_modifier(){}
         modulo_modifier(Arg arg)/*<-*/
-        	:arg_( arg )
+            :arg_( arg )
         {}BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
         
         Arg const& arg()const/*<-*/
         { 
-        	return this->arg_; 
+            return this->arg_; 
         }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
         template<typename Arg1>
@@ -52,7 +52,7 @@ namespace put_aux{
     template<typename Keyword, typename Arg>
     struct /*<<Meta-function class to be specialized on Keyword>>*/ meta_modifier_tag
     {
-        template<typename /*<<Inherits `crtp<>` >>*/ D> 
+        template<typename /*<<Inherits `adapter_crtp<>` >>*/ D> 
         struct /*<<Returns a modifier-tag>>*/ apply;
     };
 
@@ -68,13 +68,13 @@ namespace result_of{
         template<typename Keyword, typename Arg>
         struct apply 
 //<-
-        	: ::boost::mpl::apply1<
-            	meta_, 
-            	typename ::boost::mpl::apply1<
-                	put_aux::meta_modifier_tag<Keyword, Arg>, 
-                	D
-            	>::type
-        	>
+            : ::boost::mpl::apply1<
+                meta_, 
+                typename ::boost::mpl::apply1<
+                    put_aux::meta_modifier_tag<Keyword, Arg>, 
+                    D
+                >::type
+            >
 //->
         {};
         
@@ -89,7 +89,7 @@ namespace result_of{
         Keyword, Arg
     >::type
     operator%(
-        crtp<C, F, Tag, D> const& lhs,
+        adapter_crtp<C, F, Tag, D> const& lhs,
         modulo_modifier<Keyword, Arg> const& rhs
     )/*<-*/
     {

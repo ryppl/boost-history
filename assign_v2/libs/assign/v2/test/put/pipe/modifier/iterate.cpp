@@ -8,6 +8,7 @@
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
 #include <boost/assign/v2/detail/config/check.hpp>
+#include <boost/assign/v2/detail/pp/ignore.hpp>
 #include <boost/assign/v2/put/modifier/iterate.hpp>
 #include <boost/assign/v2/put/pipe/csv_put.hpp>
 #include <boost/assign/v2/put/deque/csv_deque.hpp>

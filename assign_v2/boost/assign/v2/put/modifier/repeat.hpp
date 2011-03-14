@@ -11,6 +11,7 @@
 #define BOOST_ASSIGN_V2_PUT_MODIFIER_REPEAT_ER_2010_HPP
 #include <cstddef>
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
+#include <boost/assign/v2/detail/pp/ignore.hpp>
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 #include <utility>
 #include <boost/utility/enable_if.hpp>
@@ -23,8 +24,7 @@ namespace assign{
 namespace v2{
 namespace modifier_tag{ 
 
-    template<typename /*<<Arg is the modifier-tag of the implementation to override>>*/ Arg> 
-    struct repeat{}; 
+    template<typename Tag> struct repeat{}; 
 
 }// modifier_tag
 namespace put_aux{
