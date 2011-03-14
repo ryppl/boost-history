@@ -40,7 +40,7 @@ namespace conversion_aux{
     }
 
 
-	template<typename C, typename R>
+    template<typename C, typename R>
     struct deduce_tag;
 //->
     template<typename C, typename R>

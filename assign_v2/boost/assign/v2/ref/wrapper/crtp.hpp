@@ -52,10 +52,10 @@ namespace ref{
 
         D& derived()/*<-*/
         { 
-        	return static_cast<D&>( *this ); 
+            return static_cast<D&>( *this ); 
         }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
         D const & derived()const/*<-*/{ 
-        	return static_cast<D const&>( *this ); 
+            return static_cast<D const&>( *this ); 
         }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
         void operator=(non_const& t )/*<-*/
@@ -64,7 +64,7 @@ namespace ref{
         }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
         void operator=(const_& t )/*<-*/
         {
-        	this->derived().assign( t );
+            this->derived().assign( t );
         }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
         void swap( wrapper_crtp& that )/*<-*/
         {
@@ -108,7 +108,7 @@ namespace ref{
     template<typename D, typename T>
     void rebind( wrapper_crtp<D,T>& a, T& t )/*<-*/
     { 
-    	a.rebind( t ); 
+        a.rebind( t ); 
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
     template<typename D, typename T>

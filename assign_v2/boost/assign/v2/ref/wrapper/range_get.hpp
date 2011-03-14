@@ -115,7 +115,7 @@ namespace{
 //->
 
     range_aux::get_adaptor const _get/*<-*/
-    	= range_aux::get_adaptor()/*->*/;
+        = range_aux::get_adaptor()/*->*/;
 
 //<-
 }

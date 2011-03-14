@@ -23,7 +23,7 @@ namespace xxx_deque{
 
     void test()
     {
-
+    
         using namespace boost;
         namespace as2 = assign::v2;    
         {
@@ -40,7 +40,7 @@ namespace xxx_deque{
             /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/ cont.front() == 72 );
             /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/ as2::csv_deque( 72 )( 31 )( 48 ).back() == 48 );
 
-			BOOST_MPL_ASSERT(( is_same<C0, C1> ));
+            BOOST_MPL_ASSERT(( is_same<C0, C1> ));
 
             //]
         }

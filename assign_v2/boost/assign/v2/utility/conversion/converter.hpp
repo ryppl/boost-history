@@ -35,7 +35,7 @@ namespace conversion_aux{
         public:
 
         explicit converter(typename call_traits<R>::param_type r)/*<-*/
-        	 : w( r )
+             : w( r )
         {}BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
         template<typename C>
@@ -68,8 +68,10 @@ namespace conversion_aux{
 //<-
 namespace{
 //->
+
     conversion_aux::converter_adapter const _converter/*<-*/
         = conversion_aux::converter_adapter()/*->*/;
+
 //<-
 }
 //->

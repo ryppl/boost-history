@@ -18,13 +18,12 @@
 #include <boost/assign/v2/ref/array/csv_array.hpp>
 #include <boost/assign/v2/utility/chain/check.hpp>
 #include <boost/assign/v2/utility/chain.hpp>
-#include <boost/assign/v2/utility/chain/alias.hpp>
+#include <boost/assign/v2/utility/chain/operator_and.hpp>
 #include <libs/assign/v2/test/utility/chain.h>
 
 namespace test_assign_v2{
 namespace xxx_utility{
 namespace xxx_chain{
-
 
     void test()
     {
@@ -37,40 +36,40 @@ namespace xxx_chain{
         }
         // Non-Boost.Assign.v2 containers
         {
-            //[chain_r
+            //[test_utility_chain_read
             typedef std::string T;
             array<T, 2> head;  head[0] = "A"; head[1] = "B";
-            std::list<T> tail; tail.push_back( "Y" ); tail.push_back( "Z" );
+            std::list<T> tail; tail.push_back( "C" ); tail.push_back( "D" );
             std::vector<T> joined( begin( head ), end( head ) ); copy( tail, std::back_inserter( joined ) );
+
             BOOST_ASSIGN_V2_CHECK(
                 range::equal( joined, head | as2::_chain( tail ) )
             );
             //]
         }
         {
-            //[chain_w
-            typedef std::string note; std::vector<note> scale( 4 );
-            scale[0] = "do"; scale[1] = "re"; scale[2] = "mi"; 
-            scale[3] = "fa"; scale[4] = "so"; scale[5] = "la"; scale[6] = "si";
-            array<note, 2> do_mi; std::list<note> fa_si( 4 );
-            copy( scale, begin( do_mi | as2::_chain( fa_si ) ) );
-            BOOST_ASSIGN_V2_CHECK( do_mi[0] == "do" );
-            BOOST_ASSIGN_V2_CHECK( do_mi[1] == "mi" );
-            BOOST_ASSIGN_V2_CHECK( fa_si.front() == "fa" );
-            BOOST_ASSIGN_V2_CHECK( fa_si.back() == "si" );
+            //[test_utility_chain_write
+            typedef std::string word; std::vector<word> words( 4 );
+            words[0] = "foo"; words[1] = "bar"; words[2] = "baz"; 
+            words[3] = "qux"; words[4] = "quux"; words[5] = "grault"; words[6] = "garply";
+            array<word, 2> head; std::list<word> tail( 4 );
+            copy( words, begin( head | as2::_chain( tail ) ) );
+            
+            BOOST_ASSIGN_V2_CHECK( head[0] == "foo" );
+            BOOST_ASSIGN_V2_CHECK( head[1] == "baz" );
+            BOOST_ASSIGN_V2_CHECK( tail.front() == "qux" );
+            BOOST_ASSIGN_V2_CHECK( tail.back() == "garply" );
             //]
         }
         // Boost.Assign.v2 containers
         {
-            //[chain_ref_array
+            //[test_utility_chain_write_refs
             /*<< Needed to bring && into scope >>*/ using namespace assign::v2;
             std::vector<int> consecutive8( 8 ); for(int i = 1; i < 8; i++){ consecutive8[i] = 1 + i; }
             array<int, 5> consecutive5; int six, seven, eight;
             boost::copy(
                 consecutive8,
-                begin(
-                    consecutive5 && (/*<< rvalue! >>*/ as2::ref::csv_array( six, seven, eight ) | as2::ref::_get )
-                )
+                begin( consecutive5 && (/*<< rvalue! >>*/ as2::ref::csv_array( six, seven, eight ) | as2::ref::_get ) )
             );
 
             BOOST_ASSIGN_V2_CHECK( consecutive5.front() == 1 );

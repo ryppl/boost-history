@@ -34,9 +34,9 @@ namespace assign_copy{ typedef assign_tag::copy assign_tag_; }
         BOOST_STATIC_CONSTANT( bool, is_const = boost::is_const<T>::value );
 
         wrapper()/*<-*/
-        	{/*TODO or null pointer?*/}BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
+            {/*TODO or null pointer?*/}BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
         explicit /*<<Equivalent to `rebind( r )`>>*/wrapper( T& r )/*<-*/
-        	: ref_(&r)
+            : ref_(&r)
         {}BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
         void /*<<Semantics: `ref_ = &r`>>*/rebind(T& r )/*<-*/
         {
@@ -49,7 +49,7 @@ namespace assign_copy{ typedef assign_tag::copy assign_tag_; }
         }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
         T* get_pointer() const/*<-*/
         { 
-        	return this->ref_; 
+            return this->ref_; 
         }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
         using wrapper_crtp<wrapper, T>::operator=;

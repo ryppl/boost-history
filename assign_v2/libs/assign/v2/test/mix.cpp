@@ -26,7 +26,7 @@
 #include <boost/assign/v2/put/pipe/put.hpp>
 #include <boost/assign/v2/put/deque.hpp>
 #include <boost/assign/v2/ref/array.hpp>
-#include <boost/assign/v2/utility/chain/alias.hpp>
+#include <boost/assign/v2/utility/chain/operator_and.hpp>
 #include <libs/assign/v2/test/mix.h>
 
 #include <iostream>

@@ -8,8 +8,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_CHAIN_ALIAS_ER_2010_HPP
-#define BOOST_ASSIGN_V2_CHAIN_ALIAS_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_CHAIN_OPERATOR_AND_ER_2010_HPP
+#define BOOST_ASSIGN_V2_CHAIN_OPERATOR_AND_ER_2010_HPP
 #include <boost/assign/v2/utility/chain/meta.hpp>
 #include <boost/assign/v2/utility/chain/chain.hpp>
 
@@ -38,4 +38,4 @@ BOOST_ASSIGN_V2_MACRO( R1 const, R2 const )
 }// assign
 }// boost
 
-#endif // BOOST_ASSIGN_V2_CHAIN_ALIAS_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_CHAIN_OPERATOR_AND_ER_2010_HPP

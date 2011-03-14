@@ -66,6 +66,7 @@ namespace put_aux{
         csv_deque_impl<T>(r, std::forward<Args>( args )... );
     }
 //->
+
     template<typename T, typename... Args>
     typename result_of::csv_deque<T>::type
     csv_deque(const T& t, Args const& ...  args)/*<-*/

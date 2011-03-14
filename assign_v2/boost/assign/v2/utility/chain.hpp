@@ -11,6 +11,6 @@
 #define BOOST_ASSIGN_V2_UTILITY_CHAIN_ER_2010_HPP
 
 #include <boost/assign/v2/utility/chain/chain.hpp>
-// #include <boost/assign/v2/utility/chain/alias.hpp> // keep commented out as it is optional
+// #include <boost/assign/v2/utility/chain/operator_and.hpp> // keep commented out as it is optional
 
 #endif // BOOST_ASSIGN_V2_UTILITY_CHAIN_ER_2010_HPP

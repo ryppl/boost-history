@@ -42,8 +42,8 @@ namespace put_pipe_aux{
 
 }// put_pipe_aux
 
-	put_pipe_aux::arg_list_generator<> const _csv_put/*<-*/
-    	= put_pipe_aux::arg_list_generator<>()/*->*/;
+    put_pipe_aux::arg_list_generator<> const _csv_put/*<-*/
+        = put_pipe_aux::arg_list_generator<>()/*->*/;
 
 //]
 }// v2
