@@ -82,7 +82,7 @@ namespace array_aux{
 //<-
         BOOST_STATIC_CONSTANT(size_type, static_size/*<-*/ = Impl::static_size/*->*/);
 //->
-        /*<-*/BOOST_ASSIGN_V2_IGNORE(/*->*/size_type static_size/*<-*/)/*->*/;
+        /*<-*/BOOST_ASSIGN_V2_IGNORE(/*->*/size_type static_size;/*<-*/)/*->*/
 
         iterator begin()/*<-*/
         {
@@ -160,7 +160,7 @@ namespace array_aux{
         template<typename W>
         reference elem_impl(W& w)
         {
-            return w; 
+            return w;
         }
         template<typename W>
         const_reference elem_impl(W & w)const

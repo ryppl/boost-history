@@ -37,28 +37,25 @@ namespace xxx_put{
 namespace xxx_put{
 
     void test(){
-    
+
         using namespace boost;
         namespace as2 = assign::v2;
 
         {
              //[test_put_put_bitset
-            typedef std::string str_; typedef std::bitset<3> data_; /*<<Keep in mind that although `data_( str_( "011" ) )`, for instance, is valid, `consecutive.push_back( str_( "011" ) )` isn't (GCC4.2)>>*/ std::vector<data_> consecutive; 
+            typedef std::string str_; typedef std::bitset<3> data_; /*<<Keep in mind that although `data_( str_( "011" ) )`, for instance, is valid, `consecutive.push_back( str_( "011" ) )` isn't (GCC4.2)>>*/ std::vector<data_> consecutive;
             /*<<Calls `consecutive.push_back( data_( t ) );` for [^t = ]`str_( "000" )`[^, ..., ]`str_( "111" )`[^\]]>>*/as2::put( consecutive )
                 ( str_( "000" ) )( str_( "001" ) )
                 ( str_( "010" ) )( str_( "011" ) )
                 ( str_( "100" ) )( str_( "101" ) )
                 ( str_( "110" ) )( str_( "111" ) );
-        
-            for(int i = 0; i < consecutive.size(); i++)
-            {
-                assert( consecutive[i].to_ulong() == i );
-            }
-            //]
-            for(int i = 0; i < consecutive.size(); i++)
+
+            for(unsigned i = 0; i < consecutive.size(); i++)
             {
                 /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/ consecutive[i].to_ulong() == i );
             }
+            //]
+            // unsigned i else warning comparison between signed & unsigned
         }
         {
              //[test_put_put_numeric_kb
@@ -76,10 +73,10 @@ namespace xxx_put{
         }
         {
             //[test_put_put_ragged
-            typedef double data_; typedef std::vector<data_> variable_size_; 
+            typedef double data_; typedef std::vector<data_> variable_size_;
             variable_size_ a( 3 ); a[0] = 0.71; a[1] = 0.63; a[2] = 0.85;
             variable_size_ b( 4 ); b[0] = 0.61; b[1] = 0.69; b[2] = 0.92; b[3] = 0.55;
-            array<variable_size_, 4> ragged; 
+            array<variable_size_, 4> ragged;
             as2::put( ragged )
                 /*<<Calls `ragged.push_back( variable_size_( begin( a ), end( a ) ) )`>>*/( begin( a ), end( a ) )
                 /*<<Calls `ragged.push_back( variable_size_( b ) )`>>*/( b )
@@ -118,10 +115,10 @@ namespace xxx_put{
             /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/ seq.back()        == 48 );
         }
         {
-            // http://bioinfo.mbb.yale.edu/~mbg/dom/fun3/area-codes/            
+            // http://bioinfo.mbb.yale.edu/~mbg/dom/fun3/area-codes/
             //[test_put_put_area_codes
             typedef const char us_state_ [3]; us_state_ ct = "CT", nj = "NJ", ny = "NY";
-            typedef int area_code_; typedef tuple<us_state_/*<<Notice the [*reference]>>*/&,  area_code_> data_; std::deque< data_ > tri_state_area; 
+            typedef int area_code_; typedef tuple<us_state_/*<<Notice the [*reference]>>*/&,  area_code_> data_; std::deque< data_ > tri_state_area;
             /*<<Calls `tri_state.push_back( data_( s, c ) )` for [^( s, c ) =( ny, 212 )...( ct, 203 )]>>*/
             as2::put( tri_state_area )( ny, 212 )( ny, 718 )( ny, 516 )( ny, 914 )( nj, 210 )( nj, 908 )( nj, 609 )( ct, 203 );
 
