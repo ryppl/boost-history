@@ -18,12 +18,6 @@ namespace boost{
     struct use_default;
 namespace assign{
 namespace v2{
-namespace convert_tag{
-
-    struct put{};
-    struct copy{};
-
-}// convert_tag
 namespace switch_tag{
     struct deduce_convert{};
 }// switch_tag

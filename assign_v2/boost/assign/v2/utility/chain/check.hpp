@@ -14,8 +14,8 @@
 #include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/ref/wrapper/range_get.hpp>
 #include <boost/assign/v2/ref/wrapper/copy.hpp>
-#include <boost/assign/v2/utility/chain/pipe.hpp>
-#include <boost/assign/v2/utility/chain/use_const.hpp>
+#include <boost/assign/v2/utility/chain/chain.hpp>
+#include <boost/assign/v2/utility/chain/meta.hpp>
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/identity.hpp>
 #include <boost/mpl/assert.hpp>

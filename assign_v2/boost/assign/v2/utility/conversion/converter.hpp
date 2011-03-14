@@ -9,8 +9,10 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_UTILITY_CONVERSION_CONVERTER_ER_2010_HPP
 #define BOOST_ASSIGN_V2_UTILITY_CONVERSION_CONVERTER_ER_2010_HPP
+#include <boost/assign/v2/detail/pp/ignore.hpp>
 #include <boost/assign/v2/ref/wrapper.hpp>
 #include <boost/assign/v2/utility/conversion/convert.hpp>
+#include <boost/call_traits.hpp>
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
 #include <boost/type_traits/add_const.hpp>
@@ -18,69 +20,77 @@
 namespace boost{
 namespace assign{
 namespace v2{
+//[syntax_utility_conversion_converter
 namespace conversion_aux{
 
     template<typename R>
     class converter
     {
-
-        typedef typename boost::add_const<R>::type const_;
-
+//<-
          typedef typename ref::copy_wrapper<
-            const_
+            typename boost::add_const<R>::type
         >::type wrapper_;
+//->
 
         public:
 
-        explicit converter(const_& r) : w( r ){}
+        explicit converter(typename call_traits<R>::param_type r)/*<-*/
+        	 : w( r )
+        {}BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
         template<typename C>
-        operator C () const
+        operator C () const/*<-*/
         {
             return this->type<C>();
-        }
+        }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
         template<typename C>
-        C type()const
+        C type()const/*<-*/
         {
             return conversion_aux::convert<C>( this->w.get() );
-        }
+        }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
+//<-
         private:
         wrapper_ w;
-
+//->
     };
 
-    struct converter_adapter{};
+    struct converter_adapter/*<-*/{}/*->*/;
 
     template<typename R>
-    converter<R> operator|( R const& r, converter_adapter )
+    converter<R> operator|( R const& r, converter_adapter )/*<-*/
     {
         return converter<R>( r );
-    }
+    }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
 }// conversion_aux
+//<-
 namespace{
-    conversion_aux::converter_adapter const _converter 
-        = conversion_aux::converter_adapter();
+//->
+    conversion_aux::converter_adapter const _converter/*<-*/
+        = conversion_aux::converter_adapter()/*->*/;
+//<-
 }
+//->
 namespace result_of{
 
     template<typename R>
-    struct converter
+    struct converter/*<-*/
     {
         typedef conversion_aux::converter<R> type;
-    };
+    }/*->*/;
 
 }//result_of
 
     template<typename R>
     typename result_of::converter<R>::type
-    converter(R const& r){
+    converter(R const& r)/*<-*/{
         typedef typename result_of::converter<R>::type result_;
         return result_( r );
-    }
+    }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
+//]
 }// v2
 }// assign
 }// boost

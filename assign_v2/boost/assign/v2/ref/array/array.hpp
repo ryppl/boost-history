@@ -9,6 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_REF_ARRAY_ARRAY_ER_2010_HPP
 #define BOOST_ASSIGN_V2_REF_ARRAY_ARRAY_ER_2010_HPP
+#include <boost/assign/v2/detail/pp/ignore.hpp>
 #include <boost/assign/v2/ref/array/alloc/lazy.hpp>
 #include <boost/assign/v2/ref/array/size_type.hpp>
 #include <boost/assign/v2/ref/list/list.hpp>
@@ -17,7 +18,9 @@
 namespace boost{
 namespace assign{
 namespace v2{
+//[syntax_ref_array_array
 namespace ref{
+//<-
 namespace array_aux{
 
     template<typename T>
@@ -34,49 +37,50 @@ namespace array_aux{
     struct recursive_result<0, T> : empty_array<T>{};
 
 }// array_aux
+//->
 namespace nth_result_of{
 
-    template<array_size_type N, typename T>
-    struct array
-        : array_aux::recursive_result<N, T>
-    {};
+    template<array_size_type N, typename /*<<U& has to be a reference>>*/U>
+    struct /*<<Meta-function>>*/array/*<-*/
+        : array_aux::recursive_result<N, U>
+    {}/*->*/;
 
 }// nth_result_of
 namespace result_of{
 
     template<typename U, typename T = U>
-    struct array
-        : nth_result_of::array<1, U>{};
+    struct array/*<-*/
+        : nth_result_of::array<1, U>{}/*->*/;
 
     template<typename U>
-    struct array<U, keyword_aux::nil>
-        : nth_result_of::array<0, U>{};
+    struct array<U, keyword_aux::nil>/*<-*/
+        : nth_result_of::array<0, U>{}/*->*/;
 
 }// result_of
 
     template<typename T>
     typename result_of::array<T, keyword_aux::nil>::type
-    array( keyword_aux::nil )
+    array( keyword_aux::nil )/*<-*/
     {
         return ref::list<list_aux::array_tag>( v2::_nil );
-    }
+    }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
     template<typename T>
     typename result_of::array<T>::type
-    array(T& t)
+    array(T& t)/*<-*/
     {
         return array<T>( v2::_nil )( t );
-    }
+    }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
     template<typename T>
     typename result_of::array<T const>::type
-    array(T const & t)
+    array(T const & t)/*<-*/
     {
         return array<T const>( v2::_nil )( t );
-    }
-
+    }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
 }// ref
+//]
 }// v2
 }// assign
 }// boost

@@ -10,9 +10,7 @@
 #ifndef BOOST_ASSIGN_V2_UTILITY_CHAIN_ER_2010_HPP
 #define BOOST_ASSIGN_V2_UTILITY_CHAIN_ER_2010_HPP
 
-#include <boost/assign/v2/utility/chain/pipe.hpp>
-
-// This has to be included explicitly (it's convenient, but some may object to operator overloading)
-//     #include <boost/assign/v2/utility/chain/alias.hpp>
+#include <boost/assign/v2/utility/chain/chain.hpp>
+// #include <boost/assign/v2/utility/chain/alias.hpp> // keep commented out as it is optional
 
 #endif // BOOST_ASSIGN_V2_UTILITY_CHAIN_ER_2010_HPP

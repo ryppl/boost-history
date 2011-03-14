@@ -10,8 +10,8 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_CHAIN_ALIAS_ER_2010_HPP
 #define BOOST_ASSIGN_V2_CHAIN_ALIAS_ER_2010_HPP
-#include <boost/assign/v2/utility/chain/pipe.hpp>
-#include <boost/assign/v2/utility/chain/result.hpp>
+#include <boost/assign/v2/utility/chain/meta.hpp>
+#include <boost/assign/v2/utility/chain/chain.hpp>
 
 namespace boost{
 namespace assign{

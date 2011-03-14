@@ -9,7 +9,6 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_REF_ARRAY_CPP03_CSV_ARRAY_ER_2010_HPP
 #define BOOST_ASSIGN_V2_REF_ARRAY_CPP03_CSV_ARRAY_ER_2010_HPP
-#include <boost/assign/v2/detail/keyword/nil.hpp>
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
 #include <boost/assign/v2/detail/config/limit_csv_arity.hpp>
 #include <boost/preprocessor/arithmetic/inc.hpp>

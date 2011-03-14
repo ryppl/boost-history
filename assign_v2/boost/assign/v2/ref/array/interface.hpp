@@ -9,6 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_REF_ARRAY_INTERFACE_ER_2010_HPP
 #define BOOST_ASSIGN_V2_REF_ARRAY_INTERFACE_ER_2010_HPP
+#include <boost/assign/v2/detail/pp/ignore.hpp>
 #include <boost/assign/v2/ref/wrapper.hpp>
 #include <boost/call_traits.hpp>
 #include <boost/config.hpp>
@@ -18,7 +19,9 @@
 namespace boost{
 namespace assign{
 namespace v2{
+//[syntax_ref_array_interface
 namespace ref{
+//<-
 namespace array_aux{
 
     template<typename Impl>
@@ -49,8 +52,8 @@ namespace array_aux{
         typedef typename boost::range_difference<range_>::type difference_type;
 
     };
+//->
 
-//[array_interface
     template<typename Impl, typename D>
     class interface
     {
@@ -61,84 +64,83 @@ namespace array_aux{
         typedef typename traits_::cimpl_ cimpl_;
         typedef interface<Impl, D> this_;
         typedef typename traits_::result_of_get_ result_of_get_;
-        typedef typename traits_::param_type param_type;
 //->
+        typedef /*<-*/typename traits_::param_type BOOST_ASSIGN_V2_IGNORE(/*->*/unspecified/*<-*/)/*->*/param_type;
+
         public:
 
-        typedef wrapper_ wrapper_type;
-        typedef typename traits_::inner_type inner_type;
-        typedef typename traits_::value_type value_type;
-        typedef typename traits_::iterator iterator;
-        typedef typename traits_::const_iterator const_iterator;
-        typedef typename traits_::size_type size_type;
-        typedef typename traits_::difference_type difference_type;
-        typedef typename traits_::reference reference;
-        typedef typename traits_::const_reference const_reference;
+        typedef /*<-*/wrapper_ BOOST_ASSIGN_V2_IGNORE(/*->*/unspecified/*<-*/)/*->*/ wrapper_type;
+        typedef /*<-*/typename traits_::inner_type BOOST_ASSIGN_V2_IGNORE(/*->*/unspecified/*<-*/)/*->*/ inner_type;
+        typedef /*<-*/typename traits_::value_type BOOST_ASSIGN_V2_IGNORE(/*->*/unspecified/*<-*/)/*->*/ value_type;
+        typedef /*<-*/typename traits_::iterator BOOST_ASSIGN_V2_IGNORE(/*->*/unspecified/*<-*/)/*->*/ iterator;
+        typedef /*<-*/typename traits_::const_iterator BOOST_ASSIGN_V2_IGNORE(/*->*/unspecified/*<-*/)/*->*/ const_iterator;
+        typedef /*<-*/typename traits_::size_type BOOST_ASSIGN_V2_IGNORE(/*->*/unspecified/*<-*/)/*->*/ size_type;
+        typedef /*<-*/typename traits_::difference_type BOOST_ASSIGN_V2_IGNORE(/*->*/unspecified/*<-*/)/*->*/ difference_type;
+        typedef /*<-*/typename traits_::reference BOOST_ASSIGN_V2_IGNORE(/*->*/unspecified/*<-*/)/*->*/ reference;
+        typedef /*<-*/typename traits_::const_reference BOOST_ASSIGN_V2_IGNORE(/*->*/unspecified/*<-*/)/*->*/ const_reference;
 
-        BOOST_STATIC_CONSTANT(size_type, static_size = Impl::static_size);
+//<-
+        BOOST_STATIC_CONSTANT(size_type, static_size/*<-*/ = Impl::static_size/*->*/);
+//->
+        /*<-*/BOOST_ASSIGN_V2_IGNORE(/*->*/size_type static_size/*<-*/)/*->*/;
 
-        iterator begin()//<-
+        iterator begin()/*<-*/
         {
             return boost::begin( this->wrappers() );
-        }//->
-        iterator end()//<-
+        }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
+        iterator end()/*<-*/
         {
             return boost::end( this->wrappers() );
-        }//->
-        const_iterator begin()const//<-
+        }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
+        const_iterator begin()const/*<-*/
         {
             return boost::begin( this->wrappers() );
-        }//->
-        const_iterator end()const//<-
+        }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
+        const_iterator end()const/*<-*/
         {
             return boost::end( this->wrappers() );
-        }//->
-
-        size_type size() const//<-
+        }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
+        size_type size() const/*<-*/
         {
             return this->wrappers().size();
-        }//->
-        bool empty() const//<-
+        }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
+        bool empty() const/*<-*/
         {
             return this->wrappers().empty();
-        }//->
-
-        void rebind(size_type i, result_of_get_ t)//<-
+        }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
+        void rebind(size_type i, result_of_get_ t)/*<-*/
         {
             return (this->wrappers())[i].rebind( t );
-        }//->
-
-        reference operator[](size_type i)//<-
+        }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
+        reference operator[](size_type i)/*<-*/
         {
             return this->elem_impl( this->wrappers()[i] );
-        }//->
-        const_reference operator[](size_type i)const//<-
+        }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
+        const_reference operator[](size_type i)const/*<-*/
         {
             return this->elem_impl( this->wrappers()[i] );
-        }//->
-
-        reference front()//<-
+        }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
+        reference front()/*<-*/
         {
             return this->elem_impl( this->wrappers().front() );
-        }//->
-        const_reference front() const//<-
+        }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
+        const_reference front() const/*<-*/
         {
             return this->elem_impl( this->wrappers().front() );
-        }//->
-        reference back()//<-
+        }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
+        reference back()/*<-*/
         {
             return this->elem_impl( this->wrappers().back() );
-        }//->
-        const_reference back() const//<-
+        }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
+        const_reference back() const/*<-*/
         {
             return this->elem_impl( this->wrappers().back() );
-        }//->
-
-        void assign(param_type val)//<-
+        }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
+        void assign(param_type val)/*<-*/
         {
             typedef ::boost::mpl::int_<0> int_;
             this->assign_impl( val, int_() );
-        }//->
+        }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 //<-
         protected:
 
@@ -168,20 +170,23 @@ namespace array_aux{
 
         public:
 
-        impl_& wrappers()//<-
+        impl_& wrappers()/*<-*/
         {
             return static_cast<D&>(*this).impl();
-        }
-
-        cimpl_& wrappers()const//<-
+        }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
+        cimpl_& wrappers()const/*<-*/
         {
             return static_cast<const D&>(*this).impl();
-        }
+        }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
+//->
     };
 
+//<-
 }// array_aux
+//->
 }// ref
+//]
 }// v2
 }// assign
 }// boost

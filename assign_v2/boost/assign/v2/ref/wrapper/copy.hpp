@@ -9,6 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_REF_WRAPPER_COPY_ER_2010_HPP
 #define BOOST_ASSIGN_V2_REF_WRAPPER_COPY_ER_2010_HPP
+#include <boost/assign/v2/detail/pp/ignore.hpp>
 #include <boost/assign/v2/ref/wrapper/crtp.hpp>
 #include <boost/assign/v2/ref/wrapper/framework.hpp>
 #include <boost/call_traits.hpp>
@@ -20,6 +21,7 @@ namespace boost{
 namespace assign{
 namespace v2{
 namespace ref{
+//[syntax_ref_wrapper_copy
 namespace assign_tag{ struct copy{}; }
 namespace assign_copy{ typedef assign_tag::copy assign_tag_; }
 
@@ -31,30 +33,30 @@ namespace assign_copy{ typedef assign_tag::copy assign_tag_; }
         typedef T type;
         BOOST_STATIC_CONSTANT( bool, is_const = boost::is_const<T>::value );
 
-        wrapper(){/*TODO or null pointer?*/}
-
-        explicit wrapper( T& r ) : ref_(&r)
-        { }
-
-        void rebind(T& r )
+        wrapper()/*<-*/
+        	{/*TODO or null pointer?*/}BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
+        explicit /*<<Equivalent to `rebind( r )`>>*/wrapper( T& r )/*<-*/
+        	: ref_(&r)
+        {}BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
+        void /*<<Semantics: `ref_ = &r`>>*/rebind(T& r )/*<-*/
         {
             this->ref_ = &r;
-        }
-
+        }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
         typedef T& result_of_get_type;
-        T& get() const
+        T& get() const/*<-*/
         {
             return *this->ref_;
-        }
+        }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
+        T* get_pointer() const/*<-*/
+        { 
+        	return this->ref_; 
+        }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
-        T* get_pointer() const { return this->ref_; }
-
-        using wrapper_crtp<wrapper,T>::operator=;
-
-        void assign(typename boost::call_traits<T>::param_type r )
+        using wrapper_crtp<wrapper, T>::operator=;
+        void /*<<Semantics: `*ref_ = r`>>*/assign(typename boost::call_traits<T>::param_type r )/*<-*/
         {
             this->get() = r;
-        }
+        }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
         protected:
         friend class wrapper_crtp<wrapper, T>;
@@ -63,10 +65,10 @@ namespace assign_copy{ typedef assign_tag::copy assign_tag_; }
 
         typedef ref::assign_tag::copy assign_tag;
 
-        void swap( wrapper& r )
+        void swap( wrapper& r )/*<-*/
         {
             std::swap( this->get(), r.get() );
-        }
+        }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
     };
 
@@ -74,6 +76,7 @@ namespace assign_copy{ typedef assign_tag::copy assign_tag_; }
     struct copy_wrapper{ typedef ref::wrapper<assign_tag::copy,T> type; };
 
 }// ref
+//]
 }// v2
 }// assign
 }// boost
