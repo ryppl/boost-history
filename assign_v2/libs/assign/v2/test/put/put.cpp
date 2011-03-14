@@ -64,15 +64,15 @@ namespace xxx_put{
              //[test_put_put_numeric_kb
             std::vector<int> numeric( 10 ); iota( numeric, 0 ); typedef std::string str_;
             typedef variant< int, str_ > data_; array<data_, 16> numeric_kb;
-            as2::put( numeric_kb )/*<<Calls `numeric_kb[ i ] = data_( t )` for [^( i, t ) = ( 0, "+" ), ..., ( 5, "." )]>>*/( "+" )( "-" )( "*" )( "/" )( "=" )( "." )/*<<Calls [^{`numeric_kb[ 6 + i ] = data_( *( b + i ) )` : i = 0, ..., 9; b = `boost::begin( numeric )` }]>>*/( as2::as_arg_list( numeric ) );
+            as2::put( numeric_kb )/*<<Calls `numeric_kb[ i ] = data_( t )` for [^( i, t ) = ( 0, "+" ), ..., ( 5, "." )]>>*/( "+" )( "-" )( "*" )( "/" )( "=" )( "." )/*<<Calls `numeric_kb[ 6 + i ] = data_( *( b + i ) )` for [^i = 0, ..., 9] and [^b =] `boost::begin( numeric )`>>*/( as2::as_arg_list( numeric ) );
 
             assert( get<str_>( numeric_kb.front() ) == "+" );
             assert( get<int>( numeric_kb.back()  ) == 9 );
             //]
-            /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/ get<str_>( numeric_kb.front()  ) == "+" );
+            /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/ get<str_>( numeric_kb.front() ) == "+" );
             /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/ get<str_>( numeric_kb[ 5 ] ) == "." );
-            /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/  get<int>( numeric_kb[ 6 ] ) == 0 );
-            /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/  get<int>( numeric_kb.back() ) == 9 );
+            /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/ get<int>( numeric_kb[ 6 ] ) == 0 );
+            /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/ get<int>( numeric_kb.back() ) == 9 );
         }
         {
             //[test_put_put_ragged
