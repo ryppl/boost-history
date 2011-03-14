@@ -9,16 +9,14 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_CHAIN_PIPE_ER_2010_HPP
-#define BOOST_ASSIGN_V2_CHAIN_PIPE_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_CHAIN_CHAIN_ER_2010_HPP
+#define BOOST_ASSIGN_V2_CHAIN_CHAIN_ER_2010_HPP
 #include <boost/assign/v2/utility/chain/meta.hpp>
 #include <boost/mpl/void.hpp>
 
 // Design:
 // - Original design was boost::chain in RangeEx (later joined)
-// - ER modified as follows:
-//     - sets the underlying iterator's Reference to one which both inputs are
-//     convertible to, and is lvalue-preserving
+// - ER : lvalue-preserving
 // - Finally, MPG proposed a way to compose chains http://gist.github.com/287791
 
 namespace boost{
