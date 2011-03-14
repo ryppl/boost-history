@@ -26,7 +26,7 @@ namespace xxx_array{
         using namespace boost;
         namespace as2 = assign::v2;
         {
-            //[ref_array_r
+            //[test_ref_array_read
             typedef int const T;
             T w = 11, x = 72, y = 31, z = 48;
             as2::ref::nth_result_of::array<3, T>::type ar3 = as2::ref::array( w )( x )( y );
@@ -53,22 +53,17 @@ namespace xxx_array{
             }
         }
         {
-            //[ref_array_w
-            typedef int T; T x, y, z;
-            std::vector<T> r( 3 ); r[0] = 72; r[1] = 31; r[2] = 48;
-            boost::copy( r, begin(
-                    as2::ref::array( x )( y )( z ) | as2::ref::_get
-                )
-            );
+            //[test_ref_array_write
+            typedef int T; T x, y, z; std::vector<T> r( 3 ); r[0] = 72; r[1] = 31; r[2] = 48;
+            boost::copy( r, begin( as2::ref::array( x )( y )( z ) | as2::ref::_get ) );
             
             BOOST_ASSIGN_V2_CHECK( x == r[0] );
             BOOST_ASSIGN_V2_CHECK( z == r[2] );
             //]
         }
         {
-            //[ref_array_assign
-            typedef int T; T x, y, z;
-            as2::ref::array( x )( y )( z ).assign( -1 );
+            //[test_ref_array_assign
+            typedef int T; T x, y, z; as2::ref::array( x )( y )( z ).assign( -1 );
             
             BOOST_ASSIGN_V2_CHECK( x == -1 );
             BOOST_ASSIGN_V2_CHECK( z == -1 );

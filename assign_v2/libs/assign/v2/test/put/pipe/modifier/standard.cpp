@@ -18,6 +18,7 @@
 #include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/detail/pp/ignore.hpp>
 #include <boost/assign/v2/put/modifier/standard.hpp>
+#include <boost/assign/v2/put/pipe/csv_put.hpp>
 #include <boost/assign/v2/put/pipe/put.hpp>
 #include <boost/assign/v2/put/deque.hpp>
 #include <libs/assign/v2/test/put/pipe/modifier/standard.h>
@@ -42,7 +43,7 @@ namespace xxx_standard{
         {
             //[test_put_pipe_modifier_push_front
             std::deque<int> powers; int front = (
-                powers | ( as2::_put % as2::_push_front )( 16 )( 8 )( 4 )( 2 )( 1 )
+                powers | ( as2::_csv_put % as2::_push_front )( 16, 8, 4, 2, 1 )
             ).front();
 
             /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/front == 1  );

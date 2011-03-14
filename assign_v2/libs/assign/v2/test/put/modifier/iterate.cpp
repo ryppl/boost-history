@@ -52,7 +52,7 @@ namespace xxx_iterate{
         {
             //[test_put_modifier_iterate_shifted
             typedef int T; array<T, 4> powers; powers[0] = 1; powers[1] = 10;
-            int i = 2; ( as2::put( powers ) % ( as2::_iterate = var( i )++ ) )( 100 )( 1000 );
+            int shift = 2; ( as2::put( powers ) % ( as2::_iterate = var( shift )++ ) )( 100 )( 1000 );
 
             /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/powers[0] == 1 );
             /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/powers[1] == 10 );
@@ -77,11 +77,11 @@ namespace xxx_iterate{
         {
             //[test_put_modifier_iterate_shifted_deque
             as2::result_of::deque<int>::type missing_tail = as2::deque<int>( 1 )( 10 )( -1 )( -1 );
-            int i = 2; 
+            int shift = 2; 
             
             BOOST_AUTO(
                 powers,
-                ( missing_tail % ( as2::_iterate = var( i )++ ) )( 100 )( 1000 )
+                ( missing_tail % ( as2::_iterate = var( shift )++ ) )( 100 )( 1000 )
             );
 
             /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/powers[0] == 1 );

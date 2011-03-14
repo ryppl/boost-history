@@ -61,27 +61,11 @@ namespace xxx_mix{
         {
              //[mix_bitset_revisited
             typedef std::string str_; typedef std::bitset<3> data_; 
-            std::vector<data_> consecutive; as2::put( consecutive )( as2::as_arg_list( as2::csv_deque</*Explicit template argument `std::string` is required, because the deduced argument would be `const char*`, and only the former is a valid argument to `data_`'s constructor*/std::string>( "000", "001", "010", "011", "100", "101", "110", "111" ) ) );
+            std::vector<data_> consecutive; as2::put( consecutive )( as2::_as_arg_list( as2::csv_deque</*Explicit template argument `std::string` is required, because the deduced argument would be `const char*`, and only the former is a valid argument to `data_`'s constructor*/std::string>( "000", "001", "010", "011", "100", "101", "110", "111" ) ) );
         
             for(int i = 0; i < consecutive.size(); i++)
             {
                 BOOST_ASSIGN_V2_CHECK( consecutive[i].to_ulong() == i );
-            }
-            //]
-        }
-        {
-            //[mix_maxtrix3x3
-            const int sz = 3;
-            typedef array<int, sz>  row_;
-            array<row_, sz>  matrix3x3 = converter(
-                as2::ref::array
-                    ( as2::ref::csv_array( 1, 2, 3 ) | as2::_convert<row_>() )
-                    ( as2::ref::csv_array( 4, 5, 6 ) | as2::_convert<row_>() )
-                    ( as2::ref::csv_array( 7, 8, 9 ) | as2::_convert<row_>() )
-            );
-            for(int i = 0; i < 9; i++)
-            {
-                BOOST_ASSIGN_V2_CHECK( matrix3x3[ i / 3 ][ i % 3 ] == i + 1 );
             }
             //]
         }

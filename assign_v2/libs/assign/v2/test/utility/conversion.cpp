@@ -18,13 +18,12 @@
 #include <boost/assign/v2/put/deque.hpp>
 #include <libs/assign/v2/test/utility/conversion.h>
 
-
 namespace test_assign_v2{
 namespace xxx_utility{
 namespace xxx_conversion{
 
     // suggested by JB:
-    //[convert_f
+    //[test_utility_conversion_f
     template<typename C, typename R>
     void f(C cont, R const& r){
         namespace as2 = boost::assign::v2;
@@ -38,80 +37,72 @@ namespace xxx_conversion{
         namespace as2 = assign::v2;
         namespace ns = as2::check_aux;
 
-        // Non-Boost.Assign.2.0 containers - fully qualified as2::converter()
+        // External containers (fully qualified)
         {
-            //[convert_inpl
-            std::vector<int> v( 3 ); v[0] = 72; v[1] = 31; v[2] = 48;
-            typedef array<int, 3> ar_;
-            BOOST_ASSIGN_V2_CHECK(
-                ( as2::converter( v ).type<ar_>() )[1] == v[1]
-            );
+            //[test_utility_conversion_vec_array
+            std::vector<int> r( 3 ); r[0] = 72; r[1] = 31; r[2] = 48;
+            typedef array<int, 3> ar_; ar_ const& ar = ( r | as2::_convert<ar_>() );
+            
+            BOOST_ASSIGN_V2_CHECK( ar.front() == 72 );
+            BOOST_ASSIGN_V2_CHECK( ar.back() == 48 );
             //]
-            BOOST_ASSIGN_V2_CHECK(
-                ( as2::converter( v ).type<ar_>() )[0] == v[0]
-            );
-            BOOST_ASSIGN_V2_CHECK(
-                ( as2::converter( v ).type<ar_>() )[2] == v[2]
-            );
         }
         {
-            //[convert_copy
-            std::vector<int> v( 3 ); v[0] = 72; v[1] = 31; v[2] = 48;
-            std::stack<int> lifo = as2::converter( v );
+            //[test_utility_conversion_vec_stack
+            std::vector<int> r( 3 ); r[0] = 72; r[1] = 31; r[2] = 48;
+            std::stack<int> lifo = as2::converter( r );
             BOOST_ASSIGN_V2_CHECK( lifo.top() == 48 );
             //]
         }
         {
-            {
-                typedef int T;
-                typedef std::vector<T> R; R r( 3 ); r[0] = 72; r[1] = 31; r[2] = 48; 
-                typedef std::vector<T> C; f<C>( as2::converter( r ), r );
-            }
-            {
-                typedef int T;
-                typedef std::vector<T> R; R r( 3 ); r[0] = 72; r[1] = 31; r[2] = 48; 
-                typedef std::deque<T> C; f<C>( as2::converter( r ), r );
-            }
-            {
-                typedef int T;
-                typedef std::vector<T> R; R r( 3 ); r[0] = 72; r[1] = 31; r[2] = 48; 
-                typedef std::list<T> C; f<C>( as2::converter( r ), r );
-            }
-            {
-                //[convert_f_invoke
-                typedef int T;
-                typedef std::vector<T> R; R r( 3 ); r[0] = 72; r[1] = 31; r[2] = 48; 
-                typedef std::stack<T> C; f<C>( as2::converter( r ), r );
-                //]
-            }
-            {
-                typedef int T;
-                typedef std::vector<T> R; R r( 3 ); r[0] = 72; r[1] = 31; r[2] = 48; 
-                typedef std::queue<T> C; f<C>( as2::converter( r ), r );
-            }
+			//test_utility_conversion_stl
+            typedef int T; typedef std::vector<T> R; R r( 3 ); r[0] = 72; r[1] = 31; r[2] = 48; 
+            f< std::vector<T> >( as2::converter( r ), r );
+            f< std::deque<T> >( as2::converter( r ), r );
+            f< std::list<T> >( as2::converter( r ), r );
+            f< std::stack<T> >( as2::converter( r ), r );
+            f< std::queue<T> >( as2::converter( r ), r );
+            //]
         }
-        
-        // Non-Boost.Assign.2.0 containers - name lookup
         {
-            //[convert_array
+            //[test_utility_conversion_matrix3x3
+            const int sz = 3; typedef array<int, sz>  row_;
+            array<row_, sz>  matrix3x3 = converter(
+                as2::ref::array
+                    ( as2::ref::csv_array( 1, 2, 3 ) | as2::_convert<row_>() )
+                    ( as2::ref::csv_array( 4, 5, 6 ) | as2::_convert<row_>() )
+                    ( as2::ref::csv_array( 7, 8, 9 ) | as2::_convert<row_>() )
+            );
+            for(int i = 0; i < 9; i++)
+            {
+                BOOST_ASSIGN_V2_CHECK( matrix3x3[ i / 3 ][ i % 3 ] == i + 1 );
+            }
+            //]
+        }
+        // Boost.Assign.2.0 containers - name lookup
+        {
+            //[test_utility_conversion_as2_deque_array
+            std::vector<int> r( 3 ); r[0] = 72; r[1] = 31; r[2] = 48;
+            typedef array<int, 3> ar_; ar_ const& ar = ( as2::csv_deque( 72, 31, 48 ) | as2::_convert<ar_>() );
+            
+            BOOST_ASSIGN_V2_CHECK( ar.front() == 72 );
+            BOOST_ASSIGN_V2_CHECK( ar.back() == 48 );
+            //]
+        }
+        {
+            //[test_utility_conversion_ref_array_stack
             std::stack<int> lifo = /*<<Notice unqualified (name lookup)>>*/converter( as2::ref::array( 72 )( 31 )( 48 ) );
             BOOST_ASSIGN_V2_CHECK( lifo.top() == 48 );
             //]
         }
         {
-            //[convert_csv_array
-            std::stack<int> lifo = /*<<Notice unqualified (name lookup)>>*/converter( as2::ref::csv_array( 72, 31, 48 ) );
-            BOOST_ASSIGN_V2_CHECK( lifo.top() == 48 );
+            //[test_utility_conversion_ref_array_queue
+            std::queue<int> fifo = /*<<Notice unqualified (name lookup)>>*/converter( as2::ref::csv_array( 72, 31, 48 ) );
+            BOOST_ASSIGN_V2_CHECK( fifo.front() == 72 );
             //]
         }
         {
-            //[convert_deque
-            std::stack<int> lifo = /*<<Notice unqualified (name lookup)>>*/converter( as2::deque<int>( 72 )( 31 )( 48 ) );
-            BOOST_ASSIGN_V2_CHECK( lifo.top() == 48 );
-            //]
-        }
-        {
-            //[convert_csv_array
+            //[test_utility_conversion_as2_deque_stack
             std::stack<int> lifo = /*<<Notice unqualified (name lookup)>>*/converter( as2::csv_deque( 72, 31, 48 ) );
             BOOST_ASSIGN_V2_CHECK( lifo.top() == 48 );
             //]

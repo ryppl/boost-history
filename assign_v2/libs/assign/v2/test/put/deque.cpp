@@ -8,8 +8,8 @@
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)      //
 ////////////////////////////////////////////////////////////////////////////
 #include <string>
-#include <boost/array.hpp>
-#include <boost/tuple/tuple.hpp>
+#include <boost/mpl/assert.hpp>
+#include <boost/type_traits/is_same.hpp>
 #include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/detail/pp/ignore.hpp>
 #include <boost/assign/v2/put/deque/csv_deque.hpp>
@@ -28,26 +28,20 @@ namespace xxx_deque{
         namespace as2 = assign::v2;    
         {
             //[test_put_deque_ints
-            {
-                typedef as2::result_of::deque<int>::type C;
-                C empty_cont = as2::deque<int>( as2::_nil );
+            typedef as2::result_of::deque<int>::type C0;
+            C0 empty_cont = as2::deque<int>( as2::_nil );
 
-                /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/ empty_cont( 72 )( 31 )( 48 ).front() == 72 );
-                /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/ as2::deque<int>( 72 )( 31 )( 48 ).back() == 48 );
-            }
-            typedef as2::result_of::csv_deque<int>::type C;
-            {
-                C cont = as2::csv_deque( 72, 31, 48 );
+            /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/ empty_cont( 72 )( 31 )( 48 ).front() == 72 );
+            /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/ as2::deque<int>( 72 )( 31 )( 48 ).back() == 48 );
 
-                /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/ cont.front() == 72 );
-                /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/ cont.back() == 48 );
-            }
-            {
-                C cont = as2::csv_deque( 72, 31 )/*<<This seeming oddity is possible thanks to `result_of::csv_deque<int>::type == result_of::deque<int>::type`>>*/( 48 );
-            
-                /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/ cont.front() == 72 );
-                /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/ cont.back() == 48 );
-            }
+            typedef as2::result_of::csv_deque<int>::type C1;
+            C1 cont = as2::csv_deque( 72, 31, 48 );
+
+            /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/ cont.front() == 72 );
+            /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/ as2::csv_deque( 72 )( 31 )( 48 ).back() == 48 );
+
+			BOOST_MPL_ASSERT(( is_same<C0, C1> ));
+
             //]
         }
         {
