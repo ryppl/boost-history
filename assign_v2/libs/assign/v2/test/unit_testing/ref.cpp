@@ -14,12 +14,12 @@
 
 #include <boost/test/test_tools.hpp>
 #define BOOST_ASSIGN_V2_CHECK( p ) BOOST_CHECK( p )
+#include <libs/assign/v2/test/ref/array.cpp>
 #include <libs/assign/v2/test/ref/convert_traits.cpp>
-#include <libs/assign/v2/test/ref/wrapper.cpp>
+#include <libs/assign/v2/test/ref/csv_array.cpp>
 #include <libs/assign/v2/test/ref/list.cpp>
 #include <libs/assign/v2/test/ref/list_tuple.cpp>
-#include <libs/assign/v2/test/ref/array/functor.cpp>
-#include <libs/assign/v2/test/ref/array/csv.cpp>
+#include <libs/assign/v2/test/ref/wrapper.cpp>
 
 #include <boost/test/unit_test.hpp>
 using boost::unit_test::test_suite;
@@ -29,12 +29,12 @@ test_suite* init_unit_test_suite( int argc, char* argv[] )
     using namespace test_assign_v2;
     {
     	using namespace xxx_ref;
+		test->add( BOOST_TEST_CASE( &xxx_array::test ) );
 		test->add( BOOST_TEST_CASE( &xxx_convert_traits::test ) );
-		test->add( BOOST_TEST_CASE( &xxx_wrapper::test ) );
+		test->add( BOOST_TEST_CASE( &xxx_csv_array::test ) );
 		test->add( BOOST_TEST_CASE( &xxx_list::test ) );
 		test->add( BOOST_TEST_CASE( &xxx_list_tuple::test ) );
-		test->add( BOOST_TEST_CASE( &xxx_array::xxx_functor::test ) );
-		test->add( BOOST_TEST_CASE( &xxx_array::xxx_csv::test ) );
+		test->add( BOOST_TEST_CASE( &xxx_wrapper::test ) );
     }
     return test;
 }

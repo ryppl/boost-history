@@ -24,7 +24,7 @@ namespace xxx_csv{
         using namespace boost;
         namespace as2 = assign::v2;
         {
-            //[csv_put
+            //[test_utility_csv_put
             std::deque<int> cont;
             as2::csv( as2::put( cont ), 72, 31, 48 );
 
@@ -33,7 +33,7 @@ namespace xxx_csv{
             //]
         }
         {
-            //[csv_put_modulo
+            //[test_utility_csv_put_modulo
             std::deque<int> cont;
             as2::csv( as2::put( cont ) % as2::_push_front, 72, 31, 48 );
 
@@ -42,7 +42,7 @@ namespace xxx_csv{
             //]
         }
         {
-            //[csv_deque_modulo
+            //[test_utility_csv_modulo_deque
             BOOST_AUTO(
                 cont,
                 as2::csv( as2::deque<int>( as2::_nil ) % as2::_push_front, 72, 31, 48 )

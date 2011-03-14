@@ -16,6 +16,7 @@
 #define BOOST_ASSIGN_V2_CHECK( p ) BOOST_CHECK( p )
 #include <libs/assign/v2/test/utility/chain.cpp>
 #include <libs/assign/v2/test/utility/conversion.cpp>
+#include <libs/assign/v2/test/utility/csv.cpp>
 #include <boost/test/unit_test.hpp>
 using boost::unit_test::test_suite;
 test_suite* init_unit_test_suite( int argc, char* argv[] )
@@ -25,7 +26,8 @@ test_suite* init_unit_test_suite( int argc, char* argv[] )
     {
     	using namespace xxx_utility;
     	test->add( BOOST_TEST_CASE( &xxx_chain::test ) );
-    	test->add( BOOST_TEST_CASE( &xxx_convert::test ) );
+    	test->add( BOOST_TEST_CASE( &xxx_conversion::test ) );
+    	test->add( BOOST_TEST_CASE( &xxx_csv::test ) );
 	}
     return test;
 }
