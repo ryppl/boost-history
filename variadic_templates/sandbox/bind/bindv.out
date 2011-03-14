@@ -1,0 +1,38 @@
+directory: "~/prog_dev/boost-svn/ro/boost_1_46_0/sandbox/rw/variadic_templates/sandbox/bind/" -*-
+Compilation started at Mon Mar 14 08:12:30
+
+make all
+for YES_NOT in yes not ; do \
+	  make -Wbindv.cpp YES_NOT=$YES_NOT cmp_run ; \
+	done ; \
+	#
+make[1]: Entering directory `/home/evansl/prog_dev/boost-svn/ro/boost_1_46_0/sandbox/rw/variadic_templates/sandbox/bind'
+/home/evansl/download/gcc/4.6-20110126/install/bin/g++ -c -I/home/evansl/prog_dev/boost-svn/ro/boost_1_46_0/sandbox/rw/variadic_templates -Wall -ftemplate-depth-300 -O0 -fpermissive -std=gnu++0x -DCXX0X_VARIADIC_TEMPLATES -DBOOST_USE_MPL_VARIADIC_TEMPLATES -DBOOST_MPL_CFG_NO_PREPROCESSED_HEADERS  -DUSE_VARIADIC_BIND -I/home/evansl/prog_dev/boost-svn/ro/boost_1_46_0  bindv.cpp -o bindv.yes.o
+/home/evansl/download/gcc/4.6-20110126/install/bin/g++ -Wl,-rpath /home/evansl/download/gcc/4.6-20110126/install/lib64 bindv.yes.o -o bindv.yes.x
+./bindv.yes.x
+YES_VARIADIC_BIND
+(_1,_2)(1,2)
+functor_any(:1:2)
+(2,_1)(1)
+functor_any(:2:1)
+(2,_1)(2)
+functor_any(:2:2)
+(2,1)(1)
+functor_any(:2:1)
+make[1]: Leaving directory `/home/evansl/prog_dev/boost-svn/ro/boost_1_46_0/sandbox/rw/variadic_templates/sandbox/bind'
+make[1]: Entering directory `/home/evansl/prog_dev/boost-svn/ro/boost_1_46_0/sandbox/rw/variadic_templates/sandbox/bind'
+/home/evansl/download/gcc/4.6-20110126/install/bin/g++ -c -I/home/evansl/prog_dev/boost-svn/ro/boost_1_46_0/sandbox/ro/SOC/2010/phoenix3 -Wall -ftemplate-depth-300 -O0 -fpermissive -std=gnu++0x -I/home/evansl/prog_dev/boost-svn/ro/boost_1_46_0   bindv.cpp -o bindv.not.o
+/home/evansl/download/gcc/4.6-20110126/install/bin/g++ -Wl,-rpath /home/evansl/download/gcc/4.6-20110126/install/lib64 bindv.not.o -o bindv.not.x
+./bindv.not.x
+NOT_VARIADIC_BIND
+(_1,_2)(1,2)
+functor_any(:1:2)
+(2,_1)(1)
+functor_any(:2:1)
+(2,_1)(2)
+functor_any(:2:2)
+(2,1)(1)
+functor_any(:2:1)
+make[1]: Leaving directory `/home/evansl/prog_dev/boost-svn/ro/boost_1_46_0/sandbox/rw/variadic_templates/sandbox/bind'
+
+Compilation finished at Mon Mar 14 08:12:42
