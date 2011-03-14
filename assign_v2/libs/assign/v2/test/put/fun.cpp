@@ -88,7 +88,7 @@ namespace xxx_fun{
                     as2::deque<int>( as2::_nil ) % (
                         as2::_fun = ( var(k) *= ( var(i)++ ) )
                     )
-                )/*<<Equivalent to `factorials( k *= i++ )` for i = 1, ..., 5>>*/()()()()()
+                )/*<<Equivalent to `factorials( k *= i++ )` for [^i = 1, ..., 5]>>*/()()()()()
             );
 
             /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/factorials.front() == ( 1 ) );
