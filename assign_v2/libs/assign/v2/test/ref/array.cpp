@@ -32,14 +32,14 @@ namespace xxx_array{
             as2::ref::nth_result_of::array<3, T>::type ar3 = as2::ref::array( w )( x )( y );
             {
                 T& a = ar3.front(); T& b = ar3.back();
-                
+
                 BOOST_ASSIGN_V2_CHECK( &a == &w );
                 BOOST_ASSIGN_V2_CHECK( &b == &y );
             }
             as2::ref::nth_result_of::array<4, T>::type ar4 = ar3( z );
             {
                 T& a = ar4.front(); T& b = ar4.back();
-                
+
                 BOOST_ASSIGN_V2_CHECK( &a == &w );
                 BOOST_ASSIGN_V2_CHECK( &b == &z );
             }
@@ -47,7 +47,7 @@ namespace xxx_array{
             {
                 T& a = ( *begin( ar4 ) );
                 T& b = *next( begin( ar4 ), ar4.size() - 1 );
-                
+
                 BOOST_ASSIGN_V2_CHECK( &a == &w );
                 BOOST_ASSIGN_V2_CHECK( &b == &z );
             }
@@ -56,7 +56,7 @@ namespace xxx_array{
             //[test_ref_array_write
             typedef int T; T x, y, z; std::vector<T> r( 3 ); r[0] = 72; r[1] = 31; r[2] = 48;
             boost::copy( r, begin( as2::ref::array( x )( y )( z ) | as2::ref::_get ) );
-            
+
             BOOST_ASSIGN_V2_CHECK( x == r[0] );
             BOOST_ASSIGN_V2_CHECK( z == r[2] );
             //]
@@ -64,7 +64,7 @@ namespace xxx_array{
         {
             //[test_ref_array_assign
             typedef int T; T x, y, z; as2::ref::array( x )( y )( z ).assign( -1 );
-            
+
             BOOST_ASSIGN_V2_CHECK( x == -1 );
             BOOST_ASSIGN_V2_CHECK( z == -1 );
             //]

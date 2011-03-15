@@ -13,4 +13,4 @@
 #include <boost/assign/v2/ref/list/holder/head.hpp>
 #include <boost/assign/v2/ref/list/holder/tail.hpp>
 
-#endif BOOST_ASSIGN_V2_REF_LIST_HOLDER_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_REF_LIST_HOLDER_ER_2010_HPP

@@ -10,7 +10,6 @@
 #ifndef BOOST_ASSIGN_V2_REF_LIST_TUPLE_CPP0X_CONTAINER_ER_2010_HPP
 #define BOOST_ASSIGN_V2_REF_LIST_TUPLE_CPP0X_CONTAINER_ER_2010_HPP
 #include <utility>
-#include <boost/assign/v2/ref/list_tuple/size_type.hpp>
 #include <boost/assign/v2/ref/tuple/cpp0x/data.hpp>
 #include <boost/config.hpp>
 #include <boost/mpl/empty_base.hpp>
@@ -78,7 +77,7 @@ namespace list_tuple_aux{
 
         typedef list_tuple_aux::list_size_type list_size_type;
         typedef list_tuple_aux::tuple_size_type tuple_size_type;
-        
+
         BOOST_STATIC_CONSTANT( list_size_type, static_get_size = N );
         BOOST_STATIC_CONSTANT(
             tuple_size_type,

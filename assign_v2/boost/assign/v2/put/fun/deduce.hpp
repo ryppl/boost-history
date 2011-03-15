@@ -40,8 +40,8 @@ namespace put_aux{
     };
 
     template<typename /*<<Either of a value or pointer-container>>*/C>
-    struct /*<<Meta-function mapping `C`s element-type to a factory thereof>>*/deduce_fun 
-//<-    
+    struct /*<<Meta-function mapping `C`s element-type to a factory thereof>>*/deduce_fun
+//<-
         :  boost::mpl::eval_if<
             container_traits::is_ptr_container<C>,
             deduce_fun_pointer<C>,
@@ -56,4 +56,4 @@ namespace put_aux{
 }// assign
 }// boost
 
-#endif BOOST_ASSIGN_V2_PUT_FUN_DEDUCE_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_PUT_FUN_DEDUCE_ER_2010_HPP

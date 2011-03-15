@@ -68,38 +68,35 @@ namespace put_aux{
     {
 
         wrapper(D const& d):d_( d ){}
-            
+
         operator D const&()const{ return this->d_; }
-                    
-        typedef wrapper const& result_type;            
-        
+
+        typedef wrapper const& result_type;
+
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
         template<typename T>
         result_type operator()( T&& t )const
         {
-            this->d_(
-                this->fun( std::forward<Args>(args)... )
-            );
-            return (*this);
+            this->d_( std::forward<T>(t) ); return (*this);
         }
 #else
-        
+
         template<typename T>
         result_type operator()(T& t)const
         {
             this->d_( t ); return (*this);
         }
-        
+
         template<typename T>
         result_type operator()(T const & t)const
         {
             this->d_( t ); return (*this);
         }
 #endif
-                 
+
         private:
         D const& d_;
-        
+
     };
 }//put_aux
 //[syntax_put_adapter_crtp
@@ -137,7 +134,7 @@ namespace put_aux{
     };
 
     template<typename /*<<Container>>*/C, typename /*<<Functor>>*/F, typename /*<<Modifier tag>>*/Tag, typename /*<<Derived type>>*/D>
-    class adapter_crtp 
+    class adapter_crtp
 //<-
         : public fun_holder<F>
         , public modifier_holder<Tag>
@@ -173,10 +170,10 @@ namespace put_aux{
         typedef D const& result_type;
 
         template<typename R>
-        result_type 
+        result_type
         operator()( as_arg_list_adapter<R> range )const/*<-*/
         {
-             return ::boost::for_each( range(), wrapper<D>( this->derived() ) ); 
+             return ::boost::for_each( range(), wrapper<D>( this->derived() ) );
         }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
 //<-

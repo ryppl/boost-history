@@ -10,7 +10,7 @@
 #ifndef BOOST_ASSIGN_V2_REF_TUPLE_CPP0X_DATA_ER_2010_HPP
 #define BOOST_ASSIGN_V2_REF_TUPLE_CPP0X_DATA_ER_2010_HPP
 #include <utility>
-#include <boost/assign/v2/ref/tuple/cpp0x.hpp>
+#include <boost/assign/v2/ref/tuple/data.hpp>
 #include <boost/type_traits/add_const.hpp>
 #include <boost/type_traits/add_reference.hpp>
 #include <boost/type_traits/is_reference.hpp>

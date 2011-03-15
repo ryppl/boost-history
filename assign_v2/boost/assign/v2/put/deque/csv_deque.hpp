@@ -22,14 +22,14 @@ namespace boost{
 namespace assign{
 namespace v2{
 namespace put_aux{
-    
+
     template<typename T>
     struct csv_deque_value : boost::decay<
         typename boost::remove_cv<T>::type
     >{};
 
 namespace result_of{
-    
+
     template<typename T>
     struct csv_deque: result_of::deque<
         typename csv_deque_value<T>::type
@@ -71,7 +71,7 @@ namespace put_aux{
     typename result_of::csv_deque<T>::type
     csv_deque(const T& t, Args const& ...  args)/*<-*/
     {
-        result_of::csv_deque<T>::type result;
+        typename result_of::csv_deque<T>::type result;
         csv_deque_impl<T>(result, t, args...);
         return result;
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
@@ -79,7 +79,7 @@ namespace put_aux{
 //]
 }// put_aux
 
-using put_aux::deque;
+using put_aux::csv_deque;
 
 #endif // BOOST_ASSIGN_V2_ENABLE_CPP0X
 

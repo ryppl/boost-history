@@ -53,7 +53,7 @@ namespace nth_result_of{
 //<-
 }// array_aux
 using array_aux::csv_array;
-namespace nth_result_of{ 
+namespace nth_result_of{
 
     template<array_size_type N, typename U>
     struct csv_array
@@ -82,7 +82,7 @@ namespace result_of{
     void csv_assign( R& result, U& u, Args&...args )
     {
         typedef typename R::wrapper_type wrapper_;
-        r.rebind( I::value, u );
+        result.rebind( I, u );
         csv_assign<I + 1>( result, args... );
     }
 
@@ -103,17 +103,16 @@ namespace result_of{
 
     template<typename T, typename...Args>/*<-*/
     typename boost::lazy_disable_if<
-        v2::type_traits::or_const<T, Args...>
+        v2::type_traits::or_const<T, Args...>,
         result_of::csv_array<T, Args...>
     >::type
-    BOOST_ASSIGN_V2_IGNORE(/*->*/typename result_of::csv_array<T, Args...>/*<-*/)/*->*/
     /*<<Enabled only if each of `t, args...` bind to non-const lvalue>>*/csv_array( T& t, Args&...args )/*<-*/
     {
         return csv_helper<T, Args...>::call( t, args... );
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
     template<typename T, typename...Args>
-    typename result_of::csv_array<T const, Args const...>
+    typename result_of::csv_array<T const, Args const...>::type
     csv_array( T const& t, Args const&...args )/*<-*/
     {
         return csv_helper<T const, Args const ...>::call( t, args... );
