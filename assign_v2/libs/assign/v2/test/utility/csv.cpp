@@ -16,7 +16,7 @@
 #include <libs/assign/v2/test/utility/csv.h>
 
 namespace test_assign_v2{
-namespace xxx_utiliy{
+namespace xxx_utility{
 namespace xxx_csv{
 
     void test(){
@@ -42,7 +42,7 @@ namespace xxx_csv{
             //]
         }
         {
-            //[test_utility_csv_modulo_deque
+            //[test_utility_csv_deque_modulo_
             BOOST_AUTO(
                 cont,
                 as2::csv( as2::deque<int>( as2::_nil ) % as2::_push_front, 72, 31, 48 )

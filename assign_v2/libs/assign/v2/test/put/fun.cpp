@@ -31,34 +31,35 @@ namespace test_assign_v2{
 namespace xxx_put{
 namespace xxx_fun{
 
-#ifdef __llvm__ 
+#ifdef __llvm__
 
     struct f{
-        
+
         typedef int result_type;
-        
+
         template<typename T>
         result_type operator()(T const& i)const{ return i + 1; };
-        
+
     };
-    
+
     void test()
     {
+        using namespace boost;
         namespace as2 = assign::v2;
         {
             std::vector<int> incr;
             (
              as2::put( incr ) % ( as2::_fun = f() )
-             )( 1 )( 2 )( 3 )( 4 )( 5 ); 
-            
+             )( 1 )( 2 )( 3 )( 4 )( 5 );
+
             /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/incr.front() == ( 2 ) );
             /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/incr.back() == ( 6 ) );
             // TODO fix Bug :
             // LLVM 1.5 - Release mode, EXC_BAD_ACCESS, stl_vector.h #602
-        }        
-        
+        }
+
     }
-    
+
 #else
 
     void test()
@@ -72,7 +73,7 @@ namespace xxx_fun{
             typedef function<double(double)> f_;
             (
                 as2::put( exponent ) % ( as2::_fun = f_( log10 ) )
-            )/*<<Equivalent to `as2::put( exponent )( log10( 1000.0 ) )( log10( 10.0 ) )( log10( 10000.0 ) )( log10( 1.0 ) )( log10( 100.0 ) )`>>*/( 1000.0 )( 10.0 )( 10000.0 )( 1.0 )( 100.0 ); 
+            )/*<<Equivalent to `as2::put( exponent )( log10( 1000.0 ) )( log10( 10.0 ) )( log10( 10000.0 ) )( log10( 1.0 ) )( log10( 100.0 ) )`>>*/( 1000.0 )( 10.0 )( 10000.0 )( 1.0 )( 100.0 );
 
 
             double eps = numeric::bounds<double>::smallest();
