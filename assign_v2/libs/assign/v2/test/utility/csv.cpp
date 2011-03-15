@@ -28,7 +28,7 @@ namespace xxx_csv{
             std::deque<int> cont;
             as2::csv( as2::put( cont ), 72, 31, 48 );
 
-            BOOST_ASSIGN_V2_CHECK( cont.front() == 6 );
+            BOOST_ASSIGN_V2_CHECK( cont.front() == 72 );
             BOOST_ASSIGN_V2_CHECK( cont.back() == 48 );
             //]
         }
