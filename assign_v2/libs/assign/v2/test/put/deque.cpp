@@ -11,7 +11,7 @@
 #include <boost/mpl/assert.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/assign/v2/detail/config/check.hpp>
-#include <boost/assign/v2/detail/pp/ignore.hpp>
+
 #include <boost/assign/v2/put/deque/csv_deque.hpp>
 #include <boost/assign/v2/put/deque/deque.hpp>
 
@@ -31,14 +31,14 @@ namespace xxx_deque{
             typedef as2::result_of::deque<int>::type C0;
             C0 empty_cont = as2::deque<int>( as2::_nil );
 
-            /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/ empty_cont( 72 )( 31 )( 48 ).front() == 72 );
-            /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/ as2::deque<int>( 72 )( 31 )( 48 ).back() == 48 );
+            BOOST_ASSIGN_V2_CHECK(  empty_cont( 72 )( 31 )( 48 ).front() == 72 );
+            BOOST_ASSIGN_V2_CHECK(  as2::deque<int>( 72 )( 31 )( 48 ).back() == 48 );
 
             typedef as2::result_of::csv_deque<int>::type C1;
             C1 cont = as2::csv_deque( 72, 31, 48 );
 
-            /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/ cont.front() == 72 );
-            /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/ as2::csv_deque( 72 )( 31 )( 48 ).back() == 48 );
+            BOOST_ASSIGN_V2_CHECK(  cont.front() == 72 );
+            BOOST_ASSIGN_V2_CHECK(  as2::csv_deque( 72 )( 31 )( 48 ).back() == 48 );
 
             BOOST_MPL_ASSERT(( is_same<C0, C1> ));
 
@@ -47,10 +47,10 @@ namespace xxx_deque{
         {
             //[test_put_deque_str_literal
             typedef std::string str_;
-            /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/
+            BOOST_ASSIGN_V2_CHECK( 
                 str_( as2::deque<const char*>( "x" )( "y" )( "z" )[1] ) == "y"
             );
-            /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/
+            BOOST_ASSIGN_V2_CHECK( 
                 str_( as2::csv_deque( "x", "y", "z" )[1] ) == "y"
             );
             //]

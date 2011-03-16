@@ -13,7 +13,7 @@
 #include <set>
 #include <string>
 #include <boost/assign/v2/detail/config/check.hpp>
-#include <boost/assign/v2/detail/pp/ignore.hpp>
+
 #include <boost/assign/v2/put/modifier/standard.hpp>
 #include <boost/assign/v2/put/put.hpp>
 #include <boost/assign/v2/put/deque.hpp>
@@ -64,24 +64,24 @@ namespace xxx_standard{
         
         
             // TODO abs()<eps
-            /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/boost::lower_bound( sqrt2, 1.41 ) == boost::begin( sqrt2 ) );
-            /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/boost::upper_bound( sqrt2, 1.41421 ) == boost::end( sqrt2 ) );
+            BOOST_ASSIGN_V2_CHECK( boost::lower_bound( sqrt2, 1.41 ) == boost::begin( sqrt2 ) );
+            BOOST_ASSIGN_V2_CHECK( boost::upper_bound( sqrt2, 1.41421 ) == boost::end( sqrt2 ) );
             //]
         }
         {
             //[test_put_modifier_push
             std::queue<int> fifo; ( as2::put( fifo ) % as2::_push )( 72 )( 31 )( 48 );
                 
-            /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/fifo.front() == 72 );
-            /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/fifo.back() == 48 );
+            BOOST_ASSIGN_V2_CHECK( fifo.front() == 72 );
+            BOOST_ASSIGN_V2_CHECK( fifo.back() == 48 );
             //]
         }
         {
             //[test_put_modifier_insert
             std::set<std::string> letters; ( as2::put( letters ) % as2::_insert )( "d" )( "a" )( "c" )( "b" );
         
-            /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/letters.lower_bound( "a" ) == boost::begin( letters ) );
-            /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/letters.upper_bound( "d" ) == boost::end( letters ) );
+            BOOST_ASSIGN_V2_CHECK( letters.lower_bound( "a" ) == boost::begin( letters ) );
+            BOOST_ASSIGN_V2_CHECK( letters.upper_bound( "d" ) == boost::end( letters ) );
             //]
         }
         {
@@ -89,8 +89,8 @@ namespace xxx_standard{
             typedef int int_; std::list<int> list; 
             ( as2::put( list ) % as2::_push_back )( 72 )( 31 )( 48 );
                 
-            /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/list.front() == 72 );
-            /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/list.back() == 48 );
+            BOOST_ASSIGN_V2_CHECK( list.front() == 72 );
+            BOOST_ASSIGN_V2_CHECK( list.back() == 48 );
             //]
         }
         // DEQUE
@@ -114,8 +114,8 @@ namespace xxx_standard{
                 ( as2::deque<int>( as2::_nil ) % as2::_push_front )( 16 )( 8 )( 4 )( 2 )( 1 )
             );
 
-            /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/powers[0] == 1 );
-            /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/powers[4] == 16 );
+            BOOST_ASSIGN_V2_CHECK( powers[0] == 1 );
+            BOOST_ASSIGN_V2_CHECK( powers[4] == 16 );
             //]
         }
     }

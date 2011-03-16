@@ -60,7 +60,7 @@ namespace conversion_aux{
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
 }// conversion_aux
-using conversion_aux::convert;
+//using conversion_aux::convert;
 namespace result_of{
 
     template<typename /*<<Container>>*/ C, typename /*<<Range>>*/R>
@@ -69,7 +69,7 @@ namespace result_of{
 }//result_of
 
 template<typename C>
-conversion_aux::convert_adapter<C> _convert()/*<-*/
+conversion_aux::convert_adapter<C> convert()/*<-*/
 {
     return conversion_aux::convert_adapter<C>();
 }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
@@ -79,29 +79,6 @@ conversion_aux::convert_adapter<C> _convert()/*<-*/
 }// assign
 }// boost
 
-#include <boost/assign/v2/utility/conversion/deduce_tag.hpp> // Do not displace
-
-#if defined( BOOST_ASSIGN_V2_UTILITY_CONVERSION_CONVERT_NAME_LOOKUP_PARAM ) || defined ( BOOST_ASSIGN_V2_UTILITY_CONVERSION_CONVERT_NAME_LOOKUP )
-#error
-#endif
-
-#include <boost/preprocessor/seq/enum.hpp>
-#include <boost/preprocessor/seq/transform.hpp>
-
-#define BOOST_ASSIGN_V2_UTILITY_CONVERSION_CONVERT_NAME_LOOKUP_PARAM(s, data, T) typename T
-#define BOOST_ASSIGN_V2_UTILITY_CONVERSION_CONVERT_NAME_LOOKUP(Seq, R)\
-    template<typename C, BOOST_PP_SEQ_ENUM(\
-        BOOST_PP_SEQ_TRANSFORM(\
-            BOOST_ASSIGN_V2_UTILITY_CONVERSION_CONVERT_NAME_LOOKUP_PARAM,\
-            ~,\
-            Seq\
-        )\
-    )>\
-    typename ::boost::assign::v2::result_of::convert<C, R>::type \
-    convert( R const& range )\
-    {\
-        return ::boost::assign::v2::convert<C>( range );\
-    }\
-/**/
+#include <boost/assign/v2/utility/conversion/deduce_tag.hpp>
 
 #endif //  BOOST_ASSIGN_V2_UTILITY_CONVERSION_CONVERT_ER_2010_HPP

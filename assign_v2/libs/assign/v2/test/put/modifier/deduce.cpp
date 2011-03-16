@@ -16,7 +16,7 @@
 #include <vector>
 #include <string>
 #include <boost/array.hpp>
-#include <boost/assign/v2/detail/pp/ignore.hpp>
+
 #include <boost/type_traits/is_same.hpp>
 #include <boost/ptr_container/ptr_array.hpp>
 #include <boost/ptr_container/ptr_deque.hpp>

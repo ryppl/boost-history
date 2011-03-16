@@ -42,7 +42,7 @@ namespace xxx_csv{
             //]
         }
         {
-            //[test_utility_csv_deque_modulo_
+            //[test_utility_csv_deque_modulo
             BOOST_AUTO(
                 cont,
                 as2::csv( as2::deque<int>( as2::_nil ) % as2::_push_front, 72, 31, 48 )

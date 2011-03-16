@@ -5,6 +5,7 @@
 //#include <libs/assign/v2/test/mix.h>
 #include <libs/assign/v2/test/put.h>
 #include <libs/assign/v2/test/utility.h>
+#include <libs/assign/v2/tutorial.h>
 
 // Speed
 //#include <fstream>
@@ -49,6 +50,9 @@ int main (int argc, char * const argv[])
         //xxx_mix::test();
         xxx_ref::test();
         xxx_utility::test();
+    }
+    {
+        tutorial_assign_v2::run();
     }
 
     /*

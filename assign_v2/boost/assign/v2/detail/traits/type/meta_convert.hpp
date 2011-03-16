@@ -7,11 +7,12 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_TRAITS_TYPE_HAS_VALUE_TYPE_ER_2010_HPP
-#define BOOST_ASSIGN_V2_TRAITS_TYPE_HAS_VALUE_TYPE_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_TRAITS_TYPE_META_CONVERT_ER_2010_HPP
+#define BOOST_ASSIGN_V2_TRAITS_TYPE_META_CONVERT_ER_2010_HPP
 #include <boost/assign/v2/ref/convert_traits/reference.hpp>
 
 namespace boost{
+    struct use_default;
 namespace assign{
 namespace v2{
 namespace type_traits{
@@ -31,4 +32,4 @@ namespace type_traits{
 }// assign
 }// boost
 
-#endif // BOOST_ASSIGN_V2_TRAITS_TYPE_HAS_VALUE_TYPE_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_TRAITS_TYPE_META_CONVERT_ER_2010_HPP

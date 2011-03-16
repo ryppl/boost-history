@@ -31,7 +31,7 @@ namespace chain_aux{
         typedef typename boost::iterator_reference<It1>::type ref1_;
         typedef typename boost::iterator_reference<It2>::type ref2_;
 
-        typedef assign::v2::type_traits::meta_convert<Tag> convert_;
+        typedef v2::type_traits::meta_convert<Tag> convert_;
         typedef typename ::boost::mpl::apply2<
             convert_,
             ref1_,

@@ -42,7 +42,7 @@ namespace put_aux{
 
     };
 
-//[syntax_put_adapter_as_arg_list
+//[syntax_put_adapteras_arg_list
 namespace result_of{
 
     template<typename R>
@@ -55,7 +55,7 @@ namespace result_of{
 
     template<typename R>
     typename result_of::as_arg_list<R>::type
-    _as_arg_list(R& range)/*<-*/
+    as_arg_list(R& range)/*<-*/
     {
 
         return typename result_of::as_arg_list<R>::type( range );
@@ -63,14 +63,14 @@ namespace result_of{
     
     template<typename R>
     typename result_of::as_arg_list<R const>::type
-    _as_arg_list(R const& range)/*<-*/
+    as_arg_list(R const& range)/*<-*/
     {
         return typename result_of::as_arg_list<R const>::type( range );
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
 //]
 }// put_aux
-    using put_aux::_as_arg_list;
+    using put_aux::as_arg_list;
 namespace result_of{
 
     template<typename R>

@@ -13,7 +13,7 @@
 #include <vector>
 #include <boost/array.hpp>
 #include <boost/assign/v2/detail/config/check.hpp>
-#include <boost/assign/v2/detail/pp/ignore.hpp>
+
 #include <boost/assign/v2/put/put.hpp>
 #include <boost/assign/v2/put/deque.hpp>
 #include <boost/assign/v2/put/fun.hpp>
@@ -52,8 +52,8 @@ namespace xxx_fun{
              as2::put( incr ) % ( as2::_fun = f() )
              )( 1 )( 2 )( 3 )( 4 )( 5 );
 
-            /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/incr.front() == ( 2 ) );
-            /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/incr.back() == ( 6 ) );
+            BOOST_ASSIGN_V2_CHECK( incr.front() == ( 2 ) );
+            BOOST_ASSIGN_V2_CHECK( incr.back() == ( 6 ) );
             // TODO fix Bug :
             // LLVM 1.5 - Release mode, EXC_BAD_ACCESS, stl_vector.h #602
         }
@@ -77,8 +77,8 @@ namespace xxx_fun{
 
 
             double eps = numeric::bounds<double>::smallest();
-            /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/fabs( exponent.front() - 3.0 ) < eps );
-            /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/fabs( exponent.back() - 2.0 ) < eps );
+            BOOST_ASSIGN_V2_CHECK( fabs( exponent.front() - 3.0 ) < eps );
+            BOOST_ASSIGN_V2_CHECK( fabs( exponent.back() - 2.0 ) < eps );
             //]
         }
         {
@@ -92,8 +92,8 @@ namespace xxx_fun{
                 )/*<<Equivalent to `factorials( k *= i++ )` for [^i = 1, ..., 5]>>*/()()()()()
             );
 
-            /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/factorials.front() == ( 1 ) );
-            /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/factorials.back() == ( 120 ) );
+            BOOST_ASSIGN_V2_CHECK( factorials.front() == ( 1 ) );
+            BOOST_ASSIGN_V2_CHECK( factorials.back() == ( 120 ) );
             //]
         }
 

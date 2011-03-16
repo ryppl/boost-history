@@ -10,6 +10,7 @@
 #ifndef BOOST_ASSIGN_V2_DETAIL_FUNCTOR_NEW_ER_2010_HPP
 #define BOOST_ASSIGN_V2_DETAIL_FUNCTOR_NEW_ER_2010_HPP
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
+#include <boost/assign/v2/detail/keyword/nil.hpp>
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 #include <utility>
 #else
@@ -26,7 +27,7 @@ namespace assign{
 namespace v2{
 namespace functor_aux{
 
-    template<typename T>
+    template<typename T = keyword_aux::nil>
     class new_
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 // do nothing
@@ -47,6 +48,10 @@ namespace functor_aux{
         new_(){}
 
         result_type operator()()const{ return new T(); }
+
+        template<typename U>
+        new_<U> type()const{ return new_<U>(); }
+
 
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
         template<typename... Args>
@@ -80,6 +85,7 @@ BOOST_PP_REPEAT_FROM_TO(
     };
 
 }// functor_aux
+/*
 namespace result_of{
 
     template<typename T>
@@ -98,6 +104,7 @@ namespace result_of{
         return result_();
     }
 
+*/
 }// v2
 }// assign
 }// boost

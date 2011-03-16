@@ -56,25 +56,7 @@ namespace conversion_aux{
 //->
     };
 
-    struct converter_adapter/*<-*/{}/*->*/;
-
-    template<typename R>
-    converter<R> operator|( R const& r, converter_adapter )/*<-*/
-    {
-        return converter<R>( r );
-    }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
-
 }// conversion_aux
-//<-
-namespace{
-//->
-
-    conversion_aux::converter_adapter const _converter/*<-*/
-        = conversion_aux::converter_adapter()/*->*/;
-
-//<-
-}
-//->
 namespace result_of{
 
     template<typename R>

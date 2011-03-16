@@ -90,51 +90,47 @@ namespace result_of{
 
 #include <boost/preprocessor/cat.hpp>
 
-#define BOOST_ASSIGN_V2_PUT_FUN_alias(NAME, FUN)\
+#define BOOST_ASSIGN_V2_PUT_MODULO_FUN_GENERATE(NAME, FUN)\
 namespace boost{\
 namespace assign{\
 namespace v2{\
 namespace put_aux{\
 \
     template<typename T>\
-    modulo_fun< FUN > BOOST_PP_CAT(_,NAME)(){ return v2::_fun = FUN(); }\
+    modulo_fun< FUN > NAME()\
+    {\
+        return ( v2::_fun = FUN() );\
+    }\
 \
 }\
-using put_aux::BOOST_PP_CAT(_,NAME);\
+using put_aux::NAME;\
 }\
 }\
 }\
 /**/
 
 #include <boost/assign/v2/detail/functor/constructor.hpp>
-#define BOOST_ASSIGN_V2_fun functor_aux::constructor<T>
-BOOST_ASSIGN_V2_PUT_FUN_alias(constructor, BOOST_ASSIGN_V2_fun)
-#undef BOOST_ASSIGN_V2_fun
+BOOST_ASSIGN_V2_PUT_MODULO_FUN_GENERATE(constructor, v2::functor_aux::constructor<T>)
 
 #include <boost/assign/v2/detail/functor/new.hpp>
-#define BOOST_ASSIGN_V2_fun functor_aux::new_<T>
-BOOST_ASSIGN_V2_PUT_FUN_alias(new, BOOST_ASSIGN_V2_fun)
-#undef BOOST_ASSIGN_V2_fun
+BOOST_ASSIGN_V2_PUT_MODULO_FUN_GENERATE(new_ptr, v2::functor_aux::new_<T>)
 
-#undef BOOST_ASSIGN_V2_PUT_FUN_alias
+#include <boost/typeof/typeof.hpp>
+#include <boost/type_traits/add_const.hpp>
+#define BOOST_ASSIGN_V2_PUT_MODULO_FUN_KEYWORD(NAME, EXPR)\
+namespace boost{\
+namespace assign{\
+namespace v2{\
+    typedef BOOST_TYPEOF( ( _fun = EXPR ) ) BOOST_PP_CAT(type_of,NAME);\
+namespace{\
+\
+    boost::add_const<BOOST_PP_CAT(type_of,NAME)>::type BOOST_PP_CAT(_,NAME) = ( _fun = EXPR );\
+}\
+}\
+}\
+}\
 
 #include <boost/lambda/lambda.hpp>
-#include <boost/typeof/typeof.hpp>
-namespace boost{
-namespace assign{
-namespace v2{
-namespace put_aux{
-
-    typedef BOOST_TYPEOF( ( _fun = ::boost::lambda::_1 ) ) keyword_identity;
-
-}// put_aux
-namespace {
-    
-    put_aux::keyword_identity const _identity  = ( _fun = ::boost::lambda::_1 );
-
-}
-}// v2
-}// assign
-}// boost
+BOOST_ASSIGN_V2_PUT_MODULO_FUN_KEYWORD(identity, ::boost::lambda::_1)
 
 #endif // BOOST_ASSIGN_V2_PUT_FUN_MODULO_ER_2010_HPP

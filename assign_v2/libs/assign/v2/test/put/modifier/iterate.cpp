@@ -9,7 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #include <boost/array.hpp>
 #include <boost/assign/v2/detail/config/check.hpp>
-#include <boost/assign/v2/detail/pp/ignore.hpp>
+
 #include <boost/assign/v2/put/modifier/iterate.hpp>
 #include <boost/assign/v2/put/put.hpp>
 #include <boost/assign/v2/put/deque.hpp>
@@ -54,10 +54,10 @@ namespace xxx_iterate{
             typedef int T; array<T, 4> powers; powers[0] = 1; powers[1] = 10;
             int shift = 2; ( as2::put( powers ) % ( as2::_iterate = var( shift )++ ) )( 100 )( 1000 );
 
-            /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/powers[0] == 1 );
-            /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/powers[1] == 10 );
-            /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/powers[2] == 100 );
-            /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/powers[3] == 1000 );
+            BOOST_ASSIGN_V2_CHECK( powers[0] == 1 );
+            BOOST_ASSIGN_V2_CHECK( powers[1] == 10 );
+            BOOST_ASSIGN_V2_CHECK( powers[2] == 100 );
+            BOOST_ASSIGN_V2_CHECK( powers[3] == 1000 );
             //]
         }
         {
@@ -84,10 +84,10 @@ namespace xxx_iterate{
                 ( missing_tail % ( as2::_iterate = var( shift )++ ) )( 100 )( 1000 )
             );
 
-            /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/powers[0] == 1 );
-            /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/powers[1] == 10 );
-            /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/powers[2] == 100 );
-            /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/powers[3] == 1000 );
+            BOOST_ASSIGN_V2_CHECK( powers[0] == 1 );
+            BOOST_ASSIGN_V2_CHECK( powers[1] == 10 );
+            BOOST_ASSIGN_V2_CHECK( powers[2] == 100 );
+            BOOST_ASSIGN_V2_CHECK( powers[3] == 1000 );
             //]
         }
     }

@@ -12,7 +12,7 @@
 #include <boost/typeof/typeof.hpp>
 #include <boost/assign/v2/detail/check/equal_val.hpp>
 #include <boost/assign/v2/detail/check/equal_ref.hpp>
-#include <boost/assign/v2/detail/pp/ignore.hpp>
+
 #include <boost/assign/v2/put/modifier/repeat.hpp>
 #include <boost/assign/v2/put/pipe/put.hpp> 
 #include <boost/assign/v2/utility/csv.hpp>
@@ -40,7 +40,7 @@ namespace xxx_args_list{
                 ( ( args_list_() %  ( as2::_repeat = 3 ) )( x ) ) 
             );
             int n = as2::ref::at<0>( args_list.par_list_cont() ).arg();
-            /*<-*/BOOST_ASSIGN_V2_CHECK( BOOST_ASSIGN_V2_IGNORE(/*->*/assert( /*<-*/))/*->*/n == 3 );
+            BOOST_ASSIGN_V2_CHECK( n == 3 );
         }
         namespace chk = as2::check_aux;
         namespace aux_ = as2::put_pipe_aux;
