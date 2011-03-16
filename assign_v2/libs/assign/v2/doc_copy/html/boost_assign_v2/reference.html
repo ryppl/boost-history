@@ -1,0 +1,459 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Reference</title>
+<link rel="stylesheet" href="../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="../index.html" title="Chapter&#160;1.&#160;Boost.Assign 2.0">
+<link rel="up" href="../index.html" title="Chapter&#160;1.&#160;Boost.Assign 2.0">
+<link rel="prev" href="tutorial.html" title="Tutorial">
+<link rel="next" href="reference/put.html" title="Put">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../boost.png"></td>
+<td align="center"><a href="../../../index.html">Home</a></td>
+<td align="center"><a href="../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="tutorial.html"><img src="../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="reference/put.html"><img src="../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="boost_assign_v2.reference"></a><a class="link" href="reference.html" title="Reference">Reference</a>
+</h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="reference.html#boost_assign_v2.reference.detail">Detail</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="reference.html#boost_assign_v2.reference.detail.keyword">Keyword</a></span></dt>
+<dd><dl><dt><span class="section"><a href="reference.html#boost_assign_v2.reference.detail.keyword.nil">Nil</a></span></dt></dl></dd>
+<dt><span class="section"><a href="reference.html#boost_assign_v2.reference.detail.config">Config</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="reference.html#boost_assign_v2.reference.detail.config.arity">Limit
+          arity</a></span></dt>
+<dt><span class="section"><a href="reference.html#boost_assign_v2.reference.detail.config.lconst_arity">Limit
+          lvalue-const arity</a></span></dt>
+<dt><span class="section"><a href="reference.html#boost_assign_v2.reference.detail.config.csv_arity">Limit
+          csv-arity</a></span></dt>
+</dl></dd>
+</dl></dd>
+<dt><span class="section"><a href="reference/put.html">Put</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="reference/put.html#boost_assign_v2.reference.put.adapter">Adapter</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="reference/put.html#boost_assign_v2.reference.put.adapter.as_arg_list">As_arg_list</a></span></dt>
+<dt><span class="section"><a href="reference/put.html#boost_assign_v2.reference.put.adapter.crtp">Crtp</a></span></dt>
+<dt><span class="section"><a href="reference/put.html#boost_assign_v2.reference.put.adapter.modifier">Modifier</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="reference/put.html#boost_assign_v2.reference.put.deque">Deque</a></span></dt>
+<dt><span class="section"><a href="reference/put.html#boost_assign_v2.reference.put.fun">Fun</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="reference/put.html#boost_assign_v2.reference.put.fun.deduce">Deduce</a></span></dt>
+<dt><span class="section"><a href="reference/put.html#boost_assign_v2.reference.put.fun.modulo">Modulo</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="reference/put.html#boost_assign_v2.reference.put.modifier">Modifier</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="reference/put.html#boost_assign_v2.reference.put.modifier.deduce">Deduce</a></span></dt>
+<dt><span class="section"><a href="reference/put.html#boost_assign_v2.reference.put.modifier.modulo">Modulo</a></span></dt>
+<dt><span class="section"><a href="reference/put.html#boost_assign_v2.reference.put.modifier.insert">Insert</a></span></dt>
+<dt><span class="section"><a href="reference/put.html#boost_assign_v2.reference.put.modifier.iterate">Iterate</a></span></dt>
+<dt><span class="section"><a href="reference/put.html#boost_assign_v2.reference.put.modifier.lookup">Lookup</a></span></dt>
+<dt><span class="section"><a href="reference/put.html#boost_assign_v2.reference.put.modifier.push">Push</a></span></dt>
+<dt><span class="section"><a href="reference/put.html#boost_assign_v2.reference.put.modifier.push_back">Push_back</a></span></dt>
+<dt><span class="section"><a href="reference/put.html#boost_assign_v2.reference.put.modifier.push_front">Push_front</a></span></dt>
+<dt><span class="section"><a href="reference/put.html#boost_assign_v2.reference.put.modifier.repeat">Repeat</a></span></dt>
+<dt><span class="section"><a href="reference/put.html#boost_assign_v2.reference.put.modifier.standard">Standard</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="reference/put.html#boost_assign_v2.reference.put.pipe">Pipe</a></span></dt>
+<dt><span class="section"><a href="reference/put.html#boost_assign_v2.reference.put.put">Put</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="reference/ref.html">Ref</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="reference/ref.html#boost_assign_v2.reference.ref.wrapper">Wrapper</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="reference/ref.html#boost_assign_v2.reference.ref.wrapper.copy">Copy</a></span></dt>
+<dt><span class="section"><a href="reference/ref.html#boost_assign_v2.reference.ref.wrapper.crtp">Crtp</a></span></dt>
+<dt><span class="section"><a href="reference/ref.html#boost_assign_v2.reference.ref.wrapper.range_get">Range_get</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="reference/ref.html#boost_assign_v2.reference.ref.array">Array</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="reference/ref.html#boost_assign_v2.reference.ref.array.interface">Interface</a></span></dt>
+<dt><span class="section"><a href="reference/ref.html#boost_assign_v2.reference.ref.array.array">Array</a></span></dt>
+<dt><span class="section"><a href="reference/ref.html#boost_assign_v2.reference.ref.array.csv_array">Csv_array</a></span></dt>
+</dl></dd>
+</dl></dd>
+<dt><span class="section"><a href="reference/utility.html">Utility</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="reference/utility.html#boost_assign_v2.reference.utility.chain">Chain</a></span></dt>
+<dt><span class="section"><a href="reference/utility.html#boost_assign_v2.reference.utility.conversion">Conversion</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="reference/utility.html#boost_assign_v2.reference.utility.conversion.convert">Convert</a></span></dt>
+<dt><span class="section"><a href="reference/utility.html#boost_assign_v2.reference.utility.conversion.converter">Converter</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="reference/utility.html#boost_assign_v2.reference.utility.csv">Csv</a></span></dt>
+</dl></dd>
+</dl></div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_assign_v2.reference.detail"></a><a class="link" href="reference.html#boost_assign_v2.reference.detail" title="Detail">Detail</a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="reference.html#boost_assign_v2.reference.detail.keyword">Keyword</a></span></dt>
+<dd><dl><dt><span class="section"><a href="reference.html#boost_assign_v2.reference.detail.keyword.nil">Nil</a></span></dt></dl></dd>
+<dt><span class="section"><a href="reference.html#boost_assign_v2.reference.detail.config">Config</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="reference.html#boost_assign_v2.reference.detail.config.arity">Limit
+          arity</a></span></dt>
+<dt><span class="section"><a href="reference.html#boost_assign_v2.reference.detail.config.lconst_arity">Limit
+          lvalue-const arity</a></span></dt>
+<dt><span class="section"><a href="reference.html#boost_assign_v2.reference.detail.config.csv_arity">Limit
+          csv-arity</a></span></dt>
+</dl></dd>
+</dl></div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_assign_v2.reference.detail.keyword"></a><a class="link" href="reference.html#boost_assign_v2.reference.detail.keyword" title="Keyword">Keyword</a>
+</h4></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="reference.html#boost_assign_v2.reference.detail.keyword.nil">Nil</a></span></dt></dl></div>
+<a name="boost_assign_v2.reference.detail.keyword.header"></a><h6>
+<a name="id36336671"></a>
+          <a class="link" href="reference.html#boost_assign_v2.reference.detail.keyword.header">Header</a>
+        </h6>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><a href="../../../../../../boost/assign/v2/detail/keyword.hpp" target="_top">boost/assign/v2/detail/detail/keyword.hpp</a><span class="special">&gt;</span>
+</pre>
+<p>
+        </p>
+<div class="section">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_assign_v2.reference.detail.keyword.nil"></a><a class="link" href="reference.html#boost_assign_v2.reference.detail.keyword.nil" title="Nil">Nil</a>
+</h5></div></div></div>
+<a name="boost_assign_v2.reference.detail.keyword.nil.header"></a><h6>
+<a name="id36336722"></a>
+            <a class="link" href="reference.html#boost_assign_v2.reference.detail.keyword.nil.header">Header</a>
+          </h6>
+<p>
+            
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><a href="../../../../../../boost/assign/v2/detail/keyword/nil.hpp" target="_top">boost/assign/v2/detail/detail/keyword/nil.hpp</a><span class="special">&gt;</span>
+</pre>
+<p>
+          </p>
+<a name="boost_assign_v2.reference.detail.keyword.nil.description"></a><h6>
+<a name="id36336765"></a>
+            <a class="link" href="reference.html#boost_assign_v2.reference.detail.keyword.nil.description">Description</a>
+          </h6>
+<p>
+            Type on which <code class="computeroutput"><span class="keyword">operator</span><span class="special">()</span></code>
+            is overloaded in various parts of the library.
+          </p>
+<a name="boost_assign_v2.reference.detail.keyword.nil.syntax"></a><h6>
+<a name="id36336797"></a>
+            <a class="link" href="reference.html#boost_assign_v2.reference.detail.keyword.nil.syntax">Syntax</a>
+          </h6>
+<p>
+            
+</p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">keyword_aux</span><span class="special">{</span>
+
+	<span class="keyword">struct</span> <span class="identifier">nil</span><span class="special">;</span>
+
+<span class="special">}//</span><span class="identifier">keyword_aux</span>
+
+	<span class="identifier">keyword_aux</span> <span class="keyword">const</span> _nil<span class="special">;</span>
+
+</pre>
+<p>
+          </p>
+</div>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_assign_v2.reference.detail.config"></a><a class="link" href="reference.html#boost_assign_v2.reference.detail.config" title="Config">Config</a>
+</h4></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="reference.html#boost_assign_v2.reference.detail.config.arity">Limit
+          arity</a></span></dt>
+<dt><span class="section"><a href="reference.html#boost_assign_v2.reference.detail.config.lconst_arity">Limit
+          lvalue-const arity</a></span></dt>
+<dt><span class="section"><a href="reference.html#boost_assign_v2.reference.detail.config.csv_arity">Limit
+          csv-arity</a></span></dt>
+</dl></div>
+<a name="boost_assign_v2.reference.detail.config.header"></a><h6>
+<a name="id36336884"></a>
+          <a class="link" href="reference.html#boost_assign_v2.reference.detail.config.header">Header</a>
+        </h6>
+<p>
+          Does not have a header.
+        </p>
+<a name="boost_assign_v2.reference.detail.config.description"></a><h6>
+<a name="id36336902"></a>
+          <a class="link" href="reference.html#boost_assign_v2.reference.detail.config.description">Description</a>
+        </h6>
+<div class="section">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_assign_v2.reference.detail.config.arity"></a><a class="link" href="reference.html#boost_assign_v2.reference.detail.config.arity" title="Limit arity">Limit
+          arity</a>
+</h5></div></div></div>
+<a name="boost_assign_v2.reference.detail.config.arity.header"></a><h6>
+<a name="id36336929"></a>
+            <a class="link" href="reference.html#boost_assign_v2.reference.detail.config.arity.header">Header</a>
+          </h6>
+<p>
+            
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><a href="../../../../../../boost/assign/v2/detail/config/limit_arity.hpp" target="_top">boost/assign/v2/detail/config/limit_arity.hpp</a><span class="special">&gt;</span>
+</pre>
+<p>
+          </p>
+<a name="boost_assign_v2.reference.detail.config.arity.syntax"></a><h6>
+<a name="id36336971"></a>
+            <a class="link" href="reference.html#boost_assign_v2.reference.detail.config.arity.syntax">Syntax</a>
+          </h6>
+<p>
+            
+</p>
+<pre class="programlisting"><span class="preprocessor">#define</span> <span class="identifier">BOOST_ASSIGN_V2_LIMIT_ARITY</span> <em class="replaceable"><code>unspecified</code></em>
+</pre>
+<p>
+          </p>
+<a name="boost_assign_v2.reference.detail.config.arity.semantics"></a><h6>
+<a name="id36337008"></a>
+            <a class="link" href="reference.html#boost_assign_v2.reference.detail.config.arity.semantics">Semantics</a>
+          </h6>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                    <p>
+                      Constant
+                    </p>
+                  </th>
+<th>
+                    <p>
+                      Default
+                    </p>
+                  </th>
+<th>
+                    <p>
+                      Description
+                    </p>
+                  </th>
+</tr></thead>
+<tbody><tr>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">BOOST_ASSIGN_V2_LIMIT_ARITY</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">BOOST_MPL_LIMIT_METAFUNCTION_ARITY</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      A functor's max # of arguments
+                    </p>
+                  </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_assign_v2.reference.detail.config.lconst_arity"></a><a class="link" href="reference.html#boost_assign_v2.reference.detail.config.lconst_arity" title="Limit lvalue-const arity">Limit
+          lvalue-const arity</a>
+</h5></div></div></div>
+<a name="boost_assign_v2.reference.detail.config.lconst_arity.header"></a><h6>
+<a name="id36337118"></a>
+            <a class="link" href="reference.html#boost_assign_v2.reference.detail.config.lconst_arity.header">Header</a>
+          </h6>
+<p>
+            
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><a href="../../../../../../boost/assign/v2/detail/config/limit_arity.hpp" target="_top">boost/assign/v2/detail/config/limit_arity.hpp</a><span class="special">&gt;</span>
+</pre>
+<p>
+          </p>
+<a name="boost_assign_v2.reference.detail.config.lconst_arity.syntax"></a><h6>
+<a name="id36337160"></a>
+            <a class="link" href="reference.html#boost_assign_v2.reference.detail.config.lconst_arity.syntax">Syntax</a>
+          </h6>
+<p>
+            
+</p>
+<pre class="programlisting"><span class="preprocessor">#define</span> <span class="identifier">BOOST_ASSIGN_V2_LIMIT_LVALUE_CONST_ARITY</span> <em class="replaceable"><code>unspecified</code></em>
+</pre>
+<p>
+          </p>
+<a name="boost_assign_v2.reference.detail.config.lconst_arity.semantics"></a><h6>
+<a name="id36337197"></a>
+            <a class="link" href="reference.html#boost_assign_v2.reference.detail.config.lconst_arity.semantics">Semantics</a>
+          </h6>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                    <p>
+                      Constant
+                    </p>
+                  </th>
+<th>
+                    <p>
+                      Default
+                    </p>
+                  </th>
+<th>
+                    <p>
+                      Description
+                    </p>
+                  </th>
+</tr></thead>
+<tbody><tr>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">BOOST_ASSIGN_V2_LIMIT_LVALUE_CONST_ARITY</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      2
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      A functor's max # of arguments for which any mixture of lvalue
+                      and const-lvalues is preserved
+                    </p>
+                  </td>
+</tr></tbody>
+</table></div>
+<p>
+            Beyond this limit, arguments are treated as either all lvalues or all
+            const-lvalues.
+          </p>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../doc/src/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+              Applies to <a href="http://en.wikipedia.org/wiki/C%2B%2B03" target="_top">C++03</a>,
+              not <a href="http://www2.research.att.com/~bs/C++0xFAQ.html" target="_top">C++0x</a>
+            </p></td></tr>
+</table></div>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_assign_v2.reference.detail.config.csv_arity"></a><a class="link" href="reference.html#boost_assign_v2.reference.detail.config.csv_arity" title="Limit csv-arity">Limit
+          csv-arity</a>
+</h5></div></div></div>
+<a name="boost_assign_v2.reference.detail.config.csv_arity.header"></a><h6>
+<a name="id36337320"></a>
+            <a class="link" href="reference.html#boost_assign_v2.reference.detail.config.csv_arity.header">Header</a>
+          </h6>
+<p>
+            
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><a href="../../../../../../boost/assign/v2/detail/config/limit_csv_arity.hpp" target="_top">boost/assign/v2/detail/config/limit_csv_arity.hpp</a><span class="special">&gt;</span>
+</pre>
+<p>
+          </p>
+<a name="boost_assign_v2.reference.detail.config.csv_arity.syntax"></a><h6>
+<a name="id36337363"></a>
+            <a class="link" href="reference.html#boost_assign_v2.reference.detail.config.csv_arity.syntax">Syntax</a>
+          </h6>
+<p>
+            
+</p>
+<pre class="programlisting"><span class="preprocessor">#define</span> <span class="identifier">BOOST_ASSIGN_V2_LIMIT_CSV_ARITY</span> <em class="replaceable"><code>unspecified</code></em>
+</pre>
+<p>
+          </p>
+<a name="boost_assign_v2.reference.detail.config.csv_arity.semantics"></a><h6>
+<a name="id36337400"></a>
+            <a class="link" href="reference.html#boost_assign_v2.reference.detail.config.csv_arity.semantics">Semantics</a>
+          </h6>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                    <p>
+                      Constant
+                    </p>
+                  </th>
+<th>
+                    <p>
+                      Default
+                    </p>
+                  </th>
+<th>
+                    <p>
+                      Description
+                    </p>
+                  </th>
+</tr></thead>
+<tbody><tr>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">BOOST_ASSIGN_V2_LIMIT_CSV_ARITY</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      20
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      Limits a csv-function's max # of arguments
+                    </p>
+                  </td>
+</tr></tbody>
+</table></div>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../doc/src/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+              Applies to <a href="http://en.wikipedia.org/wiki/C%2B%2B03" target="_top">C++03</a>,
+              not <a href="http://www2.research.att.com/~bs/C++0xFAQ.html" target="_top">C++0x</a>
+            </p></td></tr>
+</table></div>
+</div>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2003 -2004 Thorsten Ottosen, 2010 Erwann Rogard<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="tutorial.html"><img src="../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="reference/put.html"><img src="../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

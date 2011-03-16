@@ -1,0 +1,2261 @@
+[library Boost.Assign
+    [quickbook 1.5]
+    [version 2.0]
+    [authors [Thorsten, Ottosen],[Rogard, Erwann]]
+    [copyright 2003-2004 Thorsten Ottosen, 2010 Erwann Rogard]
+    [license
+        Distributed under the Boost Software License, Version 1.0.
+        (See accompanying file LICENSE_1_0.txt or copy at
+        [@http://www.boost.org/LICENSE_1_0.txt])
+    ]
+    [id boost_assign_v2]
+]
+
+[/Support]
+
+[def __TO__						[@http://www.boost.org/users/people/thorsten_ottosen.html TO]]
+[def __ER__						[@mailto:erDOTciDOT2020ATgmailDOTcom ER]]
+
+[template tpl_user_mailing_list[var]		[@http://www.boost.org/community/groups.html#users [var]]]
+[def __user_mailing_list__      			[tpl_user_mailing_list Boost Users Mailing List]]
+[def __url_boost_assign_v2_mini_review__ 	[@http://lists.boost.org/Archives/boost/2010/06/168028.php mini-review]]
+
+
+[/ C++ Standard ]
+
+[def __cpp03__ C++03]
+[def __cpp0x__ C++0x]
+[template tpl_cpp03[var] [@http://en.wikipedia.org/wiki/C%2B%2B03 [var]]]
+[template tpl_cpp0x[var] [@http://www2.research.att.com/~bs/C++0xFAQ.html [var]]]
+[def __url_cpp03__ [tpl_cpp03 __cpp03__]]
+[def __url_cpp0x__ [tpl_cpp0x __cpp0x__]]
+
+[/ Platform]
+
+[def __mac_os__ OS X 10.6.5]
+[def __mac_default_compiler__ gcc4.2]
+[def __mac_processor__ 2.4 Ghz Intel Core 2 Duo]
+[def __mac_mem__ 4GB 1067 Mhz DDR3]
+
+[def __fink__ Fink]
+[template tpl_fink[var] [@http://www.finkproject.org/ [var]]]
+[def __url_fink__ [tpl_fink __fink__]]
+
+
+[/ Libraries ]
+
+[def __callout__										[@http://www.boost.org/doc/libs/1_45_0/doc/html/quickbook/syntax.html#quickbook.syntax.phrase.anchors callout]]
+
+[def __boost_assign_v1__ 								Boost.Assign 1.0]
+[template tpl_boost_assign_v1[var] 						[@../../../../../libs/assign/doc/index.html [var]]]
+[def __url_boost_assign_v1__ 							[tpl_boost_assign_v1 __boost_assign_v1__]]
+
+[def __boost_assign_v2__ 								Boost.Assign 2.0]
+[template tpl_boost_assign_v2[var] 						[@./index.html [var]]]
+[def __url_boost_assign_v2__ 							[tpl_boost_assign_v2 __boost_assign_v2__]]
+
+[def __boost__											Boost]
+[template tpl_boost[var] 								[@http://www.boost.org [var]]]
+[def __url_boost__ 										[tpl_boost __boost__]]
+
+[template tpl_boost_array[var] 							[@http://www.boost.org/doc/libs/release/doc/html/array.html [var]]]
+
+[template tpl_mpl[var] 									[@http://www.boost.org/libs/mpl/index.html [var]]]
+[def __mpl__ 											[tpl_mpl MPL]]
+
+[template tpl_stl[var] 									[@http://en.wikipedia.org/wiki/Standard_Template_Library [var]]]
+[def __stl__ 											[tpl_stl STL]]
+
+[template tpl_stl_assoc[var] 							[@http://www.sgi.com/tech/stl/AssociativeContainer.html [var]]]
+[template tpl_stl_seq[var] 								[@http://www.sgi.com/tech/stl/Sequence.html [var]]]
+[template tpl_stl_adapter[var]							[@http://flylib.com/books/en/2.674.1.106/1/ [var]]]
+[template tpl_stl_deque[var] 							[@http://www.sgi.com/tech/stl/Deque.html [var]]]
+[template tpl_stl_cont[var]								[@http://www.sgi.com/tech/stl/Container.html [var]]]
+
+
+[template tpl_lambda[var] 								[@http://www.boost.org/doc/libs/release/doc/html/lambda.html [var]]]
+[def __lambda__											[tpl_lambda lambda]]
+
+[template tpl_ptr_container[var] 						[@http://www.boost.org/doc/libs/release/libs/ptr_container/doc/ptr_container.html [var]]]
+
+[template tpl_range[var] 								[@http://www.boost.org/doc/libs/release/libs/range/index.html [var]]]
+
+[template tpl_range_adaptor[var] 						[@http://svn.boost.org/svn/boost/trunk/libs/range/doc/html/range/reference/adaptors.html [var]]]
+[template tpl_range_adaptor_compose[var] 				[@http://svn.boost.org/svn/boost/trunk/libs/range/doc/html/range/reference/adaptors/introduction.html#range.reference.adaptors.introduction.composition_of_adaptors [var]]]
+[template tpl_range_algo[var] 							[@http://svn.boost.org/svn/boost/trunk/libs/range/doc/html/range/reference/algorithms.html [var]]]
+[template tpl_range_join[var]							[@http://svn.boost.org/svn/boost/trunk/boost/range/join.hpp [var]]]
+[template tpl_itr[var]						            [@http://svn.boost.org/svn/boost/trunk/libs/range/doc/html/range/reference/utilities/iterator_range.html [var]]]
+
+[template tpl_operators[var]							[@http://www.boost.org/doc/libs/release/libs/utility/operators.htm [var]]]
+[template tpl_boost_typeof[var]							[@http://www.boost.org/doc/libs/1_35_0/doc/html/typeof.html [var]]]
+
+[/Concepts]
+
+[template tpl_meta_fun[var] 							[@http://svn.boost.org/svn/boost/trunk/libs/mpl/doc/refmanual/metafunction.html [var]]]
+[template tpl_meta_fun_class[var]						[@http://svn.boost.org/svn/boost/trunk/libs/mpl/doc/refmanual/metafunction-class.html [var]]]
+
+[/Headers]
+
+[template tpl_boost_trunk [var]							[@http://svn.boost.org/svn/boost/trunk [var]]]
+[def __boost_trunk__									[tpl_boost_trunk [^boost-trunk]]]
+
+[template tpl_boost_type [var]							[@http://svn.boost.org/svn/boost/trunk/boost/type.hpp [var]]]
+[def __boost_type__										[@http://svn.boost.org/svn/boost/trunk/boost/type.hpp boost::type]]
+
+[template tpl_dir_boost_assign_v2[var] 					[@../../../../../boost/assign/v2 [var]]]
+[def __dir_boost_assign_v2__ 							[tpl_dir_boost_assign_v2 boost/assign/v2]]
+
+[template tpl_dir_libs_assign_v2[var] 					[@../../ [var]]]
+[def __dir_libs_assign_v2__ 							[tpl_dir_libs_assign_v2 libs/assign/v2]]
+
+[template tpl_dir_libs_assign_v2_example [var] 			[@../../example [var]]]
+[def __dir_libs_assign_v2_example__ 					[tpl_dir_libs_assign_v2_example libs/assign/v2/example]]
+
+
+[/Files]
+
+[template tpl_test[var] 								[@../../test/ [var]] ] 
+[template tpl_run_eff[var] 								[@../../speed/results [var]] ] 
+
+[/Concepts]
+
+[template tpl_concept_range[var] 						[@http://svn.boost.org/svn/boost/trunk/libs/range/doc/html/range/concepts/overview.html [var]]]
+[template tpl_crtp[var] 								[@http://en.wikipedia.org/wiki/Curiously_recurring_template_pattern [var]]]
+[template tpl_class_tpl[var] 							[@http://publib.boulder.ibm.com/infocenter/comphelp/v8v101/index.jsp?topic=%2Fcom.ibm.xlcpp8a.doc%2Flanguage%2Fref%2Fclass_templates.htm [var]]]
+[template tpl_pipe[var]									[@http://en.wikipedia.org/wiki/Vertical_bar#Pipe [var]]]
+
+[/ Templates]
+
+[template tpl_join[a b][a][b]]
+[template tpl_typeof[object][tpl_join [object]..__type_ext__]]
+[template tpl_seq[index first last] [index] = [first], ..., [last]]
+[template tpl_sub[var index] [var]\[[index]\] ]
+[template tpl_sub_sub[var index1 index2] [var]\[[index1],[index2]\]]
+
+[/ Note]
+
+[def __explicit_header__ 								This header has to be explicitly included]
+[def __dev_only__		 								End-users may wish to skip this part. ]
+[def __pervasive_parameters__ 							These parameters will be encountered in various (meta) expressions, but their description is only shown here: ]
+
+[def __ns_as2__											boost::assign::v2]
+[def __unspecified__ 									'''<replaceable>unspecified</replaceable>''']
+
+[/ External ]
+
+[def __cont__					cont]
+[def __cont_type__				C]
+[def __value__					t]
+[def __value_type__				T]
+[def __values__ 				__value__...]
+[def __f__						f]
+[def __f_type__					F]
+[def __range__					r]
+[def __range_type__				R]
+[def __array__					ar]
+[def __array_type__				Ar]
+[def __ref_wrapper__			w]
+[def __ref_array__		rw]
+
+[/Internal]
+
+[def __link_detail_keyword_nil__			[link boost_assign_v2.reference.detail.keyword.nil Detail.Keyword.Nil]]
+[def __link_put__							[link boost_assign_v2.reference.put Put]]
+[def __link_put_adapter__					[link boost_assign_v2.reference.put.adapter Put.Adapter]]
+[def __link_put_adapter_crtp__				[link boost_assign_v2.reference.put.adapter.crtp Put.Adapter.Crtp]]
+[def __link_put_deque__						[link boost_assign_v2.reference.put.deque Put.Deque]]
+[def __link_put_fun__						[link boost_assign_v2.reference.put.fun Put.Fun]]
+[def __link_put_fun_deduce__				[link boost_assign_v2.reference.put.fun.deduce Put.Fun.Deduce]]
+[def __link_put_fun_modulo__				[link boost_assign_v2.reference.put.fun.modulo Put.Fun.Modulo]]
+[def __link_put_modifier__					[link boost_assign_v2.reference.put.modifier Put.Modifier]]
+[def __link_put_modifier_standard__			[link boost_assign_v2.reference.put.modifier.standard Put.Modifier.Standard]
+[def __link_put_modifier_deduce__			[link boost_assign_v2.reference.put.modifier.deduce Put.Modifier.Deduce]]
+[def __link_put_modifier_modulo__			[link boost_assign_v2.reference.put.modifier.modulo Put.Modifier.Modulo]]
+[def __link_put_put__						[link boost_assign_v2.reference.put.put Put.Put]]
+[def __link_put_pipe__						[link boost_assign_v2.reference.put.pipe Put.Pipe]]
+[def __link_ref__							[link boost_assign_v2.reference.ref Ref]]
+[def __link_ref_array__						[link boost_assign_v2.reference.ref.array Ref.Array]]
+[def __link_ref_wrapper__					[link boost_assign_v2.reference.ref.array Ref.Wrapper]]
+[def __link_utility__ 						[link boost_assign_v2.reference.utility Utility]]
+[def __link_utility_chain__ 				[link boost_assign_v2.reference.utility.chain Utility.Chain]]
+[def __link_utility_conversion__ 			[link boost_assign_v2.reference.utility.conversion Utility.Conversion]]
+[def __link_utility_conversion_convert__ 	[link boost_assign_v2.reference.utility.conversion.convert Utility.Conversion.Convert]]
+[def __link_utility_conversion_converter__ 	[link boost_assign_v2.reference.utility.conversion.converter Utility.Conversion.Converter]]
+
+[def __put__					put]
+
+[section:intro Introduction]
+[import ../tutorial.cpp]
+
+This library builds upon __url_boost_assign_v1__'s design, but is functionally independent of it. It can be broadly characterized as providing a compact interface
+for carrying out operations involving containers, which would ordinarily require repetitive statements. Here's an example:
+[tutorial_assign]
+
+Header [link boost_assign_v2.reference.put [^[*boost/assign/v2/put.hpp]]] revolves around putting a sequence of values in a container. Notable features include:
+
+* A functor interface, supplied by [link boost_assign_v2.reference.put.put `__put__()`], that forwards arguments to the constructor of the container's value-type (`data_`, in the above example) and passes the result, `__value__`, to a container-deduced modifier (`numeric_kb[i++] = __value__`, in the same example). 
+* Optionally, either of the above two components can be overriden via a parameter passing mechanism expressed by the modulo operator. Common 
+  parameters are provided, and the repertoire can be arbitrarily extended through the use of macros.
+* A variant of the above in which the container is constructed in place, by invoking [link boost_assign_v2.reference.put.deque `deque<>()`]. The relevant 
+sections are [link boost_assign_v2.reference.put.fun.modulo here] and [link boost_assign_v2.reference.put.modifier.modulo here]
+* A [link boost_assign_v2.reference.put.pipe ['piping] ] mechanism to facilitate integration of  [link boost_assign_v2.reference.put.put `__put__()`] with [tpl_range_algo range algorithms]
+
+Header [link boost_assign_v2.reference.ref [^[*boost/assign/v2/ref.hpp]]] pertains to treating a set of references as a [tpl_concept_range range-like] interface. 
+
+Header [link boost_assign_v2.reference.utility [^[*boost/assign/v2/utility.hpp]]] contains functionality that is adjunct to either of the above ['put] and ['ref] frameworks.
+
+* Chaining ranges, with special consideration for those created using the ['ref] functionaltiy
+* Conversion from ranges to containers
+* Replacing successive unary functor [footnote Usually, `__put__( __cont__ )`]  calls over a sequence by a single function invocation, `csv()`
+
+If __url_cpp0x__'s capabilities are detected (specifically variadic templates and rvalues), they are incorporated into the libraries's implementation.
+
+The [link boost_assign_v2.fun_op next section] is probably the best place to rapidly grasp the library's features. 
+
+[endsect][/intro]
+[section:fun_op Functions and operators]
+
+[*Notation]
+
+[def __value_n__ [tpl_join __value__..n]]
+
+[variablelist
+	[[`__cont__`][A container]]
+	[[`__cont_type__`][`__cont__`'s type]]
+	[[`__range__`][A range]]
+	[[`args...`][A list of arguments]]
+	[[`a1, ..., ak`][Individual elements of `args...`]]
+	[[`__value__...`][A list of values, each to be inserted into a container]]
+	[[`__value_type__`][A container's value-type]]
+	[[`__value__1, ..., __value_n__`][Individual elements of `__value__...`]]
+]
+
+[*Convention]
+
+[#ref_array]
+A ['reference array] designates, in this library, an array of reference wrappers. See section __link_ref_wrapper__.
+
+[#keyword]
+A ['keyword] is an identifier with prefix `_`. Invoking it usually returns an object that specifies an operator overload. 
+
+[heading Functions]
+
+[def __converter__				converter]
+[def __csv_deque__				csv_deque]
+[def __deque__					deque]
+[/def __put__					put][/defined in intro]
+[def __gen_ref_array__			ref::array]
+[def __ref_csv_array__			ref::csv_array]
+
+[table
+	[
+		[Usage]
+		[Description][Section]
+	]
+	[
+		[`__cont_type__ __cont__ = __converter__( __range__ )`]
+		[Implicit conversion]
+		[__link_utility_conversion_converter__]
+	]
+	[
+		[`__csv_deque__( __value__... )`]
+		[Generates a deque container]
+		[__link_put_deque__]
+	]
+	[	
+		[`__deque__<__value_type__>( args1... )...( argsn... )`]
+		[Generates a deque container by forwarding the arguments to `__value_type__`'s constructor]
+		[__link_put_deque__]
+	]
+	[	
+		[`__put__( __cont__ )( args1... )...( argsn... )`]
+		[Forwards arguments to `__value_type__`'s constructor and puts them in `__cont__`]
+		[__link_put_put__]
+	]
+	[	
+		[`__gen_ref_array__( __value__1 )...( __value_n__ )`]
+		[Generates a reference array ]
+		[__link_ref_array__]
+	]
+	[	
+		[`__ref_csv_array__( __value__... )`]
+		[Generates a reference array]
+		[__link_ref_array__]
+	]
+]
+
+[/Operators]
+
+[def __modulo__ 		`operator%`]
+[def __pipe__ 			`operator|`]
+[def __functor__ 		`operator()`]
+[def __operator_and__ 	`operator&&`]
+
+[heading Operator`&&`]
+
+[def __describe_chain__ Chains two ranges, with particular attention to reference arrays]
+
+[table
+	[[Usage][Description][Section]]
+	[[`__range__1 && __range__2`][  __describe_chain__[footnote This feature is optional i.e. it's header has to be individually included] ][__link_utility_chain__]]
+]
+
+[heading Operator`()`]
+
+[def __gen_as_arg_list__		as_arg_list]
+[def __kwd_nil__				_nil]
+
+[*Notation]
+
+[def __put_adapter__ put-adapter]
+[def __generate__    generate]
+
+[variablelist
+	[[`__put_adapter__`][Result of `__csv_deque__()`, `__deque__<>()` or `__put__( __cont__ )`]]
+	[[`__generate__`][Container generating function, such as `__deque__<>()`]]
+]
+
+[*Overloads]
+
+[table
+	[
+		[Usage]
+		[Description]
+		[Sections]
+	]
+	[
+		[`__put_adapter__( __gen_as_arg_list__( __range__ ) )`]
+		[Signals to `__put_adapter__` that each element of `__range__` is to evaluated individually]
+		[__link_put_adapter__]
+	]
+	[
+		[`__generate__( __kwd_nil__ )`]
+		[Generates an empty container]
+		[__link_detail_keyword_nil__, __link_put_deque__, __link_put_put__, __link_ref_array__]
+	]
+]
+
+[heading Operator `%`]
+
+[def __gen_constructor__		constructor]
+[def __kwd_fun__				_fun]
+[def __kwd_identity__			_identity]
+[def __kwd_insert__				_insert]
+[def __kwd_iterate__			_iterate]
+[def __kwd_lookup__				_lookup]
+[def __kwd_modifier__			_modifier]
+[def __gen_new__				new_ptr]
+[def __kwd_push__				_push]
+[def __kwd_push_back__			_push_back]
+[def __kwd_push_front__			_push_front]
+[def __kwd_put__				_put]
+[def __kwd_repeat__				_repeat]
+
+[def __arg__ arg]
+
+[*Notation]
+
+[variablelist
+	[[__f__][A functor]]
+	[[`__arg__`][Some argument of unspecified type]]
+	[[`n`][An integer]]
+]
+
+[*Semantics]
+
+
+With `__put_adapter__` as the first argument, returns an altered version of it.
+
+[*Overloads]
+
+[table
+	[
+		[Usage]
+		[Section]
+	]
+	[	
+		[`__put_adapter__ % __gen_constructor__<__value_type__>()`]
+		[__link_put_fun__]
+	]
+	[	
+		[`__put_adapter__ % ( __kwd_fun__ = __f__ )`]
+		[__link_put_fun__]
+	]
+	[	
+		[`__put_adapter__ % __kwd_identity__`]
+		[__link_put_fun__]
+	]
+	[	
+		[`__put_adapter__ % __kwd_insert__`]
+		[__link_put_modifier__]
+	]
+	[	
+		[`__put_adapter__ % ( __kwd_iterate__ = __f__ )`]
+		[__link_put_modifier__]
+	]
+	[	
+		[`__put_adapter__ % ( __kwd_lookup__ = __f__ )`]
+		[__link_put_modifier__]
+	]
+	[	
+		[`__put_adapter__ % ( __kwd_modifier__ = __arg__ )`]
+		[__link_put_modifier__]
+	]
+	[	
+		[`__put_adapter__ % __gen_new__<__value_type__>()`]
+		[__link_put_fun__]
+	]
+	[	
+		[`__put_adapter__ % __kwd_push__`]
+		[__link_put_modifier__]
+	]
+	[	
+		[`__put_adapter__ % __kwd_push_back__`]
+		[__link_put_modifier__]
+	]
+	[	
+		[`__put_adapter__ % __kwd_push_front__`]
+		[__link_put_modifier__]
+	]
+	[	
+		[`__put_adapter__ % ( __kwd_repeat__ = n )`]
+		[__link_put_modifier__]
+	]
+]
+
+[heading Operator`|`]
+
+[def __convert__ 				convert]
+[def __kwd_chain__				_chain]
+[def __kwd_converter__			_converter]
+[def __kwd_csv_put__			_csv_put]
+[def __kwd_get__				ref::_get]
+
+[*Semantics]
+
+Either returns a transformed range (see [tpl_range_adaptor Range adaptors]) or returns a container with a modified state. 
+
+[*Notation]
+
+[def __list_modulo_params__ p1, ..., pm]
+[def __invoke_modulo_params__ % p1 ... % pm]
+[def __describe_modulo_params__ Parameters passed in the right hand side of `operator%`.  The special case [^m = 0] means an empty list]
+
+[variablelist
+	[
+		[`__list_modulo_params__`]
+		[__describe_modulo_params__]
+	]
+	[
+		[`__ref_array__`]
+		[[link ref_array Reference array]]
+	]
+]
+
+[*Overloads]
+
+[def __pipe_forward__ Forwards to the function(s) or operator(s) by the same name(s). ]
+
+[table
+	[
+		[Usage]
+		[Decription]
+		[Section]
+	]
+	[
+		[`__range__2 | __kwd_chain__( __range__2 )`]
+		[__describe_chain__]
+		[__link_utility_chain__]
+	]
+	[
+		[`__range__ | __convert__<__cont_type__>()`]
+		[Explicit conversion to `__cont_type__`]
+		[__link_utility_conversion_convert__]
+	]
+	[	
+		[`__cont__ | ( __kwd_csv_put__ __invoke_modulo_params__ )( __value__... )`]
+		[Same as `__cont__ | ( __kwd_put__ __invoke_modulo_params__ )( __value__1 )...( __value_n__ )`]
+		[__link_put_pipe__]
+	]
+	[
+		[`__ref_array__ | __kwd_get__ `]
+		[Transforms `__ref_array__` by getting at each of its reference wrapper's reference ]
+		[__link_ref_wrapper__]
+	]
+	[	
+		[`__cont__ | ( __kwd_put__ % p1 ... % pm )( args1... )...( argsn... )`]
+		[__pipe_forward__]
+		[__link_put_pipe__]
+	]
+]
+
+[endsect][/fun_op]
+[section:tutorial Tutorial]
+
+[heading Headers and namespaces]
+
+The declarative statement below brings most of the functionality into scope.
+``
+	#include <boost/assign/v2.hpp>
+	using namespace boost::assign::v2;
+``
+
+In any given application, one may wish to include only a subset of the headers. Some optional functonality is not included in the above header. In
+this case, the [link boost_assign_v2.reference reference] will mention it.
+
+For the sake of this tutorial, we assume, in addition,
+``
+	using namespace boost;
+``
+Headers from other libraries will not be shown here, but can be found in the tutorial's actual [@../../tutorial.cpp source file].
+
+[heading Assigning]
+
+In the [link boost_assign_v2.intro introduction]'s example we encountered the operation which gives this library
+its name, assign-ment, in this case, of an [tpl_boost_array array]'s elements. Throughout this library, we call [link boost_assign_v2.reference.put.adapter 
+['adapter]] the object returned by [link boost_assign_v2.reference.put.put `__put__( __cont__ )`]. In this example, it was invoked over one set of values 
+(`"+"`, `"-"`, etc.), each specified individually, and another set passed as a [tpl_concept_range range] with a special wrapper around it, 
+`__gen_as_arg_list__( numeric )`. The wrapper tells the adapter to process each of its elements individually.
+
+[heading Piping]
+
+Here, we'd like to put a set of values in a container, and in the same statement, pass it through a mutating [tpl_range_algo algorithm]:
+[tutorial_piping]
+
+It is the vertical bar, `|`, which expresses the on-the-fly modification we were looking for. Such an expression is referred to as 
+[link boost_assign_v2.reference.put.pipe ['piping]] throughout this library, after the related [tpl_pipe idiom] by the same name[footnote Also see [tpl_range_adaptor Boost.Range ]'s version ]. What it does is
+equivalent to invoking `csv( __put__( __cont__ ), 0, 1, 2, 3, 4, 5 )` but, in addition, returns `__cont__`.
+
+[heading Csv]
+
+The call of `csv()` that just precedes [footnote ['csv] stands for comma separated values], in turn, is equivalent to `__put__( __cont__ )( 0 )( 1 )( 2 )( 3 )( 4 )( 5 )`. Similarly, where ['csv] is the prefix
+of a generating function's identifier, it indicates that a unary functor, whose identifier is a namesake of the suffix, is evaluated successively for 
+each of the arguments. For example, [link boost_assign_v2.reference.put.deque `csv_deque()`] is paired to a container generating function,
+[link boost_assign_v2.reference.put.deque `__deque__()`], and [link boost_assign_v2.reference.ref.array `__ref_csv_array__()`] is paired to [link boost_assign_v2.reference.ref.array `__gen_ref_array__()`].
+
+[heading Container generation]
+
+Having, in the same statement, assigned `cont` and passed it through a [@http://www.boost.org/doc/libs/1_46_0/libs/range/doc/html/range/reference/algorithms/mutating/stable_partition.html stable partition algorithm], 
+let's verify that what was intended matches the state of the container:
+[tutorial_container_generation]
+
+[heading Reference arrays]
+
+There are two other container generating functions, [link boost_assign_v2.reference.ref.array `__gen_ref_array__()`], and [link boost_assign_v2.reference.ref.array 
+`__ref_csv_array__()`].  The returned container is, more specifically, an array of reference wrappers, which we designate as ['reference array] in this
+library. In the example that precedes, either could be substituted for `__csv_deque__()`. The reciprocal is not true, in general. A reference array
+is preferable if the values are expensive to copy, and necessary for working specifically with references, such as as follows:
+
+[tutorial_ref_array]
+
+[heading Chaining]
+
+Chaining ranges is already provided as [tpl_range_join `join()`] in __url_boost__. Here's a variant that caters in special way to reference arrays:
+[tutorial_chain]
+
+The odd thing to notice is that this algorithm modifies `six`, `seven` and `eight` even though the array returned by `ref::csv_array()` is 
+an rvalue. The keyword `ref::_get` is necessary in conjunction with a reference array whose references are to be modified (in read mode, instead, 
+implicit conversion takes care of it). 
+
+[heading Conversion]
+
+Even a not so standard container, such as a [tpl_stl_adapter container adapter], can be copy constructed from a container of the
+same type. Combining a container generating function with a conversion tool gives us the recipe, therefore, for initializing such 
+(and more versatile) containers:
+[tutorial_conversion]
+
+The conversion, here, is implicit, and is made possible by a conversion operator fitted to the object returned by `__converter__`. See the 
+relevant [link boost_assign_v2.reference.utility.conversion section] about explicit conversion.
+
+[heading Argument forwarding]
+
+The capabalities of `__put__` and `__deque__` vs their csv counterparts become apparent when we need to forward arguments to the  `__cont__`'s value-type. For example, 
+[tutorial_arg_forwarding]
+
+[heading Automatic deduction]
+
+We have seen that `__put__()` was applied to different containers, whether [tpl_boost_array arrays], [tpl_stl_assoc Associative] containers, etc.
+This follows from an internal mechanism that deduces
+
+* A constructor for its value-type. See __link_put_fun_deduce__.
+* A modifier (e.g. `push_back()`).  See [link boost_assign_v2.reference.put.modifier.deduce Put.Modifier.Deduce] [/ broken:__link_put_modifier_deduce__].
+
+[heading Parametrization]
+
+Either of the implementation components just mentioned can be overriden. Operator `%` is reserved for this kind of task and can be composed. The
+relevant sections are __link_put_fun_modulo__ and __link_put_modifier_modulo__, respectively. 
+
+In addition to the [link boost_assign_v2.reference.put.modifier.standard  standard modifiers] such as [link boost_assign_v2.reference.put.modifier.push_back `__kwd_push_back__`], the library caters to more complex needs e.g.
+[tutorial_parametrization]
+
+[heading Custom parameters]
+
+[link boost_assign_v2.reference.put.modifier.modulo Extending] the library with new modifiers is fairly easy. We briefly summarize how:
+
+* Create a class template, called a ['tag], that identifies the new class of modifiers. The template parameter specifies a variable aspect of the implementation.
+* Specialize a particular [link boost_assign_v2.reference.put.adapter.modifier class template] on ['tag], with the desired implementation, within the constraints of a concept.
+* Tell the library to register the above by expanding two macros taking as input the desired parameter name and some meta-information.
+
+[endsect][/tutorial]
+[section:reference Reference]
+[section:detail Detail]
+[section:keyword Keyword]
+
+[heading Header]
+
+[def __header_detail_keyword__ [@../../../../../boost/assign/v2/detail/keyword.hpp boost/assign/v2/detail/detail/keyword.hpp]]
+``
+	#include <__header_detail_keyword__>
+``
+
+[section:nil Nil]
+
+[heading Header]
+
+[def __header_detail_keyword_nil__ [@../../../../../boost/assign/v2/detail/keyword/nil.hpp boost/assign/v2/detail/detail/keyword/nil.hpp]]
+``
+	#include <__header_detail_keyword_nil__>
+``
+
+[heading Description]
+
+Type on which __functor__ is overloaded in various parts of the library.
+
+[heading Syntax]
+``
+namespace keyword_aux{
+
+	struct nil;
+
+}//keyword_aux
+
+	keyword_aux const __kwd_nil__;
+
+``
+
+[endsect][/ nil]
+[endsect][/ keyword]
+[section:config Config]
+
+[def __only_cpp03__ Applies to __url_cpp03__, not __url_cpp0x__]
+[def __describe_detail_config__ Constants that affect the implementation]
+
+[heading Header]
+
+Does not have a header.
+
+[heading Description]
+
+[section:arity Limit arity]
+
+[heading Header]
+[def __header_limit_arity__			[@../../../../../boost/assign/v2/detail/config/limit_arity.hpp boost/assign/v2/detail/config/limit_arity.hpp]]
+``
+	#include <__header_limit_arity__>
+``
+
+[heading Syntax]
+``
+	#define BOOST_ASSIGN_V2_LIMIT_ARITY __unspecified__
+``
+
+[heading Semantics]
+
+[table
+	[[ Constant ][ Default ][ Description ]]
+	[[ `BOOST_ASSIGN_V2_LIMIT_ARITY`][`BOOST_MPL_LIMIT_METAFUNCTION_ARITY`][ A functor's max # of arguments ]]
+]
+
+[endsect][/ arity]
+[section:lconst_arity Limit lvalue-const arity]
+
+[heading Header]
+[def __header_limit_lvalue_const_arity__			[@../../../../../boost/assign/v2/detail/config/limit_lvalue_const_arity.hpp boost/assign/v2/detail/config/limit_lvalue_const_arity.hpp]]
+``
+	#include <__header_limit_arity__>
+``
+
+[heading Syntax]
+``
+	#define BOOST_ASSIGN_V2_LIMIT_LVALUE_CONST_ARITY __unspecified__
+``
+
+[heading Semantics]
+
+[table
+	[[ Constant ][ Default ][ Description ]]
+	[[ `BOOST_ASSIGN_V2_LIMIT_LVALUE_CONST_ARITY`][2][ A functor's max # of arguments for which any mixture of lvalue and const-lvalues is preserved ]]
+]
+
+Beyond this limit, arguments are treated as either all lvalues or all const-lvalues.
+
+[note  __only_cpp03__ ]
+
+[endsect][/ lconst_arity]
+[section:csv_arity Limit csv-arity]
+
+[heading Header]
+[def __header_limit_csv_arity__			[@../../../../../boost/assign/v2/detail/config/limit_csv_arity.hpp boost/assign/v2/detail/config/limit_csv_arity.hpp]]
+``
+	#include <__header_limit_csv_arity__>
+``
+
+[heading Syntax]
+``
+	#define BOOST_ASSIGN_V2_LIMIT_CSV_ARITY __unspecified__
+``
+
+[heading Semantics]
+
+[table
+	[[ Constant ][ Default ][ Description ]]
+	[[ `BOOST_ASSIGN_V2_LIMIT_CSV_ARITY`][20][ Limits a csv-function's max # of arguments]]
+]
+
+[note  __only_cpp03__ ]
+
+[endsect][/ csv-arity]
+[endsect][/ config]
+[endsect][/ detail]
+[section:put Put]
+
+[/def __put_adapter__ 			'''<replaceable>put-adapter</replaceable>'''][/already defined in fun_op]
+[def __put_modifier__ 			'''<replaceable>put-modifier</replaceable>''']
+
+[def __header_put_deque__       	[@../../../../../boost/assign/v2/put/deque.hpp           boost/assign/v2/put/deque.hpp]]
+[def __header_put_pipe__        	[@../../../../../boost/assign/v2/put/pipe.hpp        	 boost/assign/v2/put/pipe.hpp]]
+
+[section:adapter Adapter]
+[def __header_put_adapter__ 			[@../../../../../boost/assign/v2/put/adapter.hpp boost/assign/v2/put/adapter.hpp]]
+[def __describe_put_adapter__ 			A framework for adapting a container's interface for inserting elements to that of a functor ]
+[import ../../../../boost/assign/v2/put/adapter.hpp]
+
+[heading Header]
+``
+    #include <__header_put_adapter__>
+``
+
+[heading Description]
+__describe_put_adapter__ 
+
+[section:as_arg_list As_arg_list]
+										
+[def __header_put_adapter_as_arg_list__ [@../../../../../boost/assign/v2/put/adapter/as_arg_list.hpp boost/assign/v2/put/adapter/as_arg_list.hpp]]
+[def __describe_put_adapter_as_arg_list__ A function that, invoked with a given [tpl_concept_range range], returns a class wrapped around it that signals that the range's elements are to be treated as a sequence of unary arguments to an adapter.]
+[import ../../../../boost/assign/v2/put/adapter/as_arg_list.hpp]
+
+[heading Header]
+``
+	#include <__header_put_adapter_as_arg_list__>
+``
+
+[heading Description]
+__describe_put_adapter_as_arg_list__
+
+[heading Synopsis]
+[syntax_put_adapter_as_arg_list]
+
+[endsect][/as_arg_list]
+[section:crtp Crtp]
+
+[def __header_put_adapter_crtp__ 		[@../../../../../boost/assign/v2/put/adapter/crtp.hpp boost/assign/v2/put/adapter/crtp.hpp]]
+[def __describe_put_adapter_crtp__ 		A [tpl_crtp CRTP] [tpl_class_tpl class template] with a variadic functor interface that maps arguments to a value 
+and inserts it in a container supplied by the derived class. Each of the mapping and the insertion mechanism, termed a ['modifier], are specified 
+by template paramaters. ]
+[import ../../../../boost/assign/v2/put/adapter/crtp.hpp]
+
+[heading Header]
+``
+#include <__header_put_adapter_crtp__>
+``
+
+[heading Description]
+__describe_put_adapter_crtp__
+
+[heading Synopsis]
+[syntax_put_adapter_crtp]
+
+[heading Semantics]
+[*Notation]
+
+[variablelist 
+    [
+        [`cont`]
+        [ Instance of `C`, supplied by the derived class  ]
+    ]
+    [
+        [`f`]
+        [ Internal copy of instance of type `F`]
+    ]
+    [
+        [`__put_modifier__`]
+        [ Internal copy of instance of type `put_aux::adapter_modifier<Tag>`]
+    ]
+    [
+        [`__put_adapter__`]
+        [ Instance of `D`  ]
+    ]
+]
+
+[*Expressions]
+
+[table
+    [[Expression][Side effect][Result]]
+    [    
+        [ `__put_adapter__( args... ) ` ]
+        [ `__put_modifier__.impl( cont, f( args... ) )` ]
+        [ A reference to `__put_adapter__` ]
+    ]
+    [    
+        [ `__put_adapter__( as_arg_list( range ) ) ` ]
+        [ `__put_adapter__( arg )` for each `arg` in `range` ]
+        [ A reference to `__put_adapter__`]
+    ]
+]
+
+[endsect][/crtp]
+[section:modifier Modifier]
+[def __header_put_adapter_modifier__ 	[@../../../../../boost/assign/v2/put/adapter/modifier.hpp boost/assign/v2/put/adapter/modifier.hpp]]
+[def __describe_put_adapter_modifier__ 	A [tpl_class_tpl class template] with no default implementation, but whose specializations
+are required to expose a particular interface for modifying a container.]
+[import ../../../../boost/assign/v2/put/adapter/modifier.hpp]
+
+[heading Header]
+``
+#include <__header_put_adapter_modifier__>
+``
+
+[heading Description]
+__describe_put_adapter_modifier__
+
+[heading Synopsis]
+[syntax_put_adapter_modifier]
+
+[endsect][/modifier]
+[endsect][/adapter]
+[section:deque Deque]
+										
+[def __header_deque__ 					[@../../../../../boost/assign/v2/put/deque.hpp boost/assign/v2/put/deque.hpp]]
+[def __describe_deque__ 				In place construction of a de-que container that has the [link boost_assign_v2.reference.put.adapter.crtp adapter interface].]
+[import ../../../../boost/assign/v2/put/deque/csv_deque.hpp]
+[import ../../../../boost/assign/v2/put/deque/deque.hpp]
+
+[heading Header]
+``
+	#include<__header_deque__>
+``
+
+[heading Describe]
+__describe_deque__
+
+[heading Synopsis]
+[syntax_put_deque_deque]
+
+[*Alernative syntax]
+[syntax_put_deque_csv_deque]
+
+[heading Semantics]
+
+[*Adapter]
+
+[table 
+	[[Expression][Properties]]
+	[	
+		[``
+			put_aux::deque_adapter<__value_type__, __f__, Tag>
+		``]
+		[Inherits `put_aux::adapter_crtp<__value_type__, __f__, Tag, deque_adapter>`]
+	]
+]
+
+[*Meta]
+
+[table 
+	[[Expression][Value]]
+	[
+		[`put_aux::deque_impl<__value_type__>::type`]
+		[`std::deque<__value_type__>`]
+	]
+	[	
+		[`result_of::deque<__value_type__>::type`]
+		[``
+        	put_aux::deque_adapter<
+        		__value_type__,
+        		put_aux::deduce_fun< deque_impl<__value_type__>::type >,
+        		put_aux::deduce_modifier_tag< deque_impl<__value_type__>::type >::type
+        	>
+		``]
+	]
+	[
+		[``
+			csv_deque_value<__value_type__>::type
+		``]
+		[``
+			boost::decay<boost::remove_cv<__value_type__>::type>::type
+		``]
+	]
+	[
+		[``
+			result_of::csv_deque<__value_type__>::type
+		``]
+		[``
+			result_of::deque< 
+				csv_deque_value<__value_type__>::type
+			>::type
+		``]
+	]
+]
+
+[note `boost::decay<>` is needed if `__value_type__` is a string literal]
+
+[*Invocation]
+
+[table 
+	[[Expression][Value]]
+	[
+		[`__deque__<__value_type__>( __kwd_nil__ )`]
+		[Instance of `result_of::__deque__<__value_type__>`]
+	]
+	[
+		[`__deque__<__value_type__>( args... )`]
+		[Equivalent to `__deque__<__value_type__>( __kwd_nil__ )( args... )`]
+	]
+	[
+		[`__csv_deque__( args... )`]
+		[Equivalent to `__deque__<csv_deque_value<__value_type__>::type>( args... )`]
+	]
+]
+
+Also see the semantics of the [link boost_assign_v2.reference.put.adapter.crtp base class].
+
+[heading Example]
+[#ex_put_deque]
+[import ../test/put/deque.cpp]
+[*Example 1]
+[test_put_deque_ints]
+
+[*Example 2]
+[test_put_deque_str_literal]
+
+[note The examples above are minimal to avoid redundancies with those of [link boost_assign_v2.reference.put.put `__put__()`], which illustrate specific
+features of the [link boost_assign_v2.reference.put.adapter.crtp adapter interface], which is common to both. These examples are easy to translate to `__deque__<>()`]
+
+[endsect][/deque]
+[section:fun Fun]
+[def __header_put_fun__ 				[@../../../../../boost/assign/v2/put/fun.hpp boost/assign/v2/put/fun.hpp]]
+[def __describe_put_fun__				Aspects of an adapter's functor] 
+										
+[heading Header]
+``
+    #include <__header_put_fun__>
+``
+
+[heading Description]
+__describe_put_fun__
+
+[section:deduce Deduce]
+[def __header_put_fun_deduce__ 			[@../../../../../boost/assign/v2/put/fun/deduce.hpp boost/assign/v2/put/fun/deduce.hpp]]
+[def __describe_put_fun_deduce__		A meta-function that maps a container's type to a functor] 
+[import ../../../../boost/assign/v2/put/fun/deduce.hpp]
+
+[heading Description]
+__describe_put_fun_deduce__
+
+[heading Synopsis]
+[syntax_put_fun_deduce]
+
+[endsect]
+[section:modulo Modulo]
+
+[def __header_put_fun_modulo__ 			[@../../../../../boost/assign/v2/put/fun/modulo.hpp boost/assign/v2/put/fun/modulo.hpp]]
+[def __describe_put_fun_modulo__		Overloads of __modulo__ that replace a __link_put_adapter__'s functor] 
+[import ../../../../boost/assign/v2/put/fun/modulo.hpp]
+
+[heading Description]
+__describe_put_fun_modulo__
+
+[heading Synopsis]
+[syntax_put_fun_modulo]
+
+[heading Semantics]
+
+[*Expressions]
+
+[table
+	[[Expression][Result type][Description]]
+    [
+    	[`__put_adapter__ % ( _fun = f )`]
+        [`::boost::mpl::apply1<result_of::modulo_fun<D>, F>::type`]
+        [Replaces `__put_adapter__`'s functor with `f`]
+    ]
+]
+
+[heading Customization]
+[*Syntax]
+``
+	#define BOOST_ASSIGN_V2_PUT_MODULO_FUN_GENERATE(NAME, FUN) __unspecified__
+	#define BOOST_ASSIGN_V2_PUT_MODULO_FUN_KEYWORD(NAME, EXPR) __unspecified__
+``
+
+[*Example]
+``
+	BOOST_ASSIGN_V2_PUT_MODULO_FUN_GENERATE(constructor, v2::functor_aux::constructor<T>)
+    BOOST_ASSIGN_V2_PUT_MODULO_FUN_KEYWORD(identity, ::boost::lambda::_1)
+``
+
+[*Instances]
+
+[table
+	[[Expression][Result type]]
+    [
+    	[`__put_adapter__ % _identity`]
+        [Replaces `__put_adapter__`'s functor with an identity functor]
+    ]
+    [
+    	[`__put_adapter__ % constructor<T>()`]
+        [Replaces `__put_adapter__`'s functor with a constructor for `T`]
+    ]
+    [
+    	[`__put_adapter__ % new_ptr<T>()`]
+        [Replaces `__put_adapter__`'s functor with a functor returning a pointer for `T`]
+    ]
+]
+
+[heading Example]
+[import ../test/put/fun.cpp]
+[#ex_put_fun]
+[*Example 1]
+[test_put_fun_math]
+[*Example 2]
+[test_put_fun_recursive]
+
+[endsect][/fun]
+[endsect][/modulo]
+[section:modifier Modifier]
+										
+[def __header_put_modifier__        	[@../../../../../boost/assign/v2/put/modifier.hpp boost/assign/v2/put/modifier.hpp]]
+[def __describe_put_modifier__  		A meta-function for deducing a default modifier, and overloads of `operator%()` that replace a __link_put_adapter__'s modifier] 
+[def __tip_put_modifier__ Don't misconstrue the existence of this overload of `operator%` as necessary to specify the stated
+modifier. In particular, the default, for a particular `__put_adapter__`, is the most natural choice. See the section of 
+that adapter and section [link boost_assign_v2.reference.put.modifier.deduce Modifier.Deduce] ]
+
+[def __describe_a_standard_modifier__ A [link boost_assign_v2.reference.put.modifier.standard Standard modifier]]
+
+[import ../test/put/modifier/standard.cpp]
+
+[heading Header]
+``
+    #include <__header_put_modifier__>
+``
+
+[heading Description]
+__describe_put_modifier__
+
+[section:deduce Deduce]
+
+[def __describe_put_modifier_deduce__ 	A meta-function that, based on a set of rules, maps a container's type to a modifier]
+[def __header_put_modifier_deduce__ 	[@../../../../../boost/assign/v2/put/modifier/deduce.hpp boost/assign/v2/put/modifier/deduce.hpp]]
+[import ../../../../boost/assign/v2/put/modifier/deduce.hpp]
+
+[heading Header]
+``
+    #include <__header_put_modifier_deduce__>
+``
+
+[heading Description]
+
+__describe_put_modifier_deduce__
+
+[heading Syntax]
+[syntax_put_modifier_deduce]
+
+[heading Semantics]
+
+[table
+	[
+    	[`C`][`Tag`]
+    ]
+    [
+    	[ [tpl_stl_assoc Associative] ]
+        [ `modifier_tag::insert`]
+    ]
+    [
+    	[ [tpl_boost_array Array] ]
+        [ `modifier_tag::iterate<>` ]
+    ]
+    [
+    	[ [tpl_stl_adapter Adapter] ]
+        [ `modifier_tag::push` ]
+    ]
+    [
+    	[ None of the above ]
+        [ `modifier_tag::push_back` ]
+    ]
+]
+
+[heading Customization]
+[*Syntax]
+``
+// The next 5 not override-able macros can be used for defining a custom switch
+#define BOOST_ASSIGN_V2_PUT_MODIFIER_DEDUCE_SWITCH_CASE(ModifierTag, BooleanMetaFun, Number) __unspecified__ 
+#define BOOST_ASSIGN_V2_PUT_MODIFIER_DEDUCE_SWITCH_ASSOCIATIVE(CaseNumber) 	__unspecified__ // modifier_tag::insert
+#define BOOST_ASSIGN_V2_PUT_MODIFIER_DEDUCE_SWITCH_ARRAY(CaseNumber) 		__unspecified__ // modifier_tag::iterate<>
+#define BOOST_ASSIGN_V2_PUT_MODIFIER_DEDUCE_SWITCH_ADAPTER(CaseNumber) 		__unspecified__ // modifier_tag::push
+#define BOOST_ASSIGN_V2_PUT_MODIFIER_DEDUCE_SWITCH_DEFAULT(CaseNumber) 		__unspecified__ // modifier_tag::push_back
+
+#define BOOST_ASSIGN_V2_PUT_MODIFIER_DEDUCE_SWITCH // Signals that a switch is already defined 
+``
+
+[endsect][/deduce]
+[section:modulo Modulo]
+										
+[def __header_put_modifier_modulo__ 	[@../../../../../boost/assign/v2/put/modifier/modulo.hpp boost/assign/v2/put/modifier/modulo.hpp]]
+[def __describe_put_modifier_modulo__ 	Overload of __modulo__  to replace an adapter's modifier]
+[import ../../../../boost/assign/v2/put/modifier/modulo.hpp]
+
+[heading Header]
+``
+    #include <__header_put_modifier_modulo__>
+``
+
+[heading Description]
+__describe_put_modifier_modulo__
+
+[heading Synopsis]
+[syntax_put_modifier_modulo]
+
+[heading Semantics]
+
+[table
+	[[Expression][Description]]
+    [[`__put_adapter__ % __put_modifier__ `][ Replaces `__put_adapter__`'s modifier]]
+]
+
+[heading Customization]
+
+[*Syntax]
+``
+#define BOOST_ASSIGN_V2_PUT_MODIFIER_MODULO_META_MODIFIER_TAG(Name, Result) unspecified
+#define BOOST_ASSIGN_V2_PUT_MODIFIER_MODULO_KEYWORD(Name) unspecified
+``
+
+[*Semantics]
+
+[table
+	[[Expression][Description]]
+    [
+    	[`BOOST_ASSIGN_V2_PUT_MODIFIER_MODULO_META_MODIFIER_TAG(Name, Result)`]
+        [Specializes `put_aux::meta_modifier_tag` on `keyword_Name` to return `Result`[footnote `Result` may be expressed in terms of `Arg`]]
+    ]
+    [
+    	[`BOOST_ASSIGN_V2_PUT_MODIFIER_MODULO_META_MODIFIER_KEYWORD(Name)`]
+        [Creates a class `put_aux::keyword_Name`, and a `const` instance thereof, `_Name`]
+    ]
+]
+
+[*Requirement]
+
+[table
+	[	
+		[Requirement]
+	]
+	[
+		[Specialize `put_aux::modifier<Result>` on `keyword_Name`. See [link boost_assign_v2.reference.put.adapter.modifier Adapter.Modifier]]
+	]
+]
+
+[*Example]
+``
+BOOST_ASSIGN_V2_PUT_MODIFIER_MODULO_KEYWORD(standard_modifier)    
+BOOST_ASSIGN_V2_PUT_MODIFIER_MODULO_META_MODIFIER_TAG(standard_modifier, Arg)
+``
+
+[endsect][/modulo]
+[section:insert Insert]
+										
+[def __header_put_modifier_insert__ 	[@../../../../../boost/assign/v2/put/modifier/insert.hpp boost/assign/v2/put/modifier/insert.hpp]]
+[import ../../../../boost/assign/v2/put/modifier/insert.hpp]
+
+[heading Header]
+``
+#include <__header_put_modifier_insert__>
+``
+
+[heading Description]
+__describe_a_standard_modifier__
+
+[heading Semantics]
+
+[table
+	[[Expression][Description]]
+	[[`__put_adapter__ % _insert `][Replaces `__put_adapter__`'s modifier-tag with `modifier_tag::insert`]]	
+]
+
+[tip __tip_put_modifier__]
+
+[heading Example]
+[*Set]
+[test_put_modifier_insert]
+
+[endsect][/insert]
+[section:iterate Iterate]
+										
+[def __header_put_modifier_iterate__ 	[@../../../../../boost/assign/v2/put/modifier/iterate.hpp boost/assign/v2/put/modifier/iterate.hpp]]
+[def __describe_put_modifier_iterate	A modifier suitable for arrays]
+[import ../../../../boost/assign/v2/put/modifier/iterate.hpp]
+
+[heading Header]
+``
+#include <__header_put_modifier_iterate__>
+``
+
+[heading Description]
+
+[heading Synopsis]
+``
+namespace modifier_tag{ 
+
+    template<typename Arg = __unspecified__ > struct iterate{}; 
+
+}// modifier_tag
+namespace put_aux{
+                
+    template<typename Arg>
+    class adapter_modifier< modifier_tag::iterate<Arg> >;
+
+    struct keyword_iterate;
+
+}//put_aux
+
+put_aux::keyword_iterate const _iterate;
+
+``
+
+[heading Semantics]
+[*Notation]
+
+[variablelist
+	[
+		[`__put_modifier__`]
+		[ Instance of `put_aux::adapter_modifier< modifier_tag::iterate<Arg> >`]
+	]
+	[
+		[`arg`]
+		[Copy of argument passed as `_iterate = arg`]
+	]
+]
+
+[*Adapter]
+
+[table
+	[[Expression][Description]]
+	[[`__put_modifier__( __cont__, __value__ )`][ `__cont__[ arg() ] = __value__` ]]
+]
+
+[*Meta]
+
+[table
+	[[Expression][Description]]
+    [[`mpl::apply2<put_aux::meta_modifier_tag<D>, keyword_iterate, Arg>::type`][`modifier_tag::iterate<Arg>`]]
+]
+
+[*Invocation]
+
+[table
+	[[Expression][Description]]
+	[[`__put_adapter__ % ( _iterate = arg )`][Replaces `__put_adapter__`'s modifier-tag with `modifier_tag::iterate<Arg>`]]	
+]
+
+If omitted, `arg()` is equivalent to `i++` for some `i` initialized at zero.
+
+[tip __tip_put_modifier__]
+
+[heading Example]
+[import ../test/put/modifier/iterate.cpp]
+[#ex_put_modifier_iterate]
+[test_put_modifier_iterate_shifted]
+
+[endsect][/iterate]
+[section:lookup Lookup]
+
+[def __header_put_modifier_lookup__ 	[@../../../../../boost/assign/v2/put/modifier/lookup.hpp boost/assign/v2/put/modifier/lookup.hpp]]
+[def __describe_put_modifier_lookup__	An alternative modifier that is suitable for associative containers]
+[import ../../../../boost/assign/v2/put/modifier/lookup.hpp]
+
+[heading Header]
+``
+#include <__header_put_modifier_lookup__>
+``
+
+[heading Description]
+
+__describe_put_modifier_lookup__
+
+[heading Synopsis]
+``
+namespace modifier_tag{ 
+
+    template<typename Arg> struct lookup{}; 
+
+}// modifier_tag
+namespace put_aux{
+                
+    template<typename Arg>
+    class adapter_modifier< modifier_tag::lookup<Arg> >;
+
+    struct keyword_lookup;
+
+}//put_aux
+
+	put_aux::keyword_lookup const _lookup;
+
+``
+
+[heading Semantics]
+[*Notation]
+
+[variablelist
+	[
+		[`__put_modifier__`]
+		[ Instance of `put_aux::adapter_modifier< modifier_tag::lookup<Arg> >`]
+	]
+	[
+		[`arg`]
+		[Copy of argument passed as `_lookup = arg`]
+	]
+]
+
+[*Adapter]
+
+[table
+	[[Expression][Description]]
+	[[`__put_modifier__( __cont__, key )`][ `__cont__[ key ] = arg( __cont__[ key ] )` ]]
+]
+
+[*Meta]
+
+[table
+	[[Expression][Description]]
+    [[`mpl::apply2<put_aux::meta_modifier_tag<D>, keyword_lookup, Arg>::type`][`modifier_tag::lookup<Arg>`]]
+]
+
+[*Pre-condition]
+
+[table
+	[[Expression][Requirement]]
+	[[`result-type` of `__put_adapter__`'s functor][convertible to `__cont_type__::key_type`]]
+]
+
+[*Invocation]
+
+[table
+	[[Expression][Description]]
+	[[`__put_adapter__ % ( _lookup = arg )`][Replaces `__put_adapter__`'s modifier-tag with `modifier_tag::lookup<Arg>`]]	
+]
+
+The precondition is usually not met by default. In common cases, this suffices:
+``
+	__put_adapter__ % ( _fun = lambda::_1 ) % ( _lookup = arg )
+``
+
+[/tip __tip_put_modifier__ Not sure if applies (think about pointer containers)]
+
+[heading Example]
+[import ../test/put/modifier/lookup.cpp]
+[#ex_put_modifier_lookup]
+[test_put_modifier_lookup_map]
+
+[endsect][/lookup]
+[section:push Push]
+
+[def __header_put_modifier_push__ 	[@../../../../../boost/assign/v2/put/modifier/push.hpp boost/assign/v2/put/modifier/push.hpp]]
+[import ../../../../boost/assign/v2/put/modifier/push.hpp]
+
+[heading Header]
+``
+#include <__header_put_modifier_push__>
+``
+
+[heading Description]
+__describe_a_standard_modifier__
+
+[heading Semantics]
+
+[table
+	[[Expression][Description]]
+	[[`__put_adapter__ % _push `][Replaces `__put_adapter__`'s modifier-tag with `modifier_tag::push`]]	
+]
+
+[tip __tip_put_modifier__]
+
+[heading Example]
+[test_put_modifier_push]
+
+[endsect][/push]
+[section:push_back Push_back]
+
+[def __header_put_modifier_push_back__ 	[@../../../../../boost/assign/v2/put/modifier/push_back.hpp boost/assign/v2/put/modifier/push_back.hpp]]
+[import ../../../../boost/assign/v2/put/modifier/push_back.hpp]
+
+[heading Header]
+``
+#include <__header_put_modifier_push_back__>
+``
+
+[heading Description]
+__describe_a_standard_modifier__
+
+[heading Semantics]
+
+[table
+	[[Expression][Description]]
+	[[`__put_adapter__ % _push_back `][Replaces `__put_adapter__`'s modifier-tag with `modifier_tag::push_back`]]	
+]
+
+[tip __tip_put_modifier__]
+
+[heading Example]
+[test_put_modifier_push_back]
+
+[endsect][/push_back]
+[section:push_front Push_front]
+
+[def __header_put_modifier_push_front__ 	[@../../../../../boost/assign/v2/put/modifier/push_front.hpp boost/assign/v2/put/modifier/push_front.hpp]]
+[import ../../../../boost/assign/v2/put/modifier/push_front.hpp]
+
+[heading Header]
+``
+#include <__header_put_modifier_push_front__>
+``
+
+[heading Description]
+__describe_a_standard_modifier__
+
+[heading Semantics]
+
+[table
+	[[Expression][Description]]
+	[[`__put_adapter__ % _push_front `][Replaces `__put_adapter__`'s modifier-tag with `modifier_tag::push_front`]]	
+]
+
+[tip __tip_put_modifier__]
+
+[heading Example]
+[#ex_put_modifier_push_front]
+[test_put_modifier_push_front]
+
+[endsect][/push_front]
+[section:repeat Repeat]
+
+[def __header_put_modifier_repeat__ 	[@../../../../../boost/assign/v2/put/modifier/repeat.hpp boost/assign/v2/put/modifier/repeat.hpp]]
+[def __describe_put_modifier_repeat		A modifier that grafts onto that of an adapter to produce repetitive invocations of the latter]
+[import ../../../../boost/assign/v2/put/modifier/repeat.hpp]
+
+[heading Header]
+``
+#include <__header_put_modifier_repeat__>
+``
+
+[heading Description]
+
+[heading Synopsis]
+``
+namespace modifier_tag{ 
+
+    template<typename Tag> struct repeat{}; 
+
+}// modifier_tag
+namespace put_aux{
+                
+    template<typename Tag>
+    class adapter_modifier< modifier_tag::repeat<Tag> >;
+
+    struct keyword_repeat;
+
+}//put_aux
+
+    put_aux::keyword_repeat const _repeat;
+
+``
+
+[heading Semantics]
+[*Notation]
+
+[variablelist
+	[
+		[`__put_modifier__0`]
+		[ Instance of `put_aux::adapter_modifier<Tag>`]
+	]
+	[
+		[`__put_modifier__`]
+		[ Instance of `put_aux::adapter_modifier< modifier_tag::repeat<Tag> >`]
+	]
+]
+
+[*Adapter]
+
+[table
+	[[Expression][Description]]
+	[[`__put_modifier__( __cont__, __value__ )`][ `m = n; while(m--) __put_modifier__0( __cont__, __value__ )` ]]
+]
+
+
+[*Meta]
+
+[table
+	[[Expression][Description]]
+    [[`mpl::apply2<put_aux::meta_modifier_tag<D>, keyword_repeat, Arg>::type`][`modifier_tag::repeat<D::modifier_tag>`]]
+]
+
+[*Invocation]
+
+[table
+	[[Expression][Description]]
+	[[`__put_adapter__ % ( _repeat = n )`][Replaces `__put_adapter__`'s modifier-tag with `modifier_tag::repeat<D::modifier_tag>`]]	
+]
+
+[/tip __tip_put_modifier__ Does not apply here]
+
+[heading Example]
+[#ex_put_modifier_repeat]
+[import ../test/put/modifier/repeat.cpp]
+[*Example 1]
+[test_put_modifier_repeat_simple]
+
+[*Example 2]
+[test_put_modifier_repeat_compose]
+
+[endsect][/repeat]
+[section:standard Standard]
+
+[def __header_put_modifier_standard__ 	[@../../../../../boost/assign/v2/put/modifier/standard.hpp boost/assign/v2/put/modifier/standard.hpp]]
+
+[heading Header]
+``
+#include <__header_put_modifier_standard__>
+``
+
+[heading Description]
+A standard modifier template.
+
+[heading Synopsis]
+``
+namespace put_aux{
+
+    struct keyword_standard_modifier;
+
+}// put_aux
+
+put_aux::keyword_standard_modifier const _standard_modifier;
+
+#define BOOST_ASSIGN_V2_PUT_MODIFIER_MODULO_STANDARD_TAG(FUN) unspecified
+#define BOOST_ASSIGN_V2_PUT_MODIFIER_MODULO_STANDARD(FUN) unspecified
+
+``
+
+[heading Semantics]
+[*Notation]
+
+[variablelist
+	[[`__put_modifier__`][Instance of `put_aux::adapter_modifier`<modifier_tag::FUN>` ]]
+]
+
+[*Expressions]
+[table
+	[[Expression][Description]]
+    [[`mpl::apply2<put_aux::meta_modifier_tag<D>, keyword_standard_modifier, Arg>::type`][`Arg`]]
+    [[`BOOST_ASSIGN_V2_PUT_MODIFIER_MODULO_STANDARD_TAG(FUN)`][Defines `modifier_tag::FUN` as an empty class.]]
+    [[`BOOST_ASSIGN_V2_PUT_MODIFIER_MODULO_STANDARD(FUN)`][Specializes `put_aux::adapter_modifier` on `modifier_tag::FUN`, such that 
+		`__put_modifier__.impl( __cont__, __value__ )` forwards to the modifier of `__cont__` named FUN, using move semantics where possible.    	
+    ]]
+]
+
+[heading Example]
+``
+	BOOST_ASSIGN_V2_PUT_MODIFIER_MODULO_STANDARD_TAG(push_back)
+	BOOST_ASSIGN_V2_PUT_MODIFIER_MODULO_STANDARD(push_back)
+``
+
+[heading Instances]
+
+* [link boost_assign_v2.reference.put.modifier.insert Insert]
+* [link boost_assign_v2.reference.put.modifier.push Push]
+* [link boost_assign_v2.reference.put.modifier.push_back Push_back]
+* [link boost_assign_v2.reference.put.modifier.push_front Push_front]
+
+[endsect][/standard]
+[endsect][/modifier]
+[section:pipe Pipe]
+
+[def __header_put_pipe__       [@../../../../../boost/assign/v2/put/pipe.hpp boost/assign/v2/put/pipe.hpp]]
+[def __describe_put_pipe__     Overloads __pipe__[footnote The reason for calling it ['pipe] rather than ['bitwise or], the C++ convention, is
+that the former speaks better to the semantics that it implements in this particular context, in reference to the 
+[tpl_pipe idiom] by the same name. ], such as to make [link boost_assign_v2.reference.put.put `put()`] composable. ]
+
+[heading Header]
+``
+	#include <__header_put_pipe__>
+``
+
+[heading Description]
+__describe_put_pipe__
+
+[heading Synopsis]
+``
+// put syntax
+namespace put_pipe_aux{
+
+    template<typename ParList = __unspecified__, typename ArgsList = __unspecified__, 	
+    	bool enable_pars = mpl::size<ArgsList>::value == 0
+    >
+    class args_list;
+
+    template<typename C, typename ParList, typename ArgsList, bool enable_pars>
+    C& operator|(
+        C& cont,
+        put_pipe_aux::args_list<ParList, ArgsList, enable_pars> const& args_list_
+    );
+
+}// put_pipe_aux
+
+    put_pipe_aux::args_list<> const _put = put_pipe_aux::args_list<>();
+
+// csv_put syntax
+namespace put_pipe_aux{
+
+    typedef __unspecified__ arg_list_size_type;
+
+    template<typename Pars, arg_list_size_type N, typename U>
+    struct arg_list;
+
+    template<typename ParList = mpl::vector0<> >
+    class arg_list_generator;
+
+    template<typename C,typename ParList, arg_list_size_type N, typename U>
+    C& operator|(C& cont, put_pipe_aux::arg_list<ParList, N, U> const& arg_list);
+
+}// put_pipe_aux
+
+	put_pipe_aux::arg_list_generator<> const _csv_put;
+
+``
+
+[heading Semantics]
+[*Notation]
+
+[variablelist
+	[
+		[`__value__1, ..., __value_n__`]
+		[ Indivual elements of the argument list, `args...`]
+	]
+	[
+		[ `__list_modulo_params__` ]
+		[ __describe_modulo_params__ ]
+	]
+]
+
+[*Invocation]
+
+[table
+	[
+		[Expression]
+		[Returns]
+		[Description]
+	]
+	[
+		[``
+			( __kwd_csv_put__ __invoke_modulo_params__ )( args... )
+		``]
+		[Returns an instance of `put_pipe_aux::arg_list<>` ]
+		[Keeps the arguments by reference (no copying) ]
+	]
+	[
+		[`( __kwd_put__ __invoke_modulo_params__ )( args1... )...( argsn... )`]
+		[Returns an instance of `put_pipe_aux::args_list<>` ]
+		[Keeps the arguments of each invocation by reference (no copying)]
+	]
+]
+
+[*Notation]
+
+[variablelist
+	[[`arg_list`][Result of `( __kwd_csv_put__ __invoke_modulo_params__ )( args... )`]]
+	[[`args_list`][Result of `( __kwd_put__ __invoke_modulo_params__ )( args1... )...( argsn... )`]]
+]
+
+[*Operator|]
+
+[table
+	[[Symbol][Description]]
+	[
+		[`__cont__ | arg_list`]
+		[``
+			( __put__( __cont__ ) % p1 ... % pm )( __value__1 )...( __value_n__ ).container()
+		``]
+	]
+	[
+		[`__cont__ | args_list`]
+		[``
+			( __put__( __cont__ ) % p1 ... % pm )( args1 )...( argsn ).container()
+		``]
+	]
+]
+
+[note The semantics above are borrowed from [tpl_range_adaptor range adaptors], but they differ in that the latter transforms a range,
+whereas, here, the state of a container is modified. In each case, however, composability follows, which is explained [tpl_range_adaptor_compose here] ]
+
+[heading Example]
+[#ex_put_pipe]
+[import ../test/put/pipe/put.cpp]
+
+[*Example 1]
+[test_put_pipe_put_str_literal]
+
+[*Example 2]
+[test_put_pipe_put_intervals]
+
+[*Example 3]
+[import ../test/put/pipe/modifier/standard.cpp]
+[test_put_pipe_modifier_push_front]
+
+[endsect][/pipe]
+[section:put Put]
+
+[def __header_put_put__       [@../../../../../boost/assign/v2/put/put.hpp boost/assign/v2/put/put.hpp]]
+[import ../../../../boost/assign/v2/put/put.hpp]
+[def __describe_put_put__      An [link boost_assign_v2.reference.put.adapter adapter] wrapped around a user supplied container]
+
+[heading Header]
+``
+	#include <__header_put_put__>
+``
+
+[heading Description]
+__describe_put_put__
+
+[heading Synopsis]
+[syntax_put_put]
+
+[heading Semantics]
+[*Adapter]
+
+[table
+	[[Expression][Properties]]
+	[
+		[ `put_aux::container_adapter<__cont_type__, __f_type__, Tag>` ]
+		[ Inherits [link boost_assign_v2.reference.put.adapter.crtp `put_aux::adapter_crtp<__cont_type__, __f_type__, Tag>`] ]
+	]	
+]
+
+[*Meta]
+
+[table
+	[
+		[Expression]
+		[Description]
+	]
+	[	
+		[`result_of::put<C>::type`]
+		[`put_aux::container_adapter<C, deduce_fun<C>::type, deduce_modifier_tag<C>::type>`]
+	]
+]
+
+[*Invocation]
+
+[table
+	[
+		[Expression]
+		[Description]
+	]
+	[
+		[`__put__( __cont__ )`]
+		[An instance of `result_of::put<C>::type`]
+	]
+]
+
+Also see the semantics of the [link boost_assign_v2.reference.put.adapter.crtp base class].
+
+[heading Example]
+[import ../test/put/put.cpp]
+[#ex_put_put]
+[*Example 1]
+[test_put_put_bitset]
+[*Example 2]
+[test_put_put_numeric_kb]
+[*Example 3]
+[test_put_put_ragged]
+[*Example 4]
+[test_put_put_stl]
+[*Example 5]
+[test_put_put_area_codes]
+
+[endsect][/put]
+[endsect][/put]
+[section:ref Ref]
+[section:wrapper Wrapper]
+
+[def __header_ref_wrapper__ 	[@../../../../../boost/assign/v2/ref/wrapper.hpp boost/assign/v2/ref/wrapper.hpp]]
+
+[heading Header]
+``
+	#include <__header_ref_wrapper__>
+``
+
+[heading Description]
+
+Default constructible reference wrapper framework
+
+[section:copy Copy]
+[def __header_ref_wrapper_copy__ 	[@../../../../../boost/assign/v2/ref/wrapper/copy.hpp boost/assign/v2/ref/wrapper/copy.hpp]]
+
+[heading Header]
+``
+	#include <__header_ref_wrapper_copy__>
+``
+
+[heading Description]
+Reference wrapper with copy semantics.
+
+[heading Syntax]
+[import ../../../../boost/assign/v2/ref/wrapper/copy.hpp]
+[syntax_ref_wrapper_copy]
+
+[endsect][/copy]
+[section:crtp Crtp]
+[def __header_ref_wrapper_crtp__ 	[@../../../../../boost/assign/v2/ref/wrapper/crtp.hpp boost/assign/v2/ref/wrapper/crtp.hpp]]
+
+[heading Header]
+``
+	#include <__header_ref_wrapper_crtp__>
+``
+
+[heading Description]
+CRTP reference wrapper.
+
+[heading Syntax]
+[import ../../../../boost/assign/v2/ref/wrapper/crtp.hpp]
+[syntax_ref_wrapper_crtp]
+
+[endsect][/crtp]
+
+[section:range_get Range_get]
+[def __header_ref_wrapper_range_get__ 	[@../../../../../boost/assign/v2/ref/wrapper/range_get.hpp boost/assign/v2/ref/wrapper/range_get.hpp]]
+
+[heading Header]
+``
+	#include <__header_ref_wrapper_range_get__>
+``
+
+[heading Description]
+
+Transforms a range by member function `get()`.
+
+[heading Syntax]
+[import ../../../../boost/assign/v2/ref/wrapper/range_get.hpp]
+[syntax_ref_wrapper_range_get]
+
+[heading Semantics]
+
+[*Notation]
+
+[variablelist
+	[[`__ref_array__`][[link ref_array Reference-array]]]
+]
+
+[*Expression]
+[table
+	[[Expression][Description]]
+	[[`__ref_array__ | __kwd_get__`][ Transforms ` __ref_array__` by member function `get()` ]]
+]
+
+[note A typical application is writing to a range of reference wrapper e.g. `copy( range, __range_ref_wrapper__ | __kwd_get__)`.]
+
+[endsect][/range_get]
+[endsect][/wrapper]
+[section:array Array]
+										
+[def __describe_ref_array__ 			Framework for in place construction of an array of reference wrappers]
+[def __header_ref_array__ 				[@../../../../../boost/assign/v2/ref/array.hpp boost/assign/v2/ref/array.hpp]]
+
+[heading Header]
+``
+	#include <__header_ref_array__>
+``
+
+[heading Description]
+__describe_ref_array__
+
+[section:interface Interface]
+[def __describe_ref_array_interface__ 	Interface for arrays of reference wrappers, a.k.a, here, as reference-array]
+[def __header_ref_array_interface__ 	[@../../../../../boost/assign/v2/ref/array/interface.hpp boost/assign/v2/ref/array/interface.hpp]]
+
+[heading Header]
+``
+	#include <__header_ref_array_interface__>
+``
+
+[heading Description]
+__describe_ref_array_interface__
+
+[heading Syntax]
+[import ../../../../boost/assign/v2/ref/array/interface.hpp]
+[syntax_ref_array_interface]
+
+[endsect][/interface]
+[section:array Array]
+[def __describe_ref_array_array__ 		Functor for generating an array of reference wrappers]
+[def __header_ref_array_array__ 		[@../../../../../boost/assign/v2/ref/array/array.hpp boost/assign/v2/ref/array/array.hpp]]
+
+[heading Header]
+``
+	#include <__header_ref_array_array__>
+``
+
+[heading Description]
+__describe_ref_array_array__
+
+[heading Syntax]
+[import ../../../../boost/assign/v2/ref/array/array.hpp]
+[syntax_ref_array_array]
+
+[heading Semantics]
+[*Expressions]
+
+[table
+	[[Expression][Description]]
+	[[`__gen_ref_array__<U>( __kwd_nil__ )`][Returns an empty reference-array   ]]
+	[[`__gen_ref_array__( __value__ )`][Returns a reference-array of one element binding to `__value__`   ]]
+]
+
+[heading Example]
+[#ex_ref_array_array]
+[import ../test/ref/array.cpp]
+[*Example 1]
+[test_ref_array_read]
+[*Example 2]
+[test_ref_array_write]
+[*Example 3]
+[test_ref_array_assign]
+
+[endsect][/array]
+[section:csv_array Csv_array]
+[def __describe_ref_array_csv_array__ 	Function generating an array of reference wrappers]
+[def __header_ref_array_csv_array__ 	[@../../../../../boost/assign/v2/ref/array/csv_array.hpp boost/assign/v2/ref/array/csv_array.hpp]]
+
+[heading Header]
+``
+	#include <__header_ref_array_csv_array__>
+``
+
+[heading Description]
+__describe_ref_array_csv_array__
+
+[heading Syntax]
+[import ../../../../boost/assign/v2/ref/array/csv_array.hpp]
+[syntax_ref_array_csv_array]
+
+[heading Semantics]
+[*Pre-condition]
+
+Each of `__value__, args...` are of the same type, `__value_type__`.
+
+[*Expressions]
+
+[table
+	[[Expression][Description]]
+	[[`__ref_csv_array__( __value__, args... )`][Returns a reference-array binding to `__value__, args...`. The type that is bound to is
+		`__value_type__` if all values are non-const lvalues, `__value_type__ const`, otherwise. 
+	]]
+]
+
+[heading Example]
+[#ex_ref_array_csv_array]
+[import ../test/ref/csv_array.cpp]
+[*Example 1]
+[test_ref_csv_array_read]
+[*Example 2]
+[test_ref_csv_array_write]
+[*Example 3]
+[test_ref_csv_array_assign]
+
+[endsect][/csv_array]
+[endsect][/array]
+[endsect][/ref]
+[section:utility Utility]
+[section:chain Chain]
+
+[def __describe_utility_chain__ A variant of [tpl_range_join join()] that caters to [link boost_assign_v2.reference.ref.array reference arrays]]
+[def __header_utility_chain__ [@../../../../../boost/assign/v2/utility/chain.hpp boost/assign/v2/utility/chain.hpp]]
+
+[heading Header]
+``
+	#include <__header_utility_chain__>
+``
+
+[heading Description]
+
+__describe_utility_chain__
+
+[heading Syntax]
+``
+namespace chain_aux{
+
+    template<typename R1, typename R2, typename Tag = use_default> struct use_const;
+
+    template<typename Tag1 = use_default, typename Tag2 = void_>
+    struct adaptor2
+    {
+
+        adaptor2();
+
+        template<typename U>
+        struct result{
+           typedef __unspecified__ type;
+        };
+
+        template<typename R> typename result<R>::type operator()(R& r)const;
+
+        template<typename R> typename result<R const>::type operator()(R const& r)const;
+
+    };
+
+    template<typename R1, typename U2, typename Tag>
+    typename chain_aux::result<R1, U2, Tag>::type
+    operator|(R1 & r1, chain_aux::adaptor1<U2, Tag> const & h);
+
+    template<typename R1, typename U2, typename Tag>
+    typename chain_aux::result<R1 const, U2, Tag>::type
+    operator|(R1 const & r1, chain_aux::adaptor1<U2, Tag> const & h);
+
+}// chain_aux
+namespace result_of{
+
+	template<typename R1, typename R2> struct chain{
+
+		typedef __unspecified__ type;
+
+	};
+
+}
+    const chain_aux::adaptor2<> _chain;
+
+``
+
+[heading Meta]
+
+[*Requirements]
+
+[table
+	[ [Parameter][Description] ]
+	[ [`R1`][Models [tpl_concept_range range]] ]
+	[ [`R2`][Models [tpl_concept_range range]] ]
+]
+
+[*Notation]
+
+[variablelist
+	[[`U1`][`range_reference<R1>::type`]]
+	[[`T`][`remove_reference<U1>::type`]]
+	[[`U2`][`range_reference<R2>::type`]]
+]
+
+[*Expressions]
+
+[table
+	[[Expression][Value]]
+	[[`chain_aux::use_const<R1, R2>::value`][ [^not] `is_reference<U1>::value` &&  `!is_const<T>::value` && `(U2 == U1)` ]]
+	[[`is_const< range_value< result_of::chain<R1, R2>::type>::type >`][`chain_aux::use_const<R1, R2>::value`]]
+]
+
+[*Comment]
+
+This meta-function becomes relevant if either of `r1` or `r2` is a [link boost_assign_v2.reference.ref.array reference array]: altghouh 
+these are usually constructed in place (rvalues), they may bind to lvalues. Use-const knows not to throw away lvalue-ness, in that
+case, i.e. returns false.
+
+[heading Range]
+
+[*Notation]
+
+[variablelist
+	[[`chained`][result of `r1 | __kwd_chain__( r2 )`]]
+]
+
+[*Expressions]
+
+[table
+	[[Expression][Value]]
+	[
+		[`*( i + begin( chained ) )`]
+		[`*( i < size( r1 ) ? i + begin( r1 ) : i - size( r1 ) + begin( r2 ) )` ]
+	]
+]
+
+[heading Alternative invocation]
+
+[def __header_utility_chain_operator_and__ [@../../../../../boost/assign/v2/utility/chain/operator_and.hpp boost/assign/v2/utility/chain/operator_and.hpp]]
+
+[*Header]
+``
+	#include <__header_utility_chain_operator_and__>
+``
+
+This header is optional (because it overloads `opearator&&`, which some may prefer not to) i.e. is it not included in
+__header_utility_chain__.
+
+[table 
+	[ [Expression][ Description ] ]
+	[
+		[`r1 && r2`]
+		[Equivalent to `r1 | _chain( r2 )`]
+	]
+]
+
+[heading Example]
+[import ../test/utility/chain.cpp]
+
+[#ex_utility_chain]
+[*Example 1]
+[test_utility_chain_read]
+
+[*Example 2]
+[test_utility_chain_write]
+
+[*Example 3]
+[test_utility_chain_write_refs]
+
+[endsect][/chain]
+[section:conversion Conversion]
+[import ../test/utility/conversion.cpp]
+[section:convert Convert]
+[def __header_utility_conversion_convert__ 		[@../../../../../boost/assign/v2/utility/conversion/convert.hpp boost/assign/v2/utility/conversion/convert.hpp]]
+[def __describe_utility_conversion_convert__ 	Function converting a range to a container]
+
+[heading Header]
+``
+	#include <__header_utility_conversion_convert__>
+``
+
+[heading Description]
+__describe_utility_conversion_convert__
+
+[heading Syntax]
+[import ../../../../boost/assign/v2/utility/conversion/convert.hpp]
+[syntax_utility_conversion_convert]
+
+[heading Semantics]
+[*Expressions]
+
+[table
+	[[Expression][Description]]
+	[
+		[`put_aux::__convert__<__cont_type__>( __range__, convert_tag::put() )`]
+		[`__cont_type__ __cont__; put( __cont__ )( __gen_as_arg_list__( __range__ ) )` and returns `__cont__`]
+	]
+	[
+		[`put_aux::__convert__<__cont_type__>( __range__, convert_tag::copy() )`]
+		[`__cont_type__( begin( __range__ ), end( __range__ ) )`]
+	]
+	[
+		[`put_aux::__convert__<__cont_type__>( __range__ )`]
+		[`put_aux::__convert__<__cont_type__>( __range__ , tag )`, where `tag = convert_tag::put` if `__cont_type__` is either
+		an [tpl_boost_array array] or an [tpl_stl_adapter adapter], `tag = convert_tag::copy` otherwise.]
+	]
+	[
+		[`__range__ | __convert__<__cont_type__>()`]
+		[`put_aux::__convert__<__cont_type__>( __range__ )`]
+	]
+]
+
+[heading Example]
+[#ex_utility_conversion_convert]
+[test_utility_conversion_as2_deque_array]
+
+[endsect][/convert]
+[section:converter Converter]
+[def __header_utility_conversion_converter__ 		[@../../../../../boost/assign/v2/utility/conversion/converter.hpp boost/assign/v2/utility/conversion/converter.hpp]]
+[def __describe_utility_conversion_converter__ 	    Wraps a range with container-convertibility]
+
+[heading Header]
+``
+	#include <__header_utility_conversion_converter__>
+``
+
+[heading Description]
+__describe_utility_conversion_converter__
+
+[heading Syntax]
+[import ../../../../boost/assign/v2/utility/conversion/converter.hpp]
+[syntax_utility_conversion_converter]
+
+[heading Semantics]
+
+[*Notation]
+
+[variablelist
+	[[`c`][Instance of `__converter__( __range__ )`]]
+]
+
+[*Converter]
+
+[table
+	[[Expression][Description]]
+	[
+		[`c.type<__cont_type__>()`]
+		[Calls `__range__ | __convert__<__cont_type__>()`]
+	]
+	[
+		[`__cont_type__ __cont__ = c`]
+		[Equivalent to `__cont_type__ __cont__ = c.type<__cont_type__>()`]
+	]
+]
+
+[heading Example]
+[#ex_utility_conversion_converter]
+[test_utility_conversion_matrix3x3]
+
+[endsect][/converter]
+[endsect][/conversion]
+[section:csv Csv]
+										
+[def __header_utility_csv__ 			[@../../../../../boost/assign/v2/utility/csv.hpp boost/assign/v2/utility/csv.hpp]]
+[def __describe_utility_csv__ 	    	A function whose invocation over a sequence of values is equivalent to unary functor invocations over that sequence.]
+
+[heading Header]
+``
+	#include <__header_utility_csv__>
+``
+
+[heading Description]
+__describe_utility_csv__
+
+[heading Syntax]
+[import ../../../../boost/assign/v2/utility/csv.hpp]
+[syntax_utility_csv]
+
+[heading Semantics]
+
+[*Notation]
+
+[variablelist
+	[[`__value__1, ..., __value_n__`][Individual elements of `args...`]]
+]
+
+[*Semantics]
+
+[table
+	[[Expression][Returns]]
+	[[`csv( functor, args... )`][` functor( __value__1 ) ... ( __value_n__ ) `]]
+]
+
+[heading Example]
+[import ../test/utility/csv.cpp]
+[#ex_utility_csv]
+[*Example 1]
+[test_utility_csv_put]
+[*Example 2]
+[test_utility_csv_deque_modulo]
+
+[endsect][/csv]
+[endsect][/utility]
+[endsect][/reference]
