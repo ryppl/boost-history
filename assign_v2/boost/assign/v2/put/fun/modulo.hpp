@@ -23,14 +23,14 @@ namespace result_of{
 
     template<typename D>
     struct modulo_fun{
-            
+
         typedef put_aux::replace_fun<D> meta_;
-            
+
         template<typename F>
         struct apply : ::boost::mpl::apply1<meta_, F>{};
-        
+
     };
-            
+
 }// result_of
 
     template<typename F = keyword_aux::ignore>
@@ -40,7 +40,7 @@ namespace result_of{
         modulo_fun(F f) : f_( f ){}
 
         F const& fun()const{ return this->f_; }
-        
+
         private:
         F f_;
     };
@@ -58,12 +58,12 @@ namespace result_of{
     }
 
     struct keyword_fun{
-    
+
         template<typename F>
-        modulo_fun<F> operator=(F const& f)const{ 
-            return modulo_fun<F>( f ); 
+        modulo_fun<F> operator=(F const& f)const{
+            return modulo_fun<F>( f );
         }
-    
+
     };
 
 }// put_aux
@@ -74,11 +74,9 @@ namespace{
 namespace result_of{
 
     template<typename D>
-    struct modulo_fun 
-//<-
+    struct modulo_fun/*<-*/
         : put_aux::result_of::modulo_fun<D>
-//->
-    {};
+    {}/*->*/;
 
 }// result_of
 //]

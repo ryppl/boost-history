@@ -49,7 +49,7 @@ namespace switch_aux{\
 #else
 #define BOOST_ASSIGN_V2_PUT_MODIFIER_DEDUCE_SWITCH_ASSOCIATIVE(CaseNumber)\
 BOOST_ASSIGN_V2_PUT_MODIFIER_DEDUCE_SWITCH_CASE(insert, container_traits::is_associative, CaseNumber)\
-/**/ 
+/**/
 #endif
 
 #ifdef BOOST_ASSIGN_V2_PUT_MODIFIER_DEDUCE_SWITCH_ARRAY
@@ -83,13 +83,13 @@ namespace switch_aux{\
 
 //[example_put_modifier_deduce_switch
 #ifdef BOOST_ASSIGN_V2_PUT_MODIFIER_DEDUCE_SWITCH
-#warning  
+#warning
 #else
 BOOST_ASSIGN_V2_PUT_MODIFIER_DEDUCE_SWITCH_ASSOCIATIVE(0)
 BOOST_ASSIGN_V2_PUT_MODIFIER_DEDUCE_SWITCH_ARRAY(1)
 BOOST_ASSIGN_V2_PUT_MODIFIER_DEDUCE_SWITCH_ADAPTER(2)
 BOOST_ASSIGN_V2_PUT_MODIFIER_DEDUCE_SWITCH_DEFAULT(3)
-#define BOOST_ASSIGN_V2_PUT_MODIFIER_DEDUCE_SWITCH 
+#define BOOST_ASSIGN_V2_PUT_MODIFIER_DEDUCE_SWITCH
 //]
 #endif
 
@@ -97,11 +97,9 @@ BOOST_ASSIGN_V2_PUT_MODIFIER_DEDUCE_SWITCH_DEFAULT(3)
 namespace put_aux{
 
     template<typename C>
-    struct /*<<Meta-function returning a modifier-tag>>*/deduce_modifier_tag
-//<-    
+    struct /*<<Meta-function returning a modifier-tag>>*/deduce_modifier_tag/*<-*/
         : switch_aux::result< switch_tag::deduce_put, C>
-//->
-    {};
+    {}/*->*/;
 
 }// put_aux
 //]

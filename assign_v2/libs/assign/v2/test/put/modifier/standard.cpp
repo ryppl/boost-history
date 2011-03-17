@@ -13,7 +13,6 @@
 #include <set>
 #include <string>
 #include <boost/assign/v2/detail/config/check.hpp>
-
 #include <boost/assign/v2/put/modifier/standard.hpp>
 #include <boost/assign/v2/put/put.hpp>
 #include <boost/assign/v2/put/deque.hpp>
@@ -61,9 +60,8 @@ namespace xxx_standard{
             //[test_put_modifier_push_front
             std::deque<double> sqrt2;
             ( as2::put( sqrt2 ) % as2::_push_front )( 1.41421 )( 1.4142 )( 1.414 )( 1.41 );
-        
-        
-            // TODO abs()<eps
+
+
             BOOST_ASSIGN_V2_CHECK( boost::lower_bound( sqrt2, 1.41 ) == boost::begin( sqrt2 ) );
             BOOST_ASSIGN_V2_CHECK( boost::upper_bound( sqrt2, 1.41421 ) == boost::end( sqrt2 ) );
             //]
@@ -71,7 +69,7 @@ namespace xxx_standard{
         {
             //[test_put_modifier_push
             std::queue<int> fifo; ( as2::put( fifo ) % as2::_push )( 72 )( 31 )( 48 );
-                
+
             BOOST_ASSIGN_V2_CHECK( fifo.front() == 72 );
             BOOST_ASSIGN_V2_CHECK( fifo.back() == 48 );
             //]
@@ -79,16 +77,16 @@ namespace xxx_standard{
         {
             //[test_put_modifier_insert
             std::set<std::string> letters; ( as2::put( letters ) % as2::_insert )( "d" )( "a" )( "c" )( "b" );
-        
+
             BOOST_ASSIGN_V2_CHECK( letters.lower_bound( "a" ) == boost::begin( letters ) );
             BOOST_ASSIGN_V2_CHECK( letters.upper_bound( "d" ) == boost::end( letters ) );
             //]
         }
         {
             //[test_put_modifier_push_back
-            typedef int int_; std::list<int> list; 
+            typedef int int_; std::list<int> list;
             ( as2::put( list ) % as2::_push_back )( 72 )( 31 )( 48 );
-                
+
             BOOST_ASSIGN_V2_CHECK( list.front() == 72 );
             BOOST_ASSIGN_V2_CHECK( list.back() == 48 );
             //]

@@ -11,15 +11,6 @@
 #define BOOST_ASSIGN_V2_CHECK_ER_2010_HPP
 #ifndef BOOST_ASSIGN_V2_CHECK
 #include <boost/assert.hpp>
-//[check
-/*<<
-For unit-testing, do, instead,
-``
-    #include <boost/test/test_tools.hpp>
-    #define BOOST_ASSIGN_V2_CHECK( p ) BOOST_CHECK( p )
-``
-<<*/
 #define BOOST_ASSIGN_V2_CHECK( p ) BOOST_ASSERT( p )
-//]
 #endif // BOOST_ASSIGN_V2_CHECK
 #endif // BOOST_ASSIGN_V2_CHECK_ER_2010_HPP

@@ -8,6 +8,7 @@
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
 #include <assert.h>
+#include <cstddef>
 #include <vector>
 #include <deque>
 #include <map>
@@ -61,19 +62,19 @@ namespace tutorial_assign_v2{
             //[tutorial_chain
             std::vector<int> consecutive8( 8 ); for(int i = 0; i < 8; i++){ consecutive8[i] = 1 + i; }
             array<int, 5> consecutive5; int six, seven, eight;
-            boost::copy( 
-                consecutive8, 
+            boost::copy(
+                consecutive8,
                 begin( consecutive5 | _chain( ref::csv_array( six, seven, eight ) | ref::_get ) )
             );
-            assert(consecutive5[0] == 1); assert(consecutive5[4] == 5); 
+            assert(consecutive5[0] == 1); assert(consecutive5[4] == 5);
             assert( six == 6 ); assert( eight == 8);
             //]
         }
-        {    
+        {
             //[tutorial_conversion
-            std::queue<int> fifo = converter( csv_deque( 72, 31, 48 ) ); 
+            std::queue<int> fifo = converter( csv_deque( 72, 31, 48 ) );
             assert( fifo.front() == 72 );
-            //]        
+            //]
         }
         {
             //[tutorial_arg_forwarding
@@ -84,12 +85,13 @@ namespace tutorial_assign_v2{
         {
             //[tutorial_parametrization
             using namespace lambda;
-            typedef int T; array<T, 4> powers = converter( csv_deque( 1, 10, -1, -1 ) ); 
-            int shift = 2; ( put( powers ) % ( _iterate = var( shift )++ ) )( 100 )( 1000 );
+            typedef int T; array<T, 4> powers = converter( csv_deque( 1, 10, -1, -1 ) );
+            std::size_t shift = 2; ( put( powers ) % ( _iterate = var( shift )++ ) )( 100 )( 1000 );
 
-            int value = 1; for(shift = 0; shift < powers.size(); shift++){ assert( powers[shift] == value ); value *=10; }
+            int value = 1; 
+            for(shift = 0; shift < powers.size(); shift++){ assert( powers[shift] == value ); value *=10; }
             //]
         }
     }
-    
+
 }// tutorial_assign_v2

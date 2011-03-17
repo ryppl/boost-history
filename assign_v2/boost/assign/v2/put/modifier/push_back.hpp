@@ -9,9 +9,8 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_PUT_MODIFIER_PUSH_BACK_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_MODIFIER_PUSH_BACK_ER_2010_HPP
-//[put_modifier_push_back
 #include <boost/assign/v2/put/modifier/standard/modifier.hpp>
 BOOST_ASSIGN_V2_PUT_MODIFIER_MODULO_STANDARD_TAG(push_back)
 BOOST_ASSIGN_V2_PUT_MODIFIER_MODULO_STANDARD(push_back)
-//]
+
 #endif // BOOST_ASSIGN_V2_PUT_MODIFIER_PUSH_BACK_ER_2010_HPP

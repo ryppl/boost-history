@@ -11,7 +11,6 @@
 #include <boost/mpl/assert.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/assign/v2/detail/config/check.hpp>
-
 #include <boost/assign/v2/put/deque/csv_deque.hpp>
 #include <boost/assign/v2/put/deque/deque.hpp>
 
@@ -23,9 +22,9 @@ namespace xxx_deque{
 
     void test()
     {
-    
+
         using namespace boost;
-        namespace as2 = assign::v2;    
+        namespace as2 = assign::v2;
         {
             //[test_put_deque_ints
             typedef as2::result_of::deque<int>::type C0;
@@ -47,10 +46,10 @@ namespace xxx_deque{
         {
             //[test_put_deque_str_literal
             typedef std::string str_;
-            BOOST_ASSIGN_V2_CHECK( 
+            BOOST_ASSIGN_V2_CHECK(
                 str_( as2::deque<const char*>( "x" )( "y" )( "z" )[1] ) == "y"
             );
-            BOOST_ASSIGN_V2_CHECK( 
+            BOOST_ASSIGN_V2_CHECK(
                 str_( as2::csv_deque( "x", "y", "z" )[1] ) == "y"
             );
             //]

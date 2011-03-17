@@ -16,4 +16,4 @@ namespace tutorial_assign_v2{
 
 }// tutorial_assign_v2
 
-#endif LIBS_ASSIGN_V2_TUTORIAL_ER_2010_H
+#endif // LIBS_ASSIGN_V2_TUTORIAL_ER_2010_H
