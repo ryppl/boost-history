@@ -153,12 +153,26 @@ namespace boost { namespace phoenix
             template <typename This, typename C, typename Index>
             struct result<This(C&, Index)>
             {
-                typedef typename const_qualified_reference_of<C>::type type;
+                //typedef typename const_qualified_reference_of<C>::type type;
+                typedef typename C::value_type & type;
             };
 
             template <typename C, typename Index>
             typename result<at(C&, Index const&)>::type
-            operator()(C& c, Index i) const
+            operator()(C& c, Index const &i) const
+            {
+                return c.at(i);
+            }
+
+            template <typename This, typename C, typename Index>
+            struct result<This(C const&, Index)>
+            {
+                typedef typename C::value_type const & type;
+            };
+
+            template <typename C, typename Index>
+            typename result<at(C const&, Index const&)>::type
+            operator()(C const& c, Index const &i) const
             {
                 return c.at(i);
             }
@@ -788,9 +802,9 @@ namespace boost { namespace phoenix
     //  The lazy functions themselves.
     //
     ///////////////////////////////////////////////////////////////////////////////
-    BOOST_PHOENIX_ADAPT_FUNCTION(assign, stl::assign, 2)
-    BOOST_PHOENIX_ADAPT_FUNCTION(assign, stl::assign, 3)
-    BOOST_PHOENIX_ADAPT_FUNCTION(assign, stl::assign, 4)
+    BOOST_PHOENIX_ADAPT_FUNCTION(assign, boost::phoenix::stl::assign, 2)
+    BOOST_PHOENIX_ADAPT_FUNCTION(assign, boost::phoenix::stl::assign, 3)
+    BOOST_PHOENIX_ADAPT_FUNCTION(assign, boost::phoenix::stl::assign, 4)
     BOOST_PHOENIX_ADAPT_FUNCTION(at, stl::at, 2)
     BOOST_PHOENIX_ADAPT_FUNCTION(back, stl::back, 1)
     BOOST_PHOENIX_ADAPT_FUNCTION(begin, stl::begin, 1)
