@@ -1,3 +1,8 @@
+#include <string>
+#include <iostream>
+#include <boost/config.hpp>
+#include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
+#include <boost/format.hpp>
 
 // Test
 //#include <libs/assign/v2/test/detail.h>
@@ -7,42 +12,42 @@
 #include <libs/assign/v2/test/utility.h>
 #include <libs/assign/v2/tutorial.h>
 
-// Speed
+// Tutorial
+
+// Speed -- CPP0x required
 #include <fstream>
 #include <libs/assign/v2/speed/test.h>
-
-#include <string>
-#include <iostream>
-#include <boost/config.hpp>
-#include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
-
 
 int main (int argc, char * const argv[])
 {
 
     // Do not put libs/assign/v2/test/unit_testing in this project
     {
-        std::string cpp0x = "RVALUE_REFERENCES : ";
-        #ifdef BOOST_NO_RVALUE_REFERENCES
-        cpp0x += "NO";
-        #else
-        cpp0x += "YES";
-        #endif
-        cpp0x += ", VARIADIC_TEMPLATES : ";
-        #ifdef BOOST_NO_VARIADIC_TEMPLATES
-        cpp0x += "NO";
-        #else
-        cpp0x += "YES";
-        #endif
-        cpp0x += ", 0X_HDR_TUPLE : ";
-        #ifdef BOOST_NO_0X_HDR_TUPLE
-        cpp0x += "NO";
-        #else
-        cpp0x += "YES";
-        #endif
-        cpp0x += ", ENABLE_CPP0X : " + std::string(BOOST_ASSIGN_V2_ENABLE_CPP0X ? "YES" : "NO");
+        std::string str = "RVALUE_REFERENCE : %1%\n";
+        str += "VARIADIC_TEMPLATES : %2%\n";
+        str += "0X_HDR_TUPLE : %3%\n";
+        str += "BOOST_ASSIGN_V2_CPP0X : %4%\n";
 
-        std::cout << cpp0x << std::endl;
+        boost::format cpp0x(str);
+
+        #ifdef BOOST_NO_RVALUE_REFERENCES
+        cpp0x % "No";
+        #else
+        cpp0x % "Yes";
+        #endif
+        #ifdef BOOST_NO_VARIADIC_TEMPLATES
+        cpp0x % "No";
+        #else
+        cpp0x % "Yes";
+        #endif
+        #ifdef BOOST_NO_0X_HDR_TUPLE
+        cpp0x % "No";
+        #else
+        cpp0x % "Yes";
+        #endif
+        cpp0x % (BOOST_ASSIGN_V2_ENABLE_CPP0X ? "YES" : "NO");
+
+        std::cout << cpp0x.str() << std::endl;
     }
     {
         using namespace test_assign_v2;
