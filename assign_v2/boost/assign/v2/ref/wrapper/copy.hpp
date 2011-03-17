@@ -31,7 +31,8 @@ namespace assign_copy{ typedef assign_tag::copy assign_tag_; }
         public ref::wrapper_crtp< wrapper<ref::assign_tag::copy, T>, T>
     {
         typedef T type;
-        BOOST_STATIC_CONSTANT( bool, is_const = boost::is_const<T>::value );
+
+        /*<-*/BOOST_STATIC_CONSTANT( bool, is_const = boost::is_const<T>::value )/*->*/;
 
         wrapper()/*<-*/
             {/*TODO or null pointer?*/}BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
@@ -48,8 +49,8 @@ namespace assign_copy{ typedef assign_tag::copy assign_tag_; }
             return *this->ref_;
         }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
         T* get_pointer() const/*<-*/
-        { 
-            return this->ref_; 
+        {
+            return this->ref_;
         }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
         using wrapper_crtp<wrapper, T>::operator=;
@@ -59,17 +60,13 @@ namespace assign_copy{ typedef assign_tag::copy assign_tag_; }
         }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
         protected:
-        friend class wrapper_crtp<wrapper, T>;
-
-        T* ref_;
-
-        typedef ref::assign_tag::copy assign_tag;
-
+        /*<-*/friend class wrapper_crtp<wrapper, T>/*->*/;
+        T* ref_;/*<-*/
+        typedef ref::assign_tag::copy assign_tag;/*->*/
         void swap( wrapper& r )/*<-*/
         {
             std::swap( this->get(), r.get() );
         }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
-
     };
 
     template<typename T>

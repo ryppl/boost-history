@@ -47,8 +47,8 @@ namespace put_aux{
 
         container_adapter()/*<-*/
             {}BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
-        explicit container_adapter( C& cont )/*<-*/ 
-            : super1_t( cont ) 
+        explicit container_adapter( C& cont )/*<-*/
+            : super1_t( cont )
         {}BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
         explicit container_adapter( C& cont, F const& f, modifier_ const& m )/*<-*/
             : super1_t( cont ), super2_t( f, m )
@@ -82,7 +82,7 @@ namespace result_of{
         typedef typename put_aux::deduce_fun<C>::type f_;
         typedef typename put_aux::deduce_modifier_tag<C>::type modifier_tag_;
         typedef put_aux::container_adapter<C, f_, modifier_tag_> type;
-    /*->*/};
+    }/*->*/;
 
 }// result_of
 

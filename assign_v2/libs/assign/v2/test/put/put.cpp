@@ -44,7 +44,7 @@ namespace xxx_put{
         {
              //[test_put_put_bitset
             typedef std::string str_; typedef std::bitset<3> data_; /*<<Keep in mind that although `data_( str_( "011" ) )`, for instance, is valid, `consecutive.push_back( str_( "011" ) )` isn't (GCC4.2)>>*/ std::vector<data_> consecutive;
-            /*<<Calls `consecutive.push_back( data_( t ) );` for [^t = ]`str_( "000" )`[^, ..., ]`str_( "111" )`[^\]]>>*/as2::put( consecutive )
+            /*<<Calls `consecutive.push_back( data_( t ) );` for [^t = ]`str_( "000" )`[^, ..., ]`str_( "111" )`>>*/as2::put( consecutive )
                 ( str_( "000" ) )( str_( "001" ) )
                 ( str_( "010" ) )( str_( "011" ) )
                 ( str_( "100" ) )( str_( "101" ) )
