@@ -2,6 +2,7 @@
 // Local functions, blocks, and exits can be arbitrarily nested into each other.
 // Simplified syntax for variadic macros only.
 
+//[nesting_va_cpp
 #include <boost/local/function.hpp>
 #include <boost/local/block.hpp>
 #include <boost/local/exit.hpp>
@@ -37,4 +38,5 @@ int main() {
     x--; n();
     return 0;
 }
+//]
 

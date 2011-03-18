@@ -16,9 +16,6 @@ exe add_except_va : add_except_va.cpp ;
 exe add_exit : add_exit.cpp ;
 exe add_exit_va : add_exit_va.cpp ;
 
-exe add_num : add_num.cpp ;
-exe add_num_va : add_num_va.cpp ;
-
 exe add_num_factor_sum : add_num_factor_sum.cpp ;
 exe add_num_factor_sum_va : add_num_factor_sum_va.cpp ;
 
@@ -70,4 +67,10 @@ exe transform_va : transform_va.cpp ;
 
 exe nesting : nesting.cpp ;
 exe nesting_va : nesting_va.cpp ;
+
+exe typeof : typeof.cpp ;
+exe typeof_va : typeof_va.cpp ;
+
+exe typeof_tpl : typeof_tpl.cpp ;
+exe typeof_tpl_va : typeof_tpl_va.cpp ;
 

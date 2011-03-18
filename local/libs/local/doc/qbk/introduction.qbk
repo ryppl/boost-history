@@ -70,17 +70,20 @@ Exceptions specifications can be programmed outside the macro and just before th
 Finally, within the local function body the type of a bound variable can be accessed using [^__BOOST_LOCAL_TYPEOF__(['variable-name])].
 (See the __Tutorial__ section.)
 # The macro ending the local function definition specifies the local function name.
+No semicolon `;` is required after the ending macro.
 # The local function macros declare a functor object local to the enclosing scope named `add`.
 The functor `add` has `void` result type, it can be called by specifying one parameter of type `double`, and it has access to the variables in scope `factor` (by constant value) and `sum` (by reference).
 # The *local exit* declaration macro only specifies the variables in scope to bind (by reference or value and eventually as constants).
 Exceptions specifications can be programmed outside the macro and just before the body code block `{...}` as usual (see the __Tutorial__ section).
 # The local exit code will be automatically executed when the enclosing scope is exited.
 # Local exits are anonymous so their ending macro takes no argument.
+No semicolon `;` is required after the ending macro.
 # The local function `add` can also be passed as a template parameter (for example, to the STL `std::for_each` algorithm).
 # The *local block* declaration macro only specifies the variables in scope to bind (by reference or value and eventually as constants).
 # The local block code is executed "in place" where it is programmed like a usual C++ block of code `{ ... }`.
 In this example, the compiler will correctly generate an error if the assignment operator `=` is mistakenly used instead of the equality operator `==` because the variable `sum` is bound by constant reference so it cannot be modified.
 # Local blocks are anonymous so their ending macro takes no argument.
+No semicolon `;` is required after the ending macro.
 
 [endsect]
 

@@ -12,12 +12,14 @@ doxygen reference
         ../../../boost/local/function.hpp
         ../../../boost/local/block.hpp
         ../../../boost/local/exit.hpp
-        ../../../boost/local/function.hpp
+        ../../../boost/local/typeof.hpp
         ../../../boost/local/config.hpp
         ../../../boost/utility/identity.hpp
     :
         <doxygen:param>QUIET=YES
-        <doxygen:param>ALIASES=" Params=\"<b>Parameters:</b> <table border="0">\" Param{2}=\"<tr><td><b><tt>\\1</tt></b></td><td>\\2</td></tr>\" EndParams=\"</table>\" Returns=\"<b>Returns:</b>\" Note=\"<b>Note:</b>\" Warning=\"<b>Warning:</b>\" See=\"<b>See:</b>\" RefSect{1}=\"\\xmlonly<link linkend='boost_local.\\1'>\\1</link>\\endxmlonly\" RefClass{1}=\"\\xmlonly<computeroutput><classname alt='\\1'>\\1</classname></computeroutput>\\endxmlonly\" RefMacro{1}=\"\\xmlonly<computeroutput><macroname alt='\\1'>\\1</macroname></computeroutput>\\endxmlonly\" "
+        <doxygen:param>ALIASES=" Params=\"<b>Parameters:</b> <table border="0">\" Param{2}=\"<tr><td><b><tt>\\1</tt></b></td><td>\\2</td></tr>\" EndParams=\"</table>\" Returns=\"<b>Returns:</b>\" Note=\"<b>Note:</b>\" Warning=\"<b>Warning:</b>\" See=\"<b>See:</b>\" RefSect{1}=\"\\xmlonly<link linkend='boost_local.\\1'>\\1</link>\\endxmlonly\" RefSect2{2}=\"\\xmlonly<link linkend='boost_local.\\1'>\\1 \\2</link>\\endxmlonly\" RefClass{1}=\"\\xmlonly<computeroutput><classname alt='\\1'>\\1</classname></computeroutput>\\endxmlonly\" RefMacro{1}=\"\\xmlonly<computeroutput><macroname alt='\\1'>\\1</macroname></computeroutput>\\endxmlonly\" "
+        # Extract Doxygen that comments non-variant macros.
+        <doxygen:param>PREDEFINED=BOOST_LOCAL_CONFIG_COMPLIANT
         <reftitle>"Reference"
     ;
 
@@ -26,14 +28,14 @@ xml doc
         qbk/local.qbk
     :
         <dependency>qbk/introduction.qbk
-        <dependency>qbk/starting.qbk
+        <dependency>qbk/getting_started.qbk
         <dependency>qbk/tutorial.qbk
-        <dependency>qbk/advanced.qbk
+        <dependency>qbk/advanced_topics.qbk
         <dependency>reference
         <dependency>qbk/examples.qbk
         <dependency>qbk/alternatives.qbk
         <dependency>qbk/implementation.qbk
-        <dependency>qbk/releases.qbk
+        <dependency>qbk/release_notes.qbk
         <dependency>qbk/bibliography.qbk
         <dependency>qbk/acknowledgements.qbk
     ;

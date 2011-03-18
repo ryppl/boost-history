@@ -30,6 +30,7 @@
 <dt><span class="section"><a href="reference.html#header.boost.local.config_hpp">Header &lt;boost/local/config.hpp&gt;</a></span></dt>
 <dt><span class="section"><a href="reference.html#header.boost.local.exit_hpp">Header &lt;boost/local/exit.hpp&gt;</a></span></dt>
 <dt><span class="section"><a href="reference.html#header.boost.local.function_hpp">Header &lt;boost/local/function.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.local.typeof_hpp">Header &lt;boost/local/typeof.hpp&gt;</a></span></dt>
 <dt><span class="section"><a href="reference.html#header.boost.utility.identity_hpp">Header &lt;boost/utility/identity.hpp&gt;</a></span></dt>
 </dl></div>
 <div class="section">
@@ -38,8 +39,8 @@
 <p>Local blocks allow to program code that is executed accessing some of the variables in scope as constants. </p>
 <pre class="synopsis">
 
-<a class="link" href="BOOST_LOCAL_BLOCK.html" title="Macro BOOST_LOCAL_BLOCK">BOOST_LOCAL_BLOCK</a>(...)
-<a class="link" href="BOOST_LOCAL_BLOCK_TPL.html" title="Macro BOOST_LOCAL_BLOCK_TPL">BOOST_LOCAL_BLOCK_TPL</a>(...)
+<a class="link" href="BOOST_LOCAL_BLOCK.html" title="Macro BOOST_LOCAL_BLOCK">BOOST_LOCAL_BLOCK</a>(bindings)
+<a class="link" href="BOOST_LOCAL_BLOCK_TPL.html" title="Macro BOOST_LOCAL_BLOCK_TPL">BOOST_LOCAL_BLOCK_TPL</a>(bindings)
 <a class="link" href="BOOST_LOCAL_BLOCK_END.html" title="Macro BOOST_LOCAL_BLOCK_END">BOOST_LOCAL_BLOCK_END</a></pre>
 </div>
 <div class="section">
@@ -48,6 +49,7 @@
 <p>Configuration macros allow to change the behaviour of this library at compile-time. </p>
 <pre class="synopsis">
 
+<a class="link" href="BOOST_LOCAL_CONFIG_COMPLIANT.html" title="Macro BOOST_LOCAL_CONFIG_COMPLIANT">BOOST_LOCAL_CONFIG_COMPLIANT</a>
 <a class="link" href="BOOST_LOCAL_CONFIG_FUNCTION_ARITY_MAX.html" title="Macro BOOST_LOCAL_CONFIG_FUNCTION_ARITY_MAX">BOOST_LOCAL_CONFIG_FUNCTION_ARITY_MAX</a>
 <a class="link" href="BOOST_LOCAL_CONFIG_THIS_PARAM_NAME.html" title="Macro BOOST_LOCAL_CONFIG_THIS_PARAM_NAME">BOOST_LOCAL_CONFIG_THIS_PARAM_NAME</a></pre>
 </div>
@@ -57,24 +59,32 @@
 <p>Local exits allow to program code that is executed when the enclosing scope is exited. </p>
 <pre class="synopsis">
 
-<a class="link" href="BOOST_LOCAL_EXIT.html" title="Macro BOOST_LOCAL_EXIT">BOOST_LOCAL_EXIT</a>(...)
-<a class="link" href="BOOST_LOCAL_EXIT_TPL.html" title="Macro BOOST_LOCAL_EXIT_TPL">BOOST_LOCAL_EXIT_TPL</a>(...)
+<a class="link" href="BOOST_LOCAL_EXIT.html" title="Macro BOOST_LOCAL_EXIT">BOOST_LOCAL_EXIT</a>(binding_list)
+<a class="link" href="BOOST_LOCAL_EXIT_TPL.html" title="Macro BOOST_LOCAL_EXIT_TPL">BOOST_LOCAL_EXIT_TPL</a>(binding_list)
 <a class="link" href="BOOST_LOCAL_EXIT_END.html" title="Macro BOOST_LOCAL_EXIT_END">BOOST_LOCAL_EXIT_END</a></pre>
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h3 class="title">
 <a name="header.boost.local.function_hpp"></a>Header &lt;<a href="../../../../boost/local/function.hpp" target="_top">boost/local/function.hpp</a>&gt;</h3></div></div></div>
-<p>Local function references can be passed as function and template parameters, they can be assigned to variables, etc. </p>
+<p>Local functions allows to program functions locally within the scope where they are needed (within enclosing functions, etc). </p>
 <pre class="synopsis">
 
-<a class="link" href="BOOST_LOCAL_FUNCTION_PARAMS.html" title="Macro BOOST_LOCAL_FUNCTION_PARAMS">BOOST_LOCAL_FUNCTION_PARAMS</a>(...)
-<a class="link" href="BOOST_LOCAL_FUNCTION_PARAMS_TPL.html" title="Macro BOOST_LOCAL_FUNCTION_PARAMS_TPL">BOOST_LOCAL_FUNCTION_PARAMS_TPL</a>(...)
-<a class="link" href="BOOST_LOCAL_FUNCTION_NAME.html" title="Macro BOOST_LOCAL_FUNCTION_NAME">BOOST_LOCAL_FUNCTION_NAME</a>(local_function_name)</pre>
+<a class="link" href="BOOST_LOCAL_FUNCTION_PARAMS.html" title="Macro BOOST_LOCAL_FUNCTION_PARAMS">BOOST_LOCAL_FUNCTION_PARAMS</a>(parameters)
+<a class="link" href="BOOST_LOCAL_FUNCTION_PARAMS_TPL.html" title="Macro BOOST_LOCAL_FUNCTION_PARAMS_TPL">BOOST_LOCAL_FUNCTION_PARAMS_TPL</a>(parameters)
+<a class="link" href="BOOST_LOCAL_FUNCTION_NAME.html" title="Macro BOOST_LOCAL_FUNCTION_NAME">BOOST_LOCAL_FUNCTION_NAME</a>(name)</pre>
 <pre class="synopsis"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
   <span class="keyword">namespace</span> <span class="identifier">local</span> <span class="special">{</span>
     <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> F<span class="special">,</span> <span class="identifier">size_t</span> defaults <span class="special">=</span> <span class="number">0</span><span class="special">&gt;</span> <span class="keyword">struct</span> <a class="link" href="boost/local/function.html" title="Struct template function">function</a><span class="special">;</span>
   <span class="special">}</span>
 <span class="special">}</span></pre>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="header.boost.local.typeof_hpp"></a>Header &lt;<a href="../../../../boost/local/typeof.hpp" target="_top">boost/local/typeof.hpp</a>&gt;</h3></div></div></div>
+<p>Deduce the type of variables that are bound to local functions, local blocks, and local exits. </p>
+<pre class="synopsis">
+
+<a class="link" href="BOOST_LOCAL_TYPEOF.html" title="Macro BOOST_LOCAL_TYPEOF">BOOST_LOCAL_TYPEOF</a>(bound_variable_name)</pre>
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h3 class="title">

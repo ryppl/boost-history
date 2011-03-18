@@ -1,11 +1,12 @@
 index.html
-boost_local/Starting.html
+boost_local/Getting.html
 boost_local/Tutorial.html
 boost_local/Advanced.html
 reference.html
 BOOST_LOCAL_BLOCK.html
 BOOST_LOCAL_BLOCK_TPL.html
 BOOST_LOCAL_BLOCK_END.html
+BOOST_LOCAL_CONFIG_COMPLIANT.html
 BOOST_LOCAL_CONFIG_FUNCTION_ARITY_MAX.html
 BOOST_LOCAL_CONFIG_THIS_PARAM_NAME.html
 BOOST_LOCAL_EXIT.html
@@ -15,11 +16,12 @@ boost/local/function.html
 BOOST_LOCAL_FUNCTION_PARAMS.html
 BOOST_LOCAL_FUNCTION_PARAMS_TPL.html
 BOOST_LOCAL_FUNCTION_NAME.html
+BOOST_LOCAL_TYPEOF.html
 BOOST_IDENTITY_TYPE.html
 BOOST_IDENTITY_VALUE.html
 boost_local/Examples.html
 boost_local/Alternatives.html
 boost_local/Implementation.html
-boost_local/Releases.html
+boost_local/Release.html
 boost_local/Bibliography.html
 boost_local/Acknowledgments.html

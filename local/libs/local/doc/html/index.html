@@ -5,7 +5,7 @@
 <link rel="stylesheet" href="../../../../doc/src/boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
 <link rel="home" href="index.html" title="Boost.Local 0.1.1">
-<link rel="next" href="boost_local/Starting.html" title="Getting Started">
+<link rel="next" href="boost_local/Getting.html" title="Getting Started">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
@@ -17,7 +17,7 @@
 <td align="center"><a href="../../../../more/index.htm">More</a></td>
 </tr></table>
 <hr>
-<div class="spirit-nav"><a accesskey="n" href="boost_local/Starting.html"><img src="../../../../doc/src/images/next.png" alt="Next"></a></div>
+<div class="spirit-nav"><a accesskey="n" href="boost_local/Getting.html"><img src="../../../../doc/src/images/next.png" alt="Next"></a></div>
 <div class="preface">
 <div class="titlepage"><div>
 <div><h2 class="title">
@@ -27,7 +27,7 @@
 </h3></div></div></div>
 <div><p class="copyright">Copyright &#169; 2009 -2011 Lorenzo Caminiti</p></div>
 <div><div class="legalnotice">
-<a name="id809313"></a><p>
+<a name="id810406"></a><p>
         Use, modification, and distribution is subject to the Boost Software License,
         Version 1.0 (see accompanying file LICENSE_1_0.txt or a copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>).
       </p>
@@ -37,14 +37,14 @@
 <p><b>Table of Contents</b></p>
 <dl>
 <dt><span class="section"><a href="index.html#boost_local.Introduction">Introduction</a></span></dt>
-<dt><span class="section"><a href="boost_local/Starting.html">Getting Started</a></span></dt>
+<dt><span class="section"><a href="boost_local/Getting.html">Getting Started</a></span></dt>
 <dt><span class="section"><a href="boost_local/Tutorial.html">Tutorial</a></span></dt>
 <dt><span class="section"><a href="boost_local/Advanced.html">Advanced Topics</a></span></dt>
 <dt><span class="section"><a href="reference.html">Reference</a></span></dt>
 <dt><span class="section"><a href="boost_local/Examples.html">Appendix: Examples</a></span></dt>
 <dt><span class="section"><a href="boost_local/Alternatives.html">Appendix: Alternatives</a></span></dt>
 <dt><span class="section"><a href="boost_local/Implementation.html">Appendix: Implementation</a></span></dt>
-<dt><span class="section"><a href="boost_local/Releases.html">Releases</a></span></dt>
+<dt><span class="section"><a href="boost_local/Release.html">Release Notes</a></span></dt>
 <dt><span class="section"><a href="boost_local/Bibliography.html">Bibliography</a></span></dt>
 <dt><span class="section"><a href="boost_local/Acknowledgments.html">Acknowledgments</a></span></dt>
 </dl>
@@ -109,7 +109,7 @@
         </li>
 </ul></div>
 <a name="boost_local.Introduction.two_syntaxes"></a><h6>
-<a name="id809120"></a>
+<a name="id810200"></a>
       <a class="link" href="index.html#boost_local.Introduction.two_syntaxes">Two Syntaxes</a>
     </h6>
 <p>
@@ -126,7 +126,7 @@
 <li class="listitem">
           The <span class="emphasis"><em>variadic macro synstax</em></span> is available only on C++
           compilers that support <a href="http://en.wikipedia.org/wiki/Variadic_macro" target="_top">variadic
-          macros</a>. <sup>[<a name="id851524" href="#ftn.id851524" class="footnote">1</a>]</sup> This syntax allow to use commas <code class="computeroutput"><span class="special">,</span></code>
+          macros</a>. <sup>[<a name="id852604" href="#ftn.id852604" class="footnote">1</a>]</sup> This syntax allow to use commas <code class="computeroutput"><span class="special">,</span></code>
           to separate macro parameters therefore resembling the usual C++ syntax
           for function parameter declaration.
         </li>
@@ -141,7 +141,7 @@
       of both syntaxes.
     </p>
 <a name="boost_local.Introduction.an_example"></a><h6>
-<a name="id851586"></a>
+<a name="id852666"></a>
       <a class="link" href="index.html#boost_local.Introduction.an_example">An Example</a>
     </h6>
 <p>
@@ -353,12 +353,13 @@
           usual meaning. Exceptions specifications can be programmed outside the
           macro and just before the body code block <code class="computeroutput"><span class="special">{...}</span></code>
           as usual. Finally, within the local function body the type of a bound variable
-          can be accessed using <code class="literal"><code class="computeroutput">BOOST_LOCAL_TYPEOF</code>(<span class="emphasis"><em>variable-name</em></span>)</code>.
+          can be accessed using <code class="literal"><code class="computeroutput"><a class="link" href="BOOST_LOCAL_TYPEOF.html" title="Macro BOOST_LOCAL_TYPEOF">BOOST_LOCAL_TYPEOF</a></code>(<span class="emphasis"><em>variable-name</em></span>)</code>.
           (See the <a class="link" href="boost_local/Tutorial.html" title="Tutorial">Tutorial</a> section.)
         </li>
 <li class="listitem">
           The macro ending the local function definition specifies the local function
-          name.
+          name. No semicolon <code class="computeroutput"><span class="special">;</span></code> is required
+          after the ending macro.
         </li>
 <li class="listitem">
           The local function macros declare a functor object local to the enclosing
@@ -381,7 +382,9 @@
           is exited.
         </li>
 <li class="listitem">
-          Local exits are anonymous so their ending macro takes no argument.
+          Local exits are anonymous so their ending macro takes no argument. No semicolon
+          <code class="computeroutput"><span class="special">;</span></code> is required after the ending
+          macro.
         </li>
 <li class="listitem">
           The local function <code class="computeroutput"><span class="identifier">add</span></code>
@@ -403,13 +406,15 @@
           is bound by constant reference so it cannot be modified.
         </li>
 <li class="listitem">
-          Local blocks are anonymous so their ending macro takes no argument.
+          Local blocks are anonymous so their ending macro takes no argument. No
+          semicolon <code class="computeroutput"><span class="special">;</span></code> is required after
+          the ending macro.
         </li>
 </ol></div>
 </div>
 <div class="footnotes">
 <br><hr width="100" align="left">
-<div class="footnote"><p><sup>[<a id="ftn.id851524" href="#id851524" class="para">1</a>] </sup>
+<div class="footnote"><p><sup>[<a id="ftn.id852604" href="#id852604" class="para">1</a>] </sup>
             Variadic macros were first introduced by the C99 preprocessor (via the
             use of the special macro symbols ellipses <code class="computeroutput"><span class="special">...</span></code>
             and <code class="computeroutput"><span class="identifier">__VA_ARGS__</span></code>). They
@@ -419,10 +424,10 @@
 </div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
-<td align="left"><p><small>Last revised: March 10, 2011 at 21:42:14 GMT</small></p></td>
+<td align="left"><p><small>Last revised: March 18, 2011 at 21:16:56 GMT</small></p></td>
 <td align="right"><div class="copyright-footer"></div></td>
 </tr></table>
 <hr>
-<div class="spirit-nav"><a accesskey="n" href="boost_local/Starting.html"><img src="../../../../doc/src/images/next.png" alt="Next"></a></div>
+<div class="spirit-nav"><a accesskey="n" href="boost_local/Getting.html"><img src="../../../../doc/src/images/next.png" alt="Next"></a></div>
 </body>
 </html>
