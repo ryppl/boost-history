@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE library PUBLIC "-//Boost//DTD BoostBook XML V1.1//EN"
+	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+
+<library dirname="mydir" name="libpoet" id="libpoet">
+	<libraryinfo>
+		<author>
+			<firstname>Frank</firstname>
+			<othername>Mori</othername>
+			<surname>Hess</surname>
+			<email>fmhess@users.sourceforge.net</email>
+		</author>
+		<copyright>
+			<year>2006</year>
+			<year>2007</year>
+			<year>2008</year>
+			<holder>Frank Mori Hess</holder>
+		</copyright>
+		<librarypurpose>This is the purpose of my library.</librarypurpose>
+		<librarycategory name="category:concurrent-programming"/>
+	</libraryinfo>
+	<title>libpoet</title>
+	<section id="poet.section.main">
+		<title>Parallel Object Execution Threads</title>
+		<using-namespace name="poet"/>
+		<section id="poet.section.introduction">
+			<title>Introduction</title>
+			<para>
+				libpoet is a C++ parallel programing library.  It provides support for easily creating active objects,
+				creating monitor objects, and automatically validating mutex locking order.
+			</para>
+			<para>
+				Active objects provide concurrency and thread-safety, since each active object
+				executes in its own thread.  Futures are employed to communicate with active objects
+				in a thread-safe manner.  To learn
+				more about the active object concept, see the paper
+				<ulink url="http://www.cs.wustl.edu/~schmidt/PDF/Act-Obj.pdf">"Active Object, An Object Behavioral Pattern for Concurrent Programming."</ulink>
+				by R. Greg Lavender and Douglas C. Schmidt.
+				Some of the more important active object classes in libpoet
+				are <classname>poet::active_function</classname>, <classname>poet::future</classname>,
+				and <classname>poet::scheduler</classname>.
+			</para>
+			<para>
+				Monitor objects provide thread-safety via automatically locked access to an object.
+				See the paper
+				<ulink url="http://www.cs.wustl.edu/~schmidt/PDF/monitor.pdf">"Monitor Object, An Object Behavioral Pattern for Concurrent Programming"</ulink>
+				by Douglas C. Schmidt for more information about monitor objects.
+				The <classname>poet::monitor_ptr</classname>, <classname>poet::monitor</classname>,
+				and <classname>poet::monitor_base</classname> classes in libpoet provide support for monitor
+				objects.
+			</para>
+			<para>
+				Finally, the <classname>poet::acyclic_mutex</classname> class provides
+				a wrapper for mutex classes which adds automatic validation of a program's
+				mutex locking order.  Following a consistent locking order ensures your program
+				will not deadlock due to problems such as "deadly embrace" or the "dining philosophers"
+				problem.
+			</para>
+			<para>
+				A version of this documentation corresponding to the most recent release should
+				be available online at
+				<ulink url="http://www.comedi.org/projects/libpoet/boostbook/doc/boostbook/html/index.html">http://www.comedi.org/projects/libpoet/boostbook/doc/boostbook/html/index.html</ulink>
+			</para>
+		</section>
+		<section id="poet.section.status">
+			<title>Status</title>
+			<para>
+				The library's API is still undergoing some development, and may be refined as feedback
+				and experience clairifies areas which could be improved.  It is anticipated that some
+				interfaces will change to keep in sync with API changes in the Boost libraries,
+				and to keep in
+				sync with relevant changes and additions to the C++ standard.
+			</para>
+		</section>
+		<section id="poet.section.dependencies">
+			<title>Dependencies</title>
+			<para>
+				libpoet depends on the <ulink url="http://www.boost.org">Boost C++ libraries</ulink>
+				version 1.39 or later, and requires linking to the Boost.Thread library (libboost_thread).
+			</para>
+		</section>
+		<section id="poet.section.download">
+			<title>Download</title>
+			<para>
+				The most recent release is available from the
+				<ulink url="http://www.boost-consulting.com/vault/index.php?&amp;direction=0&amp;order=&amp;directory=Concurrent%20Programming/Active%20Objects">
+				Boost Vault</ulink>
+				(get the latest "libpoet-xxxx-xx-xx.tgz" file).
+			</para>
+			<para>
+				The current source code is also availabe via anonymous cvs:
+				<programlisting>cvs -d:pserver:anonymous@cvs.comedi.org:/cvs/comedi login
+cvs -d:pserver:anonymous@cvs.comedi.org:/cvs/comedi co libpoet</programlisting>
+				When prompted for a password, hit enter.
+			</para>
+			<para>
+				You can also
+				<ulink url="http://www.comedi.org/cgi-bin/viewcvs.cgi/libpoet/">browse the cvs online</ulink>.
+			</para>
+			<para>
+				The code (and this documentation) is licensed under the <ulink url="http://www.boost.org/LICENSE_1_0.txt">Boost Software License, Version 1.0</ulink>.
+			</para>
+		</section>
+		<section id="poet.section.installation">
+			<title>Installation</title>
+			<para>
+				libpoet is a header-only library.  It may be used by simply unpacking the files and adding the location of
+				the top-level directory (which contains the "poet/" subdirectory) to your compiler's include path.
+				Alternatively, you may move the "poet/" subdirectory
+				into an existing include directory which is already in your include path.
+			</para>
+		</section>
+		<section id="poet.section.discussion">
+			<title>Discussion</title>
+			<para>
+				libpoet has a <ulink url="http://groups.google.com/group/libpoet">mailing list</ulink> hosted on Google Groups,
+				which may be used to discuss issues related to the library.
+			</para>
+		</section>
+	</section>
+	<xi:include href="libpoet_reference.xml"
+		xmlns:xi="http://www.w3.org/2001/XInclude"/>
+	<section id="poet.section.examples">
+		<title>Example Programs</title>
+		<section id="poet.example.active_objects">
+			<title>Active Objects</title>
+			<section id="poet.example.active_object_example.cpp">
+				<title>active_object_example.cpp</title>
+				<para>
+					Download <ulink url="../../../examples/active_object_example.cpp">active_object_example.cpp</ulink>.
+				</para>
+				<programlisting><xi:include href="../../examples/active_object_example.cpp"
+						xmlns:xi="http://www.w3.org/2001/XInclude" parse="text"/></programlisting>
+			</section>
+			<section id="poet.example.pipeline.cpp">
+				<title>pipeline.cpp</title>
+				<para>
+					Download <ulink url="../../../examples/pipeline.cpp">pipeline.cpp</ulink>.
+				</para>
+				<programlisting><xi:include href="../../examples/pipeline.cpp"
+						xmlns:xi="http://www.w3.org/2001/XInclude" parse="text"/></programlisting>
+			</section>
+			<section id="poet.example.transform.cpp">
+				<title>transform.cpp</title>
+				<para>
+					Download <ulink url="../../../examples/transform.cpp">transform.cpp</ulink>.
+				</para>
+				<programlisting><xi:include href="../../examples/transform.cpp"
+						xmlns:xi="http://www.w3.org/2001/XInclude" parse="text"/></programlisting>
+			</section>
+		</section>
+		<section id="poet.example.monitor_objects">
+			<title>Monitor Objects</title>
+			<section id="poet.example.monitor_demo.cpp">
+				<title>monitor_demo.cpp</title>
+				<para>
+					Download <ulink url="../../../examples/monitor_demo.cpp">monitor_demo.cpp</ulink>.
+				</para>
+				<programlisting><xi:include href="../../examples/monitor_demo.cpp"
+						xmlns:xi="http://www.w3.org/2001/XInclude" parse="text"/></programlisting>
+			</section>
+		</section>
+		<section id="poet.example.mutex_debugging">
+			<title>Mutex Debugging</title>
+			<section id="poet.example.acyclic_mutex_demo.cpp">
+				<title>acyclic_mutex_demo.cpp</title>
+				<para>The acyclic_mutex_demo example program writes the following graph to
+					stdout (after processing
+					into PNG format with the "dot" program from the graphviz package):
+				</para>
+				<para>
+					<imagedata fileref="demo_locking_order_graph.png"/>
+				</para>
+				<para>
+					Download <ulink url="../../../examples/acyclic_mutex_demo.cpp">acyclic_mutex_demo.cpp</ulink>.
+				</para>
+				<programlisting><xi:include href="../../examples/acyclic_mutex_demo.cpp"
+						xmlns:xi="http://www.w3.org/2001/XInclude" parse="text"/></programlisting>
+			</section>
+		</section>
+	</section>
+</library>

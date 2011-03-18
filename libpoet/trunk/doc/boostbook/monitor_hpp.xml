@@ -1,0 +1,348 @@
+<header name="poet/monitor.hpp">
+	<namespace name="poet">
+		<class name="monitor">
+			<template>
+				<template-type-parameter name="T"/>
+				<template-type-parameter name="Mutex">
+					<default>boost::mutex</default>
+				</template-type-parameter>
+			</template>
+			<purpose>A wrapper which provides automatically locked access to an object.</purpose>
+			<description>
+				<para>
+					<code>monitor</code> allows for the easy creation of monitor objects.
+					A <code>monitor</code> provides automatically locked access to its contained object's members
+					when they are accessed through the overloaded <methodname>operator-&gt;</methodname>,
+					or alternatively through one of the lock classes from
+					<link linkend="header.poet.monitor_locks.hpp">poet/monitor_locks.hpp</link>.
+					It is similar to a <classname>monitor_ptr</classname>, except it behaves like a value
+					instead of a smart pointer when copied.
+					Copies of a <code>monitor</code> object are deep copies with independent values, and
+					do not share the same mutex/condition.
+				</para>
+				<para>
+					Although any object may be wrapped in a <code>monitor</code>,
+					special support is provided
+					for classes derived from <classname>monitor_base</classname>.  This allows classes derived from
+					<classname>monitor_base</classname> to wait on conditions inside member function calls,
+					releasing the <code>monitor</code>'s mutex until the condition is satisfied.
+				</para>
+				<para>
+					The <code>Mutex</code> template type parameter must model the <code>Lockable</code>
+					concept from the Boost.Thread library.  The <code>monitor</code> itself models the
+					<code>Lockable</code> concept, and will also model any of the
+					<code>TimedLockable</code>, <code>SharedLockable</code>, or <code>UpgradeLockable</code>
+					concepts if the underlying <code>Mutex</code> template type supports them.
+				</para>
+				<para>
+					The interfaces defined by the Boost.Thread mutex concepts should generally
+					not be used directly by the user.  They are intended to be used by
+					scoped lock classes such as <classname>monitor_unique_lock</classname>,
+					which provide a safer means to perform locking.
+					See the "Mutex Concepts" documentation in the Boost.Thread library
+					for more information about the Lockable, etc. concepts.
+				</para>
+				<para>
+					It is possible to obtain <classname>monitor_ptr</classname>s from a <code>monitor</code> which shares
+					ownership/mutex/condition and points at
+					the value wrapped in a <code>monitor</code> object, via the <methodname>get_monitor_ptr</methodname>
+					method.  The value wrapped in a <code>monitor</code> object will not be destructed until
+					the last such <code>monitor_ptr</code> is destroyed, along with the <code>monitor</code>
+					object containing it, and any locks from
+					<link linkend="header.poet.monitor_locks.hpp">poet/monitor_locks.hpp</link>
+					which reference it.
+				</para>
+				<itemizedlist>
+					<title>Example Code</title>
+					<listitem>
+						<para>
+							<link linkend="poet.example.monitor_demo.cpp">monitor_demo.cpp</link>
+						</para>
+					</listitem>
+				</itemizedlist>
+				<itemizedlist>
+					<title>See also</title>
+					<listitem>
+						<para>
+							<classname>monitor_ptr</classname>: a pointer-like alternative to the <code>monitor</code> class.
+						</para>
+					</listitem>
+				</itemizedlist>
+			</description>
+			<access name="public">
+				<typedef name="element_type">
+					<type>T</type>
+				</typedef>
+				<typedef name="mutex_type">
+					<type>Mutex</type>
+				</typedef>
+				<method-group name="public member functions">
+					<overloaded-method name="get_monitor_ptr">
+						<signature>
+							<type>const <classname>monitor_ptr</classname>&lt;T, Mutex&gt; &amp;</type>
+						</signature>
+						<signature cv="const">
+							<type><classname>monitor_ptr</classname>&lt;const T, Mutex&gt;</type>
+						</signature>
+						<description>
+							<para>
+								The <code>get_monitor_ptr</code> method can be used to obtain a <classname>monitor_ptr</classname> which shares
+								ownership/mutex/condition with <code>*this</code>.
+							</para>
+						</description>
+					</overloaded-method>
+					<overloaded-method name="operator->">
+						<signature>
+							<type><classname>monitor_unique_lock</classname>&lt;monitor&gt;</type>
+						</signature>
+						<signature cv="const">
+							<type><classname>monitor_unique_lock</classname>&lt;const monitor&gt;</type>
+						</signature>
+						<description>
+							<para>Returns a temporary <classname>monitor_unique_lock</classname> which
+								locks the <code>monitor</code>'s mutex.
+								The <code>operator-&gt;()</code> of the returned <classname>monitor_unique_lock</classname>
+								object will be
+								automatically called in turn (overloading <code>operator-&gt;()</code> is special in that way), which will
+								utimately result in a call of <code>operator-&gt;()</code> on a pointer to the
+								<code>monitor</code>'s contained object.
+								The mutex is automatically unlocked after the member access completes by the
+								<classname>monitor_unique_lock</classname>
+								destructor.
+							</para>
+							<para>
+								If more flexibility is desired, the lock types from
+								<link linkend="header.poet.monitor_locks.hpp">poet/monitor_locks.hpp</link>
+								provide alternatives to <code>monitor::operator-&gt;</code>.
+							</para>
+						</description>
+					</overloaded-method>
+					<method name="swap">
+						<template>
+							<template-type-parameter name="M"/>
+						</template>
+						<type>void</type>
+						<parameter name="other">
+							<paramtype>monitor&lt;T, M&gt; &amp;</paramtype>
+						</parameter>
+						<description>
+							<para>
+								Swaps the wrapped values of <code>*this</code> and <code>other</code>.
+								Only the wrapped values of the two monitors are swapped, not their mutexes
+								or condition variables.
+							</para>
+							<para>
+								The mutexes of both monitors are locked before
+								their values are swapped.  The mutexes are locked by trying each of the
+								two possible locking orders until both mutexes are successfully locked.
+								This avoids any possibility of deadlock due to locking order violation,
+								but may produce false positives when using debugging tools such as
+								<classname>acyclic_mutex</classname>.
+							</para>
+						</description>
+					</method>
+				</method-group>
+				<method-group name="Boost.Thread Lockable concept support">
+					<method name="lock" cv="const">
+						<type>void</type>
+					</method>
+					<method name="try_lock" cv="const">
+						<type>bool</type>
+					</method>
+					<method name="unlock" cv="const">
+						<type>void</type>
+					</method>
+				</method-group>
+				<method-group name="Boost.Thread TimedLockable concept support">
+					<method name="timed_lock" cv="const">
+						<template>
+							<template-type-parameter name="Timeout"/>
+						</template>
+						<type>bool</type>
+						<parameter name="t" cv="const">
+							<paramtype>const Timeout &amp;</paramtype>
+						</parameter>
+					</method>
+				</method-group>
+				<method-group name="Boost.Thread SharedLockable concept support">
+					<method name="lock_shared" cv="const">
+						<type>void</type>
+					</method>
+					<method name="try_lock_shared" cv="const">
+						<type>bool</type>
+					</method>
+					<method name="timed_lock_shared" cv="const">
+						<template>
+							<template-type-parameter name="Timeout"/>
+						</template>
+						<type>bool</type>
+						<parameter name="t" cv="const">
+							<paramtype>const Timeout &amp;</paramtype>
+						</parameter>
+					</method>
+					<method name="unlock_shared" cv="const">
+						<type>void</type>
+					</method>
+					<method name="unlock_and_lock_shared" cv="const">
+						<type>void</type>
+					</method>
+				</method-group>
+				<method-group name="Boost.Thread UpgradeLockable concept support">
+					<method name="lock_upgrade" cv="const">
+						<type>void</type>
+					</method>
+					<method name="unlock_upgrade" cv="const">
+						<type>void</type>
+					</method>
+					<method name="unlock_upgrade_and_lock" cv="const">
+						<type>void</type>
+					</method>
+					<method name="unlock_upgrade_and_lock_shared" cv="const">
+						<type>void</type>
+					</method>
+					<method name="unlock_and_lock_upgrade" cv="const">
+						<type>void</type>
+					</method>
+				</method-group>
+				<copy-assignment>
+					<template>
+						<template-type-parameter name="U"/>
+						<template-type-parameter name="M"/>
+					</template>
+					<type>monitor&lt;T, Mutex&gt; &amp;</type>
+					<parameter name="rhs">
+						<paramtype>const monitor&lt;U, M&gt; &amp;</paramtype>
+					</parameter>
+					<requires>
+						<para>The template type <code>U</code> of <code>rhs</code>
+							must be implicitly convertible into the template type
+							<code>T</code> of <code>*this</code>.
+						</para>
+					</requires>
+					<description>
+						<para>Copies the contained value of type <code>U</code> from <code>rhs</code>
+							into <code>*this</code>.
+						</para>
+						<para>
+							The mutexes of both <code>*this</code> and <code>rhs</code> are locked before
+							the assignment is performed.  The mutexes are locked by trying each of the
+							two possible locking orders until both mutexes are successfully locked.
+							This avoids any possibility of deadlock due to locking order violation,
+							but may produce false positives when using debugging tools such as
+							<classname>acyclic_mutex</classname>.
+						</para>
+						<para>
+							Copies of a <code>monitor</code> object are deep copies, which do not share
+							the same mutex or condition.
+						</para>
+					</description>
+				</copy-assignment>
+				<copy-assignment>
+					<parameter name="rhs">
+						<paramtype>const monitor &amp;</paramtype>
+					</parameter>
+					<description>
+						<para>
+							Same as the templated assignment operator.  This overload is provided to
+							prevent a default assignment operator from being generated.
+						</para>
+					</description>
+				</copy-assignment>
+				<constructor>
+					<description>
+						<para>Creates a <code>monitor</code> with a default-constructed value.
+						</para>
+					</description>
+				</constructor>
+				<constructor>
+					<parameter name="value">
+						<paramtype>const T &amp;</paramtype>
+					</parameter>
+					<description>
+						<para>Creates a <code>monitor</code> which contains a value copy-constructed from
+							the constructor's argument.
+						</para>
+					</description>
+				</constructor>
+				<constructor>
+					<parameter name="other">
+						<paramtype>const <classname>monitor</classname> &amp;</paramtype>
+					</parameter>
+					<description>
+						<para>
+							The copy constructor creates a <code>monitor</code> whose contained value is
+							copy-constructed from the
+							value contained in the <code>other</code> parameter.  <code>other</code> is
+							locked while its value is copied out.
+						</para>
+					</description>
+				</constructor>
+				<constructor>
+					<template>
+						<template-type-parameter name="U"/>
+						<template-type-parameter name="M"/>
+					</template>
+					<parameter name="other">
+						<paramtype>const <classname>monitor</classname>&lt;U, M&gt; &amp;</paramtype>
+					</parameter>
+					<description>
+						<para>
+							Creates a <code>monitor</code> whose contained value is copy-constructed from the
+							value contained in the <code>other</code> parameter.  The type <code>U</code> must
+							be implicitly convertible to type <code>T</code>.  <code>other</code> is
+							locked while its value is copied out.
+						</para>
+					</description>
+				</constructor>
+				<constructor>
+					<template>
+						<template-type-parameter name="U1"/>
+						<template-type-parameter name="U2"/>
+						<template-type-parameter name="..."/>
+						<template-type-parameter name="UN"/>
+					</template>
+					<parameter name="arg1"><paramtype>U1</paramtype></parameter>
+					<parameter name="arg2"><paramtype>U2</paramtype></parameter>
+					<parameter><paramtype>...</paramtype></parameter>
+					<parameter name="argN"><paramtype>UN</paramtype></parameter>
+					<description>
+						<para>
+							Creates a <code>monitor</code> by forwarding the constructor's arguments
+							to the constructor for the contained value.  If you need to pass
+							a reference to the contained value's constructor, you should wrap it
+							in a <classname>boost::reference_wrapper</classname> to prevent it
+							from being automatically converted to a value.
+						</para>
+						<para>
+							If you wish to change the maximum number of arguments this family of constructors can take
+							from its default value of 10, you may define the macro <code>POET_MONITOR_MAX_CONSTRUCTOR_ARGS</code>
+							to your desired value prior to including monitor.hpp.
+						</para>
+					</description>
+				</constructor>
+				<destructor specifiers="virtual"/>
+			</access>
+			<free-function-group name="free function: swap">
+				<function name="swap">
+					<template>
+						<template-type-parameter name="T"/>
+						<template-type-parameter name="Mutex"/>
+					</template>
+					<parameter name="monitor0"><paramtype>monitor&lt;T, Mutex&gt; &amp;</paramtype></parameter>
+					<parameter name="monitor1"><paramtype>monitor&lt;T, Mutex&gt; &amp;</paramtype></parameter>
+					<type>void</type>
+					<description>
+						<para>
+							Swaps the values of <code>monitor0</code> and <code>monitor1</code>.  This
+							function is provided to
+							enhance efficiency with generic algorithms.
+						</para>
+					</description>
+					<effects>
+						<para><code>monitor0.swap(monitor1);</code></para>
+					</effects>
+				</function>
+			</free-function-group>
+		</class>
+	</namespace>
+</header>

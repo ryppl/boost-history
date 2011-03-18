@@ -1,0 +1,299 @@
+<header name="poet/active_object.hpp">
+	<namespace name="poet">
+		<class name="method_request_base">
+			<purpose>Base class for method requests.</purpose>
+			<description>
+				<para>
+					<code>method_request_base</code> is the base class for the asynchronous method requests which are
+					queued in activation queues derived from <classname>activation_queue_base</classname>, and
+					executed by schedulers derived from <classname>scheduler_base</classname>.
+				</para>
+				<para>
+					If you are building active objects using <classname>active_function</classname>s, it
+					should not be necessary to use this class directly, as the definition and creation of
+					method requests are handled internally by <classname>active_function</classname>.
+				</para>
+			</description>
+			<access name="public">
+				<method-group name="public member functions">
+					<method name="run" cv="" specifiers="virtual">
+						<type>void</type>
+						<description><para>run() is called by schedulers to execute the method request.  It will not
+							be called by the scheduler until the future returned by <methodname>scheduling_guard</methodname>
+							becomes ready or gets an exception.</para></description>
+					</method>
+					<method name="scheduling_guard" cv="const" specifiers="virtual">
+						<type><classname>future</classname>&lt;void&gt;</type>
+						<description>
+							<para>This function should return a future which becomes ready (or gets an exception) when the
+								method request is ready to be run.</para>
+						</description>
+					</method>
+				</method-group>
+				<constructor/>
+				<destructor specifiers="virtual"/>
+			</access>
+		</class>
+		<class name="activation_queue_base">
+			<purpose>Base class for activation queues. </purpose>
+			<description>
+				<para>
+					An activation queue is responsible for thread-safely transporting method requests
+					from the threads making asynchronous function calls to a scheduler thread for execution.
+					libpoet provides two activation queues derived from activation_queue_base:
+					<classname>out_of_order_activation_queue</classname> and
+					<classname>in_order_activation_queue</classname>.
+				</para>
+			</description>
+			<access name="public">
+				<typedef name="size_type">
+					<type>unsigned long</type>
+				</typedef>
+				<method-group name="public member functions">
+					<method name="push_back" cv="" specifiers="virtual">
+						<type>void</type>
+						<parameter name="request"><paramtype>const boost::shared_ptr&lt;<classname>method_request_base</classname>&gt; &amp;</paramtype></parameter>
+						<description><para>Called to adds a new method request to the activation queue.</para></description>
+					</method>
+					<method name="get_request" cv="" specifiers="virtual">
+						<type>boost::shared_ptr&lt;<classname>method_request_base</classname>&gt;</type>
+						<description>
+							<para>
+								<code>get_request</code> blocks until the next method request is ready to run, then pops
+								the request off
+								the queue and returns it.  The <code>get_request</code> call may be forced to
+								return early by a call to <methodname>wake</methodname>.  <code>get_request</code>
+								is called by schedulers to obtain method requests for execution.
+							</para>
+						</description>
+						<returns>
+							<para>
+								A method request which is ready to be run.  If <code>get_request</code> was
+								interrupted by a <methodname>wake</methodname> call
+								before any method requests became ready,
+								it should return an empty <code>shared_ptr</code>.
+							</para>
+						</returns>
+					</method>
+					<method name="wake">
+						<type>void</type>
+						<description>
+							<para>
+								A call to <code>wake</code> should cause any <methodname>get_request</methodname>
+								calls which are waiting for a ready method request
+								to wake up immediately and return an empty <code>shared_ptr</code>.
+							</para>
+						</description>
+					</method>
+					<method name="size" cv="const" specifiers="virtual">
+						<type>size_type</type>
+						<description><para></para></description>
+						<returns><para>the number of method requests waiting in the queue. </para></returns>
+					</method>
+					<method name="empty" cv="const" specifiers="virtual">
+						<type>bool</type><description><para></para></description>
+						<returns><para>true if size() is zero. </para></returns>
+					</method>
+				</method-group>
+				<destructor specifiers="virtual">
+				</destructor>
+			</access>
+		</class>
+		<class name="in_order_activation_queue">
+			<inherit access="public"><type><classname>poet::activation_queue_base</classname></type></inherit>
+			<purpose>An activation queue which always keeps method requests in FIFO order. </purpose>
+			<description>
+				<para>An <code>in_order_activation_queue</code> will never skip over method requests that aren't ready yet.
+					If you don't require the method requests to be executed in the exact order they were received,
+					use an <classname>out_of_order_activation_queue</classname> instead.
+				</para>
+			</description>
+			<access name="public">
+				<method-group name="public member functions">
+					<method name="push_back" cv="" specifiers="virtual">
+						<type>void</type>
+						<parameter name="request"><paramtype>const boost::shared_ptr&lt;<classname>method_request_base</classname>&gt; &amp;</paramtype></parameter>
+						<description><para>Adds a new method request to the activation queue. </para></description>
+					</method>
+					<method name="get_request" cv="" specifiers="virtual">
+						<type>boost::shared_ptr&lt;<classname>method_request_base</classname>&gt;</type>
+						<description>
+							<para>
+								Blocks until the oldest method request in the queue becomes ready, then pops the request
+								off the queue and returns it.
+							</para>
+						</description>
+						<returns>
+							<para>
+								The oldest method request in the queue, or an empty shared_ptr if interrupted by <methodname>wake</methodname>.
+							</para>
+						</returns>
+					</method>
+					<method name="wake">
+						<type>void</type>
+						<description>
+							<para>
+								A call to <code>wake</code> should cause any <methodname>get_request</methodname>
+								calls which are waiting for a ready method request
+								to wake up immediately and return an empty shared_ptr.
+							</para>
+						</description>
+					</method>
+					<method name="size" cv="const" specifiers="virtual">
+						<type>size_type</type>
+						<description><para></para></description>
+						<returns><para>the number of method requests waiting in the queue. </para></returns>
+					</method>
+					<method name="empty" cv="const" specifiers="virtual">
+						<type>bool</type>
+						<description><para></para></description>
+						<returns><para>true if size() is zero. </para></returns>
+					</method>
+				</method-group>
+				<destructor specifiers="virtual"/>
+			</access>
+		</class>
+		<class name="out_of_order_activation_queue">
+			<inherit access="public"><type><classname>poet::activation_queue_base</classname></type></inherit>
+			<purpose>An activation queue which can reorder method requests. </purpose>
+			<description>
+				<para>
+					An out_of_order_activation_queue can return any method request it contains
+					which is currently ready for execution. Thus, method requests which are not ready will never
+					stall the queue and prevent
+					another ready method request from running.
+				</para>
+			</description>
+			<access name="public">
+				<method-group name="public member functions">
+					<method name="push_back" cv="" specifiers="virtual">
+						<type>void</type>
+						<parameter name="request"><paramtype>const boost::shared_ptr&lt;<classname>method_request_base</classname>&gt; &amp;</paramtype></parameter>
+						<description><para>Adds a new method request to the activation queue. </para></description>
+					</method>
+					<method name="get_request" cv="" specifiers="virtual">
+						<type>boost::shared_ptr&lt;<classname>method_request_base</classname>&gt;</type>
+						<description>
+							<para>
+								Blocks until any method request in the queue becomes ready, then pops the ready
+								request off the queue and returns it.
+							</para>
+						</description>
+						<returns>
+							<para>A method request from the queue which is currently ready for execution, or
+								an empty <code>shared_ptr</code> if interrupted by <methodname>wake</methodname>.
+							</para>
+						</returns>
+					</method>
+					<method name="wake">
+						<type>void</type>
+						<description>
+							<para>
+								A call to <code>wake</code> should cause any <methodname>get_request</methodname>
+								calls which are waiting for a ready method request
+								to wake up immediately and return an empty shared_ptr.
+							</para>
+						</description>
+					</method>
+					<method name="size" cv="const" specifiers="virtual">
+						<type>size_type</type>
+						<description><para></para></description>
+						<returns><para>the number of method requests waiting in the queue. </para></returns>
+					</method>
+					<method name="empty" cv="const" specifiers="virtual">
+						<type>bool</type>
+						<description><para></para></description>
+						<returns><para>true if size() is zero. </para></returns>
+					</method>
+				</method-group>
+				<destructor specifiers="virtual"/>
+			</access>
+		</class>
+		<class name="scheduler_base">
+			<purpose>Base class for schedulers. </purpose>
+			<description><para>A scheduler creates its own thread and executes method requests which are passed to it through its activation queue. </para></description>
+			<access name="public">
+				<method-group name="public member functions">
+					<method name="post_method_request" cv="" specifiers="virtual">
+						<type>void</type>
+						<parameter name="request"><paramtype>const boost::shared_ptr&lt;<classname>method_request_base</classname>&gt; &amp;</paramtype></parameter>
+						<description><para>Adds <code>request</code> to the scheduler's activation queue.</para></description>
+					</method>
+					<method name="kill" cv="" specifiers="virtual">
+						<type>void</type>
+						<description>
+							<para>
+								Tells scheduler thread to exit as soon as possible. The scheduler thread may still be running after this function returns.
+							</para>
+						</description>
+					</method>
+					<method name="join" cv="" specifiers="virtual">
+						<type>void</type>
+						<description><para>Blocks until the scheduler thread exits. </para></description>
+					</method>
+				</method-group>
+				<destructor specifiers="virtual">
+					<description><para>Virtual destructor. </para></description>
+				</destructor>
+			</access>
+		</class>
+		<class name="scheduler">
+			<inherit access="public"><type><classname>poet::scheduler_base</classname></type></inherit>
+			<purpose>Execute method requests in a separate thread. </purpose>
+			<description>
+				<para>
+					A <code>scheduler</code> object creates a new thread of execution which pulls method
+					requests from an activation queue and executes them.
+				</para>
+				<itemizedlist>
+					<title>Example Code</title>
+					<listitem>
+						<para>
+							<link linkend="poet.example.active_object_example.cpp">active_object_example.cpp</link>
+						</para>
+					</listitem>
+				</itemizedlist>
+			</description>
+			<access name="public">
+				<method-group name="public member functions">
+					<method name="post_method_request" cv="" specifiers="virtual">
+						<type>void</type>
+						<parameter name="request"><paramtype>const boost::shared_ptr&lt;<classname>method_request_base</classname>&gt; &amp;</paramtype></parameter>
+						<description><para>Adds <code>request</code> to the scheduler's activation queue. </para></description>
+					</method>
+					<method name="kill" cv="" specifiers="virtual">
+						<type>void</type>
+						<description>
+							<para>
+								Tells scheduler thread to exit as soon as possible. The scheduler thread may still be running after this function returns.
+							</para>
+						</description>
+					</method>
+					<method name="join" cv="" specifiers="virtual">
+						<type>void</type>
+						<description><para>Blocks until the scheduler thread exits.</para></description>
+					</method>
+				</method-group>
+				<constructor>
+					<parameter name="queue">
+						<paramtype>const boost::shared_ptr&lt;<classname>activation_queue_base</classname>&gt; &amp;</paramtype>
+						<default>boost::shared_ptr&lt;activation_queue_base&gt;(new <classname>out_of_order_activation_queue</classname>)</default>
+						<description><para>Allows use of a customized activation queue. By default, an <classname>out_of_order_activation_queue</classname> is allocated for use. </para></description>
+					</parameter>
+					<description>
+						<para>The scheduler constructer will create a new thread of execution, where the scheduler will execute method requests.</para>
+					</description>
+				</constructor>
+				<destructor specifiers="virtual">
+					<description>
+						<para>
+							The scheduler thread will continue to run after the scheduler object is destroyed,
+							until all method requests in its activation queue have been dispatched (unless the
+							<methodname>kill</methodname> method has been called).
+						</para>
+					</description>
+				</destructor>
+			</access>
+		</class>
+	</namespace>
+</header>

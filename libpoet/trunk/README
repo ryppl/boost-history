@@ -1,0 +1,13 @@
+libpoet: Parallel Object Execution Threads
+
+libpoet is a C++ parallel programing library. It provides support for easily 
+creating active objects, creating monitor objects, and automatically 
+validating mutex locking order.
+
+The release tarballs should have html documentation in the doc/boostbook/html 
+subdirectory.
+
+The libpoet documentation is also online:
+
+http://www.comedi.org/projects/libpoet/boostbook/doc/boostbook/html/index.html
+

@@ -1,0 +1,112 @@
+<header name="poet/active_function.hpp">
+	<namespace name="poet">
+		<class name="active_function">
+			<template><template-type-parameter name="Signature"/></template>
+			<purpose>Create an active object from an ordinary function or object. </purpose>
+			<description>
+				<para>An <code>active_function</code> can be created in one step from an ordinary function
+					or function object.  By default, an <code>active_function</code> is a fully functional active object
+					with its own scheduler.  Multiple <code>active_function</code>s may also share a scheduler and
+					be combined to form more complicated active objects.
+				</para>
+				<para>In the following, the active_function is taken to have a signature of: <programlisting>active_function&lt;R (T1, T2, ..., TN)&gt;</programlisting></para>
+				<itemizedlist>
+					<title>Example Code</title>
+					<listitem>
+						<para>
+							<link linkend="poet.example.pipeline.cpp">pipeline.cpp</link>
+						</para>
+					</listitem>
+					<listitem>
+						<para>
+							<link linkend="poet.example.transform.cpp">pipeline.cpp</link>
+						</para>
+					</listitem>
+					<listitem>
+						<para>
+							<link linkend="poet.example.active_object_example.cpp">active_object_example.cpp</link>
+						</para>
+					</listitem>
+				</itemizedlist>
+			</description>
+			<access name="public">
+				<typedef name="passive_result_type">
+					<type>boost::function_traits&lt;Signature&gt;::result_type</type>
+				</typedef>
+				<typedef name="result_type">
+					<type><classname>poet::future</classname>&lt;passive_result_type&gt;</type>
+				</typedef>
+				<typedef name="passive_slot_type">
+					<type><classname>boost::slot</classname>&lt;Signature&gt;</type>
+					<description><para>Slot type for the passive function the active_function is constructed from.</para></description>
+				</typedef>
+				<method-group name="public member functions">
+					<overloaded-method name="operator()">
+						<signature>
+							<type>result_type</type>
+							<parameter name="arg1"><paramtype><classname>future</classname>&lt;T1&gt;</paramtype></parameter>
+							<parameter name="arg2"><paramtype><classname>future</classname>&lt;T2&gt;</paramtype></parameter>
+							<parameter name=""><paramtype>...</paramtype></parameter>
+							<parameter name="argN"><paramtype><classname>future</classname>&lt;TN&gt;</paramtype></parameter>
+						</signature>
+						<signature cv="const">
+							<type>result_type</type>
+							<parameter name="arg1"><paramtype><classname>future</classname>&lt;T1&gt;</paramtype></parameter>
+							<parameter name="arg2"><paramtype><classname>future</classname>&lt;T2&gt;</paramtype></parameter>
+							<parameter name=""><paramtype>...</paramtype></parameter>
+							<parameter name="argN"><paramtype><classname>future</classname>&lt;TN&gt;</paramtype></parameter>
+						</signature>
+						<description>
+							<para>Invocation creates a method request and sends it to the active_function's scheduler. The method request may be cancelled by calling <methodname>future::cancel</methodname>() on the returned <classname>future</classname>.</para>
+							<para>Note the active_function takes futures as arguments, as well as returning a <classname>future</classname>. This allows future results to be passed from one active_function to another without waiting for the result to become ready. Since futures are constructible from their value types, the active_function can also take ordinary values not wrapped in futures as arguments. </para>
+						</description>
+					</overloaded-method>
+					<method name="expired" cv="const">
+						<type>bool</type>
+						<description><para>Calls the boost::slot::expired() query method on the slot this active_function was constructed from. </para></description>
+					</method>
+				</method-group>
+				<constructor>
+					<parameter name="passive_function">
+						<paramtype>const <classname>passive_slot_type</classname> &amp;</paramtype>
+						<description><para>The underlying function this active_function object will call. The boost::slot class supports tracking of arbitrary boost::shared_ptr which are associated with the slot. For example, if the slot is constructed from a non-static member function, the lifetime of the member function's object can be tracked and the slot prevented from running after the object is destroyed. </para></description>
+					</parameter>
+					<parameter name="scheduler">
+						<paramtype>boost::shared_ptr&lt;<classname>scheduler_base</classname>&gt;</paramtype>
+						<default>boost::shared_ptr&lt;scheduler_base&gt;()</default>
+						<description><para>Specify a scheduler object for the active_function to post its method requests to. By default, a new Scheduler object is created for the active_function. If the active_function is providing a method as part of an active object class, you may wish for all the class' methods to share the same scheduler. </para></description>
+					</parameter>
+					<description><para></para></description>
+				</constructor>
+				<constructor>
+					<parameter name="other">
+						<paramtype>const active_function &amp;</paramtype>
+					</parameter>
+					<description>
+						<para>
+							The copy constructor creates a shallow copy of <code>other</code>.
+							Both copies share the same scheduler and passive function.
+						</para>
+					</description>
+				</constructor>
+				<constructor>
+					<description><para>The default constructor creates an empty <code>active_function</code> which cannot be
+						used until it is assigned a useable <code>active_function</code>.</para></description>
+				</constructor>
+				<destructor specifiers="virtual">
+					<description><para>Virtual destructor. </para></description>
+				</destructor>
+				<copy-assignment>
+					<parameter name="rhs">
+						<paramtype>const active_function &amp;</paramtype>
+					</parameter>
+					<description>
+						<para>Assignment turns <code>*this</code> into a shallow copy of <code>rhs</code>.  Both copies share the
+							same scheduler and passive function.
+						</para>
+					</description>
+				</copy-assignment>
+			</access>
+		</class>
+	</namespace>
+</header>

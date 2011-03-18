@@ -1,0 +1,49 @@
+<header name="poet/mutex_properties.hpp">
+	<namespace name="poet">
+		<class name="mutex_properties">
+			<template>
+				<template-type-parameter name="Mutex">
+				</template-type-parameter>
+			</template>
+			<purpose>A class for discovering the properties of a type which models one of
+				the mutex concepts defined by the Boost Thread library.</purpose>
+			<description>
+				<para>
+					The <code>mutex_properties</code> class is used by libpoet to discover the properties
+					of mutex types passed as template type parameters to
+					<classname>acyclic_mutex</classname>.  These properties are used internally to
+					perform partial template specializations according to the properties of the
+					mutex being used.
+				</para>
+				<para>
+					Specializations of <code>mutex_properties</code> are provided by libpoet
+					for all the mutex
+					types defined by the Boost Thread library, as well as all mutex types defined
+					by libpoet itself.  If you wish to use some other custom class with
+					<classname>acyclic_mutex</classname>
+					as the Mutex template type parameter, you will need to also define a
+					specialization of <code>poet::mutex_properties</code> for your custom
+					mutex class.
+				</para>
+			</description>
+			<access name="public">
+				<static-constant name="recursive">
+					<type>bool</type>
+					<default><emphasis>varies</emphasis></default>
+					<purpose><code>true</code> if the <code>Mutex</code> template type parameter is a recursive mutex.</purpose>
+				</static-constant>
+				<static-constant name="model">
+					<type>enum <enumname>mutex_model</enumname></type>
+					<default><emphasis>varies</emphasis></default>
+					<purpose>Specifies the one of the mutex concepts from Boost.Thread (version 1.35.0 or later).</purpose>
+				</static-constant>
+			</access>
+		</class>
+		<enum name="mutex_model">
+			<enumvalue name="Lockable"/>
+			<enumvalue name="TimedLockable"/>
+			<enumvalue name="SharedLockable"/>
+			<enumvalue name="UpgradeLockable"/>
+		</enum>
+	</namespace>
+</header>

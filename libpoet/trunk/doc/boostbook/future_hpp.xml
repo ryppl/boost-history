@@ -1,0 +1,411 @@
+<header name="poet/future.hpp">
+	<namespace name="poet">
+		<class name="future">
+			<template><template-type-parameter name="T"/></template>
+			<purpose>A placeholder for a future value. </purpose>
+			<description>
+				<para>Futures are placeholders for values which may not exist yet. They may be used to conveniently
+					support asyncronous function calls with built-in thread safety.
+					Since a future can be returned before any result is actually ready, an asyncronous call can return a future immediately
+					without blocking the calling thread. The calling thread can then poll the future to determine when a result is ready, or
+					block on the future waiting for a result.
+				</para>
+				<itemizedlist>
+						<title>See also</title>
+						<listitem>
+							<para>
+								<functionname>future_barrier</functionname>: construct a future which becomes ready when all of a group of futures are ready or have an exception.
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								<functionname>future_select</functionname>: construct a future which becomes ready when any of a group of futures is ready or has an exception.
+							</para>
+						</listitem>
+					</itemizedlist>
+			</description>
+			<access name="public">
+				<typedef name="value_type">
+					<type>T</type>
+				</typedef>
+				<method-group name="public member functions">
+					<method name="ready" cv="const"><type>bool</type>
+						<description><para></para></description>
+						<returns><para>true if the future's value is initialized. </para></returns>
+					</method>
+					<method name="get" cv="const">
+ 						<type>const T &amp;</type>
+						<description><para>get() is used to obtain an initialized value from a future. If the future is not ready, then get() will block until the future's promise is fulfilled or broken. The future's value may also be obtained without an explicit call to get(), through the conversion operator.</para></description>
+						<returns><para>the future's value. </para></returns>
+						<throws>
+							<para>
+								<classname>cancelled_future</classname> if the conversion fails due to
+								cancellation. If the future's promise is broken, get() will throw whatever exception
+								was specified by the <methodname>promise::renege</methodname>() call (subject
+								to the limitations of <classname>poet::exception_ptr</classname>).
+							</para>
+						</throws>
+					</method>
+					<method name="conversion-operator" cv="const">
+						<type>const T &amp;</type>
+						<description><para>The conversion operator provides implicit conversions to values. It has the same effects as the explicit get() function. </para></description>
+					</method>
+					<method name="join" cv="const">
+						<type>void</type>
+						<description><para><code>join</code> blocks until either <methodname>ready</methodname> or
+								<methodname>has_exception</methodname> becomes true.  Unlike the
+							<methodname>get</methodname> method, <code>join</code> will not throw if <methodname>has_exception</methodname>
+							is <code>true</code>.</para></description>
+					</method>
+					<method name="timed_join" cv="const">
+						<type>bool</type>
+						<parameter name="absolute_time"><paramtype>const boost::system_time &amp;</paramtype></parameter>
+						<description><para><code>timed_join</code> blocks until <computeroutput>absolute_time</computeroutput> is reached,
+								or either <methodname>ready</methodname> or <methodname>has_exception</methodname> becomes true.</para></description>
+						<returns><para><code>true</code> if either <methodname>ready</methodname> or <methodname>has_exception</methodname>
+								return <code>true</code>.</para></returns>
+					</method>
+					<method name="has_exception" cv="const">
+						<type>bool</type>
+						<description><para></para></description>
+						<returns><para><code>true</code> if this future's promise has been broken. Attempting to get the future's value will throw an exception that may give more information on why the promise was broken. </para></returns>
+					</method>
+					<method name="swap">
+						<type>void</type>
+						<parameter name="other"><paramtype>future &amp;</paramtype></parameter>
+						<description><para>Swaps <code>*this</code> with <code>other</code>.</para></description>
+					</method>
+				</method-group>
+				<constructor>
+					<parameter name="promise"><paramtype>const <classname>promise</classname>&lt;T&gt; &amp;</paramtype></parameter>
+					<description><para>Creates a new future from a promise. When the promise referenced by promise is fulfilled, the future will become ready. </para></description>
+				</constructor>
+				<constructor><template><template-type-parameter name="OtherType"/></template>
+					<parameter name="promise"><paramtype>const <classname>promise</classname>&lt;OtherType&gt; &amp;</paramtype></parameter>
+					<description><para>Creates a new future from a promise with a template type <code>OtherType</code> that is implicitly convertible to the future's value_type. When the <classname>promise</classname> referenced by <code>promise</code> is fulfilled, the future will become ready. </para></description>
+				</constructor>
+				<constructor><parameter name="value"><paramtype>const T &amp;</paramtype></parameter>
+					<description><para>Creates a new future with an initialized value, and provides implicit conversion from a value to the corresponding future. </para></description>
+				</constructor>
+				<constructor>
+					<template><template-type-parameter name="OtherType"/></template>
+					<parameter name="value"><paramtype>const OtherType &amp;</paramtype></parameter>
+					<description>
+						<para>
+							Creates a new future with an initialized value, and provides implicit conversion from a value to the corresponding future.
+							The <code>OtherType</code> type must be implicitly convertible to <code>T</code>.
+						</para>
+					</description>
+				</constructor>
+				<constructor>
+					<parameter name="other"><paramtype>const <classname>future</classname> &amp;</paramtype></parameter>
+					<description><para>Creates a future from another future with an identical template type.
+						The two futures will both reference the same <classname>promise</classname>.</para></description>
+				</constructor>
+				<constructor>
+					<template><template-type-parameter name="OtherType"/></template>
+					<parameter name="other"><paramtype>const <classname>future</classname>&lt;OtherType&gt; &amp;</paramtype></parameter>
+					<description><para>Creates a future from another future with a compatible template type. <code>*this</code> will
+						indirectly reference the <classname>promise</classname> or <code>other</code>, obtaining its value
+						by implicit conversion of <code>other</code>'s value once it is ready. </para></description>
+				</constructor>
+				<constructor>
+					<description><para>Creates an uncertain future with no promise. An attempt to get an uncertain future's value will throw an <classname>uncertain_future</classname> exception. An uncertain future may gain promise by assigning it another future with promise. </para></description>
+				</constructor>
+				<destructor specifiers="virtual">
+					<description><para></para></description>
+				</destructor>
+				<copy-assignment>
+					<parameter name="rhs"><paramtype>const <classname>future</classname> &amp;</paramtype></parameter>
+					<description><para>Assignment from a future with an identical template type results in
+						two futures which share the same promise.</para></description>
+				</copy-assignment>
+				<copy-assignment>
+					<template><template-type-parameter name="OtherType"/></template>
+					<parameter name="rhs"><paramtype>const <classname>future</classname>&lt;OtherType&gt; &amp;</paramtype></parameter>
+					<description><para>Assignment from a future&lt;U&gt; is supported if <code>U</code> is implicitly convertible to
+							<code>T</code>. The assignment happens immediately, and does not block waiting for <code>other</code> to become ready. </para></description>
+				</copy-assignment>
+			</access>
+			<free-function-group name="free functions">
+				<function name="swap">
+					<template>
+						<template-type-parameter name="T"/>
+					</template>
+					<type>void</type>
+					<parameter name="a"><paramtype>future&lt;T&gt; &amp;</paramtype></parameter>
+					<parameter name="b"><paramtype>future&lt;T&gt; &amp;</paramtype></parameter>
+					<description><para>Swaps futures <code>a</code> and <code>b</code>.</para></description>
+				</function>
+			</free-function-group>
+		</class>
+		<class-specialization name="future">
+			<template></template>
+			<specialization>
+				<template-arg>void</template-arg>
+			</specialization>
+			<purpose>A void specialization of the future template class. </purpose>
+			<description><para>future&lt;void&gt; is for futures with no value. For example, it may be used to wait on the completion of an asynchronous function which has no return value. In addition, a future&lt;void&gt; can assigned or constructed from a future&lt;T&gt; where T is any type. This allows a future&lt;void&gt; to be used by code which is only interested in whether the future is ready or has an exception, and is not interested in the future's specific value or template type. </para></description>
+			<access name="public">
+				<typedef name="value_type">
+					<type>void</type>
+				</typedef>
+				<constructor>
+					<parameter name="promise_in"><paramtype>const <classname>promise</classname>&lt;void&gt; &amp;</paramtype></parameter>
+					<description><para>Same as the corresponding constructor for an unspecialized <classname>future</classname>.</para></description>
+				</constructor>
+				<constructor>
+					<template>
+						<template-type-parameter name="OtherType"/>
+					</template>
+					<parameter name="promise"><paramtype>const <classname>promise</classname>&lt;OtherType&gt; &amp;</paramtype></parameter>
+					<description><para>A future&lt;void&gt; can be constructed from any type of <classname>promise</classname>.</para></description>
+				</constructor>
+				<constructor>
+					<parameter name="other"><paramtype>const <classname>future</classname> &amp;</paramtype></parameter>
+					<description><para>Same as the corresponding constructor for an unspecialized <classname>future</classname>.</para></description>
+				</constructor>
+				<constructor>
+					<template><template-type-parameter name="OtherType"/></template>
+					<parameter name="other"><paramtype>const <classname>future</classname>&lt;OtherType&gt; &amp;</paramtype></parameter>
+					<description><para>A future&lt;void&gt; can be constructed from any type of <classname>future</classname>.</para></description>
+				</constructor>
+				<constructor>
+					<description><para>Same as the corresponding function for an unspecialized <classname>future</classname>.</para></description>
+				</constructor>
+				<destructor specifiers="virtual">
+					<description><para> </para></description>
+				</destructor>
+				<method-group name="public member functions">
+					<method name="get" cv="const">
+						<type>void</type>
+						<description><para>A future&lt;void&gt; has no value, but get() can still be used to block until the future's promise is fulfilled or reneged.</para></description>
+					</method>
+					<method name="conversion-operator" cv="const">
+						<type>void</type>
+						<description><para>The conversion operator has the same effects as the explicit get() function. </para></description>
+					</method>
+					<method name="join" cv="const">
+						<type>void</type>
+						<description><para>Same as the corresponding function for an unspecialized <classname>future</classname>.</para></description>
+					</method>
+					<method name="timed_join" cv="const">
+						<type>bool</type>
+						<parameter name="absolute_time"><paramtype>const boost::system_time &amp;</paramtype></parameter>
+						<description><para>Same as the corresponding function for an unspecialized <classname>future</classname>.</para></description>
+					</method>
+					<method name="ready" cv="const">
+						<type>bool</type>
+						<description><para>Same as the corresponding function for an unspecialized <classname>future</classname>.</para></description>
+					</method>
+					<method name="has_exception" cv="const">
+						<type>bool</type>
+						<description><para>Same as the corresponding function for an unspecialized <classname>future</classname>.</para></description>
+					</method>
+					<method name="swap">
+						<type>void</type>
+						<parameter name="other"><paramtype>future &amp;</paramtype></parameter>
+						<description><para>Swaps <code>*this</code> with <code>other</code>.</para></description>
+					</method>
+				</method-group>
+				<copy-assignment>
+					<parameter name="rhs"><paramtype>const <classname>future</classname> &amp;</paramtype></parameter>
+					<description><para>Same as the corresponding function for an unspecialized <classname>future</classname>.</para></description>
+				</copy-assignment>
+				<copy-assignment>
+					<template>
+						<template-type-parameter name="OtherType"/>
+					</template>
+					<parameter name="other"><paramtype>const <classname>future</classname>&lt;OtherType&gt; &amp;</paramtype>
+					</parameter>
+					<description><para>A future&lt;void&gt; can be assigned any type of future.</para></description>
+				</copy-assignment>
+			</access>
+		</class-specialization>
+		<class name="promise">
+			<template><template-type-parameter name="T"/></template>
+			<purpose>A handle to a promise. </purpose>
+			<description>
+				<para>Promises are used to construct <classname>future</classname>s and set their values when they become available. You can also renege on a promise, which transports an exception instead of a value to any futures waiting on the promise.</para>
+				<para>Promise objects are handles with shallow copy semantics. Promises are reference-counted, which means a promise will automatically be reneged with an <classname>uncertain_future</classname> exception if its reference count drops to zero without the promise being fulfilled.</para>
+				<para>The idea of making a seperate promise class from the future class was suggested by Chirtopher Kohlhoff. The idea of reference counting the promise class was due to Braddock Gaskill. </para>
+			</description>
+			<access name="public">
+				<typedef name="value_type">
+					<type>T</type>
+				</typedef>
+				<method-group name="public member functions">
+					<method name="fulfill" cv="">
+						<template>
+							<template-type-parameter name="U"/>
+						</template>
+						<type>void</type>
+						<parameter name="value"><paramtype>const U &amp;</paramtype></parameter>
+						<description>
+							<para>Fulfill the promise by giving it a value. All futures which reference this promise will become ready.
+								The type <code>U</code> must be implicitly convertible to the promise's template type <code>T</code>.
+							</para>
+						</description>
+					</method>
+					<method name="fulfill" cv="">
+						<template>
+							<template-type-parameter name="U"/>
+						</template>
+						<type>void</type>
+						<parameter name="future_value"><paramtype>const <classname>future</classname>&lt;U&gt; &amp;</paramtype></parameter>
+						<description>
+							<para>Chain the promise to another promise by giving it a future.
+								All futures which reference this promise will receive the value from future_value when it becomes ready.
+								If the promise referenced by future_value is broken, this promise will also be broken.
+								The type <code>U</code> must be implicitly convertible to the promise's template type <code>T</code>.
+							</para>
+						</description>
+					</method>
+					<method name="has_future" cv="const">
+						<type>bool</type>
+						<description>
+							<para>
+								The <code>has_future</code> query allows a promise-fulfilling thread to query if there are any futures left
+								which refer to this promise.  This enables a promise-fulfilling thread to exit early if noone
+								is interested in its result.
+							</para>
+						</description>
+						<returns>
+							<para><code>true</code> if there are any <classname>future</classname> objects in existance which
+								will obtain their value/exception from this promise.
+							</para>
+						</returns>
+					</method>
+					<method name="reset">
+						<type>void</type>
+						<description>
+							<para>
+								Resets the promise by swapping it with a default-constructed promise.
+							</para>
+						</description>
+						<postconditions>
+							<para>
+								<code>has_future()==false</code>
+							</para>
+						</postconditions>
+					</method>
+					<method name="swap">
+						<type>void</type>
+						<parameter name="other"><paramtype>promise &amp;</paramtype></parameter>
+						<description>
+							<para>
+								Swaps <code>*this</code> with <code>other</code>.
+							</para>
+						</description>
+					</method>
+					<overloaded-method name="renege">
+						<signature>
+							<template><template-type-parameter name="E"/></template>
+							<type>void</type>
+							<parameter name="exception"><paramtype>const E &amp;</paramtype></parameter>
+						</signature>
+						<signature>
+							<type>void</type>
+							<parameter name="exp"><paramtype>const poet::exception_ptr &amp;</paramtype></parameter>
+						</signature>
+						<description><para>Breaks the promise. Any futures which reference the promise will throw a copy of exception when they attempt to get their value. </para></description>
+					</overloaded-method>
+				</method-group>
+				<constructor/>
+				<constructor>
+					<parameter name="other"><paramtype>const promise &amp;</paramtype></parameter>
+					<description><para>Copy construction creates a shallow copy of <code>other</code>.</para></description>
+				</constructor>
+				<copy-assignment>
+					<parameter name="rhs"><paramtype>const <classname>promise</classname> &amp;</paramtype></parameter>
+					<description><para>Assignment makes <code>*this</code> a shallow copy of <code>rhs</code>.</para></description>
+				</copy-assignment>
+			</access>
+			<free-function-group name="free functions">
+				<function name="swap">
+					<template>
+						<template-type-parameter name="T"/>
+					</template>
+					<type>void</type>
+					<parameter name="a"><paramtype>promise&lt;T&gt; &amp;</paramtype></parameter>
+					<parameter name="b"><paramtype>promise&lt;T&gt; &amp;</paramtype></parameter>
+					<description><para>Swaps promises <code>a</code> and <code>b</code>.</para></description>
+				</function>
+			</free-function-group>
+		</class>
+		<class-specialization name="promise">
+			<template></template>
+			<specialization>
+				<template-arg>void</template-arg>
+			</specialization>
+			<purpose>A void specialization of the promise template class. </purpose>
+			<description><para>promise&lt;void&gt; may be used to create future&lt;void&gt; objects which have no value. In addition, a promise&lt;void&gt; can be constructed from a promise&lt;T&gt; where T is any type. This allows a promise&lt;void&gt; to be used by code which only needs to be able to renege on a promise and not fulfill it. </para></description>
+			<access name="public">
+				<typedef name="value_type">
+					<type>void</type>
+				</typedef>
+				<constructor>
+					<description><para>Same as the corresponding constructor for an unspecialized <classname>promise</classname>.</para></description>
+				</constructor>
+				<constructor>
+					<parameter name="other"><paramtype>const <classname>promise</classname> &amp;</paramtype></parameter>
+					<description><para>Same as the corresponding constructor for an unspecialized <classname>promise</classname>.</para></description>
+				</constructor>
+				<constructor>
+					<template><template-type-parameter name="OtherType"/></template>
+					<parameter name="other">
+						<paramtype>const <classname>promise</classname>&lt;OtherType&gt; &amp;</paramtype>
+					</parameter>
+					<description>
+						<para>
+							A promise&lt;void&gt; may be constructed from a promise with any template type, although it cannot
+							fulfill such a promise. It can renege on the promise, however.
+						</para>
+					</description>
+				</constructor>
+				<copy-assignment>
+					<parameter name="rhs"><paramtype>const <classname>promise</classname> &amp;</paramtype></parameter>
+					<description><para>Assignment makes <code>*this</code> a shallow copy of <code>rhs</code>.</para></description>
+				</copy-assignment>
+				<destructor specifiers="virtual"/>
+				<method-group name="public member functions">
+					<method name="fulfill" cv="">
+						<type>void</type>
+						<parameter name="future_value"><paramtype>const <classname>future</classname>&lt;void&gt; &amp;</paramtype></parameter>
+						<description><para>Same as the corresponding function for an unspecialized <classname>promise</classname>.</para></description>
+					</method>
+					<method name="fulfill" cv="">
+						<type>void</type>
+						<description><para>Will make any future&lt;void&gt; objects referencing this promise become ready.</para></description>
+						<throws><simpara><classname>std::invalid_argument</classname> </simpara></throws>
+					</method>
+					<method name="has_future" cv="const">
+						<type>bool</type>
+						<description><para>Same as the corresponding function for an unspecialized <classname>promise</classname>.</para></description>
+					</method>
+					<method name="reset">
+						<type>void</type>
+						<description><para>Same as the corresponding function for an unspecialized <classname>promise</classname>.</para></description>
+					</method>
+					<method name="swap">
+						<type>void</type>
+						<parameter name="other"><paramtype>promise &amp;</paramtype></parameter>
+						<description><para>Same as the corresponding function for an unspecialized <classname>promise</classname>.</para></description>
+					</method>
+					<overloaded-method name="renege">
+						<signature>
+							<template><template-type-parameter name="E"/></template>
+							<type>void</type>
+							<parameter name="exception"><paramtype>const E &amp;</paramtype></parameter>
+						</signature>
+						<signature>
+							<type>void</type>
+							<parameter name="exp"><paramtype>const poet::exception_ptr &amp;</paramtype></parameter>
+						</signature>
+						<description><para>Same as the corresponding function for an unspecialized <classname>promise</classname>.</para></description>
+					</overloaded-method>
+				</method-group>
+			</access>
+		</class-specialization>
+	</namespace>
+</header>

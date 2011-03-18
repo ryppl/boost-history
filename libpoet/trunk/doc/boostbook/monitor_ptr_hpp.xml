@@ -1,0 +1,498 @@
+<header name="poet/monitor_ptr.hpp">
+	<namespace name="poet">
+		<class name="monitor_ptr">
+			<template>
+				<template-type-parameter name="T"/>
+				<template-type-parameter name="Mutex">
+					<default>boost::mutex</default>
+				</template-type-parameter>
+			</template>
+			<purpose>A smart pointer which provides automatically locked access to an object.</purpose>
+			<description>
+				<para>
+					<code>monitor_ptr</code> allows for the easy creation of monitor objects.  A
+					<code>monitor_ptr</code> provides automatically locked access to an object's members
+					when they are accessed through the overloaded <methodname>operator-&gt;</methodname>,
+					or alternatively through one of the lock classes from
+					<link linkend="header.poet.monitor_locks.hpp">poet/monitor_locks.hpp</link>.
+					It is based in part on ideas taken from
+					<ulink url="http://www.research.att.com/~bs/wrapper.pdf">"Wrapping C++ Member Function Calls"</ulink>
+					by Bjarne Stroustroup and <ulink url="http://www.cs.wustl.edu/~schmidt/PDF/monitor.pdf">"Monitor Object:
+					An Object Behavioral Pattern for Concurrent Programming"</ulink> by Douglas C. Schmidt.
+				</para>
+				<para>
+					Although any object may be passed to a <code>monitor_ptr</code>, special support is provided
+					for classes derived from <classname>monitor_base</classname>.  This allows classes derived from
+					<classname>monitor_base</classname> to wait on conditions inside member function calls,
+					releasing the <code>monitor_ptr</code>'s mutex until the condition is met.
+				</para>
+				<para>
+					The <code>Mutex</code> template type parameter must model the <code>Lockable</code>
+					concept from the Boost.Thread library.  The <code>monitor_ptr</code> itself models the
+					<code>Lockable</code> concept, and will also model any of the
+					<code>TimedLockable</code>, <code>SharedLockable</code>, or <code>UpgradeLockable</code>
+					concepts if the underlying <code>Mutex</code> template type supports them.
+					Note however, a <code>monitor_ptr</code> must not be empty when being used as
+					a mutex.  An empty <code>monitor_ptr</code> will throw a
+					<classname>boost::lock_error</classname> if any attempt is made to use
+					<methodname>lock</methodname>, <methodname>unlock</methodname>, or any other
+					part of the <code>monitor_ptr</code> interface which models the Boost.Thread concepts.
+				</para>
+				<para>
+					The interfaces defined by the Boost.Thread mutex concepts should generally
+					not be used directly by the user.  They are intended to be used by
+					scoped lock classes such as <classname>monitor_unique_lock</classname>,
+					which provide a safer means to perform locking.
+					See the "Mutex Concepts" documentation in the Boost.Thread library
+					for more information about the Lockable, etc. concepts.
+				</para>
+				<para>
+					Note that while <code>monitor_ptr</code> provides thread-safe access to the object
+					it is pointing at, it does not provide a strong thread-safety guarantee
+					for itself.
+					That is, a single
+					<code>monitor_ptr</code> object should not be modified concurrently by multiple
+					threads.  Rather, each thread should be passed its own copy of the
+					<code>monitor_ptr</code> to use.  The thread-safety guarantees of
+					<code>monitor_ptr</code> are similar to those provided by <classname>boost::shared_ptr</classname>.
+				</para>
+				<itemizedlist>
+					<title>Example Code</title>
+					<listitem>
+						<para>
+							<link linkend="poet.example.monitor_demo.cpp">monitor_demo.cpp</link>
+						</para>
+					</listitem>
+				</itemizedlist>
+				<itemizedlist>
+					<title>See also</title>
+					<listitem>
+						<para>
+							<classname>monitor</classname>: an alternative to the <code>monitor_ptr</code> class,
+							which stores its wrapped object by value instead of acting like a pointer.
+						</para>
+					</listitem>
+				</itemizedlist>
+			</description>
+			<access name="public">
+				<typedef name="element_type">
+					<type>T</type>
+				</typedef>
+				<typedef name="mutex_type">
+					<type>Mutex</type>
+				</typedef>
+				<method-group name="public member functions">
+					<method name="direct" cv="const">
+						<type>const boost::shared_ptr&lt;T&gt; &amp;</type>
+						<description><para>Gives direct unlocked access to the underlying pointer.</para></description>
+					</method>
+					<method name="operator->" cv="const">
+						<type><classname>monitor_unique_lock</classname>&lt;const monitor_ptr&gt;</type>
+						<description>
+							<para>Returns a temporary <classname>monitor_unique_lock</classname> which
+								locks the <code>monitor_ptr</code>'s mutex.
+								The <code>operator-&gt;()</code> of the returned <classname>monitor_unique_lock</classname>
+								object will be
+								automatically called in turn (overloading <code>operator-&gt;()</code> is special in that way), which will
+								utimately result in a call of <code>operator-&gt;()</code> on the
+								<code>monitor_ptr</code>'s underlying pointer.
+								The mutex is automatically unlocked after the member access completes by the
+								<classname>monitor_unique_lock</classname>
+								destructor.
+							</para>
+							<para>
+								If more flexibility is desired, the lock types from
+								<link linkend="header.poet.monitor_locks.hpp">poet/monitor_locks.hpp</link>
+								provide alternatives to <code>monitor_ptr::operator-&gt;</code>.
+							</para>
+						</description>
+					</method>
+					<method name="operator bool" cv="const">
+						<description>
+							<para>
+								Conversion to <code>bool</code> results in <code>false</code> if the <code>monitor_ptr</code>'s underlying pointer
+								is null, <code>true</code> otherwise.
+							</para>
+						</description>
+					</method>
+					<overloaded-method name="reset">
+						<signature>
+							<template>
+								<template-type-parameter name="U"/>
+							</template>
+							<type>void</type>
+							<parameter name="pointer">
+								<paramtype>U*</paramtype>
+							</parameter>
+						</signature>
+						<signature>
+							<type>void</type>
+							<parameter name="smart_pointer">
+								<paramtype>const boost::shared_ptr&lt;T&gt; &amp;</paramtype>
+							</parameter>
+						</signature>
+						<signature>
+							<type>void</type>
+						</signature>
+						<signature>
+							<template>
+								<template-type-parameter name="U"/>
+							</template>
+							<type>void</type>
+							<parameter name="other">
+								<paramtype>const monitor_ptr&lt;U, Mutex&gt; &amp;</paramtype>
+							</parameter>
+							<parameter name="pointer">
+								<paramtype>T*</paramtype>
+							</parameter>
+						</signature>
+						<description>
+							<para>
+								Resets the <code>monitor_ptr</code>'s underlying pointer using the specified parameter(s).
+								A new mutex and condition are also created (except in the no-parameter case, where
+								they are simply deleted).
+							</para>
+							<para>
+								The overload which takes a <code>monitor_ptr</code> and
+								<code>T*</code> argument makes <code>*this</code> into an aliased <code>monitor_ptr</code>,
+								which shares ownership and its mutex with
+								<code>other</code>, but which points at the address given by <code>pointer</code>.  See the
+								description of the <link linkend="monitor-ptr-constructor-aliasing">aliasing constructor</link>
+								for more information.
+							</para>
+						</description>
+					</overloaded-method>
+					<method name="swap">
+						<type>void</type>
+						<parameter name="other">
+							<paramtype>monitor_ptr &amp;</paramtype>
+						</parameter>
+						<description>
+							<para>
+								Swaps <code>*this</code> and <code>other</code>.
+							</para>
+						</description>
+					</method>
+				</method-group>
+				<method-group name="Boost.Thread Lockable concept support">
+					<method name="lock" cv="const">
+						<type>void</type>
+					</method>
+					<method name="try_lock" cv="const">
+						<type>bool</type>
+					</method>
+					<method name="unlock" cv="const">
+						<type>void</type>
+					</method>
+				</method-group>
+				<method-group name="Boost.Thread TimedLockable concept support">
+					<method name="timed_lock" cv="const">
+						<template>
+							<template-type-parameter name="Timeout"/>
+						</template>
+						<type>bool</type>
+						<parameter name="t" cv="const">
+							<paramtype>const Timeout &amp;</paramtype>
+						</parameter>
+					</method>
+				</method-group>
+				<method-group name="Boost.Thread SharedLockable concept support">
+					<method name="lock_shared" cv="const">
+						<type>void</type>
+					</method>
+					<method name="try_lock_shared" cv="const">
+						<type>bool</type>
+					</method>
+					<method name="timed_lock_shared" cv="const">
+						<template>
+							<template-type-parameter name="Timeout"/>
+						</template>
+						<type>bool</type>
+						<parameter name="t" cv="const">
+							<paramtype>const Timeout &amp;</paramtype>
+						</parameter>
+					</method>
+					<method name="unlock_shared" cv="const">
+						<type>void</type>
+					</method>
+					<method name="unlock_and_lock_shared" cv="const">
+						<type>void</type>
+					</method>
+				</method-group>
+				<method-group name="Boost.Thread UpgradeLockable concept support">
+					<method name="lock_upgrade" cv="const">
+						<type>void</type>
+					</method>
+					<method name="unlock_upgrade" cv="const">
+						<type>void</type>
+					</method>
+					<method name="unlock_upgrade_and_lock" cv="const">
+						<type>void</type>
+					</method>
+					<method name="unlock_upgrade_and_lock_shared" cv="const">
+						<type>void</type>
+					</method>
+					<method name="unlock_and_lock_upgrade" cv="const">
+						<type>void</type>
+					</method>
+				</method-group>
+				<copy-assignment>
+					<parameter name="rhs">
+						<paramtype>const monitor_ptr &amp;</paramtype>
+					</parameter>
+					<description>
+						<para>After assignment, the two <code>monitor_ptr</code>s will share the same pointer,
+							mutex, and condition variable.
+						</para>
+					</description>
+				</copy-assignment>
+				<constructor>
+					<description>
+						<para>The default constructor creates an empty <code>monitor_ptr</code>.
+						</para>
+					</description>
+				</constructor>
+				<constructor specifiers="explicit">
+					<template>
+						<template-type-parameter name="U"/>
+					</template>
+					<parameter name="pointer">
+						<paramtype>U*</paramtype>
+					</parameter>
+					<description>
+						<para>Creates a <code>monitor_ptr</code> which wraps the specified pointer.  The <code>monitor_ptr</code>
+							internally stores <code>pointer</code> in a <classname>boost::shared_ptr</classname>.
+							Thus the pointer will be automatically
+							deleted when the last copy of this <code>monitor_ptr</code> is destroyed.
+						</para>
+					</description>
+				</constructor>
+				<constructor>
+					<parameter name="smart_pointer">
+						<paramtype>boost::shared_ptr&lt;T&gt;</paramtype>
+					</parameter>
+					<description>
+						<para>Creates a <code>monitor_ptr</code> which wraps the specified pointer.
+							This constructor allows the <code>monitor_ptr</code> to be initialized with
+							a <classname>boost::shared_ptr</classname> that has a custom deleter.
+						</para>
+					</description>
+				</constructor>
+				<constructor>
+					<parameter name="other">
+						<paramtype>const monitor_ptr &amp;</paramtype>
+					</parameter>
+					<description>
+						<para>The copy constructor creates a <code>monitor_ptr</code> which shares the same pointer,
+							mutex, and condition as the original.
+						</para>
+					</description>
+				</constructor>
+				<constructor>
+					<template>
+						<template-type-parameter name="U"/>
+					</template>
+					<parameter name="other">
+						<paramtype>const monitor_ptr&lt;U, Mutex&gt; &amp;</paramtype>
+					</parameter>
+					<description>
+						<para>This constructor creates a <code>monitor_ptr</code> which shares the same pointer
+							(implicitly converted), mutex, and condition as the original.
+						</para>
+					</description>
+				</constructor>
+				<constructor>
+					<template>
+						<template-type-parameter name="U"/>
+					</template>
+					<parameter name="other">
+						<paramtype>const monitor_ptr&lt;U, Mutex&gt; &amp;</paramtype>
+					</parameter>
+					<parameter name="pointer">
+						<paramtype>T*</paramtype>
+					</parameter>
+					<description>
+						<para id="monitor-ptr-constructor-aliasing">
+							This is an aliasing constructor, similar in function to the aliasing constructor of <code>shared_ptr</code>.
+							It creates a <code>monitor_ptr</code> which shares
+							ownership and uses the same mutex as <code>other</code>, but which points at the
+							object specified by <code>pointer</code> when dereferenced.  The types <code>T</code> and
+							<code>U</code> may be unrelated.
+							It is useful for creating
+							<code>monitor_ptr</code>s to objects which are only indirectly owned by a <code>monitor_ptr</code>,
+							for example:
+<programlisting>struct coordinates
+{
+	int x;
+	int y;
+};
+
+// ...
+
+poet::monitor_ptr&lt;coordinates&gt; coords(new coordinates());
+// x_mon shares ownership of coords object, but points at coords-&gt;x.
+// x_mon might be needed to pass the x member of the coords object to a function
+// expecting an argument of type poet::monitor_ptr&lt;int&gt;.
+poet::monitor_ptr&lt;int&gt; x_mon(coords, &amp;coords-&gt;x);
+// the following block has the same effect as "coords-&gt;x = 5;"
+{
+	poet::monitor_unique_lock&lt;monitor_ptr&lt;int&gt; &gt; x_lock(x_mon);
+	*x_lock = 5;
+}</programlisting>
+						</para>
+					</description>
+				</constructor>
+				<destructor specifiers="virtual">
+					<description>
+						<para>A <code>monitor_ptr</code> and all its copies share ownership of an underlying pointer,
+							mutex, and condition variable.  The pointer, mutex, and condition are
+							deleted when the last copy of the
+							<code>monitor_ptr</code> is destroyed.  The deleter for the underlying pointer may
+							be customized by using the constructor which takes a <classname>boost::shared_ptr</classname>
+							as its parameter.
+						</para>
+					</description>
+				</destructor>
+			</access>
+			<free-function-group name="free functions: casts">
+				<function name="static_pointer_cast">
+					<template>
+						<template-type-parameter name="T"/>
+						<template-type-parameter name="U"/>
+						<template-type-parameter name="Mutex"/>
+					</template>
+					<type>monitor_ptr&lt;T, Mutex&gt;</type>
+					<parameter name="p">
+						<paramtype>const <classname>monitor_ptr</classname>&lt;U, Mutex&gt; &amp;</paramtype>
+					</parameter>
+					<description>
+						<para>
+							Casts a <code>monitor_ptr</code> by applying <code>boost::static_pointer_cast&lt;U&gt;</code>
+							to the <code>monitor_ptr</code>'s
+							underlying <code>shared_ptr</code>.
+						</para>
+					</description>
+				</function>
+				<function name="dynamic_pointer_cast">
+					<template>
+						<template-type-parameter name="T"/>
+						<template-type-parameter name="U"/>
+						<template-type-parameter name="Mutex"/>
+					</template>
+					<type>monitor_ptr&lt;T, Mutex&gt;</type>
+					<parameter name="p">
+						<paramtype>const <classname>monitor_ptr</classname>&lt;U, Mutex&gt; &amp;</paramtype>
+					</parameter>
+					<description>
+						<para>
+							Casts a <code>monitor_ptr</code> by applying <code>boost::dynamic_pointer_cast&lt;U&gt;</code>
+							to the <code>monitor_ptr</code>'s
+							underlying <code>shared_ptr</code>.
+						</para>
+					</description>
+				</function>
+				<function name="const_pointer_cast">
+					<template>
+						<template-type-parameter name="T"/>
+						<template-type-parameter name="U"/>
+						<template-type-parameter name="Mutex"/>
+					</template>
+					<type>monitor_ptr&lt;T, Mutex&gt;</type>
+					<parameter name="p">
+						<paramtype>const <classname>monitor_ptr</classname>&lt;U, Mutex&gt; &amp;</paramtype>
+					</parameter>
+					<description>
+						<para>
+							Casts a <code>monitor_ptr</code> by applying <code>boost::const_pointer_cast&lt;U&gt;</code>
+							to the <code>monitor_ptr</code>'s
+							underlying <code>shared_ptr</code>.
+						</para>
+					</description>
+				</function>
+			</free-function-group>
+			<free-function-group name="free functions: comparison">
+				<function name="operator==">
+					<template>
+						<template-type-parameter name="T"/>
+						<template-type-parameter name="MutexA"/>
+						<template-type-parameter name="U"/>
+						<template-type-parameter name="MutexB"/>
+					</template>
+					<type>bool</type>
+					<parameter name="a">
+						<paramtype>const <classname>monitor_ptr</classname>&lt;T, MutexT&gt; &amp;</paramtype>
+					</parameter>
+					<parameter name="b">
+						<paramtype>const <classname>monitor_ptr</classname>&lt;U, MutexU&gt; &amp;</paramtype>
+					</parameter>
+					<returns>
+						<para>
+							Returns the result of applying <code>operator==</code> to the underlying <code>shared_ptr</code>s
+							of the two <code>monitor_ptr</code> arguments.
+						</para>
+					</returns>
+				</function>
+				<function name="operator!=">
+					<template>
+						<template-type-parameter name="T"/>
+						<template-type-parameter name="MutexA"/>
+						<template-type-parameter name="U"/>
+						<template-type-parameter name="MutexB"/>
+					</template>
+					<type>bool</type>
+					<parameter name="a">
+						<paramtype>const <classname>monitor_ptr</classname>&lt;T, MutexT&gt; &amp;</paramtype>
+					</parameter>
+					<parameter name="b">
+						<paramtype>const <classname>monitor_ptr</classname>&lt;U, MutexU&gt; &amp;</paramtype>
+					</parameter>
+					<returns>
+						<para>
+							Returns the result of applying <code>operator!=</code> to the underlying <code>shared_ptr</code>s
+							of the two <code>monitor_ptr</code> arguments.
+						</para>
+					</returns>
+				</function>
+				<function name="operator&lt;">
+					<template>
+						<template-type-parameter name="T"/>
+						<template-type-parameter name="MutexA"/>
+						<template-type-parameter name="U"/>
+						<template-type-parameter name="MutexB"/>
+					</template>
+					<type>bool</type>
+					<parameter name="a">
+						<paramtype>const <classname>monitor_ptr</classname>&lt;T, MutexT&gt; &amp;</paramtype>
+					</parameter>
+					<parameter name="b">
+						<paramtype>const <classname>monitor_ptr</classname>&lt;U, MutexU&gt; &amp;</paramtype>
+					</parameter>
+					<returns>
+						<para>
+							Returns the result of applying <code>operator&lt;</code> to the underlying <code>shared_ptr</code>s
+							of the two <code>monitor_ptr</code> arguments.
+						</para>
+					</returns>
+				</function>
+			</free-function-group>
+			<free-function-group name="free function: swap">
+				<function name="swap">
+					<template>
+						<template-type-parameter name="T"/>
+						<template-type-parameter name="Mutex"/>
+					</template>
+					<parameter name="monitor0"><paramtype>monitor_ptr&lt;T, Mutex&gt; &amp;</paramtype></parameter>
+					<parameter name="monitor1"><paramtype>monitor_ptr&lt;T, Mutex&gt; &amp;</paramtype></parameter>
+					<type>void</type>
+					<description>
+						<para>
+							Swaps <code>monitor0</code> and <code>monitor1</code>.  This
+							function is provided to
+							enhance efficiency with generic algorithms.
+						</para>
+					</description>
+				</function>
+			</free-function-group>
+		</class>
+	</namespace>
+</header>
