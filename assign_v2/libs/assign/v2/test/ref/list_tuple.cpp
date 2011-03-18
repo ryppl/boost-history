@@ -12,7 +12,7 @@
 #include <boost/mpl/vector/vector0.hpp>
 #include <boost/mpl/vector/vector10.hpp>
 #include <boost/assign/v2/detail/config/check.hpp>
-#include <boost/assign/v2/ref/list_tuple.hpp>
+#include <boost/assign/v2/ref/aux_/list_tuple.hpp>
 
 #include <boost/type_traits/add_reference.hpp>
 
