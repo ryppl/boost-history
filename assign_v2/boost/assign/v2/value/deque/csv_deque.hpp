@@ -11,7 +11,7 @@
 #define BOOST_ASSIGN_V2_PUT_DEQUE_CSV_DEQUE_ER_2010_HPP
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
 #include <boost/assign/v2/detail/pp/ignore.hpp>
-#include <boost/assign/v2/put/deque/deque.hpp>
+#include <boost/assign/v2/value/deque/deque.hpp>
 #include <boost/type_traits/decay.hpp>
 #include <boost/type_traits/remove_cv.hpp>
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
@@ -88,7 +88,7 @@ using put_aux::csv_deque;
 }// boost
 
 #if !BOOST_ASSIGN_V2_ENABLE_CPP0X
-#include <boost/assign/v2/put/deque/cpp03/csv_deque.hpp>
+#include <boost/assign/v2/value/deque/cpp03/csv_deque.hpp>
 #endif
 
 

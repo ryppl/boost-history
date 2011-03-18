@@ -10,15 +10,15 @@
 #ifndef BOOST_ASSIGN_V2_PUT_DEQUE_DEQUE_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_DEQUE_DEQUE_ER_2010_HPP
 #include <deque>
-#include <boost/assign/v2/put/adapter/crtp.hpp>
-#include <boost/assign/v2/put/adapter/modifier.hpp>
-#include <boost/assign/v2/put/adapter/replace_parameter.hpp>
-#include <boost/assign/v2/put/deque/fwd.hpp>
+#include <boost/assign/v2/value/adapter/crtp.hpp>
+#include <boost/assign/v2/value/adapter/modifier.hpp>
+#include <boost/assign/v2/value/adapter/replace_parameter.hpp>
+#include <boost/assign/v2/value/deque/fwd.hpp>
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
 #include <boost/assign/v2/detail/keyword/nil.hpp>
 #include <boost/assign/v2/detail/pp/ignore.hpp>
-#include <boost/assign/v2/put/fun/deduce.hpp>
-#include <boost/assign/v2/put/modifier/deduce.hpp>
+#include <boost/assign/v2/value/fun/deduce.hpp>
+#include <boost/assign/v2/value/modifier/deduce.hpp>
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
 #include <boost/range/iterator.hpp>
@@ -206,7 +206,7 @@ using put_aux::deque;
 }// boost
 
 #if !BOOST_ASSIGN_V2_ENABLE_CPP0X
-#include <boost/assign/v2/put/deque/cpp03/deque.hpp>
+#include <boost/assign/v2/value/deque/cpp03/deque.hpp>
 #endif
 
 #endif // BOOST_ASSIGN_V2_PUT_DEQUE_DEQUE_ER_2010_HPP

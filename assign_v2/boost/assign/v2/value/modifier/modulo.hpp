@@ -11,9 +11,9 @@
 #define BOOST_ASSIGN_V2_PUT_MODIFIER_MODULO_ER_2010_HPP
 #include <boost/assign/v2/detail/keyword/ignore.hpp>
 #include <boost/assign/v2/detail/pp/ignore.hpp>
-#include <boost/assign/v2/put/adapter/fwd.hpp>
-#include <boost/assign/v2/put/adapter/modifier.hpp>
-#include <boost/assign/v2/put/adapter/replace_parameter.hpp>
+#include <boost/assign/v2/value/adapter/fwd.hpp>
+#include <boost/assign/v2/value/adapter/modifier.hpp>
+#include <boost/assign/v2/value/adapter/replace_parameter.hpp>
 #include <boost/mpl/apply.hpp>
 #include <boost/preprocessor/cat.hpp>
 

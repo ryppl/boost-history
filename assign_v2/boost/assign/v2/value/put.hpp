@@ -9,12 +9,12 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_PUT_PUT_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_PUT_ER_2010_HPP
-#include <boost/assign/v2/put/adapter/crtp.hpp>
-#include <boost/assign/v2/put/adapter/modifier.hpp>
-#include <boost/assign/v2/put/adapter/replace_parameter.hpp>
+#include <boost/assign/v2/value/adapter/crtp.hpp>
+#include <boost/assign/v2/value/adapter/modifier.hpp>
+#include <boost/assign/v2/value/adapter/replace_parameter.hpp>
 #include <boost/assign/v2/detail/pp/ignore.hpp>
-#include <boost/assign/v2/put/fun/deduce.hpp>
-#include <boost/assign/v2/put/modifier/deduce.hpp>
+#include <boost/assign/v2/value/fun/deduce.hpp>
+#include <boost/assign/v2/value/modifier/deduce.hpp>
 #include <boost/assign/v2/ref/wrapper/copy.hpp>
 
 namespace boost{

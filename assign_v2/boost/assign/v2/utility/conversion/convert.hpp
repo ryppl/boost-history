@@ -10,7 +10,7 @@
 #ifndef BOOST_ASSIGN_V2_UTILITY_CONVERSION_CONVERT_ER_2010_HPP
 #define BOOST_ASSIGN_V2_UTILITY_CONVERSION_CONVERT_ER_2010_HPP
 #include <boost/assign/v2/detail/pp/ignore.hpp>
-#include <boost/assign/v2/put/put.hpp>
+#include <boost/assign/v2/value/put.hpp>
 #include <boost/range/algorithm/for_each.hpp>
 
 namespace boost{

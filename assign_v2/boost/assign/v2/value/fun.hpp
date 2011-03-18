@@ -9,7 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_PUT_FUN_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_FUN_ER_2010_HPP
-#include <boost/assign/v2/put/fun/deduce.hpp>
-#include <boost/assign/v2/put/fun/modulo.hpp>
+#include <boost/assign/v2/value/fun/deduce.hpp>
+#include <boost/assign/v2/value/fun/modulo.hpp>
 
 #endif // BOOST_ASSIGN_V2_PUT_FUN_ER_2010_HPP

@@ -15,7 +15,7 @@
 #include <boost/mpl/vector/vector0.hpp>
 
 #include <boost/assign/v2/ref/list_tuple.hpp>
-#include <boost/assign/v2/put/pipe/modulo_traits.hpp>
+#include <boost/assign/v2/value/pipe/modulo_traits.hpp>
 
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X

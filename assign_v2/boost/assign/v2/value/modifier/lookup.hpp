@@ -11,7 +11,7 @@
 #define BOOST_ASSIGN_V2_PUT_MODIFIER_LOOKUP_ER_2010_HPP
 #include <boost/assign/v2/detail/keyword/ignore.hpp>
 #include <boost/assign/v2/detail/pp/ignore.hpp>
-#include <boost/assign/v2/put/adapter/modifier.hpp>
+#include <boost/assign/v2/value/adapter/modifier.hpp>
 #include <boost/call_traits.hpp>
 #include <boost/shared_ptr.hpp>
 
@@ -68,7 +68,7 @@ namespace put_aux{
 }// assign
 }// boost
 
-#include <boost/assign/v2/put/modifier/modulo.hpp>
+#include <boost/assign/v2/value/modifier/modulo.hpp>
 BOOST_ASSIGN_V2_PUT_MODIFIER_MODULO_KEYWORD(lookup)
 #define BOOST_ASSIGN_V2_TAG modifier_tag::lookup<Arg>
 BOOST_ASSIGN_V2_PUT_MODIFIER_MODULO_META_MODIFIER_TAG(lookup, BOOST_ASSIGN_V2_TAG)

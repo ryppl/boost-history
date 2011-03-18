@@ -9,8 +9,8 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_PUT_DEQUE_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_DEQUE_ER_2010_HPP
-#include <boost/assign/v2/put/deque/conversion.hpp>
-#include <boost/assign/v2/put/deque/csv_deque.hpp>
-#include <boost/assign/v2/put/deque/deque.hpp>
+#include <boost/assign/v2/value/deque/conversion.hpp>
+#include <boost/assign/v2/value/deque/csv_deque.hpp>
+#include <boost/assign/v2/value/deque/deque.hpp>
 
 #endif // BOOST_ASSIGN_V2_PUT_DEQUE_ER_2010_HPP

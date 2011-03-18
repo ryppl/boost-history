@@ -13,9 +13,9 @@
 #include <boost/assign/v2/detail/pp/forward.hpp>
 #include <boost/assign/v2/detail/pp/ignore.hpp>
 #include <boost/assign/v2/detail/traits/ptr_container/meta.hpp>
-#include <boost/assign/v2/put/adapter/as_arg_list.hpp>
-#include <boost/assign/v2/put/adapter/fwd.hpp>
-#include <boost/assign/v2/put/adapter/modifier.hpp>
+#include <boost/assign/v2/value/adapter/as_arg_list.hpp>
+#include <boost/assign/v2/value/adapter/fwd.hpp>
+#include <boost/assign/v2/value/adapter/modifier.hpp>
 #include <boost/concept_check.hpp>
 #include <boost/mpl/always.hpp>
 #include <boost/mpl/apply.hpp>

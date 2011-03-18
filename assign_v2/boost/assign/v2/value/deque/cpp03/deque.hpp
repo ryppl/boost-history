@@ -13,7 +13,7 @@
 #include <boost/assign/v2/detail/config/limit_lvalue_const_arity.hpp>
 #include <boost/assign/v2/detail/keyword/nil.hpp>
 #include <boost/assign/v2/detail/pp/parameter_list.hpp>
-#include <boost/assign/v2/put/deque/fwd.hpp>
+#include <boost/assign/v2/value/deque/fwd.hpp>
 #include <boost/preprocessor/arithmetic.hpp>
 #include <boost/preprocessor/repetition.hpp>
 #include <boost/preprocessor/seq.hpp>

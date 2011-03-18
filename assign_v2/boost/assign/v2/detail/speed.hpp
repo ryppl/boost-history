@@ -21,10 +21,10 @@
 #include <boost/assign/list_inserter.hpp>
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
-#include <boost/assign/v2/put/put.hpp>
-#include <boost/assign/v2/put/deque.hpp>
-#include <boost/assign/v2/put/pipe/put.hpp>
-#include <boost/assign/v2/put/pipe/csv_put.hpp>
+#include <boost/assign/v2/value/put.hpp>
+#include <boost/assign/v2/value/deque.hpp>
+#include <boost/assign/v2/value/pipe/put.hpp>
+#include <boost/assign/v2/value/pipe/csv_put.hpp>
 #include <boost/assign/v2/ref/array/array.hpp>
 #include <boost/assign/v2/ref/array/csv_array.hpp>
 #include <boost/type_traits/remove_reference.hpp>

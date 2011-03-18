@@ -14,10 +14,10 @@
 #include <boost/assign/v2/detail/traits/value_container/category.hpp>
 #include <boost/assign/v2/detail/traits/ptr_container/meta.hpp>
 #include <boost/assign/v2/detail/traits/switch.hpp>
-#include <boost/assign/v2/put/modifier/insert.hpp>
-#include <boost/assign/v2/put/modifier/iterate.hpp>
-#include <boost/assign/v2/put/modifier/push.hpp>
-#include <boost/assign/v2/put/modifier/push_back.hpp>
+#include <boost/assign/v2/value/modifier/insert.hpp>
+#include <boost/assign/v2/value/modifier/iterate.hpp>
+#include <boost/assign/v2/value/modifier/push.hpp>
+#include <boost/assign/v2/value/modifier/push_back.hpp>
 #include <boost/mpl/assert.hpp>
 #include <boost/preprocessor/cat.hpp>
 #include <boost/type_traits/is_same.hpp>

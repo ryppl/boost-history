@@ -12,8 +12,8 @@
 #include <boost/assign/v2/detail/pp/ignore.hpp>
 #include <boost/assign/v2/ref/list/as_modulo_list.hpp>
 #include <boost/assign/v2/ref/list_tuple/as_args_list.hpp>
-#include <boost/assign/v2/put/put.hpp>
-#include <boost/assign/v2/put/pipe/args_list.hpp>
+#include <boost/assign/v2/value/put.hpp>
+#include <boost/assign/v2/value/pipe/args_list.hpp>
 
 namespace boost{
 namespace assign{
