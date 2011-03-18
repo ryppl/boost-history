@@ -48,7 +48,7 @@ namespace result_of{
 
     template<typename T>
     struct csv_deque/*<-*/
-        : value_aux::result_of::deque<T>
+        : value_aux::result_of::csv_deque<T>
     {}/*->*/;
 
 }// result_of

@@ -56,10 +56,8 @@ namespace xxx_chain{
             array<word, 3> head; std::list<word> tail( 3 );
             copy( words, begin( head | as2::_chain( tail ) ) );
 
-            BOOST_ASSIGN_V2_CHECK( head.front() == "foo" );
-            BOOST_ASSIGN_V2_CHECK( head.back() == "baz" );
-            BOOST_ASSIGN_V2_CHECK( tail.front() == "qux" );
-            BOOST_ASSIGN_V2_CHECK( tail.back() == "grault" );
+            BOOST_ASSIGN_V2_CHECK( range::equal( head, as2::csv_deque<word>( "foo", "bar", "baz" ) ) );
+            BOOST_ASSIGN_V2_CHECK( range::equal( tail, as2::csv_deque<word>( "qux", "quux", "grault" ) ) );
             //]
         }
         // Boost.Assign.v2 containers
@@ -73,10 +71,8 @@ namespace xxx_chain{
                 begin( consecutive5 && (/*<< rvalue! >>*/ as2::ref::csv_array( six, seven, eight ) | as2::ref::_get ) )
             );
 
-            BOOST_ASSIGN_V2_CHECK( consecutive5.front() == 1 );
-            BOOST_ASSIGN_V2_CHECK( consecutive5.back()  == 5 );
-            BOOST_ASSIGN_V2_CHECK( six                  == 6 );
-            BOOST_ASSIGN_V2_CHECK( eight                == 8 );
+            BOOST_ASSIGN_V2_CHECK( range::equal( consecutive5, as2::csv_deque( 1, 2, 3, 4, 5 ) ) );
+            BOOST_ASSIGN_V2_CHECK( six   == 6 ); BOOST_ASSIGN_V2_CHECK( seven == 7 ); BOOST_ASSIGN_V2_CHECK( eight == 8 );
             //]
         }
 

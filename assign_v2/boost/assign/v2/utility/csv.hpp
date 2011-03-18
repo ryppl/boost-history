@@ -16,6 +16,7 @@
 #include <boost/mpl/fold.hpp>
 #include <boost/mpl/placeholders.hpp>
 #include <boost/mpl/vector.hpp>
+#include <boost/mpl/vector/vector0.hpp>
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 #include <utility>
 #include <boost/assign/v2/temporary/variadic_vector.hpp>
@@ -58,23 +59,25 @@ namespace csv_aux{
 namespace result_of{
 
     template<typename F, typename V>
-    struct csv /*<-*/: ::boost::mpl::apply1<
+    struct csv/*<-*/
+        : ::boost::mpl::apply1<
         csv_aux::result<F>,
         V
-    >{}/*->*/;
+        >
+    {}/*->*/;
 
 }// nth_result_of
-//->
-#if BOOST_ASSIGN_V2_ENABLE_CPP0X
 //<-
+#if BOOST_ASSIGN_V2_ENABLE_CPP0X
+//->
 
-    template<typename F, typename T>
+    template<typename F>
     typename result_of::csv<F const&,
-        ::boost::mpl::vector<T>
+        ::boost::mpl::vector0<>
     >::type
-    csv( F const& functor, T&& t )/*<-*/
+    csv( F const& functor)/*<-*/
     {
-        return functor( t );
+        return functor;
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
     template<typename F, typename T, typename... Args>
@@ -86,6 +89,7 @@ namespace result_of{
         return csv( functor( t ), std::forward<Args>( args )... );
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
+//]
 #else
 #define BOOST_ASSIGN_V2_MACRO1(z, i, data) BOOST_PP_CAT(T, i) data
 #define BOOST_ASSIGN_V2_MACRO2(z, i, data) ( BOOST_PP_CAT(_, i) )

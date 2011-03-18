@@ -30,12 +30,12 @@ namespace xxx_put{
         using namespace boost;
         namespace as2 = assign::v2;
         {
-            //[test_put_pipe_put_str_literal
+            //[test_value_pipe_put_str_literal
             typedef const char* T; typedef std::string str_; std::deque<T> cont;
             BOOST_ASSIGN_V2_CHECK( 
                 boost::range::equal(
                     cont | /*<<`"x"`, `"y"` and `"z"` are kept as `const char(&)[2]`>>*/as2::_csv_put( "x", "y", "z" ),
-                    as2::csv_deque( "x" )( "y" )( "z" )
+                    as2::csv_deque( "x", "y", "z" )
                 )
             );
             BOOST_ASSIGN_V2_CHECK( str_( cont[1] ) == "y" );
@@ -43,7 +43,7 @@ namespace xxx_put{
             //]
         }
         {
-            //[test_put_pipe_put_intervals
+            //[test_value_pipe_put_intervals
             boost::array<int, 2> interval; boost::array<int, 6> all6;
             BOOST_ASSIGN_V2_CHECK(
                 boost::range::equal(

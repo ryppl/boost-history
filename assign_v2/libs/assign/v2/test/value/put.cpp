@@ -42,7 +42,7 @@ namespace xxx_put{
         namespace as2 = assign::v2;
 
         {
-             //[test_put_put_bitset
+             //[test_value_put_bitset
             typedef std::string str_; typedef std::bitset<3> data_; /*<<Keep in mind that although `data_( str_( "011" ) )`, for instance, is valid, `consecutive.push_back( str_( "011" ) )` isn't (GCC4.2)>>*/ std::vector<data_> consecutive;
             /*<<Calls `consecutive.push_back( data_( t ) );` for [^t = ]`str_( "000" )`[^, ..., ]`str_( "111" )`>>*/as2::put( consecutive )
                 ( str_( "000" ) )( str_( "001" ) )
@@ -58,7 +58,7 @@ namespace xxx_put{
             // unsigned i else warning comparison between signed & unsigned
         }
         {
-             //[test_put_put_numeric_kb
+             //[test_value_put_numeric_kb
             std::vector<int> numeric( 10 ); iota( numeric, 0 ); typedef std::string str_;
             typedef variant< int, str_ > data_; array<data_, 16> numeric_kb;
             as2::put( numeric_kb )
@@ -74,7 +74,7 @@ namespace xxx_put{
             BOOST_ASSIGN_V2_CHECK(  get<int>( numeric_kb.back() ) == 9 );
         }
         {
-            //[test_put_put_ragged
+            //[test_value_put_ragged
             typedef double data_; typedef std::vector<data_> variable_size_;
             variable_size_ a( 3 ); a[0] = 0.71; a[1] = 0.63; a[2] = 0.85;
             variable_size_ b( 4 ); b[0] = 0.61; b[1] = 0.69; b[2] = 0.92; b[3] = 0.55;
@@ -101,7 +101,7 @@ namespace xxx_put{
             BOOST_ASSIGN_V2_CHECK(  fabs( ragged[2].back()  + 99.99     ) < eps );
         }
         {
-            //[test_put_put_stl
+            //[test_value_put_stl
             std::queue<int> adapter; /*<<Calls `adapter.push( t )` for [^t = 72, 31, 48]>>*/as2::put( adapter )( 72 )( 31 )( 48 );
             array<int, 3> array; /*<<Calls `array[i] = t` for [^( i, t ) = ( 0, 72 ), ( 1, 31 ), ( 2, 48 )]>>*/as2::put( array )( 72 )( 31 )( 48 );
             std::set<int> assoc; /*<<Calls `assoc.insert( t )` for [^t = 72, 31, 48]>>*/as2::put( assoc )( 72 )( 31 )( 48 );
@@ -118,7 +118,7 @@ namespace xxx_put{
         }
         {
             // http://bioinfo.mbb.yale.edu/~mbg/dom/fun3/area-codes/
-            //[test_put_put_area_codes
+            //[test_value_put_area_codes
             typedef const char us_state_ [3]; us_state_ ct = "CT", nj = "NJ", ny = "NY";
             typedef int area_code_; typedef tuple<us_state_/*<<Notice the [*reference]>>*/&,  area_code_> data_; std::deque< data_ > tri_state_area;
             /*<<Calls `tri_state.push_back( data_( s, c ) )` for [^( s, c ) =( ny, 212 )...( ct, 203 )]>>*/

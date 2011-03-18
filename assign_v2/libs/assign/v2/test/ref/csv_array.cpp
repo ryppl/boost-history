@@ -30,12 +30,12 @@ namespace xxx_csv_array{
             T x = 72, y = 31, z = 48;
             typedef as2::ref::nth_result_of::csv_array<3, T>::type ar_;
             ar_ ar = as2::ref::csv_array( x, y, z );
-            /*<-*/{/*->*/
+            {
                 T& a = ar[0]; T& b = ar[2];
-
+            
                 BOOST_ASSIGN_V2_CHECK( &a == &x );
                 BOOST_ASSIGN_V2_CHECK( &b == &z );
-            /*<-*/}/*->*/
+            }
             //]
             {
                 T& a = ar.front(); T& b = ar.back();

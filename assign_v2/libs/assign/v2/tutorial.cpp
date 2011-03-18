@@ -48,6 +48,7 @@ namespace tutorial_assign_v2{
             typedef std::string T; ptr_set<T> assoc;
             T x = "isomer", y = "ephemeral", z = "prosaic";
             csv( put( assoc ), x, z, y );
+            
             assert( assoc.count( x ) == 1 );
             assert( assoc.count( z ) == 1 );
             //]
@@ -55,7 +56,8 @@ namespace tutorial_assign_v2{
         {
             //[tutorial_piping
             using namespace lambda;
-            std::deque<int> cont; range::stable_partition( cont | _csv_put( 0, 1, 2, 3, 4, 5 ), _1 % 2 );
+            std::deque<int> cont; 
+            range::stable_partition( cont | _csv_put( 0, 1, 2, 3, 4, 5 ), _1 % 2 );
             //]
             //[tutorial_container_generation
             assert( range::equal( cont, csv_deque(1, 3, 5, 0, 2, 4) ) );
@@ -65,6 +67,7 @@ namespace tutorial_assign_v2{
             //[tutorial_ref_array
             int x = 4, y = 6, z = -1;
             int const& max = *max_element( ref::csv_array( x, y, z ) );
+            
             assert( &max == &y );
             //]
         }
@@ -76,30 +79,36 @@ namespace tutorial_assign_v2{
                 consecutive8,
                 begin( consecutive5 | _chain( ref::csv_array( six, seven, eight ) | ref::_get ) )
             );
-            assert(consecutive5[0] == 1); assert(consecutive5[4] == 5);
-            assert( six == 6 ); assert( eight == 8 );
+
+            assert( range::equal( consecutive5, csv_deque(1, 2, 3, 4, 5) ) );
+            assert( six == 6 ); assert( seven == 7 ); assert( eight == 8 );
             //]
         }
         {
             //[tutorial_conversion
             std::queue<int> fifo = converter( csv_deque( 72, 31, 48 ) );
-            assert( fifo.front() == 72 );
+            
+            assert( fifo.front() == 72 ); assert( fifo.back() == 48 );
             //]
         }
         {
             //[tutorial_arg_forwarding
-            std::map<std::string, int> map; put( map )( "foo", 1 )( "bar", 2 )( "baz", 3 );
-            assert( map["bar"] == 2 );
+            std::map<std::string, int> map; 
+            put( map )( "foo", 1 )( "bar", 2 )( "baz", 3 );
+            
+            assert( map["bar"] = 2 );
             //]
         }
         {
             //[tutorial_parametrization
             using namespace lambda;
             typedef int T; array<T, 4> powers = converter( csv_deque( 1, 10, -1, -1 ) );
-            std::size_t shift = 2; ( put( powers ) % ( _iterate = var( shift )++ ) )( 100 )( 1000 );
+            std::size_t index = 2; ( put( powers ) % ( _iterate = var( index )++ ) )( 100 )( 1000 );
 
-            int value = 1; 
-            for(shift = 0; shift < powers.size(); shift++){ assert( powers[shift] == value ); value *=10; }
+            for(int value = 1, index = 0; index < powers.size(); index++, value *=10 )
+            { 
+                assert( powers[index] == value ); 
+            }
             //]
         }
     }

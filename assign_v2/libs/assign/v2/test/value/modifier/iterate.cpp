@@ -18,6 +18,7 @@
 #include <boost/lambda/construct.hpp>
 #include <boost/mpl/assert.hpp>
 #include <boost/mpl/apply.hpp>
+#include <boost/range/algorithm/equal.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/typeof/typeof.hpp>
 #include <libs/assign/v2/test/value/modifier/iterate.h>
@@ -35,7 +36,7 @@ namespace xxx_iterate{
         using namespace lambda;
         namespace as2 = assign::v2;
         {
-            //[test_put_modifier_iterate_meta
+            //[test_value_modifier_iterate_meta
             typedef as2::value_aux::keyword_iterate keyword_;
             typedef as2::modifier_tag::iterate_arg arg_;
             typedef as2::value_aux::modulo_modifier<keyword_, arg_> modulo_;
@@ -50,18 +51,15 @@ namespace xxx_iterate{
             //]
         }
         {
-            //[test_put_modifier_iterate_shifted
+            //[test_value_modifier_iterate_shifted
             typedef int T; array<T, 4> powers; powers[0] = 1; powers[1] = 10;
-            int shift = 2; ( as2::put( powers ) % ( as2::_iterate = var( shift )++ ) )( 100 )( 1000 );
+            int index = 2; ( as2::put( powers ) % ( as2::_iterate = var( index )++ ) )( 100 )( 1000 );
 
-            BOOST_ASSIGN_V2_CHECK( powers[0] == 1 );
-            BOOST_ASSIGN_V2_CHECK( powers[1] == 10 );
-            BOOST_ASSIGN_V2_CHECK( powers[2] == 100 );
-            BOOST_ASSIGN_V2_CHECK( powers[3] == 1000 );
+            BOOST_ASSIGN_V2_CHECK( range::equal( powers, as2::csv_deque( 1, 10, 100, 1000 ) ) );
             //]
         }
         {
-            //[test_put_modifier_iterate_meta_deque
+            //[test_value_modifier_iterate_meta_deque
             typedef as2::value_aux::keyword_iterate keyword_;
             typedef as2::modifier_tag::iterate_arg arg_;
             typedef as2::value_aux::modulo_modifier<keyword_, arg_> modulo_;
@@ -75,19 +73,16 @@ namespace xxx_iterate{
             //]
         }
         {
-            //[test_put_modifier_iterate_shifted_deque
+            //[test_value_modifier_iterate_shifted_deque
             as2::result_of::deque<int>::type missing_tail = as2::deque<int>( 1 )( 10 )( -1 )( -1 );
-            int shift = 2; 
+            int index = 2; 
             
             BOOST_AUTO(
                 powers,
-                ( missing_tail % ( as2::_iterate = var( shift )++ ) )( 100 )( 1000 )
+                ( missing_tail % ( as2::_iterate = var( index )++ ) )( 100 )( 1000 )
             );
 
-            BOOST_ASSIGN_V2_CHECK( powers[0] == 1 );
-            BOOST_ASSIGN_V2_CHECK( powers[1] == 10 );
-            BOOST_ASSIGN_V2_CHECK( powers[2] == 100 );
-            BOOST_ASSIGN_V2_CHECK( powers[3] == 1000 );
+            BOOST_ASSIGN_V2_CHECK( range::equal( powers, as2::csv_deque( 1, 10, 100, 1000 ) ) );
             //]
         }
     }

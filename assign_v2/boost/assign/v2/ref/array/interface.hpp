@@ -65,7 +65,7 @@ namespace array_aux{
         typedef interface<Impl, D> this_;
         typedef typename traits_::result_of_get_ result_of_get_;
 //->
-        typedef /*<-*/typename traits_::param_type BOOST_ASSIGN_V2_IGNORE(/*->*/unspecified/*<-*/)/*->*/param_type;
+        typedef /*<-*/typename traits_::param_type BOOST_ASSIGN_V2_IGNORE(/*->*/unspecified/*<-*/) /*->*/param_type;
 
         public:
 

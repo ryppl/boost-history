@@ -22,6 +22,7 @@
 #include <boost/lambda/lambda.hpp>
 #include <boost/lambda/construct.hpp>
 #include <boost/numeric/conversion/bounds.hpp>
+#include <boost/range/algorithm/equal.hpp>
 #include <boost/typeof/typeof.hpp>
 #include <libs/assign/v2/test/value/fun.h>
 
@@ -68,7 +69,7 @@ namespace xxx_fun{
         using namespace lambda;
         namespace as2 = assign::v2;
         {
-            //[test_put_fun_math
+            //[test_value_fun_math
             std::vector<double> exponent;
             typedef function<double(double)> f_;
             (
@@ -82,7 +83,7 @@ namespace xxx_fun{
             //]
         }
         {
-            //[test_put_fun_recursive
+            //[test_value_fun_recursive
             int i = 1, k = 1;
             BOOST_AUTO(
                 factorials, (
@@ -92,8 +93,7 @@ namespace xxx_fun{
                 )/*<<Equivalent to `factorials( k *= i++ )` for [^i = 1, ..., 5]>>*/()()()()()
             );
 
-            BOOST_ASSIGN_V2_CHECK( factorials.front() == ( 1 ) );
-            BOOST_ASSIGN_V2_CHECK( factorials.back() == ( 120 ) );
+            BOOST_ASSIGN_V2_CHECK( range::equal( factorials, as2::csv_deque( 1, 2, 6, 24, 120 ) ) );
             //]
         }
 

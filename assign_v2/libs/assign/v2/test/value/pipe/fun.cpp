@@ -37,6 +37,7 @@ namespace xxx_fun{
         {
             //[csv_pipe_modulo_fun_math
             int i = 0, k = 1; std::list<int> factorials;
+            
             BOOST_ASSIGN_V2_CHECK(
                 range::equal(
                     factorials | ( 

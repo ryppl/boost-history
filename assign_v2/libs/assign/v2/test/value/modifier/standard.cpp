@@ -18,6 +18,7 @@
 #include <boost/assign/v2/value/deque.hpp>
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
+#include <boost/range/algorithm/equal.hpp>
 #include <boost/range/algorithm/lower_bound.hpp>
 #include <boost/range/algorithm/upper_bound.hpp>
 #include <boost/lambda/lambda.hpp>
@@ -45,7 +46,7 @@ namespace xxx_standard{
 
         // PUT
         {
-            //[test_put_modifier_standard_meta
+            //[test_value_modifier_standard_meta
             typedef as2::result_of::put<std::vector<int> >::type put_;
             typedef as2::value_aux::keyword_standard_modifier keyword_;
             typedef as2::modifier_tag::push_front tag_;
@@ -57,7 +58,7 @@ namespace xxx_standard{
             //]
         }
         {
-            //[test_put_modifier_push_front
+            //[test_value_modifier_push_front
             std::deque<double> sqrt2;
             ( as2::put( sqrt2 ) % as2::_push_front )( 1.41421 )( 1.4142 )( 1.414 )( 1.41 );
 
@@ -67,7 +68,7 @@ namespace xxx_standard{
             //]
         }
         {
-            //[test_put_modifier_push
+            //[test_value_modifier_push
             std::queue<int> fifo; ( as2::put( fifo ) % as2::_push )( 72 )( 31 )( 48 );
 
             BOOST_ASSIGN_V2_CHECK( fifo.front() == 72 );
@@ -75,7 +76,7 @@ namespace xxx_standard{
             //]
         }
         {
-            //[test_put_modifier_insert
+            //[test_value_modifier_insert
             std::set<std::string> letters; ( as2::put( letters ) % as2::_insert )( "d" )( "a" )( "c" )( "b" );
 
             BOOST_ASSIGN_V2_CHECK( letters.lower_bound( "a" ) == boost::begin( letters ) );
@@ -83,17 +84,16 @@ namespace xxx_standard{
             //]
         }
         {
-            //[test_put_modifier_push_back
-            typedef int int_; std::list<int> list;
+            //[test_value_modifier_push_back
+            std::list<int> list;
             ( as2::put( list ) % as2::_push_back )( 72 )( 31 )( 48 );
 
-            BOOST_ASSIGN_V2_CHECK( list.front() == 72 );
-            BOOST_ASSIGN_V2_CHECK( list.back() == 48 );
+            BOOST_ASSIGN_V2_CHECK( range::equal( list, as2::csv_deque( 72, 31, 48 ) ) );
             //]
         }
         // DEQUE
         {
-            //[test_put_modifier_meta_deque
+            //[test_value_modifier_meta_deque
             typedef as2::result_of::deque<int>::type put_;
             typedef as2::value_aux::keyword_standard_modifier keyword_;
             typedef as2::modifier_tag::push_front tag_;
@@ -106,14 +106,13 @@ namespace xxx_standard{
             //]
         }
         {
-            //[test_put_modifier_push_front_deque
+            //[test_value_modifier_push_front_deque
             BOOST_AUTO(
                 powers,
                 ( as2::deque<int>( as2::_nil ) % as2::_push_front )( 16 )( 8 )( 4 )( 2 )( 1 )
             );
 
-            BOOST_ASSIGN_V2_CHECK( powers[0] == 1 );
-            BOOST_ASSIGN_V2_CHECK( powers[4] == 16 );
+            BOOST_ASSIGN_V2_CHECK( range::equal( powers, as2::csv_deque( 1, 2, 4, 8, 16 ) ) );
             //]
         }
     }

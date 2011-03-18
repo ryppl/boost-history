@@ -16,6 +16,7 @@
 #include <boost/assign/v2/utility/conversion/check.hpp>
 #include <boost/assign/v2/ref/array.hpp>
 #include <boost/assign/v2/value/deque.hpp>
+#include <boost/range/algorithm/equal.hpp>
 #include <libs/assign/v2/test/utility/conversion.h>
 
 namespace test_assign_v2{
@@ -41,21 +42,22 @@ namespace xxx_conversion{
         {
             //[test_utility_conversion_vec_array
             std::vector<int> r( 3 ); r[0] = 72; r[1] = 31; r[2] = 48;
-            typedef array<int, 3> ar_; ar_ const& ar = ( r | as2::convert<ar_>() );
+            typedef array<int, 3> ar_; 
+            ar_ const& ar = ( r | as2::convert<ar_>() );
             
-            BOOST_ASSIGN_V2_CHECK( ar.front() == 72 );
-            BOOST_ASSIGN_V2_CHECK( ar.back() == 48 );
+            BOOST_ASSIGN_V2_CHECK( range::equal( ar, as2::csv_deque( 72, 31, 48 ) ) );
             //]
         }
         {
             //[test_utility_conversion_vec_stack
             std::vector<int> r( 3 ); r[0] = 72; r[1] = 31; r[2] = 48;
             std::stack<int> lifo = as2::converter( r );
+            
             BOOST_ASSIGN_V2_CHECK( lifo.top() == 48 );
             //]
         }
         {
-            //test_utility_conversion_stl
+            //[test_utility_conversion_stl
             typedef int T; typedef std::vector<T> R; R r( 3 ); r[0] = 72; r[1] = 31; r[2] = 48; 
             f< std::vector<T> >( as2::converter( r ), r );
             f< std::deque<T> >( as2::converter( r ), r );
@@ -73,6 +75,7 @@ namespace xxx_conversion{
                     ( as2::ref::csv_array( 4, 5, 6 ) | as2::convert<row_>() )
                     ( as2::ref::csv_array( 7, 8, 9 ) | as2::convert<row_>() )
             );
+            
             for(int i = 0; i < 9; i++)
             {
                 BOOST_ASSIGN_V2_CHECK( matrix3x3[ i / 3 ][ i % 3 ] == i + 1 );
@@ -83,27 +86,30 @@ namespace xxx_conversion{
         {
             //[test_utility_conversion_as2_deque_array
             std::vector<int> r( 3 ); r[0] = 72; r[1] = 31; r[2] = 48;
-            typedef array<int, 3> ar_; ar_ const& ar = ( as2::csv_deque( 72, 31, 48 ) | as2::convert<ar_>() );
+            typedef array<int, 3> ar_; 
+            ar_ const& ar = ( as2::csv_deque( 72, 31, 48 ) | as2::convert<ar_>() );
             
-            BOOST_ASSIGN_V2_CHECK( ar.front() == 72 );
-            BOOST_ASSIGN_V2_CHECK( ar.back() == 48 );
+            BOOST_ASSIGN_V2_CHECK( range::equal( ar, as2::csv_deque( 72, 31, 48 ) ) );
             //]
         }
         {
             //[test_utility_conversion_ref_array_stack
             std::stack<int> lifo = /*<<Notice unqualified (name lookup)>>*/converter( as2::ref::array( 72 )( 31 )( 48 ) );
+            
             BOOST_ASSIGN_V2_CHECK( lifo.top() == 48 );
             //]
         }
         {
             //[test_utility_conversion_ref_array_queue
             std::queue<int> fifo = /*<<Notice unqualified (name lookup)>>*/converter( as2::ref::csv_array( 72, 31, 48 ) );
+            
             BOOST_ASSIGN_V2_CHECK( fifo.front() == 72 );
             //]
         }
         {
             //[test_utility_conversion_as2_deque_stack
             std::stack<int> lifo = /*<<Notice unqualified (name lookup)>>*/converter( as2::csv_deque( 72, 31, 48 ) );
+            
             BOOST_ASSIGN_V2_CHECK( lifo.top() == 48 );
             //]
         }

@@ -13,6 +13,7 @@
 #include <boost/assign/v2/value/deque.hpp>
 #include <boost/assign/v2/value/put.hpp>
 #include <boost/assign/v2/value/modifier/push_front.hpp>
+#include <boost/range/algorithm/equal.hpp>
 #include <libs/assign/v2/test/utility/csv.h>
 
 namespace test_assign_v2{
@@ -28,8 +29,7 @@ namespace xxx_csv{
             std::deque<int> cont;
             as2::csv( as2::put( cont ), 72, 31, 48 );
 
-            BOOST_ASSIGN_V2_CHECK( cont.front() == 72 );
-            BOOST_ASSIGN_V2_CHECK( cont.back() == 48 );
+            BOOST_ASSIGN_V2_CHECK( range::equal( cont, as2::csv_deque( 72, 31, 48 ) ) );
             //]
         }
         {
@@ -37,8 +37,7 @@ namespace xxx_csv{
             std::deque<int> cont;
             as2::csv( as2::put( cont ) % as2::_push_front, 72, 31, 48 );
 
-            BOOST_ASSIGN_V2_CHECK( cont.front() == 48 );
-            BOOST_ASSIGN_V2_CHECK( cont.back() == 72 );
+            BOOST_ASSIGN_V2_CHECK( range::equal( cont, as2::csv_deque( 48, 31, 72 ) ) );
             //]
         }
         {
@@ -48,8 +47,7 @@ namespace xxx_csv{
                 as2::csv( as2::deque<int>( as2::_nil ) % as2::_push_front, 72, 31, 48 )
             );
 
-            BOOST_ASSIGN_V2_CHECK( cont.front() == 48 );
-            BOOST_ASSIGN_V2_CHECK( cont.back() == 72 );
+            BOOST_ASSIGN_V2_CHECK( range::equal( cont, as2::csv_deque( 48, 31, 72 ) ) );
             //]
         }
     }

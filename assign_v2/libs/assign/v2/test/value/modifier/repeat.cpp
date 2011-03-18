@@ -10,11 +10,11 @@
 #include <vector>
 #include <boost/typeof/typeof.hpp>
 #include <boost/assign/v2/detail/config/check.hpp>
-
 #include <boost/assign/v2/value/modifier/push_front.hpp>
 #include <boost/assign/v2/value/modifier/repeat.hpp>
 #include <boost/assign/v2/value/put.hpp>
 #include <boost/assign/v2/value/deque.hpp>
+#include <boost/range/algorithm/equal.hpp>
 #include <libs/assign/v2/test/value/modifier/repeat.h>
 
 namespace test_assign_v2{
@@ -27,26 +27,23 @@ namespace xxx_repeat{
         using namespace boost;
         namespace as2 = assign::v2;
         {
-            //[test_put_modifier_repeat_simple
+            //[test_value_modifier_repeat_simple
             std::vector<int> cont;
             ( as2::put( cont ) % ( as2::_repeat = 2  ) )( 72 )( 31 )( 48 );
 
-            BOOST_ASSIGN_V2_CHECK( cont.size() == 6 );
-            BOOST_ASSIGN_V2_CHECK( cont.front() == 72 );
-            BOOST_ASSIGN_V2_CHECK( cont.back() == 48 );
+            BOOST_ASSIGN_V2_CHECK( range::equal( cont, as2::csv_deque( 72, 72, 31, 31, 48, 48 ) ) );
             //]
         }
         {
-            //[test_put_modifier_repeat_compose
+            //[test_value_modifier_repeat_compose
             BOOST_AUTO(
                 cont, (
                     as2::deque<int>( as2::_nil ) % as2::_push_front % ( as2::_repeat = 2 )
                 )( 72 )( 31 )( 48 )
             );
-            BOOST_ASSIGN_V2_CHECK( boost::size( cont ) == 6 );
+            
+            BOOST_ASSIGN_V2_CHECK( range::equal( cont, as2::csv_deque( 48, 48, 31, 31, 72, 72 ) ) );
             //]
-            BOOST_ASSIGN_V2_CHECK( cont.front() == 48 );
-            BOOST_ASSIGN_V2_CHECK( cont.back() == 72 );
         }
     }
 

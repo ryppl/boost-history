@@ -60,7 +60,6 @@ namespace conversion_aux{
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
 }// conversion_aux
-//using conversion_aux::convert;
 namespace result_of{
 
     template<typename /*<<Container>>*/ C, typename /*<<Range>>*/R>

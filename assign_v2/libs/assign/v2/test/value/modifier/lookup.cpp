@@ -35,7 +35,7 @@ namespace xxx_lookup{
         using namespace lambda;
         namespace as2 = assign::v2;
         {
-            //[test_put_modifier_lookup_meta
+            //[test_value_modifier_lookup_meta
             typedef BOOST_TYPEOF(_1) arg_;
             typedef as2::value_aux::keyword_lookup keyword_;
             typedef as2::value_aux::modulo_modifier<keyword_, arg_> modulo_;
@@ -50,16 +50,19 @@ namespace xxx_lookup{
             //]
         }
         {
-            //[test_put_modifier_lookup_map
-            typedef std::map<std::string, int> C; C year; ( as2::put( year )( "feb", 28 )( "apr", 30 )( "jun", 30 )( "sep", 30 )( "nov", 30 ) 
-                % ( as2::_fun = _1 ) %  ( as2::_lookup = ( _1 = 31 ) ) )/*<<Calls `year["jan"] = 31` etc.>>*/( "jan" )( "mar" )( "may" )( "jul" )( "aug" )( "oct" )( "dec" );
+            //[test_value_modifier_lookup_map
+            typedef std::string str_; typedef std::map<str_, int> C; C year; 
+            ( 
+                as2::put( year )( "feb", 28 )( "apr", 30 )( "jun", 30 )( "sep", 30 )( "nov", 30 ) 
+                    % ( as2::_fun = _1 ) %  ( as2::_lookup = ( _1 = 31 ) ) 
+            )/*<<Calls `year["jan"] = 31` etc.>>*/( "jan" )( "mar" )( "may" )( "jul" )( "aug" )( "oct" )( "dec" );
             
             BOOST_ASSIGN_V2_CHECK( year["jan"] == 31 );
             BOOST_ASSIGN_V2_CHECK( year["dec"] == 31 );
             //]        
         }
         {
-            //[test_put_modifier_lookup_meta_deque
+            //[test_value_modifier_lookup_meta_deque
             typedef BOOST_TYPEOF(_1) arg_;
             typedef as2::value_aux::keyword_lookup keyword_;
             typedef as2::value_aux::modulo_modifier<keyword_, arg_> modulo_;
@@ -73,7 +76,7 @@ namespace xxx_lookup{
             //]
         }
         {
-            //[test_put_modifier_lookup_map_deque
+            //[test_value_modifier_lookup_map_deque
             BOOST_AUTO(
                 days_in_first_quater,
                 ( 
