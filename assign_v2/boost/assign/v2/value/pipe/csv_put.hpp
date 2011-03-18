@@ -19,11 +19,11 @@ namespace boost{
 namespace assign{
 namespace v2{
 //[syntax_put_pipe_csv_put
-namespace put_pipe_aux{
+namespace value_aux{
 
     template<typename C,
         typename ParList, arg_list_size_type N, typename U>
-    C& operator|(C& cont, put_pipe_aux::arg_list<
+    C& operator|(C& cont, value_aux::arg_list<
             ParList, N, U
         > const& arg_list
     )/*<-*/
@@ -40,10 +40,10 @@ namespace put_pipe_aux{
 
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
-}// put_pipe_aux
+}// value_aux
 
-    put_pipe_aux::arg_list_generator<> const _csv_put/*<-*/
-        = put_pipe_aux::arg_list_generator<>()/*->*/;
+    value_aux::arg_list_generator<> const _csv_put/*<-*/
+        = value_aux::arg_list_generator<>()/*->*/;
 
 //]
 }// v2

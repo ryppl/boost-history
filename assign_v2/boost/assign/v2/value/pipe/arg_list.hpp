@@ -27,7 +27,7 @@ namespace boost{
     struct use_default;
 namespace assign{
 namespace v2{
-namespace put_pipe_aux{
+namespace value_aux{
 
     typedef ref::array_aux::size_type arg_list_size_type;
 
@@ -102,7 +102,7 @@ namespace put_pipe_aux{
 
         template<std::size_t N, typename U = na_> // size?
         struct result{
-            typedef put_pipe_aux::arg_list<ParList, N, U> type;
+            typedef value_aux::arg_list<ParList, N, U> type;
         };
 
         typename result<0>::type
@@ -195,7 +195,7 @@ BOOST_PP_REPEAT_FROM_TO(
 
     };
 
-}// put_pipe_aux
+}// value_aux
 }// v2
 }// assign
 }// boost

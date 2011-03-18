@@ -32,7 +32,7 @@ namespace boost{
     struct use_default;
 namespace assign{
 namespace v2{
-namespace put_pipe_aux{
+namespace value_aux{
 
     typedef ::boost::mpl::vector0<> empty_args_list_;
     typedef v2::ref::list_tuple_aux::list_size_type args_list_size_type;
@@ -265,7 +265,7 @@ BOOST_PP_REPEAT_FROM_TO(
     }
 
 
-}// put_pipe_aux
+}// value_aux
 }// v2
 }// assign
 }// boost

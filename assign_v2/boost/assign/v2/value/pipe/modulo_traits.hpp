@@ -20,7 +20,7 @@ namespace boost{
     struct use_default;
 namespace assign{
 namespace v2{
-namespace put_pipe_aux{
+namespace value_aux{
 
     typedef ::boost::mpl::vector0<> empty_par_list_; 
 
@@ -41,7 +41,7 @@ namespace put_pipe_aux{
 
     };
 
-}// put_pipe_aux
+}// value_aux
 }// v2
 }// assign
 }// boost

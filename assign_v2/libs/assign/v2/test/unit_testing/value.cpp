@@ -7,8 +7,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef LIBS_ASSIGN_V2_TEST_UNIT_TEST_PUT_ER_2010_CPP
-#define LIBS_ASSIGN_V2_TEST_UNIT_TEST_PUT_ER_2010_CPP
+#ifndef LIBS_ASSIGN_V2_TEST_UNIT_TEST_VALUE_ER_2010_CPP
+#define LIBS_ASSIGN_V2_TEST_UNIT_TEST_VALUE_ER_2010_CPP
 
 #include <boost/test/test_tools.hpp>
 #define BOOST_ASSIGN_V2_CHECK( p ) BOOST_CHECK( p )

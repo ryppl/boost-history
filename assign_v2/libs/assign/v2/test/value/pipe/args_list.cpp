@@ -33,7 +33,7 @@ namespace xxx_args_list{
         namespace as2 = assign::v2;
         typedef boost::mpl::int_<0> zero_;
         {
-            typedef as2::put_pipe_aux::args_list<> args_list_;
+            typedef as2::value_aux::args_list<> args_list_;
             int x = -1;
             BOOST_AUTO( 
                 args_list, 
@@ -43,7 +43,7 @@ namespace xxx_args_list{
             BOOST_ASSIGN_V2_CHECK( n == 3 );
         }
         namespace chk = as2::check_aux;
-        namespace aux_ = as2::put_pipe_aux;
+        namespace aux_ = as2::value_aux;
         typedef chk::equal_ref r_;
         typedef chk::equal_val v_;
         {

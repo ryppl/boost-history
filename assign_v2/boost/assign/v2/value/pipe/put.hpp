@@ -19,7 +19,7 @@ namespace boost{
 namespace assign{
 namespace v2{
 //[syntax_put_pipe_put
-namespace put_pipe_aux{
+namespace value_aux{
 
     template<
         typename C,
@@ -29,7 +29,7 @@ namespace put_pipe_aux{
     >
     C& operator|(
         C& cont,
-        put_pipe_aux::args_list<
+        value_aux::args_list<
             ParList, ArgsList, enable_pars
         > const& args_list_
     )/*<-*/{
@@ -42,12 +42,12 @@ namespace put_pipe_aux{
         return cont;
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
-}// put_pipe_aux
+}// value_aux
 //<-
 namespace{
 //->
 
-    put_pipe_aux::args_list<> const _put /*<-*/= put_pipe_aux::args_list<>()/*->*/;
+    value_aux::args_list<> const _put /*<-*/= value_aux::args_list<>()/*->*/;
 
 //<-
 }
