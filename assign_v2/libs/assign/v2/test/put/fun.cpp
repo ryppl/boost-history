@@ -14,21 +14,21 @@
 #include <boost/array.hpp>
 #include <boost/assign/v2/detail/config/check.hpp>
 
-#include <boost/assign/v2/put/put.hpp>
-#include <boost/assign/v2/put/deque.hpp>
-#include <boost/assign/v2/put/fun.hpp>
+#include <boost/assign/v2/value/put.hpp>
+#include <boost/assign/v2/value/deque.hpp>
+#include <boost/assign/v2/value/fun.hpp>
 #include <boost/function.hpp>
 #include <boost/lambda/bind.hpp>
 #include <boost/lambda/lambda.hpp>
 #include <boost/lambda/construct.hpp>
 #include <boost/numeric/conversion/bounds.hpp>
 #include <boost/typeof/typeof.hpp>
-#include <libs/assign/v2/test/put/fun.h>
+#include <libs/assign/v2/test/value/fun.h>
 
 #include <boost/lexical_cast.hpp>
 
 namespace test_assign_v2{
-namespace xxx_put{
+namespace xxx_value{
 namespace xxx_fun{
 
 #ifdef __llvm__
@@ -103,5 +103,5 @@ namespace xxx_fun{
 
 
 }// xxx_fun
-}// xxx_put
+}// xxx_value
 }// test_assign_v2

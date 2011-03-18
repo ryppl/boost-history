@@ -13,14 +13,14 @@
 #include <boost/typeof/typeof.hpp>
 #include <boost/assign/v2/detail/config/check.hpp>
 
-#include <boost/assign/v2/put/fun.hpp>
-#include <boost/assign/v2/put/modifier/lookup.hpp>
-#include <boost/assign/v2/put/pipe/put.hpp>
-#include <boost/assign/v2/put/pipe/csv_put.hpp>
-#include <libs/assign/v2/test/put/pipe/modifier/lookup.h>
+#include <boost/assign/v2/value/fun.hpp>
+#include <boost/assign/v2/value/modifier/lookup.hpp>
+#include <boost/assign/v2/value/pipe/put.hpp>
+#include <boost/assign/v2/value/pipe/csv_put.hpp>
+#include <libs/assign/v2/test/value/pipe/modifier/lookup.h>
 
 namespace test_assign_v2{
-namespace xxx_put{
+namespace xxx_value{
 namespace xxx_pipe{
 namespace xxx_modifier{
 namespace xxx_lookup{
@@ -52,5 +52,5 @@ namespace xxx_lookup{
 }// xxx_lookup
 }// xxx_modifier
 }// xxx_pipe
-}// xxx_put
+}// xxx_value
 }// test_assign_v2

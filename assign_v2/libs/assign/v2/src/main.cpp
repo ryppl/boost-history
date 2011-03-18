@@ -7,7 +7,7 @@
 // Test
 #include <libs/assign/v2/test/detail.h>
 #include <libs/assign/v2/test/ref.h>
-#include <libs/assign/v2/test/put.h>
+#include <libs/assign/v2/test/value.h>
 #include <libs/assign/v2/test/utility.h>
 
 // Tutorial
@@ -51,7 +51,7 @@ int main (int argc, char * const argv[])
     {
         using namespace test_assign_v2;
         xxx_detail::test();
-        xxx_put::test();
+        xxx_value::test();
         xxx_ref::test();
         xxx_utility::test();
     }

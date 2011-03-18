@@ -12,12 +12,12 @@
 #include <vector>
 #include <boost/assign/v2/detail/config/check.hpp>
 
-#include <boost/assign/v2/put/deque/csv_deque.hpp>
-#include <boost/assign/v2/put/fun.hpp>
-#include <boost/assign/v2/put/pipe/put.hpp>
+#include <boost/assign/v2/value/deque/csv_deque.hpp>
+#include <boost/assign/v2/value/fun.hpp>
+#include <boost/assign/v2/value/pipe/put.hpp>
 #include <boost/lambda/lambda.hpp>
 #include <boost/range/algorithm/equal.hpp>
-#include <libs/assign/v2/test/put/pipe/fun.h>
+#include <libs/assign/v2/test/value/pipe/fun.h>
 
 #include <boost/range/algorithm/for_each.hpp>
 
@@ -25,7 +25,7 @@
 #include <iostream>
 
 namespace test_assign_v2{
-namespace xxx_put{
+namespace xxx_value{
 namespace xxx_pipe{
 namespace xxx_fun{
 
@@ -51,5 +51,5 @@ namespace xxx_fun{
 
 }// xxx_fun
 }// xxx_pipe
-}// xxx_put
+}// xxx_value
 }// test_assign_v2

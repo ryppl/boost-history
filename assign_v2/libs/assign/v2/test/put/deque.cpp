@@ -11,13 +11,13 @@
 #include <boost/mpl/assert.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/assign/v2/detail/config/check.hpp>
-#include <boost/assign/v2/put/deque/csv_deque.hpp>
-#include <boost/assign/v2/put/deque/deque.hpp>
+#include <boost/assign/v2/value/deque/csv_deque.hpp>
+#include <boost/assign/v2/value/deque/deque.hpp>
 
-#include <libs/assign/v2/test/put/deque.h>
+#include <libs/assign/v2/test/value/deque.h>
 
 namespace test_assign_v2{
-namespace xxx_put{
+namespace xxx_value{
 namespace xxx_deque{
 
     void test()
@@ -57,5 +57,5 @@ namespace xxx_deque{
     }
 
 }// xxx_deque
-}// xxx_put
+}// xxx_value
 }// test_assign_v2

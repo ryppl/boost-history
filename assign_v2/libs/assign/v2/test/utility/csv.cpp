@@ -10,9 +10,9 @@
 #include <deque>
 #include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/utility/csv.hpp>
-#include <boost/assign/v2/put/deque.hpp>
-#include <boost/assign/v2/put/put.hpp>
-#include <boost/assign/v2/put/modifier/push_front.hpp>
+#include <boost/assign/v2/value/deque.hpp>
+#include <boost/assign/v2/value/put.hpp>
+#include <boost/assign/v2/value/modifier/push_front.hpp>
 #include <libs/assign/v2/test/utility/csv.h>
 
 namespace test_assign_v2{

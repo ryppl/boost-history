@@ -13,22 +13,22 @@
 #include <boost/test/test_tools.hpp>
 #define BOOST_ASSIGN_V2_CHECK( p ) BOOST_CHECK( p )
 
-#include <libs/assign/v2/test/put/deque.cpp>
-#include <libs/assign/v2/test/put/fun.cpp>
-#include <libs/assign/v2/test/put/modifier/deduce.cpp>
-#include <libs/assign/v2/test/put/modifier/iterate.cpp>
-#include <libs/assign/v2/test/put/modifier/lookup.cpp>
-#include <libs/assign/v2/test/put/modifier/repeat.cpp>
-#include <libs/assign/v2/test/put/modifier/standard.cpp>
-#include <libs/assign/v2/test/put/pipe/args_list.cpp>
-#include <libs/assign/v2/test/put/pipe/fun.cpp>
-#include <libs/assign/v2/test/put/pipe/modifier/iterate.cpp>
-#include <libs/assign/v2/test/put/pipe/modifier/lookup.cpp>
-#include <libs/assign/v2/test/put/pipe/modifier/repeat.cpp>
-#include <libs/assign/v2/test/put/pipe/modifier/standard.cpp>
-#include <libs/assign/v2/test/put/pipe/put.cpp>
-#include <libs/assign/v2/test/put/ptr.cpp>
-#include <libs/assign/v2/test/put/put.cpp>
+#include <libs/assign/v2/test/value/deque.cpp>
+#include <libs/assign/v2/test/value/fun.cpp>
+#include <libs/assign/v2/test/value/modifier/deduce.cpp>
+#include <libs/assign/v2/test/value/modifier/iterate.cpp>
+#include <libs/assign/v2/test/value/modifier/lookup.cpp>
+#include <libs/assign/v2/test/value/modifier/repeat.cpp>
+#include <libs/assign/v2/test/value/modifier/standard.cpp>
+#include <libs/assign/v2/test/value/pipe/args_list.cpp>
+#include <libs/assign/v2/test/value/pipe/fun.cpp>
+#include <libs/assign/v2/test/value/pipe/modifier/iterate.cpp>
+#include <libs/assign/v2/test/value/pipe/modifier/lookup.cpp>
+#include <libs/assign/v2/test/value/pipe/modifier/repeat.cpp>
+#include <libs/assign/v2/test/value/pipe/modifier/standard.cpp>
+#include <libs/assign/v2/test/value/pipe/put.cpp>
+#include <libs/assign/v2/test/value/ptr.cpp>
+#include <libs/assign/v2/test/value/put.cpp>
 
 
 #include <boost/test/unit_test.hpp>
@@ -39,7 +39,7 @@ test_suite* init_unit_test_suite( int argc, char* argv[] )
     using namespace test_assign_v2;
     {
 
-    	namespace ns = xxx_put;
+    	namespace ns = xxx_value;
 		test->add( BOOST_TEST_CASE( &ns::xxx_deque::test ) );
 		test->add( BOOST_TEST_CASE( &ns::xxx_fun::test ) );
 		test->add( BOOST_TEST_CASE( &ns::xxx_modifier::xxx_deduce::test ) );

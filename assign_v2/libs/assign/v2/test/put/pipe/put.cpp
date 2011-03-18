@@ -14,15 +14,15 @@
 #include <string>
 #include <boost/array.hpp>
 #include <boost/assign/v2/detail/config/check.hpp>
-#include <boost/assign/v2/put/deque/csv_deque.hpp>
-#include <boost/assign/v2/put/pipe/put.hpp>
-#include <boost/assign/v2/put/pipe/csv_put.hpp> 
+#include <boost/assign/v2/value/deque/csv_deque.hpp>
+#include <boost/assign/v2/value/pipe/put.hpp>
+#include <boost/assign/v2/value/pipe/csv_put.hpp> 
 #include <boost/range/algorithm/for_each.hpp>
 
-#include <libs/assign/v2/test/put/pipe/put.h>
+#include <libs/assign/v2/test/value/pipe/put.h>
 
 namespace test_assign_v2{
-namespace xxx_put{
+namespace xxx_value{
 namespace xxx_pipe{
 namespace xxx_put{ 
 
@@ -61,5 +61,5 @@ namespace xxx_put{
 
 }// xxx_put
 }// xxx_pipe
-}// xxx_put
+}// xxx_value
 }// xxx_test_assign

@@ -13,13 +13,13 @@
 #include <boost/assign/v2/detail/check/equal_val.hpp>
 #include <boost/assign/v2/detail/check/equal_ref.hpp>
 
-#include <boost/assign/v2/put/modifier/repeat.hpp>
-#include <boost/assign/v2/put/pipe/put.hpp> 
+#include <boost/assign/v2/value/modifier/repeat.hpp>
+#include <boost/assign/v2/value/pipe/put.hpp> 
 #include <boost/assign/v2/utility/csv.hpp>
-#include <libs/assign/v2/test/put/pipe/args_list.h>
+#include <libs/assign/v2/test/value/pipe/args_list.h>
 
 namespace test_assign_v2{
-namespace xxx_put{
+namespace xxx_value{
 namespace xxx_pipe{
 namespace xxx_args_list{
 
@@ -104,5 +104,5 @@ namespace xxx_args_list{
 
 }// xxx_args_list
 }// xxx_pipe
-}// xxx_put
+}// xxx_value
 }// test_assign_v2

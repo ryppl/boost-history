@@ -11,14 +11,14 @@
 #include <boost/typeof/typeof.hpp>
 #include <boost/assign/v2/detail/config/check.hpp>
 
-#include <boost/assign/v2/put/modifier/push_front.hpp>
-#include <boost/assign/v2/put/modifier/repeat.hpp>
-#include <boost/assign/v2/put/put.hpp>
-#include <boost/assign/v2/put/deque.hpp>
-#include <libs/assign/v2/test/put/modifier/repeat.h>
+#include <boost/assign/v2/value/modifier/push_front.hpp>
+#include <boost/assign/v2/value/modifier/repeat.hpp>
+#include <boost/assign/v2/value/put.hpp>
+#include <boost/assign/v2/value/deque.hpp>
+#include <libs/assign/v2/test/value/modifier/repeat.h>
 
 namespace test_assign_v2{
-namespace xxx_put{
+namespace xxx_value{
 namespace xxx_modifier{
 namespace xxx_repeat{
 
@@ -53,5 +53,5 @@ namespace xxx_repeat{
 
 }// xxx_repeat
 }// xxx_modifier
-}// xxx_put
+}// xxx_value
 }// test_assign_v2

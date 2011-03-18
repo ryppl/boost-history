@@ -10,14 +10,14 @@
 #include <vector>
 #include <boost/assign/v2/detail/config/check.hpp>
 
-#include <boost/assign/v2/put/modifier/repeat.hpp>
-#include <boost/assign/v2/put/pipe/put.hpp>
-#include <boost/assign/v2/put/deque.hpp>
+#include <boost/assign/v2/value/modifier/repeat.hpp>
+#include <boost/assign/v2/value/pipe/put.hpp>
+#include <boost/assign/v2/value/deque.hpp>
 #include <boost/range/algorithm/equal.hpp>
-#include <libs/assign/v2/test/put/pipe/modifier/repeat.h>
+#include <libs/assign/v2/test/value/pipe/modifier/repeat.h>
 
 namespace test_assign_v2{
-namespace xxx_put{
+namespace xxx_value{
 namespace xxx_pipe{
 namespace xxx_modifier{
 namespace xxx_repeat{
@@ -44,5 +44,5 @@ namespace xxx_repeat{
 }// xxx_repeat
 }// xxx_modifier
 }// xxx_pipe
-}// xxx_put
+}// xxx_value
 }// test_assign_v2
