@@ -17,6 +17,8 @@
 //#include <fstream>
 //#include <libs/assign/v2/speed/test.h>
 
+#include <boost/assign/v2/include.hpp>
+
 int main (int argc, char * const argv[])
 {
 
