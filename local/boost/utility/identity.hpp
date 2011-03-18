@@ -45,7 +45,7 @@
  * }
  * @EndParams
  *
- * @See @RefSect{Advanced} section.
+ * @See @RefSect2{Advanced, Topics} section.
  */
 #define BOOST_IDENTITY_TYPE(parenthesized_type) \
     /* must NOT prefix this with `::` to work with parenthesized syntax */ \
@@ -60,11 +60,11 @@
  * parameter even if it contains commas and that evaluates to the specified
  * value at run-time (see the @RefSect{Advanced} section).
  *
- * For example <c>BOOST_IDENTITY_VALUE((key_size<int, double>::value))</c>
+ * For example <c>BOOST_IDENTITY_VALUE((key_sizeof<int, double>::value))</c>
  * can be passed as a single macro parameter when instead
- * <c>key_size<int, double>::value</c> cannot (because it contains a comma not
- * wrapped by round parenthesis so it will be interpreted as two separate macro
- * parameters by the preprocessor).
+ * <c>key_sizeof<int, double>::value</c> cannot (because it contains a comma
+ * not wrapped by round parenthesis so it will be interpreted as two separate
+ * macro parameters by the preprocessor).
  *
  * @Params
  * @Param{parenthesize_value,
@@ -74,7 +74,7 @@
  * }
  * @EndParams
  *
- * @See @RefSect{Advanced} section.
+ * @See @RefSect2{Advanced, Topics} section.
  */
 #define BOOST_IDENTITY_VALUE(parenthesized_value) \
     /* must NOT prefix this with `::` to work with parenthesized syntax */ \
