@@ -20,5 +20,6 @@ namespace xxx_array{
 }// xxx_ref
 }// test_assign
 
-#endif
+#endif // BOOST_ASSIGN_V2_TEST_REF_ARRAY_ER_2010_H
+
 

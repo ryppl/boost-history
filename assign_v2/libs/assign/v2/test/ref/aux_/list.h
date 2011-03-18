@@ -12,12 +12,14 @@
 
 namespace test_assign_v2{
 namespace xxx_ref{
+namespace xxx_aux_{
 namespace xxx_list{
 
     void test();
 
 }// xxx_list
+}// xxx_aux_
 }// xxx_ref
 }// test_assign
 
-#endif
+#endif // BOOST_ASSIGN_V2_TEST_REF_LIST_ER_2010_H

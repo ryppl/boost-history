@@ -17,10 +17,11 @@
 #include <boost/mpl/int.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/type_traits/add_reference.hpp>
-#include <libs/assign/v2/test/ref/list.h>
+#include <libs/assign/v2/test/ref/aux_/list.h>
 
 namespace test_assign_v2{
 namespace xxx_ref{
+namespace xxx_aux_{
 namespace xxx_list{
 
     // --User may skip this file-- //
@@ -138,5 +139,6 @@ namespace xxx_list{
     }
 
 }// xxx_list
+}// xxx_aux_
 }// xxx_ref
 }// test_assign

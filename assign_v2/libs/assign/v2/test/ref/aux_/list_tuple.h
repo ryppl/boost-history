@@ -12,11 +12,13 @@
 
 namespace test_assign_v2{
 namespace xxx_ref{
+namespace xxx_aux_{
 namespace xxx_list_tuple{
 
     void test();
 
 }// xxx_list_tuple
+}// xxx_aux_
 }// xxx_ref
 }// test_assign
 

@@ -8,10 +8,11 @@
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
 #include <boost/assign/v2/ref/aux_/convert_traits/checking.hpp>
-#include <libs/assign/v2/test/ref/convert_traits.h>
+#include <libs/assign/v2/test/ref/aux_/convert_traits.h>
 
 namespace test_assign_v2{
 namespace xxx_ref{
+namespace xxx_aux_{
 namespace xxx_convert_traits{
 
     // --User may skip this file-- //
@@ -28,6 +29,7 @@ namespace xxx_convert_traits{
         }
     }
 
-}// convert_traits
-}// ref
+}// xxx_convert_traits
+}// xxx_aux_
+}// xxx_ref
 }// test_assign

@@ -20,4 +20,4 @@ namespace xxx_wrapper{
 }// xxx_ref
 }// test_assign
 
-#endif
+#endif // BOOST_ASSIGN_V2_TEST_REF_WRAPPER_ER_2010_H
