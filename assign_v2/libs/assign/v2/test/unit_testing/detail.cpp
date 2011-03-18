@@ -26,7 +26,6 @@ test_suite* init_unit_test_suite( int argc, char* argv[] )
     {
     	using namespace xxx_detail;
 		test->add( BOOST_TEST_CASE( &xxx_functor::test ) );
-		test->add( BOOST_TEST_CASE( &xxx_traits::test ) );
     }
     return test;
 }

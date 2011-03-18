@@ -16,7 +16,7 @@
 namespace boost{
 namespace assign{
 namespace v2{
-namespace put_aux{
+namespace put_aux{    
 
     template<typename R>
     class as_arg_list_adapter

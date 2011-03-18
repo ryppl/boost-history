@@ -17,7 +17,7 @@ namespace assign{
 namespace v2{
 namespace check_aux{
 
-	struct range{};
+    struct range{};
 
     template<typename C, typename R>
     void equal_container(range, C const & cont, R const& r)

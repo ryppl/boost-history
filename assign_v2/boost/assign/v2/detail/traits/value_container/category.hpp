@@ -17,20 +17,20 @@ namespace assign{
 namespace v2{
 namespace value_container_aux{
 
-	// FIFO
+    // FIFO
     template<typename C> struct is_fifo : ::boost::mpl::false_{};
 
     template<typename T, typename A>
     struct is_fifo< std::queue<T, A> > : ::boost::mpl::true_{};
 
-	// LIFO
+    // LIFO
     template<typename V>
     struct is_lifo : ::boost::mpl::false_{};
 
     template<typename T, typename A>
     struct is_lifo< std::stack<T,A> > : ::boost::mpl::true_{};
 
-	// IS_SORTED
+    // IS_SORTED
     template<typename V>
     struct is_sorted : ::boost::mpl::false_{};
 

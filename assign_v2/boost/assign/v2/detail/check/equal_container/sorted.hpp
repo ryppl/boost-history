@@ -17,7 +17,7 @@ namespace assign{
 namespace v2{
 namespace check_aux{
 
-	struct sorted{};
+    struct sorted{};
 
     template<typename C, typename R>
     void equal_container(sorted, C const & cont, R const& r)

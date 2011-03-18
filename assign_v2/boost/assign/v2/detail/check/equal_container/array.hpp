@@ -17,7 +17,7 @@ namespace assign{
 namespace v2{
 namespace check_aux{
 
-	struct array{};
+    struct array{};
 
     template<typename C, typename R>
     void equal_container(array, C const & cont, R const& r)

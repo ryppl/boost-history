@@ -46,14 +46,14 @@ template<typename F> void eval_functor(F const& f, exit_empty){}
 template<typename F, std::size_t N>
 void eval_functor(F const& f, exit_assert_size<N>)
 {
-	assert( f.size() == N );
+    assert( f.size() == N );
 }
 
 template<typename F, typename Exit, typename T, typename... Args>
 void eval_functor(F&& f, Exit, T&& t, Args&&... args)
 {
-	eval_functor(
-    	std::forward<F>( f )(
+    eval_functor(
+        std::forward<F>( f )(
             std::forward<T>( t )
         ),
         Exit(),
@@ -71,7 +71,7 @@ void stl_push_back_impl(C& cont){}
 template<typename C, typename T, typename... Args>
 void stl_push_back_impl(C& cont, T&& t, Args&&... args)
 {
-	cont.push_back( std::forward<T>( t ) );
+    cont.push_back( std::forward<T>( t ) );
     stl_push_back_impl( cont, std::forward<Args>( args )... );
 }
 
@@ -81,8 +81,8 @@ void stl_push_back(std::size_t n, E& elapsed, C& cont, Args&&... args)
     Timer timer;
     for(std::size_t i = 0; i < n; i++)
     {
-		cont.clear();
-    	stl_push_back_impl( cont, std::forward<Args>( args )... );
+        cont.clear();
+        stl_push_back_impl( cont, std::forward<Args>( args )... );
     }
     elapsed = timer.elapsed();
     assert( cont.size() == sizeof...(Args) );
@@ -94,17 +94,17 @@ void stl_push_back(std::size_t n, E& elapsed, C& cont, Args&&... args)
 template<typename Timer, typename E, typename C, typename... Args>
 void v1_push_back(std::size_t n, E& elapsed, C& cont, Args&&... args)
 {
-	cont.clear();
+    cont.clear();
     Timer timer;
     for(std::size_t i = 0; i < n; i++)
     {
-    	cont.clear();
-    	BOOST_AUTO(functor, assign::push_back( cont ) );
-    	eval_functor(
+        cont.clear();
+        BOOST_AUTO(functor, assign::push_back( cont ) );
+        eval_functor(
             functor, // requires lvalue
             exit_empty(),
             std::forward<Args>( args )...
-    	);
+        );
     }
     elapsed = timer.elapsed();
     assert( cont.size() == sizeof...(Args) );
@@ -115,10 +115,10 @@ void v1_push_back(std::size_t n, E& elapsed, C& cont, Args&&... args)
 template<typename Timer, typename E, typename C, typename... Args>
 void v2_put(std::size_t n, E& elapsed, C& cont, Args&&... args)
 {
-	Timer timer;
+    Timer timer;
     for(std::size_t i = 0; i < n; i++){
-    	cont.clear();
-    	eval_functor( v2::put( cont ), exit_empty(), std::forward<Args>( args )... );
+        cont.clear();
+        eval_functor( v2::put( cont ), exit_empty(), std::forward<Args>( args )... );
     }
     assert( cont.size() == sizeof...(Args) );
     elapsed = timer.elapsed();
@@ -138,15 +138,15 @@ void v2_pipe_put_impl(C & cont, F const& f, T&& t, Args&&...args)
 template<typename Timer, typename E, typename C, typename... Args>
 void v2_pipe_put(std::size_t n, E& elapsed, C& cont, Args&&... args)
 {
-	Timer timer;
+    Timer timer;
     for(std::size_t i = 0; i < n; i++)
     {
-    	cont.clear();
-    	v2_pipe_put_impl(
-        	cont,
-        	v2::_put,
-        	std::forward<Args>( args )...
-    	);
+        cont.clear();
+        v2_pipe_put_impl(
+            cont,
+            v2::_put,
+            std::forward<Args>( args )...
+        );
     }
     elapsed = timer.elapsed();
     assert( cont.size() == sizeof...(Args) );
@@ -157,11 +157,11 @@ void v2_pipe_put(std::size_t n, E& elapsed, C& cont, Args&&... args)
 template<typename Timer, typename E, typename C, typename... Args>
 void v2_pipe_csv_put(std::size_t n, E& elapsed, C& cont, Args&&... args)
 {
-	Timer timer;
+    Timer timer;
     for(std::size_t i = 0; i < n; i++)
     {
-    	cont.clear();
-		cont | v2::_csv_put( std::forward<Args>( args )... );
+        cont.clear();
+        cont | v2::_csv_put( std::forward<Args>( args )... );
     }
     elapsed = timer.elapsed();
     assert( cont.size() == sizeof...( Args ) );
@@ -203,8 +203,8 @@ void v1_cref_list_of(std::size_t n, E& elapsed, T&& t, Args&&... args)
 /**/
     Timer timer;
     for(std::size_t i = 0; i < n; i++){ MACRO( exit_empty ) }
-	elapsed = timer.elapsed();
-	MACRO( exit_assert_size<1 + sizeof...(Args)> )
+    elapsed = timer.elapsed();
+    MACRO( exit_assert_size<1 + sizeof...(Args)> )
 #undef MACRO
 
 }
@@ -214,21 +214,21 @@ void v1_cref_list_of(std::size_t n, E& elapsed, T&& t, Args&&... args)
 template<typename Timer, typename E, typename T, typename... Args>
 void v2_deque(std::size_t n, E& elapsed, T&& t, Args&&... args)
 {
-	typedef typename boost::remove_cv<
-    	typename boost::remove_reference<T>::type
+    typedef typename boost::remove_cv<
+        typename boost::remove_reference<T>::type
     >::type t_;
 
 #define MACRO(Exit)\
-	eval_functor(\
+    eval_functor(\
         v2::deque<t_>( std::forward<T>( t ) ),\
         Exit(),\
         std::forward<Args>( args )...\
     );\
 /**/
-	Timer timer;
+    Timer timer;
     for(std::size_t i = 0; i < n; i++){ MACRO( exit_empty ) }
     elapsed = timer.elapsed();
-	MACRO( exit_assert_size<1 + sizeof...(Args)> )
+    MACRO( exit_assert_size<1 + sizeof...(Args)> )
 
 #undef MACRO
 
@@ -240,7 +240,7 @@ template<typename Timer, typename E, typename... Args>
 void v2_csv_deque(std::size_t n, E& elapsed, Args&&... args)
 {
 #define MACRO v2::csv_deque( std::forward<Args>( args )... )
-	Timer timer;
+    Timer timer;
     for(std::size_t i = 0; i < n; i++){ MACRO; }
     elapsed = timer.elapsed();
     assert( MACRO .size() == sizeof...(Args) );
@@ -259,10 +259,10 @@ void v2_ref_array(std::size_t n, E& elapsed, T&& t, Args&&... args)
         std::forward<Args>( args )...\
     );\
 /**/
-	Timer timer;
+    Timer timer;
     for(std::size_t i = 0; i < n; i++){ MACRO(exit_empty) }
     elapsed = timer.elapsed();
-	MACRO( exit_assert_size<1 + sizeof...(Args)> )
+    MACRO( exit_assert_size<1 + sizeof...(Args)> )
 #undef MACRO
 }
 
@@ -272,10 +272,10 @@ template<typename Timer, typename E, typename... Args>
 void v2_ref_csv_array(std::size_t n, E& elapsed, Args&&... args)
 {
 #define MACRO v2::ref::csv_array( std::forward<Args>( args )... )
-	Timer timer;
+    Timer timer;
     for(std::size_t i = 0; i < n; i++){ MACRO; }
     elapsed = timer.elapsed();
-	assert( MACRO.size() == sizeof...(Args) );
+    assert( MACRO.size() == sizeof...(Args) );
 #undef MACRO
 }
 

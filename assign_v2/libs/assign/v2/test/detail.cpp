@@ -8,7 +8,6 @@
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
 #include <libs/assign/v2/test/detail/functor.h>
-#include <libs/assign/v2/test/detail/traits.h>
 #include <libs/assign/v2/test/detail.h>
 
 namespace test_assign_v2{
@@ -16,7 +15,6 @@ namespace xxx_detail{
 
     void test(){
         xxx_functor::test();
-        xxx_traits::test();
     }
 
 }// xxx_detail

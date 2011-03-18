@@ -17,7 +17,7 @@ namespace assign{
 namespace v2{
 namespace check_aux{
 
-	struct fifo{};
+    struct fifo{};
 
     template<typename C, typename R>
     void equal_container(fifo, C const & cont, R const& r)

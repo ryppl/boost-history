@@ -19,25 +19,25 @@ namespace assign{
 namespace v2{
 namespace conversion_aux{
 
-	template<typename C>
+    template<typename C>
     struct is_array : ::boost::mpl::apply1<
-    	ptr_container_aux::through_value_container<
-        	value_container_aux::is_array
+        ptr_container_aux::through_value_container<
+            value_container_aux::is_array
         >,
-		C
+        C
     >{};
 
-	template<typename C>
+    template<typename C>
     struct has_push : ::boost::mpl::apply1<
-    	ptr_container_aux::through_value_container<
-        	value_container_aux::has_push_deduced_value
+        ptr_container_aux::through_value_container<
+            value_container_aux::has_push_deduced_value
         >,
-		C
+        C
     >{};
 
     template<typename C, typename R>
     struct use_put : ::boost::mpl::or_<
-    	is_array<C>,
+        is_array<C>,
         has_push<C>
     >{};
     

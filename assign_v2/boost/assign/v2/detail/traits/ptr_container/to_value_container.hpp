@@ -29,19 +29,19 @@ namespace ptr_container_aux{
         typedef std::allocator<T> type;
     };
 
-	template<typename PtrC>
+    template<typename PtrC>
     struct to_value_value : boost::remove_reference<
-    	typename PtrC::reference
+        typename PtrC::reference
     >{};
 
-	template<typename PtrC>
+    template<typename PtrC>
     struct to_value_allocator : to_value_allocator_helper<
-    	typename PtrC::allocator_type,
+        typename PtrC::allocator_type,
         typename to_value_value<PtrC>::type
     >
     {};
 
-	template<typename PtrC> struct helper_size{};
+    template<typename PtrC> struct helper_size{};
 
     template<typename T, std::size_t N, typename C>
     struct helper_size< boost::ptr_array<T, N, C> >
@@ -49,12 +49,12 @@ namespace ptr_container_aux{
             N
         >{};
 
-	template<typename PtrC>
+    template<typename PtrC>
     struct to_value_array
     {
-		typedef boost::array<
-        	typename to_value_value<PtrC>::type,
-        	helper_size<PtrC>::value
+        typedef boost::array<
+            typename to_value_value<PtrC>::type,
+            helper_size<PtrC>::value
         > type;
     };
 
@@ -118,12 +118,12 @@ namespace ptr_container_aux{
 
     };
 
-	// TO_VALUE_CONTAINER
+    // TO_VALUE_CONTAINER
 
-	template<typename PtrC>
-	struct to_value_container
+    template<typename PtrC>
+    struct to_value_container
     {
-    	typedef PtrC type;
+        typedef PtrC type;
     };
 
     // Array
@@ -205,7 +205,7 @@ namespace ptr_container_aux{
         std::set
     >{};
 
-	// TODO unordered
+    // TODO unordered
 
 }// ptr_container_aux
 }// v2

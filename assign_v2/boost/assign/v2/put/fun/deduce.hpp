@@ -24,14 +24,14 @@ namespace v2{
 //[syntax_put_fun_deduce
 namespace put_aux{
 
-	template<typename C>
-	struct container_value{ typedef typename C::value_type type; };
+    template<typename C>
+    struct container_value{ typedef typename C::value_type type; };
 
     template<typename /*<<Pointer-container>>*/PtrC>
     struct /*<<Meta-function mapping the `PtrC`'s pointer-type to a factory thereof>>*/ deduce_fun_pointer/*<-*/
     {
-		typedef typename v2::ptr_container_aux::to_value_container<
-        	PtrC
+        typedef typename v2::ptr_container_aux::to_value_container<
+            PtrC
         >::type cont_;
         typedef functor_aux::new_<typename cont_::value_type> type;
     }/*->*/;

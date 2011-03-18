@@ -27,8 +27,8 @@ namespace chain_aux{
     {
         typedef typename boost::iterator_reference<It1>::type ref1_;
         typedef typename boost::iterator_reference<It2>::type ref2_;
-		typedef ::boost::mpl::quote2<
-        	ref::convert_traits::reference
+        typedef ::boost::mpl::quote2<
+            ref::convert_traits::reference
         > convert_;
 
         typedef typename ::boost::mpl::apply2<

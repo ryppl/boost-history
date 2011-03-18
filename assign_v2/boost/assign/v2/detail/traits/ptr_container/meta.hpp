@@ -19,21 +19,21 @@ namespace v2{
 namespace ptr_container_aux{
 
 
-	template<typename PtrC>
+    template<typename PtrC>
     struct is_ptr_container : ::boost::mpl::not_<
-    	boost::is_same<
-    		PtrC, typename to_value_container<PtrC>::type
+        boost::is_same<
+            PtrC, typename to_value_container<PtrC>::type
         >
     >{};
 
-	template<template<typename > class F>
-	struct through_value_container
-	{
-		template<typename PtrC /*or C*/>
-    	struct apply : F<
-    		typename to_value_container<PtrC>::type
-    	>{};
-	};
+    template<template<typename > class F>
+    struct through_value_container
+    {
+        template<typename PtrC /*or C*/>
+        struct apply : F<
+            typename to_value_container<PtrC>::type
+        >{};
+    };
 
 }// ptr_container_aux
 }// v2
