@@ -30,13 +30,12 @@ namespace assign{
 namespace v2{
 namespace chain_aux{
 
-    template<typename R1, typename R2, template<typename> class F, typename Tag>
+    template<typename R1, typename R2, template<typename> class F>
     struct range{
 
         typedef typename chain_aux::iterator<
             typename F<R1>::type,
-            typename F<R2>::type,
-            Tag
+            typename F<R2>::type
         >::type iterator_t;
         typedef boost::iterator_range< iterator_t > type;
 
@@ -54,13 +53,13 @@ namespace chain_aux{
         }
     };
 
-    template<typename R1, typename R2, typename Tag>
+    template<typename R1, typename R2>
     struct range_l
-        : chain_aux::range< R1, R2, boost::range_iterator,Tag>{};
+        : chain_aux::range< R1, R2, boost::range_iterator>{};
 
-    template<typename R1, typename R2, typename Tag>
+    template<typename R1, typename R2>
     struct range_r
-        : chain_aux::range<R1, R2, boost::range_const_iterator,Tag>{};
+        : chain_aux::range<R1, R2, boost::range_const_iterator>{};
 
     // Use-const
     template<typename U1, typename U2,
@@ -74,24 +73,24 @@ namespace chain_aux{
     template<typename U>
     struct dont_use_const_impl<U, U, true, false> : ::boost::mpl::true_{};
 
-    template<typename R1, typename R2, typename Tag = use_default>
+    template<typename R1, typename R2>
     struct dont_use_const : dont_use_const_impl<
         typename boost::range_reference<R1>::type,
         typename boost::range_reference<R2>::type
     >{};
 
-    template<typename R1, typename R2, typename Tag = use_default>
+    template<typename R1, typename R2>
     struct use_const : ::boost::mpl::bool_<
-        !dont_use_const<R1, R2, Tag>::value
+        !dont_use_const<R1, R2>::value
     >{};
     
     // Result
-    template<typename R1, typename R2, typename Tag = use_default>
+    template<typename R1, typename R2>
     struct result{
         typedef typename  ::boost::mpl::eval_if<
-            chain_aux::use_const<R1, R2, Tag>,
-            ::boost::mpl::identity< chain_aux::range_r<R1, R2, Tag> >,
-            ::boost::mpl::identity< chain_aux::range_l<R1, R2, Tag> >
+            chain_aux::use_const<R1, R2>,
+            ::boost::mpl::identity< chain_aux::range_r<R1, R2> >,
+            ::boost::mpl::identity< chain_aux::range_l<R1, R2> >
         >::type caller_;
 
         typedef typename caller_::type type;

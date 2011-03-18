@@ -10,9 +10,9 @@
 #ifndef BOOST_ASSIGN_V2_PUT_MODIFIER_DEDUCE_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_MODIFIER_DEDUCE_ER_2010_HPP
 #include <boost/assign/v2/detail/pp/ignore.hpp>
-#include <boost/assign/v2/detail/traits/container/has_push.hpp>
-#include <boost/assign/v2/detail/traits/container/is_associative.hpp>
-#include <boost/assign/v2/detail/traits/container/is_array.hpp>
+#include <boost/assign/v2/detail/traits/value_container/has_push.hpp>
+#include <boost/assign/v2/detail/traits/value_container/category.hpp>
+#include <boost/assign/v2/detail/traits/ptr_container/meta.hpp>
 #include <boost/assign/v2/detail/traits/switch.hpp>
 #include <boost/assign/v2/put/modifier/insert.hpp>
 #include <boost/assign/v2/put/modifier/iterate.hpp>
@@ -32,23 +32,24 @@ namespace switch_tag{
 #ifdef BOOST_ASSIGN_V2_PUT_MODIFIER_DEDUCE_SWITCH_CASE
 #error
 #else
-#define BOOST_ASSIGN_V2_PUT_MODIFIER_DEDUCE_SWITCH_CASE(Tag, MetaFun, Number)\
+#define BOOST_ASSIGN_V2_PUT_MODIFIER_DEDUCE_SWITCH_CASE(Tag, MetaF, Number)\
 namespace switch_aux{\
     template<>\
     struct case_<switch_tag::deduce_put, Number> :\
         switch_aux::helper<\
             v2::modifier_tag::Tag,\
-            MetaFun\
+            ptr_container_aux::through_value_container<MetaF>::apply\
         >{};\
 }\
 /**/
 #endif
 
+
 #ifdef BOOST_ASSIGN_V2_PUT_MODIFIER_DEDUCE_SWITCH_ASSOCIATIVE
 #error
 #else
 #define BOOST_ASSIGN_V2_PUT_MODIFIER_DEDUCE_SWITCH_ASSOCIATIVE(CaseNumber)\
-BOOST_ASSIGN_V2_PUT_MODIFIER_DEDUCE_SWITCH_CASE(insert, container_traits::is_associative, CaseNumber)\
+BOOST_ASSIGN_V2_PUT_MODIFIER_DEDUCE_SWITCH_CASE(insert, value_container_aux::is_sorted, CaseNumber)\
 /**/
 #endif
 
@@ -56,7 +57,7 @@ BOOST_ASSIGN_V2_PUT_MODIFIER_DEDUCE_SWITCH_CASE(insert, container_traits::is_ass
 #error
 #else
 #define BOOST_ASSIGN_V2_PUT_MODIFIER_DEDUCE_SWITCH_ARRAY(CaseNumber)\
-BOOST_ASSIGN_V2_PUT_MODIFIER_DEDUCE_SWITCH_CASE(iterate<>, container_traits::is_array, CaseNumber)
+BOOST_ASSIGN_V2_PUT_MODIFIER_DEDUCE_SWITCH_CASE(iterate<>, value_container_aux::is_array, CaseNumber)
 /**/
 #endif
 
@@ -64,7 +65,7 @@ BOOST_ASSIGN_V2_PUT_MODIFIER_DEDUCE_SWITCH_CASE(iterate<>, container_traits::is_
 #error
 #else
 #define BOOST_ASSIGN_V2_PUT_MODIFIER_DEDUCE_SWITCH_ADAPTER(CaseNumber)\
-BOOST_ASSIGN_V2_PUT_MODIFIER_DEDUCE_SWITCH_CASE(push, container_traits::has_push_deduced_value, CaseNumber)
+BOOST_ASSIGN_V2_PUT_MODIFIER_DEDUCE_SWITCH_CASE(push, value_container_aux::has_push_deduced_value, CaseNumber)
 /**/
 #endif
 

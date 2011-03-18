@@ -14,8 +14,8 @@
 #include <boost/ptr_container/ptr_array.hpp>
 #include <boost/ptr_container/ptr_deque.hpp>
 #include <boost/ptr_container/ptr_list.hpp>
-//#include <boost/ptr_container/ptr_map.hpp>
-//#include <boost/ptr_container/ptr_set.hpp>
+#include <boost/ptr_container/ptr_map.hpp>
+#include <boost/ptr_container/ptr_set.hpp>
 #include <boost/ptr_container/ptr_vector.hpp>
 #include <libs/assign/v2/test/put/ptr.h>
 
@@ -27,51 +27,61 @@ namespace xxx_ptr{
 
         namespace as2 = boost::assign::v2;
 
-// TODO
         {
             //[test_put_ptr_array
-            //typedef int T;
-            //T x = 1, y = 2, z = 3; boost::ptr_array<T, 3> cont;
-            //as2::put( cont )( x )( y )( z );
+            typedef int T;
+            T x = 1, y = 2, z = 3; boost::ptr_array<T, 3> cont;
+            as2::put( cont )( x )( y )( z );
+            
+            BOOST_ASSIGN_V2_CHECK( cont.front() == x );
+            BOOST_ASSIGN_V2_CHECK( cont.back() == z );
             //]
         }
         {
             //[test_put_ptr_deque
-            //typedef int T; T x = 1, y = 2, z = 0; boost::ptr_deque<T> cont;
-            //as2::put( cont )( x )( y )( z );
+            typedef int T; T x = 1, y = 2, z = 0; boost::ptr_deque<T> cont;
+            as2::put( cont )( x )( y )( z );
+
+            BOOST_ASSIGN_V2_CHECK( cont.front() == x );
+            BOOST_ASSIGN_V2_CHECK( cont.back() == z );
             //]
         }
         {
             //[test_put_ptr_list
-            //typedef int T; T x = 1, y = 2, z = 0; boost::ptr_list<T> cont;
-            //as2::put( cont )( x )( y )( z );
+            typedef int T; T x = 1, y = 2, z = 0; boost::ptr_list<T> cont;
+            as2::put( cont )( x )( y )( z );
+
+            BOOST_ASSIGN_V2_CHECK( cont.front() == x );
+            BOOST_ASSIGN_V2_CHECK( cont.back() == z );
             //]
         }
         {
             //[test_put_ptr_vector
-            //typedef int T; T x = 1, y = 2, z = 0; boost::ptr_vector<T> cont;
-            //as2::put( cont )( x )( y )( z );
+            typedef int T; T x = 1, y = 2, z = 0; boost::ptr_vector<T> cont;
+            as2::put( cont )( x )( y )( z );
+
+            BOOST_ASSIGN_V2_CHECK( cont.front() == x );
+            BOOST_ASSIGN_V2_CHECK( cont.back() == z );
             //]
         }
-
-
+        // TODO
 /*
-        // These are not yet available (TODO)
         {
             //[put_ptr_map
             boost::ptr_map<std::string, int> assoc;
             as2::put( assoc )( "jan", 31 )( "feb", 28 )( "mar", 31 );
             //]
         }
+*/
         {
             //[put_ptr_set
-            typedef std::string T;
-            boost::ptr_set<T> assoc;
+            typedef std::string T; boost::ptr_set<T> assoc;
             T x = "isomer", y = "ephemeral", z = "prosaic";
-            as2::put( assoc )( x )( y )( z );
+            as2::put( assoc )( x )( z )( y );
+            BOOST_ASSIGN_V2_CHECK( assoc.count( x ) == 1 );
+            BOOST_ASSIGN_V2_CHECK( assoc.count( z ) == 1 );
             //]
         }
-*/
     }// test
 
 }// xxx_ptr

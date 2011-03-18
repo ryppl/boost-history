@@ -26,19 +26,13 @@ namespace chain_aux{
 
     typedef ::boost::mpl::void_ void_;
 
-    // Tag1 controls conversion. Seet traits/type/meta_convert.hpp
-
-    template<typename U, typename Tag1 = use_default, typename Tag2 = void_>
+    template<typename U>
     struct adaptor1
     {
         adaptor1( U& r ) : value( r ){}
         mutable U& value;
     };
 
-    template<
-        typename Tag1 = use_default,
-        typename Tag2 = void_
-    >
     struct adaptor2
     {
 
@@ -46,7 +40,7 @@ namespace chain_aux{
 
         template<typename U>
         struct result{
-           typedef chain_aux::adaptor1<U, Tag1, Tag2> type;
+           typedef chain_aux::adaptor1<U> type;
            static type call(U& u){ return type( u ); }
         };
 
@@ -66,22 +60,22 @@ namespace chain_aux{
 
 }// chain_aux
 namespace{
-    const chain_aux::adaptor2<> _chain = chain_aux::adaptor2<>();
+    const chain_aux::adaptor2 _chain = chain_aux::adaptor2();
 }
 namespace result_of{
 
-    template<typename R1, typename R2, typename Tag = use_default>
-    struct chain : chain_aux::result<R1, R2, Tag>{};
+    template<typename R1, typename R2>
+    struct chain : chain_aux::result<R1, R2>{};
 
 }// result_of
 namespace chain_aux{
 
 #define BOOST_ASSIGN_V2_FRAMEWORK_CHAIN(U1) \
-    template<typename R1, typename U2, typename Tag> \
-    typename chain_aux::result<U1, U2, Tag>::type \
-    operator|(U1 & r1, chain_aux::adaptor1<U2, Tag> const & h) \
+    template<typename R1, typename U2> \
+    typename chain_aux::result<U1, U2>::type \
+    operator|(U1 & r1, chain_aux::adaptor1<U2> const & h) \
     { \
-        typedef chain_aux::result<U1, U2, Tag> caller_; \
+        typedef chain_aux::result<U1, U2> caller_; \
         return caller_::call( r1, h.value ); \
     } \
 \

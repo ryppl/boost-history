@@ -87,11 +87,10 @@ namespace put_aux{
             cont.at( (*this->ptr)() ) = t;
         }
         
-        // TODO verify
         template<typename C, typename T>
         void impl(C& cont, T* t)const
         {
-            cont.replace( this->arg_() , t);
+            cont.replace( (*this->ptr)(), t);
         }
 
         protected:

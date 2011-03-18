@@ -16,6 +16,7 @@
 #include <boost/assign/v2.hpp>
 #include <boost/array.hpp>
 #include <boost/lambda/lambda.hpp>
+#include <boost/ptr_container/ptr_set.hpp>
 #include <boost/range/algorithm_ext/iota.hpp>
 #include <boost/range/algorithm/copy.hpp>
 #include <boost/range/algorithm/equal.hpp>
@@ -40,6 +41,15 @@ namespace tutorial_assign_v2{
 
             assert( get<str_>( numeric_kb.front() ) == "+" );
             assert( get<int>( numeric_kb.back()  ) == 9 );
+            //]
+        }
+        {
+            //[tutorial_ptr_container
+            typedef std::string T; ptr_set<T> assoc;
+            T x = "isomer", y = "ephemeral", z = "prosaic";
+            put( assoc )( x )( z )( y );
+            assert( assoc.count( x ) == 1 );
+            assert( assoc.count( z ) == 1 );
             //]
         }
         {

@@ -5,18 +5,17 @@
 #include <boost/format.hpp>
 
 // Test
-//#include <libs/assign/v2/test/detail.h>
+#include <libs/assign/v2/test/detail.h>
 #include <libs/assign/v2/test/ref.h>
-//#include <libs/assign/v2/test/mix.h>
 #include <libs/assign/v2/test/put.h>
 #include <libs/assign/v2/test/utility.h>
-#include <libs/assign/v2/tutorial.h>
 
 // Tutorial
+#include <libs/assign/v2/tutorial.h>
 
 // Speed -- CPP0x required
-#include <fstream>
-#include <libs/assign/v2/speed/test.h>
+//#include <fstream>
+//#include <libs/assign/v2/speed/test.h>
 
 int main (int argc, char * const argv[])
 {
@@ -51,18 +50,18 @@ int main (int argc, char * const argv[])
     }
     {
         using namespace test_assign_v2;
-        //xxx_put::test();
-        //xxx_mix::test();
-        //xxx_ref::test();
-        //xxx_utility::test();
+        xxx_detail::test();
+        xxx_put::test();
+        xxx_ref::test();
+        xxx_utility::test();
     }
     {
         tutorial_assign_v2::run();
     }
     {
-        using namespace speed_assign_v2;
-        std::ofstream ofs("assign_v2_speed_test");
-        speed_assign_v2::test(ofs);
+        //using namespace speed_assign_v2;
+        //std::ofstream ofs("assign_v2_speed_test");
+        //speed_assign_v2::test(ofs);
     }
 
     return 0;

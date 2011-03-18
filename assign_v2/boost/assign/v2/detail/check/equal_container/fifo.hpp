@@ -11,15 +11,16 @@
 #define BOOST_ASSIGN_V2_DETAIL_CHECK_EQUAL_CONTAINER_FIFO_ER_2010_HPP
 #include <boost/assign/v2/detail/check/equal_container/pp.hpp>
 #include <boost/assign/v2/detail/config/check.hpp>
-#include <boost/assign/v2/detail/traits/container/is_fifo.hpp>
 
 namespace boost{
 namespace assign{
 namespace v2{
 namespace check_aux{
 
+	struct fifo{};
+
     template<typename C, typename R>
-    void equal_container(v2::container_tag::fifo, C const & cont, R const& r)
+    void equal_container(fifo, C const & cont, R const& r)
     {
         BOOST_ASSIGN_V2_CHECK_AUX_CONTAINER_SIZE
         BOOST_ASSIGN_V2_CHECK_AUX_CONTAINER_ELEM_AT

@@ -12,7 +12,7 @@
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
 #include <boost/assign/v2/detail/pp/forward.hpp>
 #include <boost/assign/v2/detail/pp/ignore.hpp>
-#include <boost/assign/v2/detail/traits/container/is_ptr_container.hpp>
+#include <boost/assign/v2/detail/traits/ptr_container/meta.hpp>
 #include <boost/assign/v2/put/adapter/as_arg_list.hpp>
 #include <boost/assign/v2/put/adapter/fwd.hpp>
 #include <boost/assign/v2/put/adapter/modifier.hpp>
@@ -228,7 +228,7 @@ BOOST_PP_REPEAT_FROM_TO(
 
         template<typename T>
         struct ptr_enabler : boost::enable_if<
-            container_traits::is_ptr_container<C>
+            ptr_container_aux::is_ptr_container<C>
         >{};
 
         template<typename T>

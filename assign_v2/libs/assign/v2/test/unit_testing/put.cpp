@@ -10,8 +10,6 @@
 #ifndef LIBS_ASSIGN_V2_TEST_UNIT_TEST_PUT_ER_2010_CPP
 #define LIBS_ASSIGN_V2_TEST_UNIT_TEST_PUT_ER_2010_CPP
 
-#include <iostream> // needed?
-
 #include <boost/test/test_tools.hpp>
 #define BOOST_ASSIGN_V2_CHECK( p ) BOOST_CHECK( p )
 
@@ -29,10 +27,8 @@
 #include <libs/assign/v2/test/put/pipe/modifier/repeat.cpp>
 #include <libs/assign/v2/test/put/pipe/modifier/standard.cpp>
 #include <libs/assign/v2/test/put/pipe/put.cpp>
+#include <libs/assign/v2/test/put/ptr.cpp>
 #include <libs/assign/v2/test/put/put.cpp>
-
-
-//#include <libs/assign/v2/test/put/ptr.cpp>
 
 
 #include <boost/test/unit_test.hpp>
@@ -58,6 +54,7 @@ test_suite* init_unit_test_suite( int argc, char* argv[] )
 		test->add( BOOST_TEST_CASE( &ns::xxx_pipe::xxx_modifier::xxx_repeat::test ) );
 		test->add( BOOST_TEST_CASE( &ns::xxx_pipe::xxx_modifier::xxx_standard::test ) );
 		test->add( BOOST_TEST_CASE( &ns::xxx_pipe::xxx_put::test ) );
+		test->add( BOOST_TEST_CASE( &ns::xxx_ptr::test ) );
 		test->add( BOOST_TEST_CASE( &ns::xxx_put::test ) );
     }
     return test;

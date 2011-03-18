@@ -10,6 +10,7 @@
 #ifndef BOOST_ASSIGN_V2_DETAIL_TRAITS_ER_2010_HPP
 #define BOOST_ASSIGN_V2_DETAIL_TRAITS_ER_2010_HPP
 #include <boost/assign/v2/detail/traits/type.hpp>
-#include <boost/assign/v2/detail/traits/container.hpp>
+#include <boost/assign/v2/detail/traits/ptr_container.hpp>
+#include <boost/assign/v2/detail/traits/value_container.hpp>
 
 #endif // BOOST_ASSIGN_V2_DETAIL_TRAITS_ER_2010_HPP

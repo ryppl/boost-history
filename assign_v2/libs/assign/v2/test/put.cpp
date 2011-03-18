@@ -20,12 +20,11 @@ namespace xxx_put{
 
     void test()
     {
-        //xxx_deduce::test();
         xxx_deque::test();
         xxx_fun::test();
         xxx_modifier::test();
         xxx_pipe::test();
-        //xxx_ptr::test();
+        xxx_ptr::test();
         xxx_put::test();
     }
 

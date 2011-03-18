@@ -9,12 +9,12 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_DETAIL_CHECK_EQUAL_CONTAINER_DEDUCE_ER_2010_HPP
 #define BOOST_ASSIGN_V2_DETAIL_CHECK_EQUAL_CONTAINER_DEDUCE_ER_2010_HPP
-#include <boost/assign/v2/detail/traits/container/is_array.hpp>
-#include <boost/assign/v2/detail/traits/container/is_fifo.hpp>
-#include <boost/assign/v2/detail/traits/container/is_lifo.hpp>
-#include <boost/assign/v2/detail/traits/container/is_map.hpp>
-#include <boost/assign/v2/detail/traits/container/is_range.hpp>
-#include <boost/assign/v2/detail/traits/container/is_sorted.hpp>
+#include <boost/assign/v2/detail/traits/value_container/category.hpp>
+#include <boost/assign/v2/detail/check/equal_container/array.hpp>
+#include <boost/assign/v2/detail/check/equal_container/fifo.hpp>
+#include <boost/assign/v2/detail/check/equal_container/lifo.hpp>
+#include <boost/assign/v2/detail/check/equal_container/range.hpp>
+#include <boost/assign/v2/detail/check/equal_container/sorted.hpp>
 #include <boost/assign/v2/detail/traits/switch.hpp>
 
 namespace boost{
@@ -28,43 +28,35 @@ namespace switch_aux{
     template<>
     struct case_<switch_tag::check_container, 0> :
         switch_aux::helper<
-            v2::container_tag::fifo,
-            v2::container_traits::is_fifo
+            check_aux::fifo,
+            value_container_aux::is_fifo
         >{};
 
     template<>
     struct case_<switch_tag::check_container, 1> :
         switch_aux::helper<
-            v2::container_tag::lifo,
-            v2::container_traits::is_lifo
+            check_aux::lifo,
+            value_container_aux::is_lifo
         >{};
-
-    // Uncommented bec. map is taken care of by sorted
-    //template<>
-    //struct case_<switch_tag::check_container, 2> :
-    //    switch_aux::helper<
-    //        v2::container_tag::map,
-    //        v2::container_traits::is_map
-    //    >{};
 
     template<>
     struct case_<switch_tag::check_container, 2> :
         switch_aux::helper<
-            v2::container_tag::sorted,
-            v2::container_traits::is_sorted
+            check_aux::sorted,
+            value_container_aux::is_sorted
         >{};
 
     template<>
     struct case_<switch_tag::check_container, 3> :
         switch_aux::helper<
-            v2::container_tag::array,
-            v2::container_traits::is_array
+            check_aux::array,
+            value_container_aux::is_array
         >{};
 
     template<>
     struct case_<switch_tag::check_container, 4> :
         switch_aux::helper<
-            container_tag::range
+            check_aux::range
         >{};
 
 }// switch_aux

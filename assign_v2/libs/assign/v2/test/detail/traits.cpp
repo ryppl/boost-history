@@ -7,9 +7,16 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#include <boost/assign/v2/detail/traits.hpp> // ensure parses
-#include <libs/assign/v2/test/detail/traits/has_push.h>
-#include <libs/assign/v2/test/detail/traits/has_value_type.h>
+#include <cstddef>
+#include <vector>
+#include <stack>
+#include <queue>
+#include <vector>
+#include <boost/assign/v2/detail/traits.hpp> // ensure it parses
+#include <boost/assign/v2/detail/traits/value_container/has_push.hpp>
+#include <boost/assign/v2/detail/traits/value_container/has_value_type.hpp>
+#include <boost/mpl/assert.hpp>
+#include <boost/static_assert.hpp>
 #include <libs/assign/v2/test/detail/traits.h>
 
 namespace test_assign_v2{
@@ -17,8 +24,30 @@ namespace xxx_detail{
 namespace xxx_traits{
 
     void test(){
-        xxx_has_push::test();
-        xxx_has_value_type::test();
+    	namespace as2 = boost::assign::v2;
+        namespace ns = as2::value_container_aux;
+        {
+        	typedef std::queue<int> v_;
+            BOOST_MPL_ASSERT(( ns::has_push<v_> ));
+        }
+        {
+            typedef std::queue<int> v_;
+            BOOST_MPL_ASSERT(( ns::has_push<v_> ));
+        }
+        {
+            typedef std::vector<int> v_;
+            BOOST_MPL_ASSERT_NOT(( ns::has_push<v_> ));
+        }
+        {
+            typedef std::vector<int> inp_;
+            typedef ns::has_value_type<inp_>::type pred_;
+            BOOST_STATIC_ASSERT(pred_::value);
+        }
+        {
+            typedef int inp_;
+            typedef ns::has_value_type<inp_>::type pred_;
+            BOOST_STATIC_ASSERT(!pred_::value);
+        }
     }
 
 }// xxx_traits

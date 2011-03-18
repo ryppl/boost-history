@@ -14,9 +14,8 @@
 
 #include <boost/test/test_tools.hpp>
 #define BOOST_ASSIGN_V2_CHECK( p ) BOOST_CHECK( p )
-#include <libs/assign/v2/test/detail/traits/has_push.cpp>
-#include <libs/assign/v2/test/detail/traits/has_value_type.cpp>
 #include <libs/assign/v2/test/detail/functor.cpp>
+#include <libs/assign/v2/test/detail/traits.cpp>
 
 #include <boost/test/unit_test.hpp>
 using boost::unit_test::test_suite;
@@ -26,9 +25,8 @@ test_suite* init_unit_test_suite( int argc, char* argv[] )
     using namespace test_assign_v2;
     {
     	using namespace xxx_detail;
-		test->add( BOOST_TEST_CASE( &xxx_traits::xxx_has_push::test ) );
-		test->add( BOOST_TEST_CASE( &xxx_traits::xxx_has_value_type::test ) );
 		test->add( BOOST_TEST_CASE( &xxx_functor::test ) );
+		test->add( BOOST_TEST_CASE( &xxx_traits::test ) );
     }
     return test;
 }

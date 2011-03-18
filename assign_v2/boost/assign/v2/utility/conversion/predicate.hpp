@@ -9,8 +9,9 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_UTILITY_CONVERSION_TRAITS_ER_2010_HPP
 #define BOOST_ASSIGN_V2_UTILITY_CONVERSION_TRAITS_ER_2010_HPP
-#include <boost/assign/v2/detail/traits/container/is_array.hpp>
-#include <boost/assign/v2/detail/traits/container/has_push.hpp>
+#include <boost/assign/v2/detail/traits/value_container/category.hpp>
+#include <boost/assign/v2/detail/traits/value_container/has_push.hpp>
+#include <boost/assign/v2/detail/traits/ptr_container/meta.hpp>
 #include <boost/mpl/or.hpp>
 
 namespace boost{
@@ -18,12 +19,28 @@ namespace assign{
 namespace v2{
 namespace conversion_aux{
 
-    template<typename C, typename R>
-    struct use_put : ::boost::mpl::or_<
-        v2::container_traits::is_array<C>,
-        v2::container_traits::has_push<C>
+	template<typename C>
+    struct is_array : ::boost::mpl::apply1<
+    	ptr_container_aux::through_value_container<
+        	value_container_aux::is_array
+        >,
+		C
     >{};
 
+	template<typename C>
+    struct has_push : ::boost::mpl::apply1<
+    	ptr_container_aux::through_value_container<
+        	value_container_aux::has_push_deduced_value
+        >,
+		C
+    >{};
+
+    template<typename C, typename R>
+    struct use_put : ::boost::mpl::or_<
+    	is_array<C>,
+        has_push<C>
+    >{};
+    
 }// conversion_aux
 }// v2
 }// assign
