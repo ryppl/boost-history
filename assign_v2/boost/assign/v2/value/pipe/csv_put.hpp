@@ -11,7 +11,7 @@
 #define BOOST_ASSIGN_V2_VALUE_PIPE_CSV_PUT_ER_2010_HPP
 #include <boost/assign/v2/detail/pp/ignore.hpp>
 #include <boost/assign/v2/ref/array/as_arg_list.hpp>
-#include <boost/assign/v2/ref/list/as_modulo_list.hpp>
+#include <boost/assign/v2/ref/aux_/list/as_modulo_list.hpp>
 #include <boost/assign/v2/value/put.hpp>
 #include <boost/assign/v2/value/pipe/arg_list.hpp>
 

@@ -10,8 +10,8 @@
 #ifndef BOOST_ASSIGN_V2_VALUE_PIPE_PUT_ER_2010_HPP
 #define BOOST_ASSIGN_V2_VALUE_PIPE_PUT_ER_2010_HPP
 #include <boost/assign/v2/detail/pp/ignore.hpp>
-#include <boost/assign/v2/ref/list/as_modulo_list.hpp>
-#include <boost/assign/v2/ref/list_tuple/as_args_list.hpp>
+#include <boost/assign/v2/ref/aux_/list/as_modulo_list.hpp>
+#include <boost/assign/v2/ref/aux_/list_tuple/as_args_list.hpp>
 #include <boost/assign/v2/value/put.hpp>
 #include <boost/assign/v2/value/pipe/args_list.hpp>
 

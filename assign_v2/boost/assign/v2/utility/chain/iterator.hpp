@@ -9,7 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_CHAIN_ITERATOR_ER_2010_HPP
 #define BOOST_ASSIGN_V2_CHAIN_ITERATOR_ER_2010_HPP
-#include <boost/assign/v2/ref/convert_traits/reference.hpp>
+#include <boost/assign/v2/ref/aux_/convert_traits/reference.hpp>
 #include <boost/iterator/iterator_traits.hpp>
 #include <boost/mpl/apply.hpp>
 #include <boost/mpl/quote.hpp>

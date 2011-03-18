@@ -8,9 +8,7 @@
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
 #include <libs/assign/v2/test/ref/array.h>
-#include <libs/assign/v2/test/ref/convert_traits.h>
-#include <libs/assign/v2/test/ref/list.h>
-#include <libs/assign/v2/test/ref/list_tuple.h>
+#include <libs/assign/v2/test/ref/aux_.h>
 #include <libs/assign/v2/test/ref/wrapper.h>
 #include <libs/assign/v2/test/ref.h>
 
@@ -19,10 +17,8 @@ namespace xxx_ref{
 
     void test(){
 
-        xxx_convert_traits::test();
         xxx_array::test();
-        xxx_list::test();
-        xxx_list_tuple::test();
+        xxx_aux_::test();
         xxx_wrapper::test();
 
     }
