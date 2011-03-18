@@ -47,7 +47,7 @@ namespace tutorial_assign_v2{
             //[tutorial_ptr_container
             typedef std::string T; ptr_set<T> assoc;
             T x = "isomer", y = "ephemeral", z = "prosaic";
-            put( assoc )( x )( z )( y );
+            csv( put( assoc ), x, z, y );
             assert( assoc.count( x ) == 1 );
             assert( assoc.count( z ) == 1 );
             //]
@@ -77,7 +77,7 @@ namespace tutorial_assign_v2{
                 begin( consecutive5 | _chain( ref::csv_array( six, seven, eight ) | ref::_get ) )
             );
             assert(consecutive5[0] == 1); assert(consecutive5[4] == 5);
-            assert( six == 6 ); assert( eight == 8);
+            assert( six == 6 ); assert( eight == 8 );
             //]
         }
         {
