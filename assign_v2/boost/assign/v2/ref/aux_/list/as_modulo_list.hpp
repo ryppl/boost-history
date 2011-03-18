@@ -9,8 +9,8 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_LIST_REF_AS_MODULO_LIST_ER_2010_HPP
 #define BOOST_ASSIGN_V2_LIST_REF_AS_MODULO_LIST_ER_2010_HPP
-#include <boost/assign/v2/ref/list/at.hpp>
-#include <boost/assign/v2/ref/list/fwd.hpp>
+#include <boost/assign/v2/ref/aux_/list/at.hpp>
+#include <boost/assign/v2/ref/aux_/list/fwd.hpp>
 #include <boost/mpl/at.hpp>
 #include <boost/mpl/size.hpp>
 #include <boost/typeof/typeof.hpp>

@@ -7,11 +7,11 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_REF_LIST_TUPLE_CPP03_AS_ARGS_LIST_ER_2010_HPP
-#define BOOST_ASSIGN_V2_REF_LIST_TUPLE_CPP03_AS_ARGS_LIST_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_REF_AUX_LIST_TUPLE_CPP03_AS_ARGS_LIST_ER_2010_HPP
+#define BOOST_ASSIGN_V2_REF_AUX_LIST_TUPLE_CPP03_AS_ARGS_LIST_ER_2010_HPP
 #include <boost/assign/v2/detail/config/limit_arity.hpp>
-#include <boost/assign/v2/ref/list_tuple/list_tuple.hpp>
-#include <boost/assign/v2/ref/tuple/cpp03/as_arg_list.hpp>
+#include <boost/assign/v2/ref/aux_/list_tuple/list_tuple.hpp>
+#include <boost/assign/v2/ref/aux_/tuple/cpp03/as_arg_list.hpp>
 #include <boost/mpl/int.hpp>
 #include <boost/preprocessor/repetition.hpp>
 #include <boost/preprocessor/arithmetic/inc.hpp>
@@ -87,4 +87,4 @@ using list_tuple_aux::as_args_list;
 }// assign
 }// boost
 
-#endif // BOOST_ASSIGN_V2_REF_LIST_TUPLE_CPP03_AS_ARGS_LIST_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_REF_AUX_LIST_TUPLE_CPP03_AS_ARGS_LIST_ER_2010_HPP

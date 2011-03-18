@@ -7,12 +7,12 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_REF_LIST_CONTAINER_ER_2010_HPP
-#define BOOST_ASSIGN_V2_REF_LIST_CONTAINER_ER_2010_HPP
-#include <boost/assign/v2/ref/list/fwd.hpp> // consistency
-#include <boost/assign/v2/ref/list/holder/tail.hpp>
-#include <boost/assign/v2/ref/list/holder/head.hpp>
-#include <boost/assign/v2/ref/list/policy.hpp>
+#ifndef BOOST_ASSIGN_V2_REF_AUX_LIST_CONTAINER_ER_2010_HPP
+#define BOOST_ASSIGN_V2_REF_AUX_LIST_CONTAINER_ER_2010_HPP
+#include <boost/assign/v2/ref/aux_/list/fwd.hpp> // consistency
+#include <boost/assign/v2/ref/aux_/list/holder/tail.hpp>
+#include <boost/assign/v2/ref/aux_/list/holder/head.hpp>
+#include <boost/assign/v2/ref/aux_/list/policy.hpp>
 #include <boost/call_traits.hpp>
 #include <boost/mpl/apply.hpp>
 #include <boost/type_traits/is_same.hpp>
@@ -73,4 +73,4 @@ namespace list_aux{
 }// assign
 }// boost
 
-#endif // BOOST_ASSIGN_V2_REF_LIST_CONTAINER_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_REF_AUX_LIST_CONTAINER_ER_2010_HPP

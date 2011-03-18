@@ -7,10 +7,10 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_REF_LIST_ARRAY_REBIND_ER_2010_HPP
-#define BOOST_ASSIGN_V2_REF_LIST_ARRAY_REBIND_ER_2010_HPP
-#include <boost/assign/v2/ref/list/fwd.hpp>
-#include <boost/assign/v2/ref/list/at.hpp>
+#ifndef BOOST_ASSIGN_V2_REF_AUX_LIST_ARRAY_REBIND_ER_2010_HPP
+#define BOOST_ASSIGN_V2_REF_AUX_LIST_ARRAY_REBIND_ER_2010_HPP
+#include <boost/assign/v2/ref/aux_/list/fwd.hpp>
+#include <boost/assign/v2/ref/aux_/list/at.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/equal_to.hpp>
 #include <boost/mpl/int.hpp>

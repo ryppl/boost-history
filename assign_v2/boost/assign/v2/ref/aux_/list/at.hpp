@@ -7,10 +7,10 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_REF_LIST_AT_ER_2010_HPP
-#define BOOST_ASSIGN_V2_REF_LIST_AT_ER_2010_HPP
-#include <boost/assign/v2/ref/list/fwd.hpp>
-#include <boost/assign/v2/ref/list/holder.hpp>
+#ifndef BOOST_ASSIGN_V2_REF_AUX_LIST_AT_ER_2010_HPP
+#define BOOST_ASSIGN_V2_REF_AUX_LIST_AT_ER_2010_HPP
+#include <boost/assign/v2/ref/aux_/list/fwd.hpp>
+#include <boost/assign/v2/ref/aux_/list/holder.hpp>
 #include <boost/call_traits.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/eval_if.hpp>
@@ -72,4 +72,4 @@ using list_aux::at;
 }// assign
 }// boost
 
-#endif // BOOST_ASSIGN_V2_REF_LIST_AT_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_REF_AUX_LIST_AT_ER_2010_HPP

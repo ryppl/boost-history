@@ -12,8 +12,8 @@
 #include <boost/assign/v2/detail/pp/ignore.hpp>
 #include <boost/assign/v2/ref/array/alloc/lazy.hpp>
 #include <boost/assign/v2/ref/array/size_type.hpp>
-#include <boost/assign/v2/ref/list/list.hpp>
-#include <boost/assign/v2/ref/list/array.hpp>
+#include <boost/assign/v2/ref/aux_/list/list.hpp>
+#include <boost/assign/v2/ref/aux_/list/array.hpp>
 
 namespace boost{
 namespace assign{

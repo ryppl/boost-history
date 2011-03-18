@@ -7,8 +7,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_REF_LIST_TUPLE_LIST_TUPLE_ER_2010_HPP
-#define BOOST_ASSIGN_V2_REF_LIST_TUPLE_LIST_TUPLE_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_REF_AUX_LIST_TUPLE_LIST_TUPLE_ER_2010_HPP
+#define BOOST_ASSIGN_V2_REF_AUX_LIST_TUPLE_LIST_TUPLE_ER_2010_HPP
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/identity.hpp>
@@ -94,9 +94,9 @@ namespace list_tuple_aux{
 
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
-#include <boost/assign/v2/ref/list_tuple/cpp0x/container.hpp>
+#include <boost/assign/v2/ref/aux_/list_tuple/cpp0x/container.hpp>
 #else
-#include <boost/assign/v2/ref/list_tuple/cpp03/container.hpp>
+#include <boost/assign/v2/ref/aux_/list_tuple/cpp03/container.hpp>
 #endif // BOOST_ASSIGN_V2_ENABLE_CPP0X
 
 #include <boost/mpl/apply.hpp>
@@ -150,4 +150,4 @@ namespace
 }// assign
 }// boost
 
-#endif // BOOST_ASSIGN_V2_REF_LIST_TUPLE_LIST_TUPLE_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_REF_AUX_LIST_TUPLE_LIST_TUPLE_ER_2010_HPP

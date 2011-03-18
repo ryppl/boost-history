@@ -7,8 +7,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_REF_TUPLE_CPP03_AS_ARG_LIST_ER_2010_HPP
-#define BOOST_ASSIGN_V2_REF_TUPLE_CPP03_AS_ARG_LIST_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_REF_AUX_TUPLE_CPP03_AS_ARG_LIST_ER_2010_HPP
+#define BOOST_ASSIGN_V2_REF_AUX_TUPLE_CPP03_AS_ARG_LIST_ER_2010_HPP
 #include <boost/preprocessor/repetition.hpp>
 #include <boost/preprocessor/arithmetic/inc.hpp>
 #include <boost/tuple/tuple.hpp>
@@ -43,4 +43,4 @@ BOOST_PP_REPEAT(
 }// assign
 }// boost
 
-#endif // BOOST_ASSIGN_V2_REF_TUPLE_CPP03_AS_ARG_LIST_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_REF_AUX_TUPLE_CPP03_AS_ARG_LIST_ER_2010_HPP

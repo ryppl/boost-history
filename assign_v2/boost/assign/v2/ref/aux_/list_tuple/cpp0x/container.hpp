@@ -7,10 +7,10 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_REF_LIST_TUPLE_CPP0X_CONTAINER_ER_2010_HPP
-#define BOOST_ASSIGN_V2_REF_LIST_TUPLE_CPP0X_CONTAINER_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_REF_AUX_LIST_TUPLE_CPP0X_CONTAINER_ER_2010_HPP
+#define BOOST_ASSIGN_V2_REF_AUX_LIST_TUPLE_CPP0X_CONTAINER_ER_2010_HPP
 #include <utility>
-#include <boost/assign/v2/ref/tuple/cpp0x/data.hpp>
+#include <boost/assign/v2/ref/aux_/tuple/cpp0x/data.hpp>
 #include <boost/config.hpp>
 #include <boost/mpl/empty_base.hpp>
 #include <boost/mpl/eval_if.hpp>

@@ -7,8 +7,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_REF_LIST_FWD_ER_2010_HPP
-#define BOOST_ASSIGN_V2_REF_LIST_FWD_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_REF_AUX_LIST_FWD_ER_2010_HPP
+#define BOOST_ASSIGN_V2_REF_AUX_LIST_FWD_ER_2010_HPP
 
 namespace boost{
     struct use_default; // TODO ?
@@ -33,5 +33,5 @@ namespace list_aux{
 }// assign
 }// boost
 
-#endif // BOOST_ASSIGN_V2_REF_LIST_FWD_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_REF_AUX_LIST_FWD_ER_2010_HPP
 
