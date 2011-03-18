@@ -1,0 +1,353 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Convention</title>
+<link rel="stylesheet" href="../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="../index.html" title="Chapter&#160;1.&#160;Boost.Assign 2.0">
+<link rel="up" href="../index.html" title="Chapter&#160;1.&#160;Boost.Assign 2.0">
+<link rel="prev" href="../index.html" title="Chapter&#160;1.&#160;Boost.Assign 2.0">
+<link rel="next" href="put.html" title="Put">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../boost.png"></td>
+<td align="center"><a href="../../../index.html">Home</a></td>
+<td align="center"><a href="../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../index.html"><img src="../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="put.html"><img src="../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="boost_assign_v2.conv"></a><a class="link" href="conv.html" title="Convention">Convention</a>
+</h2></div></div></div>
+<p>
+      Here are conventions used in this documentation. They are hopefully intuitive
+      so the impatient reader can skip them.
+    </p>
+<a name="boost_assign_v2.conv.notation"></a><h4>
+<a name="id36331747"></a>
+      <a class="link" href="conv.html#boost_assign_v2.conv.notation">Notation</a>
+    </h4>
+<p>
+      <span class="bold"><strong>Symbol</strong></span>
+    </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+              <p>
+                Symbol
+              </p>
+            </th>
+<th>
+              <p>
+                Description
+              </p>
+            </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput">cont</code>
+              </p>
+            </td>
+<td>
+              <p>
+                A container
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput">t</code>
+              </p>
+            </td>
+<td>
+              <p>
+                A value
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput">arg</code>
+              </p>
+            </td>
+<td>
+              <p>
+                Arguments to a function
+              </p>
+            </td>
+</tr>
+</tbody>
+</table></div>
+<p>
+      Identifier <code class="computeroutput">T</code> represents the type of <code class="computeroutput">t</code>, and <code class="computeroutput">C</code>
+      that of <code class="computeroutput">cont</code>.
+    </p>
+<p>
+      <span class="bold"><strong>Index</strong></span>
+    </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+              <p>
+                Expression
+              </p>
+            </th>
+<th>
+              <p>
+                Description
+              </p>
+            </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+              <p>
+                <code class="literal"> <code class="literal">i</code> = 0, ..., <code class="literal">n</code>-1</code>
+              </p>
+            </td>
+<td>
+              <p>
+                Indexes a sequence of <code class="computeroutput">t</code>'s
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="literal"> <code class="literal">j</code> = 0, ..., <code class="literal">k</code>-1</code>
+              </p>
+            </td>
+<td>
+              <p>
+                Indexes arguments of a <code class="literal">k</code>-ary function
+              </p>
+            </td>
+</tr>
+</tbody>
+</table></div>
+<p>
+      <span class="bold"><strong>Bracket</strong></span>
+    </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+              <p>
+                Expression
+              </p>
+            </th>
+<th>
+              <p>
+                Description
+              </p>
+            </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+              <p>
+                <code class="literal">t</code>[<code class="literal">i</code>]
+              </p>
+            </td>
+<td>
+              <p>
+                <code class="literal">i</code>th value
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="literal">arg</code>[<code class="literal">j</code>]
+              </p>
+            </td>
+<td>
+              <p>
+                <code class="literal">j</code>th argument at unspecified <code class="literal">i</code>
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="literal">arg</code>[<code class="literal">i</code>,<code class="literal">j</code>]
+              </p>
+            </td>
+<td>
+              <p>
+                <code class="literal">j</code>th argument at <code class="literal">i</code>
+              </p>
+            </td>
+</tr>
+</tbody>
+</table></div>
+<p>
+      <span class="bold"><strong>Alias</strong></span>
+    </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+              <p>
+                Expression
+              </p>
+            </th>
+<th>
+              <p>
+                Description
+              </p>
+            </th>
+</tr></thead>
+<tbody><tr>
+<td>
+              <p>
+                <code class="literal">x</code>, <code class="literal">y</code>, <code class="literal">z</code>
+              </p>
+            </td>
+<td>
+              <p>
+                <code class="literal">t</code>[<code class="literal">0</code>] , <code class="literal">t</code>[<code class="literal">1</code>]
+                , <code class="literal">t</code>[<code class="literal">2</code>]
+              </p>
+            </td>
+</tr></tbody>
+</table></div>
+<a name="boost_assign_v2.conv.code_block"></a><h4>
+<a name="id36332255"></a>
+      <a class="link" href="conv.html#boost_assign_v2.conv.code_block">Code block</a>
+    </h4>
+<p>
+      <span class="bold"><strong>Feature</strong></span>
+    </p>
+<p>
+      Code that <span class="emphasis"><em>describes</em></span> a feature, such as under heading
+      <span class="bold"><strong>Synopsis</strong></span> or <span class="bold"><strong>Semantics</strong></span>,
+      is expressed in terms of the preceding symbols and indexes, never actual data-types
+      (such as <code class="computeroutput"><span class="keyword">int</span></code>). Any declaration
+      appearing within <span class="bold"><strong>Synopsis</strong></span> is assumed to be
+      enclosed in <code class="computeroutput">boost::assign::v2</code>. Accordingly, symbols appearing
+      in <span class="bold"><strong>Semantics</strong></span> are not <span class="emphasis"><em>not</em></span>
+      fully qualified. Another way to say this, is to assume that the code is preceded
+      by 
+</p>
+<pre class="programlisting"><span class="keyword">using</span> <span class="keyword">namespace</span> boost::assign::v2<span class="special">;</span>
+</pre>
+<p>
+      <span class="bold"><strong>Example</strong></span>
+    </p>
+<p>
+      Code that <span class="emphasis"><em>illustrates</em></span> a feature, such as under heading
+      <span class="bold"><strong>Example</strong></span>, is assumed to be preceded by the
+      include statement under heading <span class="bold"><strong>Header</strong></span> appearing
+      in the nearest enclosing section (if not the current one, that of the top level
+      etc.). Furthermore, the following aliases are assumed: 
+</p>
+<pre class="programlisting"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">;</span>
+<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">lambda</span><span class="special">;</span>
+<span class="keyword">namespace</span> <span class="identifier">as2</span> <span class="special">=</span> boost::assign::v2<span class="special">;</span>
+</pre>
+<p>
+    </p>
+<p>
+      Include statement of headers from other libraries (such as <code class="computeroutput"><span class="preprocessor">#include</span>
+      <span class="special">&lt;</span><span class="identifier">vector</span><span class="special">&gt;</span></code>) are ommitted. However, each example is
+      taken from a file in the <a href="../../../test/" target="_top">test directory</a> where
+      the complete code can be found.
+    </p>
+<a name="boost_assign_v2.conv.feature_layout"></a><h4>
+<a name="id36332459"></a>
+      <a class="link" href="conv.html#boost_assign_v2.conv.feature_layout">Feature layout</a>
+    </h4>
+<p>
+      A typical feature in this library is an <span class="emphasis"><em>adapter</em></span> i.e. a
+      <a href="http://publib.boulder.ibm.com/infocenter/comphelp/v8v101/index.jsp?topic=%2Fcom.ibm.xlcpp8a.doc%2Flanguage%2Fref%2Fclass_templates.htm" target="_top">template
+      class</a> that wraps around an object, or a <span class="emphasis"><em>container</em></span>.
+      We call this an <span class="emphasis"><em>implementation</em></span> because client code never
+      actually has to state its identifier. Indeed, construction is more conveniently
+      achieved by invoking a function that deduces the appropriate type of the implementation
+      at compile time and its state at runtime, from its arguments. Associated types
+      are provided by meta-functions. Accordingly, a possible layout is as follows:
+    </p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+          <span class="bold"><strong>Header</strong></span> : An <code class="computeroutput"><span class="preprocessor">#include</span></code>
+          directive for the relevant header.
+        </li>
+<li class="listitem">
+          <span class="bold"><strong>Syntax</strong></span> : Code block declaring a the <span class="emphasis"><em>implementation</em></span>'s
+          interface.
+        </li>
+<li class="listitem">
+          <span class="bold"><strong>Semantics</strong></span> : Gives meaning to the implementation's
+          interface shown in <span class="bold"><strong>Syntax</strong></span>
+        </li>
+<li class="listitem">
+          <span class="bold"><strong>Meta</strong></span> : Meta-expressions
+        </li>
+<li class="listitem">
+          <span class="bold"><strong>Make</strong></span> : A function returning an instance
+          of the implementation
+        </li>
+<li class="listitem">
+          <span class="bold"><strong>Example</strong></span> : Code block illustrating the
+          above.
+        </li>
+</ul></div>
+<p>
+      Either of <span class="bold"><strong>Meta</strong></span> or <span class="bold"><strong>Make</strong></span>
+      may be sub-divided into <span class="bold"><strong>Syntax</strong></span> and <span class="bold"><strong>Semantics</strong></span>.
+    </p>
+<p>
+      Alternatively, we may omit <span class="bold"><strong>Syntax</strong></span>, place
+      <span class="bold"><strong>Meta</strong></span> before <span class="bold"><strong>Semantics</strong></span>
+      and express object types in the latter in terms of values of meta-functions
+      listed in the former, such that the implementation's identifier is never mentioned.
+      This alternative layout is preferred, for example, if the interesting part
+      of the implementation's interface is provided by a base <code class="computeroutput"><span class="keyword">class</span></code>
+      that is documented in a different section.
+    </p>
+<p>
+      A non-typical feature is either a meta function or a function, usually referring
+      to an implementation in a different section. In that case, the layout is a
+      subset of the above that does not include <span class="bold"><strong>Make</strong></span>.
+    </p>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2003 -2004 Thorsten Ottosen, 2010 Erwann Rogard<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../index.html"><img src="../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="put.html"><img src="../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>
