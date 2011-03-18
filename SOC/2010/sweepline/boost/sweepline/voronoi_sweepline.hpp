@@ -19,14 +19,17 @@
 #include <stack>
 #include <vector>
 
-#ifdef USE_MULTI_PRECISION_LIBRARY
-    #pragma warning( disable : 4800 )
-    #include "gmpxx.h"
+#ifndef BOOST_POLYGON_USE_LONG_LONG
+#include <boost/config.hpp>
+#ifdef BOOST_HAS_LONG_LONG
+#define BOOST_POLYGON_USE_LONG_LONG
+typedef boost::long_long_type polygon_long_long_type;
+typedef boost::ulong_long_type polygon_ulong_long_type;
+#endif
 #endif
 
-#define BOOST_POLYGON_UNSIGNED_LONG_LONG unsigned long long 
-
 #include "voronoi_output.hpp"
+//#include "detail/mpz_arithmetic.hpp"
 #include "detail/voronoi_formation.hpp"
 
 namespace boost {

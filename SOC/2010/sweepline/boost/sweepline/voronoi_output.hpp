@@ -404,7 +404,7 @@ namespace sweepline {
             if (point_site == segment_site_start ||
                 point_site == segment_site_end)
                 return;
-                    
+
             // Apply the linear transformation to move start point of the
             // segment to the point with coordinates (0, 0) and the direction
             // of the segment to coincide the positive direction of the x-axis.
@@ -606,8 +606,8 @@ namespace sweepline {
         friend class voronoi_output<coordinate_type>;
 
         void incident_edge(voronoi_edge_type *e) { incident_edge_ = e; }
-        void inc_num_incident_edges() { num_incident_edges_++; }
-        void dec_num_incident_edges() { num_incident_edges_--; }
+        void inc_num_incident_edges() { ++num_incident_edges_; }
+        void dec_num_incident_edges() { --num_incident_edges_; }
 
         point_2d_type point0_;
         point_2d_type point1_;
@@ -1040,13 +1040,13 @@ namespace sweepline {
                 voronoi_edge_type *edge1 = &(*edge_it);
                 edge1->next(edge1);
                 edge1->prev(edge1);
-                edge_it++;
+                ++edge_it;
                 edge1 = &(*edge_it);
-                edge_it++;
+                ++edge_it;
 
                 while (edge_it != edge_records_.end()) {
                     voronoi_edge_type *edge2 = &(*edge_it);
-                    edge_it++;
+                    ++edge_it;
 
                     edge1->next(edge2);
                     edge1->prev(edge2);
@@ -1054,7 +1054,7 @@ namespace sweepline {
                     edge2->prev(edge1);
 
                     edge1 = &(*edge_it);
-                    edge_it++;
+                    ++edge_it;
                 }
 
                 edge1->next(edge1);
@@ -1071,7 +1071,7 @@ namespace sweepline {
 
                 // Degenerate edges exist only among finite edges.
                 if (!edge_it1->vertex0() || !edge_it1->vertex1()) {
-                    num_edge_records_++;
+                    ++num_edge_records_;
                     continue;
                 }
 
@@ -1079,7 +1079,7 @@ namespace sweepline {
                 const voronoi_vertex_type *v2 = edge_it1->vertex1();
 
                 // Make epsilon robust check.
-                if (v1->robust_vertex()->equals(v2->robust_vertex(), 64)) {
+                if (v1->robust_vertex()->equals(v2->robust_vertex(), 128)) {
                     // Decrease number of cell's incident edges.
                     edge_it1->cell()->dec_num_incident_edges();
                     edge_it1->twin()->cell()->dec_num_incident_edges();
@@ -1122,7 +1122,7 @@ namespace sweepline {
                     edge_records_.erase(edge_it1, edge_it);
                 } else {
                     // Count not degenerate edge.
-                    num_edge_records_++;
+                    ++num_edge_records_;
                 }
             }
             robust_vertices_.clear();
@@ -1134,14 +1134,14 @@ namespace sweepline {
                 if (vertex_it->incident_edge() == NULL) {
                     vertex_it = vertex_records_.erase(vertex_it);
                 } else {
-                    vertex_it++;
-                    num_vertex_records_++;
+                    ++vertex_it;
+                    ++num_vertex_records_;
                 }
             }
 
             // Update prev/next pointers for the ray-edges.
             for (voronoi_cell_iterator_type cell_it = cell_records_.begin();
-                 cell_it != cell_records_.end(); cell_it++) {
+                 cell_it != cell_records_.end(); ++cell_it) {
                 // Move to the previous edge while
                 // it is possible in the CW direction.
                 voronoi_edge_type *cur_edge = cell_it->incident_edge();

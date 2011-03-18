@@ -7,6 +7,8 @@
 
 //  See http://www.boost.org for updates, documentation, and revision history.
 
+#include <iostream>
+
 #include <QtOpenGL/QGLWidget>
 #include <QtGui/QtGui>
 
@@ -68,8 +70,15 @@ public:
     }
 
 protected:
+	void initializeGL() {
+		glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glEnable(GL_BLEND);
+		glEnable(GL_POINT_SMOOTH);
+	}
+
     void paintGL() {
-        qglClearColor(QColor::fromRgb(0, 0, 0));
+		qglClearColor(QColor::fromRgb(0, 0, 0));
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // Draw voronoi sites.

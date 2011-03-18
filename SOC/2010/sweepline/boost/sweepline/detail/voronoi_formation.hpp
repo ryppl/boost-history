@@ -389,8 +389,8 @@ namespace detail {
             erc_type rhs1 = denom_ * that.lower_x_;
             erc_type lhs2 = center_y_ * that.denom_;
             erc_type rhs2 = denom_ * that.center_y_;
-            return (lhs1.compare(rhs1, 64) == UNDEFINED &&
-                    lhs2.compare(rhs2, 64) == UNDEFINED);
+            return (lhs1.compare(rhs1, 128) == UNDEFINED &&
+                    lhs2.compare(rhs2, 128) == UNDEFINED);
         }
 
         bool operator!=(const circle_event &that) const {
@@ -407,7 +407,7 @@ namespace detail {
 
             // Compare x-coordinates of the rightmost points. If the result
             // is undefined we assume that x-coordinates are equal.
-            kPredicateResult pres = lhs1.compare(rhs1, 64);
+            kPredicateResult pres = lhs1.compare(rhs1, 128);
             if (pres != UNDEFINED)
                 return (pres == LESS);
 
@@ -416,7 +416,7 @@ namespace detail {
             erc_type rhs2 = denom_ * that.center_y_;
 
             // Compare y-coordinates of the rightmost points.
-            return (lhs2.compare(rhs2, 64) == LESS);
+            return (lhs2.compare(rhs2, 128) == LESS);
         }
 
         bool operator<=(const circle_event &that) const {
@@ -632,12 +632,12 @@ namespace detail {
     // Return true if the value is positive, else false.
     template <typename T>
     static inline bool convert_to_65_bit(
-        T value, BOOST_POLYGON_UNSIGNED_LONG_LONG &res) {
+        T value, polygon_ulong_long_type &res) {
         if (value >= 0) {
-            res = static_cast<BOOST_POLYGON_UNSIGNED_LONG_LONG>(value);
+            res = static_cast<polygon_ulong_long_type>(value);
             return true;
         } else {
-            res = static_cast<BOOST_POLYGON_UNSIGNED_LONG_LONG>(-value);
+            res = static_cast<polygon_ulong_long_type>(-value);
             return false;
         }
     }
@@ -648,7 +648,7 @@ namespace detail {
     // their integer reinterpretatoins differ in not more than maxUlps units.
     static inline bool almost_equal(double a, double b,
                                     unsigned int maxUlps) {
-        BOOST_POLYGON_UNSIGNED_LONG_LONG ll_a, ll_b;
+        polygon_ulong_long_type ll_a, ll_b;
 
         // Reinterpret double bits as 64-bit signed integer.
         memcpy(&ll_a, &a, sizeof(double));
@@ -680,15 +680,15 @@ namespace detail {
     template <typename T>
     static kOrientation orientation_test(T dif_x1_, T dif_y1_,
                                          T dif_x2_, T dif_y2_) {
-        BOOST_POLYGON_UNSIGNED_LONG_LONG dif_x1, dif_y1, dif_x2, dif_y2;
+        polygon_ulong_long_type dif_x1, dif_y1, dif_x2, dif_y2;
         bool dif_x1_plus, dif_x2_plus, dif_y1_plus, dif_y2_plus;
         dif_x1_plus = convert_to_65_bit(dif_x1_, dif_x1);
         dif_y1_plus = convert_to_65_bit(dif_y1_, dif_y1);
         dif_x2_plus = convert_to_65_bit(dif_x2_, dif_x2);
         dif_y2_plus = convert_to_65_bit(dif_y2_, dif_y2);
 
-        BOOST_POLYGON_UNSIGNED_LONG_LONG expr_l = dif_x1 * dif_y2;
-        BOOST_POLYGON_UNSIGNED_LONG_LONG expr_r = dif_x2 * dif_y1;
+        polygon_ulong_long_type expr_l = dif_x1 * dif_y2;
+        polygon_ulong_long_type expr_r = dif_x2 * dif_y1;
 
         bool expr_l_plus = (dif_x1_plus == dif_y2_plus) ? true : false;
         bool expr_r_plus = (dif_x2_plus == dif_y1_plus) ? true : false;
@@ -743,19 +743,19 @@ namespace detail {
     }
 
     // Compute robust cross_product: a1 * b2 - b1 * a2.
-    // The result is correct with epsilon relative error equal to 1EPS.
+    // The result is correct with epsilon relative error equal to 2EPS.
     template <typename T>
     static double robust_cross_product(T a1_, T b1_, T a2_, T b2_) {
-        BOOST_POLYGON_UNSIGNED_LONG_LONG a1, b1, a2, b2;
+        polygon_ulong_long_type a1, b1, a2, b2;
         bool a1_plus, a2_plus, b1_plus, b2_plus;
         a1_plus = convert_to_65_bit(a1_, a1);
         b1_plus = convert_to_65_bit(b1_, b1);
         a2_plus = convert_to_65_bit(a2_, a2);
         b2_plus = convert_to_65_bit(b2_, b2);
 
-        BOOST_POLYGON_UNSIGNED_LONG_LONG expr_l = a1 * b2;
+        polygon_ulong_long_type expr_l = a1 * b2;
         bool expr_l_plus = (a1_plus == b2_plus) ? true : false;
-        BOOST_POLYGON_UNSIGNED_LONG_LONG expr_r = b1 * a2;
+        polygon_ulong_long_type expr_r = b1 * a2;
         bool expr_r_plus = (a2_plus == b1_plus) ? true : false;
 
         if (expr_l == 0)
@@ -1021,7 +1021,7 @@ namespace detail {
     // Find the x-coordinate (relative to the sweepline position) of the point
     // of the intersection of the horizontal line going through the new site
     // with the arc corresponding to the segment site.
-    // The relative error is atmost 7EPS.
+    // The relative error is atmost 8EPS.
     template <typename T>
     static double find_distance_to_segment_arc(const site_event<T> &segment,
                                                const point_2d<T> &new_point) {
@@ -1049,9 +1049,9 @@ namespace detail {
                     k = 1.0 / (b1 - k);
                 }
             }
-            // Relative error of the robust cross product is 1EPS.
+            // Relative error of the robust cross product is 2EPS.
             // Relative error of the k is atmost 5EPS.
-            // The resulting relative error is atmost 7EPS.
+            // The resulting relative error is atmost 8EPS.
             return robust_cross_product(a1, b1, a3, b3) * k;
         }
     }
@@ -1063,8 +1063,8 @@ namespace detail {
     static bool robust_65bit_less_predicate(const point_2d<T> &left_point,
                                             const point_2d<T> &right_point,
                                             const point_2d<T> &new_point) {
-        BOOST_POLYGON_UNSIGNED_LONG_LONG a1, a2, b1, b2;
-        BOOST_POLYGON_UNSIGNED_LONG_LONG b1_sqr, b2_sqr, l_expr, r_expr;
+        polygon_ulong_long_type a1, a2, b1, b2;
+        polygon_ulong_long_type b1_sqr, b2_sqr, l_expr, r_expr;
         bool l_expr_plus, r_expr_plus;
 
         // Compute a1 = (x0-x1), a2 = (x0-x2), b1 = (y0 - y1), b2 = (y0 - y2).
@@ -1076,8 +1076,8 @@ namespace detail {
         // Compute b1_sqr = (y0-y1)^2 and b2_sqr = (y0-y2)^2.
         b1_sqr = b1 * b1;
         b2_sqr = b2 * b2;
-        BOOST_POLYGON_UNSIGNED_LONG_LONG b1_sqr_mod = b1_sqr % a1;
-        BOOST_POLYGON_UNSIGNED_LONG_LONG b2_sqr_mod = b2_sqr % a2;
+        polygon_ulong_long_type b1_sqr_mod = b1_sqr % a1;
+        polygon_ulong_long_type b2_sqr_mod = b2_sqr % a2;
 
         // Compute l_expr = (x1 - x2).
         l_expr_plus = convert_to_65_bit(left_point.x() - right_point.x(), l_expr);
@@ -1085,18 +1085,18 @@ namespace detail {
         // In case (b2_sqr / a2) < (b1_sqr / a1), decrease left_expr by 1.
         if (b2_sqr_mod * a1 < b1_sqr_mod * a2) {
             if (!l_expr_plus)
-                l_expr++;
+                ++l_expr;
             else if (l_expr != 0)
-                l_expr--;
+                --l_expr;
             else {
-                l_expr++;
+                ++l_expr;
                 l_expr_plus = false;
             }
         }
 
         // Compute right expression.
-        BOOST_POLYGON_UNSIGNED_LONG_LONG value1 = b1_sqr / a1;
-        BOOST_POLYGON_UNSIGNED_LONG_LONG value2 = b2_sqr / a2;
+        polygon_ulong_long_type value1 = b1_sqr / a1;
+        polygon_ulong_long_type value2 = b2_sqr / a2;
         if (value1 >= value2) {
             r_expr = value1 - value2;
             r_expr_plus = true;
@@ -1243,10 +1243,11 @@ namespace detail {
         double dist1 = find_distance_to_point_arc(site_point, new_point);
         double dist2 = find_distance_to_segment_arc(segment_site, new_point);
 
-        if (!almost_equal(dist1, dist2, 10)) {
+        if (!almost_equal(dist1, dist2, 11)) {
             return reverse_order ^ (dist1 < dist2);
         }
 
+        // TODO(asydorchuk): Add mpl support there.
         return reverse_order ^ (dist1 < dist2);
     }
 
@@ -1271,8 +1272,8 @@ namespace detail {
         double dist1 = find_distance_to_segment_arc(left_segment, new_point);
         double dist2 = find_distance_to_segment_arc(right_segment, new_point);
 
-        // The undefined ulp range is equal to 7EPS + 7EPS <= 14ULP.
-        if (!almost_equal(dist1, dist2, 14)) {
+        // The undefined ulp range is equal to 8EPS + 8EPS <= 16ULP.
+        if (!almost_equal(dist1, dist2, 16)) {
             return dist1 < dist2;
         }
 
@@ -1294,7 +1295,79 @@ namespace detail {
     static inline T sqr_distance(T dif_x, T dif_y) {
         return dif_x * dif_x + dif_y * dif_y;
     }
+/*
+    // Recompute parameters of the circle event using high-precision library.
+	// In the worst case parameters of the circle have next relative errors:
+	//    r(c_x) = 4 * EPS;
+	//    r(c_y) = 4 * EPS;
+	//    r(lower_x) = 8 * EPS.
+	template <typename T>
+	static bool create_circle_event_ppp_gmpxx(const site_event<T> &site1,
+											  const site_event<T> &site2,
+											  const site_event<T> &site3,
+											  circle_event<T> &c_event) {
+		static mpz_wrapper mpz_dif_x[3], mpz_dif_y[3], mpz_sum_x[3], mpz_sum_y[3],
+						   mpz_numerator[3], mpz_c_x, mpz_c_y, mpz_sqr_r;
+		mpz_dif_x[0] = site1.x() - site2.x();
+		mpz_dif_x[1] = site2.x() - site3.x();
+		mpz_dif_x[2] = site1.x() - site3.x();
+		mpz_dif_y[0] = site1.y() - site2.y();
+		mpz_dif_y[1] = site2.y() - site3.y();
+		mpz_dif_y[2] = site1.y() - site3.y();
+	
+		// Evaluate orientation.
+		double orientation = static_cast<double>(
+			mpz_dif_x[0] * mpz_dif_y[1] - mpz_dif_x[1] * mpz_dif_y[0]);
 
+		// If use this function only to recompute parameters of the circle
+		// event, this check won't be required.
+		if (orientation_test(orientation) != RIGHT_ORIENTATION)
+			return false;
+
+		// Evaluate inverse orientation to avoid division in calculations.
+		// r(inv_orientation) = 2 * EPS.
+		double inv_orientation = 0.5 / orientation;
+	
+		mpz_sum_x[0] = site1.x() + site2.x();
+		mpz_sum_x[1] = site2.x() + site3.x();
+		mpz_sum_y[0] = site1.y() + site2.y();
+		mpz_sum_y[1] = site2.y() + site3.y();
+	
+		mpz_numerator[1] = mpz_dif_x[0] * mpz_sum_x[0] + mpz_dif_y[0] * mpz_sum_y[0];
+		mpz_numerator[2] = mpz_dif_x[1] * mpz_sum_x[1] + mpz_dif_y[1] * mpz_sum_y[1];
+
+		mpz_c_x = mpz_numerator[1] * mpz_dif_y[1] - mpz_numerator[2] * mpz_dif_y[0];
+		mpz_c_y = mpz_numerator[2] * mpz_dif_x[0] - mpz_numerator[1] * mpz_dif_x[1];
+
+		// Evaluate radius of the circle.
+		mpz_sqr_r = 1.0;
+		for (int i = 0; i < 3; ++i)
+			mpz_sqr_r *= mpz_dif_x[i] * mpz_dif_x[i] + mpz_dif_y[i] * mpz_dif_y[i];
+
+		// Evaluate coordinates of the center of the circle.
+		// r(c_x) = r(c_y) = 4 * EPS.
+		double c_x = static_cast<double>(mpz_c_x) * inv_orientation;
+		double c_y = static_cast<double>(mpz_c_y) * inv_orientation;
+
+		// r(r) = 1.5 * EPS < 2 * EPS.
+		double r = sqrt(static_cast<double>(mpz_sqr_r));
+
+		// If c_x >= 0 then lower_x = c_x + r,
+		// else lower_x = (c_x * c_x - r * r) / (c_x - r).
+		// To guarantee epsilon relative error.
+		if (c_x >= 0) {
+			// r(lower_x) = 5 * EPS.
+			c_event = circle_event<double>(c_x, c_y, c_x + r * fabs(inv_orientation));
+		} else {
+			mpz_numerator[0] = mpz_c_x * mpz_c_x - mpz_sqr_r;
+			// r(lower_x) = 8 * EPS.
+			double lower_x = static_cast<double>(mpz_numerator[0]) * fabs(inv_orientation);
+			lower_x /= (mpz_c_x >= 0) ? (-mpz_c_x.get_d() - r) : (mpz_c_x.get_d() - r);
+			c_event = circle_event<double>(c_x, c_y, lower_x);
+		}
+		return true;
+	}
+*/
     // Find parameters of the inscribed circle that is tangent to three
     // point sites.
     template <typename T>
@@ -1482,6 +1555,7 @@ namespace detail {
             ix += a1 * c2 * inv_orientation;
             iy += b1 * c2 * inv_orientation;
             iy += b2 * c1 * inv_orientation;
+
             b += ix * (a1 * sqr_sum2);
             b += ix * (a2 * sqr_sum1);
             b += iy * (b1 * sqr_sum2);
@@ -1507,7 +1581,60 @@ namespace detail {
         }
         return true;
     }
+/*
+	template <typename T>
+	static bool create_circle_event_sss_gmpxx(const site_event<T> &site1,
+											  const site_event<T> &site2,
+											  const site_event<T> &site3,
+											  circle_event<T> &c_event) {
+		if (site1.index() == site2.index() || site2.index() == site3.index())
+			return false;
+		static mpz_wrapper a[3], b[3], c[3], sqr_len[4], cross[4];
+		a[0] = site1.x1(true) - site1.x0(true);
+		a[1] = site2.x1(true) - site2.x0(true);
+		a[2] = site3.x1(true) - site3.x0(true);
+	
+		b[0] = site1.y1(true) - site1.y0(true);
+		b[1] = site2.y1(true) - site2.y0(true);
+		b[2] = site3.y1(true) - site3.y0(true);
 
+		c[0] = mpz_cross(site1.x0(true), site1.y0(true), site1.x1(true), site1.y1(true));										
+		c[1] = mpz_cross(site2.x0(true), site2.y0(true), site2.x1(true), site2.y1(true));
+		c[2] = mpz_cross(site3.x0(true), site3.y0(true), site3.x1(true), site3.y1(true));
+
+		for (int i = 0; i < 3; ++i) {
+			int j = (i+1) % 3;
+			int k = (i+2) % 3;
+			cross[i] = a[j] * b[k] - a[k] * b[j];
+			sqr_len[i] = a[i] * a[i] + b[i] * b[i];
+		}
+		double denom = sqr_expr_evaluator<3>::eval(cross, sqr_len);
+
+		for (int i = 0; i < 3; ++i) {
+			int j = (i+1) % 3;
+			int k = (i+2) % 3;
+			cross[i] = b[j] * c[k] - b[k] * c[j];
+			sqr_len[i] = a[i] * a[i] + b[i] * b[i];
+		}
+		double c_y = sqr_expr_evaluator<3>::eval(cross, sqr_len) / denom;
+
+		cross[3] = 0;
+		for (int i = 0; i < 3; ++i) {
+			int j = (i+1) % 3;
+			int k = (i+2) % 3;
+			cross[i] = a[j] * c[k] - a[k] * c[j];
+			sqr_len[i] = a[i] * a[i] + b[i] * b[i];
+			cross[3] += cross[i] * b[i];
+		}
+		double c_x = sqr_expr_evaluator<3>::eval(cross, sqr_len) / denom;
+		
+		sqr_len[3] = 1;
+		double lower_x = sqr_expr_evaluator<4>::eval(cross, sqr_len) / denom;
+		
+		c_event = circle_event<double>(c_x, c_y, lower_x);
+		return true;
+	}
+*/
     // Find parameters of the inscribed circle that is tangent to three
     // segment sites.
     template <typename T>
@@ -1515,28 +1642,39 @@ namespace detail {
                                         const site_event<T> &site2,
                                         const site_event<T> &site3,
                                         circle_event<T> &c_event) {
-        if (site1.index() == site2.index() || site2.index() == site3.index()) {
+        // TODO(asydorchuk): Check if this one is required.
+		if (site1.index() == site2.index() || site2.index() == site3.index())
             return false;
-        }
         double a1 = site1.x1(true) - site1.x0(true);
         double b1 = site1.y1(true) - site1.y0(true);
-        double c1 = robust_cross_product(b1, a1, site1.y0(true), site1.x0(true));
+        double c1 = robust_cross_product(site1.x0(true), site1.y0(true),
+                                         site1.x1(true), site1.y1(true));
         double a2 = site2.x1(true) - site2.x0(true);
         double b2 = site2.y1(true) - site2.y0(true);
-        double c2 = robust_cross_product(b2, a2, site2.y0(true), site2.x0(true));
+        double c2 = robust_cross_product(site2.x0(true), site2.y0(true),
+                                         site2.x1(true), site2.y1(true));
         double a3 = site3.x1(true) - site3.x0(true);
         double b3 = site3.y1(true) - site3.y0(true);
-        double c3 = robust_cross_product(b3, a3, site3.y0(true), site3.x0(true));
+        double c3 = robust_cross_product(site3.x0(true), site3.y0(true),
+                                         site3.x1(true), site3.y1(true));
         double len1 = sqrt(a1 * a1 + b1 * b1);
         double len2 = sqrt(a2 * a2 + b2 * b2);
         double len3 = sqrt(a3 * a3 + b3 * b3);
         double cross_12 = robust_cross_product(a1, b1, a2, b2);
         double cross_23 = robust_cross_product(a2, b2, a3, b3);
         double cross_31 = robust_cross_product(a3, b3, a1, b1);
-        epsilon_robust_comparator<double> det, c_x, c_y, r;
-        det += cross_12 * len3;
-        det += cross_23 * len1;
-        det += cross_31 * len2;
+        epsilon_robust_comparator<double> denom, c_x, c_y, r;
+
+        // denom = cross_12 * len3 + cross_23 * len1 + cross_31 * len2.
+        denom += cross_12 * len3;
+        denom += cross_23 * len1;
+        denom += cross_31 * len2;
+
+        // denom * r = (b2 * c_x - a2 * c_y - c2 * denom) / len2.
+        r -= cross_12 * c3;
+        r -= cross_23 * c1;
+        r -= cross_31 * c2;
+
         c_x += a1 * c2 * len3;
         c_x -= a2 * c1 * len3;
         c_x += a2 * c3 * len1;
@@ -1549,11 +1687,7 @@ namespace detail {
         c_y -= b3 * c2 * len1;
         c_y += b3 * c1 * len2;
         c_y -= b1 * c3 * len2;
-        r += b2 * c_x;
-        r -= a2 * c_y;
-        r -= c2 * det;
-        r /= len2;
-        c_event = circle_event<double>(c_x, c_y, c_x + r, det);
+        c_event = circle_event<double>(c_x, c_y, c_x + r, denom);
         return true;
     }
 
@@ -1711,6 +1845,7 @@ namespace detail {
         void edge(voronoi_edge<T> *new_edge) {
             edge_ = new_edge;
         }
+
     private:
         typename circle_events_queue<T>::circle_event_type_it circle_event_it_;
         voronoi_edge<T> *edge_;
@@ -1850,7 +1985,7 @@ namespace detail {
 
             // Create a site event from each input point.
             for (typename std::vector< point_2d<iType> >::const_iterator it = points.begin();
-                 it != points.end(); it++) {
+                 it != points.end(); ++it) {
                 site_events_.push_back(make_site_event(static_cast<T>(it->x()),
                                                        static_cast<T>(it->y()),
                                                        0));
@@ -1861,7 +1996,7 @@ namespace detail {
             //   2) the endpoint of the segment;
             //   3) the segment itself.
             for (typename std::vector<iSegment2D>::const_iterator it = segments.begin();
-                 it != segments.end(); it++) {
+                 it != segments.end(); ++it) {
                 T x1 = static_cast<T>(it->first.x());
                 T y1 = static_cast<T>(it->first.y());
                 T x2 = static_cast<T>(it->second.x());
@@ -1879,7 +2014,7 @@ namespace detail {
                 site_events_.begin(), site_events_.end()), site_events_.end());
 
             // Number the sites.
-            for (size_t cur = 0; cur < site_events_.size(); cur++)
+            for (size_t cur = 0; cur < site_events_.size(); ++cur)
                 site_events_[cur].index(cur);
 
             // Init the site's iterator.
@@ -1904,7 +2039,7 @@ namespace detail {
             } else if (site_events_.size() == 1) {
                 // Handle one input site case.
                 output_.process_single_site(site_events_[0]);
-                site_event_iterator_++;
+                ++site_event_iterator_;
             } else {
                 int skip = 0;
 
@@ -1912,8 +2047,8 @@ namespace detail {
                 while(site_event_iterator_ != site_events_.end() &&
                       site_event_iterator_->x() == site_events_.begin()->x() &&
                       site_event_iterator_->is_vertical()) {
-                    site_event_iterator_++;
-                    skip++;
+                    ++site_event_iterator_;
+                    ++skip;
                 }
 
                 if (skip == 1) {
@@ -1969,21 +2104,21 @@ namespace detail {
             // Get the first and the second site events.
             site_event_iterator_type it_first = site_events_.begin();
             site_event_iterator_type it_second = site_events_.begin();
-            it_second++;
+            ++it_second;
 
             // Update the beach line.
             insert_new_arc(*it_first, *it_first, *it_second, beach_line_.begin());
 
             // The second site has been already processed.
             // Move the site's iterator.
-            site_event_iterator_++;
+            ++site_event_iterator_;
         }
 
         // Insert bisectors for all collinear initial sites.
         void init_beach_line_collinear_sites() {
              site_event_iterator_type it_first = site_events_.begin();
              site_event_iterator_type it_second = site_events_.begin();
-             it_second++;
+             ++it_second;
              while (it_second != site_event_iterator_) {
                  // Create a new beach line node.
                  key_type new_node(*it_first, *it_second);
@@ -1996,8 +2131,8 @@ namespace detail {
                      std::pair<key_type, value_type>(new_node, value_type(edge)));
 
                  // Update iterators.
-                 it_first++;
-                 it_second++;
+                 ++it_first;
+                 ++it_second;
              }
         }
 
@@ -2007,7 +2142,7 @@ namespace detail {
             site_event_type site_event = *site_event_iterator_;
 
             // Move the site's iterator.
-            site_event_iterator_++;
+            ++site_event_iterator_;
 
             // If a new site is an end point of some segment,
             // remove temporary nodes from the beach line data structure.
@@ -2033,7 +2168,7 @@ namespace detail {
             if (it == beach_line_.end()) {
                 // The above arc corresponds to the second arc of the last node.
                 // Move the iterator to the last node.
-                it--;
+                --it;
 
                 // Get the second site of the last node
                 const site_event_type &site_arc = it->first.right_site();
@@ -2074,7 +2209,7 @@ namespace detail {
 
                 // Remove the candidate circle from the event queue.
                 it->second.deactivate_circle_event();
-                it--;
+                --it;
                 const site_event_type &site_arc1 = it->first.right_site();
                 const site_event_type &site1 = it->first.left_site();
 
@@ -2122,7 +2257,7 @@ namespace detail {
             edge_type *bisector2 = it_first->second.edge();
 
             // Get the half-edge corresponding to the first bisector - (A, B).
-            it_first--;
+            --it_first;
             edge_type *bisector1 = it_first->second.edge();
 
             // Get the A site.
@@ -2151,14 +2286,14 @@ namespace detail {
             // to the left for potential circle events.
             if (it_first != beach_line_.begin()) {
                 it_first->second.deactivate_circle_event();
-                it_first--;
+                --it_first;
                 const site_event_type &site_l1 = it_first->first.left_site();
                 activate_circle_event(site_l1, site1, site3, it_last);
             }
 
             // Check the new triplet formed by the neighboring arcs
             // to the right for potential circle events.
-            it_last++;
+            ++it_last;
             if (it_last != beach_line_.end()) {
                 it_last->second.deactivate_circle_event();
                 const site_event_type &site_r1 = it_last->first.right_site();
@@ -2293,8 +2428,8 @@ namespace detail {
         void operator=(const voronoi_builder&);
     };
 
+} // detail
 } // sweepline
 } // boost
-} // detail
 
 #endif

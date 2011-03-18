@@ -600,8 +600,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(segment_site_test8, T, test_types) {
 BOOST_AUTO_TEST_CASE_TEMPLATE(segment_grid_test, T, test_types) {
     voronoi_output<T> test_output_small, test_output_large;
     std::vector< std::pair< point_2d<T>, point_2d<T> > > segm_vec_small, segm_vec_large;
-    int grid_size[4] = {10, 33, 100, 333};
-    int max_value[4] = {100, 330, 1000, 3330};
+    int grid_size[] = {10, 33, 100, 333};
+    int max_value[] = {100, 330, 1000, 3330};
     int array_length = sizeof(grid_size) / sizeof(int);
     for (int k = 0; k < array_length; k++) {
         int cur_sz = grid_size[k];
@@ -637,85 +637,85 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(segment_grid_test, T, test_types) {
 }
 #endif
 
-#ifdef NDEBUG
-BOOST_AUTO_TEST_CASE_TEMPLATE(segment_random_test1, T, test_types) {
-    srand(static_cast<unsigned int>(time(NULL)));
-    voronoi_output<T> test_output;
-    std::vector< point_2d<T> > point_vec;
-    std::vector< std::pair< point_2d<T>, point_2d<T> > > segm_vec;
-    int num_runs = 100000;
-    int num_segments = 3;
-    point_vec.push_back(make_point_2d<T>(-100, -100));
-    point_vec.push_back(make_point_2d<T>(-100, 100));
-    point_vec.push_back(make_point_2d<T>(100, -100));
-    point_vec.push_back(make_point_2d<T>(100, 100));
-    for (int i = 0; i < num_runs; i++) {
-        for (int j = 0; j < num_segments; j++) {
-            T x1 = 0, y1 = 0, x2 = 0, y2 = 0;
-            while (x1 == x2 && y1 == y2) {
-                x1 = (rand() % 100) - 50;
-                y1 = (rand() % 100) - 50;
-                x2 = (rand() % 100) - 50;
-                y2 = (rand() % 100) - 50;
-            }
-            point_2d<T> point1(x1, y1);
-            point_2d<T> point2(x2, y2);
-            segm_vec.push_back(std::make_pair(point1, point2));
-        }
-        remove_intersections(segm_vec);
-        build_voronoi(point_vec, segm_vec, test_output);
-        VERIFY_VORONOI_OUTPUT(test_output, NO_HALF_EDGE_INTERSECTIONS);
-        segm_vec.clear();
-    }
-}
-#endif
+//#ifdef NDEBUG
+//BOOST_AUTO_TEST_CASE_TEMPLATE(segment_random_test1, T, test_types) {
+//    srand(static_cast<unsigned int>(time(NULL)));
+//    voronoi_output<T> test_output;
+//    std::vector< point_2d<T> > point_vec;
+//    std::vector< std::pair< point_2d<T>, point_2d<T> > > segm_vec;
+//    int num_runs = 10000;
+//    int num_segments = 5;
+//    point_vec.push_back(make_point_2d<T>(-100, -100));
+//    point_vec.push_back(make_point_2d<T>(-100, 100));
+//    point_vec.push_back(make_point_2d<T>(100, -100));
+//    point_vec.push_back(make_point_2d<T>(100, 100));
+//    for (int i = 0; i < num_runs; i++) {
+//        for (int j = 0; j < num_segments; j++) {
+//            T x1 = 0, y1 = 0, x2 = 0, y2 = 0;
+//            while (x1 == x2 && y1 == y2) {
+//                x1 = (rand() % 100) - 50;
+//                y1 = (rand() % 100) - 50;
+//                x2 = (rand() % 100) - 50;
+//                y2 = (rand() % 100) - 50;
+//            }
+//            point_2d<T> point1(x1, y1);
+//            point_2d<T> point2(x2, y2);
+//            segm_vec.push_back(std::make_pair(point1, point2));
+//        }
+//        remove_intersections(segm_vec);
+//        build_voronoi(point_vec, segm_vec, test_output);
+//        VERIFY_VORONOI_OUTPUT(test_output, NO_HALF_EDGE_INTERSECTIONS);
+//        segm_vec.clear();
+//    }
+//}
+//#endif
 
-#ifdef NDEBUG
-BOOST_AUTO_TEST_CASE_TEMPLATE(segment_random_test2, T, test_types) {
-    srand(static_cast<unsigned int>(time(NULL)));
-    voronoi_output<T> test_output_small, test_output_large;
-    std::vector< std::pair< point_2d<T>, point_2d<T> > > segm_vec;
-    int num_segments[] = {10, 100, 1000, 10000};
-    int num_runs[] = {1000, 100, 10, 1};
-    int mod_koef1[] = {100, 1000, 10000, 100000};
-    int mod_koef2[] = {100, 200, 300, 400};
-    int max_value[] = {100, 600, 5150, 50200};
-    int array_length = sizeof(num_segments) / sizeof(int);
-    for (int k = 3; k < array_length; k++) {
-        int koef = std::numeric_limits<int>::max() / max_value[k];
-        for (int i = 0; i < num_runs[k]; i++) {
-            for (int j = 0; j < num_segments[k]; j++) {
-                T x1 = (rand() % (mod_koef1[k] / 100)) - mod_koef1[k] / 2;
-                T y1 = (rand() % (mod_koef1[k] / 100)) - mod_koef1[k] / 2;
-                T dx = 0, dy = 0;
-                while (dx == 0 && dy == 0) {
-                    dx = (rand() % mod_koef2[k]) - mod_koef2[k] / 2;
-                    dy = (rand() % mod_koef2[k]) - mod_koef2[k] / 2;
-                }
-                T x2 = x1 + dx;
-                T y2 = y1 + dy;
-                point_2d<T> point1_small(x1, y1);
-                point_2d<T> point2_small(x2, y2);
-                segm_vec.push_back(std::make_pair(point1_small, point2_small));
-            }
-            remove_intersections(segm_vec);
-            build_voronoi(segm_vec, test_output_small);
-            for (size_t j = 0; j < segm_vec.size(); j++) {
-                segm_vec[j].first.x(segm_vec[j].first.x() * koef);
-                segm_vec[j].first.y(segm_vec[j].first.y() * koef);
-                segm_vec[j].second.x(segm_vec[j].second.x() * koef);
-                segm_vec[j].second.y(segm_vec[j].second.y() * koef);
-            }
-            build_voronoi(segm_vec, test_output_large);
-            VERIFY_VORONOI_OUTPUT(test_output_small, NO_HALF_EDGE_INTERSECTIONS);
-            BOOST_CHECK_EQUAL(test_output_small.num_cell_records(),
-                              test_output_large.num_cell_records());
-            BOOST_CHECK_EQUAL(test_output_small.num_vertex_records(),
-                              test_output_large.num_vertex_records());
-            BOOST_CHECK_EQUAL(test_output_small.num_edge_records(),
-                              test_output_large.num_edge_records());
-            segm_vec.clear();
-        }
-    }
-}
-#endif
+//#ifdef NDEBUG
+//BOOST_AUTO_TEST_CASE_TEMPLATE(segment_random_test2, T, test_types) {
+//    srand(static_cast<unsigned int>(time(NULL)));
+//    voronoi_output<T> test_output_small, test_output_large;
+//    std::vector< std::pair< point_2d<T>, point_2d<T> > > segm_vec;
+//    int num_segments[] = {10, 100, 1000, 10000};
+//    int num_runs[] = {1000, 100, 10, 1};
+//    int mod_koef1[] = {100, 1000, 10000, 100000};
+//    int mod_koef2[] = {100, 200, 300, 400};
+//    int max_value[] = {100, 600, 5150, 50200};
+//    int array_length = sizeof(num_segments) / sizeof(int);
+//    for (int k = 0; k < 4; k++) {
+//        int koef = std::numeric_limits<int>::max() / max_value[k];
+//        for (int i = 0; i < num_runs[k]; i++) {
+//            for (int j = 0; j < num_segments[k]; j++) {
+//                T x1 = (rand() % (mod_koef1[k] / 100)) - mod_koef1[k] / 2;
+//                T y1 = (rand() % (mod_koef1[k] / 100)) - mod_koef1[k] / 2;
+//                T dx = 0, dy = 0;
+//                while (dx == 0 && dy == 0) {
+//                    dx = (rand() % mod_koef2[k]) - mod_koef2[k] / 2;
+//                    dy = (rand() % mod_koef2[k]) - mod_koef2[k] / 2;
+//                }
+//                T x2 = x1 + dx;
+//                T y2 = y1 + dy;
+//                point_2d<T> point1_small(x1, y1);
+//                point_2d<T> point2_small(x2, y2);
+//                segm_vec.push_back(std::make_pair(point1_small, point2_small));
+//            }
+//            remove_intersections(segm_vec);
+//            build_voronoi(segm_vec, test_output_small);
+//            for (size_t j = 0; j < segm_vec.size(); j++) {
+//                segm_vec[j].first.x(segm_vec[j].first.x() * koef);
+//                segm_vec[j].first.y(segm_vec[j].first.y() * koef);
+//                segm_vec[j].second.x(segm_vec[j].second.x() * koef);
+//                segm_vec[j].second.y(segm_vec[j].second.y() * koef);
+//            }
+//            build_voronoi(segm_vec, test_output_large);
+//            VERIFY_VORONOI_OUTPUT(test_output_large, NO_HALF_EDGE_INTERSECTIONS);
+//            BOOST_CHECK_EQUAL(test_output_small.num_cell_records(),
+//                              test_output_large.num_cell_records());
+//            BOOST_CHECK_EQUAL(test_output_small.num_vertex_records(),
+//                              test_output_large.num_vertex_records());
+//            BOOST_CHECK_EQUAL(test_output_small.num_edge_records(),
+//                              test_output_large.num_edge_records());
+//            segm_vec.clear();
+//        }
+//    }
+//}
+//#endif
