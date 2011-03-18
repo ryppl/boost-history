@@ -7,8 +7,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_PUT_DEQUE_CSV_DEQUE_ER_2010_HPP
-#define BOOST_ASSIGN_V2_PUT_DEQUE_CSV_DEQUE_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_VALUE_DEQUE_CSV_DEQUE_ER_2010_HPP
+#define BOOST_ASSIGN_V2_VALUE_DEQUE_CSV_DEQUE_ER_2010_HPP
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
 #include <boost/assign/v2/detail/pp/ignore.hpp>
 #include <boost/assign/v2/value/deque/deque.hpp>
@@ -21,7 +21,7 @@
 namespace boost{
 namespace assign{
 namespace v2{
-namespace put_aux{
+namespace value_aux{
 
     template<typename T>
     struct csv_deque_value : boost::decay<
@@ -36,25 +36,25 @@ namespace result_of{
     >{};
 
 }// result_of
-}// put_aux
+}// value_aux
 //[syntax_put_deque_csv_deque
 
     template<typename T>
     struct csv_deque_value/*<-*/
-        : put_aux::csv_deque_value<T>
+        : value_aux::csv_deque_value<T>
     {}/*->*/;
 
 namespace result_of{
 
     template<typename T>
     struct csv_deque/*<-*/
-        : put_aux::result_of::deque<T>
+        : value_aux::result_of::deque<T>
     {}/*->*/;
 
 }// result_of
 //<-
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
-namespace put_aux{
+namespace value_aux{
 
     template<typename T, typename R>
     void csv_deque_impl(R& r){}
@@ -77,9 +77,9 @@ namespace put_aux{
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
 //]
-}// put_aux
+}// value_aux
 
-using put_aux::csv_deque;
+using value_aux::csv_deque;
 
 #endif // BOOST_ASSIGN_V2_ENABLE_CPP0X
 
@@ -92,4 +92,4 @@ using put_aux::csv_deque;
 #endif
 
 
-#endif // BOOST_ASSIGN_V2_PUT_DEQUE_CSV_DEQUE_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_VALUE_DEQUE_CSV_DEQUE_ER_2010_HPP

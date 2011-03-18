@@ -7,21 +7,21 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_PUT_ADAPTER_FWD_ER_2010_HPP
-#define BOOST_ASSIGN_V2_PUT_ADAPTER_FWD_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_VALUE_ADAPTER_FWD_ER_2010_HPP
+#define BOOST_ASSIGN_V2_VALUE_ADAPTER_FWD_ER_2010_HPP
 
 namespace boost{
 namespace assign{
 namespace v2{
-namespace put_aux{
+namespace value_aux{
 
     template<typename C, typename F, typename Tag, typename D> 
     class adapter_crtp;
 
-}// put_aux
+}// value_aux
 }// v2
 }// assign
 }// boost
 
-#endif // BOOST_ASSIGN_V2_PUT_ADAPTER_FWD_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_VALUE_ADAPTER_FWD_ER_2010_HPP
 

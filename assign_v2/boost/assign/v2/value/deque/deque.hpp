@@ -7,8 +7,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_PUT_DEQUE_DEQUE_ER_2010_HPP
-#define BOOST_ASSIGN_V2_PUT_DEQUE_DEQUE_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_VALUE_DEQUE_DEQUE_ER_2010_HPP
+#define BOOST_ASSIGN_V2_VALUE_DEQUE_DEQUE_ER_2010_HPP
 #include <deque>
 #include <boost/assign/v2/value/adapter/crtp.hpp>
 #include <boost/assign/v2/value/adapter/modifier.hpp>
@@ -33,7 +33,7 @@ namespace boost{
 namespace assign{
 namespace v2{
 //[syntax_put_deque_deque
-namespace put_aux{
+namespace value_aux{
 
     template<typename T>
     struct /*<<Meta-function>>*/deque_impl{ typedef /*<-*/std::deque<T> BOOST_ASSIGN_V2_IGNORE(/*->*/unspecified /*<-*/)/*->*/type; };
@@ -52,7 +52,7 @@ namespace put_aux{
         typedef impl_ const cimpl_;
         typedef adapter_crtp<impl_, F, Tag, deque_adapter> put_crtp_;
 
-        typedef put_aux::adapter_modifier<Tag> modifier_;
+        typedef value_aux::adapter_modifier<Tag> modifier_;
 //->
         public:
 
@@ -161,9 +161,9 @@ namespace result_of{
 
 }// result_of
 //<-
-}// put_aux
+}// value_aux
 //->
-namespace put_aux{
+namespace value_aux{
 //<-
 
     template<typename T>
@@ -174,19 +174,19 @@ namespace put_aux{
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
     
 //<-
-}// put_aux
+}// value_aux
 //->
 namespace result_of{
 
     template<typename T>
     struct /*<<Meta-function>>*/deque/*<-*/ 
-        : put_aux::result_of::deque<T>
+        : value_aux::result_of::deque<T>
     {}/*->*/;
 
 }// result_of
 //<-
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
-namespace put_aux{
+namespace value_aux{
 //->
 
     template<typename T, typename...Args>
@@ -197,8 +197,8 @@ namespace put_aux{
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
 //]
-}// put_aux
-using put_aux::deque;
+}// value_aux
+using value_aux::deque;
 
 #endif // BOOST_ASSIGN_V2_ENABLE_CPP0X
 }// v2
@@ -209,4 +209,4 @@ using put_aux::deque;
 #include <boost/assign/v2/value/deque/cpp03/deque.hpp>
 #endif
 
-#endif // BOOST_ASSIGN_V2_PUT_DEQUE_DEQUE_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_VALUE_DEQUE_DEQUE_ER_2010_HPP

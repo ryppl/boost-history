@@ -7,8 +7,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_PUT_DEQUE_CPP03_CSV_DEQUE_ER_2010_HPP
-#define BOOST_ASSIGN_V2_PUT_DEQUE_CPP03_CSV_DEQUE_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_VALUE_DEQUE_CPP03_CSV_DEQUE_ER_2010_HPP
+#define BOOST_ASSIGN_V2_VALUE_DEQUE_CPP03_CSV_DEQUE_ER_2010_HPP
 #include <boost/assign/v2/detail/config/limit_csv_arity.hpp>
 #include <boost/preprocessor/arithmetic/inc.hpp>
 #include <boost/preprocessor/repetition.hpp>
@@ -16,7 +16,7 @@
 namespace boost{
 namespace assign{
 namespace v2{
-namespace put_aux{
+namespace value_aux{
 
 #define BOOST_ASSIGN_V2_MACRO1(z, i, data) ( BOOST_PP_CAT(_, i) )
 #define BOOST_ASSIGN_V2_MACRO2(z, N, data)\
@@ -37,12 +37,12 @@ BOOST_PP_REPEAT_FROM_TO(
 #undef BOOST_ASSIGN_V2_MACRO1
 #undef BOOST_ASSIGN_V2_MACRO2
 
-}// put_aux
+}// value_aux
 
-using put_aux::csv_deque;
+using value_aux::csv_deque;
 
 }// v2
 }// assign
 }// boost
 
-#endif // BOOST_ASSIGN_V2_PUT_DEQUE_CPP03_CSV_DEQUE_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_VALUE_DEQUE_CPP03_CSV_DEQUE_ER_2010_HPP

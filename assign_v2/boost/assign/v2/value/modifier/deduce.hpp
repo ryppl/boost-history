@@ -7,8 +7,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_PUT_MODIFIER_DEDUCE_ER_2010_HPP
-#define BOOST_ASSIGN_V2_PUT_MODIFIER_DEDUCE_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_VALUE_MODIFIER_DEDUCE_ER_2010_HPP
+#define BOOST_ASSIGN_V2_VALUE_MODIFIER_DEDUCE_ER_2010_HPP
 #include <boost/assign/v2/detail/pp/ignore.hpp>
 #include <boost/assign/v2/detail/traits/value_container/has_push.hpp>
 #include <boost/assign/v2/detail/traits/value_container/category.hpp>
@@ -29,10 +29,10 @@ namespace switch_tag{
     struct deduce_put{};
 }// switch_tag
 
-#ifdef BOOST_ASSIGN_V2_PUT_MODIFIER_DEDUCE_SWITCH_CASE
+#ifdef BOOST_ASSIGN_V2_VALUE_MODIFIER_DEDUCE_SWITCH_CASE
 #error
 #else
-#define BOOST_ASSIGN_V2_PUT_MODIFIER_DEDUCE_SWITCH_CASE(Tag, MetaF, Number)\
+#define BOOST_ASSIGN_V2_VALUE_MODIFIER_DEDUCE_SWITCH_CASE(Tag, MetaF, Number)\
 namespace switch_aux{\
     template<>\
     struct case_<switch_tag::deduce_put, Number> :\
@@ -45,34 +45,34 @@ namespace switch_aux{\
 #endif
 
 
-#ifdef BOOST_ASSIGN_V2_PUT_MODIFIER_DEDUCE_SWITCH_ASSOCIATIVE
+#ifdef BOOST_ASSIGN_V2_VALUE_MODIFIER_DEDUCE_SWITCH_ASSOCIATIVE
 #error
 #else
-#define BOOST_ASSIGN_V2_PUT_MODIFIER_DEDUCE_SWITCH_ASSOCIATIVE(CaseNumber)\
-BOOST_ASSIGN_V2_PUT_MODIFIER_DEDUCE_SWITCH_CASE(insert, value_container_aux::is_sorted, CaseNumber)\
+#define BOOST_ASSIGN_V2_VALUE_MODIFIER_DEDUCE_SWITCH_ASSOCIATIVE(CaseNumber)\
+BOOST_ASSIGN_V2_VALUE_MODIFIER_DEDUCE_SWITCH_CASE(insert, value_container_aux::is_sorted, CaseNumber)\
 /**/
 #endif
 
-#ifdef BOOST_ASSIGN_V2_PUT_MODIFIER_DEDUCE_SWITCH_ARRAY
+#ifdef BOOST_ASSIGN_V2_VALUE_MODIFIER_DEDUCE_SWITCH_ARRAY
 #error
 #else
-#define BOOST_ASSIGN_V2_PUT_MODIFIER_DEDUCE_SWITCH_ARRAY(CaseNumber)\
-BOOST_ASSIGN_V2_PUT_MODIFIER_DEDUCE_SWITCH_CASE(iterate<>, value_container_aux::is_array, CaseNumber)
+#define BOOST_ASSIGN_V2_VALUE_MODIFIER_DEDUCE_SWITCH_ARRAY(CaseNumber)\
+BOOST_ASSIGN_V2_VALUE_MODIFIER_DEDUCE_SWITCH_CASE(iterate<>, value_container_aux::is_array, CaseNumber)
 /**/
 #endif
 
-#ifdef BOOST_ASSIGN_V2_PUT_MODIFIER_DEDUCE_SWITCH_ADAPTER
+#ifdef BOOST_ASSIGN_V2_VALUE_MODIFIER_DEDUCE_SWITCH_ADAPTER
 #error
 #else
-#define BOOST_ASSIGN_V2_PUT_MODIFIER_DEDUCE_SWITCH_ADAPTER(CaseNumber)\
-BOOST_ASSIGN_V2_PUT_MODIFIER_DEDUCE_SWITCH_CASE(push, value_container_aux::has_push_deduced_value, CaseNumber)
+#define BOOST_ASSIGN_V2_VALUE_MODIFIER_DEDUCE_SWITCH_ADAPTER(CaseNumber)\
+BOOST_ASSIGN_V2_VALUE_MODIFIER_DEDUCE_SWITCH_CASE(push, value_container_aux::has_push_deduced_value, CaseNumber)
 /**/
 #endif
 
-#ifdef BOOST_ASSIGN_V2_PUT_MODIFIER_DEDUCE_SWITCH_DEFAULT
+#ifdef BOOST_ASSIGN_V2_VALUE_MODIFIER_DEDUCE_SWITCH_DEFAULT
 #error
 #else
-#define BOOST_ASSIGN_V2_PUT_MODIFIER_DEDUCE_SWITCH_DEFAULT(CaseNumber)\
+#define BOOST_ASSIGN_V2_VALUE_MODIFIER_DEDUCE_SWITCH_DEFAULT(CaseNumber)\
 namespace switch_aux{\
     template<>\
     struct case_<switch_tag::deduce_put, CaseNumber> :\
@@ -83,41 +83,41 @@ namespace switch_aux{\
 #endif
 
 //[example_put_modifier_deduce_switch
-#ifdef BOOST_ASSIGN_V2_PUT_MODIFIER_DEDUCE_SWITCH
+#ifdef BOOST_ASSIGN_V2_VALUE_MODIFIER_DEDUCE_SWITCH
 #warning
 #else
-BOOST_ASSIGN_V2_PUT_MODIFIER_DEDUCE_SWITCH_ASSOCIATIVE(0)
-BOOST_ASSIGN_V2_PUT_MODIFIER_DEDUCE_SWITCH_ARRAY(1)
-BOOST_ASSIGN_V2_PUT_MODIFIER_DEDUCE_SWITCH_ADAPTER(2)
-BOOST_ASSIGN_V2_PUT_MODIFIER_DEDUCE_SWITCH_DEFAULT(3)
-#define BOOST_ASSIGN_V2_PUT_MODIFIER_DEDUCE_SWITCH
+BOOST_ASSIGN_V2_VALUE_MODIFIER_DEDUCE_SWITCH_ASSOCIATIVE(0)
+BOOST_ASSIGN_V2_VALUE_MODIFIER_DEDUCE_SWITCH_ARRAY(1)
+BOOST_ASSIGN_V2_VALUE_MODIFIER_DEDUCE_SWITCH_ADAPTER(2)
+BOOST_ASSIGN_V2_VALUE_MODIFIER_DEDUCE_SWITCH_DEFAULT(3)
+#define BOOST_ASSIGN_V2_VALUE_MODIFIER_DEDUCE_SWITCH
 //]
 #endif
 
 //[syntax_put_modifier_deduce
-namespace put_aux{
+namespace value_aux{
 
     template<typename C>
     struct /*<<Meta-function returning a modifier-tag>>*/deduce_modifier_tag/*<-*/
         : switch_aux::result< switch_tag::deduce_put, C>
     {}/*->*/;
 
-}// put_aux
+}// value_aux
 //]
 
-namespace put_aux{
+namespace value_aux{
 
     // For testing purposes
     template<typename C, typename X>
     void check_deduce()
     {
-        typedef typename put_aux::deduce_modifier_tag<C>::type found_;
+        typedef typename value_aux::deduce_modifier_tag<C>::type found_;
         BOOST_MPL_ASSERT(( boost::is_same<found_, X> ));
     }
 
-}// put_aux
+}// value_aux
 }// v2
 }// assign
 }// boost
 
-#endif // BOOST_ASSIGN_V2_PUT_MODIFIER_DEDUCE_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_VALUE_MODIFIER_DEDUCE_ER_2010_HPP

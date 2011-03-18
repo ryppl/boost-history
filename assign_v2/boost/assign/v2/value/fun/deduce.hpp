@@ -7,8 +7,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_PUT_FUN_DEDUCE_ER_2010_HPP
-#define BOOST_ASSIGN_V2_PUT_FUN_DEDUCE_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_VALUE_FUN_DEDUCE_ER_2010_HPP
+#define BOOST_ASSIGN_V2_VALUE_FUN_DEDUCE_ER_2010_HPP
 #include <boost/assign/v2/detail/traits/ptr_container/to_value_container.hpp>
 #include <boost/assign/v2/detail/traits/ptr_container/meta.hpp>
 #include <boost/assign/v2/detail/functor/constructor.hpp>
@@ -22,7 +22,7 @@ namespace boost{
 namespace assign{
 namespace v2{
 //[syntax_put_fun_deduce
-namespace put_aux{
+namespace value_aux{
 
     template<typename C>
     struct container_value{ typedef typename C::value_type type; };
@@ -53,10 +53,10 @@ namespace put_aux{
     {}/*->*/;
 
 
-}// put_aux
+}// value_aux
 //]
 }// v2
 }// assign
 }// boost
 
-#endif // BOOST_ASSIGN_V2_PUT_FUN_DEDUCE_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_VALUE_FUN_DEDUCE_ER_2010_HPP

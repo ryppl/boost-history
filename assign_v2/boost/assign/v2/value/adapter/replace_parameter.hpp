@@ -7,8 +7,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_PUT_ADAPTER_REPLACE_PARAMETER_ER_2010_HPP
-#define BOOST_ASSIGN_V2_PUT_ADAPTER_REPLACE_PARAMETER_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_VALUE_ADAPTER_REPLACE_PARAMETER_ER_2010_HPP
+#define BOOST_ASSIGN_V2_VALUE_ADAPTER_REPLACE_PARAMETER_ER_2010_HPP
 #include <boost/assign/v2/detail/pp/ignore.hpp>
 #include <boost/mpl/apply.hpp>
 
@@ -16,7 +16,7 @@ namespace boost{
 namespace assign{
 namespace v2{
 //[syntax_put_adapter_replace_parameter
-namespace put_aux{
+namespace value_aux{
                 
     template<typename /*<<Inherits crtp\<\> >>*/D> 
     struct /*<<Meta-function class to be specialized on D>>*/replace_fun{
@@ -30,10 +30,10 @@ namespace put_aux{
         struct /*<<Transforms D by replacing Tag D::modifier_tag with Tag>>*/ apply{};
     };
     
-}// put_aux
+}// value_aux
 //]
 }// v2
 }// assign
 }// boost
     
-#endif // BOOST_ASSIGN_V2_PUT_ADAPTER_REPLACE_PARAMETER_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_VALUE_ADAPTER_REPLACE_PARAMETER_ER_2010_HPP

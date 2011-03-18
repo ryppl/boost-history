@@ -7,8 +7,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_PUT_MODIFIER_LOOKUP_ER_2010_HPP
-#define BOOST_ASSIGN_V2_PUT_MODIFIER_LOOKUP_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_VALUE_MODIFIER_LOOKUP_ER_2010_HPP
+#define BOOST_ASSIGN_V2_VALUE_MODIFIER_LOOKUP_ER_2010_HPP
 #include <boost/assign/v2/detail/keyword/ignore.hpp>
 #include <boost/assign/v2/detail/pp/ignore.hpp>
 #include <boost/assign/v2/value/adapter/modifier.hpp>
@@ -23,7 +23,7 @@ namespace modifier_tag{
     template<typename Arg> struct lookup; 
 
 }// modifier_tag
-namespace put_aux{
+namespace value_aux{
                 
     template<typename Arg>
     class adapter_modifier<modifier_tag::lookup<Arg> >
@@ -63,15 +63,15 @@ namespace put_aux{
         ptr_ ptr;
     };
 
-}// put_aux
+}// value_aux
 }// v2
 }// assign
 }// boost
 
 #include <boost/assign/v2/value/modifier/modulo.hpp>
-BOOST_ASSIGN_V2_PUT_MODIFIER_MODULO_KEYWORD(lookup)
+BOOST_ASSIGN_V2_VALUE_MODIFIER_MODULO_KEYWORD(lookup)
 #define BOOST_ASSIGN_V2_TAG modifier_tag::lookup<Arg>
-BOOST_ASSIGN_V2_PUT_MODIFIER_MODULO_META_MODIFIER_TAG(lookup, BOOST_ASSIGN_V2_TAG)
+BOOST_ASSIGN_V2_VALUE_MODIFIER_MODULO_META_MODIFIER_TAG(lookup, BOOST_ASSIGN_V2_TAG)
 #undef BOOST_ASSIGN_V2_TAG
 
-#endif // BOOST_ASSIGN_V2_PUT_MODIFIER_LOOKUP_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_VALUE_MODIFIER_LOOKUP_ER_2010_HPP

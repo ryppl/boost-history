@@ -7,8 +7,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_PUT_ADAPTER_CRTP_ER_2010_HPP
-#define BOOST_ASSIGN_V2_PUT_ADAPTER_CRTP_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_VALUE_ADAPTER_CRTP_ER_2010_HPP
+#define BOOST_ASSIGN_V2_VALUE_ADAPTER_CRTP_ER_2010_HPP
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
 #include <boost/assign/v2/detail/pp/forward.hpp>
 #include <boost/assign/v2/detail/pp/ignore.hpp>
@@ -36,7 +36,7 @@
 namespace boost{
 namespace assign{
 namespace v2{
-namespace put_aux{
+namespace value_aux{
 
     template<typename F>
     struct fun_holder{
@@ -54,7 +54,7 @@ namespace put_aux{
     struct modifier_holder{
 
         typedef Tag modifier_tag;
-        typedef put_aux::adapter_modifier<Tag> modifier_type;
+        typedef value_aux::adapter_modifier<Tag> modifier_type;
 
         modifier_holder(){}
         modifier_holder(modifier_type const& m) : modifier( m ){}
@@ -98,9 +98,9 @@ namespace put_aux{
         D const& d_;
 
     };
-}//put_aux
+}//value_aux
 //[syntax_put_adapter_crtp
-namespace put_aux{
+namespace value_aux{
 
     template<typename C, typename D>
     struct ConceptAdapter1{
@@ -119,7 +119,7 @@ namespace put_aux{
     template<typename C, typename F, typename Tag, typename D>
     struct ConceptAdapter2 : ConceptAdapter1<C, D>{
 
-        typedef put_aux::adapter_modifier<Tag> modifier_;
+        typedef value_aux::adapter_modifier<Tag> modifier_;
 
         BOOST_CONCEPT_USAGE(ConceptAdapter2)
         {
@@ -259,7 +259,7 @@ BOOST_PP_REPEAT_FROM_TO(
         result_type modify(T&& t)const
         {
             check_modifier( t );
-            /*<< Instance of put_aux::adapter_modifier<Tag> >>*/this->modifier.impl(
+            /*<< Instance of value_aux::adapter_modifier<Tag> >>*/this->modifier.impl(
                 /*<< Reference to C >>*/this->derived().container(),
                 std::forward<T>( t )
             );
@@ -288,10 +288,10 @@ BOOST_PP_REPEAT_FROM_TO(
 
     };
 
-}// put_aux
+}// value_aux
 //]
 }// v2
 }// assign
 }// boost
 
-#endif // BOOST_ASSIGN_V2_PUT_ADAPTER_CRTP_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_VALUE_ADAPTER_CRTP_ER_2010_HPP

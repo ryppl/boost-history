@@ -7,8 +7,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_PUT_FUN_MODULO_ER_2010_HPP
-#define BOOST_ASSIGN_V2_PUT_FUN_MODULO_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_VALUE_FUN_MODULO_ER_2010_HPP
+#define BOOST_ASSIGN_V2_VALUE_FUN_MODULO_ER_2010_HPP
 #include <boost/assign/v2/detail/pp/ignore.hpp>
 #include <boost/assign/v2/detail/keyword/ignore.hpp>
 #include <boost/assign/v2/value/adapter/fwd.hpp>
@@ -18,13 +18,13 @@
 namespace boost{
 namespace assign{
 namespace v2{
-namespace put_aux{
+namespace value_aux{
 namespace result_of{
 
     template<typename D>
     struct modulo_fun{
 
-        typedef put_aux::replace_fun<D> meta_;
+        typedef value_aux::replace_fun<D> meta_;
 
         template<typename F>
         struct apply : ::boost::mpl::apply1<meta_, F>{};
@@ -66,16 +66,16 @@ namespace result_of{
 
     };
 
-}// put_aux
+}// value_aux
 namespace{
-    const put_aux::keyword_fun _fun = put_aux::keyword_fun();
+    const value_aux::keyword_fun _fun = value_aux::keyword_fun();
 }
 //[syntax_put_fun_modulo
 namespace result_of{
 
     template<typename D>
     struct modulo_fun/*<-*/
-        : put_aux::result_of::modulo_fun<D>
+        : value_aux::result_of::modulo_fun<D>
     {}/*->*/;
 
 }// result_of
@@ -88,11 +88,11 @@ namespace result_of{
 
 #include <boost/preprocessor/cat.hpp>
 
-#define BOOST_ASSIGN_V2_PUT_MODULO_FUN_GENERATE(NAME, FUN)\
+#define BOOST_ASSIGN_V2_VALUE_MODULO_FUN_GENERATE(NAME, FUN)\
 namespace boost{\
 namespace assign{\
 namespace v2{\
-namespace put_aux{\
+namespace value_aux{\
 \
     template<typename T>\
     modulo_fun< FUN > NAME()\
@@ -101,21 +101,21 @@ namespace put_aux{\
     }\
 \
 }\
-using put_aux::NAME;\
+using value_aux::NAME;\
 }\
 }\
 }\
 /**/
 
 #include <boost/assign/v2/detail/functor/constructor.hpp>
-BOOST_ASSIGN_V2_PUT_MODULO_FUN_GENERATE(constructor, v2::functor_aux::constructor<T>)
+BOOST_ASSIGN_V2_VALUE_MODULO_FUN_GENERATE(constructor, v2::functor_aux::constructor<T>)
 
 #include <boost/assign/v2/detail/functor/new.hpp>
-BOOST_ASSIGN_V2_PUT_MODULO_FUN_GENERATE(new_ptr, v2::functor_aux::new_<T>)
+BOOST_ASSIGN_V2_VALUE_MODULO_FUN_GENERATE(new_ptr, v2::functor_aux::new_<T>)
 
 #include <boost/typeof/typeof.hpp>
 #include <boost/type_traits/add_const.hpp>
-#define BOOST_ASSIGN_V2_PUT_MODULO_FUN_KEYWORD(NAME, EXPR)\
+#define BOOST_ASSIGN_V2_VALUE_MODULO_FUN_KEYWORD(NAME, EXPR)\
 namespace boost{\
 namespace assign{\
 namespace v2{\
@@ -129,6 +129,6 @@ namespace{\
 }\
 
 #include <boost/lambda/lambda.hpp>
-BOOST_ASSIGN_V2_PUT_MODULO_FUN_KEYWORD(identity, ::boost::lambda::_1)
+BOOST_ASSIGN_V2_VALUE_MODULO_FUN_KEYWORD(identity, ::boost::lambda::_1)
 
-#endif // BOOST_ASSIGN_V2_PUT_FUN_MODULO_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_VALUE_FUN_MODULO_ER_2010_HPP

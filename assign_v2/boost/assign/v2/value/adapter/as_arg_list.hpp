@@ -7,8 +7,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_PUT_ADAPTER_AS_ARG_LIST_ER_2010_HPP
-#define BOOST_ASSIGN_V2_PUT_ADAPTER_AS_ARG_LIST_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_VALUE_ADAPTER_AS_ARG_LIST_ER_2010_HPP
+#define BOOST_ASSIGN_V2_VALUE_ADAPTER_AS_ARG_LIST_ER_2010_HPP
 #include <boost/assign/v2/detail/pp/ignore.hpp>
 #include <boost/range/iterator.hpp>
 #include <boost/range/iterator_range.hpp>
@@ -16,7 +16,7 @@
 namespace boost{
 namespace assign{
 namespace v2{
-namespace put_aux{    
+namespace value_aux{    
 
     template<typename R>
     class as_arg_list_adapter
@@ -69,13 +69,13 @@ namespace result_of{
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
 //]
-}// put_aux
-    using put_aux::as_arg_list;
+}// value_aux
+    using value_aux::as_arg_list;
 namespace result_of{
 
     template<typename R>
     struct as_arg_list
-        : put_aux::result_of::as_arg_list<R>
+        : value_aux::result_of::as_arg_list<R>
     {};
 
 }// result_of
@@ -83,4 +83,4 @@ namespace result_of{
 }// assign
 }// boost
 
-#endif // BOOST_ASSIGN_V2_PUT_ADAPTER_AS_ARG_LIST_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_VALUE_ADAPTER_AS_ARG_LIST_ER_2010_HPP

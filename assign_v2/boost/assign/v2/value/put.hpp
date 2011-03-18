@@ -7,8 +7,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_PUT_PUT_ER_2010_HPP
-#define BOOST_ASSIGN_V2_PUT_PUT_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_VALUE_PUT_ER_2010_HPP
+#define BOOST_ASSIGN_V2_VALUE_PUT_ER_2010_HPP
 #include <boost/assign/v2/value/adapter/crtp.hpp>
 #include <boost/assign/v2/value/adapter/modifier.hpp>
 #include <boost/assign/v2/value/adapter/replace_parameter.hpp>
@@ -21,17 +21,17 @@ namespace boost{
 namespace assign{
 namespace v2{
 //[syntax_put_put
-namespace put_aux{
+namespace value_aux{
 
     template<typename C, typename F, typename Tag>
     class container_adapter
 //<-
         : protected ref::wrapper< ref::assign_tag::copy, C >
-        , public put_aux::adapter_crtp< C, F, Tag, container_adapter<C, F, Tag> >
+        , public value_aux::adapter_crtp< C, F, Tag, container_adapter<C, F, Tag> >
 //->
     {
 //<-
-        typedef put_aux::adapter_crtp< C, F, Tag, container_adapter > super2_t;
+        typedef value_aux::adapter_crtp< C, F, Tag, container_adapter > super2_t;
 //->
         public:
 
@@ -39,7 +39,7 @@ namespace put_aux{
 //<-
         protected:
 
-        typedef put_aux::adapter_modifier<Tag> modifier_;
+        typedef value_aux::adapter_modifier<Tag> modifier_;
         typedef ref::assign_tag::copy assign_tag_;
         typedef ref::wrapper<assign_tag_,C> super1_t;
 //->
@@ -63,25 +63,25 @@ namespace put_aux{
     };
 
     template<typename C, typename F, typename Tag>
-    struct /*<<Meta-function class>>*/replace_fun< put_aux::container_adapter<C, F, Tag> >{/*<-*/
+    struct /*<<Meta-function class>>*/replace_fun< value_aux::container_adapter<C, F, Tag> >{/*<-*/
         template<typename F1>
-        struct apply{ typedef put_aux::container_adapter<C, F1, Tag> type; };
+        struct apply{ typedef value_aux::container_adapter<C, F1, Tag> type; };
     /*->*/};
 
     template<typename C, typename F, typename Tag>
-    struct /*<<Meta-function class>>*/replace_modifier_tag< put_aux::container_adapter<C, F, Tag> >{/*<-*/
+    struct /*<<Meta-function class>>*/replace_modifier_tag< value_aux::container_adapter<C, F, Tag> >{/*<-*/
         template<typename Tag1>
-        struct apply{ typedef put_aux::container_adapter<C, F, Tag1> type; };
+        struct apply{ typedef value_aux::container_adapter<C, F, Tag1> type; };
     /*->*/};
 
-}// put_aux
+}// value_aux
 namespace result_of{
 
     template<typename C>
     struct /*<<Meta-function>>*/put{/*<-*/
-        typedef typename put_aux::deduce_fun<C>::type f_;
-        typedef typename put_aux::deduce_modifier_tag<C>::type modifier_tag_;
-        typedef put_aux::container_adapter<C, f_, modifier_tag_> type;
+        typedef typename value_aux::deduce_fun<C>::type f_;
+        typedef typename value_aux::deduce_modifier_tag<C>::type modifier_tag_;
+        typedef value_aux::container_adapter<C, f_, modifier_tag_> type;
     }/*->*/;
 
 }// result_of
@@ -99,4 +99,4 @@ namespace result_of{
 }// assign
 }// boost
 
-#endif // BOOST_ASSIGN_V2_PUT_PUT_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_VALUE_PUT_ER_2010_HPP

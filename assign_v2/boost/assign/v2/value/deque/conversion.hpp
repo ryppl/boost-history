@@ -7,15 +7,15 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_PUT_DEQUE_CONVERSION_ER_2010_HPP
-#define BOOST_ASSIGN_V2_PUT_DEQUE_CONVERSION_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_VALUE_DEQUE_CONVERSION_ER_2010_HPP
+#define BOOST_ASSIGN_V2_VALUE_DEQUE_CONVERSION_ER_2010_HPP
 #include <boost/assign/v2/value/deque/fwd.hpp>
 #include <boost/assign/v2/utility/conversion/converter.hpp>
 
 namespace boost{
 namespace assign{
 namespace v2{
-namespace put_aux{
+namespace value_aux{
 
 #define BOOST_ASSIGN_V2_SEQ (T)(F)(Tag)
 #define BOOST_ASSIGN_V2_R deque_adapter<T, F, Tag>
@@ -23,9 +23,9 @@ BOOST_ASSIGN_V2_UTILITY_CONVERSION_CONVERTER_NAME_LOOKUP(BOOST_ASSIGN_V2_SEQ, BO
 #undef BOOST_ASSIGN_V2_SEQ
 #undef BOOST_ASSIGN_V2_R
 
-}// put_aux
+}// value_aux
 }// v2
 }// assign
 }// boost
 
-#endif // BOOST_ASSIGN_V2_PUT_DEQUE_CONVERSION_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_VALUE_DEQUE_CONVERSION_ER_2010_HPP

@@ -7,8 +7,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_PUT_MODIFIER_MODULO_ER_2010_HPP
-#define BOOST_ASSIGN_V2_PUT_MODIFIER_MODULO_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_VALUE_MODIFIER_MODULO_ER_2010_HPP
+#define BOOST_ASSIGN_V2_VALUE_MODIFIER_MODULO_ER_2010_HPP
 #include <boost/assign/v2/detail/keyword/ignore.hpp>
 #include <boost/assign/v2/detail/pp/ignore.hpp>
 #include <boost/assign/v2/value/adapter/fwd.hpp>
@@ -21,7 +21,7 @@ namespace boost{
 namespace assign{
 namespace v2{
 //[syntax_put_modifier_modulo
-namespace put_aux{
+namespace value_aux{
 
     template<typename /*<<A class of modifiers>>*/ Keyword, typename /*<<A part of the modifier's implementation>>*/Arg = keyword_aux::ignore>
     struct modulo_modifier
@@ -62,7 +62,7 @@ namespace result_of{
     struct modulo_modifier{
 
 //<-            
-        typedef put_aux::replace_modifier_tag<D> meta_;
+        typedef value_aux::replace_modifier_tag<D> meta_;
 //->
             
         template<typename Keyword, typename Arg>
@@ -71,7 +71,7 @@ namespace result_of{
             : ::boost::mpl::apply1<
                 meta_, 
                 typename ::boost::mpl::apply1<
-                    put_aux::meta_modifier_tag<Keyword, Arg>, 
+                    value_aux::meta_modifier_tag<Keyword, Arg>, 
                     D
                 >::type
             >
@@ -93,9 +93,9 @@ namespace result_of{
         modulo_modifier<Keyword, Arg> const& rhs
     )/*<-*/
     {
-        typedef put_aux::meta_modifier_tag<Keyword, Arg> meta_;
+        typedef value_aux::meta_modifier_tag<Keyword, Arg> meta_;
         typedef typename ::boost::mpl::apply1<meta_, D>::type modifier_tag;
-        typedef put_aux::adapter_modifier<modifier_tag> modifier_;
+        typedef value_aux::adapter_modifier<modifier_tag> modifier_;
     
         typedef typename ::boost::mpl::apply2<
             result_of::modulo_modifier<D>, 
@@ -109,13 +109,13 @@ namespace result_of{
         );
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
-}// put_aux
+}// value_aux
 //]
 namespace result_of{
 
     template<typename D>
     struct modulo_modifier 
-        : put_aux::result_of::modulo_modifier<D>
+        : value_aux::result_of::modulo_modifier<D>
     {};
 
 }// result_of
@@ -123,14 +123,14 @@ namespace result_of{
 }// assign
 }// boost
 
-#ifdef BOOST_ASSIGN_V2_PUT_MODIFIER_MODULO_META_MODIFIER_TAG
+#ifdef BOOST_ASSIGN_V2_VALUE_MODIFIER_MODULO_META_MODIFIER_TAG
 #error
 #else
-#define BOOST_ASSIGN_V2_PUT_MODIFIER_MODULO_META_MODIFIER_TAG(NAME, Result)\
+#define BOOST_ASSIGN_V2_VALUE_MODIFIER_MODULO_META_MODIFIER_TAG(NAME, Result)\
 namespace boost{\
 namespace assign{\
 namespace v2{\
-namespace put_aux{\
+namespace value_aux{\
 \
     template<typename Arg>\
     struct meta_modifier_tag<BOOST_PP_CAT(keyword_,NAME), Arg>\
@@ -146,22 +146,22 @@ namespace put_aux{\
 /**/
 #endif
 
-#ifdef BOOST_ASSIGN_V2_PUT_MODIFIER_MODULO_PARAM
+#ifdef BOOST_ASSIGN_V2_VALUE_MODIFIER_MODULO_PARAM
 #error
 #else
-#define BOOST_ASSIGN_V2_PUT_MODIFIER_MODULO_PARAM(NAME)\
-    put_aux::modulo_modifier<put_aux::BOOST_PP_CAT(keyword_,NAME)>\
+#define BOOST_ASSIGN_V2_VALUE_MODIFIER_MODULO_PARAM(NAME)\
+    value_aux::modulo_modifier<value_aux::BOOST_PP_CAT(keyword_,NAME)>\
 /**/
 #endif
 
-#ifdef BOOST_ASSIGN_V2_PUT_MODIFIER_MODULO_KEYWORD
+#ifdef BOOST_ASSIGN_V2_VALUE_MODIFIER_MODULO_KEYWORD
 #error
 #else
-#define BOOST_ASSIGN_V2_PUT_MODIFIER_MODULO_KEYWORD(NAME)\
+#define BOOST_ASSIGN_V2_VALUE_MODIFIER_MODULO_KEYWORD(NAME)\
 namespace boost{\
 namespace assign{\
 namespace v2{\
-namespace put_aux{\
+namespace value_aux{\
 \
     struct BOOST_PP_CAT(keyword_,NAME){\
 \
@@ -171,8 +171,8 @@ namespace put_aux{\
 \
 }\
 namespace {\
-    BOOST_ASSIGN_V2_PUT_MODIFIER_MODULO_PARAM(NAME) const BOOST_PP_CAT(_,NAME)\
-        = BOOST_ASSIGN_V2_PUT_MODIFIER_MODULO_PARAM(NAME)();\
+    BOOST_ASSIGN_V2_VALUE_MODIFIER_MODULO_PARAM(NAME) const BOOST_PP_CAT(_,NAME)\
+        = BOOST_ASSIGN_V2_VALUE_MODIFIER_MODULO_PARAM(NAME)();\
 }\
 }\
 }\
@@ -181,7 +181,7 @@ namespace {\
 #endif
 
 // The default
-BOOST_ASSIGN_V2_PUT_MODIFIER_MODULO_KEYWORD(standard_modifier)    
-BOOST_ASSIGN_V2_PUT_MODIFIER_MODULO_META_MODIFIER_TAG(standard_modifier, Arg)
+BOOST_ASSIGN_V2_VALUE_MODIFIER_MODULO_KEYWORD(standard_modifier)    
+BOOST_ASSIGN_V2_VALUE_MODIFIER_MODULO_META_MODIFIER_TAG(standard_modifier, Arg)
 
-#endif // BOOST_ASSIGN_V2_PUT_MODIFIER_MODULO_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_VALUE_MODIFIER_MODULO_ER_2010_HPP

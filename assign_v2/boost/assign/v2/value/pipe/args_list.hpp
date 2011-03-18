@@ -7,8 +7,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_PUT_PIPE_ARGS_LIST_ER_2010_HPP
-#define BOOST_ASSIGN_V2_PUT_PIPE_ARGS_LIST_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_VALUE_PIPE_ARGS_LIST_ER_2010_HPP
+#define BOOST_ASSIGN_V2_VALUE_PIPE_ARGS_LIST_ER_2010_HPP
 #include <boost/mpl/apply.hpp>
 #include <boost/mpl/int.hpp>
 #include <boost/mpl/size.hpp>
@@ -270,4 +270,4 @@ BOOST_PP_REPEAT_FROM_TO(
 }// assign
 }// boost
 
-#endif // BOOST_ASSIGN_V2_PUT_PIPE_ARGS_LIST_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_VALUE_PIPE_ARGS_LIST_ER_2010_HPP
