@@ -1,0 +1,245 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Getting Started</title>
+<link rel="stylesheet" href="../../../../../doc/src/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<link rel="home" href="../index.html" title="Boost.Local 0.1.1">
+<link rel="up" href="../index.html" title="Boost.Local 0.1.1">
+<link rel="prev" href="../index.html" title="Boost.Local 0.1.1">
+<link rel="next" href="Tutorial.html" title="Tutorial">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../index.html"><img src="../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="Tutorial.html"><img src="../../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="boost_local.Getting_Started"></a><a class="link" href="Getting_Started.html" title="Getting Started">Getting Started</a>
+</h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="Getting_Started.html#boost_local.Getting_Started.this_documentation">This
+      Documentation</a></span></dt>
+<dt><span class="section"><a href="Getting_Started.html#boost_local.Getting_Started.compilers_and_platforms">Compilers
+      and Platforms</a></span></dt>
+<dt><span class="section"><a href="Getting_Started.html#boost_local.Getting_Started.installation">Installation</a></span></dt>
+<dt><span class="section"><a href="Getting_Started.html#boost_local.Getting_Started.compile_time_configuration">Compile-Time
+      Configuration</a></span></dt>
+</dl></div>
+<p>
+      This section explains how to setup your system to use this library.
+    </p>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_local.Getting_Started.this_documentation"></a><a class="link" href="Getting_Started.html#boost_local.Getting_Started.this_documentation" title="This Documentation">This
+      Documentation</a>
+</h3></div></div></div>
+<p>
+        Programmers should be ready to use this library, at least at a basic level,
+        after reading the following sections of this documentation:
+      </p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+            The <a class="link" href="../index.html#boost_local.Introduction" title="Introduction">Introduction</a> section
+            provides an overview on the library and its features.
+          </li>
+<li class="listitem">
+            The <span class="underline">_Starting</span>_ section explains
+            how to read this documentation, how to install the library to work with
+            the supported compilers and platforms.
+          </li>
+<li class="listitem">
+            The <a class="link" href="Tutorial.html" title="Tutorial">Tutorial</a> section provides
+            a good explanation of basic usages of the library with extensive examples.
+          </li>
+</ul></div>
+<p>
+        The following sections could be consulted at a later point to gain a more
+        in-depth knowledge of the library features:
+      </p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+            The <span class="underline">_Advanced</span>_ section explains
+            advanced usages of the library.
+          </li>
+<li class="listitem">
+            The <a href="../reference.html" target="_top">Reference</a> section is the reference
+            manual of the library public API.
+          </li>
+<li class="listitem">
+            The <a class="link" href="Examples.html" title="Appendix: Examples">Examples</a> section lists
+            the source code of a few additional examples that use this library.
+          </li>
+<li class="listitem">
+            The <a class="link" href="Alternatives.html" title="Appendix: Alternatives">Alternatives</a> section
+            describes alternatives to this library to implement local functions.
+          </li>
+</ul></div>
+<p>
+        The following sections are for reference only:
+      </p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+            The <span class="underline">_Releases</span>_ section contains
+            short release notes.
+          </li>
+<li class="listitem">
+            The <a class="link" href="Bibliography.html" title="Bibliography">Bibliography</a> section
+            lists references that were consulted in the design and development of
+            this library.
+          </li>
+<li class="listitem">
+            The <a class="link" href="Acknowledgments.html" title="Acknowledgments">Acknowledgments</a>
+            section attempts to recognize all the people that contributes directly
+            or indirectly to the design and development of this library.
+          </li>
+</ul></div>
+<p>
+        Furthermore, some footnotes are marked by the word "<span class="bold"><strong>Rationale</strong></span>"
+        because they explain reasons behind decisions made during the design and
+        implementation of this library.
+      </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_local.Getting_Started.compilers_and_platforms"></a><a class="link" href="Getting_Started.html#boost_local.Getting_Started.compilers_and_platforms" title="Compilers and Platforms">Compilers
+      and Platforms</a>
+</h3></div></div></div>
+<p>
+        The implementation of this library uses preprocessor and template metaprogramming
+        (as supported by <a href="http://www.boost.org/doc/libs/release/libs/preprocessor/doc/index.html" target="_top">Boost.Preprocessor</a>
+        and <a href="http://www.boost.org/doc/libs/release/libs/mpl/doc/index.html" target="_top">Boost.MPL</a>),
+        templates with partial specializations and function pointers (to support
+        an interface similar to the one of <a href="http://www.boost.org/doc/libs/release/doc/html/function.html" target="_top">Boost.Function</a>).
+        As a consequence, this library is fairly demanding on compilers' compliance
+        with the ISO C++ standard. At present, this library has been successfully
+        compiled and tested on the following compilers and platforms:
+      </p>
+<div class="orderedlist"><ol class="orderedlist" type="1">
+<li class="listitem">
+            GCC 4.2.4 on Ubuntu Linux.
+          </li>
+<li class="listitem">
+            GCC 3.4.4 on Cygwin.
+          </li>
+<li class="listitem">
+            Miscrosoft Visual Studio 8.0 on Windows XP.
+          </li>
+</ol></div>
+<p>
+        This library has not yet been tested on any other compiler or platform.
+      </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_local.Getting_Started.installation"></a><a class="link" href="Getting_Started.html#boost_local.Getting_Started.installation" title="Installation">Installation</a>
+</h3></div></div></div>
+<p>
+        This library is composed of header files only. Therefore there is no pre-compiled
+        object file which needs to be installed. Programmers can simply instruct
+        the C++ compiler where to find the library header files (<code class="computeroutput"><span class="special">-</span><span class="identifier">I</span></code> option for GCC, <code class="computeroutput"><span class="special">/</span><span class="identifier">I</span></code> option for MSVC, etc) and they can start
+        compiling the code from the <a class="link" href="Examples.html" title="Appendix: Examples">Examples</a>
+        section, the code cut-and-pasted from the examples in this documentation,
+        and their own programs that use this library.
+      </p>
+<p>
+        This library implementation uses a number of <a href="http://www.boost.org/" target="_top">Boost</a>
+        libraries among which: <a href="http://www.boost.org/doc/libs/release/libs/preprocessor/doc/index.html" target="_top">Boost.Preprocessor</a>,
+        <a href="http://www.boost.org/doc/libs/release/libs/scope_exit/doc/html/index.html" target="_top">Boost.ScopeExit</a>,
+        <a href="http://www.boost.org/doc/libs/release/doc/html/typeof.html" target="_top">Boost.Typeof</a>,
+        <a href="http://www.boost.org/doc/libs/release/libs/type_traits/doc/html/index.html" target="_top">Boost.TypeTraits</a>,
+        and <a href="http://www.boost.org/doc/libs/release/libs/mpl/doc/index.html" target="_top">Boost.MPL</a>.
+        These <a href="http://www.boost.org/" target="_top">Boost</a> libraries must be
+        properly installed on your system in order for this library to work.
+      </p>
+<p>
+        The header files of this library are divided as follow:
+      </p>
+<pre class="programlisting"><code class="computeroutput"><a class="link" href="../reference.html#header.boost.local.function_hpp" title="Header &lt;boost/local/function.hpp&gt;">boost/local/function.hpp</a></code>        <span class="emphasis"><em>local functions</em></span>
+<code class="computeroutput"><a class="link" href="../reference.html#header.boost.local.block_hpp" title="Header &lt;boost/local/block.hpp&gt;">boost/local/block.hpp</a></code>           <span class="emphasis"><em>local blocks</em></span>
+<code class="computeroutput"><a class="link" href="../reference.html#header.boost.local.exit_hpp" title="Header &lt;boost/local/exit.hpp&gt;">boost/local/exit.hpp</a></code>            <span class="emphasis"><em>local exits</em></span>
+<code class="computeroutput"><a class="link" href="../reference.html#header.boost.local.typeof_hpp" title="Header &lt;boost/local/typeof.hpp&gt;">boost/local/typeof.hpp</a></code>          <span class="emphasis"><em>bound variable type deduction</em></span>
+<code class="computeroutput"><a class="link" href="../reference.html#header.boost.local.function_hpp" title="Header &lt;boost/local/function.hpp&gt;">boost/local/function.hpp</a></code>        <span class="emphasis"><em>local functors</em></span>
+<code class="computeroutput"><a class="link" href="../reference.html#header.boost.local.config_hpp" title="Header &lt;boost/local/config.hpp&gt;">boost/local/config.hpp</a></code>          <span class="emphasis"><em>configuration macros</em></span>
+</pre>
+<p>
+        The following symbols are part of the library private API, they are not documented,
+        and they should not be directly used by programmers: <sup>[<a name="id866442" href="#ftn.id866442" class="footnote">2</a>]</sup>
+      </p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+            Any symbol defined by files within the <code class="computeroutput"><span class="string">"boost/local/aux_/"</span></code>
+            directory (these header files should not be directly included by programmers).
+          </li>
+<li class="listitem">
+            Any symbol prefixed by <code class="computeroutput"><span class="identifier">BOOST_LOCAL_AUX</span></code>.
+          </li>
+<li class="listitem">
+            Any symbol within the <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">local</span><span class="special">::</span><span class="identifier">aux</span></code>
+            namespace.
+          </li>
+<li class="listitem">
+            Any symbol prefixed by <code class="computeroutput"><span class="identifier">boost_local_aux</span></code>
+            (regardless of its namespace).
+          </li>
+</ul></div>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_local.Getting_Started.compile_time_configuration"></a><a class="link" href="Getting_Started.html#boost_local.Getting_Started.compile_time_configuration" title="Compile-Time Configuration">Compile-Time
+      Configuration</a>
+</h3></div></div></div>
+<p>
+        Some of the library behaviour can be changed at compile-time by defining
+        special <span class="emphasis"><em>configuration macros</em></span>. If a configuration macro
+        is left undefined, the library will use an appropriate default value for
+        it.
+      </p>
+<p>
+        All configuration macros have names prefixed by <code class="computeroutput"><span class="identifier">BOOST_LOCAL_CONFIG</span></code>
+        (see <a href="../reference.html" target="_top">Reference</a> section). It is strongly
+        recommended not to change the library configuration macro definitions unless
+        strictly necessary.
+      </p>
+</div>
+<div class="footnotes">
+<br><hr width="100" align="left">
+<div class="footnote"><p><sup>[<a id="ftn.id866442" href="#id866442" class="para">2</a>] </sup>
+          <span class="bold"><strong>Rationale.</strong></span> This library concatenates symbols
+          specified by the programmers (e.g., the local function name) with other
+          symbols (e.g., special prefixes or preprocessor line numbers) to make internal
+          symbols with unique names to avoid name clashes. These symbols are separated
+          by the letter "<code class="computeroutput"><span class="identifier">X</span></code>"
+          when they are concatenated so they can be read more easily while debugging
+          the library. The underscore character "<code class="computeroutput"><span class="identifier">_</span></code>"
+          could not be used instead of the letter "<code class="computeroutput"><span class="identifier">X</span></code>"
+          because if the original symbols already contained a leading or trailing
+          underscore, the concatenation would result in a symbol with double underscores
+          "<code class="computeroutput"><span class="identifier">__</span></code>" which is
+          reserved by the C++ standard.
+        </p></div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2009 -2011 Lorenzo Caminiti<p>
+        Use, modification, and distribution is subject to the Boost Software License,
+        Version 1.0 (see accompanying file LICENSE_1_0.txt or a copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>).
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../index.html"><img src="../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="Tutorial.html"><img src="../../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

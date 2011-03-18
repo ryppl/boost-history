@@ -1,0 +1,57 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Macro BOOST_LOCAL_CONFIG_COMPLIANT</title>
+<link rel="stylesheet" href="../../../../doc/src/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<link rel="home" href="index.html" title="Boost.Local 0.1.1">
+<link rel="up" href="reference.html#header.boost.local.config_hpp" title="Header &lt;boost/local/config.hpp&gt;">
+<link rel="prev" href="BOOST_LOCAL_BLOCK_END.html" title="Macro BOOST_LOCAL_BLOCK_END">
+<link rel="next" href="BOOST_LOCAL_CONFIG_FUNCTION_ARITY_MAX.html" title="Macro BOOST_LOCAL_CONFIG_FUNCTION_ARITY_MAX">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../boost.png"></td>
+<td align="center"><a href="../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="BOOST_LOCAL_BLOCK_END.html"><img src="../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="reference.html#header.boost.local.config_hpp"><img src="../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="index.html"><img src="../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="BOOST_LOCAL_CONFIG_FUNCTION_ARITY_MAX.html"><img src="../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+<div class="refentry">
+<a name="BOOST_LOCAL_CONFIG_COMPLIANT"></a><div class="titlepage"></div>
+<div class="refnamediv">
+<h2><span class="refentrytitle">Macro BOOST_LOCAL_CONFIG_COMPLIANT</span></h2>
+<p>BOOST_LOCAL_CONFIG_COMPLIANT &#8212; Force to use ISO C++ standard features only. </p>
+</div>
+<h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
+<div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="comment">// In header: &lt;<a class="link" href="reference.html#header.boost.local.config_hpp" title="Header &lt;boost/local/config.hpp&gt;">boost/local/config.hpp</a>&gt;
+
+</span>BOOST_LOCAL_CONFIG_COMPLIANT</pre></div>
+<div class="refsect1">
+<a name="id911316"></a><h2>Description</h2>
+<p>If programmers leave this configuration macro undefined, its default value is to be left not defined.</p>
+<p>If this macro is defined, variadic macros and empty macro parameters are not used by this library. Using variadic macros and empty macro parameters allows this library to provide the <span class="emphasis"><em>variadic macro</em></span> and <span class="emphasis"><em>empty macro</em></span> syntaxes which some programmers might find more readable than the <span class="emphasis"><em>sequencing macro</em></span> syntax (see  <code class="computeroutput"><a class="link" href="BOOST_LOCAL_FUNCTION_PARAMS.html" title="Macro BOOST_LOCAL_FUNCTION_PARAMS">BOOST_LOCAL_FUNCTION_PARAMS</a></code>,  <code class="computeroutput"><a class="link" href="BOOST_LOCAL_BLOCK.html" title="Macro BOOST_LOCAL_BLOCK">BOOST_LOCAL_BLOCK</a></code>, and  <code class="computeroutput"><a class="link" href="BOOST_LOCAL_EXIT.html" title="Macro BOOST_LOCAL_EXIT">BOOST_LOCAL_EXIT</a></code>). If this configuration macro is defined then only the sequencing macro syntax is allowed (regardless of whether the compiler supports variadic and empty macros or not).</p>
+<p><span class="bold"><strong>Warning:</strong></span> The variadic and empty macro syntaxes are not supported by all C++ compilers so they should be used with care to avoid portability issues (and this configuration macro can be defined to disable them).</p>
+<p>Variadic macros, are supported by most recent compilers (like MSVC and GCC) and they were first introduced by the C99 standard but they are not part of the official ISO C++ standard. Empty macro parameters are also supported by the C99 standards but they are not supported by all modern compilers (for example, they are not supported by MSVC).</p>
+<p><span class="bold"><strong>See:</strong></span>  <a class="link" href="boost_local/Tutorial.html" title="Tutorial">Tutorial</a> section,  <a class="link" href="boost_local/Getting.html" title="Getting Started">Getting  Started</a> section. </p>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2009 -2011 Lorenzo Caminiti<p>
+        Use, modification, and distribution is subject to the Boost Software License,
+        Version 1.0 (see accompanying file LICENSE_1_0.txt or a copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>).
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="BOOST_LOCAL_BLOCK_END.html"><img src="../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="reference.html#header.boost.local.config_hpp"><img src="../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="index.html"><img src="../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="BOOST_LOCAL_CONFIG_FUNCTION_ARITY_MAX.html"><img src="../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>
