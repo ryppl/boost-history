@@ -1642,9 +1642,9 @@ namespace detail {
                                         const site_event<T> &site2,
                                         const site_event<T> &site3,
                                         circle_event<T> &c_event) {
-        // TODO(asydorchuk): Check if this one is required.
-		if (site1.index() == site2.index() || site2.index() == site3.index())
-            return false;
+		if (orientation_test(site1.point0(true), site1.point1(true), site2.point1(true)) != RIGHT_ORIENTATION ||
+			orientation_test(site2.point0(true), site2.point1(true), site3.point1(true)) != RIGHT_ORIENTATION)
+			return false;
         double a1 = site1.x1(true) - site1.x0(true);
         double b1 = site1.y1(true) - site1.y0(true);
         double c1 = robust_cross_product(site1.x0(true), site1.y0(true),
@@ -2142,7 +2142,8 @@ namespace detail {
             site_event_type site_event = *site_event_iterator_;
 
             // Move the site's iterator.
-            ++site_event_iterator_;
+            site_event_iterator_;
+			site_event_iterator_type last = site_event_iterator_ + 1;
 
             // If a new site is an end point of some segment,
             // remove temporary nodes from the beach line data structure.
@@ -2152,86 +2153,93 @@ namespace detail {
                     beach_line_.erase(end_points_.top().second);
                     end_points_.pop();
                 }
-            }
+			} else {
+				while (last != site_events_.end() &&
+					   last->is_segment() && last->point0() == site_event.point0())
+					last++;
+			}
 
-            // Create degenerate node.
-            key_type new_key(site_event);
+			for (; site_event_iterator_ != last; ++site_event_iterator_) {
+				site_event = *site_event_iterator_;
+				// Create degenerate node.
+				key_type new_key(site_event);
 
-            // Find the node in the binary search tree with left arc
-            // lying above the new site point.
-            beach_line_iterator it = beach_line_.lower_bound(new_key);
-            int it_dist = site_event.is_segment() ? 2 : 1;
+				// Find the node in the binary search tree with left arc
+				// lying above the new site point.
+				beach_line_iterator it = beach_line_.lower_bound(new_key);
+				int it_dist = site_event.is_segment() ? 2 : 1;
 
-            // Do further processing depending on the above node position.
-            // For any two neighbouring nodes the second site of the first node
-            // is the same as the first site of the second arc.
-            if (it == beach_line_.end()) {
-                // The above arc corresponds to the second arc of the last node.
-                // Move the iterator to the last node.
-                --it;
+				// Do further processing depending on the above node position.
+				// For any two neighbouring nodes the second site of the first node
+				// is the same as the first site of the second arc.
+				if (it == beach_line_.end()) {
+					// The above arc corresponds to the second arc of the last node.
+					// Move the iterator to the last node.
+					--it;
 
-                // Get the second site of the last node
-                const site_event_type &site_arc = it->first.right_site();
+					// Get the second site of the last node
+					const site_event_type &site_arc = it->first.right_site();
 
-                // Insert new nodes into the beach line. Update the output.
-                beach_line_iterator new_node_it =
-                    insert_new_arc(site_arc, site_arc, site_event, it);
+					// Insert new nodes into the beach line. Update the output.
+					beach_line_iterator new_node_it =
+						insert_new_arc(site_arc, site_arc, site_event, it);
 
-                // Add a candidate circle to the circle event queue.
-                // There could be only one new circle event formed by
-                // a new bisector and the one on the left.
-                std::advance(new_node_it, -it_dist);
-                activate_circle_event(it->first.left_site(),
-                                      it->first.right_site(),
-                                      site_event, new_node_it);
-            } else if (it == beach_line_.begin()) {
-                // The above arc corresponds to the first site of the first node.
-                const site_event_type &site_arc = it->first.left_site();
+					// Add a candidate circle to the circle event queue.
+					// There could be only one new circle event formed by
+					// a new bisector and the one on the left.
+					std::advance(new_node_it, -it_dist);
+					activate_circle_event(it->first.left_site(),
+										  it->first.right_site(),
+										  site_event, new_node_it);
+				} else if (it == beach_line_.begin()) {
+					// The above arc corresponds to the first site of the first node.
+					const site_event_type &site_arc = it->first.left_site();
 
-                // Insert new nodes into the beach line. Update the output.
-                insert_new_arc(site_arc, site_arc, site_event, it);
+					// Insert new nodes into the beach line. Update the output.
+					insert_new_arc(site_arc, site_arc, site_event, it);
 
-                // If the site event is a segment, update its direction.
-                if (site_event.is_segment()) {
-                    site_event.inverse();
-                }
+					// If the site event is a segment, update its direction.
+					if (site_event.is_segment()) {
+						site_event.inverse();
+					}
 
-                // Add a candidate circle to the circle event queue.
-                // There could be only one new circle event formed by
-                // a new bisector and the one on the right.
-                activate_circle_event(site_event, it->first.left_site(),
-                                      it->first.right_site(), it);
-            } else {
-                // The above arc corresponds neither to the first,
-                // nor to the last site in the beach line.
-                const site_event_type &site_arc2 = it->first.left_site();
-                const site_event_type &site3 = it->first.right_site();
+					// Add a candidate circle to the circle event queue.
+					// There could be only one new circle event formed by
+					// a new bisector and the one on the right.
+					activate_circle_event(site_event, it->first.left_site(),
+										  it->first.right_site(), it);
+				} else {
+					// The above arc corresponds neither to the first,
+					// nor to the last site in the beach line.
+					const site_event_type &site_arc2 = it->first.left_site();
+					const site_event_type &site3 = it->first.right_site();
 
-                // Remove the candidate circle from the event queue.
-                it->second.deactivate_circle_event();
-                --it;
-                const site_event_type &site_arc1 = it->first.right_site();
-                const site_event_type &site1 = it->first.left_site();
+					// Remove the candidate circle from the event queue.
+					it->second.deactivate_circle_event();
+					--it;
+					const site_event_type &site_arc1 = it->first.right_site();
+					const site_event_type &site1 = it->first.left_site();
 
-                // Insert new nodes into the beach line. Update the output.
-                beach_line_iterator new_node_it =
-                    insert_new_arc(site_arc1, site_arc2, site_event, it);
+					// Insert new nodes into the beach line. Update the output.
+					beach_line_iterator new_node_it =
+						insert_new_arc(site_arc1, site_arc2, site_event, it);
 
-                // Add candidate circles to the circle event queue.
-                // There could be up to two circle events formed by
-                // a new bisector and the one on the left or right.
-                std::advance(new_node_it, -it_dist);
-                activate_circle_event(site1, site_arc1, site_event,
-                                      new_node_it);
+					// Add candidate circles to the circle event queue.
+					// There could be up to two circle events formed by
+					// a new bisector and the one on the left or right.
+					std::advance(new_node_it, -it_dist);
+					activate_circle_event(site1, site_arc1, site_event,
+										  new_node_it);
 
-                // If the site event is a segment, update its direction.
-                if (site_event.is_segment()) {
-                    site_event.inverse();
-                }
-                std::advance(new_node_it, it_dist + 1);
-                activate_circle_event(site_event, site_arc2, site3,
-                                      new_node_it);
-            }
+					// If the site event is a segment, update its direction.
+					if (site_event.is_segment()) {
+						site_event.inverse();
+					}
+					std::advance(new_node_it, it_dist + 1);
+					activate_circle_event(site_event, site_arc2, site3,
+										  new_node_it);
+				}
+			}
         }
 
         // Process a single circle event.
