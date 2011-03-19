@@ -29,8 +29,12 @@ namespace chain_aux{
     template<typename U>
     struct adaptor1
     {
-        adaptor1( U& r ) : value( r ){}
-        mutable U& value;
+        adaptor1( U& r ) 
+        	: ptr( &r )
+        {}
+        U& reference()const{ return *this->ptr; }
+        private:
+        mutable U* ptr;
     };
 
     struct adaptor2
@@ -76,7 +80,7 @@ namespace chain_aux{
     operator|(U1 & r1, chain_aux::adaptor1<U2> const & h) \
     { \
         typedef chain_aux::result<U1, U2> caller_; \
-        return caller_::call( r1, h.value ); \
+        return caller_::call( r1, h.reference() ); \
     } \
 \
 /**/

@@ -25,13 +25,13 @@ namespace list_aux{
 
         typedef T head_value_type;
 
-        explicit head_holder(T& t) : head_( t ){}
+        explicit head_holder(T& t) : head_( &t ){}
 
         typedef T& result_of_head_type;
-        result_of_head_type head()const{ return this->head_; }
+        result_of_head_type head()const{ return (*this->head_); }
 
         private:
-        mutable T& head_;
+		T* head_;
 
     };
 
