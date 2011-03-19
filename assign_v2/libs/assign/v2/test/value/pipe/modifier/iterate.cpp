@@ -26,12 +26,12 @@ namespace xxx_iterate{
     void test()
     {
         using namespace boost;
-        using namespace lambda;
         namespace as2 = assign::v2;
         
         {
         
             //[pipe_iterate
+        	using namespace lambda;
             typedef int T; boost::array<T, 4> powers; powers[0] = 1; powers[1] = 10;
             int i = 2; 
             BOOST_ASSIGN_V2_CHECK(

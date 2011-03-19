@@ -27,10 +27,10 @@ namespace xxx_lookup{
     void test()
     {
         using namespace boost;
-        using namespace lambda;
         namespace as2 = assign::v2;
         {
             //[pipe_lookup
+        	using namespace lambda;
             std::map<std::string, int> cal;
             BOOST_AUTO( _local, ( as2::_fun = _1 ) );
             BOOST_ASSIGN_V2_CHECK(

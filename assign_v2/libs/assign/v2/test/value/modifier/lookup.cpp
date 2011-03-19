@@ -32,10 +32,10 @@ namespace xxx_lookup{
     void test()
     {
         using namespace boost;
-        using namespace lambda;
         namespace as2 = assign::v2;
         {
             //[test_value_modifier_lookup_meta
+        	using namespace lambda;
             typedef BOOST_TYPEOF(_1) arg_;
             typedef as2::value_aux::keyword_lookup keyword_;
             typedef as2::value_aux::modulo_modifier<keyword_, arg_> modulo_;
@@ -51,6 +51,7 @@ namespace xxx_lookup{
         }
         {
             //[test_value_modifier_lookup_map
+        	using namespace lambda;
             typedef std::string str_; typedef std::map<str_, int> C; C year; 
             ( 
                 as2::put( year )( "feb", 28 )( "apr", 30 )( "jun", 30 )( "sep", 30 )( "nov", 30 ) 
@@ -63,6 +64,7 @@ namespace xxx_lookup{
         }
         {
             //[test_value_modifier_lookup_meta_deque
+        	using namespace lambda;
             typedef BOOST_TYPEOF(_1) arg_;
             typedef as2::value_aux::keyword_lookup keyword_;
             typedef as2::value_aux::modulo_modifier<keyword_, arg_> modulo_;
@@ -77,6 +79,7 @@ namespace xxx_lookup{
         }
         {
             //[test_value_modifier_lookup_map_deque
+        	using namespace lambda;
             BOOST_AUTO(
                 days_in_first_quater,
                 ( 

@@ -33,7 +33,6 @@ namespace xxx_iterate{
     void test()
     {
         using namespace boost;
-        using namespace lambda;
         namespace as2 = assign::v2;
         {
             //[test_value_modifier_iterate_meta
@@ -52,6 +51,7 @@ namespace xxx_iterate{
         }
         {
             //[test_value_modifier_iterate_shifted
+        	using namespace lambda;
             typedef int T; array<T, 4> powers; powers[0] = 1; powers[1] = 10;
             int index = 2; ( as2::put( powers ) % ( as2::_iterate = var( index )++ ) )( 100 )( 1000 );
 
@@ -74,6 +74,7 @@ namespace xxx_iterate{
         }
         {
             //[test_value_modifier_iterate_shifted_deque
+        	using namespace lambda;
             as2::result_of::deque<int>::type missing_tail = as2::deque<int>( 1 )( 10 )( -1 )( -1 );
             int index = 2; 
             

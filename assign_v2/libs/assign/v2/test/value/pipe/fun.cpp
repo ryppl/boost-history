@@ -32,11 +32,11 @@ namespace xxx_fun{
     void test()
     {
         using namespace boost;
-        using namespace lambda;
         namespace as2 = assign::v2;
         {
             //[csv_pipe_modulo_fun_math
             int i = 0, k = 1; std::list<int> factorials;
+        	using namespace lambda;
             
             BOOST_ASSIGN_V2_CHECK(
                 range::equal(
