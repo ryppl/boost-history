@@ -1,4 +1,4 @@
-//Prototype varadic template bind and phoenixV3 bind.
+//Prototype varadic template bind which using "overriding" to substitute values.
 //====================================================================
 //  (C) Copyright Larry Evans 2011.
 //
@@ -7,23 +7,17 @@
 //  This software is provided "as is" without express or implied
 //  warranty, and with no claim as to its suitability for any purpose.
 //====================================================================
-//#define USE_VARIADIC_BIND
-#ifdef USE_VARIADIC_BIND
   #include <boost/mpl/package_c.hpp>
   #include <boost/type_traits/remove_cv.hpp>
   #include <boost/bind/placeholders.hpp>
   #include <boost/composite_storage/pack/multiple_dispatch/apply_unpack.hpp>
-#else
-  #include <boost/phoenix/bind.hpp>
-  #include <boost/phoenix/core/argument.hpp>
-#endif
+  #include <boost/type_traits/detail/wrap.hpp>
 #include <iostream>
 
 namespace boost
 {
 namespace sandbox
 {
-#ifdef USE_VARIADIC_BIND
   template
   < unsigned Size
   >
@@ -184,125 +178,159 @@ void_ptr_array
   };
   
   template
-  < typename TargetFront
-  , typename TargetBack
+  < typename Target
   , typename Source
   >
   struct
 substitute
   /**@brief
-   *  Subsittute values in TargetBack
+   *  Subsittute values in Target
    *  with values in Source. 
+   *  Produce type suitable for use in
+   *  apply_unpack template.
    */
 ;
   template
-  < typename... Front
-  , int Index
-  , typename... Back
-  , typename Source
+  < typename... Target
+  , typename... Source
   >
   struct
 substitute
-  < mpl::package<Front...>
-  , mpl::package<arg<Index>,Back...>
-  , Source
-  >
-{
-          static
-        unsigned const
-      arg_i=Index-1
-      ;
-          typedef typename
-        Source::template result_type<arg_i>::type
-      arg_t
-      ;
-          typedef
-        substitute
-        < mpl::package<Front...,arg_t>
-        , mpl::package<Back...>
-        , Source
-        >
-      next_t
-      /**@brief
-       *   Substitute arg<Index> with the Index-th value in Source.
-       */
-      ;
-          static
-        auto
-     _( void_ptr_size_array<sizeof...(Front)+1+sizeof...(Back)>& target
-      , Source const& source
-      )-> decltype(next_t::_(target,source))
-      {
-          unsigned const tar_index=sizeof...(Front);
-          target.ptr_at(tar_index) = source.ptr_at(arg_i);
-          return next_t::_(target,source);
-      }
-};
-
-  template
-  < typename... Front
-  , typename    Middle
-  , typename... Back
-  , typename Source
-  >
-  struct
-substitute
-  < mpl::package<Front...>
-  , mpl::package<Middle,Back...>
-  , Source
-  >
-{
-          typedef
-        substitute
-        < mpl::package<Front...,Middle>
-        , mpl::package<Back...>
-        , Source
-        >
-      next_t
-      /**@brief
-       *   Since Middle is not a placeholder, just move
-       *   it to Front.
-       */
-      ;
-          static
-        auto
-     _( void_ptr_size_array<sizeof...(Front)+1+sizeof...(Back)>& target
-      , Source const& source
-      )->decltype(next_t::_(target,source))
-      {
-          return next_t::_(target,source);
-      }
-};
-
-  template
-  < typename... Front
-  , typename Source
-  >
-  struct
-substitute
-  < mpl::package<Front...>
-  , mpl::package<>
-  , Source
+  < void_ptr_array
+    < mpl::package<Target...>
+    >
+  , void_ptr_array
+    < mpl::package<Source...>
+    >
   >
 {
           typedef
         void_ptr_array
-        < mpl::package<Front...>
+        < mpl::package<Target...>
         >
-      next_t
+      target_t
       ;
-          static
-        next_t&
-     _( void_ptr_size_array<sizeof...(Front)>& target
-      , Source const&
-      )
-      /**@brief
-       *  Since no more arguments to be sustituted,
-       *  just cast target to the actual type.
-       */
-      {
-          return static_cast<next_t&>(target);
-      }
+          typedef
+        void_ptr_array
+        < mpl::package<Source...>
+        >
+      source_t
+      ;
+        target_t const&
+      my_target
+      ;
+        source_t const
+      my_source
+      ;
+        template
+        < unsigned CompleteIndex
+        , typename TargetType
+        >
+        struct 
+      result_if_type
+        /**@brief
+         *  Returns type depending of
+         *  the form of TargetType
+         *  if TargetType is arg<SouceIndex>, for
+         *    some sourceIndex, 
+         *  then 
+         *     returns SourceIndex-th Source...
+         *  otherwise, 
+         *     returns CompleteIndex-th Target...
+         */
+        ;
+
+        template
+        < unsigned CompleteIndex
+        , typename TargetType//== CompleteIndex-th Target...
+        >
+        struct 
+      result_if_type
+        {
+                typedef 
+              TargetType 
+            type
+              ;
+                static
+              type&
+            at
+              ( substitute const& subs_this
+              )
+              {
+                return subs_this.my_target.project<CompleteIndex>();
+              }
+        };
+
+        template
+        < unsigned CompleteIndex
+        , int SourceIndex
+        >
+        struct 
+      result_if_type
+        < CompleteIndex
+        , arg<SourceIndex> //TargetType == CompleteIndex-th Target...
+                           //TargetType is placeholder, which must be
+                           //"overrided" with SourceIndex-th source value.
+        >
+        {
+                static
+              unsigned const
+            source_index
+              =unsigned(SourceIndex-1)//arg indices start at 1 so decrement 
+                                      //to create index starting at 0.
+              ;
+                typedef typename
+              source_t::template result_type
+              < source_index
+              >::type
+            type
+              ;
+                static
+              type&
+            at
+              ( substitute const& subs_this
+              )
+              {
+                return subs_this.my_source.project<source_index>();
+              }
+            
+        };
+        
+        template
+        < unsigned Index
+        >
+        struct 
+      result_type
+        : result_if_type
+          < Index
+          , typename mpl::at_c
+            < mpl::package<Target...>
+            , Index
+            >::type
+          >
+        {
+        };
+        
+        template
+        < unsigned Index
+        >
+        typename result_type<Index>::type&
+      project(void)const
+        {
+                typedef
+              result_type<Index>
+            res_t;
+            return res_t::at(*this);
+        }
+        
+      substitute
+        ( target_t const& a_target
+        , Source&... a_source
+        )
+        : my_target(a_target)
+        , my_source(a_source...)
+        {} 
+        
 };
 
   template
@@ -311,22 +339,21 @@ substitute
   >
   struct
 bind_result
-  : void_ptr_array
-    < mpl::package<ArgsPart...>
-    >
   {
           typedef
         void_ptr_array
         < mpl::package<ArgsPart...>
         >
-      super_t;
+      part_t;
+        part_t
+      part_v;
         Functor
       my_ftor;
       bind_result
-        ( Functor a_ftor
+        ( Functor& a_ftor
         , ArgsPart&... a_args
         )
-      : super_t
+      : part_v
         ( a_args...
         )
       , my_ftor(a_ftor)
@@ -339,21 +366,23 @@ bind_result
     operator()
       ( ArgsComplete&... a_args
       )
+      /**@brief
+       *  REQUIRES:
+       *    ArgsPart... substituted with
+       *    ArgsComplet... produces
+       *    a complete argument list.
+       *  ENSURES:
+       *    returns my_ftor called with
+       *    the completed argument list.
+       */
       {
           typedef mpl::package<ArgsComplete...> pkg_args;
           typedef void_ptr_array<pkg_args> source_t;
-          source_t source_v(a_args...);
-          super_t target_part(*this);
-            auto 
-          target_complete
-            =substitute
-             < mpl::package<>
-             , mpl::package<ArgsPart...>
-             , source_t
-             >::_
-             ( target_part
-             , source_v
-             );
+            substitute
+            < part_t
+            , source_t
+            >
+          target_complete(part_v,a_args...);
              composite_storage::pack::multiple_dispatch::
             apply_unpack
             < typename mpl::package_range_c
@@ -365,6 +394,32 @@ bind_result
           uapp;
           return uapp(my_ftor,target_complete);
       }
+
+      typename Functor::result_type
+    operator()
+      ( void
+      )
+      /**@brief
+       *  REQUIRES:
+       *    ArgsPart... is complete
+       *    argument list.
+       *  ENSURES:
+       *    returns my_ftor called with
+       *    the completed argument list.
+       */
+      {
+             composite_storage::pack::multiple_dispatch::
+            apply_unpack
+            < typename mpl::package_range_c
+              < unsigned
+              , 0
+              , sizeof...(ArgsPart)
+              >::type
+            >
+          uapp;
+          return uapp(my_ftor,part_v);
+      }
+
   };
 
   template
@@ -383,6 +438,19 @@ bind
     bind_result<Functor,Args...> bres(a_ftor,a_args...);
     return bres;
   }
+  
+  template
+  < int I
+  >
+  std::ostream&
+operator<<
+  ( std::ostream& sout
+  , arg<I>
+  )
+  {
+      sout<<"arg<"<<I<<">";
+      return sout;
+  }        
   
   void
 pkg_print
@@ -423,32 +491,6 @@ functor_any
         std::cout<<")\n";
       }
   };
-#else
-using namespace phoenix;
-using namespace phoenix::placeholders;
-  struct
-functor_any
-  {
-          typedef 
-        void 
-      result_type;
-        template
-        < typename Arg1
-        , typename Arg2
-        >
-        result_type
-      operator()
-        ( Arg1& a_arg1
-        , Arg2& a_arg2
-        )
-      {
-        std::cout<<"functor_any(";
-        std::cout<<":"<<a_arg1;
-        std::cout<<":"<<a_arg2;
-        std::cout<<")\n";
-      }
-  };
-#endif
   
   void
 test()
@@ -457,21 +499,25 @@ test()
     int act2=2;
     functor_any f_any;
     {
-      std::cout<<"(_1,_2)("<<act1<<","<<act2<<")\n";
       auto bnd_any=bind(f_any,_1,_2);
+      std::cout<<"(_1,_2)("<<act1<<","<<act2<<")\n";
       bnd_any(act1,act2);
     }
     {
-      std::cout<<"("<<act2<<",_1)("<<act1<<")\n";
       auto bnd_any=bind(f_any,act2,_1);
+      std::cout<<"("<<act2<<",_1)("<<act1<<")\n";
       bnd_any(act1);
       std::cout<<"("<<act2<<",_1)("<<act2<<")\n";
       bnd_any(act2);
     }
     {
-      std::cout<<"("<<act2<<","<<act1<<")("<<act1<<")\n";
       auto bnd_any=bind(f_any,act2,act1);
+      std::cout<<"("<<act2<<","<<act1<<")()\n";
+      bnd_any();
+      std::cout<<"("<<act2<<","<<act1<<")("<<act1<<")\n";
       bnd_any(act1);
+      std::cout<<"("<<act2<<","<<act1<<")("<<act1<<","<<act2<<")\n";
+      bnd_any(act1,act2);
     }
   }  
 
@@ -480,11 +526,6 @@ test()
 
 int main()
 {
-  #ifdef USE_VARIADIC_BIND
-  std::cout<<"YES_VARIADIC_BIND\n";
-  #else
-  std::cout<<"NOT_VARIADIC_BIND\n";
-  #endif
   boost::sandbox::test();
   return 0;
 }  

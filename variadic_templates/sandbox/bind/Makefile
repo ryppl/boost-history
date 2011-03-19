@@ -1,4 +1,5 @@
-MAIN=bindv
+MAIN=bindo
+#MAIN=gcc_bug.nullary_variadic_functor
 YES_NOT=yes
 #Purpose:
 #  compile/run $(MAIN).cpp with one_of:
