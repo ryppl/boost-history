@@ -9,7 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_REF_CONVERT_TRAITS_CONST_ER_2010_HPP
 #define BOOST_ASSIGN_V2_REF_CONVERT_TRAITS_CONST_ER_2010_HPP
-#include <boost/assign/v2/ref/convert_traits/value.hpp>
+#include <boost/assign/v2/ref/aux_/convert_traits/value.hpp>
 #include <boost/type_traits/add_const.hpp>
 #include <boost/type_traits/is_const.hpp>
 #include <boost/type_traits/remove_cv.hpp>

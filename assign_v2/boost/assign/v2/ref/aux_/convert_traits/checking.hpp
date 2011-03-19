@@ -9,7 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_REF_CONVERT_TRAITS_CHECKING_ER_2010_HPP
 #define BOOST_ASSIGN_V2_REF_CONVERT_TRAITS_CHECKING_ER_2010_HPP
-#include <boost/assign/v2/ref/convert_traits/reference.hpp>
+#include <boost/assign/v2/ref/aux_/convert_traits/reference.hpp>
 #include <boost/mpl/assert.hpp>
 #include <boost/type_traits/is_same.hpp>
 
