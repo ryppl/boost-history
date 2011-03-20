@@ -103,6 +103,12 @@ namespace detail {
 			return temp_[next_cur()];
 		}
 
+		mpz_wrapper& operator*(double that) const {
+			temp_[cur_].m_ = that;
+			temp_[cur_].m_ *= this->m_;
+			return temp_[next_cur()];
+		}
+
 		mpz_wrapper& operator+=(const mpz_wrapper& that) {
 			this->m_ += that.m_;
 			return *this;
@@ -181,6 +187,8 @@ namespace detail {
 			sign_sort(A, B, 2);
 			double ret_val = fabs(A[0].get_d()) * sqrt(B[0].get_d()) +
 							 fabs(A[1].get_d()) * sqrt(B[1].get_d());
+			if (ret_val == 0.0)
+				return 0.0;
 			if (!A[1].is_negative())
 				return ret_val;
 			if (!A[0].is_positive())
@@ -200,6 +208,8 @@ namespace detail {
 			double res = fabs(A[0].get_d()) * sqrt(B[0].get_d()) +
 						 fabs(A[1].get_d()) * sqrt(B[1].get_d()) +
 						 fabs(A[2].get_d()) * sqrt(B[2].get_d());
+			if (res == 0.0)
+				return res;
 			if (!A[2].is_negative())
 				return res;
 			if (!A[0].is_positive())
@@ -234,6 +244,8 @@ namespace detail {
 						 fabs(A[1].get_d()) * sqrt(B[1].get_d()) +
 						 fabs(A[2].get_d()) * sqrt(B[2].get_d()) +
 						 fabs(A[3].get_d()) * sqrt(B[3].get_d());
+			if (res == 0.0)
+				return res;
 			if (!A[3].is_negative())
 				return res;
 			if (!A[0].is_positive())

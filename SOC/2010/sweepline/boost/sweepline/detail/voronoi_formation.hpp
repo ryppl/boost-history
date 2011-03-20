@@ -1295,7 +1295,8 @@ namespace detail {
     static inline T sqr_distance(T dif_x, T dif_y) {
         return dif_x * dif_x + dif_y * dif_y;
     }
-/*
+
+	/*
     // Recompute parameters of the circle event using high-precision library.
 	// In the worst case parameters of the circle have next relative errors:
 	//    r(c_x) = 4 * EPS;
@@ -1316,8 +1317,7 @@ namespace detail {
 		mpz_dif_y[2] = site1.y() - site3.y();
 	
 		// Evaluate orientation.
-		double orientation = static_cast<double>(
-			mpz_dif_x[0] * mpz_dif_y[1] - mpz_dif_x[1] * mpz_dif_y[0]);
+		double orientation = (mpz_dif_x[0] * mpz_dif_y[1] - mpz_dif_x[1] * mpz_dif_y[0]).get_d();
 
 		// If use this function only to recompute parameters of the circle
 		// event, this check won't be required.
@@ -1346,11 +1346,11 @@ namespace detail {
 
 		// Evaluate coordinates of the center of the circle.
 		// r(c_x) = r(c_y) = 4 * EPS.
-		double c_x = static_cast<double>(mpz_c_x) * inv_orientation;
-		double c_y = static_cast<double>(mpz_c_y) * inv_orientation;
+		double c_x = mpz_c_x.get_d() * inv_orientation;
+		double c_y = mpz_c_y.get_d() * inv_orientation;
 
 		// r(r) = 1.5 * EPS < 2 * EPS.
-		double r = sqrt(static_cast<double>(mpz_sqr_r));
+		double r = sqrt(mpz_sqr_r.get_d());
 
 		// If c_x >= 0 then lower_x = c_x + r,
 		// else lower_x = (c_x * c_x - r * r) / (c_x - r).
@@ -1361,13 +1361,157 @@ namespace detail {
 		} else {
 			mpz_numerator[0] = mpz_c_x * mpz_c_x - mpz_sqr_r;
 			// r(lower_x) = 8 * EPS.
-			double lower_x = static_cast<double>(mpz_numerator[0]) * fabs(inv_orientation);
-			lower_x /= (mpz_c_x >= 0) ? (-mpz_c_x.get_d() - r) : (mpz_c_x.get_d() - r);
+			double lower_x = mpz_numerator[0].get_d() * fabs(inv_orientation);
+			lower_x /= (!mpz_c_x.is_negative()) ? (-mpz_c_x.get_d() - r) : (mpz_c_x.get_d() - r);
 			c_event = circle_event<double>(c_x, c_y, lower_x);
 		}
 		return true;
 	}
-*/
+
+	template <typename T>
+	static bool create_circle_event_pps_gmpxx(const site_event<T> &site1,
+											  const site_event<T> &site2,
+											  const site_event<T> &site3,
+											  int segment_index,
+											  circle_event<T> &c_event) {
+		// TODO(asydorchuk): Checks are not required if we recompute event parameters.
+		if (segment_index != 2) {
+            kOrientation orient1 = orientation_test(site1.point0(),
+                site2.point0(), site3.point0(true));
+            kOrientation orient2 = orientation_test(site1.point0(),
+                site2.point0(), site3.point1(true));
+            if (segment_index == 1 && site1.x0() >= site2.x0()) {
+                if (orient1 != RIGHT_ORIENTATION)
+                    return false;
+            } else if (segment_index == 3 && site2.x0() >= site1.x0()) {
+                if (orient2 != RIGHT_ORIENTATION)
+                    return false;
+            } else if (orient1 != RIGHT_ORIENTATION && orient2 != RIGHT_ORIENTATION) {
+                return false;
+            }
+        } else {
+            if (site3.point0(true) == site1.point0() &&
+                site3.point1(true) == site2.point0())
+                return false;
+        }
+
+		static mpz_wrapper line_a, line_b, segm_len, vec_x, vec_y, sum_x, sum_y, teta,
+			               denom, A, B, sum_AB, dif[2], numer, cA[4], cB[4], det;
+
+		line_a = site3.point1(true).y() - site3.point0(true).y();
+		line_b = site3.point0(true).x() - site3.point1(true).x();
+		segm_len = line_a * line_a + line_b * line_b;
+		vec_x = site2.y() - site1.y();
+		vec_y = site1.x() - site2.x();
+		sum_x = site1.x() + site2.x();
+		sum_y = site1.y() + site2.y();
+		teta = line_a * vec_x + line_b * vec_y;
+		denom = vec_x * line_b - vec_y * line_a;
+		
+		dif[0] = site3.point1().y() - site1.y();
+		dif[1] = site1.x() - site3.point1().x();
+		A = line_a * dif[1] - line_b * dif[0];
+		dif[0] = site3.point1().y() - site2.y();
+		dif[1] = site2.x() - site3.point1().x();
+		B = line_a * dif[1] - line_b * dif[0];
+		sum_AB = A + B;
+
+        if (!denom.is_negative() && !denom.is_positive()) {
+			numer = teta * teta - sum_AB * sum_AB;
+			denom = teta * sum_AB;
+			cA[0] = denom * sum_x * 2.0 + numer * vec_x;
+			cB[0] = segm_len;
+			cA[1] = denom * sum_AB * 2.0 + numer * teta;
+			cB[1] = 1;
+			cA[2] = denom * sum_y * 2.0 + numer * vec_y;
+			double c_x = 0.25 * cA[0].get_d() / denom.get_d();
+			double c_y = 0.25 * cA[2].get_d() / denom.get_d();
+			double lower_x = 0.25 * sqr_expr_evaluator<2>::eval(cA, cB) / 
+				(denom.get_d() * sqrt(segm_len.get_d()));
+			c_event = circle_event<double>(c_x, c_y, lower_x);
+			return true;
+        }
+
+		det = (teta * teta + denom * denom) * A * B * 4.0;
+		cA[0] = sum_x * denom * denom + teta * sum_AB * vec_x;
+		cB[0] = 1.0;
+		cA[1] = (segment_index == 2) ? -vec_x : vec_x;
+		cB[1] = det;
+		double c_x = 0.5 * sqr_expr_evaluator<2>::eval(cA, cB) / (denom.get_d() * denom.get_d());
+		
+		cA[2] = sum_y * denom * denom + teta * sum_AB * vec_y;
+		cB[2] = 1.0;
+		cA[3] = (segment_index == 2) ? -vec_y : vec_y;
+		cB[3] = det;
+		double c_y = 0.5 * sqr_expr_evaluator<2>::eval(&cA[2], &cB[2]) / (denom.get_d() * denom.get_d());
+		
+		cB[0] *= segm_len;
+		cB[1] *= segm_len;
+		cA[2] = sum_AB * (denom * denom + teta * teta);
+		cB[2] = 1.0;
+		cA[3] = (segment_index == 2) ? -teta : teta;
+		cB[3] = det;
+		double lower_x = 0.5 * sqr_expr_evaluator<4>::eval(cA, cB) / 
+			(denom.get_d() * denom.get_d() * sqrt(segm_len.get_d()));
+		
+        c_event = circle_event<double>(c_x, c_y, lower_x);
+        return true;
+	}
+
+	template <typename T>
+	static bool create_circle_event_sss_gmpxx(const site_event<T> &site1,
+											  const site_event<T> &site2,
+											  const site_event<T> &site3,
+											  circle_event<T> &c_event) {
+		if (site1.index() == site2.index() || site2.index() == site3.index())
+			return false;
+		static mpz_wrapper a[3], b[3], c[3], sqr_len[4], cross[4];
+		a[0] = site1.x1(true) - site1.x0(true);
+		a[1] = site2.x1(true) - site2.x0(true);
+		a[2] = site3.x1(true) - site3.x0(true);
+	
+		b[0] = site1.y1(true) - site1.y0(true);
+		b[1] = site2.y1(true) - site2.y0(true);
+		b[2] = site3.y1(true) - site3.y0(true);
+
+		c[0] = mpz_cross(site1.x0(true), site1.y0(true), site1.x1(true), site1.y1(true));										
+		c[1] = mpz_cross(site2.x0(true), site2.y0(true), site2.x1(true), site2.y1(true));
+		c[2] = mpz_cross(site3.x0(true), site3.y0(true), site3.x1(true), site3.y1(true));
+
+		for (int i = 0; i < 3; ++i) {
+			int j = (i+1) % 3;
+			int k = (i+2) % 3;
+			cross[i] = a[j] * b[k] - a[k] * b[j];
+			sqr_len[i] = a[i] * a[i] + b[i] * b[i];
+		}
+		double denom = sqr_expr_evaluator<3>::eval(cross, sqr_len);
+
+		for (int i = 0; i < 3; ++i) {
+			int j = (i+1) % 3;
+			int k = (i+2) % 3;
+			cross[i] = b[j] * c[k] - b[k] * c[j];
+			sqr_len[i] = a[i] * a[i] + b[i] * b[i];
+		}
+		double c_y = sqr_expr_evaluator<3>::eval(cross, sqr_len) / denom;
+
+		cross[3] = 0;
+		for (int i = 0; i < 3; ++i) {
+			int j = (i+1) % 3;
+			int k = (i+2) % 3;
+			cross[i] = a[j] * c[k] - a[k] * c[j];
+			sqr_len[i] = a[i] * a[i] + b[i] * b[i];
+			cross[3] += cross[i] * b[i];
+		}
+		double c_x = sqr_expr_evaluator<3>::eval(cross, sqr_len) / denom;
+		
+		sqr_len[3] = 1;
+		double lower_x = sqr_expr_evaluator<4>::eval(cross, sqr_len) / denom;
+		
+		c_event = circle_event<double>(c_x, c_y, lower_x);
+		return true;
+	}
+	*/
+	
     // Find parameters of the inscribed circle that is tangent to three
     // point sites.
     template <typename T>
@@ -1406,7 +1550,7 @@ namespace detail {
         c_event = circle_event<double>(c_x, c_y, lower_x);
         return true;
     }
-
+	
     // Find parameters of the inscribed circle that is tangent to two
     // point sites and on segment site.
     template <typename T>
@@ -1435,8 +1579,8 @@ namespace detail {
                 return false;
         }
 
-        double line_a = site3.point1().y() - site3.point0().y();
-        double line_b = site3.point0().x() - site3.point1().x();
+        double line_a = site3.point1(true).y() - site3.point0(true).y();
+        double line_b = site3.point0(true).x() - site3.point1(true).x();
         double vec_x = site2.y() - site1.y();
         double vec_y = site1.x() - site2.x();
         double teta = robust_cross_product(line_a, line_b, -vec_y, vec_x);
@@ -1471,7 +1615,7 @@ namespace detail {
         r -= line_b * site3.y0();
         r += line_a * c_x;
         r += line_b * c_y;
-        r.abs();
+		r.abs();
         lower_x += r * inv_segm_len;
         c_event = circle_event<double>(c_x, c_y, lower_x);
         return true;
@@ -1581,60 +1725,7 @@ namespace detail {
         }
         return true;
     }
-/*
-	template <typename T>
-	static bool create_circle_event_sss_gmpxx(const site_event<T> &site1,
-											  const site_event<T> &site2,
-											  const site_event<T> &site3,
-											  circle_event<T> &c_event) {
-		if (site1.index() == site2.index() || site2.index() == site3.index())
-			return false;
-		static mpz_wrapper a[3], b[3], c[3], sqr_len[4], cross[4];
-		a[0] = site1.x1(true) - site1.x0(true);
-		a[1] = site2.x1(true) - site2.x0(true);
-		a[2] = site3.x1(true) - site3.x0(true);
-	
-		b[0] = site1.y1(true) - site1.y0(true);
-		b[1] = site2.y1(true) - site2.y0(true);
-		b[2] = site3.y1(true) - site3.y0(true);
 
-		c[0] = mpz_cross(site1.x0(true), site1.y0(true), site1.x1(true), site1.y1(true));										
-		c[1] = mpz_cross(site2.x0(true), site2.y0(true), site2.x1(true), site2.y1(true));
-		c[2] = mpz_cross(site3.x0(true), site3.y0(true), site3.x1(true), site3.y1(true));
-
-		for (int i = 0; i < 3; ++i) {
-			int j = (i+1) % 3;
-			int k = (i+2) % 3;
-			cross[i] = a[j] * b[k] - a[k] * b[j];
-			sqr_len[i] = a[i] * a[i] + b[i] * b[i];
-		}
-		double denom = sqr_expr_evaluator<3>::eval(cross, sqr_len);
-
-		for (int i = 0; i < 3; ++i) {
-			int j = (i+1) % 3;
-			int k = (i+2) % 3;
-			cross[i] = b[j] * c[k] - b[k] * c[j];
-			sqr_len[i] = a[i] * a[i] + b[i] * b[i];
-		}
-		double c_y = sqr_expr_evaluator<3>::eval(cross, sqr_len) / denom;
-
-		cross[3] = 0;
-		for (int i = 0; i < 3; ++i) {
-			int j = (i+1) % 3;
-			int k = (i+2) % 3;
-			cross[i] = a[j] * c[k] - a[k] * c[j];
-			sqr_len[i] = a[i] * a[i] + b[i] * b[i];
-			cross[3] += cross[i] * b[i];
-		}
-		double c_x = sqr_expr_evaluator<3>::eval(cross, sqr_len) / denom;
-		
-		sqr_len[3] = 1;
-		double lower_x = sqr_expr_evaluator<4>::eval(cross, sqr_len) / denom;
-		
-		c_event = circle_event<double>(c_x, c_y, lower_x);
-		return true;
-	}
-*/
     // Find parameters of the inscribed circle that is tangent to three
     // segment sites.
     template <typename T>
