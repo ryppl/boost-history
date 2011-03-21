@@ -7,8 +7,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_VALUE_ADAPTER_AS_ARG_LIST_ER_2010_HPP
-#define BOOST_ASSIGN_V2_VALUE_ADAPTER_AS_ARG_LIST_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_FRAMEWORK_AS_ARG_LIST_ER_2010_HPP
+#define BOOST_ASSIGN_V2_FRAMEWORK_AS_ARG_LIST_ER_2010_HPP
 #include <boost/assign/v2/detail/pp/ignore.hpp>
 #include <boost/range/iterator.hpp>
 #include <boost/range/iterator_range.hpp>
@@ -83,4 +83,4 @@ namespace result_of{
 }// assign
 }// boost
 
-#endif // BOOST_ASSIGN_V2_VALUE_ADAPTER_AS_ARG_LIST_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_FRAMEWORK_AS_ARG_LIST_ER_2010_HPP
