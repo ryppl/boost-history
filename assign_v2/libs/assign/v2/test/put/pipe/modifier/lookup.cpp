@@ -16,12 +16,12 @@
 #include <boost/assign/v2/put/pipe/csv_put.hpp>
 // Options come next
 #include <boost/assign/v2/optional/lookup.hpp>
-#include <libs/assign/v2/test/put/pipe/modifier/lookup.h>
+#include <libs/assign/v2/test/put/pipe/optional/lookup.h>
 
 namespace test_assign_v2{
 namespace xxx_put{
 namespace xxx_pipe{
-namespace xxx_modifier{
+namespace xxx_optional{
 namespace xxx_lookup{
 
     void test()
@@ -49,7 +49,7 @@ namespace xxx_lookup{
     }
 
 }// xxx_lookup
-}// xxx_modifier
+}// xxx_optional
 }// xxx_pipe
 }// xxx_put
 }// test_assign_v2

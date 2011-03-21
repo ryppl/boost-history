@@ -13,11 +13,11 @@
 namespace test_assign_v2{
 namespace xxx_put{
 namespace xxx_pipe{
-namespace xxx_modifier{
+namespace xxx_optional{
 
     void test();
 
-}// xxx_modifier
+}// xxx_optional
 }// xxx_pipe
 }// xxx_put
 }// test_assign_v2

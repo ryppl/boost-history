@@ -7,8 +7,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#include <libs/assign/v2/test/framwork/modifier.h>
-#include <libs/assign/v2/test/framwork.h>
+#include <libs/assign/v2/test/framework/modifier.h>
+#include <libs/assign/v2/test/framework.h>
 
 namespace test_assign_v2{
 namespace xxx_framework{

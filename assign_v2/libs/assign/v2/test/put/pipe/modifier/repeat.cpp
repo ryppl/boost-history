@@ -14,12 +14,12 @@
 // Options come next
 #include <boost/assign/v2/optional/repeat.hpp>
 #include <boost/range/algorithm/equal.hpp>
-#include <libs/assign/v2/test/put/pipe/modifier/repeat.h>
+#include <libs/assign/v2/test/put/pipe/optional/repeat.h>
 
 namespace test_assign_v2{
 namespace xxx_put{
 namespace xxx_pipe{
-namespace xxx_modifier{
+namespace xxx_optional{
 namespace xxx_repeat{
 
     void test()
@@ -42,7 +42,7 @@ namespace xxx_repeat{
 
 
 }// xxx_repeat
-}// xxx_modifier
+}// xxx_optional
 }// xxx_pipe
 }// xxx_put
 }// test_assign_v2

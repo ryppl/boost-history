@@ -18,7 +18,7 @@ namespace test_assign_v2{
 namespace xxx_optional{
 
     void test(){
-        xxx_deduce::test();
+        xxx_fun::test();
         xxx_iterate::test();
         xxx_lookup::test();
         xxx_repeat::test();

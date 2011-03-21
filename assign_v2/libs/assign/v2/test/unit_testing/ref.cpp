@@ -17,7 +17,6 @@
 #include <libs/assign/v2/test/ref/array.cpp>
 #include <libs/assign/v2/test/ref/aux_/convert_traits.cpp>
 #include <libs/assign/v2/test/ref/aux_/list.cpp>
-#include <libs/assign/v2/test/ref/aux_/list_tuple.cpp>
 #include <libs/assign/v2/test/ref/csv_array.cpp>
 #include <libs/assign/v2/test/ref/wrapper.cpp>
 

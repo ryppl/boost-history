@@ -11,13 +11,13 @@
 #define LIBS_ASSIGN_V2_TEST_MODIFIER_STANDARD_ER_2010_H
 
 namespace test_assign_v2{
-namespace xxx_modifier{
+namespace xxx_optional{
 namespace xxx_standard{
 
     void test();
 
 }// xxx_standard
-}// xxx_modifier
+}// xxx_optional
 }// xxx_test_assign
 
 #endif // LIBS_ASSIGN_V2_TEST_MODIFIER_STANDARD_ER_2010_H

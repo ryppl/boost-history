@@ -16,12 +16,12 @@
 #include <boost/array.hpp>
 #include <boost/lambda/lambda.hpp>
 #include <boost/range/algorithm/equal.hpp>
-#include <libs/assign/v2/test/put/pipe/modifier/iterate.h>
+#include <libs/assign/v2/test/put/pipe/optional/iterate.h>
 
 namespace test_assign_v2{
 namespace xxx_put{
 namespace xxx_pipe{
-namespace xxx_modifier{
+namespace xxx_optional{
 namespace xxx_iterate{
 
     void test()
@@ -46,7 +46,7 @@ namespace xxx_iterate{
     }
 
 }// xxx_iterate
-}// xxx_modifier
+}// xxx_optional
 }// xxx_pipe
 }// xxx_put
 }// test_assign_v2

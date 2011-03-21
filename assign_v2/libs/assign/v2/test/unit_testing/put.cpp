@@ -14,10 +14,10 @@
 #define BOOST_ASSIGN_V2_CHECK( p ) BOOST_CHECK( p )
 
 #include <libs/assign/v2/test/put/pipe/csv_put.cpp>
-#include <libs/assign/v2/test/put/pipe/modifier/iterate.cpp>
-#include <libs/assign/v2/test/put/pipe/modifier/lookup.cpp>
-#include <libs/assign/v2/test/put/pipe/modifier/repeat.cpp>
-#include <libs/assign/v2/test/put/pipe/modifier/standard.cpp>
+#include <libs/assign/v2/test/put/pipe/optional/iterate.cpp>
+#include <libs/assign/v2/test/put/pipe/optional/lookup.cpp>
+#include <libs/assign/v2/test/put/pipe/optional/repeat.cpp>
+#include <libs/assign/v2/test/put/pipe/optional/standard.cpp>
 #include <libs/assign/v2/test/put/ptr.cpp>
 #include <libs/assign/v2/test/put/put.cpp>
 
@@ -30,10 +30,10 @@ test_suite* init_unit_test_suite( int argc, char* argv[] )
     {
 		namespace ns = xxx_put;
 		test->add( BOOST_TEST_CASE( &ns::xxx_pipe::xxx_csv_put::test ) );
-		test->add( BOOST_TEST_CASE( &ns::xxx_pipe::xxx_modifier::xxx_iterate::test ) );
-		test->add( BOOST_TEST_CASE( &ns::xxx_pipe::xxx_modifier::xxx_lookup::test ) );
-		test->add( BOOST_TEST_CASE( &ns::xxx_pipe::xxx_modifier::xxx_repeat::test ) );
-		test->add( BOOST_TEST_CASE( &ns::xxx_pipe::xxx_modifier::xxx_standard::test ) );
+		test->add( BOOST_TEST_CASE( &ns::xxx_pipe::xxx_optional::xxx_iterate::test ) );
+		test->add( BOOST_TEST_CASE( &ns::xxx_pipe::xxx_optional::xxx_lookup::test ) );
+		test->add( BOOST_TEST_CASE( &ns::xxx_pipe::xxx_optional::xxx_repeat::test ) );
+		test->add( BOOST_TEST_CASE( &ns::xxx_pipe::xxx_optional::xxx_standard::test ) );
 		test->add( BOOST_TEST_CASE( &ns::xxx_ptr::test ) );
 		test->add( BOOST_TEST_CASE( &ns::xxx_put::test ) );
     }

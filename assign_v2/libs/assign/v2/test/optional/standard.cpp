@@ -27,10 +27,10 @@
 #include <boost/mpl/assert.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/typeof/typeof.hpp>
-#include <libs/assign/v2/test/modifier/standard.h>
+#include <libs/assign/v2/test/optional/standard.h>
 
 namespace test_assign_v2{
-namespace xxx_modifier{
+namespace xxx_optional{
 namespace xxx_standard{
 
     void test()
@@ -119,5 +119,5 @@ namespace xxx_standard{
     }
 
 }// xxx_standard
-}// xxx_modifier
+}// xxx_optional
 }// test_assign_v2

@@ -7,11 +7,11 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#include <libs/assign/v2/test/put/pipe/modifier/iterate.h>
-#include <libs/assign/v2/test/put/pipe/modifier/lookup.h>
-#include <libs/assign/v2/test/put/pipe/modifier/repeat.h>
-#include <libs/assign/v2/test/put/pipe/modifier/standard.h>
-#include <libs/assign/v2/test/put/pipe/modifier.h>
+#include <libs/assign/v2/test/put/pipe/optional/iterate.h>
+#include <libs/assign/v2/test/put/pipe/optional/lookup.h>
+#include <libs/assign/v2/test/put/pipe/optional/repeat.h>
+#include <libs/assign/v2/test/put/pipe/optional/standard.h>
+#include <libs/assign/v2/test/put/pipe/optional.h>
 
 namespace test_assign_v2{
 namespace xxx_put{

@@ -22,12 +22,12 @@
 #include <boost/range/algorithm/equal.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/typeof/typeof.hpp>
-#include <libs/assign/v2/test/modifier/iterate.h>
+#include <libs/assign/v2/test/optional/iterate.h>
 
 #include <iostream>
 
 namespace test_assign_v2{
-namespace xxx_modifier{
+namespace xxx_optional{
 namespace xxx_iterate{
 
     void test()
@@ -89,5 +89,5 @@ namespace xxx_iterate{
     }
 
 }// xxx_iterate
-}// xxx_modifier
+}// xxx_optional
 }// test_assign_v2

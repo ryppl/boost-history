@@ -16,10 +16,10 @@
 #include <boost/assign/v2/optional/repeat.hpp>
 #include <boost/assign/v2/deque.hpp>
 #include <boost/range/algorithm/equal.hpp>
-#include <libs/assign/v2/test/modifier/repeat.h>
+#include <libs/assign/v2/test/optional/repeat.h>
 
 namespace test_assign_v2{
-namespace xxx_modifier{
+namespace xxx_optional{
 namespace xxx_repeat{
 
     void test()
@@ -49,5 +49,5 @@ namespace xxx_repeat{
 
 
 }// xxx_repeat
-}// xxx_modifier
+}// xxx_optional
 }// test_assign_v2

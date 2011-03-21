@@ -9,7 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #include <libs/assign/v2/test/put/pipe/csv_put.h>
 #include <libs/assign/v2/test/put/pipe/fun.h>
-#include <libs/assign/v2/test/put/pipe/modifier.h>
+#include <libs/assign/v2/test/put/pipe/optional.h>
 #include <libs/assign/v2/test/put/pipe.h>
 
 namespace test_assign_v2{
@@ -20,7 +20,7 @@ namespace xxx_pipe{
     {
         xxx_csv_put::test();
         xxx_fun::test();
-        xxx_modifier::test();
+        xxx_optional::test();
     }
 
 }// xxx_pipe

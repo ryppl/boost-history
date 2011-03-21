@@ -23,10 +23,10 @@
 #include <boost/type_traits/is_same.hpp>
 #include <boost/typeof/typeof.hpp>
 #include <boost/tuple/tuple.hpp>
-#include <libs/assign/v2/test/modifier/lookup.h>
+#include <libs/assign/v2/test/optional/lookup.h>
 
 namespace test_assign_v2{
-namespace xxx_modifier{
+namespace xxx_optional{
 namespace xxx_lookup{
 
     void test()
@@ -94,5 +94,5 @@ namespace xxx_lookup{
     }
 
 }// xxx_lookup
-}// xxx_modifier
+}// xxx_optional
 }// test_assign_v2
