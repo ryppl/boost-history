@@ -14,6 +14,7 @@
 #define BOOST_ASSIGN_V2_CHECK( p ) BOOST_CHECK( p )
 
 #include <libs/assign/v2/test/put/pipe/csv_put.cpp>
+#include <libs/assign/v2/test/put/pipe/optional/fun.cpp>
 #include <libs/assign/v2/test/put/pipe/optional/iterate.cpp>
 #include <libs/assign/v2/test/put/pipe/optional/lookup.cpp>
 #include <libs/assign/v2/test/put/pipe/optional/repeat.cpp>
@@ -30,6 +31,7 @@ test_suite* init_unit_test_suite( int argc, char* argv[] )
     {
 		namespace ns = xxx_put;
 		test->add( BOOST_TEST_CASE( &ns::xxx_pipe::xxx_csv_put::test ) );
+		test->add( BOOST_TEST_CASE( &ns::xxx_pipe::xxx_optional::xxx_fun::test ) );
 		test->add( BOOST_TEST_CASE( &ns::xxx_pipe::xxx_optional::xxx_iterate::test ) );
 		test->add( BOOST_TEST_CASE( &ns::xxx_pipe::xxx_optional::xxx_lookup::test ) );
 		test->add( BOOST_TEST_CASE( &ns::xxx_pipe::xxx_optional::xxx_repeat::test ) );

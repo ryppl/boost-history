@@ -11,22 +11,17 @@
 #include <list>
 #include <vector>
 #include <boost/assign/v2/detail/config/check.hpp>
-
 #include <boost/assign/v2/deque/csv_deque.hpp>
 #include <boost/assign/v2/fun.hpp>
 #include <boost/assign/v2/put/pipe/csv_put.hpp>
 #include <boost/lambda/lambda.hpp>
 #include <boost/range/algorithm/equal.hpp>
-#include <libs/assign/v2/test/put/pipe/fun.h>
-
-#include <boost/range/algorithm/for_each.hpp>
-
-    
-#include <iostream>
+#include <libs/assign/v2/test/put/pipe/optional/fun.h>
 
 namespace test_assign_v2{
 namespace xxx_put{
 namespace xxx_pipe{
+namespace xxx_optional{
 namespace xxx_fun{
 
     void test()
@@ -34,7 +29,7 @@ namespace xxx_fun{
         using namespace boost;
         namespace as2 = assign::v2;
         {
-            //[test_put_pipe_fun_math
+            //[test_put_pipe_optional_fun_math
             int k = 1; std::list<int> factorials;
         	using namespace lambda;
             
@@ -51,6 +46,7 @@ namespace xxx_fun{
     }
 
 }// xxx_fun
+}// xxx_optional
 }// xxx_pipe
 }// xxx_value
 }// test_assign_v2
