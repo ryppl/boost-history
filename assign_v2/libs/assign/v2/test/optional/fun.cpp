@@ -24,7 +24,7 @@
 #include <boost/numeric/conversion/bounds.hpp>
 #include <boost/range/algorithm/equal.hpp>
 #include <boost/typeof/typeof.hpp>
-#include <libs/assign/v2/test/optional/fun.h>
+#include <libs/assign/v2/test/optional/data.h>
 
 namespace test_assign_v2{
 namespace xxx_optional{

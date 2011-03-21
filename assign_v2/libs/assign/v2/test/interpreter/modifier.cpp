@@ -24,10 +24,10 @@
 #include <boost/ptr_container/ptr_vector.hpp>
 
 #include <boost/assign/v2/interpreter/modifier.hpp>
-#include <libs/assign/v2/test/framework/modifier.h>
+#include <libs/assign/v2/test/interpreter/modifier.h>
 
 namespace test_assign_v2{
-namespace xxx_framework{
+namespace xxx_interpreter{
 namespace xxx_modifier{
 
     // --User may skip this file-- //
@@ -77,5 +77,5 @@ namespace xxx_modifier{
 
 
 }// xxx_modifier
-}// xxx_framework
+}// xxx_interpreter
 }// test_assign_v2

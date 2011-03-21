@@ -17,7 +17,7 @@
 #include <boost/assign/v2/optional/data.hpp>
 #include <boost/lambda/lambda.hpp>
 #include <boost/range/algorithm/equal.hpp>
-#include <libs/assign/v2/test/put/pipe/optional/fun.h>
+#include <libs/assign/v2/test/put/pipe/optional/data.h>
 
 namespace test_assign_v2{
 namespace xxx_put{

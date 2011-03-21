@@ -11,11 +11,11 @@
 #define LIBS_ASSIGN_V2_TEST_FRAMEWORK_ER_2010_H
 
 namespace test_assign_v2{
-namespace xxx_framework{
+namespace xxx_interpreter{
 
     void test();
 
-}// xxx_framework
+}// xxx_interpreter
 }// xxx_test_assign
 
 #endif // LIBS_ASSIGN_V2_TEST_FRAMEWORK_ER_2010_H
