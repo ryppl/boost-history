@@ -39,12 +39,12 @@ namespace v2{
 namespace aux{
 
     template<typename F>
-    struct fun_holder{
+    struct data_gen_holder{
 
         typedef F fun_type;
 
-        fun_holder(){}
-        fun_holder(fun_type const& f) : fun( f ){}
+        data_gen_holder(){}
+        data_gen_holder(fun_type const& f) : fun( f ){}
 
         fun_type fun;
 
@@ -133,10 +133,10 @@ namespace aux{
 
     };
 
-    template<typename /*<<Container>>*/C, typename /*<<Functor>>*/F, typename /*<<Modifier tag>>*/Tag, typename /*<<Derived type>>*/D>
+    template<typename /*<<Container>>*/C, typename /*<<Data generator>>*/F, typename /*<<Modifier tag>>*/Tag, typename /*<<Derived type>>*/D>
     class interpreter_crtp
 //<-
-        : public fun_holder<F>
+        : public data_gen_holder<F>
         , public modifier_holder<Tag>
 #if !BOOST_ASSIGN_V2_ENABLE_CPP0X
         , public functor_aux::crtp_unary_and_up<
@@ -153,7 +153,7 @@ namespace aux{
 
         protected:
 
-        typedef fun_holder<F> fun_holder_;
+        typedef data_gen_holder<F> data_gen_holder_;
         typedef modifier_holder<Tag> modifier_holder_;
 //->
 
@@ -163,9 +163,9 @@ namespace aux{
         modifier_type;
 
         interpreter_crtp(){}
-        explicit interpreter_crtp( F const& f )/*<-*/ : fun_holder_( f ){}BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
+        explicit interpreter_crtp( F const& f )/*<-*/ : data_gen_holder_( f ){}BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
         explicit interpreter_crtp( F const& f, modifier_type const& m )/*<-*/
-            : fun_holder_( f ), modifier_holder_( m ){}BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
+            : data_gen_holder_( f ), modifier_holder_( m ){}BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
         typedef D const& result_type;
 

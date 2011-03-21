@@ -14,11 +14,11 @@ namespace test_assign_v2{
 namespace xxx_put{
 namespace xxx_pipe{
 namespace xxx_optional{
-namespace xxx_lookup{
+namespace xxx_mapped{
 
     void test();
 
-}// xxx_lookup
+}// xxx_mapped
 }// xxx_optional
 }// xxx_pipe
 }// xxx_put

@@ -62,13 +62,13 @@ namespace aux{
     };
 
     template<typename C, typename F, typename Tag>
-    struct /*<<Meta-function class>>*/replace_fun< aux::container_adapter<C, F, Tag> >{/*<-*/
+    struct /*<<Metafunction class>>*/replace_fun< aux::container_adapter<C, F, Tag> >{/*<-*/
         template<typename F1>
         struct apply{ typedef aux::container_adapter<C, F1, Tag> type; };
     /*->*/};
 
     template<typename C, typename F, typename Tag>
-    struct /*<<Meta-function class>>*/replace_modifier_tag< aux::container_adapter<C, F, Tag> >{/*<-*/
+    struct /*<<Metafunction class>>*/replace_modifier_tag< aux::container_adapter<C, F, Tag> >{/*<-*/
         template<typename Tag1>
         struct apply{ typedef aux::container_adapter<C, F, Tag1> type; };
     /*->*/};
@@ -77,7 +77,7 @@ namespace aux{
 namespace result_of{
 
     template<typename C>
-    struct /*<<Meta-function>>*/put{/*<-*/
+    struct /*<<Metafunction>>*/put{/*<-*/
         typedef typename aux::deduce_data_generator<C>::type f_;
         typedef typename aux::deduce_modifier_tag<C>::type modifier_tag_;
         typedef aux::container_adapter<C, f_, modifier_tag_> type;

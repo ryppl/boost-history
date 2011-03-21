@@ -35,7 +35,7 @@ namespace v2{
 namespace aux{
 
     template<typename T>
-    struct /*<<Meta-function>>*/deque_impl{ typedef /*<-*/std::deque<T> BOOST_ASSIGN_V2_IGNORE(/*->*/unspecified /*<-*/)/*->*/type; };
+    struct /*<<Metafunction>>*/deque_impl{ typedef /*<-*/std::deque<T> BOOST_ASSIGN_V2_IGNORE(/*->*/unspecified /*<-*/)/*->*/type; };
 
     template<typename T, typename F, typename Tag>
     class deque_adapter 
@@ -132,14 +132,14 @@ namespace aux{
     };
 
     template<typename T, typename F, typename Tag>
-    struct /*<<Meta-function class>>*/replace_fun< deque_adapter<T, F, Tag> >/*<-*/
+    struct /*<<Metafunction class>>*/replace_fun< deque_adapter<T, F, Tag> >/*<-*/
     {
         template<typename F1>
         struct apply{ typedef deque_adapter<T, F1, Tag> type; };
     }/*->*/;
 
     template<typename T, typename F, typename Tag>
-    struct /*<<Meta-function class>>*/replace_modifier_tag< deque_adapter<T, F, Tag> >/*<-*/
+    struct /*<<Metafunction class>>*/replace_modifier_tag< deque_adapter<T, F, Tag> >/*<-*/
     {
         template<typename Tag1>
         struct apply{ typedef deque_adapter<T, F, Tag1> type; };
@@ -178,7 +178,7 @@ namespace aux{
 namespace result_of{
 
     template<typename T>
-    struct /*<<Meta-function>>*/deque/*<-*/ 
+    struct /*<<Metafunction>>*/deque/*<-*/ 
         : aux::result_of::deque<T>
     {}/*->*/;
 

@@ -35,7 +35,7 @@ namespace array_aux{
 namespace nth_result_of{
 
     template<array_size_type N, typename /*<<U& has to be a reference>>*/U>
-    struct /*<<Meta-function>>*/csv_array/*<-*/
+    struct /*<<Metafunction>>*/csv_array/*<-*/
     {
         typedef array_aux::instant_alloc<N, U> type;
     }/*->*/;

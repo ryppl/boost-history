@@ -18,14 +18,14 @@ namespace v2{
 //[syntax_put_adapter_replace_parameter
 namespace aux{
                 
-    template<typename /*<<Inherits crtp\<\> >>*/D> 
-    struct /*<<Meta-function class to be specialized on D>>*/replace_fun{
+    template<typename /*<<Inherits interpreter_crtp\<\> >>*/D> 
+    struct /*<<Metafunction class to be specialized on D>>*/replace_fun{
         template<typename F> 
         struct /*<<Transforms D by replacing D::fun_type with F>>*/apply{};
     };
 
-    template<typename /*<<Inherits crtp\<\> >>*/ D> 
-    struct /*<<Meta-function class to be specialized on D>>*/ replace_modifier_tag{
+    template<typename /*<<Inherits interpreter_crtp\<\> >>*/ D> 
+    struct /*<<Metafunction class to be specialized on D>>*/ replace_modifier_tag{
         template<typename Tag> 
         struct /*<<Transforms D by replacing Tag D::modifier_tag with Tag>>*/ apply{};
     };

@@ -9,7 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #include <libs/assign/v2/test/optional/data.h>
 #include <libs/assign/v2/test/optional/iterate.h>
-#include <libs/assign/v2/test/optional/lookup.h>
+#include <libs/assign/v2/test/optional/mapped.h>
 #include <libs/assign/v2/test/optional/repeat.h>
 #include <libs/assign/v2/test/optional/standard.h>
 #include <libs/assign/v2/test/optional.h>
@@ -20,7 +20,7 @@ namespace xxx_optional{
     void test(){
         xxx_fun::test();
         xxx_iterate::test();
-        xxx_lookup::test();
+        xxx_mapped::test();
         xxx_repeat::test();
         xxx_standard::test();
     }

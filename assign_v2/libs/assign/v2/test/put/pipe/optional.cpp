@@ -9,7 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #include <libs/assign/v2/test/put/pipe/optional/data.h>
 #include <libs/assign/v2/test/put/pipe/optional/iterate.h>
-#include <libs/assign/v2/test/put/pipe/optional/lookup.h>
+#include <libs/assign/v2/test/put/pipe/optional/mapped.h>
 #include <libs/assign/v2/test/put/pipe/optional/repeat.h>
 #include <libs/assign/v2/test/put/pipe/optional/standard.h>
 #include <libs/assign/v2/test/put/pipe/optional.h>
@@ -23,7 +23,7 @@ namespace xxx_optional{
     {
         xxx_fun::test();
         xxx_iterate::test();
-        xxx_lookup::test();
+        xxx_mapped::test();
         xxx_repeat::test();
         xxx_standard::test();
     }

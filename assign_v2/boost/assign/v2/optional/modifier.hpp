@@ -50,7 +50,7 @@ namespace aux{
     };
 
     template<typename Keyword, typename Arg>
-    struct /*<<Meta-function class to be specialized on Keyword>>*/ meta_modifier_tag
+    struct /*<<Metafunction class to be specialized on Keyword>>*/ meta_modifier_tag
     {
         template<typename /*<<Inherits `interpreter_crtp<>` >>*/ D> 
         struct /*<<Returns a modifier-tag>>*/ apply;

@@ -15,21 +15,21 @@
 #include <boost/assign/v2/put/pipe/csv_put.hpp>
 // Options come next
 #include <boost/assign/v2/optional/data.hpp>
-#include <boost/assign/v2/optional/lookup.hpp>
-#include <libs/assign/v2/test/put/pipe/optional/lookup.h>
+#include <boost/assign/v2/optional/mapped.hpp>
+#include <libs/assign/v2/test/put/pipe/optional/mapped.h>
 
 namespace test_assign_v2{
 namespace xxx_put{
 namespace xxx_pipe{
 namespace xxx_optional{
-namespace xxx_lookup{
+namespace xxx_mapped{
 
     void test()
     {
         using namespace boost;
         namespace as2 = assign::v2;
         {
-            //[test_put_pipe_modifier_lookup
+            //[test_put_pipe_modifier_mapped
         	using namespace lambda;
             typedef std::map<std::string, int> C; C cal;
             BOOST_AUTO( _local, ( as2::_data = _1 ) );
@@ -37,8 +37,8 @@ namespace xxx_lookup{
                 (
                     cal 
                         | as2::_csv_put( C::value_type( "feb", 28 ) ) 
-                        | ( as2::_csv_put % _local % ( as2::_lookup = (_1 = 30) ) )( "apr", "jun", "sep", "nov" )
-                        | ( as2::_csv_put % _local % ( as2::_lookup = (_1 = 31) ) )( "jan", "mar", "may", "jul", "aug", "oct", "dec" )
+                        | ( as2::_csv_put % _local % ( as2::_mapped = (_1 = 30) ) )( "apr", "jun", "sep", "nov" )
+                        | ( as2::_csv_put % _local % ( as2::_mapped = (_1 = 31) ) )( "jan", "mar", "may", "jul", "aug", "oct", "dec" )
  
                 )["feb"] == 28
             );
@@ -48,7 +48,7 @@ namespace xxx_lookup{
         }    
     }
 
-}// xxx_lookup
+}// xxx_mapped
 }// xxx_optional
 }// xxx_pipe
 }// xxx_put

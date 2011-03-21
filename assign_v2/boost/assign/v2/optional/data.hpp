@@ -9,8 +9,8 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_OPTIONAL_DATA_ER_2010_HPP
 #define BOOST_ASSIGN_V2_OPTIONAL_DATA_ER_2010_HPP
-#include <boost/assign/v2/detail/pp/ignore.hpp>
 #include <boost/assign/v2/detail/keyword/ignore.hpp>
+#include <boost/assign/v2/detail/pp/ignore.hpp>
 #include <boost/assign/v2/interpreter/fwd.hpp>
 #include <boost/assign/v2/interpreter/replace_parameter.hpp>
 #include <boost/mpl/apply.hpp>
@@ -18,11 +18,12 @@
 namespace boost{
 namespace assign{
 namespace v2{
+//[syntax_optional_data
 namespace aux{
 namespace result_of{
 
     template<typename D>
-    struct data_generator{
+    struct /*<<Metafunction class>>*/data_generator/*<-*/{
 
         typedef aux::replace_fun<D> meta_;
 
@@ -33,8 +34,8 @@ namespace result_of{
 
 }// result_of
 
-    template<typename F = keyword_aux::ignore>
-    struct data_generator
+    template<typename F/*<-*/= keyword_aux::ignore/*->*/>
+    struct data_generator/*<-*/
     {
         data_generator(){}
         data_generator(F f) : f_( f ){}
@@ -43,38 +44,39 @@ namespace result_of{
 
         private:
         F f_;
-    };
+    }/*->*/;
 
     template<typename C, typename F, typename Tag, typename D, typename F1>
     typename ::boost::mpl::apply1<result_of::data_generator<D>, F1>::type
     operator%(
         interpreter_crtp<C, F, Tag, D> const& lhs,
         data_generator<F1> const& rhs
-    )
+    )/*<-*/
     {
         typedef result_of::data_generator<D> meta_;
         typedef typename ::boost::mpl::apply1<meta_, F1>::type result_;
         return result_( lhs.container(), rhs.fun(), lhs.modifier );
-    }
+    }/*<-*/BOOST_ASSIGN_V2_IGNORE(/*<-*/;/*->*/)/*->*/
 
-    struct keyword_data_generator{
+    struct keyword_data_generator
+    /*<-*/{
 
         template<typename F>
         data_generator<F> operator=(F const& f)const{
             return data_generator<F>( f );
         }
 
-    };
+    }/*->*/;
 
 }// aux
 namespace{
-    const aux::keyword_data_generator _data = aux::keyword_data_generator();
+    const aux::keyword_data_generator _data/*<-*/ 
+    	= aux::keyword_data_generator()/*->*/;
 }
-//[syntax_put_fun_modulo
 namespace result_of{
 
     template<typename D>
-    struct data_generator/*<-*/
+    struct /*<<Metafunction class>>*/data_generator/*<-*/
         : aux::result_of::data_generator<D>
     {}/*->*/;
 

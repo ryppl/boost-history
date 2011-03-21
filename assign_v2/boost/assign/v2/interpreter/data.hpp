@@ -21,14 +21,14 @@
 namespace boost{
 namespace assign{
 namespace v2{
-//[syntax_interpreter_fun
+//[syntax_interpreter_data
 namespace aux{
 
     template<typename C>
     struct container_value{ typedef typename C::value_type type; };
 
     template<typename /*<<Pointer-container>>*/PtrC>
-    struct /*<<Meta-function mapping the `PtrC`'s pointer-type to a factory thereof>>*/ deduce_data_generator_pointer/*<-*/
+    struct /*<<Metafunction>>*/ deduce_ptr_generator/*<-*/
     {
         typedef typename v2::ptr_container_aux::to_value_container<
             PtrC
@@ -37,18 +37,17 @@ namespace aux{
     }/*->*/;
 
     template<typename /*<<Value-container>>*/C>
-    struct /*<<Meta-function mapping `C`'s value-type to a factory thereof>>*/ deduce_data_generator_value/*<-*/
+    struct /*<<Metafunction>>*/ deduce_value_generator/*<-*/
     {
-//        typedef typename v2::container_traits::value<C>::type value_type;
         typedef functor_aux::constructor<typename C::value_type> type;
     }/*->*/;
 
-    template<typename /*<<Either of a value or pointer-container>>*/C>
-    struct /*<<Meta-function mapping `C`s element-type to a factory thereof>>*/deduce_data_generator/*<-*/
+    template<typename /*<<Value or pointer-container>>*/C>
+    struct /*<<Metafunction>>*/deduce_data_generator/*<-*/
         :  boost::mpl::eval_if<
             ptr_container_aux::is_ptr_container<C>,
-            deduce_data_generator_pointer<C>,
-            deduce_data_generator_value<C>
+            deduce_ptr_generator<C>,
+            deduce_value_generator<C>
         >
     {}/*->*/;
 

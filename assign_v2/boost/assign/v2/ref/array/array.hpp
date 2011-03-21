@@ -41,7 +41,7 @@ namespace array_aux{
 namespace nth_result_of{
 
     template<array_size_type N, typename /*<<U& has to be a reference>>*/U>
-    struct /*<<Meta-function>>*/array/*<-*/
+    struct /*<<Metafunction>>*/array/*<-*/
         : array_aux::recursive_result<N, U>
     {}/*->*/;
 

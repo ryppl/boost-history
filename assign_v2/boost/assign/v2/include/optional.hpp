@@ -12,7 +12,7 @@
 #include <boost/assign/v2/include/optional/data.hpp>
 #include <boost/assign/v2/include/optional/insert.hpp>
 #include <boost/assign/v2/include/optional/iterate.hpp>
-#include <boost/assign/v2/include/optional/lookup.hpp>
+#include <boost/assign/v2/include/optional/mapped.hpp>
 #include <boost/assign/v2/include/optional/push.hpp>
 #include <boost/assign/v2/include/optional/push_back.hpp>
 #include <boost/assign/v2/include/optional/push_front.hpp>

@@ -16,10 +16,11 @@
 namespace boost{
 namespace assign{
 namespace v2{
+//[syntax_interpreter_as_arg_list
 namespace aux{    
 
-    template<typename R>
-    class as_arg_list_adapter
+    template<typename /*<<Range>>*/R>
+    class as_arg_list_adapter/*<-*/
     {
 
         typedef typename boost::range_iterator<R>::type ri_;
@@ -40,16 +41,15 @@ namespace aux{
         as_arg_list_adapter();
         ir_ ir;
 
-    };
+    }/*->*/;
 
-//[syntax_interpreter_as_arg_list
 namespace result_of{
 
     template<typename R>
-    struct as_arg_list
+    struct /*<<Metafunction>>*/as_arg_list/*<-*/
     {
-        typedef/*<-*/ BOOST_ASSIGN_V2_IGNORE(/*->*/ unspecified /*<-*/) as_arg_list_adapter<R> /*->*/type;
-    };
+        typedef as_arg_list_adapter<R> type;
+    }/*->*/;
 
 }// result_of
 
@@ -57,7 +57,6 @@ namespace result_of{
     typename result_of::as_arg_list<R>::type
     as_arg_list(R& range)/*<-*/
     {
-
         return typename result_of::as_arg_list<R>::type( range );
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
@@ -68,17 +67,17 @@ namespace result_of{
         return typename result_of::as_arg_list<R const>::type( range );
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
-//]
 }// aux
     using aux::as_arg_list;
 namespace result_of{
 
     template<typename R>
-    struct as_arg_list
+    struct as_arg_list/*<-*/
         : aux::result_of::as_arg_list<R>
-    {};
+    {}/*->*/;
 
 }// result_of
+//]
 }// v2
 }// assign
 }// boost

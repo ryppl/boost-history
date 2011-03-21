@@ -21,13 +21,13 @@ namespace assign{
 namespace v2{
 namespace modifier_tag{ 
 
-    template<typename Arg> struct lookup; 
+    template<typename Arg> struct mapped; 
 
 }// modifier_tag
 namespace aux{
                 
     template<typename Arg>
-    class adapter_modifier<modifier_tag::lookup<Arg> >
+    class adapter_modifier<modifier_tag::mapped<Arg> >
     {
 
         typedef Arg arg_;
@@ -70,9 +70,9 @@ namespace aux{
 }// boost
 
 #include <boost/assign/v2/optional/modifier.hpp>
-BOOST_ASSIGN_V2_OPTIONAL_MODIFIER_KEYWORD(lookup)
-#define BOOST_ASSIGN_V2_TAG modifier_tag::lookup<Arg>
-BOOST_ASSIGN_V2_OPTIONAL_MODIFIER_META_MODIFIER_TAG(lookup, BOOST_ASSIGN_V2_TAG)
+BOOST_ASSIGN_V2_OPTIONAL_MODIFIER_KEYWORD(mapped)
+#define BOOST_ASSIGN_V2_TAG modifier_tag::mapped<Arg>
+BOOST_ASSIGN_V2_OPTIONAL_MODIFIER_META_MODIFIER_TAG(mapped, BOOST_ASSIGN_V2_TAG)
 #undef BOOST_ASSIGN_V2_TAG
 
 #endif // BOOST_ASSIGN_V2_OPTIONAL_LOOKUP_ER_2010_HPP

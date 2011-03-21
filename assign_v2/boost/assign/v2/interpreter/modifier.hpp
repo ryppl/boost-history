@@ -34,7 +34,7 @@ namespace aux{
     struct /*<<Specialize on Tag>>*/ adapter_modifier{};
 
     template<typename C>
-    struct /*<<Meta-function returning a modifier-tag>>*/deduce_modifier_tag;
+    struct /*<<Metafunction returning a modifier-tag>>*/deduce_modifier_tag;
 
 }// aux
 namespace put_concept{

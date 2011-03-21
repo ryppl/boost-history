@@ -34,7 +34,7 @@ namespace range_aux{
 namespace result_of{
 
     template<typename /*<<Range of reference-wrappers>>*/R>
-    struct /*<<Meta-function>>*/range_get/*<-*/{
+    struct /*<<Metafunction>>*/range_get/*<-*/{
 
         typedef ref::get_functor f_;
         #ifdef BOOST_MSVC
