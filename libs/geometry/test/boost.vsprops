@@ -16,6 +16,6 @@
 	/>
 	<UserMacro
 		Name="BOOST_ROOT"
-		Value="../../.."
+		Value="c:\software\boost_1_46_0"
 	/>
 </VisualStudioPropertySheet>
