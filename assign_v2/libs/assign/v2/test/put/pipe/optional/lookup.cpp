@@ -14,7 +14,7 @@
 #include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/put/pipe/csv_put.hpp>
 // Options come next
-#include <boost/assign/v2/optional/fun.hpp>
+#include <boost/assign/v2/optional/data.hpp>
 #include <boost/assign/v2/optional/lookup.hpp>
 #include <libs/assign/v2/test/put/pipe/optional/lookup.h>
 
@@ -32,7 +32,7 @@ namespace xxx_lookup{
             //[test_put_pipe_modifier_lookup
         	using namespace lambda;
             typedef std::map<std::string, int> C; C cal;
-            BOOST_AUTO( _local, ( as2::_fun = _1 ) );
+            BOOST_AUTO( _local, ( as2::_data = _1 ) );
             BOOST_ASSIGN_V2_CHECK(
                 (
                     cal 

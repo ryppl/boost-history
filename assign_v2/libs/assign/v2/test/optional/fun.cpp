@@ -16,7 +16,7 @@
 #include <boost/assign/v2/deque.hpp>
 #include <boost/assign/v2/put/put.hpp>
 // Options come next
-#include <boost/assign/v2/optional/fun.hpp>
+#include <boost/assign/v2/optional/data.hpp>
 #include <boost/function.hpp>
 #include <boost/lambda/bind.hpp>
 #include <boost/lambda/lambda.hpp>
@@ -36,12 +36,12 @@ namespace xxx_fun{
         namespace as2 = assign::v2;
         {
         	// (*fp) resolves error C2440 using MSVC
-            //[test_optional_fun_math
+            //[test_optional_data_math
             std::vector<double> exponent;
             typedef double(*fp)(double);
             typedef function<double(double)> f_;
             (
-                as2::put( exponent ) % ( as2::_fun = f_( fp(log10) ) )
+                as2::put( exponent ) % ( as2::_data = f_( fp(log10) ) )
             )/*<<Equivalent to `as2::put( exponent )( log10( 1000.0 ) )( log10( 10.0 ) )( log10( 10000.0 ) )( log10( 1.0 ) )( log10( 100.0 ) )`>>*/( 1000.0 )( 10.0 )( 10000.0 )( 1.0 )( 100.0 );
 
             double eps = numeric::bounds<double>::smallest();
@@ -50,13 +50,13 @@ namespace xxx_fun{
             //]
         }
         {
-            //[test_optional_fun_recursive
+            //[test_optional_data_recursive
         	using namespace lambda;
             int i = 1, k = 1;
             BOOST_AUTO(
                 factorials, (
                     as2::deque<int>( as2::_nil ) % (
-                        as2::_fun = ( var(k) *= ( var(i)++ ) )
+                        as2::_data = ( var(k) *= ( var(i)++ ) )
                     )
                 )/*<<Equivalent to `factorials( k *= i++ )` for [^i = 1, ..., 5]>>*/()()()()()
             );

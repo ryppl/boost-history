@@ -23,7 +23,7 @@
 #include <boost/ptr_container/ptr_list.hpp>
 #include <boost/ptr_container/ptr_vector.hpp>
 
-#include <boost/assign/v2/framework/modifier.hpp>
+#include <boost/assign/v2/interpreter/modifier.hpp>
 #include <libs/assign/v2/test/framework/modifier.h>
 
 namespace test_assign_v2{

@@ -14,7 +14,7 @@
 #include <boost/assign/v2/put/put.hpp>
 #include <boost/assign/v2/deque.hpp>
 // Options come next
-#include <boost/assign/v2/optional/fun.hpp>
+#include <boost/assign/v2/optional/data.hpp>
 #include <boost/assign/v2/optional/lookup.hpp> 
 #include <boost/lambda/lambda.hpp>
 #include <boost/mpl/assert.hpp>
@@ -55,7 +55,7 @@ namespace xxx_lookup{
             typedef std::string str_; typedef std::map<str_, int> C; C year; 
             ( 
                 as2::put( year )( "feb", 28 )( "apr", 30 )( "jun", 30 )( "sep", 30 )( "nov", 30 ) 
-                    % ( as2::_fun = _1 ) %  ( as2::_lookup = ( _1 = 31 ) ) 
+                    % ( as2::_data = _1 ) %  ( as2::_lookup = ( _1 = 31 ) ) 
             )/*<<Calls `year["jan"] = 31` etc.>>*/( "jan" )( "mar" )( "may" )( "jul" )( "aug" )( "oct" )( "dec" );
             
             BOOST_ASSIGN_V2_CHECK( year["jan"] == 31 );

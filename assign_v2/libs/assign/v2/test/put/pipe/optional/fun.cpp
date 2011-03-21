@@ -14,7 +14,7 @@
 #include <boost/assign/v2/deque/csv_deque.hpp>
 #include <boost/assign/v2/put/pipe/csv_put.hpp>
 // Options come next
-#include <boost/assign/v2/optional/fun.hpp>
+#include <boost/assign/v2/optional/data.hpp>
 #include <boost/lambda/lambda.hpp>
 #include <boost/range/algorithm/equal.hpp>
 #include <libs/assign/v2/test/put/pipe/optional/fun.h>
@@ -30,14 +30,14 @@ namespace xxx_fun{
         using namespace boost;
         namespace as2 = assign::v2;
         {
-            //[test_put_pipe_optional_fun_math
+            //[test_put_pipe_optional_data_math
             int k = 1; std::list<int> factorials;
         	using namespace lambda;
             
             BOOST_ASSIGN_V2_CHECK(
                 range::equal(
                     factorials | ( 
-                        as2::_csv_put % ( as2::_fun = ( var(k) *= _1 ) ) 
+                        as2::_csv_put % ( as2::_data = ( var(k) *= _1 ) ) 
                     )/*Equivalent to calling `factorials.push_back( k *= ++i )`*/( 1, 2, 3, 4, 5 ),
                     as2::csv_deque<int>( 1 )( 2 )( 6 )( 24 )( 120 )
                 )

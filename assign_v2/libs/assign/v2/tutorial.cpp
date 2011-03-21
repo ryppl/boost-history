@@ -102,7 +102,7 @@ namespace tutorial_assign_v2{
             //]
         }
         {
-            //[tutorial_parametrization
+            //[tutorial_optional
             using namespace lambda;
             typedef int T; array<T, 4> powers = converter( csv_deque( 1, 10, -1, -1 ) );
             std::size_t index = 2; ( put( powers ) % ( _iterate = var( index )++ ) )( 100 )( 1000 );
