@@ -7,8 +7,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef LIBS_ASSIGN_V2_TEST_MODIFIER_STANDARD_ER_2010_H
-#define LIBS_ASSIGN_V2_TEST_MODIFIER_STANDARD_ER_2010_H
+#ifndef LIBS_ASSIGN_V2_TEST_OPTIONAL_STANDARD_ER_2010_H
+#define LIBS_ASSIGN_V2_TEST_OPTIONAL_STANDARD_ER_2010_H
 
 namespace test_assign_v2{
 namespace xxx_optional{
@@ -20,4 +20,4 @@ namespace xxx_standard{
 }// xxx_optional
 }// xxx_test_assign
 
-#endif // LIBS_ASSIGN_V2_TEST_MODIFIER_STANDARD_ER_2010_H
+#endif // LIBS_ASSIGN_V2_TEST_OPTIONAL_STANDARD_ER_2010_H
