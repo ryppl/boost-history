@@ -12,7 +12,7 @@
 
 #include <boost/assign/v2/value/modifier/iterate.hpp>
 #include <boost/assign/v2/value/put.hpp>
-#include <boost/assign/v2/value/deque.hpp>
+#include <boost/assign/v2/deque.hpp>
 #include <boost/lambda/lambda.hpp>
 #include <boost/lambda/bind.hpp>
 #include <boost/lambda/construct.hpp>

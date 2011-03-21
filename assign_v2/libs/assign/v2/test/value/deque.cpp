@@ -13,8 +13,8 @@
 #include <boost/mpl/assert.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/assign/v2/detail/config/check.hpp>
-#include <boost/assign/v2/value/deque/csv_deque.hpp>
-#include <boost/assign/v2/value/deque/deque.hpp>
+#include <boost/assign/v2/deque/csv_deque.hpp>
+#include <boost/assign/v2/deque/deque.hpp>
 #include <boost/range/algorithm/equal.hpp>
 #include <libs/assign/v2/test/value/deque.h>
 

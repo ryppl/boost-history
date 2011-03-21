@@ -11,7 +11,7 @@
 
 #include <boost/assign/v2/value/modifier/iterate.hpp>
 #include <boost/assign/v2/value/pipe/csv_put.hpp>
-#include <boost/assign/v2/value/deque/csv_deque.hpp>
+#include <boost/assign/v2/deque/csv_deque.hpp>
 #include <boost/array.hpp>
 #include <boost/lambda/lambda.hpp>
 #include <boost/range/algorithm/equal.hpp>

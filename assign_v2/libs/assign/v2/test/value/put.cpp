@@ -21,7 +21,7 @@
 #include <boost/assign/v2/detail/config/check.hpp>
 
 #include <boost/assign/v2/value/put.hpp>
-#include <boost/assign/v2/value/deque/csv_deque.hpp>
+#include <boost/assign/v2/deque/csv_deque.hpp>
 #include <boost/tuple/tuple.hpp>
 #include <boost/range/algorithm_ext/iota.hpp>
 #include <boost/range/begin.hpp>

@@ -15,7 +15,7 @@
 #include <boost/assign/v2/detail/config/check.hpp>
 
 #include <boost/assign/v2/value/put.hpp>
-#include <boost/assign/v2/value/deque.hpp>
+#include <boost/assign/v2/deque.hpp>
 #include <boost/assign/v2/value/fun.hpp>
 #include <boost/function.hpp>
 #include <boost/lambda/bind.hpp>

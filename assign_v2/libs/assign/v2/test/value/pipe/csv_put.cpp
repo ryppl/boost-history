@@ -14,7 +14,7 @@
 #include <string>
 #include <boost/array.hpp>
 #include <boost/assign/v2/detail/config/check.hpp>
-#include <boost/assign/v2/value/deque/csv_deque.hpp>
+#include <boost/assign/v2/deque/csv_deque.hpp>
 #include <boost/assign/v2/value/pipe/put.hpp>
 #include <boost/assign/v2/value/pipe/csv_put.hpp> 
 #include <boost/range/algorithm/for_each.hpp>

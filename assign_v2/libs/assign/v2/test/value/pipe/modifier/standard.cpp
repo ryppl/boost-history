@@ -18,7 +18,7 @@
 #include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/value/modifier/standard.hpp>
 #include <boost/assign/v2/value/pipe/csv_put.hpp>
-#include <boost/assign/v2/value/deque.hpp>
+#include <boost/assign/v2/deque.hpp>
 #include <libs/assign/v2/test/value/pipe/modifier/standard.h>
 
 namespace test_assign_v2{
