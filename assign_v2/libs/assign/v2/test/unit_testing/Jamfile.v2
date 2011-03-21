@@ -16,10 +16,10 @@ rule assign-test ( name )
 }
 
 test-suite assign :
-    [ assign-test detail ]
     [ assign-test deque ]
-    [ assign-test fun ]
-    [ assign-test modifier ]
+    [ assign-test detail ]
+    [ assign-test framework ]
+    [ assign-test optional ]
     [ assign-test put ]
     [ assign-test ref ]
     [ assign-test utility ]
