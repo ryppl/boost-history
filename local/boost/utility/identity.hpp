@@ -29,7 +29,8 @@
  *
  * This macro expands to an expression that can be passed as a single macro
  * parameter even if it contains commas and that evaluates to the specified
- * type at compile-time (see the @RefSect{Advanced} section).
+ * type at compile-time (see the @RefSect2{Advanced_Topics, Advanced Topics}
+ * section).
  *
  * For example <c>BOOST_IDENTITY_TYPE((std::map<int, double>))</c> can be
  * passed as a single macro parameter when instead
@@ -45,7 +46,7 @@
  * }
  * @EndParams
  *
- * @See @RefSect2{Advanced, Topics} section.
+ * @See @RefSect2{Advanced_Topics, Advanced Topics} section.
  */
 #define BOOST_IDENTITY_TYPE(parenthesized_type) \
     /* must NOT prefix this with `::` to work with parenthesized syntax */ \
@@ -58,7 +59,8 @@
  *
  * This macro expands to an expression that can be passed as a single macro
  * parameter even if it contains commas and that evaluates to the specified
- * value at run-time (see the @RefSect{Advanced} section).
+ * value at run-time (see the @RefSect{Advanced_Topics, Advanced Topics}
+ * section).
  *
  * For example <c>BOOST_IDENTITY_VALUE((key_sizeof<int, double>::value))</c>
  * can be passed as a single macro parameter when instead
@@ -74,7 +76,7 @@
  * }
  * @EndParams
  *
- * @See @RefSect2{Advanced, Topics} section.
+ * @See @RefSect2{Advanced_Topics, Advanced Topics} section.
  */
 #define BOOST_IDENTITY_VALUE(parenthesized_value) \
     /* must NOT prefix this with `::` to work with parenthesized syntax */ \

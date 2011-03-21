@@ -4,7 +4,7 @@
 [/ License, Version 1.0 (see accompanying file LICENSE_1_0.txt or a ]
 [/ copy at http://www.boost.org/LICENSE_1_0.txt). ]
 
-[section:Starting Getting Started]
+[section:Getting_Started Getting Started]
 
 This section explains how to setup your system to use this library.
 
@@ -56,10 +56,6 @@ Programmers can simply instruct the C++ compiler where to find the library heade
 This library implementation uses a number of __Boost__ libraries among which: __Boost_Preprocessor__, __Boost_ScopeExit__, __Boost_Typeof__, __Boost_TypeTraits__, and __Boost_MPL__.
 These __Boost__ libraries must be properly installed on your system in order for this library to work.
 
-[endsect]
-
-[section File Structure]
-
 The header files of this library are divided as follow:
 
     ``[headerref boost/local/function.hpp]        /local functions/``
@@ -68,10 +64,6 @@ The header files of this library are divided as follow:
     ``[headerref boost/local/typeof.hpp]          /bound variable type deduction/``
     ``[headerref boost/local/function.hpp]        /local functors/``
     ``[headerref boost/local/config.hpp]          /configuration macros/``
-
-[endsect]
-
-[section Symbols]
 
 The following symbols are part of the library private API, they are not documented, and they should not be directly used by programmers:
 [footnote

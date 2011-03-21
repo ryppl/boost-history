@@ -33,9 +33,9 @@
 
 </span>BOOST_IDENTITY_VALUE(parenthesized_value)</pre></div>
 <div class="refsect1">
-<a name="id915525"></a><h2>Description</h2>
-<p>This macro expands to an expression that can be passed as a single macro parameter even if it contains commas and that evaluates to the specified value at run-time (see the  <a class="link" href="boost_local/Advanced.html" title="Advanced Topics">Advanced</a> section).</p>
-<p>For example <code class="computeroutput">BOOST_IDENTITY_VALUE((key_size&lt;int, double&gt;::value))</code> can be passed as a single macro parameter when instead <code class="computeroutput">key_size&lt;int, double&gt;::value</code> cannot (because it contains a comma not wrapped by round parenthesis so it will be interpreted as two separate macro parameters by the preprocessor).</p>
+<a name="id913525"></a><h2>Description</h2>
+<p>This macro expands to an expression that can be passed as a single macro parameter even if it contains commas and that evaluates to the specified value at run-time (see the {Advanced_Topics, Advanced Topics} section).</p>
+<p>For example <code class="computeroutput">BOOST_IDENTITY_VALUE((key_sizeof&lt;int, double&gt;::value))</code> can be passed as a single macro parameter when instead <code class="computeroutput">key_sizeof&lt;int, double&gt;::value</code> cannot (because it contains a comma not wrapped by round parenthesis so it will be interpreted as two separate macro parameters by the preprocessor).</p>
 <p><span class="bold"><strong>Parameters:</strong></span> </p>
 <div class="informaltable"><table class="table">
 <colgroup>
@@ -49,7 +49,7 @@
 </table></div>
 <p>
 </p>
-<p><span class="bold"><strong>See:</strong></span>  <a class="link" href="boost_local/Advanced.html" title="Advanced Topics">Advanced</a> section. </p>
+<p><span class="bold"><strong>See:</strong></span>  <a class="link" href="boost_local/Advanced_Topics.html" title="Advanced Topics"> Advanced Topics</a> section. </p>
 </div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>

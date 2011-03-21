@@ -1,7 +1,7 @@
 index.html
-boost_local/Getting.html
+boost_local/Getting_Started.html
 boost_local/Tutorial.html
-boost_local/Advanced.html
+boost_local/Advanced_Topics.html
 reference.html
 BOOST_LOCAL_BLOCK.html
 BOOST_LOCAL_BLOCK_TPL.html
@@ -22,6 +22,6 @@ BOOST_IDENTITY_VALUE.html
 boost_local/Examples.html
 boost_local/Alternatives.html
 boost_local/Implementation.html
-boost_local/Release.html
+boost_local/Release_Notes.html
 boost_local/Bibliography.html
 boost_local/Acknowledgments.html

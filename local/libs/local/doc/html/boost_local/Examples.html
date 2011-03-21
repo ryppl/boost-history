@@ -26,202 +26,1067 @@
 <div class="titlepage"><div><div><h2 class="title" style="clear: both">
 <a name="boost_local.Examples"></a><a class="link" href="Examples.html" title="Appendix: Examples">Appendix: Examples</a>
 </h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="Examples.html#boost_local.Examples.Boost_Typeof_for_User_Defined_Types">Boost.Typeof
+      for User Defined Types</a></span></dt>
+<dt><span class="section"><a href="Examples.html#boost_local.Examples.Emulating_Ds_Scope_Guards">Emulating
+      D's Scope Guards</a></span></dt>
+<dt><span class="section"><a href="Examples.html#boost_local.Examples.stl_find__c__0x_lambdas_">STL Find
+      (C++0x Lambdas)</a></span></dt>
+<dt><span class="section"><a href="Examples.html#boost_local.Examples.binding__this___c__0x_lambdas_">Binding
+      <code class="computeroutput"><span class="keyword">this</span></code> (C++0x Lambdas)</a></span></dt>
+<dt><span class="section"><a href="Examples.html#boost_local.Examples.all_parameter_permutations">All
+      Parameter Permutations</a></span></dt>
+</dl></div>
 <p>
-      This section lists the complete source code of some examples that can be compiled
-      and executed using this library (see also the many examples listed within the
-      text of this documentation).
+      This sections lists a few examples in addition to the already numerous examples
+      presented in the rest of this documents.
     </p>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_local.Examples.Boost_Typeof_for_User_Defined_Types"></a><a class="link" href="Examples.html#boost_local.Examples.Boost_Typeof_for_User_Defined_Types" title="Boost.Typeof for User Defined Types">Boost.Typeof
+      for User Defined Types</a>
+</h3></div></div></div>
+<p>
+        This example is adapted from the <a href="http://www.boost.org/doc/libs/release/libs/scope_exit/doc/html/index.html" target="_top">Boost.ScopeExit</a>
+        documentation. This example illustrates how to use <a href="http://www.boost.org/doc/libs/release/doc/html/typeof.html" target="_top">Boost.Typeof</a>
+        to register user defined types and then use these types to bind local exit
+        variables.
+      </p>
 <div class="informaltable"><table class="table">
 <colgroup>
-<col>
-<col>
 <col>
 <col>
 </colgroup>
 <thead><tr>
 <th>
-              <p>
-                Adapted From
-              </p>
-            </th>
+                <p>
+                  Variadic Macro Syntax (C99 and later compilers)
+                </p>
+              </th>
 <th>
-              <p>
-                Name
-              </p>
-            </th>
-<th>
-              <p>
-                Description
-              </p>
-            </th>
-<th>
-              <p>
-                Source File(s)
-              </p>
-            </th>
+                <p>
+                  Sequencing Macro Syntax (all C++ compilers)
+                </p>
+              </th>
 </tr></thead>
-<tbody>
-<tr>
+<tbody><tr>
 <td>
-              <p>
-                <a href="http://www.boost.org/doc/libs/release/libs/scope_exit/doc/html/index.html" target="_top">Boost.ScopeExit</a>
-                documentation
-              </p>
-            </td>
+                <p>
+                  
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">local</span><span class="special">/</span><span class="identifier">exit</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">foreach</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">typeof</span><span class="special">/</span><span class="identifier">std</span><span class="special">/</span><span class="identifier">vector</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span> <span class="comment">// Typeof emulation mode.
+</span><span class="preprocessor">#include</span> <span class="identifier">BOOST_TYPEOF_INCREMENT_REGISTRATION_GROUP</span><span class="special">()</span> <span class="comment">// Typeof emulation mode.
+</span><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">vector</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">ostream</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">cassert</span><span class="special">&gt;</span>
+
+<span class="keyword">class</span> <span class="identifier">world</span><span class="special">;</span>
+
+<span class="keyword">class</span> <span class="identifier">person</span> <span class="special">{</span>
+    <span class="keyword">friend</span> <span class="keyword">class</span> <span class="identifier">world</span><span class="special">;</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">typedef</span> <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">id_t</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">evolution_t</span><span class="special">;</span>
+
+    <span class="identifier">person</span><span class="special">():</span> <span class="identifier">id_</span><span class="special">(</span><span class="number">0</span><span class="special">),</span> <span class="identifier">evolution_</span><span class="special">(</span><span class="number">0</span><span class="special">)</span> <span class="special">{}</span>
+
+    <span class="keyword">friend</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">ostream</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">&lt;&lt;(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">ostream</span><span class="special">&amp;</span> <span class="identifier">o</span><span class="special">,</span> <span class="identifier">person</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">p</span><span class="special">)</span>
+        <span class="special">{</span> <span class="keyword">return</span> <span class="identifier">o</span> <span class="special">&lt;&lt;</span> <span class="string">"person: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">p</span><span class="special">.</span><span class="identifier">id_</span> <span class="special">&lt;&lt;</span> <span class="string">", "</span> <span class="special">&lt;&lt;</span> <span class="identifier">p</span><span class="special">.</span><span class="identifier">evolution_</span><span class="special">;</span> <span class="special">}</span>
+
+<span class="keyword">private</span><span class="special">:</span>
+    <span class="identifier">id_t</span> <span class="identifier">id_</span><span class="special">;</span>
+    <span class="identifier">evolution_t</span> <span class="identifier">evolution_</span><span class="special">;</span>
+<span class="special">};</span>
+
+<span class="identifier">BOOST_TYPEOF_REGISTER_TYPE</span><span class="special">(</span><span class="identifier">person</span><span class="special">)</span>
+
+<span class="keyword">class</span> <span class="identifier">world</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">typedef</span> <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">id_t</span><span class="special">;</span>
+
+    <span class="identifier">world</span><span class="special">():</span> <span class="identifier">next_id_</span><span class="special">(</span><span class="number">1</span><span class="special">)</span> <span class="special">{}</span>
+
+    <span class="keyword">void</span> <span class="identifier">add_person</span><span class="special">(</span><span class="identifier">person</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">a_person</span><span class="special">);</span>
+
+    <span class="keyword">friend</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">ostream</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">&lt;&lt;(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">ostream</span><span class="special">&amp;</span> <span class="identifier">o</span><span class="special">,</span> <span class="identifier">world</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">w</span><span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">o</span> <span class="special">&lt;&lt;</span> <span class="string">"world: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">w</span><span class="special">.</span><span class="identifier">next_id_</span> <span class="special">&lt;&lt;</span> <span class="string">", {"</span><span class="special">;</span>
+        <span class="identifier">BOOST_FOREACH</span><span class="special">(</span><span class="identifier">person</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">p</span><span class="special">,</span> <span class="identifier">w</span><span class="special">.</span><span class="identifier">persons_</span><span class="special">)</span> <span class="special">{</span>
+            <span class="identifier">o</span> <span class="special">&lt;&lt;</span> <span class="char">' '</span> <span class="special">&lt;&lt;</span> <span class="identifier">p</span> <span class="special">&lt;&lt;</span> <span class="char">','</span><span class="special">;</span>
+        <span class="special">}</span>
+        <span class="keyword">return</span> <span class="identifier">o</span> <span class="special">&lt;&lt;</span> <span class="string">"}"</span><span class="special">;</span>
+    <span class="special">}</span>
+<span class="keyword">private</span><span class="special">:</span>
+    <span class="identifier">id_t</span> <span class="identifier">next_id_</span><span class="special">;</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="identifier">person</span><span class="special">&gt;</span> <span class="identifier">persons_</span><span class="special">;</span>
+<span class="special">};</span>
+
+<span class="identifier">BOOST_TYPEOF_REGISTER_TYPE</span><span class="special">(</span><span class="identifier">world</span><span class="special">)</span>
+
+<span class="keyword">void</span> <span class="identifier">world</span><span class="special">::</span><span class="identifier">add_person</span><span class="special">(</span><span class="identifier">person</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">a_person</span><span class="special">)</span> <span class="special">{</span>
+    <span class="identifier">persons_</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span><span class="identifier">a_person</span><span class="special">);</span>
+
+    <span class="comment">// This block must be no-throw.
+</span>    <span class="identifier">person</span><span class="special">&amp;</span> <span class="identifier">p</span> <span class="special">=</span> <span class="identifier">persons_</span><span class="special">.</span><span class="identifier">back</span><span class="special">();</span>
+    <span class="identifier">person</span><span class="special">::</span><span class="identifier">evolution_t</span> <span class="identifier">checkpoint</span> <span class="special">=</span> <span class="identifier">p</span><span class="special">.</span><span class="identifier">evolution_</span><span class="special">;</span>
+
+    <span class="identifier">BOOST_LOCAL_EXIT</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">checkpoint</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">p</span><span class="special">,</span> <span class="identifier">bind</span> <span class="keyword">this</span><span class="special">)</span> <span class="special">{</span>
+        <span class="keyword">if</span> <span class="special">(</span><span class="identifier">checkpoint</span> <span class="special">==</span> <span class="identifier">p</span><span class="special">.</span><span class="identifier">evolution_</span><span class="special">)</span> <span class="identifier">this_</span><span class="special">-&gt;</span><span class="identifier">persons_</span><span class="special">.</span><span class="identifier">pop_back</span><span class="special">();</span>
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"1st local exit"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+        <span class="keyword">return</span><span class="special">;</span> <span class="comment">// Exit local scope (not enclosing function).
+</span>        <span class="identifier">assert</span><span class="special">(</span><span class="keyword">false</span><span class="special">);</span>
+    <span class="special">}</span> <span class="identifier">BOOST_LOCAL_EXIT_END</span>
+
+    <span class="comment">// ...
+</span>
+    <span class="identifier">checkpoint</span> <span class="special">=</span> <span class="special">++</span><span class="identifier">p</span><span class="special">.</span><span class="identifier">evolution_</span><span class="special">;</span>
+
+    <span class="comment">// Assign new id to the person.
+</span>    <span class="identifier">world</span><span class="special">::</span><span class="identifier">id_t</span> <span class="keyword">const</span> <span class="identifier">prev_id</span> <span class="special">=</span> <span class="identifier">p</span><span class="special">.</span><span class="identifier">id_</span><span class="special">;</span>
+    <span class="identifier">p</span><span class="special">.</span><span class="identifier">id_</span> <span class="special">=</span> <span class="identifier">next_id_</span><span class="special">++;</span>
+    <span class="identifier">BOOST_LOCAL_EXIT</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">checkpoint</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">prev_id</span><span class="special">,</span>
+            <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">p</span><span class="special">,</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">next_id_</span><span class="special">)</span> <span class="special">{</span>
+        <span class="keyword">if</span> <span class="special">(</span><span class="identifier">checkpoint</span> <span class="special">==</span> <span class="identifier">p</span><span class="special">.</span><span class="identifier">evolution_</span><span class="special">)</span> <span class="special">{</span>
+            <span class="identifier">next_id_</span> <span class="special">=</span> <span class="identifier">p</span><span class="special">.</span><span class="identifier">id_</span><span class="special">;</span>
+            <span class="identifier">p</span><span class="special">.</span><span class="identifier">id_</span> <span class="special">=</span> <span class="identifier">prev_id</span><span class="special">;</span>
+        <span class="special">}</span>
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"2nd local exit"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    <span class="special">}</span> <span class="identifier">BOOST_LOCAL_EXIT_END</span>
+
+    <span class="comment">// ...
+</span>
+    <span class="identifier">checkpoint</span> <span class="special">=</span> <span class="special">++</span><span class="identifier">p</span><span class="special">.</span><span class="identifier">evolution_</span><span class="special">;</span>
+<span class="special">}</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
+    <span class="identifier">person</span> <span class="identifier">adamo</span><span class="special">,</span> <span class="identifier">eva</span><span class="special">;</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">adamo</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">eva</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+
+    <span class="identifier">world</span> <span class="identifier">w</span><span class="special">;</span>
+    <span class="identifier">w</span><span class="special">.</span><span class="identifier">add_person</span><span class="special">(</span><span class="identifier">adamo</span><span class="special">);</span>
+    <span class="identifier">w</span><span class="special">.</span><span class="identifier">add_person</span><span class="special">(</span><span class="identifier">eva</span><span class="special">);</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">w</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+                </p>
+              </td>
 <td>
-              <p>
-                Local Exit
-              </p>
-            </td>
-<td>
-              <p>
-                Local exits with user defined types registered using <a href="http://www.boost.org/doc/libs/release/doc/html/typeof.html" target="_top">Boost.Typeof</a>.
-              </p>
-            </td>
-<td>
-              <p>
-                <a href="../../../example/exit.cpp" target="_top">exit.cpp</a>
-              </p>
-            </td>
-</tr>
-<tr>
-<td>
-              <p>
-                N/A
-              </p>
-            </td>
-<td>
-              <p>
-                STL Transform
-              </p>
-            </td>
-<td>
-              <p>
-                Bind a local function to another local function.
-              </p>
-            </td>
-<td>
-              <p>
-                <a href="../../../example/transform.cpp" target="_top">transform.cpp</a>
-              </p>
-            </td>
-</tr>
-<tr>
-<td>
-              <p>
-                <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2550.pdf" target="_top">[N2550]</a>
-              </p>
-            </td>
-<td>
-              <p>
-                STL Find
-              </p>
-            </td>
-<td>
-              <p>
-                Pass a local function to <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">find_if</span></code>.
-              </p>
-            </td>
-<td>
-              <p>
-                <a href="../../../example/find_if.cpp" target="_top">find_if.cpp</a>
-              </p>
-            </td>
-</tr>
-<tr>
-<td>
-              <p>
-                <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2529.pdf" target="_top">[N2529]</a>
-              </p>
-            </td>
-<td>
-              <p>
-                Bind This
-              </p>
-            </td>
-<td>
-              <p>
-                Bind object <code class="computeroutput"><span class="keyword">this</span></code> to
-                a local function.
-              </p>
-            </td>
-<td>
-              <p>
-                <a href="../../../example/this.cpp" target="_top">this.cpp</a>
-              </p>
-            </td>
-</tr>
-<tr>
-<td>
-              <p>
-                N/A
-              </p>
-            </td>
-<td>
-              <p>
-                Local Block
-              </p>
-            </td>
-<td>
-              <p>
-                Local blocks with biding (constant, non-constant, and <code class="computeroutput"><span class="keyword">this</span></code>) and <code class="computeroutput"><span class="keyword">return</span></code>.
-              </p>
-            </td>
-<td>
-              <p>
-                <a href="../../../example/block.cpp" target="_top">block.cpp</a>
-              </p>
-            </td>
-</tr>
-<tr>
-<td>
-              <p>
-                N/A
-              </p>
-            </td>
-<td>
-              <p>
-                Parameters Permutations
-              </p>
-            </td>
-<td>
-              <p>
-                Exhaustively shows all possible parameter permutations (with/without
-                parameters, with/without binding constant and not, with/without
-                <code class="computeroutput"><span class="keyword">this</span></code> binding constant
-                and not).
-              </p>
-            </td>
-<td>
-              <p>
-                <a href="../../../example/params.cpp" target="_top">params.cpp</a>
-              </p>
-            </td>
-</tr>
-<tr>
-<td>
-              <p>
-                N/A
-              </p>
-            </td>
-<td>
-              <p>
-                Same Line
-              </p>
-            </td>
-<td>
-              <p>
-                Two local functions defined on the same line of code.
-              </p>
-            </td>
-<td>
-              <p>
-                <a href="../../../example/same_line.cpp" target="_top">same_line.cpp</a>
-              </p>
-            </td>
-</tr>
-</tbody>
+                <p>
+                  
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">local</span><span class="special">/</span><span class="identifier">exit</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">foreach</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">typeof</span><span class="special">/</span><span class="identifier">std</span><span class="special">/</span><span class="identifier">vector</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span> <span class="comment">// Typeof emulation mode.
+</span><span class="preprocessor">#include</span> <span class="identifier">BOOST_TYPEOF_INCREMENT_REGISTRATION_GROUP</span><span class="special">()</span> <span class="comment">// Typeof emulation mode.
+</span><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">vector</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">ostream</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">cassert</span><span class="special">&gt;</span>
+
+<span class="keyword">class</span> <span class="identifier">world</span><span class="special">;</span>
+
+<span class="keyword">class</span> <span class="identifier">person</span> <span class="special">{</span>
+    <span class="keyword">friend</span> <span class="keyword">class</span> <span class="identifier">world</span><span class="special">;</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">typedef</span> <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">id_t</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">evolution_t</span><span class="special">;</span>
+
+    <span class="identifier">person</span><span class="special">():</span> <span class="identifier">id_</span><span class="special">(</span><span class="number">0</span><span class="special">),</span> <span class="identifier">evolution_</span><span class="special">(</span><span class="number">0</span><span class="special">)</span> <span class="special">{}</span>
+
+    <span class="keyword">friend</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">ostream</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">&lt;&lt;(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">ostream</span><span class="special">&amp;</span> <span class="identifier">o</span><span class="special">,</span> <span class="identifier">person</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">p</span><span class="special">)</span>
+        <span class="special">{</span> <span class="keyword">return</span> <span class="identifier">o</span> <span class="special">&lt;&lt;</span> <span class="string">"person: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">p</span><span class="special">.</span><span class="identifier">id_</span> <span class="special">&lt;&lt;</span> <span class="string">", "</span> <span class="special">&lt;&lt;</span> <span class="identifier">p</span><span class="special">.</span><span class="identifier">evolution_</span><span class="special">;</span> <span class="special">}</span>
+
+<span class="keyword">private</span><span class="special">:</span>
+    <span class="identifier">id_t</span> <span class="identifier">id_</span><span class="special">;</span>
+    <span class="identifier">evolution_t</span> <span class="identifier">evolution_</span><span class="special">;</span>
+<span class="special">};</span>
+
+<span class="identifier">BOOST_TYPEOF_REGISTER_TYPE</span><span class="special">(</span><span class="identifier">person</span><span class="special">)</span>
+
+<span class="keyword">class</span> <span class="identifier">world</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">typedef</span> <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">id_t</span><span class="special">;</span>
+
+    <span class="identifier">world</span><span class="special">():</span> <span class="identifier">next_id_</span><span class="special">(</span><span class="number">1</span><span class="special">)</span> <span class="special">{}</span>
+
+    <span class="keyword">void</span> <span class="identifier">add_person</span><span class="special">(</span><span class="identifier">person</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">a_person</span><span class="special">);</span>
+
+    <span class="keyword">friend</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">ostream</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">&lt;&lt;(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">ostream</span><span class="special">&amp;</span> <span class="identifier">o</span><span class="special">,</span> <span class="identifier">world</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">w</span><span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">o</span> <span class="special">&lt;&lt;</span> <span class="string">"world: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">w</span><span class="special">.</span><span class="identifier">next_id_</span> <span class="special">&lt;&lt;</span> <span class="string">", {"</span><span class="special">;</span>
+        <span class="identifier">BOOST_FOREACH</span><span class="special">(</span><span class="identifier">person</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">p</span><span class="special">,</span> <span class="identifier">w</span><span class="special">.</span><span class="identifier">persons_</span><span class="special">)</span> <span class="special">{</span>
+            <span class="identifier">o</span> <span class="special">&lt;&lt;</span> <span class="char">' '</span> <span class="special">&lt;&lt;</span> <span class="identifier">p</span> <span class="special">&lt;&lt;</span> <span class="char">','</span><span class="special">;</span>
+        <span class="special">}</span>
+        <span class="keyword">return</span> <span class="identifier">o</span> <span class="special">&lt;&lt;</span> <span class="string">"}"</span><span class="special">;</span>
+    <span class="special">}</span>
+<span class="keyword">private</span><span class="special">:</span>
+    <span class="identifier">id_t</span> <span class="identifier">next_id_</span><span class="special">;</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="identifier">person</span><span class="special">&gt;</span> <span class="identifier">persons_</span><span class="special">;</span>
+<span class="special">};</span>
+
+<span class="identifier">BOOST_TYPEOF_REGISTER_TYPE</span><span class="special">(</span><span class="identifier">world</span><span class="special">)</span>
+
+<span class="keyword">void</span> <span class="identifier">world</span><span class="special">::</span><span class="identifier">add_person</span><span class="special">(</span><span class="identifier">person</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">a_person</span><span class="special">)</span> <span class="special">{</span>
+    <span class="identifier">persons_</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span><span class="identifier">a_person</span><span class="special">);</span>
+
+    <span class="comment">// This block must be no-throw.
+</span>    <span class="identifier">person</span><span class="special">&amp;</span> <span class="identifier">p</span> <span class="special">=</span> <span class="identifier">persons_</span><span class="special">.</span><span class="identifier">back</span><span class="special">();</span>
+    <span class="identifier">person</span><span class="special">::</span><span class="identifier">evolution_t</span> <span class="identifier">checkpoint</span> <span class="special">=</span> <span class="identifier">p</span><span class="special">.</span><span class="identifier">evolution_</span><span class="special">;</span>
+
+    <span class="identifier">BOOST_LOCAL_EXIT</span><span class="special">(</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">checkpoint</span><span class="special">)</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">p</span><span class="special">)</span> <span class="special">(</span><span class="identifier">bind</span> <span class="keyword">this</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span>
+        <span class="keyword">if</span> <span class="special">(</span><span class="identifier">checkpoint</span> <span class="special">==</span> <span class="identifier">p</span><span class="special">.</span><span class="identifier">evolution_</span><span class="special">)</span> <span class="identifier">this_</span><span class="special">-&gt;</span><span class="identifier">persons_</span><span class="special">.</span><span class="identifier">pop_back</span><span class="special">();</span>
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"1st local exit"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+        <span class="keyword">return</span><span class="special">;</span> <span class="comment">// Exit local scope (not enclosing function).
+</span>        <span class="identifier">assert</span><span class="special">(</span><span class="keyword">false</span><span class="special">);</span>
+    <span class="special">}</span> <span class="identifier">BOOST_LOCAL_EXIT_END</span>
+
+    <span class="comment">// ...
+</span>
+    <span class="identifier">checkpoint</span> <span class="special">=</span> <span class="special">++</span><span class="identifier">p</span><span class="special">.</span><span class="identifier">evolution_</span><span class="special">;</span>
+
+    <span class="comment">// Assign new id to the person.
+</span>    <span class="identifier">world</span><span class="special">::</span><span class="identifier">id_t</span> <span class="keyword">const</span> <span class="identifier">prev_id</span> <span class="special">=</span> <span class="identifier">p</span><span class="special">.</span><span class="identifier">id_</span><span class="special">;</span>
+    <span class="identifier">p</span><span class="special">.</span><span class="identifier">id_</span> <span class="special">=</span> <span class="identifier">next_id_</span><span class="special">++;</span>
+    <span class="identifier">BOOST_LOCAL_EXIT</span><span class="special">(</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">checkpoint</span><span class="special">)</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">prev_id</span><span class="special">)</span>
+            <span class="special">(</span><span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">p</span><span class="special">)</span> <span class="special">(</span><span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">next_id_</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span>
+        <span class="keyword">if</span> <span class="special">(</span><span class="identifier">checkpoint</span> <span class="special">==</span> <span class="identifier">p</span><span class="special">.</span><span class="identifier">evolution_</span><span class="special">)</span> <span class="special">{</span>
+            <span class="identifier">next_id_</span> <span class="special">=</span> <span class="identifier">p</span><span class="special">.</span><span class="identifier">id_</span><span class="special">;</span>
+            <span class="identifier">p</span><span class="special">.</span><span class="identifier">id_</span> <span class="special">=</span> <span class="identifier">prev_id</span><span class="special">;</span>
+        <span class="special">}</span>
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"2nd local exit"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    <span class="special">}</span> <span class="identifier">BOOST_LOCAL_EXIT_END</span>
+
+    <span class="comment">// ...
+</span>
+    <span class="identifier">checkpoint</span> <span class="special">=</span> <span class="special">++</span><span class="identifier">p</span><span class="special">.</span><span class="identifier">evolution_</span><span class="special">;</span>
+<span class="special">}</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
+    <span class="identifier">person</span> <span class="identifier">adamo</span><span class="special">,</span> <span class="identifier">eva</span><span class="special">;</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">adamo</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">eva</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+
+    <span class="identifier">world</span> <span class="identifier">w</span><span class="special">;</span>
+    <span class="identifier">w</span><span class="special">.</span><span class="identifier">add_person</span><span class="special">(</span><span class="identifier">adamo</span><span class="special">);</span>
+    <span class="identifier">w</span><span class="special">.</span><span class="identifier">add_person</span><span class="special">(</span><span class="identifier">eva</span><span class="special">);</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">w</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+                </p>
+              </td>
+</tr></tbody>
 </table></div>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_local.Examples.Emulating_Ds_Scope_Guards"></a><a class="link" href="Examples.html#boost_local.Examples.Emulating_Ds_Scope_Guards" title="Emulating D's Scope Guards">Emulating
+      D's Scope Guards</a>
+</h3></div></div></div>
+<p>
+        Similarly to <a href="http://www.boost.org/doc/libs/release/libs/scope_exit/doc/html/index.html" target="_top">Boost.ScopeExit</a>,
+        local exits essentially emulate the <a href="http://www.digitalmars.com/d/2.0/statement.html" target="_top">scope
+        exits</a> provided by the <a href="http://d.digitalmars.com" target="_top">D Programming
+        Language</a>. Local exits can also be used to emulate D's <a href="http://www.digitalmars.com/d/2.0/statement.html" target="_top">scope
+        success</a> and <a href="http://www.digitalmars.com/d/2.0/statement.html" target="_top">scope
+        failure</a> statements using a local variable that is set when an error
+        occurs. For example, using error codes:
+      </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Variadic Macro Syntax (C99 and later compilers)
+                </p>
+              </th>
+<th>
+                <p>
+                  Sequencing Macro Syntax (all C++ compilers)
+                </p>
+              </th>
+</tr></thead>
+<tbody><tr>
+<td>
+                <p>
+                  
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">local</span><span class="special">/</span><span class="identifier">exit</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+
+<span class="keyword">int</span> <span class="identifier">f</span><span class="special">()</span> <span class="special">{</span>
+    <span class="keyword">int</span> <span class="identifier">error</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span> <span class="comment">// No error to start with.
+</span>
+    <span class="identifier">BOOST_LOCAL_EXIT</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">{</span> <span class="comment">// Same as D's `scope(exit)`.
+</span>        <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"exit"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    <span class="special">}</span> <span class="identifier">BOOST_LOCAL_EXIT_END</span>
+
+    <span class="identifier">BOOST_LOCAL_EXIT</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">error</span><span class="special">)</span> <span class="special">{</span> <span class="comment">// Sane as D's `scope(success)`.
+</span>        <span class="keyword">if</span> <span class="special">(!</span><span class="identifier">error</span><span class="special">)</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"success"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    <span class="special">}</span> <span class="identifier">BOOST_LOCAL_EXIT_END</span>
+    
+    <span class="identifier">BOOST_LOCAL_EXIT</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">error</span><span class="special">)</span> <span class="special">{</span> <span class="comment">// Same as D's `scope(failure)`.
+</span>        <span class="keyword">if</span> <span class="special">(</span><span class="identifier">error</span><span class="special">)</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"failure"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    <span class="special">}</span> <span class="identifier">BOOST_LOCAL_EXIT_END</span>
+    
+    <span class="keyword">return</span> <span class="identifier">error</span> <span class="special">=</span> <span class="special">-</span><span class="number">1</span><span class="special">;</span> <span class="comment">// Must set error.
+</span><span class="special">}</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
+    <span class="keyword">return</span> <span class="identifier">f</span><span class="special">();</span>
+<span class="special">}</span>
+</pre>
+<p>
+                </p>
+              </td>
+<td>
+                <p>
+                  
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">local</span><span class="special">/</span><span class="identifier">exit</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+
+<span class="keyword">int</span> <span class="identifier">f</span><span class="special">()</span> <span class="special">{</span>
+    <span class="keyword">int</span> <span class="identifier">error</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span> <span class="comment">// No error to start with.
+</span>
+    <span class="identifier">BOOST_LOCAL_EXIT</span><span class="special">(</span> <span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span> <span class="comment">// Same as D's `scope(exit)`.
+</span>        <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"exit"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    <span class="special">}</span> <span class="identifier">BOOST_LOCAL_EXIT_END</span>
+
+    <span class="identifier">BOOST_LOCAL_EXIT</span><span class="special">(</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">error</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span> <span class="comment">// Sane as D's `scope(success)`.
+</span>        <span class="keyword">if</span> <span class="special">(!</span><span class="identifier">error</span><span class="special">)</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"success"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    <span class="special">}</span> <span class="identifier">BOOST_LOCAL_EXIT_END</span>
+    
+    <span class="identifier">BOOST_LOCAL_EXIT</span><span class="special">(</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">error</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span> <span class="comment">// Same as D's `scope(failure)`.
+</span>        <span class="keyword">if</span> <span class="special">(</span><span class="identifier">error</span><span class="special">)</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"failure"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    <span class="special">}</span> <span class="identifier">BOOST_LOCAL_EXIT_END</span>
+    
+    <span class="keyword">return</span> <span class="identifier">error</span> <span class="special">=</span> <span class="special">-</span><span class="number">1</span><span class="special">;</span> <span class="comment">// Must set error.
+</span><span class="special">}</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
+    <span class="keyword">return</span> <span class="identifier">f</span><span class="special">();</span>
+<span class="special">}</span>
+</pre>
+<p>
+                </p>
+              </td>
+</tr></tbody>
+</table></div>
+<p>
+        Or similarly but using exceptions:
+      </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Variadic Macro Syntax (C99 and later compilers)
+                </p>
+              </th>
+<th>
+                <p>
+                  Sequencing Macro Syntax (all C++ compilers)
+                </p>
+              </th>
+</tr></thead>
+<tbody><tr>
+<td>
+                <p>
+                  
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">local</span><span class="special">/</span><span class="identifier">exit</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">stdexcept</span><span class="special">&gt;</span>
+
+<span class="keyword">void</span> <span class="identifier">f</span><span class="special">()</span> <span class="special">{</span>
+    <span class="keyword">bool</span> <span class="identifier">error</span> <span class="special">=</span> <span class="keyword">false</span><span class="special">;</span> <span class="comment">// No error to start with.
+</span>
+    <span class="identifier">BOOST_LOCAL_EXIT</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">{</span> <span class="comment">// Same as D's `scope(exit)`.
+</span>        <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"exit"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    <span class="special">}</span> <span class="identifier">BOOST_LOCAL_EXIT_END</span>
+
+    <span class="identifier">BOOST_LOCAL_EXIT</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">error</span><span class="special">)</span> <span class="special">{</span> <span class="comment">// Same as D's `scope(success)`.
+</span>        <span class="keyword">if</span> <span class="special">(!</span><span class="identifier">error</span><span class="special">)</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"success"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    <span class="special">}</span> <span class="identifier">BOOST_LOCAL_EXIT_END</span>
+    
+    <span class="identifier">BOOST_LOCAL_EXIT</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">error</span><span class="special">)</span> <span class="special">{</span> <span class="comment">// Same as D's `scope(failure)`.
+</span>        <span class="keyword">if</span> <span class="special">(</span><span class="identifier">error</span><span class="special">)</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"failure"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    <span class="special">}</span> <span class="identifier">BOOST_LOCAL_EXIT_END</span>
+    
+    <span class="identifier">error</span> <span class="special">=</span> <span class="keyword">true</span><span class="special">;</span> <span class="keyword">throw</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">runtime_error</span><span class="special">(</span><span class="string">"some error"</span><span class="special">);</span> <span class="comment">// Must set error.
+</span><span class="special">}</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
+    <span class="comment">// Program cannot terminate with uncaught exception (otherwise local exit
+</span>    <span class="comment">// code is not guaranteed to be executed).
+</span>    <span class="keyword">try</span> <span class="special">{</span>
+        <span class="identifier">f</span><span class="special">();</span>
+        <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+    <span class="special">}</span> <span class="keyword">catch</span><span class="special">(...)</span> <span class="special">{</span>
+        <span class="keyword">return</span> <span class="special">-</span><span class="number">1</span><span class="special">;</span>
+    <span class="special">}</span>
+<span class="special">}</span>
+</pre>
+<p>
+                </p>
+              </td>
+<td>
+                <p>
+                  
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">local</span><span class="special">/</span><span class="identifier">exit</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">stdexcept</span><span class="special">&gt;</span>
+
+<span class="keyword">void</span> <span class="identifier">f</span><span class="special">()</span> <span class="special">{</span>
+    <span class="keyword">bool</span> <span class="identifier">error</span> <span class="special">=</span> <span class="keyword">false</span><span class="special">;</span> <span class="comment">// No error to start with.
+</span>
+    <span class="identifier">BOOST_LOCAL_EXIT</span><span class="special">(</span> <span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span> <span class="comment">// Same as D's `scope(exit)`.
+</span>        <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"exit"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    <span class="special">}</span> <span class="identifier">BOOST_LOCAL_EXIT_END</span>
+
+    <span class="identifier">BOOST_LOCAL_EXIT</span><span class="special">(</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">error</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span> <span class="comment">// Same as D's `scope(success)`.
+</span>        <span class="keyword">if</span> <span class="special">(!</span><span class="identifier">error</span><span class="special">)</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"success"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    <span class="special">}</span> <span class="identifier">BOOST_LOCAL_EXIT_END</span>
+    
+    <span class="identifier">BOOST_LOCAL_EXIT</span><span class="special">(</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">error</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span> <span class="comment">// Same as D's `scope(failure)`.
+</span>        <span class="keyword">if</span> <span class="special">(</span><span class="identifier">error</span><span class="special">)</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"failure"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    <span class="special">}</span> <span class="identifier">BOOST_LOCAL_EXIT_END</span>
+    
+    <span class="identifier">error</span> <span class="special">=</span> <span class="keyword">true</span><span class="special">;</span> <span class="keyword">throw</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">runtime_error</span><span class="special">(</span><span class="string">"some error"</span><span class="special">);</span> <span class="comment">// Must set error.
+</span><span class="special">}</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
+    <span class="comment">// Program cannot terminate with uncaught exception (otherwise local exit
+</span>    <span class="comment">// code is not guaranteed to be executed).
+</span>    <span class="keyword">try</span> <span class="special">{</span>
+        <span class="identifier">f</span><span class="special">();</span>
+        <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+    <span class="special">}</span> <span class="keyword">catch</span><span class="special">(...)</span> <span class="special">{</span>
+        <span class="keyword">return</span> <span class="special">-</span><span class="number">1</span><span class="special">;</span>
+    <span class="special">}</span>
+<span class="special">}</span>
+</pre>
+<p>
+                </p>
+              </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_local.Examples.stl_find__c__0x_lambdas_"></a><a class="link" href="Examples.html#boost_local.Examples.stl_find__c__0x_lambdas_" title="STL Find (C++0x Lambdas)">STL Find
+      (C++0x Lambdas)</a>
+</h3></div></div></div>
+<p>
+        This example is adapted from <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2550.pdf" target="_top">[N2550]</a>
+        (C++0x lambda functions). This example passes a local function to the STL
+        algorithm <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">find_if</span></code>.
+      </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Variadic Macro Syntax (C99 and later compilers)
+                </p>
+              </th>
+<th>
+                <p>
+                  Sequencing Macro Syntax (all C++ compilers)
+                </p>
+              </th>
+</tr></thead>
+<tbody><tr>
+<td>
+                <p>
+                  
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">local</span><span class="special">/</span><span class="identifier">function</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">list</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">algorithm</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+
+<span class="keyword">class</span> <span class="identifier">employee</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">explicit</span> <span class="identifier">employee</span><span class="special">(</span><span class="keyword">const</span> <span class="keyword">double</span><span class="special">&amp;</span> <span class="identifier">salary</span><span class="special">):</span> <span class="identifier">salary_</span><span class="special">(</span><span class="identifier">salary</span><span class="special">)</span> <span class="special">{}</span>
+    <span class="keyword">double</span> <span class="identifier">salary</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">{</span> <span class="keyword">return</span> <span class="identifier">salary_</span><span class="special">;</span> <span class="special">}</span>
+<span class="keyword">private</span><span class="special">:</span>
+    <span class="keyword">double</span> <span class="identifier">salary_</span><span class="special">;</span>
+<span class="special">};</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">list</span><span class="special">&lt;</span><span class="identifier">employee</span><span class="special">&gt;</span> <span class="identifier">employees</span><span class="special">;</span>
+    <span class="identifier">employees</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span><span class="identifier">employee</span><span class="special">(</span> <span class="number">85000.00</span><span class="special">));</span>
+    <span class="identifier">employees</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span><span class="identifier">employee</span><span class="special">(</span><span class="number">100000.00</span><span class="special">));</span>
+    <span class="identifier">employees</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span><span class="identifier">employee</span><span class="special">(</span><span class="number">120000.00</span><span class="special">));</span>
+
+    <span class="keyword">double</span> <span class="identifier">min_salary</span> <span class="special">=</span> <span class="number">100000.00</span><span class="special">;</span>
+    <span class="keyword">double</span> <span class="identifier">u_limit</span> <span class="special">=</span> <span class="number">1.1</span> <span class="special">*</span> <span class="identifier">min_salary</span><span class="special">;</span>
+
+    <span class="keyword">bool</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">employee</span><span class="special">&amp;</span> <span class="identifier">e</span><span class="special">,</span>
+            <span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">min_salary</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">u_limit</span><span class="special">)</span> <span class="special">{</span>
+        <span class="keyword">return</span> <span class="identifier">e</span><span class="special">.</span><span class="identifier">salary</span><span class="special">()</span> <span class="special">&gt;=</span> <span class="identifier">min_salary</span> <span class="special">&amp;&amp;</span> <span class="identifier">e</span><span class="special">.</span><span class="identifier">salary</span><span class="special">()</span> <span class="special">&lt;</span> <span class="identifier">u_limit</span><span class="special">;</span>
+    <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">between</span><span class="special">)</span>
+    
+    <span class="comment">// Pass local function to an STL algorithm as a template paramter (this
+</span>    <span class="comment">// cannot be done with plain member funcitons of local classes).
+</span>    <span class="identifier">std</span><span class="special">::</span><span class="identifier">list</span><span class="special">&lt;</span><span class="identifier">employee</span><span class="special">&gt;::</span><span class="identifier">iterator</span> <span class="identifier">i</span> <span class="special">=</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">find_if</span><span class="special">(</span>
+            <span class="identifier">employees</span><span class="special">.</span><span class="identifier">begin</span><span class="special">(),</span> <span class="identifier">employees</span><span class="special">.</span><span class="identifier">end</span><span class="special">(),</span> <span class="identifier">between</span><span class="special">);</span>
+
+    <span class="keyword">if</span> <span class="special">(</span><span class="identifier">i</span> <span class="special">!=</span> <span class="identifier">employees</span><span class="special">.</span><span class="identifier">end</span><span class="special">())</span> <span class="special">{</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">i</span><span class="special">-&gt;</span><span class="identifier">salary</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span> <span class="special">}</span>
+    <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+                </p>
+              </td>
+<td>
+                <p>
+                  
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">local</span><span class="special">/</span><span class="identifier">function</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">list</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">algorithm</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+
+<span class="keyword">class</span> <span class="identifier">employee</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">explicit</span> <span class="identifier">employee</span><span class="special">(</span><span class="keyword">const</span> <span class="keyword">double</span><span class="special">&amp;</span> <span class="identifier">salary</span><span class="special">):</span> <span class="identifier">salary_</span><span class="special">(</span><span class="identifier">salary</span><span class="special">)</span> <span class="special">{}</span>
+    <span class="keyword">double</span> <span class="identifier">salary</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">{</span> <span class="keyword">return</span> <span class="identifier">salary_</span><span class="special">;</span> <span class="special">}</span>
+<span class="keyword">private</span><span class="special">:</span>
+    <span class="keyword">double</span> <span class="identifier">salary_</span><span class="special">;</span>
+<span class="special">};</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">list</span><span class="special">&lt;</span><span class="identifier">employee</span><span class="special">&gt;</span> <span class="identifier">employees</span><span class="special">;</span>
+    <span class="identifier">employees</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span><span class="identifier">employee</span><span class="special">(</span> <span class="number">85000.00</span><span class="special">));</span>
+    <span class="identifier">employees</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span><span class="identifier">employee</span><span class="special">(</span><span class="number">100000.00</span><span class="special">));</span>
+    <span class="identifier">employees</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span><span class="identifier">employee</span><span class="special">(</span><span class="number">120000.00</span><span class="special">));</span>
+
+    <span class="keyword">double</span> <span class="identifier">min_salary</span> <span class="special">=</span> <span class="number">100000.00</span><span class="special">;</span>
+    <span class="keyword">double</span> <span class="identifier">u_limit</span> <span class="special">=</span> <span class="number">1.1</span> <span class="special">*</span> <span class="identifier">min_salary</span><span class="special">;</span>
+
+    <span class="keyword">bool</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">employee</span><span class="special">&amp;</span> <span class="identifier">e</span><span class="special">)</span>
+            <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">min_salary</span><span class="special">)</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">u_limit</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span>
+        <span class="keyword">return</span> <span class="identifier">e</span><span class="special">.</span><span class="identifier">salary</span><span class="special">()</span> <span class="special">&gt;=</span> <span class="identifier">min_salary</span> <span class="special">&amp;&amp;</span> <span class="identifier">e</span><span class="special">.</span><span class="identifier">salary</span><span class="special">()</span> <span class="special">&lt;</span> <span class="identifier">u_limit</span><span class="special">;</span>
+    <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">between</span><span class="special">)</span>
+    
+    <span class="comment">// Pass local function to an STL algorithm as a template paramter (this
+</span>    <span class="comment">// cannot be done with plain member funcitons of local classes).
+</span>    <span class="identifier">std</span><span class="special">::</span><span class="identifier">list</span><span class="special">&lt;</span><span class="identifier">employee</span><span class="special">&gt;::</span><span class="identifier">iterator</span> <span class="identifier">i</span> <span class="special">=</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">find_if</span><span class="special">(</span>
+            <span class="identifier">employees</span><span class="special">.</span><span class="identifier">begin</span><span class="special">(),</span> <span class="identifier">employees</span><span class="special">.</span><span class="identifier">end</span><span class="special">(),</span> <span class="identifier">between</span><span class="special">);</span>
+
+    <span class="keyword">if</span> <span class="special">(</span><span class="identifier">i</span> <span class="special">!=</span> <span class="identifier">employees</span><span class="special">.</span><span class="identifier">end</span><span class="special">())</span> <span class="special">{</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">i</span><span class="special">-&gt;</span><span class="identifier">salary</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span> <span class="special">}</span>
+    <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+                </p>
+              </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_local.Examples.binding__this___c__0x_lambdas_"></a><a class="link" href="Examples.html#boost_local.Examples.binding__this___c__0x_lambdas_" title="Binding this (C++0x Lambdas)">Binding
+      <code class="computeroutput"><span class="keyword">this</span></code> (C++0x Lambdas)</a>
+</h3></div></div></div>
+<p>
+        This example is adapted from <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2529.pdf" target="_top">[N2529]</a>
+        (C++0x lambda functions). This example binds the object in scope <code class="computeroutput"><span class="keyword">this</span></code> to a local function.
+      </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Variadic Macro Syntax (C99 and later compilers)
+                </p>
+              </th>
+<th>
+                <p>
+                  Sequencing Macro Syntax (all C++ compilers)
+                </p>
+              </th>
+</tr></thead>
+<tbody><tr>
+<td>
+                <p>
+                  
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">local</span><span class="special">/</span><span class="identifier">function</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">vector</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">algorithm</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+
+<span class="keyword">class</span> <span class="identifier">a</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="identifier">a</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;&amp;</span> <span class="identifier">numbers</span><span class="special">):</span> <span class="identifier">v_</span><span class="special">(</span><span class="identifier">numbers</span><span class="special">)</span> <span class="special">{}</span>
+
+    <span class="keyword">void</span> <span class="identifier">change_sign_all</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;&amp;</span> <span class="identifier">indices</span><span class="special">)</span> <span class="special">{</span>
+        <span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">i</span><span class="special">,</span> <span class="identifier">bind</span> <span class="keyword">this</span><span class="special">)</span> <span class="special">{</span> <span class="comment">// Bind this.
+</span>            <span class="comment">// Local function uses special name `this_` to access bound object.
+</span>            <span class="identifier">this_</span><span class="special">-&gt;</span><span class="identifier">v_</span><span class="special">[</span><span class="identifier">i</span><span class="special">]</span> <span class="special">=</span> <span class="special">-</span><span class="identifier">this_</span><span class="special">-&gt;</span><span class="identifier">v_</span><span class="special">[</span><span class="identifier">i</span><span class="special">];</span>
+        <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">complement</span><span class="special">)</span>
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">for_each</span><span class="special">(</span><span class="identifier">indices</span><span class="special">.</span><span class="identifier">begin</span><span class="special">(),</span> <span class="identifier">indices</span><span class="special">.</span><span class="identifier">end</span><span class="special">(),</span> <span class="identifier">complement</span><span class="special">);</span>
+    <span class="special">}</span>
+
+    <span class="keyword">friend</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">ostream</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">&lt;&lt;(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">ostream</span><span class="special">&amp;</span> <span class="identifier">s</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">a</span><span class="special">&amp;</span> <span class="identifier">obj</span><span class="special">)</span> <span class="special">{</span>
+        <span class="keyword">for</span> <span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;::</span><span class="identifier">const_iterator</span> <span class="identifier">i</span> <span class="special">=</span> <span class="identifier">obj</span><span class="special">.</span><span class="identifier">v_</span><span class="special">.</span><span class="identifier">begin</span><span class="special">();</span>
+                <span class="identifier">i</span> <span class="special">!=</span> <span class="identifier">obj</span><span class="special">.</span><span class="identifier">v_</span><span class="special">.</span><span class="identifier">end</span><span class="special">();</span> <span class="special">++</span><span class="identifier">i</span><span class="special">)</span> <span class="special">{</span>
+            <span class="identifier">s</span> <span class="special">&lt;&lt;</span> <span class="special">*</span><span class="identifier">i</span> <span class="special">&lt;&lt;</span> <span class="string">" "</span><span class="special">;</span>
+        <span class="special">}</span>
+        <span class="keyword">return</span> <span class="identifier">s</span><span class="special">;</span>
+    <span class="special">}</span>
+
+<span class="keyword">private</span><span class="special">:</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;</span> <span class="identifier">v_</span><span class="special">;</span>
+<span class="special">};</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;</span> <span class="identifier">n</span><span class="special">(</span><span class="number">3</span><span class="special">,</span> <span class="number">0</span><span class="special">);</span>
+    <span class="identifier">n</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="number">1.11</span><span class="special">;</span> <span class="identifier">n</span><span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">=</span> <span class="number">2.22</span><span class="special">;</span> <span class="identifier">n</span><span class="special">[</span><span class="number">2</span><span class="special">]</span> <span class="special">=</span> <span class="number">3.33</span><span class="special">;</span>
+
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">i</span><span class="special">(</span><span class="number">2</span><span class="special">,</span> <span class="number">0</span><span class="special">);</span>
+    <span class="identifier">i</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span> <span class="identifier">i</span><span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">=</span> <span class="number">2</span><span class="special">;</span>
+    
+    <span class="identifier">a</span> <span class="identifier">an</span><span class="special">(</span><span class="identifier">n</span><span class="special">);</span>
+    <span class="identifier">an</span><span class="special">.</span><span class="identifier">change_sign_all</span><span class="special">(</span><span class="identifier">i</span><span class="special">);</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">an</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    
+    <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+                </p>
+              </td>
+<td>
+                <p>
+                  
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">local</span><span class="special">/</span><span class="identifier">function</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">vector</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">algorithm</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+
+<span class="keyword">class</span> <span class="identifier">a</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="identifier">a</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;&amp;</span> <span class="identifier">numbers</span><span class="special">):</span> <span class="identifier">v_</span><span class="special">(</span><span class="identifier">numbers</span><span class="special">)</span> <span class="special">{}</span>
+
+    <span class="keyword">void</span> <span class="identifier">change_sign_all</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;&amp;</span> <span class="identifier">indices</span><span class="special">)</span> <span class="special">{</span>
+        <span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">i</span><span class="special">)</span> <span class="special">(</span><span class="identifier">bind</span> <span class="keyword">this</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span> <span class="comment">// Bind this.
+</span>            <span class="comment">// Local function uses special name `this_` to access bound object.
+</span>            <span class="identifier">this_</span><span class="special">-&gt;</span><span class="identifier">v_</span><span class="special">[</span><span class="identifier">i</span><span class="special">]</span> <span class="special">=</span> <span class="special">-</span><span class="identifier">this_</span><span class="special">-&gt;</span><span class="identifier">v_</span><span class="special">[</span><span class="identifier">i</span><span class="special">];</span>
+        <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">complement</span><span class="special">)</span>
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">for_each</span><span class="special">(</span><span class="identifier">indices</span><span class="special">.</span><span class="identifier">begin</span><span class="special">(),</span> <span class="identifier">indices</span><span class="special">.</span><span class="identifier">end</span><span class="special">(),</span> <span class="identifier">complement</span><span class="special">);</span>
+    <span class="special">}</span>
+
+    <span class="keyword">friend</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">ostream</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">&lt;&lt;(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">ostream</span><span class="special">&amp;</span> <span class="identifier">s</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">a</span><span class="special">&amp;</span> <span class="identifier">obj</span><span class="special">)</span> <span class="special">{</span>
+        <span class="keyword">for</span> <span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;::</span><span class="identifier">const_iterator</span> <span class="identifier">i</span> <span class="special">=</span> <span class="identifier">obj</span><span class="special">.</span><span class="identifier">v_</span><span class="special">.</span><span class="identifier">begin</span><span class="special">();</span>
+                <span class="identifier">i</span> <span class="special">!=</span> <span class="identifier">obj</span><span class="special">.</span><span class="identifier">v_</span><span class="special">.</span><span class="identifier">end</span><span class="special">();</span> <span class="special">++</span><span class="identifier">i</span><span class="special">)</span> <span class="special">{</span>
+            <span class="identifier">s</span> <span class="special">&lt;&lt;</span> <span class="special">*</span><span class="identifier">i</span> <span class="special">&lt;&lt;</span> <span class="string">" "</span><span class="special">;</span>
+        <span class="special">}</span>
+        <span class="keyword">return</span> <span class="identifier">s</span><span class="special">;</span>
+    <span class="special">}</span>
+
+<span class="keyword">private</span><span class="special">:</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;</span> <span class="identifier">v_</span><span class="special">;</span>
+<span class="special">};</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;</span> <span class="identifier">n</span><span class="special">(</span><span class="number">3</span><span class="special">,</span> <span class="number">0</span><span class="special">);</span>
+    <span class="identifier">n</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="number">1.11</span><span class="special">;</span> <span class="identifier">n</span><span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">=</span> <span class="number">2.22</span><span class="special">;</span> <span class="identifier">n</span><span class="special">[</span><span class="number">2</span><span class="special">]</span> <span class="special">=</span> <span class="number">3.33</span><span class="special">;</span>
+
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">i</span><span class="special">(</span><span class="number">2</span><span class="special">,</span> <span class="number">0</span><span class="special">);</span>
+    <span class="identifier">i</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span> <span class="identifier">i</span><span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">=</span> <span class="number">2</span><span class="special">;</span>
+    
+    <span class="identifier">a</span> <span class="identifier">an</span><span class="special">(</span><span class="identifier">n</span><span class="special">);</span>
+    <span class="identifier">an</span><span class="special">.</span><span class="identifier">change_sign_all</span><span class="special">(</span><span class="identifier">i</span><span class="special">);</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">an</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    
+    <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+                </p>
+              </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_local.Examples.all_parameter_permutations"></a><a class="link" href="Examples.html#boost_local.Examples.all_parameter_permutations" title="All Parameter Permutations">All
+      Parameter Permutations</a>
+</h3></div></div></div>
+<p>
+        This example shows all possible parameter permutations (with and without
+        binding, etc).
+      </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Variadic Macro Syntax (C99 and later compilers)
+                </p>
+              </th>
+<th>
+                <p>
+                  Sequencing Macro Syntax (all C++ compilers)
+                </p>
+              </th>
+</tr></thead>
+<tbody><tr>
+<td>
+                <p>
+                  
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">local</span><span class="special">/</span><span class="identifier">function</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="keyword">struct</span> <span class="identifier">s</span> <span class="special">{</span>
+    <span class="keyword">void</span> <span class="identifier">f</span><span class="special">(</span><span class="keyword">double</span> <span class="identifier">p</span> <span class="special">=</span> <span class="number">1.23</span><span class="special">,</span> <span class="keyword">double</span> <span class="identifier">q</span> <span class="special">=</span> <span class="special">-</span><span class="number">1.23</span><span class="special">)</span> <span class="special">{</span>
+        <span class="special">{</span> <span class="comment">// Only params.
+</span>            <span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">x</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">y</span><span class="special">,</span> <span class="keyword">default</span> <span class="number">0</span><span class="special">)</span> <span class="special">{</span>
+            <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">l</span><span class="special">)</span>
+            <span class="identifier">l</span><span class="special">(</span><span class="number">1</span><span class="special">);</span>
+        <span class="special">}</span>
+        <span class="special">{</span> <span class="comment">// Only const binds.
+</span>            <span class="keyword">int</span> <span class="identifier">a</span><span class="special">,</span> <span class="identifier">b</span><span class="special">;</span>
+
+            <span class="keyword">const</span> <span class="keyword">int</span><span class="special">&amp;</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">a</span><span class="special">,</span>
+                    <span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">b</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">p</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">q</span><span class="special">)</span> <span class="special">{</span>
+                <span class="keyword">return</span> <span class="identifier">b</span><span class="special">;</span>
+            <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">l</span><span class="special">)</span>
+            <span class="identifier">l</span><span class="special">();</span>
+
+            <span class="keyword">const</span> <span class="identifier">s</span><span class="special">&amp;</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span> <span class="keyword">this</span><span class="special">)</span> <span class="special">{</span>
+                <span class="keyword">return</span> <span class="special">*</span><span class="identifier">this_</span><span class="special">;</span>
+            <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">t</span><span class="special">)</span>
+            <span class="identifier">t</span><span class="special">();</span>
+
+            <span class="keyword">const</span> <span class="keyword">int</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">a</span><span class="special">,</span>
+                    <span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">b</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">p</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">q</span><span class="special">,</span>
+                    <span class="keyword">const</span> <span class="identifier">bind</span> <span class="keyword">this</span><span class="special">)</span> <span class="special">{</span>
+                <span class="keyword">return</span> <span class="identifier">a</span><span class="special">;</span>
+            <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">lt</span><span class="special">)</span>
+            <span class="identifier">lt</span><span class="special">();</span>
+        <span class="special">}</span>
+        <span class="special">{</span> <span class="comment">// Only plain binds.
+</span>            <span class="keyword">int</span> <span class="identifier">c</span><span class="special">,</span> <span class="identifier">d</span><span class="special">;</span>
+
+            <span class="keyword">int</span><span class="special">&amp;</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span><span class="identifier">bind</span> <span class="identifier">c</span><span class="special">,</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">d</span><span class="special">,</span>
+                    <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">p</span><span class="special">,</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">q</span><span class="special">)</span> <span class="special">{</span>
+                <span class="keyword">return</span> <span class="identifier">d</span><span class="special">;</span>
+            <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">l</span><span class="special">)</span>
+            <span class="identifier">l</span><span class="special">();</span>
+
+            <span class="identifier">s</span><span class="special">&amp;</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span><span class="identifier">bind</span> <span class="keyword">this</span><span class="special">)</span> <span class="special">{</span>
+                <span class="keyword">return</span> <span class="special">*</span><span class="identifier">this_</span><span class="special">;</span>
+            <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">t</span><span class="special">)</span>
+            <span class="identifier">t</span><span class="special">();</span>
+
+            <span class="keyword">int</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span><span class="identifier">bind</span> <span class="identifier">c</span><span class="special">,</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">d</span><span class="special">,</span>
+                    <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">p</span><span class="special">,</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">q</span><span class="special">,</span> <span class="identifier">bind</span> <span class="keyword">this</span><span class="special">)</span> <span class="special">{</span>
+                <span class="keyword">return</span> <span class="identifier">c</span><span class="special">;</span>
+            <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">lt</span><span class="special">)</span>
+            <span class="identifier">lt</span><span class="special">();</span>
+        <span class="special">}</span>
+
+        <span class="special">{</span> <span class="comment">// Both params and const binds.
+</span>            <span class="keyword">int</span> <span class="identifier">a</span><span class="special">,</span> <span class="identifier">b</span><span class="special">;</span>
+
+            <span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">x</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">y</span><span class="special">,</span> <span class="keyword">default</span> <span class="number">0</span><span class="special">,</span>
+                    <span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">a</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">b</span><span class="special">,</span>
+                    <span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">p</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">q</span><span class="special">)</span> <span class="special">{</span>
+            <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">l</span><span class="special">)</span>
+            <span class="identifier">l</span><span class="special">(</span><span class="number">1</span><span class="special">);</span>
+
+            <span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">x</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">y</span><span class="special">,</span> <span class="keyword">default</span> <span class="number">0</span><span class="special">,</span>
+                    <span class="keyword">const</span> <span class="identifier">bind</span> <span class="keyword">this</span><span class="special">)</span> <span class="special">{</span>
+            <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">t</span><span class="special">)</span>
+            <span class="identifier">t</span><span class="special">(</span><span class="number">1</span><span class="special">);</span>
+
+            <span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">x</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">y</span><span class="special">,</span> <span class="keyword">default</span> <span class="number">0</span><span class="special">,</span>
+                    <span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">a</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">bind</span> <span class="keyword">this</span><span class="special">,</span>
+                    <span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">b</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">p</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">q</span><span class="special">)</span> <span class="special">{</span>
+            <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">lt</span><span class="special">)</span>
+            <span class="identifier">lt</span><span class="special">(</span><span class="number">1</span><span class="special">);</span>
+        <span class="special">}</span>
+        <span class="special">{</span> <span class="comment">// Both params and plain binds.
+</span>            <span class="keyword">int</span> <span class="identifier">c</span><span class="special">,</span> <span class="identifier">d</span><span class="special">;</span>
+
+            <span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">x</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">y</span><span class="special">,</span> <span class="keyword">default</span> <span class="number">0</span><span class="special">,</span>
+                    <span class="identifier">bind</span> <span class="identifier">c</span><span class="special">,</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">d</span><span class="special">,</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">p</span><span class="special">,</span> <span class="identifier">bind</span> <span class="identifier">q</span><span class="special">)</span> <span class="special">{</span>
+            <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">l</span><span class="special">)</span>
+            <span class="identifier">l</span><span class="special">(</span><span class="number">1</span><span class="special">);</span>
+
+            <span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">x</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">y</span><span class="special">,</span> <span class="keyword">default</span> <span class="number">0</span><span class="special">,</span>
+                    <span class="identifier">bind</span> <span class="keyword">this</span><span class="special">)</span> <span class="special">{</span>
+            <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">t</span><span class="special">)</span>
+            <span class="identifier">t</span><span class="special">(</span><span class="number">1</span><span class="special">);</span>
+            
+            <span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">x</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">y</span><span class="special">,</span> <span class="keyword">default</span> <span class="number">0</span><span class="special">,</span>
+                    <span class="identifier">bind</span> <span class="identifier">c</span><span class="special">,</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">d</span><span class="special">,</span>
+                    <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">p</span><span class="special">,</span> <span class="identifier">bind</span> <span class="keyword">this</span><span class="special">,</span> <span class="identifier">bind</span> <span class="identifier">q</span><span class="special">)</span> <span class="special">{</span>
+            <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">lt</span><span class="special">)</span>
+            <span class="identifier">lt</span><span class="special">(</span><span class="number">1</span><span class="special">);</span>
+        <span class="special">}</span>
+        <span class="special">{</span> <span class="comment">// Both const and plain binds.
+</span>            <span class="keyword">int</span> <span class="identifier">a</span><span class="special">,</span> <span class="identifier">b</span><span class="special">,</span> <span class="identifier">c</span><span class="special">,</span> <span class="identifier">d</span><span class="special">;</span>
+
+            <span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">a</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">b</span><span class="special">,</span>
+                    <span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">p</span><span class="special">,</span> <span class="identifier">bind</span> <span class="identifier">c</span><span class="special">,</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">d</span><span class="special">,</span> <span class="identifier">bind</span> <span class="identifier">q</span><span class="special">)</span> <span class="special">{</span>
+            <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">l</span><span class="special">)</span>
+            <span class="identifier">l</span><span class="special">();</span>
+
+            <span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span> <span class="keyword">this</span><span class="special">,</span>
+                    <span class="identifier">bind</span> <span class="identifier">c</span><span class="special">,</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">d</span><span class="special">,</span> <span class="identifier">bind</span> <span class="identifier">q</span><span class="special">)</span> <span class="special">{</span>
+            <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">ct</span><span class="special">)</span>
+            <span class="identifier">ct</span><span class="special">();</span>
+            <span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span> <span class="keyword">this</span><span class="special">,</span>
+                    <span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">a</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">b</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">p</span><span class="special">,</span>
+                    <span class="identifier">bind</span> <span class="identifier">c</span><span class="special">,</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">d</span><span class="special">,</span> <span class="identifier">bind</span> <span class="identifier">q</span><span class="special">)</span> <span class="special">{</span>
+            <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">lct</span><span class="special">)</span>
+            <span class="identifier">lct</span><span class="special">();</span>
+
+            <span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">a</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">b</span><span class="special">,</span>
+                    <span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">p</span><span class="special">,</span> <span class="identifier">bind</span> <span class="keyword">this</span><span class="special">)</span> <span class="special">{</span>
+            <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">pt</span><span class="special">)</span>
+            <span class="identifier">pt</span><span class="special">();</span>
+            <span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">a</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">b</span><span class="special">,</span>
+                    <span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">p</span><span class="special">,</span> <span class="identifier">bind</span> <span class="identifier">c</span><span class="special">,</span> <span class="identifier">bind</span> <span class="keyword">this</span><span class="special">,</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">d</span><span class="special">,</span> <span class="identifier">bind</span> <span class="identifier">q</span><span class="special">)</span> <span class="special">{</span>
+            <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">lpt</span><span class="special">)</span>
+            <span class="identifier">lpt</span><span class="special">();</span>
+        <span class="special">}</span>
+
+        <span class="special">{</span> <span class="comment">// All params, const binds, and plain binds.
+</span>            <span class="keyword">int</span> <span class="identifier">a</span><span class="special">,</span> <span class="identifier">b</span><span class="special">,</span> <span class="identifier">c</span><span class="special">,</span> <span class="identifier">d</span><span class="special">;</span>
+            
+            <span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">x</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">y</span><span class="special">,</span> <span class="keyword">default</span> <span class="number">0</span><span class="special">,</span>
+                    <span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">a</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">b</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">p</span><span class="special">,</span>
+                    <span class="identifier">bind</span> <span class="identifier">c</span><span class="special">,</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">d</span><span class="special">,</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">q</span><span class="special">)</span> <span class="special">{</span>
+            <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">l</span><span class="special">)</span>
+            <span class="identifier">l</span><span class="special">(</span><span class="number">1</span><span class="special">);</span>
+
+            <span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">x</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">y</span><span class="special">,</span> <span class="keyword">default</span> <span class="number">0</span><span class="special">,</span>
+                    <span class="keyword">const</span> <span class="identifier">bind</span> <span class="keyword">this</span><span class="special">,</span> <span class="identifier">bind</span> <span class="identifier">c</span><span class="special">,</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">d</span><span class="special">,</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">q</span><span class="special">)</span> <span class="special">{</span>
+            <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">ct</span><span class="special">)</span>
+            <span class="identifier">ct</span><span class="special">(</span><span class="number">1</span><span class="special">);</span>
+            <span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">x</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">y</span><span class="special">,</span> <span class="keyword">default</span> <span class="number">0</span><span class="special">,</span>
+                    <span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">a</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">b</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">p</span><span class="special">,</span>
+                    <span class="identifier">bind</span> <span class="keyword">this</span><span class="special">)</span> <span class="special">{</span>
+            <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">pt</span><span class="special">)</span>
+            <span class="identifier">pt</span><span class="special">(</span><span class="number">1</span><span class="special">);</span>
+
+            <span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">x</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">y</span><span class="special">,</span> <span class="keyword">default</span> <span class="number">0</span><span class="special">,</span>
+                    <span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">a</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">bind</span> <span class="keyword">this</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">b</span><span class="special">,</span>
+                    <span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">p</span><span class="special">,</span> <span class="identifier">bind</span> <span class="identifier">c</span><span class="special">,</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">d</span><span class="special">,</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">q</span><span class="special">)</span> <span class="special">{</span>
+            <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">lct</span><span class="special">)</span>
+            <span class="identifier">lct</span><span class="special">(</span><span class="number">1</span><span class="special">);</span>
+            <span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">x</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">y</span><span class="special">,</span> <span class="keyword">default</span> <span class="number">0</span><span class="special">,</span>
+                    <span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">a</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">b</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">p</span><span class="special">,</span>
+                    <span class="identifier">bind</span> <span class="identifier">c</span><span class="special">,</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">d</span><span class="special">,</span> <span class="identifier">bind</span> <span class="keyword">this</span><span class="special">,</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">q</span><span class="special">)</span> <span class="special">{</span>
+            <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">lpt</span><span class="special">)</span>
+            <span class="identifier">lpt</span><span class="special">(</span><span class="number">1</span><span class="special">);</span>
+        <span class="special">}</span>
+    <span class="special">}</span>
+<span class="special">};</span>
+    
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
+    <span class="identifier">s</span><span class="special">().</span><span class="identifier">f</span><span class="special">();</span>
+    <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+                </p>
+              </td>
+<td>
+                <p>
+                  
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">local</span><span class="special">/</span><span class="identifier">function</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="keyword">struct</span> <span class="identifier">s</span> <span class="special">{</span>
+    <span class="keyword">void</span> <span class="identifier">f</span><span class="special">(</span><span class="keyword">double</span> <span class="identifier">p</span> <span class="special">=</span> <span class="number">1.23</span><span class="special">,</span> <span class="keyword">double</span> <span class="identifier">q</span> <span class="special">=</span> <span class="special">-</span><span class="number">1.23</span><span class="special">)</span> <span class="special">{</span>
+        <span class="special">{</span> <span class="comment">// Only params.
+</span>            <span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">x</span><span class="special">)</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">y</span><span class="special">)(</span><span class="keyword">default</span> <span class="number">0</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span>
+            <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">l</span><span class="special">)</span>
+            <span class="identifier">l</span><span class="special">(</span><span class="number">1</span><span class="special">);</span>
+        <span class="special">}</span>
+        <span class="special">{</span> <span class="comment">// Only const binds.
+</span>            <span class="keyword">int</span> <span class="identifier">a</span><span class="special">,</span> <span class="identifier">b</span><span class="special">;</span>
+
+            <span class="keyword">const</span> <span class="keyword">int</span><span class="special">&amp;</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">a</span><span class="special">)</span>
+                    <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">b</span><span class="special">)</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">p</span><span class="special">)</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">q</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span>
+                <span class="keyword">return</span> <span class="identifier">b</span><span class="special">;</span>
+            <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">l</span><span class="special">)</span>
+            <span class="identifier">l</span><span class="special">();</span>
+
+            <span class="keyword">const</span> <span class="identifier">s</span><span class="special">&amp;</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span> <span class="keyword">this</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span>
+                <span class="keyword">return</span> <span class="special">*</span><span class="identifier">this_</span><span class="special">;</span>
+            <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">t</span><span class="special">)</span>
+            <span class="identifier">t</span><span class="special">();</span>
+
+            <span class="keyword">const</span> <span class="keyword">int</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">a</span><span class="special">)</span>
+                    <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">b</span><span class="special">)</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">p</span><span class="special">)</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">q</span><span class="special">)</span>
+                    <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span> <span class="keyword">this</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span>
+                <span class="keyword">return</span> <span class="identifier">a</span><span class="special">;</span>
+            <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">lt</span><span class="special">)</span>
+            <span class="identifier">lt</span><span class="special">();</span>
+        <span class="special">}</span>
+        <span class="special">{</span> <span class="comment">// Only plain binds.
+</span>            <span class="keyword">int</span> <span class="identifier">c</span><span class="special">,</span> <span class="identifier">d</span><span class="special">;</span>
+
+            <span class="keyword">int</span><span class="special">&amp;</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span> <span class="special">(</span><span class="identifier">bind</span> <span class="identifier">c</span><span class="special">)</span> <span class="special">(</span><span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">d</span><span class="special">)</span>
+                    <span class="special">(</span><span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">p</span><span class="special">)</span> <span class="special">(</span><span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">q</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span>
+                <span class="keyword">return</span> <span class="identifier">d</span><span class="special">;</span>
+            <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">l</span><span class="special">)</span>
+            <span class="identifier">l</span><span class="special">();</span>
+
+            <span class="identifier">s</span><span class="special">&amp;</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span> <span class="special">(</span><span class="identifier">bind</span> <span class="keyword">this</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span>
+                <span class="keyword">return</span> <span class="special">*</span><span class="identifier">this_</span><span class="special">;</span>
+            <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">t</span><span class="special">)</span>
+            <span class="identifier">t</span><span class="special">();</span>
+
+            <span class="keyword">int</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span> <span class="special">(</span><span class="identifier">bind</span> <span class="identifier">c</span><span class="special">)</span> <span class="special">(</span><span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">d</span><span class="special">)</span>
+                    <span class="special">(</span><span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">p</span><span class="special">)</span> <span class="special">(</span><span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">q</span><span class="special">)</span> <span class="special">(</span><span class="identifier">bind</span> <span class="keyword">this</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span>
+                <span class="keyword">return</span> <span class="identifier">c</span><span class="special">;</span>
+            <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">lt</span><span class="special">)</span>
+            <span class="identifier">lt</span><span class="special">();</span>
+        <span class="special">}</span>
+
+        <span class="special">{</span> <span class="comment">// Both params and const binds.
+</span>            <span class="keyword">int</span> <span class="identifier">a</span><span class="special">,</span> <span class="identifier">b</span><span class="special">;</span>
+
+            <span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">x</span><span class="special">)</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">y</span><span class="special">)(</span><span class="keyword">default</span> <span class="number">0</span><span class="special">)</span>
+                    <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">a</span><span class="special">)</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">b</span><span class="special">)</span>
+                    <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">p</span><span class="special">)</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">q</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span>
+            <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">l</span><span class="special">)</span>
+            <span class="identifier">l</span><span class="special">(</span><span class="number">1</span><span class="special">);</span>
+
+            <span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">x</span><span class="special">)</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">y</span><span class="special">)(</span><span class="keyword">default</span> <span class="number">0</span><span class="special">)</span>
+                    <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span> <span class="keyword">this</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span>
+            <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">t</span><span class="special">)</span>
+            <span class="identifier">t</span><span class="special">(</span><span class="number">1</span><span class="special">);</span>
+
+            <span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">x</span><span class="special">)</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">y</span><span class="special">)(</span><span class="keyword">default</span> <span class="number">0</span><span class="special">)</span>
+                    <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">a</span><span class="special">)</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span> <span class="keyword">this</span><span class="special">)</span>
+                    <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">b</span><span class="special">)</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">p</span><span class="special">)</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">q</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span>
+            <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">lt</span><span class="special">)</span>
+            <span class="identifier">lt</span><span class="special">(</span><span class="number">1</span><span class="special">);</span>
+        <span class="special">}</span>
+        <span class="special">{</span> <span class="comment">// Both params and plain binds.
+</span>            <span class="keyword">int</span> <span class="identifier">c</span><span class="special">,</span> <span class="identifier">d</span><span class="special">;</span>
+
+            <span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">x</span><span class="special">)</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">y</span><span class="special">)(</span><span class="keyword">default</span> <span class="number">0</span><span class="special">)</span>
+                    <span class="special">(</span><span class="identifier">bind</span> <span class="identifier">c</span><span class="special">)</span> <span class="special">(</span><span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">d</span><span class="special">)</span> <span class="special">(</span><span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">p</span><span class="special">)</span> <span class="special">(</span><span class="identifier">bind</span> <span class="identifier">q</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span>
+            <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">l</span><span class="special">)</span>
+            <span class="identifier">l</span><span class="special">(</span><span class="number">1</span><span class="special">);</span>
+
+            <span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">x</span><span class="special">)</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">y</span><span class="special">)(</span><span class="keyword">default</span> <span class="number">0</span><span class="special">)</span>
+                    <span class="special">(</span><span class="identifier">bind</span> <span class="keyword">this</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span>
+            <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">t</span><span class="special">)</span>
+            <span class="identifier">t</span><span class="special">(</span><span class="number">1</span><span class="special">);</span>
+            
+            <span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">x</span><span class="special">)</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">y</span><span class="special">)(</span><span class="keyword">default</span> <span class="number">0</span><span class="special">)</span>
+                    <span class="special">(</span><span class="identifier">bind</span> <span class="identifier">c</span><span class="special">)</span> <span class="special">(</span><span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">d</span><span class="special">)</span>
+                    <span class="special">(</span><span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">p</span><span class="special">)</span> <span class="special">(</span><span class="identifier">bind</span> <span class="keyword">this</span><span class="special">)</span> <span class="special">(</span><span class="identifier">bind</span> <span class="identifier">q</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span>
+            <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">lt</span><span class="special">)</span>
+            <span class="identifier">lt</span><span class="special">(</span><span class="number">1</span><span class="special">);</span>
+        <span class="special">}</span>
+        <span class="special">{</span> <span class="comment">// Both const and plain binds.
+</span>            <span class="keyword">int</span> <span class="identifier">a</span><span class="special">,</span> <span class="identifier">b</span><span class="special">,</span> <span class="identifier">c</span><span class="special">,</span> <span class="identifier">d</span><span class="special">;</span>
+
+            <span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">a</span><span class="special">)</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">b</span><span class="special">)</span>
+                    <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">p</span><span class="special">)</span> <span class="special">(</span><span class="identifier">bind</span> <span class="identifier">c</span><span class="special">)</span> <span class="special">(</span><span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">d</span><span class="special">)</span> <span class="special">(</span><span class="identifier">bind</span> <span class="identifier">q</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span>
+            <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">l</span><span class="special">)</span>
+            <span class="identifier">l</span><span class="special">();</span>
+
+            <span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span> <span class="keyword">this</span><span class="special">)</span>
+                    <span class="special">(</span><span class="identifier">bind</span> <span class="identifier">c</span><span class="special">)</span> <span class="special">(</span><span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">d</span><span class="special">)</span> <span class="special">(</span><span class="identifier">bind</span> <span class="identifier">q</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span>
+            <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">ct</span><span class="special">)</span>
+            <span class="identifier">ct</span><span class="special">();</span>
+            <span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span> <span class="keyword">this</span><span class="special">)</span>
+                    <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">a</span><span class="special">)</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">b</span><span class="special">)</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">p</span><span class="special">)</span>
+                    <span class="special">(</span><span class="identifier">bind</span> <span class="identifier">c</span><span class="special">)</span> <span class="special">(</span><span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">d</span><span class="special">)</span> <span class="special">(</span><span class="identifier">bind</span> <span class="identifier">q</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span>
+            <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">lct</span><span class="special">)</span>
+            <span class="identifier">lct</span><span class="special">();</span>
+
+            <span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">a</span><span class="special">)</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">b</span><span class="special">)</span>
+                    <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">p</span><span class="special">)</span> <span class="special">(</span><span class="identifier">bind</span> <span class="keyword">this</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span>
+            <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">pt</span><span class="special">)</span>
+            <span class="identifier">pt</span><span class="special">();</span>
+            <span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">a</span><span class="special">)</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">b</span><span class="special">)</span>
+                    <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">p</span><span class="special">)</span> <span class="special">(</span><span class="identifier">bind</span> <span class="identifier">c</span><span class="special">)</span> <span class="special">(</span><span class="identifier">bind</span> <span class="keyword">this</span><span class="special">)</span> <span class="special">(</span><span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">d</span><span class="special">)</span> <span class="special">(</span><span class="identifier">bind</span> <span class="identifier">q</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span>
+            <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">lpt</span><span class="special">)</span>
+            <span class="identifier">lpt</span><span class="special">();</span>
+        <span class="special">}</span>
+
+        <span class="special">{</span> <span class="comment">// All params, const binds, and plain binds.
+</span>            <span class="keyword">int</span> <span class="identifier">a</span><span class="special">,</span> <span class="identifier">b</span><span class="special">,</span> <span class="identifier">c</span><span class="special">,</span> <span class="identifier">d</span><span class="special">;</span>
+            
+            <span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">x</span><span class="special">)</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">y</span><span class="special">)(</span><span class="keyword">default</span> <span class="number">0</span><span class="special">)</span>
+                    <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">a</span><span class="special">)</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">b</span><span class="special">)</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">p</span><span class="special">)</span>
+                    <span class="special">(</span><span class="identifier">bind</span> <span class="identifier">c</span><span class="special">)</span> <span class="special">(</span><span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">d</span><span class="special">)</span> <span class="special">(</span><span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">q</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span>
+            <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">l</span><span class="special">)</span>
+            <span class="identifier">l</span><span class="special">(</span><span class="number">1</span><span class="special">);</span>
+
+            <span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">x</span><span class="special">)</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">y</span><span class="special">)(</span><span class="keyword">default</span> <span class="number">0</span><span class="special">)</span>
+                    <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span> <span class="keyword">this</span><span class="special">)</span> <span class="special">(</span><span class="identifier">bind</span> <span class="identifier">c</span><span class="special">)</span> <span class="special">(</span><span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">d</span><span class="special">)</span> <span class="special">(</span><span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">q</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span>
+            <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">ct</span><span class="special">)</span>
+            <span class="identifier">ct</span><span class="special">(</span><span class="number">1</span><span class="special">);</span>
+            <span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">x</span><span class="special">)</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">y</span><span class="special">)(</span><span class="keyword">default</span> <span class="number">0</span><span class="special">)</span>
+                    <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">a</span><span class="special">)</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">b</span><span class="special">)</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">p</span><span class="special">)</span>
+                    <span class="special">(</span><span class="identifier">bind</span> <span class="keyword">this</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span>
+            <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">pt</span><span class="special">)</span>
+            <span class="identifier">pt</span><span class="special">(</span><span class="number">1</span><span class="special">);</span>
+
+            <span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">x</span><span class="special">)</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">y</span><span class="special">)(</span><span class="keyword">default</span> <span class="number">0</span><span class="special">)</span>
+                    <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">a</span><span class="special">)</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span> <span class="keyword">this</span><span class="special">)</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">b</span><span class="special">)</span>
+                    <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">p</span><span class="special">)</span> <span class="special">(</span><span class="identifier">bind</span> <span class="identifier">c</span><span class="special">)</span> <span class="special">(</span><span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">d</span><span class="special">)</span> <span class="special">(</span><span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">q</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span>
+            <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">lct</span><span class="special">)</span>
+            <span class="identifier">lct</span><span class="special">(</span><span class="number">1</span><span class="special">);</span>
+            <span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">x</span><span class="special">)</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">y</span><span class="special">)(</span><span class="keyword">default</span> <span class="number">0</span><span class="special">)</span>
+                    <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">a</span><span class="special">)</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">b</span><span class="special">)</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">p</span><span class="special">)</span>
+                    <span class="special">(</span><span class="identifier">bind</span> <span class="identifier">c</span><span class="special">)</span> <span class="special">(</span><span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">d</span><span class="special">)</span> <span class="special">(</span><span class="identifier">bind</span> <span class="keyword">this</span><span class="special">)</span> <span class="special">(</span><span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">q</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span>
+            <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">lpt</span><span class="special">)</span>
+            <span class="identifier">lpt</span><span class="special">(</span><span class="number">1</span><span class="special">);</span>
+        <span class="special">}</span>
+    <span class="special">}</span>
+<span class="special">};</span>
+    
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
+    <span class="identifier">s</span><span class="special">().</span><span class="identifier">f</span><span class="special">();</span>
+    <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+                </p>
+              </td>
+</tr></tbody>
+</table></div>
+</div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>

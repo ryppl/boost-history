@@ -6,58 +6,74 @@
 
 [section:Examples Appendix: Examples]
 
-This section lists the complete source code of some examples that can be compiled and executed using this library (see also the many examples listed within the text of this documentation).
+This sections lists a few examples in addition to the already numerous examples presented in the rest of this documents.
+
+[section:Boost_Typeof_for_User_Defined_Types Boost.Typeof for User Defined Types]
+
+This example is adapted from the __Boost_ScopeExit__ documentation.
+This example illustrates how to use __Boost_Typeof__ to register user defined types and then use these types to bind local exit variables.
 
 [table
-[
-    [ Adapted From ]
-    [ Name ]
-    [ Description ]
-    [ Source File(s) ]
+[ [Variadic Macro Syntax (C99 and later compilers)] [Sequencing Macro Syntax (all C++ compilers)] ]
+[ [ [world_exit_va_cpp] ] [ [world_exit_cpp] ] ]
 ]
-[
-    [ __Boost_ScopeExit__ documentation ]
-    [ Local Exit ]
-    [ Local exits with user defined types registered using __Boost_Typeof__. ]
-    [ [@../../example/exit.cpp exit.cpp] ]
+
+[endsect]
+
+[section:Emulating_Ds_Scope_Guards Emulating D's Scope Guards]
+
+Similarly to __Boost_ScopeExit__, local exits essentially emulate the [@http://www.digitalmars.com/d/2.0/statement.html scope exits] provided by the __D_Programming_Language__.
+Local exits can also be used to emulate D's [@http://www.digitalmars.com/d/2.0/statement.html scope success] and [@http://www.digitalmars.com/d/2.0/statement.html scope failure] statements using a local variable that is set when an error occurs.
+For example, using error codes:
+
+[table
+[ [Variadic Macro Syntax (C99 and later compilers)] [Sequencing Macro Syntax (all C++ compilers)] ]
+[ [ [scope_guards_errno_va_cpp] ] [ [scope_guards_errno_cpp] ] ]
 ]
-[
-    [ N/A ]
-    [ STL Transform ]
-    [ Bind a local function to another local function. ]
-    [ [@../../example/transform.cpp transform.cpp] ]
+
+Or similarly but using exceptions:
+
+[table
+[ [Variadic Macro Syntax (C99 and later compilers)] [Sequencing Macro Syntax (all C++ compilers)] ]
+[ [ [scope_guards_except_va_cpp] ] [ [scope_guards_except_cpp] ] ]
 ]
-[
-    [ __N2550__ ]
-    [ STL Find ]
-    [ Pass a local function to `std::find_if`. ]
-    [ [@../../example/find_if.cpp find_if.cpp] ]
+
+[endsect]
+
+[section STL Find (C++0x Lambdas)]
+
+This example is adapted from __N2550__ (C++0x lambda functions).
+This example passes a local function to the STL algorithm `std::find_if`.
+
+[table
+[ [Variadic Macro Syntax (C99 and later compilers)] [Sequencing Macro Syntax (all C++ compilers)] ]
+[ [ [find_if_va_cpp] ] [ [find_if_cpp] ] ]
 ]
-[
-    [ __N2529__ ]
-    [ Bind This ]
-    [ Bind object `this` to a local function. ]
-    [ [@../../example/this.cpp this.cpp] ]
+
+[endsect]
+
+[section Binding `this` (C++0x Lambdas)]
+
+This example is adapted from __N2529__ (C++0x lambda functions).
+This example binds the object in scope `this` to a local function.
+
+[table
+[ [Variadic Macro Syntax (C99 and later compilers)] [Sequencing Macro Syntax (all C++ compilers)] ]
+[ [ [this_va_cpp] ] [ [this_cpp] ] ]
 ]
-[
-    [ N/A ]
-    [ Local Block ]
-    [ Local blocks with biding (constant, non-constant, and `this`) and `return`. ]
-    [ [@../../example/block.cpp block.cpp] ]
+
+[endsect]
+
+[section All Parameter Permutations]
+
+This example shows all possible parameter permutations (with and without binding, etc).
+
+[table
+[ [Variadic Macro Syntax (C99 and later compilers)] [Sequencing Macro Syntax (all C++ compilers)] ]
+[ [ [params_all_va_cpp] ] [ [params_all_cpp] ] ]
 ]
-[
-    [ N/A ]
-    [ Parameters Permutations ]
-    [ Exhaustively shows all possible parameter permutations (with/without parameters, with/without binding constant and not, with/without `this` binding constant and not). ]
-    [ [@../../example/params.cpp params.cpp] ]
-]
-[
-    [ N/A ]
-    [ Same Line ]
-    [ Two local functions defined on the same line of code. ]
-    [ [@../../example/same_line.cpp same_line.cpp] ]
-]
-]
+
+[endsect]
 
 [endsect]
 

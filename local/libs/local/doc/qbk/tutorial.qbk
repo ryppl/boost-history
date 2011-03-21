@@ -152,7 +152,7 @@ This is especially useful for maintenance so if a bound variable type is changed
 ]
 
 [important
-User defined *types need to be manually registered* as usual when using __Boost_Typeof__ (see __Boost_Typeof__ documentation and the Local Exit example from the __Examples__ section).
+User defined *types need to be manually registered* as usual when using __Boost_Typeof__ (see the __Boost_Typeof__ documentation and the __Examples_Boost_Typeof_for_User_Defined_Types__ example).
 ]
 
 This library introduces the new "keyword" `bind`
@@ -334,18 +334,7 @@ Local blocks would be named "scope blocks" and they would be provided by the `BO
 However, local functions would have to be named "scope functions" and they would be provided by the `BOOST_SCOPE_FUNCTION...` macros.
 These names might not expressive enough because local functions are not known under the name of "scope functions" -- they are indeed known by either the name of "local functions" or by the name of "[@http://gcc.gnu.org/onlinedocs/gcc/Nested-Functions.html nested functions]".
 ]
-
-[h5 D's Scope Guards]
-
-Local exits are very similar to the [@http://www.digitalmars.com/d/2.0/statement.html scope exit] statements provided by the D programming language.
-Local exits can be used also to emulate D's [@http://www.digitalmars.com/d/2.0/statement.html scope success] and [@http://www.digitalmars.com/d/2.0/statement.html scope failure] statements using a local variable that is set when an error occurs.
-For example, using error codes:
-
-[scope_guards_errno_cpp]
-
-Or similarly but using exceptions:
-
-[scope_guards_except_cpp]
+Local exits can be used to emulate the __D_Programming_Language__ /scope guards/ (see the __Examples_Emulating_Ds_Scope_Guards__ example).
 
 [endsect]
 

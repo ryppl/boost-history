@@ -83,7 +83,7 @@
 <p>
         In addition, local function parameter types cannot start with non-alphanumeric
         symbols (alphanumeric symbols are <code class="computeroutput"><span class="identifier">A</span><span class="special">-</span><span class="identifier">Z</span></code>, <code class="computeroutput"><span class="identifier">a</span><span class="special">-</span><span class="identifier">z</span></code>,
-        and <code class="computeroutput"><span class="number">0</span><span class="special">-</span><span class="number">9</span></code>). <sup>[<a name="id881890" href="#ftn.id881890" class="footnote">15</a>]</sup> The library will generate (cryptic) preprocessor errors if a
+        and <code class="computeroutput"><span class="number">0</span><span class="special">-</span><span class="number">9</span></code>). <sup>[<a name="id879865" href="#ftn.id879865" class="footnote">15</a>]</sup> The library will generate (cryptic) preprocessor errors if a
         parameter type starts with a non-alphanumeric symbol.
       </p>
 <p>
@@ -206,7 +206,7 @@
 <li class="listitem">
             Parenthesis to wrap the type expression (and therefore any commas <code class="computeroutput"><span class="special">,</span></code> that it contains) passed as parameter
             to the <code class="computeroutput"><a class="link" href="../BOOST_IDENTITY_TYPE.html" title="Macro BOOST_IDENTITY_TYPE">BOOST_IDENTITY_TYPE</a></code>
-            macro. <sup>[<a name="id883247" href="#ftn.id883247" class="footnote">16</a>]</sup>
+            macro. <sup>[<a name="id881223" href="#ftn.id881223" class="footnote">16</a>]</sup>
           </li>
 </ol></div>
 <p>
@@ -407,7 +407,7 @@
         </p></td></tr>
 </table></div>
 <p>
-        Consider the following complete example: <sup>[<a name="id884552" href="#ftn.id884552" class="footnote">17</a>]</sup>
+        Consider the following complete example: <sup>[<a name="id882527" href="#ftn.id882527" class="footnote">17</a>]</sup>
       </p>
 <div class="informaltable"><table class="table">
 <colgroup>
@@ -480,8 +480,11 @@
 <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">string</span><span class="special">&gt;</span>
 <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
 
-<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">K</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">key_size</span> <span class="special">{</span> <span class="keyword">static</span> <span class="keyword">const</span> <span class="identifier">size_t</span> <span class="identifier">value</span><span class="special">;</span> <span class="special">};</span>
-<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">K</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="keyword">const</span> <span class="identifier">size_t</span> <span class="identifier">key_size</span><span class="special">&lt;</span><span class="identifier">K</span><span class="special">,</span> <span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">value</span> <span class="special">=</span> <span class="keyword">sizeof</span><span class="special">(</span><span class="identifier">K</span><span class="special">);</span>
+<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">K</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">key_sizeof</span> <span class="special">{</span>
+    <span class="keyword">static</span> <span class="keyword">const</span> <span class="identifier">size_t</span> <span class="identifier">value</span><span class="special">;</span> 
+<span class="special">};</span>
+<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">K</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="keyword">const</span> <span class="identifier">size_t</span> <span class="identifier">key_sizeof</span><span class="special">&lt;</span><span class="identifier">K</span><span class="special">,</span> <span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">value</span> <span class="special">=</span>
+        <span class="keyword">sizeof</span><span class="special">(</span><span class="identifier">K</span><span class="special">);</span>
 
 <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">cat</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;</span> <span class="identifier">a</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;</span> <span class="identifier">b</span><span class="special">)</span> <span class="special">{</span> <span class="keyword">return</span> <span class="identifier">a</span> <span class="special">+</span> <span class="identifier">b</span><span class="special">;</span> <span class="special">}</span>
 
@@ -494,7 +497,7 @@
             <span class="comment">// Also, identity macros handle leading symbols.
 </span>            <span class="special">(</span><span class="identifier">BOOST_IDENTITY_TYPE</span><span class="special">((::</span><span class="identifier">sign_t</span><span class="special">))</span> <span class="identifier">sign</span><span class="special">)(</span><span class="keyword">default</span> <span class="special">-</span><span class="number">1</span><span class="special">)</span> 
             <span class="special">(</span><span class="keyword">const</span> <span class="identifier">size_t</span><span class="special">&amp;</span> <span class="identifier">factor</span><span class="special">)(</span><span class="keyword">default</span> <span class="comment">// Or use `BOOST_IDENTITY_VALUE`.
-</span>                    <span class="special">(</span><span class="identifier">key_size</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">,</span> <span class="identifier">size_t</span><span class="special">&gt;::</span><span class="identifier">value</span><span class="special">))</span>
+</span>                    <span class="special">(</span><span class="identifier">key_sizeof</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">,</span> <span class="identifier">size_t</span><span class="special">&gt;::</span><span class="identifier">value</span><span class="special">))</span>
             <span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;</span> <span class="identifier">separator</span><span class="special">)(</span><span class="keyword">default</span> <span class="identifier">cat</span><span class="special">(</span><span class="string">":"</span><span class="special">,</span> <span class="string">" "</span><span class="special">))</span> <span class="special">)</span> <span class="special">{</span>
         <span class="keyword">for</span> <span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">,</span> <span class="identifier">size_t</span><span class="special">&gt;::</span><span class="identifier">const_iterator</span> <span class="identifier">i</span> <span class="special">=</span> <span class="identifier">m</span><span class="special">.</span><span class="identifier">begin</span><span class="special">();</span>
                 <span class="identifier">i</span> <span class="special">!=</span> <span class="identifier">m</span><span class="special">.</span><span class="identifier">end</span><span class="special">();</span> <span class="special">++</span><span class="identifier">i</span><span class="special">)</span> <span class="special">{</span>
@@ -868,7 +871,7 @@
         The <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">local</span><span class="special">::</span><a class="link" href="../boost/local/function.html" title="Struct template function">function</a></code> template takes two
         parameters (see the <a href="../reference.html" target="_top">Reference</a> section):
       </p>
-<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">F</span><span class="special">,</span> <span class="identifier">size_t</span> <span class="identifier">defaults</span> <span class="special">=</span> <span class="number">0</span> <span class="special">&gt;</span> <span class="keyword">class</span> <code class="computeroutput"><a class="link" href="../boost/local/function.html" title="Struct template function">function</a></code><span class="special">;</span>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">F</span><span class="special">,</span> <span class="identifier">size_t</span> <span class="identifier">defaults</span> <span class="special">=</span> <span class="number">0</span><span class="special">&gt;</span> <span class="keyword">class</span> <code class="computeroutput"><a class="link" href="../boost/local/function.html" title="Struct template function">function</a></code><span class="special">;</span>
 </pre>
 <div class="variablelist">
 <p class="title"><b></b></p>
@@ -881,8 +884,8 @@
               syntax as <a href="http://www.boost.org/doc/libs/release/doc/html/function.html" target="_top">Boost.Function</a>'s
               preferred syntax. For example:
 </p>
-<pre class="programlisting"><code class="computeroutput"><a class="link" href="../boost/local/function.html" title="Struct template function">function</a></code><span class="special">&lt;</span> <span class="keyword">int</span><span class="special">()</span> <span class="special">&gt;</span>                   <span class="comment">// Returns `int` and takes no parameter.
-</span><code class="computeroutput"><a class="link" href="../boost/local/function.html" title="Struct template function">function</a></code><span class="special">&lt;</span> <span class="keyword">int</span><span class="special">(</span><span class="keyword">double</span><span class="special">,</span> <span class="keyword">char</span><span class="special">)</span> <span class="special">&gt;</span>       <span class="comment">// Returns `int`and takes two parameters: a `double` followed by a `char`.
+<pre class="programlisting"><code class="computeroutput"><a class="link" href="../boost/local/function.html" title="Struct template function">function</a></code><span class="special">&lt;</span><span class="keyword">int</span><span class="special">()&gt;</span>                   <span class="comment">// Returns `int` and takes no parameter.
+</span><code class="computeroutput"><a class="link" href="../boost/local/function.html" title="Struct template function">function</a></code><span class="special">&lt;</span><span class="keyword">int</span><span class="special">(</span><span class="keyword">double</span><span class="special">,</span> <span class="keyword">char</span><span class="special">)&gt;</span>       <span class="comment">// Returns `int`and takes two parameters: a `double` followed by a `char`.
 </span></pre>
 <p>
             </p>
@@ -900,9 +903,9 @@
               it is optional and it is <code class="computeroutput"><span class="number">0</span></code>
               by default. For example:
 </p>
-<pre class="programlisting"><code class="computeroutput"><a class="link" href="../boost/local/function.html" title="Struct template function">function</a></code><span class="special">&lt;</span> <span class="keyword">int</span><span class="special">(</span><span class="keyword">double</span><span class="special">,</span> <span class="keyword">char</span><span class="special">)</span> <span class="special">&gt;</span>       <span class="comment">// No default: All parameters must be specified.
-</span><code class="computeroutput"><a class="link" href="../boost/local/function.html" title="Struct template function">function</a></code><span class="special">&lt;</span> <span class="keyword">int</span><span class="special">(</span><span class="keyword">double</span><span class="special">,</span> <span class="keyword">char</span><span class="special">),</span> <span class="number">1</span> <span class="special">&gt;</span>    <span class="comment">// 1 default: The last `char` parameter is optional.
-</span><code class="computeroutput"><a class="link" href="../boost/local/function.html" title="Struct template function">function</a></code><span class="special">&lt;</span> <span class="keyword">int</span><span class="special">(</span><span class="keyword">double</span><span class="special">,</span> <span class="keyword">char</span><span class="special">),</span> <span class="number">2</span> <span class="special">&gt;</span>    <span class="comment">// 2 defaults: All parameters are optional.
+<pre class="programlisting"><code class="computeroutput"><a class="link" href="../boost/local/function.html" title="Struct template function">function</a></code><span class="special">&lt;</span><span class="keyword">int</span><span class="special">(</span><span class="keyword">double</span><span class="special">,</span> <span class="keyword">char</span><span class="special">)&gt;</span>       <span class="comment">// No default: All parameters must be specified.
+</span><code class="computeroutput"><a class="link" href="../boost/local/function.html" title="Struct template function">function</a></code><span class="special">&lt;</span><span class="keyword">int</span><span class="special">(</span><span class="keyword">double</span><span class="special">,</span> <span class="keyword">char</span><span class="special">),</span> <span class="number">1</span><span class="special">&gt;</span>    <span class="comment">// 1 default: The last `char` parameter is optional.
+</span><code class="computeroutput"><a class="link" href="../boost/local/function.html" title="Struct template function">function</a></code><span class="special">&lt;</span><span class="keyword">int</span><span class="special">(</span><span class="keyword">double</span><span class="special">,</span> <span class="keyword">char</span><span class="special">),</span> <span class="number">2</span><span class="special">&gt;</span>    <span class="comment">// 2 defaults: All parameters are optional.
 </span></pre>
 <p>
             </p>
@@ -1865,14 +1868,14 @@
 </tbody>
 </table></div>
 <a name="boost_local.Advanced_Topics.limitations__overloading__operators__etc_.overloading"></a><h6>
-<a name="id909636"></a>
+<a name="id907584"></a>
         <a class="link" href="Advanced_Topics.html#boost_local.Advanced_Topics.limitations__overloading__operators__etc_.overloading">Overloading</a>
       </h6>
 <p>
         It is not possible to overload local functions. Declaring multiple local
         functions with the same name within the same enclosing scope generates a
         compile-time error (even if the different declarations specify different
-        parameters). <sup>[<a name="id909661" href="#ftn.id909661" class="footnote">18</a>]</sup>
+        parameters). <sup>[<a name="id907608" href="#ftn.id907608" class="footnote">18</a>]</sup>
       </p>
 <p>
         For example, the following code will <span class="bold"><strong>not</strong></span>
@@ -1891,12 +1894,12 @@
 <span class="special">}</span>
 </pre>
 <a name="boost_local.Advanced_Topics.limitations__overloading__operators__etc_.operators"></a><h6>
-<a name="id909967"></a>
+<a name="id907915"></a>
         <a class="link" href="Advanced_Topics.html#boost_local.Advanced_Topics.limitations__overloading__operators__etc_.operators">Operators</a>
       </h6>
 <p>
         Local functions cannot be operators. Naming a local function <code class="computeroutput"><span class="keyword">operator</span><span class="special">...</span></code>
-        will generate a compile-time error. <sup>[<a name="id910004" href="#ftn.id910004" class="footnote">19</a>]</sup>
+        will generate a compile-time error. <sup>[<a name="id907952" href="#ftn.id907952" class="footnote">19</a>]</sup>
       </p>
 <p>
         For example, the following code will <span class="bold"><strong>not</strong></span>
@@ -1919,21 +1922,21 @@
 </div>
 <div class="footnotes">
 <br><hr width="100" align="left">
-<div class="footnote"><p><sup>[<a id="ftn.id881890" href="#id881890" class="para">15</a>] </sup>
+<div class="footnote"><p><sup>[<a id="ftn.id879865" href="#id879865" class="para">15</a>] </sup>
           <span class="bold"><strong>Rationale.</strong></span> This limitation derives from
           the fact that <code class="computeroutput"><a class="link" href="../BOOST_LOCAL_FUNCTION_PARAMS.html" title="Macro BOOST_LOCAL_FUNCTION_PARAMS">BOOST_LOCAL_FUNCTION_PARAMS</a></code>
           uses preprocessor token concatenation to inspect the parameter type token
           to see if the token is a parameter or a bound variable. The C++ preprocessor
           does not allow to concatenate non-alphanumeric tokens.
         </p></div>
-<div class="footnote"><p><sup>[<a id="ftn.id883247" href="#id883247" class="para">16</a>] </sup>
+<div class="footnote"><p><sup>[<a id="ftn.id881223" href="#id881223" class="para">16</a>] </sup>
               <span class="bold"><strong>Rationale.</strong></span> Using variadic macros,
               this extra set of parenthesis could be eliminated requiring only the
               parenthesis to invoke the <code class="computeroutput"><a class="link" href="../BOOST_IDENTITY_TYPE.html" title="Macro BOOST_IDENTITY_TYPE">BOOST_IDENTITY_TYPE</a></code>
               macro. However, this feature is currently not implemented and the double
               parenthesis are always needed when invoking this macro.
             </p></div>
-<div class="footnote"><p><sup>[<a id="ftn.id884552" href="#id884552" class="para">17</a>] </sup>
+<div class="footnote"><p><sup>[<a id="ftn.id882527" href="#id882527" class="para">17</a>] </sup>
           The authors recognize that the use of the <span class="emphasis"><em>identity macros</em></span>
           adds extra parenthesis to the already significant number of parenthesis
           required by the sequencing macro syntax. However, macro parameters usually
@@ -1941,14 +1944,14 @@
           (unless template metaprogramming is being used) so this is usually not
           a problem.
         </p></div>
-<div class="footnote"><p><sup>[<a id="ftn.id909661" href="#id909661" class="para">18</a>] </sup>
+<div class="footnote"><p><sup>[<a id="ftn.id907608" href="#id907608" class="para">18</a>] </sup>
           <span class="bold"><strong>Rationale.</strong></span> This is because a local function
           is a functor object declared as a local variable within the enclosing scope.
           Therefore, declaring two local functions with the same name within the
           same enclosing scope declares two local variables with the same name within
           the same scope and that is not allowed in C++.
         </p></div>
-<div class="footnote"><p><sup>[<a id="ftn.id910004" href="#id910004" class="para">19</a>] </sup>
+<div class="footnote"><p><sup>[<a id="ftn.id907952" href="#id907952" class="para">19</a>] </sup>
           <span class="bold"><strong>Rationale.</strong></span> This is the because a local
           function name must be a valid local variable name (the local variable to
           hold the local functor object) and operators cannot be used as local variable

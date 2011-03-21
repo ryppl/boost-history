@@ -33,7 +33,7 @@
 
 </span>BOOST_LOCAL_TYPEOF(bound_variable_name)</pre></div>
 <div class="refsect1">
-<a name="id915057"></a><h2>Description</h2>
+<a name="id913056"></a><h2>Description</h2>
 <p>The type is fully qualified in that it contains the extra constant and reference qualifiers when they are specified for binding by constant and by reference. For example, if a variable named <code class="computeroutput">x</code> of type <code class="computeroutput">T</code> is: </p>
 <div class="itemizedlist"><ul class="itemizedlist" type="disc">
 <li class="listitem"><p>Bound by value using <code class="computeroutput">bind x</code> then <code class="computeroutput">BOOST_LOCAL_TYPEOF(x)</code> is <code class="computeroutput">T</code>. </p></li>
@@ -42,7 +42,8 @@
 <li class="listitem"><p>Bound by constant reference using <code class="computeroutput">const bind&amp; x</code> then <code class="computeroutput">BOOST_LOCAL_TYPEOF(x)</code> is <code class="computeroutput">const T&amp;</code>.</p></li>
 </ul></div>
 <p>
-Within local functions, local blocks, and local exits, this macro can be used to deduce the bound variable types to declare local variables, check concepts (using Boost.ConceptCheck), etc (see  <a class="link" href="boost_local/Advanced.html" title="Advanced Topics">Advanced  Topics</a> section).</p>
+Within local functions, local blocks, and local exits, this macro can be used to deduce the bound variable types to declare local variables, check concepts (using Boost.ConceptCheck), etc (see  <a class="link" href="boost_local/Advanced_Topics.html" title="Advanced Topics">
+ Advanced Topics</a> section).</p>
 <p><span class="bold"><strong>Parameters:</strong></span> </p>
 <div class="informaltable"><table class="table">
 <colgroup>
@@ -51,12 +52,12 @@ Within local functions, local blocks, and local exits, this macro can be used to
 </colgroup>
 <tbody><tr>
 <td><span class="bold"><strong><code class="computeroutput">bound_variable_name</code></strong></span></td>
-<td>The bound variable name for which the type is being deduced by this macro.  </td>
+<td>The name of the bound variable for which the type is being deduced.  </td>
 </tr></tbody>
 </table></div>
 <p>
 </p>
-<p><span class="bold"><strong>See:</strong></span>  <code class="computeroutput"><a class="link" href="BOOST_LOCAL_FUNCTION_PARAMS.html" title="Macro BOOST_LOCAL_FUNCTION_PARAMS">BOOST_LOCAL_FUNCTION_PARAMS</a></code>,  <code class="computeroutput"><a class="link" href="BOOST_LOCAL_BLOCK.html" title="Macro BOOST_LOCAL_BLOCK">BOOST_LOCAL_BLOCK</a></code>,  <code class="computeroutput"><a class="link" href="BOOST_LOCAL_EXIT.html" title="Macro BOOST_LOCAL_EXIT">BOOST_LOCAL_EXIT</a></code>,  <a class="link" href="boost_local/Advanced.html" title="Advanced Topics">Advanced  Topics</a> section. </p>
+<p><span class="bold"><strong>See:</strong></span>  <code class="computeroutput"><a class="link" href="BOOST_LOCAL_FUNCTION_PARAMS.html" title="Macro BOOST_LOCAL_FUNCTION_PARAMS">BOOST_LOCAL_FUNCTION_PARAMS</a></code>,  <code class="computeroutput"><a class="link" href="BOOST_LOCAL_BLOCK.html" title="Macro BOOST_LOCAL_BLOCK">BOOST_LOCAL_BLOCK</a></code>,  <code class="computeroutput"><a class="link" href="BOOST_LOCAL_EXIT.html" title="Macro BOOST_LOCAL_EXIT">BOOST_LOCAL_EXIT</a></code>,  <a class="link" href="boost_local/Advanced_Topics.html" title="Advanced Topics"> Advanced Topics</a> section. </p>
 </div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>

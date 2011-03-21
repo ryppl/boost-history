@@ -36,8 +36,8 @@
  *
  * Within local functions, local blocks, and local exits, this macro can be
  * used to deduce the bound variable types to declare local variables, check
- * concepts (using Boost.ConceptCheck), etc (see @RefSect2{Advanced, Topics}
- * section).
+ * concepts (using Boost.ConceptCheck), etc (see @RefSect2{Advanced_Topics,
+ * Advanced Topics} section).
  *
  * @Params
  * @Param{bound_variable_name,
@@ -46,7 +46,8 @@
  * @EndParams
  *
  * @See @RefMacro{BOOST_LOCAL_FUNCTION_PARAMS}, @RefMacro{BOOST_LOCAL_BLOCK},
- *  @RefMacro{BOOST_LOCAL_EXIT}, @RefSect2{Advanced, Topics} section.
+ *  @RefMacro{BOOST_LOCAL_EXIT}, @RefSect2{Advanced_Topics, Advanced Topics}
+ *  section.
  */
 #define BOOST_LOCAL_TYPEOF(bound_variable_name) \
     BOOST_LOCAL_AUX_SYMBOL_TYPEOF_TYPE(bound_variable_name)

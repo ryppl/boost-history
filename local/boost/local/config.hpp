@@ -13,7 +13,6 @@
 #define BOOST_LOCAL_CONFIG_HPP_
 
 /**
- * @def BOOST_LOCAL_CONFIG_COMPLIANT
  * @brief Force to use ISO C++ standard features only.
  *
  * If programmers leave this configuration macro undefined, its default
@@ -38,18 +37,23 @@
  * part of the official ISO C++ standard. Empty macro parameters are also
  * supported by the C99 standards but they are not supported by all modern
  * compilers (for example, they are not supported by MSVC).
+ *
+ * @Note This library internally uses Boost.Typeof to automatically deduce
+ *  the bound variable types. The macro symbol <a href='http://www.boost.org/doc/libs/1_46_1/doc/html/typeof/refe.html#typeof.compl'><c>BOOST_TYPEOF_COMPLIANT</c></a>
+ *  needs to be defined separately from this configuration macro if programmers
+ *  do not want to use non ISO C++ standard support for type deduction
+ *  operations.
  * 
- * 
- * @See @RefSect{Tutorial} section, @RefSect2{Getting, Started} section.
+ * @See @RefSect{Tutorial} section, @RefSect2{Getting_Started, Getting Started}
+ *  section.
  */
 #ifndef BOOST_LOCAL_CONFIG_COMPLIANT
 #undef BOOST_LOCAL_CONFIG_COMPLIANT
 #else
-#define BOOST_LOCAL_CONFIG_COMPLIANT
+#define BOOST_LOCAL_CONFIG_COMPLIANT // For doxygen comment above.
 #endif
 
 /**
- * @def BOOST_LOCAL_CONFIG_FUNCTION_ARITY_MAX
  * @brief Maximum number of function parameters supported for the local
  *  functions.
  *
@@ -63,14 +67,13 @@
  *
  * @Warning Increasing this number will increase compilation time.
  *
- * @See @RefSect2{Getting, Starting} section.
+ * @See @RefSect2{Getting_Started, Getting Started} section.
  */
 #ifndef BOOST_LOCAL_CONFIG_FUNCTION_ARITY_MAX
 #define BOOST_LOCAL_CONFIG_FUNCTION_ARITY_MAX 5
 #endif
 
 /**
- * @def BOOST_LOCAL_CONFIG_THIS_PARAM_NAME
  * @brief The name of the special symbol used to access the bound object
  * <c>this</c>.
  *
@@ -82,7 +85,7 @@
  *  changed). Changing the symbol <c>this_</c> effectively changes the public
  *  API of this library.
  *
- * @See @RefSect2{Getting, Started} section.
+ * @See @RefSect2{Getting_Started, Getting Started} section.
  */
 #ifndef BOOST_LOCAL_CONFIG_THIS_PARAM_NAME
 #define BOOST_LOCAL_CONFIG_THIS_PARAM_NAME this_
