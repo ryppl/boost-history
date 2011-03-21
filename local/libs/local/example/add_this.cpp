@@ -22,6 +22,15 @@ public:
             std::clog << "Summed: " << this_->sum_ << std::endl;
         } BOOST_LOCAL_FUNCTION_NAME(add)
 
+        BOOST_LOCAL_EXIT( (const bind this) ) {
+            std::clog << "Exiting: " << this_->sum_ << std::endl;
+        } BOOST_LOCAL_EXIT_END
+
+        BOOST_LOCAL_BLOCK( (const bind this) ) {
+            std::clong << "Asserted: " << this_->sum_ << std::endl;
+            assert(this_->sum_ > 0.0);
+        } BOOST_LOCAL_BLOCK_END
+
         std::for_each(nums.begin(), nums.end(), add);
         return sum_;
     }

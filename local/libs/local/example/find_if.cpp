@@ -4,6 +4,7 @@
 // License, Version 1.0 (see accompanying file LICENSE_1_0.txt or a
 // copy at http://www.boost.org/LICENSE_1_0.txt).
 
+//[find_if_cpp
 #include <boost/local/function.hpp>
 #include <list>
 #include <algorithm>
@@ -39,4 +40,5 @@ int main() {
     if (i != employees.end()) { std::cout << i->salary() << std::endl; }
     return 0;
 }
+//]
 
