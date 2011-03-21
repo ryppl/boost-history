@@ -11,7 +11,7 @@
 #define BOOST_ASSIGN_V2_VALUE_MODIFIER_STANDARD_MODIFIER_ER_2010_HPP
 #include <boost/assign/v2/detail/keyword/ignore.hpp>
 #include <boost/assign/v2/value/adapter/modifier.hpp>
-#include <boost/assign/v2/value/modifier/modulo.hpp>
+#include <boost/assign/v2/modifier/modulo.hpp>
 #include <boost/preprocessor/cat.hpp>
 
 #define BOOST_ASSIGN_V2_VALUE_MODIFIER_MODULO_STANDARD_IMPL_PTR(FUN)\

@@ -23,7 +23,7 @@
 #include <boost/ptr_container/ptr_list.hpp>
 #include <boost/ptr_container/ptr_vector.hpp>
 
-#include <boost/assign/v2/value/modifier/deduce.hpp>
+#include <boost/assign/v2/modifier/deduce.hpp>
 #include <libs/assign/v2/test/value/modifier/deduce.h>
 
 namespace test_assign_v2{

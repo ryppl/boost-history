@@ -9,7 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_VALUE_MODIFIER_STANDARD_ER_2010_HPP
 #define BOOST_ASSIGN_V2_VALUE_MODIFIER_STANDARD_ER_2010_HPP
-#include <boost/assign/v2/value/modifier/standard/modifier.hpp>
-#include <boost/assign/v2/value/modifier/standard/include.hpp>
+#include <boost/assign/v2/modifier/standard/modifier.hpp>
+#include <boost/assign/v2/modifier/standard/include.hpp>
 
 #endif // BOOST_ASSIGN_V2_VALUE_MODIFIER_STANDARD_ER_2010_HPP

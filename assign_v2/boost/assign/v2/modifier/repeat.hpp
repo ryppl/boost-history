@@ -82,7 +82,7 @@ namespace value_aux{
 }// v2
 }// assign
 }// boost
-#include <boost/assign/v2/value/modifier/modulo.hpp>
+#include <boost/assign/v2/modifier/modulo.hpp>
 BOOST_ASSIGN_V2_VALUE_MODIFIER_MODULO_KEYWORD(repeat)
 #define BOOST_ASSIGN_V2_TAG modifier_tag::repeat<typename D::modifier_tag>
 BOOST_ASSIGN_V2_VALUE_MODIFIER_MODULO_META_MODIFIER_TAG(repeat, BOOST_ASSIGN_V2_TAG)

@@ -68,7 +68,7 @@ namespace value_aux{
 }// assign
 }// boost
 
-#include <boost/assign/v2/value/modifier/modulo.hpp>
+#include <boost/assign/v2/modifier/modulo.hpp>
 BOOST_ASSIGN_V2_VALUE_MODIFIER_MODULO_KEYWORD(lookup)
 #define BOOST_ASSIGN_V2_TAG modifier_tag::lookup<Arg>
 BOOST_ASSIGN_V2_VALUE_MODIFIER_MODULO_META_MODIFIER_TAG(lookup, BOOST_ASSIGN_V2_TAG)

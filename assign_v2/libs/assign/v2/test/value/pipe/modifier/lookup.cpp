@@ -13,7 +13,7 @@
 #include <boost/typeof/typeof.hpp>
 #include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/fun.hpp>
-#include <boost/assign/v2/value/modifier/lookup.hpp>
+#include <boost/assign/v2/modifier/lookup.hpp>
 #include <boost/assign/v2/value/pipe/put.hpp>
 #include <boost/assign/v2/value/pipe/csv_put.hpp>
 #include <libs/assign/v2/test/value/pipe/modifier/lookup.h>

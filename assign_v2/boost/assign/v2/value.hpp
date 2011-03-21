@@ -13,7 +13,7 @@
 #include <boost/assign/v2/value/container.hpp>
 #include <boost/assign/v2/deque.hpp>
 #include <boost/assign/v2/fun.hpp>
-#include <boost/assign/v2/value/modifier.hpp>
+#include <boost/assign/v2/modifier.hpp>
 #include <boost/assign/v2/value/pipe.hpp>
 
 #endif // BOOST_ASSIGN_V2_PUT_ER_2010_HPP

@@ -10,8 +10,8 @@
 #include <vector>
 #include <boost/typeof/typeof.hpp>
 #include <boost/assign/v2/detail/config/check.hpp>
-#include <boost/assign/v2/value/modifier/push_front.hpp>
-#include <boost/assign/v2/value/modifier/repeat.hpp>
+#include <boost/assign/v2/modifier/push_front.hpp>
+#include <boost/assign/v2/modifier/repeat.hpp>
 #include <boost/assign/v2/value/put.hpp>
 #include <boost/assign/v2/deque.hpp>
 #include <boost/range/algorithm/equal.hpp>

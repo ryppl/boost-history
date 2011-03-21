@@ -103,7 +103,7 @@ namespace value_aux{
 }// assign
 }// boost
 
-#include <boost/assign/v2/value/modifier/modulo.hpp>
+#include <boost/assign/v2/modifier/modulo.hpp>
 BOOST_ASSIGN_V2_VALUE_MODIFIER_MODULO_KEYWORD(iterate)
 
 #define BOOST_ASSIGN_V2_TAG modifier_tag::iterate<Arg>

@@ -10,7 +10,7 @@
 #include <boost/array.hpp>
 #include <boost/assign/v2/detail/config/check.hpp>
 
-#include <boost/assign/v2/value/modifier/iterate.hpp>
+#include <boost/assign/v2/modifier/iterate.hpp>
 #include <boost/assign/v2/value/put.hpp>
 #include <boost/assign/v2/deque.hpp>
 #include <boost/lambda/lambda.hpp>

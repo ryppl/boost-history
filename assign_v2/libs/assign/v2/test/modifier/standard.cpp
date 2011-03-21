@@ -13,7 +13,7 @@
 #include <set>
 #include <string>
 #include <boost/assign/v2/detail/config/check.hpp>
-#include <boost/assign/v2/value/modifier/standard.hpp>
+#include <boost/assign/v2/modifier/standard.hpp>
 #include <boost/assign/v2/value/put.hpp>
 #include <boost/assign/v2/deque.hpp>
 #include <boost/range/begin.hpp>
