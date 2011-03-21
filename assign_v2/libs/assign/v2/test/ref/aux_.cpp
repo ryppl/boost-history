@@ -9,7 +9,6 @@
 //////////////////////////////////////////////////////////////////////////////
 #include <libs/assign/v2/test/ref/aux_/convert_traits.h>
 #include <libs/assign/v2/test/ref/aux_/list.h>
-#include <libs/assign/v2/test/ref/aux_/list_tuple.h>
 #include <libs/assign/v2/test/ref/aux_.h>
 
 namespace test_assign_v2{
@@ -20,7 +19,6 @@ namespace xxx_aux_{
     {
         xxx_convert_traits::test();
         xxx_list::test();
-        xxx_list_tuple::test();
     }
 
 }// xxx_aux_
