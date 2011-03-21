@@ -10,7 +10,7 @@
 #ifndef BOOST_ASSIGN_V2_DEQUE_DEQUE_ER_2010_HPP
 #define BOOST_ASSIGN_V2_DEQUE_DEQUE_ER_2010_HPP
 #include <deque>
-#include <boost/assign/v2/framework/crtp.hpp>
+#include <boost/assign/v2/framework/adapter_crtp.hpp>
 #include <boost/assign/v2/framework/modifier.hpp>
 #include <boost/assign/v2/framework/replace_parameter.hpp>
 #include <boost/assign/v2/deque/fwd.hpp>

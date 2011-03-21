@@ -11,6 +11,5 @@
 #define BOOST_ASSIGN_V2_INCLUDE_OPERATOR_ER_2010_HPP
 #include <boost/assign/v2/include/operator/chain.hpp>
 #include <boost/assign/v2/include/operator/csv_put.hpp>
-#include <boost/assign/v2/include/operator/put.hpp>
 
 #endif // BOOST_ASSIGN_V2_INCLUDE_OPERATOR_ER_2010_HPP
