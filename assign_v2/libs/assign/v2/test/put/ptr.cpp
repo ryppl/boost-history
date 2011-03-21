@@ -28,7 +28,7 @@ namespace xxx_ptr{
         namespace as2 = boost::assign::v2;
 
         {
-            //[test_value_ptr_array
+            //[test_put_ptr_array
             typedef int T;
             T x = 1, y = 2, z = 3; boost::ptr_array<T, 3> cont;
             as2::put( cont )/*<<Calls `assoc[i++] = new T( t )` for `i = 0` and `t`[^ = ] `x`, `y`, and `z`>>*/( x )( y )( z );
@@ -38,7 +38,7 @@ namespace xxx_ptr{
             //]
         }
         {
-            //[test_value_ptr_deque
+            //[test_put_ptr_deque
             typedef int T; T x = 1, y = 2, z = 0; boost::ptr_deque<T> cont;
             as2::put( cont )/*<<Calls `assoc.push_back( new T( t ) )` for `t` [^=] `x`, `y`, and `z`>>*/( x )( y )( z );
 
@@ -47,7 +47,7 @@ namespace xxx_ptr{
             //]
         }
         {
-            //[test_value_ptr_list
+            //[test_put_ptr_list
             typedef int T; T x = 1, y = 2, z = 0; boost::ptr_list<T> cont;
             as2::put( cont )/*<<Calls `assoc.push_back( new T( t ) )` for `t` [^=] `x`, `y`, and `z`>>*/( x )( y )( z );
 
@@ -56,7 +56,7 @@ namespace xxx_ptr{
             //]
         }
         {
-            //[test_value_ptr_vector
+            //[test_put_ptr_vector
             typedef int T; T x = 1, y = 2, z = 0; boost::ptr_vector<T> cont;
             as2::put( cont )/*<<Calls `assoc.push_back( new T( t ) )` for `t` [^=] `x`, `y`, and `z`>>*/( x )( y )( z );
 

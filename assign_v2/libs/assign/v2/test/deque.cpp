@@ -27,7 +27,7 @@ namespace xxx_deque{
         using namespace boost;
         namespace as2 = assign::v2;
         {
-            //[test_value_deque_pair
+            //[test_deque_pair
             typedef std::string str_;
             typedef std::pair<str_, str_> T;
             typedef as2::result_of::deque<T>::type C;
@@ -42,7 +42,7 @@ namespace xxx_deque{
             range::equal( benchmark, airports );            
             //]
         }        {
-            //[test_value_deque_ints
+            //[test_deque_ints
             typedef as2::result_of::deque<int>::type C1;
             typedef as2::result_of::csv_deque<int>::type C2;
             
@@ -66,7 +66,7 @@ namespace xxx_deque{
             //]
         }
         {
-            //[test_value_deque_str_literal
+            //[test_deque_str_literal
             typedef as2::result_of::deque<char*>::type C1;
             typedef as2::result_of::csv_deque<const char[2]>::type C2;
             

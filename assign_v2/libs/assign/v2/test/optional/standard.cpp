@@ -46,7 +46,7 @@ namespace xxx_standard{
 
         // PUT
         {
-            //[test_value_modifier_standard_meta
+            //[test_optional_standard_meta
             typedef as2::result_of::put<std::vector<int> >::type put_;
             typedef as2::aux::keyword_standard_modifier keyword_;
             typedef as2::modifier_tag::push_front tag_;
@@ -59,7 +59,7 @@ namespace xxx_standard{
         }
         {
         	// fully qual boost::begin/end demanded by MSVC - error C2668
-            //[test_value_modifier_push_front
+            //[test_optional_push_front
             std::deque<double> sqrt2;
             ( as2::put( sqrt2 ) % as2::_push_front )( 1.41421 )( 1.4142 )( 1.414 )( 1.41 );
 
@@ -69,7 +69,7 @@ namespace xxx_standard{
             //]
         }
         {
-            //[test_value_modifier_push
+            //[test_optional_push
             std::queue<int> fifo; ( as2::put( fifo ) % as2::_push )( 72 )( 31 )( 48 );
 
             BOOST_ASSIGN_V2_CHECK( fifo.front() == 72 );
@@ -77,7 +77,7 @@ namespace xxx_standard{
             //]
         }
         {
-            //[test_value_modifier_insert
+            //[test_optional_insert
             std::set<std::string> letters; ( as2::put( letters ) % as2::_insert )( "d" )( "a" )( "c" )( "b" );
 
             BOOST_ASSIGN_V2_CHECK( letters.lower_bound( "a" ) == boost::begin( letters ) );
@@ -85,7 +85,7 @@ namespace xxx_standard{
             //]
         }
         {
-            //[test_value_modifier_push_back
+            //[test_optional_push_back
             std::list<int> list;
             ( as2::put( list ) % as2::_push_back )( 72 )( 31 )( 48 );
 
@@ -94,7 +94,7 @@ namespace xxx_standard{
         }
         // DEQUE
         {
-            //[test_value_modifier_meta_deque
+            //[test_optional_meta_deque
             typedef as2::result_of::deque<int>::type put_;
             typedef as2::aux::keyword_standard_modifier keyword_;
             typedef as2::modifier_tag::push_front tag_;
@@ -107,7 +107,7 @@ namespace xxx_standard{
             //]
         }
         {
-            //[test_value_modifier_push_front_deque
+            //[test_optional_push_front_deque
             BOOST_AUTO(
                 powers,
                 ( as2::deque<int>( as2::_nil ) % as2::_push_front )( 16 )( 8 )( 4 )( 2 )( 1 )

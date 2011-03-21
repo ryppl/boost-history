@@ -35,7 +35,7 @@ namespace xxx_iterate{
         using namespace boost;
         namespace as2 = assign::v2;
         {
-            //[test_value_modifier_iterate_meta
+            //[test_optional_iterate_meta
             typedef as2::aux::keyword_iterate keyword_;
             typedef as2::modifier_tag::iterate_arg arg_;
             typedef as2::aux::modulo_modifier<keyword_, arg_> modulo_;
@@ -50,7 +50,7 @@ namespace xxx_iterate{
             //]
         }
         {
-            //[test_value_modifier_iterate_shifted
+            //[test_optional_iterate_shifted
         	using namespace lambda;
             typedef int T; array<T, 4> powers; powers[0] = 1; powers[1] = 10;
             int index = 2; ( as2::put( powers ) % ( as2::_iterate = var( index )++ ) )( 100 )( 1000 );
@@ -59,7 +59,7 @@ namespace xxx_iterate{
             //]
         }
         {
-            //[test_value_modifier_iterate_meta_deque
+            //[test_optional_iterate_meta_deque
             typedef as2::aux::keyword_iterate keyword_;
             typedef as2::modifier_tag::iterate_arg arg_;
             typedef as2::aux::modulo_modifier<keyword_, arg_> modulo_;
@@ -73,7 +73,7 @@ namespace xxx_iterate{
             //]
         }
         {
-            //[test_value_modifier_iterate_shifted_deque
+            //[test_optional_iterate_shifted_deque
         	using namespace lambda;
             as2::result_of::deque<int>::type missing_tail = as2::deque<int>( 1 )( 10 )( -1 )( -1 );
             int index = 2; 

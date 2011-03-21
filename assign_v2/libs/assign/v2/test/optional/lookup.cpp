@@ -1,4 +1,4 @@
-//////////////////////////////////////////////////////////////////////////////
+test_optional_//////////////////////////////////////////////////////////////////////////////
 //  Boost.Assign v2                                                         //
 //                                                                          //
 //  Copyright (C) 2003-2004 Thorsten Ottosen                                //
@@ -34,7 +34,7 @@ namespace xxx_lookup{
         using namespace boost;
         namespace as2 = assign::v2;
         {
-            //[test_value_modifier_lookup_meta
+            //[test_optional_lookup_meta
         	using namespace lambda;
             typedef BOOST_TYPEOF(_1) arg_;
             typedef as2::aux::keyword_lookup keyword_;
@@ -50,7 +50,7 @@ namespace xxx_lookup{
             //]
         }
         {
-            //[test_value_modifier_lookup_map
+            //[test_optional_lookup_map
         	using namespace lambda;
             typedef std::string str_; typedef std::map<str_, int> C; C year; 
             ( 
@@ -63,7 +63,7 @@ namespace xxx_lookup{
             //]        
         }
         {
-            //[test_value_modifier_lookup_meta_deque
+            //[test_optional_lookup_meta_deque
         	using namespace lambda;
             typedef BOOST_TYPEOF(_1) arg_;
             typedef as2::aux::keyword_lookup keyword_;
@@ -78,7 +78,7 @@ namespace xxx_lookup{
             //]
         }
         {
-            //[test_value_modifier_lookup_map_deque
+            //[test_optional_lookup_map_deque
         	using namespace lambda;
             BOOST_AUTO(
                 days_in_first_quater,

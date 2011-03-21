@@ -27,7 +27,7 @@ namespace xxx_repeat{
         using namespace boost;
         namespace as2 = assign::v2;
         {
-            //[test_value_modifier_repeat_simple
+            //[test_optional_repeat_simple
             std::vector<int> cont;
             ( as2::put( cont ) % ( as2::_repeat = 2  ) )( 72 )( 31 )( 48 );
 
@@ -35,7 +35,7 @@ namespace xxx_repeat{
             //]
         }
         {
-            //[test_value_modifier_repeat_compose
+            //[test_optional_repeat_compose
             BOOST_AUTO(
                 cont, (
                     as2::deque<int>( as2::_nil ) % as2::_push_front % ( as2::_repeat = 2 )

@@ -8,7 +8,7 @@
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_FRAMEWORK_FWD_ER_2010_HPP
-#define BOOST_ASSIGN_V2_FRAMEWORK__FWD_ER_2010_HPP
+#define BOOST_ASSIGN_V2_FRAMEWORK_FWD_ER_2010_HPP
 
 namespace boost{
 namespace assign{
@@ -25,5 +25,5 @@ namespace aux{
 }// assign
 }// boost
 
-#endif // BOOST_ASSIGN_V2_FRAMEWORK__FWD_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_FRAMEWORK_FWD_ER_2010_HPP
 
