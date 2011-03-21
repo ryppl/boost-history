@@ -7,15 +7,15 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_FRAMEWORK_ADAPTER_CRTP_ER_2010_HPP
-#define BOOST_ASSIGN_V2_FRAMEWORK_ADAPTER_CRTP_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_INTERPRETER_ADAPTER_CRTP_ER_2010_HPP
+#define BOOST_ASSIGN_V2_INTERPRETER_ADAPTER_CRTP_ER_2010_HPP
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
 #include <boost/assign/v2/detail/pp/forward.hpp>
 #include <boost/assign/v2/detail/pp/ignore.hpp>
 #include <boost/assign/v2/detail/traits/ptr_container/meta.hpp>
-#include <boost/assign/v2/framework/as_arg_list.hpp>
-#include <boost/assign/v2/framework/fwd.hpp>
-#include <boost/assign/v2/framework/modifier.hpp>
+#include <boost/assign/v2/interpreter/as_arg_list.hpp>
+#include <boost/assign/v2/interpreter/fwd.hpp>
+#include <boost/assign/v2/interpreter/modifier.hpp>
 #include <boost/concept_check.hpp>
 #include <boost/mpl/always.hpp>
 #include <boost/mpl/apply.hpp>
@@ -99,7 +99,7 @@ namespace aux{
 
     };
 }//aux
-//[syntax_put_adapter_crtp
+//[syntax_put_interpreter_crtp
 namespace aux{
 
     template<typename C, typename D>
@@ -134,13 +134,13 @@ namespace aux{
     };
 
     template<typename /*<<Container>>*/C, typename /*<<Functor>>*/F, typename /*<<Modifier tag>>*/Tag, typename /*<<Derived type>>*/D>
-    class adapter_crtp
+    class interpreter_crtp
 //<-
         : public fun_holder<F>
         , public modifier_holder<Tag>
 #if !BOOST_ASSIGN_V2_ENABLE_CPP0X
         , public functor_aux::crtp_unary_and_up<
-            adapter_crtp<C, F, Tag, D>,
+            interpreter_crtp<C, F, Tag, D>,
             ::boost::mpl::always< D const& >
         >
 #endif // BOOST_ASSIGN_V2_ENABLE_CPP0X
@@ -162,9 +162,9 @@ namespace aux{
         typedef /*<-*/ typename modifier_holder_::modifier_type BOOST_ASSIGN_V2_IGNORE(/*->*/ adapter_modifier<Tag> /*<-*/)/*->*/
         modifier_type;
 
-        adapter_crtp(){}
-        explicit adapter_crtp( F const& f )/*<-*/ : fun_holder_( f ){}BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
-        explicit adapter_crtp( F const& f, modifier_type const& m )/*<-*/
+        interpreter_crtp(){}
+        explicit interpreter_crtp( F const& f )/*<-*/ : fun_holder_( f ){}BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
+        explicit interpreter_crtp( F const& f, modifier_type const& m )/*<-*/
             : fun_holder_( f ), modifier_holder_( m ){}BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
         typedef D const& result_type;
@@ -192,7 +192,7 @@ namespace aux{
 #else
         protected:
         typedef functor_aux::crtp_unary_and_up<
-            adapter_crtp,
+            interpreter_crtp,
             ::boost::mpl::always<result_type>
         > super_t;
 
@@ -294,4 +294,4 @@ BOOST_PP_REPEAT_FROM_TO(
 }// assign
 }// boost
 
-#endif // BOOST_ASSIGN_V2_FRAMEWORK_ADAPTER_CRTP_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_INTERPRETER_ADAPTER_CRTP_ER_2010_HPP

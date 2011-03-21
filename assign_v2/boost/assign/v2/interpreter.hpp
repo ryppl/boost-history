@@ -7,10 +7,10 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_FRAMEWORK_ER_2010_HPP
-#define BOOST_ASSIGN_V2_FRAMEWORK_ER_2010_HPP
-#include <boost/assign/v2/framework/adapter_crtp.hpp>
-#include <boost/assign/v2/framework/modifier.hpp>
-#include <boost/assign/v2/framework/replace_parameter.hpp>
+#ifndef BOOST_ASSIGN_V2_INTERPRETER_ER_2010_HPP
+#define BOOST_ASSIGN_V2_INTERPRETER_ER_2010_HPP
+#include <boost/assign/v2/interpreter/crtp.hpp>
+#include <boost/assign/v2/interpreter/modifier.hpp>
+#include <boost/assign/v2/interpreter/replace_parameter.hpp>
 
-#endif // BOOST_ASSIGN_V2_FRAMEWORK_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_INTERPRETER_ER_2010_HPP

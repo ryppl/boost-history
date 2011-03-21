@@ -7,8 +7,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_FRAMEWORK_MODIFIER_ER_2010_HPP
-#define BOOST_ASSIGN_V2_FRAMEWORK_MODIFIER_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_INTERPRETER_MODIFIER_ER_2010_HPP
+#define BOOST_ASSIGN_V2_INTERPRETER_MODIFIER_ER_2010_HPP
 #include <boost/assign/v2/detail/pp/ignore.hpp>
 #include <boost/assign/v2/detail/traits/value_container/has_push.hpp>
 #include <boost/assign/v2/detail/traits/value_container/category.hpp>
@@ -145,4 +145,4 @@ namespace aux{
 }// assign
 }// boost
 
-#endif // BOOST_ASSIGN_V2_FRAMEWORK_MODIFIER_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_INTERPRETER_MODIFIER_ER_2010_HPP

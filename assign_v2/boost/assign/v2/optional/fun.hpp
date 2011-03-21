@@ -11,8 +11,8 @@
 #define BOOST_ASSIGN_V2_OPTIONAL_FUN_ER_2010_HPP
 #include <boost/assign/v2/detail/pp/ignore.hpp>
 #include <boost/assign/v2/detail/keyword/ignore.hpp>
-#include <boost/assign/v2/framework/fwd.hpp>
-#include <boost/assign/v2/framework/replace_parameter.hpp>
+#include <boost/assign/v2/interpreter/fwd.hpp>
+#include <boost/assign/v2/interpreter/replace_parameter.hpp>
 #include <boost/mpl/apply.hpp>
 
 namespace boost{
@@ -48,7 +48,7 @@ namespace result_of{
     template<typename C, typename F, typename Tag, typename D, typename F1>
     typename ::boost::mpl::apply1<result_of::optional_fun<D>, F1>::type
     operator%(
-        adapter_crtp<C, F, Tag, D> const& lhs,
+        interpreter_crtp<C, F, Tag, D> const& lhs,
         optional_fun<F1> const& rhs
     )
     {

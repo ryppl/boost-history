@@ -74,7 +74,7 @@ namespace result_of{
 }// result_of
 namespace chain_aux{
 
-#define BOOST_ASSIGN_V2_FRAMEWORK_CHAIN(U1) \
+#define BOOST_ASSIGN_V2_INTERPRETER_CHAIN(U1) \
     template<typename R1, typename U2> \
     typename chain_aux::result<U1, U2>::type \
     operator|(U1 & r1, chain_aux::adaptor1<U2> const & h) \
@@ -85,9 +85,9 @@ namespace chain_aux{
 \
 /**/
 
-BOOST_ASSIGN_V2_FRAMEWORK_CHAIN(R1      )
-BOOST_ASSIGN_V2_FRAMEWORK_CHAIN(R1 const)
-#undef BOOST_ASSIGN_V2_FRAMEWORK_CHAIN
+BOOST_ASSIGN_V2_INTERPRETER_CHAIN(R1      )
+BOOST_ASSIGN_V2_INTERPRETER_CHAIN(R1 const)
+#undef BOOST_ASSIGN_V2_INTERPRETER_CHAIN
 
 }// chain_aux
 

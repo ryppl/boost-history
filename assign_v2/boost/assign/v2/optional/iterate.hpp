@@ -13,8 +13,8 @@
 #include <boost/assign/v2/detail/keyword/ignore.hpp>
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
 #include <boost/assign/v2/detail/pp/ignore.hpp>
-//#include <boost/assign/v2/framework/modifier.hpp>
-#include <boost/assign/v2/framework/fwd.hpp>
+//#include <boost/assign/v2/interpreter/modifier.hpp>
+#include <boost/assign/v2/interpreter/fwd.hpp>
 #include <boost/call_traits.hpp>
 #include <boost/shared_ptr.hpp>
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X

@@ -16,7 +16,7 @@ namespace v2{
 namespace aux{
 
     template<typename C, typename F, typename Tag, typename D> 
-    class adapter_crtp;
+    class interpreter_crtp;
 
     template<typename Tag> struct /*<<Specialize on Tag>>*/ adapter_modifier;
 

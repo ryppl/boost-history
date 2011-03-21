@@ -11,9 +11,9 @@
 #define BOOST_ASSIGN_V2_OPTIONAL_MODIFIER_ER_2010_HPP
 #include <boost/assign/v2/detail/keyword/ignore.hpp>
 #include <boost/assign/v2/detail/pp/ignore.hpp>
-#include <boost/assign/v2/framework/fwd.hpp>
-#include <boost/assign/v2/framework/modifier.hpp>
-#include <boost/assign/v2/framework/replace_parameter.hpp>
+#include <boost/assign/v2/interpreter/fwd.hpp>
+#include <boost/assign/v2/interpreter/modifier.hpp>
+#include <boost/assign/v2/interpreter/replace_parameter.hpp>
 #include <boost/mpl/apply.hpp>
 #include <boost/preprocessor/cat.hpp>
 
@@ -52,7 +52,7 @@ namespace aux{
     template<typename Keyword, typename Arg>
     struct /*<<Meta-function class to be specialized on Keyword>>*/ meta_modifier_tag
     {
-        template<typename /*<<Inherits `adapter_crtp<>` >>*/ D> 
+        template<typename /*<<Inherits `interpreter_crtp<>` >>*/ D> 
         struct /*<<Returns a modifier-tag>>*/ apply;
     };
 
@@ -89,7 +89,7 @@ namespace result_of{
         Keyword, Arg
     >::type
     operator%(
-        adapter_crtp<C, F, Tag, D> const& lhs,
+        interpreter_crtp<C, F, Tag, D> const& lhs,
         optional_modifier<Keyword, Arg> const& rhs
     )/*<-*/
     {

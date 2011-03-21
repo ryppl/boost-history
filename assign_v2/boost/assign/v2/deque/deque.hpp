@@ -10,10 +10,10 @@
 #ifndef BOOST_ASSIGN_V2_DEQUE_DEQUE_ER_2010_HPP
 #define BOOST_ASSIGN_V2_DEQUE_DEQUE_ER_2010_HPP
 #include <deque>
-#include <boost/assign/v2/framework/adapter_crtp.hpp>
-#include <boost/assign/v2/framework/fun.hpp>
-#include <boost/assign/v2/framework/modifier.hpp>
-#include <boost/assign/v2/framework/replace_parameter.hpp>
+#include <boost/assign/v2/interpreter/interpreter_crtp.hpp>
+#include <boost/assign/v2/interpreter/fun.hpp>
+#include <boost/assign/v2/interpreter/modifier.hpp>
+#include <boost/assign/v2/interpreter/replace_parameter.hpp>
 #include <boost/assign/v2/deque/fwd.hpp>
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
 #include <boost/assign/v2/detail/keyword/nil.hpp>
@@ -40,7 +40,7 @@ namespace aux{
     template<typename T, typename F, typename Tag>
     class deque_adapter 
 //<-
-        : public adapter_crtp<
+        : public interpreter_crtp<
             typename deque_impl<T>::type, F, Tag,
             deque_adapter<T, F, Tag>
         >
@@ -49,7 +49,7 @@ namespace aux{
 //<-
         typedef typename deque_impl<T>::type impl_;
         typedef impl_ const cimpl_;
-        typedef adapter_crtp<impl_, F, Tag, deque_adapter> put_crtp_;
+        typedef interpreter_crtp<impl_, F, Tag, deque_adapter> put_crtp_;
 
         typedef aux::adapter_modifier<Tag> modifier_;
 //->
