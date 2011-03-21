@@ -22,7 +22,7 @@ namespace aux{
 namespace result_of{
 
     template<typename D>
-    struct modulo_fun{
+    struct optional_fun{
 
         typedef aux::replace_fun<D> meta_;
 
@@ -34,10 +34,10 @@ namespace result_of{
 }// result_of
 
     template<typename F = keyword_aux::ignore>
-    struct modulo_fun
+    struct optional_fun
     {
-        modulo_fun(){}
-        modulo_fun(F f) : f_( f ){}
+        optional_fun(){}
+        optional_fun(F f) : f_( f ){}
 
         F const& fun()const{ return this->f_; }
 
@@ -46,13 +46,13 @@ namespace result_of{
     };
 
     template<typename C, typename F, typename Tag, typename D, typename F1>
-    typename ::boost::mpl::apply1<result_of::modulo_fun<D>, F1>::type
+    typename ::boost::mpl::apply1<result_of::optional_fun<D>, F1>::type
     operator%(
         adapter_crtp<C, F, Tag, D> const& lhs,
-        modulo_fun<F1> const& rhs
+        optional_fun<F1> const& rhs
     )
     {
-        typedef result_of::modulo_fun<D> meta_;
+        typedef result_of::optional_fun<D> meta_;
         typedef typename ::boost::mpl::apply1<meta_, F1>::type result_;
         return result_( lhs.container(), rhs.fun(), lhs.modifier );
     }
@@ -60,8 +60,8 @@ namespace result_of{
     struct keyword_fun{
 
         template<typename F>
-        modulo_fun<F> operator=(F const& f)const{
-            return modulo_fun<F>( f );
+        optional_fun<F> operator=(F const& f)const{
+            return optional_fun<F>( f );
         }
 
     };
@@ -74,8 +74,8 @@ namespace{
 namespace result_of{
 
     template<typename D>
-    struct modulo_fun/*<-*/
-        : aux::result_of::modulo_fun<D>
+    struct optional_fun/*<-*/
+        : aux::result_of::optional_fun<D>
     {}/*->*/;
 
 }// result_of
@@ -88,14 +88,14 @@ namespace result_of{
 
 #include <boost/preprocessor/cat.hpp>
 
-#define BOOST_ASSIGN_V2_MODULO_FUN_GENERATE(NAME, FUN)\
+#define BOOST_ASSIGN_V2_OPTIONAL_FUN_GENERATE(NAME, FUN)\
 namespace boost{\
 namespace assign{\
 namespace v2{\
 namespace aux{\
 \
     template<typename T>\
-    modulo_fun< FUN > NAME()\
+    optional_fun< FUN > NAME()\
     {\
         return ( v2::_fun = FUN() );\
     }\
@@ -108,14 +108,14 @@ using aux::NAME;\
 /**/
 
 #include <boost/assign/v2/detail/functor/constructor.hpp>
-BOOST_ASSIGN_V2_MODULO_FUN_GENERATE(constructor, v2::functor_aux::constructor<T>)
+BOOST_ASSIGN_V2_OPTIONAL_FUN_GENERATE(constructor, v2::functor_aux::constructor<T>)
 
 #include <boost/assign/v2/detail/functor/new.hpp>
-BOOST_ASSIGN_V2_MODULO_FUN_GENERATE(new_ptr, v2::functor_aux::new_<T>)
+BOOST_ASSIGN_V2_OPTIONAL_FUN_GENERATE(new_ptr, v2::functor_aux::new_<T>)
 
 #include <boost/typeof/typeof.hpp>
 #include <boost/type_traits/add_const.hpp>
-#define BOOST_ASSIGN_V2_MODULO_FUN_KEYWORD(NAME, EXPR)\
+#define BOOST_ASSIGN_V2_OPTIONAL_FUN_KEYWORD(NAME, EXPR)\
 namespace boost{\
 namespace assign{\
 namespace v2{\
@@ -129,6 +129,6 @@ namespace{\
 }\
 
 #include <boost/lambda/lambda.hpp>
-BOOST_ASSIGN_V2_MODULO_FUN_KEYWORD(identity, ::boost::lambda::_1)
+BOOST_ASSIGN_V2_OPTIONAL_FUN_KEYWORD(identity, ::boost::lambda::_1)
 
 #endif // BOOST_ASSIGN_V2_OPTIONAL_FUN_ER_2010_HPP

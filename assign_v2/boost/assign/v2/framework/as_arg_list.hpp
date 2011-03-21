@@ -42,7 +42,7 @@ namespace aux{
 
     };
 
-//[syntax_put_adapter_as_arg_list
+//[syntax_framework_as_arg_list
 namespace result_of{
 
     template<typename R>

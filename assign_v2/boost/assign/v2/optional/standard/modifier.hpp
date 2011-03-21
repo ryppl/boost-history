@@ -84,7 +84,7 @@ namespace aux{\
 }\
 namespace{\
 \
-    aux::modulo_modifier<aux::keyword_standard_modifier, modifier_tag::FUN> const\
+    aux::optional_modifier<aux::keyword_standard_modifier, modifier_tag::FUN> const\
         BOOST_PP_CAT(_,FUN) = ( \
         _standard_modifier = modifier_tag::FUN() \
     );\

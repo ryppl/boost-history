@@ -50,7 +50,7 @@ namespace xxx_standard{
             typedef as2::result_of::put<std::vector<int> >::type put_;
             typedef as2::aux::keyword_standard_modifier keyword_;
             typedef as2::modifier_tag::push_front tag_;
-            typedef as2::result_of::modulo_modifier<put_> meta1_;
+            typedef as2::result_of::optional_modifier<put_> meta1_;
             typedef ::boost::mpl::apply2<meta1_, keyword_, tag_>::type result1_;
             typedef as2::aux::replace_modifier_tag<put_> meta2_;
             typedef ::boost::mpl::apply1<meta2_, tag_>::type result2_;
@@ -98,7 +98,7 @@ namespace xxx_standard{
             typedef as2::result_of::deque<int>::type put_;
             typedef as2::aux::keyword_standard_modifier keyword_;
             typedef as2::modifier_tag::push_front tag_;
-            typedef as2::result_of::modulo_modifier<put_> meta1_;
+            typedef as2::result_of::optional_modifier<put_> meta1_;
             typedef ::boost::mpl::apply2<meta1_, keyword_, tag_>::type result1_;
             typedef as2::aux::replace_modifier_tag<put_> meta2_;
             typedef ::boost::mpl::apply1<meta2_, tag_>::type result2_;

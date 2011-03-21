@@ -21,7 +21,7 @@
 namespace boost{
 namespace assign{
 namespace v2{
-//[syntax_put_fun_deduce
+//[syntax_framework_fun
 namespace aux{
 
     template<typename C>

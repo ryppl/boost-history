@@ -24,11 +24,11 @@ namespace v2{
 namespace aux{
 
     template<typename /*<<A class of modifiers>>*/ Keyword, typename /*<<A part of the modifier's implementation>>*/Arg = keyword_aux::ignore>
-    struct modulo_modifier
+    struct optional_modifier
     {
         
-        modulo_modifier(){}
-        modulo_modifier(Arg arg)/*<-*/
+        optional_modifier(){}
+        optional_modifier(Arg arg)/*<-*/
             :arg_( arg )
         {}BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
         
@@ -38,9 +38,9 @@ namespace aux{
         }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
         template<typename Arg1>
-        modulo_modifier<Keyword, Arg1>
+        optional_modifier<Keyword, Arg1>
         operator=(const Arg1& arg1)const/*<-*/{
-            return modulo_modifier<Keyword, Arg1>( arg1 );
+            return optional_modifier<Keyword, Arg1>( arg1 );
         }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
         
 //<-
@@ -59,7 +59,7 @@ namespace aux{
 namespace result_of{
         
     template<typename D>
-    struct modulo_modifier{
+    struct optional_modifier{
 
 //<-            
         typedef aux::replace_modifier_tag<D> meta_;
@@ -85,12 +85,12 @@ namespace result_of{
     template<typename C, typename F, typename Tag, typename D, 
         typename Keyword, typename Arg>
     typename ::boost::mpl::apply2<
-        result_of::modulo_modifier<D>, 
+        result_of::optional_modifier<D>, 
         Keyword, Arg
     >::type
     operator%(
         adapter_crtp<C, F, Tag, D> const& lhs,
-        modulo_modifier<Keyword, Arg> const& rhs
+        optional_modifier<Keyword, Arg> const& rhs
     )/*<-*/
     {
         typedef aux::meta_modifier_tag<Keyword, Arg> meta_;
@@ -98,7 +98,7 @@ namespace result_of{
         typedef aux::adapter_modifier<modifier_tag> modifier_;
     
         typedef typename ::boost::mpl::apply2<
-            result_of::modulo_modifier<D>, 
+            result_of::optional_modifier<D>, 
             Keyword, Arg
         >::type result_;
     
@@ -114,8 +114,8 @@ namespace result_of{
 namespace result_of{
 
     template<typename D>
-    struct modulo_modifier 
-        : aux::result_of::modulo_modifier<D>
+    struct optional_modifier 
+        : aux::result_of::optional_modifier<D>
     {};
 
 }// result_of
@@ -150,7 +150,7 @@ namespace aux{\
 #error
 #else
 #define BOOST_ASSIGN_V2_OPTIONAL_MODIFIER_PARAM(NAME)\
-    aux::modulo_modifier<aux::BOOST_PP_CAT(keyword_,NAME)>\
+    aux::optional_modifier<aux::BOOST_PP_CAT(keyword_,NAME)>\
 /**/
 #endif
 
