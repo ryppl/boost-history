@@ -1,4 +1,4 @@
-test_optional_//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
 //  Boost.Assign v2                                                         //
 //                                                                          //
 //  Copyright (C) 2003-2004 Thorsten Ottosen                                //
@@ -11,12 +11,11 @@ test_optional_//////////////////////////////////////////////////////////////////
 #include <string>
 #include <cmath>
 #include <boost/assign/v2/detail/config/check.hpp>
-
-#include <boost/assign/v2/fun.hpp>
 #include <boost/assign/v2/put/put.hpp>
-// Options come next
-#include <boost/assign/v2/optional/lookup.hpp> 
 #include <boost/assign/v2/deque.hpp>
+// Options come next
+#include <boost/assign/v2/optional/fun.hpp>
+#include <boost/assign/v2/optional/lookup.hpp> 
 #include <boost/lambda/lambda.hpp>
 #include <boost/mpl/assert.hpp>
 #include <boost/mpl/apply.hpp>
@@ -31,6 +30,7 @@ namespace xxx_lookup{
 
     void test()
     {
+
         using namespace boost;
         namespace as2 = assign::v2;
         {

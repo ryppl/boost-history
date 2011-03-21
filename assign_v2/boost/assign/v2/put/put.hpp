@@ -10,10 +10,10 @@
 #ifndef BOOST_ASSIGN_V2_PUT_PUT_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_PUT_ER_2010_HPP
 #include <boost/assign/v2/framework/adapter_crtp.hpp>
+#include <boost/assign/v2/framework/fun.hpp>
 #include <boost/assign/v2/framework/modifier.hpp>
 #include <boost/assign/v2/framework/replace_parameter.hpp>
 #include <boost/assign/v2/detail/pp/ignore.hpp>
-#include <boost/assign/v2/fun/deduce.hpp>
 #include <boost/assign/v2/ref/wrapper/copy.hpp>
 
 namespace boost{

@@ -12,7 +12,6 @@
 
 #include <boost/assign/v2/detail.hpp>
 #include <boost/assign/v2/deque.hpp>
-#include <boost/assign/v2/fun.hpp>
 #include <boost/assign/v2/optional.hpp>
 #include <boost/assign/v2/put.hpp>
 #include <boost/assign/v2/ref.hpp>

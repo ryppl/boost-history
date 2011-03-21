@@ -12,8 +12,9 @@
 #include <vector>
 #include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/deque/csv_deque.hpp>
-#include <boost/assign/v2/fun.hpp>
 #include <boost/assign/v2/put/pipe/csv_put.hpp>
+// Options come next
+#include <boost/assign/v2/optional/fun.hpp>
 #include <boost/lambda/lambda.hpp>
 #include <boost/range/algorithm/equal.hpp>
 #include <libs/assign/v2/test/put/pipe/optional/fun.h>
