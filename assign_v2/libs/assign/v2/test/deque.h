@@ -11,13 +11,11 @@
 #define LIBS_ASSIGN_V2_TEST_DEQUE_ER_2010_H
 
 namespace test_assign_v2{
-namespace xxx_value{
 namespace xxx_deque{
 
     void test();
 
 }// xxx_deque
-}// xxx_value
 }// test_assign_v2
 
 #endif // LIBS_ASSIGN_V2_TEST_DEQUE_ER_2010_H

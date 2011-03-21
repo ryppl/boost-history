@@ -11,7 +11,7 @@
 #include <boost/assign/v2/detail/config/check.hpp>
 
 #include <boost/assign/v2/modifier/iterate.hpp>
-#include <boost/assign/v2/value/put.hpp>
+#include <boost/assign/v2/put/put.hpp>
 #include <boost/assign/v2/deque.hpp>
 #include <boost/lambda/lambda.hpp>
 #include <boost/lambda/bind.hpp>
@@ -26,7 +26,6 @@
 #include <iostream>
 
 namespace test_assign_v2{
-namespace xxx_value{
 namespace xxx_modifier{
 namespace xxx_iterate{
 
@@ -36,15 +35,15 @@ namespace xxx_iterate{
         namespace as2 = assign::v2;
         {
             //[test_value_modifier_iterate_meta
-            typedef as2::value_aux::keyword_iterate keyword_;
+            typedef as2::aux::keyword_iterate keyword_;
             typedef as2::modifier_tag::iterate_arg arg_;
-            typedef as2::value_aux::modulo_modifier<keyword_, arg_> modulo_;
+            typedef as2::aux::modulo_modifier<keyword_, arg_> modulo_;
             typedef array<int, 4> cont_;
             typedef as2::result_of::put<cont_>::type put_;
             typedef as2::result_of::modulo_modifier<put_> meta1_;
             typedef ::boost::mpl::apply2<meta1_, keyword_, arg_>::type result1_;
             typedef as2::modifier_tag::iterate<arg_> tag1_;
-            typedef as2::value_aux::replace_modifier_tag<put_> meta2_;
+            typedef as2::aux::replace_modifier_tag<put_> meta2_;
             typedef ::boost::mpl::apply1<meta2_, tag1_>::type result2_;
             BOOST_MPL_ASSERT(( is_same<result1_, result2_> ));
             //]
@@ -60,14 +59,14 @@ namespace xxx_iterate{
         }
         {
             //[test_value_modifier_iterate_meta_deque
-            typedef as2::value_aux::keyword_iterate keyword_;
+            typedef as2::aux::keyword_iterate keyword_;
             typedef as2::modifier_tag::iterate_arg arg_;
-            typedef as2::value_aux::modulo_modifier<keyword_, arg_> modulo_;
+            typedef as2::aux::modulo_modifier<keyword_, arg_> modulo_;
             typedef as2::result_of::deque<int>::type put_;
             typedef as2::result_of::modulo_modifier<put_> meta1_;
             typedef ::boost::mpl::apply2<meta1_, keyword_, arg_>::type result1_;
             typedef as2::modifier_tag::iterate<arg_> tag1_;
-            typedef as2::value_aux::replace_modifier_tag<put_> meta2_;
+            typedef as2::aux::replace_modifier_tag<put_> meta2_;
             typedef ::boost::mpl::apply1<meta2_, tag1_>::type result2_;
             BOOST_MPL_ASSERT(( is_same<result1_, result2_> ));
             //]
@@ -90,5 +89,4 @@ namespace xxx_iterate{
 
 }// xxx_iterate
 }// xxx_modifier
-}// xxx_value
 }// test_assign_v2

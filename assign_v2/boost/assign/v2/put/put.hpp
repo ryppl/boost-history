@@ -9,9 +9,9 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_PUT_PUT_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_PUT_ER_2010_HPP
-#include <boost/assign/v2/value/adapter/crtp.hpp>
-#include <boost/assign/v2/value/adapter/modifier.hpp>
-#include <boost/assign/v2/value/adapter/replace_parameter.hpp>
+#include <boost/assign/v2/framework/crtp.hpp>
+#include <boost/assign/v2/framework/modifier.hpp>
+#include <boost/assign/v2/framework/replace_parameter.hpp>
 #include <boost/assign/v2/detail/pp/ignore.hpp>
 #include <boost/assign/v2/fun/deduce.hpp>
 #include <boost/assign/v2/modifier/deduce.hpp>
@@ -21,17 +21,17 @@ namespace boost{
 namespace assign{
 namespace v2{
 //[syntax_put_put
-namespace value_aux{
+namespace aux{
 
     template<typename C, typename F, typename Tag>
     class container_adapter
 //<-
         : protected ref::wrapper< ref::assign_tag::copy, C >
-        , public value_aux::adapter_crtp< C, F, Tag, container_adapter<C, F, Tag> >
+        , public aux::adapter_crtp< C, F, Tag, container_adapter<C, F, Tag> >
 //->
     {
 //<-
-        typedef value_aux::adapter_crtp< C, F, Tag, container_adapter > super2_t;
+        typedef aux::adapter_crtp< C, F, Tag, container_adapter > super2_t;
 //->
         public:
 
@@ -39,7 +39,7 @@ namespace value_aux{
 //<-
         protected:
 
-        typedef value_aux::adapter_modifier<Tag> modifier_;
+        typedef aux::adapter_modifier<Tag> modifier_;
         typedef ref::assign_tag::copy assign_tag_;
         typedef ref::wrapper<assign_tag_,C> super1_t;
 //->
@@ -63,25 +63,25 @@ namespace value_aux{
     };
 
     template<typename C, typename F, typename Tag>
-    struct /*<<Meta-function class>>*/replace_fun< value_aux::container_adapter<C, F, Tag> >{/*<-*/
+    struct /*<<Meta-function class>>*/replace_fun< aux::container_adapter<C, F, Tag> >{/*<-*/
         template<typename F1>
-        struct apply{ typedef value_aux::container_adapter<C, F1, Tag> type; };
+        struct apply{ typedef aux::container_adapter<C, F1, Tag> type; };
     /*->*/};
 
     template<typename C, typename F, typename Tag>
-    struct /*<<Meta-function class>>*/replace_modifier_tag< value_aux::container_adapter<C, F, Tag> >{/*<-*/
+    struct /*<<Meta-function class>>*/replace_modifier_tag< aux::container_adapter<C, F, Tag> >{/*<-*/
         template<typename Tag1>
-        struct apply{ typedef value_aux::container_adapter<C, F, Tag1> type; };
+        struct apply{ typedef aux::container_adapter<C, F, Tag1> type; };
     /*->*/};
 
-}// value_aux
+}// aux
 namespace result_of{
 
     template<typename C>
     struct /*<<Meta-function>>*/put{/*<-*/
-        typedef typename value_aux::deduce_fun<C>::type f_;
-        typedef typename value_aux::deduce_modifier_tag<C>::type modifier_tag_;
-        typedef value_aux::container_adapter<C, f_, modifier_tag_> type;
+        typedef typename aux::deduce_fun<C>::type f_;
+        typedef typename aux::deduce_modifier_tag<C>::type modifier_tag_;
+        typedef aux::container_adapter<C, f_, modifier_tag_> type;
     }/*->*/;
 
 }// result_of

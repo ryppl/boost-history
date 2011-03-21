@@ -20,7 +20,7 @@ namespace boost{
     struct use_default;
 namespace assign{
 namespace v2{
-namespace value_aux{
+namespace aux{
 
     typedef ::boost::mpl::vector0<> empty_par_list_; 
 
@@ -41,7 +41,7 @@ namespace value_aux{
 
     };
 
-}// value_aux
+}// aux
 }// v2
 }// assign
 }// boost

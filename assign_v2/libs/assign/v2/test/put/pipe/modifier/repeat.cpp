@@ -10,10 +10,10 @@
 #include <vector>
 #include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/modifier/repeat.hpp>
-#include <boost/assign/v2/value/pipe/csv_put.hpp>
+#include <boost/assign/v2/put/pipe/csv_put.hpp>
 #include <boost/assign/v2/deque.hpp>
 #include <boost/range/algorithm/equal.hpp>
-#include <libs/assign/v2/test/value/pipe/modifier/repeat.h>
+#include <libs/assign/v2/test/put/pipe/modifier/repeat.h>
 
 namespace test_assign_v2{
 namespace xxx_put{

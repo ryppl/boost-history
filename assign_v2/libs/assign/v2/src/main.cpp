@@ -7,9 +7,12 @@
 
 // Test
 #include <libs/assign/v2/test/detail.h>
+#include <libs/assign/v2/test/deque.h>
+#include <libs/assign/v2/test/fun.h>
+#include <libs/assign/v2/test/modifier.h>
+#include <libs/assign/v2/test/put.h>
 #include <libs/assign/v2/test/ref.h>
-#include <libs/assign/v2/test/value.h>
-//#include <libs/assign/v2/test/utility.h>
+#include <libs/assign/v2/test/utility.h>
 
 // Tutorial
 #include <libs/assign/v2/tutorial.h>
@@ -59,9 +62,12 @@ int main (int argc, char * const argv[])
     {
         using namespace test_assign_v2;
         xxx_detail::test();
-        xxx_value::test();
+        xxx_deque::test();
+        xxx_fun::test();
+        xxx_modifier::test();
+        xxx_put::test();
         xxx_ref::test();
-//        xxx_utility::test();
+        xxx_utility::test();
     }
     {
         tutorial_assign_v2::run();

@@ -12,13 +12,12 @@
 #include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/modifier/push_front.hpp>
 #include <boost/assign/v2/modifier/repeat.hpp>
-#include <boost/assign/v2/value/put.hpp>
+#include <boost/assign/v2/put/put.hpp>
 #include <boost/assign/v2/deque.hpp>
 #include <boost/range/algorithm/equal.hpp>
 #include <libs/assign/v2/test/modifier/repeat.h>
 
 namespace test_assign_v2{
-namespace xxx_value{
 namespace xxx_modifier{
 namespace xxx_repeat{
 
@@ -50,5 +49,4 @@ namespace xxx_repeat{
 
 }// xxx_repeat
 }// xxx_modifier
-}// xxx_value
 }// test_assign_v2

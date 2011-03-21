@@ -16,7 +16,7 @@
 namespace boost{
 namespace assign{
 namespace v2{
-namespace value_aux{    
+namespace aux{    
 
     template<typename R>
     class as_arg_list_adapter
@@ -69,13 +69,13 @@ namespace result_of{
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
 //]
-}// value_aux
-    using value_aux::as_arg_list;
+}// aux
+    using aux::as_arg_list;
 namespace result_of{
 
     template<typename R>
     struct as_arg_list
-        : value_aux::result_of::as_arg_list<R>
+        : aux::result_of::as_arg_list<R>
     {};
 
 }// result_of

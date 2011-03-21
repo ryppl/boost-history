@@ -11,13 +11,11 @@
 #define LIBS_ASSIGN_V2_TEST_FUN_ER_2010_H
 
 namespace test_assign_v2{
-namespace xxx_value{
 namespace xxx_fun{
 
     void test();
 
 }// xxx_fun
-}// xxx_value
 }// xxx_test_assign
 
 #endif // LIBS_ASSIGN_V2_TEST_FUN_ER_2010_H

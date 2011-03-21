@@ -13,4 +13,4 @@
 #include <boost/assign/v2/framework/modifier.hpp>
 #include <boost/assign/v2/framework/replace_parameter.hpp>
 
-#endif // BOOST_ASSIGN_V2_FRAMEWORK_ADAPTER_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_FRAMEWORK_ER_2010_HPP

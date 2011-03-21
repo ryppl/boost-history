@@ -16,8 +16,8 @@ namespace boost{
 namespace assign{
 namespace v2{
 //[syntax_put_adapter_modifier
-namespace /*<< Template arguments to `value_aux::adapter_modifier<>` have to be declared within this `namespace`>>*/modifier_tag{}
-namespace value_aux{
+namespace /*<< Template arguments to `aux::adapter_modifier<>` have to be declared within this `namespace`>>*/modifier_tag{}
+namespace aux{
 
     template<typename Tag>
     struct /*<<Specialize on Tag>>*/ adapter_modifier{};
@@ -35,7 +35,7 @@ namespace put_concept{
         }
 
         private:
-        static value_aux::adapter_modifier<Tag>& m;
+        static aux::adapter_modifier<Tag>& m;
         static C& cont;
         static T t;
     };

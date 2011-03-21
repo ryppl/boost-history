@@ -16,7 +16,7 @@ namespace boost{
 namespace assign{
 namespace v2{
 //[syntax_put_adapter_replace_parameter
-namespace value_aux{
+namespace aux{
                 
     template<typename /*<<Inherits crtp\<\> >>*/D> 
     struct /*<<Meta-function class to be specialized on D>>*/replace_fun{
@@ -30,7 +30,7 @@ namespace value_aux{
         struct /*<<Transforms D by replacing Tag D::modifier_tag with Tag>>*/ apply{};
     };
     
-}// value_aux
+}// aux
 //]
 }// v2
 }// assign

@@ -14,7 +14,7 @@
 #include <string>
 #include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/modifier/standard.hpp>
-#include <boost/assign/v2/value/put.hpp>
+#include <boost/assign/v2/put/put.hpp>
 #include <boost/assign/v2/deque.hpp>
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
@@ -29,7 +29,6 @@
 #include <libs/assign/v2/test/modifier/standard.h>
 
 namespace test_assign_v2{
-namespace xxx_value{
 namespace xxx_modifier{
 namespace xxx_standard{
 
@@ -48,11 +47,11 @@ namespace xxx_standard{
         {
             //[test_value_modifier_standard_meta
             typedef as2::result_of::put<std::vector<int> >::type put_;
-            typedef as2::value_aux::keyword_standard_modifier keyword_;
+            typedef as2::aux::keyword_standard_modifier keyword_;
             typedef as2::modifier_tag::push_front tag_;
             typedef as2::result_of::modulo_modifier<put_> meta1_;
             typedef ::boost::mpl::apply2<meta1_, keyword_, tag_>::type result1_;
-            typedef as2::value_aux::replace_modifier_tag<put_> meta2_;
+            typedef as2::aux::replace_modifier_tag<put_> meta2_;
             typedef ::boost::mpl::apply1<meta2_, tag_>::type result2_;
             BOOST_MPL_ASSERT(( boost::is_same<result1_, result2_> ));
             //]
@@ -96,11 +95,11 @@ namespace xxx_standard{
         {
             //[test_value_modifier_meta_deque
             typedef as2::result_of::deque<int>::type put_;
-            typedef as2::value_aux::keyword_standard_modifier keyword_;
+            typedef as2::aux::keyword_standard_modifier keyword_;
             typedef as2::modifier_tag::push_front tag_;
             typedef as2::result_of::modulo_modifier<put_> meta1_;
             typedef ::boost::mpl::apply2<meta1_, keyword_, tag_>::type result1_;
-            typedef as2::value_aux::replace_modifier_tag<put_> meta2_;
+            typedef as2::aux::replace_modifier_tag<put_> meta2_;
             typedef ::boost::mpl::apply1<meta2_, tag_>::type result2_;
 
             BOOST_MPL_ASSERT(( boost::is_same<result1_, result2_> ));
@@ -120,5 +119,4 @@ namespace xxx_standard{
 
 }// xxx_standard
 }// xxx_modifier
-}// xxx_value
 }// test_assign_v2

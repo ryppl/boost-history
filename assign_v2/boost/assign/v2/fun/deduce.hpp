@@ -22,7 +22,7 @@ namespace boost{
 namespace assign{
 namespace v2{
 //[syntax_put_fun_deduce
-namespace value_aux{
+namespace aux{
 
     template<typename C>
     struct container_value{ typedef typename C::value_type type; };
@@ -53,7 +53,7 @@ namespace value_aux{
     {}/*->*/;
 
 
-}// value_aux
+}// aux
 //]
 }// v2
 }// assign

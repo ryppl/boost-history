@@ -15,7 +15,6 @@
 #include <libs/assign/v2/test/modifier.h>
 
 namespace test_assign_v2{
-namespace xxx_value{
 namespace xxx_modifier{
 
     void test(){
@@ -27,6 +26,5 @@ namespace xxx_modifier{
     }
 
 }// xxx_modifier
-}// xxx_value
 }// xxx_test_assign
 

@@ -12,18 +12,18 @@
 #include <boost/assign/v2/detail/pp/ignore.hpp>
 #include <boost/assign/v2/ref/array/as_arg_list.hpp>
 #include <boost/assign/v2/ref/aux_/list/as_modulo_list.hpp>
-#include <boost/assign/v2/value/put.hpp>
-#include <boost/assign/v2/value/pipe/arg_list.hpp>
+#include <boost/assign/v2/put/put.hpp>
+#include <boost/assign/v2/put/pipe/arg_list.hpp>
 
 namespace boost{
 namespace assign{
 namespace v2{
 //[syntax_put_pipe_csv_put
-namespace value_aux{
+namespace aux{
 
     template<typename C,
         typename ParList, arg_list_size_type N, typename U>
-    C& operator|(C& cont, value_aux::arg_list<
+    C& operator|(C& cont, aux::arg_list<
             ParList, N, U
         > const& arg_list
     )/*<-*/
@@ -40,10 +40,10 @@ namespace value_aux{
 
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
-}// value_aux
+}// aux
 
-    value_aux::arg_list_generator<> const _csv_put/*<-*/
-        = value_aux::arg_list_generator<>()/*->*/;
+    aux::arg_list_generator<> const _csv_put/*<-*/
+        = aux::arg_list_generator<>()/*->*/;
 
 //]
 }// v2

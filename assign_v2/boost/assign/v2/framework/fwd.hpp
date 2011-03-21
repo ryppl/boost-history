@@ -13,12 +13,12 @@
 namespace boost{
 namespace assign{
 namespace v2{
-namespace value_aux{
+namespace aux{
 
     template<typename C, typename F, typename Tag, typename D> 
     class adapter_crtp;
 
-}// value_aux
+}// aux
 }// v2
 }// assign
 }// boost

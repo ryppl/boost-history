@@ -33,7 +33,7 @@ namespace boost{
 namespace assign{
 namespace v2{
 //[syntax_put_deque_deque
-namespace value_aux{
+namespace aux{
 
     template<typename T>
     struct /*<<Meta-function>>*/deque_impl{ typedef /*<-*/std::deque<T> BOOST_ASSIGN_V2_IGNORE(/*->*/unspecified /*<-*/)/*->*/type; };
@@ -52,7 +52,7 @@ namespace value_aux{
         typedef impl_ const cimpl_;
         typedef adapter_crtp<impl_, F, Tag, deque_adapter> put_crtp_;
 
-        typedef value_aux::adapter_modifier<Tag> modifier_;
+        typedef aux::adapter_modifier<Tag> modifier_;
 //->
         public:
 
@@ -161,9 +161,9 @@ namespace result_of{
 
 }// result_of
 //<-
-}// value_aux
+}// aux
 //->
-namespace value_aux{
+namespace aux{
 //<-
 
     template<typename T>
@@ -174,19 +174,19 @@ namespace value_aux{
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
     
 //<-
-}// value_aux
+}// aux
 //->
 namespace result_of{
 
     template<typename T>
     struct /*<<Meta-function>>*/deque/*<-*/ 
-        : value_aux::result_of::deque<T>
+        : aux::result_of::deque<T>
     {}/*->*/;
 
 }// result_of
 //<-
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
-namespace value_aux{
+namespace aux{
 //->
 
     template<typename T, typename...Args>
@@ -197,8 +197,8 @@ namespace value_aux{
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
 //]
-}// value_aux
-using value_aux::deque;
+}// aux
+using aux::deque;
 
 #endif // BOOST_ASSIGN_V2_ENABLE_CPP0X
 }// v2

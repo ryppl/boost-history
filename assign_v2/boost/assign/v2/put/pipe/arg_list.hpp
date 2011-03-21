@@ -12,7 +12,7 @@
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
 #include <boost/assign/v2/ref/array/csv_array.hpp>
 #include <boost/assign/v2/ref/wrapper/copy.hpp>
-#include <boost/assign/v2/value/pipe/modulo_traits.hpp>
+#include <boost/assign/v2/put/pipe/modulo_traits.hpp>
 #include <boost/mpl/apply.hpp>
 #include <boost/mpl/vector/vector0.hpp>
 #include <boost/mpl/size.hpp>
@@ -27,7 +27,7 @@ namespace boost{
     struct use_default;
 namespace assign{
 namespace v2{
-namespace value_aux{
+namespace aux{
 
     typedef ref::array_aux::size_type arg_list_size_type;
 
@@ -97,7 +97,7 @@ namespace value_aux{
 
         template<std::size_t N, typename U = na_> // size?
         struct result{
-            typedef value_aux::arg_list<ParList, N, U> type;
+            typedef aux::arg_list<ParList, N, U> type;
         };
  
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
@@ -190,7 +190,7 @@ BOOST_PP_REPEAT_FROM_TO(
 
     };
 
-}// value_aux
+}// aux
 }// v2
 }// assign
 }// boost

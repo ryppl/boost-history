@@ -14,9 +14,9 @@
 #include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/fun.hpp>
 #include <boost/assign/v2/modifier/lookup.hpp>
-#include <boost/assign/v2/value/pipe/put.hpp>
-#include <boost/assign/v2/value/pipe/csv_put.hpp>
-#include <libs/assign/v2/test/value/pipe/modifier/lookup.h>
+#include <boost/assign/v2/put/pipe/put.hpp>
+#include <boost/assign/v2/put/pipe/csv_put.hpp>
+#include <libs/assign/v2/test/put/pipe/modifier/lookup.h>
 
 namespace test_assign_v2{
 namespace xxx_put{

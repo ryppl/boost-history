@@ -14,7 +14,7 @@
 
 #include <boost/assign/v2/fun.hpp>
 #include <boost/assign/v2/modifier/lookup.hpp>
-#include <boost/assign/v2/value/put.hpp>
+#include <boost/assign/v2/put/put.hpp>
 #include <boost/assign/v2/deque.hpp>
 #include <boost/lambda/lambda.hpp>
 #include <boost/mpl/assert.hpp>
@@ -25,7 +25,6 @@
 #include <libs/assign/v2/test/modifier/lookup.h>
 
 namespace test_assign_v2{
-namespace xxx_value{
 namespace xxx_modifier{
 namespace xxx_lookup{
 
@@ -37,14 +36,14 @@ namespace xxx_lookup{
             //[test_value_modifier_lookup_meta
         	using namespace lambda;
             typedef BOOST_TYPEOF(_1) arg_;
-            typedef as2::value_aux::keyword_lookup keyword_;
-            typedef as2::value_aux::modulo_modifier<keyword_, arg_> modulo_;
+            typedef as2::aux::keyword_lookup keyword_;
+            typedef as2::aux::modulo_modifier<keyword_, arg_> modulo_;
             typedef std::map<std::string, int> cont_;
             typedef as2::result_of::put<cont_>::type put_;
             typedef as2::result_of::modulo_modifier<put_> meta1_;
             typedef ::boost::mpl::apply2<meta1_, keyword_, arg_>::type result1_;
             typedef as2::modifier_tag::lookup<arg_> tag1_;
-            typedef as2::value_aux::replace_modifier_tag<put_> meta2_;
+            typedef as2::aux::replace_modifier_tag<put_> meta2_;
             typedef ::boost::mpl::apply1<meta2_, tag1_>::type result2_;
             BOOST_MPL_ASSERT((boost::is_same<result1_, result2_>));
             //]
@@ -66,13 +65,13 @@ namespace xxx_lookup{
             //[test_value_modifier_lookup_meta_deque
         	using namespace lambda;
             typedef BOOST_TYPEOF(_1) arg_;
-            typedef as2::value_aux::keyword_lookup keyword_;
-            typedef as2::value_aux::modulo_modifier<keyword_, arg_> modulo_;
+            typedef as2::aux::keyword_lookup keyword_;
+            typedef as2::aux::modulo_modifier<keyword_, arg_> modulo_;
             typedef as2::result_of::deque<int>::type put_;
             typedef as2::result_of::modulo_modifier<put_> meta1_;
             typedef ::boost::mpl::apply2<meta1_, keyword_, arg_>::type result1_;
             typedef as2::modifier_tag::lookup<arg_> tag1_;
-            typedef as2::value_aux::replace_modifier_tag<put_> meta2_;
+            typedef as2::aux::replace_modifier_tag<put_> meta2_;
             typedef ::boost::mpl::apply1<meta2_, tag1_>::type result2_;
             BOOST_MPL_ASSERT((boost::is_same<result1_, result2_>));
             //]
@@ -95,5 +94,4 @@ namespace xxx_lookup{
 
 }// xxx_lookup
 }// xxx_modifier
-}// xxx_value
 }// test_assign_v2

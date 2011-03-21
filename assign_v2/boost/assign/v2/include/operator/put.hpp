@@ -9,6 +9,6 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_INCLUDE_PIPE_PUT_ER_2010_HPP
 #define BOOST_ASSIGN_V2_INCLUDE_PIPE_PUT_ER_2010_HPP
-#include <boost/assign/v2/value/pipe/put.hpp>
+#include <boost/assign/v2/put/pipe/put.hpp>
 
 #endif // BOOST_ASSIGN_V2_INCLUDE_PIPE_PUT_ER_2010_HPP

@@ -22,7 +22,7 @@
 namespace boost{
 namespace assign{
 namespace v2{
-namespace value_aux{
+namespace aux{
 
     template<typename T>
     typename result_of::deque<T>::type
@@ -80,9 +80,9 @@ BOOST_PP_REPEAT_FROM_TO(
 )
 #undef BOOST_ASSIGN_V2_MACRO
 
-}// value_aux
+}// aux
 
-using value_aux::deque;
+using aux::deque;
 
 }// v2
 }// assign

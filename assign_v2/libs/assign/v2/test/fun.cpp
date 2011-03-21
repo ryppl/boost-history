@@ -14,7 +14,7 @@
 #include <boost/array.hpp>
 #include <boost/assign/v2/detail/config/check.hpp>
 
-#include <boost/assign/v2/value/put.hpp>
+#include <boost/assign/v2/put/put.hpp>
 #include <boost/assign/v2/deque.hpp>
 #include <boost/assign/v2/fun.hpp>
 #include <boost/function.hpp>
@@ -29,7 +29,6 @@
 #include <boost/lexical_cast.hpp>
 
 namespace test_assign_v2{
-namespace xxx_value{
 namespace xxx_fun{
 
     void test()
@@ -70,5 +69,4 @@ namespace xxx_fun{
     }
 
 }// xxx_fun
-}// xxx_value
 }// test_assign_v2

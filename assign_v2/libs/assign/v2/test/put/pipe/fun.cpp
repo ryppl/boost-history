@@ -14,10 +14,10 @@
 
 #include <boost/assign/v2/deque/csv_deque.hpp>
 #include <boost/assign/v2/fun.hpp>
-#include <boost/assign/v2/value/pipe/csv_put.hpp>
+#include <boost/assign/v2/put/pipe/csv_put.hpp>
 #include <boost/lambda/lambda.hpp>
 #include <boost/range/algorithm/equal.hpp>
-#include <libs/assign/v2/test/value/pipe/fun.h>
+#include <libs/assign/v2/test/put/pipe/fun.h>
 
 #include <boost/range/algorithm/for_each.hpp>
 

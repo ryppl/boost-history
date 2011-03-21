@@ -11,7 +11,6 @@
 #define LIBS_ASSIGN_V2_TEST_MODIFIER_STANDARD_ER_2010_H
 
 namespace test_assign_v2{
-namespace xxx_value{
 namespace xxx_modifier{
 namespace xxx_standard{
 
@@ -19,7 +18,6 @@ namespace xxx_standard{
 
 }// xxx_standard
 }// xxx_modifier
-}// xxx_value
 }// xxx_test_assign
 
 #endif // LIBS_ASSIGN_V2_TEST_MODIFIER_STANDARD_ER_2010_H
