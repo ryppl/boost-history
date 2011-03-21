@@ -16,9 +16,10 @@
 #include <boost/range/begin.hpp>
 #include <boost/range/iterator.hpp>
 #include <boost/assign/v2/detail/config/check.hpp>
-#include <boost/assign/v2/modifier/standard.hpp>
 #include <boost/assign/v2/put/pipe/csv_put.hpp>
 #include <boost/assign/v2/deque.hpp>
+// Options come next
+#include <boost/assign/v2/optional/standard.hpp>
 #include <libs/assign/v2/test/put/pipe/modifier/standard.h>
 
 namespace test_assign_v2{

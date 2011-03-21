@@ -13,9 +13,10 @@
 #include <set>
 #include <string>
 #include <boost/assign/v2/detail/config/check.hpp>
-#include <boost/assign/v2/modifier/standard.hpp>
 #include <boost/assign/v2/put/put.hpp>
 #include <boost/assign/v2/deque.hpp>
+// Options come next
+#include <boost/assign/v2/optional/standard.hpp>
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
 #include <boost/range/algorithm/equal.hpp>
