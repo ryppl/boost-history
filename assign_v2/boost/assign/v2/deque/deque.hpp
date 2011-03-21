@@ -17,7 +17,7 @@
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
 #include <boost/assign/v2/detail/keyword/nil.hpp>
 #include <boost/assign/v2/detail/pp/ignore.hpp>
-#include <boost/assign/v2/value/fun/deduce.hpp>
+#include <boost/assign/v2/fun/deduce.hpp>
 #include <boost/assign/v2/value/modifier/deduce.hpp>
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>

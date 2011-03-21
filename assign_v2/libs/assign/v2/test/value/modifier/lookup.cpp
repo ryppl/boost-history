@@ -12,7 +12,7 @@
 #include <cmath>
 #include <boost/assign/v2/detail/config/check.hpp>
 
-#include <boost/assign/v2/value/fun.hpp>
+#include <boost/assign/v2/fun.hpp>
 #include <boost/assign/v2/value/modifier/lookup.hpp>
 #include <boost/assign/v2/value/put.hpp>
 #include <boost/assign/v2/deque.hpp>

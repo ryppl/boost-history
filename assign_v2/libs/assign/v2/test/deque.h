@@ -7,27 +7,17 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#include <libs/assign/v2/test/deque.h>
-#include <libs/assign/v2/test/value/modifier.h>
-#include <libs/assign/v2/test/fun.h>
-#include <libs/assign/v2/test/value/pipe.h>
-#include <libs/assign/v2/test/value/ptr.h>
-#include <libs/assign/v2/test/value/put.h>
-#include <libs/assign/v2/test/value.h>
+#ifndef LIBS_ASSIGN_V2_TEST_VALUE_DEQUE_ER_2010_H
+#define LIBS_ASSIGN_V2_TEST_VALUE_DEQUE_ER_2010_H
 
 namespace test_assign_v2{
 namespace xxx_value{
+namespace xxx_deque{
 
-    void test()
-    {
-        xxx_deque::test();
-        xxx_fun::test();
-        xxx_modifier::test();
-        xxx_pipe::test();
-        xxx_ptr::test();
-        xxx_put::test();
-    }
+    void test();
 
+}// xxx_deque
 }// xxx_value
 }// test_assign_v2
 
+#endif // LIBS_ASSIGN_V2_TEST_VALUE_DEQUE_ER_2010_H

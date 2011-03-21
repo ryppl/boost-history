@@ -13,8 +13,8 @@
 #include <boost/test/test_tools.hpp>
 #define BOOST_ASSIGN_V2_CHECK( p ) BOOST_CHECK( p )
 
-#include <libs/assign/v2/test/value/deque.cpp>
-#include <libs/assign/v2/test/value/fun.cpp>
+#include <libs/assign/v2/test/deque.cpp>
+#include <libs/assign/v2/test/fun.cpp>
 #include <libs/assign/v2/test/value/modifier/deduce.cpp>
 #include <libs/assign/v2/test/value/modifier/iterate.cpp>
 #include <libs/assign/v2/test/value/modifier/lookup.cpp>
@@ -39,9 +39,9 @@ test_suite* init_unit_test_suite( int argc, char* argv[] )
     using namespace test_assign_v2;
     {
 
-    	namespace ns = xxx_value;
 		test->add( BOOST_TEST_CASE( &ns::xxx_deque::test ) );
 		test->add( BOOST_TEST_CASE( &ns::xxx_fun::test ) );
+    	namespace ns = xxx_value;
 		test->add( BOOST_TEST_CASE( &ns::xxx_modifier::xxx_deduce::test ) );
 		test->add( BOOST_TEST_CASE( &ns::xxx_modifier::xxx_iterate::test ) );
 		test->add( BOOST_TEST_CASE( &ns::xxx_modifier::xxx_lookup::test ) );

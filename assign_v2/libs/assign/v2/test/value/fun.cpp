@@ -16,7 +16,7 @@
 
 #include <boost/assign/v2/value/put.hpp>
 #include <boost/assign/v2/deque.hpp>
-#include <boost/assign/v2/value/fun.hpp>
+#include <boost/assign/v2/fun.hpp>
 #include <boost/function.hpp>
 #include <boost/lambda/bind.hpp>
 #include <boost/lambda/lambda.hpp>
@@ -24,7 +24,7 @@
 #include <boost/numeric/conversion/bounds.hpp>
 #include <boost/range/algorithm/equal.hpp>
 #include <boost/typeof/typeof.hpp>
-#include <libs/assign/v2/test/value/fun.h>
+#include <libs/assign/v2/test/fun.h>
 
 #include <boost/lexical_cast.hpp>
 

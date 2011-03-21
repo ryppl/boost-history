@@ -7,8 +7,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_VALUE_FUN_MODULO_ER_2010_HPP
-#define BOOST_ASSIGN_V2_VALUE_FUN_MODULO_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_FUN_MODULO_ER_2010_HPP
+#define BOOST_ASSIGN_V2_FUN_MODULO_ER_2010_HPP
 #include <boost/assign/v2/detail/pp/ignore.hpp>
 #include <boost/assign/v2/detail/keyword/ignore.hpp>
 #include <boost/assign/v2/value/adapter/fwd.hpp>
@@ -131,4 +131,4 @@ namespace{\
 #include <boost/lambda/lambda.hpp>
 BOOST_ASSIGN_V2_VALUE_MODULO_FUN_KEYWORD(identity, ::boost::lambda::_1)
 
-#endif // BOOST_ASSIGN_V2_VALUE_FUN_MODULO_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_FUN_MODULO_ER_2010_HPP

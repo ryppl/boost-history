@@ -9,6 +9,6 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_INCLUDE_PUT_FUN_ER_2010_HPP
 #define BOOST_ASSIGN_V2_INCLUDE_PUT_FUN_ER_2010_HPP
-#include <boost/assign/v2/value/fun.hpp>
+#include <boost/assign/v2/fun.hpp>
 
 #endif // BOOST_ASSIGN_V2_INCLUDE_FUN_ER_2010_HPP
