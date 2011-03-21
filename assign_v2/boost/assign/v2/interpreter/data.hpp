@@ -21,7 +21,7 @@
 namespace boost{
 namespace assign{
 namespace v2{
-//[syntax_framework_fun
+//[syntax_interpreter_fun
 namespace aux{
 
     template<typename C>

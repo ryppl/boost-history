@@ -8,7 +8,7 @@
 // Test
 #include <libs/assign/v2/test/detail.h>
 #include <libs/assign/v2/test/deque.h>
-#include <libs/assign/v2/test/framework.h>
+#include <libs/assign/v2/test/interpreter.h>
 #include <libs/assign/v2/test/optional.h>
 #include <libs/assign/v2/test/put.h>
 #include <libs/assign/v2/test/ref.h>
@@ -63,7 +63,7 @@ int main (int argc, char * const argv[])
         using namespace test_assign_v2;
         xxx_detail::test();
         xxx_deque::test();
-        xxx_framework::test();
+        xxx_interpreter::test();
         xxx_optional::test();
         xxx_put::test();
         xxx_ref::test();

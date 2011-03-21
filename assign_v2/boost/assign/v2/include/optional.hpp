@@ -9,7 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_INCLUDE_OPTIONAL_ER_2010_HPP
 #define BOOST_ASSIGN_V2_INCLUDE_OPTIONAL_ER_2010_HPP
-#include <boost/assign/v2/include/optional/fun.hpp>
+#include <boost/assign/v2/include/optional/data.hpp>
 #include <boost/assign/v2/include/optional/insert.hpp>
 #include <boost/assign/v2/include/optional/iterate.hpp>
 #include <boost/assign/v2/include/optional/lookup.hpp>

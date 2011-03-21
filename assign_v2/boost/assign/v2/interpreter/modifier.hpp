@@ -26,7 +26,7 @@
 namespace boost{
 namespace assign{
 namespace v2{
-//[syntax_framework_modifier
+//[syntax_interpreter_modifier
 namespace /*<< Template arguments to `aux::adapter_modifier<>` have to be declared within this `namespace`>>*/modifier_tag{}
 namespace aux{
 
