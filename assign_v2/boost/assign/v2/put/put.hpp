@@ -9,7 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_PUT_PUT_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_PUT_ER_2010_HPP
-#include <boost/assign/v2/interpreter/interpreter_crtp.hpp>
+#include <boost/assign/v2/interpreter/crtp.hpp>
 #include <boost/assign/v2/interpreter/fun.hpp>
 #include <boost/assign/v2/interpreter/modifier.hpp>
 #include <boost/assign/v2/interpreter/replace_parameter.hpp>
