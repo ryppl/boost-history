@@ -13,11 +13,6 @@
 #include <boost/test/test_tools.hpp>
 #define BOOST_ASSIGN_V2_CHECK( p ) BOOST_CHECK( p )
 
-#include <libs/assign/v2/test/put/pipe/fun.cpp>
-#include <libs/assign/v2/test/put/pipe/modifier/iterate.cpp>
-#include <libs/assign/v2/test/put/pipe/modifier/lookup.cpp>
-#include <libs/assign/v2/test/put/pipe/modifier/repeat.cpp>
-#include <libs/assign/v2/test/put/pipe/modifier/standard.cpp>
 #include <libs/assign/v2/test/put/pipe/csv_put.cpp>
 #include <libs/assign/v2/test/put/ptr.cpp>
 #include <libs/assign/v2/test/put/put.cpp>

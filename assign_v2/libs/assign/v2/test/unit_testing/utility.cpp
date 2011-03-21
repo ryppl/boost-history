@@ -33,4 +33,4 @@ test_suite* init_unit_test_suite( int argc, char* argv[] )
     return test;
 }
 
-#endif
+#endif // LIBS_ASSIGN_V2_TEST_UNIT_TEST_UTILITY_ER_2010_CPP
