@@ -7,8 +7,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_VALUE_DEQUE_CPP03_CSV_DEQUE_ER_2010_HPP
-#define BOOST_ASSIGN_V2_VALUE_DEQUE_CPP03_CSV_DEQUE_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_DEQUE_CPP03_CSV_DEQUE_ER_2010_HPP
+#define BOOST_ASSIGN_V2_DEQUE_CPP03_CSV_DEQUE_ER_2010_HPP
 #include <boost/assign/v2/detail/config/limit_csv_arity.hpp>
 #include <boost/preprocessor/arithmetic/inc.hpp>
 #include <boost/preprocessor/repetition.hpp>
@@ -45,4 +45,4 @@ using value_aux::csv_deque;
 }// assign
 }// boost
 
-#endif // BOOST_ASSIGN_V2_VALUE_DEQUE_CPP03_CSV_DEQUE_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_DEQUE_CPP03_CSV_DEQUE_ER_2010_HPP

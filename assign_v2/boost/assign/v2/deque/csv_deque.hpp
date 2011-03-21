@@ -7,11 +7,11 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_VALUE_DEQUE_CSV_DEQUE_ER_2010_HPP
-#define BOOST_ASSIGN_V2_VALUE_DEQUE_CSV_DEQUE_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_DEQUE_CSV_DEQUE_ER_2010_HPP
+#define BOOST_ASSIGN_V2_DEQUE_CSV_DEQUE_ER_2010_HPP
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
 #include <boost/assign/v2/detail/pp/ignore.hpp>
-#include <boost/assign/v2/value/deque/deque.hpp>
+#include <boost/assign/v2/deque/deque.hpp>
 #include <boost/type_traits/decay.hpp>
 #include <boost/type_traits/remove_cv.hpp>
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
@@ -88,8 +88,8 @@ using value_aux::csv_deque;
 }// boost
 
 #if !BOOST_ASSIGN_V2_ENABLE_CPP0X
-#include <boost/assign/v2/value/deque/cpp03/csv_deque.hpp>
+#include <boost/assign/v2/deque/cpp03/csv_deque.hpp>
 #endif
 
 
-#endif // BOOST_ASSIGN_V2_VALUE_DEQUE_CSV_DEQUE_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_DEQUE_CSV_DEQUE_ER_2010_HPP

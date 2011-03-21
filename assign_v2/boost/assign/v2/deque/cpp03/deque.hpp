@@ -7,13 +7,13 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_VALUE_DEQUE_CPP03_DEQUE_ER_2010_HPP
-#define BOOST_ASSIGN_V2_VALUE_DEQUE_CPP03_DEQUE_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_DEQUE_CPP03_DEQUE_ER_2010_HPP
+#define BOOST_ASSIGN_V2_DEQUE_CPP03_DEQUE_ER_2010_HPP
 #include <boost/assign/v2/detail/config/limit_arity.hpp>
 #include <boost/assign/v2/detail/config/limit_lvalue_const_arity.hpp>
 #include <boost/assign/v2/detail/keyword/nil.hpp>
 #include <boost/assign/v2/detail/pp/parameter_list.hpp>
-#include <boost/assign/v2/value/deque/fwd.hpp>
+#include <boost/assign/v2/deque/fwd.hpp>
 #include <boost/preprocessor/arithmetic.hpp>
 #include <boost/preprocessor/repetition.hpp>
 #include <boost/preprocessor/seq.hpp>
@@ -88,4 +88,4 @@ using value_aux::deque;
 }// assign
 }// boost
 
-#endif // BOOST_ASSIGN_V2_VALUE_DEQUE_CPP03_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_DEQUE_CPP03_ER_2010_HPP

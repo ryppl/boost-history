@@ -7,13 +7,13 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_VALUE_DEQUE_DEQUE_ER_2010_HPP
-#define BOOST_ASSIGN_V2_VALUE_DEQUE_DEQUE_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_DEQUE_DEQUE_ER_2010_HPP
+#define BOOST_ASSIGN_V2_DEQUE_DEQUE_ER_2010_HPP
 #include <deque>
 #include <boost/assign/v2/value/adapter/crtp.hpp>
 #include <boost/assign/v2/value/adapter/modifier.hpp>
 #include <boost/assign/v2/value/adapter/replace_parameter.hpp>
-#include <boost/assign/v2/value/deque/fwd.hpp>
+#include <boost/assign/v2/deque/fwd.hpp>
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
 #include <boost/assign/v2/detail/keyword/nil.hpp>
 #include <boost/assign/v2/detail/pp/ignore.hpp>
@@ -206,7 +206,7 @@ using value_aux::deque;
 }// boost
 
 #if !BOOST_ASSIGN_V2_ENABLE_CPP0X
-#include <boost/assign/v2/value/deque/cpp03/deque.hpp>
+#include <boost/assign/v2/deque/cpp03/deque.hpp>
 #endif
 
-#endif // BOOST_ASSIGN_V2_VALUE_DEQUE_DEQUE_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_DEQUE_DEQUE_ER_2010_HPP

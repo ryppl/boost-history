@@ -22,7 +22,7 @@
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 #include <boost/assign/v2/value/put.hpp>
-#include <boost/assign/v2/value/deque.hpp>
+#include <boost/assign/v2/deque.hpp>
 #include <boost/assign/v2/value/pipe/put.hpp>
 #include <boost/assign/v2/value/pipe/csv_put.hpp>
 #include <boost/assign/v2/ref/array/array.hpp>
