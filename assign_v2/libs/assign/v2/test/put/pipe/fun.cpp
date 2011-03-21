@@ -34,7 +34,7 @@ namespace xxx_fun{
         using namespace boost;
         namespace as2 = assign::v2;
         {
-            //[csv_pipe_modulo_fun_math
+            //[test_put_pipe_fun_math
             int k = 1; std::list<int> factorials;
         	using namespace lambda;
             

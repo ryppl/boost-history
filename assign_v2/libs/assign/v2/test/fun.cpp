@@ -37,7 +37,7 @@ namespace xxx_fun{
         namespace as2 = assign::v2;
         {
         	// (*fp) resolves error C2440 using MSVC
-            //[test_value_fun_math
+            //[test_fun_math
             std::vector<double> exponent;
             typedef double(*fp)(double);
             typedef function<double(double)> f_;
@@ -51,7 +51,7 @@ namespace xxx_fun{
             //]
         }
         {
-            //[test_value_fun_recursive
+            //[test_fun_recursive
         	using namespace lambda;
             int i = 1, k = 1;
             BOOST_AUTO(

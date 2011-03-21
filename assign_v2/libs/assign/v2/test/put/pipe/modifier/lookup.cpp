@@ -28,7 +28,7 @@ namespace xxx_lookup{
         using namespace boost;
         namespace as2 = assign::v2;
         {
-            //[pipe_lookup
+            //[test_put_pipe_modifier_lookup
         	using namespace lambda;
             typedef std::map<std::string, int> C; C cal;
             BOOST_AUTO( _local, ( as2::_fun = _1 ) );
