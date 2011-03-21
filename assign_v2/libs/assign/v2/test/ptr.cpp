@@ -17,10 +17,10 @@
 #include <boost/ptr_container/ptr_map.hpp>
 #include <boost/ptr_container/ptr_set.hpp>
 #include <boost/ptr_container/ptr_vector.hpp>
-#include <libs/assign/v2/test/value/ptr.h>
+#include <libs/assign/v2/test/put/ptr.h>
 
 namespace test_assign_v2{
-namespace xxx_value{
+namespace xxx_put{
 namespace xxx_ptr{
 
     void test(){
@@ -85,5 +85,5 @@ namespace xxx_ptr{
     }// test
 
 }// xxx_ptr
-}// xxx_value
+}// xxx_put
 }// xxx_test_assign
