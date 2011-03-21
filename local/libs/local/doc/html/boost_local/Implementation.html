@@ -28,31 +28,147 @@
 </h2></div></div></div>
 <div class="toc"><dl>
 <dt><span class="section"><a href="Implementation.html#boost_local.Implementation.local_functions">Local Functions</a></span></dt>
-<dt><span class="section"><a href="Implementation.html#boost_local.Implementation.local_blocks">Local Blocks</a></span></dt>
-<dt><span class="section"><a href="Implementation.html#boost_local.Implementation.local_exits">Local Exits</a></span></dt>
+<dt><span class="section"><a href="Implementation.html#boost_local.Implementation.local_blocks_and_exits">Local
+      Blocks and Exits</a></span></dt>
 </dl></div>
+<p>
+      This section lists source code that should provide a general idea on how this
+      library implements local functions.
+    </p>
+<p>
+      The code listed here should only be used as a reference in trying to understand
+      the library implementation and source code. There is no guarantee that the
+      library implementation will use exactly the code listed here. Refer to the
+      code comments in the library source files for the reasons behind the specific
+      instructions listed here.
+    </p>
 <div class="section">
 <div class="titlepage"><div><div><h3 class="title">
 <a name="boost_local.Implementation.local_functions"></a><a class="link" href="Implementation.html#boost_local.Implementation.local_functions" title="Local Functions">Local Functions</a>
 </h3></div></div></div>
 <p>
-        [factorial_impl_cpp]
+        The expansion of the local function macros in the <code class="computeroutput"><span class="identifier">factorial</span></code>
+        example presented in the <a class="link" href="Advanced_Topics.html" title="Advanced Topics">Advanced
+        Topics</a> section generates code equivalent to the following:
+      </p>
+<p>
+        
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">local</span><span class="special">/</span><span class="identifier">function</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">sstream</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">algorithm</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">vector</span><span class="special">&gt;</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span> <span class="special">()</span> <span class="special">{</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">ostringstream</span> <span class="identifier">output</span><span class="special">;</span>
+
+    <span class="keyword">int</span> <span class="comment">// The local function result type (just before the `BOOST_LOCAL_FUNCTION_PARAMS` macro).
+</span>
+    <span class="comment">// *BEGIN* The macro
+</span>    <span class="comment">//  BOOST_LOCAL_FUNCTION_PARAMS( (int n) (bool recursion)(default false)
+</span>    <span class="comment">//          (bind&amp; output) )
+</span>    <span class="comment">// expands (at line 18) to:
+</span>
+    <span class="special">(*</span><span class="identifier">ERROR_missing_result_type_before_the_local_function_parameter_macro_id18</span><span class="special">)();</span> 
+    <span class="keyword">typedef</span> <span class="keyword">void</span> <span class="special">(*</span><span class="identifier">boost_local_auxXdeduce_result_tag18</span><span class="special">)(</span><span class="keyword">int</span> <span class="identifier">ERROR_missing_result_type_before_the_local_function_parameter_macro_id18</span><span class="special">);</span> 
+    <span class="keyword">typedef</span> <span class="identifier">BOOST_TYPEOF</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">scope_exit</span><span class="special">::</span><span class="identifier">aux</span><span class="special">::</span><span class="identifier">wrap</span><span class="special">(</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">scope_exit</span><span class="special">::</span><span class="identifier">aux</span><span class="special">::</span><span class="identifier">deref</span><span class="special">(</span> <span class="identifier">ERROR_missing_result_type_before_the_local_function_parameter_macro_id18</span><span class="special">,</span> <span class="special">(</span><span class="identifier">boost_local_auxXdeduce_result_tag18</span><span class="special">)</span><span class="number">0</span><span class="special">)))</span> <span class="identifier">boost_local_auxXdeduce_result_wrap18</span><span class="special">;</span> 
+    <span class="keyword">typedef</span> <span class="identifier">boost_local_auxXdeduce_result_wrap18</span><span class="special">::</span><span class="identifier">type</span> <span class="identifier">boost_local_auxXdeduce_result_capture18</span><span class="special">;</span> 
+    <span class="keyword">struct</span> <span class="identifier">boost_local_auxXdeduce_result_params18</span> <span class="special">{</span>
+        <span class="keyword">typedef</span> <span class="identifier">boost_local_auxXdeduce_result_capture18</span> <span class="identifier">function_ptr_type</span><span class="special">;</span>
+    <span class="special">};</span> 
+
+    <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">remove_pointer</span><span class="special">&lt;</span> <span class="identifier">boost_local_auxXdeduce_result_params18</span><span class="special">::</span><span class="identifier">function_ptr_type</span> <span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">boost_local_auxXdeduce_result_function_type18</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">function_traits</span><span class="special">&lt;</span> <span class="identifier">boost_local_auxXdeduce_result_function_type18</span><span class="special">&gt;::</span><span class="identifier">result_type</span> <span class="identifier">boost_local_auxXresult_type18</span><span class="special">;</span> 
+    <span class="keyword">typedef</span> <span class="keyword">void</span> <span class="special">(*</span><span class="identifier">boost_se_tag_0_18</span><span class="special">)(</span><span class="keyword">int</span> <span class="special">&amp;</span> <span class="identifier">output</span> <span class="special">);</span> 
+    <span class="keyword">typedef</span> <span class="identifier">BOOST_TYPEOF</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">scope_exit</span><span class="special">::</span><span class="identifier">aux</span><span class="special">::</span><span class="identifier">wrap</span><span class="special">(</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">scope_exit</span><span class="special">::</span><span class="identifier">aux</span><span class="special">::</span><span class="identifier">deref</span><span class="special">(&amp;</span> <span class="identifier">output</span><span class="special">,</span> <span class="special">(</span><span class="identifier">boost_se_tag_0_18</span><span class="special">)</span><span class="number">0</span><span class="special">)))</span> <span class="identifier">boost_se_wrapped_t_0_18</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">boost_se_wrapped_t_0_18</span><span class="special">::</span><span class="identifier">type</span> <span class="identifier">boost_se_capture_t_0_18</span><span class="special">;</span>
+    <span class="keyword">struct</span> <span class="identifier">boost_se_params_t_18</span> <span class="special">{</span>
+        <span class="keyword">typedef</span> <span class="identifier">boost_se_capture_t_0_18</span> <span class="identifier">boost_se_param_t_0_18</span><span class="special">;</span>
+        <span class="identifier">boost</span><span class="special">::</span><span class="identifier">scope_exit</span><span class="special">::</span><span class="identifier">aux</span><span class="special">::</span><span class="identifier">member</span><span class="special">&lt;</span> <span class="identifier">boost_se_param_t_0_18</span><span class="special">,</span> <span class="identifier">boost_se_tag_0_18</span> <span class="special">&gt;</span> <span class="identifier">boost_se_param_0_18</span><span class="special">;</span>
+    <span class="special">}</span> <span class="identifier">boost_local_auxXparams18</span> <span class="special">=</span> <span class="special">{</span>
+        <span class="special">{</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">scope_exit</span><span class="special">::</span><span class="identifier">aux</span><span class="special">::</span><span class="identifier">deref</span><span class="special">(&amp;</span> <span class="identifier">output</span><span class="special">,</span> <span class="special">(</span><span class="identifier">boost_se_tag_0_18</span><span class="special">)</span><span class="number">0</span><span class="special">)</span> <span class="special">}</span> <span class="comment">// This is for GCC but no extra curly parenthesis on MSVC.
+</span>    <span class="special">};</span> 
+    
+    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">scope_exit</span><span class="special">::</span><span class="identifier">aux</span><span class="special">::</span><span class="identifier">declared</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">scope_exit</span><span class="special">::</span><span class="identifier">aux</span><span class="special">::</span><span class="identifier">resolve</span><span class="special">&lt;</span> <span class="keyword">sizeof</span><span class="special">(</span><span class="identifier">boost_local_auxXargs</span><span class="special">)</span> <span class="special">&gt;::</span><span class="identifier">cmp1</span><span class="special">&lt;</span><span class="number">0</span><span class="special">&gt;::</span><span class="identifier">cmp2</span> <span class="special">&gt;</span> <span class="identifier">boost_local_auxXargs</span><span class="special">;</span>
+    <span class="identifier">boost_local_auxXargs</span><span class="special">.</span><span class="identifier">value</span> <span class="special">=</span> <span class="special">&amp;</span><span class="identifier">boost_local_auxXparams18</span><span class="special">;</span>
+    
+    <span class="keyword">class</span> <span class="identifier">boost_local_auxXfunctor18</span> <span class="special">:</span> <span class="keyword">public</span> <span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">local</span><span class="special">::</span><span class="identifier">aux</span><span class="special">::</span><span class="identifier">abstract_function</span><span class="special">&lt;</span> <span class="identifier">boost_local_auxXresult_type18</span> <span class="special">(</span> <span class="keyword">int</span> <span class="identifier">n</span> <span class="special">,</span> <span class="keyword">bool</span> <span class="identifier">recursion</span> <span class="special">),</span> <span class="number">1</span> <span class="special">&gt;</span> <span class="special">{</span>
+        <span class="keyword">typedef</span> <span class="identifier">boost_local_auxXresult_type18</span> <span class="special">(</span><span class="identifier">boost_local_auxXfunction_type</span><span class="special">)</span> <span class="special">(</span> <span class="keyword">int</span> <span class="identifier">n</span> <span class="special">,</span> <span class="keyword">bool</span> <span class="identifier">recursion</span> <span class="special">);</span>
+    <span class="keyword">public</span><span class="special">:</span>
+        <span class="keyword">explicit</span> <span class="identifier">boost_local_auxXfunctor18</span><span class="special">(</span> <span class="keyword">void</span><span class="special">*</span> <span class="identifier">binding_data</span><span class="special">)</span> <span class="special">:</span>
+                <span class="identifier">boost_local_auxXbinds</span><span class="special">(</span><span class="keyword">static_cast</span><span class="special">&lt;</span> <span class="identifier">boost_se_params_t_18</span><span class="special">*&gt;(</span><span class="identifier">binding_data</span><span class="special">))</span> <span class="special">{</span>
+            <span class="identifier">boost_local_auxXinit_recursion</span><span class="special">();</span>
+        <span class="special">}</span>
+        
+        <span class="identifier">boost_local_auxXresult_type18</span> <span class="keyword">operator</span><span class="special">()(</span>
+                <span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">function_traits</span><span class="special">&lt;</span> <span class="identifier">boost_local_auxXfunction_type</span><span class="special">&gt;::</span><span class="identifier">arg1_type</span> <span class="identifier">arg1</span> <span class="special">,</span> 
+                <span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">function_traits</span><span class="special">&lt;</span> <span class="identifier">boost_local_auxXfunction_type</span><span class="special">&gt;::</span><span class="identifier">arg2_type</span> <span class="identifier">arg2</span> <span class="special">)</span> <span class="special">{</span> 
+            <span class="keyword">return</span> <span class="identifier">boost_local_auxXbody</span><span class="special">(</span> <span class="identifier">boost_local_auxXbinds</span><span class="special">-&gt;</span> <span class="identifier">boost_se_param_0_18</span><span class="special">.</span><span class="identifier">value</span> <span class="special">,</span> <span class="identifier">arg1</span> <span class="special">,</span> <span class="identifier">arg2</span> <span class="special">);</span>
+        <span class="special">}</span>
+        <span class="identifier">boost_local_auxXresult_type18</span> <span class="keyword">operator</span><span class="special">()(</span>
+                <span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">function_traits</span><span class="special">&lt;</span> <span class="identifier">boost_local_auxXfunction_type</span><span class="special">&gt;::</span><span class="identifier">arg1_type</span> <span class="identifier">arg1</span> <span class="special">)</span> <span class="special">{</span>
+            <span class="keyword">return</span> <span class="identifier">boost_local_auxXbody</span><span class="special">(</span> <span class="identifier">boost_local_auxXbinds</span><span class="special">-&gt;</span> <span class="identifier">boost_se_param_0_18</span><span class="special">.</span><span class="identifier">value</span> <span class="special">,</span> <span class="identifier">arg1</span> <span class="special">);</span>
+        <span class="special">}</span> 
+    
+    <span class="keyword">private</span><span class="special">:</span>
+        <span class="identifier">boost</span><span class="special">::</span><span class="identifier">scope_exit</span><span class="special">::</span><span class="identifier">aux</span><span class="special">::</span><span class="identifier">undeclared</span> <span class="identifier">boost_local_auxXargs</span><span class="special">;</span>
+        <span class="keyword">typedef</span> <span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">local</span><span class="special">::</span><span class="identifier">function</span><span class="special">&lt;</span><span class="identifier">boost_local_auxXfunction_type</span><span class="special">,</span> <span class="number">1</span> <span class="special">&gt;</span> <span class="identifier">boost_local_auxXfunctor_type</span><span class="special">;</span>
+        <span class="keyword">typedef</span> <span class="identifier">boost_se_params_t_18</span><span class="special">::</span> <span class="identifier">boost_se_param_t_0_18</span> <span class="special">&amp;</span> <span class="identifier">outputXboost_local_auxXtypeof_type</span> <span class="special">;</span>
+        <span class="identifier">boost_se_params_t_18</span><span class="special">*</span> <span class="identifier">boost_local_auxXbinds</span><span class="special">;</span>
+
+        <span class="identifier">boost_local_auxXresult_type18</span> <span class="identifier">boost_local_auxXbody</span><span class="special">(</span> <span class="identifier">boost_se_params_t_18</span><span class="special">::</span> <span class="identifier">boost_se_param_t_0_18</span> <span class="special">&amp;</span> <span class="identifier">output</span> <span class="special">,</span> <span class="keyword">int</span> <span class="identifier">n</span> <span class="special">,</span> <span class="keyword">bool</span> <span class="identifier">recursion</span> <span class="special">=</span> <span class="keyword">false</span> <span class="special">)</span> <span class="keyword">const</span>
+
+    <span class="comment">// *END* The expansion of `BOOST_LOCAL_FUNCTION_PARAMS` ends here.
+</span>
+    <span class="comment">// *BEGIN* The local function body code `{ ... }` as specified by the programmers:
+</span>
+    <span class="special">{</span>
+        <span class="keyword">int</span> <span class="identifier">result</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+
+        <span class="keyword">if</span> <span class="special">(</span><span class="identifier">n</span> <span class="special">&lt;</span> <span class="number">2</span> <span class="special">)</span> <span class="identifier">result</span> <span class="special">=</span> <span class="number">1</span><span class="special">;</span>
+        <span class="keyword">else</span> <span class="identifier">result</span> <span class="special">=</span> <span class="identifier">n</span> <span class="special">*</span> <span class="identifier">factorial</span><span class="special">(</span><span class="identifier">n</span> <span class="special">-</span> <span class="number">1</span><span class="special">,</span> <span class="keyword">true</span><span class="special">);</span> <span class="comment">// Recursive call.
+</span>
+        <span class="keyword">if</span> <span class="special">(!</span><span class="identifier">recursion</span><span class="special">)</span> <span class="identifier">output</span> <span class="special">&lt;&lt;</span> <span class="identifier">result</span> <span class="special">&lt;&lt;</span> <span class="string">" "</span><span class="special">;</span>
+        <span class="keyword">return</span> <span class="identifier">result</span><span class="special">;</span>
+    <span class="special">}</span>
+
+    <span class="comment">// *END* The local function body `{ ... }` ends here.
+</span>    
+    <span class="comment">// *BEGIN* The macro `BOOST_LOCAL_FUNCTION_NAME(factorial)` expands to:
+</span>
+    <span class="keyword">public</span><span class="special">:</span>
+        <span class="identifier">boost_local_auxXfunctor_type</span> <span class="identifier">factorial</span><span class="special">;</span>
+
+    <span class="keyword">private</span><span class="special">:</span> 
+        <span class="keyword">void</span> <span class="identifier">boost_local_auxXinit_recursion</span><span class="special">()</span> <span class="special">{</span> 
+            <span class="identifier">factorial</span> <span class="special">=</span> <span class="special">*</span><span class="keyword">this</span><span class="special">;</span> 
+        <span class="special">}</span> 
+    <span class="special">}</span> <span class="identifier">boost_local_auxXfunctorXfactorial</span><span class="special">(</span><span class="identifier">boost_local_auxXargs</span><span class="special">.</span><span class="identifier">value</span><span class="special">);</span>
+    <span class="identifier">BOOST_TYPEOF</span><span class="special">(</span><span class="identifier">boost_local_auxXfunctorXfactorial</span><span class="special">.</span><span class="identifier">factorial</span><span class="special">)</span> <span class="keyword">const</span> <span class="identifier">factorial</span><span class="special">(</span><span class="identifier">boost_local_auxXfunctorXfactorial</span><span class="special">);</span>
+
+    <span class="comment">// *END* The expansion of `BOOST_LOCAL_FUNCTION_NAME` ends here.
+</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">v</span><span class="special">(</span><span class="number">3</span><span class="special">);</span>
+    <span class="identifier">v</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="number">1</span><span class="special">;</span> <span class="identifier">v</span><span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">=</span> <span class="number">4</span><span class="special">;</span> <span class="identifier">v</span><span class="special">[</span><span class="number">2</span><span class="special">]</span> <span class="special">=</span> <span class="number">7</span><span class="special">;</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">for_each</span><span class="special">(</span><span class="identifier">v</span><span class="special">.</span><span class="identifier">begin</span><span class="special">(),</span> <span class="identifier">v</span><span class="special">.</span><span class="identifier">end</span><span class="special">(),</span> <span class="identifier">factorial</span><span class="special">);</span>
+
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">output</span><span class="special">.</span><span class="identifier">str</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
       </p>
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="boost_local.Implementation.local_blocks"></a><a class="link" href="Implementation.html#boost_local.Implementation.local_blocks" title="Local Blocks">Local Blocks</a>
+<a name="boost_local.Implementation.local_blocks_and_exits"></a><a class="link" href="Implementation.html#boost_local.Implementation.local_blocks_and_exits" title="Local Blocks and Exits">Local
+      Blocks and Exits</a>
 </h3></div></div></div>
 <p>
-        [add_block_impl_cpp]
-      </p>
-</div>
-<div class="section">
-<div class="titlepage"><div><div><h3 class="title">
-<a name="boost_local.Implementation.local_exits"></a><a class="link" href="Implementation.html#boost_local.Implementation.local_exits" title="Local Exits">Local Exits</a>
-</h3></div></div></div>
-<p>
-        [add_exit_impl_cpp]
+        Local blocks and local exits are trivially implemented by this library reusing
+        local functions. Local block and local exit implementation code should be
+        obvious from the library source files so it is not listed here.
       </p>
 </div>
 </div>

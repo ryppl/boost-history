@@ -1,21 +1,24 @@
 
 [section:Implementation Appendix: Implementation]
 
+This section lists source code that should provide a general idea on how this library implements local functions.
+
+The code listed here should only be used as a reference in trying to understand the library implementation and source code.
+There is no guarantee that the library implementation will use exactly the code listed here.
+Refer to the code comments in the library source files for the reasons behind the specific instructions listed here.
+
 [section Local Functions]
+
+The expansion of the local function macros in the `factorial` example presented in the __Advanced_Topics__ section generates code equivalent to the following:
 
 [factorial_impl_cpp]
 
 [endsect]
 
-[section Local Blocks]
+[section Local Blocks and Exits]
 
-[add_block_impl_cpp]
-
-[endsect]
-
-[section Local Exits]
-
-[add_exit_impl_cpp]
+Local blocks and local exits are trivially implemented by this library reusing local functions.
+Local block and local exit implementation code should be obvious from the library source files so it is not listed here.
 
 [endsect]
 

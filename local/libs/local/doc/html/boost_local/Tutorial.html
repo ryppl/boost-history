@@ -115,12 +115,12 @@
         <span class="special">...</span> <span class="special">}</span></code>
         using the usual C++ syntax. The body is specified outside any of the macros
         so eventual compiler error messages and line numbers retain their usual meaning.
-        <sup>[<a name="id867132" href="#ftn.id867132" class="footnote">3</a>]</sup>
+        <sup>[<a name="id866968" href="#ftn.id866968" class="footnote">3</a>]</sup>
       </p>
 <p>
         The macro <code class="computeroutput"><a class="link" href="../BOOST_LOCAL_FUNCTION_NAME.html" title="Macro BOOST_LOCAL_FUNCTION_NAME">BOOST_LOCAL_FUNCTION_NAME</a></code>
         is used to end the local function definition and to specify the local function
-        name. <sup>[<a name="id867168" href="#ftn.id867168" class="footnote">4</a>]</sup>
+        name. <sup>[<a name="id867004" href="#ftn.id867004" class="footnote">4</a>]</sup>
       </p>
 <p>
         For example, let's program a local function named <code class="computeroutput"><span class="identifier">add</span></code>
@@ -366,7 +366,7 @@
         This library also allows to specify default values for the local function
         parameters. However, the usual C++ syntax for default parameters that uses
         the assignment symbol <code class="computeroutput"><span class="special">=</span></code> cannot
-        be used. <sup>[<a name="id869094" href="#ftn.id869094" class="footnote">5</a>]</sup> The keyword <code class="computeroutput"><span class="keyword">default</span></code>
+        be used. <sup>[<a name="id868926" href="#ftn.id868926" class="footnote">5</a>]</sup> The keyword <code class="computeroutput"><span class="keyword">default</span></code>
         is used instead:
       </p>
 <div class="informaltable"><table class="table">
@@ -508,7 +508,7 @@
         variables, the object <code class="computeroutput"><span class="keyword">this</span></code>,
         etc) can be bound to a local function declaration. The types of bound variables
         are automatically deduced by this library using <a href="http://www.boost.org/doc/libs/release/doc/html/typeof.html" target="_top">Boost.Typeof</a>.
-        <sup>[<a name="id870318" href="#ftn.id870318" class="footnote">6</a>]</sup>
+        <sup>[<a name="id870150" href="#ftn.id870150" class="footnote">6</a>]</sup>
       </p>
 <div class="important"><table border="0" summary="Important">
 <tr>
@@ -525,7 +525,7 @@
 </table></div>
 <p>
         This library introduces the new "keyword" <code class="computeroutput"><span class="identifier">bind</span></code>
-        <sup>[<a name="id870406" href="#ftn.id870406" class="footnote">7</a>]</sup> which is used in place of the parameter type to specify the name
+        <sup>[<a name="id870238" href="#ftn.id870238" class="footnote">7</a>]</sup> which is used in place of the parameter type to specify the name
         of a variable in scope to bind. The variable can be bound by value:
       </p>
 <pre class="programlisting"><span class="identifier">bind</span> <span class="emphasis"><em>variable-name</em></span> <span class="comment">// Bind by value.
@@ -566,7 +566,7 @@
         unless constant binding is forced using <code class="computeroutput"><span class="keyword">const</span>
         <span class="identifier">bind</span> <span class="special">...</span></code>
         (note that binding by constant reference is not supported by <a href="http://en.wikipedia.org/wiki/C%2B%2B0x#Lambda_functions_and_expressions" target="_top">C++0x
-        lambda</a> functions). <sup>[<a name="id870660" href="#ftn.id870660" class="footnote">8</a>]</sup> Programmers might want to bind variables of complex types by
+        lambda</a> functions). <sup>[<a name="id870493" href="#ftn.id870493" class="footnote">8</a>]</sup> Programmers might want to bind variables of complex types by
         (constant) reference instead than by value to avoid expensive copy operations
         when these variables are automatically passed to the local function (as usual
         with C++ function parameter passing).
@@ -609,7 +609,7 @@
         ]
       </p>
 <a name="boost_local.Tutorial.Binding.binding_the_object__code__phrase_role__keyword__this__phrase___code_"></a><h6>
-<a name="id870852"></a>
+<a name="id870685"></a>
         <a class="link" href="Tutorial.html#boost_local.Tutorial.Binding.binding_the_object__code__phrase_role__keyword__this__phrase___code_">Binding
         the Object <code class="computeroutput"><span class="keyword">this</span></code></a>
       </h6>
@@ -663,12 +663,12 @@
           to a local function, the local function <span class="bold"><strong>body must
           use the special symbol</strong></span> <code class="computeroutput"><span class="identifier">this_</span></code>
           (instead of <code class="computeroutput"><span class="keyword">this</span></code>) to access
-          the bound object. <sup>[<a name="id871171" href="#ftn.id871171" class="footnote">9</a>]</sup>
+          the bound object. <sup>[<a name="id871003" href="#ftn.id871003" class="footnote">9</a>]</sup>
         </p>
 <p>
           Unfortunately, mistakenly using <code class="computeroutput"><span class="keyword">this</span></code>
           within the local function body instead of <code class="computeroutput"><span class="identifier">this_</span></code>
-          will not necessarily generate a compile-time error. <sup>[<a name="id871265" href="#ftn.id871265" class="footnote">10</a>]</sup> Programmers are responsible to make sure that <code class="computeroutput"><span class="keyword">this</span></code> is never used within a local function
+          will not necessarily generate a compile-time error. <sup>[<a name="id871097" href="#ftn.id871097" class="footnote">10</a>]</sup> Programmers are responsible to make sure that <code class="computeroutput"><span class="keyword">this</span></code> is never used within a local function
           body which should only use the special symbol <code class="computeroutput"><span class="identifier">this_</span></code>.
         </p>
 </td></tr>
@@ -838,7 +838,7 @@
           A <code class="computeroutput"><span class="keyword">return</span><span class="special">;</span></code>
           instruction from within a local block jumps to the end of the local block
           body and <span class="bold"><strong>it does not return the enclosing function</strong></span>.
-          <sup>[<a name="id873980" href="#ftn.id873980" class="footnote">11</a>]</sup>
+          <sup>[<a name="id873804" href="#ftn.id873804" class="footnote">11</a>]</sup>
         </p></td></tr>
 </table></div>
 <p>
@@ -941,7 +941,7 @@
         If multiple local exits are declared within the same scope, their bodies
         will be executed in the reverse order in which they have been declared. The
         execution of the local exit code can be guaranteed only if the program does
-        not terminate because of an uncaught exception. <sup>[<a name="id875184" href="#ftn.id875184" class="footnote">12</a>]</sup>
+        not terminate because of an uncaught exception. <sup>[<a name="id875009" href="#ftn.id875009" class="footnote">12</a>]</sup>
       </p>
 <p>
         Only bound variables specified by <code class="literal"><span class="emphasis"><em>bindings</em></span></code>
@@ -1045,7 +1045,7 @@
         Local exits are very similar to the <span class="emphasis"><em>scope exits</em></span> provided
         by <a href="http://www.boost.org/doc/libs/release/libs/scope_exit/doc/html/index.html" target="_top">Boost.ScopeExit</a>
         with the addition that they also support constant binding and binding of
-        the object <code class="computeroutput"><span class="keyword">this</span></code>. <sup>[<a name="id876436" href="#ftn.id876436" class="footnote">13</a>]</sup> Local exits can be used to emulate the <a href="http://d.digitalmars.com" target="_top">D
+        the object <code class="computeroutput"><span class="keyword">this</span></code>. <sup>[<a name="id876261" href="#ftn.id876261" class="footnote">13</a>]</sup> Local exits can be used to emulate the <a href="http://d.digitalmars.com" target="_top">D
         Programming Language</a> <span class="emphasis"><em>scope guards</em></span> (see the
         <a class="link" href="Examples.html#boost_local.Examples.Emulating_Ds_Scope_Guards" title="Emulating D's Scope Guards">Emulating
         D's Scope Guards</a> example).
@@ -1059,7 +1059,7 @@
         When local functions, local blocks, and local exits are programmed within
         templates, they need to be declared using the following special macros ending
         with the <code class="computeroutput"><span class="identifier">TPL</span></code> postfix (see
-        the <a href="../reference.html" target="_top">Reference</a> section): <sup>[<a name="id876718" href="#ftn.id876718" class="footnote">14</a>]</sup>
+        the <a href="../reference.html" target="_top">Reference</a> section): <sup>[<a name="id876540" href="#ftn.id876540" class="footnote">14</a>]</sup>
       </p>
 <pre class="programlisting"><code class="computeroutput"><a class="link" href="../BOOST_LOCAL_FUNCTION_PARAMS_TPL.html" title="Macro BOOST_LOCAL_FUNCTION_PARAMS_TPL">BOOST_LOCAL_FUNCTION_PARAMS_TPL</a></code><span class="special">(</span><span class="emphasis"><em>parameters</em></span><span class="special">)</span>
 <code class="computeroutput"><a class="link" href="../BOOST_LOCAL_BLOCK_TPL.html" title="Macro BOOST_LOCAL_BLOCK_TPL">BOOST_LOCAL_BLOCK_TPL</a></code><span class="special">(</span><span class="emphasis"><em>bindings</em></span><span class="special">)</span>
@@ -1192,20 +1192,20 @@
 </div>
 <div class="footnotes">
 <br><hr width="100" align="left">
-<div class="footnote"><p><sup>[<a id="ftn.id867132" href="#id867132" class="para">3</a>] </sup>
+<div class="footnote"><p><sup>[<a id="ftn.id866968" href="#id866968" class="para">3</a>] </sup>
           <span class="bold"><strong>Rationale.</strong></span> If the local function body
           were instead passed as a macro parameter, it would be expanded on a single
           line of code (because macros always expand as a single line of code). Therefore,
           eventual compiler error line numbers would all have the same value and
           would no longer be useful to pinpoint the error.
         </p></div>
-<div class="footnote"><p><sup>[<a id="ftn.id867168" href="#id867168" class="para">4</a>] </sup>
+<div class="footnote"><p><sup>[<a id="ftn.id867004" href="#id867004" class="para">4</a>] </sup>
           <span class="bold"><strong>Rationale.</strong></span> The local function name must
           be passed to the macro <code class="computeroutput"><a class="link" href="../BOOST_LOCAL_FUNCTION_NAME.html" title="Macro BOOST_LOCAL_FUNCTION_NAME">BOOST_LOCAL_FUNCTION_NAME</a></code>
           ending the function definition so this macro can declare a local variable
           with the local function name to hold the local functor object.
         </p></div>
-<div class="footnote"><p><sup>[<a id="ftn.id869094" href="#id869094" class="para">5</a>] </sup>
+<div class="footnote"><p><sup>[<a id="ftn.id868926" href="#id868926" class="para">5</a>] </sup>
           <span class="bold"><strong>Rationale.</strong></span> The assignment symbol <code class="computeroutput"><span class="special">=</span></code> cannot be used to specify default parameter
           values because default values are not part of the parameter type so they
           cannot be handled using template metaprogamming. Default parameter values
@@ -1215,7 +1215,7 @@
           it counts the number of default values to provide the correct set of call
           operators for the local functor object.
         </p></div>
-<div class="footnote"><p><sup>[<a id="ftn.id870318" href="#id870318" class="para">6</a>] </sup>
+<div class="footnote"><p><sup>[<a id="ftn.id870150" href="#id870150" class="para">6</a>] </sup>
           <span class="bold"><strong>Rationale.</strong></span> By binding a variable in scope,
           the local function declaration is specifying that such a variable should
           be accessible within the local function body regardless of its type. Semantically,
@@ -1228,7 +1228,7 @@
           This is especially useful for maintenance so if a bound variable type is
           changed, the local function declaration does not have to change.
         </p></div>
-<div class="footnote"><p><sup>[<a id="ftn.id870406" href="#id870406" class="para">7</a>] </sup>
+<div class="footnote"><p><sup>[<a id="ftn.id870238" href="#id870238" class="para">7</a>] </sup>
           The token <code class="computeroutput"><span class="identifier">bind</span></code> is not a
           real keyword of the C++ language. This library parses <code class="computeroutput"><span class="identifier">bind</span></code>
           during macro expansion using preprocessor metaprogramming. Therefore,
@@ -1237,7 +1237,7 @@
           within the syntax defined by the macros of this library -- thus it is referred
           to as a "keyword" only within quotes.
         </p></div>
-<div class="footnote"><p><sup>[<a id="ftn.id870660" href="#id870660" class="para">8</a>] </sup>
+<div class="footnote"><p><sup>[<a id="ftn.id870493" href="#id870493" class="para">8</a>] </sup>
           An historical note: Constant binding of variables in scope was the main
           use case that originally motivated the authors in developing this library.
           The authors needed to locally create a chuck of code to assert some correctness
@@ -1252,7 +1252,7 @@
           generates an error because the bound variable is of <code class="computeroutput"><span class="keyword">const</span></code>
           type within the local function body.
         </p></div>
-<div class="footnote"><p><sup>[<a id="ftn.id871171" href="#id871171" class="para">9</a>] </sup>
+<div class="footnote"><p><sup>[<a id="ftn.id871003" href="#id871003" class="para">9</a>] </sup>
             <span class="bold"><strong>Rationale.</strong></span> This limitation comes from
             the fact that <code class="computeroutput"><span class="keyword">this</span></code> is a
             reserved C++ keyword so it cannot be used as the name of the internal
@@ -1266,7 +1266,7 @@
             behaviour of <code class="computeroutput"><span class="keyword">static_cast</span></code></a>
             (which might not work on all platforms at the cost of portability).
           </p></div>
-<div class="footnote"><p><sup>[<a id="ftn.id871265" href="#id871265" class="para">10</a>] </sup>
+<div class="footnote"><p><sup>[<a id="ftn.id871097" href="#id871097" class="para">10</a>] </sup>
             <span class="bold"><strong>Rationale.</strong></span> The local function body cannot
             be a static member function of the local functor object in order to support
             recursion (because the local function name is specified by the <code class="computeroutput"><a class="link" href="../BOOST_LOCAL_FUNCTION_NAME.html" title="Macro BOOST_LOCAL_FUNCTION_NAME">BOOST_LOCAL_FUNCTION_NAME</a></code>
@@ -1279,7 +1279,7 @@
             is visible but it refers to the local functor object and not to the bound
             object.
           </p></div>
-<div class="footnote"><p><sup>[<a id="ftn.id873980" href="#id873980" class="para">11</a>] </sup>
+<div class="footnote"><p><sup>[<a id="ftn.id873804" href="#id873804" class="para">11</a>] </sup>
             <span class="bold"><strong>Rationale.</strong></span> Programmers might expect
             <code class="computeroutput"><span class="keyword">return</span><span class="special">;</span></code>
             to exit the enclosing function instead of the local block (or local exit),
@@ -1297,7 +1297,7 @@
             <code class="computeroutput"><span class="identifier">BOOST_LOCAL_RETURN</span><span class="special">;</span></code>)
             to exit local blocks (and local exits).
           </p></div>
-<div class="footnote"><p><sup>[<a id="ftn.id875184" href="#id875184" class="para">12</a>] </sup>
+<div class="footnote"><p><sup>[<a id="ftn.id875009" href="#id875009" class="para">12</a>] </sup>
           <span class="bold"><strong>Rationale.</strong></span> This library (as well as <a href="http://www.boost.org/doc/libs/release/libs/scope_exit/doc/html/index.html" target="_top">Boost.ScopeExit</a>)
           uses the destructor of a local variable to automatically execute the local
           exit code upon exit of the enclosing scope. However, in C++ it is no possible
@@ -1306,7 +1306,7 @@
           different from the D programming language which executes the scope exit
           code even if the main program terminates because of an uncaught exception.)
         </p></div>
-<div class="footnote"><p><sup>[<a id="ftn.id876436" href="#id876436" class="para">13</a>] </sup>
+<div class="footnote"><p><sup>[<a id="ftn.id876261" href="#id876261" class="para">13</a>] </sup>
           <span class="bold"><strong>Rationale.</strong></span> This library could be merged
           together with <a href="http://www.boost.org/doc/libs/release/libs/scope_exit/doc/html/index.html" target="_top">Boost.ScopeExit</a>
           into a new library named Boost.Scope (from the meaning of the word "<a href="http://en.wikipedia.org/wiki/Scope_(programming)" target="_top">scope</a>"
@@ -1333,7 +1333,7 @@
           name of "<a href="http://gcc.gnu.org/onlinedocs/gcc/Nested-Functions.html" target="_top">nested
           functions</a>".
         </p></div>
-<div class="footnote"><p><sup>[<a id="ftn.id876718" href="#id876718" class="para">14</a>] </sup>
+<div class="footnote"><p><sup>[<a id="ftn.id876540" href="#id876540" class="para">14</a>] </sup>
           <span class="bold"><strong>Rationale.</strong></span> Within templates, this library
           needs to use <code class="computeroutput"><span class="keyword">typename</span></code> to explicitly
           indicate that some expressions evaluate to a type. Because C++ does not

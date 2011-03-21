@@ -121,6 +121,7 @@
 [import ../../example/this_va.cpp]
 [import ../../example/params_all.cpp]
 [import ../../example/params_all_va.cpp]
+[import ../../example/factorial_impl.cpp]
 
 The Boost Local library implements local functions, local blocks, and local exits for the C++ programming language.
 

@@ -10,26 +10,11 @@ This section explains how to setup your system to use this library.
 
 [section This Documentation]
 
-Programmers should be ready to use this library, at least at a basic level, after reading the following sections of this documentation:
+Programmers should be ready to use this library, at least at a basic level, after reading this section and the __Tutorial__ section.
+The __Advanced_Topics__ and __Reference__ sections can be consulted at a later point to gain a more advanced knowledge of this library features.
+All the other sections of this documentation are for reference only.
 
-* The __Introduction__ section provides an overview on the library and its features.
-* The __Starting__ section explains how to read this documentation, how to install the library to work with the supported compilers and platforms.
-* The __Tutorial__ section provides a good explanation of basic usages of the library with extensive examples.
-
-The following sections could be consulted at a later point to gain a more in-depth knowledge of the library features:
-
-* The __Advanced__ section explains advanced usages of the library.
-* The __Reference__ section is the reference manual of the library public API.
-* The __Examples__ section lists the source code of a few additional examples that use this library.
-* The __Alternatives__ section describes alternatives to this library to implement local functions.
-
-The following sections are for reference only:
-
-* The __Releases__ section contains short release notes.
-* The __Bibliography__ section lists references that were consulted in the design and development of this library.
-* The __Acknowledgments__ section attempts to recognize all the people that contributes directly or indirectly to the design and development of this library.
-
-Furthermore, some footnotes are marked by the word "*Rationale*" because they explain reasons behind decisions made during the design and implementation of this library.
+Some footnotes are marked by the word "*Rationale*" because they explain reasons behind decisions made during the design and implementation of this library.
 
 [endsect]
 
@@ -62,7 +47,6 @@ The header files of this library are divided as follow:
     ``[headerref boost/local/block.hpp]           /local blocks/``
     ``[headerref boost/local/exit.hpp]            /local exits/``
     ``[headerref boost/local/typeof.hpp]          /bound variable type deduction/``
-    ``[headerref boost/local/function.hpp]        /local functors/``
     ``[headerref boost/local/config.hpp]          /configuration macros/``
 
 The following symbols are part of the library private API, they are not documented, and they should not be directly used by programmers:

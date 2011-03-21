@@ -12,11 +12,6 @@ This section compares the features offered by this library with similar features
 
 The following table compares local function features.
 
-@todo From Mathias: Minus of Local compared to Lambdas:
-  - creating a local can only be done at statement scope. 
-  - locals may not automatically capture all context 
-  - size of a local function cannot be optimized to be two words. 
-
 [table
 [
     [ Local Function Feature ]
@@ -44,11 +39,13 @@ The following table compares local function features.
 ]
 [
     [ ['Bind variables in scope] ]
-    [ Yes, bind by value, constant value, reference, and constant reference (also bind the object `this`). ]
+    [ Yes, bind by value, constant value, reference, and constant reference (also bind the object `this`).
+However, the names of the bound variables must be repeated one by one.]
     [ No. ]
-    [ Yes, but no bind by constant (value or reference). ]
+    [ Yes, plus there is short-hand syntax to bind all variables in scope at once (by value or by reference).
+However, there is no bind by constant value nor by constant reference. ]
     [ No. ]
-    [ No. ]
+    [ Yes. ]
 ]
 [
     [ ['Can be defined within expressions] ]
@@ -57,6 +54,93 @@ The following table compares local function features.
     [ Yes. ]
     [ Yes. ]
     [ Yes. ]
+]
+[
+    [ Examples ]
+    [``
+    int main() {
+        double sum = 0.0;
+        int factor = 10;
+
+        void BOOST_LOCAL_FUNCTION_PARAMS(
+                (double num) (bind& sum)
+                (const bind& factor) ) {
+            sum += factor * num;
+            std::clog << "Summed: " <<
+                    sum << std::endl;
+        } BOOST_LOCAL_FUNCTION_NAME(add)
+
+        double nums[3] = {1, 2, 3};
+        std::for_each(nums, nums + 3, add);
+        return 0;
+    }
+    ``]
+    [``
+    int main() {
+        double sum = 0.0;
+        int factor = 10;
+
+        struct local {
+            static void add(double num,
+                    // Unfortunately, cannot bind
+                    // (so specify variable types).
+                    double& sum,
+                    const int& factor) {
+                sum += factor * num;
+                std::clog << "Summed: " <<
+                        sum << std::endl;
+            }
+        };
+
+        double nums[3] = {1, 2, 3};
+        // Unfortunately, cannot pass as
+        // template parameter to `std::for_each`.
+        for (size_t i = 0; i < 3; ++i) {
+            // Unfortunately, explicitly pass
+            // variables `sum` and `factor`.
+            local::add(nums[i], sum, factor);
+        }
+        return 0;
+    }
+    ``]
+    [``
+    int main() {
+        double sum = 0.0;
+        int factor = 10;
+
+        double numes[3] = {1, 2, 3};
+        std::for_each(nums, nums + 3,
+            // Lambdas are defined at expression
+            // level. Unfortunately, cannot bind
+            // `factor` by `const&`.
+            [&sum, factor](double num) {
+                sum += factor * num;
+                std::clog << "Summed: " <<
+                        sum << std::endl;
+            }
+        );
+        return 0;
+    }
+    ``]
+    [ The body of `add` is too complex to be programmed using __Boost_Lambda__. ]
+    [``
+    int main() {
+        double sum = 0.0;
+        int factor = 10;
+
+        boost::function<void(double)> add=(
+            // Unfortunately, body cannot use
+            // usual C++ syntax.
+            ref(sum) += factor * _1,
+            std::clog << var("Summed: ") <<
+                    sum << std::endl
+        );
+
+        double nums[3] = {1, 2, 3};
+        std::for_each(nums, nums + 3, add);
+        return 0;
+    }
+    ``]
 ]
 ]
 

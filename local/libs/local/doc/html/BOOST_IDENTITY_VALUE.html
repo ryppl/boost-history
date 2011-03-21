@@ -33,7 +33,7 @@
 
 </span>BOOST_IDENTITY_VALUE(parenthesized_value)</pre></div>
 <div class="refsect1">
-<a name="id913525"></a><h2>Description</h2>
+<a name="id913343"></a><h2>Description</h2>
 <p>This macro expands to an expression that can be passed as a single macro parameter even if it contains commas and that evaluates to the specified value at run-time (see the {Advanced_Topics, Advanced Topics} section).</p>
 <p>For example <code class="computeroutput">BOOST_IDENTITY_VALUE((key_sizeof&lt;int, double&gt;::value))</code> can be passed as a single macro parameter when instead <code class="computeroutput">key_sizeof&lt;int, double&gt;::value</code> cannot (because it contains a comma not wrapped by round parenthesis so it will be interpreted as two separate macro parameters by the preprocessor).</p>
 <p><span class="bold"><strong>Parameters:</strong></span> </p>
