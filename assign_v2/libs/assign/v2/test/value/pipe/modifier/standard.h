@@ -24,4 +24,4 @@ namespace xxx_standard{
 }// xxx_value
 }// xxx_test_assign
 
-#endif
+#endif // LIBS_ASSIGN_V2_TEST_VALUE_PIPE_MODIFIER_STANDARD_ER_2010_H

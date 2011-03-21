@@ -51,11 +51,6 @@ namespace value_aux{
             return this->par_list_cont_;
         }
 
-        arg_list_cont_type& arg_list_cont() // TODO needed (non-const)?
-        {
-            return this->arg_list_cont_;
-        }
-
         arg_list_cont_type const& arg_list_cont() const
         {
             return this->arg_list_cont_;

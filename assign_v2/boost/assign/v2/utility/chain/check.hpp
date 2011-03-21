@@ -136,7 +136,7 @@ void verify_mpl()
                 boost::begin( vt1 | as2::_chain( vt2 ) | as2::_chain( vt3 ) )
             );
             BOOST_ASSIGN_V2_CHECK(
-                boost::equal( vt1 | as2::_chain( vt2 ) , vt ) // TODO
+                boost::equal( vt1 | as2::_chain( vt2 ) , vt )
             );
         }
         {

@@ -18,4 +18,4 @@ namespace xxx_detail{
 }// xxx_detail
 }// test_assign_v2
 
-#endif
+#endif // LIBS_ASSIGN_V2_TEST_DETAIL_ER_2010_H

@@ -20,4 +20,4 @@ namespace xxx_ptr{
 }// xxx_value
 }// xxx_test_assign
 
-#endif
+#endif // LIBS_ASSIGN_V2_TEST_VALUE_PTR_ER_2010_H

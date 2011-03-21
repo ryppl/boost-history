@@ -18,10 +18,9 @@ namespace xxx_pipe{
 
     void test()
     {
-    	// TODO
-        //xxx_fun::test();
-        //xxx_modifier::test();
         xxx_csv_put::test();
+        xxx_fun::test();
+        xxx_modifier::test();
     }
 
 }// xxx_pipe

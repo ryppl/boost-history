@@ -52,7 +52,7 @@ namespace value_aux{
         impl(C& cont, T&& t )const
         {
             size_type m = this->size();\
-            while(m--) this->inner_.impl( cont, std::move( t ) /* TODO ? */ );
+            while(m--) this->inner_.impl( cont, std::forward<T>( t ) );
         }
 
 #endif

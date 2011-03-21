@@ -7,12 +7,12 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#include <libs/assign/v2/test/value/csv_put.h>
 #include <libs/assign/v2/test/value/deque.h>
 #include <libs/assign/v2/test/value/modifier.h>
 #include <libs/assign/v2/test/value/fun.h>
 #include <libs/assign/v2/test/value/pipe.h>
 #include <libs/assign/v2/test/value/ptr.h>
+#include <libs/assign/v2/test/value/put.h>
 #include <libs/assign/v2/test/value.h>
 
 namespace test_assign_v2{
@@ -25,7 +25,7 @@ namespace xxx_value{
         xxx_modifier::test();
         xxx_pipe::test();
         xxx_ptr::test();
-        xxx_csv_put::test();
+        xxx_put::test();
     }
 
 }// xxx_value

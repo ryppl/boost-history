@@ -20,4 +20,4 @@ namespace xxx_deque{
 }// xxx_value
 }// test_assign_v2
 
-#endif
+#endif // LIBS_ASSIGN_V2_TEST_VALUE_DEQUE_ER_2010_H

@@ -11,7 +11,6 @@
 #define BOOST_ASSIGN_V2_REF_AUX_LIST_FWD_ER_2010_HPP
 
 namespace boost{
-    struct use_default; // TODO ?
 namespace assign{
 namespace v2{
 namespace ref{

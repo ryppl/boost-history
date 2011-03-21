@@ -28,7 +28,7 @@
 #include <libs/assign/v2/test/value/pipe/modifier/standard.cpp>
 #include <libs/assign/v2/test/value/pipe/csv_put.cpp>
 #include <libs/assign/v2/test/value/ptr.cpp>
-#include <libs/assign/v2/test/value/csv_put.cpp>
+#include <libs/assign/v2/test/value/put.cpp>
 
 
 #include <boost/test/unit_test.hpp>
