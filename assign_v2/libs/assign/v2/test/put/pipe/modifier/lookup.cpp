@@ -14,7 +14,6 @@
 #include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/fun.hpp>
 #include <boost/assign/v2/modifier/lookup.hpp>
-#include <boost/assign/v2/put/pipe/put.hpp>
 #include <boost/assign/v2/put/pipe/csv_put.hpp>
 #include <libs/assign/v2/test/put/pipe/modifier/lookup.h>
 
@@ -31,12 +30,12 @@ namespace xxx_lookup{
         {
             //[pipe_lookup
         	using namespace lambda;
-            std::map<std::string, int> cal;
+            typedef std::map<std::string, int> C; C cal;
             BOOST_AUTO( _local, ( as2::_fun = _1 ) );
             BOOST_ASSIGN_V2_CHECK(
                 (
                     cal 
-                        | as2::_put( "feb", 28 ) 
+                        | as2::_csv_put( C::value_type( "feb", 28 ) ) 
                         | ( as2::_csv_put % _local % ( as2::_lookup = (_1 = 30) ) )( "apr", "jun", "sep", "nov" )
                         | ( as2::_csv_put % _local % ( as2::_lookup = (_1 = 31) ) )( "jan", "mar", "may", "jul", "aug", "oct", "dec" )
  
