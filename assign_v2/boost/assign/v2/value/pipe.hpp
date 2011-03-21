@@ -10,6 +10,5 @@
 #ifndef BOOST_ASSIGN_V2_VALUE_PIPE_ER_2010_HPP
 #define BOOST_ASSIGN_V2_VALUE_PIPE_ER_2010_HPP
 #include <boost/assign/v2/value/pipe/csv_put.hpp>
-#include <boost/assign/v2/value/pipe/put.hpp>
 
 #endif // BOOST_ASSIGN_V2_VALUE_PIPE_ER_2010_HPP

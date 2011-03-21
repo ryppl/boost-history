@@ -26,9 +26,9 @@
 #include <libs/assign/v2/test/value/pipe/modifier/lookup.cpp>
 #include <libs/assign/v2/test/value/pipe/modifier/repeat.cpp>
 #include <libs/assign/v2/test/value/pipe/modifier/standard.cpp>
-#include <libs/assign/v2/test/value/pipe/put.cpp>
+#include <libs/assign/v2/test/value/pipe/csv_put.cpp>
 #include <libs/assign/v2/test/value/ptr.cpp>
-#include <libs/assign/v2/test/value/put.cpp>
+#include <libs/assign/v2/test/value/csv_put.cpp>
 
 
 #include <boost/test/unit_test.hpp>
@@ -53,7 +53,7 @@ test_suite* init_unit_test_suite( int argc, char* argv[] )
 		test->add( BOOST_TEST_CASE( &ns::xxx_pipe::xxx_modifier::xxx_lookup::test ) );
 		test->add( BOOST_TEST_CASE( &ns::xxx_pipe::xxx_modifier::xxx_repeat::test ) );
 		test->add( BOOST_TEST_CASE( &ns::xxx_pipe::xxx_modifier::xxx_standard::test ) );
-		test->add( BOOST_TEST_CASE( &ns::xxx_pipe::xxx_put::test ) );
+		test->add( BOOST_TEST_CASE( &ns::xxx_pipe::xxx_csv_put::test ) );
 		test->add( BOOST_TEST_CASE( &ns::xxx_ptr::test ) );
 		test->add( BOOST_TEST_CASE( &ns::xxx_put::test ) );
     }
