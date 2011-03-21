@@ -22,7 +22,7 @@
 #include <libs/assign/v2/test/value/pipe/csv_put.h>
 
 namespace test_assign_v2{
-namespace xxx_value{
+namespace xxx_put{
 namespace xxx_pipe{
 namespace xxx_csv_put{ 
 

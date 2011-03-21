@@ -11,7 +11,7 @@
 #define LIBS_ASSIGN_V2_TEST_PIPE_MODIFIER_ITERATE_ER_2010_H
 
 namespace test_assign_v2{
-namespace xxx_value{
+namespace xxx_put{
 namespace xxx_pipe{
 namespace xxx_modifier{
 namespace xxx_iterate{

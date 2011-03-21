@@ -9,9 +9,6 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef LIBS_ASSIGN_V2_TEST_UNIT_TEST_DETAIL_ER_2010_CPP
 #define LIBS_ASSIGN_V2_TEST_UNIT_TEST_DETAIL_ER_2010_CPP
-
-#include <iostream> // needed?
-
 #include <boost/test/test_tools.hpp>
 #define BOOST_ASSIGN_V2_CHECK( p ) BOOST_CHECK( p )
 #include <libs/assign/v2/test/detail/functor.cpp>
@@ -31,4 +28,4 @@ test_suite* init_unit_test_suite( int argc, char* argv[] )
     return test;
 }
 
-#endif
+#endif // LIBS_ASSIGN_V2_TEST_UNIT_TEST_DETAIL_ER_2010_CPP

@@ -22,7 +22,7 @@
 #include <libs/assign/v2/test/value/pipe/modifier/standard.h>
 
 namespace test_assign_v2{
-namespace xxx_value{
+namespace xxx_put{
 namespace xxx_pipe{
 namespace xxx_modifier{
 namespace xxx_standard{
@@ -76,5 +76,5 @@ namespace xxx_standard{
 }// xxx_standard
 }// xxx_modifier
 }// xxx_pipe
-}// xxx_value
+}// xxx_put
 }// test_assign_v2

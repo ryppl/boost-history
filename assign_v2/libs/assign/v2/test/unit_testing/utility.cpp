@@ -17,6 +17,7 @@
 #include <libs/assign/v2/test/utility/chain.cpp>
 #include <libs/assign/v2/test/utility/conversion.cpp>
 #include <libs/assign/v2/test/utility/csv.cpp>
+
 #include <boost/test/unit_test.hpp>
 using boost::unit_test::test_suite;
 test_suite* init_unit_test_suite( int argc, char* argv[] )

@@ -25,7 +25,7 @@
 #include <iostream>
 
 namespace test_assign_v2{
-namespace xxx_value{
+namespace xxx_put{
 namespace xxx_pipe{
 namespace xxx_fun{
 

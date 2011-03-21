@@ -31,7 +31,6 @@ test_suite* init_unit_test_suite( int argc, char* argv[] )
     	using namespace xxx_ref;
 		test->add( BOOST_TEST_CASE( &xxx_aux_::xxx_convert_traits::test ) );
 		test->add( BOOST_TEST_CASE( &xxx_aux_::xxx_list::test ) );
-		test->add( BOOST_TEST_CASE( &xxx_aux_::xxx_list_tuple::test ) );
 		test->add( BOOST_TEST_CASE( &xxx_array::test ) );
 		test->add( BOOST_TEST_CASE( &xxx_csv_array::test ) );
 		test->add( BOOST_TEST_CASE( &xxx_wrapper::test ) );
@@ -39,4 +38,4 @@ test_suite* init_unit_test_suite( int argc, char* argv[] )
     return test;
 }
 
-#endif
+#endif // LIBS_ASSIGN_V2_TEST_UNIT_TEST_REF_ER_2010_CPP
