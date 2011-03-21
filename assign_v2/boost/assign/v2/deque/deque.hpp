@@ -10,9 +10,9 @@
 #ifndef BOOST_ASSIGN_V2_DEQUE_DEQUE_ER_2010_HPP
 #define BOOST_ASSIGN_V2_DEQUE_DEQUE_ER_2010_HPP
 #include <deque>
-#include <boost/assign/v2/value/adapter/crtp.hpp>
-#include <boost/assign/v2/value/adapter/modifier.hpp>
-#include <boost/assign/v2/value/adapter/replace_parameter.hpp>
+#include <boost/assign/v2/framework/crtp.hpp>
+#include <boost/assign/v2/framework/modifier.hpp>
+#include <boost/assign/v2/framework/replace_parameter.hpp>
 #include <boost/assign/v2/deque/fwd.hpp>
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
 #include <boost/assign/v2/detail/keyword/nil.hpp>

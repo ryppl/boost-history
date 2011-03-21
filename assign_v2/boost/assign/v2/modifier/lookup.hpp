@@ -11,7 +11,7 @@
 #define BOOST_ASSIGN_V2_VALUE_MODIFIER_LOOKUP_ER_2010_HPP
 #include <boost/assign/v2/detail/keyword/ignore.hpp>
 #include <boost/assign/v2/detail/pp/ignore.hpp>
-#include <boost/assign/v2/value/adapter/modifier.hpp>
+#include <boost/assign/v2/framework/modifier.hpp>
 #include <boost/call_traits.hpp>
 #include <boost/shared_ptr.hpp>
 

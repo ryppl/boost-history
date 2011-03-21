@@ -17,7 +17,7 @@
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/is_reference.hpp>
 #endif
-#include <boost/assign/v2/value/adapter/modifier.hpp>
+#include <boost/assign/v2/framework/modifier.hpp>
 
 namespace boost{
 namespace assign{
