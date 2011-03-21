@@ -7,8 +7,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_MODIFIER_MODULO_ER_2010_HPP
-#define BOOST_ASSIGN_V2_MODIFIER_MODULO_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_OPTIONAL_MODULO_ER_2010_HPP
+#define BOOST_ASSIGN_V2_OPTIONAL_MODULO_ER_2010_HPP
 #include <boost/assign/v2/detail/keyword/ignore.hpp>
 #include <boost/assign/v2/detail/pp/ignore.hpp>
 #include <boost/assign/v2/framework/fwd.hpp>
@@ -123,10 +123,10 @@ namespace result_of{
 }// assign
 }// boost
 
-#ifdef BOOST_ASSIGN_V2_MODIFIER_MODULO_META_MODIFIER_TAG
+#ifdef BOOST_ASSIGN_V2_OPTIONAL_MODULO_META_MODIFIER_TAG
 #error
 #else
-#define BOOST_ASSIGN_V2_MODIFIER_MODULO_META_MODIFIER_TAG(NAME, Result)\
+#define BOOST_ASSIGN_V2_OPTIONAL_MODULO_META_MODIFIER_TAG(NAME, Result)\
 namespace boost{\
 namespace assign{\
 namespace v2{\
@@ -146,18 +146,18 @@ namespace aux{\
 /**/
 #endif
 
-#ifdef BOOST_ASSIGN_V2_MODIFIER_MODULO_PARAM
+#ifdef BOOST_ASSIGN_V2_OPTIONAL_MODULO_PARAM
 #error
 #else
-#define BOOST_ASSIGN_V2_MODIFIER_MODULO_PARAM(NAME)\
+#define BOOST_ASSIGN_V2_OPTIONAL_MODULO_PARAM(NAME)\
     aux::modulo_modifier<aux::BOOST_PP_CAT(keyword_,NAME)>\
 /**/
 #endif
 
-#ifdef BOOST_ASSIGN_V2_MODIFIER_MODULO_KEYWORD
+#ifdef BOOST_ASSIGN_V2_OPTIONAL_MODULO_KEYWORD
 #error
 #else
-#define BOOST_ASSIGN_V2_MODIFIER_MODULO_KEYWORD(NAME)\
+#define BOOST_ASSIGN_V2_OPTIONAL_MODULO_KEYWORD(NAME)\
 namespace boost{\
 namespace assign{\
 namespace v2{\
@@ -171,8 +171,8 @@ namespace aux{\
 \
 }\
 namespace {\
-    BOOST_ASSIGN_V2_MODIFIER_MODULO_PARAM(NAME) const BOOST_PP_CAT(_,NAME)\
-        = BOOST_ASSIGN_V2_MODIFIER_MODULO_PARAM(NAME)();\
+    BOOST_ASSIGN_V2_OPTIONAL_MODULO_PARAM(NAME) const BOOST_PP_CAT(_,NAME)\
+        = BOOST_ASSIGN_V2_OPTIONAL_MODULO_PARAM(NAME)();\
 }\
 }\
 }\
@@ -181,7 +181,7 @@ namespace {\
 #endif
 
 // The default
-BOOST_ASSIGN_V2_MODIFIER_MODULO_KEYWORD(standard_modifier)    
-BOOST_ASSIGN_V2_MODIFIER_MODULO_META_MODIFIER_TAG(standard_modifier, Arg)
+BOOST_ASSIGN_V2_OPTIONAL_MODULO_KEYWORD(standard_modifier)    
+BOOST_ASSIGN_V2_OPTIONAL_MODULO_META_MODIFIER_TAG(standard_modifier, Arg)
 
-#endif // BOOST_ASSIGN_V2_MODIFIER_MODULO_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_OPTIONAL_MODULO_ER_2010_HPP

@@ -7,8 +7,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_MODIFIER_REPEAT_ER_2010_HPP
-#define BOOST_ASSIGN_V2_MODIFIER_REPEAT_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_OPTIONAL_REPEAT_ER_2010_HPP
+#define BOOST_ASSIGN_V2_OPTIONAL_REPEAT_ER_2010_HPP
 #include <cstddef>
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
 #include <boost/assign/v2/detail/pp/ignore.hpp>
@@ -82,10 +82,10 @@ namespace aux{
 }// v2
 }// assign
 }// boost
-#include <boost/assign/v2/modifier/modulo.hpp>
-BOOST_ASSIGN_V2_MODIFIER_MODULO_KEYWORD(repeat)
+#include <boost/assign/v2/optional/modulo.hpp>
+BOOST_ASSIGN_V2_OPTIONAL_MODULO_KEYWORD(repeat)
 #define BOOST_ASSIGN_V2_TAG modifier_tag::repeat<typename D::modifier_tag>
-BOOST_ASSIGN_V2_MODIFIER_MODULO_META_MODIFIER_TAG(repeat, BOOST_ASSIGN_V2_TAG)
+BOOST_ASSIGN_V2_OPTIONAL_MODULO_META_MODIFIER_TAG(repeat, BOOST_ASSIGN_V2_TAG)
 #undef BOOST_ASSIGN_V2_TAG
 
-#endif // BOOST_ASSIGN_V2_MODIFIER_REPEAT_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_OPTIONAL_REPEAT_ER_2010_HPP

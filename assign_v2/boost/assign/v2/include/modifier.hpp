@@ -9,6 +9,6 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_INCLUDE_MODIFIER_ER_2010_HPP
 #define BOOST_ASSIGN_V2_INCLUDE_MODIFIER_ER_2010_HPP
-#include <boost/assign/v2/modifier.hpp>
+#include <boost/assign/v2/optional.hpp>
 
 #endif // BOOST_ASSIGN_V2_INCLUDE_PIPE_ER_2010_HPP

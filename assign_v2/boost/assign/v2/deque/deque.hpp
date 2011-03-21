@@ -18,7 +18,7 @@
 #include <boost/assign/v2/detail/keyword/nil.hpp>
 #include <boost/assign/v2/detail/pp/ignore.hpp>
 #include <boost/assign/v2/fun/deduce.hpp>
-#include <boost/assign/v2/modifier/deduce.hpp>
+#include <boost/assign/v2/optional/deduce.hpp>
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
 #include <boost/range/iterator.hpp>

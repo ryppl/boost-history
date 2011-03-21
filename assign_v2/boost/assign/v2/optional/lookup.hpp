@@ -7,8 +7,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_MODIFIER_LOOKUP_ER_2010_HPP
-#define BOOST_ASSIGN_V2_MODIFIER_LOOKUP_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_OPTIONAL_LOOKUP_ER_2010_HPP
+#define BOOST_ASSIGN_V2_OPTIONAL_LOOKUP_ER_2010_HPP
 #include <boost/assign/v2/detail/keyword/ignore.hpp>
 #include <boost/assign/v2/detail/pp/ignore.hpp>
 #include <boost/assign/v2/framework/modifier.hpp>
@@ -68,10 +68,10 @@ namespace aux{
 }// assign
 }// boost
 
-#include <boost/assign/v2/modifier/modulo.hpp>
-BOOST_ASSIGN_V2_MODIFIER_MODULO_KEYWORD(lookup)
+#include <boost/assign/v2/optional/modulo.hpp>
+BOOST_ASSIGN_V2_OPTIONAL_MODULO_KEYWORD(lookup)
 #define BOOST_ASSIGN_V2_TAG modifier_tag::lookup<Arg>
-BOOST_ASSIGN_V2_MODIFIER_MODULO_META_MODIFIER_TAG(lookup, BOOST_ASSIGN_V2_TAG)
+BOOST_ASSIGN_V2_OPTIONAL_MODULO_META_MODIFIER_TAG(lookup, BOOST_ASSIGN_V2_TAG)
 #undef BOOST_ASSIGN_V2_TAG
 
-#endif // BOOST_ASSIGN_V2_MODIFIER_LOOKUP_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_OPTIONAL_LOOKUP_ER_2010_HPP
