@@ -26,18 +26,19 @@ namespace list_tuple_aux{
 
     struct root{};
 
-    template<typename T>
-    struct link
-    {
+// (*) MSVC workaround : tail has to be variable, not a base class
+// http://social.msdn.microsoft.com/Forums/en/vclanguage/thread/68d0361c-1813-4689-aaa3-b78f47eaf8ad
+//    template<typename T>
+//    struct tail_holder
+//    {
+//
+//        tail_holder(T const& t) : tail( t ){}
+//
+//        T const& tail;
+//    };
 
-        link(T const& t) : unlink( t ){}
-
-        T const& unlink;
-    };
-
-    template<list_size_type N,
-        typename L, typename T, typename D>
-    class extraction
+    template<list_size_type N, typename H, typename T, typename D>
+    class fetch_tuple
     {
         typedef D const& result_of_derived_;
         result_of_derived_ derived()const
@@ -49,39 +50,31 @@ namespace list_tuple_aux{
 
         public:
 
-        template<list_size_type I>
+        template<list_size_type I> 
         struct is_head : ::boost::mpl::bool_< I + 1 == N >{};
-
         template<list_size_type I>
-        struct link_get_result : L::template get_result<I>{};
+        struct tail_result : H::template get_result<I>{};
+		struct head_result{ typedef T const& type; };
 
         template<list_size_type I>
         struct get_result : ::boost::mpl::eval_if<
-            is_head<I>,
-            ::boost::mpl::identity<
-                T const&
-            >,
-            link_get_result<I>
+        	is_head<I>,
+            head_result,
+            tail_result<I>
         >{};
 
         template<list_size_type I>
-        typename boost::lazy_enable_if<
-            is_head<I>,
-            get_result<I>
-        >::type
-        get(boost::mpl::int_<I> index)const
+        typename boost::lazy_enable_if<is_head<I>, get_result<I> >::type
+        get( ::boost::mpl::int_<I> index)const
         {
-            return this->derived().get_tuple();
+            return this->derived().head();
         }
 
         template<list_size_type I>
-        typename boost::lazy_disable_if<
-            is_head<I>,
-            get_result<I>
-        >::type
+        typename boost::lazy_disable_if<is_head<I>, get_result<I> >::type
         get( ::boost::mpl::int_<I> index )const
         {
-            return this->derived().get_link().unlink.get( index );
+            return this->derived().tail().get( index );
         }
 
     };

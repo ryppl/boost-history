@@ -11,6 +11,7 @@
 #define BOOST_ASSIGN_V2_UTILITY_CSV_ER_2010_HPP
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
 #include <boost/assign/v2/detail/pp/ignore.hpp>
+#include <boost/config.hpp>
 #include <boost/typeof/typeof.hpp>
 #include <boost/mpl/apply.hpp>
 #include <boost/mpl/fold.hpp>
@@ -36,7 +37,13 @@ namespace csv_aux{
     {
         static F f;
         static T t;
+#ifdef BOOST_MSVC
+		BOOST_TYPEOF_NESTED_TYPEDEF_TPL(nested, f( t ) )
+    	typedef typename nested::type type;
+#else        
         typedef BOOST_TYPEOF_TPL( f( t ) ) type;
+#endif
+
     };
 
     template<typename F>

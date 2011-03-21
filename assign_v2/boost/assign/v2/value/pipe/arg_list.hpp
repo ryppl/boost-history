@@ -104,16 +104,6 @@ namespace value_aux{
         struct result{
             typedef value_aux::arg_list<ParList, N, U> type;
         };
-
-        typename result<0>::type
-        operator()()const
-        {
-            typedef typename result<0>::type result_;
-            return result_(
-                *this,
-                ref::csv_array<na_>( _nil )
-            );
-        }
  
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 
@@ -150,6 +140,16 @@ namespace value_aux{
     }
 
 #else
+
+        typename result<0>::type
+        operator()()const
+        {
+            typedef typename result<0>::type result_;
+            return result_(
+                *this,
+                ref::csv_array<na_>( _nil )
+            );
+        }
 
 #define BOOST_ASSIGN_V2_MACRO1(N, U)\
     return result_( \

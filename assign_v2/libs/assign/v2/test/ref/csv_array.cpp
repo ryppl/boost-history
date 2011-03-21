@@ -20,6 +20,8 @@ namespace test_assign_v2{
 namespace xxx_ref{
 namespace xxx_csv_array{
 
+    // MSVC REMINDER : fully qualify boost::begin boost::end - error C2668
+
     void test()
     {
         using namespace boost;
@@ -45,7 +47,7 @@ namespace xxx_csv_array{
             }
             {
                 T& a = (*begin( ar ) );
-                T& b = *next( begin( ar ), 2 );
+                T& b = *next(boost::begin( ar ), 2 );
 
                 BOOST_ASSIGN_V2_CHECK( &a == &x );
                 BOOST_ASSIGN_V2_CHECK( &b == &z );
@@ -55,7 +57,7 @@ namespace xxx_csv_array{
             //[test_ref_csv_array_write
             typedef int T; T x, y, z;
             std::vector<T> r( 3 ); r[0] = 72; r[1] = 31; r[2] = 48;
-            boost::copy( r, begin( as2::ref::csv_array( x, y, z ) | as2::ref::_get ) );
+            boost::copy( r,boost::begin( as2::ref::csv_array( x, y, z ) | as2::ref::_get ) );
 
             BOOST_ASSIGN_V2_CHECK( x == r[0] );
             BOOST_ASSIGN_V2_CHECK( z == r[2] );

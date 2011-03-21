@@ -41,7 +41,11 @@ namespace value_aux{
     typedef ref::list_tuple_aux::na_type na_type;
 #endif
 
-    template<typename ParList = empty_par_list_, typename ArgsList = empty_args_list_, bool enable_pars = ::boost::mpl::size<ArgsList>::value == 0>
+    template<
+    	typename ParList = empty_par_list_, 
+    	typename ArgsList = empty_args_list_, 
+        bool enable_pars = ::boost::mpl::size<ArgsList>::value == 0
+    >
     class args_list;
 
     template<typename ParList, typename ArgsList, bool enable_pars>

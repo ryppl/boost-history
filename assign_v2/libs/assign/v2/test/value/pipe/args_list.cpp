@@ -47,10 +47,10 @@ namespace xxx_args_list{
         typedef chk::equal_ref r_;
         typedef chk::equal_val v_;
         {
-/* rvalue */
+// rvalue
 #define A -10
 #define B 10
-            /* lvalue */
+            // lvalue
             int a1 = -1, b1 = 0;
             typedef const int cint_;
             cint_ a = 4, b = 5;
@@ -87,6 +87,7 @@ namespace xxx_args_list{
 #undef A
 #undef B
         }
+/*
         {
             // str_literal
             BOOST_AUTO(args_list, as2::_put( "x" ) );
@@ -99,6 +100,7 @@ namespace xxx_args_list{
             #endif
             aux_::check_args_list<0, 0>( args_list, v_(), str_( "x" ) );
         }
+*/
     }
 
 

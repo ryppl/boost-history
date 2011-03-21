@@ -11,7 +11,6 @@
 #include <libs/assign/v2/test/value/pipe/fun.h>
 #include <libs/assign/v2/test/value/pipe/modifier.h>
 #include <libs/assign/v2/test/value/pipe/put.h>
-// #include <libs/assign/v2/test/value/pipe/put_range.h>
 #include <libs/assign/v2/test/value/pipe.h>
 
 namespace test_assign_v2{
@@ -20,11 +19,11 @@ namespace xxx_pipe{
 
     void test()
     {
-        xxx_args_list::test();
-        xxx_fun::test();
-        xxx_modifier::test();
+    	// TODO
+        //xxx_args_list::test();
+        //xxx_fun::test();
+        //xxx_modifier::test();
         xxx_put::test();
-        // xxx_put_range::test();
     }
 
 }// xxx_pipe

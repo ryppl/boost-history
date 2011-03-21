@@ -24,27 +24,6 @@ namespace v2{
 namespace ref{
 namespace list_tuple_aux{
 
-    template<list_size_type N,
-        typename L, typename...Args> class container;
-
-    template<list_size_type N, typename L, typename...Args>
-    struct meta_result
-    {
-
-        typedef container<N, L, Args...> this_;
-
-        template<typename... Args1>
-        struct apply
-        {
-            typedef container<
-                N + 1,
-                this_,
-                Args1...
-            > type;
-        };
-
-    };
-
     template<typename NewState>
     struct result
     {
@@ -52,28 +31,27 @@ namespace list_tuple_aux{
         struct apply : NewState::template result<Args...>{};
     };
 
-    template<list_size_type N, typename L, typename...Args>
-    class container :
-    ::boost::mpl::eval_if_c<
-        N == 0,
-        ::boost::mpl::identity< ::boost::mpl::empty_base >,
-        ::boost::mpl::identity< link<L> >
-    >::type,
-    public list_tuple_aux::extraction<
-        N, L,
-        tuple_aux::data<Args...>,
-        list_tuple_aux::container<N, L, Args...>
-    >
+    template<list_size_type N, typename Tail, typename...Args>
+    class container 
+    	: public fetch_tuple<
+        	N, L,
+        	tuple_aux::data<Args...>,
+        	list_tuple_aux::container<N, Tail, Args...>
+    	>
     {
-        typedef link<L> link_;
-        typedef meta_result<N, L, Args...> meta_result_;
+    	typename ::boost::mpl::eval_if_c<
+        	N == 0,
+        	::boost::mpl::identity< Tail >,
+        	::boost::mpl::identity< Tail const& >
+    	>::type tail_value_;
+        typedef tuple_aux::data<Args...> head_value_;
 
-        typedef tuple_aux::data<Args...> tuple_;
-        tuple_ tuple;
+        tail_value_ t;
+        head_value_ h;
 
         public:
-        tuple_ const& get_tuple()const{ return this->tuple; }
-        link_ const& get_link()const{ return *this; }
+        tail_value_ const& tail()const{ return this->t; }
+        head_value_ const& head()const{ return this->h; }
 
         typedef list_tuple_aux::list_size_type list_size_type;
         typedef list_tuple_aux::tuple_size_type tuple_size_type;
@@ -90,20 +68,18 @@ namespace list_tuple_aux{
         }
 
         explicit container(
-            const L& l,
+            const Tail& t_,
             Args&&... args
-        )
-        : link_( l ),
-        tuple(
-            std::forward<Args>( args )...
-        )
-
+        ) : t( t_ ), h( std::forward<Args>( args )... )
         {
             BOOST_STATIC_ASSERT( N > 0 );
         }
 
         template<typename... Args1>
-        struct result : meta_result_::template apply<Args1...>{};
+        struct result
+        {
+            typedef container<N + 1, container, Args1...> type;
+        };
 
         template<typename... Args1>
         typename result<Args1...>::type

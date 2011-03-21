@@ -24,16 +24,19 @@ namespace list_aux{
     template<typename T>
     struct tail_holder
     {
+// (*) MSVC workaround : tail has to be variable, not a base class
+// http://social.msdn.microsoft.com/Forums/en/vclanguage/thread/68d0361c-1813-4689-aaa3-b78f47eaf8ad
+
+        //tail_holder(T const& t) : tail_( t ){}
+        //result_of_tail_type tail()const{ return this->tail_; }
+
         typedef T tail_type;
         typedef ::boost::mpl::int_<T::static_size::value + 1> static_size;
 
-        tail_holder(T const& t) : tail_( t ){}
-
         typedef T const& result_of_tail_type;
-        result_of_tail_type tail()const{ return this->tail_; }
 
-        private:
-        T const& tail_;
+        //private:
+        //T const& tail_;
     };
 
     template<>
@@ -42,6 +45,8 @@ namespace list_aux{
         typedef nil tail_type;
         typedef ::boost::mpl::int_<0> static_size;
         tail_holder(){}
+        
+        typedef tail_type result_of_tail_type;
     };
 
     template<typename T>

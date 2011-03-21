@@ -26,6 +26,8 @@ namespace test_assign_v2{
 namespace xxx_utility{
 namespace xxx_chain{
 
+    // MSVC REMINDER : fully qualify boost::begin boost::end - error C2668
+
     void test()
     {
         using namespace boost;
@@ -54,7 +56,7 @@ namespace xxx_chain{
             words[0] = "foo"; words[1] = "bar"; words[2] = "baz";
             words[3] = "qux"; words[4] = "quux"; words[5] = "grault";
             array<word, 3> head; std::list<word> tail( 3 );
-            copy( words, begin( head | as2::_chain( tail ) ) );
+            copy( words,boost::begin( head | as2::_chain( tail ) ) );
 
             BOOST_ASSIGN_V2_CHECK( range::equal( head, as2::csv_deque<word>( "foo", "bar", "baz" ) ) );
             BOOST_ASSIGN_V2_CHECK( range::equal( tail, as2::csv_deque<word>( "qux", "quux", "grault" ) ) );
@@ -68,7 +70,7 @@ namespace xxx_chain{
             array<int, 5> consecutive5; int six, seven, eight;
             boost::copy(
                 consecutive8,
-                begin( consecutive5 && (/*<< rvalue! >>*/ as2::ref::csv_array( six, seven, eight ) | as2::ref::_get ) )
+               boost::begin( consecutive5 && (/*<< rvalue! >>*/ as2::ref::csv_array( six, seven, eight ) | as2::ref::_get ) )
             );
 
             BOOST_ASSIGN_V2_CHECK( range::equal( consecutive5, as2::csv_deque( 1, 2, 3, 4, 5 ) ) );

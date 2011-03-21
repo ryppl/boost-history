@@ -31,9 +31,10 @@ namespace xxx_iterate{
         {
         
             //[pipe_iterate
-        	using namespace lambda;
             typedef int T; boost::array<T, 4> powers; powers[0] = 1; powers[1] = 10;
+
             int i = 2; 
+        	using namespace lambda;
             BOOST_ASSIGN_V2_CHECK(
                 boost::range::equal(
                     powers | ( as2::_csv_put % ( as2::_iterate = var( i )++ ) )( 100, 1000 ),

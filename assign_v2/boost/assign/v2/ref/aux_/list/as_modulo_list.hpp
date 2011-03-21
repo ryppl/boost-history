@@ -11,6 +11,7 @@
 #define BOOST_ASSIGN_V2_LIST_REF_AS_MODULO_LIST_ER_2010_HPP
 #include <boost/assign/v2/ref/aux_/list/at.hpp>
 #include <boost/assign/v2/ref/aux_/list/fwd.hpp>
+#include <boost/config.hpp>
 #include <boost/mpl/at.hpp>
 #include <boost/mpl/size.hpp>
 #include <boost/typeof/typeof.hpp>
@@ -32,7 +33,13 @@ namespace list_aux{
         {
             static Lhs lhs;
             static P p;
-            typedef BOOST_TYPEOF_TPL( lhs % p ) type;
+
+#ifdef BOOST_MSVC
+			BOOST_TYPEOF_NESTED_TYPEDEF_TPL(nested, lhs % p )
+    		typedef typename nested::type type;
+#else        
+        	typedef BOOST_TYPEOF_TPL( lhs % p ) type;
+#endif
         };
         
         typedef typename result<at_>::type result_;

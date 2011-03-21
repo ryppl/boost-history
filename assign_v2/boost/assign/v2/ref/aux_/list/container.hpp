@@ -25,13 +25,13 @@ namespace list_aux{
 
     template<typename Tag, typename H, typename T>
     class container :
+        public tail_holder<T>, // (*) see holder/tail.hpp
         public head_holder<H>,
-        public tail_holder<T>,
         public ::boost::mpl::apply2<policy<Tag>, H, T>::type
     {
 
-        typedef head_holder<H> head_holder_;
         typedef tail_holder<T> tail_holder_;
+        typedef head_holder<H> head_holder_;
 
         public:
 
@@ -44,27 +44,37 @@ namespace list_aux{
         };
 
         explicit container(
-            H h,
-            typename boost::call_traits<T>::param_type t
-        )
-            : head_holder_( h ), tail_holder_( t )
+            typename boost::call_traits<T>::param_type t,
+            H h
+        ):
+            tail_( t ) // // tail_holder_( t ) // (*)
+            , head_holder_( h )
         {}
 
         template<typename H1>
         typename result<H1&>::type
         operator()(H1& h)const{
             typedef typename result<H1&>::type result_;
-            return result_( h, *this);
+            return result_( *this, h );
         }
 
         template<typename H1>
         typename result<H1 const&>::type
         operator()(H1 const& h)const{
             typedef typename result<H1 const&>::type result_;
-            return result_( h, *this);
+            return result_( *this, h );
         }
         
-
+        typedef typename tail_holder_::result_of_tail_type result_of_tail_type;
+        
+        // (*)
+        result_of_tail_type
+        tail()const{ return this->tail_; } 
+        
+        private:
+		typename boost::call_traits< // (*)
+        	typename tail_holder_::result_of_tail_type
+        >::value_type tail_;
     };
 
 }// list_aux

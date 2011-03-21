@@ -41,12 +41,7 @@ namespace xxx_list{
             typedef add_reference<t0_>::type r0_;
 
 
-/* // TODO possible extension
-#ifndef BOOST_NO_RVALUE_REFERENCES
-            typedef int r1_;
-#else*/
             typedef add_reference<t1_>::type r1_;
-//#endif
             typedef add_reference<t2_>::type r2_;
 
             t0_ a = 0;

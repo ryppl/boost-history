@@ -27,6 +27,8 @@
 
 namespace tutorial_assign_v2{
 
+    // MSVC REMINDER : fully qualify boost::begin boost::end - error C2668
+
     void run()
     {
         using namespace boost;
@@ -77,7 +79,7 @@ namespace tutorial_assign_v2{
             array<int, 5> consecutive5; int six, seven, eight;
             boost::copy(
                 consecutive8,
-                begin( consecutive5 | _chain( ref::csv_array( six, seven, eight ) | ref::_get ) )
+               boost::begin( consecutive5 | _chain( ref::csv_array( six, seven, eight ) | ref::_get ) )
             );
 
             assert( range::equal( consecutive5, csv_deque(1, 2, 3, 4, 5) ) );

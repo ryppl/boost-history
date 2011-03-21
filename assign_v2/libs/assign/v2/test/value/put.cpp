@@ -36,6 +36,8 @@ namespace test_assign_v2{
 namespace xxx_value{
 namespace xxx_put{
 
+    // MSVC REMINDER : fully qualify boost::begin boost::end - error C2668
+
     void test(){
 
         using namespace boost;
@@ -80,7 +82,7 @@ namespace xxx_put{
             variable_size_ b( 4 ); b[0] = 0.61; b[1] = 0.69; b[2] = 0.92; b[3] = 0.55;
             array<variable_size_, 4> ragged;
             as2::put( ragged )
-                /*<<Calls `ragged.push_back( variable_size_( begin( a ), end( a ) ) )`>>*/( begin( a ), end( a ) )
+                /*<<Calls `ragged.push_back( variable_size_( begin( a ), end( a ) ) )`>>*/( boost::begin( a ), boost::end( a ) )
                 /*<<Calls `ragged.push_back( variable_size_( b ) )`>>*/( b )
                 /*<<Calls `ragged.push_back( variable_size_( 1, -99.99 ) )`>>*/( 1, -99.99 )
                 /*<<Calls `ragged.push_back( variable_size_( ) )`>>*/( );

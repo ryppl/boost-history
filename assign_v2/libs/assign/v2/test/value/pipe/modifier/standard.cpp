@@ -36,8 +36,10 @@ namespace xxx_standard{
         // ------------------------------ WARNING ---------------------------- //
         // Don't misconstrue the commands in the tests below as *necessary* to //
         // obtain particular implementation. Most of the time the default is   //
-        // already set at that invoked with operator%                            //
+        // already set at that invoked with operator%                          //
         // ------------------------------------------------------------------- //
+        
+    	// MSVC REMINDER : fully qualify boost::begin boost::end - error C2668
 
         {
             //[test_value_pipe_modifier_push_front
@@ -66,8 +68,8 @@ namespace xxx_standard{
                 sqrt2 | ( as2::_put % as2::_insert )( 1.414 )( 1.41421 )( 1.41 )( 1.4142 ) 
             ).lower_bound( 1.41 );
         
-            BOOST_ASSIGN_V2_CHECK( lower == begin( sqrt2 ) );
-            BOOST_ASSIGN_V2_CHECK( sqrt2.upper_bound( 1.41421 ) == end( sqrt2 ) );
+            BOOST_ASSIGN_V2_CHECK( lower ==boost::begin( sqrt2 ) );
+            BOOST_ASSIGN_V2_CHECK( sqrt2.upper_bound( 1.41421 ) ==boost::end( sqrt2 ) );
             //]
         }
     }

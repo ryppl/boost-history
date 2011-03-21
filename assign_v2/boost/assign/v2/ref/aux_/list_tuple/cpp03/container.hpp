@@ -11,6 +11,7 @@
 #define BOOST_ASSIGN_V2_REF_AUX_LIST_TUPLE_CPP03_CONTAINER_ER_2010_HPP
 #include <boost/assign/v2/detail/config/limit_arity.hpp>
 #include <boost/assign/v2/detail/functor/crtp_unary_and_up.hpp>
+#include <boost/call_traits.hpp>
 #include <boost/config.hpp>
 #include <boost/mpl/aux_/na.hpp>
 #include <boost/mpl/empty_base.hpp>
@@ -33,17 +34,17 @@ namespace list_tuple_aux{
     typedef ::boost::tuples::null_type null_type;
     typedef ::boost::mpl::na na_type;
 
-#define params_default(T, U)\
+#define params_default(U, Na)\
     BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(\
         BOOST_ASSIGN_V2_LIMIT_ARITY,\
-        T,\
-        U\
+        U,\
+        Na\
     )\
 /**/
-#define params(T)\
+#define params(U)\
     BOOST_PP_ENUM_PARAMS(\
         BOOST_ASSIGN_V2_LIMIT_ARITY,\
-        T\
+        U\
     )\
 /**/
 
@@ -61,10 +62,10 @@ namespace list_tuple_aux{
     template<> struct vec_value<na_type>{ typedef na_type type; };
 
     template<params( typename T )>
-    struct tuple
+    struct head_value
     {
 #define BOOST_ASSIGN_V2_MACRO(z, n, T)\
-    typename list_tuple_aux::tuple_value<\
+    typename tuple_value<\
         BOOST_PP_CAT(T, n)\
     >::type\
 /**/
@@ -88,72 +89,59 @@ namespace list_tuple_aux{
     };
 
     template<list_size_type N,
-        typename L, params_default(typename T, na_type)>
+        typename Tail, params_default(typename T, na_type)>
     class container;
 
-    template<list_size_type N, typename L,
-        params_default(typename T, na_type)
-    >
-    struct meta_result
-    {
-
-        typedef list_tuple_aux::container<N, L, params(T)> this_;
-
-        template<params_default(typename U, na_type)>
-        struct apply
-        {
-            typedef container<
-                N + 1,
-                this_,
-                params(U)
-            > type;
-        };
-
-    };
-
-    template<list_size_type N, typename L,
-        params_default(typename T, na_type)>
+    template<list_size_type N, typename Tail, 
+    	params_default(typename T, na_type)>
     struct traits
     {
-        typedef list_tuple_aux::container<N, L, params(T)> C;
-        typedef typename list_tuple_aux::tuple<params(T)>::type tuple_;
-        typedef list_tuple_aux::extraction<N, L, tuple_, C> extraction_;
-        typedef list_tuple_aux::meta_result<N, L, params(T)> meta_result_;
-        typedef functor_aux::crtp_unary_and_up<
-            C,
-            boost::mpl::unpack_args<meta_result_>
-        > crtp_;
-        typedef typename ::boost::mpl::eval_if_c<
-            N == 0,
-            ::boost::mpl::identity< ::boost::mpl::empty_base >,
-            ::boost::mpl::identity< link<L> >
-        >::type link_;
+        typedef container<N, Tail, params(T)> cont_;
+        typedef typename head_value<params(T)>::type head_value_;
+        typedef fetch_tuple<N, Tail, head_value_, cont_> fetch_tuple_;
+        struct meta_result{
+        	template<params_default(typename U, na_type)>
+        	struct apply
+        	{
+            	typedef container<N + 1, cont_, params(U)> type;
+        	};
+        };
+        typedef ::boost::mpl::unpack_args<meta_result> unpacked_; 
+        typedef functor_aux::crtp_unary_and_up<cont_, unpacked_> crtp_;
+
     };
 
-    template<list_size_type N, typename L, params(typename T)>
+    template<list_size_type N, typename Tail, params(typename T)>
     class container :
-        public list_tuple_aux::traits<N, L, params(T)>::link_,
-        public list_tuple_aux::traits<N, L, params(T)>::crtp_,
-        public list_tuple_aux::traits<N, L, params(T)>::extraction_
+        public traits<N, Tail, params(T)>::crtp_,
+        public traits<N, Tail, params(T)>::fetch_tuple_
     {
-        typedef list_tuple_aux::traits<N, L, params(T)> traits_;
-        typedef typename traits_::link_ link_;
-        typedef typename traits_::meta_result_ meta_result_;
-        typedef typename traits_::tuple_ tuple_;
+    
+        typedef traits<N, Tail, params(T)> traits_;
+        typedef typename traits_::meta_result meta_result_;
+        typedef typename traits_::head_value_ head_value_;
         typedef typename traits_::crtp_ crtp_;
+        typedef typename ::boost::mpl::eval_if_c<
+            N == 0,
+            ::boost::mpl::identity< Tail >,
+            ::boost::mpl::identity< Tail const& >
+        >::type tail_value_;
 
-        tuple_ tuple;
+		tail_value_ t;
+        head_value_ h;
 
         public:
-        tuple_ const& get_tuple()const{ return this->tuple; }
-        link_ const& get_link()const{ return (*this); }
+        typename boost::call_traits<tail_value_>::const_reference 
+        	tail()const{ return this->t; }
+        typename boost::call_traits<head_value_>::const_reference 
+        	head()const{ return this->h; }
 
         typedef list_tuple_aux::list_size_type list_size_type;
         typedef list_tuple_aux::tuple_size_type tuple_size_type;
         BOOST_STATIC_CONSTANT( list_size_type, static_get_size = N );
         BOOST_STATIC_CONSTANT(
             tuple_size_type,
-            static_tuple_size = ::boost::tuples::length<tuple_>::value
+            static_tuple_size = ::boost::tuples::length<head_value_>::value
         );
 
         container()
@@ -161,15 +149,14 @@ namespace list_tuple_aux{
             BOOST_STATIC_ASSERT( N == 0 );
         }
 
-    explicit container(const L& l)
-    : link_( l )
-    {
-        BOOST_STATIC_ASSERT( N > 0 );
-
-    }
+    	explicit container(const Tail& t_)
+    	: t( t )
+    	{
+        	BOOST_STATIC_ASSERT( N > 0 );
+    	}
 
 #define BOOST_ASSIGN_V2_MACRO1(T,R)\
-    typename list_tuple_aux::tuple_param<T>::type R\
+    typename tuple_param<T>::type R\
 /**/
 #define BOOST_ASSIGN_V2_MACRO(z, n, T)\
     BOOST_ASSIGN_V2_MACRO1(\
@@ -179,16 +166,16 @@ namespace list_tuple_aux{
         = boost::tuples::detail::cnull()\
 /**/
     explicit container(
-        const L& l,
-        BOOST_ASSIGN_V2_MACRO1(T0,_0) // (*)
+        const Tail& t_,
+        BOOST_ASSIGN_V2_MACRO1(T0, _0) // (*)
         BOOST_PP_ENUM_TRAILING(
             BOOST_PP_DEC(BOOST_ASSIGN_V2_LIMIT_ARITY),
             BOOST_ASSIGN_V2_MACRO,
             T
         )
     )
-    : link_( l )
-    , tuple(
+    : t( t_ )
+    , h(
         BOOST_PP_ENUM_PARAMS(BOOST_ASSIGN_V2_LIMIT_ARITY, _)
     )
     {

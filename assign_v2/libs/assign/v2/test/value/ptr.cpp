@@ -31,7 +31,7 @@ namespace xxx_ptr{
             //[test_value_ptr_array
             typedef int T;
             T x = 1, y = 2, z = 3; boost::ptr_array<T, 3> cont;
-            as2::put( cont )( x )( y )( z );
+            as2::put( cont )/*<<Calls `assoc[i++] = new T( t )` for `i = 0` and `t`[^ = ] `x`, `y`, and `z`>>*/( x )( y )( z );
             
             BOOST_ASSIGN_V2_CHECK( cont.front() == x );
             BOOST_ASSIGN_V2_CHECK( cont.back() == z );
@@ -40,7 +40,7 @@ namespace xxx_ptr{
         {
             //[test_value_ptr_deque
             typedef int T; T x = 1, y = 2, z = 0; boost::ptr_deque<T> cont;
-            as2::put( cont )( x )( y )( z );
+            as2::put( cont )/*<<Calls `assoc.push_back( new T( t ) )` for `t` [^=] `x`, `y`, and `z`>>*/( x )( y )( z );
 
             BOOST_ASSIGN_V2_CHECK( cont.front() == x );
             BOOST_ASSIGN_V2_CHECK( cont.back() == z );
@@ -49,7 +49,7 @@ namespace xxx_ptr{
         {
             //[test_value_ptr_list
             typedef int T; T x = 1, y = 2, z = 0; boost::ptr_list<T> cont;
-            as2::put( cont )( x )( y )( z );
+            as2::put( cont )/*<<Calls `assoc.push_back( new T( t ) )` for `t` [^=] `x`, `y`, and `z`>>*/( x )( y )( z );
 
             BOOST_ASSIGN_V2_CHECK( cont.front() == x );
             BOOST_ASSIGN_V2_CHECK( cont.back() == z );
@@ -58,7 +58,7 @@ namespace xxx_ptr{
         {
             //[test_value_ptr_vector
             typedef int T; T x = 1, y = 2, z = 0; boost::ptr_vector<T> cont;
-            as2::put( cont )( x )( y )( z );
+            as2::put( cont )/*<<Calls `assoc.push_back( new T( t ) )` for `t` [^=] `x`, `y`, and `z`>>*/( x )( y )( z );
 
             BOOST_ASSIGN_V2_CHECK( cont.front() == x );
             BOOST_ASSIGN_V2_CHECK( cont.back() == z );
@@ -77,7 +77,7 @@ namespace xxx_ptr{
             //[put_ptr_set
             typedef std::string T; boost::ptr_set<T> assoc;
             T x = "isomer", y = "ephemeral", z = "prosaic";
-            as2::put( assoc )( x )( z )( y );
+            as2::put( assoc )/*<<Calls `assoc.insert( new T( t ) )` for `t` [^=] `x`, `y`, and `z`>>*/( x )( z )( y );
             BOOST_ASSIGN_V2_CHECK( assoc.count( x ) == 1 );
             BOOST_ASSIGN_V2_CHECK( assoc.count( z ) == 1 );
             //]

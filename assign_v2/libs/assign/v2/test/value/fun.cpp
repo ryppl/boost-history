@@ -37,13 +37,14 @@ namespace xxx_fun{
         using namespace boost;
         namespace as2 = assign::v2;
         {
+        	// (*fp) resolves error C2440 using MSVC
             //[test_value_fun_math
             std::vector<double> exponent;
+            typedef double(*fp)(double);
             typedef function<double(double)> f_;
             (
-                as2::put( exponent ) % ( as2::_fun = f_( log10 ) )
+                as2::put( exponent ) % ( as2::_fun = f_( fp(log10) ) )
             )/*<<Equivalent to `as2::put( exponent )( log10( 1000.0 ) )( log10( 10.0 ) )( log10( 10000.0 ) )( log10( 1.0 ) )( log10( 100.0 ) )`>>*/( 1000.0 )( 10.0 )( 10000.0 )( 1.0 )( 100.0 );
-
 
             double eps = numeric::bounds<double>::smallest();
             BOOST_ASSIGN_V2_CHECK( fabs( exponent.front() - 3.0 ) < eps );

@@ -15,8 +15,7 @@
 #include <boost/type_traits/add_reference.hpp>
 #include <boost/type_traits/is_reference.hpp>
 
-// This tuple variant keeps a copy of rvalue reference. Expression templates
-// involving references to tuples otheriwse cause runtime errors in Release mode under OS X.
+// Keeps copy of rvalue (otherwise reference to temporary problem)
 
 namespace boost{
 namespace assign{
