@@ -10,8 +10,9 @@
 #ifndef BOOST_ASSIGN_V2_OPTIONAL_STANDARD_MODIFIER_ER_2010_HPP
 #define BOOST_ASSIGN_V2_OPTIONAL_STANDARD_MODIFIER_ER_2010_HPP
 #include <boost/assign/v2/detail/keyword/ignore.hpp>
-#include <boost/assign/v2/framework/modifier.hpp>
-#include <boost/assign/v2/optional/modulo.hpp>
+//#include <boost/assign/v2/framework/modifier.hpp>
+#include <boost/assign/v2/framework/fwd.hpp>
+#include <boost/assign/v2/optional/modifier.hpp>
 #include <boost/preprocessor/cat.hpp>
 
 #define BOOST_ASSIGN_V2_OPTIONAL_MODIFIER_STANDARD_IMPL_PTR(FUN)\

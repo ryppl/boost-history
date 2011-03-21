@@ -14,7 +14,6 @@
 #include <boost/assign/v2/framework/replace_parameter.hpp>
 #include <boost/assign/v2/detail/pp/ignore.hpp>
 #include <boost/assign/v2/fun/deduce.hpp>
-#include <boost/assign/v2/optional/deduce.hpp>
 #include <boost/assign/v2/ref/wrapper/copy.hpp>
 
 namespace boost{
