@@ -15,7 +15,7 @@
 #include <boost/assign/v2/value/put.hpp>
 #include <boost/assign/v2/deque.hpp>
 #include <boost/range/algorithm/equal.hpp>
-#include <libs/assign/v2/test/value/modifier/repeat.h>
+#include <libs/assign/v2/test/modifier/repeat.h>
 
 namespace test_assign_v2{
 namespace xxx_value{

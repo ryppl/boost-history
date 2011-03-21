@@ -7,8 +7,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_VALUE_PIPE_ARG_LIST_HPP_ER_2010
-#define BOOST_ASSIGN_V2_VALUE_PIPE_ARG_LIST_HPP_ER_2010
+#ifndef BOOST_ASSIGN_V2_PUT_PIPE_ARG_LIST_HPP_ER_2010
+#define BOOST_ASSIGN_V2_PUT_PIPE_ARG_LIST_HPP_ER_2010
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
 #include <boost/assign/v2/ref/array/csv_array.hpp>
 #include <boost/assign/v2/ref/wrapper/copy.hpp>
@@ -195,5 +195,5 @@ BOOST_PP_REPEAT_FROM_TO(
 }// assign
 }// boost
 
-#endif // BOOST_ASSIGN_V2_VALUE_PIPE_ARG_LIST_HPP_ER_2010
+#endif // BOOST_ASSIGN_V2_PUT_PIPE_ARG_LIST_HPP_ER_2010
 

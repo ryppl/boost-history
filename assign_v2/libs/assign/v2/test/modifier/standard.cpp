@@ -26,7 +26,7 @@
 #include <boost/mpl/assert.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/typeof/typeof.hpp>
-#include <libs/assign/v2/test/value/modifier/standard.h>
+#include <libs/assign/v2/test/modifier/standard.h>
 
 namespace test_assign_v2{
 namespace xxx_value{

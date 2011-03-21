@@ -15,7 +15,7 @@
 #include <boost/assign/v2/utility/conversion.hpp>
 #include <boost/assign/v2/utility/conversion/check.hpp>
 #include <boost/assign/v2/ref/array.hpp>
-#include <boost/assign/v2/value/deque.hpp>
+#include <boost/assign/v2/deque.hpp>
 #include <boost/range/algorithm/equal.hpp>
 #include <libs/assign/v2/test/utility/conversion.h>
 

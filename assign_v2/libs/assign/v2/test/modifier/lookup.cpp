@@ -22,7 +22,7 @@
 #include <boost/type_traits/is_same.hpp>
 #include <boost/typeof/typeof.hpp>
 #include <boost/tuple/tuple.hpp>
-#include <libs/assign/v2/test/value/modifier/lookup.h>
+#include <libs/assign/v2/test/modifier/lookup.h>
 
 namespace test_assign_v2{
 namespace xxx_value{

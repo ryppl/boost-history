@@ -21,7 +21,7 @@
 #include <boost/range/algorithm/equal.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/typeof/typeof.hpp>
-#include <libs/assign/v2/test/value/modifier/iterate.h>
+#include <libs/assign/v2/test/modifier/iterate.h>
 
 #include <iostream>
 

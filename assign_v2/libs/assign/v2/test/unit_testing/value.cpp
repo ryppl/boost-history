@@ -15,11 +15,11 @@
 
 #include <libs/assign/v2/test/deque.cpp>
 #include <libs/assign/v2/test/fun.cpp>
-#include <libs/assign/v2/test/value/modifier/deduce.cpp>
-#include <libs/assign/v2/test/value/modifier/iterate.cpp>
-#include <libs/assign/v2/test/value/modifier/lookup.cpp>
-#include <libs/assign/v2/test/value/modifier/repeat.cpp>
-#include <libs/assign/v2/test/value/modifier/standard.cpp>
+#include <libs/assign/v2/test/modifier/deduce.cpp>
+#include <libs/assign/v2/test/modifier/iterate.cpp>
+#include <libs/assign/v2/test/modifier/lookup.cpp>
+#include <libs/assign/v2/test/modifier/repeat.cpp>
+#include <libs/assign/v2/test/modifier/standard.cpp>
 #include <libs/assign/v2/test/value/pipe/args_list.cpp>
 #include <libs/assign/v2/test/value/pipe/fun.cpp>
 #include <libs/assign/v2/test/value/pipe/modifier/iterate.cpp>

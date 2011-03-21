@@ -7,12 +7,12 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#include <libs/assign/v2/test/value/modifier/deduce.h>
-#include <libs/assign/v2/test/value/modifier/iterate.h>
-#include <libs/assign/v2/test/value/modifier/lookup.h>
-#include <libs/assign/v2/test/value/modifier/repeat.h>
-#include <libs/assign/v2/test/value/modifier/standard.h>
-#include <libs/assign/v2/test/value/modifier.h>
+#include <libs/assign/v2/test/modifier/deduce.h>
+#include <libs/assign/v2/test/modifier/iterate.h>
+#include <libs/assign/v2/test/modifier/lookup.h>
+#include <libs/assign/v2/test/modifier/repeat.h>
+#include <libs/assign/v2/test/modifier/standard.h>
+#include <libs/assign/v2/test/modifier.h>
 
 namespace test_assign_v2{
 namespace xxx_value{

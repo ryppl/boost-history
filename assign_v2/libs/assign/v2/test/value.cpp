@@ -8,7 +8,7 @@
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
 #include <libs/assign/v2/test/deque.h>
-#include <libs/assign/v2/test/value/modifier.h>
+#include <libs/assign/v2/test/modifier.h>
 #include <libs/assign/v2/test/fun.h>
 #include <libs/assign/v2/test/value/pipe.h>
 #include <libs/assign/v2/test/value/ptr.h>
