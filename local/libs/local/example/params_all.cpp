@@ -4,6 +4,7 @@
 // License, Version 1.0 (see accompanying file LICENSE_1_0.txt or a
 // copy at http://www.boost.org/LICENSE_1_0.txt).
 
+//[params_all_cpp
 #include <boost/local/function.hpp>
 
 struct s {
@@ -159,4 +160,5 @@ int main() {
     s().f();
     return 0;
 }
+//]
 

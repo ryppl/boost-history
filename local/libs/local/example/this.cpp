@@ -4,6 +4,7 @@
 // License, Version 1.0 (see accompanying file LICENSE_1_0.txt or a
 // copy at http://www.boost.org/LICENSE_1_0.txt).
 
+//[this_cpp
 #include <boost/local/function.hpp>
 #include <vector>
 #include <algorithm>
@@ -46,4 +47,5 @@ int main() {
     
     return 0;
 }
+//]
 
