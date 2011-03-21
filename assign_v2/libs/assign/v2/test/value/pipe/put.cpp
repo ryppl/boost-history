@@ -41,25 +41,6 @@ namespace xxx_put{
             );
             //]
         }
-// TODO
-/*
-        {
-            //[test_value_pipe_put_intervals
-            boost::array<int, 2> interval; boost::array<int, 6> all6;
-            
-            BOOST_ASSIGN_V2_CHECK(
-                boost::range::equal(
-                    all6 | as2::_put( 1 )( 2 )( as2::as_arg_list( interval | as2::_csv_put( 3, 4 ) ) )( 5 )( 6 ),
-                    as2::csv_deque( 1, 2, 3, 4, 5, 6 )
-                )
-            );
-            
-            BOOST_ASSIGN_V2_CHECK(
-                boost::range::equal( interval, as2::csv_deque( 3, 4 ) )
-            );
-            //]
-        }
-*/
     }// test()
 
 }// xxx_put

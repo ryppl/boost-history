@@ -10,7 +10,7 @@
 #include <vector>
 #include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/value/modifier/repeat.hpp>
-#include <boost/assign/v2/value/pipe/put.hpp>
+#include <boost/assign/v2/value/pipe/csv_put.hpp>
 #include <boost/assign/v2/value/deque.hpp>
 #include <boost/range/algorithm/equal.hpp>
 #include <libs/assign/v2/test/value/pipe/modifier/repeat.h>
@@ -31,7 +31,7 @@ namespace xxx_repeat{
             std::vector<int> cont;
             BOOST_ASSIGN_V2_CHECK(
                 range::equal(
-                    cont | ( as2::_put % ( as2::_repeat = 2  ) )( 72 )( 31 )( 48 ),
+                    cont | ( as2::_csv_put % ( as2::_repeat = 2  ) )( 72, 31, 48 ),
                     as2::csv_deque<int>( 72, 72, 31, 31, 48, 48 )
                 )
             );
