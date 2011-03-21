@@ -82,7 +82,7 @@ namespace aux{
 }// v2
 }// assign
 }// boost
-#include <boost/assign/v2/optional/modulo.hpp>
+#include <boost/assign/v2/optional/modifier.hpp>
 BOOST_ASSIGN_V2_OPTIONAL_MODIFIER_KEYWORD(repeat)
 #define BOOST_ASSIGN_V2_TAG modifier_tag::repeat<typename D::modifier_tag>
 BOOST_ASSIGN_V2_OPTIONAL_MODIFIER_META_MODIFIER_TAG(repeat, BOOST_ASSIGN_V2_TAG)

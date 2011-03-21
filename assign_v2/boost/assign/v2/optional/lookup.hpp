@@ -68,7 +68,7 @@ namespace aux{
 }// assign
 }// boost
 
-#include <boost/assign/v2/optional/modulo.hpp>
+#include <boost/assign/v2/optional/modifier.hpp>
 BOOST_ASSIGN_V2_OPTIONAL_MODIFIER_KEYWORD(lookup)
 #define BOOST_ASSIGN_V2_TAG modifier_tag::lookup<Arg>
 BOOST_ASSIGN_V2_OPTIONAL_MODIFIER_META_MODIFIER_TAG(lookup, BOOST_ASSIGN_V2_TAG)

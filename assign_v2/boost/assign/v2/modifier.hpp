@@ -11,7 +11,7 @@
 #define BOOST_ASSIGN_V2_OPTIONAL_ER_2010_HPP
 #include <boost/assign/v2/optional/iterate.hpp>
 #include <boost/assign/v2/optional/lookup.hpp>
-#include <boost/assign/v2/optional/modulo.hpp>
+#include <boost/assign/v2/optional/modifier.hpp>
 #include <boost/assign/v2/optional/repeat.hpp>
 #include <boost/assign/v2/optional/standard.hpp>
 
