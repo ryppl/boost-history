@@ -11,7 +11,7 @@
 #define BOOST_ASSIGN_V2_DEQUE_DEQUE_ER_2010_HPP
 #include <deque>
 #include <boost/assign/v2/interpreter/crtp.hpp>
-#include <boost/assign/v2/interpreter/fun.hpp>
+#include <boost/assign/v2/interpreter/data.hpp>
 #include <boost/assign/v2/interpreter/modifier.hpp>
 #include <boost/assign/v2/interpreter/replace_parameter.hpp>
 #include <boost/assign/v2/deque/fwd.hpp>
@@ -153,7 +153,7 @@ namespace result_of{
     {
         typedef typename boost::remove_cv<T>::type t_;
         typedef typename deque_impl<t_>::type impl_;
-        typedef typename deduce_fun<impl_>::type f_;
+        typedef typename deduce_data_generator<impl_>::type f_;
         typedef typename deduce_modifier_tag<impl_>::type modifier_tag_;
         typedef deque_adapter<t_,f_,modifier_tag_> type;
     };

@@ -10,7 +10,7 @@
 #ifndef BOOST_ASSIGN_V2_PUT_PUT_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_PUT_ER_2010_HPP
 #include <boost/assign/v2/interpreter/crtp.hpp>
-#include <boost/assign/v2/interpreter/fun.hpp>
+#include <boost/assign/v2/interpreter/data.hpp>
 #include <boost/assign/v2/interpreter/modifier.hpp>
 #include <boost/assign/v2/interpreter/replace_parameter.hpp>
 #include <boost/assign/v2/detail/pp/ignore.hpp>
@@ -78,7 +78,7 @@ namespace result_of{
 
     template<typename C>
     struct /*<<Meta-function>>*/put{/*<-*/
-        typedef typename aux::deduce_fun<C>::type f_;
+        typedef typename aux::deduce_data_generator<C>::type f_;
         typedef typename aux::deduce_modifier_tag<C>::type modifier_tag_;
         typedef aux::container_adapter<C, f_, modifier_tag_> type;
     }/*->*/;

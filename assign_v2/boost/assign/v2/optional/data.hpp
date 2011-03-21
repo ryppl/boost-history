@@ -7,8 +7,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_OPTIONAL_FUN_ER_2010_HPP
-#define BOOST_ASSIGN_V2_OPTIONAL_FUN_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_OPTIONAL_DATA_ER_2010_HPP
+#define BOOST_ASSIGN_V2_OPTIONAL_DATA_ER_2010_HPP
 #include <boost/assign/v2/detail/pp/ignore.hpp>
 #include <boost/assign/v2/detail/keyword/ignore.hpp>
 #include <boost/assign/v2/interpreter/fwd.hpp>
@@ -22,7 +22,7 @@ namespace aux{
 namespace result_of{
 
     template<typename D>
-    struct optional_fun{
+    struct data_generator{
 
         typedef aux::replace_fun<D> meta_;
 
@@ -34,10 +34,10 @@ namespace result_of{
 }// result_of
 
     template<typename F = keyword_aux::ignore>
-    struct optional_fun
+    struct data_generator
     {
-        optional_fun(){}
-        optional_fun(F f) : f_( f ){}
+        data_generator(){}
+        data_generator(F f) : f_( f ){}
 
         F const& fun()const{ return this->f_; }
 
@@ -46,36 +46,36 @@ namespace result_of{
     };
 
     template<typename C, typename F, typename Tag, typename D, typename F1>
-    typename ::boost::mpl::apply1<result_of::optional_fun<D>, F1>::type
+    typename ::boost::mpl::apply1<result_of::data_generator<D>, F1>::type
     operator%(
         interpreter_crtp<C, F, Tag, D> const& lhs,
-        optional_fun<F1> const& rhs
+        data_generator<F1> const& rhs
     )
     {
-        typedef result_of::optional_fun<D> meta_;
+        typedef result_of::data_generator<D> meta_;
         typedef typename ::boost::mpl::apply1<meta_, F1>::type result_;
         return result_( lhs.container(), rhs.fun(), lhs.modifier );
     }
 
-    struct keyword_fun{
+    struct keyword_data_generator{
 
         template<typename F>
-        optional_fun<F> operator=(F const& f)const{
-            return optional_fun<F>( f );
+        data_generator<F> operator=(F const& f)const{
+            return data_generator<F>( f );
         }
 
     };
 
 }// aux
 namespace{
-    const aux::keyword_fun _fun = aux::keyword_fun();
+    const aux::keyword_data_generator _data = aux::keyword_data_generator();
 }
 //[syntax_put_fun_modulo
 namespace result_of{
 
     template<typename D>
-    struct optional_fun/*<-*/
-        : aux::result_of::optional_fun<D>
+    struct data_generator/*<-*/
+        : aux::result_of::data_generator<D>
     {}/*->*/;
 
 }// result_of
@@ -88,16 +88,16 @@ namespace result_of{
 
 #include <boost/preprocessor/cat.hpp>
 
-#define BOOST_ASSIGN_V2_OPTIONAL_FUN_GENERATE(NAME, FUN)\
+#define BOOST_ASSIGN_V2_OPTIONAL_DATA_GENERATE(NAME, FUN)\
 namespace boost{\
 namespace assign{\
 namespace v2{\
 namespace aux{\
 \
     template<typename T>\
-    optional_fun< FUN > NAME()\
+    data_generator< FUN > NAME()\
     {\
-        return ( v2::_fun = FUN() );\
+        return ( v2::_data = FUN() );\
     }\
 \
 }\
@@ -108,27 +108,27 @@ using aux::NAME;\
 /**/
 
 #include <boost/assign/v2/detail/functor/constructor.hpp>
-BOOST_ASSIGN_V2_OPTIONAL_FUN_GENERATE(constructor, v2::functor_aux::constructor<T>)
+BOOST_ASSIGN_V2_OPTIONAL_DATA_GENERATE(constructor, v2::functor_aux::constructor<T>)
 
 #include <boost/assign/v2/detail/functor/new.hpp>
-BOOST_ASSIGN_V2_OPTIONAL_FUN_GENERATE(new_ptr, v2::functor_aux::new_<T>)
+BOOST_ASSIGN_V2_OPTIONAL_DATA_GENERATE(new_ptr, v2::functor_aux::new_<T>)
 
 #include <boost/typeof/typeof.hpp>
 #include <boost/type_traits/add_const.hpp>
-#define BOOST_ASSIGN_V2_OPTIONAL_FUN_KEYWORD(NAME, EXPR)\
+#define BOOST_ASSIGN_V2_OPTIONAL_DATA_KEYWORD(NAME, EXPR)\
 namespace boost{\
 namespace assign{\
 namespace v2{\
-    typedef BOOST_TYPEOF( ( _fun = EXPR ) ) BOOST_PP_CAT(type_of,NAME);\
+    typedef BOOST_TYPEOF( ( _data = EXPR ) ) BOOST_PP_CAT(type_of,NAME);\
 namespace{\
 \
-    boost::add_const<BOOST_PP_CAT(type_of,NAME)>::type BOOST_PP_CAT(_,NAME) = ( _fun = EXPR );\
+    boost::add_const<BOOST_PP_CAT(type_of,NAME)>::type BOOST_PP_CAT(_,NAME) = ( _data = EXPR );\
 }\
 }\
 }\
 }\
 
 #include <boost/lambda/lambda.hpp>
-BOOST_ASSIGN_V2_OPTIONAL_FUN_KEYWORD(identity, ::boost::lambda::_1)
+BOOST_ASSIGN_V2_OPTIONAL_DATA_KEYWORD(identity, ::boost::lambda::_1)
 
-#endif // BOOST_ASSIGN_V2_OPTIONAL_FUN_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_OPTIONAL_DATA_ER_2010_HPP
