@@ -7,8 +7,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_INCLUDE_OPERATOR_MODULUS_ER_2010_HPP
-#define BOOST_ASSIGN_V2_INCLUDE_OPERATOR_MODULUS_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_INCLUDE_MODULO_ER_2010_HPP
+#define BOOST_ASSIGN_V2_INCLUDE_MODULO_ER_2010_HPP
 #include <boost/assign/v2/include/operator/modulus/data.hpp>
 #include <boost/assign/v2/include/operator/modulus/key.hpp>
 #include <boost/assign/v2/include/operator/modulus/insert.hpp>
@@ -19,4 +19,4 @@
 #include <boost/assign/v2/include/operator/modulus/push_front.hpp>
 #include <boost/assign/v2/include/operator/modulus/repeat.hpp>
 
-#endif // BOOST_ASSIGN_V2_INCLUDE_OPERATOR_MODULUS_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_INCLUDE_MODULO_ER_2010_HPP

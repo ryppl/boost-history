@@ -9,6 +9,8 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_INCLUDE_BITWISE_OR_ER_2010_HPP
 #define BOOST_ASSIGN_V2_INCLUDE_BITWISE_OR_ER_2010_HPP
+#include <boost/assign/v2/include/bitwise_or/chain.hpp>
+#include <boost/assign/v2/include/bitwise_or/convert.hpp>
 #include <boost/assign/v2/include/bitwise_or/csv_put.hpp>
 
-#endif // BOOST_ASSIGN_V2_INCLUDE_OPERATOR_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_INCLUDE_BITWISE_OR_ER_2010_HPP
