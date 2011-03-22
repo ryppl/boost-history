@@ -12,7 +12,7 @@
 
 #include <boost/assign/v2/put/put.hpp>
 // Options come next
-#include <boost/assign/v2/optional/iterate.hpp> 
+#include <boost/assign/v2/option/iterate.hpp> 
 #include <boost/assign/v2/deque.hpp>
 #include <boost/lambda/lambda.hpp>
 #include <boost/lambda/bind.hpp>
@@ -22,12 +22,12 @@
 #include <boost/range/algorithm/equal.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/typeof/typeof.hpp>
-#include <libs/assign/v2/test/optional/iterate.h>
+#include <libs/assign/v2/test/option/iterate.h>
 
 #include <iostream>
 
 namespace test_assign_v2{
-namespace xxx_optional{
+namespace xxx_option{
 namespace xxx_iterate{
 
     void test()
@@ -35,13 +35,13 @@ namespace xxx_iterate{
         using namespace boost;
         namespace as2 = assign::v2;
         {
-            //[test_optional_iterate_meta
+            //[test_option_iterate_meta
             typedef as2::aux::keyword_iterate keyword_;
             typedef as2::modifier_tag::iterate_arg arg_;
-            typedef as2::aux::optional_modifier<keyword_, arg_> modulo_;
+            typedef as2::aux::option_modifier<keyword_, arg_> modulo_;
             typedef array<int, 4> cont_;
             typedef as2::result_of::put<cont_>::type put_;
-            typedef as2::result_of::optional_modifier<put_> meta1_;
+            typedef as2::result_of::option_modifier<put_> meta1_;
             typedef ::boost::mpl::apply2<meta1_, keyword_, arg_>::type result1_;
             typedef as2::modifier_tag::iterate<arg_> tag1_;
             typedef as2::aux::replace_modifier_tag<put_> meta2_;
@@ -50,7 +50,7 @@ namespace xxx_iterate{
             //]
         }
         {
-            //[test_optional_iterate_shifted
+            //[test_option_iterate_shifted
             using namespace lambda;
             typedef int T; array<T, 4> powers; powers[0] = 1; powers[1] = 10;
             int index = 2; ( as2::put( powers ) % ( as2::_iterate = var( index )++ ) )( 100 )( 1000 );
@@ -59,12 +59,12 @@ namespace xxx_iterate{
             //]
         }
         {
-            //[test_optional_iterate_meta_deque
+            //[test_option_iterate_meta_deque
             typedef as2::aux::keyword_iterate keyword_;
             typedef as2::modifier_tag::iterate_arg arg_;
-            typedef as2::aux::optional_modifier<keyword_, arg_> modulo_;
+            typedef as2::aux::option_modifier<keyword_, arg_> modulo_;
             typedef as2::result_of::deque<int>::type put_;
-            typedef as2::result_of::optional_modifier<put_> meta1_;
+            typedef as2::result_of::option_modifier<put_> meta1_;
             typedef ::boost::mpl::apply2<meta1_, keyword_, arg_>::type result1_;
             typedef as2::modifier_tag::iterate<arg_> tag1_;
             typedef as2::aux::replace_modifier_tag<put_> meta2_;
@@ -73,7 +73,7 @@ namespace xxx_iterate{
             //]
         }
         {
-            //[test_optional_iterate_shifted_deque
+            //[test_option_iterate_shifted_deque
             using namespace lambda;
             as2::result_of::deque<int>::type missing_tail = as2::deque<int>( 1 )( 10 )( -1 )( -1 );
             int index = 2; 
@@ -89,5 +89,5 @@ namespace xxx_iterate{
     }
 
 }// xxx_iterate
-}// xxx_optional
+}// xxx_option
 }// test_assign_v2

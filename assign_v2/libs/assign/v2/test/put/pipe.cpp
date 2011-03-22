@@ -8,7 +8,7 @@
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
 #include <libs/assign/v2/test/put/pipe/csv_put.h>
-#include <libs/assign/v2/test/put/pipe/optional.h>
+#include <libs/assign/v2/test/put/pipe/option.h>
 #include <libs/assign/v2/test/put/pipe.h>
 
 namespace test_assign_v2{
@@ -18,7 +18,7 @@ namespace xxx_pipe{
     void test()
     {
         xxx_csv_put::test();
-        xxx_optional::test();
+        xxx_option::test();
     }
 
 }// xxx_pipe

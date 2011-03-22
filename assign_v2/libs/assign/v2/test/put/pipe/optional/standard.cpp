@@ -19,13 +19,13 @@
 #include <boost/assign/v2/put/pipe/csv_put.hpp>
 #include <boost/assign/v2/deque.hpp>
 // Options come next
-#include <boost/assign/v2/optional/standard.hpp>
-#include <libs/assign/v2/test/put/pipe/optional/standard.h>
+#include <boost/assign/v2/option/standard.hpp>
+#include <libs/assign/v2/test/put/pipe/option/standard.h>
 
 namespace test_assign_v2{
 namespace xxx_put{
 namespace xxx_pipe{
-namespace xxx_optional{
+namespace xxx_option{
 namespace xxx_standard{
 
     void test()
@@ -75,7 +75,7 @@ namespace xxx_standard{
     }
 
 }// xxx_standard
-}// xxx_optional
+}// xxx_option
 }// xxx_pipe
 }// xxx_put
 }// test_assign_v2

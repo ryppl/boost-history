@@ -16,7 +16,7 @@
 #include <boost/assign/v2/put/put.hpp>
 #include <boost/assign/v2/deque.hpp>
 // Options come next
-#include <boost/assign/v2/optional/standard.hpp>
+#include <boost/assign/v2/option/standard.hpp>
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
 #include <boost/range/algorithm/equal.hpp>
@@ -27,10 +27,10 @@
 #include <boost/mpl/assert.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/typeof/typeof.hpp>
-#include <libs/assign/v2/test/optional/standard.h>
+#include <libs/assign/v2/test/option/standard.h>
 
 namespace test_assign_v2{
-namespace xxx_optional{
+namespace xxx_option{
 namespace xxx_standard{
 
     void test()
@@ -46,11 +46,11 @@ namespace xxx_standard{
 
         // PUT
         {
-            //[test_optional_standard_meta
+            //[test_option_standard_meta
             typedef as2::result_of::put<std::vector<int> >::type put_;
             typedef as2::aux::keyword_standard_modifier keyword_;
             typedef as2::modifier_tag::push_front tag_;
-            typedef as2::result_of::optional_modifier<put_> meta1_;
+            typedef as2::result_of::option_modifier<put_> meta1_;
             typedef ::boost::mpl::apply2<meta1_, keyword_, tag_>::type result1_;
             typedef as2::aux::replace_modifier_tag<put_> meta2_;
             typedef ::boost::mpl::apply1<meta2_, tag_>::type result2_;
@@ -59,7 +59,7 @@ namespace xxx_standard{
         }
         {
             // fully qual boost::begin/end demanded by MSVC - error C2668
-            //[test_optional_push_front
+            //[test_option_push_front
             std::deque<double> sqrt2;
             ( as2::put( sqrt2 ) % as2::_push_front )( 1.41421 )( 1.4142 )( 1.414 )( 1.41 );
 
@@ -69,7 +69,7 @@ namespace xxx_standard{
             //]
         }
         {
-            //[test_optional_push
+            //[test_option_push
             std::queue<int> fifo; ( as2::put( fifo ) % as2::_push )( 72 )( 31 )( 48 );
 
             BOOST_ASSIGN_V2_CHECK( fifo.front() == 72 );
@@ -77,7 +77,7 @@ namespace xxx_standard{
             //]
         }
         {
-            //[test_optional_insert
+            //[test_option_insert
             std::set<std::string> letters; ( as2::put( letters ) % as2::_insert )( "d" )( "a" )( "c" )( "b" );
 
             BOOST_ASSIGN_V2_CHECK( letters.lower_bound( "a" ) == boost::begin( letters ) );
@@ -85,7 +85,7 @@ namespace xxx_standard{
             //]
         }
         {
-            //[test_optional_push_back
+            //[test_option_push_back
             std::list<int> list;
             ( as2::put( list ) % as2::_push_back )( 72 )( 31 )( 48 );
 
@@ -94,11 +94,11 @@ namespace xxx_standard{
         }
         // DEQUE
         {
-            //[test_optional_meta_deque
+            //[test_option_meta_deque
             typedef as2::result_of::deque<int>::type put_;
             typedef as2::aux::keyword_standard_modifier keyword_;
             typedef as2::modifier_tag::push_front tag_;
-            typedef as2::result_of::optional_modifier<put_> meta1_;
+            typedef as2::result_of::option_modifier<put_> meta1_;
             typedef ::boost::mpl::apply2<meta1_, keyword_, tag_>::type result1_;
             typedef as2::aux::replace_modifier_tag<put_> meta2_;
             typedef ::boost::mpl::apply1<meta2_, tag_>::type result2_;
@@ -107,7 +107,7 @@ namespace xxx_standard{
             //]
         }
         {
-            //[test_optional_push_front_deque
+            //[test_option_push_front_deque
             BOOST_AUTO(
                 powers,
                 ( as2::deque<int>( as2::_nil ) % as2::_push_front )( 16 )( 8 )( 4 )( 2 )( 1 )
@@ -119,5 +119,5 @@ namespace xxx_standard{
     }
 
 }// xxx_standard
-}// xxx_optional
+}// xxx_option
 }// test_assign_v2

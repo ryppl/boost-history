@@ -12,14 +12,14 @@
 #include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/put/put.hpp>
 // Options come next
-#include <boost/assign/v2/optional/push_front.hpp>
-#include <boost/assign/v2/optional/repeat.hpp>
+#include <boost/assign/v2/option/push_front.hpp>
+#include <boost/assign/v2/option/repeat.hpp>
 #include <boost/assign/v2/deque.hpp>
 #include <boost/range/algorithm/equal.hpp>
-#include <libs/assign/v2/test/optional/repeat.h>
+#include <libs/assign/v2/test/option/repeat.h>
 
 namespace test_assign_v2{
-namespace xxx_optional{
+namespace xxx_option{
 namespace xxx_repeat{
 
     void test()
@@ -27,7 +27,7 @@ namespace xxx_repeat{
         using namespace boost;
         namespace as2 = assign::v2;
         {
-            //[test_optional_repeat_simple
+            //[test_option_repeat_simple
             std::vector<int> cont;
             ( as2::put( cont ) % ( as2::_repeat = 2  ) )( 72 )( 31 )( 48 );
 
@@ -35,7 +35,7 @@ namespace xxx_repeat{
             //]
         }
         {
-            //[test_optional_repeat_compose
+            //[test_option_repeat_compose
             BOOST_AUTO(
                 cont, (
                     as2::deque<int>( as2::_nil ) % as2::_push_front % ( as2::_repeat = 2 )
@@ -49,5 +49,5 @@ namespace xxx_repeat{
 
 
 }// xxx_repeat
-}// xxx_optional
+}// xxx_option
 }// test_assign_v2

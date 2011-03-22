@@ -14,14 +14,14 @@
 #include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/put/pipe/csv_put.hpp>
 // Options come next
-#include <boost/assign/v2/optional/data.hpp>
-#include <boost/assign/v2/optional/mapped.hpp>
-#include <libs/assign/v2/test/put/pipe/optional/mapped.h>
+#include <boost/assign/v2/option/data.hpp>
+#include <boost/assign/v2/option/mapped.hpp>
+#include <libs/assign/v2/test/put/pipe/option/mapped.h>
 
 namespace test_assign_v2{
 namespace xxx_put{
 namespace xxx_pipe{
-namespace xxx_optional{
+namespace xxx_option{
 namespace xxx_mapped{
 
     void test()
@@ -49,7 +49,7 @@ namespace xxx_mapped{
     }
 
 }// xxx_mapped
-}// xxx_optional
+}// xxx_option
 }// xxx_pipe
 }// xxx_put
 }// test_assign_v2

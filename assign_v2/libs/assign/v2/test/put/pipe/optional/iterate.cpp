@@ -12,16 +12,16 @@
 #include <boost/assign/v2/put/pipe/csv_put.hpp>
 #include <boost/assign/v2/deque/csv_deque.hpp>
 // Options come next
-#include <boost/assign/v2/optional/iterate.hpp>
+#include <boost/assign/v2/option/iterate.hpp>
 #include <boost/array.hpp>
 #include <boost/lambda/lambda.hpp>
 #include <boost/range/algorithm/equal.hpp>
-#include <libs/assign/v2/test/put/pipe/optional/iterate.h>
+#include <libs/assign/v2/test/put/pipe/option/iterate.h>
 
 namespace test_assign_v2{
 namespace xxx_put{
 namespace xxx_pipe{
-namespace xxx_optional{
+namespace xxx_option{
 namespace xxx_iterate{
 
     void test()
@@ -46,7 +46,7 @@ namespace xxx_iterate{
     }
 
 }// xxx_iterate
-}// xxx_optional
+}// xxx_option
 }// xxx_pipe
 }// xxx_put
 }// test_assign_v2

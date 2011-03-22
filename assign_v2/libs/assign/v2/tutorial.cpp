@@ -102,7 +102,7 @@ namespace tutorial_assign_v2{
             //]
         }
         {
-            //[tutorial_optional
+            //[tutorial_option
             using namespace lambda;
             array<int, 4> powers = converter( csv_deque( 1, 10, -1, -1 ) );
             std::size_t index = 2; using namespace lambda;

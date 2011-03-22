@@ -16,7 +16,7 @@
 #include <boost/assign/v2/deque.hpp>
 #include <boost/assign/v2/put/put.hpp>
 // Options come next
-#include <boost/assign/v2/optional/data.hpp>
+#include <boost/assign/v2/option/data.hpp>
 #include <boost/function.hpp>
 #include <boost/lambda/bind.hpp>
 #include <boost/lambda/lambda.hpp>
@@ -24,10 +24,10 @@
 #include <boost/numeric/conversion/bounds.hpp>
 #include <boost/range/algorithm/equal.hpp>
 #include <boost/typeof/typeof.hpp>
-#include <libs/assign/v2/test/optional/data.h>
+#include <libs/assign/v2/test/option/data.h>
 
 namespace test_assign_v2{
-namespace xxx_optional{
+namespace xxx_option{
 namespace xxx_fun{
 
     void test()
@@ -36,7 +36,7 @@ namespace xxx_fun{
         namespace as2 = assign::v2;
         {
             // (*fp) resolves error C2440 using MSVC
-            //[test_optional_data_math
+            //[test_option_data_math
             std::vector<double> exponent;
             typedef double(*fp)(double);
             typedef function<double(double)> f_;
@@ -50,7 +50,7 @@ namespace xxx_fun{
             //]
         }
         {
-            //[test_optional_data_recursive
+            //[test_option_data_recursive
             using namespace lambda;
             int i = 1, k = 1;
             BOOST_AUTO(
@@ -68,5 +68,5 @@ namespace xxx_fun{
     }
 
 }// xxx_fun
-}// xxx_optional
+}// xxx_option
 }// test_assign_v2
