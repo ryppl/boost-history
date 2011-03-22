@@ -9,7 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_OPTION_INSERT_ER_2010_HPP
 #define BOOST_ASSIGN_V2_OPTION_INSERT_ER_2010_HPP
-#include <boost/assign/v2/option/standard/modifier.hpp>
+#include <boost/assign/v2/option/std_modifier/modifier.hpp>
 BOOST_ASSIGN_V2_OPTION_MODIFIER_STANDARD_TAG(insert)
 BOOST_ASSIGN_V2_OPTION_MODIFIER_STANDARD(insert)
 

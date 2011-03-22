@@ -9,7 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_OPTION_STANDARD_ER_2010_HPP
 #define BOOST_ASSIGN_V2_OPTION_STANDARD_ER_2010_HPP
-#include <boost/assign/v2/option/standard/modifier.hpp>
-#include <boost/assign/v2/option/standard/include.hpp>
+#include <boost/assign/v2/option/std_modifier/modifier.hpp>
+#include <boost/assign/v2/option/std_modifier/include.hpp>
 
 #endif // BOOST_ASSIGN_V2_OPTION_STANDARD_ER_2010_HPP

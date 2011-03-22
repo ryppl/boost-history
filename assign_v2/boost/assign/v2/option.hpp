@@ -14,6 +14,6 @@
 #include <boost/assign/v2/option/mapped.hpp>
 #include <boost/assign/v2/option/modifier.hpp>
 #include <boost/assign/v2/option/repeat.hpp>
-#include <boost/assign/v2/option/standard.hpp>
+#include <boost/assign/v2/option/std_modifier.hpp>
 
 #endif // BOOST_ASSIGN_V2_OPTION_ER_2010_HPP

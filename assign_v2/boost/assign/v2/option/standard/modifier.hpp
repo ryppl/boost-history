@@ -15,6 +15,17 @@
 #include <boost/assign/v2/option/modifier.hpp>
 #include <boost/preprocessor/cat.hpp>
 
+namespace boost{
+namespace assign{
+namespace v2{
+
+BOOST_ASSIGN_V2_OPTION_MODIFIER_KEYWORD(std_modifier)
+BOOST_ASSIGN_V2_OPTION_MODIFIER_META_MODIFIER_TAG(std_modifier, Arg)
+
+}// v2
+}// assign
+}// boost
+
 #define BOOST_ASSIGN_V2_OPTION_MODIFIER_STANDARD_IMPL_PTR(FUN)\
     template<typename C, typename T>\
     void impl(C& cont, T* t)const{\
@@ -84,9 +95,9 @@ namespace aux{\
 }\
 namespace{\
 \
-    aux::option_modifier<aux::keyword_standard_modifier, modifier_tag::FUN> const\
+    aux::option_modifier<aux::keyword_std_modifier, modifier_tag::FUN> const\
         BOOST_PP_CAT(_,FUN) = ( \
-        _standard_modifier = modifier_tag::FUN() \
+        _std_modifier = modifier_tag::FUN() \
     );\
 \
 }\

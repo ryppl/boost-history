@@ -19,8 +19,8 @@
 #include <boost/assign/v2/put/pipe/csv_put.hpp>
 #include <boost/assign/v2/deque.hpp>
 // Options come next
-#include <boost/assign/v2/option/standard.hpp>
-#include <libs/assign/v2/test/put/pipe/option/standard.h>
+#include <boost/assign/v2/option/std_modifier.hpp>
+#include <libs/assign/v2/test/put/pipe/option/std_modifier.h>
 
 namespace test_assign_v2{
 namespace xxx_put{

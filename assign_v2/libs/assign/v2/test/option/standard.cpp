@@ -16,7 +16,7 @@
 #include <boost/assign/v2/put/put.hpp>
 #include <boost/assign/v2/deque.hpp>
 // Options come next
-#include <boost/assign/v2/option/standard.hpp>
+#include <boost/assign/v2/option/std_modifier.hpp>
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
 #include <boost/range/algorithm/equal.hpp>
@@ -27,7 +27,7 @@
 #include <boost/mpl/assert.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/typeof/typeof.hpp>
-#include <libs/assign/v2/test/option/standard.h>
+#include <libs/assign/v2/test/option/std_modifier.h>
 
 namespace test_assign_v2{
 namespace xxx_option{
@@ -48,7 +48,7 @@ namespace xxx_standard{
         {
             //[test_option_standard_meta
             typedef as2::result_of::put<std::vector<int> >::type put_;
-            typedef as2::aux::keyword_standard_modifier keyword_;
+            typedef as2::aux::keyword_std_modifier keyword_;
             typedef as2::modifier_tag::push_front tag_;
             typedef as2::result_of::option_modifier<put_> meta1_;
             typedef ::boost::mpl::apply2<meta1_, keyword_, tag_>::type result1_;
@@ -96,7 +96,7 @@ namespace xxx_standard{
         {
             //[test_option_meta_deque
             typedef as2::result_of::deque<int>::type put_;
-            typedef as2::aux::keyword_standard_modifier keyword_;
+            typedef as2::aux::keyword_std_modifier keyword_;
             typedef as2::modifier_tag::push_front tag_;
             typedef as2::result_of::option_modifier<put_> meta1_;
             typedef ::boost::mpl::apply2<meta1_, keyword_, tag_>::type result1_;
