@@ -13,8 +13,8 @@
 #include <boost/assign/v2/detail/keyword/ignore.hpp>
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
 #include <boost/assign/v2/detail/pp/ignore.hpp>
-//#include <boost/assign/v2/interpreter/modifier.hpp>
 #include <boost/assign/v2/interpreter/fwd.hpp>
+#include <boost/assign/v2/optional/modifier.hpp>
 #include <boost/call_traits.hpp>
 #include <boost/shared_ptr.hpp>
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
@@ -26,6 +26,7 @@
 namespace boost{
 namespace assign{
 namespace v2{
+//[syntax_optional_iterate
 namespace modifier_tag{ 
 
     struct iterate_arg
@@ -45,13 +46,13 @@ namespace modifier_tag{
 
     };
 
-    template<typename Arg = iterate_arg::type > struct iterate{}; 
+    template<typename Arg/*<-*/= iterate_arg::type/*->*/> struct iterate{}; 
 
 }// modifier_tag
 namespace aux{
                 
     template<typename Arg>
-    class adapter_modifier< modifier_tag::iterate<Arg> >
+    class adapter_modifier< modifier_tag::iterate<Arg> >/*<-*/
     {
 
         typedef keyword_aux::ignore ignore_;
@@ -97,18 +98,15 @@ namespace aux{
         protected:
         ptr_ ptr;
 
-    };
+    }/*->*/;
 
 }// aux
+BOOST_ASSIGN_V2_OPTIONAL_MODIFIER_KEYWORD(iterate)
+BOOST_ASSIGN_V2_OPTIONAL_MODIFIER_META_MODIFIER_TAG(iterate, modifier_tag::iterate<Arg>)
+//]
 }// v2
 }// assign
 }// boost
 
-#include <boost/assign/v2/optional/modifier.hpp>
-BOOST_ASSIGN_V2_OPTIONAL_MODIFIER_KEYWORD(iterate)
-
-#define BOOST_ASSIGN_V2_TAG modifier_tag::iterate<Arg>
-BOOST_ASSIGN_V2_OPTIONAL_MODIFIER_META_MODIFIER_TAG(iterate, BOOST_ASSIGN_V2_TAG)
-#undef BOOST_ASSIGN_V2_TAG
 
 #endif // BOOST_ASSIGN_V2_OPTIONAL_ITERATE_ER_2010_HPP

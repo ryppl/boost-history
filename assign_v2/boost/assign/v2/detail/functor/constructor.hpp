@@ -24,33 +24,41 @@
 namespace boost{
 namespace assign{
 namespace v2{
+//syntax_detail_functor_constructor
 namespace functor_aux{
 
     template<typename T = keyword_aux::nil>
-    class constructor
+    class constructor/*<-*/
 #if !BOOST_ASSIGN_V2_ENABLE_CPP0X
     : public functor_aux::crtp_unary_and_up<
         functor_aux::constructor<T>,
         ::boost::mpl::always<T>
     >
 #endif
+	/*->*/
     {
+//<-
         typedef functor_aux::constructor<T> this_;
-
+//->
         public:
 
-        constructor(){}
+        constructor()/*<-*/{}BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
+//<-
         template<typename U>
         constructor<U> type()const{ return constructor<U>(); }
 
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
+//->
         template<typename... Args>
-        T operator()(Args&&...args)const
+        T operator()(Args&&...args)const/*<-*/
         {
             return T( std::forward<Args>(args)... );
-        }
+        }/*->*/BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
+//<-
+
 #else
+
         protected:
             typedef ::boost::mpl::always<T> meta_result_;
             typedef functor_aux::crtp_unary_and_up<this_, meta_result_> super_;
@@ -75,28 +83,12 @@ BOOST_PP_REPEAT_FROM_TO(
 #undef BOOST_ASSIGN_V2_MACRO
 
 #endif // BOOST_ASSIGN_V2_ENABLE_CPP0X
+
+//->
     };
 
 }// functor_aux
-/*
-namespace result_of{
-
-    template<typename T>
-    struct constructor
-    {
-        typedef functor_aux::constructor<T> type;
-    };
-
-}// result_of
-
-    template<typename T>
-    typename result_of::constructor<T>::type
-    constructor()
-    {
-        typedef typename result_of::constructor<T>::type result_;
-        return result_();
-    }
-*/
+//]
 }// v2
 }// assign
 }// boost

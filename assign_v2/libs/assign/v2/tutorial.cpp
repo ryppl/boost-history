@@ -73,7 +73,7 @@ namespace tutorial_assign_v2{
             assert( &max == &y );
             //]
         }
-        {
+        {    
             //[tutorial_chain
             std::vector<int> consecutive8( 8 ); for(int i = 0; i < 8; i++){ consecutive8[i] = 1 + i; }
             array<int, 5> consecutive5; int six, seven, eight;
@@ -94,7 +94,7 @@ namespace tutorial_assign_v2{
             //]
         }
         {
-            //[tutorial_arg_forwarding
+            //[tutorial_data_gen
             std::map<std::string, int> map; 
             put( map )( "foo", 1 )( "bar", 2 )( "baz", 3 );
             
@@ -104,9 +104,10 @@ namespace tutorial_assign_v2{
         {
             //[tutorial_optional
             using namespace lambda;
-            typedef int T; array<T, 4> powers = converter( csv_deque( 1, 10, -1, -1 ) );
-            std::size_t index = 2; ( put( powers ) % ( _iterate = var( index )++ ) )( 100 )( 1000 );
-
+            array<int, 4> powers = converter( csv_deque( 1, 10, -1, -1 ) );
+            std::size_t index = 2; using namespace lambda;
+             ( put( powers ) % ( _iterate = var( index )++ ) )( 100 )( 1000 );
+ 
             for(int value = 1, index = 0; index < powers.size(); index++, value *=10 )
             { 
                 assert( powers[index] == value ); 

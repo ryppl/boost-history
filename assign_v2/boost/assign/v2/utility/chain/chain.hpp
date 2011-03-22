@@ -30,7 +30,7 @@ namespace chain_aux{
     struct adaptor1
     {
         adaptor1( U& r ) 
-        	: ptr( &r )
+            : ptr( &r )
         {}
         U& reference()const{ return *this->ptr; }
         private:

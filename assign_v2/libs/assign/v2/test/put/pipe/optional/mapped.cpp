@@ -30,7 +30,7 @@ namespace xxx_mapped{
         namespace as2 = assign::v2;
         {
             //[test_put_pipe_modifier_mapped
-        	using namespace lambda;
+            using namespace lambda;
             typedef std::map<std::string, int> C; C cal;
             BOOST_AUTO( _local, ( as2::_data = _1 ) );
             BOOST_ASSIGN_V2_CHECK(

@@ -11,23 +11,24 @@
 #define BOOST_ASSIGN_V2_OPTIONAL_MAPPED_ER_2010_HPP
 #include <boost/assign/v2/detail/keyword/ignore.hpp>
 #include <boost/assign/v2/detail/pp/ignore.hpp>
-//#include <boost/assign/v2/interpreter/modifier.hpp>
 #include <boost/assign/v2/interpreter/fwd.hpp>
+#include <boost/assign/v2/optional/modifier.hpp>
 #include <boost/call_traits.hpp>
 #include <boost/shared_ptr.hpp>
 
 namespace boost{
 namespace assign{
 namespace v2{
+//[syntax_optional_mapped
 namespace modifier_tag{ 
 
-    template<typename Arg> struct mapped; 
+    template<typename/*<<Mapping>>*/ Arg> struct mapped; 
 
 }// modifier_tag
 namespace aux{
                 
     template<typename Arg>
-    class adapter_modifier<modifier_tag::mapped<Arg> >
+    class adapter_modifier<modifier_tag::mapped<Arg> >/*<-*/
     {
 
         typedef Arg arg_;
@@ -62,17 +63,15 @@ namespace aux{
 
         private:
         ptr_ ptr;
-    };
+    }/*->*/;
 
 }// aux
+BOOST_ASSIGN_V2_OPTIONAL_MODIFIER_KEYWORD(mapped)
+BOOST_ASSIGN_V2_OPTIONAL_MODIFIER_META_MODIFIER_TAG(mapped, modifier_tag::mapped<Arg>)
+//]
 }// v2
 }// assign
 }// boost
 
-#include <boost/assign/v2/optional/modifier.hpp>
-BOOST_ASSIGN_V2_OPTIONAL_MODIFIER_KEYWORD(mapped)
-#define BOOST_ASSIGN_V2_TAG modifier_tag::mapped<Arg>
-BOOST_ASSIGN_V2_OPTIONAL_MODIFIER_META_MODIFIER_TAG(mapped, BOOST_ASSIGN_V2_TAG)
-#undef BOOST_ASSIGN_V2_TAG
 
 #endif // BOOST_ASSIGN_V2_OPTIONAL_MAPPED_ER_2010_HPP

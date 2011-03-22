@@ -66,7 +66,8 @@ namespace xxx_chain{
         {
             //[test_utility_chain_write_refs
             /*<< Needed to bring && into scope >>*/ using namespace assign::v2;
-            std::vector<int> consecutive8( 8 ); for(int i = 0; i < 8; i++){ consecutive8[i] = 1 + i; }
+            std::vector<int> consecutive8( 8 ); 
+            for(int i = 0; i < 8; i++){ consecutive8[i] = 1 + i; }
             array<int, 5> consecutive5; int six, seven, eight;
             boost::copy(
                 consecutive8,

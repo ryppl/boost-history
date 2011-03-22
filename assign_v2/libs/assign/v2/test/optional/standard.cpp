@@ -58,7 +58,7 @@ namespace xxx_standard{
             //]
         }
         {
-        	// fully qual boost::begin/end demanded by MSVC - error C2668
+            // fully qual boost::begin/end demanded by MSVC - error C2668
             //[test_optional_push_front
             std::deque<double> sqrt2;
             ( as2::put( sqrt2 ) % as2::_push_front )( 1.41421 )( 1.4142 )( 1.414 )( 1.41 );

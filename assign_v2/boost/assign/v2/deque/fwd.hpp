@@ -17,7 +17,7 @@ namespace aux{
 
     template<typename T> struct deque_impl;
 
-    template<typename T, typename F, typename Tag> class deque_adapter;
+    template<typename T, typename F, typename Tag> class deque_interpreter;
 
 }// aux
 }// v2

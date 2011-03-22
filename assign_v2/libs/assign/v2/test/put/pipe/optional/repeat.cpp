@@ -28,7 +28,7 @@ namespace xxx_repeat{
         using namespace boost;
         namespace as2 = assign::v2;
         {
-			//[test_put_pipe_modifier_repeat
+            //[test_put_pipe_modifier_repeat
             std::vector<int> cont;
             BOOST_ASSIGN_V2_CHECK(
                 range::equal(

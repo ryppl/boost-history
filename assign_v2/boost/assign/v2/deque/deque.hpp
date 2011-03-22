@@ -38,18 +38,18 @@ namespace aux{
     struct /*<<Metafunction>>*/deque_impl{ typedef /*<-*/std::deque<T> BOOST_ASSIGN_V2_IGNORE(/*->*/unspecified /*<-*/)/*->*/type; };
 
     template<typename T, typename F, typename Tag>
-    class deque_adapter 
+    class deque_interpreter 
 //<-
         : public interpreter_crtp<
             typename deque_impl<T>::type, F, Tag,
-            deque_adapter<T, F, Tag>
+            deque_interpreter<T, F, Tag>
         >
 //->
     {
 //<-
         typedef typename deque_impl<T>::type impl_;
         typedef impl_ const cimpl_;
-        typedef interpreter_crtp<impl_, F, Tag, deque_adapter> put_crtp_;
+        typedef interpreter_crtp<impl_, F, Tag, deque_interpreter> put_crtp_;
 
         typedef aux::adapter_modifier<Tag> modifier_;
 //->
@@ -61,9 +61,9 @@ namespace aux{
         typedef /*<-*/typename boost::range_iterator<cimpl_>::type BOOST_ASSIGN_V2_IGNORE(/*->*/unspecified /*<-*/)/*->*/const_iterator;
 
         // Construct
-        deque_adapter()/*<-*/
+        deque_interpreter()/*<-*/
             {}BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
-        explicit deque_adapter( impl_ const& cont, F const& f, modifier_ const& m )/*<-*/
+        explicit deque_interpreter( impl_ const& cont, F const& f, modifier_ const& m )/*<-*/
             : put_crtp_( f, m ), impl( cont )
         {}BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
@@ -118,7 +118,7 @@ namespace aux{
         void pop_back()/*<-*/{
             this->container().pop_back();
         }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
-        void swap(deque_adapter& that)/*<-*/{
+        void swap(deque_interpreter& that)/*<-*/{
             this->container().swap( that.container() );
         }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
@@ -132,17 +132,17 @@ namespace aux{
     };
 
     template<typename T, typename F, typename Tag>
-    struct /*<<Metafunction class>>*/replace_fun< deque_adapter<T, F, Tag> >/*<-*/
+    struct /*<<Metafunction class>>*/replace_fun< deque_interpreter<T, F, Tag> >/*<-*/
     {
         template<typename F1>
-        struct apply{ typedef deque_adapter<T, F1, Tag> type; };
+        struct apply{ typedef deque_interpreter<T, F1, Tag> type; };
     }/*->*/;
 
     template<typename T, typename F, typename Tag>
-    struct /*<<Metafunction class>>*/replace_modifier_tag< deque_adapter<T, F, Tag> >/*<-*/
+    struct /*<<Metafunction class>>*/replace_modifier_tag< deque_interpreter<T, F, Tag> >/*<-*/
     {
         template<typename Tag1>
-        struct apply{ typedef deque_adapter<T, F, Tag1> type; };
+        struct apply{ typedef deque_interpreter<T, F, Tag1> type; };
     }/*->*/;
 
 //<-
@@ -155,7 +155,7 @@ namespace result_of{
         typedef typename deque_impl<t_>::type impl_;
         typedef typename deduce_data_generator<impl_>::type f_;
         typedef typename deduce_modifier_tag<impl_>::type modifier_tag_;
-        typedef deque_adapter<t_,f_,modifier_tag_> type;
+        typedef deque_interpreter<t_,f_,modifier_tag_> type;
     };
 
 }// result_of

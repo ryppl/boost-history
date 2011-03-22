@@ -23,14 +23,14 @@ namespace v2{
 namespace aux{
 
     template<typename C, typename F, typename Tag>
-    class container_adapter
+    class put_interpreter
 //<-
         : protected ref::wrapper< ref::assign_tag::copy, C >
-        , public aux::interpreter_crtp< C, F, Tag, container_adapter<C, F, Tag> >
+        , public aux::interpreter_crtp< C, F, Tag, put_interpreter<C, F, Tag> >
 //->
     {
 //<-
-        typedef aux::interpreter_crtp< C, F, Tag, container_adapter > super2_t;
+        typedef aux::interpreter_crtp< C, F, Tag, put_interpreter > super2_t;
 //->
         public:
 
@@ -44,12 +44,12 @@ namespace aux{
 //->
         public:
 
-        container_adapter()/*<-*/
+        put_interpreter()/*<-*/
             {}BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
-        explicit container_adapter( C& cont )/*<-*/
+        explicit put_interpreter( C& cont )/*<-*/
             : super1_t( cont )
         {}BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
-        explicit container_adapter( C& cont, F const& f, modifier_ const& m )/*<-*/
+        explicit put_interpreter( C& cont, F const& f, modifier_ const& m )/*<-*/
             : super1_t( cont ), super2_t( f, m )
             {
                 // This constructor is required in conjunction with modulo
@@ -62,15 +62,15 @@ namespace aux{
     };
 
     template<typename C, typename F, typename Tag>
-    struct /*<<Metafunction class>>*/replace_fun< aux::container_adapter<C, F, Tag> >{/*<-*/
+    struct /*<<Metafunction class>>*/replace_fun< aux::put_interpreter<C, F, Tag> >{/*<-*/
         template<typename F1>
-        struct apply{ typedef aux::container_adapter<C, F1, Tag> type; };
+        struct apply{ typedef aux::put_interpreter<C, F1, Tag> type; };
     /*->*/};
 
     template<typename C, typename F, typename Tag>
-    struct /*<<Metafunction class>>*/replace_modifier_tag< aux::container_adapter<C, F, Tag> >{/*<-*/
+    struct /*<<Metafunction class>>*/replace_modifier_tag< aux::put_interpreter<C, F, Tag> >{/*<-*/
         template<typename Tag1>
-        struct apply{ typedef aux::container_adapter<C, F, Tag1> type; };
+        struct apply{ typedef aux::put_interpreter<C, F, Tag1> type; };
     /*->*/};
 
 }// aux
@@ -80,7 +80,7 @@ namespace result_of{
     struct /*<<Metafunction>>*/put{/*<-*/
         typedef typename aux::deduce_data_generator<C>::type f_;
         typedef typename aux::deduce_modifier_tag<C>::type modifier_tag_;
-        typedef aux::container_adapter<C, f_, modifier_tag_> type;
+        typedef aux::put_interpreter<C, f_, modifier_tag_> type;
     }/*->*/;
 
 }// result_of

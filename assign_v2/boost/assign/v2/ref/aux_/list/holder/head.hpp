@@ -31,7 +31,7 @@ namespace list_aux{
         result_of_head_type head()const{ return (*this->head_); }
 
         private:
-		T* head_;
+        T* head_;
 
     };
 

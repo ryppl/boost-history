@@ -32,7 +32,7 @@ namespace xxx_fun{
         {
             //[test_put_pipe_optional_data_math
             int k = 1; std::list<int> factorials;
-        	using namespace lambda;
+            using namespace lambda;
             
             BOOST_ASSIGN_V2_CHECK(
                 range::equal(

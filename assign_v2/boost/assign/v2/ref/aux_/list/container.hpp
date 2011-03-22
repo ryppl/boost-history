@@ -72,8 +72,8 @@ namespace list_aux{
         tail()const{ return this->tail_; } 
         
         private:
-		typename boost::call_traits< // (*)
-        	typename tail_holder_::result_of_tail_type
+        typename boost::call_traits< // (*)
+            typename tail_holder_::result_of_tail_type
         >::value_type tail_;
     };
 

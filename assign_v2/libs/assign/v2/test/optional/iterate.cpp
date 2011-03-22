@@ -51,7 +51,7 @@ namespace xxx_iterate{
         }
         {
             //[test_optional_iterate_shifted
-        	using namespace lambda;
+            using namespace lambda;
             typedef int T; array<T, 4> powers; powers[0] = 1; powers[1] = 10;
             int index = 2; ( as2::put( powers ) % ( as2::_iterate = var( index )++ ) )( 100 )( 1000 );
 
@@ -74,7 +74,7 @@ namespace xxx_iterate{
         }
         {
             //[test_optional_iterate_shifted_deque
-        	using namespace lambda;
+            using namespace lambda;
             as2::result_of::deque<int>::type missing_tail = as2::deque<int>( 1 )( 10 )( -1 )( -1 );
             int index = 2; 
             

@@ -119,17 +119,11 @@ namespace result_of{
     {};
 
 }// result_of
-}// v2
-}// assign
-}// boost
 
 #ifdef BOOST_ASSIGN_V2_OPTIONAL_MODIFIER_META_MODIFIER_TAG
 #error
 #else
 #define BOOST_ASSIGN_V2_OPTIONAL_MODIFIER_META_MODIFIER_TAG(NAME, Result)\
-namespace boost{\
-namespace assign{\
-namespace v2{\
 namespace aux{\
 \
     template<typename Arg>\
@@ -138,18 +132,14 @@ namespace aux{\
         template<typename D>\
         struct apply{ typedef Result type; };\
     };\
-\
-}\
-}\
-}\
 }\
 /**/
 #endif
 
-#ifdef BOOST_ASSIGN_V2_OPTIONAL_MODIFIER_PARAM
+#ifdef BOOST_ASSIGN_V2_OPTIONAL_MODIFIER_KWD_TYPE
 #error
 #else
-#define BOOST_ASSIGN_V2_OPTIONAL_MODIFIER_PARAM(NAME)\
+#define BOOST_ASSIGN_V2_OPTIONAL_MODIFIER_KWD_TYPE(NAME)\
     aux::optional_modifier<aux::BOOST_PP_CAT(keyword_,NAME)>\
 /**/
 #endif
@@ -158,24 +148,16 @@ namespace aux{\
 #error
 #else
 #define BOOST_ASSIGN_V2_OPTIONAL_MODIFIER_KEYWORD(NAME)\
-namespace boost{\
-namespace assign{\
-namespace v2{\
 namespace aux{\
-\
     struct BOOST_PP_CAT(keyword_,NAME){\
 \
         BOOST_PP_CAT(keyword_,NAME)(){}\
 \
     };\
-\
 }\
 namespace {\
-    BOOST_ASSIGN_V2_OPTIONAL_MODIFIER_PARAM(NAME) const BOOST_PP_CAT(_,NAME)\
-        = BOOST_ASSIGN_V2_OPTIONAL_MODIFIER_PARAM(NAME)();\
-}\
-}\
-}\
+    BOOST_ASSIGN_V2_OPTIONAL_MODIFIER_KWD_TYPE(NAME) const BOOST_PP_CAT(_,NAME)\
+        = BOOST_ASSIGN_V2_OPTIONAL_MODIFIER_KWD_TYPE(NAME)();\
 }\
 /**/
 #endif
@@ -183,5 +165,9 @@ namespace {\
 // The default
 BOOST_ASSIGN_V2_OPTIONAL_MODIFIER_KEYWORD(standard_modifier)    
 BOOST_ASSIGN_V2_OPTIONAL_MODIFIER_META_MODIFIER_TAG(standard_modifier, Arg)
+
+}// v2
+}// assign
+}// boost
 
 #endif // BOOST_ASSIGN_V2_OPTIONAL_MODIFIER_ER_2010_HPP

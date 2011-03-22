@@ -27,12 +27,13 @@ namespace boost{
     struct use_default;
 namespace assign{
 namespace v2{
+//[syntax_put_pipe_arg_list
 namespace aux{
 
     typedef ref::array_aux::size_type arg_list_size_type;
 
     template<typename Pars, arg_list_size_type N, typename U>
-    struct arg_list
+    struct arg_list/*<-*/
     {
         typedef boost::use_default tag2_;
         typedef modulo_traits<Pars> modulo_traits_;
@@ -60,10 +61,10 @@ namespace aux{
         par_list_cont_type par_list_cont_;
         arg_list_cont_type arg_list_cont_;
 
-    };
+    }/*->*/;
 
-    template<typename ParList = ::boost::mpl::vector0<> >
-    class arg_list_generator
+    template<typename ParList/*<-*/ = ::boost::mpl::vector0<> /*->*/>
+    class arg_list_generator/*<-*/
     {
 
         typedef ::boost::mpl::na na_;
@@ -188,9 +189,10 @@ BOOST_PP_REPEAT_FROM_TO(
         protected:
         par_list_cont_type par_list_cont_;
 
-    };
+    }/*->*/;
 
 }// aux
+//]
 }// v2
 }// assign
 }// boost

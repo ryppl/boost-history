@@ -35,7 +35,7 @@ namespace xxx_fun{
         using namespace boost;
         namespace as2 = assign::v2;
         {
-        	// (*fp) resolves error C2440 using MSVC
+            // (*fp) resolves error C2440 using MSVC
             //[test_optional_data_math
             std::vector<double> exponent;
             typedef double(*fp)(double);
@@ -51,7 +51,7 @@ namespace xxx_fun{
         }
         {
             //[test_optional_data_recursive
-        	using namespace lambda;
+            using namespace lambda;
             int i = 1, k = 1;
             BOOST_AUTO(
                 factorials, (

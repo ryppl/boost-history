@@ -40,11 +40,16 @@ namespace aux{
 
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
-}// aux
-
+}// aux 
+//<-
+namespace{
+//->
     aux::arg_list_generator<> const _csv_put/*<-*/
         = aux::arg_list_generator<>()/*->*/;
 
+//<-
+}
+//->
 //]
 }// v2
 }// assign

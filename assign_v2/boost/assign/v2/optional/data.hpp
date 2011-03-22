@@ -23,7 +23,7 @@ namespace aux{
 namespace result_of{
 
     template<typename D>
-    struct /*<<Metafunction class>>*/data_generator/*<-*/{
+    struct /*<<Metafunction class>>*/optional_data_generator/*<-*/{
 
         typedef aux::replace_fun<D> meta_;
 
@@ -35,10 +35,10 @@ namespace result_of{
 }// result_of
 
     template<typename F/*<-*/= keyword_aux::ignore/*->*/>
-    struct data_generator/*<-*/
+    struct optional_data_generator/*<-*/
     {
-        data_generator(){}
-        data_generator(F f) : f_( f ){}
+        optional_data_generator(){}
+        optional_data_generator(F f) : f_( f ){}
 
         F const& fun()const{ return this->f_; }
 
@@ -47,13 +47,13 @@ namespace result_of{
     }/*->*/;
 
     template<typename C, typename F, typename Tag, typename D, typename F1>
-    typename ::boost::mpl::apply1<result_of::data_generator<D>, F1>::type
-    operator%(
+    typename ::boost::mpl::apply1<result_of::optional_data_generator<D>, F1>::type
+    operator%/*<<Overrides data generator>>*/(
         interpreter_crtp<C, F, Tag, D> const& lhs,
-        data_generator<F1> const& rhs
+        optional_data_generator<F1> const& rhs
     )/*<-*/
     {
-        typedef result_of::data_generator<D> meta_;
+        typedef result_of::optional_data_generator<D> meta_;
         typedef typename ::boost::mpl::apply1<meta_, F1>::type result_;
         return result_( lhs.container(), rhs.fun(), lhs.modifier );
     }/*<-*/BOOST_ASSIGN_V2_IGNORE(/*<-*/;/*->*/)/*->*/
@@ -62,8 +62,8 @@ namespace result_of{
     /*<-*/{
 
         template<typename F>
-        data_generator<F> operator=(F const& f)const{
-            return data_generator<F>( f );
+        optional_data_generator<F> operator=(F const& f)const{
+            return optional_data_generator<F>( f );
         }
 
     }/*->*/;
@@ -71,13 +71,13 @@ namespace result_of{
 }// aux
 namespace{
     const aux::keyword_data_generator _data/*<-*/ 
-    	= aux::keyword_data_generator()/*->*/;
+        = aux::keyword_data_generator()/*->*/;
 }
 namespace result_of{
 
     template<typename D>
-    struct /*<<Metafunction class>>*/data_generator/*<-*/
-        : aux::result_of::data_generator<D>
+    struct /*<<Metafunction class>>*/optional_data_generator/*<-*/
+        : aux::result_of::optional_data_generator<D>
     {}/*->*/;
 
 }// result_of
@@ -97,7 +97,7 @@ namespace v2{\
 namespace aux{\
 \
     template<typename T>\
-    data_generator< FUN > NAME()\
+    optional_data_generator< FUN > NAME()\
     {\
         return ( v2::_data = FUN() );\
     }\

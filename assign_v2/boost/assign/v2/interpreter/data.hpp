@@ -27,19 +27,26 @@ namespace aux{
     template<typename C>
     struct container_value{ typedef typename C::value_type type; };
 
-    template<typename /*<<Pointer-container>>*/PtrC>
+    template<typename /*<<Pointer-container>>*/PtrC, 
+        template<typename > class F = container_value
+    >
     struct /*<<Metafunction>>*/ deduce_ptr_generator/*<-*/
     {
         typedef typename v2::ptr_container_aux::to_value_container<
             PtrC
         >::type cont_;
-        typedef functor_aux::new_<typename cont_::value_type> type;
+        typedef functor_aux::new_<
+            typename F<cont_>::type
+        > type;
     }/*->*/;
 
-    template<typename /*<<Value-container>>*/C>
+    template<typename /*<<Value-container>>*/C, 
+        template<typename > class F = container_value>
     struct /*<<Metafunction>>*/ deduce_value_generator/*<-*/
     {
-        typedef functor_aux::constructor<typename C::value_type> type;
+        typedef functor_aux::constructor<
+            typename F<C>::type
+        > type;
     }/*->*/;
 
     template<typename /*<<Value or pointer-container>>*/C>
@@ -50,7 +57,6 @@ namespace aux{
             deduce_value_generator<C>
         >
     {}/*->*/;
-
 
 }// aux
 //]

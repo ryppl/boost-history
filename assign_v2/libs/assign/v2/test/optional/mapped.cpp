@@ -14,7 +14,7 @@
 #include <boost/assign/v2/put/put.hpp>
 #include <boost/assign/v2/deque.hpp>
 // Options come next
-#include <boost/assign/v2/optional/data.hpp>
+#include <boost/assign/v2/optional/key.hpp>
 #include <boost/assign/v2/optional/mapped.hpp> 
 #include <boost/lambda/lambda.hpp>
 #include <boost/mpl/assert.hpp>
@@ -35,7 +35,7 @@ namespace xxx_mapped{
         namespace as2 = assign::v2;
         {
             //[test_optional_mapped_meta
-        	using namespace lambda;
+            using namespace lambda;
             typedef BOOST_TYPEOF(_1) arg_;
             typedef as2::aux::keyword_mapped keyword_;
             typedef as2::aux::optional_modifier<keyword_, arg_> modulo_;
@@ -51,11 +51,11 @@ namespace xxx_mapped{
         }
         {
             //[test_optional_mapped_map
-        	using namespace lambda;
+            using namespace lambda;
             typedef std::string str_; typedef std::map<str_, int> C; C year; 
             ( 
                 as2::put( year )( "feb", 28 )( "apr", 30 )( "jun", 30 )( "sep", 30 )( "nov", 30 ) 
-                    % ( as2::_data = _1 ) %  ( as2::_mapped = ( _1 = 31 ) ) 
+                    % as2::_key %  ( as2::_mapped = ( _1 = 31 ) ) 
             )/*<<Calls `year["jan"] = 31` etc.>>*/( "jan" )( "mar" )( "may" )( "jul" )( "aug" )( "oct" )( "dec" );
             
             BOOST_ASSIGN_V2_CHECK( year["jan"] == 31 );
@@ -64,7 +64,7 @@ namespace xxx_mapped{
         }
         {
             //[test_optional_mapped_meta_deque
-        	using namespace lambda;
+            using namespace lambda;
             typedef BOOST_TYPEOF(_1) arg_;
             typedef as2::aux::keyword_mapped keyword_;
             typedef as2::aux::optional_modifier<keyword_, arg_> modulo_;
@@ -79,7 +79,7 @@ namespace xxx_mapped{
         }
         {
             //[test_optional_mapped_map_deque
-        	using namespace lambda;
+            using namespace lambda;
             BOOST_AUTO(
                 days_in_first_quater,
                 ( 

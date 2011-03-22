@@ -39,10 +39,10 @@ namespace xxx_standard{
         // already set at that invoked with operator%                          //
         // ------------------------------------------------------------------- //
         
-    	// MSVC REMINDER : fully qualify boost::begin boost::end - error C2668
+        // MSVC REMINDER : fully qualify boost::begin boost::end - error C2668
 
         {
-			//[test_put_pipe_modifier_push_front
+            //[test_put_pipe_modifier_push_front
             std::deque<int> powers; int front = (
                 powers | ( as2::_csv_put % as2::_push_front )( 16, 8, 4, 2, 1 )
             ).front();
@@ -52,7 +52,7 @@ namespace xxx_standard{
             //]
         }
         {
-			//[test_put_pipe_modifier_push
+            //[test_put_pipe_modifier_push
             typedef int int_; std::queue<int_> fifo; int_ front = ( 
                 fifo | ( as2::_csv_put % as2::_push )( 72, 31, 48 ) 
             ).front();
@@ -62,7 +62,7 @@ namespace xxx_standard{
             //]
         }
         {
-			//[test_put_pipe_modifier_insert
+            //[test_put_pipe_modifier_insert
             typedef std::set<double> doubles_; doubles_ sqrt2;
             range_iterator<doubles_>::type lower = ( 
                 sqrt2 | ( as2::_csv_put % as2::_insert )( 1.414, 1.41421, 1.41, 1.4142 ) 

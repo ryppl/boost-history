@@ -18,7 +18,7 @@ namespace v2{
 namespace aux{
 
 #define BOOST_ASSIGN_V2_SEQ (T)(F)(Tag)
-#define BOOST_ASSIGN_V2_R deque_adapter<T, F, Tag>
+#define BOOST_ASSIGN_V2_R deque_interpreter<T, F, Tag>
 BOOST_ASSIGN_V2_UTILITY_CONVERSION_CONVERTER_NAME_LOOKUP(BOOST_ASSIGN_V2_SEQ, BOOST_ASSIGN_V2_R)
 #undef BOOST_ASSIGN_V2_SEQ
 #undef BOOST_ASSIGN_V2_R

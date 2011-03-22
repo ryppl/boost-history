@@ -17,21 +17,22 @@
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/is_reference.hpp>
 #endif
-//#include <boost/assign/v2/interpreter/modifier.hpp>
 #include <boost/assign/v2/interpreter/fwd.hpp>
+#include <boost/assign/v2/optional/modifier.hpp>
 
 namespace boost{
 namespace assign{
 namespace v2{
+//[syntax_optional_repeat
 namespace modifier_tag{ 
 
-    template<typename Tag> struct repeat{}; 
+    template<typename Tag> struct repeat/*<-*/{}/*->*/; 
 
 }// modifier_tag
 namespace aux{
 
     template<typename Arg>
-    class adapter_modifier<modifier_tag::repeat<Arg> >
+    class adapter_modifier<modifier_tag::repeat<Arg> >/*<-*/
     {
         typedef adapter_modifier<Arg> inner_type;
 
@@ -77,16 +78,14 @@ namespace aux{
         protected:
         inner_type inner_;
         size_type n_;
-    };
+    }/*->*/;
 
 }// aux
+BOOST_ASSIGN_V2_OPTIONAL_MODIFIER_KEYWORD(repeat)
+BOOST_ASSIGN_V2_OPTIONAL_MODIFIER_META_MODIFIER_TAG(repeat, modifier_tag::repeat<typename D::modifier_tag>)
+//]
 }// v2
 }// assign
 }// boost
-#include <boost/assign/v2/optional/modifier.hpp>
-BOOST_ASSIGN_V2_OPTIONAL_MODIFIER_KEYWORD(repeat)
-#define BOOST_ASSIGN_V2_TAG modifier_tag::repeat<typename D::modifier_tag>
-BOOST_ASSIGN_V2_OPTIONAL_MODIFIER_META_MODIFIER_TAG(repeat, BOOST_ASSIGN_V2_TAG)
-#undef BOOST_ASSIGN_V2_TAG
 
 #endif // BOOST_ASSIGN_V2_OPTIONAL_REPEAT_ER_2010_HPP

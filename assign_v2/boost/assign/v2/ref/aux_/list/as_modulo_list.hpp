@@ -35,10 +35,10 @@ namespace list_aux{
             static P p;
 
 #ifdef BOOST_MSVC
-			BOOST_TYPEOF_NESTED_TYPEDEF_TPL(nested, lhs % p )
-    		typedef typename nested::type type;
+            BOOST_TYPEOF_NESTED_TYPEDEF_TPL(nested, lhs % p )
+            typedef typename nested::type type;
 #else        
-        	typedef BOOST_TYPEOF_TPL( lhs % p ) type;
+            typedef BOOST_TYPEOF_TPL( lhs % p ) type;
 #endif
         };
         

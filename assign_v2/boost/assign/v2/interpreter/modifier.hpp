@@ -27,7 +27,7 @@ namespace boost{
 namespace assign{
 namespace v2{
 //[syntax_interpreter_modifier
-namespace /*<< Template arguments to `aux::adapter_modifier<>` have to be declared within this `namespace`>>*/modifier_tag{}
+namespace /*<< Template arguments to `aux::adapter_modifier<>` have to be within this `namespace`>>*/modifier_tag{}
 namespace aux{
 
     template<typename Tag>
@@ -54,8 +54,9 @@ namespace put_concept{
         static T t;
     };
 
-}
-//]
+}//put_concept
+/*<-*/
+
 namespace switch_tag{
     struct deduce_put{};
 }// switch_tag
@@ -63,13 +64,13 @@ namespace switch_tag{
 #ifdef BOOST_ASSIGN_V2_OPTIONAL_MODIFIER_SWITCH_CASE
 #error
 #else
-#define BOOST_ASSIGN_V2_OPTIONAL_MODIFIER_SWITCH_CASE(Tag, MetaF, Number)\
+#define BOOST_ASSIGN_V2_OPTIONAL_MODIFIER_SWITCH_CASE(Tag, BooleanMetaF, CaseNumber)\
 namespace switch_aux{\
     template<>\
-    struct case_<switch_tag::deduce_put, Number> :\
+    struct case_<switch_tag::deduce_put, CaseNumber> :\
         switch_aux::helper<\
             v2::modifier_tag::Tag,\
-            ptr_container_aux::through_value_container<MetaF>::apply\
+            ptr_container_aux::through_value_container<BooleanMetaF>::apply\
         >{};\
 }\
 /**/
@@ -125,13 +126,16 @@ BOOST_ASSIGN_V2_OPTIONAL_MODIFIER_SWITCH_DEFAULT(3)
 //]
 #endif
 
+
+/*->*/
 namespace aux{
 
-    template<typename C>
-    struct deduce_modifier_tag
+    template<typename /*<<Container>>*/C>
+    struct /*<<Metafunction>>*/deduce_modifier_tag/*<-*/
         : switch_aux::result< switch_tag::deduce_put, C>
-    {};
+    {}/*->*/;
 
+//<-
     // For testing purposes
     template<typename C, typename X>
     void check_deduce()
@@ -140,7 +144,9 @@ namespace aux{
         BOOST_MPL_ASSERT(( boost::is_same<found_, X> ));
     }
 
+//->
 }// aux
+//]
 }// v2
 }// assign
 }// boost

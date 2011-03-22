@@ -38,8 +38,8 @@ namespace csv_aux{
         static F f;
         static T t;
 #ifdef BOOST_MSVC
-		BOOST_TYPEOF_NESTED_TYPEDEF_TPL(nested, f( t ) )
-    	typedef typename nested::type type;
+        BOOST_TYPEOF_NESTED_TYPEDEF_TPL(nested, f( t ) )
+        typedef typename nested::type type;
 #else        
         typedef BOOST_TYPEOF_TPL( f( t ) ) type;
 #endif

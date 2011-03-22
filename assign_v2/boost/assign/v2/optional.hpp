@@ -9,6 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_OPTIONAL_ER_2010_HPP
 #define BOOST_ASSIGN_V2_OPTIONAL_ER_2010_HPP
+#include <boost/assign/v2/optional/key.hpp>
 #include <boost/assign/v2/optional/iterate.hpp>
 #include <boost/assign/v2/optional/mapped.hpp>
 #include <boost/assign/v2/optional/modifier.hpp>
