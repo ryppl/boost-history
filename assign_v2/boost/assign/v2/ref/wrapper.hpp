@@ -13,6 +13,6 @@
 #include <boost/assign/v2/ref/wrapper/get.hpp>
 #include <boost/assign/v2/ref/wrapper/copy.hpp>
 #include <boost/assign/v2/ref/wrapper/cpp0x.hpp>
-#include <boost/assign/v2/ref/wrapper/range_get.hpp>
+#include <boost/assign/v2/ref/array/get.hpp>
 
 #endif // BOOST_ASSIGN_V2_REF_WRAPPER_ER_2010_HPP

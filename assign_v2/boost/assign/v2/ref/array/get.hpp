@@ -7,8 +7,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_REF_WRAPPER_RANGE_GET_ER_2010_HPP
-#define BOOST_ASSIGN_V2_REF_WRAPPER_RANGE_GET_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_REF_ARRAY_GET_ER_2010_HPP
+#define BOOST_ASSIGN_V2_REF_ARRAY_GET_ER_2010_HPP
 #include <boost/assign/v2/detail/pp/ignore.hpp>
 #include <boost/config.hpp>
 #include <boost/range/reference.hpp>
@@ -126,4 +126,4 @@ namespace{
 }// assign
 }// boost
 
-#endif // BOOST_ASSIGN_V2_REF_WRAPPER_RANGE_GET_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_REF_ARRAY_GET_ER_2010_HPP
