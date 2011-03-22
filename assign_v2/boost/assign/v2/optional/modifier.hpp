@@ -162,10 +162,6 @@ namespace {\
 /**/
 #endif
 
-// The default
-BOOST_ASSIGN_V2_OPTIONAL_MODIFIER_KEYWORD(standard_modifier)    
-BOOST_ASSIGN_V2_OPTIONAL_MODIFIER_META_MODIFIER_TAG(standard_modifier, Arg)
-
 }// v2
 }// assign
 }// boost

@@ -12,7 +12,7 @@
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
 #include <boost/assign/v2/ref/array/csv_array.hpp>
 #include <boost/assign/v2/ref/wrapper/copy.hpp>
-#include <boost/assign/v2/put/pipe/modulo_traits.hpp>
+#include <boost/assign/v2/put/pipe/option_traits.hpp>
 #include <boost/mpl/apply.hpp>
 #include <boost/mpl/vector/vector0.hpp>
 #include <boost/mpl/size.hpp>
@@ -32,24 +32,24 @@ namespace aux{
 
     typedef ref::array_aux::size_type arg_list_size_type;
 
-    template<typename Pars, arg_list_size_type N, typename U>
+    template<typename OptionList, arg_list_size_type N, typename U>
     struct arg_list/*<-*/
     {
         typedef boost::use_default tag2_;
-        typedef modulo_traits<Pars> modulo_traits_;
-        typedef typename modulo_traits_::cont_ par_list_cont_type;
+        typedef option_traits<OptionList> option_traits;
+        typedef typename option_traits::cont_ option_list_cont_type;
         typedef typename v2::ref::nth_result_of::csv_array<
             N,
             U
         >::type arg_list_cont_type; //notice it's arg, not args
 
         arg_list(){}
-        arg_list(par_list_cont_type const& a, arg_list_cont_type const& b)
-            : par_list_cont_( a ), arg_list_cont_( b ){}
+        arg_list(option_list_cont_type const& a, arg_list_cont_type const& b)
+            : option_list_cont_( a ), arg_list_cont_( b ){}
 
-        par_list_cont_type const& par_list_cont()const 
+        option_list_cont_type const& option_list_cont()const 
         {
-            return this->par_list_cont_;
+            return this->option_list_cont_;
         }
 
         arg_list_cont_type const& arg_list_cont() const
@@ -58,60 +58,60 @@ namespace aux{
         }
 
         protected:
-        par_list_cont_type par_list_cont_;
+        option_list_cont_type option_list_cont_;
         arg_list_cont_type arg_list_cont_;
 
     }/*->*/;
 
-    template<typename ParList/*<-*/ = ::boost::mpl::vector0<> /*->*/>
+    template<typename OptionList/*<-*/ = ::boost::mpl::vector0<> /*->*/>
     class arg_list_generator/*<-*/
     {
 
         typedef ::boost::mpl::na na_;
-        typedef modulo_traits<ParList> modulo_traits_;
+        typedef option_traits<OptionList> option_traits_;
 
         public:
 
-        typedef typename modulo_traits_::size par_list_size;
-        typedef typename modulo_traits_::cont_ par_list_cont_type;
+        typedef typename option_traits_::size option_list_size;
+        typedef typename option_traits_::cont_ option_list_cont_type;
 
         arg_list_generator(){}
-        explicit arg_list_generator(par_list_cont_type const& p)
-            : par_list_cont_( p ){}
+        explicit arg_list_generator(option_list_cont_type const& p)
+            : option_list_cont_( p ){}
 
         template<typename P>
-        struct modulo_result
+        struct option_result
         {
-            typedef typename modulo_traits_:: template next_par_list<
+            typedef typename option_traits_:: template next_option_list<
                 P
-            >::type par_list_;
-            typedef arg_list_generator<par_list_> type;
+            >::type option_list_;
+            typedef arg_list_generator<option_list_> type;
         };
 
-        template<typename P>
-        typename modulo_result<P>::type
-        operator%(P const& p)const
+        template<typename O>
+        typename option_result<O>::type
+        operator%(O const& option)const
         {
-            typedef typename modulo_result<P>::type result_;
-            return result_( this->par_list_cont()( p ) );
+            typedef typename option_result<O>::type result_;
+            return result_( this->option_list_cont()( option ) );
         }
 
         template<std::size_t N, typename U = na_> // size?
         struct result{
-            typedef aux::arg_list<ParList, N, U> type;
+            typedef aux::arg_list<OptionList, N, U> type;
         };
  
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 
     protected:
     template<typename T, typename...Args>
-    typename result<sizeof...(Args)+1, T>::type
+    typename result<sizeof...(Args) + 1, T>::type
     impl(T& t, Args&...args)const
     {
         typedef typename result<sizeof...(Args)+1, T>::type result_;
         namespace ns = ref::assign_copy;
         return result_(
-            this->par_list_cont(),
+            this->option_list_cont(),
             ref::csv_array( t, args... )
         );
     }
@@ -149,7 +149,7 @@ namespace aux{
 
 #define BOOST_ASSIGN_V2_MACRO1(N, U)\
     return result_( \
-        this->par_list_cont(), \
+        this->option_list_cont(), \
         ref::csv_array<U>( BOOST_PP_ENUM_PARAMS(N, _) ) \
     );\
 /**/
@@ -181,13 +181,13 @@ BOOST_PP_REPEAT_FROM_TO(
 
 #endif // BOOST_ASSIGN_V2_ENABLE_CPP0X
 
-        par_list_cont_type const& par_list_cont()const
+        option_list_cont_type const& option_list_cont()const
         {
-            return this->par_list_cont_;
+            return this->option_list_cont_;
         }
 
         protected:
-        par_list_cont_type par_list_cont_;
+        option_list_cont_type option_list_cont_;
 
     }/*->*/;
 
