@@ -10,13 +10,13 @@
 #ifndef BOOST_ASSIGN_V2_INTERPRETER_KEY_ER_2010_HPP
 #define BOOST_ASSIGN_V2_INTERPRETER_KEY_ER_2010_HPP
 #include <boost/assign/v2/interpreter/data.hpp>
-#include <boost/assign/v2/optional/data.hpp>
+#include <boost/assign/v2/option/data.hpp>
 #include <boost/mpl/apply.hpp>
 
 namespace boost{
 namespace assign{
 namespace v2{
-//[syntax_optional_key
+//[syntax_option_key
 namespace aux{
 
     template<typename C>
@@ -31,24 +31,24 @@ namespace aux{
         >
     {}/*->*/;
 
-    struct optional_key{};
+    struct option_key{};
 
 
 namespace result_of{
 
     template<typename C, typename D>
-    struct optional_key : ::boost::mpl::apply1<
-        aux::result_of::optional_data_generator<D>,
+    struct option_key : ::boost::mpl::apply1<
+        aux::result_of::option_data_generator<D>,
         typename deduce_key_generator<C>::type
     >{};
 
 }//result_of
 
     template<typename C, typename F, typename Tag, typename D>
-    typename result_of::optional_key<C, D>::type
+    typename result_of::option_key<C, D>::type
     operator%/*<<Overrides data generator with a constructor for C::key_type>>*/(
         interpreter_crtp<C, F, Tag, D> const& lhs,
-        optional_key rhs
+        option_key rhs
     )/*<-*/
     {
         typedef typename deduce_key_generator<C>::type gen_;
@@ -60,7 +60,7 @@ namespace result_of{
 //<-
 namespace{
 //->
-    aux::optional_key const _key/*<-*/= aux::optional_key()/*->*/;
+    aux::option_key const _key/*<-*/= aux::option_key()/*->*/;
 //]
 }
 }// v2

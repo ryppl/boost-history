@@ -7,8 +7,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_OPTIONAL_DATA_ER_2010_HPP
-#define BOOST_ASSIGN_V2_OPTIONAL_DATA_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_OPTION_DATA_ER_2010_HPP
+#define BOOST_ASSIGN_V2_OPTION_DATA_ER_2010_HPP
 #include <boost/assign/v2/detail/keyword/ignore.hpp>
 #include <boost/assign/v2/detail/pp/ignore.hpp>
 #include <boost/assign/v2/interpreter/fwd.hpp>
@@ -18,12 +18,12 @@
 namespace boost{
 namespace assign{
 namespace v2{
-//[syntax_optional_data
+//[syntax_option_data
 namespace aux{
 namespace result_of{
 
     template<typename D>
-    struct /*<<Metafunction class>>*/optional_data_generator/*<-*/{
+    struct /*<<Metafunction class>>*/option_data_generator/*<-*/{
 
         typedef aux::replace_fun<D> meta_;
 
@@ -35,10 +35,10 @@ namespace result_of{
 }// result_of
 
     template<typename F/*<-*/= keyword_aux::ignore/*->*/>
-    struct optional_data_generator/*<-*/
+    struct option_data_generator/*<-*/
     {
-        optional_data_generator(){}
-        optional_data_generator(F f) : f_( f ){}
+        option_data_generator(){}
+        option_data_generator(F f) : f_( f ){}
 
         F const& fun()const{ return this->f_; }
 
@@ -47,13 +47,13 @@ namespace result_of{
     }/*->*/;
 
     template<typename C, typename F, typename Tag, typename D, typename F1>
-    typename ::boost::mpl::apply1<result_of::optional_data_generator<D>, F1>::type
+    typename ::boost::mpl::apply1<result_of::option_data_generator<D>, F1>::type
     operator%/*<<Overrides data generator>>*/(
         interpreter_crtp<C, F, Tag, D> const& lhs,
-        optional_data_generator<F1> const& rhs
+        option_data_generator<F1> const& rhs
     )/*<-*/
     {
-        typedef result_of::optional_data_generator<D> meta_;
+        typedef result_of::option_data_generator<D> meta_;
         typedef typename ::boost::mpl::apply1<meta_, F1>::type result_;
         return result_( lhs.container(), rhs.fun(), lhs.modifier );
     }/*<-*/BOOST_ASSIGN_V2_IGNORE(/*<-*/;/*->*/)/*->*/
@@ -62,8 +62,8 @@ namespace result_of{
     /*<-*/{
 
         template<typename F>
-        optional_data_generator<F> operator=(F const& f)const{
-            return optional_data_generator<F>( f );
+        option_data_generator<F> operator=(F const& f)const{
+            return option_data_generator<F>( f );
         }
 
     }/*->*/;
@@ -76,8 +76,8 @@ namespace{
 namespace result_of{
 
     template<typename D>
-    struct /*<<Metafunction class>>*/optional_data_generator/*<-*/
-        : aux::result_of::optional_data_generator<D>
+    struct /*<<Metafunction class>>*/option_data_generator/*<-*/
+        : aux::result_of::option_data_generator<D>
     {}/*->*/;
 
 }// result_of
@@ -90,14 +90,14 @@ namespace result_of{
 
 #include <boost/preprocessor/cat.hpp>
 
-#define BOOST_ASSIGN_V2_OPTIONAL_DATA_GENERATE(NAME, FUN)\
+#define BOOST_ASSIGN_V2_OPTION_DATA_GENERATE(NAME, FUN)\
 namespace boost{\
 namespace assign{\
 namespace v2{\
 namespace aux{\
 \
     template<typename T>\
-    optional_data_generator< FUN > NAME()\
+    option_data_generator< FUN > NAME()\
     {\
         return ( v2::_data = FUN() );\
     }\
@@ -110,14 +110,14 @@ using aux::NAME;\
 /**/
 
 #include <boost/assign/v2/detail/functor/constructor.hpp>
-BOOST_ASSIGN_V2_OPTIONAL_DATA_GENERATE(constructor, v2::functor_aux::constructor<T>)
+BOOST_ASSIGN_V2_OPTION_DATA_GENERATE(constructor, v2::functor_aux::constructor<T>)
 
 #include <boost/assign/v2/detail/functor/new.hpp>
-BOOST_ASSIGN_V2_OPTIONAL_DATA_GENERATE(new_ptr, v2::functor_aux::new_<T>)
+BOOST_ASSIGN_V2_OPTION_DATA_GENERATE(new_ptr, v2::functor_aux::new_<T>)
 
 #include <boost/typeof/typeof.hpp>
 #include <boost/type_traits/add_const.hpp>
-#define BOOST_ASSIGN_V2_OPTIONAL_DATA_KEYWORD(NAME, EXPR)\
+#define BOOST_ASSIGN_V2_OPTION_DATA_KEYWORD(NAME, EXPR)\
 namespace boost{\
 namespace assign{\
 namespace v2{\
@@ -131,6 +131,6 @@ namespace{\
 }\
 
 #include <boost/lambda/lambda.hpp>
-BOOST_ASSIGN_V2_OPTIONAL_DATA_KEYWORD(identity, ::boost::lambda::_1)
+BOOST_ASSIGN_V2_OPTION_DATA_KEYWORD(identity, ::boost::lambda::_1)
 
-#endif // BOOST_ASSIGN_V2_OPTIONAL_DATA_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_OPTION_DATA_ER_2010_HPP

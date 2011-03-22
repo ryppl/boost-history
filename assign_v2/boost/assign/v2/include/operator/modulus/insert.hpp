@@ -9,6 +9,6 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_INCLUDE_OPERATOR_MODULUS_INSERT_ER_2010_HPP
 #define BOOST_ASSIGN_V2_INCLUDE_OPERATOR_MODULUS_INSERT_ER_2010_HPP
-#include <boost/assign/v2/optional/insert.hpp>
+#include <boost/assign/v2/option/insert.hpp>
 
 #endif // BOOST_ASSIGN_V2_INCLUDE_OPERATOR_MODULUS_INSERT_ER_2010_HPP

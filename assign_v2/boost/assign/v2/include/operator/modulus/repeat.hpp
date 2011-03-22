@@ -9,6 +9,6 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_INCLUDE_OPERATOR_MODULUS_REPEAT_ER_2010_HPP
 #define BOOST_ASSIGN_V2_INCLUDE_OPERATOR_MODULUS_REPEAT_ER_2010_HPP
-#include <boost/assign/v2/optional/repeat.hpp>
+#include <boost/assign/v2/option/repeat.hpp>
 
 #endif // BOOST_ASSIGN_V2_INCLUDE_OPERATOR_MODULUS_REPEAT_ER_2010_HPP

@@ -9,6 +9,6 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_INCLUDE_OPERATOR_MODULUS_KEY_ER_2010_HPP
 #define BOOST_ASSIGN_V2_INCLUDE_OPERATOR_MODULUS_KEY_ER_2010_HPP
-#include <boost/assign/v2/optional/key.hpp>
+#include <boost/assign/v2/option/key.hpp>
 
 #endif // BOOST_ASSIGN_V2_INCLUDE_OPERATOR_MODULUS_KEY_ER_2010_HPP

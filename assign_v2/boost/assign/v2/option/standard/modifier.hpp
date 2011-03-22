@@ -7,21 +7,21 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_OPTIONAL_STANDARD_MODIFIER_ER_2010_HPP
-#define BOOST_ASSIGN_V2_OPTIONAL_STANDARD_MODIFIER_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_OPTION_STANDARD_MODIFIER_ER_2010_HPP
+#define BOOST_ASSIGN_V2_OPTION_STANDARD_MODIFIER_ER_2010_HPP
 #include <boost/assign/v2/detail/keyword/ignore.hpp>
 //#include <boost/assign/v2/interpreter/modifier.hpp>
 #include <boost/assign/v2/interpreter/fwd.hpp>
-#include <boost/assign/v2/optional/modifier.hpp>
+#include <boost/assign/v2/option/modifier.hpp>
 #include <boost/preprocessor/cat.hpp>
 
-#define BOOST_ASSIGN_V2_OPTIONAL_MODIFIER_STANDARD_IMPL_PTR(FUN)\
+#define BOOST_ASSIGN_V2_OPTION_MODIFIER_STANDARD_IMPL_PTR(FUN)\
     template<typename C, typename T>\
     void impl(C& cont, T* t)const{\
     cont.FUN( t );\
 }\
 /**/
-#define BOOST_ASSIGN_V2_OPTIONAL_MODIFIER_STANDARD_IMPL_LVALUE(FUN)\
+#define BOOST_ASSIGN_V2_OPTION_MODIFIER_STANDARD_IMPL_LVALUE(FUN)\
     template<typename C, typename T>\
     void impl(C& cont, T& t)const{\
     cont.FUN( t );\
@@ -34,7 +34,7 @@
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/is_reference.hpp>
 // disable_if necessary to avoid ambiguity resolution with GCC4.4
-#define BOOST_ASSIGN_V2_OPTIONAL_MODIFIER_STANDARD_IMPL_RVALUE(FUN)\
+#define BOOST_ASSIGN_V2_OPTION_MODIFIER_STANDARD_IMPL_RVALUE(FUN)\
     template<typename C, typename T>\
         typename boost::disable_if<\
         boost::is_reference<T>,\
@@ -44,17 +44,17 @@
         cont.FUN( std::move( t ) );\
     }\
 /**/
-#define BOOST_ASSIGN_V2_OPTIONAL_MODIFIER_STANDARD_IMPL(FUN)\
-BOOST_ASSIGN_V2_OPTIONAL_MODIFIER_STANDARD_IMPL_LVALUE(FUN)\
-BOOST_ASSIGN_V2_OPTIONAL_MODIFIER_STANDARD_IMPL_RVALUE(FUN)\
+#define BOOST_ASSIGN_V2_OPTION_MODIFIER_STANDARD_IMPL(FUN)\
+BOOST_ASSIGN_V2_OPTION_MODIFIER_STANDARD_IMPL_LVALUE(FUN)\
+BOOST_ASSIGN_V2_OPTION_MODIFIER_STANDARD_IMPL_RVALUE(FUN)\
 /**/
 #else
-#define BOOST_ASSIGN_V2_OPTIONAL_MODIFIER_STANDARD_IMPL(FUN)\
-BOOST_ASSIGN_V2_OPTIONAL_MODIFIER_STANDARD_IMPL_LVALUE(FUN)\
+#define BOOST_ASSIGN_V2_OPTION_MODIFIER_STANDARD_IMPL(FUN)\
+BOOST_ASSIGN_V2_OPTION_MODIFIER_STANDARD_IMPL_LVALUE(FUN)\
 /**/
 #endif // BOOST_ASSIGN_V2_ENABLE_CPP0X
 
-#define BOOST_ASSIGN_V2_OPTIONAL_MODIFIER_STANDARD_TAG(FUN)\
+#define BOOST_ASSIGN_V2_OPTION_MODIFIER_STANDARD_TAG(FUN)\
 namespace boost{\
 namespace assign{\
 namespace v2{\
@@ -64,8 +64,8 @@ namespace modifier_tag{ struct FUN{}; }\
 }\
 /**/
 
-// Must be preceded by BOOST_ASSIGN_V2_OPTIONAL_MODIFIER_STANDARD_TAG(FUN)
-#define BOOST_ASSIGN_V2_OPTIONAL_MODIFIER_STANDARD(FUN)\
+// Must be preceded by BOOST_ASSIGN_V2_OPTION_MODIFIER_STANDARD_TAG(FUN)
+#define BOOST_ASSIGN_V2_OPTION_MODIFIER_STANDARD(FUN)\
 namespace boost{\
 namespace assign{\
 namespace v2{\
@@ -78,13 +78,13 @@ namespace aux{\
         public:\
         adapter_modifier(){}\
         adapter_modifier( ignore_, ignore_ ){}\
-        BOOST_ASSIGN_V2_OPTIONAL_MODIFIER_STANDARD_IMPL(FUN)\
+        BOOST_ASSIGN_V2_OPTION_MODIFIER_STANDARD_IMPL(FUN)\
     };\
 \
 }\
 namespace{\
 \
-    aux::optional_modifier<aux::keyword_standard_modifier, modifier_tag::FUN> const\
+    aux::option_modifier<aux::keyword_standard_modifier, modifier_tag::FUN> const\
         BOOST_PP_CAT(_,FUN) = ( \
         _standard_modifier = modifier_tag::FUN() \
     );\
@@ -96,4 +96,4 @@ namespace{\
 /**/
 
 
-#endif // BOOST_ASSIGN_V2_OPTIONAL_MODIFIER_STANDARD_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_OPTION_MODIFIER_STANDARD_ER_2010_HPP
