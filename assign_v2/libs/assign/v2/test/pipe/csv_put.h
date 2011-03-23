@@ -10,14 +10,14 @@
 #ifndef LIBS_ASSIGN_V2_TEST_PIPE_CSV_PUT_ER_2010_H
 #define LIBS_ASSIGN_V2_TEST_PIPE_CSV_PUT_ER_2010_H
 
-//namespace test_assign_v2{
-//namespace xxx_pipe{
-//namespace xxx_csv_put{
+namespace test_assign_v2{
+namespace xxx_pipe{
+namespace xxx_csv_put{
 
-//    void test();
+    void test();
 
-//}// xxx_csv_put
-//}// xxx_pipe
-//}// test_assign_v2
+}// xxx_csv_put
+}// xxx_pipe
+}// test_assign_v2
 
 #endif // LIBS_ASSIGN_V2_TEST_PIPE_CSV_PUT_ER_2010_H
