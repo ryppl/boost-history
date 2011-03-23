@@ -9,6 +9,6 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_INCLUDE__CSV_PUT_ER_2010_HPP
 #define BOOST_ASSIGN_V2_INCLUDE__CSV_PUT_ER_2010_HPP
-#include <boost/assign/v2/put/pipe/csv_put.hpp>
+#include <boost/assign/v2/pipe/put/csv_put.hpp>
 
 #endif // BOOST_ASSIGN_V2_INCLUDE__CSV_PUT_ER_2010_HPP
