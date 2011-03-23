@@ -14,7 +14,7 @@
 #include <boost/assign/v2/ref/array/csv_array.hpp>
 #include <boost/assign/v2/ref/aux_/list/as_modulo_list.hpp>
 #include <boost/assign/v2/ref/wrapper/copy.hpp>
-#include <boost/assign/v2/pipe/put/option_traits.hpp>
+#include <boost/assign/v2/pipe/option_traits.hpp>
 #include <boost/assign/v2/put.hpp>
 #include <boost/mpl/apply.hpp>
 #include <boost/mpl/vector/vector0.hpp>
