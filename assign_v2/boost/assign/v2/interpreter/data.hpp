@@ -22,7 +22,7 @@ namespace boost{
 namespace assign{
 namespace v2{
 //[syntax_interpreter_data
-namespace aux{
+namespace interpreter_aux{
 
     template<typename C>
     struct container_value{ typedef typename C::value_type type; };
@@ -58,7 +58,7 @@ namespace aux{
         >
     {}/*->*/;
 
-}// aux
+}// interpreter_aux
 //]
 }// v2
 }// assign

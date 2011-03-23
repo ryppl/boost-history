@@ -20,17 +20,17 @@ namespace boost{
 namespace assign{
 namespace v2{
 //[syntax_put
-namespace aux{
+namespace interpreter_aux{
 
     template<typename C, typename F, typename Tag>
     class put_interpreter
         : protected ref::wrapper< ref::assign_tag::copy, C >,
 //<-
-        public aux::interpreter_crtp< C, F, Tag, put_interpreter<C, F, Tag> >
+        public interpreter_aux::interpreter_crtp< C, F, Tag, put_interpreter<C, F, Tag> >
 //->
     {
 //<-
-        typedef aux::interpreter_crtp< C, F, Tag, put_interpreter > super2_t;
+        typedef interpreter_aux::interpreter_crtp< C, F, Tag, put_interpreter > super2_t;
 //->
         public:
 
@@ -38,7 +38,7 @@ namespace aux{
 //<-
         protected:
 
-        typedef aux::adapter_modifier<Tag> modifier_;
+        typedef interpreter_aux::adapter_modifier<Tag> modifier_;
         typedef ref::assign_tag::copy assign_tag_;
         typedef ref::wrapper<assign_tag_,C> super1_t;
 //->
@@ -62,25 +62,25 @@ namespace aux{
     };
 
     template<typename C, typename F, typename Tag>
-    struct /*<<Metafunction class>>*/replace_data_generator< aux::put_interpreter<C, F, Tag> >{/*<-*/
+    struct /*<<Metafunction class>>*/replace_data_generator< interpreter_aux::put_interpreter<C, F, Tag> >{/*<-*/
         template<typename F1>
-        struct apply{ typedef aux::put_interpreter<C, F1, Tag> type; };
+        struct apply{ typedef interpreter_aux::put_interpreter<C, F1, Tag> type; };
     /*->*/};
 
     template<typename C, typename F, typename Tag>
-    struct /*<<Metafunction class>>*/replace_modifier_tag< aux::put_interpreter<C, F, Tag> >{/*<-*/
+    struct /*<<Metafunction class>>*/replace_modifier_tag< interpreter_aux::put_interpreter<C, F, Tag> >{/*<-*/
         template<typename Tag1>
-        struct apply{ typedef aux::put_interpreter<C, F, Tag1> type; };
+        struct apply{ typedef interpreter_aux::put_interpreter<C, F, Tag1> type; };
     /*->*/};
 
-}// aux
+}// interpreter_aux
 namespace result_of{
 
     template<typename C>
     struct /*<<Metafunction>>*/put/*<-*/{
-        typedef typename aux::deduce_data_generator<C>::type f_;
-        typedef typename aux::deduce_modifier_tag<C>::type modifier_tag_;
-        typedef aux::put_interpreter<C, f_, modifier_tag_> type;
+        typedef typename interpreter_aux::deduce_data_generator<C>::type f_;
+        typedef typename interpreter_aux::deduce_modifier_tag<C>::type modifier_tag_;
+        typedef interpreter_aux::put_interpreter<C, f_, modifier_tag_> type;
     }/*->*/;
 
 }// result_of

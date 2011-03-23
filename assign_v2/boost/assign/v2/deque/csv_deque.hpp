@@ -21,7 +21,7 @@
 namespace boost{
 namespace assign{
 namespace v2{
-namespace aux{
+namespace interpreter_aux{
 
     template<typename T>
     struct csv_deque_value : boost::decay<
@@ -36,25 +36,25 @@ namespace result_of{
     >{};
 
 }// result_of
-}// aux
+}// interpreter_aux
 //[syntax_deque_csv_deque
 
     template<typename T>
     struct csv_deque_value/*<-*/
-        : aux::csv_deque_value<T>
+        : interpreter_aux::csv_deque_value<T>
     {}/*->*/;
 
 namespace result_of{
 
     template<typename T>
     struct csv_deque/*<-*/
-        : aux::result_of::csv_deque<T>
+        : interpreter_aux::result_of::csv_deque<T>
     {}/*->*/;
 
 }// result_of
 //<-
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
-namespace aux{
+namespace interpreter_aux{
 
     template<typename T, typename R>
     void csv_deque_impl(R& r){}
@@ -77,9 +77,9 @@ namespace aux{
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
 //]
-}// aux
+}// interpreter_aux
 
-using aux::csv_deque;
+using interpreter_aux::csv_deque;
 
 #endif // BOOST_ASSIGN_V2_ENABLE_CPP0X
 

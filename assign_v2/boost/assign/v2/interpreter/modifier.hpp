@@ -28,7 +28,7 @@ namespace assign{
 namespace v2{
 //[syntax_interpreter_modifier
 namespace /*<< Template arguments to `aux::adapter_modifier<>` have to be within this `namespace`>>*/modifier_tag{}
-namespace aux{
+namespace interpreter_aux{
 
     template<typename Tag>
     struct /*<<Specialize on Tag>>*/ adapter_modifier{};
@@ -36,7 +36,7 @@ namespace aux{
     template<typename C>
     struct /*<<Metafunction returning a modifier-tag>>*/deduce_modifier_tag;
 
-}// aux
+}// interpreter_aux
 namespace put_concept{
 
     template<typename Tag, /*<<Container>>*/ typename C, /*<<Input>>*/ typename T>
@@ -49,7 +49,7 @@ namespace put_concept{
         }
 
         private:
-        static aux::adapter_modifier<Tag>& m;
+        static interpreter_aux::adapter_modifier<Tag>& m;
         static C& cont;
         static T t;
     };
@@ -128,7 +128,7 @@ BOOST_ASSIGN_V2_OPTION_MODIFIER_SWITCH_DEFAULT(3)
 
 
 /*->*/
-namespace aux{
+namespace interpreter_aux{
 
     template<typename /*<<Container>>*/C>
     struct /*<<Metafunction>>*/deduce_modifier_tag/*<-*/
@@ -140,12 +140,12 @@ namespace aux{
     template<typename C, typename X>
     void check_deduce()
     {
-        typedef typename aux::deduce_modifier_tag<C>::type found_;
+        typedef typename interpreter_aux::deduce_modifier_tag<C>::type found_;
         BOOST_MPL_ASSERT(( boost::is_same<found_, X> ));
     }
 
 //->
-}// aux
+}// interpreter_aux
 //]
 }// v2
 }// assign

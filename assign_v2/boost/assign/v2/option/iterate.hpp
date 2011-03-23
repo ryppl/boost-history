@@ -49,7 +49,7 @@ namespace modifier_tag{
     template<typename Arg/*<-*/= iterate_arg::type/*->*/> struct iterate{}; 
 
 }// modifier_tag
-namespace aux{
+namespace interpreter_aux{
                 
     template<typename Arg>
     class adapter_modifier< modifier_tag::iterate<Arg> >/*<-*/
@@ -100,7 +100,7 @@ namespace aux{
 
     }/*->*/;
 
-}// aux
+}// interpreter_aux
 BOOST_ASSIGN_V2_OPTION_MODIFIER_KEYWORD(iterate)
 BOOST_ASSIGN_V2_OPTION_MODIFIER_META_MODIFIER_TAG(iterate, modifier_tag::iterate<Arg>)
 //]

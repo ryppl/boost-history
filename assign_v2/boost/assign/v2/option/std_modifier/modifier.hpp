@@ -79,7 +79,7 @@ namespace modifier_tag{ struct FUN{}; }\
 namespace boost{\
 namespace assign{\
 namespace v2{\
-namespace aux{\
+namespace interpreter_aux{\
 \
     template<>\
     class adapter_modifier<modifier_tag::FUN>\
@@ -94,7 +94,7 @@ namespace aux{\
 }\
 namespace{\
 \
-    aux::option_modifier<aux::keyword_std_modifier, modifier_tag::FUN> const\
+    interpreter_aux::option_modifier<interpreter_aux::keyword_std_modifier, modifier_tag::FUN> const\
         BOOST_PP_CAT(_,FUN) = ( \
         _std_modifier = modifier_tag::FUN() \
     );\

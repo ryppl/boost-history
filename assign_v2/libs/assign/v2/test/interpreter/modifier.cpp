@@ -41,34 +41,34 @@ namespace xxx_modifier{
 
         {
             typedef as2::modifier_tag::push_back answer_;
-            as2::aux::check_deduce<std::deque<int>, answer_>();
-            as2::aux::check_deduce<std::list<int>, answer_>();
-            as2::aux::check_deduce<std::vector<int>, answer_>();
+            as2:: interpreter_aux::check_deduce<std::deque<int>, answer_>();
+            as2:: interpreter_aux::check_deduce<std::list<int>, answer_>();
+            as2:: interpreter_aux::check_deduce<std::vector<int>, answer_>();
 
-            as2::aux::check_deduce<boost::ptr_deque<int>, answer_>();
-            as2::aux::check_deduce<boost::ptr_list<int>, answer_>();
-            as2::aux::check_deduce<boost::ptr_vector<int>, answer_>();
+            as2:: interpreter_aux::check_deduce<boost::ptr_deque<int>, answer_>();
+            as2:: interpreter_aux::check_deduce<boost::ptr_list<int>, answer_>();
+            as2:: interpreter_aux::check_deduce<boost::ptr_vector<int>, answer_>();
         }
         {
             typedef as2::modifier_tag::iterate<> answer_;
-            as2::aux::check_deduce<boost::array<int, 1>, answer_>();
-            as2::aux::check_deduce<boost::ptr_array<int, 1>, answer_>();
+            as2:: interpreter_aux::check_deduce<boost::array<int, 1>, answer_>();
+            as2:: interpreter_aux::check_deduce<boost::ptr_array<int, 1>, answer_>();
         }
         {
             typedef as2::modifier_tag::push answer_;
-            as2::aux::check_deduce<std::queue<int>, answer_>();
-            as2::aux::check_deduce<std::stack<int>, answer_>();
+            as2:: interpreter_aux::check_deduce<std::queue<int>, answer_>();
+            as2:: interpreter_aux::check_deduce<std::stack<int>, answer_>();
         }
         {
             typedef as2::modifier_tag::insert answer_;
-            as2::aux::check_deduce<std::set<int>, answer_>();
+            as2:: interpreter_aux::check_deduce<std::set<int>, answer_>();
             typedef std::string str_;
-            as2::aux::check_deduce<std::map<str_, int>, answer_>();
+            as2:: interpreter_aux::check_deduce<std::map<str_, int>, answer_>();
         }
         {
             //[put_deduce_map
             typedef std::map<std::string, int> C;
-            typedef as2::aux::deduce_modifier_tag<C>::type found_;
+            typedef as2:: interpreter_aux::deduce_modifier_tag<C>::type found_;
             typedef as2::modifier_tag::insert answer_;
             BOOST_MPL_ASSERT(( boost::is_same<found_, answer_> ));
             //]

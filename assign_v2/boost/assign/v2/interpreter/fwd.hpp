@@ -13,14 +13,14 @@
 namespace boost{
 namespace assign{
 namespace v2{
-namespace aux{
+namespace interpreter_aux{
 
     template<typename C, typename F, typename Tag, typename D> 
     class interpreter_crtp;
 
     template<typename Tag> struct /*<<Specialize on Tag>>*/ adapter_modifier;
 
-}// aux
+}// interpreter_aux
 }// v2
 }// assign
 }// boost

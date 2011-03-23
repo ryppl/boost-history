@@ -13,13 +13,13 @@
 namespace boost{
 namespace assign{
 namespace v2{
-namespace aux{
+namespace interpreter_aux{
 
     template<typename T> struct deque_impl;
 
     template<typename T, typename F, typename Tag> class deque_interpreter;
 
-}// aux
+}// interpreter_aux
 }// v2
 }// assign
 }// boost

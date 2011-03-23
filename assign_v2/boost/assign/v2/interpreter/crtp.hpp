@@ -36,7 +36,7 @@
 namespace boost{
 namespace assign{
 namespace v2{
-namespace aux{
+namespace interpreter_aux{
 
     template<typename F>
     struct data_gen_holder{
@@ -54,7 +54,7 @@ namespace aux{
     struct modifier_holder{
 
         typedef Tag modifier_tag;
-        typedef aux::adapter_modifier<Tag> modifier_type;
+        typedef interpreter_aux::adapter_modifier<Tag> modifier_type;
 
         modifier_holder(){}
         modifier_holder(modifier_type const& m) : modifier( m ){}
@@ -100,7 +100,7 @@ namespace aux{
     };
 }//aux
 //[syntax_put_interpreter_crtp
-namespace aux{
+namespace interpreter_aux{
 
     template<typename C, typename D>
     struct ConceptAdapter1{
@@ -119,7 +119,7 @@ namespace aux{
     template<typename C, typename F, typename Tag, typename D>
     struct ConceptAdapter2 : ConceptAdapter1<C, D>{
 
-        typedef aux::adapter_modifier<Tag> modifier_;
+        typedef interpreter_aux::adapter_modifier<Tag> modifier_;
 
         BOOST_CONCEPT_USAGE(ConceptAdapter2)
         {
@@ -259,7 +259,7 @@ BOOST_PP_REPEAT_FROM_TO(
         result_type modify(T&& t)const
         {
             check_modifier( t );
-            /*<< Instance of aux::adapter_modifier<Tag> >>*/this->modifier.impl(
+            /*<< Instance of interpreter_aux::adapter_modifier<Tag> >>*/this->modifier.impl(
                 /*<< Reference to C >>*/this->derived().container(),
                 std::forward<T>( t )
             );
@@ -288,7 +288,7 @@ BOOST_PP_REPEAT_FROM_TO(
 
     };
 
-}// aux
+}// interpreter_aux
 //]
 }// v2
 }// assign

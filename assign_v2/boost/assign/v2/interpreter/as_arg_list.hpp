@@ -17,7 +17,7 @@ namespace boost{
 namespace assign{
 namespace v2{
 //[syntax_interpreter_as_arg_list
-namespace aux{    
+namespace interpreter_aux{    
 
     template<typename /*<<Range>>*/R>
     class as_arg_list_adapter/*<-*/
@@ -67,13 +67,13 @@ namespace result_of{
         return typename result_of::as_arg_list<R const>::type( range );
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
-}// aux
-    using aux::as_arg_list;
+}// interpreter_aux
+    using interpreter_aux::as_arg_list;
 namespace result_of{
 
     template<typename R>
     struct as_arg_list/*<-*/
-        : aux::result_of::as_arg_list<R>
+        : interpreter_aux::result_of::as_arg_list<R>
     {}/*->*/;
 
 }// result_of

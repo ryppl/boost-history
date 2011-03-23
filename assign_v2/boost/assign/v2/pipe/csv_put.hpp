@@ -32,7 +32,7 @@ namespace boost{
 namespace assign{
 namespace v2{
 //[syntax_pipe_csv_put
-namespace aux{
+namespace interpreter_aux{
 
     typedef ref::array_aux::size_type arg_list_size_type;
 
@@ -102,7 +102,7 @@ namespace aux{
 
         template<std::size_t N, typename U = na_> // size?
         struct result{
-            typedef aux::arg_list<OptionList, N, U> type;
+            typedef interpreter_aux::arg_list<OptionList, N, U> type;
         };
  
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
@@ -196,7 +196,7 @@ BOOST_PP_REPEAT_FROM_TO(
     }/*->*/;
 
     template<typename C, typename ParList, arg_list_size_type N, typename U>
-    C& operator|(C& cont, aux::arg_list<ParList, N, U> const& arg_list)/*<-*/
+    C& operator|(C& cont, interpreter_aux::arg_list<ParList, N, U> const& arg_list)/*<-*/
     {
         v2::ref::as_arg_list(
             v2::ref::as_modulo_list<ParList>( 
@@ -209,13 +209,13 @@ BOOST_PP_REPEAT_FROM_TO(
 
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
-}// aux 
+}// interpreter_aux 
 //<-
 namespace{
 //->
 
-    aux::arg_list_generator<> const _csv_put/*<-*/
-        = aux::arg_list_generator<>()/*->*/;
+    interpreter_aux::arg_list_generator<> const _csv_put/*<-*/
+        = interpreter_aux::arg_list_generator<>()/*->*/;
 
 //<-
 }

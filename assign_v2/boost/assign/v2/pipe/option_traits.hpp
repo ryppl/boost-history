@@ -19,7 +19,7 @@
 namespace boost{
 namespace assign{
 namespace v2{
-namespace aux{
+namespace interpreter_aux{
 
     typedef ::boost::mpl::vector0<> empty_option_list_; 
     typedef ref::list_aux::size_type option_size_type;
@@ -38,7 +38,7 @@ namespace aux{
         >{};
     };
 
-}// aux
+}// interpreter_aux
 }// v2
 }// assign
 }// boost

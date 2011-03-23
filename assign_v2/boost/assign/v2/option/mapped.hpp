@@ -25,7 +25,7 @@ namespace modifier_tag{
     template<typename/*<<Mapping>>*/ Arg> struct mapped; 
 
 }// modifier_tag
-namespace aux{
+namespace interpreter_aux{
                 
     template<typename Arg>
     class adapter_modifier<modifier_tag::mapped<Arg> >/*<-*/
@@ -65,7 +65,7 @@ namespace aux{
         ptr_ ptr;
     }/*->*/;
 
-}// aux
+}// interpreter_aux
 BOOST_ASSIGN_V2_OPTION_MODIFIER_KEYWORD(mapped)
 BOOST_ASSIGN_V2_OPTION_MODIFIER_META_MODIFIER_TAG(mapped, modifier_tag::mapped<Arg>)
 //]

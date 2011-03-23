@@ -15,7 +15,7 @@
 namespace boost{
 namespace assign{
 namespace v2{
-namespace aux{
+namespace interpreter_aux{
 
 #define BOOST_ASSIGN_V2_SEQ (T)(F)(Tag)
 #define BOOST_ASSIGN_V2_R deque_interpreter<T, F, Tag>
@@ -23,7 +23,7 @@ BOOST_ASSIGN_V2_UTILITY_CONVERSION_CONVERTER_NAME_LOOKUP(BOOST_ASSIGN_V2_SEQ, BO
 #undef BOOST_ASSIGN_V2_SEQ
 #undef BOOST_ASSIGN_V2_R
 
-}// aux
+}// interpreter_aux
 }// v2
 }// assign
 }// boost

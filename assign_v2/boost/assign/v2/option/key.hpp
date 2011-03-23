@@ -17,7 +17,7 @@ namespace boost{
 namespace assign{
 namespace v2{
 //[syntax_option_key
-namespace aux{
+namespace interpreter_aux{
 
     template<typename C>
     struct container_key{ typedef typename C::key_type type; };
@@ -38,7 +38,7 @@ namespace result_of{
 
     template<typename C, typename D>
     struct option_key : ::boost::mpl::apply1<
-        aux::result_of::option_data_generator<D>,
+        interpreter_aux::result_of::option_data_generator<D>,
         typename deduce_key_generator<C>::type
     >{};
 
@@ -56,11 +56,11 @@ namespace result_of{
     }/*<-*/BOOST_ASSIGN_V2_IGNORE(/*<-*/;/*->*/)/*->*/
 
 
-}// aux
+}// interpreter_aux
 //<-
 namespace{
 //->
-    aux::option_key const _key/*<-*/= aux::option_key()/*->*/;
+    interpreter_aux::option_key const _key/*<-*/= interpreter_aux::option_key()/*->*/;
 //]
 }
 }// v2

@@ -37,14 +37,14 @@ namespace xxx_mapped{
             //[test_option_mapped_meta
             using namespace lambda;
             typedef BOOST_TYPEOF(_1) arg_;
-            typedef as2::aux::keyword_mapped keyword_;
-            typedef as2::aux::option_modifier<keyword_, arg_> modulo_;
+            typedef as2:: interpreter_aux::keyword_mapped keyword_;
+            typedef as2:: interpreter_aux::option_modifier<keyword_, arg_> modulo_;
             typedef std::map<std::string, int> cont_;
             typedef as2::result_of::put<cont_>::type put_;
             typedef as2::result_of::option_modifier<put_> meta1_;
             typedef ::boost::mpl::apply2<meta1_, keyword_, arg_>::type result1_;
             typedef as2::modifier_tag::mapped<arg_> tag1_;
-            typedef as2::aux::replace_modifier_tag<put_> meta2_;
+            typedef as2:: interpreter_aux::replace_modifier_tag<put_> meta2_;
             typedef ::boost::mpl::apply1<meta2_, tag1_>::type result2_;
             BOOST_MPL_ASSERT((boost::is_same<result1_, result2_>));
             //]
@@ -66,13 +66,13 @@ namespace xxx_mapped{
             //[test_option_mapped_meta_deque
             using namespace lambda;
             typedef BOOST_TYPEOF(_1) arg_;
-            typedef as2::aux::keyword_mapped keyword_;
-            typedef as2::aux::option_modifier<keyword_, arg_> modulo_;
+            typedef as2:: interpreter_aux::keyword_mapped keyword_;
+            typedef as2:: interpreter_aux::option_modifier<keyword_, arg_> modulo_;
             typedef as2::result_of::deque<int>::type put_;
             typedef as2::result_of::option_modifier<put_> meta1_;
             typedef ::boost::mpl::apply2<meta1_, keyword_, arg_>::type result1_;
             typedef as2::modifier_tag::mapped<arg_> tag1_;
-            typedef as2::aux::replace_modifier_tag<put_> meta2_;
+            typedef as2:: interpreter_aux::replace_modifier_tag<put_> meta2_;
             typedef ::boost::mpl::apply1<meta2_, tag1_>::type result2_;
             BOOST_MPL_ASSERT((boost::is_same<result1_, result2_>));
             //]

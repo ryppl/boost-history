@@ -7,8 +7,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_INTERPRETER_REPLACE_PARAMETER_ER_2010_HPP
-#define BOOST_ASSIGN_V2_INTERPRETER_REPLACE_PARAMETER_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_INTERPRETER_REPLACE_ER_2010_HPP
+#define BOOST_ASSIGN_V2_INTERPRETER_REPLACE_ER_2010_HPP
 #include <boost/assign/v2/detail/pp/ignore.hpp>
 #include <boost/mpl/apply.hpp>
 
@@ -16,10 +16,10 @@ namespace boost{
 namespace assign{
 namespace v2{
 //[syntax_put_adapter_replace_parameter
-namespace aux{
+namespace interpreter_aux{
                 
     template<typename /*<<Inherits interpreter_crtp\<\> >>*/D> 
-    struct /*<<Metafunction class to be specialized on D>>*/replace_fun{
+    struct /*<<Metafunction class to be specialized on D>>*/replace_data_generator{
         template<typename F> 
         struct /*<<Transforms D by replacing D::fun_type with F>>*/apply{};
     };
@@ -30,10 +30,10 @@ namespace aux{
         struct /*<<Transforms D by replacing Tag D::modifier_tag with Tag>>*/ apply{};
     };
     
-}// aux
+}// interpreter_aux
 //]
 }// v2
 }// assign
 }// boost
     
-#endif // BOOST_ASSIGN_V2_INTERPRETER_REPLACE_PARAMETER_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_INTERPRETER_REPLACE_ER_2010_HPP

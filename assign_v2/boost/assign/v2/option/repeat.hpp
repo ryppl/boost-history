@@ -29,7 +29,7 @@ namespace modifier_tag{
     template<typename Tag> struct repeat/*<-*/{}/*->*/; 
 
 }// modifier_tag
-namespace aux{
+namespace interpreter_aux{
 
     template<typename Arg>
     class adapter_modifier<modifier_tag::repeat<Arg> >/*<-*/
@@ -80,7 +80,7 @@ namespace aux{
         size_type n_;
     }/*->*/;
 
-}// aux
+}// interpreter_aux
 BOOST_ASSIGN_V2_OPTION_MODIFIER_KEYWORD(repeat)
 BOOST_ASSIGN_V2_OPTION_MODIFIER_META_MODIFIER_TAG(repeat, modifier_tag::repeat<typename D::modifier_tag>)
 //]

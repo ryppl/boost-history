@@ -16,7 +16,7 @@
 namespace boost{
 namespace assign{
 namespace v2{
-namespace aux{
+namespace interpreter_aux{
 
 #define BOOST_ASSIGN_V2_MACRO1(z, i, data) ( BOOST_PP_CAT(_, i) )
 #define BOOST_ASSIGN_V2_MACRO2(z, N, data)\
@@ -37,9 +37,9 @@ BOOST_PP_REPEAT_FROM_TO(
 #undef BOOST_ASSIGN_V2_MACRO1
 #undef BOOST_ASSIGN_V2_MACRO2
 
-}// aux
+}// interpreter_aux
 
-using aux::csv_deque;
+using interpreter_aux::csv_deque;
 
 }// v2
 }// assign

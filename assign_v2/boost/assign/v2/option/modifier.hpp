@@ -21,7 +21,7 @@ namespace boost{
 namespace assign{
 namespace v2{
 //[syntax_put_modifier_modulo
-namespace aux{
+namespace interpreter_aux{
 
     template<typename /*<<A class of modifiers>>*/ Keyword, typename /*<<A part of the modifier's implementation>>*/Arg = keyword_aux::ignore>
     struct option_modifier
@@ -62,7 +62,7 @@ namespace result_of{
     struct option_modifier{
 
 //<-            
-        typedef aux::replace_modifier_tag<D> meta_;
+        typedef interpreter_aux::replace_modifier_tag<D> meta_;
 //->
             
         template<typename Keyword, typename Arg>
@@ -71,7 +71,7 @@ namespace result_of{
             : ::boost::mpl::apply1<
                 meta_, 
                 typename ::boost::mpl::apply1<
-                    aux::meta_modifier_tag<Keyword, Arg>, 
+                    interpreter_aux::meta_modifier_tag<Keyword, Arg>, 
                     D
                 >::type
             >
@@ -93,9 +93,9 @@ namespace result_of{
         option_modifier<Keyword, Arg> const& rhs
     )/*<-*/
     {
-        typedef aux::meta_modifier_tag<Keyword, Arg> meta_;
+        typedef interpreter_aux::meta_modifier_tag<Keyword, Arg> meta_;
         typedef typename ::boost::mpl::apply1<meta_, D>::type modifier_tag;
-        typedef aux::adapter_modifier<modifier_tag> modifier_;
+        typedef interpreter_aux::adapter_modifier<modifier_tag> modifier_;
     
         typedef typename ::boost::mpl::apply2<
             result_of::option_modifier<D>, 
@@ -109,13 +109,13 @@ namespace result_of{
         );
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
-}// aux
+}// interpreter_aux
 //]
 namespace result_of{
 
     template<typename D>
     struct option_modifier 
-        : aux::result_of::option_modifier<D>
+        : interpreter_aux::result_of::option_modifier<D>
     {};
 
 }// result_of
@@ -124,7 +124,7 @@ namespace result_of{
 #error
 #else
 #define BOOST_ASSIGN_V2_OPTION_MODIFIER_META_MODIFIER_TAG(NAME, Result)\
-namespace aux{\
+namespace interpreter_aux{\
 \
     template<typename Arg>\
     struct meta_modifier_tag<BOOST_PP_CAT(keyword_,NAME), Arg>\
@@ -140,7 +140,7 @@ namespace aux{\
 #error
 #else
 #define BOOST_ASSIGN_V2_OPTION_MODIFIER_KWD_TYPE(NAME)\
-    aux::option_modifier<aux::BOOST_PP_CAT(keyword_,NAME)>\
+    interpreter_aux::option_modifier<interpreter_aux::BOOST_PP_CAT(keyword_,NAME)>\
 /**/
 #endif
 
@@ -148,7 +148,7 @@ namespace aux{\
 #error
 #else
 #define BOOST_ASSIGN_V2_OPTION_MODIFIER_KEYWORD(NAME)\
-namespace aux{\
+namespace interpreter_aux{\
     struct BOOST_PP_CAT(keyword_,NAME){\
 \
         BOOST_PP_CAT(keyword_,NAME)(){}\

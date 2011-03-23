@@ -19,13 +19,13 @@ namespace boost{
 namespace assign{
 namespace v2{
 //[syntax_option_data
-namespace aux{
+namespace interpreter_aux{
 namespace result_of{
 
     template<typename D>
     struct /*<<Metafunction class>>*/option_data_generator/*<-*/{
 
-        typedef aux::replace_data_generator<D> meta_;
+        typedef interpreter_aux::replace_data_generator<D> meta_;
 
         template<typename F>
         struct apply : ::boost::mpl::apply1<meta_, F>{};
@@ -68,16 +68,16 @@ namespace result_of{
 
     }/*->*/;
 
-}// aux
+}// interpreter_aux
 namespace{
-    const aux::keyword_data_generator _data/*<-*/ 
-        = aux::keyword_data_generator()/*->*/;
+    const interpreter_aux::keyword_data_generator _data/*<-*/ 
+        = interpreter_aux::keyword_data_generator()/*->*/;
 }
 namespace result_of{
 
     template<typename D>
     struct /*<<Metafunction class>>*/option_data_generator/*<-*/
-        : aux::result_of::option_data_generator<D>
+        : interpreter_aux::result_of::option_data_generator<D>
     {}/*->*/;
 
 }// result_of
@@ -94,7 +94,7 @@ namespace result_of{
 namespace boost{\
 namespace assign{\
 namespace v2{\
-namespace aux{\
+namespace interpreter_aux{\
 \
     template<typename T>\
     option_data_generator< FUN > NAME()\
@@ -103,7 +103,7 @@ namespace aux{\
     }\
 \
 }\
-using aux::NAME;\
+using interpreter_aux::NAME;\
 }\
 }\
 }\
