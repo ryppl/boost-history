@@ -24,7 +24,7 @@
 #include <boost/assign/v2/put.hpp>
 #include <boost/assign/v2/deque.hpp>
 #include <boost/assign/v2/pipe/putput.hpp>
-#include <boost/assign/v2/pipe/put/csv_put.hpp>
+#include <boost/assign/v2/pipe/csv_put.hpp>
 #include <boost/assign/v2/ref/array/array.hpp>
 #include <boost/assign/v2/ref/array/csv_array.hpp>
 #include <boost/type_traits/remove_reference.hpp>

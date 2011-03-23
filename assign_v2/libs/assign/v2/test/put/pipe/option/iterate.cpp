@@ -9,7 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #include <boost/assign/v2/detail/config/check.hpp>
 
-#include <boost/assign/v2/put/pipe/csv_put.hpp>
+#include <boost/assign/v2/pipe/csv_put.hpp>
 #include <boost/assign/v2/deque/csv_deque.hpp>
 // Options come next
 #include <boost/assign/v2/option/iterate.hpp>

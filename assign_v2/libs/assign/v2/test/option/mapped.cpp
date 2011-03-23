@@ -11,7 +11,7 @@
 #include <string>
 #include <cmath>
 #include <boost/assign/v2/detail/config/check.hpp>
-#include <boost/assign/v2/put/put.hpp>
+#include <boost/assign/v2/put.hpp>
 #include <boost/assign/v2/deque.hpp>
 // Options come next
 #include <boost/assign/v2/option/key.hpp>

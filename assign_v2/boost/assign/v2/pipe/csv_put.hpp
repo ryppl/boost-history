@@ -7,8 +7,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_PIPE_PUT_CSV_PUT_HPP_ER_2010
-#define BOOST_ASSIGN_V2_PIPE_PUT_CSV_PUT_HPP_ER_2010
+#ifndef BOOST_ASSIGN_V2_PIPE_CSV_PUT_HPP_ER_2010
+#define BOOST_ASSIGN_V2_PIPE_CSV_PUT_HPP_ER_2010
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
 #include <boost/assign/v2/ref/array/as_arg_list.hpp>
 #include <boost/assign/v2/ref/array/csv_array.hpp>
@@ -31,7 +31,7 @@ namespace boost{
     struct use_default;
 namespace assign{
 namespace v2{
-//[syntax_put_pipe_csv_put
+//[syntax_pipe_csv_put
 namespace aux{
 
     typedef ref::array_aux::size_type arg_list_size_type;
@@ -230,5 +230,5 @@ namespace{
 }// assign
 }// boost
 
-#endif // BOOST_ASSIGN_V2_PIPE_PUT_CSV_PUT_HPP_ER_2010
+#endif // BOOST_ASSIGN_V2_PIPE_CSV_PUT_HPP_ER_2010
 

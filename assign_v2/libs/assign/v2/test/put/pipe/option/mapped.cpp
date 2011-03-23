@@ -12,7 +12,7 @@
 #include <boost/lambda/lambda.hpp>
 #include <boost/typeof/typeof.hpp>
 #include <boost/assign/v2/detail/config/check.hpp>
-#include <boost/assign/v2/put/pipe/csv_put.hpp>
+#include <boost/assign/v2/pipe/csv_put.hpp>
 // Options come next
 #include <boost/assign/v2/option/data.hpp>
 #include <boost/assign/v2/option/mapped.hpp>

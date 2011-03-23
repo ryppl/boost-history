@@ -10,7 +10,7 @@
 #include <vector>
 #include <boost/typeof/typeof.hpp>
 #include <boost/assign/v2/detail/config/check.hpp>
-#include <boost/assign/v2/put/put.hpp>
+#include <boost/assign/v2/put.hpp>
 // Options come next
 #include <boost/assign/v2/option/push_front.hpp>
 #include <boost/assign/v2/option/repeat.hpp>

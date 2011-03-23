@@ -15,7 +15,7 @@
 #include <boost/array.hpp>
 #include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/deque/csv_deque.hpp>
-#include <boost/assign/v2/put/pipe/csv_put.hpp> 
+#include <boost/assign/v2/pipe/csv_put.hpp> 
 #include <boost/range/algorithm/for_each.hpp>
 
 #include <libs/assign/v2/test/put/pipe/csv_put.h>
