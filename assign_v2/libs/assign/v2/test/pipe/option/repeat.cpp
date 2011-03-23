@@ -14,10 +14,9 @@
 // Options come next
 #include <boost/assign/v2/option/repeat.hpp>
 #include <boost/range/algorithm/equal.hpp>
-#include <libs/assign/v2/test/put/pipe/option/repeat.h>
+#include <libs/assign/v2/test/pipe/option/repeat.h>
 
 namespace test_assign_v2{
-namespace xxx_put{
 namespace xxx_pipe{
 namespace xxx_option{
 namespace xxx_repeat{
@@ -44,5 +43,4 @@ namespace xxx_repeat{
 }// xxx_repeat
 }// xxx_option
 }// xxx_pipe
-}// xxx_put
 }// test_assign_v2

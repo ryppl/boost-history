@@ -18,14 +18,14 @@
 #include <boost/assign/v2/pipe/csv_put.hpp> 
 #include <boost/range/algorithm/for_each.hpp>
 
-#include <libs/assign/v2/test/put/pipe/csv_put.h>
+#include <libs/assign/v2/test/pipe/csv_put.h>
 
 namespace test_assign_v2{
-namespace xxx_put{
 namespace xxx_pipe{
 namespace xxx_csv_put{ 
 
     void test(){
+    
         using namespace boost;
         namespace as2 = assign::v2;
         {
@@ -40,9 +40,9 @@ namespace xxx_csv_put{
             );
             //]
         }
+
     }// test()
 
 }// xxx_csv_put
 }// xxx_pipe
-}// xxx_value
 }// xxx_test_assign

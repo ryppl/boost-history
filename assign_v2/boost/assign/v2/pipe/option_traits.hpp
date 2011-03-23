@@ -1,4 +1,4 @@
-PIPE_PUT//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
 //  Boost.Assign v2                                                         //
 //                                                                          //
 //  Copyright (C) 2003-2004 Thorsten Ottosen                                //
@@ -17,13 +17,11 @@ PIPE_PUT////////////////////////////////////////////////////////////////////////
 #include <boost/mpl/vector/vector0.hpp>
 
 namespace boost{
-    struct use_default;
 namespace assign{
 namespace v2{
 namespace aux{
 
     typedef ::boost::mpl::vector0<> empty_option_list_; 
-
     typedef ref::list_aux::size_type option_size_type;
 
     template<typename OptionList>
@@ -38,7 +36,6 @@ namespace aux{
             OptionList, 
             O const&
         >{};
-
     };
 
 }// aux

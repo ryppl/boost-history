@@ -20,13 +20,12 @@
 #include <boost/assign/v2/deque.hpp>
 // Options come next
 #include <boost/assign/v2/option/std_modifier.hpp>
-#include <libs/assign/v2/test/put/pipe/option/std_modifier.h>
+#include <libs/assign/v2/test/pipe/option/std_modifier.h>
 
 namespace test_assign_v2{
-namespace xxx_put{
 namespace xxx_pipe{
 namespace xxx_option{
-namespace xxx_standard{
+namespace xxx_std_modifier{
 
     void test()
     {
@@ -74,8 +73,7 @@ namespace xxx_standard{
         }
     }
 
-}// xxx_standard
+}// xxx_std_modifier
 }// xxx_option
 }// xxx_pipe
-}// xxx_put
 }// test_assign_v2

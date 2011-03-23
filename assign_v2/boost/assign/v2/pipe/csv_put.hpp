@@ -195,14 +195,9 @@ BOOST_PP_REPEAT_FROM_TO(
 
     }/*->*/;
 
-    template<typename C,
-        typename ParList, arg_list_size_type N, typename U>
-    C& operator|(C& cont, aux::arg_list<
-            ParList, N, U
-        > const& arg_list
-    )/*<-*/
+    template<typename C, typename ParList, arg_list_size_type N, typename U>
+    C& operator|(C& cont, aux::arg_list<ParList, N, U> const& arg_list)/*<-*/
     {
-
         v2::ref::as_arg_list(
             v2::ref::as_modulo_list<ParList>( 
                 put( cont ), 

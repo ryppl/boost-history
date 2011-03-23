@@ -17,10 +17,9 @@
 #include <boost/assign/v2/option/data.hpp>
 #include <boost/lambda/lambda.hpp>
 #include <boost/range/algorithm/equal.hpp>
-#include <libs/assign/v2/test/put/pipe/option/data.h>
+#include <libs/assign/v2/test/pipe/option/data.h>
 
 namespace test_assign_v2{
-namespace xxx_put{
 namespace xxx_pipe{
 namespace xxx_option{
 namespace xxx_data{
@@ -48,6 +47,5 @@ namespace xxx_data{
 
 }// xxx_data
 }// xxx_option
-}// xxx_pipe
 }// xxx_value
 }// test_assign_v2

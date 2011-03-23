@@ -7,7 +7,7 @@
 #include <boost/version.hpp>*/
 
 // Test
-//#include <libs/assign/v2/test/detail.h>
+#include <libs/assign/v2/test/detail.h>
 //#include <libs/assign/v2/test/deque.h>
 //#include <libs/assign/v2/test/interpreter.h>
 //#include <libs/assign/v2/test/option.h>
@@ -23,7 +23,7 @@
 //#include <fstream>
 //#include <libs/assign/v2/speed/test.h>
 
-#include <boost/assign/v2/include.hpp>
+//#include <boost/assign/v2/include.hpp>
 
 int main (int argc, char * const argv[])
 {

@@ -16,10 +16,9 @@
 // Options come next
 #include <boost/assign/v2/option/data.hpp>
 #include <boost/assign/v2/option/mapped.hpp>
-#include <libs/assign/v2/test/put/pipe/option/mapped.h>
+#include <libs/assign/v2/test/pipe/option/mapped.h>
 
 namespace test_assign_v2{
-namespace xxx_put{
 namespace xxx_pipe{
 namespace xxx_option{
 namespace xxx_mapped{
@@ -51,5 +50,4 @@ namespace xxx_mapped{
 }// xxx_mapped
 }// xxx_option
 }// xxx_pipe
-}// xxx_put
 }// test_assign_v2

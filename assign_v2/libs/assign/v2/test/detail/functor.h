@@ -20,4 +20,4 @@ namespace xxx_functor{
 }// xxx_detail
 }// test_assign_v2
 
-#endif
+#endif // LIBS_ASSIGN_V2_TEST_DETAIL_FUNCTOR_ER_2010_H

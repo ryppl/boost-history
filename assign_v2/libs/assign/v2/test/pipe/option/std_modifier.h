@@ -7,21 +7,19 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef LIBS_ASSIGN_V2_TEST_PUT_PIPE_OPTION_STD_MODIFIER_ER_2010_H
-#define LIBS_ASSIGN_V2_TEST_PUT_PIPE_OPTION_STD_MODIFIER_ER_2010_H
+#ifndef LIBS_ASSIGN_V2_TEST_PIPE_OPTION_STD_MODIFIER_ER_2010_H
+#define LIBS_ASSIGN_V2_TEST_PIPE_OPTION_STD_MODIFIER_ER_2010_H
 
 namespace test_assign_v2{
-namespace xxx_put{
 namespace xxx_pipe{
 namespace xxx_option{
-namespace xxx_standard{
+namespace xxx_std_modifier{
 
     void test();
 
-}// xxx_standard
+}// xxx_std_modifier
 }// xxx_option
 }// xxx_pipe
-}// xxx_put
 }// xxx_test_assign
 
-#endif // LIBS_ASSIGN_V2_TEST_PUT_PIPE_OPTION_STD_MODIFIER_ER_2010_H
+#endif // LIBS_ASSIGN_V2_TEST_PIPE_OPTION_STD_MODIFIER_ER_2010_H
