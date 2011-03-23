@@ -12,7 +12,7 @@
 #include <boost/assign/v2/interpreter/crtp.hpp>
 #include <boost/assign/v2/interpreter/data.hpp>
 #include <boost/assign/v2/interpreter/modifier.hpp>
-#include <boost/assign/v2/interpreter/replace_parameter.hpp>
+#include <boost/assign/v2/interpreter/replace.hpp>
 #include <boost/assign/v2/detail/pp/ignore.hpp>
 #include <boost/assign/v2/ref/wrapper/copy.hpp>
 
@@ -24,9 +24,9 @@ namespace aux{
 
     template<typename C, typename F, typename Tag>
     class put_interpreter
+        : protected ref::wrapper< ref::assign_tag::copy, C >,
 //<-
-        : protected ref::wrapper< ref::assign_tag::copy, C >
-        , public aux::interpreter_crtp< C, F, Tag, put_interpreter<C, F, Tag> >
+        public aux::interpreter_crtp< C, F, Tag, put_interpreter<C, F, Tag> >
 //->
     {
 //<-
@@ -62,7 +62,7 @@ namespace aux{
     };
 
     template<typename C, typename F, typename Tag>
-    struct /*<<Metafunction class>>*/replace_fun< aux::put_interpreter<C, F, Tag> >{/*<-*/
+    struct /*<<Metafunction class>>*/replace_data_generator< aux::put_interpreter<C, F, Tag> >{/*<-*/
         template<typename F1>
         struct apply{ typedef aux::put_interpreter<C, F1, Tag> type; };
     /*->*/};
@@ -77,7 +77,7 @@ namespace aux{
 namespace result_of{
 
     template<typename C>
-    struct /*<<Metafunction>>*/put{/*<-*/
+    struct /*<<Metafunction>>*/put/*<-*/{
         typedef typename aux::deduce_data_generator<C>::type f_;
         typedef typename aux::deduce_modifier_tag<C>::type modifier_tag_;
         typedef aux::put_interpreter<C, f_, modifier_tag_> type;

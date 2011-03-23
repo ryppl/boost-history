@@ -7,8 +7,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_INCLUDE_KEYWORD_MAPPED_ER_2010_HPP
-#define BOOST_ASSIGN_V2_INCLUDE_KEYWORD_MAPPED_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_INCLUDE__MAPPED_ER_2010_HPP
+#define BOOST_ASSIGN_V2_INCLUDE__MAPPED_ER_2010_HPP
 #include <boost/assign/v2/option/mapped.hpp>
 
-#endif // BOOST_ASSIGN_V2_INCLUDE_KEYWORD_MAPPED_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_INCLUDE__MAPPED_ER_2010_HPP

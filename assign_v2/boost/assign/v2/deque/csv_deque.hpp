@@ -37,7 +37,7 @@ namespace result_of{
 
 }// result_of
 }// aux
-//[syntax_put_deque_csv_deque
+//[syntax_deque_csv_deque
 
     template<typename T>
     struct csv_deque_value/*<-*/

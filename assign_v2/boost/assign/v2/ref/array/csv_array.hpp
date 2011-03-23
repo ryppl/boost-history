@@ -101,12 +101,12 @@ namespace result_of{
     };
 //->
 
-    template<typename T, typename...Args>/*<-*/
-    typename boost::lazy_disable_if<
+    template<typename T, typename...Args>
+    /*<-*/typename boost::lazy_disable_if<
         v2::type_traits::or_const<T, Args...>,
         result_of::csv_array<T, Args...>
-    >::type
-    /*<<Enabled only if each of `t, args...` bind to non-const lvalue>>*/csv_array( T& t, Args&...args )/*<-*/
+    >::type BOOST_ASSIGN_V2_IGNORE(/*->*/unspecified/*<-*/)/*->*/
+    csv_array( T& t, Args&...args )/*<-*/
     {
         return csv_helper<T, Args...>::call( t, args... );
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
@@ -126,10 +126,10 @@ using array_aux::csv_array;
 namespace result_of{
 
     template<typename U, typename... Args>
-    struct csv_array : nth_result_of::csv_array<
+    struct csv_array/*<-*/ : nth_result_of::csv_array<
         1 + sizeof...(Args),  U
     >
-    {};
+    {}/*->*/;
 
 }// result_of
 #endif

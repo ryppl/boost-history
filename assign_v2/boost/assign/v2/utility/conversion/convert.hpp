@@ -68,7 +68,7 @@ namespace result_of{
 }//result_of
 
 template<typename C>
-conversion_aux::convert_adapter<C> convert()/*<-*/
+conversion_aux::convert_adapter<C> _convert()/*<-*/
 {
     return conversion_aux::convert_adapter<C>();
 }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/

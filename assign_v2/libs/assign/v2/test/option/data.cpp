@@ -28,7 +28,7 @@
 
 namespace test_assign_v2{
 namespace xxx_option{
-namespace xxx_fun{
+namespace xxx_data{
 
     void test()
     {
@@ -67,6 +67,6 @@ namespace xxx_fun{
 
     }
 
-}// xxx_fun
+}// xxx_data
 }// xxx_option
 }// test_assign_v2

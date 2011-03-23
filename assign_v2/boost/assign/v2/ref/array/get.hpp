@@ -28,13 +28,12 @@
 namespace boost{
 namespace assign{
 namespace v2{
-//[syntax_ref_wrapper_range_get
+//[syntax_ref_array_get
 namespace ref{
-namespace range_aux{
 namespace result_of{
 
     template<typename /*<<Range of reference-wrappers>>*/R>
-    struct /*<<Metafunction>>*/range_get/*<-*/{
+    struct /*<<Metafunction>>*/transform_get/*<-*/{
 
         typedef ref::get_functor f_;
         #ifdef BOOST_MSVC
@@ -51,11 +50,11 @@ namespace result_of{
 }// result_of
 
     template<typename R>
-    typename range_aux::result_of::range_get<R>::type
+    typename result_of::transform_get<R>::type
     /*<<Semantics: transforms `r` by invoking member function `get()`>>*/
-    range_get(R& rw)/*<-*/
+    transform_get(R& rw)/*<-*/
     {
-        typedef typename range_aux::result_of::range_get<R>::type result_;
+        typedef typename result_of::transform_get<R>::type result_;
         #ifdef BOOST_MSVC
         return result_(
             boost::make_transform_iterator( boost::begin( rw ), get_functor() ),
@@ -67,11 +66,11 @@ namespace result_of{
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
     
     template<typename R>
-    typename range_aux::result_of::range_get<R const>::type
+    typename result_of::transform_get<R const>::type
     /*<<Semantics: transforms `r` by invoking member function `get()`>>*/
-    range_get(R const& rw )/*<-*/
+    transform_get(R const& rw )/*<-*/
     {
-        typedef typename range_aux::result_of::range_get<R const>::type result_;
+        typedef typename result_of::transform_get<R const>::type result_;
         #ifdef BOOST_MSVC
         return result_(
             boost::make_transform_iterator( boost::begin( rw ), get_functor() ),
@@ -85,37 +84,23 @@ namespace result_of{
     struct get_adaptor/*<-*/{}/*->*/;
 
     template<typename R>
-    typename range_aux::result_of::range_get<R>::type
+    typename result_of::transform_get<R>::type
     operator|(R& rw, get_adaptor)/*<-*/{
-        return range_get( rw );
+        return transform_get( rw );
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
     template<typename R>
-    typename range_aux::result_of::range_get<R const>::type
+    typename result_of::transform_get<R const>::type
     operator|(R const& rw, get_adaptor)/*<-*/{
-        return range_get( rw );
+        return transform_get( rw );
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
-}// range_aux
-namespace result_of{
-
-    template<typename R>
-    struct range_get/*<-*/ : boost::lazy_enable_if<
-        boost::is_reference_wrapper<
-            typename boost::range_value<
-                typename boost::remove_cv<R>::type
-            >::type
-        >,
-        range_aux::result_of::range_get<R>
-    >{}/*->*/;
-
-}// result_of
 //<-
 namespace{
 //->
 
-    range_aux::get_adaptor const _get/*<-*/
-        = range_aux::get_adaptor()/*->*/;
+    get_adaptor const _get/*<-*/
+        = get_adaptor()/*->*/;
 
 //<-
 }

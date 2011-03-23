@@ -12,11 +12,11 @@
 
 namespace test_assign_v2{
 namespace xxx_option{
-namespace xxx_fun{
+namespace xxx_data{
 
     void test();
 
-}// xxx_fun
+}// xxx_data
 }// xxx_option
 }// xxx_test_assign
 

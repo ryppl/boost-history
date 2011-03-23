@@ -11,6 +11,6 @@
 #define BOOST_ASSIGN_V2_INTERPRETER_ER_2010_HPP
 #include <boost/assign/v2/interpreter/crtp.hpp>
 #include <boost/assign/v2/interpreter/modifier.hpp>
-#include <boost/assign/v2/interpreter/replace_parameter.hpp>
+#include <boost/assign/v2/interpreter/replace.hpp>
 
 #endif // BOOST_ASSIGN_V2_INTERPRETER_ER_2010_HPP

@@ -7,8 +7,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_INCLUDE_KEYWORD_CSV_PUT_ER_2010_HPP
-#define BOOST_ASSIGN_V2_INCLUDE_KEYWORD_CSV_PUT_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_INCLUDE__CSV_PUT_ER_2010_HPP
+#define BOOST_ASSIGN_V2_INCLUDE__CSV_PUT_ER_2010_HPP
 #include <boost/assign/v2/put/pipe/csv_put.hpp>
 
-#endif // BOOST_ASSIGN_V2_INCLUDE_KEYWORD_CSV_PUT_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_INCLUDE__CSV_PUT_ER_2010_HPP

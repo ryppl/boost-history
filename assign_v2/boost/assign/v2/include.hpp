@@ -9,13 +9,23 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_INCLUDE_ER_2010_HPP
 #define BOOST_ASSIGN_V2_INCLUDE_ER_2010_HPP
-#include <boost/assign/v2/include/chain.hpp>
-#include <boost/assign/v2/include/convert.hpp>
+#include <boost/assign/v2/include/_chain.hpp>
+#include <boost/assign/v2/include/_convert.hpp>
+#include <boost/assign/v2/include/_csv_put.hpp>
+#include <boost/assign/v2/include/_data.hpp>
+#include <boost/assign/v2/include/_insert.hpp>
+#include <boost/assign/v2/include/_iterate.hpp>
+#include <boost/assign/v2/include/_key.hpp>
+#include <boost/assign/v2/include/_mapped.hpp>
+#include <boost/assign/v2/include/_push.hpp>
+#include <boost/assign/v2/include/_push_back.hpp>
+#include <boost/assign/v2/include/_push_front.hpp>
+#include <boost/assign/v2/include/_repeat.hpp>
 #include <boost/assign/v2/include/converter.hpp>
 #include <boost/assign/v2/include/csv.hpp>
 #include <boost/assign/v2/include/csv_deque.hpp>
 #include <boost/assign/v2/include/deque.hpp>
-#include <boost/assign/v2/include/operator.hpp>
-#include <boost/assign/v2/include/ref.hpp>
+//#include <boost/assign/v2/include/ref.hpp>
+//#include <boost/assign/v2/include/logical_and.hpp>
 
 #endif // BOOST_ASSIGN_V2_INCLUDE_ER_2010_HPP

@@ -60,21 +60,21 @@ namespace result_of{
 
     template<typename T>
     typename result_of::array<T, keyword_aux::nil>::type
-    array( keyword_aux::nil )/*<-*/
+	/*<<Generates an empty array>>*/array( keyword_aux::nil )/*<-*/
     {
         return ref::list<list_aux::array_tag>( v2::_nil );
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
     template<typename T>
     typename result_of::array<T>::type
-    array(T& t)/*<-*/
+	/*<<Generates a size one array>>*/array(T& t)/*<-*/
     {
         return array<T>( v2::_nil )( t );
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
     template<typename T>
     typename result_of::array<T const>::type
-    array(T const & t)/*<-*/
+	/*<<Generates a size one array>>*/array(T const & t)/*<-*/
     {
         return array<T const>( v2::_nil )( t );
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/

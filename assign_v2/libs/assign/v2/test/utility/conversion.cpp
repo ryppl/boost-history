@@ -43,7 +43,7 @@ namespace xxx_conversion{
             //[test_utility_conversion_vec_array
             std::vector<int> r( 3 ); r[0] = 72; r[1] = 31; r[2] = 48;
             typedef array<int, 3> ar_; 
-            ar_ const& ar = ( r | as2::convert<ar_>() );
+            ar_ const& ar = ( r | as2::_convert<ar_>() );
             
             BOOST_ASSIGN_V2_CHECK( range::equal( ar, as2::csv_deque( 72, 31, 48 ) ) );
             //]
@@ -71,9 +71,9 @@ namespace xxx_conversion{
             const int sz = 3; typedef array<int, sz>  row_;
             array<row_, sz>  matrix3x3 = converter(
                 as2::ref::array
-                    ( as2::ref::csv_array( 1, 2, 3 ) | as2::convert<row_>() )
-                    ( as2::ref::csv_array( 4, 5, 6 ) | as2::convert<row_>() )
-                    ( as2::ref::csv_array( 7, 8, 9 ) | as2::convert<row_>() )
+                    ( as2::ref::csv_array( 1, 2, 3 ) | as2::_convert<row_>() )
+                    ( as2::ref::csv_array( 4, 5, 6 ) | as2::_convert<row_>() )
+                    ( as2::ref::csv_array( 7, 8, 9 ) | as2::_convert<row_>() )
             );
             
             for(int i = 0; i < 9; i++)
@@ -87,7 +87,7 @@ namespace xxx_conversion{
             //[test_utility_conversion_as2_deque_array
             std::vector<int> r( 3 ); r[0] = 72; r[1] = 31; r[2] = 48;
             typedef array<int, 3> ar_; 
-            ar_ const& ar = ( as2::csv_deque( 72, 31, 48 ) | as2::convert<ar_>() );
+            ar_ const& ar = ( as2::csv_deque( 72, 31, 48 ) | as2::_convert<ar_>() );
             
             BOOST_ASSIGN_V2_CHECK( range::equal( ar, as2::csv_deque( 72, 31, 48 ) ) );
             //]

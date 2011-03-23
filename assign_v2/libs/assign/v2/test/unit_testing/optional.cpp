@@ -13,11 +13,11 @@
 #include <boost/test/test_tools.hpp>
 #define BOOST_ASSIGN_V2_CHECK( p ) BOOST_CHECK( p )
 
-#include <libs/assign/v2/test/optional/fun.cpp>
-#include <libs/assign/v2/test/optional/iterate.cpp>
-#include <libs/assign/v2/test/optional/lookup.cpp>
-#include <libs/assign/v2/test/optional/repeat.cpp>
-#include <libs/assign/v2/test/optional/standard.cpp>
+#include <libs/assign/v2/test/option/data.cpp>
+#include <libs/assign/v2/test/option/iterate.cpp>
+#include <libs/assign/v2/test/option/mapped.cpp>
+#include <libs/assign/v2/test/option/repeat.cpp>
+#include <libs/assign/v2/test/option/std_modifier.cpp>
 
 
 #include <boost/test/unit_test.hpp>
@@ -27,10 +27,10 @@ test_suite* init_unit_test_suite( int argc, char* argv[] )
     test_suite* test = BOOST_TEST_SUITE( "BOOST_ASSIGN_V2" );
     using namespace test_assign_v2;
     {
-    	namespace ns = xxx_optional;
-		test->add( BOOST_TEST_CASE( &ns::xxx_fun::test ) );
+    	namespace ns = xxx_option;
+		test->add( BOOST_TEST_CASE( &ns::xxx_data::test ) );
 		test->add( BOOST_TEST_CASE( &ns::xxx_iterate::test ) );
-		test->add( BOOST_TEST_CASE( &ns::xxx_lookup::test ) );
+		test->add( BOOST_TEST_CASE( &ns::xxx_mapped::test ) );
 		test->add( BOOST_TEST_CASE( &ns::xxx_repeat::test ) );
 		test->add( BOOST_TEST_CASE( &ns::xxx_standard::test ) );
     }

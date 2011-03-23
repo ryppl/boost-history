@@ -13,7 +13,7 @@
 #include <boost/test/test_tools.hpp>
 #define BOOST_ASSIGN_V2_CHECK( p ) BOOST_CHECK( p )
 
-#include <libs/assign/v2/test/framework/modifier.cpp>
+#include <libs/assign/v2/test/interpreter/modifier.cpp>
 
 #include <boost/test/unit_test.hpp>
 using boost::unit_test::test_suite;
@@ -22,7 +22,7 @@ test_suite* init_unit_test_suite( int argc, char* argv[] )
     test_suite* test = BOOST_TEST_SUITE( "BOOST_ASSIGN_V2" );
     using namespace test_assign_v2;
     {
-    	namespace ns = xxx_framework;
+    	namespace ns = xxx_interpreter;
 		test->add( BOOST_TEST_CASE( &ns::xxx_modifier::test ) );
     }
     return test;

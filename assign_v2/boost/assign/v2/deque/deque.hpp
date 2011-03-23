@@ -13,7 +13,7 @@
 #include <boost/assign/v2/interpreter/crtp.hpp>
 #include <boost/assign/v2/interpreter/data.hpp>
 #include <boost/assign/v2/interpreter/modifier.hpp>
-#include <boost/assign/v2/interpreter/replace_parameter.hpp>
+#include <boost/assign/v2/interpreter/replace.hpp>
 #include <boost/assign/v2/deque/fwd.hpp>
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
 #include <boost/assign/v2/detail/keyword/nil.hpp>
@@ -31,7 +31,7 @@
 namespace boost{
 namespace assign{
 namespace v2{
-//[syntax_put_deque_deque
+//[syntax_deque_deque
 namespace aux{
 
     template<typename T>
@@ -39,12 +39,10 @@ namespace aux{
 
     template<typename T, typename F, typename Tag>
     class deque_interpreter 
-//<-
         : public interpreter_crtp<
             typename deque_impl<T>::type, F, Tag,
             deque_interpreter<T, F, Tag>
         >
-//->
     {
 //<-
         typedef typename deque_impl<T>::type impl_;
@@ -132,7 +130,7 @@ namespace aux{
     };
 
     template<typename T, typename F, typename Tag>
-    struct /*<<Metafunction class>>*/replace_fun< deque_interpreter<T, F, Tag> >/*<-*/
+    struct /*<<Metafunction class>>*/replace_data_generator< deque_interpreter<T, F, Tag> >/*<-*/
     {
         template<typename F1>
         struct apply{ typedef deque_interpreter<T, F1, Tag> type; };

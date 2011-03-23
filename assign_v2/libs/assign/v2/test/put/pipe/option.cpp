@@ -21,7 +21,7 @@ namespace xxx_option{
 
     void test()
     {
-        xxx_fun::test();
+        xxx_data::test();
         xxx_iterate::test();
         xxx_mapped::test();
         xxx_repeat::test();

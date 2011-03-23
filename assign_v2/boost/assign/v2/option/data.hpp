@@ -12,7 +12,7 @@
 #include <boost/assign/v2/detail/keyword/ignore.hpp>
 #include <boost/assign/v2/detail/pp/ignore.hpp>
 #include <boost/assign/v2/interpreter/fwd.hpp>
-#include <boost/assign/v2/interpreter/replace_parameter.hpp>
+#include <boost/assign/v2/interpreter/replace.hpp>
 #include <boost/mpl/apply.hpp>
 
 namespace boost{
@@ -25,7 +25,7 @@ namespace result_of{
     template<typename D>
     struct /*<<Metafunction class>>*/option_data_generator/*<-*/{
 
-        typedef aux::replace_fun<D> meta_;
+        typedef aux::replace_data_generator<D> meta_;
 
         template<typename F>
         struct apply : ::boost::mpl::apply1<meta_, F>{};

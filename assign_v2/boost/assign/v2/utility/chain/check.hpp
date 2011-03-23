@@ -63,7 +63,7 @@ void verify_mpl()
     typedef std::vector<w_> vec_w_;
     typedef typename add_const_if<qual_v2, vec_w_ >::type vec2_;
     // Transformation through range_get (necessary)
-    typedef typename ref::result_of::range_get<vec2_>::type r2_;
+    typedef typename ref::result_of::transform_get<vec2_>::type r2_;
 
     {
         typedef r1_       cr1_;
