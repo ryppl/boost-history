@@ -16,6 +16,9 @@ rule assign-test ( name )
 }
 
 test-suite assign :
+    [ assign-test chain ]
+    [ assign-test conversion ]
+    [ assign-test csv ]
     [ assign-test deque ]
     [ assign-test detail ]
     [ assign-test framework ]
