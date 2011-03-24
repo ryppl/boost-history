@@ -25,20 +25,12 @@ namespace array_aux{
     typename boost::enable_if_c<
         D::static_size == I
     >::type
-    as_arg_list(
-        F const& f ,
-        interface<Impl, D> const& array
-    )
+    as_arg_list( F const& f, interface<Impl, D> const& array)
     {}
 
     template<size_type I, typename F, typename Impl, typename D>
-    typename boost::enable_if_c<
-        I < D::static_size
-    >::type
-    as_arg_list(
-        F const& f ,
-        interface<Impl, D> const& array
-    )
+    typename boost::enable_if_c< I < D::static_size >::type
+    as_arg_list(F const& f , interface<Impl, D> const& array)
     {
         f( array[ I ].get() );
         as_arg_list<I + 1>( f, array );
@@ -47,10 +39,8 @@ namespace array_aux{
     // --- User interface --- //
 
     template<typename F, typename Impl, typename D>
-    void as_arg_list(
-        F const& f ,
-        interface<Impl, D> const& array
-    ){
+    void as_arg_list(F const& f , interface<Impl, D> const& array)
+    {
         as_arg_list<0>( f, array );
     }
 

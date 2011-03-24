@@ -32,8 +32,10 @@ namespace v2{
 namespace ref{
 namespace result_of{
 
-    template<typename /*<<Range of reference-wrappers>>*/R>
-    struct /*<<Metafunction>>*/transform_get/*<-*/{
+    template<
+    	typename R // Range of reference-wrappers
+    >
+    struct transform_get/*<-*/{
 
         typedef ref::get_functor f_;
         #ifdef BOOST_MSVC
@@ -49,9 +51,9 @@ namespace result_of{
 
 }// result_of
 
+    // Transforms rw by member function `get()`
     template<typename R>
     typename result_of::transform_get<R>::type
-    /*<<Semantics: transforms `r` by invoking member function `get()`>>*/
     transform_get(R& rw)/*<-*/
     {
         typedef typename result_of::transform_get<R>::type result_;
@@ -67,7 +69,6 @@ namespace result_of{
     
     template<typename R>
     typename result_of::transform_get<R const>::type
-    /*<<Semantics: transforms `r` by invoking member function `get()`>>*/
     transform_get(R const& rw )/*<-*/
     {
         typedef typename result_of::transform_get<R const>::type result_;

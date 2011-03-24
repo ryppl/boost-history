@@ -40,8 +40,11 @@ namespace array_aux{
 //->
 namespace nth_result_of{
 
-    template<array_size_type N, typename /*<<U& has to be a reference>>*/U>
-    struct /*<<Metafunction>>*/array/*<-*/
+    template<
+    	array_size_type N
+        , typename U // U& has to be a reference
+    >
+    struct array/*<-*/
         : array_aux::recursive_result<N, U>
     {}/*->*/;
 
@@ -58,23 +61,27 @@ namespace result_of{
 
 }// result_of
 
+	// Generates an empty array
     template<typename T>
     typename result_of::array<T, keyword_aux::nil>::type
-	/*<<Generates an empty array>>*/array( keyword_aux::nil )/*<-*/
+	array( keyword_aux::nil ) 
+    /*<-*/
     {
         return ref::list<list_aux::array_tag>( v2::_nil );
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
+	// Generates a size one array
     template<typename T>
     typename result_of::array<T>::type
-	/*<<Generates a size one array>>*/array(T& t)/*<-*/
+	array(T& t)/*<-*/
     {
         return array<T>( v2::_nil )( t );
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
+	// Generates a size one array
     template<typename T>
     typename result_of::array<T const>::type
-	/*<<Generates a size one array>>*/array(T const & t)/*<-*/
+	array(T const & t)/*<-*/
     {
         return array<T const>( v2::_nil )( t );
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
