@@ -10,12 +10,12 @@
 #ifndef BOOST_ASSIGN_V2_PIPE_CSV_PUT_HPP_ER_2010
 #define BOOST_ASSIGN_V2_PIPE_CSV_PUT_HPP_ER_2010
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
+#include <boost/assign/v2/pipe/option_traits.hpp>
+#include <boost/assign/v2/put.hpp>
 #include <boost/assign/v2/ref/array/as_arg_list.hpp>
 #include <boost/assign/v2/ref/array/csv_array.hpp>
 #include <boost/assign/v2/ref/aux_/list/as_modulo_list.hpp>
 #include <boost/assign/v2/ref/wrapper/copy.hpp>
-#include <boost/assign/v2/pipe/option_traits.hpp>
-#include <boost/assign/v2/put.hpp>
 #include <boost/mpl/apply.hpp>
 #include <boost/mpl/vector/vector0.hpp>
 #include <boost/mpl/size.hpp>
@@ -40,8 +40,8 @@ namespace interpreter_aux{
     struct arg_list/*<-*/
     {
         typedef boost::use_default tag2_;
-        typedef option_traits<OptionList> option_traits;
-        typedef typename option_traits::cont_ option_list_cont_type;
+        typedef option_traits<OptionList> option_traits_;
+        typedef typename option_traits_::cont_ option_list_cont_type;
         typedef typename v2::ref::nth_result_of::csv_array<
             N,
             U
