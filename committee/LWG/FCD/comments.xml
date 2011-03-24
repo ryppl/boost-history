@@ -9731,7 +9731,7 @@ through this new overload.
 <rationale>No consensus to make this change. 
 </rationale>
 </comment>
-<comment nb="GB" num="111" type="te" owner="editor" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="111" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 21.5
 </section>
@@ -9757,7 +9757,7 @@ and sprintf() since these functions depend on the
 global C locale and thus cannot be made thread
 safe.
 </suggestion>
-<notes>LWG: no objections to passing to Pete as editorial </notes>
+<notes></notes>
 <rationale>
 </rationale>
 </comment>
@@ -10271,7 +10271,7 @@ args);
 <rationale>
 </rationale>
 </comment>
-<comment nb="GB" num="117" type="te" owner="editor" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="117" type="te" owner="LWG" issue="1525" disp="" date="" extdoc="">
 <section>
 23.3.6.2
 </section>
@@ -10288,7 +10288,7 @@ this explicitely.
 Append "If sz == size(), does nothing" to the
 effects.
 </suggestion>
-<notes>LWG: no objections to passing to Pete as editorial</notes>
+<notes></notes>
 <rationale>
 </rationale>
 </comment>
