@@ -15,44 +15,46 @@
 #include <cassert>
 
 template<typename T>
-T total(const T& x, const T& y, const T& z) {
-    T sum = T();
-    int factor = 10;
+struct calculator {
+    static T total(const T& x, const T& y, const T& z) {
+        T sum = T();
+        int factor = 10;
 
-    T BOOST_LOCAL_FUNCTION_PARAMS_TPL( (T num) (const bind factor)
-            (bind& sum) ) {
-        // Typeof for variable declaration.
-        BOOST_LOCAL_TYPEOF(factor) f = factor;
-        return sum += f * num;
-    } BOOST_LOCAL_FUNCTION_NAME(add)
-    add(x);
+        T BOOST_LOCAL_FUNCTION_PARAMS_TPL( (T num) (const bind factor)
+                (bind& sum) ) {
+            // Typeof for variable declaration.
+            BOOST_LOCAL_TYPEOF(factor) f = factor;
+            return sum += f * num;
+        } BOOST_LOCAL_FUNCTION_NAME(add)
+        add(x);
 
-    size_t size = 2;
-    T* nums = new T[size];
-    BOOST_LOCAL_EXIT_TPL( (const bind& size) (bind nums) ) {
-        // Typeof is qualified with eventual bind's `const` and `&`.
-        boost::remove_const<boost::remove_reference<
-                BOOST_LOCAL_TYPEOF(size)>::type>::type s;
-        s = size;
-        if (s && nums) delete[] nums;
-    } BOOST_LOCAL_EXIT_END
+        size_t size = 2;
+        T* nums = new T[size];
+        BOOST_LOCAL_EXIT_TPL( (const bind& size) (bind nums) ) {
+            // Typeof is qualified with eventual bind's `const` and `&`.
+            typename boost::remove_const<typename boost::remove_reference<
+                    BOOST_LOCAL_TYPEOF(size)>::type>::type s;
+            s = size;
+            if (s && nums) delete[] nums;
+        } BOOST_LOCAL_EXIT_END
 
-    nums[0] = y; nums[1] = z;
-    std::for_each(nums, nums + size, add);
+        nums[0] = y; nums[1] = z;
+        std::for_each(nums, nums + size, add);
 
-    BOOST_LOCAL_BLOCK_TPL( (const bind &sum) (const bind& factor)
-            (const bind& x) (const bind& y) (const bind& z) ) {
-        // Typeof for concept checking.
-        BOOST_CONCEPT_ASSERT((boost::EqualityComparable<
-                BOOST_LOCAL_TYPEOF(sum)>));
-        assert(sum == factor * (x + y + z));
-    } BOOST_LOCAL_BLOCK_END
+        BOOST_LOCAL_BLOCK_TPL( (const bind &sum) (const bind& factor)
+                (const bind& x) (const bind& y) (const bind& z) ) {
+            // Typeof for concept checking.
+            BOOST_CONCEPT_ASSERT((boost::EqualityComparable<
+                    BOOST_LOCAL_TYPEOF(sum)>));
+            assert(sum == factor * (x + y + z));
+        } BOOST_LOCAL_BLOCK_END
 
-    return sum;
-}
+        return sum;
+    }
+};
 
 int main() {
-    total(100.0, 90.5, 7.0);
+    calculator<double>::total(100.0, 90.5, 7.0);
     return 0;
 }
 //]
