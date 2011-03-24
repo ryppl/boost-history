@@ -175,12 +175,6 @@
                 (sign_params, unbinds, const_binds, has_const_bind_this, \
                  binds, has_bind_this, id, typename_keyword) ) \
     private: \
-        /* this allows for nesting (local functions, blocks, and exits) as */ \
-        /* it makes the args variable visible within the body code (which */ \
-        /* cannot be static); this is for compilation only as the args */ \
-        /* variable is actually declared by the 1st enclosing local func */ \
-        boost::scope_exit::aux::undeclared \
-                BOOST_LOCAL_AUX_SYMBOL_ARGS_VARIABLE_NAME; \
         /* this type symbol cannot have ID postfix because it is used */ \
         /* the `NAME` macro (because this symbol is within functor class */ \
         /* it doesn't have to have ID postfix). */ \
@@ -228,7 +222,15 @@
             BOOST_SCOPE_EXIT_AUX_PARAMS_T(id)* \
                     BOOST_LOCAL_AUX_SYMBOL_BINDS_VARIABLE_NAME; \
         ) \
-        /* body function */ \
+        /* this allows for nesting (local functions, blocks, and exits) as */ \
+        /* it makes the args variable visible within the body code (which */ \
+        /* cannot be static); this is for compilation only as the args */ \
+        /* variable is actually declared by the 1st enclosing local func */ \
+        boost::scope_exit::aux::undeclared \
+                BOOST_LOCAL_AUX_SYMBOL_ARGS_VARIABLE_NAME; \
+        /* body function (unfortunately, cannot be static to allow access */ \
+        /* to member var with local function name for recursion but doing */ \
+        /* so also allows the body to misuse `this` instead of `this_`) */ \
         BOOST_LOCAL_AUX_SYMBOL_RESULT_TYPE(id) \
         BOOST_LOCAL_AUX_SYMBOL_BODY_FUNCTION_NAME( \
                 /* const binds */ \

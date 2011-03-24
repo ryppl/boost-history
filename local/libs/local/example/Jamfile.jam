@@ -9,22 +9,17 @@ exe add_va : add_va.cpp ;
 
 exe add_block : add_block.cpp ;
 exe add_block_va : add_block_va.cpp ;
+exe add_block_impl : add_block_impl.cpp ;
 
 exe add_except : add_except.cpp ;
 exe add_except_va : add_except_va.cpp ;
 
 exe add_exit : add_exit.cpp ;
 exe add_exit_va : add_exit_va.cpp ;
+exe add_exit_impl : add_exit_impl.cpp ;
 
-exe add_num_factor_sum : add_num_factor_sum.cpp ;
-exe add_num_factor_sum_va : add_num_factor_sum_va.cpp ;
-
-exe add_num_factor_sum_default : add_num_factor_sum_default.cpp ;
-exe add_num_factor_sum_default_va : add_num_factor_sum_default_va.cpp ;
-exe add_num_factor_sum_with_default_va : add_num_factor_sum_with_default_va.cpp ;
-
-exe add_num_sum : add_num_sum.cpp ;
-exe add_num_sum_va : add_num_sum_va.cpp ;
+exe add_function : add_function.cpp ;
+exe add_function_va : add_function_va.cpp ;
 
 exe add_optimizers : add_optimizers.cpp ;
 exe add_optimizers_va : add_optimizers_va.cpp ;
@@ -35,29 +30,50 @@ exe add_template_va : add_template_va.cpp ;
 exe add_this : add_this.cpp ;
 exe add_this_va : add_this_va.cpp ;
 
-exe block : block.cpp ;
-exe block_va : block_va.cpp ;
+exe add_x_y : add_x_y.cpp ;
+exe add_x_y_va : add_x_y_va.cpp ;
+
+exe add_x_y_default : add_x_y_default.cpp ;
+exe add_x_y_default_va : add_x_y_default_va.cpp ;
+exe add_x_y_default_with_va : add_x_y_default_with_va.cpp ;
 
 exe doit : doit.cpp ;
 exe doit_va : doit_va.cpp ;
 
-exe exit : exit.cpp ;
-exe exit_va : exit_va.cpp ;
-
 exe factorial : factorial.cpp ;
 exe factorial_va : factorial_va.cpp ;
+exe factorial_impl : factorial_impl.cpp ;
 
 exe find_if : find_if.cpp ;
 exe find_if_va : find_if_va.cpp ;
 
+exe gcc-access : gcc-access.cpp ;
+exe gcc-access_va : gcc-access_va.cpp ;
+
+exe gcc-square : gcc-square.cpp ;
+exe gcc-square_va : gcc-square_va.cpp ;
+
+exe gcc-store : gcc-store.cpp ;
+exe gcc-store_va : gcc-store_va.cpp ;
+
+exe nesting : nesting.cpp ;
+exe nesting_va : nesting_va.cpp ;
+
 exe params_all : params_all.cpp ;
 exe params_all_va : params_all_va.cpp ;
 
-exe params_none : params_none.cpp ;
-exe params_none_ep : params_none_ep.cpp ;
-
 exe print_map : print_map.cpp ;
 exe print_map_va : print_map_va.cpp ;
+
+exe scope_guards_errno : scope_guards_errno.cpp ;
+exe scope_guards_errno_va : scope_guards_errno_va.cpp ;
+
+exe scope_guards_execpt : scope_guards_except.cpp ;
+exe scope_guards_execpt_va : scope_guards_except_va.cpp ;
+
+exe ten : ten.cpp ;
+exe ten_va : ten_va.cpp ;
+exe ten_ep : ten_ep.cpp ;
 
 exe this : this.cpp ;
 exe this_va : this_va.cpp ;
@@ -65,12 +81,12 @@ exe this_va : this_va.cpp ;
 exe transform : transform.cpp ;
 exe transform_va : transform_va.cpp ;
 
-exe nesting : nesting.cpp ;
-exe nesting_va : nesting_va.cpp ;
-
 exe typeof : typeof.cpp ;
 exe typeof_va : typeof_va.cpp ;
 
 exe typeof_tpl : typeof_tpl.cpp ;
 exe typeof_tpl_va : typeof_tpl_va.cpp ;
+
+exe world_exit : world_exit.cpp ;
+exe world_exit_va : world_exit_va.cpp ;
 

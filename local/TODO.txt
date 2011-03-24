@@ -4,6 +4,37 @@
 
 * Docs: Document that const must appear before bind.
 
+* Docs: Limitation that enclosing scope gotos cannot be jumped to from within a local functions:
+#include <boost/local/function.hpp>
+#include <iostream>
+
+int print(int* array, int offset, int size) {
+    int BOOST_LOCAL_FUNCTION_PARAMS( (int* array) (int index)
+            (const bind offset) (const bind size) ) {
+        if (index > size) goto failure;
+        return array[index + offset];
+    } BOOST_LOCAL_FUNCTION_NAME(access)
+
+    for (int i = 0; i < size; ++i) {
+        std::cout << access(array, i) << std::endl;
+    }
+    return 0;
+
+failure:
+    return -1;
+}
+
+int main() {
+    int a[] = {1, 2, 3, 4, 5};
+    print(a, 1, 2);
+    return 0;
+}
+
+* Docs: Add the GCC "nested function" examples to the docs.
+
+* Examples: Use std::cout instead of std::clog in all examples.
+
+
 * Docs: The simplified syntax removes the function name repetition. However, to supoprt recursion (and nesting) the body cannot be static (to access the member functor variable with the local function name defined by the NAME macro). Therefore the limitation that no compiler error if `this` is used instead of `this_` as a pointer within the body (if not used as pointer, compiler will most likely error because `this` is the functor which has a rather different structure than the user's object `this_`).
 
 * Docs: `inline` does not apply to local function which are already inlined (because they are defined where they are declared).

@@ -6,6 +6,8 @@
 
 //[ add_this_va_cpp
 #include <boost/local/function.hpp>
+#include <boost/local/block.hpp>
+#include <boost/local/exit.hpp>
 #include <vector>
 #include <algorithm>
 #include <iostream>
@@ -19,8 +21,17 @@ public:
         void BOOST_LOCAL_FUNCTION_PARAMS(double num, const bind factor,
                 bind this) {
             this_->sum_ += factor * num; // Use `this_` instead of `this`.
-            std::clog << "Summed: " << this_->sum_ << std::endl;
+            std::cout << "Summed: " << this_->sum_ << std::endl;
         } BOOST_LOCAL_FUNCTION_NAME(add)
+
+        BOOST_LOCAL_EXIT(const bind this) {
+            std::cout << "Exiting: " << this_->sum_ << std::endl;
+        } BOOST_LOCAL_EXIT_END
+
+        BOOST_LOCAL_BLOCK(const bind this) {
+            std::cout << "Asserted: " << this_->sum_ << std::endl;
+            assert(this_->sum_ > 0.0);
+        } BOOST_LOCAL_BLOCK_END
 
         std::for_each(nums.begin(), nums.end(), add);
         return sum_;

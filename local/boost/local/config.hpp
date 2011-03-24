@@ -80,7 +80,7 @@
  * If programmers leave this configuration macro undefined, the default
  * symbol used is <c>this_</c>.
  *
- * @Warning Programmers should not #define this macro unless it is absolutely
+ * @Warning Programmers should not define this macro unless it is absolutely
  *  necessary (e.g., to avoid name clashes with another library which cannot be
  *  changed). Changing the symbol <c>this_</c> effectively changes the public
  *  API of this library.

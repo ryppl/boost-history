@@ -59,7 +59,7 @@
  *
  * This macro expands to an expression that can be passed as a single macro
  * parameter even if it contains commas and that evaluates to the specified
- * value at run-time (see the @RefSect{Advanced_Topics, Advanced Topics}
+ * value at run-time (see the @RefSect2{Advanced_Topics, Advanced Topics}
  * section).
  *
  * For example <c>BOOST_IDENTITY_VALUE((key_sizeof<int, double>::value))</c>

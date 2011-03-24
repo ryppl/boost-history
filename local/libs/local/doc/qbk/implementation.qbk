@@ -1,7 +1,7 @@
 
 [section:Implementation Appendix: Implementation]
 
-This section lists source code that should provide a general idea on how this library implements local functions.
+This section lists source code that should provide a general idea on how this library is implemented.
 
 The code listed here should only be used as a reference in trying to understand the library implementation and source code.
 There is no guarantee that the library implementation will use exactly the code listed here.
@@ -9,16 +9,54 @@ Refer to the code comments in the library source files for the reasons behind th
 
 [section Local Functions]
 
-The expansion of the local function macros in the `factorial` example presented in the __Advanced_Topics__ section generates code equivalent to the following:
+The expansion of the local function macros of the `factorial` example presented in the __Advanced_Topics__ section generates code equivalent to the following:
 
 [factorial_impl_cpp]
 
 [endsect]
 
-[section Local Blocks and Exits]
+[section Local Blocks]
 
-Local blocks and local exits are trivially implemented by this library reusing local functions.
-Local block and local exit implementation code should be obvious from the library source files so it is not listed here.
+The expansion of the local block macros for the main local block example presented in the __Tutorial__ section generates code equivalent to the following:
+
+[add_block_impl_cpp]
+
+[endsect]
+
+[section Local Exits]
+
+The expansion of the local exit macros for the main local exit example presented in the __Tutorial__ section generates code equivalent to the following:
+
+[add_exit_impl_cpp]
+
+[endsect]
+
+[section Parsing Macros]
+
+This library macros can parse the list of specified parameters and detect if any of the bound parameter name matches the token `this` (to generate special code to bind the object in scope), or if the parameter is bound by `const` (to generate special code to bind by constant), etc.
+The parameter tokens are inspected by preprocessor metaprogramming using both __Boost_Preprocessor__ and the `BOOST_DETAIL_PP_KEYWORD_...` macros that in brief work as follow:
+
+    #include <boost/detail/preprocessor/keyword/this.hpp>
+    #include <boost/detail/preprocessor/keyword/const.hpp>
+    #include <boost/locla/aux_/preprocessor/keyword/bind.hpp>
+
+    // Detect `this`.
+    BOOST_DETAIL_PP_KEYWORD_IS_THIS_BACK(const bind this)   // Expand to 1.
+    BOOST_DETAIL_PP_KEYWORD_IS_THIS_BACK(const bind& x)     // Expand to 0.
+
+    // Detect constant.
+    BOOST_DETAIL_PP_KEYWORD_IS_CONST_FRONT(const bind this) // Expand to 1.
+    BOOST_DETAIL_PP_KEYWORD_IS_CONST_FRONT(bind this)       // Expand to 0.
+
+    // Detect binding (constant and not).
+    BOOST_LOCAL_AUX_PP_KEYWORD_IS_BIND_FRONT(               // Expand to 1.
+            BOOST_DETAIL_PP_KEYWORD_CONST_REMOVE_FRONT(const bind this))
+    BOOST_LOCAL_AUX_PP_KEYWORD_IS_BIND_FRONT(               // Also expand to 1.
+            BOOST_DETAIL_PP_KEYWORD_CONST_REMOVE_FRONT(bind this))
+    BOOST_LOCAL_AUX_PP_KEYWORD_IS_BIND_FRONT(               // Expand to 0.
+            BOOST_DETAIL_PP_KEYWORD_CONST_REMOVE_FRONT(const int x))
+    BOOST_LOCAL_AUX_PP_KEYWORD_IS_BIND_FRONT(               // Also expand to 0.
+            BOOST_DETAIL_PP_KEYWORD_CONST_REMOVE_FRONT(int x))
 
 [endsect]
 

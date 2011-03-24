@@ -10,26 +10,36 @@
 #include <sstream>
 #include <algorithm>
 #include <vector>
+#include <string>
 
-int main () {
+struct calculator {
     std::ostringstream output;
 
-    int BOOST_LOCAL_FUNCTION_PARAMS(int n, bool recursion, default false,
-            bind& output) {
-        int result = 0;
+    void factorials(const std::vector<int>& nums,
+            const std::string& separator = " ") {
+        int BOOST_LOCAL_FUNCTION_PARAMS(int n, bool recursion, default false,
+                const bind& separator, bind this) {
+            int result = 0;
 
-        if (n < 2 ) result = 1;
-        else result = n * factorial(n - 1, true); // Recursive call.
+            if (n < 2 ) result = 1;
+            else result = n * factorial(n - 1, true); // Recursive call.
 
-        if (!recursion) output << result << " ";
-        return result;
-    } BOOST_LOCAL_FUNCTION_NAME(factorial)
+            if (!recursion) this_->output << result << separator;
+            return result;
+        } BOOST_LOCAL_FUNCTION_NAME(factorial)
+    
+        std::for_each(nums.begin(), nums.end(), factorial);
+    }
+};
 
+int main() {
     std::vector<int> v(3);
     v[0] = 1; v[1] = 4; v[2] = 7;
-    std::for_each(v.begin(), v.end(), factorial);
 
-    std::cout << output.str() << std::endl;
+    calculator calc;
+    calc.factorials(v);
+    std::cout << calc.output.str() << std::endl;
+
     return 0;
 }
 //]
