@@ -1,0 +1,18 @@
+[import ../../../../boost/assign/v2/detail/keyword.hpp]
+
+[tpl_module 
+	[@../../../../../boost/assign/v2/detail/keyword.hpp boost/assign/v2/detail/detail/keyword.hpp]
+	..Keywords used by the rest of the library
+]
+
+[section:nil Nil]
+
+[tpl_feature
+
+	[@../../../../../boost/assign/v2/detail/keyword/nil.hpp `boost/assign/v2/detail/detail/keyword/nil.hpp`]
+	..Type on which a function or a functor is overloaded to request an empty container
+	..syntax_detail_keyword_nil
+	..None
+]
+
+[endsect][/ nil]

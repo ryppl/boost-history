@@ -1,0 +1,794 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Include</title>
+<link rel="stylesheet" href="../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="../index.html" title="Chapter&#160;1.&#160;Boost.Assign 2.0">
+<link rel="up" href="../index.html" title="Chapter&#160;1.&#160;Boost.Assign 2.0">
+<link rel="prev" href="conv.html" title="Conventions">
+<link rel="next" href="reference.html" title="Reference">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../boost.png"></td>
+<td align="center"><a href="../../../index.html">Home</a></td>
+<td align="center"><a href="../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="conv.html"><img src="../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="reference.html"><img src="../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="boost_assign_v2.include"></a><a class="link" href="include.html" title="Include">Include</a>
+</h2></div></div></div>
+<p>
+      <span class="bold"><strong>Description</strong></span>
+    </p>
+<p>
+      Overview of directory <a href="../../../../../../boost/assign/v2/include" target="_top">boost/assign/v2/include</a>,
+      which enables faster lookup of a particular feature. For example, 
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">assign</span><span class="special">/</span><span class="identifier">v2</span><span class="special">/</span><span class="identifier">include</span><span class="special">/</span><span class="identifier">csv_deque</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+</pre>
+<p>
+      is equivalent to 
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">assign</span><span class="special">/</span><span class="identifier">v2</span><span class="special">/</span><span class="identifier">deque</span><span class="special">/</span><span class="identifier">csv_deque</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+</pre>
+<p>
+    </p>
+<a name="boost_assign.include.files_in__literal__include__literal_"></a><h4>
+<a name="id36335280"></a>
+      <a class="link" href="include.html#boost_assign.include.files_in__literal__include__literal_">Files
+      in <code class="literal">/include</code></a>
+    </h4>
+<a name="include_begins_here"></a><p>
+      <span class="bold"><strong>Usage</strong></span>
+    </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+              <p>
+                File
+              </p>
+            </th>
+<th>
+              <p>
+                Usage
+              </p>
+            </th>
+<th>
+              <p>
+                Description
+              </p>
+            </th>
+<th>
+              <p>
+                Module
+              </p>
+            </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+              <p>
+                <code class="literal">chain.hpp</code>
+              </p>
+            </td>
+<td>
+              <p>
+                <code class="computeroutput">r<span class="number">2</span> <span class="special">|</span>
+                _chain<span class="special">(</span> r<span class="number">2</span>
+                <span class="special">)</span></code>
+              </p>
+            </td>
+<td>
+              <p>
+                Chains two ranges, with particular attention to reference arrays
+              </p>
+            </td>
+<td>
+              <p>
+                <a class="link" href="../">Utility.Chain</a>
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="literal">convert.hpp</code>
+              </p>
+            </td>
+<td>
+              <p>
+                <code class="computeroutput">r <span class="special">|</span> convert<span class="special">&lt;</span>C<span class="special">&gt;()</span></code>
+              </p>
+            </td>
+<td>
+              <p>
+                Explicit conversion
+              </p>
+            </td>
+<td>
+              <p>
+                <a class="link" href="../">Utility.Conversion</a>
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="literal">converter.hpp</code>
+              </p>
+            </td>
+<td>
+              <p>
+                <code class="computeroutput">C cont <span class="special">=</span> converter<span class="special">(</span>
+                r <span class="special">)</span></code>
+              </p>
+            </td>
+<td>
+              <p>
+                Implicit conversion
+              </p>
+            </td>
+<td>
+              <p>
+                <a class="link" href="../">Utility.Conversion</a>
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="literal">csv.hpp</code>
+              </p>
+            </td>
+<td>
+              <p>
+                <code class="computeroutput">csv<span class="special">(</span> <span class="identifier">functor</span><span class="special">,</span> t<span class="number">1</span><span class="special">,</span> <span class="special">...,</span> tn<span class="special">)</span></code>
+              </p>
+            </td>
+<td>
+              <p>
+                Same as <code class="computeroutput"><span class="identifier">functor</span><span class="special">(</span>
+                t<span class="number">1</span> <span class="special">)</span>
+                <span class="special">...</span> <span class="special">(</span>
+                tn <span class="special">)</span></code>
+              </p>
+            </td>
+<td>
+              <p>
+                <a class="link" href="../">Csv</a>
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="literal">csv_deque.hpp</code>
+              </p>
+            </td>
+<td>
+              <p>
+                <code class="computeroutput">csv_deque<span class="special">(</span> <span class="identifier">args</span><span class="special">...</span> <span class="special">)</span></code>
+              </p>
+            </td>
+<td>
+              <p>
+                Interpreter that generates a container
+              </p>
+            </td>
+<td>
+              <p>
+                <a class="link" href="reference/deque.html" title="Deque">Deque</a>
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="literal">deque.hpp</code>
+              </p>
+            </td>
+<td>
+              <p>
+                <code class="computeroutput">deque<span class="special">&lt;</span>T<span class="special">&gt;(</span>
+                <span class="identifier">args1</span><span class="special">...</span>
+                <span class="special">)</span> <span class="special">...</span>
+                <span class="special">(</span> <span class="identifier">argsn</span><span class="special">...</span> <span class="special">)</span></code>
+              </p>
+            </td>
+<td>
+              <p>
+                Interpreter that generates a container
+              </p>
+            </td>
+<td>
+              <p>
+                <a class="link" href="reference/deque.html" title="Deque">Deque</a>
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="literal">put.hpp</code>
+              </p>
+            </td>
+<td>
+              <p>
+                <code class="computeroutput">put<span class="special">(</span> cont <span class="special">)(</span>
+                <span class="identifier">args1</span><span class="special">...</span>
+                <span class="special">)...(</span> <span class="identifier">argsn</span><span class="special">...</span> <span class="special">)</span></code>
+              </p>
+            </td>
+<td>
+              <p>
+                Interpreter that changes the state of a container
+              </p>
+            </td>
+<td>
+              <p>
+                <a class="link" href="reference/put.html" title="Put">Put</a>
+              </p>
+            </td>
+</tr>
+</tbody>
+</table></div>
+<p>
+      <span class="bold"><strong>Auxiliary</strong></span>
+    </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+              <p>
+                Usage
+              </p>
+            </th>
+<th>
+              <p>
+                Description
+              </p>
+            </th>
+<th>
+              <p>
+                Module
+              </p>
+            </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput">interpreter<span class="special">(</span> as_arg_list<span class="special">(</span> r <span class="special">)</span> <span class="special">)</span></code>
+              </p>
+            </td>
+<td>
+              <p>
+                Signals to <code class="computeroutput">interpreter</code> to process each element of <code class="computeroutput">r</code>
+                individually
+              </p>
+            </td>
+<td>
+              <p>
+                <a class="link" href="reference/interpreter.html" title="Interpreter">Interpreter</a>
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput">generate<span class="special">(</span> _nil <span class="special">)</span></code>
+              </p>
+            </td>
+<td>
+              <p>
+                Generates an empty container <sup>[<a name="id36336022" href="#ftn.id36336022" class="footnote">a</a>]</sup>
+              </p>
+            </td>
+<td>
+              <p>
+                <a class="link" href="../">Detail</a>
+              </p>
+            </td>
+</tr>
+</tbody>
+<tbody class="footnotes"><tr><td colspan="3"><div class="footnote"><p><sup>[<a name="ftn.id36336022" href="#id36336022" class="para">a</a>] </sup>
+                  Whereas <code class="computeroutput">generate<span class="special">()</span></code>,
+                  if it is valid, generates a container whose only element is default
+                  constructed
+                </p></div></td></tr></tbody>
+</table></div>
+<a name="boost_assign.include.optional"></a><h4>
+<a name="id36336064"></a>
+      <a class="link" href="include.html#boost_assign.include.optional">Optional</a>
+    </h4>
+<p>
+      <span class="bold"><strong>Semantics</strong></span>
+    </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+              <p>
+                Expression
+              </p>
+            </th>
+<th>
+              <p>
+                Description
+              </p>
+            </th>
+</tr></thead>
+<tbody><tr>
+<td>
+              <p>
+                <code class="computeroutput">interpreter <span class="special">%</span> option</code>
+              </p>
+            </td>
+<td>
+              <p>
+                Modifies <code class="computeroutput">interpreter</code>'s semantics
+              </p>
+            </td>
+</tr></tbody>
+</table></div>
+<p>
+      <span class="bold"><strong>Options</strong></span>
+    </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+              <p>
+                File
+              </p>
+            </th>
+<th>
+              <p>
+                Option
+              </p>
+            </th>
+<th>
+              <p>
+                Encapsulates command to
+              </p>
+            </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+              <p>
+                <code class="literal">data.hpp</code>
+              </p>
+            </td>
+<td>
+              <p>
+                <code class="computeroutput"><span class="special">(</span> _data <span class="special">=</span>
+                f <span class="special">)</span></code>
+              </p>
+            </td>
+<td>
+              <p>
+                Replace the data-generator
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="literal">insert.hpp</code>
+              </p>
+            </td>
+<td>
+              <p>
+                <code class="computeroutput">_insert</code>
+              </p>
+            </td>
+<td>
+              <p>
+                Replace the modifier
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="literal">iterate.hpp</code>
+              </p>
+            </td>
+<td>
+              <p>
+                <code class="computeroutput">_iterate <span class="special">=</span> f </code>
+              </p>
+            </td>
+<td>
+              <p>
+                Replace the modifier
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="literal">key.hpp</code>
+              </p>
+            </td>
+<td>
+              <p>
+                <code class="computeroutput">_key</code>
+              </p>
+            </td>
+<td>
+              <p>
+                Replacing the data-generator by a key-generator
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="literal">modifier.hpp</code>
+              </p>
+            </td>
+<td>
+              <p>
+                
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">BOOST_ASSIGN_V2_OPTIONAL_MODIFIER_KEYWORD</span><span class="special">(</span><span class="identifier">Keyword</span><span class="special">)</span>    
+<span class="identifier">BOOST_ASSIGN_V2_OPTIONAL_MODIFIER_META_MODIFIER_TAG</span><span class="special">(</span><span class="identifier">Keyword</span><span class="special">,</span> <span class="identifier">Result</span><span class="special">)</span>
+</pre>
+<p>
+              </p>
+            </td>
+<td>
+              <p>
+                Customize a modifier-option
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="literal">push.hpp</code>
+              </p>
+            </td>
+<td>
+              <p>
+                <code class="computeroutput">_push</code>
+              </p>
+            </td>
+<td>
+              <p>
+                Replace the modifier
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="literal">push_front.hpp</code>
+              </p>
+            </td>
+<td>
+              <p>
+                <code class="computeroutput">_push_front</code>
+              </p>
+            </td>
+<td>
+              <p>
+                Replace the modifier
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="literal">repeat.hpp</code>
+              </p>
+            </td>
+<td>
+              <p>
+                <code class="computeroutput">_repeat <span class="special">=</span> <span class="identifier">n</span></code>
+              </p>
+            </td>
+<td>
+              <p>
+                Replace the modifier
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="literal">standard.hpp</code>
+              </p>
+            </td>
+<td>
+              <p>
+                <code class="computeroutput">_standard_modifier <span class="special">=</span> arg</code>
+              </p>
+            </td>
+<td>
+              <p>
+                Replace the modifier
+              </p>
+            </td>
+</tr>
+</tbody>
+</table></div>
+<a name="boost_assign.include._literal__include_operator__literal_"></a><h4>
+<a name="id36336571"></a>
+      <a class="link" href="include.html#boost_assign.include._literal__include_operator__literal_"><code class="literal">/include/operator</code></a>
+    </h4>
+<p>
+      <span class="bold"><strong>Description</strong></span>
+    </p>
+<p>
+      Operator overloads associated with a function that are optional i.e. whose
+      the headers are not included in those of the associated functions.
+    </p>
+<p>
+      <span class="bold"><strong>Usage</strong></span>
+    </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+              <p>
+                File
+              </p>
+            </th>
+<th>
+              <p>
+                Usage
+              </p>
+            </th>
+<th>
+              <p>
+                Description
+              </p>
+            </th>
+<th>
+              <p>
+                Section
+              </p>
+            </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+              <p>
+                <code class="literal">chain.hpp</code>
+              </p>
+            </td>
+<td>
+              <p>
+                <code class="computeroutput">r<span class="number">1</span> <span class="special">&amp;&amp;</span>
+                r<span class="number">2</span></code>
+              </p>
+            </td>
+<td>
+              <p>
+                Chains two ranges, with particular attention to reference arrays
+              </p>
+            </td>
+<td>
+              <p>
+                <a class="link" href="../">Utility.Chain</a>
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="literal">csv_hpp</code>
+              </p>
+            </td>
+<td>
+              <p>
+                <code class="computeroutput">cont <span class="special">|</span> <span class="special">(</span>
+                _csv_put % option1 ... % optionm <span class="special">)(</span>
+                t<span class="special">...</span> <span class="special">)</span></code>
+              </p>
+            </td>
+<td>
+              <p>
+                Forwards parameters and arguments to <code class="computeroutput">put<span class="special">(</span>
+                cont <span class="special">)</span></code> returns <code class="computeroutput">cont</code>
+              </p>
+            </td>
+<td>
+              <p>
+                __link_value<span class="underline">pipe</span>_
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="literal">hpp</code>
+              </p>
+            </td>
+<td>
+              <p>
+                <code class="computeroutput">cont <span class="special">|</span> <span class="special">(</span>
+                _put <span class="special">%</span> <span class="identifier">p1</span>
+                <span class="special">...</span> <span class="special">%</span>
+                <span class="identifier">pm</span> <span class="special">)(</span>
+                <span class="identifier">args1</span><span class="special">...</span>
+                <span class="special">)...(</span> <span class="identifier">argsn</span><span class="special">...</span> <span class="special">)</span></code>
+              </p>
+            </td>
+<td>
+              <p>
+                Forwards parameters and arguments to <code class="computeroutput">put<span class="special">(</span>
+                cont <span class="special">)</span></code> returns <code class="computeroutput">cont</code>
+              </p>
+            </td>
+<td>
+              <p>
+                __link_value<span class="underline">pipe</span>_
+              </p>
+            </td>
+</tr>
+</tbody>
+</table></div>
+<a name="boost_assign.include._literal__include_ref__literal_"></a><h4>
+<a name="id36336935"></a>
+      <a class="link" href="include.html#boost_assign.include._literal__include_ref__literal_"><code class="literal">/include/ref</code></a>
+    </h4>
+<p>
+      <span class="bold"><strong>Description</strong></span>
+    </p>
+<p>
+      Functionality in namespace <code class="computeroutput"><span class="identifier">ref</span></code>.
+    </p>
+<p>
+      <span class="bold"><strong>Usage</strong></span>
+    </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+              <p>
+                File
+              </p>
+            </th>
+<th>
+              <p>
+                Usage
+              </p>
+            </th>
+<th>
+              <p>
+                Description
+              </p>
+            </th>
+<th>
+              <p>
+                Section
+              </p>
+            </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+              <p>
+                <code class="literal">array.hpp</code>
+              </p>
+            </td>
+<td>
+              <p>
+                <code class="computeroutput">rw<span class="special">(</span> t<span class="number">1</span>
+                <span class="special">)</span> <span class="special">...</span>
+                <span class="special">(</span> tn <span class="special">)</span></code>
+              </p>
+            </td>
+<td>
+              <p>
+                Generates a reference array
+              </p>
+            </td>
+<td>
+              <p>
+                __link_ref<span class="underline">array</span>_
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="literal">csv_array.hpp</code>
+              </p>
+            </td>
+<td>
+              <p>
+                <code class="computeroutput">ref::csv_array<span class="special">(</span> t<span class="special">...</span>
+                <span class="special">)</span></code>
+              </p>
+            </td>
+<td>
+              <p>
+                Generates a reference array
+              </p>
+            </td>
+<td>
+              <p>
+                __link_ref<span class="underline">array</span>_
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="literal">get.hpp</code>
+              </p>
+            </td>
+<td>
+              <p>
+                <code class="computeroutput">rw <span class="special">|</span> ref::_get </code>
+              </p>
+            </td>
+<td>
+              <p>
+                Transforms <code class="computeroutput">rw</code> by member function <code class="computeroutput"><span class="identifier">get</span></code>
+              </p>
+            </td>
+<td>
+              <p>
+                __link_ref<span class="underline">wrapper</span>_
+              </p>
+            </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2003 -2004 Thorsten Ottosen, 2010 Erwann Rogard<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="conv.html"><img src="../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="reference.html"><img src="../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

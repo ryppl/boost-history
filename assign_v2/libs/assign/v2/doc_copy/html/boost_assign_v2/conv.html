@@ -1,0 +1,161 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Conventions</title>
+<link rel="stylesheet" href="../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="../index.html" title="Chapter&#160;1.&#160;Boost.Assign 2.0">
+<link rel="up" href="../index.html" title="Chapter&#160;1.&#160;Boost.Assign 2.0">
+<link rel="prev" href="tut.html" title="Tutorial">
+<link rel="next" href="reference.html" title="Reference">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../boost.png"></td>
+<td align="center"><a href="../../../index.html">Home</a></td>
+<td align="center"><a href="../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="tut.html"><img src="../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="reference.html"><img src="../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="boost_assign_v2.conv"></a><a class="link" href="conv.html" title="Conventions">Conventions</a>
+</h2></div></div></div>
+<p>
+      Conventions used in this documentation.
+    </p>
+<a name="boost_assign.conv.namespace"></a><h4>
+<a name="id36334671"></a>
+      <a class="link" href="conv.html#boost_assign.conv.namespace">Namespace</a>
+    </h4>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+          Syntax or semantics about identifier <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">assign</span><span class="special">::</span><span class="identifier">v2</span><span class="special">::</span><span class="identifier">name</span></code>
+          displays the latter as <code class="computeroutput"><span class="identifier">name</span></code>.
+        </li>
+<li class="listitem">
+          In code snippets under header <span class="bold"><strong>Example</strong></span>,
+          <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">assign</span><span class="special">::</span><span class="identifier">v2</span><span class="special">::</span><span class="identifier">name</span></code> is displayed as <code class="computeroutput"><span class="identifier">as2</span><span class="special">::</span><span class="identifier">name</span></code>.
+        </li>
+</ul></div>
+<a name="boost_assign.conv.glossary"></a><h4>
+<a name="id36334795"></a>
+      <a class="link" href="conv.html#boost_assign.conv.glossary">Glossary</a>
+    </h4>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Container generator</span></dt>
+<dd><p>
+            A function that returns a container
+          </p></dd>
+<dt><span class="term">Csv form</span></dt>
+<dd><p>
+            Syntax that is equivalent to succesive functor invocations
+          </p></dd>
+<dt><span class="term">Data generator</span></dt>
+<dd><p>
+            Internal component of an interpreter that constructs a data-member from
+            passed arguments
+          </p></dd>
+<dt><span class="term">Functor form</span></dt>
+<dd><p>
+            Syntax that, to assign or generate a container, requires successive functor
+            invocations
+          </p></dd>
+<dt><span class="term">Interpreter</span></dt>
+<dd><p>
+            Object that translates the syntax for repetitively modifying a container
+            into a friendlier one
+          </p></dd>
+<dt><span class="term">Modifier</span></dt>
+<dd><p>
+            Internal component of an interpreter that invokes a container modifier
+          </p></dd>
+<dt><span class="term">Option</span></dt>
+<dd><p>
+            Object that encapsulates a command to alter the semantics of an interpreter
+          </p></dd>
+<dt><span class="term">Pipe</span></dt>
+<dd><p>
+            TODO
+          </p></dd>
+<dt><span class="term">Reference array</span></dt>
+<dd><p>
+            Designates, in this library, an array of reference wrappers.
+          </p></dd>
+</dl>
+</div>
+<a name="boost_assign.conv.notation"></a><h4>
+<a name="id36334937"></a>
+      <a class="link" href="conv.html#boost_assign.conv.notation">Notation</a>
+    </h4>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term"><code class="computeroutput">arg</code></span></dt>
+<dd><p>
+            Some argument of unspecified type
+          </p></dd>
+<dt><span class="term"><code class="computeroutput">cont</code></span></dt>
+<dd><p>
+            A container
+          </p></dd>
+<dt><span class="term"><code class="computeroutput">C</code></span></dt>
+<dd><p>
+            <code class="computeroutput">cont</code>'s type
+          </p></dd>
+<dt><span class="term"><code class="computeroutput">r</code></span></dt>
+<dd><p>
+            A range
+          </p></dd>
+<dt><span class="term"><code class="computeroutput">f</code></span></dt>
+<dd><p>
+            A functor
+          </p></dd>
+<dt><span class="term"><code class="computeroutput">generate</code></span></dt>
+<dd><p>
+            A container generator
+          </p></dd>
+<dt><span class="term"><code class="computeroutput">interpreter</code></span></dt>
+<dd><p>
+            An interpreter
+          </p></dd>
+<dt><span class="term"><code class="computeroutput">option-modifier</code></span></dt>
+<dd><p>
+            Option to alter a modifier
+          </p></dd>
+<dt><span class="term"><code class="computeroutput">option</code></span></dt>
+<dd><p>
+            An option
+          </p></dd>
+<dt><span class="term"><code class="computeroutput">rw</code></span></dt>
+<dd><p>
+            A reference array
+          </p></dd>
+<dt><span class="term"><code class="computeroutput">t</code></span></dt>
+<dd><p>
+            A container data-member
+          </p></dd>
+</dl>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2003 -2004 Thorsten Ottosen, 2010 Erwann Rogard<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="tut.html"><img src="../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="reference.html"><img src="../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

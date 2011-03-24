@@ -1,0 +1,124 @@
+[tpl_module
+	[@../../../../../boost/assign/v2/include `boost/assign/v2/include`]
+	..Header lookup by identifier
+]
+
+[heading Synopsis]
+
+[def __invoke_option__ `__object_interpreter__ % `]
+
+[table
+	[[Identifier][Usage][Module]]
+	[
+		[`__kwd_chain__`]
+		[`__range__1 | __kwd_chain__( __range__2 )`]
+		[TODO]
+	]
+	[
+		[`__kwd_convert__`]
+		[`__range__ | __fun_convert__<__cont_type__>()`]
+		[TODO]
+	]
+	[
+		[`__kwd_csv_put__`]
+		[`__cont__ | __kwd_csv_put__( __args__ )`]
+		[TODO]
+	]
+	[
+		[`__kwd_data__`]
+		[__invoke_option__`( __kwd_data__ = __f__ )`]
+		[__link_option__]
+	]
+	[
+		[`__kwd_insert__`]
+		[__invoke_option__`__kwd_insert__`]
+		[__link_option__]
+	]
+	[
+		[`__kwd_iterate__`]
+		[__invoke_option__`( __kwd_iterate__ = __f__ )`]
+		[__link_option__]
+	]
+	[
+		[`__kwd_key__`]
+		[__invoke_option__`__kwd_key__`]
+		[__link_option__]
+	]
+	[
+		[`__kwd_mapped__`]
+		[__invoke_option__`( __kwd_mapped__ = __arg__ )`]
+		[__link_option__]
+	]
+	[
+		[`__kwd_push__`]
+		[__invoke_option__`__kwd_push__`]
+		[__link_option__]	
+	]
+	[
+		[`__kwd_push_back__`]
+		[__invoke_option__`__kwd_push_back__`]
+		[__link_option__]	
+	]
+	[
+		[`__kwd_push_front__`]
+		[__invoke_option__`__kwd_push_front__`]
+		[__link_option__]	
+	]
+	[
+		[`__kwd_repeat__`]
+		[__invoke_option__`__kwd_repeat__`]
+		[__link_option__]	
+	]
+	[
+		[`__kwd_std_modifier__`]
+		[__invoke_option__`__kwd_std_modifier__ = __arg__`]
+		[__link_option__]
+	]
+	[
+		[`__fun_converter__`]
+		[`__cont_type__ __cont__ = __fun_converter__( __range__ )`]
+		[__link_option__]
+	]
+	[
+		[`__fun_csv__`]
+		[`__fun_csv__( functor, __args__)`]
+		[__link_option__]
+	]
+	[
+		[`__fun_csv_deque__`]
+		[`__fun_csv_deque__( __args__ )`]
+		[__link_deque__]
+	]
+	[
+		[`__fun_deque__`]
+		[`__fun_deque__<__value_type__>( __args__ )`]
+		[__link_deque__]
+	]
+	[
+		[`__fun_put__`]
+		[`__fun_put__( __cont__ )( __args1__ ) __ellipsis__( __argsn__ )`]
+		[__link_put__]
+	]
+]
+
+
+
+
+
+	[/	
+		[[^chain.hpp]]
+		[`__range__1 && __range__2`]
+		[__describe_chain__]
+		[__link_utility_chain__]
+	]
+
+
+[/table
+		[`__ref_array__( __value__1 ) ... ( __value_n__ )`]
+		[__link_ref_array__]
+		[`__fun_ref_csv_array__( __value__... )`]
+		[__link_ref_array__]
+		[[^get.hpp]]
+		[__link_ref_wrapper__]
+]
+

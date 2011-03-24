@@ -1,0 +1,274 @@
+
+[section:utility Utility]
+[section:chain Chain]
+
+[def __describe_utility_chain__ A variant of [tpl_range_join join] that caters to [link boost_assign_v2.reference.ref.array reference arrays]]
+[def __header_utility_chain__ [@../../../../../boost/assign/v2/utility/chain.hpp boost/assign/v2/utility/chain.hpp]]
+
+[heading Header]
+``
+	#include <__header_utility_chain__>
+``
+
+[heading Description]
+
+__describe_utility_chain__
+
+[heading Syntax]
+``
+namespace chain_aux{
+
+    template<typename R1, typename R2> struct use_const;
+
+    struct adaptor2
+    {
+
+        adaptor2();
+
+        template<typename U>
+        struct result{
+           typedef __unspecified__ type;
+        };
+
+        template<typename R> typename result<R>::type operator()(R& r)const;
+        template<typename R> typename result<R const>::type operator()(R const& r)const;
+
+    };
+
+    template<typename R1, typename U2>
+    typename chain_aux::result<R1, U2>::type
+    operator|(R1 & r1, chain_aux::adaptor1<U2> const & h);
+
+    template<typename R1, typename U2>
+    typename chain_aux::result<R1 const, U2>::type
+    operator|(R1 const & r1, chain_aux::adaptor1<U2> const & h);
+
+}// chain_aux
+namespace result_of{
+
+	template<typename R1, typename R2> struct chain{
+		typedef __unspecified__ type;
+	};
+
+}
+    const chain_aux::adaptor2 _chain;
+
+``
+
+[heading Meta]
+
+[*Requirements]
+
+[table
+	[ [Parameter][Description] ]
+	[ [`R1`][Models [tpl_concept_range range]] ]
+	[ [`R2`][Models [tpl_concept_range range]] ]
+]
+
+[*Notation]
+
+[variablelist
+	[[`U1`][`range_reference<R1>::type`]]
+	[[`T`][`remove_reference<U1>::type`]]
+	[[`U2`][`range_reference<R2>::type`]]
+]
+
+[*Expressions]
+
+[table
+	[[Expression][Value]]
+	[[`chain_aux::use_const<R1, R2>::value`][ [^not] `is_reference<U1>::value` &&  `!is_const<T>::value` && `(U2 == U1)` ]]
+	[[`is_const< range_value< result_of::chain<R1, R2>::type>::type >`][`chain_aux::use_const<R1, R2>::value`]]
+]
+
+[*Comment]
+
+This meta-function becomes relevant if either of `r1` or `r2` is a [link boost_assign_v2.reference.ref.array reference array]: altghouh 
+these are usually constructed in place (rvalues), the references therein may bind to lvalues. `use_const` knows not to throw away lvalue-ness, 
+in that case, i.e. it returns false.
+
+[heading Range]
+
+[*Notation]
+
+[variablelist
+	[[`chained`][result of `r1 | __kwd_chain__( r2 )`]]
+]
+
+[*Expressions]
+
+[table
+	[[Expression][Value]]
+	[
+		[`*( i + begin( chained ) )`]
+		[`*( i < size( r1 ) ? i + begin( r1 ) : i - size( r1 ) + begin( r2 ) )` ]
+	]
+]
+
+[heading Alternative invocation]
+
+[def __header_utility_chain_operator_and__ [@../../../../../boost/assign/v2/utility/chain/operator_and.hpp boost/assign/v2/utility/chain/operator_and.hpp]]
+
+[*Header]
+``
+	#include <__header_utility_chain_operator_and__>
+``
+
+This header is optional (because it overloads `opearator&&`, which some may prefer not to) i.e. is it not included in
+__header_utility_chain__.
+
+[table 
+	[ [Expression][ Description ] ]
+	[
+		[`r1 && r2`]
+		[Equivalent to `r1 | _chain( r2 )`]
+	]
+]
+
+[heading Example]
+[import ../test/utility/chain.cpp]
+
+[#ex_utility_chain]
+[*Example 1]
+[test_utility_chain_read]
+
+[*Example 2]
+[test_utility_chain_write]
+
+[*Example 3]
+[test_utility_chain_write_refs]
+
+[endsect][/chain]
+[section:conversion Conversion]
+[import ../test/utility/conversion.cpp]
+[section:convert Convert]
+[def __header_utility_conversion_convert__ 		[@../../../../../boost/assign/v2/utility/conversion/convert.hpp boost/assign/v2/utility/conversion/convert.hpp]]
+[def __describe_utility_conversion_convert__ 	Function converting a range to a container]
+
+[heading Header]
+``
+	#include <__header_utility_conversion_convert__>
+``
+
+[heading Description]
+__describe_utility_conversion_convert__
+
+[heading Syntax]
+[import ../../../../boost/assign/v2/utility/conversion/convert.hpp]
+[syntax_utility_conversion_convert]
+
+[heading Semantics]
+[*Expressions]
+
+[table
+	[[Expression][Description]]
+	[
+		[`convert_aux::__fun_convert__<__cont_type__>( __range__, convert_tag::put() )`]
+		[`__cont_type__ __cont__; put( __cont__ )( __gen_as_arg_list__( __range__ ) )` and returns `__cont__`]
+	]
+	[
+		[`convert_aux::__fun_convert__<__cont_type__>( __range__, convert_tag::copy() )`]
+		[`__cont_type__( begin( __range__ ), end( __range__ ) )`]
+	]
+	[
+		[`convert_aux::__fun_convert__<__cont_type__>( __range__ )`]
+		[`convert_aux::__fun_convert__<__cont_type__>( __range__ , tag )`, where `tag = convert_tag::put` if `__cont_type__` is either
+		an [tpl_boost_array array] or an [tpl_stl_adapter adapter], `tag = convert_tag::copy` otherwise.]
+	]
+	[
+		[`__range__ | __fun_convert__<__cont_type__>()`]
+		[`convert_aux::__fun_convert__<__cont_type__>( __range__ )`]
+	]
+]
+
+[heading Example]
+[#ex_utility_conversion_convert]
+[test_utility_conversion_as2_deque_array]
+
+[endsect][/convert]
+[section:converter Converter]
+[def __header_utility_conversion_converter__ 		[@../../../../../boost/assign/v2/utility/conversion/converter.hpp boost/assign/v2/utility/conversion/converter.hpp]]
+[def __describe_utility_conversion_converter__ 	    Wraps a range with container-convertibility]
+
+[heading Header]
+``
+	#include <__header_utility_conversion_converter__>
+``
+
+[heading Description]
+__describe_utility_conversion_converter__
+
+[heading Syntax]
+[import ../../../../boost/assign/v2/utility/conversion/converter.hpp]
+[syntax_utility_conversion_converter]
+
+[heading Semantics]
+
+[*Notation]
+
+[variablelist
+	[[`c`][Instance of `__fun_converter__( __range__ )`]]
+]
+
+[*Converter]
+
+[table
+	[[Expression][Description]]
+	[
+		[`c.type<__cont_type__>()`]
+		[Calls `__range__ | __fun_convert__<__cont_type__>()`]
+	]
+	[
+		[`__cont_type__ __cont__ = c`]
+		[Equivalent to `__cont_type__ __cont__ = c.type<__cont_type__>()`]
+	]
+]
+
+[heading Example]
+[#ex_utility_conversion_converter]
+[test_utility_conversion_matrix3x3]
+
+[endsect][/converter]
+[endsect][/conversion]
+[section:csv Csv]
+										
+[def __header_utility_csv__ 			[@../../../../../boost/assign/v2/utility/csv.hpp boost/assign/v2/utility/csv.hpp]]
+[def __describe_utility_csv__ 	    	A function whose invocation over a sequence of values is equivalent to unary functor invocations over that sequence.]
+
+[heading Header]
+``
+	#include <__header_utility_csv__>
+``
+
+[heading Description]
+__describe_utility_csv__
+
+[heading Syntax]
+[import ../../../../boost/assign/v2/utility/csv.hpp]
+[syntax_utility_csv]
+
+[heading Semantics]
+
+[*Notation]
+
+[variablelist
+	[[`__value__1, ..., __value_n__`][Individual elements of `args...`]]
+]
+
+[*Semantics]
+
+[table
+	[[Expression][Returns]]
+	[[`__fun_csv__( functor, args... )`][` functor( __value__1 ) ... ( __value_n__ ) `]]
+]
+
+[heading Example]
+[import ../test/utility/csv.cpp]
+[#ex_utility_csv]
+[*Example 1]
+[test_utility_csv_put]
+[*Example 2]
+[test_utility_csv_deque_modulo]
+
+[endsect][/csv]
+[endsect][/utility]
