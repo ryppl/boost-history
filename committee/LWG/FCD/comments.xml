@@ -9843,7 +9843,7 @@ Correct typo.
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="113" type="te" owner="LWG" issue="" disp="rejected" date="2010-08-07" extdoc="">
+<comment nb="US" num="113" type="te" owner="LWG" issue="579" disp="rejected" date="2010-08-07" extdoc="">
 <section>
 23.2
 </section>
@@ -10043,7 +10043,7 @@ unmodified
 <rationale>
 </rationale>
 </comment>
-<comment nb="ES" num="2" type="te" owner="LWG" issue="" disp="rejected" date="2010-08-07" extdoc="">
+<comment nb="ES" num="2" type="te" owner="LWG" issue="579" disp="rejected" date="2010-08-07" extdoc="">
 <section>
 23.2.5 [unord.req], Table 100 (Unordered associative container requirements (in addition to container))
 </section>
@@ -10437,7 +10437,7 @@ explicit multiset(const Allocator&amp;);
 <rationale>
 </rationale>
 </comment>
-<comment nb="US" num="118" type="te" owner="LWG" issue="" disp="rejected" date="2010-08-07" extdoc="">
+<comment nb="US" num="118" type="te" owner="LWG" issue="579" disp="rejected" date="2010-08-07" extdoc="">
 <section>
 23.5
 </section>
