@@ -23,11 +23,11 @@ namespace v2{
 namespace interpreter_aux{
 
     template<typename C, typename F, typename Tag>
-    class put_interpreter
-        : protected ref::wrapper< ref::assign_tag::copy, C >,
+    class put_interpreter :
 //<-
-        public interpreter_aux::interpreter_crtp< C, F, Tag, put_interpreter<C, F, Tag> >
+        protected ref::wrapper< ref::assign_tag::copy, C >,
 //->
+        public interpreter_aux::interpreter_crtp< C, F, Tag, put_interpreter<C, F, Tag> >
     {
 //<-
         typedef interpreter_aux::interpreter_crtp< C, F, Tag, put_interpreter > super2_t;
@@ -38,7 +38,7 @@ namespace interpreter_aux{
 //<-
         protected:
 
-        typedef interpreter_aux::adapter_modifier<Tag> modifier_;
+        typedef interpreter_aux::interpreter_modifier<Tag> modifier_;
         typedef ref::assign_tag::copy assign_tag_;
         typedef ref::wrapper<assign_tag_,C> super1_t;
 //->
@@ -65,13 +65,13 @@ namespace interpreter_aux{
     struct /*<<Metafunction class>>*/replace_data_generator< interpreter_aux::put_interpreter<C, F, Tag> >{/*<-*/
         template<typename F1>
         struct apply{ typedef interpreter_aux::put_interpreter<C, F1, Tag> type; };
-    /*->*/};
+    }/*->*/;
 
     template<typename C, typename F, typename Tag>
     struct /*<<Metafunction class>>*/replace_modifier_tag< interpreter_aux::put_interpreter<C, F, Tag> >{/*<-*/
         template<typename Tag1>
         struct apply{ typedef interpreter_aux::put_interpreter<C, F, Tag1> type; };
-    /*->*/};
+    }/*->*/;
 
 }// interpreter_aux
 namespace result_of{

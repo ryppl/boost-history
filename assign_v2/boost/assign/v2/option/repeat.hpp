@@ -32,16 +32,16 @@ namespace modifier_tag{
 namespace interpreter_aux{
 
     template<typename Arg>
-    class adapter_modifier<modifier_tag::repeat<Arg> >/*<-*/
+    class interpreter_modifier<modifier_tag::repeat<Arg> >/*<-*/
     {
-        typedef adapter_modifier<Arg> inner_type;
+        typedef interpreter_modifier<Arg> inner_type;
 
         public:
 
         typedef std::size_t size_type;
 
-        adapter_modifier() : n_( 0 ){}
-        explicit adapter_modifier( inner_type inner, size_type n )
+        interpreter_modifier() : n_( 0 ){}
+        explicit interpreter_modifier( inner_type inner, size_type n )
             : inner_( inner ), n_( n )
         {}
 

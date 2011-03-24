@@ -27,34 +27,35 @@ namespace boost{
 namespace assign{
 namespace v2{
 //[syntax_interpreter_modifier
-namespace /*<< Template arguments to `aux::adapter_modifier<>` have to be within this `namespace`>>*/modifier_tag{}
+namespace modifier_tag{
+
+	// Namespace in which to declare template arguments of `interpreter_modifier<>`
+
+}//modifier_tag
 namespace interpreter_aux{
 
     template<typename Tag>
-    struct /*<<Specialize on Tag>>*/ adapter_modifier{};
+    struct interpreter_modifier
+    {
+    	// Specialize on Tag to model ConceptModifier 
+    };
 
-    template<typename C>
-    struct /*<<Metafunction returning a modifier-tag>>*/deduce_modifier_tag;
-
-}// interpreter_aux
-namespace put_concept{
-
-    template<typename Tag, /*<<Container>>*/ typename C, /*<<Input>>*/ typename T>
-    struct Modifier
+    template<typename Tag, typename C, typename T>
+    struct ConceptModifier
     {
 
-        BOOST_CONCEPT_USAGE(Modifier)
+        BOOST_CONCEPT_USAGE(ConceptModifier)
         {
             m.impl( cont, t ); 
         }
 
         private:
-        static interpreter_aux::adapter_modifier<Tag>& m;
+        static interpreter_aux::interpreter_modifier<Tag>& m;
         static C& cont;
         static T t;
     };
 
-}//put_concept
+}//interpreter_aux
 /*<-*/
 
 namespace switch_tag{
@@ -114,7 +115,6 @@ namespace switch_aux{\
 /**/
 #endif
 
-//[example_put_modifier_deduce_switch
 #ifdef BOOST_ASSIGN_V2_OPTION_MODIFIER_SWITCH
 #warning
 #else
@@ -123,15 +123,16 @@ BOOST_ASSIGN_V2_OPTION_MODIFIER_SWITCH_ARRAY(1)
 BOOST_ASSIGN_V2_OPTION_MODIFIER_SWITCH_ADAPTER(2)
 BOOST_ASSIGN_V2_OPTION_MODIFIER_SWITCH_DEFAULT(3)
 #define BOOST_ASSIGN_V2_OPTION_MODIFIER_SWITCH
-//]
 #endif
 
 
 /*->*/
 namespace interpreter_aux{
 
-    template<typename /*<<Container>>*/C>
-    struct /*<<Metafunction>>*/deduce_modifier_tag/*<-*/
+    template<
+    	typename C // Container
+    >
+    struct deduce_modifier_tag/*<-*/
         : switch_aux::result< switch_tag::deduce_put, C>
     {}/*->*/;
 

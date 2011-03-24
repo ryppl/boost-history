@@ -29,7 +29,7 @@ namespace xxx_data{
         using namespace boost;
         namespace as2 = assign::v2;
         {
-            //[test_put_pipe_option_data_math
+            //[test_pipe_option_data_math
             int k = 1; std::list<int> factorials;
             using namespace lambda;
             
@@ -37,8 +37,8 @@ namespace xxx_data{
                 range::equal(
                     factorials | ( 
                         as2::_csv_put % ( as2::_data = ( var(k) *= _1 ) ) 
-                    )/*Equivalent to calling `factorials.push_back( k *= ++i )`*/( 1, 2, 3, 4, 5 ),
-                    as2::csv_deque<int>( 1 )( 2 )( 6 )( 24 )( 120 )
+                    )/*<<Equivalent to calling `factorials.push_back( k *= ++i )`>>*/( 1, 2, 3, 4, 5 ),
+                    as2::csv_deque<int>( 1, 2, 6, 24, 120 )
                 )
             );
             //]

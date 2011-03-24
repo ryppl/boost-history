@@ -19,7 +19,9 @@ namespace v2{
 //[syntax_interpreter_as_arg_list
 namespace interpreter_aux{    
 
-    template<typename /*<<Range>>*/R>
+    template<
+    	typename R	// Range
+    >
     class as_arg_list_adapter/*<-*/
     {
 
@@ -46,10 +48,10 @@ namespace interpreter_aux{
 namespace result_of{
 
     template<typename R>
-    struct /*<<Metafunction>>*/as_arg_list/*<-*/
+    struct as_arg_list/*<-*/
     {
         typedef as_arg_list_adapter<R> type;
-    }/*->*/;
+    }/*->*/; // Metafunction
 
 }// result_of
 

@@ -44,7 +44,7 @@ namespace result_of{
 
 }//result_of
 
-    template<typename C, typename F, typename Tag, typename D>
+    template<typename /*<<Associative container>>*/C, typename F, typename Tag, typename D>
     typename result_of::option_key<C, D>::type
     operator%/*<<Overrides data generator with a constructor for C::key_type>>*/(
         interpreter_crtp<C, F, Tag, D> const& lhs,

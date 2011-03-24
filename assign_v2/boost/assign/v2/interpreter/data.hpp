@@ -27,11 +27,12 @@ namespace interpreter_aux{
     template<typename C>
     struct container_value{ typedef typename C::value_type type; };
 
-    template<typename /*<<Pointer-container>>*/PtrC, 
-        template<typename > class F = container_value
+    template<typename PtrC // Pointer-container 
+        ,template<typename > class F = container_value
     >
-    struct /*<<Metafunction>>*/ deduce_ptr_generator/*<-*/
+    struct deduce_ptr_generator/*<-*/
     {
+        
         typedef typename v2::ptr_container_aux::to_value_container<
             PtrC
         >::type cont_;
@@ -40,17 +41,21 @@ namespace interpreter_aux{
         > type;
     }/*->*/;
 
-    template<typename /*<<Value-container>>*/C, 
-        template<typename > class F = container_value>
-    struct /*<<Metafunction>>*/ deduce_value_generator/*<-*/
+    template<
+    	typename C // Value-container 
+        , template<typename > class F = container_value
+    >
+    struct deduce_value_generator/*<-*/
     {
         typedef functor_aux::constructor<
             typename F<C>::type
         > type;
     }/*->*/;
 
-    template<typename /*<<Value or pointer-container>>*/C>
-    struct /*<<Metafunction>>*/deduce_data_generator/*<-*/
+    template<
+    	typename C // Value or pointer-container
+    >
+    struct deduce_data_generator/*<-*/
         :  boost::mpl::eval_if<
             ptr_container_aux::is_ptr_container<C>,
             deduce_ptr_generator<C>,

@@ -28,7 +28,7 @@ namespace xxx_mapped{
         using namespace boost;
         namespace as2 = assign::v2;
         {
-            //[test_put_pipe_modifier_mapped
+            //[test_pipe_option_mapped
             using namespace lambda;
             typedef std::map<std::string, int> C; C cal;
             BOOST_AUTO( _local, ( as2::_data = _1 ) );

@@ -49,7 +49,7 @@ namespace interpreter_aux{
         typedef impl_ const cimpl_;
         typedef interpreter_crtp<impl_, F, Tag, deque_interpreter> put_crtp_;
 
-        typedef interpreter_aux::adapter_modifier<Tag> modifier_;
+        typedef interpreter_aux::interpreter_modifier<Tag> modifier_;
 //->
         public:
 

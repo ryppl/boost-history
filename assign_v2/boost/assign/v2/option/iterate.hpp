@@ -52,7 +52,7 @@ namespace modifier_tag{
 namespace interpreter_aux{
                 
     template<typename Arg>
-    class adapter_modifier< modifier_tag::iterate<Arg> >/*<-*/
+    class interpreter_modifier< modifier_tag::iterate<Arg> >/*<-*/
     {
 
         typedef keyword_aux::ignore ignore_;
@@ -62,8 +62,8 @@ namespace interpreter_aux{
 
         public:
                     
-        adapter_modifier(): ptr( new arg_() ){}
-        explicit adapter_modifier( 
+        interpreter_modifier(): ptr( new arg_() ){}
+        explicit interpreter_modifier( 
             ignore_,  
             typename boost::call_traits<arg_>::param_type arg 
         ) : ptr( new arg_( arg ) )

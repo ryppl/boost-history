@@ -29,7 +29,7 @@ namespace xxx_iterate{
         namespace as2 = assign::v2;
         
         {
-            //[test_put_pipe_modifier_iterate
+            //[test_pipe_option_iterate
             typedef int T; boost::array<T, 4> powers; powers[0] = 1; powers[1] = 10;
 
             int i = 2; 

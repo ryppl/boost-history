@@ -29,7 +29,7 @@ namespace xxx_csv_put{
         using namespace boost;
         namespace as2 = assign::v2;
         {
-            //[test_put_pipe_csv_put_str_literal
+            //[test_pipe_csv_put_str_literal
             typedef const char* T; typedef std::string str_; std::deque<T> cont;
 
             BOOST_ASSIGN_V2_CHECK( 

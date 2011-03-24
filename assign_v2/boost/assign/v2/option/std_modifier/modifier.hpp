@@ -82,12 +82,12 @@ namespace v2{\
 namespace interpreter_aux{\
 \
     template<>\
-    class adapter_modifier<modifier_tag::FUN>\
+    class interpreter_modifier<modifier_tag::FUN>\
     {\
         typedef keyword_aux::ignore ignore_;\
         public:\
-        adapter_modifier(){}\
-        adapter_modifier( ignore_, ignore_ ){}\
+        interpreter_modifier(){}\
+        interpreter_modifier( ignore_, ignore_ ){}\
         BOOST_ASSIGN_V2_OPTION_STD_MODIFIER_IMPL(FUN)\
     };\
 \

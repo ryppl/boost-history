@@ -20,7 +20,7 @@
 namespace boost{
 namespace assign{
 namespace v2{
-//[syntax_put_modifier_modulo
+//[syntax_option_modifier
 namespace interpreter_aux{
 
     template<typename /*<<A class of modifiers>>*/ Keyword, typename /*<<A part of the modifier's implementation>>*/Arg = keyword_aux::ignore>
@@ -53,7 +53,7 @@ namespace interpreter_aux{
     struct /*<<Metafunction class to be specialized on Keyword>>*/ meta_modifier_tag
     {
         template<typename /*<<Inherits `interpreter_crtp<>` >>*/ D> 
-        struct /*<<Returns a modifier-tag>>*/ apply;
+        struct apply;
     };
 
 namespace result_of{
@@ -85,8 +85,7 @@ namespace result_of{
     template<typename C, typename F, typename Tag, typename D, 
         typename Keyword, typename Arg>
     typename ::boost::mpl::apply2<
-        result_of::option_modifier<D>, 
-        Keyword, Arg
+    	result_of::option_modifier<D>, Keyword, Arg
     >::type
     operator%(
         interpreter_crtp<C, F, Tag, D> const& lhs,
@@ -95,7 +94,7 @@ namespace result_of{
     {
         typedef interpreter_aux::meta_modifier_tag<Keyword, Arg> meta_;
         typedef typename ::boost::mpl::apply1<meta_, D>::type modifier_tag;
-        typedef interpreter_aux::adapter_modifier<modifier_tag> modifier_;
+        typedef interpreter_aux::interpreter_modifier<modifier_tag> modifier_;
     
         typedef typename ::boost::mpl::apply2<
             result_of::option_modifier<D>, 
@@ -110,6 +109,10 @@ namespace result_of{
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
 }// interpreter_aux
+
+	/*<-*/BOOST_ASSIGN_V2_IGNORE(/*->*/#define BOOST_ASSIGN_V2_OPTION_MODIFIER_KEYWORD(NAME) unspecified/*<-*/)/*->*/
+	/*<-*/BOOST_ASSIGN_V2_IGNORE(/*->*/#define BOOST_ASSIGN_V2_OPTION_MODIFIER_META_MODIFIER_TAG(NAME, Result) unspecified/*<-*/)/*->*/
+
 //]
 namespace result_of{
 

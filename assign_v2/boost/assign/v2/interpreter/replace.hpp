@@ -18,16 +18,28 @@ namespace v2{
 //[syntax_put_adapter_replace_parameter
 namespace interpreter_aux{
                 
-    template<typename /*<<Inherits interpreter_crtp\<\> >>*/D> 
-    struct /*<<Metafunction class to be specialized on D>>*/replace_data_generator{
+    template<
+    	typename D // Derives from interpreter_crtp
+    > 
+    struct replace_data_generator{
+
+		// Metafunction class specialized on D should return its transformation
+        // by D::fun_type = F
+    
         template<typename F> 
-        struct /*<<Transforms D by replacing D::fun_type with F>>*/apply{};
+        struct apply{};
     };
 
-    template<typename /*<<Inherits interpreter_crtp\<\> >>*/ D> 
-    struct /*<<Metafunction class to be specialized on D>>*/ replace_modifier_tag{
+    template<
+    	typename D // Derives from interpreter_crtp
+    > 
+    struct replace_modifier_tag{
+
+		// Metafunction class specialized on D should return its transformation
+        // by D::modifier_tag = Tag
+
         template<typename Tag> 
-        struct /*<<Transforms D by replacing Tag D::modifier_tag with Tag>>*/ apply{};
+        struct apply{};
     };
     
 }// interpreter_aux
