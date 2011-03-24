@@ -7,6 +7,9 @@
 #include <boost/version.hpp>*/
 
 // Test
+#include <libs/assign/v2/test/chain.h>
+#include <libs/assign/v2/test/conversion.h>
+#include <libs/assign/v2/test/csv.h>
 #include <libs/assign/v2/test/detail.h>
 //#include <libs/assign/v2/test/deque.h>
 //#include <libs/assign/v2/test/interpreter.h>
@@ -14,7 +17,6 @@
 //#include <libs/assign/v2/test/pipe.h>
 //#include <libs/assign/v2/test/put.h>
 //#include <libs/assign/v2/test/ref.h>
-//#include <libs/assign/v2/test/utility.h>
 
 // Tutorial
 //#include <libs/assign/v2/tutorial.h>

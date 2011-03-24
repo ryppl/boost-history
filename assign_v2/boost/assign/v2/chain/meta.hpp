@@ -9,7 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_CHAIN_META_ER_2010_HPP
 #define BOOST_ASSIGN_V2_CHAIN_META_ER_2010_HPP
-#include <boost/assign/v2/utility/chain/iterator.hpp>
+#include <boost/assign/v2/chain/iterator.hpp>
 #include <boost/config.hpp>
 #include <boost/concept/assert.hpp>
 #include <boost/mpl/and.hpp>

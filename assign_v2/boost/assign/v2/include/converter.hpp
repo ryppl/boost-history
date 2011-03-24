@@ -9,6 +9,6 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_INCLUDE_CONVERTER_ER_2010_HPP
 #define BOOST_ASSIGN_V2_INCLUDE_CONVERTER_ER_2010_HPP
-#include <boost/assign/v2/utility/conversion/converter.hpp>
+#include <boost/assign/v2/conversion/converter.hpp>
 
 #endif // BOOST_ASSIGN_V2_INCLUDE_CONVERTER_ER_2010_HPP

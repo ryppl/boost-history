@@ -9,6 +9,6 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_INCLUDE_LOGICAL_AND_CHAIN_ER_2010_HPP
 #define BOOST_ASSIGN_V2_INCLUDE_LOGICAL_AND_CHAIN_ER_2010_HPP
-#include <boost/assign/v2/utility/chain/operator_and.hpp>
+#include <boost/assign/v2/chain/operator_and.hpp>
 
 #endif //BOOST_ASSIGN_V2_INCLUDE_LOGICAL_AND_CHAIN_ER_2010_HPP

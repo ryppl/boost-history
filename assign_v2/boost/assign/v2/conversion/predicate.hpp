@@ -7,8 +7,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_UTILITY_CONVERSION_TRAITS_ER_2010_HPP
-#define BOOST_ASSIGN_V2_UTILITY_CONVERSION_TRAITS_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_CONVERSION_TRAITS_ER_2010_HPP
+#define BOOST_ASSIGN_V2_CONVERSION_TRAITS_ER_2010_HPP
 #include <boost/assign/v2/detail/traits/value_container/category.hpp>
 #include <boost/assign/v2/detail/traits/value_container/has_push.hpp>
 #include <boost/assign/v2/detail/traits/ptr_container/meta.hpp>
@@ -46,4 +46,4 @@ namespace conversion_aux{
 }// assign
 }// boost
 
-#endif // BOOST_ASSIGN_V2_UTILITY_CONVERSION_TRAITS_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_CONVERSION_TRAITS_ER_2010_HPP

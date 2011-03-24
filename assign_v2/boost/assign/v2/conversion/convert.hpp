@@ -7,8 +7,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_UTILITY_CONVERSION_CONVERT_ER_2010_HPP
-#define BOOST_ASSIGN_V2_UTILITY_CONVERSION_CONVERT_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_CONVERSION_CONVERT_ER_2010_HPP
+#define BOOST_ASSIGN_V2_CONVERSION_CONVERT_ER_2010_HPP
 #include <boost/assign/v2/detail/pp/ignore.hpp>
 #include <boost/assign/v2/put.hpp>
 #include <boost/range/algorithm/for_each.hpp>
@@ -78,6 +78,6 @@ conversion_aux::convert_adapter<C> _convert()/*<-*/
 }// assign
 }// boost
 
-#include <boost/assign/v2/utility/conversion/deduce_tag.hpp>
+#include <boost/assign/v2/conversion/deduce_tag.hpp>
 
-#endif //  BOOST_ASSIGN_V2_UTILITY_CONVERSION_CONVERT_ER_2010_HPP
+#endif //  BOOST_ASSIGN_V2_CONVERSION_CONVERT_ER_2010_HPP

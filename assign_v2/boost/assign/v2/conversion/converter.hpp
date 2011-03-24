@@ -7,11 +7,11 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_UTILITY_CONVERSION_CONVERTER_ER_2010_HPP
-#define BOOST_ASSIGN_V2_UTILITY_CONVERSION_CONVERTER_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_CONVERSION_CONVERTER_ER_2010_HPP
+#define BOOST_ASSIGN_V2_CONVERSION_CONVERTER_ER_2010_HPP
 #include <boost/assign/v2/detail/pp/ignore.hpp>
 #include <boost/assign/v2/ref/wrapper.hpp>
-#include <boost/assign/v2/utility/conversion/convert.hpp>
+#include <boost/assign/v2/conversion/convert.hpp>
 #include <boost/call_traits.hpp>
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
@@ -79,18 +79,18 @@ namespace result_of{
 }// assign
 }// boost
 
-#if defined( BOOST_ASSIGN_V2_UTILITY_CONVERSION_CONVERTER_NAME_LOOKUP_PARAM ) || defined ( BOOST_ASSIGN_V2_UTILITY_CONVERSION_CONVERTER_NAME_LOOKUP )
+#if defined( BOOST_ASSIGN_V2_CONVERSION_CONVERTER_NAME_LOOKUP_PARAM ) || defined ( BOOST_ASSIGN_V2_CONVERSION_CONVERTER_NAME_LOOKUP )
 #error
 #endif
 
 #include <boost/preprocessor/seq/enum.hpp>
 #include <boost/preprocessor/seq/transform.hpp>
 
-#define BOOST_ASSIGN_V2_UTILITY_CONVERSION_CONVERTER_NAME_LOOKUP_PARAM(s, data, T) typename T
-#define BOOST_ASSIGN_V2_UTILITY_CONVERSION_CONVERTER_NAME_LOOKUP(Seq, R)\
+#define BOOST_ASSIGN_V2_CONVERSION_CONVERTER_NAME_LOOKUP_PARAM(s, data, T) typename T
+#define BOOST_ASSIGN_V2_CONVERSION_CONVERTER_NAME_LOOKUP(Seq, R)\
     template<BOOST_PP_SEQ_ENUM(\
         BOOST_PP_SEQ_TRANSFORM(\
-            BOOST_ASSIGN_V2_UTILITY_CONVERSION_CONVERTER_NAME_LOOKUP_PARAM,\
+            BOOST_ASSIGN_V2_CONVERSION_CONVERTER_NAME_LOOKUP_PARAM,\
             ~,\
             Seq\
         )\
@@ -103,4 +103,4 @@ namespace result_of{
 /**/
 
 
-#endif // BOOST_ASSIGN_V2_UTILITY_CONVERSION_CONVERTER_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_CONVERSION_CONVERTER_ER_2010_HPP

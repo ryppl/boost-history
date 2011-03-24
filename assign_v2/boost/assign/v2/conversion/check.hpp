@@ -7,8 +7,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_UTILITY_CONVERSION_CHECK_ER_2010_HPP
-#define BOOST_ASSIGN_V2_UTILITY_CONVERSION_CHECK_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_CONVERSION_CHECK_ER_2010_HPP
+#define BOOST_ASSIGN_V2_CONVERSION_CHECK_ER_2010_HPP
 #include <deque>
 #include <list>
 #include <map>
@@ -17,9 +17,9 @@
 #include <stack>
 #include <vector>
 #include <boost/array.hpp>
-#include <boost/assign/v2/utility/conversion/converter.hpp>
-#include <boost/assign/v2/utility/conversion/deduce_tag.hpp>
-#include <boost/assign/v2/utility/conversion/predicate.hpp>
+#include <boost/assign/v2/conversion/converter.hpp>
+#include <boost/assign/v2/conversion/deduce_tag.hpp>
+#include <boost/assign/v2/conversion/predicate.hpp>
 #include <boost/assign/v2/detail/check/fwd_equal_container.hpp>
 #include <boost/mpl/assert.hpp>
 #include <boost/type.hpp>
@@ -115,4 +115,4 @@ namespace check_aux{
 }// assign
 }// boost
 
-#endif // BOOST_ASSIGN_V2_UTILITY_CONVERSION_CHECK_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_CONVERSION_CHECK_ER_2010_HPP

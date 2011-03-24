@@ -11,7 +11,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_CHAIN_CHAIN_ER_2010_HPP
 #define BOOST_ASSIGN_V2_CHAIN_CHAIN_ER_2010_HPP
-#include <boost/assign/v2/utility/chain/meta.hpp>
+#include <boost/assign/v2/chain/meta.hpp>
 #include <boost/mpl/void.hpp>
 
 // Design:

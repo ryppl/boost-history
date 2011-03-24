@@ -10,8 +10,8 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_CHAIN_OPERATOR_AND_ER_2010_HPP
 #define BOOST_ASSIGN_V2_CHAIN_OPERATOR_AND_ER_2010_HPP
-#include <boost/assign/v2/utility/chain/meta.hpp>
-#include <boost/assign/v2/utility/chain/chain.hpp>
+#include <boost/assign/v2/chain/meta.hpp>
+#include <boost/assign/v2/chain/chain.hpp>
 
 namespace boost{
 namespace assign{
