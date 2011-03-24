@@ -438,11 +438,29 @@ For example, the following code will *not* compile:
         };
 
         bool __BOOST_LOCAL_FUNCTION_PARAMS__(
-                (const point&)(p) (const point&)(q) ) {
+                (const point& p) (const point& q) ) {
             return p.x == q.x && p.y == q.y;
         ) __BOOST_LOCAL_FUNCTION_NAME__(operator==) // Error: Cannot be `operator==`.
 
         ...
+    }
+
+[h5 Goto]
+
+It is not possible to jump with a `goto` from within a local function, local block, or local exit to a label defined in the enclosing scope.
+
+For example, the following will *not* compile:
+
+    int f() {
+        void __BOOST_LOCAL_FUNCTION_PARAMS__( (boost error) ) {
+            if (error) goto failure; // Error: Cannot jump to enclosing label `failure`.
+        } __BOOST_LOCAL_FUNCTION_NAME__(l)
+
+        l(true);
+
+        return 0;
+    failure:
+        return -1;
     }
 
 [endsect]

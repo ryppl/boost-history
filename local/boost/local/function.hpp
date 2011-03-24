@@ -18,8 +18,6 @@
 #include <boost/preprocessor/facilities/empty.hpp>
 #include <boost/config.hpp> // For variadic macros.
 
-// Params.
-
 // Pass a parenthesized params seq `()()...` on C++. If variadic macros (C99, 
 // GCC, MVSC, etc) you can also pass a variable length tuple `..., ...` for
 // params and nothing `` for no params.
@@ -115,6 +113,10 @@
  *
  * @Note Local functions are functors. They cannot be copied but they can be
  *  assigned to other functor objects like @RefClass{boost::local::function}.
+ *
+ * @Note This macro cannot be used multiple times on the same line because it
+ *  internally uses the line number <c>__LINE__</c> to generate unique
+ *  identifiers.
  *
  * @See @RefSect{Tutorial} section, @RefSect2{Advanced_Topics, Advanced Topics}
  *  section, @RefMacro{BOOST_LOCAL_FUNCTION_PARAMS_TPL},

@@ -97,6 +97,10 @@
  * }
  * @EndParams
  *
+ * @Note This macro cannot be used multiple times on the same line because it
+ *  internally uses the line number <c>__LINE__</c> to generate unique
+ *  identifiers.
+ *
  * @See @RefSect{Tutorial} section, @RefSect2{Advanced_Topics, Advanced Topics}
  *  section, @RefMacro{BOOST_LOCAL_EXIT_TPL}, @RefMacro{BOOST_LOCAL_EXIT_END}.
  */
@@ -133,6 +137,10 @@
  *
  * This macro must follow the local exit body code <c>{ ... }</c> as
  * shown in the @RefMacro{BOOST_LOCAL_EXIT} documentation.
+ *
+ * @Note This macro cannot be used multiple times on the same line because it
+ *  internally uses the line number <c>__LINE__</c> to generate unique
+ *  identifiers.
  *
  * @See @RefMacro{BOOST_LOCAL_EXIT}, @RefSect{Tutorial} section.
  */

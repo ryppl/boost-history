@@ -35,6 +35,8 @@
       (C++0x Lambdas)</a></span></dt>
 <dt><span class="section"><a href="Examples.html#boost_local.Examples.binding__this___c__0x_lambdas_">Binding
       <code class="computeroutput"><span class="keyword">this</span></code> (C++0x Lambdas)</a></span></dt>
+<dt><span class="section"><a href="Examples.html#boost_local.Examples.gcc_nested_functions">GCC Nested
+      Functions</a></span></dt>
 <dt><span class="section"><a href="Examples.html#boost_local.Examples.all_parameter_permutations">All
       Parameter Permutations</a></span></dt>
 </dl></div>
@@ -729,6 +731,200 @@
                 </p>
               </td>
 </tr></tbody>
+</table></div>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_local.Examples.gcc_nested_functions"></a><a class="link" href="Examples.html#boost_local.Examples.gcc_nested_functions" title="GCC Nested Functions">GCC Nested
+      Functions</a>
+</h3></div></div></div>
+<p>
+        The GCC compiler supports local functions under the name of <a href="http://gcc.gnu.org/onlinedocs/gcc/Nested-Functions.html" target="_top">nested
+        functions</a>. Nested functions are exclusively an extension of the GCC
+        compiler and they are not part of any C++ standard (ISO C++, C99, C++0x,
+        etc) nor they are supported by other compilers like MSVC.
+      </p>
+<p>
+        The following examples rework the GCC nested function examples using this
+        library local functions.
+      </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Variadic Macro Syntax (C99 and later compilers)
+                </p>
+              </th>
+<th>
+                <p>
+                  Sequencing Macro Syntax (all C++ compilers)
+                </p>
+              </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                <p>
+                  
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">local</span><span class="special">/</span><span class="identifier">function</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+
+<span class="keyword">double</span> <span class="identifier">add_square</span><span class="special">(</span><span class="keyword">double</span> <span class="identifier">a</span><span class="special">,</span> <span class="keyword">double</span> <span class="identifier">b</span><span class="special">)</span> <span class="special">{</span>
+    <span class="keyword">double</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span><span class="keyword">double</span> <span class="identifier">z</span><span class="special">)</span> <span class="special">{</span>
+        <span class="keyword">return</span> <span class="identifier">z</span> <span class="special">*</span> <span class="identifier">z</span><span class="special">;</span>
+    <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">square</span><span class="special">)</span>
+
+    <span class="keyword">return</span> <span class="identifier">square</span><span class="special">(</span><span class="identifier">a</span><span class="special">)</span> <span class="special">+</span> <span class="identifier">square</span><span class="special">(</span><span class="identifier">b</span><span class="special">);</span>
+<span class="special">}</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">add_square</span><span class="special">(</span><span class="number">2.0</span><span class="special">,</span> <span class="number">3.0</span><span class="special">)</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+                </p>
+              </td>
+<td>
+                <p>
+                  
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">local</span><span class="special">/</span><span class="identifier">function</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+
+<span class="keyword">double</span> <span class="identifier">add_square</span><span class="special">(</span><span class="keyword">double</span> <span class="identifier">a</span><span class="special">,</span> <span class="keyword">double</span> <span class="identifier">b</span><span class="special">)</span> <span class="special">{</span>
+    <span class="keyword">double</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span> <span class="special">(</span><span class="keyword">double</span> <span class="identifier">z</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span>
+        <span class="keyword">return</span> <span class="identifier">z</span> <span class="special">*</span> <span class="identifier">z</span><span class="special">;</span>
+    <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">square</span><span class="special">)</span>
+
+    <span class="keyword">return</span> <span class="identifier">square</span><span class="special">(</span><span class="identifier">a</span><span class="special">)</span> <span class="special">+</span> <span class="identifier">square</span><span class="special">(</span><span class="identifier">b</span><span class="special">);</span>
+<span class="special">}</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">add_square</span><span class="special">(</span><span class="number">2.0</span><span class="special">,</span> <span class="number">3.0</span><span class="special">)</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">local</span><span class="special">/</span><span class="identifier">function</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+
+<span class="keyword">void</span> <span class="identifier">bar</span><span class="special">(</span><span class="keyword">int</span><span class="special">*</span> <span class="identifier">array</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">offset</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">size</span><span class="special">)</span> <span class="special">{</span>
+    <span class="keyword">int</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span><span class="keyword">int</span><span class="special">*</span> <span class="identifier">array</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">index</span><span class="special">,</span>
+            <span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">offset</span><span class="special">)</span> <span class="special">{</span>
+        <span class="keyword">return</span> <span class="identifier">array</span><span class="special">[</span><span class="identifier">index</span> <span class="special">+</span> <span class="identifier">offset</span><span class="special">];</span>
+    <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">access</span><span class="special">)</span>
+
+    <span class="keyword">for</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">i</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span> <span class="identifier">i</span> <span class="special">&lt;</span> <span class="identifier">size</span><span class="special">;</span> <span class="special">++</span><span class="identifier">i</span><span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">access</span><span class="special">(</span><span class="identifier">array</span><span class="special">,</span> <span class="identifier">i</span><span class="special">)</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    <span class="special">}</span>
+<span class="special">}</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
+    <span class="keyword">int</span> <span class="identifier">nums</span><span class="special">[</span><span class="number">3</span><span class="special">]</span> <span class="special">=</span> <span class="special">{</span><span class="number">1</span><span class="special">,</span> <span class="number">2</span><span class="special">,</span> <span class="number">3</span><span class="special">};</span>
+    <span class="identifier">bar</span><span class="special">(</span><span class="identifier">nums</span><span class="special">,</span> <span class="number">0</span><span class="special">,</span> <span class="number">3</span><span class="special">);</span>
+    <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+                </p>
+              </td>
+<td>
+                <p>
+                  
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">local</span><span class="special">/</span><span class="identifier">function</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+
+<span class="keyword">void</span> <span class="identifier">bar</span><span class="special">(</span><span class="keyword">int</span><span class="special">*</span> <span class="identifier">array</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">offset</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">size</span><span class="special">)</span> <span class="special">{</span>
+    <span class="keyword">int</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span> <span class="special">(</span><span class="keyword">int</span><span class="special">*</span> <span class="identifier">array</span><span class="special">)</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">index</span><span class="special">)</span>
+            <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">offset</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span>
+        <span class="keyword">return</span> <span class="identifier">array</span><span class="special">[</span><span class="identifier">index</span> <span class="special">+</span> <span class="identifier">offset</span><span class="special">];</span>
+    <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">access</span><span class="special">)</span>
+
+    <span class="keyword">for</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">i</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span> <span class="identifier">i</span> <span class="special">&lt;</span> <span class="identifier">size</span><span class="special">;</span> <span class="special">++</span><span class="identifier">i</span><span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">access</span><span class="special">(</span><span class="identifier">array</span><span class="special">,</span> <span class="identifier">i</span><span class="special">)</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    <span class="special">}</span>
+<span class="special">}</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
+    <span class="keyword">int</span> <span class="identifier">nums</span><span class="special">[</span><span class="number">3</span><span class="special">]</span> <span class="special">=</span> <span class="special">{</span><span class="number">1</span><span class="special">,</span> <span class="number">2</span><span class="special">,</span> <span class="number">3</span><span class="special">};</span>
+    <span class="identifier">bar</span><span class="special">(</span><span class="identifier">nums</span><span class="special">,</span> <span class="number">0</span><span class="special">,</span> <span class="number">3</span><span class="special">);</span>
+    <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">local</span><span class="special">/</span><span class="identifier">function</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="keyword">void</span> <span class="identifier">intermediate</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">local</span><span class="special">::</span><span class="identifier">function</span><span class="special">&lt;</span><span class="keyword">void</span> <span class="special">(</span><span class="keyword">int</span><span class="special">,</span> <span class="keyword">int</span><span class="special">)&gt;</span> <span class="identifier">store_func</span><span class="special">,</span>
+        <span class="keyword">int</span> <span class="identifier">size</span><span class="special">)</span> <span class="special">{</span>
+    <span class="identifier">store_func</span><span class="special">(</span><span class="identifier">size</span> <span class="special">-</span> <span class="number">1</span><span class="special">,</span> <span class="special">-</span><span class="number">1</span><span class="special">);</span>
+<span class="special">}</span>
+
+<span class="keyword">void</span> <span class="identifier">hack</span><span class="special">(</span><span class="keyword">int</span><span class="special">*</span> <span class="identifier">array</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">size</span><span class="special">)</span> <span class="special">{</span>
+    <span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">index</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">value</span><span class="special">,</span> <span class="identifier">bind</span> <span class="identifier">array</span><span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">array</span><span class="special">[</span><span class="identifier">index</span><span class="special">]</span> <span class="special">=</span> <span class="identifier">value</span><span class="special">;</span>
+    <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">store</span><span class="special">)</span>
+
+    <span class="identifier">intermediate</span><span class="special">(</span><span class="identifier">store</span><span class="special">,</span> <span class="identifier">size</span><span class="special">);</span>
+<span class="special">}</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
+    <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+                </p>
+              </td>
+<td>
+                <p>
+                  
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">local</span><span class="special">/</span><span class="identifier">function</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="keyword">void</span> <span class="identifier">intermediate</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">local</span><span class="special">::</span><span class="identifier">function</span><span class="special">&lt;</span><span class="keyword">void</span> <span class="special">(</span><span class="keyword">int</span><span class="special">,</span> <span class="keyword">int</span><span class="special">)&gt;</span> <span class="identifier">store_func</span><span class="special">,</span>
+        <span class="keyword">int</span> <span class="identifier">size</span><span class="special">)</span> <span class="special">{</span>
+    <span class="identifier">store_func</span><span class="special">(</span><span class="identifier">size</span> <span class="special">-</span> <span class="number">1</span><span class="special">,</span> <span class="special">-</span><span class="number">1</span><span class="special">);</span>
+<span class="special">}</span>
+
+<span class="keyword">void</span> <span class="identifier">hack</span><span class="special">(</span><span class="keyword">int</span><span class="special">*</span> <span class="identifier">array</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">size</span><span class="special">)</span> <span class="special">{</span>
+    <span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">index</span><span class="special">)</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">value</span><span class="special">)</span> <span class="special">(</span><span class="identifier">bind</span> <span class="identifier">array</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">array</span><span class="special">[</span><span class="identifier">index</span><span class="special">]</span> <span class="special">=</span> <span class="identifier">value</span><span class="special">;</span>
+    <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">store</span><span class="special">)</span>
+
+    <span class="identifier">intermediate</span><span class="special">(</span><span class="identifier">store</span><span class="special">,</span> <span class="identifier">size</span><span class="special">);</span>
+<span class="special">}</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
+    <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+                </p>
+              </td>
+</tr>
+</tbody>
 </table></div>
 </div>
 <div class="section">

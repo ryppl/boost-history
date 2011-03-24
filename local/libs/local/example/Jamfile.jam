@@ -47,14 +47,14 @@ exe factorial_impl : factorial_impl.cpp ;
 exe find_if : find_if.cpp ;
 exe find_if_va : find_if_va.cpp ;
 
-exe gcc-access : gcc-access.cpp ;
-exe gcc-access_va : gcc-access_va.cpp ;
+exe gcc_access : gcc_access.cpp ;
+exe gcc_access_va : gcc_access_va.cpp ;
 
-exe gcc-square : gcc-square.cpp ;
-exe gcc-square_va : gcc-square_va.cpp ;
+exe gcc_square : gcc_square.cpp ;
+exe gcc_square_va : gcc_square_va.cpp ;
 
-exe gcc-store : gcc-store.cpp ;
-exe gcc-store_va : gcc-store_va.cpp ;
+exe gcc_store : gcc_store.cpp ;
+exe gcc_store_va : gcc_store_va.cpp ;
 
 exe nesting : nesting.cpp ;
 exe nesting_va : nesting_va.cpp ;

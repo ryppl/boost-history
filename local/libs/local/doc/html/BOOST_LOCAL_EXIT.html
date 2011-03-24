@@ -33,7 +33,7 @@
 
 </span>BOOST_LOCAL_EXIT(binding_list)</pre></div>
 <div class="refsect1">
-<a name="id910607"></a><h2>Description</h2>
+<a name="id911848"></a><h2>Description</h2>
 <p>This macro must be used within a declarative context, it must be followed by the local exit body code and then by the  <code class="computeroutput"><a class="link" href="BOOST_LOCAL_EXIT_END.html" title="Macro BOOST_LOCAL_EXIT_END">BOOST_LOCAL_EXIT_END</a></code> macro (see the  <a class="link" href="boost_local/Tutorial.html" title="Tutorial">Tutorial</a> section): </p>
 <pre class="programlisting">  <span class="special">{</span> <span class="comment">// Some declarative context.</span>
       <span class="special">...</span>
@@ -73,6 +73,7 @@
 </table></div>
 <p>
 </p>
+<p><span class="bold"><strong>Note:</strong></span> This macro cannot be used multiple times on the same line because it internally uses the line number <code class="computeroutput">__LINE__</code> to generate unique identifiers.</p>
 <p><span class="bold"><strong>See:</strong></span>  <a class="link" href="boost_local/Tutorial.html" title="Tutorial">Tutorial</a> section,  <a class="link" href="boost_local/Advanced_Topics.html" title="Advanced Topics"> Advanced Topics</a> section,  <code class="computeroutput"><a class="link" href="BOOST_LOCAL_EXIT_TPL.html" title="Macro BOOST_LOCAL_EXIT_TPL">BOOST_LOCAL_EXIT_TPL</a></code>,  <code class="computeroutput"><a class="link" href="BOOST_LOCAL_EXIT_END.html" title="Macro BOOST_LOCAL_EXIT_END">BOOST_LOCAL_EXIT_END</a></code>. </p>
 </div>
 </div>

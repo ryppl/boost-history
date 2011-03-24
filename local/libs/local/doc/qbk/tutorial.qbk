@@ -177,6 +177,8 @@ Furthermore, the "keyword" `bind` can be prefixed by `const` to bind the variabl
 Or by constant reference:
     
     const bind& ``/variable-name/`` // Bind by constant value.
+
+Note that when `const` is used, it must always precede `bind`.
     
 If a variable is bound by value, then a copy of the variable value is taken at the point of the local function declaration.
 If a variable is bound by reference instead, the variable will refer to the value it has at the point of the local function call.
@@ -197,7 +199,7 @@ We bind the local variable `factor` by constant value, the local variable `sum` 
 
 [table
 [ [Variadic Macro Syntax (C99 and later compilers)] [Sequencing Macro Syntax (all C++ compilers)] ]
-[ [ [add_num_factor_sum_va_cpp] ] [ [add_num_factor_sum_cpp] ] ]
+[ [ [add_function_va_cpp] ] [ [add_function_cpp] ] ]
 ]
 
 [h5 Binding the Object `this`]
@@ -332,7 +334,7 @@ The headers will be `"boost/scope/function.hpp"`, `"boost/scope/block.hpp"`, and
 However, the new `BOOST_SCOPE_EXIT` macro will not be backward compatible with the current __Boost_ScopeExit__ macro because it will require to prefix the bound variable with `bind` or `const bind` (in order to differentiate from constant and non-constant binding).
 Local blocks would be named "scope blocks" and they would be provided by the `BOOST_SCOPE_BLOCK...` macros (the "scope block" names seem reasonably expressive).
 However, local functions would have to be named "scope functions" and they would be provided by the `BOOST_SCOPE_FUNCTION...` macros.
-These names might not expressive enough because local functions are not known under the name of "scope functions" -- they are indeed known by either the name of "local functions" or by the name of "[@http://gcc.gnu.org/onlinedocs/gcc/Nested-Functions.html nested functions]".
+These names might not expressive enough because local functions are not known under the name of "scope functions" -- they are indeed known by either the name of "local functions" or by the name of "[@http://gcc.gnu.org/onlinedocs/gcc/Nested-Functions.html nested functions]" (GCC compiler extension).
 ]
 Local exits can be used to emulate the __D_Programming_Language__ /scope guards/ (see the __Examples_Emulating_Ds_Scope_Guards__ example).
 

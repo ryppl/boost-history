@@ -28,8 +28,22 @@
 
 [section TODO]
 
-# Finish local function parenthesized syntax validation macros.
-# Add examples to Alternatives section for Local Classes, C++0x lambads, Boost.Lambda, and Boost.Phoenix (ask boosters).
+# *Examples.* Compile with COMPLIANT (local and/or typeof) defined.
+Disable va and ep examples if COMPLIANT and/or NO_VARIADICS.
+
+# *Examples.* Use std::cout instead of std::clog in all examples.
+
+# *Code.* Optimize macro expansion code for C++0x, C++03, etc.
+From John Bytheway:
+
+    > Yes, in C++0x local structs can be passed as template parameters.
+    > Obviously, in C++0x there are lambdas too, so you might think your
+    > library is useless, but I'd expect most compilers to support passing
+    > local structs as template parameters before they support lambdas, so
+    > there is some advantage in having this intermediate implementation.
+    > Also, your macros would allow writing code that worked in C++0x and
+    > C++03, with the virtual function business in only those compilers/modes
+    > where it is necessary.
 
 [endsect]
 

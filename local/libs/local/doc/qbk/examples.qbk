@@ -64,6 +64,22 @@ This example binds the object in scope `this` to a local function.
 
 [endsect]
 
+[section GCC Nested Functions]
+
+The GCC compiler supports local functions under the name of [@http://gcc.gnu.org/onlinedocs/gcc/Nested-Functions.html nested functions].
+Nested functions are exclusively an extension of the GCC compiler and they are not part of any C++ standard (ISO C++, C99, C++0x, etc) nor they are supported by other compilers like MSVC.
+
+The following examples rework the GCC nested function examples using this library local functions.
+
+[table
+[ [Variadic Macro Syntax (C99 and later compilers)] [Sequencing Macro Syntax (all C++ compilers)] ]
+[ [ [gcc_square_va_cpp] ] [ [gcc_square_cpp] ] ]
+[ [ [gcc_access_va_cpp] ] [ [gcc_access_cpp] ] ]
+[ [ [gcc_store_va_cpp] ] [ [gcc_store_cpp] ] ]
+]
+
+[endsect]
+
 [section All Parameter Permutations]
 
 This example shows all possible parameter permutations (with and without binding, etc).

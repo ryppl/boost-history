@@ -33,7 +33,7 @@
 
 </span>BOOST_LOCAL_CONFIG_COMPLIANT</pre></div>
 <div class="refsect1">
-<a name="id910196"></a><h2>Description</h2>
+<a name="id911436"></a><h2>Description</h2>
 <p>If programmers leave this configuration macro undefined, its default value is to be left not defined.</p>
 <p>If this macro is defined, variadic macros and empty macro parameters are not used by this library. Using variadic macros and empty macro parameters allows this library to provide the <span class="emphasis"><em>variadic macro</em></span> and <span class="emphasis"><em>empty macro</em></span> syntaxes which some programmers might find more readable than the <span class="emphasis"><em>sequencing macro</em></span> syntax (see  <code class="computeroutput"><a class="link" href="BOOST_LOCAL_FUNCTION_PARAMS.html" title="Macro BOOST_LOCAL_FUNCTION_PARAMS">BOOST_LOCAL_FUNCTION_PARAMS</a></code>,  <code class="computeroutput"><a class="link" href="BOOST_LOCAL_BLOCK.html" title="Macro BOOST_LOCAL_BLOCK">BOOST_LOCAL_BLOCK</a></code>, and  <code class="computeroutput"><a class="link" href="BOOST_LOCAL_EXIT.html" title="Macro BOOST_LOCAL_EXIT">BOOST_LOCAL_EXIT</a></code>). If this configuration macro is defined then only the sequencing macro syntax is allowed (regardless of whether the compiler supports variadic and empty macros or not).</p>
 <p><span class="bold"><strong>Warning:</strong></span> The variadic and empty macro syntaxes are not supported by all C++ compilers so they should be used with care to avoid portability issues (and this configuration macro can be defined to disable them).</p>

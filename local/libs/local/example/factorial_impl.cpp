@@ -105,7 +105,7 @@ struct calculator {
             // This same declaration is first made at global scope in one of the library header files. This declaration needs to be repeated here so it is also visible from within the local function body to allow for nesting local function into one another.
             boost::scope_exit::aux::undeclared boost_local_auxXargs;
             
-            // The local function body. The body function cannot be static because is needs to access the member variable with the local function name to support recursion (and local classes cannot have static member variable) but unfortunately this implies that `this` can be misused within the body instead of `this_` without necessarily generating a compile-time error.
+            // The local function body. The body function cannot be static because is needs to access the member variable with the local function name to support recursion and the member variable named `...args` to support nesting (local classes cannot have static member variable). Unfortunately, this implies that `this` can be misused within the body instead of `this_` without necessarily generating a compile-time error.
             boost_local_auxXresult_type21 boost_local_auxXbody(
                     // Use special name `this_` instead of `this` here.
                     ::boost::add_const<boost_se_params_t_21::boost_se_param_t_0_21>::type & separator, se_this_type21 this_,
