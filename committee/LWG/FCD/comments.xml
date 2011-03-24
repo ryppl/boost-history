@@ -9731,7 +9731,7 @@ through this new overload.
 <rationale>No consensus to make this change. 
 </rationale>
 </comment>
-<comment nb="GB" num="111" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="GB" num="111" type="te" owner="LWG" issue="1526" disp="" date="" extdoc="">
 <section>
 21.5
 </section>
