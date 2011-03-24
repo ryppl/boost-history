@@ -10,6 +10,7 @@
 #ifndef BOOST_ASSIGN_V2_CHAIN_META_ER_2010_HPP
 #define BOOST_ASSIGN_V2_CHAIN_META_ER_2010_HPP
 #include <boost/assign/v2/chain/iterator.hpp>
+#include <boost/assign/v2/detail/pp/ignore.hpp>
 #include <boost/config.hpp>
 #include <boost/concept/assert.hpp>
 #include <boost/mpl/and.hpp>
@@ -28,8 +29,10 @@ namespace boost{
     struct use_default;
 namespace assign{
 namespace v2{
+//[syntax_chain_meta
 namespace chain_aux{
 
+//<-
     template<typename R1, typename R2, template<typename> class F>
     struct range{
 
@@ -61,7 +64,6 @@ namespace chain_aux{
     struct range_r
         : chain_aux::range<R1, R2, boost::range_const_iterator>{};
 
-    // Use-const
     template<typename U1, typename U2,
         bool is_r = boost::is_reference<U1>::value,
         bool is_c = boost::is_const<
@@ -79,14 +81,21 @@ namespace chain_aux{
         typename boost::range_reference<R2>::type
     >{};
 
-    template<typename R1, typename R2>
-    struct use_const : ::boost::mpl::bool_<
+//->
+
+    template<
+        typename R1        // Range
+        , typename R2    // Range
+    >
+    struct use_const/*<-*/ : ::boost::mpl::bool_<
         !dont_use_const<R1, R2>::value
-    >{};
+    >{}/*->*/;
     
-    // Result
+namespace result_of{
+
     template<typename R1, typename R2>
-    struct result{
+    struct chain/*<-*/
+    {
         typedef typename  ::boost::mpl::eval_if<
             chain_aux::use_const<R1, R2>,
             ::boost::mpl::identity< chain_aux::range_r<R1, R2> >,
@@ -99,9 +108,11 @@ namespace chain_aux{
         {
             return caller_::call( r1, r2 );
         }
-    };
-
+    }/*->*/;
+    
+}// result_of
 }// chain_aux
+//]
 }// v2
 }// assign
 }// boost

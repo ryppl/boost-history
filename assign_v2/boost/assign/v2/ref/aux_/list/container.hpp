@@ -25,7 +25,7 @@ namespace list_aux{
 
     template<typename Tag, typename H, typename T>
     class container :
-        public tail_holder<T>, // (*) see holder/tail.hpp
+        public tail_holder<T>, 
         public head_holder<H>,
         public ::boost::mpl::apply2<policy<Tag>, H, T>::type
     {
@@ -47,7 +47,7 @@ namespace list_aux{
             typename boost::call_traits<T>::param_type t,
             H h
         ):
-            tail_( t ) // // tail_holder_( t ) // (*)
+            tail_holder_( t )
             , head_holder_( h )
         {}
 
@@ -65,16 +65,6 @@ namespace list_aux{
             return result_( *this, h );
         }
         
-        typedef typename tail_holder_::result_of_tail_type result_of_tail_type;
-        
-        // (*)
-        result_of_tail_type
-        tail()const{ return this->tail_; } 
-        
-        private:
-        typename boost::call_traits< // (*)
-            typename tail_holder_::result_of_tail_type
-        >::value_type tail_;
     };
 
 }// list_aux

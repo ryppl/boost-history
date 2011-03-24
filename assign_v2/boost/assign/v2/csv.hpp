@@ -62,7 +62,7 @@ namespace csv_aux{
     };
 
 }// csv_aux
-//[syntax_utility_csv
+//[syntax_csv
 namespace result_of{
 
     template<typename F, typename V>

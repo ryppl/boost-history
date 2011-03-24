@@ -85,7 +85,7 @@ namespace result_of{
     template<typename C, typename F, typename Tag, typename D, 
         typename Keyword, typename Arg>
     typename ::boost::mpl::apply2<
-    	result_of::option_modifier<D>, Keyword, Arg
+        result_of::option_modifier<D>, Keyword, Arg
     >::type
     operator%(
         interpreter_crtp<C, F, Tag, D> const& lhs,
@@ -110,8 +110,8 @@ namespace result_of{
 
 }// interpreter_aux
 
-	/*<-*/BOOST_ASSIGN_V2_IGNORE(/*->*/#define BOOST_ASSIGN_V2_OPTION_MODIFIER_KEYWORD(NAME) unspecified/*<-*/)/*->*/
-	/*<-*/BOOST_ASSIGN_V2_IGNORE(/*->*/#define BOOST_ASSIGN_V2_OPTION_MODIFIER_META_MODIFIER_TAG(NAME, Result) unspecified/*<-*/)/*->*/
+    /*<-*/BOOST_ASSIGN_V2_IGNORE(/*->*/#define BOOST_ASSIGN_V2_OPTION_MODIFIER_KEYWORD(NAME) unspecified/*<-*/)/*->*/
+    /*<-*/BOOST_ASSIGN_V2_IGNORE(/*->*/#define BOOST_ASSIGN_V2_OPTION_MODIFIER_META_MODIFIER_TAG(NAME, Result) unspecified/*<-*/)/*->*/
 
 //]
 namespace result_of{

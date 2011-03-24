@@ -21,12 +21,11 @@ test-suite assign :
     [ assign-test csv ]
     [ assign-test deque ]
     [ assign-test detail ]
-    [ assign-test framework ]
-    [ assign-test optional ]
+    [ assign-test interpreter ]
+    [ assign-test option ]
     [ assign-test pipe ]
     [ assign-test put ]
     [ assign-test ref ]
-    [ assign-test utility ]
 ;
 
 

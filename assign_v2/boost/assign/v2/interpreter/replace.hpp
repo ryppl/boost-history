@@ -19,11 +19,11 @@ namespace v2{
 namespace interpreter_aux{
                 
     template<
-    	typename D // Derives from interpreter_crtp
+        typename D // Derives from interpreter_crtp
     > 
     struct replace_data_generator{
 
-		// Metafunction class specialized on D should return its transformation
+        // Metafunction class specialized on D should return its transformation
         // by D::fun_type = F
     
         template<typename F> 
@@ -31,11 +31,11 @@ namespace interpreter_aux{
     };
 
     template<
-    	typename D // Derives from interpreter_crtp
+        typename D // Derives from interpreter_crtp
     > 
     struct replace_modifier_tag{
 
-		// Metafunction class specialized on D should return its transformation
+        // Metafunction class specialized on D should return its transformation
         // by D::modifier_tag = Tag
 
         template<typename Tag> 

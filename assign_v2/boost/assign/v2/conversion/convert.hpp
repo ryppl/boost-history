@@ -16,7 +16,7 @@
 namespace boost{
 namespace assign{
 namespace v2{
-//[syntax_utility_conversion_convert
+//[syntax_conversion_convert
 namespace convert_tag{
 
     struct put{};
@@ -42,13 +42,15 @@ namespace conversion_aux{
 
     template<typename C, typename R>
     struct deduce_tag;
-//->
+
     template<typename C, typename R>
     C convert(R const& r)/*<-*/
     {
         typedef typename conversion_aux::deduce_tag<C, R>::type tag_;
         return conversion_aux::convert<C>( r, tag_() );
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
+
+//->
 
     template<typename C>
     struct convert_adapter/*<-*/{}/*->*/;
@@ -62,7 +64,10 @@ namespace conversion_aux{
 }// conversion_aux
 namespace result_of{
 
-    template<typename /*<<Container>>*/ C, typename /*<<Range>>*/R>
+    template<
+        typename C        // Container
+        , typename R     // Range
+    >
     struct convert/*<-*/{ typedef C type; }/*->*/;
 
 }//result_of

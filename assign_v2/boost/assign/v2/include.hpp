@@ -25,7 +25,8 @@
 #include <boost/assign/v2/include/csv.hpp>
 #include <boost/assign/v2/include/csv_deque.hpp>
 #include <boost/assign/v2/include/deque.hpp>
-//#include <boost/assign/v2/include/ref.hpp>
-//#include <boost/assign/v2/include/logical_and.hpp>
+#include <boost/assign/v2/include/logical_and.hpp>
+#include <boost/assign/v2/include/macro.hpp>
+#include <boost/assign/v2/include/ref.hpp>
 
 #endif // BOOST_ASSIGN_V2_INCLUDE_ER_2010_HPP

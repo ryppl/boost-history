@@ -20,7 +20,7 @@
 namespace boost{
 namespace assign{
 namespace v2{
-//[syntax_utility_conversion_converter
+//[syntax_conversion_converter
 namespace conversion_aux{
 
     template<typename R>

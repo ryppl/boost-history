@@ -29,7 +29,7 @@ namespace v2{
 //[syntax_interpreter_modifier
 namespace modifier_tag{
 
-	// Namespace in which to declare template arguments of `interpreter_modifier<>`
+    // Namespace in which to declare template arguments of `interpreter_modifier<>`
 
 }//modifier_tag
 namespace interpreter_aux{
@@ -37,7 +37,7 @@ namespace interpreter_aux{
     template<typename Tag>
     struct interpreter_modifier
     {
-    	// Specialize on Tag to model ConceptModifier 
+        // Specialize on Tag to model ConceptModifier 
     };
 
     template<typename Tag, typename C, typename T>
@@ -130,7 +130,7 @@ BOOST_ASSIGN_V2_OPTION_MODIFIER_SWITCH_DEFAULT(3)
 namespace interpreter_aux{
 
     template<
-    	typename C // Container
+        typename C // Container
     >
     struct deduce_modifier_tag/*<-*/
         : switch_aux::result< switch_tag::deduce_put, C>

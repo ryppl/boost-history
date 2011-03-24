@@ -23,7 +23,7 @@ namespace test_assign_v2{
 namespace xxx_conversion{
 
     // suggested by JB:
-    //[test_utility_conversion_f
+    //[test_conversion_f
     template<typename C, typename R>
     void f(C cont, R const& r){
         namespace as2 = boost::assign::v2;
@@ -39,7 +39,7 @@ namespace xxx_conversion{
 
         // External containers (fully qualified)
         {
-            //[test_utility_conversion_vec_array
+            //[test_conversion_vec_array
             std::vector<int> r( 3 ); r[0] = 72; r[1] = 31; r[2] = 48;
             typedef array<int, 3> ar_; 
             ar_ const& ar = ( r | as2::_convert<ar_>() );
@@ -48,7 +48,7 @@ namespace xxx_conversion{
             //]
         }
         {
-            //[test_utility_conversion_vec_stack
+            //[test_conversion_vec_stack
             std::vector<int> r( 3 ); r[0] = 72; r[1] = 31; r[2] = 48;
             std::stack<int> lifo = as2::converter( r );
             
@@ -56,7 +56,7 @@ namespace xxx_conversion{
             //]
         }
         {
-            //[test_utility_conversion_stl
+            //[test_conversion_stl
             typedef int T; typedef std::vector<T> R; R r( 3 ); r[0] = 72; r[1] = 31; r[2] = 48; 
             f< std::vector<T> >( as2::converter( r ), r );
             f< std::deque<T> >( as2::converter( r ), r );
@@ -66,7 +66,7 @@ namespace xxx_conversion{
             //]
         }
         {
-            //[test_utility_conversion_matrix3x3
+            //[test_conversion_matrix3x3
             const int sz = 3; typedef array<int, sz>  row_;
             array<row_, sz>  matrix3x3 = converter(
                 as2::ref::array
@@ -83,7 +83,7 @@ namespace xxx_conversion{
         }
         // Boost.Assign.2.0 containers - name lookup
         {
-            //[test_utility_conversion_as2_deque_array
+            //[test_conversion_as2_deque_array
             std::vector<int> r( 3 ); r[0] = 72; r[1] = 31; r[2] = 48;
             typedef array<int, 3> ar_; 
             ar_ const& ar = ( as2::csv_deque( 72, 31, 48 ) | as2::_convert<ar_>() );
@@ -92,21 +92,21 @@ namespace xxx_conversion{
             //]
         }
         {
-            //[test_utility_conversion_ref_array_stack
+            //[test_conversion_ref_array_stack
             std::stack<int> lifo = /*<<Notice unqualified (name lookup)>>*/converter( as2::ref::array( 72 )( 31 )( 48 ) );
             
             BOOST_ASSIGN_V2_CHECK( lifo.top() == 48 );
             //]
         }
         {
-            //[test_utility_conversion_ref_array_queue
+            //[test_conversion_ref_array_queue
             std::queue<int> fifo = /*<<Notice unqualified (name lookup)>>*/converter( as2::ref::csv_array( 72, 31, 48 ) );
             
             BOOST_ASSIGN_V2_CHECK( fifo.front() == 72 );
             //]
         }
         {
-            //[test_utility_conversion_as2_deque_stack
+            //[test_conversion_as2_deque_stack
             std::stack<int> lifo = /*<<Notice unqualified (name lookup)>>*/converter( as2::csv_deque( 72, 31, 48 ) );
             
             BOOST_ASSIGN_V2_CHECK( lifo.top() == 48 );

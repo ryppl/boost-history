@@ -42,7 +42,7 @@ namespace interpreter_aux{
     }/*->*/;
 
     template<
-    	typename C // Value-container 
+        typename C // Value-container 
         , template<typename > class F = container_value
     >
     struct deduce_value_generator/*<-*/
@@ -53,7 +53,7 @@ namespace interpreter_aux{
     }/*->*/;
 
     template<
-    	typename C // Value or pointer-container
+        typename C // Value or pointer-container
     >
     struct deduce_data_generator/*<-*/
         :  boost::mpl::eval_if<

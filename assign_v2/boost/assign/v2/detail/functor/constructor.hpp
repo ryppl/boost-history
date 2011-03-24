@@ -36,7 +36,7 @@ namespace functor_aux{
         ::boost::mpl::always<T>
     >
 #endif
-	/*->*/
+    /*->*/
     {
 //<-
         typedef functor_aux::constructor<T> this_;

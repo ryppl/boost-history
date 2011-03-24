@@ -11,6 +11,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_CHAIN_CHAIN_ER_2010_HPP
 #define BOOST_ASSIGN_V2_CHAIN_CHAIN_ER_2010_HPP
+#include <boost/assign/v2/detail/pp/ignore.hpp>
 #include <boost/assign/v2/chain/meta.hpp>
 #include <boost/mpl/void.hpp>
 
@@ -22,12 +23,13 @@
 namespace boost{
 namespace assign{
 namespace v2{
+//[syntax_chain_chain
 namespace chain_aux{
 
-    typedef ::boost::mpl::void_ void_;
+    /*<-*/typedef ::boost::mpl::void_ void_;/*->*/
 
     template<typename U>
-    struct adaptor1
+    struct adaptor1/*<-*/
     {
         adaptor1( U& r ) 
             : ptr( &r )
@@ -35,9 +37,9 @@ namespace chain_aux{
         U& reference()const{ return *this->ptr; }
         private:
         mutable U* ptr;
-    };
+    }/*->*/;
 
-    struct adaptor2
+    struct adaptor2/*<-*/
     {
 
         adaptor2(){}
@@ -60,37 +62,43 @@ namespace chain_aux{
             return result<R const>::call( r );
         }
 
-    };
+    }/*->*/;
+
+    template<typename R1, typename U2>
+    typename result_of::chain<R1, U2>::type
+    operator|(R1 & r1, chain_aux::adaptor1<U2> const & h)/*<-*/
+    {
+        typedef result_of::chain<R1, U2> caller_;
+        return caller_::call( r1, h.reference() );
+    }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
+    
+    template<typename R1, typename U2>
+    typename result_of::chain<R1 const, U2>::type
+    operator|(R1 const & r1, chain_aux::adaptor1<U2> const & h)/*<-*/
+    {
+        typedef result_of::chain<R1 const, U2> caller_;
+        return caller_::call( r1, h.reference() );
+    }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
 }// chain_aux
+//<-
 namespace{
-    const chain_aux::adaptor2 _chain = chain_aux::adaptor2();
+//->
+
+    const chain_aux::adaptor2 _chain/*<-*/ = chain_aux::adaptor2()/*->*/;
+
+//<-
 }
+//->
 namespace result_of{
 
     template<typename R1, typename R2>
-    struct chain : chain_aux::result<R1, R2>{};
+    struct chain/*<-*/
+        : chain_aux::result_of::chain<R1, R2>
+    {}/*->*/;
 
 }// result_of
-namespace chain_aux{
-
-#define BOOST_ASSIGN_V2_INTERPRETER_CHAIN(U1) \
-    template<typename R1, typename U2> \
-    typename chain_aux::result<U1, U2>::type \
-    operator|(U1 & r1, chain_aux::adaptor1<U2> const & h) \
-    { \
-        typedef chain_aux::result<U1, U2> caller_; \
-        return caller_::call( r1, h.reference() ); \
-    } \
-\
-/**/
-
-BOOST_ASSIGN_V2_INTERPRETER_CHAIN(R1      )
-BOOST_ASSIGN_V2_INTERPRETER_CHAIN(R1 const)
-#undef BOOST_ASSIGN_V2_INTERPRETER_CHAIN
-
-}// chain_aux
-
+//]
 }// v2
 }// assign
 }// boost

@@ -35,7 +35,7 @@ namespace array_aux{
 namespace nth_result_of{
 
     template<
-    	array_size_type N
+        array_size_type N
         , typename U // U& has to be a reference
     >
     struct csv_array/*<-*/

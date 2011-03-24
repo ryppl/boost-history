@@ -134,10 +134,10 @@ namespace interpreter_aux{
     };
 
     template<
-    	typename C 		// Container, 
-        , typename F 	// Data generator
+        typename C         // Container, 
+        , typename F     // Data generator
         , typename Tag  // Modifier tag
-        , typename D	// Derived
+        , typename D    // Derived
     >
     class interpreter_crtp
 //<-

@@ -19,7 +19,7 @@
 #include <boost/assign/v2/deque/csv_deque.hpp>
 #include <boost/assign/v2/chain/check.hpp>
 #include <boost/assign/v2/chain.hpp>
-#include <boost/assign/v2/chain/operator_and.hpp>
+#include <boost/assign/v2/chain/logical_and.hpp>
 #include <libs/assign/v2/test/chain.h>
 
 namespace test_assign_v2{
@@ -38,7 +38,7 @@ namespace xxx_chain{
         }
         // Non-Boost.Assign.v2 containers
         {
-            //[test_utility_chain_read
+            //[test_chain_read
             typedef std::string T;
             array<T, 2> head;  head[0] = "A"; head[1] = "B";
             std::list<T> tail; tail.push_back( "C" ); tail.push_back( "D" );
@@ -50,7 +50,7 @@ namespace xxx_chain{
             //]
         }
         {
-            //[test_utility_chain_write
+            //[test_chain_write
             typedef std::string word; std::vector<word> words( 6 );
             words[0] = "foo"; words[1] = "bar"; words[2] = "baz";
             words[3] = "qux"; words[4] = "quux"; words[5] = "grault";
@@ -63,7 +63,7 @@ namespace xxx_chain{
         }
         // Boost.Assign.v2 containers
         {
-            //[test_utility_chain_write_refs
+            //[test_chain_write_refs
             /*<< Needed to bring && into scope >>*/ using namespace assign::v2;
             std::vector<int> consecutive8( 8 ); 
             for(int i = 0; i < 8; i++){ consecutive8[i] = 1 + i; }

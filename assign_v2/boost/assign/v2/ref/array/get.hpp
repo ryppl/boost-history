@@ -33,7 +33,7 @@ namespace ref{
 namespace result_of{
 
     template<
-    	typename R // Range of reference-wrappers
+        typename R // Range of reference-wrappers
     >
     struct transform_get/*<-*/{
 

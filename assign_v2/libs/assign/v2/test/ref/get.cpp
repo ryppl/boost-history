@@ -22,17 +22,17 @@ namespace xxx_get{
 
     void test()
     {
-    	//[test_ref_get
+        //[test_ref_get
         namespace as2 = boost::assign::v2;
         typedef int T; typedef as2::ref::copy_wrapper<T>::type w_;
         boost::array<w_, 3> ref_array; int x, y, z;
         
         boost::copy( 
-        	as2::csv_deque( w_( x ), w_( y ), w_( z ) ), 
+            as2::csv_deque( w_( x ), w_( y ), w_( z ) ), 
             boost::begin( ref_array ) 
         );
         boost::copy( 
-        	as2::csv_deque( 314, 3141, 31415 ), 
+            as2::csv_deque( 314, 3141, 31415 ), 
             boost::begin( ref_array | as2::ref::_get )
         );
 

@@ -37,7 +37,7 @@ namespace xxx_wrapper{
         }
         #if BOOST_ASSIGN_V2_ENABLE_CPP0X
         {
- 	       //[test_ref_wrapper
+            //[test_ref_wrapper
             typedef val_ const cval_;
             typedef as2::ref::wrapper_param<val_>::type param_;
             BOOST_MPL_ASSERT(( boost::is_same<param_, cval_> ));

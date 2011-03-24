@@ -9,6 +9,6 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_INCLUDE_REF_ER_2010_HPP
 #define BOOST_ASSIGN_V2_INCLUDE_REF_ER_2010_HPP
-//#include <boost/assign/v2/ref/include.hpp>
+#include <boost/assign/v2/ref/include.hpp>
 
 #endif // BOOST_ASSIGN_V2_INCLUDE_REF_ER_2010_HPP

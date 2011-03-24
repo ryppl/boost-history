@@ -8,8 +8,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_CHAIN_OPERATOR_AND_ER_2010_HPP
-#define BOOST_ASSIGN_V2_CHAIN_OPERATOR_AND_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_CHAIN_LOGICAL_AND_ER_2010_HPP
+#define BOOST_ASSIGN_V2_CHAIN_LOGICAL_AND_ER_2010_HPP
 #include <boost/assign/v2/chain/meta.hpp>
 #include <boost/assign/v2/chain/chain.hpp>
 
@@ -19,7 +19,7 @@ namespace v2{
 
 #define BOOST_ASSIGN_V2_MACRO(U1, U2) \
 template<typename R1, typename R2> \
-typename chain_aux::result< \
+typename result_of::chain< \
     U1,\
     U2 \
 >::type \
