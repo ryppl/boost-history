@@ -16,7 +16,7 @@
 namespace boost{
 namespace assign{
 namespace v2{
-namespace value_container_aux{
+namespace container_aux{
 
     template<typename T>
     struct has_value_type{
@@ -37,7 +37,7 @@ namespace value_container_aux{
     };
 
 
-}// value_container_aux
+}// container_aux
 }// v2
 }// assign
 }// boost

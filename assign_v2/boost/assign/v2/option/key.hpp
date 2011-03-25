@@ -9,9 +9,12 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_OPTION_KEY_ER_2010_HPP
 #define BOOST_ASSIGN_V2_OPTION_KEY_ER_2010_HPP
+#include <boost/assign/v2/detail/traits/ptr_container/meta.hpp>
+#include <boost/assign/v2/detail/traits/value_container/category.hpp>
 #include <boost/assign/v2/interpreter/data.hpp>
 #include <boost/assign/v2/option/data.hpp>
 #include <boost/mpl/apply.hpp>
+#include <boost/utility/enable_if.hpp>
 
 namespace boost{
 namespace assign{
@@ -22,10 +25,12 @@ namespace interpreter_aux{
     template<typename C>
     struct container_key{ typedef typename C::key_type type; };
 
-    template<typename /*<<Value or pointer-container>>*/C>
-    struct /*<<Metafunction>>*/deduce_key_generator/*<-*/
+    template<
+    	typename C // Value or pointer-container
+    >
+    struct deduce_key_generator/*<-*/
         :  boost::mpl::eval_if<
-            ptr_container_aux::is_ptr_container<C>,
+            container_aux::is_ptr_container<C>,
             deduce_ptr_generator<C, container_key>,
             deduce_value_generator<C, container_key>
         >
@@ -37,16 +42,28 @@ namespace interpreter_aux{
 namespace result_of{
 
     template<typename C, typename D>
-    struct option_key : ::boost::mpl::apply1<
-        interpreter_aux::result_of::option_data_generator<D>,
-        typename deduce_key_generator<C>::type
+    struct option_key : boost::lazy_enable_if<
+    	::boost::mpl::apply1<
+    		container_aux::through_value_container<
+    			container_aux::is_sorted
+    		>,
+    		C
+    	>,
+    	::boost::mpl::apply1<
+        	interpreter_aux::result_of::option_data_generator<D>,
+        	typename deduce_key_generator<C>::type
+    	>
     >{};
 
 }//result_of
 
-    template<typename /*<<Associative container>>*/C, typename F, typename Tag, typename D>
+	// Overrides data generator with a constructor for C::key_type
+    template<
+    	typename C  // Associative container
+    	, typename F, typename Tag, typename D
+    >
     typename result_of::option_key<C, D>::type
-    operator%/*<<Overrides data generator with a constructor for C::key_type>>*/(
+    operator%(
         interpreter_crtp<C, F, Tag, D> const& lhs,
         option_key rhs
     )/*<-*/

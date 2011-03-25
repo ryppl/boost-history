@@ -29,28 +29,28 @@ namespace switch_aux{
     struct case_<switch_tag::check_container, 0> :
         switch_aux::helper<
             check_aux::fifo,
-            value_container_aux::is_fifo
+            container_aux::is_fifo
         >{};
 
     template<>
     struct case_<switch_tag::check_container, 1> :
         switch_aux::helper<
             check_aux::lifo,
-            value_container_aux::is_lifo
+            container_aux::is_lifo
         >{};
 
     template<>
     struct case_<switch_tag::check_container, 2> :
         switch_aux::helper<
             check_aux::sorted,
-            value_container_aux::is_sorted
+            container_aux::is_sorted
         >{};
 
     template<>
     struct case_<switch_tag::check_container, 3> :
         switch_aux::helper<
             check_aux::array,
-            value_container_aux::is_array
+            container_aux::is_array
         >{};
 
     template<>

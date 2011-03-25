@@ -10,6 +10,7 @@
 #include <iterator>
 #include <vector>
 #include <list>
+#include <string>
 #include <boost/next_prior.hpp>
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>

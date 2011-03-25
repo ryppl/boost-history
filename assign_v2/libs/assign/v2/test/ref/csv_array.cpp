@@ -27,30 +27,43 @@ namespace xxx_csv_array{
         using namespace boost;
         namespace as2 = assign::v2;
         {
+            //[test_ref_csv_array_temporaries
+            boost::array<int, 3> ar; 
+            ar[0] = 72; ar[1] = 31; ar[2] = 48;
+            
+            BOOST_ASSIGN_V2_CHECK(
+            	range::equal(
+            		as2::ref::csv_array( 72, 31, 48 ),
+            		ar    	
+            	)
+            )/*<<Temporaries destroyed past semicolon>>*/;
+            //]
+		}
+        {
             //[test_ref_csv_array_read
             typedef int const T;
             T x = 72, y = 31, z = 48;
-            typedef as2::ref::nth_result_of::csv_array<3, T>::type ar_;
-            ar_ ar = as2::ref::csv_array( x, y, z );
-            {
-                T& a = ar[0]; T& b = ar[2];
+            as2::ref::nth_result_of::csv_array<3, T>::type ar 
+            	= as2::ref::csv_array( x, y, z );
+            /*<-*/{/*->*/
+            T& front = ar.front(); T& back = ar.back();
             
-                BOOST_ASSIGN_V2_CHECK( &a == &x );
-                BOOST_ASSIGN_V2_CHECK( &b == &z );
-            }
+            BOOST_ASSIGN_V2_CHECK( &front == &x );
+            BOOST_ASSIGN_V2_CHECK( &back == &z );
+            /*<-*/}/*->*/
             //]
             {
-                T& a = ar.front(); T& b = ar.back();
+                T& front = ar.front(); T& back = ar.back();
 
-                BOOST_ASSIGN_V2_CHECK( &a == &x );
-                BOOST_ASSIGN_V2_CHECK( &b == &z );
+                BOOST_ASSIGN_V2_CHECK( &front == &x );
+                BOOST_ASSIGN_V2_CHECK( &back == &z );
             }
             {
-                T& a = (*begin( ar ) );
-                T& b = *next(boost::begin( ar ), 2 );
+                T& front = ( *begin( ar ) );
+                T& back = *next( boost::begin( ar ), 2 );
 
-                BOOST_ASSIGN_V2_CHECK( &a == &x );
-                BOOST_ASSIGN_V2_CHECK( &b == &z );
+                BOOST_ASSIGN_V2_CHECK( &front == &x );
+                BOOST_ASSIGN_V2_CHECK( &back == &z );
             }
         }
         {

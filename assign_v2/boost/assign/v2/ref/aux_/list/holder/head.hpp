@@ -26,7 +26,7 @@ namespace list_aux{
         typedef T head_value_type;
 
         explicit head_holder(T& t) : head_( &t ){}
-
+        
         typedef T& result_of_head_type;
         result_of_head_type head()const{ return (*this->head_); }
 

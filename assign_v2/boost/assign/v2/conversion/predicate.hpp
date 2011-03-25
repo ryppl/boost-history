@@ -21,16 +21,16 @@ namespace conversion_aux{
 
     template<typename C>
     struct is_array : ::boost::mpl::apply1<
-        ptr_container_aux::through_value_container<
-            value_container_aux::is_array
+        container_aux::through_value_container<
+            container_aux::is_array
         >,
         C
     >{};
 
     template<typename C>
     struct has_push : ::boost::mpl::apply1<
-        ptr_container_aux::through_value_container<
-            value_container_aux::has_push_deduced_value
+        container_aux::through_value_container<
+            container_aux::has_push_deduced_value
         >,
         C
     >{};

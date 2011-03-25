@@ -17,6 +17,7 @@
 #include <boost/mpl/vector/vector0.hpp>
 
 namespace boost{
+	struct use_default;
 namespace assign{
 namespace v2{
 namespace interpreter_aux{

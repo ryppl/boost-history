@@ -15,7 +15,7 @@
 namespace boost{
 namespace assign{
 namespace v2{
-namespace value_container_aux{
+namespace container_aux{
 
     // FIFO
     template<typename C> struct is_fifo : ::boost::mpl::false_{};
@@ -47,7 +47,7 @@ namespace value_container_aux{
     > : ::boost::mpl::true_{};
 
 
-}// value_container_aux
+}// container_aux
 }// v2
 }// assign
 }// boost

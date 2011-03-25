@@ -29,6 +29,19 @@ namespace xxx_array{
         using namespace boost;
         namespace as2 = assign::v2;
         {
+            //[test_ref_array_temporaries
+            boost::array<int, 3> ar; 
+            ar[0] = 72; ar[1] = 31; ar[2] = 48;
+            
+            BOOST_ASSIGN_V2_CHECK(
+            	range::equal(
+            		as2::ref::array( 72 )( 31 )( 48 ),
+            		ar    	
+            	)
+            )/*<<Temporaries destroyed past semicolon>>*/;
+            //]
+		}
+        {
             //[test_ref_array_read
             typedef int const T;
             T w = 11, x = 72, y = 31, z = 48;

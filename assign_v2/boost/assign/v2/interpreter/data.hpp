@@ -7,8 +7,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_INTERPRETER_FUN_ER_2010_HPP
-#define BOOST_ASSIGN_V2_INTERPRETER_FUN_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_INTERPRETER_DATA_ER_2010_HPP
+#define BOOST_ASSIGN_V2_INTERPRETER_DATA_ER_2010_HPP
 #include <boost/assign/v2/detail/traits/ptr_container/to_value_container.hpp>
 #include <boost/assign/v2/detail/traits/ptr_container/meta.hpp>
 #include <boost/assign/v2/detail/functor/constructor.hpp>
@@ -33,7 +33,7 @@ namespace interpreter_aux{
     struct deduce_ptr_generator/*<-*/
     {
         
-        typedef typename v2::ptr_container_aux::to_value_container<
+        typedef typename v2::container_aux::to_value_container<
             PtrC
         >::type cont_;
         typedef functor_aux::new_<
@@ -57,7 +57,7 @@ namespace interpreter_aux{
     >
     struct deduce_data_generator/*<-*/
         :  boost::mpl::eval_if<
-            ptr_container_aux::is_ptr_container<C>,
+            container_aux::is_ptr_container<C>,
             deduce_ptr_generator<C>,
             deduce_value_generator<C>
         >
@@ -69,4 +69,4 @@ namespace interpreter_aux{
 }// assign
 }// boost
 
-#endif // BOOST_ASSIGN_V2_INTERPRETER_FUN_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_INTERPRETER_DATA_ER_2010_HPP

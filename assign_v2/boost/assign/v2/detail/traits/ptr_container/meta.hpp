@@ -16,7 +16,7 @@
 namespace boost{
 namespace assign{
 namespace v2{
-namespace ptr_container_aux{
+namespace container_aux{
 
 
     template<typename PtrC>
@@ -35,7 +35,7 @@ namespace ptr_container_aux{
         >{};
     };
 
-}// ptr_container_aux
+}// container_aux
 }// v2
 }// assign
 }// boost

@@ -45,19 +45,21 @@ namespace xxx_list{
             typedef add_reference<t2_>::type r2_;
 
             t0_ a = 0;
-#define B 2
             t2_ c = "c";
 
             typedef as2::ref::nth_result_of::list<tag_> result_;
             typedef mpl::apply1<result_,
                 mpl::vector<r0_, r1_, r2_>
             >::type ar_;
-            ar_ ar = as2::ref::list<tag_>( as2::_nil )( a )( B )( c );
 
-            BOOST_ASSIGN_V2_CHECK( &as2::ref::at<0>( ar ) == &a );
-            BOOST_ASSIGN_V2_CHECK( as2::ref::at<1>( ar ) == B );
-            BOOST_ASSIGN_V2_CHECK( str_( as2::ref::at<2>( ar ) ) == c );
-#undef B
+// Reminder : temporaries destroyed at the semi-colon
+// Implication : don't try to save the result.
+#define BOOST_ASSIGN_V2_macro as2::ref::list<tag_>( as2::_nil )( a )( 2 )( c )
+
+            BOOST_ASSIGN_V2_CHECK( &as2::ref::at<0>( BOOST_ASSIGN_V2_macro ) == &a );
+            BOOST_ASSIGN_V2_CHECK( as2::ref::at<1>( BOOST_ASSIGN_V2_macro ) == 2 );
+            BOOST_ASSIGN_V2_CHECK( str_( as2::ref::at<2>( BOOST_ASSIGN_V2_macro ) ) == c );
+#undef BOOST_ASSIGN_V2_macro
         }
         {
             typedef int t_; typedef add_reference<t_>::type r_;
@@ -78,7 +80,7 @@ namespace xxx_list{
             BOOST_ASSIGN_V2_CHECK( &arw[ 2 ].get() == &c );
         }
         {
-               typedef as2::ref::alloc_tag::lazy_alloc tag_;
+            typedef as2::ref::alloc_tag::lazy_alloc tag_;
             typedef as2::ref::list_aux::void_ void_;
             typedef as2::ref::list_aux::nil nil_;
             typedef as2::ref::empty_list<tag_>::type empty_;

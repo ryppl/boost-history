@@ -17,7 +17,7 @@
 namespace boost{
 namespace assign{
 namespace v2{
-namespace value_container_aux{
+namespace container_aux{
 
     template<typename C, typename T = typename C::value_type>
     struct has_push{
@@ -46,7 +46,7 @@ namespace value_container_aux{
     template<typename C>
     struct has_push_deduced_value : has_push<C>{};
 
-}// value_container_aux
+}// container_aux
 }// v2
 }// assign
 }// boost

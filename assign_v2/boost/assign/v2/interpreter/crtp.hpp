@@ -233,7 +233,7 @@ BOOST_PP_REPEAT_FROM_TO(
 
         template<typename T>
         struct ptr_enabler : boost::enable_if<
-            ptr_container_aux::is_ptr_container<C>
+            container_aux::is_ptr_container<C>
         >{};
 
         template<typename T>

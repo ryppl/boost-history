@@ -23,7 +23,7 @@ namespace xxx_traits{
     void test()
     {
         namespace as2 = boost::assign::v2;
-        namespace ns = as2::value_container_aux;
+        namespace ns = as2::container_aux;
         {
             typedef std::queue<int> v_;
             BOOST_MPL_ASSERT(( ns::has_push<v_> ));

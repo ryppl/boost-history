@@ -19,7 +19,7 @@
 namespace boost{
 namespace assign{
 namespace v2{
-namespace ptr_container_aux{
+namespace container_aux{
 
     template<typename A, typename T> struct to_value_allocator_helper{};
 
@@ -207,7 +207,7 @@ namespace ptr_container_aux{
 
     // TODO unordered
 
-}// ptr_container_aux
+}// container_aux
 }// v2
 }// assign
 }// boost

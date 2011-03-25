@@ -71,7 +71,7 @@ namespace switch_aux{\
     struct case_<switch_tag::deduce_put, CaseNumber> :\
         switch_aux::helper<\
             v2::modifier_tag::Tag,\
-            ptr_container_aux::through_value_container<BooleanMetaF>::apply\
+            container_aux::through_value_container<BooleanMetaF>::apply\
         >{};\
 }\
 /**/
@@ -82,7 +82,7 @@ namespace switch_aux{\
 #error
 #else
 #define BOOST_ASSIGN_V2_OPTION_MODIFIER_SWITCH_ASSOCIATIVE(CaseNumber)\
-BOOST_ASSIGN_V2_OPTION_MODIFIER_SWITCH_CASE(insert, value_container_aux::is_sorted, CaseNumber)\
+BOOST_ASSIGN_V2_OPTION_MODIFIER_SWITCH_CASE(insert, container_aux::is_sorted, CaseNumber)\
 /**/
 #endif
 
@@ -90,7 +90,7 @@ BOOST_ASSIGN_V2_OPTION_MODIFIER_SWITCH_CASE(insert, value_container_aux::is_sort
 #error
 #else
 #define BOOST_ASSIGN_V2_OPTION_MODIFIER_SWITCH_ARRAY(CaseNumber)\
-BOOST_ASSIGN_V2_OPTION_MODIFIER_SWITCH_CASE(iterate<>, value_container_aux::is_array, CaseNumber)
+BOOST_ASSIGN_V2_OPTION_MODIFIER_SWITCH_CASE(iterate<>, container_aux::is_array, CaseNumber)
 /**/
 #endif
 
@@ -98,7 +98,7 @@ BOOST_ASSIGN_V2_OPTION_MODIFIER_SWITCH_CASE(iterate<>, value_container_aux::is_a
 #error
 #else
 #define BOOST_ASSIGN_V2_OPTION_MODIFIER_SWITCH_ADAPTER(CaseNumber)\
-BOOST_ASSIGN_V2_OPTION_MODIFIER_SWITCH_CASE(push, value_container_aux::has_push_deduced_value, CaseNumber)
+BOOST_ASSIGN_V2_OPTION_MODIFIER_SWITCH_CASE(push, container_aux::has_push_deduced_value, CaseNumber)
 /**/
 #endif
 
@@ -124,7 +124,6 @@ BOOST_ASSIGN_V2_OPTION_MODIFIER_SWITCH_ADAPTER(2)
 BOOST_ASSIGN_V2_OPTION_MODIFIER_SWITCH_DEFAULT(3)
 #define BOOST_ASSIGN_V2_OPTION_MODIFIER_SWITCH
 #endif
-
 
 /*->*/
 namespace interpreter_aux{
