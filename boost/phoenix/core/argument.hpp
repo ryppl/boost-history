@@ -25,30 +25,29 @@ namespace boost { namespace phoenix
     //
     ////////////////////////////////////////////////////////////////////////////
     
-    namespace detail
+    template <int I>
+    struct argument
+        //: mpl::int_<I>
     {
-        template <int I>
-        struct argument
-            : mpl::int_<I>
+        typedef typename mpl::int_<I>::value_type value_type;
+        static const value_type value = mpl::int_<I>::value;
+        
+        bool operator==(argument) const
         {
-            bool operator==(argument) const
-            {
-                return true;
-            }
-
-            template <int I2>
-            bool operator==(argument<I2>) const
-            {
-                return false;
-            }
-        };
-    }
-
+            return true;
+        }
+        
+        template <int I2>
+        bool operator==(argument<I2>) const
+        {
+            return false;
+        }
+    };
 }}
 
 namespace boost {
     template <int I>
-    struct is_placeholder<phoenix::detail::argument<I> >
+    struct is_placeholder<phoenix::argument<I> >
         : mpl::int_<I>
     {};
 }
@@ -59,12 +58,12 @@ namespace boost { namespace phoenix
     {
         template <int I>
         struct argument
-            : expression::terminal<detail::argument<I> >
+            : expression::terminal<phoenix::argument<I> >
         {
-            typedef typename expression::terminal<detail::argument<I> >::type type;
+            typedef typename expression::terminal<phoenix::argument<I> >::type type;
             static const type make()
             {
-                type const e = {};
+                type const e = {{{}}};
                 return e;
             }
         };
@@ -77,7 +76,7 @@ namespace boost { namespace phoenix
         expression::argument<BOOST_PP_INC(N)>::type                             \
         BOOST_PP_CAT(BOOST_PP_CAT(name, BOOST_PP_INC(N)), _type);               \
     expression::argument<BOOST_PP_INC(N)>::type const                           \
-        BOOST_PP_CAT(name, BOOST_PP_INC(N)) = {};                               \
+        BOOST_PP_CAT(name, BOOST_PP_INC(N)) = {{{}}};                           \
     /**/
 
 #else // BOOST_PHOENIX_NO_PREDEFINED_TERMINALS
