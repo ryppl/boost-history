@@ -51,9 +51,7 @@ namespace interpreter_aux{
         {}BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
         explicit put_interpreter( C& cont, F const& f, modifier_ const& m )/*<-*/
             : super1_t( cont ), super2_t( f, m )
-            {
-                // This constructor is required in conjunction with modulo
-            }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
+        {}BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
         C& container()const/*<-*/{
             return static_cast<super1_t const&>(*this).get();
@@ -62,26 +60,26 @@ namespace interpreter_aux{
     };
 
     template<typename C, typename F, typename Tag>
-    struct /*<<Metafunction class>>*/replace_data_generator< interpreter_aux::put_interpreter<C, F, Tag> >{/*<-*/
+    struct replace_data_generator< interpreter_aux::put_interpreter<C, F, Tag> >{
         template<typename F1>
-        struct apply{ typedef interpreter_aux::put_interpreter<C, F1, Tag> type; };
-    }/*->*/;
+        struct apply/*<-*/{ typedef interpreter_aux::put_interpreter<C, F1, Tag> type; }/*->*/;
+    };
 
     template<typename C, typename F, typename Tag>
-    struct /*<<Metafunction class>>*/replace_modifier_tag< interpreter_aux::put_interpreter<C, F, Tag> >{/*<-*/
+    struct replace_modifier_tag< interpreter_aux::put_interpreter<C, F, Tag> >{
         template<typename Tag1>
-        struct apply{ typedef interpreter_aux::put_interpreter<C, F, Tag1> type; };
-    }/*->*/;
+        struct apply/*<-*/{ typedef interpreter_aux::put_interpreter<C, F, Tag1> type; }/*->*/;
+    };
 
 }// interpreter_aux
 namespace result_of{
 
     template<typename C>
-    struct /*<<Metafunction>>*/put/*<-*/{
+    struct put{/*<-*/
         typedef typename interpreter_aux::deduce_data_generator<C>::type f_;
         typedef typename interpreter_aux::deduce_modifier_tag<C>::type modifier_tag_;
-        typedef interpreter_aux::put_interpreter<C, f_, modifier_tag_> type;
-    }/*->*/;
+        /*->*/typedef /*<-*/BOOST_ASSIGN_V2_IGNORE(/*->*/unspecified/*<-*/)interpreter_aux::put_interpreter<C, f_, modifier_tag_>/*->*/ type;
+    };
 
 }// result_of
 

@@ -18,7 +18,8 @@ namespace interpreter_aux{
     template<typename C, typename F, typename Tag, typename D> 
     class interpreter_crtp;
 
-    template<typename Tag> struct /*<<Specialize on Tag>>*/ interpreter_modifier;
+    template<typename Tag> 
+    struct interpreter_modifier;
 
 }// interpreter_aux
 }// v2

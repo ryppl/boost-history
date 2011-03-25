@@ -23,7 +23,6 @@
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 #include <boost/assign/v2/put.hpp>
 #include <boost/assign/v2/deque.hpp>
-#include <boost/assign/v2/pipe/putput.hpp>
 #include <boost/assign/v2/pipe/csv_put.hpp>
 #include <boost/assign/v2/ref/array/array.hpp>
 #include <boost/assign/v2/ref/array/csv_array.hpp>
@@ -125,7 +124,7 @@ void v2_put(std::size_t n, E& elapsed, C& cont, Args&&... args)
 }
 
 // V2-PIPE_PUT
-
+/*
 template<typename C, typename F>
 void v2_pipe_put_impl(C& cont, F const& f){ cont | f; }
 
@@ -151,6 +150,7 @@ void v2_pipe_put(std::size_t n, E& elapsed, C& cont, Args&&... args)
     elapsed = timer.elapsed();
     assert( cont.size() == sizeof...(Args) );
 }
+*/
 
 // V2-PIPE-CSV_PUT
 

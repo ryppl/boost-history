@@ -22,7 +22,10 @@ namespace v2{
 //[syntax_option_mapped
 namespace modifier_tag{ 
 
-    template<typename/*<<Mapping>>*/ Arg> struct mapped; 
+    template<
+    	typename Arg // Mapping applied to mapped
+    > 
+    struct mapped; 
 
 }// modifier_tag
 namespace interpreter_aux{

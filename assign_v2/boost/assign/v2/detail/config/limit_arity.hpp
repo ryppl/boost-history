@@ -18,7 +18,7 @@
 #endif
 #ifndef BOOST_ASSIGN_V2_LIMIT_ARITY
 //[limit_arity
-/*<< n = BOOST_ASSIGN_V2_LIMIT_ARITY
+/* n = BOOST_ASSIGN_V2_LIMIT_ARITY
    Overload                           | Arity
    -------------------------------------
    functor()                          |    0
@@ -26,12 +26,12 @@
    functor(x[0], x[1])                |    2
    ...
    functor(x[0], ...., x[n-1])        |    n
->>*/
+*/
 #define BOOST_ASSIGN_V2_LIMIT_ARITY BOOST_PP_MIN( BOOST_MPL_LIMIT_METAFUNCTION_ARITY, BOOST_ASSIGN_V2_PARAMETER_LIST_SIZE )
 //]
 #endif // BOOST_ASSIGN_V2_LIMIT_ARITY
 //[limit_arity_requirement
-/*<<Required for some meta-function classes yielding result type of invoking a functor>>*/  
+/*Required for some meta-function classes yielding result type of invoking a functor*/  
 #if BOOST_PP_GREATER( BOOST_MPL_LIMIT_METAFUNCTION_ARITY, BOOST_ASSIGN_V2_LIMIT_ARITY )
 #error
 #endif

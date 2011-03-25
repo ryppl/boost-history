@@ -180,10 +180,10 @@ void fill_vec_stat(std::size_t scale_factor,
         n, elapsed, cont, std::forward<Args>( args )... ),
        "v2_put"
     )
-	MACRO( as2::speed_aux::v2_pipe_put<timer_>(
-        n, elapsed, cont, std::forward<Args>( args )... ),
-       "v2_pipe_put"
-    )
+	//MACRO( as2::speed_aux::v2_pipe_put<timer_>(
+    //    n, elapsed, cont, std::forward<Args>( args )... ),
+    //   "v2_pipe_put"
+    //)
 	MACRO( as2::speed_aux::v2_pipe_csv_put<timer_>(
         n, elapsed, cont, std::forward<Args>( args )... ),
        "v2_pipe_csv_put"
@@ -242,7 +242,7 @@ void test( std::ostream& os )
     cols["stl_push_back"] =   "cont.push_back( arg1 ); ...; cont.push_back( argm )";
     cols["v1_push_back"] =    "assign::push_back( cont )( arg1 )...( argm )";
     cols["v2_put"] =          "assign::v2::put( cont )( arg1 )...( argm )";
-    cols["v2_pipe_put"] =     "cont | assign::v2::_put( arg1 )...( argm )";
+    //cols["v2_pipe_put"] =     "cont | assign::v2::_put( arg1 )...( argm )";
     cols["v2_pipe_csv_put"] = "cont | assign::v2::_csv_put( args... )";
     cols["v1_list_of"] =      "assign::list_of( arg1 )...( argm )";
     cols["v2_deque"] =        "assign::v2::deque<T>( arg1 )...( argm )";
@@ -296,7 +296,7 @@ void test( std::ostream& os )
             << ( f %"stl_push_back" % cols["stl_push_back"] ).str()
             << ( f % "v1_push_back"% cols["v1_push_back"] ).str()
             << ( f % "v2_put" % cols["v2_put"] ).str()
-            << ( f % "v2_pipe_put" % cols["v2_pipe_put"] ).str()
+            //<< ( f % "v2_pipe_put" % cols["v2_pipe_put"] ).str()
             << ( f % "v2_pipe_csv_put" % cols["v2_pipe_csv_put"] ).str()
             << ( title % "Generate" ).str()
             << ( f % "v1_list_of" % cols["v1_list_of"] ).str()

@@ -23,12 +23,14 @@ namespace interpreter_aux{
 namespace result_of{
 
     template<typename D>
-    struct /*<<Metafunction class>>*/option_data_generator/*<-*/{
+    struct option_data_generator/*<-*/{
 
         typedef interpreter_aux::replace_data_generator<D> meta_;
 
-        template<typename F>
-        struct apply : ::boost::mpl::apply1<meta_, F>{};
+        template<
+        	typename F // Data generator to replace D with
+        >
+        struct apply/*<-*/ : ::boost::mpl::apply1<meta_, F>{}/*->*/;
 
     };
 
@@ -46,9 +48,10 @@ namespace result_of{
         F f_;
     }/*->*/;
 
+	// Overrides data generator
     template<typename C, typename F, typename Tag, typename D, typename F1>
     typename ::boost::mpl::apply1<result_of::option_data_generator<D>, F1>::type
-    operator%/*<<Overrides data generator>>*/(
+    operator%(
         interpreter_crtp<C, F, Tag, D> const& lhs,
         option_data_generator<F1> const& rhs
     )/*<-*/
@@ -76,7 +79,7 @@ namespace{
 namespace result_of{
 
     template<typename D>
-    struct /*<<Metafunction class>>*/option_data_generator/*<-*/
+    struct option_data_generator/*<-*/
         : interpreter_aux::result_of::option_data_generator<D>
     {}/*->*/;
 

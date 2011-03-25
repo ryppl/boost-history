@@ -17,27 +17,25 @@ namespace assign{
 namespace v2{
 //[syntax_put_adapter_replace_parameter
 namespace interpreter_aux{
-                
+
+	//Specialize on D
     template<
         typename D // Derives from interpreter_crtp
     > 
     struct replace_data_generator{
-
-        // Metafunction class specialized on D should return its transformation
-        // by D::fun_type = F
     
+        // Return transformation by D::fun_type = F
         template<typename F> 
-        struct apply{};
+        struct apply/*<-*/{}/*->*/;
     };
 
+	//Specialize on D
     template<
         typename D // Derives from interpreter_crtp
     > 
     struct replace_modifier_tag{
 
-        // Metafunction class specialized on D should return its transformation
-        // by D::modifier_tag = Tag
-
+        // Return transformation by D::modifier_tag = Tag
         template<typename Tag> 
         struct apply{};
     };

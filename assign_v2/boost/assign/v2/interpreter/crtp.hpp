@@ -189,7 +189,7 @@ namespace interpreter_aux{
         result_type operator()( Args&&...args )const/*<-*/
         {
             return  this->modify(
-                /*<< Instance of F >>*/ this->fun( std::forward<Args>(args)... )
+                /*Instance of F*/ this->fun( std::forward<Args>(args)... )
             );
         }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
@@ -264,8 +264,9 @@ BOOST_PP_REPEAT_FROM_TO(
         result_type modify(T&& t)const
         {
             check_modifier( t );
-            /*<< Instance of interpreter_aux::interpreter_modifier<Tag> >>*/this->modifier.impl(
-                /*<< Reference to C >>*/this->derived().container(),
+            
+            this->modifier.impl(
+                this->derived().container(),
                 std::forward<T>( t )
             );
             return this->derived();

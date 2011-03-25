@@ -12,7 +12,7 @@
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
 #ifndef BOOST_ASSIGN_V2_LIMIT_CPP03_TUPLE_ARITY
 //[limit_tuple_arity
-/*<<Do not override. Source: boost/tuple/detail/tuple_basic.hpp>>*/
+/*Do not override. Source: boost/tuple/detail/tuple_basic.hpp*/
 #define BOOST_ASSIGN_V2_LIMIT_CPP03_TUPLE_ARITY 10
 //]
 #endif // BOOST_ASSIGN_V2_LIMIT_CPP03_TUPLE_ARITY

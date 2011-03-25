@@ -36,32 +36,39 @@ namespace assign_copy{ typedef assign_tag::copy assign_tag_; }
 
         wrapper()/*<-*/
             {/*TODO or null pointer?*/}BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
-        explicit /*<<Equivalent to `rebind( r )`>>*/wrapper( T& r )/*<-*/
-            : ref_(&r)
+
+		// Initialization equivalent to rebind( r )            
+        explicit wrapper( T& r )/*<-*/
+            : ptr(&r)
         {}BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
-        void /*<<Semantics: `ref_ = &r`>>*/rebind(T& r )/*<-*/
+
+        void rebind(T& r )/*<-*/
         {
-            this->ref_ = &r;
+            this->ptr = &r;
         }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
+
         typedef T& result_of_get_type;
         T& get() const/*<-*/
         {
-            return *this->ref_;
+            return *this->ptr;
         }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
+
         T* get_pointer() const/*<-*/
         {
-            return this->ref_;
+            return this->ptr;
         }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
         using wrapper_crtp<wrapper, T>::operator=;
-        void /*<<Semantics: `*ref_ = r`>>*/assign(typename boost::call_traits<T>::param_type r )/*<-*/
+
+		// Copy semantics i.e. *ptr = r
+        void assign(typename boost::call_traits<T>::param_type r )/*<-*/
         {
             this->get() = r;
         }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
         protected:
         /*<-*/friend class wrapper_crtp<wrapper, T>/*->*/;
-        T* ref_;/*<-*/
+        T* ptr;/*<-*/
         typedef ref::assign_tag::copy assign_tag;/*->*/
         void swap( wrapper& r )/*<-*/
         {

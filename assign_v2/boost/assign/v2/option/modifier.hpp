@@ -23,7 +23,10 @@ namespace v2{
 //[syntax_option_modifier
 namespace interpreter_aux{
 
-    template<typename /*<<A class of modifiers>>*/ Keyword, typename /*<<A part of the modifier's implementation>>*/Arg = keyword_aux::ignore>
+    template<
+    	typename Keyword // A class of modifiers
+        , typename Arg /*<-*/= keyword_aux::ignore/*->*/ // Specifies an aspect of the implementation
+    >
     struct option_modifier
     {
         
@@ -49,10 +52,13 @@ namespace interpreter_aux{
 //->
     };
 
+	// Specialize on Keyword
     template<typename Keyword, typename Arg>
-    struct /*<<Metafunction class to be specialized on Keyword>>*/ meta_modifier_tag
+    struct meta_modifier_tag
     {
-        template<typename /*<<Inherits `interpreter_crtp<>` >>*/ D> 
+        template<
+        	typename D // Inherits interpreter_crtp<>
+        >
         struct apply;
     };
 
