@@ -24,7 +24,7 @@ namespace interpreter_aux{
     typename result_of::csv_deque<T>::type\
     csv_deque( BOOST_PP_ENUM_PARAMS(N, T const & _) )\
     {\
-    	typedef typename result_of::csv_deque<T>::type result_;\
+        typedef typename result_of::csv_deque<T>::type result_;\
         return result_() BOOST_PP_REPEAT(N, BOOST_ASSIGN_V2_MACRO1, ~ );\
     }\
 /**/

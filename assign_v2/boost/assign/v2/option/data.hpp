@@ -28,7 +28,7 @@ namespace result_of{
         typedef interpreter_aux::replace_data_generator<D> meta_;
 
         template<
-        	typename F // Data generator to replace D with
+            typename F // Data generator to replace D with
         >
         struct apply/*<-*/ : ::boost::mpl::apply1<meta_, F>{}/*->*/;
 
@@ -48,7 +48,7 @@ namespace result_of{
         F f_;
     }/*->*/;
 
-	// Overrides data generator
+    // Overrides data generator
     template<typename C, typename F, typename Tag, typename D, typename F1>
     typename ::boost::mpl::apply1<result_of::option_data_generator<D>, F1>::type
     operator%(

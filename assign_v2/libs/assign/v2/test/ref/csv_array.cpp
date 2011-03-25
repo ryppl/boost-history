@@ -32,19 +32,19 @@ namespace xxx_csv_array{
             ar[0] = 72; ar[1] = 31; ar[2] = 48;
             
             BOOST_ASSIGN_V2_CHECK(
-            	range::equal(
-            		as2::ref::csv_array( 72, 31, 48 ),
-            		ar    	
-            	)
+                range::equal(
+                    as2::ref::csv_array( 72, 31, 48 ),
+                    ar        
+                )
             )/*<<Temporaries destroyed past semicolon>>*/;
             //]
-		}
+        }
         {
             //[test_ref_csv_array_read
             typedef int const T;
             T x = 72, y = 31, z = 48;
             as2::ref::nth_result_of::csv_array<3, T>::type ar 
-            	= as2::ref::csv_array( x, y, z );
+                = as2::ref::csv_array( x, y, z );
             /*<-*/{/*->*/
             T& front = ar.front(); T& back = ar.back();
             

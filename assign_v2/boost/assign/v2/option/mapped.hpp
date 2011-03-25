@@ -23,7 +23,7 @@ namespace v2{
 namespace modifier_tag{ 
 
     template<
-    	typename Arg // Mapping applied to mapped
+        typename Arg // Mapping applied to mapped
     > 
     struct mapped; 
 

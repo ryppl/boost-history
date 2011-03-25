@@ -26,7 +26,7 @@ namespace interpreter_aux{
     struct container_key{ typedef typename C::key_type type; };
 
     template<
-    	typename C // Value or pointer-container
+        typename C // Value or pointer-container
     >
     struct deduce_key_generator/*<-*/
         :  boost::mpl::eval_if<
@@ -43,26 +43,26 @@ namespace result_of{
 
     template<typename C, typename D>
     struct option_key : 
-    	::boost::mpl::apply1<
-        	interpreter_aux::result_of::option_data_generator<D>,
-        	typename deduce_key_generator<C>::type
-    	>{};
+        ::boost::mpl::apply1<
+            interpreter_aux::result_of::option_data_generator<D>,
+            typename deduce_key_generator<C>::type
+        >{};
 
 }//result_of
 
-	// Overrides data generator with a constructor for C::key_type
+    // Overrides data generator with a constructor for C::key_type
     template<
-    	typename C  // Associative container
-    	, typename F, typename Tag, typename D
+        typename C  // Associative container
+        , typename F, typename Tag, typename D
     >
-	typename /*<-*/boost::lazy_enable_if<
-    	::boost::mpl::apply1<
-    		container_aux::through_value_container<
-    			container_aux::is_sorted
-    		>,
-    		C
-    	>,/*->*/
-    	result_of::option_key<C, D>/*<-*/
+    typename /*<-*/boost::lazy_enable_if<
+        ::boost::mpl::apply1<
+            container_aux::through_value_container<
+                container_aux::is_sorted
+            >,
+            C
+        >,/*->*/
+        result_of::option_key<C, D>/*<-*/
     >::/*->*/type
     operator%(
         interpreter_crtp<C, F, Tag, D> const& lhs,

@@ -41,10 +41,10 @@ namespace speed_assign_v2{
 struct stat_
 {
 
-	typedef boost::numeric::bounds<double> bounds_;
-	typedef boost::numeric::converter<double, int> converter_;
+    typedef boost::numeric::bounds<double> bounds_;
+    typedef boost::numeric::converter<double, int> converter_;
 
-	stat_()
+    stat_()
         :
         scale_factor(0),
         min( bounds_::highest() ),
@@ -52,11 +52,11 @@ struct stat_
         max( 0 ),
         cum_elapsed( 0 ){}
 
-	void put(double elapsed_)
+    void put(double elapsed_)
     {
         this->min = this->min > elapsed_ ? elapsed_ : this->min;
         this->max = this->max < elapsed_ ? elapsed_ : this->max;
-		this->cum_elapsed += elapsed_;
+        this->cum_elapsed += elapsed_;
     }
 
     static const std::string description;
@@ -64,9 +64,9 @@ struct stat_
     int scale_factor;
     std::string method;
 
-	private:
-	friend std::ostream& operator<<(std::ostream&, stat_);
-	friend struct vec_stat_;
+    private:
+    friend std::ostream& operator<<(std::ostream&, stat_);
+    friend struct vec_stat_;
     double min;
     double elapsed;     // not computed internally
     double max;
@@ -94,9 +94,9 @@ std::ostream& operator<<( std::ostream& os, stat_ stat)
         % ( scale * stat.cum_elapsed );
     ;
 
-	return os << f.str();
+    return os << f.str();
 
-/*	'{'
+/*    '{'
         << stat.min         << ','
         << stat.max         << ','
         << stat.elapsed     << ','
@@ -106,13 +106,13 @@ std::ostream& operator<<( std::ostream& os, stat_ stat)
 struct vec_stat_
 {
     typedef std::size_t size_type;
-	typedef std::vector<stat_> storage_;
-	typedef boost::numeric::converter<double, size_type> converter_;
+    typedef std::vector<stat_> storage_;
+    typedef boost::numeric::converter<double, size_type> converter_;
 
-	void put(stat_ stat)
+    void put(stat_ stat)
     {
         stat.elapsed = stat.cum_elapsed / converter_::convert( k );
-    	stats.push_back( stat );
+        stats.push_back( stat );
     }
 
     static const std::string description;
@@ -128,10 +128,10 @@ const std::string vec_stat_::description = "{{k, n, m}, stats...}";
 
 std::ostream& operator<<( std::ostream& os, vec_stat_ vec_stat)
 {
-	namespace lambda = boost::lambda;
-	boost::format f("{\n{%1%, %2%, %3%}");
-	f % vec_stat.k %  vec_stat.n % vec_stat.m;
-	os << f.str();
+    namespace lambda = boost::lambda;
+    boost::format f("{\n{%1%, %2%, %3%}");
+    f % vec_stat.k %  vec_stat.n % vec_stat.m;
+    os << f.str();
     boost::for_each(
         vec_stat.stats,
         os << lambda::constant( ',' ) << "\n" << lambda::_1
@@ -144,7 +144,7 @@ void fill_vec_stat(std::size_t scale_factor,
     vec_stat_& vec_stat, std::size_t k, std::size_t n, Args&&... args)
 {
     typedef boost::timer timer_;
-	C cont;
+    C cont;
     vec_stat.k = k;
     vec_stat.n = n;
     vec_stat.m = sizeof...(Args);
@@ -152,15 +152,15 @@ void fill_vec_stat(std::size_t scale_factor,
     namespace as2 = boost::assign::v2;
 
 #define MACRO(Expr, Method)\
-	{\
+    {\
         stat_ stat;\
         stat.method = Method;\
         stat.scale_factor = scale_factor;\
-		for(std::size_t j = 0; j < k; j++)\
-    	{\
-			double elapsed;\
-        	Expr;\
-        	stat.put( elapsed );\
+        for(std::size_t j = 0; j < k; j++)\
+        {\
+            double elapsed;\
+            Expr;\
+            stat.put( elapsed );\
         }\
         vec_stat.put( stat );\
     }\
@@ -168,51 +168,51 @@ void fill_vec_stat(std::size_t scale_factor,
 
 // Assign Containers
 
-	MACRO( as2::speed_aux::stl_push_back<timer_>(
+    MACRO( as2::speed_aux::stl_push_back<timer_>(
         n, elapsed, cont, std::forward<Args>( args )... ),
        "stl_push_back"
     )
-	MACRO( as2::speed_aux::v1_push_back<timer_>(
+    MACRO( as2::speed_aux::v1_push_back<timer_>(
         n, elapsed, cont, std::forward<Args>( args )... ),
        "v1_push_back"
     )
-	MACRO( as2::speed_aux::v2_put<timer_>(
+    MACRO( as2::speed_aux::v2_put<timer_>(
         n, elapsed, cont, std::forward<Args>( args )... ),
        "v2_put"
     )
-	//MACRO( as2::speed_aux::v2_pipe_put<timer_>(
+    //MACRO( as2::speed_aux::v2_pipe_put<timer_>(
     //    n, elapsed, cont, std::forward<Args>( args )... ),
     //   "v2_pipe_put"
     //)
-	MACRO( as2::speed_aux::v2_pipe_csv_put<timer_>(
+    MACRO( as2::speed_aux::v2_pipe_csv_put<timer_>(
         n, elapsed, cont, std::forward<Args>( args )... ),
        "v2_pipe_csv_put"
     )
 
 // Generate containers
 
-	MACRO( as2::speed_aux::v1_list_of<timer_>(
+    MACRO( as2::speed_aux::v1_list_of<timer_>(
         n, elapsed, std::forward<Args>( args )... ),
        "v1_list_of"
     )
-	MACRO( as2::speed_aux::v2_deque<timer_>(
+    MACRO( as2::speed_aux::v2_deque<timer_>(
         n, elapsed, std::forward<Args>( args )... ),
        "v2_deque"
     )
 
-	MACRO( as2::speed_aux::v2_csv_deque<timer_>(
+    MACRO( as2::speed_aux::v2_csv_deque<timer_>(
         n, elapsed, std::forward<Args>( args )... ),
        "v2_csv_deque"
     )
-	MACRO( as2::speed_aux::v1_cref_list_of<timer_>(
+    MACRO( as2::speed_aux::v1_cref_list_of<timer_>(
         n, elapsed, std::forward<Args>( args )... ),
        "v1_cref_list_of"
     )
-	MACRO( as2::speed_aux::v2_ref_array<timer_>(
+    MACRO( as2::speed_aux::v2_ref_array<timer_>(
         n, elapsed, std::forward<Args>( args )... ),
        "v2_ref_array"
     )
-	MACRO( as2::speed_aux::v2_ref_csv_array<timer_>(
+    MACRO( as2::speed_aux::v2_ref_csv_array<timer_>(
         n, elapsed, std::forward<Args>( args )... ),
        "v2_ref_csv_array"
     )
@@ -224,17 +224,17 @@ void fill_vec_stat(std::size_t scale_factor,
 void test( std::ostream& os )
 {
     namespace lambda = boost::lambda;
-	const std::size_t T_size = 1000;
-	typedef std::vector<int> T; boost::array<T, 128> args_list;
-	typedef std::deque<T> C;
+    const std::size_t T_size = 1000;
+    typedef std::vector<int> T; boost::array<T, 128> args_list;
+    typedef std::deque<T> C;
     for(std::size_t i = 0; i < 128; i++)
     {
-    	args_list[i] = rand_vec( T_size );
+        args_list[i] = rand_vec( T_size );
     }
 
     const std::size_t scale_factor = 1000;
-	const std::size_t total_sz = 1280000;
-	const std::size_t n = 100;
+    const std::size_t total_sz = 1280000;
+    const std::size_t n = 100;
 
     BOOST_STATIC_ASSERT( total_sz/(128 * n) > 0); // Invariant : k * n * m = total_sz;
 
@@ -315,16 +315,16 @@ void test( std::ostream& os )
 
 #define MACRO1(z, i, data) args_list[i]
 #define MACRO2(C_size)\
-	{\
-		speed_assign_v2::vec_stat_ vec_stat;\
-		speed_assign_v2::fill_vec_stat<C>(\
+    {\
+        speed_assign_v2::vec_stat_ vec_stat;\
+        speed_assign_v2::fill_vec_stat<C>(\
             scale_factor,\
             vec_stat,\
             total_sz/(C_size * n),\
             n,\
             BOOST_PP_ENUM(C_size, MACRO1, ~)\
         );\
-		os << vec_stat;\
+        os << vec_stat;\
     }\
 /**/
 

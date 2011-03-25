@@ -27,12 +27,12 @@ test_suite* init_unit_test_suite( int argc, char* argv[] )
     test_suite* test = BOOST_TEST_SUITE( "BOOST_ASSIGN_V2" );
     using namespace test_assign_v2;
     {
-    	namespace ns = xxx_option;
-		test->add( BOOST_TEST_CASE( &ns::xxx_data::test ) );
-		test->add( BOOST_TEST_CASE( &ns::xxx_iterate::test ) );
-		test->add( BOOST_TEST_CASE( &ns::xxx_mapped::test ) );
-		test->add( BOOST_TEST_CASE( &ns::xxx_repeat::test ) );
-		test->add( BOOST_TEST_CASE( &ns::xxx_standard::test ) );
+        namespace ns = xxx_option;
+        test->add( BOOST_TEST_CASE( &ns::xxx_data::test ) );
+        test->add( BOOST_TEST_CASE( &ns::xxx_iterate::test ) );
+        test->add( BOOST_TEST_CASE( &ns::xxx_mapped::test ) );
+        test->add( BOOST_TEST_CASE( &ns::xxx_repeat::test ) );
+        test->add( BOOST_TEST_CASE( &ns::xxx_standard::test ) );
     }
     return test;
 }

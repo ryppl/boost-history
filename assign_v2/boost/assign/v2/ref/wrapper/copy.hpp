@@ -37,7 +37,7 @@ namespace assign_copy{ typedef assign_tag::copy assign_tag_; }
         wrapper()/*<-*/
             {/*TODO or null pointer?*/}BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
-		// Initialization equivalent to rebind( r )            
+        // Initialization equivalent to rebind( r )            
         explicit wrapper( T& r )/*<-*/
             : ptr(&r)
         {}BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
@@ -60,7 +60,7 @@ namespace assign_copy{ typedef assign_tag::copy assign_tag_; }
 
         using wrapper_crtp<wrapper, T>::operator=;
 
-		// Copy semantics i.e. *ptr = r
+        // Copy semantics i.e. *ptr = r
         void assign(typename boost::call_traits<T>::param_type r )/*<-*/
         {
             this->get() = r;

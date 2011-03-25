@@ -22,7 +22,7 @@ test_suite* init_unit_test_suite( int argc, char* argv[] )
     using namespace test_assign_v2;
     {
 
-		test->add( BOOST_TEST_CASE( &xxx_deque::test ) );
+        test->add( BOOST_TEST_CASE( &xxx_deque::test ) );
     }
     return test;
 }

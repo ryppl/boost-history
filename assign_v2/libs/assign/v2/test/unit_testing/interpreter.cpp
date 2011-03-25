@@ -22,8 +22,8 @@ test_suite* init_unit_test_suite( int argc, char* argv[] )
     test_suite* test = BOOST_TEST_SUITE( "BOOST_ASSIGN_V2" );
     using namespace test_assign_v2;
     {
-    	namespace ns = xxx_interpreter;
-		test->add( BOOST_TEST_CASE( &ns::xxx_modifier::test ) );
+        namespace ns = xxx_interpreter;
+        test->add( BOOST_TEST_CASE( &ns::xxx_modifier::test ) );
     }
     return test;
 }

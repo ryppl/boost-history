@@ -34,13 +34,13 @@ namespace xxx_array{
             ar[0] = 72; ar[1] = 31; ar[2] = 48;
             
             BOOST_ASSIGN_V2_CHECK(
-            	range::equal(
-            		as2::ref::array( 72 )( 31 )( 48 ),
-            		ar    	
-            	)
+                range::equal(
+                    as2::ref::array( 72 )( 31 )( 48 ),
+                    ar        
+                )
             )/*<<Temporaries destroyed past semicolon>>*/;
             //]
-		}
+        }
         {
             //[test_ref_array_read
             typedef int const T;

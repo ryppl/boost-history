@@ -18,7 +18,7 @@ namespace v2{
 //[syntax_put_adapter_replace_parameter
 namespace interpreter_aux{
 
-	//Specialize on D
+    //Specialize on D
     template<
         typename D // Derives from interpreter_crtp
     > 
@@ -29,7 +29,7 @@ namespace interpreter_aux{
         struct apply/*<-*/{}/*->*/;
     };
 
-	//Specialize on D
+    //Specialize on D
     template<
         typename D // Derives from interpreter_crtp
     > 
