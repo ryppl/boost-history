@@ -4,6 +4,15 @@
 // License, Version 1.0 (see accompanying file LICENSE_1_0.txt or a
 // copy at http://www.boost.org/LICENSE_1_0.txt).
 
+#include <boost/config.hpp>
+#if defined(BOOST_NO_VARIADIC_MACROS) || defined(BOOST_LOCAL_CONFIG_COMPLIANT)
+#include <iostream>
+int main() {
+    std::cerr << "Error: This program requires variadic macros" << std::endl;
+    return 0;
+}
+#else
+
 //[ add_x_y_default_with_va_cpp
 #include <boost/local/function.hpp>
 #include <iostream>
@@ -19,4 +28,6 @@ int main() {
     return 0;
 }
 //]
+
+#endif
 

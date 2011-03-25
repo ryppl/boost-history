@@ -14,7 +14,7 @@ int main() {
 
     BOOST_LOCAL_BLOCK( (const bind& sum) ) {
         assert(sum == 1975.0); // OK: Complier error if `==` confused with `=`.
-        std::clog << "Asserted summation: " << sum << std::endl;
+        std::cout << "Asserted summation: " << sum << std::endl;
 
         return; // Return this local block (and not the enclosing scope).
         assert(false); // OK: Never executed.

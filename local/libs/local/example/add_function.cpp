@@ -4,7 +4,7 @@
 // License, Version 1.0 (see accompanying file LICENSE_1_0.txt or a
 // copy at http://www.boost.org/LICENSE_1_0.txt).
 
-//[ add_num_factor_sum_cpp
+//[ add_function_cpp
 #include <boost/local/function.hpp>
 #include <iostream>
 
@@ -15,7 +15,7 @@ int main() {
     void BOOST_LOCAL_FUNCTION_PARAMS( (double num) (const bind factor)
             (bind& sum) ) {
         sum += factor * num;
-        std::clog << "Summed: " << sum << std::endl;
+        std::cout << "Summed: " << sum << std::endl;
     } BOOST_LOCAL_FUNCTION_NAME(add)
 
     add(100.0);

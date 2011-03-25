@@ -238,7 +238,7 @@
     <span class="comment">// Local block body.
 </span>    <span class="special">{</span>
         <span class="identifier">assert</span><span class="special">(</span><span class="identifier">sum</span> <span class="special">==</span> <span class="number">1975.0</span><span class="special">);</span> <span class="comment">// OK: Complier error if `==` confused with `=`.
-</span>        <span class="identifier">std</span><span class="special">::</span><span class="identifier">clog</span> <span class="special">&lt;&lt;</span> <span class="string">"Asserted summation: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">sum</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+</span>        <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Asserted summation: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">sum</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
 
         <span class="keyword">return</span><span class="special">;</span> <span class="comment">// Return this local block (and not the enclosing scope).
 </span>        <span class="identifier">assert</span><span class="special">(</span><span class="keyword">false</span><span class="special">);</span> <span class="comment">// OK: Never executed.
@@ -281,7 +281,7 @@
     <span class="comment">// Local exit body.
 </span>    <span class="special">{</span>
         <span class="keyword">if</span> <span class="special">(</span><span class="identifier">size</span> <span class="special">&amp;&amp;</span> <span class="identifier">nums</span><span class="special">)</span> <span class="keyword">delete</span><span class="special">[]</span> <span class="identifier">nums</span><span class="special">;</span>
-        <span class="identifier">std</span><span class="special">::</span><span class="identifier">clog</span> <span class="special">&lt;&lt;</span> <span class="string">"Freed array: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">nums</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Freed array: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">nums</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
 
         <span class="keyword">return</span><span class="special">;</span> <span class="comment">// Return this local exit (and not the enclosing scope).
 </span>        <span class="identifier">assert</span><span class="special">(</span><span class="keyword">false</span><span class="special">);</span> <span class="comment">// OK: Never executed.

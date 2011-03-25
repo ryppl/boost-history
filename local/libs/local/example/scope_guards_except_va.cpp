@@ -1,4 +1,13 @@
 
+#include <boost/config.hpp>
+#if defined(BOOST_NO_VARIADIC_MACROS) || defined(BOOST_LOCAL_CONFIG_COMPLIANT)
+#include <iostream>
+int main() {
+    std::cerr << "Error: This program requires variadic macros" << std::endl;
+    return 0;
+}
+#else
+
 //[scope_guards_except_va_cpp
 #include <boost/local/exit.hpp>
 #include <iostream>
@@ -33,4 +42,6 @@ int main() {
     }
 }
 //]
+
+#endif
 

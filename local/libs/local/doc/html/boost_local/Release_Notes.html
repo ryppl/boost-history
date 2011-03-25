@@ -68,24 +68,13 @@
 <div class="titlepage"><div><div><h3 class="title">
 <a name="boost_local.Release_Notes.todo"></a><a class="link" href="Release_Notes.html#boost_local.Release_Notes.todo" title="TODO">TODO</a>
 </h3></div></div></div>
-<div class="orderedlist"><ol class="orderedlist" type="1">
-<li class="listitem">
-            <span class="bold"><strong>Examples.</strong></span> Compile with COMPLIANT (local
-            and/or typeof) defined. Disable va and ep examples if COMPLIANT and/or
-            NO_VARIADICS.
-          </li>
-<li class="listitem">
-            <span class="bold"><strong>Examples.</strong></span> Use std::cout instead of std::clog
-            in all examples.
-          </li>
-<li class="listitem">
+<div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem">
             <span class="bold"><strong>Code.</strong></span> Optimize macro expansion code
             for C++0x, C++03, etc. From John Bytheway:
-          </li>
-</ol></div>
+          </li></ol></div>
 <pre class="programlisting"><span class="special">&gt;</span> <span class="identifier">Yes</span><span class="special">,</span> <span class="identifier">in</span> <span class="identifier">C</span><span class="special">++</span><span class="number">0</span><span class="identifier">x</span> <span class="identifier">local</span> <span class="identifier">structs</span> <span class="identifier">can</span> <span class="identifier">be</span> <span class="identifier">passed</span> <span class="identifier">as</span> <span class="keyword">template</span> <span class="identifier">parameters</span><span class="special">.</span>
 <span class="special">&gt;</span> <span class="identifier">Obviously</span><span class="special">,</span> <span class="identifier">in</span> <span class="identifier">C</span><span class="special">++</span><span class="number">0</span><span class="identifier">x</span> <span class="identifier">there</span> <span class="identifier">are</span> <span class="identifier">lambdas</span> <span class="identifier">too</span><span class="special">,</span> <span class="identifier">so</span> <span class="identifier">you</span> <span class="identifier">might</span> <span class="identifier">think</span> <span class="identifier">your</span>
-<span class="special">&gt;</span> <span class="identifier">library</span> <span class="identifier">is</span> <span class="identifier">useless</span><span class="special">,</span> <span class="identifier">but</span> <span class="identifier">I</span><span class="error">'</span><span class="identifier">d</span> <span class="identifier">expect</span> <span class="identifier">most</span> <span class="identifier">compilers</span> <span class="identifier">to</span> <span class="identifier">support</span> <span class="identifier">passing</span>
+<span class="special">&gt;</span> <span class="identifier">library</span> <span class="identifier">is</span> <span class="identifier">useless</span><span class="special">,</span> <span class="identifier">but</span> <span class="identifier">I</span> <span class="identifier">would</span> <span class="identifier">expect</span> <span class="identifier">most</span> <span class="identifier">compilers</span> <span class="identifier">to</span> <span class="identifier">support</span> <span class="identifier">passing</span>
 <span class="special">&gt;</span> <span class="identifier">local</span> <span class="identifier">structs</span> <span class="identifier">as</span> <span class="keyword">template</span> <span class="identifier">parameters</span> <span class="identifier">before</span> <span class="identifier">they</span> <span class="identifier">support</span> <span class="identifier">lambdas</span><span class="special">,</span> <span class="identifier">so</span>
 <span class="special">&gt;</span> <span class="identifier">there</span> <span class="identifier">is</span> <span class="identifier">some</span> <span class="identifier">advantage</span> <span class="identifier">in</span> <span class="identifier">having</span> <span class="keyword">this</span> <span class="identifier">intermediate</span> <span class="identifier">implementation</span><span class="special">.</span>
 <span class="special">&gt;</span> <span class="identifier">Also</span><span class="special">,</span> <span class="identifier">your</span> <span class="identifier">macros</span> <span class="identifier">would</span> <span class="identifier">allow</span> <span class="identifier">writing</span> <span class="identifier">code</span> <span class="identifier">that</span> <span class="identifier">worked</span> <span class="identifier">in</span> <span class="identifier">C</span><span class="special">++</span><span class="number">0</span><span class="identifier">x</span> <span class="keyword">and</span>

@@ -4,6 +4,15 @@
 // License, Version 1.0 (see accompanying file LICENSE_1_0.txt or a
 // copy at http://www.boost.org/LICENSE_1_0.txt).
 
+#include <boost/config.hpp>
+#if defined(BOOST_NO_VARIADIC_MACROS) || defined(BOOST_LOCAL_CONFIG_COMPLIANT)
+#include <iostream>
+int main() {
+    std::cerr << "Error: This program requires variadic macros" << std::endl;
+    return 0;
+}
+#else
+
 //[ add_exit_va_cpp
 #include <boost/local/exit.hpp>
 #include <iostream>
@@ -15,7 +24,7 @@ int main() {
     
     BOOST_LOCAL_EXIT(const bind& size, bind nums) {
         if (size && nums) delete[] nums;
-        std::clog << "Freed array: " << nums << std::endl;
+        std::cout << "Freed array: " << nums << std::endl;
 
         return; // Return this local exit (and not the enclosing scope).
         assert(false); // OK: Never executed.
@@ -24,4 +33,6 @@ int main() {
     return 0;
 }
 //]
+
+#endif
 

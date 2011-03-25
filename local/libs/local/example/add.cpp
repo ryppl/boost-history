@@ -20,7 +20,7 @@ int main() {
     void BOOST_LOCAL_FUNCTION_PARAMS( (double num)
             (const bind factor) (bind& sum) ) {
         sum += factor * num;
-        std::clog << "Summed: " << sum << std::endl;
+        std::cout << "Summed: " << sum << std::endl;
     } BOOST_LOCAL_FUNCTION_NAME(add)
     add(100.0);
 
@@ -28,7 +28,7 @@ int main() {
     double* nums = new double[size];
     BOOST_LOCAL_EXIT( (const bind& size) (bind nums) ) {
         if (size && nums) delete[] nums;
-        std::clog << "Freed array: " << nums << std::endl;
+        std::cout << "Freed array: " << nums << std::endl;
     } BOOST_LOCAL_EXIT_END
 
     nums[0] = 90.5; nums[1] = 7.0;
@@ -36,7 +36,7 @@ int main() {
 
     BOOST_LOCAL_BLOCK( (const bind& sum) ) {
         assert(sum == 1975.0); // so far `sum` is 10*100+10*90.5+10*7=1975
-        std::clog << "Asserted summation: " << sum << std::endl;
+        std::cout << "Asserted summation: " << sum << std::endl;
     } BOOST_LOCAL_BLOCK_END
     
     return 0;

@@ -738,44 +738,46 @@
 <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">cassert</span><span class="special">&gt;</span>
 
 <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
-<span class="identifier">T</span> <span class="identifier">total</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">x</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">y</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">z</span><span class="special">)</span> <span class="special">{</span>
-    <span class="identifier">T</span> <span class="identifier">sum</span> <span class="special">=</span> <span class="identifier">T</span><span class="special">();</span>
-    <span class="keyword">int</span> <span class="identifier">factor</span> <span class="special">=</span> <span class="number">10</span><span class="special">;</span>
+<span class="keyword">struct</span> <span class="identifier">calculator</span> <span class="special">{</span>
+    <span class="keyword">static</span> <span class="identifier">T</span> <span class="identifier">total</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">x</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">y</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">z</span><span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">T</span> <span class="identifier">sum</span> <span class="special">=</span> <span class="identifier">T</span><span class="special">();</span>
+        <span class="keyword">int</span> <span class="identifier">factor</span> <span class="special">=</span> <span class="number">10</span><span class="special">;</span>
 
-    <span class="identifier">T</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS_TPL</span><span class="special">(</span><span class="identifier">T</span> <span class="identifier">num</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">factor</span><span class="special">,</span>
-            <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">sum</span><span class="special">)</span> <span class="special">{</span>
-        <span class="comment">// Typeof for variable declaratin.
-</span>        <span class="identifier">BOOST_LOCAL_TYPEOF</span><span class="special">(</span><span class="identifier">factor</span><span class="special">)</span> <span class="identifier">f</span> <span class="special">=</span> <span class="identifier">factor</span><span class="special">;</span>
-        <span class="keyword">return</span> <span class="identifier">sum</span> <span class="special">+=</span> <span class="identifier">f</span> <span class="special">*</span> <span class="identifier">num</span><span class="special">;</span>
-    <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">add</span><span class="special">)</span>
-    <span class="identifier">add</span><span class="special">(</span><span class="identifier">x</span><span class="special">);</span>
+        <span class="identifier">T</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS_TPL</span><span class="special">(</span><span class="identifier">T</span> <span class="identifier">num</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">factor</span><span class="special">,</span>
+                <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">sum</span><span class="special">)</span> <span class="special">{</span>
+            <span class="comment">// Typeof for variable declaratin.
+</span>            <span class="identifier">BOOST_LOCAL_TYPEOF</span><span class="special">(</span><span class="identifier">factor</span><span class="special">)</span> <span class="identifier">f</span> <span class="special">=</span> <span class="identifier">factor</span><span class="special">;</span>
+            <span class="keyword">return</span> <span class="identifier">sum</span> <span class="special">+=</span> <span class="identifier">f</span> <span class="special">*</span> <span class="identifier">num</span><span class="special">;</span>
+        <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">add</span><span class="special">)</span>
+        <span class="identifier">add</span><span class="special">(</span><span class="identifier">x</span><span class="special">);</span>
 
-    <span class="identifier">size_t</span> <span class="identifier">size</span> <span class="special">=</span> <span class="number">2</span><span class="special">;</span>
-    <span class="identifier">T</span><span class="special">*</span> <span class="identifier">nums</span> <span class="special">=</span> <span class="keyword">new</span> <span class="identifier">T</span><span class="special">[</span><span class="identifier">size</span><span class="special">];</span>
-    <span class="identifier">BOOST_LOCAL_EXIT_TPL</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">size</span><span class="special">,</span> <span class="identifier">bind</span> <span class="identifier">nums</span><span class="special">)</span> <span class="special">{</span>
-        <span class="comment">// Typeof is qualified with eventual bind's `const` and `&amp;`.
-</span>        <span class="identifier">boost</span><span class="special">::</span><span class="identifier">remove_const</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">remove_reference</span><span class="special">&lt;</span>
-                <span class="identifier">BOOST_LOCAL_TYPEOF</span><span class="special">(</span><span class="identifier">size</span><span class="special">)&gt;::</span><span class="identifier">type</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">s</span><span class="special">;</span>
-        <span class="identifier">s</span> <span class="special">=</span> <span class="identifier">size</span><span class="special">;</span>
-        <span class="keyword">if</span> <span class="special">(</span><span class="identifier">s</span> <span class="special">&amp;&amp;</span> <span class="identifier">nums</span><span class="special">)</span> <span class="keyword">delete</span><span class="special">[]</span> <span class="identifier">nums</span><span class="special">;</span>
-    <span class="special">}</span> <span class="identifier">BOOST_LOCAL_EXIT_END</span>
+        <span class="identifier">size_t</span> <span class="identifier">size</span> <span class="special">=</span> <span class="number">2</span><span class="special">;</span>
+        <span class="identifier">T</span><span class="special">*</span> <span class="identifier">nums</span> <span class="special">=</span> <span class="keyword">new</span> <span class="identifier">T</span><span class="special">[</span><span class="identifier">size</span><span class="special">];</span>
+        <span class="identifier">BOOST_LOCAL_EXIT_TPL</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">size</span><span class="special">,</span> <span class="identifier">bind</span> <span class="identifier">nums</span><span class="special">)</span> <span class="special">{</span>
+            <span class="comment">// Typeof is qualified with eventual bind's `const` and `&amp;`.
+</span>            <span class="keyword">typename</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">remove_const</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">remove_reference</span><span class="special">&lt;</span>
+                    <span class="identifier">BOOST_LOCAL_TYPEOF</span><span class="special">(</span><span class="identifier">size</span><span class="special">)&gt;::</span><span class="identifier">type</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">s</span><span class="special">;</span>
+            <span class="identifier">s</span> <span class="special">=</span> <span class="identifier">size</span><span class="special">;</span>
+            <span class="keyword">if</span> <span class="special">(</span><span class="identifier">s</span> <span class="special">&amp;&amp;</span> <span class="identifier">nums</span><span class="special">)</span> <span class="keyword">delete</span><span class="special">[]</span> <span class="identifier">nums</span><span class="special">;</span>
+        <span class="special">}</span> <span class="identifier">BOOST_LOCAL_EXIT_END</span>
 
-    <span class="identifier">nums</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="identifier">y</span><span class="special">;</span> <span class="identifier">nums</span><span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">=</span> <span class="identifier">z</span><span class="special">;</span>
-    <span class="identifier">std</span><span class="special">::</span><span class="identifier">for_each</span><span class="special">(</span><span class="identifier">nums</span><span class="special">,</span> <span class="identifier">nums</span> <span class="special">+</span> <span class="identifier">size</span><span class="special">,</span> <span class="identifier">add</span><span class="special">);</span>
+        <span class="identifier">nums</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="identifier">y</span><span class="special">;</span> <span class="identifier">nums</span><span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">=</span> <span class="identifier">z</span><span class="special">;</span>
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">for_each</span><span class="special">(</span><span class="identifier">nums</span><span class="special">,</span> <span class="identifier">nums</span> <span class="special">+</span> <span class="identifier">size</span><span class="special">,</span> <span class="identifier">add</span><span class="special">);</span>
 
-    <span class="identifier">BOOST_LOCAL_BLOCK_TPL</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span> <span class="special">&amp;</span><span class="identifier">sum</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">factor</span><span class="special">,</span>
-            <span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">x</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">y</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">z</span><span class="special">)</span> <span class="special">{</span>
-        <span class="comment">// Tyepof for concept checking.
-</span>        <span class="identifier">BOOST_CONCEPT_ASSERT</span><span class="special">((</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">EqualityComparable</span><span class="special">&lt;</span>
-                <span class="identifier">BOOST_LOCAL_TYPEOF</span><span class="special">(</span><span class="identifier">sum</span><span class="special">)&gt;));</span>
-        <span class="identifier">assert</span><span class="special">(</span><span class="identifier">sum</span> <span class="special">==</span> <span class="identifier">factor</span> <span class="special">*</span> <span class="special">(</span><span class="identifier">x</span> <span class="special">+</span> <span class="identifier">y</span> <span class="special">+</span> <span class="identifier">z</span><span class="special">));</span>
-    <span class="special">}</span> <span class="identifier">BOOST_LOCAL_BLOCK_END</span>
+        <span class="identifier">BOOST_LOCAL_BLOCK_TPL</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span> <span class="special">&amp;</span><span class="identifier">sum</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">factor</span><span class="special">,</span>
+                <span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">x</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">y</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">z</span><span class="special">)</span> <span class="special">{</span>
+            <span class="comment">// Tyepof for concept checking.
+</span>            <span class="identifier">BOOST_CONCEPT_ASSERT</span><span class="special">((</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">EqualityComparable</span><span class="special">&lt;</span>
+                    <span class="identifier">BOOST_LOCAL_TYPEOF</span><span class="special">(</span><span class="identifier">sum</span><span class="special">)&gt;));</span>
+            <span class="identifier">assert</span><span class="special">(</span><span class="identifier">sum</span> <span class="special">==</span> <span class="identifier">factor</span> <span class="special">*</span> <span class="special">(</span><span class="identifier">x</span> <span class="special">+</span> <span class="identifier">y</span> <span class="special">+</span> <span class="identifier">z</span><span class="special">));</span>
+        <span class="special">}</span> <span class="identifier">BOOST_LOCAL_BLOCK_END</span>
 
-    <span class="keyword">return</span> <span class="identifier">sum</span><span class="special">;</span>
-<span class="special">}</span>
+        <span class="keyword">return</span> <span class="identifier">sum</span><span class="special">;</span>
+    <span class="special">}</span>
+<span class="special">};</span>
 
 <span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
-    <span class="identifier">total</span><span class="special">(</span><span class="number">100.0</span><span class="special">,</span> <span class="number">90.5</span><span class="special">,</span> <span class="number">7.0</span><span class="special">);</span>
+    <span class="identifier">calculator</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;::</span><span class="identifier">total</span><span class="special">(</span><span class="number">100.0</span><span class="special">,</span> <span class="number">90.5</span><span class="special">,</span> <span class="number">7.0</span><span class="special">);</span>
     <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
 <span class="special">}</span>
 </pre>
@@ -796,44 +798,46 @@
 <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">cassert</span><span class="special">&gt;</span>
 
 <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
-<span class="identifier">T</span> <span class="identifier">total</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">x</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">y</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">z</span><span class="special">)</span> <span class="special">{</span>
-    <span class="identifier">T</span> <span class="identifier">sum</span> <span class="special">=</span> <span class="identifier">T</span><span class="special">();</span>
-    <span class="keyword">int</span> <span class="identifier">factor</span> <span class="special">=</span> <span class="number">10</span><span class="special">;</span>
+<span class="keyword">struct</span> <span class="identifier">calculator</span> <span class="special">{</span>
+    <span class="keyword">static</span> <span class="identifier">T</span> <span class="identifier">total</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">x</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">y</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">z</span><span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">T</span> <span class="identifier">sum</span> <span class="special">=</span> <span class="identifier">T</span><span class="special">();</span>
+        <span class="keyword">int</span> <span class="identifier">factor</span> <span class="special">=</span> <span class="number">10</span><span class="special">;</span>
 
-    <span class="identifier">T</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS_TPL</span><span class="special">(</span> <span class="special">(</span><span class="identifier">T</span> <span class="identifier">num</span><span class="special">)</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">factor</span><span class="special">)</span>
-            <span class="special">(</span><span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">sum</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span>
-        <span class="comment">// Typeof for variable declaration.
-</span>        <span class="identifier">BOOST_LOCAL_TYPEOF</span><span class="special">(</span><span class="identifier">factor</span><span class="special">)</span> <span class="identifier">f</span> <span class="special">=</span> <span class="identifier">factor</span><span class="special">;</span>
-        <span class="keyword">return</span> <span class="identifier">sum</span> <span class="special">+=</span> <span class="identifier">f</span> <span class="special">*</span> <span class="identifier">num</span><span class="special">;</span>
-    <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">add</span><span class="special">)</span>
-    <span class="identifier">add</span><span class="special">(</span><span class="identifier">x</span><span class="special">);</span>
+        <span class="identifier">T</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS_TPL</span><span class="special">(</span> <span class="special">(</span><span class="identifier">T</span> <span class="identifier">num</span><span class="special">)</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">factor</span><span class="special">)</span>
+                <span class="special">(</span><span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">sum</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span>
+            <span class="comment">// Typeof for variable declaration.
+</span>            <span class="identifier">BOOST_LOCAL_TYPEOF</span><span class="special">(</span><span class="identifier">factor</span><span class="special">)</span> <span class="identifier">f</span> <span class="special">=</span> <span class="identifier">factor</span><span class="special">;</span>
+            <span class="keyword">return</span> <span class="identifier">sum</span> <span class="special">+=</span> <span class="identifier">f</span> <span class="special">*</span> <span class="identifier">num</span><span class="special">;</span>
+        <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">add</span><span class="special">)</span>
+        <span class="identifier">add</span><span class="special">(</span><span class="identifier">x</span><span class="special">);</span>
 
-    <span class="identifier">size_t</span> <span class="identifier">size</span> <span class="special">=</span> <span class="number">2</span><span class="special">;</span>
-    <span class="identifier">T</span><span class="special">*</span> <span class="identifier">nums</span> <span class="special">=</span> <span class="keyword">new</span> <span class="identifier">T</span><span class="special">[</span><span class="identifier">size</span><span class="special">];</span>
-    <span class="identifier">BOOST_LOCAL_EXIT_TPL</span><span class="special">(</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">size</span><span class="special">)</span> <span class="special">(</span><span class="identifier">bind</span> <span class="identifier">nums</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span>
-        <span class="comment">// Typeof is qualified with eventual bind's `const` and `&amp;`.
-</span>        <span class="identifier">boost</span><span class="special">::</span><span class="identifier">remove_const</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">remove_reference</span><span class="special">&lt;</span>
-                <span class="identifier">BOOST_LOCAL_TYPEOF</span><span class="special">(</span><span class="identifier">size</span><span class="special">)&gt;::</span><span class="identifier">type</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">s</span><span class="special">;</span>
-        <span class="identifier">s</span> <span class="special">=</span> <span class="identifier">size</span><span class="special">;</span>
-        <span class="keyword">if</span> <span class="special">(</span><span class="identifier">s</span> <span class="special">&amp;&amp;</span> <span class="identifier">nums</span><span class="special">)</span> <span class="keyword">delete</span><span class="special">[]</span> <span class="identifier">nums</span><span class="special">;</span>
-    <span class="special">}</span> <span class="identifier">BOOST_LOCAL_EXIT_END</span>
+        <span class="identifier">size_t</span> <span class="identifier">size</span> <span class="special">=</span> <span class="number">2</span><span class="special">;</span>
+        <span class="identifier">T</span><span class="special">*</span> <span class="identifier">nums</span> <span class="special">=</span> <span class="keyword">new</span> <span class="identifier">T</span><span class="special">[</span><span class="identifier">size</span><span class="special">];</span>
+        <span class="identifier">BOOST_LOCAL_EXIT_TPL</span><span class="special">(</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">size</span><span class="special">)</span> <span class="special">(</span><span class="identifier">bind</span> <span class="identifier">nums</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span>
+            <span class="comment">// Typeof is qualified with eventual bind's `const` and `&amp;`.
+</span>            <span class="keyword">typename</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">remove_const</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">remove_reference</span><span class="special">&lt;</span>
+                    <span class="identifier">BOOST_LOCAL_TYPEOF</span><span class="special">(</span><span class="identifier">size</span><span class="special">)&gt;::</span><span class="identifier">type</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">s</span><span class="special">;</span>
+            <span class="identifier">s</span> <span class="special">=</span> <span class="identifier">size</span><span class="special">;</span>
+            <span class="keyword">if</span> <span class="special">(</span><span class="identifier">s</span> <span class="special">&amp;&amp;</span> <span class="identifier">nums</span><span class="special">)</span> <span class="keyword">delete</span><span class="special">[]</span> <span class="identifier">nums</span><span class="special">;</span>
+        <span class="special">}</span> <span class="identifier">BOOST_LOCAL_EXIT_END</span>
 
-    <span class="identifier">nums</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="identifier">y</span><span class="special">;</span> <span class="identifier">nums</span><span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">=</span> <span class="identifier">z</span><span class="special">;</span>
-    <span class="identifier">std</span><span class="special">::</span><span class="identifier">for_each</span><span class="special">(</span><span class="identifier">nums</span><span class="special">,</span> <span class="identifier">nums</span> <span class="special">+</span> <span class="identifier">size</span><span class="special">,</span> <span class="identifier">add</span><span class="special">);</span>
+        <span class="identifier">nums</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="identifier">y</span><span class="special">;</span> <span class="identifier">nums</span><span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">=</span> <span class="identifier">z</span><span class="special">;</span>
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">for_each</span><span class="special">(</span><span class="identifier">nums</span><span class="special">,</span> <span class="identifier">nums</span> <span class="special">+</span> <span class="identifier">size</span><span class="special">,</span> <span class="identifier">add</span><span class="special">);</span>
 
-    <span class="identifier">BOOST_LOCAL_BLOCK_TPL</span><span class="special">(</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span> <span class="special">&amp;</span><span class="identifier">sum</span><span class="special">)</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">factor</span><span class="special">)</span>
-            <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">x</span><span class="special">)</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">y</span><span class="special">)</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">z</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span>
-        <span class="comment">// Typeof for concept checking.
-</span>        <span class="identifier">BOOST_CONCEPT_ASSERT</span><span class="special">((</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">EqualityComparable</span><span class="special">&lt;</span>
-                <span class="identifier">BOOST_LOCAL_TYPEOF</span><span class="special">(</span><span class="identifier">sum</span><span class="special">)&gt;));</span>
-        <span class="identifier">assert</span><span class="special">(</span><span class="identifier">sum</span> <span class="special">==</span> <span class="identifier">factor</span> <span class="special">*</span> <span class="special">(</span><span class="identifier">x</span> <span class="special">+</span> <span class="identifier">y</span> <span class="special">+</span> <span class="identifier">z</span><span class="special">));</span>
-    <span class="special">}</span> <span class="identifier">BOOST_LOCAL_BLOCK_END</span>
+        <span class="identifier">BOOST_LOCAL_BLOCK_TPL</span><span class="special">(</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span> <span class="special">&amp;</span><span class="identifier">sum</span><span class="special">)</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">factor</span><span class="special">)</span>
+                <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">x</span><span class="special">)</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">y</span><span class="special">)</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">z</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span>
+            <span class="comment">// Typeof for concept checking.
+</span>            <span class="identifier">BOOST_CONCEPT_ASSERT</span><span class="special">((</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">EqualityComparable</span><span class="special">&lt;</span>
+                    <span class="identifier">BOOST_LOCAL_TYPEOF</span><span class="special">(</span><span class="identifier">sum</span><span class="special">)&gt;));</span>
+            <span class="identifier">assert</span><span class="special">(</span><span class="identifier">sum</span> <span class="special">==</span> <span class="identifier">factor</span> <span class="special">*</span> <span class="special">(</span><span class="identifier">x</span> <span class="special">+</span> <span class="identifier">y</span> <span class="special">+</span> <span class="identifier">z</span><span class="special">));</span>
+        <span class="special">}</span> <span class="identifier">BOOST_LOCAL_BLOCK_END</span>
 
-    <span class="keyword">return</span> <span class="identifier">sum</span><span class="special">;</span>
-<span class="special">}</span>
+        <span class="keyword">return</span> <span class="identifier">sum</span><span class="special">;</span>
+    <span class="special">}</span>
+<span class="special">};</span>
 
 <span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
-    <span class="identifier">total</span><span class="special">(</span><span class="number">100.0</span><span class="special">,</span> <span class="number">90.5</span><span class="special">,</span> <span class="number">7.0</span><span class="special">);</span>
+    <span class="identifier">calculator</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;::</span><span class="identifier">total</span><span class="special">(</span><span class="number">100.0</span><span class="special">,</span> <span class="number">90.5</span><span class="special">,</span> <span class="number">7.0</span><span class="special">);</span>
     <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
 <span class="special">}</span>
 </pre>
@@ -1888,14 +1892,14 @@
 </tbody>
 </table></div>
 <a name="boost_local.Advanced_Topics.limitations__overloading__operators__etc_.overloading"></a><h6>
-<a name="id909398"></a>
+<a name="id909526"></a>
         <a class="link" href="Advanced_Topics.html#boost_local.Advanced_Topics.limitations__overloading__operators__etc_.overloading">Overloading</a>
       </h6>
 <p>
         It is not possible to overload local functions. Declaring multiple local
         functions with the same name within the same enclosing scope generates a
         compile-time error (even if the different declarations specify different
-        parameters). <sup>[<a name="id909422" href="#ftn.id909422" class="footnote">18</a>]</sup>
+        parameters). <sup>[<a name="id909550" href="#ftn.id909550" class="footnote">18</a>]</sup>
       </p>
 <p>
         For example, the following code will <span class="bold"><strong>not</strong></span>
@@ -1914,12 +1918,12 @@
 <span class="special">}</span>
 </pre>
 <a name="boost_local.Advanced_Topics.limitations__overloading__operators__etc_.operators"></a><h6>
-<a name="id909728"></a>
+<a name="id909856"></a>
         <a class="link" href="Advanced_Topics.html#boost_local.Advanced_Topics.limitations__overloading__operators__etc_.operators">Operators</a>
       </h6>
 <p>
         Local functions cannot be operators. Naming a local function <code class="computeroutput"><span class="keyword">operator</span><span class="special">...</span></code>
-        will generate a compile-time error. <sup>[<a name="id909765" href="#ftn.id909765" class="footnote">19</a>]</sup>
+        will generate a compile-time error. <sup>[<a name="id909893" href="#ftn.id909893" class="footnote">19</a>]</sup>
       </p>
 <p>
         For example, the following code will <span class="bold"><strong>not</strong></span>
@@ -1940,7 +1944,7 @@
 <span class="special">}</span>
 </pre>
 <a name="boost_local.Advanced_Topics.limitations__overloading__operators__etc_.goto"></a><h6>
-<a name="id910140"></a>
+<a name="id910268"></a>
         <a class="link" href="Advanced_Topics.html#boost_local.Advanced_Topics.limitations__overloading__operators__etc_.goto">Goto</a>
       </h6>
 <p>
@@ -1988,14 +1992,14 @@
           (unless template metaprogramming is being used) so this is usually not
           a problem.
         </p></div>
-<div class="footnote"><p><sup>[<a id="ftn.id909422" href="#id909422" class="para">18</a>] </sup>
+<div class="footnote"><p><sup>[<a id="ftn.id909550" href="#id909550" class="para">18</a>] </sup>
           <span class="bold"><strong>Rationale.</strong></span> This is because a local function
           is a functor object declared as a local variable within the enclosing scope.
           Therefore, declaring two local functions with the same name within the
           same enclosing scope declares two local variables with the same name within
           the same scope and that is not allowed in C++.
         </p></div>
-<div class="footnote"><p><sup>[<a id="ftn.id909765" href="#id909765" class="para">19</a>] </sup>
+<div class="footnote"><p><sup>[<a id="ftn.id909893" href="#id909893" class="para">19</a>] </sup>
           <span class="bold"><strong>Rationale.</strong></span> This is the because a local
           function name must be a valid local variable name (the local variable to
           hold the local functor object) and operators cannot be used as local variable

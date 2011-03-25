@@ -19,7 +19,7 @@ int main() {
     // Local exit body.
     {
         if (size && nums) delete[] nums;
-        std::clog << "Freed array: " << nums << std::endl;
+        std::cout << "Freed array: " << nums << std::endl;
 
         return; // Return this local exit (and not the enclosing scope).
         assert(false); // OK: Never executed.

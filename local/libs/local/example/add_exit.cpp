@@ -15,7 +15,7 @@ int main() {
     
     BOOST_LOCAL_EXIT( (const bind& size) (bind nums) ) {
         if (size && nums) delete[] nums;
-        std::clog << "Freed array: " << nums << std::endl;
+        std::cout << "Freed array: " << nums << std::endl;
 
         return; // Return this local exit (and not the enclosing scope).
         assert(false); // OK: Never executed.

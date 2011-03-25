@@ -4,6 +4,20 @@
 # License, Version 1.0 (see accompanying file LICENSE_1_0.txt or a
 # copy at http://www.boost.org/LICENSE_1_0.txt).
 
+import feature ;
+
+# `bjam boost_local_config_compliant ...` for pure ISO C++ (no variadic, etc).
+feature.feature boost_local_config_compliant : off on
+    : composite propagated link-incompatible ;
+feature.compose <boost_local_config_compliant>on
+    : <define>BOOST_LOCAL_CONFIG_COMPLIANT ;
+
+# `biam boost_local_compliant_typeof ...` for ISO C++ compliant `typeof`.
+feature.feature boost_local_compliant_typeof : off on
+    : composite propagated link-incompatible ;
+feature.compose <boost_local_compliant_typeof>on
+    : <define>BOOST_TYPEOF_COMPLIANT ;
+
 exe add : add.cpp ;
 exe add_va : add_va.cpp ;
 

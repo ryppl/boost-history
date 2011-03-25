@@ -50,7 +50,9 @@
 #ifndef BOOST_LOCAL_CONFIG_COMPLIANT
 #undef BOOST_LOCAL_CONFIG_COMPLIANT
 #else
-#define BOOST_LOCAL_CONFIG_COMPLIANT // For doxygen comment above.
+// Undefine and define again for doxygen comment above.
+#undef BOOST_LOCAL_CONFIG_COMPLIANT
+#define BOOST_LOCAL_CONFIG_COMPLIANT
 #endif
 
 /**
