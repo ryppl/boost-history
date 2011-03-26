@@ -9,9 +9,9 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_OPTION_STD_MODIFIER_INCLUDE_ER_2010_HPP
 #define BOOST_ASSIGN_V2_OPTION_STD_MODIFIER_INCLUDE_ER_2010_HPP
-#include <boost/assign/v2/option/insert.hpp>
-#include <boost/assign/v2/option/push.hpp>
-#include <boost/assign/v2/option/push_back.hpp>
-#include <boost/assign/v2/option/push_front.hpp>
+#include <boost/assign/v2/option/modifier/std/insert.hpp>
+#include <boost/assign/v2/option/modifier/std/push.hpp>
+#include <boost/assign/v2/option/modifier/std/push_back.hpp>
+#include <boost/assign/v2/option/modifier/std/push_front.hpp>
 
 #endif // BOOST_ASSIGN_V2_OPTION_STD_MODIFIER_INCLUDE_ER_2010_HPP

@@ -7,8 +7,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_OPTION_DATA_ER_2010_HPP
-#define BOOST_ASSIGN_V2_OPTION_DATA_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_OPTION_DATA_GENERATOR_FRAMEWORK_ER_2010_HPP
+#define BOOST_ASSIGN_V2_OPTION_DATA_GENERATOR_FRAMEWORK_ER_2010_HPP
 #include <boost/assign/v2/detail/keyword/ignore.hpp>
 #include <boost/assign/v2/detail/pp/ignore.hpp>
 #include <boost/assign/v2/interpreter/fwd.hpp>
@@ -18,7 +18,7 @@
 namespace boost{
 namespace assign{
 namespace v2{
-//[syntax_option_data
+//[syntax_option_data_generator
 namespace interpreter_aux{
 namespace result_of{
 
@@ -136,4 +136,4 @@ namespace{\
 #include <boost/lambda/lambda.hpp>
 BOOST_ASSIGN_V2_OPTION_DATA_KEYWORD(identity, ::boost::lambda::_1)
 
-#endif // BOOST_ASSIGN_V2_OPTION_DATA_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_OPTION_DATA_GENERATOR_FRAMEWORK_ER_2010_HPP

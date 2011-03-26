@@ -12,7 +12,7 @@
 #include <boost/assign/v2/detail/keyword/ignore.hpp>
 #include <boost/assign/v2/detail/pp/ignore.hpp>
 #include <boost/assign/v2/interpreter/fwd.hpp>
-#include <boost/assign/v2/option/modifier.hpp>
+#include <boost/assign/v2/option/modifier/framework.hpp>
 #include <boost/call_traits.hpp>
 #include <boost/shared_ptr.hpp>
 

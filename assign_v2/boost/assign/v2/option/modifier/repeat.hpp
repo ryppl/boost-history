@@ -18,7 +18,7 @@
 #include <boost/type_traits/is_reference.hpp>
 #endif
 #include <boost/assign/v2/interpreter/fwd.hpp>
-#include <boost/assign/v2/option/modifier.hpp>
+#include <boost/assign/v2/option/modifier/framework.hpp>
 
 namespace boost{
 namespace assign{

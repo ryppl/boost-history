@@ -12,7 +12,7 @@
 #include <boost/assign/v2/detail/traits/ptr_container/meta.hpp>
 #include <boost/assign/v2/detail/traits/value_container/category.hpp>
 #include <boost/assign/v2/interpreter/data.hpp>
-#include <boost/assign/v2/option/data.hpp>
+#include <boost/assign/v2/option/data_generator/framework.hpp>
 #include <boost/mpl/apply.hpp>
 #include <boost/utility/enable_if.hpp>
 

@@ -11,7 +11,7 @@
 #define BOOST_ASSIGN_V2_OPTION_STD_MODIFIER_MODIFIER_ER_2010_HPP
 #include <boost/assign/v2/detail/keyword/ignore.hpp>
 #include <boost/assign/v2/interpreter/fwd.hpp>
-#include <boost/assign/v2/option/modifier.hpp>
+#include <boost/assign/v2/option/modifier/framework.hpp>
 #include <boost/preprocessor/cat.hpp>
 
 namespace boost{

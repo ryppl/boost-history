@@ -9,7 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_OPTION_PUSH_BACK_ER_2010_HPP
 #define BOOST_ASSIGN_V2_OPTION_PUSH_BACK_ER_2010_HPP
-#include <boost/assign/v2/option/std_modifier/modifier.hpp>
+#include <boost/assign/v2/option/std/modifier/framework.hpp>
 BOOST_ASSIGN_V2_OPTION_STD_MODIFIER_TAG(push_back)
 BOOST_ASSIGN_V2_OPTION_STD_MODIFIER(push_back)
 
