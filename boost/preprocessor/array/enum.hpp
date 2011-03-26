@@ -13,9 +13,10 @@
 # define BOOST_PREPROCESSOR_ARRAY_ENUM_HPP
 #
 #include <boost/preprocessor/tuple/enum.hpp>
+#include <boost/preprocessor/array/size.hpp>
 #include <boost/preprocessor/array/data.hpp>
 #
 #define BOOST_PP_ARRAY_ENUM(array) \
-  BOOST_PP_TUPLE_ENUM(BOOST_PP_ARRAY_DATA(array)) \
+  BOOST_PP_TUPLE_ENUM(BOOST_PP_ARRAY_SIZE(array),BOOST_PP_ARRAY_DATA(array)) \
 /**/
 # endif // BOOST_PREPROCESSOR_ARRAY_ENUM_HPP

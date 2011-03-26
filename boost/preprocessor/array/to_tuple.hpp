@@ -12,9 +12,9 @@
 # ifndef BOOST_PREPROCESSOR_ARRAY_TO_TUPLE_HPP
 # define BOOST_PREPROCESSOR_ARRAY_TO_TUPLE_HPP
 #
-#include <boost/preprocessor/tuple/enum.hpp>
 #include <boost/preprocessor/array/data.hpp>
 #
 #define BOOST_PP_ARRAY_TO_TUPLE(array) \
+  BOOST_PP_ARRAY_DATA(array) \
 /**/
 # endif // BOOST_PREPROCESSOR_ARRAY_TO_TUPLE_HPP

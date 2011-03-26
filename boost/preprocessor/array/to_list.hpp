@@ -12,6 +12,11 @@
 # ifndef BOOST_PREPROCESSOR_ARRAY_TO_LIST_HPP
 # define BOOST_PREPROCESSOR_ARRAY_TO_LIST_HPP
 #
+#include <boost/preprocessor/tuple/to_list.hpp>
+#include <boost/preprocessor/array/size.hpp>
+#include <boost/preprocessor/array/data.hpp>
+#
 #define BOOST_PP_ARRAY_TO_LIST(array) \
+  BOOST_PP_TUPLE_TO_LIST(BOOST_PP_ARRAY_SIZE(array),BOOST_PP_ARRAY_DATA(array)) \
 /**/
 # endif // BOOST_PREPROCESSOR_ARRAY_TO_LIST_HPP

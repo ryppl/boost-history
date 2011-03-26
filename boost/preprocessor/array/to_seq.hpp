@@ -12,9 +12,11 @@
 # ifndef BOOST_PREPROCESSOR_ARRAY_TO_SEQ_HPP
 # define BOOST_PREPROCESSOR_ARRAY_TO_SEQ_HPP
 #
-#include <boost/preprocessor/tuple/enum.hpp>
+#include <boost/preprocessor/tuple/to_seq.hpp>
+#include <boost/preprocessor/array/size.hpp>
 #include <boost/preprocessor/array/data.hpp>
 #
 #define BOOST_PP_ARRAY_TO_SEQ(array) \
+  BOOST_PP_TUPLE_TO_SEQ(BOOST_PP_ARRAY_SIZE(array),BOOST_PP_ARRAY_DATA(array)) \
 /**/
 # endif // BOOST_PREPROCESSOR_ARRAY_TO_SEQ_HPP
