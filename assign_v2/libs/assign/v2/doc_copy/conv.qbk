@@ -1,0 +1,98 @@
+Conventions used in this documentation.
+
+[heading Namespace]
+
+* Syntax or semantics about identifier `boost::assign::v2::name` displays the latter as `name`. 
+* In code snippets under header [*Example], `boost::assign::v2::name` is displayed as `as2::name`.
+
+[heading Glossary]
+
+[variablelist
+	[
+		[Container generator]
+		[A function that returns a container]
+	]
+	[
+		[Csv form]
+		[ Syntax that takes the form of one function invocation to achieve the same side effect as successive functor invocations over its arguments]
+	]
+	[
+		[Data generator]
+		[Internal component of an interpreter that constructs a container data-member from passed arguments ]
+	]
+	[
+		[Functor form]
+		[ Syntax that takes the form of successive functor invocations  ]
+	]
+	[
+		[Interpreter]
+		[Object that makes the syntax for successively modifying a container to resemble a sentence]
+	]
+	[
+		[Modifier]
+		[Internal component of an interpreter that invokes a container modifier]
+	]
+	[
+		[Option]
+		[Object that encapsulates a command to alter the semantics of an interpreter]
+	]
+	[
+		[Pipe]
+		[
+			Overload of `operator|` that transforms the first argument by a mapping specified by the second argument, and returns it[footnote This idiom originated in [tpl_pipe Unix] and is present in Boost.Range under the name [tpl_range_adaptor range adaptor].].
+		]
+	]
+	[
+		[Reference array]
+		[ Designates, in this library, an array of reference wrappers. ]
+	]
+]
+
+[heading Notation]
+
+[variablelist
+	[
+		[`__arg__`]
+		[Some argument of unspecified type]
+	]
+	[
+		[`__cont__`]
+		[A container]
+	]
+	[
+		[`__cont_type__`]
+		[`__cont__`'s type]
+	]
+	[
+		[`__range__`]
+		[A range]
+	]
+	[
+		[`__f__`]
+		[A functor]
+	]
+	[
+		[`__generate__`]
+		[A container generator]
+	]
+	[
+		[`__interpreter__`]
+		[An interpreter]
+	]
+	[	
+		[`__option_modifier__`]
+		[Option to alter a modifier]
+	]
+	[
+		[`__option__`]
+		[An option]
+	]
+	[	
+		[`__ref_array__`]
+		[A reference array]
+	]
+	[
+		[`__value__`]
+		[A container data-member]
+	]
+]

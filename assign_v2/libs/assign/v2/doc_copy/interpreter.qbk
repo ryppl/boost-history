@@ -1,0 +1,103 @@
+[tpl_module
+	[@../../../../../boost/assign/v2/interpreter.hpp `boost/assign/v2/interpreter.hpp`]
+	..Interpreter framework
+]
+
+[section:as_arglist As_arg_list]
+
+[import ../../../../boost/assign/v2/interpreter/as_arg_list.hpp]
+
+[tpl_feature
+	[@../../../../../boost/assign/v2/interpreter/as_arg_list.hpp `boost/assign/v2/interpreter/as_arg_list.hpp`]
+	..Command to an interpreter to process each element of a range individually
+	..[syntax_interpreter_as_arg_list]
+	..None
+]
+
+[endsect][/as_arglist]
+[section:crtp Crtp]
+[#interpreter_crtp]
+
+[import ../../../../boost/assign/v2/interpreter/crtp.hpp]
+
+[tpl_feature
+	[@../../../../../boost/assign/v2/interpreter/crtp.hpp `boost/assign/v2/interpreter/crtp.hpp`]
+	..Interpreter crtp
+	..[syntax_interpreter_crtp]
+	..None
+]
+
+[endsect][/crtp]
+[section:data Data]
+
+[import ../../../../boost/assign/v2/interpreter/data.hpp]
+
+[heading Header]
+[@../../../../../boost/assign/v2/interpreter/data.hpp `boost/assign/v2/interpreter/data.hpp`]
+
+[heading Description]
+Interpreter's data generator
+
+[heading Synopsis]
+[syntax_interpreter_data]
+
+[heading Semantics]
+
+[#data_gen_rules]
+
+[*Notation]
+
+[variablelist
+	[[`__cont_type__`][Container type]]
+	[[`__value_type__`][`remove_reference<__cont_type__::reference>::type`]]
+]
+
+[*Expressions]
+
+Metafunction `deduce_data_generator<__cont_type__>` returns a generator, variadic in its arguments, of `__value_type__` and 
+`__value_type__*`, for value- and [tpl_ptr_container pointer-containers], respectively.
+
+[endsect][/data]
+[section:modifier Modifier]
+[#interpreter_modifier]
+
+[import ../../../../boost/assign/v2/interpreter/modifier.hpp]
+
+[heading Header]
+[@../../../../../boost/assign/v2/interpreter/modifier.hpp `boost/assign/v2/interpreter/modifier.hpp`]
+
+[heading Description]
+Interpreter's modifier
+
+[heading Synopsis]
+[syntax_interpreter_modifier]
+
+[heading Semantics]
+[#modifier_rules]
+
+Metafunction `deduce_modifier_tag<__cont_type__>` implements the following switch statement: 
+
+[table
+	[
+		[Case]
+		[Result]
+	]
+	[
+		[`__cont_type__` is [tpl_stl_assoc Associative]]
+		[[link boost_assign_v2.reference.option `modifier_tag::insert`]]
+	]
+	[	
+		[`__cont_type__` is an [tpl_boost_array Array]]
+		[[link boost_assign_v2.reference.option `modifier_tag::iterate`]]
+	]
+	[	
+		[`__cont_type__` is an [tpl_stl_adapter Adapter]]
+		[[link boost_assign_v2.reference.option `modifier_tag::push`]]
+	]
+	[
+		[None of the above]
+		[[link boost_assign_v2.reference.option `modifier_tag::push_back`]]
+	]
+]
+
+[endsect][/modifier]
