@@ -29,7 +29,7 @@ namespace v2{
 //[syntax_interpreter_modifier
 namespace modifier_tag{
 
-    // Namespace in which to declare template arguments of `interpreter_modifier<>`
+    // Namespace in which to declare template arguments of interpreter_modifier<>
 
 }//modifier_tag
 namespace interpreter_aux{
