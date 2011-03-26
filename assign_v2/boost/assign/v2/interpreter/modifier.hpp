@@ -14,10 +14,9 @@
 #include <boost/assign/v2/detail/traits/value_container/category.hpp>
 #include <boost/assign/v2/detail/traits/ptr_container/meta.hpp>
 #include <boost/assign/v2/detail/traits/switch.hpp>
-#include <boost/assign/v2/option/insert.hpp>
-#include <boost/assign/v2/option/iterate.hpp>
-#include <boost/assign/v2/option/push.hpp>
-#include <boost/assign/v2/option/push_back.hpp>
+#include <boost/assign/v2/option/modifier/std.hpp>
+#include <boost/assign/v2/option/modifier/iterate.hpp>
+#include <boost/assign/v2/option/modifier/std.hpp>
 #include <boost/concept_check.hpp>
 #include <boost/mpl/assert.hpp>
 #include <boost/preprocessor/cat.hpp>
