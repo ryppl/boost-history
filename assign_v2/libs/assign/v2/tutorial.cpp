@@ -108,7 +108,7 @@ namespace tutorial_assign_v2{
             using namespace lambda;
             array<int, 4> powers = converter( csv_deque( 1, 10, -1, -1 ) );
             std::size_t index = 2; using namespace lambda;
-             ( put( powers ) % ( _iterate = var( index )++ ) )( 100 )( 1000 );
+            ( put( powers ) % ( _iterate = var( index )++ ) )( 100 )( 1000 );
  
             for(int value = 1, index = 0; index < powers.size(); index++, value *=10 )
             { 

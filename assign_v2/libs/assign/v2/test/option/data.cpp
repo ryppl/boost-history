@@ -38,10 +38,10 @@ namespace xxx_data{
             // (*fp) resolves error C2440 using MSVC
             //[test_option_data_math
             std::vector<double> exponent;
-            typedef double(*fp)(double);
+            /*<-*/typedef double(*fp)(double);/*->*/
             typedef function<double(double)> f_;
             (
-                as2::put( exponent ) % ( as2::_data = /*<<Some compilers allow `f_( log10 )`. See [@http://boost.2283326.n4.nabble.com/function-lt-double-double-gt-cmath-td3388896.html link]>>*/f_( fp( log10 ) ) )
+                as2::put( exponent ) % ( as2::_data = f_( /*<-*/fp(/*->*/ log10 /*<-*/)/*->*/ ) )
             )/*<<Equivalent to `as2::put( exponent )( log10( 1000.0 ) )( log10( 10.0 ) )( log10( 10000.0 ) )( log10( 1.0 ) )( log10( 100.0 ) )`>>*/( 1000.0 )( 10.0 )( 10000.0 )( 1.0 )( 100.0 );
 
             double eps = numeric::bounds<double>::smallest();

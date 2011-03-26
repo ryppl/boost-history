@@ -67,13 +67,11 @@ namespace xxx_put{
                 /*<<Calls `numeric_kb[ i ] = data_( t )` for [^( i, t ) = ( 0, "+" ), ..., ( 5, "." )]>>*/( "+" )( "-" )( "*" )( "/" )( "=" )( "." )
                 /*<<Calls `numeric_kb[ 6 + i ] = data_( *( b + i ) )` for [^i = 0, ..., 9] and [^b =] `boost::begin( numeric )`>>*/( as2::as_arg_list( numeric ) );
 
-            assert( get<str_>( numeric_kb.front() ) == "+" );
-            assert( get<int>( numeric_kb.back()  ) == 9 );
-            //]
             BOOST_ASSIGN_V2_CHECK(  get<str_>( numeric_kb.front() ) == "+" );
+            BOOST_ASSIGN_V2_CHECK(  get<int>( numeric_kb.back() ) == 9 );
+            //]
             BOOST_ASSIGN_V2_CHECK(  get<str_>( numeric_kb[ 5 ] ) == "." );
             BOOST_ASSIGN_V2_CHECK(  get<int>( numeric_kb[ 6 ] ) == 0 );
-            BOOST_ASSIGN_V2_CHECK(  get<int>( numeric_kb.back() ) == 9 );
         }
         {
             //[test_put_put_ragged
@@ -87,13 +85,11 @@ namespace xxx_put{
                 /*<<Calls `ragged.push_back( variable_size_( 1, -99.99 ) )`>>*/( 1, -99.99 )
                 /*<<Calls `ragged.push_back( variable_size_( ) )`>>*/( );
 
-            assert( ragged[0].size() == a.size() );
-            assert( ragged[3].size() == 0        );
+            BOOST_ASSIGN_V2_CHECK( ragged[0].size() == a.size() );
+            BOOST_ASSIGN_V2_CHECK( ragged[3].size() == 0 );
             //]
-            BOOST_ASSIGN_V2_CHECK(  ragged[0].size() == a.size() );
             BOOST_ASSIGN_V2_CHECK(  ragged[1].size() == b.size() );
             BOOST_ASSIGN_V2_CHECK(  ragged[2].size() == 1        );
-            BOOST_ASSIGN_V2_CHECK(  ragged[3].size() == 0        );
             data_ eps = numeric::bounds<data_>::smallest();
             BOOST_ASSIGN_V2_CHECK(  fabs( ragged[0].front() - a.front() ) < eps );
             BOOST_ASSIGN_V2_CHECK(  fabs( ragged[0].back()  - a.back()  ) < eps );
@@ -126,13 +122,11 @@ namespace xxx_put{
             /*<<Calls `tri_state.push_back( data_( s, c ) )` for [^( s, c ) =( ny, 212 )...( ct, 203 )]>>*/
             as2::put( tri_state_area )( ny, 212 )( ny, 718 )( ny, 516 )( ny, 914 )( nj, 210 )( nj, 908 )( nj, 609 )( ct, 203 );
 
-            assert( get<0>( tri_state_area.front() ) == ny );
-            assert( get<1>( tri_state_area.back()  ) == 203 );
-            //]
             BOOST_ASSIGN_V2_CHECK(  get<0>( tri_state_area.front() ) == ny );
+            BOOST_ASSIGN_V2_CHECK(  get<1>( tri_state_area.back()  ) == 203 );
+            //]
             BOOST_ASSIGN_V2_CHECK(  get<1>( tri_state_area.front() ) == 212 );
             BOOST_ASSIGN_V2_CHECK(  get<0>( tri_state_area.back()  ) == ct );
-            BOOST_ASSIGN_V2_CHECK(  get<1>( tri_state_area.back()  ) == 203 );
         }
     }// test()
 

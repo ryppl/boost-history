@@ -32,7 +32,9 @@ namespace assign_copy{ typedef assign_tag::copy assign_tag_; }
     {
         typedef T type;
 
-        /*<-*/BOOST_STATIC_CONSTANT( bool, is_const = boost::is_const<T>::value )/*->*/;
+        /*<-*/BOOST_STATIC_CONSTANT( bool, is_const = boost::is_const<T>::value );/*->*/
+
+		BOOST_ASSIGN_V2_IGNORE(static bool is_const;)
 
         wrapper()/*<-*/
             {/*TODO or null pointer?*/}BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/

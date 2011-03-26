@@ -23,6 +23,7 @@ namespace assign{
 namespace v2{
 //[syntax_interpreter_data
 namespace interpreter_aux{
+//<-
 
     template<typename C>
     struct container_value{ typedef typename C::value_type type; };
@@ -51,6 +52,8 @@ namespace interpreter_aux{
             typename F<C>::type
         > type;
     }/*->*/;
+
+//->
 
     template<
         typename C // Value or pointer-container

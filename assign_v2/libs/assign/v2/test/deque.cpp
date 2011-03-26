@@ -62,7 +62,7 @@ namespace xxx_deque{
             typedef std::string str_;
             typedef std::pair<str_, str_> T;
             typedef as2::result_of::deque<T>::type C;
-            C airports = as2::deque<T>("AUH", "Abu Dhabi")("JFK", "New York")("LHR", "London")( "PEK", "Beijing" );
+            C airports = as2::deque<T>("AUH", "Abu Dhabi")("JFK", "New York")("LHR", "London")("PEK", "Beijing");
             
             std::deque<T> benchmark;
             benchmark.push_back( T("AUH", "Abu Dhabi") );

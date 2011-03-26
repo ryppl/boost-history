@@ -51,7 +51,7 @@ namespace result_of{
 
 }// result_of
 
-    // Transforms rw by member function `get()`
+    // Transforms rw by member function get()
     template<typename R>
     typename result_of::transform_get<R>::type
     transform_get(R& rw)/*<-*/

@@ -14,7 +14,7 @@ Conventions used in this documentation.
 	]
 	[
 		[Csv form]
-		[Syntax that is equivalent to succesive functor invocations ]
+		[Function whose invocation is equivalent to successive functor invocations ]
 	]
 	[
 		[Data generator]
@@ -38,13 +38,17 @@ Conventions used in this documentation.
 	]
 	[
 		[Pipe]
-		[TODO]
+		[Overload of `operator|` that applies, then returns, some transformation to the first argument in a way that is specified by
+		the second argument. [footnote This idiom originated in [tpl_pipe Unix] and is present in [tpl_boost_range Boost.Range]
+		under the name [tpl_boost_range_adaptor range adaptor]]
+		]
 	]
 	[
 		[Reference array]
 		[ Designates, in this library, an array of reference wrappers. ]
 	]
 ]
+
 
 [heading Notation]
 

@@ -17,8 +17,8 @@ library. The following statement  __full_include__:
 
 [*By identifier]
 
-In directory [^boost/assign/v2/include], described in section [link boost_assign_v2.reference.include Include], headers are named after the
-an identifier that they define. 
+In directory [link boost_assign_v2.reference.include [^boost/assign/v2/include]], headers are named after the an identifier that they 
+define. 
 
 [*Requirement]
 
