@@ -15,11 +15,33 @@
 # define BOOST_PREPROCESSOR_TUPLE_TO_LIST_HPP
 #
 # include <boost/preprocessor/config/config.hpp>
+# include <boost/preprocessor/config/variadics.hpp>
+#
+# if BOOST_PP_VARIADICS
+#
+# include <boost/preprocessor/facilities/overload.hpp>
+# include <boost/preprocessor/tuple/size.hpp>
 #
 # /* BOOST_PP_TUPLE_TO_LIST */
 #
+# define BOOST_PP_TUPLE_TO_LIST(...) \
+  BOOST_PP_OVERLOAD(BOOST_PP_TUPLE_DETAIL_TO_LIST_, __VA_ARGS__)(__VA_ARGS__) \
+  /**/
+# define BOOST_PP_TUPLE_DETAIL_TO_LIST_1(tuple) \
+  BOOST_PP_TUPLE_DETAIL_TO_LIST_2(BOOST_PP_TUPLE_SIZE(tuple),tuple) \
+  /**/
+# define BOOST_PP_TUPLE_DETAIL_TO_LIST_2(size, tuple) BOOST_PP_TUPLE_TO_LIST_COMMON(size, tuple)
+#
+# else
+#
+# /* BOOST_PP_TUPLE_TO_LIST */
+#
+#    define BOOST_PP_TUPLE_TO_LIST(size, tuple) BOOST_PP_TUPLE_TO_LIST_COMMON(size, tuple)
+#
+# endif // BOOST_PP_VARIADICS
+#
 # if ~BOOST_PP_CONFIG_FLAGS() & BOOST_PP_CONFIG_MWCC()
-#    define BOOST_PP_TUPLE_TO_LIST(size, tuple) BOOST_PP_TUPLE_TO_LIST_I(size, tuple)
+#    define BOOST_PP_TUPLE_TO_LIST_COMMON(size, tuple) BOOST_PP_TUPLE_TO_LIST_I(size, tuple)
 #    if ~BOOST_PP_CONFIG_FLAGS() & BOOST_PP_CONFIG_MSVC()
 #        define BOOST_PP_TUPLE_TO_LIST_I(s, t) BOOST_PP_TUPLE_TO_LIST_ ## s t
 #    else
@@ -27,7 +49,7 @@
 #        define BOOST_PP_TUPLE_TO_LIST_II(res) res
 #    endif
 # else
-#    define BOOST_PP_TUPLE_TO_LIST(size, tuple) BOOST_PP_TUPLE_TO_LIST_OO((size, tuple))
+#    define BOOST_PP_TUPLE_TO_LIST_COMMON(size, tuple) BOOST_PP_TUPLE_TO_LIST_OO((size, tuple))
 #    define BOOST_PP_TUPLE_TO_LIST_OO(par) BOOST_PP_TUPLE_TO_LIST_I ## par
 #    define BOOST_PP_TUPLE_TO_LIST_I(s, t) BOOST_PP_TUPLE_TO_LIST_ ## s ## t
 # endif

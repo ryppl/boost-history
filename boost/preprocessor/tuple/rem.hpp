@@ -12,6 +12,23 @@
 # ifndef BOOST_PREPROCESSOR_TUPLE_REM_HPP
 # define BOOST_PREPROCESSOR_TUPLE_REM_HPP
 #
+# include <boost/preprocessor/config/variadics.hpp>
+#
+# if BOOST_PP_VARIADICS
+#
+# include <boost/preprocessor/facilities/overload.hpp>
+#
+#define BOOST_PP_TUPLE_REM(size) BOOST_PP_DETAIL_TUPLE_REM
+#define BOOST_PP_DETAIL_TUPLE_REM(...) __VA_ARGS__
+#
+#    define BOOST_PP_TUPLE_REM_CTOR(...) \
+         BOOST_PP_OVERLOAD(BOOST_PP_TUPLE_REM_CTOR_, __VA_ARGS__)(__VA_ARGS__) \
+         /**/
+#    define BOOST_PP_TUPLE_REM_CTOR_1(tuple) BOOST_PP_DETAIL_TUPLE_REM tuple
+#    define BOOST_PP_TUPLE_REM_CTOR_2(size, tuple) BOOST_PP_TUPLE_REM_CTOR_1(tuple)
+#
+# else
+#
 # include <boost/preprocessor/config/config.hpp>
 #
 # /* BOOST_PP_TUPLE_REM */
@@ -69,4 +86,5 @@
 #    define BOOST_PP_TUPLE_REM_CTOR_II(ext, tuple) ext ## tuple
 # endif
 #
+# endif
 # endif

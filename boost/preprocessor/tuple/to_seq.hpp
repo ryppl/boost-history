@@ -13,11 +13,33 @@
 # define BOOST_PREPROCESSOR_TUPLE_TO_SEQ_HPP
 #
 # include <boost/preprocessor/config/config.hpp>
+# include <boost/preprocessor/config/variadics.hpp>
+#
+# if BOOST_PP_VARIADICS
+#
+# include <boost/preprocessor/facilities/overload.hpp>
+# include <boost/preprocessor/tuple/size.hpp>
 #
 # /* BOOST_PP_TUPLE_TO_SEQ */
 #
+# define BOOST_PP_TUPLE_TO_SEQ(...) \
+  BOOST_PP_OVERLOAD(BOOST_PP_TUPLE_DETAIL_TO_SEQ_, __VA_ARGS__)(__VA_ARGS__) \
+  /**/
+# define BOOST_PP_TUPLE_DETAIL_TO_SEQ_1(tuple) \
+  BOOST_PP_TUPLE_DETAIL_TO_SEQ_2(BOOST_PP_TUPLE_SIZE(tuple),tuple) \
+  /**/
+# define BOOST_PP_TUPLE_DETAIL_TO_SEQ_2(size, tuple) BOOST_PP_TUPLE_TO_SEQ_COMMON(size, tuple)
+#
+# else
+#
+# /* BOOST_PP_TUPLE_TO_SEQ */
+#
+#    define BOOST_PP_TUPLE_TO_SEQ(size, tuple) BOOST_PP_TUPLE_TO_SEQ_COMMON(size, tuple)
+#
+# endif // BOOST_PP_VARIADICS
+#
 # if ~BOOST_PP_CONFIG_FLAGS() & BOOST_PP_CONFIG_MWCC()
-#    define BOOST_PP_TUPLE_TO_SEQ(size, tuple) BOOST_PP_TUPLE_TO_SEQ_I(size, tuple)
+#    define BOOST_PP_TUPLE_TO_SEQ_COMMON(size, tuple) BOOST_PP_TUPLE_TO_SEQ_I(size, tuple)
 #    if ~BOOST_PP_CONFIG_FLAGS() & BOOST_PP_CONFIG_MSVC()
 #        define BOOST_PP_TUPLE_TO_SEQ_I(s, t) BOOST_PP_TUPLE_TO_SEQ_ ## s t
 #    else
@@ -25,7 +47,7 @@
 #        define BOOST_PP_TUPLE_TO_SEQ_II(res) res
 #    endif
 # else
-#    define BOOST_PP_TUPLE_TO_SEQ(size, tuple) BOOST_PP_TUPLE_TO_SEQ_OO((size, tuple))
+#    define BOOST_PP_TUPLE_TO_SEQ_COMMON(size, tuple) BOOST_PP_TUPLE_TO_SEQ_OO((size, tuple))
 #    define BOOST_PP_TUPLE_TO_SEQ_OO(par) BOOST_PP_TUPLE_TO_SEQ_I ## par
 #    define BOOST_PP_TUPLE_TO_SEQ_I(s, t) BOOST_PP_TUPLE_TO_SEQ_ ## s ## t
 # endif

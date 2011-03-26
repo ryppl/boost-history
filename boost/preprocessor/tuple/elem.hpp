@@ -27,6 +27,7 @@
          /**/
 #    define BOOST_PP_TUPLE_ELEM_2(i, tuple) BOOST_PP_VARIADIC_ELEM(i,BOOST_PP_TUPLE_ENUM(tuple))
 #    define BOOST_PP_TUPLE_ELEM_3(size, i, tuple) BOOST_PP_TUPLE_ELEM_2(i, tuple)
+#
 # else
 #
 # include <boost/preprocessor/config/config.hpp>

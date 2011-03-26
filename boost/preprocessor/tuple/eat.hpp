@@ -14,6 +14,15 @@
 # ifndef BOOST_PREPROCESSOR_TUPLE_EAT_HPP
 # define BOOST_PREPROCESSOR_TUPLE_EAT_HPP
 #
+# include <boost/preprocessor/config/variadics.hpp>
+#
+# if BOOST_PP_VARIADICS
+#
+#define BOOST_PP_TUPLE_EAT(size) BOOST_PP_DETAIL_TUPLE_EAT
+#define BOOST_PP_DETAIL_TUPLE_EAT(...)
+#
+# else
+#
 # include <boost/preprocessor/config/config.hpp>
 #
 # /* BOOST_PP_TUPLE_EAT */
@@ -54,4 +63,5 @@
 # define BOOST_PP_TUPLE_EAT_24(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x)
 # define BOOST_PP_TUPLE_EAT_25(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y)
 #
+# endif
 # endif

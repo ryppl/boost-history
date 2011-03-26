@@ -12,6 +12,28 @@
 # ifndef BOOST_PREPROCESSOR_TUPLE_TO_ARRAY_HPP
 # define BOOST_PREPROCESSOR_TUPLE_TO_ARRAY_HPP
 #
-#define BOOST_PP_TUPLE_TO_ARRAY(array) \
+# include <boost/preprocessor/config/variadics.hpp>
+#
+#if BOOST_PP_VARIADICS
+#
+# include <boost/preprocessor/facilities/overload.hpp>
+# include <boost/preprocessor/tuple/size.hpp>
+#
+# define BOOST_PP_TUPLE_TO_ARRAY(...) \
+  BOOST_PP_OVERLOAD(BOOST_PP_TUPLE_TO_ARRAY_, __VA_ARGS__)(__VA_ARGS__) \
+  /**/
+# define BOOST_PP_TUPLE_TO_ARRAY_1(tuple) \
+  BOOST_PP_TUPLE_TO_ARRAY_2(BOOST_PP_TUPLE_SIZE(tuple),tuple) \
+  /**/
+# define BOOST_PP_TUPLE_TO_ARRAY_2(size, tuple) \
+  ( size, tuple ) \
 /**/
+#
+# else
+#
+#define BOOST_PP_TUPLE_TO_ARRAY(size,tuple) \
+  ( size, tuple ) \
+/**/
+#
+# endif // BOOST_PP_VARIADICS
 # endif // BOOST_PREPROCESSOR_TUPLE_TO_ARRAY_HPP
