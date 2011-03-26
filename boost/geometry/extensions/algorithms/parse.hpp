@@ -1,13 +1,18 @@
 // Boost.Geometry (aka GGL, Generic Geometry Library)
-//
-// Copyright Bruno Lalande 2008, 2009
-// Copyright Barend Gehrels 2007-2009, Geodan, Amsterdam, the Netherlands.
+
+// Copyright (c) 2007-2011 Barend Gehrels, Amsterdam, the Netherlands.
+// Copyright (c) 2008-2011 Bruno Lalande, Paris, France.
+// Copyright (c) 2009-2011 Mateusz Loskot, London, UK.
+
+// Parts of Boost.Geometry are redesigned from Geodan's Geographic Library
+// (geolib/GGL), copyright (c) 1995-2010 Geodan, Amsterdam, the Netherlands.
+
 // Use, modification and distribution is subject to the Boost Software License,
 // Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_GEOMETRY_ALGORITHMS_PARSE_HPP
-#define BOOST_GEOMETRY_ALGORITHMS_PARSE_HPP
+#ifndef BOOST_GEOMETRY_EXTENSIONS_ALGORITHMS_PARSE_HPP
+#define BOOST_GEOMETRY_EXTENSIONS_ALGORITHMS_PARSE_HPP
 
 #include <string>
 
@@ -17,7 +22,6 @@
 
 #include <boost/geometry/geometries/concepts/check.hpp>
 
-// TODO: remove used EXTENSION here (result should be part of parsing strategy)
 #include <boost/geometry/extensions/gis/geographic/strategies/dms_parser.hpp>
 
 
@@ -116,4 +120,4 @@ inline Geometry parse(std::string const& c1, std::string const& c2)
 
 }} // namespace boost::geometry
 
-#endif // BOOST_GEOMETRY_ALGORITHMS_PARSE_HPP
+#endif // BOOST_GEOMETRY_EXTENSIONS_ALGORITHMS_PARSE_HPP

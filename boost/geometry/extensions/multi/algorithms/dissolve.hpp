@@ -1,12 +1,13 @@
 // Boost.Geometry (aka GGL, Generic Geometry Library)
-//
-// Copyright Barend Gehrels 2010, Geodan, Amsterdam, the Netherlands.
+
+// Copyright (c) 2007-2011 Barend Gehrels, Amsterdam, the Netherlands.
+
 // Use, modification and distribution is subject to the Boost Software License,
 // Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_GEOMETRY_MULTI_ALGORITHMS_DISSOLVE_HPP
-#define BOOST_GEOMETRY_MULTI_ALGORITHMS_DISSOLVE_HPP
+#ifndef BOOST_GEOMETRY_EXTENSIONS_MULTI_ALGORITHMS_DISSOLVE_HPP
+#define BOOST_GEOMETRY_EXTENSIONS_MULTI_ALGORITHMS_DISSOLVE_HPP
 
 
 #include <vector>
@@ -16,10 +17,10 @@
 #include <boost/geometry/multi/core/tags.hpp>
 #include <boost/geometry/multi/core/point_type.hpp>
 
-#include <boost/geometry/algorithms/dissolve.hpp>
 #include <boost/geometry/algorithms/union.hpp>
 
-#include <boost/geometry/algorithms/detail/overlay/dissolver.hpp>
+#include <boost/geometry/extensions/algorithms/dissolve.hpp>
+#include <boost/geometry/extensions/algorithms/detail/overlay/dissolver.hpp>
 
 
 namespace boost { namespace geometry
@@ -95,4 +96,4 @@ struct dissolve<multi_polygon_tag, polygon_tag, Multi, GeometryOut>
 
 }} // namespace boost::geometry
 
-#endif // BOOST_GEOMETRY_MULTI_ALGORITHMS_DISSOLVE_HPP
+#endif // BOOST_GEOMETRY_EXTENSIONS_MULTI_ALGORITHMS_DISSOLVE_HPP

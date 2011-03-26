@@ -1,22 +1,26 @@
 // Boost.Geometry (aka GGL, Generic Geometry Library)
-//
-// Copyright Barend Gehrels 2010, Geodan, Amsterdam, the Netherlands.
+
+// Copyright (c) 2007-2011 Barend Gehrels, Amsterdam, the Netherlands.
+// Copyright (c) 2008-2011 Bruno Lalande, Paris, France.
+// Copyright (c) 2009-2011 Mateusz Loskot, London, UK.
+
+// Parts of Boost.Geometry are redesigned from Geodan's Geographic Library
+// (geolib/GGL), copyright (c) 1995-2010 Geodan, Amsterdam, the Netherlands.
+
 // Use, modification and distribution is subject to the Boost Software License,
 // Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
 
-#ifndef BOOST_GEOMETRY_MULTI_CORE_NUM_GEOMETRIES_HPP
-#define BOOST_GEOMETRY_MULTI_CORE_NUM_GEOMETRIES_HPP
+#ifndef BOOST_GEOMETRY_MULTI_ALGORITHMS_NUM_GEOMETRIES_HPP
+#define BOOST_GEOMETRY_MULTI_ALGORITHMS_NUM_GEOMETRIES_HPP
 
 
 #include <cstddef>
 
 #include <boost/range.hpp>
 
-
-#include <boost/geometry/core/num_geometries.hpp>
-#include <boost/geometry/multi/core/tags.hpp>
+#include <boost/geometry/algorithms/num_geometries.hpp>
 
 
 namespace boost { namespace geometry
@@ -24,11 +28,11 @@ namespace boost { namespace geometry
 
 
 #ifndef DOXYGEN_NO_DISPATCH
-namespace core_dispatch
+namespace dispatch
 {
 
-template <typename Tag, typename MultiGeometry>
-struct num_geometries<Tag, true, MultiGeometry>
+template <typename MultiGeometry>
+struct num_geometries<multi_tag, MultiGeometry>
 {
     static inline std::size_t apply(MultiGeometry const& multi_geometry)
     {
@@ -37,11 +41,11 @@ struct num_geometries<Tag, true, MultiGeometry>
 };
 
 
-} // namespace core_dispatch
+} // namespace dispatch
 #endif
 
 
 }} // namespace boost::geometry
 
 
-#endif // BOOST_GEOMETRY_MULTI_CORE_NUM_GEOMETRIES_HPP
+#endif // BOOST_GEOMETRY_MULTI_ALGORITHMS_NUM_GEOMETRIES_HPP
