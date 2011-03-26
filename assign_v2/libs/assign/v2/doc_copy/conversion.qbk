@@ -1,0 +1,79 @@
+[import ../test/conversion.cpp]
+
+[tpl_module
+	[@../../../../../boost/assign/v2/conversion.hpp boost/assign/v2/conversion.hpp]
+	..Range-to-container conversion
+]
+
+[section:convert Convert]
+
+[heading Header]
+[@../../../../../boost/assign/v2/conversion/convert.hpp [^boost/assign/v2/conversion/convert.hpp]]
+
+[heading Description]
+Explicit conversion.
+
+[heading Synopsis]
+[import ../../../../boost/assign/v2/conversion/convert.hpp]
+[syntax_conversion_convert]
+
+
+[heading Semantics]
+[*Expressions]
+
+`__range__ | __fun_convert__<__cont_type__>()` is defined as the switch below:
+
+[table
+	[[Case][Statement]]
+	[
+		[`__cont_type__` is either an [tpl_boost_array Array] or an [tpl_stl_adapter Adapter]]
+		[`__cont_type__ __cont__; put( __cont__ )( __fun_as_arg_list__( __range__ ) )` and returns `__cont__`]
+	]
+	[
+		[Otherwise]
+		[`__cont_type__( begin( __range__ ), end( __range__ ) )`]
+	]
+]
+
+[heading Example]
+[test_conversion_as2_deque_array]
+
+[endsect][/convert]
+[section:converter Converter]
+
+[heading Header]
+[@../../../../../boost/assign/v2/utility/conversion/converter.hpp boost/assign/v2/utility/conversion/converter.hpp]
+
+[heading Description]
+Implicit conversion.
+
+[heading Synopsis]
+[import ../../../../boost/assign/v2/conversion/converter.hpp]
+[syntax_conversion_converter]
+
+[heading Semantics]
+
+[*Notation]
+
+[variablelist
+	[[`c`][Instance of `__fun_converter__( __range__ )`]]
+]
+
+[*Converter]
+
+[table
+	[[Expression][Description]]
+	[
+		[`c.type<__cont_type__>()`]
+		[Calls `__range__ | __fun_convert__<__cont_type__>()`]
+	]
+	[
+		[`__cont_type__ __cont__ = c`]
+		[Equivalent to `__cont_type__ __cont__ = c.type<__cont_type__>()`]
+	]
+]
+
+[heading Example]
+[test_conversion_matrix3x3]
+
+[endsect][/converter]

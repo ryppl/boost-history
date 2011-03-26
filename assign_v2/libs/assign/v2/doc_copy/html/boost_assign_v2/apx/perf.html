@@ -1,0 +1,404 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Performance</title>
+<link rel="stylesheet" href="../../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="../../index.html" title="Chapter&#160;1.&#160;Boost.Assign 2.0">
+<link rel="up" href="../apx.html" title="Appendix">
+<link rel="prev" href="../apx.html" title="Appendix">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../boost.png"></td>
+<td align="center"><a href="../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../apx.html"><img src="../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../apx.html"><img src="../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/src/images/home.png" alt="Home"></a>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_assign_v2.apx.perf"></a><a class="link" href="perf.html" title="Performance">Performance</a>
+</h3></div></div></div>
+<p>
+        <span class="bold"><strong>Machine</strong></span> Mac OS
+      </p>
+<p>
+        <span class="bold"><strong>Compiler</strong></span> GNU C++ version 4.4.1
+      </p>
+<p>
+        <span class="bold"><strong>Notation</strong></span>
+      </p>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term"><code class="computeroutput"><span class="identifier">T</span></code></span></dt>
+<dd><p>
+              <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span></code>
+            </p></dd>
+<dt><span class="term"><code class="literal">n</code></span></dt>
+<dd><p>
+              Controls inner number of loops
+            </p></dd>
+<dt><span class="term"><code class="literal">k</code></span></dt>
+<dd><p>
+              Control outer number of loops
+            </p></dd>
+<dt><span class="term"><code class="computeroutput"><span class="identifier">args</span><span class="special">...</span></code></span></dt>
+<dd><p>
+              List of arguments, each of type T and max size 1000
+            </p></dd>
+<dt><span class="term"><code class="literal">var</code></span></dt>
+<dd><p>
+              Time to eval some method over <code class="computeroutput"><span class="identifier">args</span><span class="special">...</span></code> <code class="literal">n</code> times
+            </p></dd>
+<dt><span class="term"><code class="literal">var_scaled</code></span></dt>
+<dd><p>
+              <code class="literal">1000 * var</code>
+            </p></dd>
+<dt><span class="term"><code class="literal">m</code></span></dt>
+<dd><p>
+              Size of <code class="computeroutput"><span class="identifier">args</span><span class="special">...</span></code>
+            </p></dd>
+<dt><span class="term"><code class="literal">min</code></span></dt>
+<dd><p>
+              Max value of <code class="literal">var_scaled</code>, over <code class="literal">k</code>
+              repetitions
+            </p></dd>
+<dt><span class="term"><code class="literal">average</code></span></dt>
+<dd><p>
+              Average value of <code class="literal">var_scaled</code>, over <code class="literal">k</code>
+              repetitions
+            </p></dd>
+<dt><span class="term"><code class="literal">max</code></span></dt>
+<dd><p>
+              Max value of <code class="literal">var_scaled</code>, over <code class="literal">k</code>
+              repetitions
+            </p></dd>
+<dt><span class="term"><code class="literal">cumulated</code></span></dt>
+<dd><p>
+              Cumulative value of <code class="literal">var_scaled</code>, over <code class="literal">k</code>
+              repetitions
+            </p></dd>
+</dl>
+</div>
+<p>
+        <span class="bold"><strong>Methods</strong></span>
+      </p>
+<div class="table">
+<a name="boost_assign_v2.apx.perf.assign"></a><p class="title"><b>Table&#160;1.1.&#160;Assign</b></p>
+<div class="table-contents"><table class="table" summary="Assign">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Method
+                </p>
+              </th>
+<th>
+                <p>
+                  Description
+                </p>
+              </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                <p>
+                  stl_push_back
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">cont</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span>
+                  <span class="identifier">arg1</span> <span class="special">);</span>
+                  <span class="special">...;</span> <span class="identifier">cont</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span> <span class="identifier">argm</span>
+                  <span class="special">)</span></code>
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  v1_push_back
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">assign</span><span class="special">::</span><span class="identifier">push_back</span><span class="special">(</span>
+                  <span class="identifier">cont</span> <span class="special">)(</span>
+                  <span class="identifier">arg1</span> <span class="special">)...(</span>
+                  <span class="identifier">argm</span> <span class="special">)</span></code>
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  v2_put
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">assign</span><span class="special">::</span><span class="identifier">v2</span><span class="special">::</span><span class="identifier">put</span><span class="special">(</span>
+                  <span class="identifier">cont</span> <span class="special">)(</span>
+                  <span class="identifier">arg1</span> <span class="special">)...(</span>
+                  <span class="identifier">argm</span> <span class="special">)</span></code>
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  v2_pipe_put
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">cont</span> <span class="special">|</span>
+                  <span class="identifier">assign</span><span class="special">::</span><span class="identifier">v2</span><span class="special">::</span><span class="identifier">_put</span><span class="special">(</span>
+                  <span class="identifier">arg1</span> <span class="special">)...(</span>
+                  <span class="identifier">argm</span> <span class="special">)</span></code>
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  v2_pipe_csv_put
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">cont</span> <span class="special">|</span>
+                  <span class="identifier">assign</span><span class="special">::</span><span class="identifier">v2</span><span class="special">::</span><span class="identifier">_csv_put</span><span class="special">(</span>
+                  <span class="identifier">args</span><span class="special">...</span>
+                  <span class="special">)</span></code>
+                </p>
+              </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break"><div class="table">
+<a name="boost_assign_v2.apx.perf.generate"></a><p class="title"><b>Table&#160;1.2.&#160;Generate</b></p>
+<div class="table-contents"><table class="table" summary="Generate">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Method
+                </p>
+              </th>
+<th>
+                <p>
+                  Description
+                </p>
+              </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                <p>
+                  v1_list_of
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">assign</span><span class="special">::</span><span class="identifier">list_of</span><span class="special">(</span>
+                  <span class="identifier">arg1</span> <span class="special">)...(</span>
+                  <span class="identifier">argm</span> <span class="special">)</span></code>
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  v2_deque
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">assign</span><span class="special">::</span><span class="identifier">v2</span><span class="special">::</span><span class="identifier">deque</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;(</span>
+                  <span class="identifier">arg1</span> <span class="special">)...(</span>
+                  <span class="identifier">argm</span> <span class="special">)</span></code>
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  v2_csv_deque
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">assign</span><span class="special">::</span><span class="identifier">v2</span><span class="special">::</span><span class="identifier">csv_deque</span><span class="special">(</span>
+                  <span class="identifier">args</span><span class="special">...</span>
+                  <span class="special">)</span></code>
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  v1_cref_list_of
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">assign</span><span class="special">::</span><span class="identifier">cref_list_of</span><span class="special">&lt;</span><span class="identifier">m</span><span class="special">&gt;(</span>
+                  <span class="identifier">arg1</span> <span class="special">)...(</span>
+                  <span class="identifier">argm</span> <span class="special">)</span></code>
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  v2_ref_array
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">assign</span><span class="special">::</span><span class="identifier">v2</span><span class="special">::</span><span class="identifier">ref</span><span class="special">::</span><span class="identifier">array</span><span class="special">(</span>
+                  <span class="identifier">arg1</span> <span class="special">)...(</span>
+                  <span class="identifier">argm</span> <span class="special">)</span></code>
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  v2_ref_csv_array
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">assign</span><span class="special">::</span><span class="identifier">v2</span><span class="special">::</span><span class="identifier">ref</span><span class="special">::</span><span class="identifier">csv_array</span><span class="special">(</span>
+                  <span class="identifier">args</span><span class="special">...)</span></code>
+                </p>
+              </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break"><p>
+        <span class="bold"><strong>Results</strong></span> 
+</p>
+<pre class="programlisting"><span class="special">{</span><span class="identifier">k</span><span class="special">,</span> <span class="identifier">n</span><span class="special">,</span> <span class="identifier">m</span><span class="special">}</span>
+<span class="special">{</span><span class="identifier">method</span><span class="special">,</span>                      <span class="identifier">min</span><span class="special">,</span>      <span class="identifier">average</span><span class="special">,</span>  <span class="identifier">max</span><span class="special">,</span>      <span class="identifier">cumulative</span><span class="special">}</span>
+
+<span class="special">{</span>
+<span class="special">{</span><span class="number">12800</span><span class="special">,</span> <span class="number">100</span><span class="special">,</span> <span class="number">1</span><span class="special">},</span>
+<span class="special">{</span><span class="identifier">stl_push_back</span><span class="special">,</span>                <span class="number">0.012</span><span class="special">,</span>    <span class="number">0.014</span><span class="special">,</span>    <span class="number">0.037</span><span class="special">,</span>    <span class="number">174.4</span><span class="special">},</span>
+<span class="special">{</span><span class="identifier">v1_push_back</span><span class="special">,</span>                 <span class="number">0.030</span><span class="special">,</span>    <span class="number">0.033</span><span class="special">,</span>    <span class="number">0.066</span><span class="special">,</span>    <span class="number">418.1</span><span class="special">},</span>
+<span class="special">{</span><span class="identifier">v2_put</span><span class="special">,</span>                       <span class="number">0.013</span><span class="special">,</span>    <span class="number">0.014</span><span class="special">,</span>    <span class="number">0.026</span><span class="special">,</span>    <span class="number">185.3</span><span class="special">},</span>
+<span class="special">{</span><span class="identifier">v2_pipe_put</span><span class="special">,</span>                  <span class="number">0.013</span><span class="special">,</span>    <span class="number">0.015</span><span class="special">,</span>    <span class="number">0.028</span><span class="special">,</span>    <span class="number">188.2</span><span class="special">},</span>
+<span class="special">{</span><span class="identifier">v2_pipe_csv_put</span><span class="special">,</span>              <span class="number">0.013</span><span class="special">,</span>    <span class="number">0.015</span><span class="special">,</span>    <span class="number">0.042</span><span class="special">,</span>    <span class="number">186.9</span><span class="special">},</span>
+<span class="special">{</span><span class="identifier">v1_list_of</span><span class="special">,</span>                   <span class="number">0.118</span><span class="special">,</span>    <span class="number">0.123</span><span class="special">,</span>    <span class="number">0.164</span><span class="special">,</span>   <span class="number">1572.2</span><span class="special">},</span>
+<span class="special">{</span><span class="identifier">v2_deque</span><span class="special">,</span>                     <span class="number">0.100</span><span class="special">,</span>    <span class="number">0.103</span><span class="special">,</span>    <span class="number">0.119</span><span class="special">,</span>   <span class="number">1321.2</span><span class="special">},</span>
+<span class="special">{</span><span class="identifier">v2_csv_deque</span><span class="special">,</span>                 <span class="number">0.040</span><span class="special">,</span>    <span class="number">0.043</span><span class="special">,</span>    <span class="number">0.048</span><span class="special">,</span>    <span class="number">544.8</span><span class="special">},</span>
+<span class="special">{</span><span class="identifier">v1_cref_list_of</span><span class="special">,</span>              <span class="number">0.000</span><span class="special">,</span>    <span class="number">0.001</span><span class="special">,</span>    <span class="number">0.003</span><span class="special">,</span>     <span class="number">17.6</span><span class="special">},</span>
+<span class="special">{</span><span class="identifier">v2_ref_array</span><span class="special">,</span>                 <span class="number">0.002</span><span class="special">,</span>    <span class="number">0.003</span><span class="special">,</span>    <span class="number">0.005</span><span class="special">,</span>     <span class="number">37.9</span><span class="special">},</span>
+<span class="special">{</span><span class="identifier">v2_ref_csv_array</span><span class="special">,</span>             <span class="number">0.000</span><span class="special">,</span>    <span class="number">0.001</span><span class="special">,</span>    <span class="number">0.004</span><span class="special">,</span>     <span class="number">17.5</span><span class="special">}</span>
+<span class="special">}</span>
+<span class="special">{</span>
+<span class="special">{</span><span class="number">6400</span><span class="special">,</span> <span class="number">100</span><span class="special">,</span> <span class="number">2</span><span class="special">},</span>
+<span class="special">{</span><span class="identifier">stl_push_back</span><span class="special">,</span>                <span class="number">0.032</span><span class="special">,</span>    <span class="number">0.033</span><span class="special">,</span>    <span class="number">0.039</span><span class="special">,</span>    <span class="number">213.5</span><span class="special">},</span>
+<span class="special">{</span><span class="identifier">v1_push_back</span><span class="special">,</span>                 <span class="number">0.077</span><span class="special">,</span>    <span class="number">0.081</span><span class="special">,</span>    <span class="number">0.098</span><span class="special">,</span>    <span class="number">517.0</span><span class="special">},</span>
+<span class="special">{</span><span class="identifier">v2_put</span><span class="special">,</span>                       <span class="number">0.033</span><span class="special">,</span>    <span class="number">0.035</span><span class="special">,</span>    <span class="number">0.047</span><span class="special">,</span>    <span class="number">222.5</span><span class="special">},</span>
+<span class="special">{</span><span class="identifier">v2_pipe_put</span><span class="special">,</span>                  <span class="number">0.033</span><span class="special">,</span>    <span class="number">0.035</span><span class="special">,</span>    <span class="number">0.042</span><span class="special">,</span>    <span class="number">221.0</span><span class="special">},</span>
+<span class="special">{</span><span class="identifier">v2_pipe_csv_put</span><span class="special">,</span>              <span class="number">0.033</span><span class="special">,</span>    <span class="number">0.035</span><span class="special">,</span>    <span class="number">0.041</span><span class="special">,</span>    <span class="number">222.5</span><span class="special">},</span>
+<span class="special">{</span><span class="identifier">v1_list_of</span><span class="special">,</span>                   <span class="number">0.174</span><span class="special">,</span>    <span class="number">0.178</span><span class="special">,</span>    <span class="number">0.203</span><span class="special">,</span>   <span class="number">1138.6</span><span class="special">},</span>
+<span class="special">{</span><span class="identifier">v2_deque</span><span class="special">,</span>                     <span class="number">0.135</span><span class="special">,</span>    <span class="number">0.137</span><span class="special">,</span>    <span class="number">0.157</span><span class="special">,</span>    <span class="number">878.8</span><span class="special">},</span>
+<span class="special">{</span><span class="identifier">v2_csv_deque</span><span class="special">,</span>                 <span class="number">0.073</span><span class="special">,</span>    <span class="number">0.076</span><span class="special">,</span>    <span class="number">0.095</span><span class="special">,</span>    <span class="number">489.0</span><span class="special">},</span>
+<span class="special">{</span><span class="identifier">v1_cref_list_of</span><span class="special">,</span>              <span class="number">0.000</span><span class="special">,</span>    <span class="number">0.001</span><span class="special">,</span>    <span class="number">0.003</span><span class="special">,</span>      <span class="number">8.8</span><span class="special">},</span>
+<span class="special">{</span><span class="identifier">v2_ref_array</span><span class="special">,</span>                 <span class="number">0.002</span><span class="special">,</span>    <span class="number">0.003</span><span class="special">,</span>    <span class="number">0.007</span><span class="special">,</span>     <span class="number">22.3</span><span class="special">},</span>
+<span class="special">{</span><span class="identifier">v2_ref_csv_array</span><span class="special">,</span>             <span class="number">0.001</span><span class="special">,</span>    <span class="number">0.002</span><span class="special">,</span>    <span class="number">0.004</span><span class="special">,</span>     <span class="number">11.4</span><span class="special">}</span>
+<span class="special">}</span>
+<span class="special">{</span>
+<span class="special">{</span><span class="number">3200</span><span class="special">,</span> <span class="number">100</span><span class="special">,</span> <span class="number">4</span><span class="special">},</span>
+<span class="special">{</span><span class="identifier">stl_push_back</span><span class="special">,</span>                <span class="number">0.091</span><span class="special">,</span>    <span class="number">0.095</span><span class="special">,</span>    <span class="number">0.109</span><span class="special">,</span>    <span class="number">302.9</span><span class="special">},</span>
+<span class="special">{</span><span class="identifier">v1_push_back</span><span class="special">,</span>                 <span class="number">0.231</span><span class="special">,</span>    <span class="number">0.242</span><span class="special">,</span>    <span class="number">0.279</span><span class="special">,</span>    <span class="number">775.4</span><span class="special">},</span>
+<span class="special">{</span><span class="identifier">v2_put</span><span class="special">,</span>                       <span class="number">0.099</span><span class="special">,</span>    <span class="number">0.105</span><span class="special">,</span>    <span class="number">0.138</span><span class="special">,</span>    <span class="number">334.9</span><span class="special">},</span>
+<span class="special">{</span><span class="identifier">v2_pipe_put</span><span class="special">,</span>                  <span class="number">0.097</span><span class="special">,</span>    <span class="number">0.101</span><span class="special">,</span>    <span class="number">0.136</span><span class="special">,</span>    <span class="number">324.2</span><span class="special">},</span>
+<span class="special">{</span><span class="identifier">v2_pipe_csv_put</span><span class="special">,</span>              <span class="number">0.105</span><span class="special">,</span>    <span class="number">0.108</span><span class="special">,</span>    <span class="number">0.117</span><span class="special">,</span>    <span class="number">346.1</span><span class="special">},</span>
+<span class="special">{</span><span class="identifier">v1_list_of</span><span class="special">,</span>                   <span class="number">0.321</span><span class="special">,</span>    <span class="number">0.330</span><span class="special">,</span>    <span class="number">0.371</span><span class="special">,</span>   <span class="number">1054.9</span><span class="special">},</span>
+<span class="special">{</span><span class="identifier">v2_deque</span><span class="special">,</span>                     <span class="number">0.208</span><span class="special">,</span>    <span class="number">0.214</span><span class="special">,</span>    <span class="number">0.234</span><span class="special">,</span>    <span class="number">683.2</span><span class="special">},</span>
+<span class="special">{</span><span class="identifier">v2_csv_deque</span><span class="special">,</span>                 <span class="number">0.138</span><span class="special">,</span>    <span class="number">0.144</span><span class="special">,</span>    <span class="number">0.154</span><span class="special">,</span>    <span class="number">461.0</span><span class="special">},</span>
+<span class="special">{</span><span class="identifier">v1_cref_list_of</span><span class="special">,</span>              <span class="number">0.000</span><span class="special">,</span>    <span class="number">0.001</span><span class="special">,</span>    <span class="number">0.003</span><span class="special">,</span>      <span class="number">4.4</span><span class="special">},</span>
+<span class="special">{</span><span class="identifier">v2_ref_array</span><span class="special">,</span>                 <span class="number">0.004</span><span class="special">,</span>    <span class="number">0.005</span><span class="special">,</span>    <span class="number">0.017</span><span class="special">,</span>     <span class="number">16.6</span><span class="special">},</span>
+<span class="special">{</span><span class="identifier">v2_ref_csv_array</span><span class="special">,</span>             <span class="number">0.001</span><span class="special">,</span>    <span class="number">0.002</span><span class="special">,</span>    <span class="number">0.010</span><span class="special">,</span>      <span class="number">7.1</span><span class="special">}</span>
+<span class="special">}</span>
+<span class="special">{</span>
+<span class="special">{</span><span class="number">1600</span><span class="special">,</span> <span class="number">100</span><span class="special">,</span> <span class="number">8</span><span class="special">},</span>
+<span class="special">{</span><span class="identifier">stl_push_back</span><span class="special">,</span>                <span class="number">0.281</span><span class="special">,</span>    <span class="number">0.286</span><span class="special">,</span>    <span class="number">0.425</span><span class="special">,</span>    <span class="number">457.7</span><span class="special">},</span>
+<span class="special">{</span><span class="identifier">v1_push_back</span><span class="special">,</span>                 <span class="number">0.518</span><span class="special">,</span>    <span class="number">0.526</span><span class="special">,</span>    <span class="number">0.556</span><span class="special">,</span>    <span class="number">841.6</span><span class="special">},</span>
+<span class="special">{</span><span class="identifier">v2_put</span><span class="special">,</span>                       <span class="number">0.285</span><span class="special">,</span>    <span class="number">0.290</span><span class="special">,</span>    <span class="number">0.318</span><span class="special">,</span>    <span class="number">463.4</span><span class="special">},</span>
+<span class="special">{</span><span class="identifier">v2_pipe_put</span><span class="special">,</span>                  <span class="number">0.287</span><span class="special">,</span>    <span class="number">0.293</span><span class="special">,</span>    <span class="number">0.317</span><span class="special">,</span>    <span class="number">469.2</span><span class="special">},</span>
+<span class="special">{</span><span class="identifier">v2_pipe_csv_put</span><span class="special">,</span>              <span class="number">0.287</span><span class="special">,</span>    <span class="number">0.292</span><span class="special">,</span>    <span class="number">0.317</span><span class="special">,</span>    <span class="number">467.4</span><span class="special">},</span>
+<span class="special">{</span><span class="identifier">v1_list_of</span><span class="special">,</span>                   <span class="number">0.608</span><span class="special">,</span>    <span class="number">0.615</span><span class="special">,</span>    <span class="number">0.657</span><span class="special">,</span>    <span class="number">984.2</span><span class="special">},</span>
+<span class="special">{</span><span class="identifier">v2_deque</span><span class="special">,</span>                     <span class="number">0.395</span><span class="special">,</span>    <span class="number">0.399</span><span class="special">,</span>    <span class="number">0.456</span><span class="special">,</span>    <span class="number">638.1</span><span class="special">},</span>
+<span class="special">{</span><span class="identifier">v2_csv_deque</span><span class="special">,</span>                 <span class="number">0.324</span><span class="special">,</span>    <span class="number">0.329</span><span class="special">,</span>    <span class="number">0.350</span><span class="special">,</span>    <span class="number">525.9</span><span class="special">},</span>
+<span class="special">{</span><span class="identifier">v1_cref_list_of</span><span class="special">,</span>              <span class="number">0.000</span><span class="special">,</span>    <span class="number">0.001</span><span class="special">,</span>    <span class="number">0.002</span><span class="special">,</span>      <span class="number">2.3</span><span class="special">},</span>
+<span class="special">{</span><span class="identifier">v2_ref_array</span><span class="special">,</span>                 <span class="number">0.007</span><span class="special">,</span>    <span class="number">0.008</span><span class="special">,</span>    <span class="number">0.010</span><span class="special">,</span>     <span class="number">13.5</span><span class="special">},</span>
+<span class="special">{</span><span class="identifier">v2_ref_csv_array</span><span class="special">,</span>             <span class="number">0.002</span><span class="special">,</span>    <span class="number">0.003</span><span class="special">,</span>    <span class="number">0.004</span><span class="special">,</span>      <span class="number">5.4</span><span class="special">}</span>
+<span class="special">}</span>
+<span class="special">{</span>
+<span class="special">{</span><span class="number">800</span><span class="special">,</span> <span class="number">100</span><span class="special">,</span> <span class="number">16</span><span class="special">},</span>
+<span class="special">{</span><span class="identifier">stl_push_back</span><span class="special">,</span>                <span class="number">0.645</span><span class="special">,</span>    <span class="number">0.651</span><span class="special">,</span>    <span class="number">0.704</span><span class="special">,</span>    <span class="number">521.1</span><span class="special">},</span>
+<span class="special">{</span><span class="identifier">v1_push_back</span><span class="special">,</span>                 <span class="number">1.120</span><span class="special">,</span>    <span class="number">1.134</span><span class="special">,</span>    <span class="number">1.226</span><span class="special">,</span>    <span class="number">906.9</span><span class="special">},</span>
+<span class="special">{</span><span class="identifier">v2_put</span><span class="special">,</span>                       <span class="number">0.668</span><span class="special">,</span>    <span class="number">0.675</span><span class="special">,</span>    <span class="number">0.716</span><span class="special">,</span>    <span class="number">540.0</span><span class="special">},</span>
+<span class="special">{</span><span class="identifier">v2_pipe_put</span><span class="special">,</span>                  <span class="number">0.674</span><span class="special">,</span>    <span class="number">0.684</span><span class="special">,</span>    <span class="number">0.737</span><span class="special">,</span>    <span class="number">547.1</span><span class="special">},</span>
+<span class="special">{</span><span class="identifier">v2_pipe_csv_put</span><span class="special">,</span>              <span class="number">0.671</span><span class="special">,</span>    <span class="number">0.677</span><span class="special">,</span>    <span class="number">0.716</span><span class="special">,</span>    <span class="number">541.6</span><span class="special">},</span>
+<span class="special">{</span><span class="identifier">v1_list_of</span><span class="special">,</span>                   <span class="number">1.247</span><span class="special">,</span>    <span class="number">1.255</span><span class="special">,</span>    <span class="number">1.330</span><span class="special">,</span>   <span class="number">1004.2</span><span class="special">},</span>
+<span class="special">{</span><span class="identifier">v2_deque</span><span class="special">,</span>                     <span class="number">0.779</span><span class="special">,</span>    <span class="number">0.785</span><span class="special">,</span>    <span class="number">0.831</span><span class="special">,</span>    <span class="number">627.8</span><span class="special">},</span>
+<span class="special">{</span><span class="identifier">v2_csv_deque</span><span class="special">,</span>                 <span class="number">0.722</span><span class="special">,</span>    <span class="number">0.729</span><span class="special">,</span>    <span class="number">0.764</span><span class="special">,</span>    <span class="number">583.2</span><span class="special">},</span>
+<span class="special">{</span><span class="identifier">v1_cref_list_of</span><span class="special">,</span>              <span class="number">0.000</span><span class="special">,</span>    <span class="number">0.001</span><span class="special">,</span>    <span class="number">0.002</span><span class="special">,</span>      <span class="number">1.1</span><span class="special">},</span>
+<span class="special">{</span><span class="identifier">v2_ref_array</span><span class="special">,</span>                 <span class="number">0.016</span><span class="special">,</span>    <span class="number">0.017</span><span class="special">,</span>    <span class="number">0.031</span><span class="special">,</span>     <span class="number">13.8</span><span class="special">},</span>
+<span class="special">{</span><span class="identifier">v2_ref_csv_array</span><span class="special">,</span>             <span class="number">0.004</span><span class="special">,</span>    <span class="number">0.005</span><span class="special">,</span>    <span class="number">0.008</span><span class="special">,</span>      <span class="number">4.1</span><span class="special">}</span>
+<span class="special">}</span>
+<span class="special">{</span>
+<span class="special">{</span><span class="number">400</span><span class="special">,</span> <span class="number">100</span><span class="special">,</span> <span class="number">32</span><span class="special">},</span>
+<span class="special">{</span><span class="identifier">stl_push_back</span><span class="special">,</span>                <span class="number">1.236</span><span class="special">,</span>    <span class="number">1.245</span><span class="special">,</span>    <span class="number">1.301</span><span class="special">,</span>    <span class="number">498.1</span><span class="special">},</span>
+<span class="special">{</span><span class="identifier">v1_push_back</span><span class="special">,</span>                 <span class="number">2.273</span><span class="special">,</span>    <span class="number">2.283</span><span class="special">,</span>    <span class="number">2.355</span><span class="special">,</span>    <span class="number">913.4</span><span class="special">},</span>
+<span class="special">{</span><span class="identifier">v2_put</span><span class="special">,</span>                       <span class="number">1.267</span><span class="special">,</span>    <span class="number">1.280</span><span class="special">,</span>    <span class="number">1.333</span><span class="special">,</span>    <span class="number">512.0</span><span class="special">},</span>
+<span class="special">{</span><span class="identifier">v2_pipe_put</span><span class="special">,</span>                  <span class="number">1.307</span><span class="special">,</span>    <span class="number">1.318</span><span class="special">,</span>    <span class="number">1.382</span><span class="special">,</span>    <span class="number">527.2</span><span class="special">},</span>
+<span class="special">{</span><span class="identifier">v2_pipe_csv_put</span><span class="special">,</span>              <span class="number">1.279</span><span class="special">,</span>    <span class="number">1.287</span><span class="special">,</span>    <span class="number">1.335</span><span class="special">,</span>    <span class="number">515.0</span><span class="special">},</span>
+<span class="special">{</span><span class="identifier">v1_list_of</span><span class="special">,</span>                   <span class="number">2.344</span><span class="special">,</span>    <span class="number">2.357</span><span class="special">,</span>    <span class="number">2.447</span><span class="special">,</span>    <span class="number">942.9</span><span class="special">},</span>
+<span class="special">{</span><span class="identifier">v2_deque</span><span class="special">,</span>                     <span class="number">1.393</span><span class="special">,</span>    <span class="number">1.402</span><span class="special">,</span>    <span class="number">1.476</span><span class="special">,</span>    <span class="number">560.6</span><span class="special">},</span>
+<span class="special">{</span><span class="identifier">v2_csv_deque</span><span class="special">,</span>                 <span class="number">1.316</span><span class="special">,</span>    <span class="number">1.323</span><span class="special">,</span>    <span class="number">1.404</span><span class="special">,</span>    <span class="number">529.0</span><span class="special">},</span>
+<span class="special">{</span><span class="identifier">v1_cref_list_of</span><span class="special">,</span>              <span class="number">0.004</span><span class="special">,</span>    <span class="number">0.005</span><span class="special">,</span>    <span class="number">0.006</span><span class="special">,</span>      <span class="number">2.0</span><span class="special">},</span>
+<span class="special">{</span><span class="identifier">v2_ref_array</span><span class="special">,</span>                 <span class="number">0.046</span><span class="special">,</span>    <span class="number">0.047</span><span class="special">,</span>    <span class="number">0.056</span><span class="special">,</span>     <span class="number">18.9</span><span class="special">},</span>
+<span class="special">{</span><span class="identifier">v2_ref_csv_array</span><span class="special">,</span>             <span class="number">0.012</span><span class="special">,</span>    <span class="number">0.013</span><span class="special">,</span>    <span class="number">0.016</span><span class="special">,</span>      <span class="number">5.1</span><span class="special">}</span>
+<span class="special">}</span>
+</pre>
+<p>
+      </p>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2003 -2004 Thorsten Ottosen, 2010 Erwann Rogard<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../apx.html"><img src="../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../apx.html"><img src="../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/src/images/home.png" alt="Home"></a>
+</div>
+</body>
+</html>

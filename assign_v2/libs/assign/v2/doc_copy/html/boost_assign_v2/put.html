@@ -1,0 +1,462 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Put</title>
+<link rel="stylesheet" href="../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="../index.html" title="Chapter&#160;1.&#160;Boost.Assign 2.0">
+<link rel="up" href="../index.html" title="Chapter&#160;1.&#160;Boost.Assign 2.0">
+<link rel="prev" href="detail/config.html" title="Config">
+<link rel="next" href="put/deque.html" title="Deque">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../boost.png"></td>
+<td align="center"><a href="../../../index.html">Home</a></td>
+<td align="center"><a href="../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="detail/config.html"><img src="../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="put/deque.html"><img src="../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="boost_assign_v2.put"></a><a class="link" href="put.html" title="Put">Put</a>
+</h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="put.html#boost_assign_v2.put.adapter">Adapter</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="put.html#boost_assign_v2.put.adapter.as_arg_list">As_arg_list</a></span></dt>
+<dt><span class="section"><a href="put.html#boost_assign_v2.put.adapter.crtp">Crtp</a></span></dt>
+<dt><span class="section"><a href="put.html#boost_assign_v2.put.adapter.modifier">Modifier</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="put/deque.html">Deque</a></span></dt>
+<dt><span class="section"><a href="put/fun.html">Fun</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="put/fun.html#boost_assign_v2.put.fun.deduce">Deduce</a></span></dt>
+<dt><span class="section"><a href="put/fun.html#boost_assign_v2.put.fun.modulo">Modulo</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="put/modifier.html">Modifier</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="put/modifier.html#boost_assign_v2.put.modifier.deduce">Deduce</a></span></dt>
+<dt><span class="section"><a href="put/modifier.html#boost_assign_v2.put.modifier.modulo">Modulo</a></span></dt>
+<dt><span class="section"><a href="put/modifier.html#boost_assign_v2.put.modifier.insert">Insert</a></span></dt>
+<dt><span class="section"><a href="put/modifier.html#boost_assign_v2.put.modifier.iterate">Iterate</a></span></dt>
+<dt><span class="section"><a href="put/modifier.html#boost_assign_v2.put.modifier.lookup">Lookup</a></span></dt>
+<dt><span class="section"><a href="put/modifier.html#boost_assign_v2.put.modifier.push">Push</a></span></dt>
+<dt><span class="section"><a href="put/modifier.html#boost_assign_v2.put.modifier.push_back">Push_back</a></span></dt>
+<dt><span class="section"><a href="put/modifier.html#boost_assign_v2.put.modifier.push_front">Push_front</a></span></dt>
+<dt><span class="section"><a href="put/modifier.html#boost_assign_v2.put.modifier.repeat">Repeat</a></span></dt>
+<dt><span class="section"><a href="put/modifier.html#boost_assign_v2.put.modifier.standard">Standard</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="put/pipe.html">Pipe</a></span></dt>
+<dt><span class="section"><a href="put/put.html">Put</a></span></dt>
+</dl></div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_assign_v2.put.adapter"></a><a class="link" href="put.html#boost_assign_v2.put.adapter" title="Adapter">Adapter</a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="put.html#boost_assign_v2.put.adapter.as_arg_list">As_arg_list</a></span></dt>
+<dt><span class="section"><a href="put.html#boost_assign_v2.put.adapter.crtp">Crtp</a></span></dt>
+<dt><span class="section"><a href="put.html#boost_assign_v2.put.adapter.modifier">Modifier</a></span></dt>
+</dl></div>
+<a name="boost_assign_v2.put.adapter.header"></a><h5>
+<a name="id36337621"></a>
+        <a class="link" href="put.html#boost_assign_v2.put.adapter.header">Header</a>
+      </h5>
+<p>
+        
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><a href="../../../../../../boost/assign/v2/put/adapter.hpp" target="_top">boost/assign/v2/put/adapter.hpp</a><span class="special">&gt;</span>
+</pre>
+<p>
+      </p>
+<a name="boost_assign_v2.put.adapter.description"></a><h5>
+<a name="id36337661"></a>
+        <a class="link" href="put.html#boost_assign_v2.put.adapter.description">Description</a>
+      </h5>
+<p>
+        A framework for adapting a container's interface for inserting elements to
+        that of a functor
+      </p>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_assign_v2.put.adapter.as_arg_list"></a><a class="link" href="put.html#boost_assign_v2.put.adapter.as_arg_list" title="As_arg_list">As_arg_list</a>
+</h4></div></div></div>
+<a name="boost_assign_v2.put.adapter.as_arg_list.header"></a><h6>
+<a name="id36337689"></a>
+          <a class="link" href="put.html#boost_assign_v2.put.adapter.as_arg_list.header">Header</a>
+        </h6>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><a href="../../../../../../boost/assign/v2/put/adapter/as_arg_list.hpp" target="_top">boost/assign/v2/put/adapter/as_arg_list.hpp</a><span class="special">&gt;</span>
+</pre>
+<p>
+        </p>
+<a name="boost_assign_v2.put.adapter.as_arg_list.description"></a><h6>
+<a name="id36337731"></a>
+          <a class="link" href="put.html#boost_assign_v2.put.adapter.as_arg_list.description">Description</a>
+        </h6>
+<p>
+          A function that, invoked with a given <a href="http://svn.boost.org/svn/boost/trunk/libs/range/doc/html/range/concepts/overview.html" target="_top">range</a>,
+          returns a class wrapped around it that signals that the range's elements
+          are to be treated as a sequence of unary arguments to an adapter.
+        </p>
+<a name="boost_assign_v2.put.adapter.as_arg_list.synopsis"></a><h6>
+<a name="id36337758"></a>
+          <a class="link" href="put.html#boost_assign_v2.put.adapter.as_arg_list.synopsis">Synopsis</a>
+        </h6>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">result_of</span><span class="special">{</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">R</span><span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">as_arg_list</span>
+    <span class="special">{</span> 
+        <span class="keyword">typedef</span> <span class="identifier">unspecified</span> <span class="identifier">type</span><span class="special">;</span> 
+    <span class="special">};</span>
+
+<span class="special">}//</span> <span class="identifier">result_of</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">R</span><span class="special">&gt;</span>
+    <span class="keyword">typename</span> <span class="identifier">result_of</span><span class="special">::</span><span class="identifier">as_arg_list</span><span class="special">&lt;</span><span class="identifier">R</span><span class="special">&gt;::</span><span class="identifier">type</span>
+    <span class="identifier">_as_arg_list</span><span class="special">(</span><span class="identifier">R</span><span class="special">&amp;</span> <span class="identifier">range</span><span class="special">);</span>
+    
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">R</span><span class="special">&gt;</span>
+    <span class="keyword">typename</span> <span class="identifier">result_of</span><span class="special">::</span><span class="identifier">as_arg_list</span><span class="special">&lt;</span><span class="identifier">R</span> <span class="keyword">const</span><span class="special">&gt;::</span><span class="identifier">type</span>
+    <span class="identifier">_as_arg_list</span><span class="special">(</span><span class="identifier">R</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">range</span><span class="special">);</span>
+
+</pre>
+<p>
+        </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_assign_v2.put.adapter.crtp"></a><a class="link" href="put.html#boost_assign_v2.put.adapter.crtp" title="Crtp">Crtp</a>
+</h4></div></div></div>
+<a name="boost_assign_v2.put.adapter.crtp.header"></a><h6>
+<a name="id36338053"></a>
+          <a class="link" href="put.html#boost_assign_v2.put.adapter.crtp.header">Header</a>
+        </h6>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><a href="../../../../../../boost/assign/v2/put/adapter/crtp.hpp" target="_top">boost/assign/v2/put/adapter/crtp.hpp</a><span class="special">&gt;</span>
+</pre>
+<p>
+        </p>
+<a name="boost_assign_v2.put.adapter.crtp.description"></a><h6>
+<a name="id36338092"></a>
+          <a class="link" href="put.html#boost_assign_v2.put.adapter.crtp.description">Description</a>
+        </h6>
+<p>
+          A <a href="http://en.wikipedia.org/wiki/Curiously_recurring_template_pattern" target="_top">CRTP</a>
+          <a href="http://publib.boulder.ibm.com/infocenter/comphelp/v8v101/index.jsp?topic=%2Fcom.ibm.xlcpp8a.doc%2Flanguage%2Fref%2Fclass_templates.htm" target="_top">class
+          template</a> with a variadic functor interface that maps arguments
+          to a value and inserts it in a container supplied by the derived class.
+          Each of the mapping and the insertion mechanism, termed a <span class="emphasis"><em>modifier</em></span>,
+          are specified by template paramaters.
+        </p>
+<a name="boost_assign_v2.put.adapter.crtp.synopsis"></a><h6>
+<a name="id36338127"></a>
+          <a class="link" href="put.html#boost_assign_v2.put.adapter.crtp.synopsis">Synopsis</a>
+        </h6>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">put_aux</span><span class="special">{</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">C</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">D</span><span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">ConceptAdapter1</span><span class="special">{</span>
+
+        <span class="identifier">BOOST_CONCEPT_USAGE</span><span class="special">(</span><span class="identifier">ConceptAdapter1</span><span class="special">)</span>
+        <span class="special">{</span>
+            <span class="identifier">D</span> <span class="identifier">derived</span><span class="special">(</span> <span class="identifier">cont</span> <span class="special">);</span>
+            <span class="identifier">C</span><span class="special">&amp;</span> <span class="identifier">ref</span> <span class="special">=</span> <span class="identifier">derived</span><span class="special">.</span><span class="identifier">container</span><span class="special">();</span>
+        <span class="special">}</span>
+
+        <span class="keyword">private</span><span class="special">:</span>
+        <span class="keyword">static</span> <span class="identifier">C</span><span class="special">&amp;</span> <span class="identifier">cont</span><span class="special">;</span>
+
+    <span class="special">};</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">C</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">F</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Tag</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">D</span><span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">ConceptAdapter2</span> <span class="special">:</span> <span class="identifier">ConceptAdapter1</span><span class="special">&lt;</span><span class="identifier">C</span><span class="special">,</span> <span class="identifier">D</span><span class="special">&gt;{</span>
+
+        <span class="keyword">typedef</span> <span class="identifier">put_aux</span><span class="special">::</span><span class="identifier">adapter_modifier</span><span class="special">&lt;</span><span class="identifier">Tag</span><span class="special">&gt;</span> <span class="identifier">modifier_</span><span class="special">;</span>
+
+        <span class="identifier">BOOST_CONCEPT_USAGE</span><span class="special">(</span><span class="identifier">ConceptAdapter2</span><span class="special">)</span>
+        <span class="special">{</span>
+            <span class="identifier">D</span> <span class="identifier">derived</span><span class="special">(</span> <span class="identifier">cont</span><span class="special">,</span> <span class="identifier">f</span><span class="special">,</span> <span class="identifier">m</span> <span class="special">);</span>
+        <span class="special">}</span>
+
+        <span class="keyword">private</span><span class="special">:</span>
+        <span class="keyword">static</span> <span class="identifier">C</span><span class="special">&amp;</span> <span class="identifier">cont</span><span class="special">;</span>
+        <span class="keyword">static</span> <span class="identifier">F</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">f</span><span class="special">;</span>
+        <span class="keyword">static</span> <span class="identifier">modifier_</span> <span class="identifier">m</span><span class="special">;</span>
+
+    <span class="special">};</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <a class="co" name="boost_assign_v22co" href="put.html#boost_assign_v22"><img src="../../../doc/src/images/callouts/1.png" alt="1" border="0"></a><span class="identifier">C</span><span class="special">,</span> <span class="keyword">typename</span> <a class="co" name="boost_assign_v23co" href="put.html#boost_assign_v23"><img src="../../../doc/src/images/callouts/2.png" alt="2" border="0"></a><span class="identifier">F</span><span class="special">,</span> <span class="keyword">typename</span> <a class="co" name="boost_assign_v24co" href="put.html#boost_assign_v24"><img src="../../../doc/src/images/callouts/3.png" alt="3" border="0"></a><span class="identifier">Tag</span><span class="special">,</span> <span class="keyword">typename</span> <a class="co" name="boost_assign_v25co" href="put.html#boost_assign_v25"><img src="../../../doc/src/images/callouts/4.png" alt="4" border="0"></a><span class="identifier">D</span><span class="special">&gt;</span>
+    <span class="keyword">class</span> <span class="identifier">adapter_crtp</span>
+    <span class="special">{</span>
+
+        <span class="keyword">public</span><span class="special">:</span>
+
+        <span class="keyword">typedef</span>  <span class="identifier">adapter_modifier</span><span class="special">&lt;</span><span class="identifier">Tag</span><span class="special">&gt;</span> 
+        <span class="identifier">modifier_type</span><span class="special">;</span>
+
+        <span class="identifier">adapter_crtp</span><span class="special">(){}</span>
+        <span class="keyword">explicit</span> <span class="identifier">adapter_crtp</span><span class="special">(</span> <span class="identifier">F</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">f</span> <span class="special">);</span>
+        <span class="keyword">explicit</span> <span class="identifier">adapter_crtp</span><span class="special">(</span> <span class="identifier">F</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">f</span><span class="special">,</span> <span class="identifier">modifier_type</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">m</span> <span class="special">);</span>
+
+        <span class="keyword">typedef</span> <span class="identifier">D</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">result_type</span><span class="special">;</span>
+
+        <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">R</span><span class="special">&gt;</span>
+        <span class="identifier">result_type</span>
+        <span class="keyword">operator</span><span class="special">()(</span> <span class="identifier">as_arg_list_adapter</span><span class="special">&lt;</span><span class="identifier">R</span><span class="special">&gt;</span> <span class="identifier">range</span> <span class="special">)</span><span class="keyword">const</span><span class="special">;</span>
+
+
+        <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span><span class="special">...</span><span class="identifier">Args</span><span class="special">&gt;</span>
+        <span class="identifier">result_type</span> <span class="keyword">operator</span><span class="special">()(</span> <span class="identifier">Args</span><span class="special">&amp;&amp;...</span><span class="identifier">args</span> <span class="special">)</span><span class="keyword">const</span><span class="special">;</span>
+
+
+    <span class="special">};</span>
+
+<span class="special">}//</span> <span class="identifier">put_aux</span>
+</pre>
+<p>
+        </p>
+<div class="calloutlist"><table border="0" summary="Callout list">
+<tr>
+<td width="5%" valign="top" align="left"><p><a name="boost_assign_v22"></a><a href="#boost_assign_v22co"><img src="../../../doc/src/images/callouts/1.png" alt="1" border="0"></a> </p></td>
+<td valign="top" align="left"><p>
+              Container
+            </p></td>
+</tr>
+<tr>
+<td width="5%" valign="top" align="left"><p><a name="boost_assign_v23"></a><a href="#boost_assign_v23co"><img src="../../../doc/src/images/callouts/2.png" alt="2" border="0"></a> </p></td>
+<td valign="top" align="left"><p>
+              Functor
+            </p></td>
+</tr>
+<tr>
+<td width="5%" valign="top" align="left"><p><a name="boost_assign_v24"></a><a href="#boost_assign_v24co"><img src="../../../doc/src/images/callouts/3.png" alt="3" border="0"></a> </p></td>
+<td valign="top" align="left"><p>
+              Modifier tag
+            </p></td>
+</tr>
+<tr>
+<td width="5%" valign="top" align="left"><p><a name="boost_assign_v25"></a><a href="#boost_assign_v25co"><img src="../../../doc/src/images/callouts/4.png" alt="4" border="0"></a> </p></td>
+<td valign="top" align="left"><p>
+              Derived type
+            </p></td>
+</tr>
+</table></div>
+<a name="boost_assign_v2.put.adapter.crtp.semantics"></a><h6>
+<a name="id36339110"></a>
+          <a class="link" href="put.html#boost_assign_v2.put.adapter.crtp.semantics">Semantics</a>
+        </h6>
+<p>
+          <span class="bold"><strong>Notation</strong></span>
+        </p>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term"><code class="computeroutput"><span class="identifier">cont</span></code></span></dt>
+<dd><p>
+                Instance of <code class="computeroutput"><span class="identifier">C</span></code>, supplied
+                by the derived class
+              </p></dd>
+<dt><span class="term"><code class="computeroutput"><span class="identifier">f</span></code></span></dt>
+<dd><p>
+                Internal copy of instance of type <code class="computeroutput"><span class="identifier">F</span></code>
+              </p></dd>
+<dt><span class="term"><code class="computeroutput"><em class="replaceable"><code>put-modifier</code></em></code></span></dt>
+<dd><p>
+                Internal copy of instance of type <code class="computeroutput"><span class="identifier">put_aux</span><span class="special">::</span><span class="identifier">adapter_modifier</span><span class="special">&lt;</span><span class="identifier">Tag</span><span class="special">&gt;</span></code>
+              </p></dd>
+<dt><span class="term"><code class="computeroutput">put-adapter</code></span></dt>
+<dd><p>
+                Instance of <code class="computeroutput"><span class="identifier">D</span></code>
+              </p></dd>
+</dl>
+</div>
+<p>
+          <span class="bold"><strong>Expressions</strong></span>
+        </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Expression
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Side effect
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Result
+                  </p>
+                </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput">put-adapter<span class="special">(</span> <span class="identifier">args</span><span class="special">...</span> <span class="special">)</span>
+                    </code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><em class="replaceable"><code>put-modifier</code></em><span class="special">.</span><span class="identifier">impl</span><span class="special">(</span> <span class="identifier">cont</span><span class="special">,</span> <span class="identifier">f</span><span class="special">(</span> <span class="identifier">args</span><span class="special">...</span> <span class="special">)</span>
+                    <span class="special">)</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    A reference to <code class="computeroutput">put-adapter</code>
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput">put-adapter<span class="special">(</span> <span class="identifier">as_arg_list</span><span class="special">(</span> <span class="identifier">range</span>
+                    <span class="special">)</span> <span class="special">)</span>
+                    </code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput">put-adapter<span class="special">(</span> <span class="identifier">arg</span>
+                    <span class="special">)</span></code> for each <code class="computeroutput"><span class="identifier">arg</span></code> in <code class="computeroutput"><span class="identifier">range</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    A reference to <code class="computeroutput">put-adapter</code>
+                  </p>
+                </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_assign_v2.put.adapter.modifier"></a><a class="link" href="put.html#boost_assign_v2.put.adapter.modifier" title="Modifier">Modifier</a>
+</h4></div></div></div>
+<a name="boost_assign_v2.put.adapter.modifier.header"></a><h6>
+<a name="id36339525"></a>
+          <a class="link" href="put.html#boost_assign_v2.put.adapter.modifier.header">Header</a>
+        </h6>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><a href="../../../../../../boost/assign/v2/put/adapter/modifier.hpp" target="_top">boost/assign/v2/put/adapter/modifier.hpp</a><span class="special">&gt;</span>
+</pre>
+<p>
+        </p>
+<a name="boost_assign_v2.put.adapter.modifier.description"></a><h6>
+<a name="id36339566"></a>
+          <a class="link" href="put.html#boost_assign_v2.put.adapter.modifier.description">Description</a>
+        </h6>
+<p>
+          A <a href="http://publib.boulder.ibm.com/infocenter/comphelp/v8v101/index.jsp?topic=%2Fcom.ibm.xlcpp8a.doc%2Flanguage%2Fref%2Fclass_templates.htm" target="_top">class
+          template</a> with no default implementation, but whose specializations
+          are required to expose a particular interface for modifying a container.
+        </p>
+<a name="boost_assign_v2.put.adapter.modifier.synopsis"></a><h6>
+<a name="id36339592"></a>
+          <a class="link" href="put.html#boost_assign_v2.put.adapter.modifier.synopsis">Synopsis</a>
+        </h6>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="keyword">namespace</span> <a class="co" name="boost_assign_v26co" href="put.html#boost_assign_v26"><img src="../../../doc/src/images/callouts/1.png" alt="1" border="0"></a><span class="identifier">modifier_tag</span><span class="special">{}</span>
+<span class="keyword">namespace</span> <span class="identifier">put_aux</span><span class="special">{</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Tag</span><span class="special">&gt;</span>
+    <span class="keyword">struct</span> <a class="co" name="boost_assign_v27co" href="put.html#boost_assign_v27"><img src="../../../doc/src/images/callouts/2.png" alt="2" border="0"></a><span class="identifier">adapter_modifier</span><span class="special">{};</span>
+
+<span class="special">}</span>
+<span class="keyword">namespace</span> <span class="identifier">put_concept</span><span class="special">{</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Tag</span><span class="special">,</span> <a class="co" name="boost_assign_v28co" href="put.html#boost_assign_v28"><img src="../../../doc/src/images/callouts/3.png" alt="3" border="0"></a><span class="keyword">typename</span> <span class="identifier">C</span><span class="special">,</span> <a class="co" name="boost_assign_v29co" href="put.html#boost_assign_v29"><img src="../../../doc/src/images/callouts/4.png" alt="4" border="0"></a><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">Modifier</span>
+    <span class="special">{</span>
+
+        <span class="identifier">BOOST_CONCEPT_USAGE</span><span class="special">(</span><span class="identifier">Modifier</span><span class="special">)</span>
+        <span class="special">{</span>
+            <span class="identifier">m</span><span class="special">.</span><span class="identifier">impl</span><span class="special">(</span> <span class="identifier">cont</span><span class="special">,</span> <span class="identifier">t</span> <span class="special">);</span> 
+        <span class="special">}</span>
+
+        <span class="keyword">private</span><span class="special">:</span>
+        <span class="keyword">static</span> <span class="identifier">put_aux</span><span class="special">::</span><span class="identifier">adapter_modifier</span><span class="special">&lt;</span><span class="identifier">Tag</span><span class="special">&gt;&amp;</span> <span class="identifier">m</span><span class="special">;</span>
+        <span class="keyword">static</span> <span class="identifier">C</span><span class="special">&amp;</span> <span class="identifier">cont</span><span class="special">;</span>
+        <span class="keyword">static</span> <span class="identifier">T</span> <span class="identifier">t</span><span class="special">;</span>
+    <span class="special">};</span>
+
+<span class="special">}</span>
+</pre>
+<p>
+        </p>
+<div class="calloutlist"><table border="0" summary="Callout list">
+<tr>
+<td width="5%" valign="top" align="left"><p><a name="boost_assign_v26"></a><a href="#boost_assign_v26co"><img src="../../../doc/src/images/callouts/1.png" alt="1" border="0"></a> </p></td>
+<td valign="top" align="left"><p>
+              Template arguments to <code class="computeroutput"><span class="identifier">put_aux</span><span class="special">::</span><span class="identifier">adapter_modifier</span><span class="special">&lt;&gt;</span></code> have to be declared within
+              this <code class="computeroutput"><span class="keyword">namespace</span></code>
+            </p></td>
+</tr>
+<tr>
+<td width="5%" valign="top" align="left"><p><a name="boost_assign_v27"></a><a href="#boost_assign_v27co"><img src="../../../doc/src/images/callouts/2.png" alt="2" border="0"></a> </p></td>
+<td valign="top" align="left"><p>
+              Specialize on Tag
+            </p></td>
+</tr>
+<tr>
+<td width="5%" valign="top" align="left"><p><a name="boost_assign_v28"></a><a href="#boost_assign_v28co"><img src="../../../doc/src/images/callouts/3.png" alt="3" border="0"></a> </p></td>
+<td valign="top" align="left"><p>
+              Container
+            </p></td>
+</tr>
+<tr>
+<td width="5%" valign="top" align="left"><p><a name="boost_assign_v29"></a><a href="#boost_assign_v29co"><img src="../../../doc/src/images/callouts/4.png" alt="4" border="0"></a> </p></td>
+<td valign="top" align="left"><p>
+              Input
+            </p></td>
+</tr>
+</table></div>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2003 -2004 Thorsten Ottosen, 2010 Erwann Rogard<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="detail/config.html"><img src="../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="put/deque.html"><img src="../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>
