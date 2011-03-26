@@ -9,13 +9,9 @@
 #
 # /* See http://www.boost.org for most recent version. */
 #
-# ifndef BOOST_PREPROCESSOR_ARRAY_ENUM_HPP
-# define BOOST_PREPROCESSOR_ARRAY_ENUM_HPP
+# ifndef BOOST_PREPROCESSOR_LIST_TO_ARRAY_HPP
+# define BOOST_PREPROCESSOR_LIST_TO_ARRAY_HPP
 #
-#include <boost/preprocessor/tuple/enum.hpp>
-#include <boost/preprocessor/array/data.hpp>
-#
-#define BOOST_PP_ARRAY_ENUM(array) \
-  BOOST_PP_TUPLE_ENUM(BOOST_PP_ARRAY_DATA(array)) \
+#define BOOST_PP_LIST_TO_ARRAY(list) \
 /**/
-# endif // BOOST_PREPROCESSOR_ARRAY_ENUM_HPP
+# endif // BOOST_PREPROCESSOR_LIST_TO_ARRAY_HPP
