@@ -18,8 +18,11 @@
 #include <stack>
 #include <string>
 #include <utility>
-#include <boost/assign/v2/detail/config/check.hpp>
+#include <boost/circular_buffer.hpp>
+#include <boost/unordered_map.hpp>
+#include <boost/unordered_set.hpp>
 
+#include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/put.hpp>
 #include <boost/assign/v2/deque/csv_deque.hpp>
 #include <boost/tuple/tuple.hpp>
@@ -128,6 +131,40 @@ namespace xxx_put{
             BOOST_ASSIGN_V2_CHECK(  get<1>( tri_state_area.front() ) == 212 );
             BOOST_ASSIGN_V2_CHECK(  get<0>( tri_state_area.back()  ) == ct );
         }
+        {	
+        	//[test_put_put_unordered_map
+			boost::unordered_map<std::string, int> map; 
+            as2::put( map )("foo", 1)("bar", 2)("baz", 3);
+
+            BOOST_ASSIGN_V2_CHECK( map["foo"] == 1 );
+            BOOST_ASSIGN_V2_CHECK( map["baz"] == 3 );
+            //]
+        }
+        {	
+        	//[test_put_put_unordered_set
+			boost::unordered_set<std::string> set; 
+            as2::put( set )("foo")("bar")("baz");
+
+            BOOST_ASSIGN_V2_CHECK( set.count("foo") == 1 );
+            BOOST_ASSIGN_V2_CHECK( set.count("baz") == 1 );
+            //]
+        }
+        {
+        	//test_put_put_cb
+     		 boost::circular_buffer<int> cb(3);
+             as2::put( cb )( 1 )( 2 )( 3 );
+             
+             BOOST_ASSIGN_V2_CHECK(
+             	range::equal(cb, as2::csv_deque(1, 2, 3) )
+             );
+
+             as2::put( cb )( 4 )( 5 );
+
+             BOOST_ASSIGN_V2_CHECK(
+             	range::equal(cb, as2::csv_deque(3, 4, 5) )
+             );
+			//]
+		}
     }// test()
 
 }// xxx_put

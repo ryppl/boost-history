@@ -17,6 +17,7 @@
 #include <boost/assign/v2/deque.hpp>
 // Options come next
 #include <boost/assign/v2/option/std_modifier.hpp>
+#include <boost/circular_buffer.hpp>
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
 #include <boost/range/algorithm/equal.hpp>
@@ -60,13 +61,28 @@ namespace xxx_standard{
         {
             // fully qual boost::begin/end demanded by MSVC - error C2668
             //[test_option_push_front
-            std::deque<double> sqrt2;
+     		 boost::circular_buffer<int> cb(3); 
+             ( as2::put( cb ) % as2::_push_front)( 3 )( 2 )( 1 );
+             
+             BOOST_ASSIGN_V2_CHECK(
+             	range::equal(cb, as2::csv_deque(1, 2, 3) )
+             );
+
+            as2::put( cb )( 4 )( 5 );
+
+             BOOST_ASSIGN_V2_CHECK(
+             	range::equal(cb, as2::csv_deque(3, 4, 5) )
+             );
+
+            //]
+
+            /*std::deque<double> sqrt2;
             ( as2::put( sqrt2 ) % as2::_push_front )( 1.41421 )( 1.4142 )( 1.414 )( 1.41 );
 
 
             BOOST_ASSIGN_V2_CHECK( boost::lower_bound( sqrt2, 1.41 ) == boost::begin( sqrt2 ) );
-            BOOST_ASSIGN_V2_CHECK( boost::upper_bound( sqrt2, 1.41421 ) == boost::end( sqrt2 ) );
-            //]
+            BOOST_ASSIGN_V2_CHECK( boost::upper_bound( sqrt2, 1.41421 ) == boost::end( sqrt2 ) );*/
+
         }
         {
             //[test_option_push

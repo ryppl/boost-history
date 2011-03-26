@@ -43,7 +43,7 @@ namespace list_aux{
         typedef nil tail_type;
         typedef ::boost::mpl::int_<0> static_size;
         tail_holder(){}
-        
+
         typedef tail_type result_of_tail_type;
     };
 

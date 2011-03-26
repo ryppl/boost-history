@@ -25,7 +25,7 @@ namespace list_aux{
 
     template<typename Tag, typename H, typename T>
     class container :
-        public tail_holder<T>, 
+        public tail_holder<T>,
         public head_holder<H>,
         public ::boost::mpl::apply2<policy<Tag>, H, T>::type
     {
@@ -64,7 +64,7 @@ namespace list_aux{
             typedef typename result<H1 const&>::type result_;
             return result_( *this, h );
         }
-        
+
     };
 
 }// list_aux

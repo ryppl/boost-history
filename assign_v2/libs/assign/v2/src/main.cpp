@@ -21,8 +21,8 @@
 #include <libs/assign/v2/tutorial.h>
 
 // Speed -- CPP0x required
-//#include <fstream>
-//#include <libs/assign/v2/speed/test.h>
+/*#include <fstream>
+#include <libs/assign/v2/speed/test.h>*/
 
 #include <boost/assign/v2/include.hpp>
 

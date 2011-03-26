@@ -21,25 +21,28 @@ namespace assign{
 namespace v2{
 namespace container_aux{
 
-    template<typename A, typename T> struct to_value_allocator_helper{};
-
-    template<typename T>
-    struct to_value_allocator_helper<std::allocator<void*>, T>
-    {
-        typedef std::allocator<T> type;
-    };
+	// VALUE
 
     template<typename PtrC>
     struct to_value_value : boost::remove_reference<
         typename PtrC::reference
     >{};
 
+	template<typename PtrC>
+    struct to_value_mapped : boost::remove_reference<
+		typename PtrC::mapped_reference    
+    >{};
+
+	// ALLOCATOR
+
     template<typename PtrC>
-    struct to_value_allocator : to_value_allocator_helper<
-        typename PtrC::allocator_type,
-        typename to_value_value<PtrC>::type
-    >
-    {};
+    struct to_value_allocator
+    {
+    	typedef std::allocator<typename to_value_value<PtrC>::type> type;
+    };
+
+
+	// ARRAY
 
     template<typename PtrC> struct helper_size{};
 
@@ -58,6 +61,8 @@ namespace container_aux{
         > type;
     };
 
+	// SEQUENCE
+
     template<typename PtrC, template<typename, typename> class C>
     struct to_value_sequence {
 
@@ -68,17 +73,21 @@ namespace container_aux{
 
     };
 
+	// MAP
+
     template<typename PtrC, template<typename, typename, typename, typename> class C>
     struct to_value_map{
 
         typedef C<
             typename PtrC::key_type,
-            typename to_value_value<PtrC>::type,
+            typename to_value_mapped<PtrC>::type,
             typename PtrC::key_compare,
-            typename to_value_allocator<PtrC>::type
+			typename to_value_allocator<PtrC>::type
         > type;
 
     };
+
+	// SET
 
     template<typename PtrC, template<typename, typename, typename> class C>
     struct to_value_set{
@@ -91,30 +100,34 @@ namespace container_aux{
 
     };
 
+	// UNORDERED MAP
+
     template<typename PtrC,
         template<typename, typename, typename, typename, typename> class C>
-    class to_value_unordered_map{
+    struct to_value_unordered_map{
 
         typedef C<
             typename PtrC::key_type,
-            typename to_value_value<PtrC>::type,
+            typename to_value_mapped<PtrC>::type,
             typename PtrC::hasher,
             typename PtrC::key_equal,
             typename to_value_allocator<PtrC>::type
-        > container_type;
+        > type;
 
     };
 
+	// UNORDERED SET
+
     template<typename PtrC,
         template<typename, typename, typename, typename> class C>
-    class unordered_set_like{
+    struct to_value_unordered_set{
 
         typedef C<
             typename PtrC::key_type,
             typename PtrC::hasher,
             typename PtrC::key_equal,
             typename to_value_allocator<PtrC>::type
-        > container_type;
+        > type;
 
     };
 
@@ -176,20 +189,24 @@ namespace container_aux{
         std::vector
     >{};
 
+	// Map
+
     template
     <
         class Key,
-        class T,
+        class Mapped,
         class Compare,
         class CloneAllocator,
         class Allocator
     >
     struct to_value_container<
-        boost::ptr_map<Key, T, Compare, CloneAllocator, Allocator>
+        boost::ptr_map<Key, Mapped, Compare, CloneAllocator, Allocator>
     > : to_value_map<
-        boost::ptr_map<Key, T, Compare, CloneAllocator, Allocator>,
+        boost::ptr_map<Key, Mapped, Compare, CloneAllocator, Allocator>,
         std::map
     >{};
+
+	// Set
 
     template
     <
@@ -205,7 +222,40 @@ namespace container_aux{
         std::set
     >{};
 
-    // TODO unordered
+	// Unordered map
+
+    template
+    <
+        class Key,
+        class Mapped,
+        class Hash,
+        class Pred,
+        class CloneAllocator,
+        class Allocator
+    >
+    struct to_value_container<
+        boost::ptr_unordered_map<Key, Mapped, Hash, Pred, CloneAllocator, Allocator>
+    > : to_value_unordered_map<
+        boost::ptr_unordered_map<Key, Mapped, Hash, Pred, CloneAllocator, Allocator>,
+        boost::unordered_map
+    >{};
+
+	// Unordered set
+
+    template
+    <
+        class Key,
+        class Hash,
+        class Pred,
+        class CloneAllocator,
+        class Allocator
+    >
+    struct to_value_container<
+        boost::ptr_unordered_set<Key, Hash, Pred, CloneAllocator, Allocator>
+    > : to_value_unordered_set<
+        boost::ptr_unordered_set<Key, Hash, Pred, CloneAllocator, Allocator>,
+        boost::unordered_set
+    >{};
 
 }// container_aux
 }// v2

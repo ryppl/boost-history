@@ -68,7 +68,7 @@ namespace boost{
     template
     <
         class Key,
-        class T,
+        class Mapped,
         class Hash,
         class Pred,
         class CloneAllocator,

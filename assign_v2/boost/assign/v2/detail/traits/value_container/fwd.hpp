@@ -43,6 +43,40 @@ namespace boost{
     // http://www.boost.org/doc/libs/release/libs/circular_buffer/index.html
     template<typename T, typename Alloc> class circular_buffer;
 
+   template <
+        class Key,
+        class Hash, 
+        class Pred, 
+        class Alloc
+    >
+    class unordered_set;
+
+	template <
+        class Key, 
+        class Mapped,
+        class Hash,
+        class Pred,
+        class Alloc
+    >
+    class unordered_map;
+
+    template<
+        class Key, 
+        class Mapped,
+        class Hash,
+        class Pred,
+        class Alloc
+    >
+    class unordered_multimap;
+
+    template<
+        class Key,
+        class Hash, 
+        class Pred, 
+        class Alloc
+    > 
+    class unordered_multiset;
+
 }// boost
 
 #endif // BOOST_ASSIGN_V2_DETAIL_TRAITS_VALUE_CONTAINER_FWD_ER_2010_HPP
