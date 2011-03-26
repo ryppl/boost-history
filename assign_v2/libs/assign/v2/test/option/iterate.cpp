@@ -12,7 +12,7 @@
 
 #include <boost/assign/v2/put.hpp>
 // Options come next
-#include <boost/assign/v2/option/iterate.hpp> 
+#include <boost/assign/v2/option/modifier/iterate.hpp> 
 #include <boost/assign/v2/deque.hpp>
 #include <boost/lambda/lambda.hpp>
 #include <boost/lambda/bind.hpp>

@@ -14,7 +14,7 @@
 #include <boost/assign/v2/deque/csv_deque.hpp>
 #include <boost/assign/v2/pipe/csv_put.hpp>
 // Options come next
-#include <boost/assign/v2/option/data.hpp>
+#include <boost/assign/v2/option/data_generator/framework.hpp>
 #include <boost/lambda/lambda.hpp>
 #include <boost/range/algorithm/equal.hpp>
 #include <libs/assign/v2/test/pipe/option/data.h>

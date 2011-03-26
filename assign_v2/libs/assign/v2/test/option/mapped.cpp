@@ -14,8 +14,8 @@
 #include <boost/assign/v2/put.hpp>
 #include <boost/assign/v2/deque.hpp>
 // Options come next
-#include <boost/assign/v2/option/key.hpp>
-#include <boost/assign/v2/option/mapped.hpp>
+#include <boost/assign/v2/option/data_generator/key.hpp>
+#include <boost/assign/v2/option/modifier/mapped.hpp>
 #include <boost/lambda/lambda.hpp>
 #include <boost/mpl/assert.hpp>
 #include <boost/mpl/apply.hpp>

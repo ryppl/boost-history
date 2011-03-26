@@ -9,7 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_INCLUDE_MACRO_STD_MODIFIER_ER_2010_HPP
 #define BOOST_ASSIGN_V2_INCLUDE_MACRO_STD_MODIFIER_ER_2010_HPP
-#include <boost/assign/v2/option/std_modifier.hpp>
+#include <boost/assign/v2/option/modifier/std.hpp>
 
 #endif // BOOST_ASSIGN_V2_INCLUDE_MACRO_STD_MODIFIER_ER_2010_HPP
 

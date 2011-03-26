@@ -11,7 +11,7 @@
 #define BOOST_ASSIGN_V2_DEQUE_DEQUE_ER_2010_HPP
 #include <deque>
 #include <boost/assign/v2/interpreter/crtp.hpp>
-#include <boost/assign/v2/interpreter/data.hpp>
+#include <boost/assign/v2/interpreter/data_generator.hpp>
 #include <boost/assign/v2/interpreter/modifier.hpp>
 #include <boost/assign/v2/interpreter/replace.hpp>
 #include <boost/assign/v2/deque/fwd.hpp>

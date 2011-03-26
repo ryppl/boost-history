@@ -9,6 +9,6 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_INCLUDE__ITERATE_ER_2010_HPP
 #define BOOST_ASSIGN_V2_INCLUDE__ITERATE_ER_2010_HPP
-#include <boost/assign/v2/option/iterate.hpp>
+#include <boost/assign/v2/option/modifier/iterate.hpp>
 
 #endif // BOOST_ASSIGN_V2_INCLUDE__ITERATE_ER_2010_HPP

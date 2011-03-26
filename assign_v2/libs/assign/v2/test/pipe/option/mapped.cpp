@@ -14,8 +14,8 @@
 #include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/pipe/csv_put.hpp>
 // Options come next
-#include <boost/assign/v2/option/data.hpp>
-#include <boost/assign/v2/option/mapped.hpp>
+#include <boost/assign/v2/option/data_generator/framework.hpp>
+#include <boost/assign/v2/option/modifier/mapped.hpp>
 #include <libs/assign/v2/test/pipe/option/mapped.h>
 
 namespace test_assign_v2{

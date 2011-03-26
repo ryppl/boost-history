@@ -9,6 +9,6 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_INCLUDE__MAPPED_ER_2010_HPP
 #define BOOST_ASSIGN_V2_INCLUDE__MAPPED_ER_2010_HPP
-#include <boost/assign/v2/option/mapped.hpp>
+#include <boost/assign/v2/option/modifier/mapped.hpp>
 
 #endif // BOOST_ASSIGN_V2_INCLUDE__MAPPED_ER_2010_HPP

@@ -9,6 +9,6 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_INCLUDE__KEY_ER_2010_HPP
 #define BOOST_ASSIGN_V2_INCLUDE__KEY_ER_2010_HPP
-#include <boost/assign/v2/option/key.hpp>
+#include <boost/assign/v2/option/data_generator/key.hpp>
 
 #endif // BOOST_ASSIGN_V2_INCLUDE__KEY_ER_2010_HPP

@@ -9,6 +9,6 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_INCLUDE__REPEAT_ER_2010_HPP
 #define BOOST_ASSIGN_V2_INCLUDE__REPEAT_ER_2010_HPP
-#include <boost/assign/v2/option/repeat.hpp>
+#include <boost/assign/v2/option/modifier/repeat.hpp>
 
 #endif // BOOST_ASSIGN_V2_INCLUDE__REPEAT_ER_2010_HPP

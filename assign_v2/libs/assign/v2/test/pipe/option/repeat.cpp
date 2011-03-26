@@ -12,7 +12,7 @@
 #include <boost/assign/v2/pipe/csv_put.hpp>
 #include <boost/assign/v2/deque.hpp>
 // Options come next
-#include <boost/assign/v2/option/repeat.hpp>
+#include <boost/assign/v2/option/modifier/repeat.hpp>
 #include <boost/range/algorithm/equal.hpp>
 #include <libs/assign/v2/test/pipe/option/repeat.h>
 

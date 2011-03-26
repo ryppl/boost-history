@@ -12,8 +12,8 @@
 #include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/put.hpp>
 // Options come next
-#include <boost/assign/v2/option/push_front.hpp>
-#include <boost/assign/v2/option/repeat.hpp>
+#include <boost/assign/v2/option/modifier/std.hpp>
+#include <boost/assign/v2/option/modifier/repeat.hpp>
 #include <boost/assign/v2/deque.hpp>
 #include <boost/range/algorithm/equal.hpp>
 #include <libs/assign/v2/test/option/repeat.h>

@@ -9,11 +9,11 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_OPTION_ER_2010_HPP
 #define BOOST_ASSIGN_V2_OPTION_ER_2010_HPP
-#include <boost/assign/v2/option/key.hpp>
-#include <boost/assign/v2/option/iterate.hpp>
-#include <boost/assign/v2/option/mapped.hpp>
-#include <boost/assign/v2/option/modifier.hpp>
-#include <boost/assign/v2/option/repeat.hpp>
-#include <boost/assign/v2/option/std_modifier.hpp>
+#include <boost/assign/v2/option/data_generator/key.hpp>
+#include <boost/assign/v2/option/modifier/iterate.hpp>
+#include <boost/assign/v2/option/modifier/mapped.hpp>
+#include <boost/assign/v2/option/modifier/framework.hpp>
+#include <boost/assign/v2/option/modifier/repeat.hpp>
+#include <boost/assign/v2/option/modifier/std.hpp>
 
 #endif // BOOST_ASSIGN_V2_OPTION_ER_2010_HPP

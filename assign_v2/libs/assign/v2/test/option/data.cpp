@@ -16,7 +16,7 @@
 #include <boost/assign/v2/deque.hpp>
 #include <boost/assign/v2/put.hpp>
 // Options come next
-#include <boost/assign/v2/option/data.hpp>
+#include <boost/assign/v2/option/data_generator/framework.hpp>
 #include <boost/function.hpp>
 #include <boost/lambda/bind.hpp>
 #include <boost/lambda/lambda.hpp>

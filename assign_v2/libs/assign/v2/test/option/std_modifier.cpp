@@ -16,7 +16,7 @@
 #include <boost/assign/v2/put.hpp>
 #include <boost/assign/v2/deque.hpp>
 // Options come next
-#include <boost/assign/v2/option/std_modifier.hpp>
+#include <boost/assign/v2/option/modifier/std.hpp>
 #include <boost/circular_buffer.hpp>
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
