@@ -1,0 +1,17 @@
+#
+#   Copyright 2010 
+#   Edward Diener
+#
+#   This file is taken from the 'example' sandbox library
+#
+
+##
+##  IMPORTANT NOTE: This file MUST NOT be copied over a boost installation
+##
+
+project preprocessor
+    : requirements
+        <include>.&&$(BOOST_ROOT)
+    :
+        build-dir bin.v2
+    ;
