@@ -18,6 +18,8 @@
 #
 # include <boost/preprocessor/variadic/size.hpp>
 #
+# /* BOOST_PP_TUPLE_SIZE */
+#
 #define BOOST_PP_TUPLE_SIZE(tuple) BOOST_PP_VARIADIC_SIZE tuple
 #
 #endif // BOOST_PP_VARIADICS

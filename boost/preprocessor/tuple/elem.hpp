@@ -22,15 +22,23 @@
 # include <boost/preprocessor/tuple/enum.hpp>
 # include <boost/preprocessor/variadic/elem.hpp>
 #
+# /* BOOST_PP_TUPLE_ELEM */
+#
 #    define BOOST_PP_TUPLE_ELEM(...) \
-         BOOST_PP_OVERLOAD(BOOST_PP_TUPLE_ELEM_, __VA_ARGS__)(__VA_ARGS__) \
+         BOOST_PP_OVERLOAD(BOOST_PP_TUPLE_DETAIL_ELEM_, __VA_ARGS__)(__VA_ARGS__) \
          /**/
-#    define BOOST_PP_TUPLE_ELEM_2(i, tuple) BOOST_PP_VARIADIC_ELEM(i,BOOST_PP_TUPLE_ENUM(tuple))
-#    define BOOST_PP_TUPLE_ELEM_3(size, i, tuple) BOOST_PP_TUPLE_ELEM_2(i, tuple)
+#    define BOOST_PP_TUPLE_DETAIL_ELEM_2(i, tuple) \
+         BOOST_PP_VARIADIC_ELEM(i,BOOST_PP_TUPLE_ENUM(tuple)) \
+         /**/
+#    define BOOST_PP_TUPLE_DETAIL_ELEM_3(size, i, tuple) \
+         BOOST_PP_TUPLE_DETAIL_ELEM_2(i, tuple) \
+         /**/
 #
 # else
 #
 # include <boost/preprocessor/config/config.hpp>
+#
+# /* BOOST_PP_TUPLE_ELEM */
 #
 # if ~BOOST_PP_CONFIG_FLAGS() & BOOST_PP_CONFIG_MWCC()
 #    define BOOST_PP_TUPLE_ELEM(size, index, tuple) BOOST_PP_TUPLE_ELEM_I(size, index, tuple)

@@ -16,6 +16,8 @@
 #include <boost/preprocessor/list/to_tuple.hpp>
 #include <boost/preprocessor/list/size.hpp>
 #
+# /* BOOST_PP_LIST_TO_ARRAY */
+#
 #define BOOST_PP_LIST_TO_ARRAY(list) \
   BOOST_PP_TUPLE_TO_ARRAY(BOOST_PP_LIST_SIZE(list),BOOST_PP_LIST_TO_TUPLE(list)) \
 /**/

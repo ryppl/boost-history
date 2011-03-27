@@ -18,6 +18,8 @@
 #
 # include <boost/preprocessor/facilties/overload.hpp>
 #
+# /* BOOST_PP_TUPLE_ENUM */
+#
 #define BOOST_PP_TUPLE_ENUM(...) \
   BOOST_PP_OVERLOAD(BOOST_PP_TUPLE_ENUM_, __VA_ARGS__)(__VA_ARGS__) \
 /**/
@@ -36,6 +38,8 @@
 #else
 #
 #include <boost/preprocessor/tuple/rem.hpp>
+#
+# /* BOOST_PP_TUPLE_ENUM */
 #
 #define BOOST_PP_TUPLE_ENUM(size, tuple) \
   BOOST_PP_TUPLE_REM_CTOR(size, tuple) \

@@ -18,14 +18,18 @@
 #
 # include <boost/preprocessor/facilities/overload.hpp>
 #
+# /* BOOST_PP_TUPLE_REM */
+#
 #define BOOST_PP_TUPLE_REM(size) BOOST_PP_DETAIL_TUPLE_REM
 #define BOOST_PP_DETAIL_TUPLE_REM(...) __VA_ARGS__
 #
+# /* BOOST_PP_TUPLE_REM_CTOR */
+#
 #    define BOOST_PP_TUPLE_REM_CTOR(...) \
-         BOOST_PP_OVERLOAD(BOOST_PP_TUPLE_REM_CTOR_, __VA_ARGS__)(__VA_ARGS__) \
+         BOOST_PP_OVERLOAD(BOOST_PP_TUPLE_DETAIL_REM_CTOR_, __VA_ARGS__)(__VA_ARGS__) \
          /**/
-#    define BOOST_PP_TUPLE_REM_CTOR_1(tuple) BOOST_PP_DETAIL_TUPLE_REM tuple
-#    define BOOST_PP_TUPLE_REM_CTOR_2(size, tuple) BOOST_PP_TUPLE_REM_CTOR_1(tuple)
+#    define BOOST_PP_TUPLE_DETAIL_REM_CTOR_1(tuple) BOOST_PP_DETAIL_TUPLE_REM tuple
+#    define BOOST_PP_TUPLE_DETAIL_REM_CTOR_2(size, tuple) BOOST_PP_TUPLE_DETAIL_REM_CTOR_1(tuple)
 #
 # else
 #

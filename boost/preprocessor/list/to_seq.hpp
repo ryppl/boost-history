@@ -16,6 +16,8 @@
 #include <boost/preprocessor/list/to_tuple.hpp>
 #include <boost/preprocessor/list/size.hpp>
 #
+# /* BOOST_PP_LIST_TO_SEQ */
+#
 #define BOOST_PP_LIST_TO_SEQ(list) \
   BOOST_PP_TUPLE_TO_SEQ(BOOST_PP_LIST_SIZE(list),BOOST_PP_LIST_TO_TUPLE(list)) \
 /**/

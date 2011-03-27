@@ -14,6 +14,7 @@
 # ifndef BOOST_PREPROCESSOR_TUPLE_REVERSE_HPP
 # define BOOST_PREPROCESSOR_TUPLE_REVERSE_HPP
 #
+# include <boost/preprocessor/config/config.hpp>
 # include <boost/preprocessor/config/variadics.hpp>
 #
 # if BOOST_PP_VARIADICS
@@ -38,8 +39,6 @@
 #    define BOOST_PP_TUPLE_REVERSE(size, tuple) BOOST_PP_TUPLE_REVERSE_COMMON(size, tuple)
 #
 # endif // BOOST_PP_VARIADICS
-#
-# include <boost/preprocessor/config/config.hpp>
 #
 # if ~BOOST_PP_CONFIG_FLAGS() & BOOST_PP_CONFIG_MWCC()
 #    define BOOST_PP_TUPLE_REVERSE_COMMON(size, tuple) BOOST_PP_TUPLE_REVERSE_I(size, tuple)

@@ -14,6 +14,8 @@
 #
 #include <boost/preprocessor/array/data.hpp>
 #
+# /* BOOST_PP_ARRAY_TO_TUPLE */
+#
 #define BOOST_PP_ARRAY_TO_TUPLE(array) \
   BOOST_PP_ARRAY_DATA(array) \
 /**/
