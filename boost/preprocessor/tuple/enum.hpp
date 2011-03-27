@@ -16,7 +16,7 @@
 #
 #if BOOST_PP_VARIADICS
 #
-# include <boost/preprocessor/facilties/overload.hpp>
+# include <boost/preprocessor/facilities/overload.hpp>
 #
 # /* BOOST_PP_TUPLE_ENUM */
 #
@@ -29,12 +29,9 @@
 #define BOOST_PP_TUPLE_ENUM_2(size, tuple) \
   BOOST_PP_TUPLE_ENUM_1(tuple) \
 /**/
-#define BOOST_PP_TUPLE_DETAIL_REMOVE_TUPLE_PARENS(...) \
-  __VA_ARGS__ \
-/**/
-#define BOOST_PP_TUPLE_DETAIL_ENUM(tuple) \
-  BOOST_PP_TUPLE_DETAIL_REMOVE_TUPLE_PARENS tuple \
-/**/
+#define BOOST_PP_TUPLE_DETAIL_REMOVE_TUPLE_PARENS(...) __VA_ARGS__
+#define BOOST_PP_TUPLE_DETAIL_ENUM(tuple) BOOST_PP_TUPLE_DETAIL_REMOVE_TUPLE_PARENS tuple
+#
 #else
 #
 #include <boost/preprocessor/tuple/rem.hpp>

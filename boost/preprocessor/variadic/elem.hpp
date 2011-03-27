@@ -19,7 +19,7 @@
 #include "detail/elem.hpp"
 #
 #define BOOST_PP_VARIADIC_ELEM(n,...) \
-  BOOST_PP_VARIADIC_DETAIL_ELEM(n,__VA_ARGS__) \
+  BOOST_PP_VARIADIC_DETAIL_DATA_ELEM(n,__VA_ARGS__) \
 /**/
 #
 #endif // BOOST_PP_VARIADICS

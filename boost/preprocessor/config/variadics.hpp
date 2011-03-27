@@ -12,7 +12,6 @@
 # ifndef BOOST_PREPROCESSOR_CONFIG_VARIADICS_HPP
 # define BOOST_PREPROCESSOR_CONFIG_VARIADICS_HPP
 #
-# define BOOST_PP_VARIADICS 1
 # if defined(BOOST_PP_NO_VARIADICS)
 /* This macro is purely for testing purposes so that we can 
    test Boost PP without variadic macro support even on 
@@ -145,6 +144,10 @@
 # define BOOST_PP_VARIADICS 0
 #endif
 #
+#if !defined(BOOST_PP_VARIADICS)
+#define BOOST_PP_VARIADICS 1
+#endif
+#
 # else // !1
 /* This is the ideal code, but will not work until Boost Config 
    works with C compilers or C++ compilers in C mode. I will be 
@@ -154,6 +157,8 @@
 #
 # if defined(BOOST_NO_VARIADIC_MACROS)
 # define BOOST_PP_VARIADICS 0
+# else
+# define BOOST_PP_VARIADICS 1
 # endif // !BOOST_NO_VARIADIC_MACROS
 #
 # endif // 1
