@@ -4,16 +4,16 @@
 // License, Version 1.0 (see accompanying file LICENSE_1_0.txt or a
 // copy at http://www.boost.org/LICENSE_1_0.txt).
 
-//[ add_num_cpp
+//[ add_x_y_cpp
 #include <boost/local/function.hpp>
 #include <iostream>
 
 int main() {
-    void BOOST_LOCAL_FUNCTION_PARAMS( (double num) ) {
-        std::clog << num << std::endl;
+    int BOOST_LOCAL_FUNCTION_PARAMS( (int x) (int y) ) {
+        return x + y;
     } BOOST_LOCAL_FUNCTION_NAME(add)
 
-    add(100.0);
+    std::cout << add(1, 2) << std::endl;
     return 0;
 }
 //]

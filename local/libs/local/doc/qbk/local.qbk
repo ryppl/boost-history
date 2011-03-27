@@ -70,6 +70,10 @@
 [def __BOOST_IDENTITY_VALUE__ [macroref BOOST_IDENTITY_VALUE]]
 [def __function__ [classref boost::local::function function]]
 
+[def __Variadic_Macro_Syntax__ Variadic Macro Syntax (C99 and later compilers)]
+[def __Sequencing_Macro_Syntax__ Sequencing Macro Syntax (all C++ compilers)]
+[def __Empty_Macro_Syntax__ Empty Macro Syntax (C99 and other modern compilers)]
+
 [import ../../example/add_callouts.cpp]
 [import ../../example/add.cpp]
 [import ../../example/add_va.cpp]
@@ -130,6 +134,12 @@
 [import ../../example/factorial_impl.cpp]
 [import ../../example/add_block_impl.cpp]
 [import ../../example/add_exit_impl.cpp]
+[import ../../example/add_boost_local.cpp]
+[import ../../example/add_boost_local_va.cpp]
+[import ../../example/add_local_class.cpp]
+[import ../../example/add_cpp0x_lambda.cpp]
+[import ../../example/add_boost_lambda.cpp]
+[import ../../example/add_boost_phoenix.cpp]
 
 The Boost Local library implements local functions, local blocks, and local exits for the C++ programming language.
 

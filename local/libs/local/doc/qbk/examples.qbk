@@ -14,7 +14,7 @@ This example is adapted from the __Boost_ScopeExit__ documentation.
 This example illustrates how to use __Boost_Typeof__ to register user defined types and then use these types to bind local exit variables.
 
 [table
-[ [Variadic Macro Syntax (C99 and later compilers)] [Sequencing Macro Syntax (all C++ compilers)] ]
+[ [__Variadic_Macro_Syntax__] [__Sequencing_Macro_Syntax__] ]
 [ [ [world_exit_va_cpp] ] [ [world_exit_cpp] ] ]
 ]
 
@@ -27,14 +27,14 @@ Local exits can also be used to emulate D's [@http://www.digitalmars.com/d/2.0/s
 For example, using error codes:
 
 [table
-[ [Variadic Macro Syntax (C99 and later compilers)] [Sequencing Macro Syntax (all C++ compilers)] ]
+[ [__Variadic_Macro_Syntax__] [__Sequencing_Macro_Syntax__] ]
 [ [ [scope_guards_errno_va_cpp] ] [ [scope_guards_errno_cpp] ] ]
 ]
 
 Or similarly but using exceptions:
 
 [table
-[ [Variadic Macro Syntax (C99 and later compilers)] [Sequencing Macro Syntax (all C++ compilers)] ]
+[ [__Variadic_Macro_Syntax__] [__Sequencing_Macro_Syntax__] ]
 [ [ [scope_guards_except_va_cpp] ] [ [scope_guards_except_cpp] ] ]
 ]
 
@@ -46,7 +46,7 @@ This example is adapted from __N2550__ (C++0x lambda functions).
 This example passes a local function to the STL algorithm `std::find_if`.
 
 [table
-[ [Variadic Macro Syntax (C99 and later compilers)] [Sequencing Macro Syntax (all C++ compilers)] ]
+[ [__Variadic_Macro_Syntax__] [__Sequencing_Macro_Syntax__] ]
 [ [ [find_if_va_cpp] ] [ [find_if_cpp] ] ]
 ]
 
@@ -58,7 +58,7 @@ This example is adapted from __N2529__ (C++0x lambda functions).
 This example binds the object in scope `this` to a local function.
 
 [table
-[ [Variadic Macro Syntax (C99 and later compilers)] [Sequencing Macro Syntax (all C++ compilers)] ]
+[ [__Variadic_Macro_Syntax__] [__Sequencing_Macro_Syntax__] ]
 [ [ [this_va_cpp] ] [ [this_cpp] ] ]
 ]
 
@@ -67,12 +67,12 @@ This example binds the object in scope `this` to a local function.
 [section GCC Nested Functions]
 
 The GCC compiler supports local functions under the name of [@http://gcc.gnu.org/onlinedocs/gcc/Nested-Functions.html nested functions].
-Nested functions are exclusively an extension of the GCC compiler and they are not part of any C++ standard (ISO C++, C99, C++0x, etc) nor they are supported by other compilers like MSVC.
+Nested functions are exclusively a C extension of the GCC compiler, they are not supported for C++ not even by the GCC compiler, and they are not part of any C++ standard (ISO C++, C99, C++0x, etc) nor they are supported by other compilers like MSVC.
 
 The following examples rework the GCC nested function examples using this library local functions.
 
 [table
-[ [Variadic Macro Syntax (C99 and later compilers)] [Sequencing Macro Syntax (all C++ compilers)] ]
+[ [__Variadic_Macro_Syntax__] [__Sequencing_Macro_Syntax__] ]
 [ [ [gcc_square_va_cpp] ] [ [gcc_square_cpp] ] ]
 [ [ [gcc_access_va_cpp] ] [ [gcc_access_cpp] ] ]
 [ [ [gcc_store_va_cpp] ] [ [gcc_store_cpp] ] ]
@@ -85,7 +85,7 @@ The following examples rework the GCC nested function examples using this librar
 This example shows all possible parameter permutations (with and without binding, etc).
 
 [table
-[ [Variadic Macro Syntax (C99 and later compilers)] [Sequencing Macro Syntax (all C++ compilers)] ]
+[ [__Variadic_Macro_Syntax__] [__Sequencing_Macro_Syntax__] ]
 [ [ [params_all_va_cpp] ] [ [params_all_cpp] ] ]
 ]
 

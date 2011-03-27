@@ -24,7 +24,7 @@ int main() {
         return x + y;
     } BOOST_LOCAL_FUNCTION_NAME(add)
 
-    add(1);
+    std::cout << add(1) << std::endl;
     return 0;
 }
 //]

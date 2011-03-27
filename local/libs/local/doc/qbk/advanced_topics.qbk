@@ -31,7 +31,7 @@ The library will generate (cryptic) preprocessor errors if a parameter type star
 Let's consider the following example:
 
 [table
-[ [Variadic Macro Syntax (C99 and later compilers)] [Sequencing Macro Syntax (all C++ compilers)] ]
+[ [__Variadic_Macro_Syntax__] [__Sequencing_Macro_Syntax__] ]
 [ [``
     ... __BOOST_LOCAL_FUNCTION_PARAMS__(
         const std::map<std::string, size_t>& m,                 // (1) Error.
@@ -56,7 +56,7 @@ This comma is not wrapped by any round parenthesis `()` (the outer parenthesis `
 The macro `__BOOST_IDENTITY_TYPE__(`/parenthesized-type/`)` can be used to wrap a type within extra parenthesis `()` so to overcome this issue:
 
 [table
-[ [Variadic Macro Syntax (C99 and later compilers)] [Sequencing Macro Syntax (all C++ compilers)] ]
+[ [__Variadic_Macro_Syntax__] [__Sequencing_Macro_Syntax__] ]
 [ [``
     ... __BOOST_LOCAL_FUNCTION_PARAMS__(
         __BOOST_IDENTITY_TYPE__((const std::map<std::string, size_t>&)) m,  // OK.
@@ -85,7 +85,7 @@ However, this feature is currently not implemented and the double parenthesis ar
 The macros `__BOOST_IDENTITY_TYPE__` can also be used to overcome this issue:
 
 [table
-[ [Variadic Macro Syntax (C99 and later compilers)] [Sequencing Macro Syntax (all C++ compilers)] ]
+[ [__Variadic_Macro_Syntax__] [__Sequencing_Macro_Syntax__] ]
 [ [``
     ... __BOOST_LOCAL_FUNCTION_PARAMS__(
         ...
@@ -105,7 +105,7 @@ Often, there might be better ways to overcome this limitation that lead to code 
 For example, in this case the symbols `::` could have been simply dropped to obtain the following valid and more readable code:
 
 [table
-[ [Variadic Macro Syntax (C99 and later compilers)] [Sequencing Macro Syntax (all C++ compilers)] ]
+[ [__Variadic_Macro_Syntax__] [__Sequencing_Macro_Syntax__] ]
 [ [``
     ... __BOOST_LOCAL_FUNCTION_PARAMS__(
         ...
@@ -126,7 +126,7 @@ Again, this comma is not wrapped by any parenthesis `()` so it will cause a prep
 Because this is a value expression (and not a type expression), it can be simply wrapped within an extra set of round parenthesis `()`:
 
 [table
-[ [Variadic Macro Syntax (C99 and later compilers)] [Sequencing Macro Syntax (all C++ compilers)] ]
+[ [__Variadic_Macro_Syntax__] [__Sequencing_Macro_Syntax__] ]
 [ [``
     ... __BOOST_LOCAL_FUNCTION_PARAMS__(
         ...
@@ -164,7 +164,7 @@ However, macro parameters usually do not contain unwrapped commas `,` (unless te
 ]
 
 [table
-[ [Variadic Macro Syntax (C99 and later compilers)] [Sequencing Macro Syntax (all C++ compilers)] ]
+[ [__Variadic_Macro_Syntax__] [__Sequencing_Macro_Syntax__] ]
 [ [ [print_map_va_cpp] ] [ [print_map_cpp] ] ]
 ]
 
@@ -193,14 +193,14 @@ The deduced bound type can be used within the body to declare a local variable, 
 For example:
 
 [table
-[ [Variadic Macro Syntax (C99 and later compilers)] [Sequencing Macro Syntax (all C++ compilers)] ]
+[ [__Variadic_Macro_Syntax__] [__Sequencing_Macro_Syntax__] ]
 [ [ [typeof_va_cpp] ] [ [typeof_cpp] ] ]
 ]
 
 Within templates, `__BOOST_LOCAL_TYPEOF__` does not require to be prefixed by the `typename` keyword but eventual type manipulations need the `typename` prefix as usual:
 
 [table
-[ [Variadic Macro Syntax (C99 and later compilers)] [Sequencing Macro Syntax (all C++ compilers)] ]
+[ [__Variadic_Macro_Syntax__] [__Sequencing_Macro_Syntax__] ]
 [ [ [typeof_tpl_va_cpp] ] [ [typeof_tpl_cpp] ] ]
 ]
 
@@ -240,7 +240,7 @@ For example:``
 For example:
 
 [table
-[ [Variadic Macro Syntax (C99 and later compilers)] [Sequencing Macro Syntax (all C++ compilers)] ]
+[ [__Variadic_Macro_Syntax__] [__Sequencing_Macro_Syntax__] ]
 [ [ [doit_va_cpp] ] [ [doit_cpp] ] ]
 ]
 
@@ -248,7 +248,7 @@ In addition, a local function can bind and call another local function.
 For example, the following local function `inc_sum` binds the local function `inc` so `inc_sum` can call `inc`:
 
 [table
-[ [Variadic Macro Syntax (C99 and later compilers)] [Sequencing Macro Syntax (all C++ compilers)] ]
+[ [__Variadic_Macro_Syntax__] [__Sequencing_Macro_Syntax__] ]
 [ [ [transform_va_cpp] ] [ [transform_cpp] ] ]
 ]
 
@@ -267,7 +267,7 @@ For example, even if the body code is specified to throw no exception using `thr
 For example:
 
 [table
-[ [Variadic Macro Syntax (C99 and later compilers)] [Sequencing Macro Syntax (all C++ compilers)] ]
+[ [__Variadic_Macro_Syntax__] [__Sequencing_Macro_Syntax__] ]
 [ [ [add_except_va_cpp] ] [ [add_except_cpp] ] ]
 ]
 
@@ -287,7 +287,7 @@ and the `register` storage classifier is specified as:
 For example:
 
 [table
-[ [Variadic Macro Syntax (C99 and later compilers)] [Sequencing Macro Syntax (all C++ compilers)] ]
+[ [__Variadic_Macro_Syntax__] [__Sequencing_Macro_Syntax__] ]
 [ [ [add_optimizers_va_cpp] ] [ [add_optimizers_cpp] ] ]
 ]
 
@@ -300,7 +300,7 @@ A local function can recursively call itself as usual with C++ functions.
 For example, the following local function is used to recursively calculate and print the factorial of the specified numbers:
 
 [table
-[ [Variadic Macro Syntax (C99 and later compilers)] [Sequencing Macro Syntax (all C++ compilers)] ]
+[ [__Variadic_Macro_Syntax__] [__Sequencing_Macro_Syntax__] ]
 [ [ [factorial_va_cpp] ] [ [factorial_cpp] ] ]
 ]
 
@@ -313,7 +313,7 @@ It is possible to nest local function, local block, and local exit declarations 
 For example:
 
 [table
-[ [Variadic Macro Syntax (C99 and later compilers)] [Sequencing Macro Syntax (all C++ compilers)] ]
+[ [__Variadic_Macro_Syntax__] [__Sequencing_Macro_Syntax__] ]
 [ [ [nesting_va_cpp] ] [ [nesting_cpp] ] ]
 ]
 

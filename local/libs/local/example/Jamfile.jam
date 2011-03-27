@@ -104,3 +104,10 @@ exe typeof_tpl_va : typeof_tpl_va.cpp ;
 exe world_exit : world_exit.cpp ;
 exe world_exit_va : world_exit_va.cpp ;
 
+exe add_boost_local : add_boost_local.cpp ;
+exe add_boost_local_va : add_boost_local_va.cpp ;
+exe add_local_class : add_local_class.cpp ;
+exe add_cpp0x_lambda : add_cpp0x_lambda.cpp ;
+exe add_boost_lambda : add_boost_lambda.cpp ;
+exe add_boost_phoenix : add_boost_phoenix.cpp ;
+

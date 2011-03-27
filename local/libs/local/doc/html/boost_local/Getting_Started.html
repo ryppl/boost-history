@@ -44,12 +44,13 @@
       Documentation</a>
 </h3></div></div></div>
 <p>
-        Programmers should be ready to use this library, at least at a basic level,
-        after reading this section and the <a class="link" href="Tutorial.html" title="Tutorial">Tutorial</a>
-        section. The <a class="link" href="Advanced_Topics.html" title="Advanced Topics">Advanced Topics</a>
+        Programmers should have enough knowledge to use this library after reading
+        the <a class="link" href="../index.html#boost_local.Introduction" title="Introduction">Introduction</a>, <a class="link" href="Getting_Started.html" title="Getting Started">Getting
+        Started</a>, and <a class="link" href="Tutorial.html" title="Tutorial">Tutorial</a>
+        sections. The <a class="link" href="Advanced_Topics.html" title="Advanced Topics">Advanced Topics</a>
         and <a href="../reference.html" target="_top">Reference</a> sections can be consulted
-        at a later point to gain a more advanced knowledge of this library features.
-        All the other sections of this documentation are for reference only.
+        at a later point to gain a more advanced knowledge of the library. All the
+        other sections of this documentation are for reference only.
       </p>
 <p>
         Some footnotes are marked by the word "<span class="bold"><strong>Rationale</strong></span>"
@@ -120,7 +121,7 @@
 </pre>
 <p>
         The following symbols are part of the library private API, they are not documented,
-        and they should not be directly used by programmers: <sup>[<a name="id866124" href="#ftn.id866124" class="footnote">1</a>]</sup>
+        and they should not be directly used by programmers: <sup>[<a name="id866137" href="#ftn.id866137" class="footnote">1</a>]</sup>
       </p>
 <div class="itemizedlist"><ul class="itemizedlist" type="disc">
 <li class="listitem">
@@ -128,15 +129,14 @@
             directory (these header files should not be directly included by programmers).
           </li>
 <li class="listitem">
-            Any symbol prefixed by <code class="computeroutput"><span class="identifier">BOOST_LOCAL_AUX</span></code>.
+            Any symbol prefixed by <code class="computeroutput"><span class="identifier">BOOST_LOCAL_AUX_</span><span class="special">...</span></code>.
           </li>
 <li class="listitem">
             Any symbol within the <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">local</span><span class="special">::</span><span class="identifier">aux</span></code>
             namespace.
           </li>
 <li class="listitem">
-            Any symbol prefixed by <code class="computeroutput"><span class="identifier">boost_local_aux</span></code>
-            (regardless of its namespace).
+            Any symbol prefixed by <code class="computeroutput"><span class="identifier">boost_local_aux</span><span class="special">...</span></code> (regardless of its namespace).
           </li>
 </ul></div>
 </div>
@@ -152,15 +152,14 @@
         it.
       </p>
 <p>
-        All configuration macros have names prefixed by <code class="computeroutput"><span class="identifier">BOOST_LOCAL_CONFIG</span></code>
-        (see <a href="../reference.html" target="_top">Reference</a> section). It is strongly
-        recommended not to change the library configuration macro definitions unless
-        strictly necessary.
+        All configuration macros have names prefixed by <code class="computeroutput"><span class="identifier">BOOST_LOCAL_CONFIG_</span><span class="special">...</span></code> (see <a href="../reference.html" target="_top">Reference</a>
+        section). It is strongly recommended not to change the library configuration
+        macro definitions unless strictly necessary.
       </p>
 </div>
 <div class="footnotes">
 <br><hr width="100" align="left">
-<div class="footnote"><p><sup>[<a id="ftn.id866124" href="#id866124" class="para">1</a>] </sup>
+<div class="footnote"><p><sup>[<a id="ftn.id866137" href="#id866137" class="para">1</a>] </sup>
           <span class="bold"><strong>Rationale.</strong></span> This library concatenates symbols
           specified by the programmers (e.g., the local function name) with other
           symbols (e.g., special prefixes or preprocessor line numbers) to make internal

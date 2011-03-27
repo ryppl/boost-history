@@ -45,7 +45,7 @@ A local block is used to assert the correct final value of the summation in a co
 See the __Tutorial__ section for more details.
 
 [table
-[ [Notes] [Variadic Macro Syntax (C99 and later compilers)] [Sequencing Macro Syntax (all C++ compilers)] ]
+[ [Notes] [__Variadic_Macro_Syntax__] [__Sequencing_Macro_Syntax__] ]
 [ [ [add_callouts_cpp] ] [ [add_va_cpp] ] [ [add_cpp] ] ]
 ]
 

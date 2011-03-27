@@ -10,8 +10,8 @@ This section explains how to setup your system to use this library.
 
 [section This Documentation]
 
-Programmers should be ready to use this library, at least at a basic level, after reading this section and the __Tutorial__ section.
-The __Advanced_Topics__ and __Reference__ sections can be consulted at a later point to gain a more advanced knowledge of this library features.
+Programmers should have enough knowledge to use this library after reading the __Introduction__, __Getting_Started__, and __Tutorial__ sections.
+The __Advanced_Topics__ and __Reference__ sections can be consulted at a later point to gain a more advanced knowledge of the library.
 All the other sections of this documentation are for reference only.
 
 Some footnotes are marked by the word "*Rationale*" because they explain reasons behind decisions made during the design and implementation of this library.
@@ -58,9 +58,9 @@ The underscore character "`_`" could not be used instead of the letter "`X`" bec
 ]
 
 * Any symbol defined by files within the `"boost/local/aux_/"` directory (these header files should not be directly included by programmers).
-* Any symbol prefixed by `BOOST_LOCAL_AUX`.
+* Any symbol prefixed by `BOOST_LOCAL_AUX_...`.
 * Any symbol within the `boost::local::aux` namespace.
-* Any symbol prefixed by `boost_local_aux` (regardless of its namespace).
+* Any symbol prefixed by `boost_local_aux...` (regardless of its namespace).
 
 [endsect]
 
@@ -69,7 +69,7 @@ The underscore character "`_`" could not be used instead of the letter "`X`" bec
 Some of the library behaviour can be changed at compile-time by defining special /configuration macros/.
 If a configuration macro is left undefined, the library will use an appropriate default value for it.
 
-All configuration macros have names prefixed by `BOOST_LOCAL_CONFIG` (see __Reference__ section).
+All configuration macros have names prefixed by `BOOST_LOCAL_CONFIG_...` (see __Reference__ section).
 It is strongly recommended not to change the library configuration macro definitions unless strictly necessary.
 
 [endsect]
