@@ -10,7 +10,7 @@
 #ifndef BOOST_ASSIGN_V2_DETAIL_FUNCTOR_ER_2010_HPP
 #define BOOST_ASSIGN_V2_DETAIL_FUNCTOR_ER_2010_HPP
 #include <boost/assign/v2/detail/functor/crtp_unary_and_up.hpp>
-#include <boost/assign/v2/detail/functor/constructor.hpp>
-#include <boost/assign/v2/detail/functor/new.hpp>
+#include <boost/assign/v2/detail/functor/pair.hpp>
+#include <boost/assign/v2/detail/functor/value.hpp>
 
 #endif // BOOST_ASSIGN_V2_DETAIL_FUNCTOR_ER_2010_HPP

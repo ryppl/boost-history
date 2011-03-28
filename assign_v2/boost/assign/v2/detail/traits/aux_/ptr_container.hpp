@@ -14,17 +14,50 @@
 #include <utility> // std::pair
 #include <boost/assign/v2/detail/traits/aux_/fwd_container.hpp>
 #include <boost/mpl/size_t.hpp>
+#include <boost/type_traits/remove_reference.hpp>
 
 namespace boost{
 namespace assign{
 namespace v2{
 namespace container_aux{
 
-	// FWD
     
-    template<typename C> struct mapped;
-    template<typename C> struct key;
-    template<typename C> struct value; // Some specializations below
+	// DATA-MEMBER
+
+    template<typename PtrC>
+    struct to_value_key{ typedef typename PtrC::key_type type; };
+
+    template<typename PtrC>
+    struct to_value_value : boost::remove_reference<
+    	typename PtrC::reference
+    >{};
+
+    template<typename PtrC>
+    struct to_value_mapped : boost::remove_reference<
+    	typename PtrC::mapped_reference
+    >{};
+
+    template
+    <
+        class Key,
+        class Mapped,
+        class Compare,
+        class CloneAllocator,
+        class Allocator
+    >
+    struct to_value_value<
+    	boost::ptr_map<Key, Mapped, Compare, CloneAllocator, Allocator>
+    >{
+
+		typedef boost::ptr_map<
+        	Key, Mapped, Compare, CloneAllocator, Allocator
+        > ptr_c_;
+        typedef std::pair<
+        	const typename to_value_key<ptr_c_>::type, 
+            typename to_value_mapped<ptr_c_>::type
+        > type;
+    };
+    
 
 
     // ALLOCATOR
@@ -32,7 +65,7 @@ namespace container_aux{
     template<typename PtrC>
     struct to_value_allocator
     {
-        typedef std::allocator<typename value<PtrC>::type> type;
+        typedef std::allocator<typename to_value_value<PtrC>::type> type;
     };
 
 
@@ -50,7 +83,7 @@ namespace container_aux{
     struct to_value_array
     {
         typedef boost::array<
-            typename value<PtrC>::type,
+            typename to_value_value<PtrC>::type,
             helper_size<PtrC>::value
         > type;
     };
@@ -61,7 +94,7 @@ namespace container_aux{
     struct to_value_sequence {
 
         typedef C<
-            typename value<PtrC>::type,
+            typename to_value_value<PtrC>::type,
             typename to_value_allocator<PtrC>::type
         > type;
 
@@ -75,15 +108,11 @@ namespace container_aux{
     >
     struct to_value_map{
 
-		typedef typename key<PtrC>::type k_;
-		typedef typename mapped<PtrC>::type m_;
-        typedef std::pair<const k_, m_> p_;
-	
         typedef C<
-            k_,
-            m_,
+            typename to_value_key<PtrC>::type,
+            typename to_value_mapped<PtrC>::type,
             typename PtrC::key_compare,
-			std::allocator<p_>
+			typename to_value_allocator<PtrC>::type
         > type;
 
     };
@@ -94,7 +123,7 @@ namespace container_aux{
     struct to_value_set{
 
         typedef C<
-            typename PtrC::key_type,
+            typename to_value_key<PtrC>::type,
             typename PtrC::key_compare,
             typename to_value_allocator<PtrC>::type
         > type;
@@ -108,8 +137,8 @@ namespace container_aux{
     struct to_value_unordered_map{
 
         typedef C<
-            typename PtrC::key_type,
-            typename mapped<PtrC>::type,
+            typename to_value_key<PtrC>::type,
+            typename to_value_mapped<PtrC>::type,
             typename PtrC::hasher,
             typename PtrC::key_equal,
             typename to_value_allocator<PtrC>::type
@@ -124,7 +153,7 @@ namespace container_aux{
     struct to_value_unordered_set{
 
         typedef C<
-            typename PtrC::key_type,
+            typename to_value_key<PtrC>::type,
             typename PtrC::hasher,
             typename PtrC::key_equal,
             typename to_value_allocator<PtrC>::type
@@ -134,11 +163,10 @@ namespace container_aux{
 
     // TO_VALUE_CONTAINER
 
-    template<typename C>
-    struct to_value_container
-    {
-        typedef C type;
-    };
+    template<
+    	typename C // Pointer or Value container
+    >
+    struct to_value_container{ typedef C type; };
 
     // Array
     template<
@@ -205,23 +233,6 @@ namespace container_aux{
     > : to_value_map<
         boost::ptr_map<Key, Mapped, Compare, CloneAllocator, Allocator>,
         std::map
-    >{};
-
-
-    template
-    <
-        class Key,
-        class Mapped,
-        class Compare,
-        class CloneAllocator,
-        class Allocator
-    >
-    struct value<
-    	boost::ptr_map<Key, Mapped, Compare, CloneAllocator, Allocator>
-    > : value<
-    	typename to_value_container<
-        	boost::ptr_map<Key, Mapped, Compare, CloneAllocator, Allocator>
-        >::type
     >{};
 
     // Set

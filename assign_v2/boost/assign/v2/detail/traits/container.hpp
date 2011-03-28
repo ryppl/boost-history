@@ -39,24 +39,14 @@ namespace container_aux{
 
 // DATA-MEMBER
 
-    template<
-    	typename C	// Ptr or value container
-    >
-    struct key{ typedef typename C::key_type type; };
+    template<typename C>
+    struct key : through_value_container<value_key, C>{};
 
-    template<
-    	typename C	// Ptr or value container
-    >
-    struct value : boost::remove_reference<
-    	typename C::reference
-    >{};
+    template<typename C>
+    struct mapped : through_value_container<value_mapped, C>{};
 
-    template<
-    	typename C	// Ptr or value container
-    >
-    struct mapped : boost::remove_reference<
-        typename C::mapped_reference    
-    >{};
+    template<typename C>
+    struct value : through_value_container<value_value, C>{};
 
 // STORAGE
 

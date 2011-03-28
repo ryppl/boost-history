@@ -78,11 +78,15 @@ namespace functor_aux{
         ::boost::mpl::vector<BOOST_ASSIGN_V2_TPL_ARG_LIST(SeqU)> \
     >::type \
     operator()( BOOST_ASSIGN_V2_PARAMETER_LIST(SeqU, _) )const{ \
-        return this->derived().template impl<BOOST_ASSIGN_V2_TPL_ARG_LIST(SeqU)>( \
+        return this->derived().impl( \
             BOOST_ASSIGN_V2_ARG_LIST(SeqU, _) \
         ); \
     } \
 /**/
+
+// TODO remove
+// return this->derived().template impl<BOOST_ASSIGN_V2_TPL_ARG_LIST(SeqU)>( \
+
 
 #define BOOST_ASSIGN_V2_MACRO2(z, n, data) BOOST_PP_SEQ_FOR_EACH_PRODUCT(\
     BOOST_ASSIGN_V2_MACRO1, \

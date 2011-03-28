@@ -16,24 +16,46 @@
 #include <boost/mpl/apply.hpp>
 
 namespace boost{
+	struct use_default;
 namespace assign{
 namespace v2{
 //[syntax_option_data_generator
 namespace interpreter_aux{
 namespace result_of{
 
-    template<typename D>
-    struct option_data_generator/*<-*/{
-
-        typedef interpreter_aux::replace_data_generator<D> meta_;
-
-        template<
-            typename F // Data generator to replace D with
+    template<typename D, typename C, typename F = use_default>
+    struct option_data_generator/*<-*/
+    	: ::boost::mpl::apply1<
+        	interpreter_aux::replace_data_generator<D>, 
+            F
         >
-        struct apply/*<-*/ : ::boost::mpl::apply1<meta_, F>{}/*->*/;
+    {
+    }/*->*/;
 
-    };
+    template<typename D, typename C>
+    struct option_data_generator<D, C, use_default>/*<-*/
+    	: option_data_generator<
+        	D, C, typename deduce_data_generator<C>::type
+        >
+    {}/*->*/;
 
+    template<
+        typename C // Value or pointer-container
+    >
+    struct deduce_key_generator/*<-*/
+    {
+		typedef typename container_aux::key<C>::type key_;
+        typedef functor_aux::value<key_> type;
+    }/*->*/;
+    
+    template<typename D, typename C>
+    struct option_data_generator<D, C, keyword_aux::key>/*<-*/
+    	: option_data_generator<
+        	D, C, typename deduce_key_generator<C>::type
+        >
+    {}/*->*/;
+
+	
 }// result_of
 
     template<typename F/*<-*/= keyword_aux::ignore/*->*/>
@@ -42,23 +64,47 @@ namespace result_of{
         option_data_generator(){}
         option_data_generator(F f) : f_( f ){}
 
+		template<typename C>
         F const& fun()const{ return this->f_; }
-
+        
         private:
         F f_;
+    }/*->*/;
+
+    template<>
+    struct option_data_generator<keyword_aux::default_>/*<-*/
+    {
+        option_data_generator(){}
+
+		template<typename C>
+        typename deduce_data_generator<C>::type 
+        fun()const{ return typename deduce_data_generator<C>::type(); }
+        
+    }/*->*/;
+
+    template<>
+    struct option_data_generator<keyword_aux::key>/*<-*/
+    {
+        option_data_generator(){}
+
+		template<typename C>
+        typename deduce_key_generator<C>::type 
+        fun()const{ return typename deduce_key_generator<C>::type(); }
+        
     }/*->*/;
 
     // Overrides data generator
     template<typename C, typename F, typename ModifierTag
     	, typename DataTag, typename D, typename F1>
-    typename ::boost::mpl::apply1<result_of::option_data_generator<D>, F1>::type
+    typename result_of::option_data_generator<D, C, F1>::type
     operator%(
         interpreter_crtp<C, F, ModifierTag, DataTag, D> const& lhs,
         option_data_generator<F1> const& rhs
     )/*<-*/
     {
-        typedef result_of::option_data_generator<D> meta_;
-        typedef typename ::boost::mpl::apply1<meta_, F1>::type result_;
+    	typedef typename result_of::option_data_generator<
+        	D, C, F1
+        >::type result_
         return result_( lhs.container(), rhs.fun(), lhs.modifier );
     }/*<-*/BOOST_ASSIGN_V2_IGNORE(/*<-*/;/*->*/)/*->*/
 
@@ -113,8 +159,8 @@ using interpreter_aux::NAME;\
 }\
 /**/
 
-#include <boost/assign/v2/detail/functor/constructor.hpp>
-BOOST_ASSIGN_V2_OPTION_DATA_GENERATE(constructor, v2::functor_aux::constructor<T>)
+#include <boost/assign/v2/detail/functor/value.hpp>
+BOOST_ASSIGN_V2_OPTION_DATA_GENERATE(value, v2::functor_aux::value<T>)
 
 #include <boost/typeof/typeof.hpp>
 #include <boost/type_traits/add_const.hpp>

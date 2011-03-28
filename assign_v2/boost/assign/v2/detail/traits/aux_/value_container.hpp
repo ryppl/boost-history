@@ -101,6 +101,26 @@ BOOST_ASSIGN_V2_TRAITS_CONTAINER_CATEGORIES(
 
 namespace container_aux{
 
+// DATA-MEMBER
+
+    template<
+    	typename C	// Ptr or value container
+    >
+    struct value_key{ typedef typename C::key_type type; };
+
+    template<
+    	typename C	// Ptr or value container
+    >
+    struct value_value{ typedef typename C::value_type type; };
+
+    template<
+    	typename C	// Ptr or value container
+    >
+    struct value_mapped{
+    	typedef typename C::mapped_type type;
+    };
+
+
 // HAS_VALUE
 
     template<typename T>
