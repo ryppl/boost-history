@@ -22,23 +22,31 @@ namespace v2{
 //[syntax_put
 namespace interpreter_aux{
 
-    template<typename C, typename F, typename Tag>
+    template<typename C, typename F, typename ModifierTag, typename DataTag>
     class put_interpreter :
 //<-
         protected ref::wrapper< ref::assign_tag::copy, C >,
 //->
-        public interpreter_aux::interpreter_crtp< C, F, Tag, put_interpreter<C, F, Tag> >
+        public interpreter_aux::interpreter_crtp< 
+        	C, 
+            F, 
+            ModifierTag, DataTag, put_interpreter<C, F, ModifierTag, DataTag> 
+        >
     {
 //<-
-        typedef interpreter_aux::interpreter_crtp< C, F, Tag, put_interpreter > super2_t;
+        typedef interpreter_aux::interpreter_crtp< 
+        	C, F, ModifierTag, DataTag, put_interpreter 
+        > super2_t;
 //->
         public:
 
-        typedef /*<-*/ typename super2_t::result_type BOOST_ASSIGN_V2_IGNORE(/*->*/ unspecified /*<-*/) /*->*/result_type;
+        typedef /*<-*/ typename super2_t::result_type 
+        	BOOST_ASSIGN_V2_IGNORE(/*->*/ unspecified /*<-*/)/*->*/
+        result_type;
 //<-
         protected:
 
-        typedef interpreter_aux::interpreter_modifier<Tag> modifier_;
+        typedef interpreter_aux::interpreter_modifier<ModifierTag> modifier_;
         typedef ref::assign_tag::copy assign_tag_;
         typedef ref::wrapper<assign_tag_,C> super1_t;
 //->
@@ -59,16 +67,40 @@ namespace interpreter_aux{
 
     };
 
-    template<typename C, typename F, typename Tag>
-    struct replace_data_generator< interpreter_aux::put_interpreter<C, F, Tag> >{
+    template<typename C, typename F, typename ModifierTag, typename DataTag>
+    struct replace_data_generator< 
+    	interpreter_aux::put_interpreter<C, F, ModifierTag, DataTag> 
+    >{
         template<typename F1>
-        struct apply/*<-*/{ typedef interpreter_aux::put_interpreter<C, F1, Tag> type; }/*->*/;
+        struct apply/*<-*/{ 
+        	typedef interpreter_aux::put_interpreter<
+            	C, F1, ModifierTag, DataTag
+            > type; 
+        }/*->*/;
     };
 
-    template<typename C, typename F, typename Tag>
-    struct replace_modifier_tag< interpreter_aux::put_interpreter<C, F, Tag> >{
-        template<typename Tag1>
-        struct apply/*<-*/{ typedef interpreter_aux::put_interpreter<C, F, Tag1> type; }/*->*/;
+    template<typename C, typename F, typename ModifierTag, typename DataTag>
+    struct replace_modifier_tag< 
+    	interpreter_aux::put_interpreter<C, F, ModifierTag, DataTag> 
+    >{
+        template<typename ModifierTag1>
+        struct apply/*<-*/{ 
+        	typedef interpreter_aux::put_interpreter<
+            	C, F, ModifierTag1, DataTag
+            > type; 
+        }/*->*/;
+    };
+
+    template<typename C, typename F, typename ModifierTag, typename DataTag>
+    struct replace_data_tag< 
+    	interpreter_aux::put_interpreter<C, F, ModifierTag, DataTag> 
+    >{
+        template<typename DataTag1>
+        struct apply/*<-*/{ 
+        	typedef interpreter_aux::put_interpreter<
+            	C, F, ModifierTag, DataTag1
+            > type; 
+        }/*->*/;
     };
 
 }// interpreter_aux
@@ -78,7 +110,10 @@ namespace result_of{
     struct put{/*<-*/
         typedef typename interpreter_aux::deduce_data_generator<C>::type f_;
         typedef typename interpreter_aux::deduce_modifier_tag<C>::type modifier_tag_;
-        /*->*/typedef /*<-*/BOOST_ASSIGN_V2_IGNORE(/*->*/unspecified/*<-*/)interpreter_aux::put_interpreter<C, f_, modifier_tag_>/*->*/ type;
+        typedef typename interpreter_aux::deduce_data_tag<C>::type data_tag_;
+        /*->*/typedef /*<-*/BOOST_ASSIGN_V2_IGNORE(/*->*/unspecified/*<-*/)
+        	interpreter_aux::put_interpreter<C, f_, modifier_tag_, data_tag_>/*->*/ 
+        type;
     };
 
 }// result_of

@@ -16,7 +16,7 @@ namespace xxx_put{
 
     void test(){
 
-        xxx_ptr::test();
+        //xxx_ptr::test();
         xxx_put::test();
 
     }

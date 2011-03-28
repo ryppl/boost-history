@@ -9,8 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_OPTION_DATA_GENERATOR_KEY_ER_2010_HPP
 #define BOOST_ASSIGN_V2_OPTION_DATA_GENERATOR_KEY_ER_2010_HPP
-#include <boost/assign/v2/detail/traits/ptr_container/meta.hpp>
-#include <boost/assign/v2/detail/traits/value_container/category.hpp>
+#include <boost/assign/v2/detail/traits/container.hpp>
 #include <boost/assign/v2/interpreter/data_generator.hpp>
 #include <boost/assign/v2/option/data_generator/framework.hpp>
 #include <boost/mpl/apply.hpp>
@@ -29,11 +28,7 @@ namespace interpreter_aux{
         typename C // Value or pointer-container
     >
     struct deduce_key_generator/*<-*/
-        :  boost::mpl::eval_if<
-            container_aux::is_ptr_container<C>,
-            deduce_ptr_generator<C, container_key>,
-            deduce_value_generator<C, container_key>
-        >
+    	: deduce_data_generator<C, container_key>
     {}/*->*/;
 
     struct option_key{};
@@ -53,19 +48,14 @@ namespace result_of{
     // Overrides data generator with a constructor for C::key_type
     template<
         typename C  // Associative container
-        , typename F, typename Tag, typename D
+        , typename F, typename ModifierTag, typename DataTag, typename D
     >
     typename /*<-*/boost::lazy_enable_if<
-        ::boost::mpl::apply1<
-            container_aux::through_value_container<
-                container_aux::is_sorted
-            >,
-            C
-        >,/*->*/
+        container_aux::is_sorted<C>,/*->*/
         result_of::option_key<C, D>/*<-*/
     >::/*->*/type
     operator%(
-        interpreter_crtp<C, F, Tag, D> const& lhs,
+        interpreter_crtp<C, F, ModifierTag, DataTag, D> const& lhs,
         option_key rhs
     )/*<-*/
     {

@@ -10,8 +10,10 @@
 #ifndef BOOST_ASSIGN_V2_CONVERSION_DEDUCE_TAG_ER_2010_HPP
 #define BOOST_ASSIGN_V2_CONVERSION_DEDUCE_TAG_ER_2010_HPP
 #include <boost/assign/v2/detail/traits/switch.hpp>
+#include <boost/assign/v2/detail/traits/container.hpp>
 #include <boost/assign/v2/conversion/helper.hpp>
 #include <boost/assign/v2/conversion/predicate.hpp>
+#include <boost/mpl/or.hpp>
 #include <boost/mpl/pair.hpp>
 
 namespace boost{
@@ -21,6 +23,15 @@ namespace v2{
 namespace switch_tag{
     struct deduce_convert{};
 }// switch_tag
+namespace conversion_aux{
+
+    template<typename C, typename R>
+    struct use_put : ::boost::mpl::or_<
+        container_aux::is_array<C>,
+        container_aux::has_push_deduced_value<C>
+    >{};
+
+}// conversion_aux
 namespace switch_aux{
 
     template<>

@@ -12,7 +12,7 @@
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
 #include <boost/assign/v2/detail/pp/forward.hpp>
 #include <boost/assign/v2/detail/pp/ignore.hpp>
-#include <boost/assign/v2/detail/traits/ptr_container/meta.hpp>
+#include <boost/assign/v2/detail/traits/container.hpp>
 #include <boost/assign/v2/interpreter/as_arg_list.hpp>
 #include <boost/assign/v2/interpreter/fwd.hpp>
 #include <boost/assign/v2/interpreter/modifier.hpp>
@@ -116,10 +116,10 @@ namespace interpreter_aux{
 
     };
 
-    template<typename C, typename F, typename Tag, typename D>
+    template<typename C, typename F, typename ModifierTag, typename D>
     struct ConceptDerivedInterpreter2 : ConceptDerivedInterpreter1<C, D>{
 
-        typedef interpreter_aux::interpreter_modifier<Tag> modifier_;
+        typedef interpreter_aux::interpreter_modifier<ModifierTag> modifier_;
 
         BOOST_CONCEPT_USAGE(ConceptDerivedInterpreter2)
         {
@@ -134,18 +134,19 @@ namespace interpreter_aux{
     };
 
     template<
-        typename C      // Container, 
-        , typename F    // Data generator
-        , typename Tag  // Modifier tag
-        , typename D    // Derived
+        typename C      		// Container, 
+        , typename F    		// Data generator
+        , typename ModifierTag  // Modifier tag
+        , typename DataTag  	// Data tag
+        , typename D    		// Derived
     >
     class interpreter_crtp
 //<-
         : public data_gen_holder<F>
-        , public modifier_holder<Tag>
+        , public modifier_holder<ModifierTag>
 #if !BOOST_ASSIGN_V2_ENABLE_CPP0X
         , public functor_aux::crtp_unary_and_up<
-            interpreter_crtp<C, F, Tag, D>,
+            interpreter_crtp<C, F, ModifierTag, DataTag, D>,
             ::boost::mpl::always< D const& >
         >
 #endif // BOOST_ASSIGN_V2_ENABLE_CPP0X
@@ -159,18 +160,22 @@ namespace interpreter_aux{
         protected:
 
         typedef data_gen_holder<F> data_gen_holder_;
-        typedef modifier_holder<Tag> modifier_holder_;
+        typedef modifier_holder<ModifierTag> modifier_holder_;
 //->
 
         public:
 
-        typedef /*<-*/ typename modifier_holder_::modifier_type BOOST_ASSIGN_V2_IGNORE(/*->*/ interpreter_modifier<Tag> /*<-*/)/*->*/
+        typedef /*<-*/ typename modifier_holder_::modifier_type 
+        	BOOST_ASSIGN_V2_IGNORE(/*->*/ interpreter_modifier<Tag> /*<-*/)/*->*/
         modifier_type;
 
         interpreter_crtp(){}
-        explicit interpreter_crtp( F const& f )/*<-*/ : data_gen_holder_( f ){}BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
+        explicit interpreter_crtp( F const& f )/*<-*/ 
+        	: data_gen_holder_( f )
+        {}BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
         explicit interpreter_crtp( F const& f, modifier_type const& m )/*<-*/
-            : data_gen_holder_( f ), modifier_holder_( m ){}BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
+            : data_gen_holder_( f ), modifier_holder_( m )
+        {}BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
         typedef D const& result_type;
 
@@ -232,23 +237,9 @@ BOOST_PP_REPEAT_FROM_TO(
         protected:
 
         template<typename T>
-        struct ptr_enabler : boost::enable_if<
-            container_aux::is_ptr_container<C>
-        >{};
-
-        template<typename T>
-        result_type modify(T* t, typename ptr_enabler<T>::type* = 0)const
-        {
-            typedef ConceptModifier<Tag, C, T*> concept_;
-            BOOST_CONCEPT_ASSERT(( concept_ ));
-            this->modifier.impl( this->derived().container(), t );
-            return this->derived();
-        }
-
-        template<typename T>
         void check_modifier( BOOST_ASSIGN_V2_FORWARD_PARAM(T, t) )const
         {
-            typedef ConceptModifier<Tag, C,
+            typedef ConceptModifier<ModifierTag, DataTag, C,
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
                 T&&
 #else
@@ -267,7 +258,8 @@ BOOST_PP_REPEAT_FROM_TO(
             
             this->modifier.impl(
                 this->derived().container(),
-                std::forward<T>( t )
+                std::forward<T>( t ),
+                DataTag()
             );
             return this->derived();
         }
@@ -276,7 +268,7 @@ BOOST_PP_REPEAT_FROM_TO(
         result_type modify(T& t)const
         {
             check_modifier( t );
-            this->modifier.impl( this->derived().container(), t );
+            this->modifier.impl( this->derived().container(), t, DataTag() );
             return this->derived();
         }
 
@@ -284,7 +276,7 @@ BOOST_PP_REPEAT_FROM_TO(
         result_type modify(T const& t)const
         {
             check_modifier( t );
-            this->modifier.impl( this->derived().container(), t );
+            this->modifier.impl( this->derived().container(), t, DataTag() );
             return this->derived();
         }
 

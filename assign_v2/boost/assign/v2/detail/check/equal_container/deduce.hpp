@@ -9,7 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_DETAIL_CHECK_EQUAL_CONTAINER_DEDUCE_ER_2010_HPP
 #define BOOST_ASSIGN_V2_DETAIL_CHECK_EQUAL_CONTAINER_DEDUCE_ER_2010_HPP
-#include <boost/assign/v2/detail/traits/value_container/category.hpp>
+#include <boost/assign/v2/detail/traits/container.hpp>
 #include <boost/assign/v2/detail/check/equal_container/array.hpp>
 #include <boost/assign/v2/detail/check/equal_container/fifo.hpp>
 #include <boost/assign/v2/detail/check/equal_container/lifo.hpp>

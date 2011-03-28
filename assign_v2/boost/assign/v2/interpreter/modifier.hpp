@@ -10,15 +10,15 @@
 #ifndef BOOST_ASSIGN_V2_INTERPRETER_MODIFIER_ER_2010_HPP
 #define BOOST_ASSIGN_V2_INTERPRETER_MODIFIER_ER_2010_HPP
 #include <boost/assign/v2/detail/pp/ignore.hpp>
-#include <boost/assign/v2/detail/traits/value_container/has_push.hpp>
-#include <boost/assign/v2/detail/traits/value_container/category.hpp>
-#include <boost/assign/v2/detail/traits/ptr_container/meta.hpp>
+#include <boost/assign/v2/detail/traits/container.hpp>
 #include <boost/assign/v2/detail/traits/switch.hpp>
-#include <boost/assign/v2/option/modifier/std.hpp>
+#include <boost/assign/v2/option/modifier/insert.hpp>
 #include <boost/assign/v2/option/modifier/iterate.hpp>
 #include <boost/assign/v2/option/modifier/std.hpp>
 #include <boost/concept_check.hpp>
 #include <boost/mpl/assert.hpp>
+#include <boost/mpl/if.hpp>
+#include <boost/mpl/apply.hpp>
 #include <boost/preprocessor/cat.hpp>
 #include <boost/type_traits/is_same.hpp>
 
@@ -33,23 +33,24 @@ namespace modifier_tag{
 }//modifier_tag
 namespace interpreter_aux{
 
-    template<typename Tag>
+
+    template<typename ModifierTag>
     struct interpreter_modifier
     {
         // Specialize on Tag to model ConceptModifier 
     };
 
-    template<typename Tag, typename C, typename T>
+    template<typename ModifierTag, typename DataTag, typename C, typename T>
     struct ConceptModifier
     {
 
         BOOST_CONCEPT_USAGE(ConceptModifier)
         {
-            m.impl( cont, t ); 
+            m.impl( cont, t, DataTag() ); 
         }
 
         private:
-        static interpreter_aux::interpreter_modifier<Tag>& m;
+        static interpreter_aux::interpreter_modifier<ModifierTag>& m;
         static C& cont;
         static T t;
     };
@@ -70,7 +71,7 @@ namespace switch_aux{\
     struct case_<switch_tag::deduce_put, CaseNumber> :\
         switch_aux::helper<\
             v2::modifier_tag::Tag,\
-            container_aux::through_value_container<BooleanMetaF>::apply\
+            BooleanMetaF\
         >{};\
 }\
 /**/
@@ -119,6 +120,27 @@ namespace interpreter_aux{
     }
 
 //->
+
+	template<
+    	typename C // Container
+    >
+    struct deduce_data_tag{
+    
+    	typedef typename ::boost::mpl::if_<
+    		container_aux::is_ptr_container<C>,
+        	data_tag::storage_ptr,
+        	data_tag::storage_value
+    	>::type storage_;
+    
+	    typedef typename ::boost::mpl::if_<
+    		container_aux::is_map<C>,
+        	data_tag::assign_map,
+        	data_tag::assign
+        >::type assign_;
+
+		typedef data_tag::plus<storage_, assign_> type;    
+    };
+
 }// interpreter_aux
 //]
 }// v2

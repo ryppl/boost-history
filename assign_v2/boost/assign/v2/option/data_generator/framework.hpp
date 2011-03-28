@@ -49,10 +49,11 @@ namespace result_of{
     }/*->*/;
 
     // Overrides data generator
-    template<typename C, typename F, typename Tag, typename D, typename F1>
+    template<typename C, typename F, typename ModifierTag
+    	, typename DataTag, typename D, typename F1>
     typename ::boost::mpl::apply1<result_of::option_data_generator<D>, F1>::type
     operator%(
-        interpreter_crtp<C, F, Tag, D> const& lhs,
+        interpreter_crtp<C, F, ModifierTag, DataTag, D> const& lhs,
         option_data_generator<F1> const& rhs
     )/*<-*/
     {
@@ -114,9 +115,6 @@ using interpreter_aux::NAME;\
 
 #include <boost/assign/v2/detail/functor/constructor.hpp>
 BOOST_ASSIGN_V2_OPTION_DATA_GENERATE(constructor, v2::functor_aux::constructor<T>)
-
-#include <boost/assign/v2/detail/functor/new.hpp>
-BOOST_ASSIGN_V2_OPTION_DATA_GENERATE(new_ptr, v2::functor_aux::new_<T>)
 
 #include <boost/typeof/typeof.hpp>
 #include <boost/type_traits/add_const.hpp>

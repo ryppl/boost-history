@@ -73,10 +73,11 @@ namespace xxx_ptr{
             //[put_ptr_map
             typedef std::string key_;
             boost::ptr_map<key_, int> assoc;
-            //( as2::put( assoc ) % _key % _mapped ) ( "jan", 31 )( "feb", 28 )( "mar", 31 );
-			//key_ key = "jan";
-            //std::pair<key_, int*> p( key, new int(31) );
-			//assoc.insert( p );
+            as2::put( assoc )( "jan", 31 )( "feb", 28 )( "mar", 31 );
+            key_ key = "jan";
+            //typedef std::auto_ptr<int> auto_;
+            //std::pair< const key_, const auto_ > p( key, auto_( new int( 31 ) ) );
+            //assoc.base().insert( p );
             //]
         }
         {
@@ -88,18 +89,19 @@ namespace xxx_ptr{
             BOOST_ASSIGN_V2_CHECK( assoc.count( z ) == 1 );
             //]
         }
-        {/*	
-        	//[test_put_put_unordered_map
-			boost::ptr_unordered_map<std::string, int> map; 
+        {
+        /*    
+            //[test_put_put_unordered_map
+            boost::ptr_unordered_map<std::string, int> map; 
             as2::put( map )("foo", 1)("bar", 2)("baz", 3);
 
             BOOST_ASSIGN_V2_CHECK( map["foo"] == 1 );
             BOOST_ASSIGN_V2_CHECK( map["baz"] == 3 );
             //]
         */}
-        {	
-        	//[test_put_put_unordered_set
-			boost::ptr_unordered_set<std::string> set; 
+        {    
+            //[test_put_put_unordered_set
+            boost::ptr_unordered_set<std::string> set; 
             as2::put( set )("foo")("bar")("baz");
 
             BOOST_ASSIGN_V2_CHECK( set.count("foo") == 1 );

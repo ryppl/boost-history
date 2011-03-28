@@ -35,21 +35,27 @@ namespace v2{
 namespace interpreter_aux{
 
     template<typename T>
-    struct deque_impl{ typedef /*<-*/std::deque<T> BOOST_ASSIGN_V2_IGNORE(/*->*/unspecified /*<-*/)/*->*/type; };
+    struct deque_impl{ 
+    	typedef /*<-*/std::deque<T> 
+        	BOOST_ASSIGN_V2_IGNORE(/*->*/unspecified /*<-*/)/*->*/
+            type; 
+    };
 
-    template<typename T, typename F, typename Tag>
+    template<typename T, typename F, typename ModifierTag>
     class deque_interpreter 
         : public interpreter_crtp<
-            typename deque_impl<T>::type, F, Tag,
-            deque_interpreter<T, F, Tag>
+            typename deque_impl<T>::type, F, ModifierTag, data_tag::value,
+            deque_interpreter<T, F, ModifierTag>
         >
     {
 //<-
         typedef typename deque_impl<T>::type impl_;
         typedef impl_ const cimpl_;
-        typedef interpreter_crtp<impl_, F, Tag, deque_interpreter> put_crtp_;
+        typedef interpreter_crtp<
+        	impl_, F, ModifierTag, data_tag::value, deque_interpreter
+        > put_crtp_;
 
-        typedef interpreter_aux::interpreter_modifier<Tag> modifier_;
+        typedef interpreter_aux::interpreter_modifier<ModifierTag> modifier_;
 //->
         public:
 
@@ -129,18 +135,18 @@ namespace interpreter_aux{
 //->
     };
 
-    template<typename T, typename F, typename Tag>
-    struct replace_data_generator< deque_interpreter<T, F, Tag> >
+    template<typename T, typename F, typename ModifierTag>
+    struct replace_data_generator< deque_interpreter<T, F, ModifierTag> >
     {
         template<typename F1>
-        struct apply{ typedef /*<-*/BOOST_ASSIGN_V2_IGNORE(/*->*/unspecified/*<-*/)deque_interpreter<T, F1, Tag>/*->*/ type; };
+        struct apply{ typedef /*<-*/BOOST_ASSIGN_V2_IGNORE(/*->*/unspecified/*<-*/)deque_interpreter<T, F1, ModifierTag>/*->*/ type; };
     };
 
-    template<typename T, typename F, typename Tag>
-    struct replace_modifier_tag< deque_interpreter<T, F, Tag> >/*<-*/
+    template<typename T, typename F, typename ModifierTag>
+    struct replace_modifier_tag< deque_interpreter<T, F, ModifierTag> >/*<-*/
     {
-        template<typename Tag1>
-        struct apply{ /*<-*/BOOST_ASSIGN_V2_IGNORE(/*->*/unspecified/*<-*/)typedef deque_interpreter<T, F, Tag1>/*->*/ type; };
+        template<typename ModifierTag1>
+        struct apply{ /*<-*/BOOST_ASSIGN_V2_IGNORE(/*->*/unspecified/*<-*/)typedef deque_interpreter<T, F, ModifierTag1>/*->*/ type; };
     }/*->*/;
 
 //<-
@@ -153,7 +159,7 @@ namespace result_of{
         typedef typename deque_impl<t_>::type impl_;
         typedef typename deduce_data_generator<impl_>::type f_;
         typedef typename deduce_modifier_tag<impl_>::type modifier_tag_;
-        typedef deque_interpreter<t_,f_,modifier_tag_> type;
+        typedef deque_interpreter<t_, f_, modifier_tag_> type;
     };
 
 }// result_of

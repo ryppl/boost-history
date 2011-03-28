@@ -11,6 +11,7 @@
 #define BOOST_ASSIGN_V2_OPTION_MODIFIER_MAPPED_ER_2010_HPP
 #include <boost/assign/v2/detail/keyword/ignore.hpp>
 #include <boost/assign/v2/detail/pp/ignore.hpp>
+#include <boost/assign/v2/detail/traits/container.hpp>
 #include <boost/assign/v2/interpreter/fwd.hpp>
 #include <boost/assign/v2/option/modifier/framework.hpp>
 #include <boost/call_traits.hpp>
@@ -50,7 +51,7 @@ namespace interpreter_aux{
 
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
         template<typename C, typename T>
-        void impl(C& cont, T&& key )const
+        void impl(C& cont, T&& key, data_tag::storage_value )const
         {
             cont[ key ] = (*this->ptr)( cont[ std::forward<T>( key ) ] );
         }
@@ -58,7 +59,7 @@ namespace interpreter_aux{
 #else
 
         template<typename C, typename T>
-        void impl(C& cont, T& key )const{
+        void impl(C& cont, T& key, data_tag::storage_value )const{
             cont[ key ] = (*this->ptr)( cont[ key ] );
         }
 

@@ -13,6 +13,7 @@
 #include <boost/assign/v2/detail/keyword/ignore.hpp>
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
 #include <boost/assign/v2/detail/pp/ignore.hpp>
+#include <boost/assign/v2/detail/traits/container.hpp>
 #include <boost/assign/v2/interpreter/fwd.hpp>
 #include <boost/assign/v2/option/modifier/framework.hpp>
 #include <boost/call_traits.hpp>
@@ -72,29 +73,28 @@ namespace interpreter_aux{
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 
         template<typename C, typename T>
-            typename boost::disable_if<
-            boost::is_reference<T>,
-            void
-        >::type
-        impl(C& cont, T&& t )const
+        void impl(C& cont, T&& t, data_tag::value )const
         {
-            cont.at( (*this->ptr)() ) = std::move( t ); 
+            cont.at( (*this->ptr)() ) = std::forward<T>( t ); 
         }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
-#endif
-                    
+#else
+
         template<typename C, typename T>
-        void impl(C& cont, T& t )const
+        void impl(C& cont, T& t, data_tag::value )const
         {
             cont.at( (*this->ptr)() ) = t;
         }
-        
-        template<typename C, typename T>
-        void impl(C& cont, T* t)const
-        {
-            cont.replace( (*this->ptr)(), t);
-        }
 
+#endif
+
+        template<typename C, typename T>
+        void impl(C& cont, T& t, data_tag::ptr )const
+        {
+        	typedef typename container_aux::value<C>::type value_;
+            cont.replace( (*this->ptr)(), new value_( t ) );
+        }
+                            
         protected:
         ptr_ ptr;
 

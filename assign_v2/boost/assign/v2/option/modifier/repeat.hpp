@@ -12,6 +12,7 @@
 #include <cstddef>
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
 #include <boost/assign/v2/detail/pp/ignore.hpp>
+#include <boost/assign/v2/detail/traits/container.hpp>
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 #include <utility>
 #include <boost/utility/enable_if.hpp>
@@ -46,32 +47,23 @@ namespace interpreter_aux{
         {}
 
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
-        template<typename C, typename T>
-            typename boost::disable_if<
-            boost::is_reference<T>,
-            void
-        >::type
-        impl(C& cont, T&& t )const
+        template<typename C, typename T, typename DataTag>
+        void impl(C& cont, T&& t, DataTag tag )const
         {
             size_type m = this->size();\
-            while(m--) this->inner_.impl( cont, std::forward<T>( t ) );
+            while(m--) this->inner_.impl( cont, std::forward<T>( t ), tag );
+        }
+
+#else
+
+        template<typename C, typename T, typename DataTag>
+        void impl(C& cont, T& t, DataTag tag )const
+        {
+            size_type m = this->size();
+            while(m--) this->inner_.impl( cont, t, tag );
         }
 
 #endif
-
-        template<typename C, typename T>
-        void impl(C& cont, T& t )const
-        {
-            size_type m = this->size();
-            while(m--) this->inner_.impl( cont, t );
-        }
-
-        template<typename C, typename T>
-        void impl(C& cont, T* t)const
-        {
-            size_type m = this->size();
-            while(m--) this->inner_.impl( cont, t );
-        }
 
         size_type const& size()const{ return this->n_; }
 

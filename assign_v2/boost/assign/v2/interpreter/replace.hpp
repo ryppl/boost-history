@@ -18,26 +18,24 @@ namespace v2{
 //[syntax_put_adapter_replace_parameter
 namespace interpreter_aux{
 
-    //Specialize on D
-    template<
-        typename D // Derives from interpreter_crtp
-    > 
+    template<typename Derived> 
     struct replace_data_generator{
     
-        // Return transformation by D::fun_type = F
         template<typename F> 
         struct apply/*<-*/{}/*->*/;
     };
 
-    //Specialize on D
-    template<
-        typename D // Derives from interpreter_crtp
-    > 
+    template<typename Derived> 
     struct replace_modifier_tag{
 
-        // Return transformation by D::modifier_tag = Tag
+        template<typename Tag> struct apply/*<-*/{}/*->*/;
+    };
+
+    template<typename Derived> 
+    struct replace_data_tag{
+
         template<typename Tag> 
-        struct apply{};
+        struct apply/*<-*/{}/*->*/;
     };
     
 }// interpreter_aux

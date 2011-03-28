@@ -10,6 +10,7 @@
 #ifndef BOOST_ASSIGN_V2_OPTION_MODIFIER_STD_ER_2010_HPP
 #define BOOST_ASSIGN_V2_OPTION_MODIFIER_STD_ER_2010_HPP
 #include <boost/assign/v2/detail/keyword/ignore.hpp>
+#include <boost/assign/v2/detail/traits/container.hpp>
 #include <boost/assign/v2/interpreter/fwd.hpp>
 #include <boost/assign/v2/option/modifier/framework.hpp>
 #include <boost/preprocessor/cat.hpp>
@@ -25,17 +26,17 @@ BOOST_ASSIGN_V2_OPTION_MODIFIER_META_MODIFIER_TAG(std_modifier, Arg)
 }// assign
 }// boost
 
-#define BOOST_ASSIGN_V2_OPTION_STD_MODIFIER_IMPL_PTR(FUN)\
+
+#define BOOST_ASSIGN_V2_OPTION_STD_MODIFIER_IMPL_CPP03(FUN)\
     template<typename C, typename T>\
-    void impl(C& cont, T* t)const{\
-    cont.FUN( t );\
-}\
-/**/
-#define BOOST_ASSIGN_V2_OPTION_STD_MODIFIER_IMPL_LVALUE(FUN)\
+    	void impl(C& cont, T& t, data_tag::value)const{\
+    	cont.FUN( t );\
+	}\
     template<typename C, typename T>\
-    void impl(C& cont, T& t)const{\
-    cont.FUN( t );\
-}\
+    void impl(C& cont, T& t, data_tag::ptr)const{\
+        typedef typename container_aux::value<C>::type value_;\
+    	cont.FUN( new value_( t ) );\
+	}\
 /**/
 
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
@@ -43,24 +44,24 @@ BOOST_ASSIGN_V2_OPTION_MODIFIER_META_MODIFIER_TAG(std_modifier, Arg)
 #include <utility>
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/is_reference.hpp>
-// disable_if necessary to avoid ambiguity resolution with GCC4.4
+// disable_if necessary to avoid ambiguity resolution
 #define BOOST_ASSIGN_V2_OPTION_STD_MODIFIER_IMPL_RVALUE(FUN)\
     template<typename C, typename T>\
         typename boost::disable_if<\
         boost::is_reference<T>,\
         void\
     >::type\
-    impl(C& cont, T&& t)const{\
-        cont.FUN( std::move( t ) );\
+    impl(C& cont, T&& t, data_tag::value)const{\
+        cont.FUN( std::forward<T>( t ) );\
     }\
 /**/
 #define BOOST_ASSIGN_V2_OPTION_STD_MODIFIER_IMPL(FUN)\
-BOOST_ASSIGN_V2_OPTION_STD_MODIFIER_IMPL_LVALUE(FUN)\
+BOOST_ASSIGN_V2_OPTION_STD_MODIFIER_IMPL_CPP03(FUN)\
 BOOST_ASSIGN_V2_OPTION_STD_MODIFIER_IMPL_RVALUE(FUN)\
 /**/
 #else
 #define BOOST_ASSIGN_V2_OPTION_STD_MODIFIER_IMPL(FUN)\
-BOOST_ASSIGN_V2_OPTION_STD_MODIFIER_IMPL_LVALUE(FUN)\
+BOOST_ASSIGN_V2_OPTION_STD_MODIFIER_IMPL_CPP03(FUN)\
 /**/
 #endif // BOOST_ASSIGN_V2_ENABLE_CPP0X
 
@@ -104,9 +105,6 @@ namespace{\
 }\
 }\
 /**/
-
-BOOST_ASSIGN_V2_OPTION_STD_MODIFIER_TAG(insert)
-BOOST_ASSIGN_V2_OPTION_STD_MODIFIER(insert)
 
 BOOST_ASSIGN_V2_OPTION_STD_MODIFIER_TAG(push)
 BOOST_ASSIGN_V2_OPTION_STD_MODIFIER(push)
