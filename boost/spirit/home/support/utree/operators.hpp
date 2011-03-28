@@ -15,6 +15,7 @@
 #endif
 
 #include <exception>
+#include <ios>
 #include <boost/spirit/home/support/utree/utree.hpp>
 #include <boost/preprocessor/cat.hpp>
 #include <boost/throw_exception.hpp>
@@ -126,7 +127,7 @@ namespace boost { namespace spirit
             return true;
         }
 
-        bool operator()(function_base const& a, function_base const& b) const
+        bool operator()(function_base const&, function_base const&) const
         {
             return false; // just don't allow comparison of functions
         }
@@ -184,13 +185,13 @@ namespace boost { namespace spirit
             return false; // no less than comparison for nil
         }
 
-        bool operator()(any_ptr const& a, any_ptr const& b) const
+        bool operator()(any_ptr const&, any_ptr const&) const
         {
             boost::throw_exception(bad_type_exception());
             return false; // no less than comparison for any_ptr
         }
 
-        bool operator()(function_base const& a, function_base const& b) const
+        bool operator()(function_base const&, function_base const&) const
         {
             boost::throw_exception(bad_type_exception());
             return false; // no less than comparison of functions
@@ -268,12 +269,12 @@ namespace boost { namespace spirit
             (*this)(')');
         }
 
-        void operator()(any_ptr const& p) const
+        void operator()(any_ptr const&) const
         {
             return (*this)("<pointer>");
         }
 
-        void operator()(function_base const& pf) const
+        void operator()(function_base const&) const
         {
             return (*this)("<function>");
         }
@@ -287,41 +288,59 @@ namespace boost { namespace spirit
         // We assume anything except false is true
 
         // binary
-        utree operator()(bool a, bool b) const
+        template <typename A, typename B>
+        utree operator()(A const& a, B const& b) const
         {
-            return Base::eval(a, b); // for boolean types
+            return dispatch(a, b
+              , boost::is_arithmetic<A>()
+              , boost::is_arithmetic<B>());
         }
 
         // binary
-        template <typename A>
-        utree operator()(A const& a, bool b) const
+        template <typename A, typename B>
+        utree dispatch(A const& a, B const& b, mpl::true_, mpl::true_) const
+        {
+            return Base::eval(a, b); // for arithmetic types
+        }
+
+        // binary
+        template <typename A, typename B>
+        utree dispatch(A const&, B const& b, mpl::false_, mpl::true_) const
         {
             return Base::eval(true, b);
         }
 
         // binary
-        template <typename B>
-        utree operator()(bool a, B const& b) const
+        template <typename A, typename B>
+        utree dispatch(A const& a, B const&, mpl::true_, mpl::false_) const
         {
             return Base::eval(a, true);
         }
 
         // binary
         template <typename A, typename B>
-        utree operator()(A const& a, B const& b) const
+        utree dispatch(A const&, B const&, mpl::false_, mpl::false_) const
         {
             return Base::eval(true, true);
         }
+        
+        // unary
+        template <typename A>
+        utree operator()(A const& a) const
+        {
+            return dispatch(a, boost::is_arithmetic<A>());
+        }
 
         // unary
-        utree operator()(bool a) const
+        template <typename A>
+        utree dispatch(A const& a, mpl::true_) const
         {
             return Base::eval(a);
         }
 
         // unary
         template <typename A>
-        utree operator()(A const& a) const
+        utree dispatch(A const&, mpl::false_) const
         {
             return Base::eval(true);
         }
@@ -493,33 +512,33 @@ namespace boost { namespace spirit
         return out;
     }
 
-    inline std::ostream& operator<<(std::ostream& out, utree::invalid_type const& x)
+    inline std::ostream& operator<<(std::ostream& out, utree::invalid_type const&)
     {
         return out;
     }
 
-    inline std::ostream& operator<<(std::ostream& out, utree::nil_type const& x)
+    inline std::ostream& operator<<(std::ostream& out, utree::nil_type const&)
     {
         return out;
     }
 
-    BOOST_SPIRIT_UTREE_CREATE_LOGICAL_FUNCTION(and_, a&&b);
-    BOOST_SPIRIT_UTREE_CREATE_LOGICAL_FUNCTION(or_, a||b);
-    BOOST_SPIRIT_UTREE_CREATE_LOGICAL_FUNCTION(not_, !a);
+    BOOST_SPIRIT_UTREE_CREATE_LOGICAL_FUNCTION(and_, a&&b)
+    BOOST_SPIRIT_UTREE_CREATE_LOGICAL_FUNCTION(or_, a||b)
+    BOOST_SPIRIT_UTREE_CREATE_LOGICAL_FUNCTION(not_, !a)
 
-    BOOST_SPIRIT_UTREE_CREATE_ARITHMETIC_FUNCTION(plus, a+b);
-    BOOST_SPIRIT_UTREE_CREATE_ARITHMETIC_FUNCTION(minus, a-b);
-    BOOST_SPIRIT_UTREE_CREATE_ARITHMETIC_FUNCTION(times, a*b);
-    BOOST_SPIRIT_UTREE_CREATE_ARITHMETIC_FUNCTION(divides, a/b);
-    BOOST_SPIRIT_UTREE_CREATE_INTEGRAL_FUNCTION(modulus, a%b);
-    BOOST_SPIRIT_UTREE_CREATE_ARITHMETIC_FUNCTION(negate, -a);
+    BOOST_SPIRIT_UTREE_CREATE_ARITHMETIC_FUNCTION(plus, a+b)
+    BOOST_SPIRIT_UTREE_CREATE_ARITHMETIC_FUNCTION(minus, a-b)
+    BOOST_SPIRIT_UTREE_CREATE_ARITHMETIC_FUNCTION(times, a*b)
+    BOOST_SPIRIT_UTREE_CREATE_ARITHMETIC_FUNCTION(divides, a/b)
+    BOOST_SPIRIT_UTREE_CREATE_INTEGRAL_FUNCTION(modulus, a%b)
+    BOOST_SPIRIT_UTREE_CREATE_ARITHMETIC_FUNCTION(negate, -a)
 
-    BOOST_SPIRIT_UTREE_CREATE_INTEGRAL_FUNCTION(bitand_, a&b);
-    BOOST_SPIRIT_UTREE_CREATE_INTEGRAL_FUNCTION(bitor_, a|b);
-    BOOST_SPIRIT_UTREE_CREATE_INTEGRAL_FUNCTION(bitxor_, a^b);
-    BOOST_SPIRIT_UTREE_CREATE_INTEGRAL_FUNCTION(shift_left, a<<b);
-    BOOST_SPIRIT_UTREE_CREATE_INTEGRAL_FUNCTION(shift_right, a>>b);
-    BOOST_SPIRIT_UTREE_CREATE_INTEGRAL_FUNCTION(invert, ~a);
+    BOOST_SPIRIT_UTREE_CREATE_INTEGRAL_FUNCTION(bitand_, a&b)
+    BOOST_SPIRIT_UTREE_CREATE_INTEGRAL_FUNCTION(bitor_, a|b)
+    BOOST_SPIRIT_UTREE_CREATE_INTEGRAL_FUNCTION(bitxor_, a^b)
+    BOOST_SPIRIT_UTREE_CREATE_INTEGRAL_FUNCTION(shift_left, a<<b)
+    BOOST_SPIRIT_UTREE_CREATE_INTEGRAL_FUNCTION(shift_right, a>>b)
+    BOOST_SPIRIT_UTREE_CREATE_INTEGRAL_FUNCTION(invert, ~a)
 
     inline utree operator&&(utree const& a, utree const& b)
     {

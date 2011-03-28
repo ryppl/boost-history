@@ -175,7 +175,7 @@ namespace boost { namespace spirit
     //[utree_function_object_interface
     struct function_base
     {
-        virtual ~function_base() {};
+        virtual ~function_base() {}
         virtual utree operator()(scope const& env) const = 0;
 
         // Calling f.clone() must return a newly allocated function_base 
@@ -189,6 +189,16 @@ namespace boost { namespace spirit
         F f;
         stored_function(F f = F());
         virtual ~stored_function();
+        virtual utree operator()(scope const& env) const;
+        virtual function_base* clone() const;
+    };
+    
+    template <typename F>
+    struct referenced_function : function_base
+    {
+        F& f;
+        referenced_function(F& f);
+        virtual ~referenced_function();
         virtual utree operator()(scope const& env) const;
         virtual function_base* clone() const;
     };
@@ -361,6 +371,13 @@ namespace boost { namespace spirit
         utree(stored_function<F> const&);
         template <class F>
         reference operator=(stored_function<F> const&);
+       
+        // This initializes a `function_type` node, storing by reference
+        // instead of copying the function object. 
+        template <class F>
+        utree(referenced_function<F> const&);
+        template <class F>
+        reference operator=(referenced_function<F> const&);
 
         // This initializes either a `string_type`, a `symbol_type`, or a 
         // `binary_type` node (depending on the template parameter `type_`), 
@@ -458,7 +475,7 @@ namespace boost { namespace spirit
         reference operator[](size_type);
         const_reference operator[](size_type) const;
 
-        // This clears the utree instance and resets its type to 'invalid_type'
+        // This clears the utree instance and resets its type to `invalid_type`
         void clear();
 
         void swap(utree&);

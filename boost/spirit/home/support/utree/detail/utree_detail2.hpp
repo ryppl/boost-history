@@ -605,7 +605,7 @@ namespace boost { namespace spirit
     template <typename F>
     stored_function<F>::~stored_function()
     {
-    };
+    }
 
     template <typename F>
     utree stored_function<F>::operator()(scope const& env) const
@@ -617,7 +617,31 @@ namespace boost { namespace spirit
     function_base*
     stored_function<F>::clone() const
     {
-        return new stored_function<F>(*this);
+        return new stored_function<F>(f);
+    }
+    
+    template <typename F>
+    referenced_function<F>::referenced_function(F& f)
+      : f(f)
+    {
+    }
+
+    template <typename F>
+    referenced_function<F>::~referenced_function()
+    {
+    }
+
+    template <typename F>
+    utree referenced_function<F>::operator()(scope const& env) const
+    {
+        return f(env);
+    }
+
+    template <typename F>
+    function_base*
+    referenced_function<F>::clone() const
+    {
+        return new referenced_function<F>(f);
     }
 
     inline utree::utree(utree::invalid_type)
@@ -717,6 +741,14 @@ namespace boost { namespace spirit
     {
         s.initialize();
         pf = new stored_function<F>(pf_);
+        set_type(type::function_type);
+    }
+    
+    template <typename F>
+    inline utree::utree(referenced_function<F> const& pf_)
+    {
+        s.initialize();
+        pf = new referenced_function<F>(pf_);
         set_type(type::function_type);
     }
 
@@ -864,10 +896,19 @@ namespace boost { namespace spirit
     }
 
     template <typename F>
-    utree& utree::operator=(stored_function<F> const& pf)
+    utree& utree::operator=(stored_function<F> const& pf_)
     {
         free();
-        pf = new stored_function<F>(pf);
+        pf = new stored_function<F>(pf_);
+        set_type(type::function_type);
+        return *this;
+    }
+    
+    template <typename F>
+    utree& utree::operator=(referenced_function<F> const& pf_)
+    {
+        free();
+        pf = new referenced_function<F>(pf_);
         set_type(type::function_type);
         return *this;
     }
@@ -1396,7 +1437,7 @@ namespace boost { namespace spirit
         }
 
         template <typename From>
-        To dispatch(From const& val, boost::mpl::false_) const
+        To dispatch(From const&, boost::mpl::false_) const
         {
             // From is NOT convertible to To !!!
             boost::throw_exception(std::bad_cast());
@@ -1422,7 +1463,7 @@ namespace boost { namespace spirit
         typedef T* result_type;
 
         template <typename From>
-        T* operator()(From const& val) const
+        T* operator()(From const&) const
         {
             // From is NOT convertible to T !!!
             boost::throw_exception(std::bad_cast());
