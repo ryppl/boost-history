@@ -16,13 +16,13 @@
 #
 #if BOOST_PP_VARIADICS
 #
-# include <boost/preprocessor/facilities/overload.hpp>
 # include <boost/preprocessor/tuple/size.hpp>
+# include "detail/use_overload.hpp"
 #
 # /* BOOST_PP_TUPLE_TO_ARRAY */
 #
 # define BOOST_PP_TUPLE_TO_ARRAY(...) \
-  BOOST_PP_OVERLOAD(BOOST_PP_TUPLE_DETAIL_TO_ARRAY_, __VA_ARGS__)(__VA_ARGS__) \
+  BOOST_PP_TUPLE_DETAIL_USE_OVERLOAD(BOOST_PP_TUPLE_DETAIL_TO_ARRAY_, __VA_ARGS__) \
   /**/
 # define BOOST_PP_TUPLE_DETAIL_TO_ARRAY_1(tuple) \
   BOOST_PP_TUPLE_DETAIL_TO_ARRAY_2(BOOST_PP_TUPLE_SIZE(tuple),tuple) \

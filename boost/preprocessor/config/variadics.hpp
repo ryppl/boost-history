@@ -12,16 +12,16 @@
 # ifndef BOOST_PREPROCESSOR_CONFIG_VARIADICS_HPP
 # define BOOST_PREPROCESSOR_CONFIG_VARIADICS_HPP
 #
-# if defined(BOOST_PP_NO_VARIADICS)
+# if defined(BOOST_PP_TEST_NO_VARIADICS)
 /* This macro is purely for testing purposes so that we can 
    test Boost PP without variadic macro support even on 
    compilers that support variadic macros by defining
-   BOOST_PP_NO_VARIADICS on the command line. We can remove 
+   BOOST_PP_TEST_NO_VARIADICS on the command line. We can remove 
    this after the intiial tests.
 */
 # define BOOST_PP_VARIADICS 0
 #
-# else // !defined(BOOST_PP_NO_VARIADICS)
+# else // !defined(BOOST_PP_TEST_NO_VARIADICS)
 #
 # if 1
 /* This is the code we will use. It is essentially a duplication
@@ -163,6 +163,6 @@
 #
 # endif // 1
 #
-# endif // BOOST_PP_NO_VARIADICS
+# endif // BOOST_PP_TEST_NO_VARIADICS
 #
 # endif // BOOST_PREPROCESSOR_CONFIG_VARIADICS_HPP

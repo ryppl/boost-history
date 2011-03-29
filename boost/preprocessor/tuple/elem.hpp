@@ -14,36 +14,38 @@
 # ifndef BOOST_PREPROCESSOR_TUPLE_ELEM_HPP
 # define BOOST_PREPROCESSOR_TUPLE_ELEM_HPP
 #
+# include <boost/preprocessor/config/config.hpp>
 # include <boost/preprocessor/config/variadics.hpp>
 #
-# if BOOST_PP_VARIADICS
+# if BOOST_PP_VARIADICS && !defined(BOOST_PP_TEST_NO_TUPLE_ELEM)
 #
-# include <boost/preprocessor/facilities/overload.hpp>
-# include <boost/preprocessor/tuple/enum.hpp>
-# include <boost/preprocessor/variadic/elem.hpp>
+# include <boost/preprocessor/tuple/size.hpp>
+# include "detail/use_overload.hpp"
 #
 # /* BOOST_PP_TUPLE_ELEM */
 #
 #    define BOOST_PP_TUPLE_ELEM(...) \
-         BOOST_PP_OVERLOAD(BOOST_PP_TUPLE_DETAIL_ELEM_, __VA_ARGS__)(__VA_ARGS__) \
+         BOOST_PP_TUPLE_DETAIL_USE_OVERLOAD(BOOST_PP_TUPLE_DETAIL_ELEM_,__VA_ARGS__) \
          /**/
 #    define BOOST_PP_TUPLE_DETAIL_ELEM_2(i, tuple) \
-         BOOST_PP_VARIADIC_ELEM(i,BOOST_PP_TUPLE_ENUM(tuple)) \
+         BOOST_PP_TUPLE_DETAIL_ELEM_3(BOOST_PP_TUPLE_SIZE(tuple),i,tuple) \
          /**/
 #    define BOOST_PP_TUPLE_DETAIL_ELEM_3(size, i, tuple) \
-         BOOST_PP_TUPLE_DETAIL_ELEM_2(i, tuple) \
+         BOOST_PP_TUPLE_ELEM_COMMON(size, i, tuple) \
          /**/
 #
 # else
-#
-# include <boost/preprocessor/config/config.hpp>
 #
 # /* BOOST_PP_TUPLE_ELEM */
 #
+#    define BOOST_PP_TUPLE_ELEM(size, index, tuple) BOOST_PP_TUPLE_ELEM_COMMON(size, index, tuple)
+#
+# endif // BOOST_PP_VARIADICS
+#
 # if ~BOOST_PP_CONFIG_FLAGS() & BOOST_PP_CONFIG_MWCC()
-#    define BOOST_PP_TUPLE_ELEM(size, index, tuple) BOOST_PP_TUPLE_ELEM_I(size, index, tuple)
+#    define BOOST_PP_TUPLE_ELEM_COMMON(size, index, tuple) BOOST_PP_TUPLE_ELEM_I(size, index, tuple)
 # else
-#    define BOOST_PP_TUPLE_ELEM(size, index, tuple) BOOST_PP_TUPLE_ELEM_OO((size, index, tuple))
+#    define BOOST_PP_TUPLE_ELEM_COMMON(size, index, tuple) BOOST_PP_TUPLE_ELEM_OO((size, index, tuple))
 #    define BOOST_PP_TUPLE_ELEM_OO(par) BOOST_PP_TUPLE_ELEM_I ## par
 # endif
 #
@@ -406,5 +408,4 @@
 # define BOOST_PP_TUPLE_ELEM_25_23(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y) x
 # define BOOST_PP_TUPLE_ELEM_25_24(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y) y
 #
-# endif // BOOST_PP_VARIADICS
 # endif

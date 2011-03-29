@@ -9,20 +9,21 @@
 #
 # /* See http://www.boost.org for most recent version. */
 #
-# ifndef BOOST_PREPROCESSOR_TUPLE_SIZE_HPP
-# define BOOST_PREPROCESSOR_TUPLE_SIZE_HPP
+# ifndef BOOST_PREPROCESSOR_TUPLE_USE_OVERLOAD_HPP
+# define BOOST_PREPROCESSOR_TUPLE_USE_OVERLOAD_HPP
 #
 # include <boost/preprocessor/config/variadics.hpp>
 #
-#if BOOST_PP_VARIADICS
+# if BOOST_PP_VARIADICS
 #
-# include <boost/preprocessor/tuple/enum.hpp>
-# include <boost/preprocessor/variadic/size.hpp>
+# include <boost/preprocessor/facilities/overload.hpp>
+# include <boost/preprocessor/variadic/detail/apply_var.hpp>
 #
-# /* BOOST_PP_TUPLE_SIZE */
+# /* BOOST_PP_TUPLE_DETAIL_USE_OVERLOAD */
 #
-#define BOOST_PP_TUPLE_SIZE(tuple) BOOST_PP_TUPLE_SIZE_DETAIL(tuple)
-#define BOOST_PP_TUPLE_SIZE_DETAIL(tuple) BOOST_PP_VARIADIC_SIZE(BOOST_PP_TUPLE_ENUM(tuple))
+#    define BOOST_PP_TUPLE_DETAIL_USE_OVERLOAD(prefix,...) \
+         BOOST_PP_VARIADIC_DETAIL_APPLY_VAR(BOOST_PP_OVERLOAD(prefix, __VA_ARGS__),(__VA_ARGS__)) \
+         /**/
 #
-#endif // BOOST_PP_VARIADICS
-#endif // BOOST_PREPROCESSOR_TUPLE_SIZE_HPP
+# endif // BOOST_PP_VARIADICS
+# endif // BOOST_PREPROCESSOR_TUPLE_USE_OVERLOAD_HPP

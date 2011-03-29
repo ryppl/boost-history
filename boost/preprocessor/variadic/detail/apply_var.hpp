@@ -9,20 +9,14 @@
 #
 # /* See http://www.boost.org for most recent version. */
 #
-# ifndef BOOST_PREPROCESSOR_TUPLE_SIZE_HPP
-# define BOOST_PREPROCESSOR_TUPLE_SIZE_HPP
+# ifndef BOOST_PREPROCESSOR_VARIADIC_DETAIL_APPLYVAR_HPP
+# define BOOST_PREPROCESSOR_VARIADIC_DETAIL_APPLYVAR_HPP
 #
-# include <boost/preprocessor/config/variadics.hpp>
+#define BOOST_PP_VARIADIC_DETAIL_APPLY_VAR_I(macro, args) \
+  macro args \
+/**/
+#define BOOST_PP_VARIADIC_DETAIL_APPLY_VAR(macro, args) \
+  BOOST_PP_VARIADIC_DETAIL_APPLY_VAR_I(macro, args) \
+/**/
 #
-#if BOOST_PP_VARIADICS
-#
-# include <boost/preprocessor/tuple/enum.hpp>
-# include <boost/preprocessor/variadic/size.hpp>
-#
-# /* BOOST_PP_TUPLE_SIZE */
-#
-#define BOOST_PP_TUPLE_SIZE(tuple) BOOST_PP_TUPLE_SIZE_DETAIL(tuple)
-#define BOOST_PP_TUPLE_SIZE_DETAIL(tuple) BOOST_PP_VARIADIC_SIZE(BOOST_PP_TUPLE_ENUM(tuple))
-#
-#endif // BOOST_PP_VARIADICS
-#endif // BOOST_PREPROCESSOR_TUPLE_SIZE_HPP
+#endif // BOOST_PREPROCESSOR_VARIADIC_DETAIL_APPLYVAR_HPP

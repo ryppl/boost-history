@@ -12,11 +12,12 @@
 # ifndef BOOST_PREPROCESSOR_TUPLE_REM_HPP
 # define BOOST_PREPROCESSOR_TUPLE_REM_HPP
 #
+# include <boost/preprocessor/config/config.hpp>
 # include <boost/preprocessor/config/variadics.hpp>
 #
-# if BOOST_PP_VARIADICS
+# if BOOST_PP_VARIADICS && !defined(BOOST_PP_TEST_NO_TUPLE_REM)
 #
-# include <boost/preprocessor/facilities/overload.hpp>
+# include "detail/use_overload.hpp"
 #
 # /* BOOST_PP_TUPLE_REM */
 #
@@ -26,21 +27,27 @@
 # /* BOOST_PP_TUPLE_REM_CTOR */
 #
 #    define BOOST_PP_TUPLE_REM_CTOR(...) \
-         BOOST_PP_OVERLOAD(BOOST_PP_TUPLE_DETAIL_REM_CTOR_, __VA_ARGS__)(__VA_ARGS__) \
+         BOOST_PP_TUPLE_DETAIL_USE_OVERLOAD(BOOST_PP_TUPLE_DETAIL_REM_CTOR_, __VA_ARGS__) \
          /**/
 #    define BOOST_PP_TUPLE_DETAIL_REM_CTOR_1(tuple) BOOST_PP_DETAIL_TUPLE_REM tuple
 #    define BOOST_PP_TUPLE_DETAIL_REM_CTOR_2(size, tuple) BOOST_PP_TUPLE_DETAIL_REM_CTOR_1(tuple)
 #
 # else
 #
-# include <boost/preprocessor/config/config.hpp>
-#
 # /* BOOST_PP_TUPLE_REM */
 #
+#    define BOOST_PP_TUPLE_REM(size) BOOST_PP_TUPLE_REM_COMMON(size)
+#
+# /* BOOST_PP_TUPLE_REM_CTOR */
+#
+#    define BOOST_PP_TUPLE_REM_CTOR(size, tuple) BOOST_PP_TUPLE_REM_CTOR_COMMON(size, tuple)
+#
+# endif // BOOST_PP_VARIADICS
+#
 # if ~BOOST_PP_CONFIG_FLAGS() & BOOST_PP_CONFIG_MWCC()
-#    define BOOST_PP_TUPLE_REM(size) BOOST_PP_TUPLE_REM_I(size)
+#    define BOOST_PP_TUPLE_REM_COMMON(size) BOOST_PP_TUPLE_REM_I(size)
 # else
-#    define BOOST_PP_TUPLE_REM(size) BOOST_PP_TUPLE_REM_OO((size))
+#    define BOOST_PP_TUPLE_REM_COMMON(size) BOOST_PP_TUPLE_REM_OO((size))
 #    define BOOST_PP_TUPLE_REM_OO(par) BOOST_PP_TUPLE_REM_I ## par
 # endif
 #
@@ -73,12 +80,10 @@
 # define BOOST_PP_TUPLE_REM_24(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x) a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x
 # define BOOST_PP_TUPLE_REM_25(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y) a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y
 #
-# /* BOOST_PP_TUPLE_REM_CTOR */
-#
 # if ~BOOST_PP_CONFIG_FLAGS() & BOOST_PP_CONFIG_EDG()
-#    define BOOST_PP_TUPLE_REM_CTOR(size, tuple) BOOST_PP_TUPLE_REM_CTOR_I(BOOST_PP_TUPLE_REM(size), tuple)
+#    define BOOST_PP_TUPLE_REM_CTOR_COMMON(size, tuple) BOOST_PP_TUPLE_REM_CTOR_I(BOOST_PP_TUPLE_REM(size), tuple)
 # else
-#    define BOOST_PP_TUPLE_REM_CTOR(size, tuple) BOOST_PP_TUPLE_REM_CTOR_D(size, tuple)
+#    define BOOST_PP_TUPLE_REM_CTOR_COMMON(size, tuple) BOOST_PP_TUPLE_REM_CTOR_D(size, tuple)
 #    define BOOST_PP_TUPLE_REM_CTOR_D(size, tuple) BOOST_PP_TUPLE_REM_CTOR_I(BOOST_PP_TUPLE_REM(size), tuple)
 # endif
 #
@@ -90,5 +95,4 @@
 #    define BOOST_PP_TUPLE_REM_CTOR_II(ext, tuple) ext ## tuple
 # endif
 #
-# endif
 # endif
