@@ -13,6 +13,7 @@
 #include <boost/assign/v2/detail/traits/container.hpp>
 #include <boost/assign/v2/conversion/helper.hpp>
 #include <boost/assign/v2/conversion/predicate.hpp>
+#include <boost/mpl/bool.hpp>
 #include <boost/mpl/or.hpp>
 #include <boost/mpl/pair.hpp>
 
@@ -24,6 +25,24 @@ namespace switch_tag{
     struct deduce_convert{};
 }// switch_tag
 namespace conversion_aux{
+
+    // This is in replacement of switch_aux::helper since here we need
+    // two arguments.
+
+    template<typename T, typename U>
+    struct default_f : ::boost::mpl::true_{};
+
+    template<typename Tag,
+        template<typename, typename> class F = conversion_aux::default_f>
+    struct helper
+    {
+        typedef Tag tag;
+        template<typename T>  // T must derive from mpl::pair<>
+        struct apply
+            : F<typename T::first, typename T::second>
+        {
+        };
+    };
 
     template<typename C, typename R>
     struct use_put : ::boost::mpl::or_<
