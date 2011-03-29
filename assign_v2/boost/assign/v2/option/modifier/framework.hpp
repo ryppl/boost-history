@@ -64,47 +64,31 @@ namespace interpreter_aux{
 
 namespace result_of{
         
-    template<typename D>
-    struct option_modifier{
-
-//<-            
-        typedef interpreter_aux::replace_modifier_tag<D> meta_;
-//->
-            
-        template<typename Keyword, typename Arg>
-        struct apply 
-//<-
-            : ::boost::mpl::apply1<
-                meta_, 
-                typename ::boost::mpl::apply1<
-                    interpreter_aux::meta_modifier_tag<Keyword, Arg>, 
-                    D
-                >::type
-            >
-//->
-        {};
-        
-    };
+    template<typename D,typename Keyword, typename Arg>
+    struct option_modifier /*<-*/ : ::boost::mpl::apply1<
+		replace_modifier_tag<D>, 
+        typename ::boost::mpl::apply1<
+            interpreter_aux::meta_modifier_tag<Keyword, Arg>, 
+            D
+        >::type
+    >
+    {}/*->*/;
             
 }// result_of
 
     template<typename C, typename F, typename ModifierTag, typename DataTag, typename D, 
         typename Keyword, typename Arg>
-    typename ::boost::mpl::apply2<
-        result_of::option_modifier<D>, Keyword, Arg
-    >::type
+    typename result_of::option_modifier<D, Keyword, Arg>::type
     operator%(
         interpreter_crtp<C, F, ModifierTag, DataTag, D> const& lhs,
         option_modifier<Keyword, Arg> const& rhs
     )/*<-*/
     {
-        typedef interpreter_aux::meta_modifier_tag<Keyword, Arg> meta_;
+    	typedef interpreter_aux::meta_modifier_tag<Keyword, Arg> meta_;
         typedef typename ::boost::mpl::apply1<meta_, D>::type modifier_tag;
         typedef interpreter_aux::interpreter_modifier<modifier_tag> modifier_;
-    
-        typedef typename ::boost::mpl::apply2<
-            result_of::option_modifier<D>, 
-            Keyword, Arg
+    	typedef typename result_of::option_modifier<
+        	D, Keyword, Arg
         >::type result_;
     
         return result_(
@@ -122,9 +106,9 @@ namespace result_of{
 //]
 namespace result_of{
 
-    template<typename D>
+    template<typename D, typename Keyword, typename Arg>
     struct option_modifier 
-        : interpreter_aux::result_of::option_modifier<D>
+        : interpreter_aux::result_of::option_modifier<D, Keyword, Arg>
     {};
 
 }// result_of
@@ -141,6 +125,14 @@ namespace interpreter_aux{\
         template<typename D>\
         struct apply{ typedef Result type; };\
     };\
+}\
+namespace result_of{\
+\
+    template<typename D, typename Arg>\
+    struct BOOST_PP_CAT(option_, NAME)\
+        : result_of::option_modifier<D, interpreter_aux::BOOST_PP_CAT(keyword_,NAME), Arg>\
+    {};\
+\
 }\
 /**/
 #endif

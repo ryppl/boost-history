@@ -9,9 +9,11 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_OPTION_DATA_GENERATOR_ER_2010_HPP
 #define BOOST_ASSIGN_V2_OPTION_DATA_GENERATOR_ER_2010_HPP
+#include <boost/assign/v2/detail/functor/value.hpp>
 #include <boost/assign/v2/detail/keyword/key.hpp>
 #include <boost/assign/v2/detail/keyword/ignore.hpp>
 #include <boost/assign/v2/detail/pp/ignore.hpp>
+#include <boost/assign/v2/interpreter/data_generator.hpp>
 #include <boost/assign/v2/interpreter/fwd.hpp>
 #include <boost/assign/v2/interpreter/replace.hpp>
 #include <boost/mpl/apply.hpp>

@@ -51,7 +51,7 @@ namespace interpreter_aux{
 
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
         template<typename C, typename T>
-        void impl(C& cont, T&& key, data_tag::storage_value )const
+        void impl(C& cont, T&& key, data_tag::storage )const
         {
             cont[ key ] = (*this->ptr)( cont[ std::forward<T>( key ) ] );
         }
@@ -59,7 +59,7 @@ namespace interpreter_aux{
 #else
 
         template<typename C, typename T>
-        void impl(C& cont, T& key, data_tag::storage_value )const{
+        void impl(C& cont, T& key, data_tag::storage )const{
             cont[ key ] = (*this->ptr)( cont[ key ] );
         }
 

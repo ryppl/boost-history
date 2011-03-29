@@ -9,6 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #include <libs/assign/v2/test/option/data.h>
 #include <libs/assign/v2/test/option/iterate.h>
+#include <libs/assign/v2/test/option/list.h>
 #include <libs/assign/v2/test/option/mapped.h>
 #include <libs/assign/v2/test/option/repeat.h>
 #include <libs/assign/v2/test/option/std_modifier.h>
@@ -21,6 +22,7 @@ namespace xxx_option{
         xxx_data::test();
         xxx_iterate::test();
         xxx_mapped::test();
+        xxx_list::test();
         xxx_repeat::test();
         xxx_standard::test();
     }

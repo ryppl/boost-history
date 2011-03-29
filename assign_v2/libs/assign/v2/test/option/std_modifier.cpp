@@ -39,20 +39,17 @@ namespace xxx_standard{
         using namespace boost;
         namespace as2 = assign::v2;
 
-        // ------------------------------ WARNING ---------------------------- //
-        // Don't misconstrue the commands in the tests below as *necessary* to //
-        // obtain particular implementation. In most cases, the default is     //
-        // already set at that invoked with operator%                          //
-        // ------------------------------------------------------------------- //
+        // Note: In many cases, the default is already set at that invoked with 
+        // operator% 
 
         // PUT
         {
             //[test_option_standard_meta
             typedef as2::result_of::put<std::vector<int> >::type put_;
-            typedef as2:: interpreter_aux::keyword_std_modifier keyword_;
             typedef as2::modifier_tag::push_front tag_;
-            typedef as2::result_of::option_modifier<put_> meta1_;
-            typedef ::boost::mpl::apply2<meta1_, keyword_, tag_>::type result1_;
+            typedef as2::result_of::option_std_modifier<
+            	put_, tag_
+            >::type result1_;
             typedef as2:: interpreter_aux::replace_modifier_tag<put_> meta2_;
             typedef ::boost::mpl::apply1<meta2_, tag_>::type result2_;
             BOOST_MPL_ASSERT(( boost::is_same<result1_, result2_> ));
@@ -112,10 +109,8 @@ namespace xxx_standard{
         {
             //[test_option_meta_deque
             typedef as2::result_of::deque<int>::type put_;
-            typedef as2:: interpreter_aux::keyword_std_modifier keyword_;
             typedef as2::modifier_tag::push_front tag_;
-            typedef as2::result_of::option_modifier<put_> meta1_;
-            typedef ::boost::mpl::apply2<meta1_, keyword_, tag_>::type result1_;
+            typedef as2::result_of::option_push_front<put_>::type result1_;
             typedef as2:: interpreter_aux::replace_modifier_tag<put_> meta2_;
             typedef ::boost::mpl::apply1<meta2_, tag_>::type result2_;
 

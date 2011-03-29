@@ -7,16 +7,15 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-//#include <map>
+#include <map>
 #include <deque>
-#include <vector>
-#include <list>
 #include <string>
-#include <boost/array.hpp>
 #include <boost/assign/v2/detail/config/check.hpp>
+#include <boost/assign/v2/detail/traits/container.hpp>
 #include <boost/assign/v2/deque/csv_deque.hpp>
 #include <boost/assign/v2/pipe/csv_put.hpp> 
-#include <boost/range/algorithm/for_each.hpp>
+#include <boost/ptr_container/ptr_map.hpp>/
+#include <boost/range/algorithm/equal.hpp>
 
 #include <libs/assign/v2/test/pipe/csv_put.h>
 
@@ -30,12 +29,50 @@ namespace xxx_csv_put{
         namespace as2 = assign::v2;
         {
             //[test_pipe_csv_put_str_literal
-            typedef const char* T; typedef std::string str_; std::deque<T> cont;
+            typedef const char* T; typedef std::string str_; 
+            std::deque<T> cont;
 
             BOOST_ASSIGN_V2_CHECK( 
                 boost::range::equal(
                     cont | /*<<`"x"`, `"y"` and `"z"` are kept as `const char(&)[2]`>>*/as2::_csv_put( "x", "y", "z" ),
                     as2::csv_deque<str_>( "x", "y", "z" )
+                )
+            );
+            //]
+        }
+        {
+            //[test_pipe_csv_put_map
+            typedef std::map<std::string, int> C; typedef C::value_type T;
+            C cal; C benchmark; 
+            benchmark["jan"] = 31;
+            benchmark["feb"] = 28;
+            benchmark["mar"] = 31;
+            
+            cal  | as2::_csv_put( T("jan", 31), T( "feb", 28 ), T("mar", 31) );
+            
+			BOOST_ASSIGN_V2_CHECK( 
+            	range::equal(
+                	cal  | as2::_csv_put( T("jan", 31), T("feb", 28 ), T("mar", 31) ),
+                    benchmark
+                )
+            );
+            //]
+        }
+        {
+            //[test_pipe_csv_put_map
+            typedef boost::ptr_map<std::string, int> C; 
+            typedef as2::value_container_value<C>::type T; 
+
+            C benchmark; 
+            benchmark["jan"] = 31;
+            benchmark["feb"] = 28;
+            benchmark["mar"] = 31;
+            
+			C cal; 
+            BOOST_ASSIGN_V2_CHECK( 
+            	range::equal(
+                	cal  | as2::_csv_put( T("jan", 31), T("feb", 28 ), T("mar", 31) ),
+                    benchmark
                 )
             );
             //]

@@ -106,15 +106,25 @@ namespace interpreter_aux{
 }// interpreter_aux
 namespace result_of{
 
-    template<typename C>
-    struct put{/*<-*/
-        typedef typename interpreter_aux::deduce_data_generator<C>::type f_;
-        typedef typename interpreter_aux::deduce_modifier_tag<C>::type modifier_tag_;
-        typedef typename interpreter_aux::deduce_data_tag<C>::type data_tag_;
-        /*->*/typedef /*<-*/BOOST_ASSIGN_V2_IGNORE(/*->*/unspecified/*<-*/)
-        	interpreter_aux::put_interpreter<C, f_, modifier_tag_, data_tag_>/*->*/ 
+    template<
+    	typename C/*<-*/
+		, typename DataGenerator 
+        	= typename interpreter_aux::deduce_data_generator<C>::type 
+        , typename ModifierTag 
+        	= typename interpreter_aux::deduce_modifier_tag<C>::type
+        , typename DataTag 
+        	= typename interpreter_aux::deduce_data_tag<C>::type/*->*/
+    >
+    struct put/*<-*/{
+        typedef 
+        	interpreter_aux::put_interpreter<
+            	C, 
+                DataGenerator, 
+                ModifierTag, 
+                DataTag
+            > 
         type;
-    };
+    }/*->*/;
 
 }// result_of
 
@@ -126,6 +136,23 @@ namespace result_of{
         return result_( cont );
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
+/*<-*/
+    template<
+    	typename DataGenerator 
+        ,typename ModifierTag 
+        ,typename DataTag 
+        ,typename C
+    >
+    typename result_of::put<C, DataGenerator, ModifierTag, DataTag>::type
+    put( C& cont )/*<-*/
+    {
+    	typedef typename result_of::put<
+        	C, DataGenerator, ModifierTag, DataTag
+        >::type result_;
+        return result_( cont );
+    }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
+
+/*->*/
 //]
 }// v2
 }// assign

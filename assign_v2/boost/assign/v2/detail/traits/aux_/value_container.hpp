@@ -91,7 +91,7 @@ BOOST_ASSIGN_V2_TRAITS_CONTAINER_CATEGORIES(
 ) 
 BOOST_ASSIGN_V2_TRAITS_CONTAINER_CATEGORIES( 
     (typename K)(typename M)(typename H)(typename P)(typename A), 
-    (is_associative),
+    (is_associative)(is_map),
     boost::unordered_map, (K)(M)(H)(P)(A)
 )
 BOOST_ASSIGN_V2_TRAITS_CONTAINER_CATEGORIES( 

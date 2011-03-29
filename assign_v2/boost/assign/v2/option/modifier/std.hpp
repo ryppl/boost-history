@@ -101,6 +101,14 @@ namespace{\
     );\
 \
 }\
+namespace result_of{\
+\
+    template<typename D>\
+    struct BOOST_PP_CAT(option_, FUN)\
+        : result_of::option_std_modifier<D, modifier_tag::FUN>\
+    {};\
+\
+}\
 }\
 }\
 }\

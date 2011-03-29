@@ -14,7 +14,7 @@
 #include <boost/assign/v2/put.hpp>
 #include <boost/assign/v2/deque.hpp>
 // Options come next
-#include <boost/assign/v2/option/data_generator/key.hpp>
+#include <boost/assign/v2/option/data_generator.hpp>
 #include <boost/assign/v2/option/modifier/mapped.hpp>
 #include <boost/lambda/lambda.hpp>
 #include <boost/mpl/assert.hpp>
@@ -39,7 +39,7 @@ namespace xxx_mapped{
             typedef std::string str_; typedef std::map<str_, int> C; C year;
             (
                 as2::put( year )( "feb", 28 )( "apr", 30 )( "jun", 30 )( "sep", 30 )( "nov", 30 )
-                    % as2::_key %  ( as2::_mapped = ( _1 = 31 ) )
+                    % (as2::_data = as2::_key) %  ( as2::_mapped = ( _1 = 31 ) )
             )/*<<Calls `year["jan"] = 31` etc.>>*/( "jan" )( "mar" )( "may" )( "jul" )( "aug" )( "oct" )( "dec" );
 
             BOOST_ASSIGN_V2_CHECK( year["jan"] == 31 );
@@ -51,10 +51,8 @@ namespace xxx_mapped{
             using namespace lambda;
             typedef BOOST_TYPEOF(_1) arg_;
             typedef as2:: interpreter_aux::keyword_mapped keyword_;
-            typedef as2:: interpreter_aux::option_modifier<keyword_, arg_> modulo_;
             typedef as2::result_of::deque<int>::type put_;
-            typedef as2::result_of::option_modifier<put_> meta1_;
-            typedef ::boost::mpl::apply2<meta1_, keyword_, arg_>::type result1_;
+            typedef as2::result_of::option_mapped<put_, arg_>::type result1_;
             typedef as2::modifier_tag::mapped<arg_> tag1_;
             typedef as2:: interpreter_aux::replace_modifier_tag<put_> meta2_;
             typedef ::boost::mpl::apply1<meta2_, tag1_>::type result2_;

@@ -9,13 +9,15 @@
 //////////////////////////////////////////////////////////////////////////////
 #include <map>
 #include <string>
-#include <boost/lambda/lambda.hpp>
-#include <boost/typeof/typeof.hpp>
 #include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/pipe/csv_put.hpp>
 // Options come next
-#include <boost/assign/v2/option/data_generator/framework.hpp>
+#include <boost/assign/v2/option/data_generator.hpp>
 #include <boost/assign/v2/option/modifier/mapped.hpp>
+#include <boost/lambda/lambda.hpp>
+#include <boost/ptr_container/ptr_map.hpp>
+#include <boost/typeof/typeof.hpp>
+
 #include <libs/assign/v2/test/pipe/option/mapped.h>
 
 namespace test_assign_v2{
@@ -29,20 +31,62 @@ namespace xxx_mapped{
         namespace as2 = assign::v2;
         {
             //[test_pipe_option_mapped
+            typedef std::map<std::string, int> C; 
+            C benchmark;
+            benchmark["feb"] = 28;
+            benchmark["apr"] = 30;
+            benchmark["jun"] = 30;
+            benchmark["sep"] = 30;
+            benchmark["nov"] = 30;
+            benchmark["jan"] = 31;
+            benchmark["mar"] = 31;
+            benchmark["may"] = 31;
+            benchmark["jul"] = 31;
+            benchmark["aug"] = 31;
+            benchmark["oct"] = 31;
+            benchmark["dec"] = 31;
+            
+            BOOST_AUTO( apply, as2::_csv_put % (as2::_data = as2::_key) );
+            C cal; as2::put( cal )("feb", 28);
             using namespace lambda;
-            typedef std::map<std::string, int> C; C cal;
-            BOOST_AUTO( _local, ( as2::_data = _1 ) );
             BOOST_ASSIGN_V2_CHECK(
-                (
-                    cal 
-                        | as2::_csv_put( C::value_type( "feb", 28 ) ) 
-                        | ( as2::_csv_put % _local % ( as2::_mapped = (_1 = 30) ) )( "apr", "jun", "sep", "nov" )
-                        | ( as2::_csv_put % _local % ( as2::_mapped = (_1 = 31) ) )( "jan", "mar", "may", "jul", "aug", "oct", "dec" )
- 
-                )["feb"] == 28
+            	range::equal(
+					cal 
+                    	| ( apply % ( as2::_mapped = (_1 = 30) ) )( "apr", "jun", "sep", "nov" )
+                    	| ( apply % ( as2::_mapped = (_1 = 31) ) )( "jan", "mar", "may", "jul", "aug", "oct", "dec" ),
+                    benchmark
+                )
             );
-            BOOST_ASSIGN_V2_CHECK( cal["jun"] == 30 );
-            BOOST_ASSIGN_V2_CHECK( cal["mar"] == 31 );
+            //] 
+        }    
+        {
+            //[test_pipe_option_mapped_ptr
+            typedef boost::ptr_map<std::string, int> C; 
+            C benchmark;
+            benchmark["feb"] = 28;
+            benchmark["apr"] = 30;
+            benchmark["jun"] = 30;
+            benchmark["sep"] = 30;
+            benchmark["nov"] = 30;
+            benchmark["jan"] = 31;
+            benchmark["mar"] = 31;
+            benchmark["may"] = 31;
+            benchmark["jul"] = 31;
+            benchmark["aug"] = 31;
+            benchmark["oct"] = 31;
+            benchmark["dec"] = 31;
+            
+            C cal; as2::put( cal )("feb", 28);
+            BOOST_AUTO( apply, as2::_csv_put % (as2::_data = as2::_key) );
+            using namespace lambda;
+            BOOST_ASSIGN_V2_CHECK(
+            	range::equal(
+					cal 
+                    	| ( apply % ( as2::_mapped = (_1 = 30) ) )( "apr", "jun", "sep", "nov" )
+                    	| ( apply % ( as2::_mapped = (_1 = 31) ) )( "jan", "mar", "may", "jul", "aug", "oct", "dec" ),
+                    benchmark
+                )
+            );
             //] 
         }    
     }

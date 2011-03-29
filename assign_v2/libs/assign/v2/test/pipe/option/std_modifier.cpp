@@ -32,11 +32,9 @@ namespace xxx_std_modifier{
         using namespace boost;
         namespace as2 = assign::v2;
 
-        // ------------------------------ WARNING ---------------------------- //
-        // Don't misconstrue the commands in the tests below as *necessary* to //
-        // obtain particular implementation. Most of the time the default is   //
-        // already set at that invoked with operator%                          //
-        // ------------------------------------------------------------------- //
+        // Note
+        // Most of the time the default is already set at that invoked with 
+        // operator%
         
         // MSVC REMINDER : fully qualify boost::begin boost::end - error C2668
 

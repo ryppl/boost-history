@@ -90,7 +90,6 @@ namespace xxx_ptr{
             //]
         }
         {
-        /*    
             //[test_put_put_unordered_map
             boost::ptr_unordered_map<std::string, int> map; 
             as2::put( map )("foo", 1)("bar", 2)("baz", 3);
@@ -98,7 +97,7 @@ namespace xxx_ptr{
             BOOST_ASSIGN_V2_CHECK( map["foo"] == 1 );
             BOOST_ASSIGN_V2_CHECK( map["baz"] == 3 );
             //]
-        */}
+        }
         {    
             //[test_put_put_unordered_set
             boost::ptr_unordered_set<std::string> set; 

@@ -9,7 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
-#include <boost/assign/v2/detail/functor/constructor.hpp>
+#include <boost/assign/v2/detail/functor/value.hpp>
 #include <boost/tuple/tuple.hpp>
 #include <libs/assign/v2/test/detail/functor.h>
 
@@ -36,56 +36,56 @@ namespace xxx_functor{
         {
             typedef int e_; e_ x = -1, y = 1;
             typedef boost::tuple<e_&, e_&> tuple_;
-            typedef as2::functor_aux::constructor<tuple_> constructor_;
+            typedef as2::functor_aux::value<tuple_> value_;
 
-            BOOST_ASSIGN_V2_CHECK( &get<0>( constructor_()( x, y ) ) == &x );
-            BOOST_ASSIGN_V2_CHECK( &get<1>( constructor_()( x, y ) ) == &y );
+            BOOST_ASSIGN_V2_CHECK( &get<0>( value_()( x, y ) ) == &x );
+            BOOST_ASSIGN_V2_CHECK( &get<1>( value_()( x, y ) ) == &y );
 
         }
         {
             typedef int e_; e_ x = -1;
             {
                 typedef boost::tuple<e_&, e_ const&> tuple_;
-                typedef as2::functor_aux::constructor<tuple_> constructor_;
+                typedef as2::functor_aux::value<tuple_> value_;
 
-                BOOST_ASSIGN_V2_CHECK( &get<0>( constructor_()( x, 1 ) ) == &x );
-                BOOST_ASSIGN_V2_CHECK(  get<1>( constructor_()( x, 1 ) ) == 1  );
+                BOOST_ASSIGN_V2_CHECK( &get<0>( value_()( x, 1 ) ) == &x );
+                BOOST_ASSIGN_V2_CHECK(  get<1>( value_()( x, 1 ) ) == 1  );
             }
             {
                 typedef boost::tuple< e_ const&, e_&> tuple_;
-                typedef as2::functor_aux::constructor<tuple_> constructor_;
+                typedef as2::functor_aux::value<tuple_> value_;
 
-                BOOST_ASSIGN_V2_CHECK(  get<0>( constructor_()( 1, x ) ) == 1 );
-                BOOST_ASSIGN_V2_CHECK( &get<1>( constructor_()( 1, x ) ) == &x  );
+                BOOST_ASSIGN_V2_CHECK(  get<0>( value_()( 1, x ) ) == 1 );
+                BOOST_ASSIGN_V2_CHECK( &get<1>( value_()( 1, x ) ) == &x  );
             }
         }
         {
             typedef int e_; e_ x = -1, y = 0, z = 1;
             typedef boost::tuple<e_&, e_&, e_&> tuple_;
-            typedef as2::functor_aux::constructor<tuple_> constructor_;
+            typedef as2::functor_aux::value<tuple_> value_;
 
-            BOOST_ASSIGN_V2_CHECK( &get<0>( constructor_()( x, y, z ) ) == &x );
-            BOOST_ASSIGN_V2_CHECK( &get<1>( constructor_()( x, y, z ) ) == &y );
+            BOOST_ASSIGN_V2_CHECK( &get<0>( value_()( x, y, z ) ) == &x );
+            BOOST_ASSIGN_V2_CHECK( &get<1>( value_()( x, y, z ) ) == &y );
         }
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
         {
             typedef int e_; int y = 0;
             typedef boost::tuple<e_ const&, e_ &, e_ const&> tuple_;
-            typedef as2::functor_aux::constructor<tuple_> constructor_;
+            typedef as2::functor_aux::value<tuple_> value_;
 
-            BOOST_ASSIGN_V2_CHECK(  get<0>( constructor_()( -1, y, 1 ) ) == -1 );
-            BOOST_ASSIGN_V2_CHECK( &get<1>( constructor_()( -1, y, 1 ) ) == &y );
-            BOOST_ASSIGN_V2_CHECK(  get<2>( constructor_()( -1, y, 1 ) ) == 1 );
+            BOOST_ASSIGN_V2_CHECK(  get<0>( value_()( -1, y, 1 ) ) == -1 );
+            BOOST_ASSIGN_V2_CHECK( &get<1>( value_()( -1, y, 1 ) ) == &y );
+            BOOST_ASSIGN_V2_CHECK(  get<2>( value_()( -1, y, 1 ) ) == 1 );
         }
 #endif
         {
             typedef int e_; 
             typedef boost::tuple<e_ const&, e_ const&, e_ const&> tuple_;
-            typedef as2::functor_aux::constructor<tuple_> constructor_;
+            typedef as2::functor_aux::value<tuple_> value_;
 
-            BOOST_ASSIGN_V2_CHECK( get<0>( constructor_()( -1, 0, 1 ) ) == -1 );
-            BOOST_ASSIGN_V2_CHECK( get<1>( constructor_()( -1, 0, 1 ) ) == 0 );
-            BOOST_ASSIGN_V2_CHECK( get<2>( constructor_()( -1, 0, 1 ) ) == 1 );
+            BOOST_ASSIGN_V2_CHECK( get<0>( value_()( -1, 0, 1 ) ) == -1 );
+            BOOST_ASSIGN_V2_CHECK( get<1>( value_()( -1, 0, 1 ) ) == 0 );
+            BOOST_ASSIGN_V2_CHECK( get<2>( value_()( -1, 0, 1 ) ) == 1 );
         }
     }
 

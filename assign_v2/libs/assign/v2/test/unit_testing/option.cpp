@@ -15,6 +15,7 @@
 
 #include <libs/assign/v2/test/option/data.cpp>
 #include <libs/assign/v2/test/option/iterate.cpp>
+#include <libs/assign/v2/test/option/list.cpp>
 #include <libs/assign/v2/test/option/mapped.cpp>
 #include <libs/assign/v2/test/option/repeat.cpp>
 #include <libs/assign/v2/test/option/std_modifier.cpp>
@@ -30,6 +31,7 @@ test_suite* init_unit_test_suite( int argc, char* argv[] )
         namespace ns = xxx_option;
         test->add( BOOST_TEST_CASE( &ns::xxx_data::test ) );
         test->add( BOOST_TEST_CASE( &ns::xxx_iterate::test ) );
+        test->add( BOOST_TEST_CASE( &ns::xxx_list::test ) );
         test->add( BOOST_TEST_CASE( &ns::xxx_mapped::test ) );
         test->add( BOOST_TEST_CASE( &ns::xxx_repeat::test ) );
         test->add( BOOST_TEST_CASE( &ns::xxx_standard::test ) );

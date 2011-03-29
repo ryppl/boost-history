@@ -19,7 +19,6 @@
 #include <boost/array.hpp>
 #include <boost/assign/v2/conversion/converter.hpp>
 #include <boost/assign/v2/conversion/deduce_tag.hpp>
-#include <boost/assign/v2/conversion/predicate.hpp>
 #include <boost/assign/v2/detail/check/fwd_equal_container.hpp>
 #include <boost/mpl/assert.hpp>
 #include <boost/type.hpp>

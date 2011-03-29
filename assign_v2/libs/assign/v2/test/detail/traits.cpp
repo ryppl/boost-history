@@ -38,12 +38,12 @@ namespace xxx_traits{
         }
         {
             typedef std::vector<int> inp_;
-            typedef ns::has_value_type<inp_>::type pred_;
+            typedef ns::value_has_value_type<inp_>::type pred_;
             BOOST_STATIC_ASSERT(pred_::value);
         }
         {
             typedef int inp_;
-            typedef ns::has_value_type<inp_>::type pred_;
+            typedef ns::value_has_value_type<inp_>::type pred_;
             BOOST_STATIC_ASSERT(!pred_::value);
         }
     }

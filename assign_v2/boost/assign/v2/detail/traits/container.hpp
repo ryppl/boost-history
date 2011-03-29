@@ -93,6 +93,12 @@ namespace container_aux{
 	{};
 
 }// container_aux
+
+	template<typename C>
+    struct value_container_value/*<-*/
+    	: container_aux::value<C>{}
+    /*->*/;
+
 }// v2
 }// assign
 }// boost

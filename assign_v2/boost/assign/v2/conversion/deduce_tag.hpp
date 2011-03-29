@@ -11,8 +11,6 @@
 #define BOOST_ASSIGN_V2_CONVERSION_DEDUCE_TAG_ER_2010_HPP
 #include <boost/assign/v2/detail/traits/switch.hpp>
 #include <boost/assign/v2/detail/traits/container.hpp>
-#include <boost/assign/v2/conversion/helper.hpp>
-#include <boost/assign/v2/conversion/predicate.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/or.hpp>
 #include <boost/mpl/pair.hpp>

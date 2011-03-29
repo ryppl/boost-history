@@ -49,7 +49,7 @@ namespace tutorial_assign_v2{
             //[tutorial_ptr_container
             typedef std::string T; ptr_set<T> assoc;
             T x = "isomer", y = "ephemeral", z = "prosaic";
-            csv( put( assoc ), x, z, y );
+            /*<<Calls `assoc.insert( new T( t ) )` for [^t = x, y, z]>>*/csv( put( assoc ), x, z, y );
 
             assert( assoc.count( x ) == 1 );
             assert( assoc.count( z ) == 1 );
@@ -98,9 +98,10 @@ namespace tutorial_assign_v2{
         {
             //[tutorial_data_gen
             std::map<std::string, int> map;
-            put( map )( "foo", 1 )( "bar", 2 )( "baz", 3 );
+            put( map )( "foo", 1 )( "bar", 2 )( "baz", 3 )("qux");
 
-            assert( map["bar"] = 2 );
+            assert( map["bar"] == 2 );
+            assert( map["qux"] == int() );
             //]
         }
         {
