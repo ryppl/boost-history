@@ -60,7 +60,7 @@ namespace interpreter_aux{
         }
         
         template<typename C, typename T>
-        void impl(C& cont, T& t, data_tag::value_map )const
+        void impl(C& cont, BOOST_ASSIGN_V2_arg, data_tag::value_map )const
         {
             cont.insert( BOOST_ASSIGN_V2_forward );
         }

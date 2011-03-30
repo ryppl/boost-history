@@ -14,7 +14,7 @@
 #include <boost/assign/v2/detail/traits/container.hpp>
 #include <boost/assign/v2/deque/csv_deque.hpp>
 #include <boost/assign/v2/pipe/csv_put.hpp> 
-#include <boost/ptr_container/ptr_map.hpp>/
+#include <boost/ptr_container/ptr_map.hpp>
 #include <boost/range/algorithm/equal.hpp>
 
 #include <libs/assign/v2/test/pipe/csv_put.h>
