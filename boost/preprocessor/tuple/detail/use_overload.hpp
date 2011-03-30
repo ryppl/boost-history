@@ -20,15 +20,32 @@
 #
 # /* BOOST_PP_TUPLE_DETAIL_USE_OVERLOAD */
 #
+# if BOOST_PP_CONFIG_FLAGS() & BOOST_PP_CONFIG_MSVC()
+#    define BOOST_PP_TUPLE_DETAIL_USE_OVERLOAD(prefix,...) \
+         BOOST_PP_USE_OV_CAT(BOOST_PP_TUPLE_DETAIL_APPLY_VAR(BOOST_PP_OVERLOAD(prefix, __VA_ARGS__),(__VA_ARGS__)),BOOST_PP_EMPTY()) \
+         /**/
+#
+# else
+#
 #    define BOOST_PP_TUPLE_DETAIL_USE_OVERLOAD(prefix,...) \
          BOOST_PP_TUPLE_DETAIL_APPLY_VAR(BOOST_PP_OVERLOAD(prefix, __VA_ARGS__),(__VA_ARGS__)) \
          /**/
 #
+# endif
+#
 #define BOOST_PP_TUPLE_DETAIL_APPLY_VAR_I(macro, args) \
   macro args \
 /**/
+#
 #define BOOST_PP_TUPLE_DETAIL_APPLY_VAR(macro, args) \
   BOOST_PP_TUPLE_DETAIL_APPLY_VAR_I(macro, args) \
 /**/
+#
+# if BOOST_PP_CONFIG_FLAGS() & BOOST_PP_CONFIG_MSVC()
+#    define BOOST_PP_USE_OV_CAT(a, b) BOOST_PP_USE_OV_CAT_I(a, b)
+#    define BOOST_PP_USE_OV_CAT_I(a, b) BOOST_PP_USE_OV_CAT_II(a ## b)
+#    define BOOST_PP_USE_OV_CAT_II(res) res
+# endif
+#
 # endif // BOOST_PP_VARIADICS
 # endif // BOOST_PREPROCESSOR_TUPLE_USE_OVERLOAD_HPP
