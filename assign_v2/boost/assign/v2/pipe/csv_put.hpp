@@ -59,14 +59,14 @@ namespace interpreter_aux{
     }/*->*/;
 
     template<
-    	typename Head/*<-*/ = typename empty_list_option::head_type/*->*/, 
+        typename Head/*<-*/ = typename empty_list_option::head_type/*->*/, 
         typename Tail/*<-*/ = typename empty_list_option::tail_type/*->*/
     >
     class arg_list_generator : public list_option<Head, Tail>/*<-*/
     {
 
         typedef ::boost::mpl::na na_;
-		typedef list_option<Head, Tail> list_option_;
+        typedef list_option<Head, Tail> list_option_;
 
         public:
 
@@ -75,17 +75,17 @@ namespace interpreter_aux{
             : list_option_( t, h )
         {}
 
-    	template<typename Option>
+        template<typename Option>
         struct modulo_result
         {
-        	typedef arg_list_generator<Option, arg_list_generator> type;
+            typedef arg_list_generator<Option, arg_list_generator> type;
         };
     
-    	template<typename Option>
+        template<typename Option>
         typename modulo_result<Option>::type
-    	operator%(Option option)const
+        operator%(Option option)const
         {
-        	typedef typename modulo_result<Option>::type result_;
+            typedef typename modulo_result<Option>::type result_;
             return result_( *this, option );
         }
 
@@ -96,34 +96,34 @@ namespace interpreter_aux{
  
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 
-	    protected:
-    	template<typename T, typename...Args>
-    	typename result<sizeof...(Args) + 1, T>::type
-    	impl(T& t, Args&...args)const
-    	{
-        	typedef typename result<sizeof...(Args)+1, T>::type result_;
-        	namespace ns = ref::assign_copy;
-        	return result_(*this, ref::csv_array( t, args... ) );
-    	}
+        protected:
+        template<typename T, typename...Args>
+        typename result<sizeof...(Args) + 1, T>::type
+        impl(T& t, Args&...args)const
+        {
+            typedef typename result<sizeof...(Args)+1, T>::type result_;
+            namespace ns = ref::assign_copy;
+            return result_(*this, ref::csv_array( t, args... ) );
+        }
 
-	    public:
+        public:
 
-    	template<typename T, typename...Args>
-    	typename boost::lazy_disable_if<
-        	v2::type_traits::or_const<T, Args...>,
-        	result<sizeof...(Args)+1, T>
-    	>::type
-    	operator()(T& t, Args&...args)const
-    	{
-        	return this->impl(t, args...);
-    	}
+        template<typename T, typename...Args>
+        typename boost::lazy_disable_if<
+            v2::type_traits::or_const<T, Args...>,
+            result<sizeof...(Args)+1, T>
+        >::type
+        operator()(T& t, Args&...args)const
+        {
+            return this->impl(t, args...);
+        }
 
-    	template<typename T, typename...Args>
-    	typename result<sizeof...(Args)+1, T const>::type
-    	operator()(T const& t, Args const&...args)const
-    	{
-        	return this->impl(t, args...);
-    	}
+        template<typename T, typename...Args>
+        typename result<sizeof...(Args)+1, T const>::type
+        operator()(T const& t, Args const&...args)const
+        {
+            return this->impl(t, args...);
+        }
 
 #else
 
@@ -138,26 +138,26 @@ namespace interpreter_aux{
         }
 
 #define BOOST_ASSIGN_V2_MACRO1(N, U)\
-    	return result_( \
-        	*this, \
-        	ref::csv_array<U>( BOOST_PP_ENUM_PARAMS(N, _) ) \
-    	);\
+        return result_( \
+            *this, \
+            ref::csv_array<U>( BOOST_PP_ENUM_PARAMS(N, _) ) \
+        );\
 /**/
 #define BOOST_ASSIGN_V2_MACRO2(z, N, data)\
-    	template<typename T>\
-    	typename result<N, T>::type\
-    	operator()( BOOST_PP_ENUM_PARAMS(N, T &_) )const \
-    	{ \
-        	typedef typename result<N, T>::type result_;\
-        	BOOST_ASSIGN_V2_MACRO1( N, T )\
-    	} \
-    	template<typename T>\
-    	typename result<N, T const>::type\
-    	operator()( BOOST_PP_ENUM_PARAMS(N, T const &_) )const \
-    	{ \
-        	typedef typename result<N, T const>::type result_;\
-        	BOOST_ASSIGN_V2_MACRO1( N, T const )\
-    	} \
+        template<typename T>\
+        typename result<N, T>::type\
+        operator()( BOOST_PP_ENUM_PARAMS(N, T &_) )const \
+        { \
+            typedef typename result<N, T>::type result_;\
+            BOOST_ASSIGN_V2_MACRO1( N, T )\
+        } \
+        template<typename T>\
+        typename result<N, T const>::type\
+        operator()( BOOST_PP_ENUM_PARAMS(N, T const &_) )const \
+        { \
+            typedef typename result<N, T const>::type result_;\
+            BOOST_ASSIGN_V2_MACRO1( N, T const )\
+        } \
 /**/
 
 BOOST_PP_REPEAT_FROM_TO(
@@ -174,19 +174,19 @@ BOOST_PP_REPEAT_FROM_TO(
     }/*->*/;
 
     template<
-    	typename C, typename H, typename T, 
+        typename C, typename H, typename T, 
         arg_list_size_type N, typename U
     >
     C& operator|(C& cont, interpreter_aux::arg_list<H, T, N, U> const& arg_list)/*<-*/
     {
-    	typedef typename v2::result_of::put<
-        	C
-        	, functor_aux::value<
-        		typename container_aux::value<C>::type
-        	>
-        	, typename interpreter_aux::deduce_modifier_tag<C>::type
-        	, typename interpreter_aux::deduce_data_tag<C>::type
-		>::type put_;
+        typedef typename v2::result_of::put<
+            C
+            , functor_aux::value<
+                typename container_aux::value<C>::type
+            >
+            , typename interpreter_aux::deduce_modifier_tag<C>::type
+            , typename interpreter_aux::deduce_data_tag<C>::type
+        >::type put_;
         v2::ref::as_arg_list(
             arg_list.apply(  put_( cont ) ),
             arg_list.arg_list_cont()

@@ -19,8 +19,7 @@
 #include <libs/assign/v2/test/option/mapped.cpp>
 #include <libs/assign/v2/test/option/repeat.cpp>
 #include <libs/assign/v2/test/option/std_modifier.cpp>
-
-
+    
 #include <boost/test/unit_test.hpp>
 using boost::unit_test::test_suite;
 test_suite* init_unit_test_suite( int argc, char* argv[] )

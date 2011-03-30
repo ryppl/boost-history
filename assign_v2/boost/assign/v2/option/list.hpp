@@ -32,89 +32,89 @@ namespace interpreter_aux{
         #ifdef BOOST_MSVC
         BOOST_TYPEOF_NESTED_TYPEDEF_TPL(nested, lhs % option )
         typedef typename nested::type type;
-		#else        
+        #else        
         typedef BOOST_TYPEOF_TPL( lhs % option ) type;
-		#endif
+        #endif
     };
 
-	template<typename Head>
+    template<typename Head>
     struct option_list_exit 
-    	: boost::is_same<Head, keyword_aux::nil>
+        : boost::is_same<Head, keyword_aux::nil>
     {};
 
 namespace result_of{
 
     template<
-    	typename Head, 
+        typename Head, 
         typename Tail, 
         typename Lhs, 
         bool exit = option_list_exit<Head>::value
     >
     struct apply_list_option
     {
-    	typedef typename apply_list_option<
-        	typename Tail::head_type, typename Tail::tail_type, Lhs
+        typedef typename apply_list_option<
+            typename Tail::head_type, typename Tail::tail_type, Lhs
         >::type lhs_;
         
         typedef typename modulo_result<lhs_, Head>::type type;
     };
 
     template<
-    	typename Head, 
+        typename Head, 
         typename Tail, 
         typename Lhs
     >
     struct apply_list_option<Head, Tail, Lhs, true>
     {
-		typedef Lhs type;    
+        typedef Lhs type;    
     };
     
 }// result_of
     
-	template<
-    	typename Head = keyword_aux::nil, 
-    	typename Tail = boost::mpl::empty_base, 
+    template<
+        typename Head = keyword_aux::nil, 
+        typename Tail = boost::mpl::empty_base, 
         bool exit = option_list_exit<Head>::value
     >
     struct list_option : public Tail
     {
 
-		typedef Head head_type;
+        typedef Head head_type;
         typedef Tail tail_type;
 
-		list_option(){ /*exit = true*/ }
-		list_option(Tail tail, Head h)
-        	: Tail( tail ), head_( h )
-    	{}
+        list_option(){ /*exit = true*/ }
+        list_option(Tail tail, Head h)
+            : Tail( tail ), head_( h )
+        {}
     
-    	template<typename Option>
+        template<typename Option>
         struct result
         {
-        	typedef list_option<Option, list_option> type;
+            typedef list_option<Option, list_option> type;
         };
     
-    	template<typename Option>
+        template<typename Option>
         typename result<Option>::type
-    	operator%(Option option)const
+        operator%(Option option)const
         {
-        	typedef typename result<Option>::type result_;
+            typedef typename result<Option>::type result_;
             return result_( *this, option );
         }
                         
         template<typename Lhs>
         typename boost::lazy_disable_if_c<
-        	exit, result_of::apply_list_option<Head, Tail, Lhs> 
+            exit, result_of::apply_list_option<Head, Tail, Lhs> 
         >::type
         apply(Lhs const& lhs)const
         {
-        	return static_cast<
-            	Tail const&
+            return static_cast<
+                Tail const&
             >( *this ).apply( lhs ) % this->head_;
         }
 
         template<typename Lhs>
         typename boost::lazy_enable_if_c<
-        	exit, result_of::apply_list_option<Head, Tail, Lhs> 
+            exit, result_of::apply_list_option<Head, Tail, Lhs> 
         >::type
         apply(Lhs const& lhs)const{ return lhs; }
         
@@ -123,11 +123,11 @@ namespace result_of{
     
     };
 
-	typedef list_option<> empty_list_option;
+    typedef list_option<> empty_list_option;
 
     template<
-    	typename C, typename F, typename ModifierTag, 
-    	typename DataTag, typename D,
+        typename C, typename F, typename ModifierTag, 
+        typename DataTag, typename D,
         typename H, typename T
     >
     typename result_of::apply_list_option<H, T, D>::type
@@ -136,13 +136,13 @@ namespace result_of{
         list_option<H, T> const& list
     )
     {
-		return list.apply( lhs );
-	}
+        return list.apply( lhs );
+    }
     
 }// interpreter_aux
 namespace{
-	interpreter_aux::empty_list_option _list_option
-    	= interpreter_aux::empty_list_option();
+    interpreter_aux::empty_list_option _list_option
+        = interpreter_aux::empty_list_option();
 }
 }// v2
 }// assign
