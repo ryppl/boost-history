@@ -14,6 +14,7 @@
 namespace boost{
 namespace assign{
 namespace v2{
+//[syntax_detail_keyword
 namespace keyword_aux{
 
     struct ignore{ 
@@ -21,15 +22,16 @@ namespace keyword_aux{
         template<typename Anything> ignore(Anything){}
     };
     
-	struct key{};
-	struct nil{};
+	struct key{}/*->*/;
+	struct nil{}/*->*/;
 
 }// keyword_aux
-namespace{
-    const keyword_aux::ignore _ignore = keyword_aux::ignore();
-    const keyword_aux::key _key = keyword_aux::key();
-    const keyword_aux::nil _nil = keyword_aux::nil();
-}
+/*<-*/namespace{/*->*/
+    const keyword_aux::ignore _ignore/*<-*/ = keyword_aux::ignore()/*->*/;
+    const keyword_aux::key _key/*<-*/ = keyword_aux::key()/*->*/;
+    const keyword_aux::nil _nil/*<-*/ = keyword_aux::nil()/*->*/;
+/*<-*/}/*->*/
+//]
 }// v2
 }// assign
 }// boost
