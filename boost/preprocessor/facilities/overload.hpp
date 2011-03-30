@@ -16,14 +16,27 @@
 #
 #if BOOST_PP_VARIADICS
 #
-# include <boost/preprocessor/cat.hpp>
 # include <boost/preprocessor/variadic/size.hpp>
 #
 # /* BOOST_PP_OVERLOAD */
 #
 #define BOOST_PP_OVERLOAD(prefix, ...) \
-  BOOST_PP_CAT(prefix, BOOST_PP_VARIADIC_SIZE(__VA_ARGS__)) \
+  BOOST_PP_OV_CAT(prefix, BOOST_PP_VARIADIC_SIZE(__VA_ARGS__)) \
 /**/
+#
+# if ~BOOST_PP_CONFIG_FLAGS() & BOOST_PP_CONFIG_MWCC()
+#    define BOOST_PP_OV_CAT(a, b) BOOST_PP_OV_CAT_I(a, b)
+# else
+#    define BOOST_PP_OV_CAT(a, b) BOOST_PP_OV_CAT_OO((a, b))
+#    define BOOST_PP_OV_CAT_OO(par) BOOST_PP_OV_CAT_I ## par
+# endif
+#
+# if ~BOOST_PP_CONFIG_FLAGS() & BOOST_PP_CONFIG_MSVC()
+#    define BOOST_PP_OV_CAT_I(a, b) a ## b
+# else
+#    define BOOST_PP_OV_CAT_I(a, b) BOOST_PP_OV_CAT_II(a ## b)
+#    define BOOST_PP_OV_CAT_II(res) res
+# endif
 #
 #endif // BOOST_PP_VARIADICS
 #endif // BOOST_PREPROCESSOR_FACILITIES_OVERLOAD_HPP

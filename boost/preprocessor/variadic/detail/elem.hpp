@@ -19,7 +19,7 @@
 # include <boost/preprocessor/config/config.hpp>
 #
 # if BOOST_PP_CONFIG_FLAGS() & BOOST_PP_CONFIG_MSVC()
-# include <boost/preprocessor/cat.hpp>
+# include <boost/preprocessor/variadic/detail/vd_cat.hpp>
 # include <boost/preprocessor/facilities/empty.hpp>
 # endif
 #
@@ -92,7 +92,7 @@
 #define BOOST_PP_VARIADIC_DETAIL_PRIMITIVE_CAT(a, ...) a ## __VA_ARGS__
 # if BOOST_PP_CONFIG_FLAGS() & BOOST_PP_CONFIG_MSVC()
 #define BOOST_PP_VARIADIC_DETAIL_DATA_ELEM(n,...) \
-  BOOST_PP_CAT(BOOST_PP_VARIADIC_DETAIL_CAT(BOOST_PP_VARIADIC_DETAIL_DATA_ELEM_, n)(__VA_ARGS__,),BOOST_PP_EMPTY()) \
+  BOOST_PP_VD_CAT(BOOST_PP_VARIADIC_DETAIL_CAT(BOOST_PP_VARIADIC_DETAIL_DATA_ELEM_, n)(__VA_ARGS__,),BOOST_PP_EMPTY()) \
 /**/
 #else
 #define BOOST_PP_VARIADIC_DETAIL_DATA_ELEM(n,...) \

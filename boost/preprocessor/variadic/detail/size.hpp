@@ -20,7 +20,7 @@
 # include <boost/preprocessor/variadic/detail/apply_var.hpp>
 #
 # if BOOST_PP_CONFIG_FLAGS() & BOOST_PP_CONFIG_MSVC()
-# include <boost/preprocessor/cat.hpp>
+# include <boost/preprocessor/variadic/detail/vd_cat.hpp>
 # include <boost/preprocessor/facilities/empty.hpp>
 # endif
 #
@@ -36,7 +36,7 @@
 /**/
 # if BOOST_PP_CONFIG_FLAGS() & BOOST_PP_CONFIG_MSVC()
 #define BOOST_PP_VARIADIC_DETAIL_SIZE(...) \
-  BOOST_PP_CAT(BOOST_PP_VARIADIC_DETAIL_APPLY_VAR(BOOST_PP_VARIADIC_DETAIL_ARG_N, (__VA_ARGS__, BOOST_PP_VARIADIC_DETAIL_RSEQ_N())),BOOST_PP_EMPTY()) \
+  BOOST_PP_VD_CAT(BOOST_PP_VARIADIC_DETAIL_APPLY_VAR(BOOST_PP_VARIADIC_DETAIL_ARG_N, (__VA_ARGS__, BOOST_PP_VARIADIC_DETAIL_RSEQ_N())),BOOST_PP_EMPTY()) \
 /**/
 #else
 #define BOOST_PP_VARIADIC_DETAIL_SIZE(...) \
