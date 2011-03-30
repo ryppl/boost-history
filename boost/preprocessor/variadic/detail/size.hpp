@@ -17,7 +17,7 @@
 #if BOOST_PP_VARIADICS
 #
 # include <boost/preprocessor/config/config.hpp>
-# include "apply_var.hpp"
+# include <boost/preprocessor/variadic/detail/apply_var.hpp>
 #
 # if BOOST_PP_CONFIG_FLAGS() & BOOST_PP_CONFIG_MSVC()
 # include <boost/preprocessor/cat.hpp>

@@ -16,7 +16,7 @@
 #
 #if BOOST_PP_VARIADICS
 #
-#include "detail/to_array.hpp"
+# include <boost/preprocessor/variadic/detail/to_array.hpp>
 #
 #define BOOST_PP_TO_ARRAY(...) \
   BOOST_PP_VARIADIC_DETAIL_TO_ARRAY(__VA_ARGS__) \

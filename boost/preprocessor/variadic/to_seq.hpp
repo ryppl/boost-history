@@ -16,7 +16,7 @@
 #
 #if BOOST_PP_VARIADICS
 #
-#include "detail/to_seq.hpp"
+# include <boost/preprocessor/variadic/detail/to_seq.hpp>
 #
 #define BOOST_PP_TO_SEQ(...) \
   BOOST_PP_VARIADIC_DETAIL_TO_SEQ(__VA_ARGS__) \

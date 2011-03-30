@@ -16,9 +16,9 @@
 #
 #if BOOST_PP_VARIADICS
 #
-#include <boost/preprocessor/tuple/to_list.hpp>
-#include "size.hpp"
-#include "to_tuple.hpp"
+# include <boost/preprocessor/tuple/to_list.hpp>
+# include <boost/preprocessor/variadic/detail/size.hpp>
+# include <boost/preprocessor/variadic/detail/to_tuple.hpp>
 #
 #define BOOST_PP_VARIADIC_DETAIL_TO_LIST(...) \
   BOOST_PP_VARIADIC_DETAIL_TUPLE_TO_LIST(BOOST_PP_VARIADIC_DETAIL_SIZE(__VA_ARGS__),BOOST_PP_VARIADIC_DETAIL_TO_TUPLE(__VA_ARGS__)) \

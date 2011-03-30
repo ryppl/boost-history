@@ -16,7 +16,7 @@
 #
 #if BOOST_PP_VARIADICS
 #
-#include "detail/size.hpp"
+# include <boost/preprocessor/variadic/detail/size.hpp>
 #
 #define BOOST_PP_VARIADIC_SIZE(...) \
   BOOST_PP_VARIADIC_DETAIL_SIZE(__VA_ARGS__) \

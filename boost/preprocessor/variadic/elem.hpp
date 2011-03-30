@@ -16,7 +16,7 @@
 #
 #if BOOST_PP_VARIADICS
 #
-#include "detail/elem.hpp"
+# include <boost/preprocessor/variadic/detail/elem.hpp>
 #
 #define BOOST_PP_VARIADIC_ELEM(n,...) \
   BOOST_PP_VARIADIC_DETAIL_DATA_ELEM(n,__VA_ARGS__) \
