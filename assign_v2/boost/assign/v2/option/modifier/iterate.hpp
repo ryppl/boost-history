@@ -51,6 +51,14 @@ namespace modifier_tag{
 
 }// modifier_tag
 namespace interpreter_aux{
+
+#if BOOST_ASSIGN_V2_ENABLE_CPP0X
+#define BOOST_ASSIGN_V2_arg T&& t
+#define BOOST_ASSIGN_V2_forward std::forward<T>( t )
+#else
+#define BOOST_ASSIGN_V2_arg T& t
+#define BOOST_ASSIGN_V2_forward t
+#endif
                 
     template<typename Arg>
     class interpreter_modifier< modifier_tag::iterate<Arg> >/*<-*/
@@ -70,35 +78,26 @@ namespace interpreter_aux{
         ) : ptr( new arg_( arg ) )
         {}
 
-#if BOOST_ASSIGN_V2_ENABLE_CPP0X
-
         template<typename C, typename T>
-        void impl(C& cont, T&& t, data_tag::value )const
+        void impl(C& cont, BOOST_ASSIGN_V2_arg, data_tag::value )const
         {
-            cont.at( (*this->ptr)() ) = std::forward<T>( t ); 
-        }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
-
-#else
-
-        template<typename C, typename T>
-        void impl(C& cont, T& t, data_tag::value )const
-        {
-            cont.at( (*this->ptr)() ) = t;
+            cont.at( (*this->ptr)() ) = BOOST_ASSIGN_V2_forward; 
         }
 
-#endif
-
         template<typename C, typename T>
-        void impl(C& cont, T& t, data_tag::ptr )const
+        void impl(C& cont, BOOST_ASSIGN_V2_arg, data_tag::ptr )const
         {
             typedef typename container_aux::value<C>::type value_;
-            cont.replace( (*this->ptr)(), new value_( t ) );
+            cont.replace( (*this->ptr)(), new value_( BOOST_ASSIGN_V2_forward ) );
         }
                             
         protected:
         ptr_ ptr;
 
     }/*->*/;
+
+#undef BOOST_ASSIGN_V2_arg
+#undef BOOST_ASSIGN_V2_forward
 
 }// interpreter_aux
 BOOST_ASSIGN_V2_OPTION_MODIFIER_KEYWORD(iterate)

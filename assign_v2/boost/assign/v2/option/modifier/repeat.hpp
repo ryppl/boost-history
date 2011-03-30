@@ -47,23 +47,21 @@ namespace interpreter_aux{
         {}
 
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
+#define BOOST_ASSIGN_V2_arg T&& t
+#define BOOST_ASSIGN_V2_forward std::forward<T>( t )
+#else
+#define BOOST_ASSIGN_V2_arg T& t
+#define BOOST_ASSIGN_V2_forward t
+#endif
         template<typename C, typename T, typename DataTag>
-        void impl(C& cont, T&& t, DataTag tag )const
+        void impl(C& cont, BOOST_ASSIGN_V2_arg, DataTag tag )const
         {
             size_type m = this->size();\
-            while(m--) this->inner_.impl( cont, std::forward<T>( t ), tag );
+            while(m--) this->inner_.impl( cont, BOOST_ASSIGN_V2_forward, tag );
         }
 
-#else
-
-        template<typename C, typename T, typename DataTag>
-        void impl(C& cont, T& t, DataTag tag )const
-        {
-            size_type m = this->size();
-            while(m--) this->inner_.impl( cont, t, tag );
-        }
-
-#endif
+#undef BOOST_ASSIGN_V2_arg
+#undef BOOST_ASSIGN_V2_forward
 
         size_type const& size()const{ return this->n_; }
 

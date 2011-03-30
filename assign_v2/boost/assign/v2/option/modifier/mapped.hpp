@@ -24,7 +24,7 @@ namespace v2{
 namespace modifier_tag{ 
 
     template<
-        typename Arg // Mapping applied to mapped
+        typename Arg
     > 
     struct mapped; 
 
@@ -50,20 +50,21 @@ namespace interpreter_aux{
         {}
 
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
-        template<typename C, typename T>
-        void impl(C& cont, T&& key, data_tag::storage )const
-        {
-            cont[ key ] = (*this->ptr)( cont[ std::forward<T>( key ) ] );
-        }
-
+#define BOOST_ASSIGN_V2_arg T&& t
+#define BOOST_ASSIGN_V2_forward std::forward<T>( t )
 #else
+#define BOOST_ASSIGN_V2_arg T& t
+#define BOOST_ASSIGN_V2_forward t
+#endif
 
         template<typename C, typename T>
-        void impl(C& cont, T& key, data_tag::storage )const{
-            cont[ key ] = (*this->ptr)( cont[ key ] );
+        void impl(C& cont, BOOST_ASSIGN_V2_arg, data_tag::storage )const
+        {
+            cont[ t/*key*/ ] = (*this->ptr)( cont[ BOOST_ASSIGN_V2_forward ] );
         }
 
-#endif
+#undef BOOST_ASSIGN_V2_arg
+#undef BOOST_ASSIGN_V2_forward
 
         private:
         ptr_ ptr;

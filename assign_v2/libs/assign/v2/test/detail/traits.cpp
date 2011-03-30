@@ -26,15 +26,15 @@ namespace xxx_traits{
         namespace ns = as2::container_aux;
         {
             typedef std::queue<int> v_;
-            BOOST_MPL_ASSERT(( ns::has_push<v_> ));
+            BOOST_MPL_ASSERT(( ns::has_push_deduced_value<v_> ));
         }
         {
             typedef std::queue<int> v_;
-            BOOST_MPL_ASSERT(( ns::has_push<v_> ));
+            BOOST_MPL_ASSERT(( ns::has_push_deduced_value<v_> ));
         }
         {
             typedef std::vector<int> v_;
-            BOOST_MPL_ASSERT_NOT(( ns::has_push<v_> ));
+            BOOST_MPL_ASSERT_NOT(( ns::has_push_deduced_value<v_> ));
         }
         {
             typedef std::vector<int> inp_;

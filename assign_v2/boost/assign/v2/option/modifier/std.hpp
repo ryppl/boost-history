@@ -26,8 +26,22 @@ BOOST_ASSIGN_V2_OPTION_MODIFIER_META_MODIFIER_TAG(std_modifier, Arg)
 }// assign
 }// boost
 
-
-#define BOOST_ASSIGN_V2_OPTION_STD_MODIFIER_IMPL_CPP03(FUN)\
+#include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
+#if BOOST_ASSIGN_V2_ENABLE_CPP0X
+#include <utility>
+#define BOOST_ASSIGN_V2_OPTION_STD_MODIFIER_IMPL(FUN)\
+    template<typename C, typename T>\
+        void impl(C& cont, T&& t, data_tag::value)const{\
+        cont.FUN( std::forward<T>( t ) );\
+    }\
+    template<typename C, typename T>\
+    void impl(C& cont, T&& t, data_tag::ptr)const{\
+        typedef typename container_aux::value<C>::type value_;\
+        cont.FUN( new value_( std::forward<T>( t ) ) );\
+    }\
+/**/
+#else
+#define BOOST_ASSIGN_V2_OPTION_STD_MODIFIER_IMPL(FUN)\
     template<typename C, typename T>\
         void impl(C& cont, T& t, data_tag::value)const{\
         cont.FUN( t );\
@@ -38,32 +52,8 @@ BOOST_ASSIGN_V2_OPTION_MODIFIER_META_MODIFIER_TAG(std_modifier, Arg)
         cont.FUN( new value_( t ) );\
     }\
 /**/
-
-#include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
-#if BOOST_ASSIGN_V2_ENABLE_CPP0X
-#include <utility>
-#include <boost/utility/enable_if.hpp>
-#include <boost/type_traits/is_reference.hpp>
-// disable_if necessary to avoid ambiguity resolution
-#define BOOST_ASSIGN_V2_OPTION_STD_MODIFIER_IMPL_RVALUE(FUN)\
-    template<typename C, typename T>\
-        typename boost::disable_if<\
-        boost::is_reference<T>,\
-        void\
-    >::type\
-    impl(C& cont, T&& t, data_tag::value)const{\
-        cont.FUN( std::forward<T>( t ) );\
-    }\
-/**/
-#define BOOST_ASSIGN_V2_OPTION_STD_MODIFIER_IMPL(FUN)\
-BOOST_ASSIGN_V2_OPTION_STD_MODIFIER_IMPL_CPP03(FUN)\
-BOOST_ASSIGN_V2_OPTION_STD_MODIFIER_IMPL_RVALUE(FUN)\
-/**/
-#else
-#define BOOST_ASSIGN_V2_OPTION_STD_MODIFIER_IMPL(FUN)\
-BOOST_ASSIGN_V2_OPTION_STD_MODIFIER_IMPL_CPP03(FUN)\
-/**/
 #endif // BOOST_ASSIGN_V2_ENABLE_CPP0X
+
 
 #define BOOST_ASSIGN_V2_OPTION_STD_MODIFIER_TAG(FUN)\
 namespace boost{\
