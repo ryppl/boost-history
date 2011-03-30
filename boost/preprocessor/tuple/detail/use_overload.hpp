@@ -17,13 +17,18 @@
 # if BOOST_PP_VARIADICS
 #
 # include <boost/preprocessor/facilities/overload.hpp>
-# include <boost/preprocessor/variadic/detail/apply_var.hpp>
 #
 # /* BOOST_PP_TUPLE_DETAIL_USE_OVERLOAD */
 #
 #    define BOOST_PP_TUPLE_DETAIL_USE_OVERLOAD(prefix,...) \
-         BOOST_PP_VARIADIC_DETAIL_APPLY_VAR(BOOST_PP_OVERLOAD(prefix, __VA_ARGS__),(__VA_ARGS__)) \
+         BOOST_PP_TUPLE_DETAIL_APPLY_VAR(BOOST_PP_OVERLOAD(prefix, __VA_ARGS__),(__VA_ARGS__)) \
          /**/
 #
+#define BOOST_PP_TUPLE_DETAIL_APPLY_VAR_I(macro, args) \
+  macro args \
+/**/
+#define BOOST_PP_TUPLE_DETAIL_APPLY_VAR(macro, args) \
+  BOOST_PP_TUPLE_DETAIL_APPLY_VAR_I(macro, args) \
+/**/
 # endif // BOOST_PP_VARIADICS
 # endif // BOOST_PREPROCESSOR_TUPLE_USE_OVERLOAD_HPP
