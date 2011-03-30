@@ -113,11 +113,7 @@ namespace tutorial_assign_v2{
             ar_::size_type index = 2; using namespace lambda;
             ( put( powers ) % ( _iterate = var( index )++ ) )( 100 )( 1000 );
 
-            for(
-                int value = 1, index = 0;
-                index < ar_::static_size;
-                index++, value *=10
-            )
+            for(int value = 1, index = 0; index < ar_::static_size; index++, value *=10)
             {
                 assert( powers[index] == value );
             }

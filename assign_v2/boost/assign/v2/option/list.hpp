@@ -9,7 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_OPTION_LIST_ER_2010_HPP
 #define BOOST_ASSIGN_V2_OPTION_LIST_ER_2010_HPP
-#include <boost/assign/v2/detail/keyword/nil.hpp>
+#include <boost/assign/v2/detail/keyword.hpp>
 #include <boost/assign/v2/interpreter/crtp.hpp>
 #include <boost/mpl/empty_base.hpp>
 #include <boost/mpl/eval_if.hpp>
