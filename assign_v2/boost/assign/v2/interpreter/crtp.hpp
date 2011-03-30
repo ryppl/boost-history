@@ -134,11 +134,11 @@ namespace interpreter_aux{
     };
 
     template<
-        typename C      		// Container, 
-        , typename F    		// Data generator
+        typename C              // Container, 
+        , typename F            // Data generator
         , typename ModifierTag  // Modifier tag
-        , typename DataTag  	// Data tag
-        , typename D    		// Derived
+        , typename DataTag      // Data tag
+        , typename D            // Derived
     >
     class interpreter_crtp
 //<-
@@ -166,12 +166,12 @@ namespace interpreter_aux{
         public:
 
         typedef /*<-*/ typename modifier_holder_::modifier_type 
-        	BOOST_ASSIGN_V2_IGNORE(/*->*/ interpreter_modifier<Tag> /*<-*/)/*->*/
+            BOOST_ASSIGN_V2_IGNORE(/*->*/ interpreter_modifier<Tag> /*<-*/)/*->*/
         modifier_type;
 
         interpreter_crtp(){}
         explicit interpreter_crtp( F const& f )/*<-*/ 
-        	: data_gen_holder_( f )
+            : data_gen_holder_( f )
         {}BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
         explicit interpreter_crtp( F const& f, modifier_type const& m )/*<-*/
             : data_gen_holder_( f ), modifier_holder_( m )

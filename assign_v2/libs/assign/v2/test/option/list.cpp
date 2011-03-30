@@ -26,16 +26,16 @@ namespace xxx_list{
     {
         //xxx_csv_put::test();
         //xxx_option::test();
-		using namespace boost::assign::v2;
-		std::deque<int> cont;
+        using namespace boost::assign::v2;
+        std::deque<int> cont;
 
-		( _list_option ).apply( put( cont ) )( 1 );
+        ( _list_option ).apply( put( cont ) )( 1 );
         BOOST_ASSIGN_V2_CHECK( cont[0] == 1 );
         using namespace boost::lambda;
-		BOOST_AUTO( 
-        	apply, 
+        BOOST_AUTO( 
+            apply, 
             ( 
-            	_list_option % _push_front % ( _data = ( _1 % 10 ) ) 
+                _list_option % _push_front % ( _data = ( _1 % 10 ) ) 
             ).apply( put( cont ) ) 
         );
         apply( 15 );

@@ -10,8 +10,7 @@
 #ifndef BOOST_ASSIGN_V2_OPTION_DATA_GENERATOR_ER_2010_HPP
 #define BOOST_ASSIGN_V2_OPTION_DATA_GENERATOR_ER_2010_HPP
 #include <boost/assign/v2/detail/functor/value.hpp>
-#include <boost/assign/v2/detail/keyword/key.hpp>
-#include <boost/assign/v2/detail/keyword/ignore.hpp>
+#include <boost/assign/v2/detail/keyword.hpp>
 #include <boost/assign/v2/detail/pp/ignore.hpp>
 #include <boost/assign/v2/interpreter/data_generator.hpp>
 #include <boost/assign/v2/interpreter/fwd.hpp>
@@ -121,7 +120,7 @@ namespace result_of{
             rhs.template data_generator<C>(), 
             lhs.modifier 
         );
-    }/*<-*/BOOST_ASSIGN_V2_IGNORE(/*<-*/;/*->*/)/*->*/
+    }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
     struct keyword_data_generator
     /*<-*/{

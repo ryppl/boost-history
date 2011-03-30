@@ -11,7 +11,7 @@
 #define BOOST_ASSIGN_V2_REF_ARRAY_CSV_ARRAY_ER_2010_HPP
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
 #include <boost/assign/v2/detail/pp/ignore.hpp>
-#include <boost/assign/v2/detail/keyword/nil.hpp>
+#include <boost/assign/v2/detail/keyword.hpp>
 #include <boost/assign/v2/ref/array/alloc/instant.hpp>
 #include <boost/assign/v2/ref/array/size_type.hpp>
 

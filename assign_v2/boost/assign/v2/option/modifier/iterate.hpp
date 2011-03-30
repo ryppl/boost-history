@@ -10,7 +10,7 @@
 #ifndef BOOST_ASSIGN_V2_OPTION_MODIFIER_ITERATE_ER_2010_HPP
 #define BOOST_ASSIGN_V2_OPTION_MODIFIER_ITERATE_ER_2010_HPP
 #include <cstddef>
-#include <boost/assign/v2/detail/keyword/ignore.hpp>
+#include <boost/assign/v2/detail/keyword.hpp>
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
 #include <boost/assign/v2/detail/pp/ignore.hpp>
 #include <boost/assign/v2/detail/traits/container.hpp>
@@ -91,7 +91,7 @@ namespace interpreter_aux{
         template<typename C, typename T>
         void impl(C& cont, T& t, data_tag::ptr )const
         {
-        	typedef typename container_aux::value<C>::type value_;
+            typedef typename container_aux::value<C>::type value_;
             cont.replace( (*this->ptr)(), new value_( t ) );
         }
                             

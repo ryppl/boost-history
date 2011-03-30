@@ -10,7 +10,7 @@
 #ifndef BOOST_ASSIGN_V2_DETAIL_FUNCTOR_VALUE_ER_2010_HPP
 #define BOOST_ASSIGN_V2_DETAIL_FUNCTOR_VALUE_ER_2010_HPP
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
-#include <boost/assign/v2/detail/keyword/nil.hpp>
+#include <boost/assign/v2/detail/keyword.hpp>
 #include <boost/assign/v2/detail/pp/ignore.hpp>
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 #include <utility>

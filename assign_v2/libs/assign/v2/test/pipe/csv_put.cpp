@@ -50,16 +50,16 @@ namespace xxx_csv_put{
             
             cal  | as2::_csv_put( T("jan", 31), T( "feb", 28 ), T("mar", 31) );
             
-			BOOST_ASSIGN_V2_CHECK( 
-            	range::equal(
-                	cal  | as2::_csv_put( T("jan", 31), T("feb", 28 ), T("mar", 31) ),
+            BOOST_ASSIGN_V2_CHECK( 
+                range::equal(
+                    cal  | as2::_csv_put( T("jan", 31), T("feb", 28 ), T("mar", 31) ),
                     benchmark
                 )
             );
             //]
         }
         {
-            //[test_pipe_csv_put_map
+            //[test_pipe_csv_put_map_ptr
             typedef boost::ptr_map<std::string, int> C; 
             typedef as2::value_container_value<C>::type T; 
 
@@ -68,10 +68,10 @@ namespace xxx_csv_put{
             benchmark["feb"] = 28;
             benchmark["mar"] = 31;
             
-			C cal; 
+            C cal; 
             BOOST_ASSIGN_V2_CHECK( 
-            	range::equal(
-                	cal  | as2::_csv_put( T("jan", 31), T("feb", 28 ), T("mar", 31) ),
+                range::equal(
+                    cal  | as2::_csv_put( T("jan", 31), T("feb", 28 ), T("mar", 31) ),
                     benchmark
                 )
             );

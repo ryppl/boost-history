@@ -11,34 +11,34 @@
 #define BOOST_ASSIGN_V2_INTERPRETER_FWD_ER_2010_HPP
 
 namespace boost{
-	struct use_default;
+    struct use_default;
 namespace assign{
 namespace v2{
 namespace data_tag{
 
-	// Storage
+    // Storage
     struct storage{};
     struct storage_ptr : storage{};
     struct storage_value : storage{};
 
-	// Assign
-	struct assign{};
+    // Assign
+    struct assign{};
     struct assign_map : assign{};
 
-	template<typename Storage, typename Assign> struct plus : Storage{};
+    template<typename Storage, typename Assign> struct plus : Storage{};
 
-	// Shortcuts
+    // Shortcuts
 
-	typedef plus<storage_ptr, assign> ptr;
-	typedef plus<storage_ptr, assign_map> ptr_map;
-	typedef plus<storage_value, assign> value;
+    typedef plus<storage_ptr, assign> ptr;
+    typedef plus<storage_ptr, assign_map> ptr_map;
+    typedef plus<storage_value, assign> value;
     typedef plus<storage_value, assign_map> value_map;
 
 }// data_tag
 namespace interpreter_aux{
 
     template<typename C, typename F, 
-    	typename ModifierTag, typename DataTag, typename D> 
+        typename ModifierTag, typename DataTag, typename D> 
     class interpreter_crtp;
 
     template<typename Tag> 

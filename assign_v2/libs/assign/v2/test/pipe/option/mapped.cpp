@@ -50,10 +50,10 @@ namespace xxx_mapped{
             C cal; as2::put( cal )("feb", 28);
             using namespace lambda;
             BOOST_ASSIGN_V2_CHECK(
-            	range::equal(
-					cal 
-                    	| ( apply % ( as2::_mapped = (_1 = 30) ) )( "apr", "jun", "sep", "nov" )
-                    	| ( apply % ( as2::_mapped = (_1 = 31) ) )( "jan", "mar", "may", "jul", "aug", "oct", "dec" ),
+                range::equal(
+                    cal 
+                        | ( apply % ( as2::_mapped = (_1 = 30) ) )( "apr", "jun", "sep", "nov" )
+                        | ( apply % ( as2::_mapped = (_1 = 31) ) )( "jan", "mar", "may", "jul", "aug", "oct", "dec" ),
                     benchmark
                 )
             );
@@ -80,10 +80,10 @@ namespace xxx_mapped{
             BOOST_AUTO( apply, as2::_csv_put % (as2::_data = as2::_key) );
             using namespace lambda;
             BOOST_ASSIGN_V2_CHECK(
-            	range::equal(
-					cal 
-                    	| ( apply % ( as2::_mapped = (_1 = 30) ) )( "apr", "jun", "sep", "nov" )
-                    	| ( apply % ( as2::_mapped = (_1 = 31) ) )( "jan", "mar", "may", "jul", "aug", "oct", "dec" ),
+                range::equal(
+                    cal 
+                        | ( apply % ( as2::_mapped = (_1 = 30) ) )( "apr", "jun", "sep", "nov" )
+                        | ( apply % ( as2::_mapped = (_1 = 31) ) )( "jan", "mar", "may", "jul", "aug", "oct", "dec" ),
                     benchmark
                 )
             );

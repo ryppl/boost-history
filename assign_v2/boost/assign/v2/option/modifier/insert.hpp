@@ -10,7 +10,7 @@
 #ifndef BOOST_ASSIGN_V2_OPTION_MODIFIER_INSERT_ER_2010_HPP
 #define BOOST_ASSIGN_V2_OPTION_MODIFIER_INSERT_ER_2010_HPP
 #include <cstddef>
-#include <boost/assign/v2/detail/keyword/ignore.hpp>
+#include <boost/assign/v2/detail/keyword.hpp>
 #include <boost/assign/v2/detail/traits/container.hpp>
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
 #include <boost/assign/v2/detail/pp/ignore.hpp>
@@ -35,7 +35,7 @@ namespace modifier_tag{
 }// modifier_tag
 namespace interpreter_aux{
                 
-	template<>                
+    template<>                
     class interpreter_modifier< modifier_tag::insert >/*<-*/
     {
 
@@ -71,7 +71,7 @@ namespace interpreter_aux{
         template<typename C, typename T>
         void impl(C& cont, T& t, data_tag::ptr )const
         {
-        	typedef typename container_aux::value<C>::type value_;
+            typedef typename container_aux::value<C>::type value_;
             cont.insert( new value_( t ) );
         }
 
@@ -80,7 +80,7 @@ namespace interpreter_aux{
         {
             typedef typename container_aux::key<C>::type key_;
             key_ k = t.first; // non-const necessary. See ptr_map.
-        	typedef typename container_aux::mapped<C>::type m_;
+            typedef typename container_aux::mapped<C>::type m_;
             cont.insert( k , new m_( t.second ) );
         }
 

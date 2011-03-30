@@ -9,7 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_OPTION_MODIFIER_STD_ER_2010_HPP
 #define BOOST_ASSIGN_V2_OPTION_MODIFIER_STD_ER_2010_HPP
-#include <boost/assign/v2/detail/keyword/ignore.hpp>
+#include <boost/assign/v2/detail/keyword.hpp>
 #include <boost/assign/v2/detail/traits/container.hpp>
 #include <boost/assign/v2/interpreter/fwd.hpp>
 #include <boost/assign/v2/option/modifier/framework.hpp>
@@ -29,14 +29,14 @@ BOOST_ASSIGN_V2_OPTION_MODIFIER_META_MODIFIER_TAG(std_modifier, Arg)
 
 #define BOOST_ASSIGN_V2_OPTION_STD_MODIFIER_IMPL_CPP03(FUN)\
     template<typename C, typename T>\
-    	void impl(C& cont, T& t, data_tag::value)const{\
-    	cont.FUN( t );\
-	}\
+        void impl(C& cont, T& t, data_tag::value)const{\
+        cont.FUN( t );\
+    }\
     template<typename C, typename T>\
     void impl(C& cont, T& t, data_tag::ptr)const{\
         typedef typename container_aux::value<C>::type value_;\
-    	cont.FUN( new value_( t ) );\
-	}\
+        cont.FUN( new value_( t ) );\
+    }\
 /**/
 
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>

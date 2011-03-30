@@ -121,25 +121,25 @@ namespace interpreter_aux{
 
 //->
 
-	template<
-    	typename C // Container
+    template<
+        typename C // Container
     >
-    struct deduce_data_tag{
+    struct deduce_data_tag/*<-*/{
     
-    	typedef typename ::boost::mpl::if_<
-    		container_aux::is_ptr_container<C>,
-        	data_tag::storage_ptr,
-        	data_tag::storage_value
-    	>::type storage_;
+        typedef typename ::boost::mpl::if_<
+            container_aux::is_ptr_container<C>,
+            data_tag::storage_ptr,
+            data_tag::storage_value
+        >::type storage_;
     
-	    typedef typename ::boost::mpl::if_<
-    		container_aux::is_map<C>,
-        	data_tag::assign_map,
-        	data_tag::assign
+        typedef typename ::boost::mpl::if_<
+            container_aux::is_map<C>,
+            data_tag::assign_map,
+            data_tag::assign
         >::type assign_;
 
-		typedef data_tag::plus<storage_, assign_> type;    
-    };
+        typedef data_tag::plus<storage_, assign_> type;    
+    }/*->*/;
 
 }// interpreter_aux
 //]

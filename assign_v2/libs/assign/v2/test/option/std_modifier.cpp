@@ -48,7 +48,7 @@ namespace xxx_standard{
             typedef as2::result_of::put<std::vector<int> >::type put_;
             typedef as2::modifier_tag::push_front tag_;
             typedef as2::result_of::option_std_modifier<
-            	put_, tag_
+                put_, tag_
             >::type result1_;
             typedef as2:: interpreter_aux::replace_modifier_tag<put_> meta2_;
             typedef ::boost::mpl::apply1<meta2_, tag_>::type result2_;

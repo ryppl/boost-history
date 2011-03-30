@@ -9,8 +9,29 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_DETAIL_KEYWORD_ER_2010_HPP
 #define BOOST_ASSIGN_V2_DETAIL_KEYWORD_ER_2010_HPP
-#include <boost/assign/v2/detail/keyword/key.hpp>
-#include <boost/assign/v2/detail/keyword/ignore.hpp>
-#include <boost/assign/v2/detail/keyword/nil.hpp>
+#include <boost/preprocessor/cat.hpp>
+
+namespace boost{
+namespace assign{
+namespace v2{
+namespace keyword_aux{
+
+    struct ignore{ 
+        ignore(){} 
+        template<typename Anything> ignore(Anything){}
+    };
+    
+	struct key{};
+	struct nil{};
+
+}// keyword_aux
+namespace{
+    const keyword_aux::ignore _ignore = keyword_aux::ignore();
+    const keyword_aux::key _key = keyword_aux::key();
+    const keyword_aux::nil _nil = keyword_aux::nil();
+}
+}// v2
+}// assign
+}// boost
 
 #endif // BOOST_ASSIGN_V2_DETAIL_KEYWORD_ER_2010_HPP

@@ -18,23 +18,22 @@ namespace assign{
 namespace v2{
 //[syntax_interpreter_data
 namespace interpreter_aux{
-//<-
 
     template<
         typename C // Value or pointer-container
-        , typename T/*->*/ = typename v2::container_aux::value<C>::type/*->*/
-        , bool is_map/*->*/ = v2::container_aux::is_map<C>::value/*->*/
+        , typename T/*<-*/ = typename v2::container_aux::value<C>::type/*->*/
+        , bool is_map/*<-*/ = v2::container_aux::is_map<C>::value/*->*/
     >
     struct deduce_data_generator/*<-*/
     {
-		typedef v2::functor_aux::value<T> type; 
+        typedef v2::functor_aux::value<T> type; 
     }/*->*/;
 
     template<typename C, typename T>
     struct deduce_data_generator<C, T, true>/*<-*/
     {
-		typedef v2::functor_aux::pair<
-        	T, 
+        typedef v2::functor_aux::pair<
+            T, 
             typename container_aux::key<C>::type,
             typename container_aux::mapped<C>::type
         > type; 

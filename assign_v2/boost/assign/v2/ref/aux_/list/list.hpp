@@ -9,7 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_REF_AUX_LIST_LIST_ER_2010_HPP
 #define BOOST_ASSIGN_V2_REF_AUX_LIST_LIST_ER_2010_HPP
-#include <boost/assign/v2/detail/keyword/nil.hpp>
+#include <boost/assign/v2/detail/keyword.hpp>
 #include <boost/assign/v2/ref/aux_/list/container.hpp>
 #include <boost/assign/v2/ref/aux_/list/fwd.hpp>
 #include <boost/mpl/apply.hpp>
