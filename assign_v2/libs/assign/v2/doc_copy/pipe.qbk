@@ -1,0 +1,23 @@
+[import ../test/pipe/option/data.cpp]
+
+[tpl_module
+	[@../../../../../boost/assign/v2/pipe.hpp `boost/assign/v2/pipe.hpp`]
+	..Pipe version of a functor
+]
+
+[section:csv_put Csv_put]
+[import ../../../../boost/assign/v2/pipe/csv_put.hpp]
+[import ../test/pipe/csv_put.cpp]
+
+[tpl_feature
+	[@../../../../../boost/assign/v2/pipe/csv_put.hpp `boost/assign/v2/pipe/csv_put.hpp`]
+	..Pipe & csv form of [link boost_assign_v2.reference.put `__fun_put__`]
+	..[syntax_pipe_csv_put]
+	..[*Example1]
+	[test_pipe_csv_put_str_literal]
+	[*Example2]
+	[test_pipe_option_data_math]
+]
+
+[endsect][/csv_put]
+

@@ -1,0 +1,41 @@
+[import ../test/deque.cpp]
+
+[tpl_module
+	[@../../../../../boost/assign/v2/deque.hpp `boost/assign/v2/deque.hpp`]
+	..Interpreter that generates a deque container.
+]
+
+[section:deque Deque]
+
+[import ../../../../boost/assign/v2/deque/deque.hpp]
+
+[tpl_feature 
+	[@../../../../../boost/assign/v2/deque/deque.hpp `boost/assign/v2/deque/deque.hpp`]
+	..__functor_form__
+	..[syntax_deque_deque]
+	..[*Example 1]
+	[test_deque_ints]
+	[*Example 2]
+	[test_deque_str_literal]
+	[*Example 3]
+	[test_deque_pair]
+]
+
+[endsect][/deque]
+[section:csv_deque Csv_deque]
+
+[import ../../../../boost/assign/v2/deque/csv_deque.hpp]
+
+[tpl_feature
+	[@../../../../../boost/assign/v2/deque/csv_deque.hpp `boost/assign/v2/deque/csv_deque.hpp`]
+	..__csv_form__
+	..[syntax_deque_csv_deque]
+	..[*Example 1]
+	[test_csv_deque_ints]
+	[*Example 2]
+	[test_csv_deque_str_literal]
+]
+
+[/note The internal value-type is `boost::decay<__value_type__>::type` to allow for a string literal]
+
+[endsect][/csv_deque]

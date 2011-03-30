@@ -1,0 +1,194 @@
+
+[*Machine]
+Mac OS
+
+[*Compiler]
+GNU C++ version 4.4.1
+
+[*Notation]
+
+[variablelist
+	[
+		[`T`]
+		[`std::vector<int>`]
+	]
+	[
+		[[^n]]
+		[Number of inner loops]
+	]
+	[
+		[[^k]]
+		[Number of outer loops]
+	]
+	[
+		[`args...`]
+		[List of arguments, each of type T and max size 1000]
+	]
+	[	
+		[[^var]]
+		[Time to eval some method over `args...`, [^n] times]
+	]
+	[
+		[[^var_scaled]]
+		[[^1000 * var]]
+	]
+	[
+		[[^m]]
+		[Size of `args...`]
+	]
+	[
+		[[^min]]
+		[Min value of [^var_scaled], over [^k] repetitions]
+	]
+	[
+		[[^average]]
+		[Average value of [^var_scaled], over [^k] repetitions]
+	]
+	[
+		[[^max]]
+		[Max value of [^var_scaled], over [^k] repetitions]
+	]
+	[
+		[[^cumulated]]
+		[Cumulative value of [^var_scaled], over [^k] repetitions]
+	]
+]
+
+[*Methods]
+
+[table Assign
+	[[Method][Description]]
+	[
+		[stl_push_back]
+		[`cont.push_back( arg1 ); ...; cont.push_back( argm )`]
+	]
+	[
+		[v1_push_back]
+		[`assign::push_back( cont )( arg1 )...( argm )`]
+	]
+	[
+		[v2_put]
+		[`assign::v2::put( cont )( arg1 )...( argm )`]
+	]
+	[/
+		[v2_pipe_put]
+		[`cont | assign::v2::_put( arg1 )...( argm )`]
+	]
+	[
+		[v2_pipe_csv_put]
+		[`cont | assign::v2::_csv_put( args... )`]
+	]
+]
+
+[table Generate
+	[[Method][Description]]
+	[
+		[v1_list_of]
+		[`assign::list_of( arg1 )...( argm )`]
+	]
+	[
+		[v2_deque]
+		[`assign::v2::deque<T>( arg1 )...( argm )`]
+	]
+	[
+		[v2_csv_deque]
+		[`assign::v2::csv_deque( args... )`]
+	]
+	[
+		[v1_cref_list_of]
+		[`assign::cref_list_of<m>( arg1 )...( argm )`]
+	]
+	[
+		[v2_ref_array]
+		[`assign::v2::ref::array( arg1 )...( argm )`]
+	]
+	[
+		[v2_ref_csv_array]
+		[`assign::v2::ref::csv_array( args...)`]
+	]
+]
+
+[*Results]
+``
+{k, n, m}
+{method,                      min,      average,  max,      cumulative}
+
+{12800, 100, 1},
+{stl_push_back,                0.013,    0.014,    0.027,    178.3},
+{v1_push_back,                 0.031,    0.034,    0.050,    430.5},
+{v2_put,                       0.013,    0.015,    0.023,    194.0},
+{v2_pipe_csv_put,              0.013,    0.015,    0.019,    191.4},
+{v1_list_of,                   0.122,    0.125,    0.153,   1601.9},
+{v2_deque,                     0.102,    0.105,    0.127,   1341.5},
+{v2_csv_deque,                 0.042,    0.045,    0.057,    581.6},
+{v1_cref_list_of,              0.000,    0.001,    0.004,     17.7},
+{v2_ref_array,                 0.002,    0.004,    0.007,     47.9},
+{v2_ref_csv_array,             0.000,    0.001,    0.005,     17.8}
+}
+{
+{6400, 100, 2},
+{stl_push_back,                0.034,    0.036,    0.045,    229.7},
+{v1_push_back,                 0.080,    0.085,    0.104,    541.0},
+{v2_put,                       0.035,    0.037,    0.046,    237.0},
+{v2_pipe_csv_put,              0.035,    0.037,    0.044,    235.3},
+{v1_list_of,                   0.180,    0.187,    0.223,   1194.4},
+{v2_deque,                     0.142,    0.145,    0.174,    930.5},
+{v2_csv_deque,                 0.075,    0.079,    0.094,    503.5},
+{v1_cref_list_of,              0.000,    0.001,    0.005,      9.0},
+{v2_ref_array,                 0.005,    0.006,    0.017,     40.1},
+{v2_ref_csv_array,             0.001,    0.002,    0.005,     11.2}
+}
+{
+{3200, 100, 4},
+{stl_push_back,                0.093,    0.097,    0.117,    311.3},
+{v1_push_back,                 0.244,    0.251,    0.296,    804.4},
+{v2_put,                       0.097,    0.100,    0.115,    321.0},
+{v2_pipe_csv_put,              0.097,    0.101,    0.125,    324.6},
+{v1_list_of,                   0.345,    0.353,    0.432,   1128.6},
+{v2_deque,                     0.214,    0.219,    0.266,    699.8},
+{v2_csv_deque,                 0.142,    0.147,    0.175,    469.5},
+{v1_cref_list_of,              0.000,    0.001,    0.006,      4.5},
+{v2_ref_array,                 0.012,    0.013,    0.018,     42.0},
+{v2_ref_csv_array,             0.001,    0.002,    0.006,      7.3}
+}
+{
+{1600, 100, 8},
+{stl_push_back,                0.286,    0.292,    0.317,    467.6},
+{v1_push_back,                 0.531,    0.540,    0.674,    863.3},
+{v2_put,                       0.288,    0.295,    0.472,    471.5},
+{v2_pipe_csv_put,              0.293,    0.298,    0.340,    477.6},
+{v1_list_of,                   0.620,    0.627,    0.715,   1003.9},
+{v2_deque,                     0.400,    0.407,    0.460,    651.0},
+{v2_csv_deque,                 0.321,    0.328,    0.381,    525.4},
+{v1_cref_list_of,              0.000,    0.001,    0.002,      2.3},
+{v2_ref_array,                 0.038,    0.040,    0.043,     64.3},
+{v2_ref_csv_array,             0.002,    0.003,    0.004,      5.3}
+}
+{
+{800, 100, 16},
+{stl_push_back,                0.659,    0.666,    0.773,    533.2},
+{v1_push_back,                 1.145,    1.163,    1.327,    930.2},
+{v2_put,                       0.683,    0.691,    0.742,    552.9},
+{v2_pipe_csv_put,              0.685,    0.694,    0.742,    555.0},
+{v1_list_of,                   1.274,    1.285,    1.339,   1027.6},
+{v2_deque,                     0.809,    0.828,    0.910,    662.5},
+{v2_csv_deque,                 0.729,    0.746,    0.837,    596.6},
+{v1_cref_list_of,              0.000,    0.001,    0.005,      1.1},
+{v2_ref_array,                 0.120,    0.122,    0.147,     97.6},
+{v2_ref_csv_array,             0.004,    0.005,    0.009,      4.2}
+}
+{
+{400, 100, 32},
+{stl_push_back,                1.263,    1.277,    1.355,    510.8},
+{v1_push_back,                 2.328,    2.346,    2.467,    938.2},
+{v2_put,                       1.291,    1.312,    1.422,    524.9},
+{v2_pipe_csv_put,              1.321,    1.339,    1.431,    535.4},
+{v1_list_of,                   2.393,    2.410,    2.529,    964.2},
+{v2_deque,                     1.406,    1.424,    1.524,    569.4},
+{v2_csv_deque,                 1.346,    1.361,    1.433,    544.4},
+{v1_cref_list_of,              0.005,    0.006,    0.007,      2.5},
+{v2_ref_array,                 0.497,    0.509,    0.559,    203.5},
+{v2_ref_csv_array,             0.026,    0.027,    0.030,     10.9}
+}
+``
+[c++]
