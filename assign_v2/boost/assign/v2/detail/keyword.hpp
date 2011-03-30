@@ -17,19 +17,26 @@ namespace v2{
 //[syntax_detail_keyword
 namespace keyword_aux{
 
+    struct use_default/*<-*/{}/*->*/;
+
     struct ignore{ 
         ignore(){} 
         template<typename Anything> ignore(Anything){}
     };
     
-	struct key{}/*->*/;
-	struct nil{}/*->*/;
+    struct key/*<-*/{}/*->*/;
+    struct nil/*<-*/{}/*->*/;
 
 }// keyword_aux
 /*<-*/namespace{/*->*/
-    const keyword_aux::ignore _ignore/*<-*/ = keyword_aux::ignore()/*->*/;
-    const keyword_aux::key _key/*<-*/ = keyword_aux::key()/*->*/;
-    const keyword_aux::nil _nil/*<-*/ = keyword_aux::nil()/*->*/;
+    const keyword_aux::use_default _use_default/*<-*/ 
+        = keyword_aux::use_default()/*->*/;
+    const keyword_aux::ignore _ignore/*<-*/ 
+        = keyword_aux::ignore()/*->*/;
+    const keyword_aux::key _key/*<-*/ 
+        = keyword_aux::key()/*->*/;
+    const keyword_aux::nil _nil/*<-*/ 
+        = keyword_aux::nil()/*->*/;
 /*<-*/}/*->*/
 //]
 }// v2

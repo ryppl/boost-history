@@ -144,13 +144,13 @@ namespace result_of{
         ,typename C
     >
     typename result_of::put<C, DataGenerator, ModifierTag, DataTag>::type
-    put( C& cont )/*<-*/
+    put( C& cont )
     {
     	typedef typename result_of::put<
         	C, DataGenerator, ModifierTag, DataTag
         >::type result_;
         return result_( cont );
-    }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
+    }
 
 /*->*/
 //]

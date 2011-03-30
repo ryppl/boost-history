@@ -25,7 +25,6 @@
 #include <boost/preprocessor/repetition.hpp>
 #endif
 
-
 namespace boost{
     struct use_default;
 namespace assign{
@@ -60,8 +59,8 @@ namespace interpreter_aux{
     }/*->*/;
 
     template<
-    	typename Head = typename empty_list_option::head_type, 
-        typename Tail = typename empty_list_option::tail_type
+    	typename Head/*<-*/ = typename empty_list_option::head_type/*->*/, 
+        typename Tail/*<-*/ = typename empty_list_option::tail_type/*->*/
     >
     class arg_list_generator : public list_option<Head, Tail>/*<-*/
     {
@@ -174,16 +173,11 @@ BOOST_PP_REPEAT_FROM_TO(
 
     }/*->*/;
 
-// TODO deal with maps
-
     template<
     	typename C, typename H, typename T, 
         arg_list_size_type N, typename U
     >
-    C& operator|(
-    	C& cont, 
-        interpreter_aux::arg_list<H, T, N, U> const& arg_list
-    )/*<-*/
+    C& operator|(C& cont, interpreter_aux::arg_list<H, T, N, U> const& arg_list)/*<-*/
     {
     	typedef typename v2::result_of::put<
         	C

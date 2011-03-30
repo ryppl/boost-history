@@ -51,7 +51,7 @@ namespace result_of{
     struct as_arg_list/*<-*/
     {
         typedef as_arg_list_adapter<R> type;
-    }/*->*/; // Metafunction
+    }/*->*/;
 
 }// result_of
 

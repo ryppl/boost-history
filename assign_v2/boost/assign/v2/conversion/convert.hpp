@@ -65,7 +65,7 @@ namespace conversion_aux{
 namespace result_of{
 
     template<
-        typename C        // Container
+        typename C       // Container
         , typename R     // Range
     >
     struct convert/*<-*/{ typedef C type; }/*->*/;

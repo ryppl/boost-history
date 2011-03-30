@@ -66,7 +66,7 @@ namespace result_of{
         
     template<typename D,typename Keyword, typename Arg>
     struct option_modifier /*<-*/ : ::boost::mpl::apply1<
-		replace_modifier_tag<D>, 
+        replace_modifier_tag<D>, 
         typename ::boost::mpl::apply1<
             interpreter_aux::meta_modifier_tag<Keyword, Arg>, 
             D
@@ -84,11 +84,11 @@ namespace result_of{
         option_modifier<Keyword, Arg> const& rhs
     )/*<-*/
     {
-    	typedef interpreter_aux::meta_modifier_tag<Keyword, Arg> meta_;
+        typedef interpreter_aux::meta_modifier_tag<Keyword, Arg> meta_;
         typedef typename ::boost::mpl::apply1<meta_, D>::type modifier_tag;
         typedef interpreter_aux::interpreter_modifier<modifier_tag> modifier_;
-    	typedef typename result_of::option_modifier<
-        	D, Keyword, Arg
+        typedef typename result_of::option_modifier<
+            D, Keyword, Arg
         >::type result_;
     
         return result_(

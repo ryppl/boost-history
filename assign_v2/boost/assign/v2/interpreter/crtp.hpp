@@ -283,7 +283,6 @@ BOOST_PP_REPEAT_FROM_TO(
 #endif // BOOST_ASSIGN_V2_ENABLE_CPP0X
 
 //->
-
     };
 
 }// interpreter_aux

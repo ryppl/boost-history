@@ -58,18 +58,18 @@ namespace xxx_standard{
         {
             // fully qual boost::begin/end demanded by MSVC - error C2668
             //[test_option_push_front
-              boost::circular_buffer<int> cb(3); 
-             ( as2::put( cb ) % as2::_push_front)( 3 )( 2 )( 1 );
+            boost::circular_buffer<int> cb(3); 
+            ( as2::put( cb ) % as2::_push_front)( 3 )( 2 )( 1 );
              
-             BOOST_ASSIGN_V2_CHECK(
-                 range::equal(cb, as2::csv_deque(1, 2, 3) )
-             );
+            BOOST_ASSIGN_V2_CHECK(
+                range::equal(cb, as2::csv_deque(1, 2, 3) )
+            );
 
             as2::put( cb )( 4 )( 5 );
 
-             BOOST_ASSIGN_V2_CHECK(
-                 range::equal(cb, as2::csv_deque(3, 4, 5) )
-             );
+            BOOST_ASSIGN_V2_CHECK(
+                range::equal(cb, as2::csv_deque(3, 4, 5) )
+            );    
 
             //]
 
