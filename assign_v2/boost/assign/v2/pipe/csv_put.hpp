@@ -12,6 +12,7 @@
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
 #include <boost/assign/v2/put.hpp>
 #include <boost/assign/v2/option/list.hpp>
+#include <boost/assign/v2/option/data_generator.hpp>
 #include <boost/assign/v2/ref/array/as_arg_list.hpp>
 #include <boost/assign/v2/ref/array/csv_array.hpp>
 #include <boost/assign/v2/ref/wrapper/copy.hpp>
@@ -179,16 +180,10 @@ BOOST_PP_REPEAT_FROM_TO(
     >
     C& operator|(C& cont, interpreter_aux::arg_list<H, T, N, U> const& arg_list)/*<-*/
     {
-        typedef typename v2::result_of::put<
-            C
-            , functor_aux::value<
-                typename container_aux::value<C>::type
-            >
-            , typename interpreter_aux::deduce_modifier_tag<C>::type
-            , typename interpreter_aux::deduce_data_tag<C>::type
-        >::type put_;
-        v2::ref::as_arg_list(
-            arg_list.apply(  put_( cont ) ),
+        typedef typename deduce_value_generator<C>::type data_gen_;
+        typedef typename v2::result_of::put<C, data_gen_>::type put_;
+        v2::ref::as_arg_list(    
+            arg_list.apply( put_( cont ) ),
             arg_list.arg_list_cont()
         );
         return cont;

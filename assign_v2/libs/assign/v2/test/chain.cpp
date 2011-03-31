@@ -63,18 +63,18 @@ namespace xxx_chain{
             //]
         }
         // Boost.Assign.v2 containers
-        {
+        {    
             //[test_chain_write_refs
             /*<< Needed to bring && into scope >>*/ using namespace assign::v2;
-            std::vector<int> consecutive8( 8 ); 
-            for(int i = 0; i < 8; i++){ consecutive8[i] = 1 + i; }
-            array<int, 5> consecutive5; int six, seven, eight;
+            std::vector<int> iota8( 8 ); 
+            for(int i = 0; i < 8; i++){ iota8[i] = 1 + i; }
+            array<int, 5> iota5; int six, seven, eight;
             boost::copy(
-                consecutive8,
-               boost::begin( consecutive5 && (/*<< rvalue! >>*/ as2::ref::csv_array( six, seven, eight ) | as2::ref::_get ) )
+                iota8,
+                boost::begin( iota5 && (/*<< rvalue! >>*/ as2::ref::csv_array( six, seven, eight ) | as2::ref::_get ) )
             );
 
-            BOOST_ASSIGN_V2_CHECK( range::equal( consecutive5, as2::csv_deque( 1, 2, 3, 4, 5 ) ) );
+            BOOST_ASSIGN_V2_CHECK( range::equal( iota5, as2::csv_deque( 1, 2, 3, 4, 5 ) ) );
             BOOST_ASSIGN_V2_CHECK( six   == 6 ); BOOST_ASSIGN_V2_CHECK( seven == 7 ); BOOST_ASSIGN_V2_CHECK( eight == 8 );
             //]
         }

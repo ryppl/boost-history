@@ -12,6 +12,7 @@
 #include <boost/assign/v2/detail/functor/value.hpp>
 #include <boost/assign/v2/detail/keyword.hpp>
 #include <boost/assign/v2/detail/pp/ignore.hpp>
+#include <boost/assign/v2/detail/traits/container.hpp>
 #include <boost/assign/v2/interpreter/data_generator.hpp>
 #include <boost/assign/v2/interpreter/fwd.hpp>
 #include <boost/assign/v2/interpreter/replace.hpp>
@@ -33,6 +34,16 @@ namespace interpreter_aux{
         typedef functor_aux::value<key_> type;
     }/*->*/;
 
+    template<
+        typename C // Value or pointer-container
+    >
+    struct deduce_value_generator/*<-*/
+    {
+        typedef functor_aux::value<
+            typename container_aux::value<C>::type
+        > type;
+    }/*->*/;
+
 namespace result_of{
 
     template<typename D, typename C, typename F = keyword_aux::use_default>
@@ -44,20 +55,26 @@ namespace result_of{
     {}/*->*/;
 
     template<typename D, typename C>
-    struct option_data_generator<D, C, keyword_aux::use_default>/*<-*/
-        : option_data_generator<
-            D, C, typename deduce_data_generator<C>::type
-        >
-    {}/*->*/;
-    
-    template<typename D, typename C>
     struct option_data_generator<D, C, keyword_aux::key>/*<-*/
         : option_data_generator<
             D, C, typename deduce_key_generator<C>::type
         >
     {}/*->*/;
 
-    
+    template<typename D, typename C>
+    struct option_data_generator<D, C, keyword_aux::use_default>/*<-*/
+        : option_data_generator<
+            D, C, typename deduce_data_generator<C>::type
+        >
+    {}/*->*/;
+
+    template<typename D, typename C>
+    struct option_data_generator<D, C, keyword_aux::value>/*<-*/
+        : option_data_generator<
+            D, C, typename deduce_value_generator<C>::type
+        >
+    {}/*->*/;
+        
 }// result_of
 
     template<typename F/*<-*/= keyword_aux::ignore/*->*/>

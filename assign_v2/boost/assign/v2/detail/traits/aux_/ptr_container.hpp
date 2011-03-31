@@ -22,19 +22,19 @@ namespace v2{
 namespace container_aux{
 
     
-	// DATA-MEMBER
+    // DATA-MEMBER
 
     template<typename PtrC>
     struct to_value_key{ typedef typename PtrC::key_type type; };
 
     template<typename PtrC>
     struct to_value_value : boost::remove_reference<
-    	typename PtrC::reference
+        typename PtrC::reference
     >{};
 
     template<typename PtrC>
     struct to_value_mapped : boost::remove_reference<
-    	typename PtrC::mapped_reference
+        typename PtrC::mapped_reference
     >{};
 
     template
@@ -46,14 +46,14 @@ namespace container_aux{
         class Allocator
     >
     struct to_value_value<
-    	boost::ptr_map<Key, Mapped, Compare, CloneAllocator, Allocator>
+        boost::ptr_map<Key, Mapped, Compare, CloneAllocator, Allocator>
     >{
 
-		typedef boost::ptr_map<
-        	Key, Mapped, Compare, CloneAllocator, Allocator
+        typedef boost::ptr_map<
+            Key, Mapped, Compare, CloneAllocator, Allocator
         > ptr_c_;
         typedef std::pair<
-        	const typename to_value_key<ptr_c_>::type, 
+            const typename to_value_key<ptr_c_>::type, 
             typename to_value_mapped<ptr_c_>::type
         > type;
     };
@@ -103,8 +103,8 @@ namespace container_aux{
     // MAP
 
     template<
-    	typename PtrC, 
-    	template<typename, typename, typename, typename> class C
+        typename PtrC, 
+        template<typename, typename, typename, typename> class C
     >
     struct to_value_map{
 
@@ -112,7 +112,7 @@ namespace container_aux{
             typename to_value_key<PtrC>::type,
             typename to_value_mapped<PtrC>::type,
             typename PtrC::key_compare,
-			typename to_value_allocator<PtrC>::type
+            typename to_value_allocator<PtrC>::type
         > type;
 
     };
@@ -164,7 +164,7 @@ namespace container_aux{
     // TO_VALUE_CONTAINER
 
     template<
-    	typename C // Pointer or Value container
+        typename C // Pointer or Value container
     >
     struct to_value_container{ typedef C type; };
 
@@ -264,11 +264,11 @@ namespace container_aux{
     >
     struct to_value_container<
         boost::ptr_unordered_map<
-        	Key, Mapped, Hash, Pred, CloneAllocator, Allocator
+            Key, Mapped, Hash, Pred, CloneAllocator, Allocator
         >
     > : to_value_unordered_map<
         boost::ptr_unordered_map<
-        	Key, Mapped, Hash, Pred, CloneAllocator, Allocator
+            Key, Mapped, Hash, Pred, CloneAllocator, Allocator
         >,
         boost::unordered_map
     >{};
@@ -285,11 +285,11 @@ namespace container_aux{
     >
     struct to_value_container<
         boost::ptr_unordered_set<
-        	Key, Hash, Pred, CloneAllocator, Allocator
+            Key, Hash, Pred, CloneAllocator, Allocator
         >
     > : to_value_unordered_set<
         boost::ptr_unordered_set<
-        	Key, Hash, Pred, CloneAllocator, Allocator
+            Key, Hash, Pred, CloneAllocator, Allocator
         >,
         boost::unordered_set
     >{};

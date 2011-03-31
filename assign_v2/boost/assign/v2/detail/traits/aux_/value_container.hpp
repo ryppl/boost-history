@@ -104,20 +104,20 @@ namespace container_aux{
 // DATA-MEMBER
 
     template<
-    	typename C	// Ptr or value container
+        typename C    // Ptr or value container
     >
     struct value_key{ typedef typename C::key_type type; };
 
     template<
-    	typename C	// Ptr or value container
+        typename C    // Ptr or value container
     >
     struct value_value{ typedef typename C::value_type type; };
 
     template<
-    	typename C	// Ptr or value container
+        typename C    // Ptr or value container
     >
     struct value_mapped{
-    	typedef typename C::mapped_type type;
+        typedef typename C::mapped_type type;
     };
 
 

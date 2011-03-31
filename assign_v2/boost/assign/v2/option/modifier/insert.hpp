@@ -76,7 +76,7 @@ namespace interpreter_aux{
         void impl( C& cont, BOOST_ASSIGN_V2_arg, data_tag::ptr_map )const
         {
             typedef typename container_aux::key<C>::type key_;
-			// non-const key necessary. See ptr_map.
+            // non-const key necessary. See ptr_map.
             key_ k = BOOST_ASSIGN_V2_forward.first; 
             typedef typename container_aux::mapped<C>::type m_;
             cont.insert( k , new m_( BOOST_ASSIGN_V2_forward.second ) );

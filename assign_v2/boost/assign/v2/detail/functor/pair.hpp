@@ -27,7 +27,11 @@ namespace v2{
 //syntax_detail_functor_pair
 namespace functor_aux{
 
-    template<typename T, typename K, typename M>
+    template<
+    	typename T 		// Value
+        , typename K 	// Key
+        , typename M	// Mapped
+    >
     class pair/*<-*/
 #if !BOOST_ASSIGN_V2_ENABLE_CPP0X
     : public functor_aux::crtp_unary_and_up<
@@ -63,22 +67,22 @@ namespace functor_aux{
 
         using super_::operator();
 
-    	T impl( K const& k )const{
-        	return T( k, M() ); 
-    	} 
+        T impl()const;// leave un-implemented 
 
+#define BOOST_ASSIGN_V2_arg(z, I, data) BOOST_PP_CAT(data,BOOST_PP_INC(I))
 #define BOOST_ASSIGN_V2_MACRO(z, N, data) \
-    	template<BOOST_PP_ENUM_PARAMS(N, typename T)> \
-    	T impl( K const& k BOOST_PP_ENUM_TRAILING_BINARY_PARAMS(N, T, &_) )const{ \
-        	return T( k, M( BOOST_PP_ENUM_PARAMS(N, _) ) ); \
-    	} \
+    template<BOOST_PP_ENUM_PARAMS(N, typename T)> \
+    T impl( BOOST_PP_ENUM_BINARY_PARAMS(N, T, &_) )const{ \
+        return T( _0, M( BOOST_PP_ENUM(BOOST_PP_DEC(N), BOOST_ASSIGN_V2_arg, _) ) ); \
+    } \
 /**/
 BOOST_PP_REPEAT_FROM_TO(
-	1,
-    BOOST_ASSIGN_V2_LIMIT_ARITY,
+    1,
+    BOOST_PP_INC(BOOST_ASSIGN_V2_LIMIT_ARITY),
     BOOST_ASSIGN_V2_MACRO,
     ~
 )
+#undef BOOST_ASSIGN_V2_arg
 #undef BOOST_ASSIGN_V2_MACRO
 
 #endif // BOOST_ASSIGN_V2_ENABLE_CPP0X

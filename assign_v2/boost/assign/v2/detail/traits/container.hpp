@@ -32,8 +32,8 @@ namespace container_aux{
 
     template<template<typename > class F, typename C>
     struct through_value_container
-    	: F<
-        	typename to_value_container<C>::type
+        : F<
+            typename to_value_container<C>::type
         >
     {};
 
@@ -59,44 +59,44 @@ namespace container_aux{
 
     template<typename C>
     struct has_push_deduced_value
-    	: through_value_container<value_has_push_deduced_value, C>
+        : through_value_container<value_has_push_deduced_value, C>
     {};
 
 // CATEGORY
 
     template<typename C> struct is_array
-    	: through_value_container<value_is_array, C>
+        : through_value_container<value_is_array, C>
     {};
 
     template<typename C>
     struct is_associative 
-    	: through_value_container<value_is_associative, C>
+        : through_value_container<value_is_associative, C>
     {};
 
     template<typename C>
     struct is_fifo 
-    	: through_value_container<value_is_fifo, C>
+        : through_value_container<value_is_fifo, C>
     {};
     
     template<typename C>
     struct is_lifo 
-    	: through_value_container<value_is_lifo, C>
+        : through_value_container<value_is_lifo, C>
     {};
             
     template<typename C> struct is_map 
-    	: through_value_container<value_is_map, C>
+        : through_value_container<value_is_map, C>
     {};
     
     template<typename C>
     struct is_sorted 
-    	: through_value_container<value_is_sorted, C>
-	{};
+        : through_value_container<value_is_sorted, C>
+    {};
 
 }// container_aux
 
-	template<typename C>
+    template<typename C>
     struct value_container_value/*<-*/
-    	: container_aux::value<C>{}
+        : container_aux::value<C>{}
     /*->*/;
 
 }// v2

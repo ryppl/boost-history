@@ -35,14 +35,15 @@ namespace tutorial_assign_v2{
         using namespace assign::v2;
         {
             //[tutorial_assign
-            std::vector<int> numeric( 10 ); iota( numeric, 0 ); typedef std::string str_;
-            typedef variant< int, str_ > data_; array<data_, 16> numeric_kb;
-            put( numeric_kb )
+            std::vector<int> numeric( 10 ); iota( numeric, 0 ); 
+            typedef std::string str_; typedef variant< int, str_ > data_; 
+            array<data_, 16> numeric_keyboard;
+            put( numeric_keyboard )
                 ( "+" )( "-" )( "*" )( "/" )( "=" )( "." )
                 ( as_arg_list( numeric ) );
 
-            assert( get<str_>( numeric_kb.front() ) == "+" );
-            assert( get<int>( numeric_kb.back()  ) == 9 );
+            assert( get<str_>( numeric_keyboard.front() ) == "+" );
+            assert( get<int>( numeric_keyboard.back()  ) == 9 );
             //]
         }
         {
@@ -75,16 +76,16 @@ namespace tutorial_assign_v2{
         }
         {
             //[tutorial_chain
-            std::vector<int> consecutive8( 8 ); for(int i = 0; i < 8; i++){ consecutive8[i] = 1 + i; }
-            array<int, 5> consecutive5; int six, seven, eight;
+            std::vector<int> iota8( 8 ); for(int i = 0; i < 8; i++){ iota8[i] = 1 + i; }
+            array<int, 5> iota5; int six, seven, eight;
             boost::copy(
-                consecutive8,
-                   boost::begin(
-                    consecutive5 | _chain( ref::csv_array( six, seven, eight ) | ref::_get )
+                iota8,
+                boost::begin(
+                    iota5 | _chain( ref::csv_array( six, seven, eight ) | ref::_get )
                 )
             );
 
-            assert( range::equal( consecutive5, csv_deque(1, 2, 3, 4, 5) ) );
+            assert( range::equal( iota5, csv_deque(1, 2, 3, 4, 5) ) );
             assert( six == 6 ); assert( seven == 7 ); assert( eight == 8 );
             //]
         }
@@ -97,11 +98,15 @@ namespace tutorial_assign_v2{
         }
         {
             //[tutorial_data_gen
-            std::map<std::string, int> map;
-            put( map )( "foo", 1 )( "bar", 2 )( "baz", 3 )("qux");
+            typedef std::string str_; 
+            const char foo[] = "foo";
+            const char bar[4] = { 'b', 'a', 'r', '\0' };
+            str_ baz = "***baz***";
+			std::map<int, str_> map;
+            put( map )( 1, foo, 3 )( 2, bar )( 3, baz, 3, 3 )( 4, "qux");
 
-            assert( map["bar"] == 2 );
-            assert( map["qux"] == int() );
+            assert( map[1] == "foo" ); assert( map[2] == "bar" );
+            assert( map[3] == "baz" ); assert( map[4] == "qux" );
             //]
         }
         {
