@@ -128,7 +128,7 @@ namespace xxx_put{
             std::deque< data_ > region;
             /*<<Calls `tri_state.push_back( data_( s, c ) )` for [^( s, c ) =( ny, 212 )...( ct, 203 )]>>*/
             as2::put( region )
-            	( ny, 212 )( ny, 718 )( ny, 516 )( ny, 914 )
+                ( ny, 212 )( ny, 718 )( ny, 516 )( ny, 914 )
                 ( nj, 210 )( nj, 908 )( nj, 609 )
                 ( ct, 203 );
 
