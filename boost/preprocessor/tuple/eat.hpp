@@ -8,6 +8,7 @@
 #  */
 #
 # /* Revised by Paul Mensonides (2002) */
+# /* Revised by Edward Diener (2011) */
 #
 # /* See http://www.boost.org for most recent version. */
 #
@@ -17,7 +18,7 @@
 # include <boost/preprocessor/config/config.hpp>
 # include <boost/preprocessor/config/variadics.hpp>
 #
-# if BOOST_PP_VARIADICS && !defined(BOOST_PP_TEST_NO_TUPLE_EAT)
+# if BOOST_PP_VARIADICS
 #
 # /* BOOST_PP_TUPLE_EAT */
 #

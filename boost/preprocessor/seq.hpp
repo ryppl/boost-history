@@ -7,6 +7,8 @@
 #  *                                                                          *
 #  ************************************************************************** */
 #
+# /* Revised by Edward Diener (2011) */
+#
 # /* See http://www.boost.org for most recent version. */
 #
 # ifndef BOOST_PREPROCESSOR_SEQ_HPP
@@ -35,6 +37,7 @@
 # include <boost/preprocessor/seq/size.hpp>
 # include <boost/preprocessor/seq/subseq.hpp>
 # include <boost/preprocessor/seq/to_array.hpp>
+# include <boost/preprocessor/seq/to_list.hpp>
 # include <boost/preprocessor/seq/to_tuple.hpp>
 # include <boost/preprocessor/seq/transform.hpp>
 #

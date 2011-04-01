@@ -8,6 +8,7 @@
 #  */
 #
 # /* Revised by Paul Mensonides (2002) */
+# /* Revised by Edward Diener (2011) */
 #
 # /* See http://www.boost.org for most recent version. */
 #
@@ -17,7 +18,7 @@
 # include <boost/preprocessor/config/config.hpp>
 # include <boost/preprocessor/config/variadics.hpp>
 #
-# if BOOST_PP_VARIADICS && !defined(BOOST_PP_TEST_NO_TUPLE_REVERSE)
+# if BOOST_PP_VARIADICS
 #
 # include <boost/preprocessor/tuple/size.hpp>
 # include <boost/preprocessor/tuple/detail/use_overload.hpp>
@@ -25,7 +26,7 @@
 # /* BOOST_PP_TUPLE_REVERSE */
 #
 #    define BOOST_PP_TUPLE_REVERSE(...) \
-         BOOST_PP_TUPLE_DETAIL_USE_OVERLOAD(BOOST_PP_TUPLE_DETAIL_REVERSE_, __VA_ARGS__) \
+         BOOST_PP_TUPLE_DETAIL_REVERSE_USE_OVERLOAD(BOOST_PP_TUPLE_DETAIL_REVERSE_, __VA_ARGS__) \
          /**/
 #    define BOOST_PP_TUPLE_DETAIL_REVERSE_1(tuple) \
          BOOST_PP_TUPLE_DETAIL_REVERSE_2(BOOST_PP_TUPLE_SIZE(tuple),tuple) \

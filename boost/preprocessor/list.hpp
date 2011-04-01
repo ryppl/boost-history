@@ -1,6 +1,7 @@
 # /* Copyright (C) 2001
 #  * Housemarque Oy
 #  * http://www.housemarque.com
+#  * Copyright (C) 2011 Edward Diener
 #  *
 #  * Distributed under the Boost Software License, Version 1.0. (See
 #  * accompanying file LICENSE_1_0.txt or copy at
@@ -8,6 +9,7 @@
 #  */
 #
 # /* Revised by Paul Mensonides (2002) */
+# /* Revised by Edward Diener (2011) */
 #
 # /* See http://www.boost.org for most recent version. */
 #
@@ -29,6 +31,8 @@
 # include <boost/preprocessor/list/rest_n.hpp>
 # include <boost/preprocessor/list/reverse.hpp>
 # include <boost/preprocessor/list/size.hpp>
+# include <boost/preprocessor/list/to_array.hpp>
+# include <boost/preprocessor/list/to_seq.hpp>
 # include <boost/preprocessor/list/to_tuple.hpp>
 # include <boost/preprocessor/list/transform.hpp>
 #

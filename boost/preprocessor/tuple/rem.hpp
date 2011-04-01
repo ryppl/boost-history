@@ -7,6 +7,8 @@
 #  *                                                                          *
 #  ************************************************************************** */
 #
+# /* Revised by Edward Diener (2011) */
+#
 # /* See http://www.boost.org for most recent version. */
 #
 # ifndef BOOST_PREPROCESSOR_TUPLE_REM_HPP
@@ -15,7 +17,7 @@
 # include <boost/preprocessor/config/config.hpp>
 # include <boost/preprocessor/config/variadics.hpp>
 #
-# if BOOST_PP_VARIADICS && !defined(BOOST_PP_TEST_NO_TUPLE_REM)
+# if BOOST_PP_VARIADICS
 #
 # include <boost/preprocessor/tuple/detail/use_overload.hpp>
 #
@@ -26,8 +28,9 @@
 #
 # /* BOOST_PP_TUPLE_REM_CTOR */
 #
+#
 #    define BOOST_PP_TUPLE_REM_CTOR(...) \
-         BOOST_PP_TUPLE_DETAIL_USE_OVERLOAD(BOOST_PP_TUPLE_DETAIL_REM_CTOR_, __VA_ARGS__) \
+         BOOST_PP_TUPLE_DETAIL_REM_USE_OVERLOAD(BOOST_PP_TUPLE_DETAIL_REM_CTOR_, __VA_ARGS__) \
          /**/
 #    define BOOST_PP_TUPLE_DETAIL_REM_CTOR_1(tuple) BOOST_PP_DETAIL_TUPLE_REM tuple
 #    define BOOST_PP_TUPLE_DETAIL_REM_CTOR_2(size, tuple) BOOST_PP_TUPLE_DETAIL_REM_CTOR_1(tuple)

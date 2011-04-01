@@ -12,16 +12,15 @@
 # ifndef BOOST_PREPROCESSOR_CONFIG_VARIADICS_HPP
 # define BOOST_PREPROCESSOR_CONFIG_VARIADICS_HPP
 #
-# if defined(BOOST_PP_TEST_NO_VARIADICS)
-/* This macro is purely for testing purposes so that we can 
-   test Boost PP without variadic macro support even on 
-   compilers that support variadic macros by defining
-   BOOST_PP_TEST_NO_VARIADICS on the command line. We can remove 
-   this after the intiial tests.
+# if defined(BOOST_PP_NO_VARIADICS)
+/* 
+   This macro allows an end-user to turn off variadic macro 
+   support in Boost PP even on compilers that support variadic 
+   macros.
 */
 # define BOOST_PP_VARIADICS 0
 #
-# else // !defined(BOOST_PP_TEST_NO_VARIADICS)
+# else // !defined(BOOST_PP_NO_VARIADICS)
 #
 # if 1
 /* This is the code we will use. It is essentially a duplication
@@ -31,6 +30,12 @@
 #if defined(__GCCXML__)
 // GCC-XML emulates other compilers, it has to appear first here!
 # define BOOST_PP_VARIADICS 0
+#
+#elif defined __WAVE__
+//  Wave preprocessor
+#if !defined(__WAVE_HAS_VARIADICS__)
+# define BOOST_PP_VARIADICS 0
+#endif
 #
 #elif defined __CUDACC__
 //  NVIDIA CUDA C++ compiler for GPU
@@ -163,6 +168,6 @@
 #
 # endif // 1
 #
-# endif // BOOST_PP_TEST_NO_VARIADICS
+# endif // BOOST_PP_NO_VARIADICS
 #
 # endif // BOOST_PREPROCESSOR_CONFIG_VARIADICS_HPP

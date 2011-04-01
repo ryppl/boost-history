@@ -16,13 +16,13 @@
 #
 #if BOOST_PP_VARIADICS
 #
-# include <boost/preprocessor/tuple/enum.hpp>
+# include <boost/preprocessor/tuple/rem.hpp>
 # include <boost/preprocessor/variadic/size.hpp>
 #
 # /* BOOST_PP_TUPLE_SIZE */
 #
 #define BOOST_PP_TUPLE_SIZE(tuple) BOOST_PP_TUPLE_SIZE_DETAIL(tuple)
-#define BOOST_PP_TUPLE_SIZE_DETAIL(tuple) BOOST_PP_VARIADIC_SIZE(BOOST_PP_TUPLE_ENUM(tuple))
+#define BOOST_PP_TUPLE_SIZE_DETAIL(tuple) BOOST_PP_VARIADIC_SIZE(BOOST_PP_TUPLE_DETAIL_REM_CTOR_1(tuple))
 #
 #endif // BOOST_PP_VARIADICS
 #endif // BOOST_PREPROCESSOR_TUPLE_SIZE_HPP
