@@ -1,0 +1,38 @@
+
+[tpl_module
+	[@../../../../../boost/assign/v2/detail/config/limit_arity.hpp `boost/assign/v2/detail/config/limit_arity.hpp`][br]
+	[@../../../../../boost/assign/v2/detail/config/limit_csv_arity.hpp `boost/assign/v2/detail/config/limit_csv_arity.hpp`][br]
+	[@../../../../../boost/assign/v2/detail/config/limit_lvalue_const_arity.hpp `boost/assign/v2/detail/config/limit_lvalue_const_arity.hpp`]
+	..Lirary constants that affect __url_cpp03__, not __url_cpp0x__
+]
+
+
+[heading Synopsis]
+``
+	#define BOOST_ASSIGN_V2_LIMIT_ARITY __unspecified__
+	#define BOOST_ASSIGN_V2_LIMIT_CSV_ARITY __unspecified__
+	#define BOOST_ASSIGN_V2_LIMIT_LVALUE_CONST_ARITY __unspecified__
+``
+
+[heading Semantics]
+
+[table
+	[[ Constant ][ Default ][ Description ]]
+	[
+		[ `BOOST_ASSIGN_V2_LIMIT_ARITY`]
+		[`BOOST_MPL_LIMIT_METAFUNCTION_ARITY`]
+		[ A functor's max # of arguments ]
+	]
+	[
+		[ `BOOST_ASSIGN_V2_LIMIT_CSV_ARITY`]
+		[20]
+		[ Limits a csv-function's max # of arguments]
+	]
+	[
+		[ `BOOST_ASSIGN_V2_LIMIT_LVALUE_CONST_ARITY`]
+		[2]
+		[ A functor's max # of arguments for which any mixture of lvalue and const-lvalues is preserved 
+			[footnote Beyond this limit, arguments are treated as either all lvalues or all const-lvalues.] 
+		]
+	]
+]

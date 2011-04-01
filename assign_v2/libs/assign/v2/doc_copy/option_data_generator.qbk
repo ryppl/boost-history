@@ -1,0 +1,43 @@
+[import ../../../../boost/assign/v2/option/data_generator.hpp]
+[import ../test/option/data.cpp]
+
+[heading Header]
+[@../../../../../boost/assign/v2/option/data_generator.hpp `boost/assign/v2/option/data_generator.hpp`]
+
+[warning __option_requirement__]
+
+[heading Description]
+Options to alter the data-generator of an [link boost_assign_v2.reference.interpreter interpreter].
+
+[heading Synopsis]
+[syntax_option_data_generator]
+
+[heading Semantics]
+
+[table
+	[
+		[Option][Data-generation]
+	]
+	[
+		[`__kwd_data__ = __f__`][`__f__( __args__ )`]
+	]
+	[	
+		[`__kwd_data__ = __kwd_use_default__`][Data generator reset to the default]
+	]
+	[
+		[`__kwd_data__ = __kwd_key__`][`__value_type__( __args__ )`]
+	]
+]
+
+[heading Examples]
+[*Example1]
+[test_option_data_math]
+[*Example2]
+[test_option_data_recursive]
+[*Example3]
+[test_option_data_value]
+[*Example4]
+
+See [link option_mapped `__kwd_mapped__`]
+
+

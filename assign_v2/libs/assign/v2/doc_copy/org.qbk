@@ -1,0 +1,42 @@
+[heading Headers]
+[#org_headers]
+
+Using a given feature of this library requires no more than including the corresponding header file. To find it, one can look inside 
+either the organization by module or the one by identifier.
+
+[def __full_include__ includes most of the functionality [footnote A few headers are not included in that of their enclosing module. Where applicable, 
+this will be mentioned]]
+
+[*By module]
+
+In directory [@../../../../../boost/assign/v2 `boost/assign/v2`], headers 
+and directories (except those named [^include]) are organized according to the modular structure of this library. The following statement  __full_include__:
+[#full_include]
+``
+	#include <boost/assign/v2.hpp>
+``
+
+[*By identifier]
+
+In directory [link boost_assign_v2.reference.include [^boost/assign/v2/include]] and [link ref_include [^boost/assign/v2/ref/include]]
+headers are named after an identifier that they define. 
+
+[*Requirement]
+
+__option_requirement__ For example,
+``
+	#include <boost/assign/v2/include/deque.hpp>
+	#include <boost/assign/v2/option/data.hpp>
+`` 
+
+is right, but reversing the order is wrong.
+
+[heading Library conventions ]
+[#org_ns]
+[#org_id]
+
+* All identifiers are within `boost::assign::v2`. 
+* The nested namespace `boost::assign::v2::ref` is reserved for functionality dedicated to references.
+* Identifiers with prefix `_` are reserved for objects (or the function that generate them) on which `operator%` or `operator|` are overloaded.
+* Idenfifier with prefix `csv` specifies a function that is dual to a functor whose identifier is a namesake of the suffix.
+

@@ -1,0 +1,141 @@
+[tpl_module
+	[@../../../../../boost/assign/v2/interpreter.hpp `boost/assign/v2/interpreter.hpp`]
+	..Interpreter framework
+]
+
+[section:as_arglist As_arg_list]
+
+[import ../../../../boost/assign/v2/interpreter/as_arg_list.hpp]
+
+[tpl_feature
+	[@../../../../../boost/assign/v2/interpreter/as_arg_list.hpp `boost/assign/v2/interpreter/as_arg_list.hpp`]
+	..Command to an interpreter to process each element of a range individually
+	..[syntax_interpreter_as_arg_list]
+	..None
+]
+
+[endsect][/as_arglist]
+[section:crtp Crtp]
+[#interpreter_crtp]
+
+[import ../../../../boost/assign/v2/interpreter/crtp.hpp]
+
+[tpl_feature
+	[@../../../../../boost/assign/v2/interpreter/crtp.hpp `boost/assign/v2/interpreter/crtp.hpp`]
+	..Interpreter crtp
+	..[syntax_interpreter_crtp]
+	..None
+]
+
+[endsect][/crtp]
+[section:data Data_generator]
+
+[import ../../../../boost/assign/v2/interpreter/data_generator.hpp]
+
+[heading Header]
+[@../../../../../boost/assign/v2/interpreter/data_generator.hpp `boost/assign/v2/interpreter/data_generator.hpp`]
+
+[heading Description]
+Interpreter's data generator
+
+[heading Synopsis]
+[syntax_interpreter_data]
+
+[heading Semantics]
+
+[#data_gen_rules]
+
+[*Notation]
+
+[variablelist
+	[[`__cont_type__`][Container type]]
+	[
+		[`__object__`]
+		[Instance of `interpreter_aux::deduce_data_generator<__cont_type__>::type`]
+	]
+	[
+		[`__value_type__`]
+		[`__cont_type__`'s value-type (pointer removed in the case of a pointer-container)]
+	]
+	[
+		[`__mapped_type__`]
+		[`__cont_type__`'s mapped-type (pointer removed in the case of a pointer-container)]
+	]
+]
+
+[*Expressions]
+
+[table
+	[[Case][Expression][Description]]
+	[[`__cont_type__` is a map][`__object__( __key__, __args__ )`][`__value_type__(__key__, __mapped_type__( __args__ ) )`]]
+	[[Otherwise][`__object__( __args__ )`][`__value_type__( __args__ )`]]
+]
+
+See [link containers Containers] supported.
+
+[endsect][/data]
+[section:modifier Modifier]
+[#interpreter_modifier]
+
+[import ../../../../boost/assign/v2/interpreter/modifier.hpp]
+
+[heading Header]
+[@../../../../../boost/assign/v2/interpreter/modifier.hpp `boost/assign/v2/interpreter/modifier.hpp`]
+
+[heading Description]
+Interpreter's modifier
+
+[heading Synopsis]
+[syntax_interpreter_modifier]
+
+[*Parameters]
+
+[table
+	[
+		[Parameter]
+		[Description]
+	]
+	[
+		[`ModifierTag`]
+		[Specifies a modifier]
+	]
+	[
+		[`DataTag`]
+		[
+			Specifies an aspect of the implementation that may vary depending on `__cont_type__`
+			storage's (value or pointer) and assignment interface (maps require a special treatment).
+		]
+	]
+]
+
+[heading Semantics]
+[#modifier_rules]
+
+Metafunction `deduce_modifier_tag<__cont_type__>` implements the following switch statement: 
+
+[table
+	[
+		[Case]
+		[Result]
+	]
+	[
+		[`__cont_type__` is [tpl_stl_assoc Associative]]
+		[[link std_modifier `modifier_tag::insert`]]
+	]
+	[	
+		[`__cont_type__` is an [tpl_boost_array Array]]
+		[[link option_iterate `modifier_tag::iterate`]]
+	]
+	[	
+		[`__cont_type__` is an [tpl_stl_adapter Adapter]]
+		[[link std_modifier `modifier_tag::push`]]
+	]
+	[
+		[None of the above]
+		[[link std_modifier `modifier_tag::push_back`]]
+	]
+]
+
+See [link containers Containers] supported.
+
+[endsect][/modifier]

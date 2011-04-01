@@ -1,0 +1,23 @@
+[import ../../../../boost/assign/v2/detail/traits/container.hpp]
+
+[heading Header]
+[@../../../../../boost/assign/v2/detail/traits.hpp [^boost/assign/v2/detail/detail/traits.hpp]]
+
+[heading Description]
+
+[heading Synopsis]
+``
+	template<typename __cont_type__>
+	struct value_container_value;
+``
+
+[heading Semantics]
+
+[table
+	[
+		[Expression][Description]
+	]
+	[
+		[`value_container_value<__cont_type__>`][Container's value-type (removes pointer if pointer container)]
+	]
+]
