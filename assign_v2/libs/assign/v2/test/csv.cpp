@@ -40,7 +40,10 @@ namespace xxx_csv{
             typedef std::map<std::string, int> C; typedef C::value_type T;
             C cont;
 
-            as2::csv( as2::put( cont ) % (as2::_data = as2::_value), T("jan", 31), T("feb", 28), T("mar", 31) );
+            as2::csv( 
+            	as2::put( cont ) % (as2::_data = as2::_value), 
+                T("jan", 31), T("feb", 28), T("mar", 31) 
+            );
 
             BOOST_ASSIGN_V2_CHECK( cont["jan"] == 31 );
             BOOST_ASSIGN_V2_CHECK( cont["mar"] == 31 );
@@ -49,7 +52,10 @@ namespace xxx_csv{
         {
             //[test_csv_put_modulo
             std::deque<int> cont;
-            as2::csv( as2::put( cont ) % as2::_push_front, 100, 10, 1 );
+            as2::csv( 
+            	as2::put( cont ) % as2::_push_front, 
+                100, 10, 1 
+            );
 
             BOOST_ASSIGN_V2_CHECK( 
                 range::equal( cont, as2::csv_deque( 1, 10, 100 ) ) 
