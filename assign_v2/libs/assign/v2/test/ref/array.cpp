@@ -46,7 +46,7 @@ namespace xxx_array{
             typedef int const T;
             T w = 11, x = 72, y = 31, z = 48;
             as2::ref::nth_result_of::array<3, T>::type ar3 
-            	= as2::ref::array( w )( x )( y );
+                = as2::ref::array( w )( x )( y );
             {
                 T& a = ar3.front(); T& b = ar3.back();
 
@@ -74,9 +74,9 @@ namespace xxx_array{
             typedef int T; T x, y, z; std::vector<T> r( 3 ); 
             r[0] = 1; r[1] = 10; r[2] = 100;
             boost::copy( 
-            	r,
+                r,
                 boost::begin( 
-                	as2::ref::array( x )( y )( z ) | as2::ref::_get 
+                    as2::ref::array( x )( y )( z ) | as2::ref::_get 
                 ) 
             );
 

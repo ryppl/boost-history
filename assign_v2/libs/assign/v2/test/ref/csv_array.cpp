@@ -71,9 +71,9 @@ namespace xxx_csv_array{
             typedef int T; T x, y, z;
             std::vector<T> r( 3 ); r[0] = 1; r[1] = 10; r[2] = 100;
             boost::copy( 
-            	r,
+                r,
                 boost::begin( 
-                	as2::ref::csv_array( x, y, z ) | as2::ref::_get 
+                    as2::ref::csv_array( x, y, z ) | as2::ref::_get 
                 ) 
             );
 

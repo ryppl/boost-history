@@ -41,7 +41,7 @@ namespace xxx_csv{
             C cont;
 
             as2::csv( 
-            	as2::put( cont ) % (as2::_data = as2::_value), 
+                as2::put( cont ) % (as2::_data = as2::_value), 
                 T("jan", 31), T("feb", 28), T("mar", 31) 
             );
 
@@ -53,7 +53,7 @@ namespace xxx_csv{
             //[test_csv_put_modulo
             std::deque<int> cont;
             as2::csv( 
-            	as2::put( cont ) % as2::_push_front, 
+                as2::put( cont ) % as2::_push_front, 
                 100, 10, 1 
             );
 

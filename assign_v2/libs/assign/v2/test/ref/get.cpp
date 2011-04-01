@@ -18,7 +18,7 @@
 
 namespace test_assign_v2{
 namespace xxx_ref{
-namespace xxx_get{
+namespace xxx_get{    
 
     void test()
     {
@@ -34,7 +34,7 @@ namespace xxx_get{
         boost::copy( 
             as2::csv_deque( 314, 3141, 31415 ), 
             boost::begin( 
-            	ref_array | as2::ref::_get 
+                ref_array | as2::ref::_get 
             )
         );
 
