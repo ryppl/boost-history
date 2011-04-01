@@ -31,8 +31,8 @@ namespace xxx_repeat{
             std::vector<int> cont;
             BOOST_ASSIGN_V2_CHECK(
                 range::equal(
-                    cont | ( as2::_csv_put % ( as2::_repeat = 2  ) )( 72, 31, 48 ),
-                    as2::csv_deque<int>( 72, 72, 31, 31, 48, 48 )
+                    cont | ( as2::_csv_put % ( as2::_repeat = 2  ) )( 1, 10 ,100 ),
+                    as2::csv_deque<int>( 1, 1, 10, 10, 100, 100 )
                 )
             );
             //]

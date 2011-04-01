@@ -49,17 +49,17 @@ namespace xxx_put{
 
         {
              //[test_put_put_bitset
-            typedef std::string str_; typedef std::bitset<3> data_; 
-            /*<<Keep in mind that although `data_( str_( "011" ) )`, for instance, is valid, `consecutive.push_back( str_( "011" ) )` isn't (GCC4.2)>>*/ std::vector<data_> consecutive;
-            /*<<Calls `consecutive.push_back( data_( t ) );` for [^t = ]`str_( "000" )`[^, ..., ]`str_( "111" )`>>*/as2::put( consecutive )
+            typedef std::string str_; typedef std::bitset<3> number; 
+            /*<<Keep in mind that although `number( str_( "011" ) )`, for instance, is valid, `range_3bit.push_back( str_( "011" ) )` isn't (GCC4.2)>>*/ std::vector<number> range_3bit;
+            /*<<Calls `range_3bit.push_back( number( t ) );` for [^t = ]`str_( "000" )`[^, ..., ]`str_( "111" )`>>*/as2::put( range_3bit )
                 ( str_( "000" ) )( str_( "001" ) )
                 ( str_( "010" ) )( str_( "011" ) )
                 ( str_( "100" ) )( str_( "101" ) )
                 ( str_( "110" ) )( str_( "111" ) );
 
-            for(unsigned i = 0; i < consecutive.size(); i++)
+            for(unsigned i = 0; i < range_3bit.size(); i++)
             {
-                BOOST_ASSIGN_V2_CHECK(  consecutive[i].to_ulong() == i );
+                BOOST_ASSIGN_V2_CHECK(  range_3bit[i].to_ulong() == i );
             }
             //]
             // unsigned i else warning comparison between signed & unsigned
@@ -67,28 +67,28 @@ namespace xxx_put{
         {
              //[test_put_put_numeric_kb
             std::vector<int> numeric( 10 ); iota( numeric, 0 ); typedef std::string str_;
-            typedef variant< int, str_ > data_; array<data_, 16> numeric_kb;
-            as2::put( numeric_kb )
-                /*<<Calls `numeric_kb[ i ] = data_( t )` for [^( i, t ) = ( 0, "+" ), ..., ( 5, "." )]>>*/( "+" )( "-" )( "*" )( "/" )( "=" )( "." )
-                /*<<Calls `numeric_kb[ 6 + i ] = data_( *( b + i ) )` for [^i = 0, ..., 9] and [^b =] `boost::begin( numeric )`>>*/( as2::as_arg_list( numeric ) );
+            typedef variant< int, str_ > key_; array<key_, 16> keypad;
+            as2::put( keypad )
+                /*<<Calls `keypad[ i ] = key_( t )` for [^( i, t ) = ( 0, "+" ), ..., ( 5, "." )]>>*/( "+" )( "-" )( "*" )( "/" )( "=" )( "." )
+                /*<<Calls `keypad[ 6 + i ] = key_( *( b + i ) )` for [^i = 0, ..., 9] and [^b =] `boost::begin( numeric )`>>*/( as2::as_arg_list( numeric ) );
 
-            BOOST_ASSIGN_V2_CHECK(  get<str_>( numeric_kb.front() ) == "+" );
-            BOOST_ASSIGN_V2_CHECK(  get<int>( numeric_kb.back() ) == 9 );
+            BOOST_ASSIGN_V2_CHECK(  get<str_>( keypad.front() ) == "+" );
+            BOOST_ASSIGN_V2_CHECK(  get<int>( keypad.back() ) == 9 );
             //]
-            BOOST_ASSIGN_V2_CHECK(  get<str_>( numeric_kb[ 5 ] ) == "." );
-            BOOST_ASSIGN_V2_CHECK(  get<int>( numeric_kb[ 6 ] ) == 0 );
+            BOOST_ASSIGN_V2_CHECK(  get<str_>( keypad[ 5 ] ) == "." );
+            BOOST_ASSIGN_V2_CHECK(  get<int>( keypad[ 6 ] ) == 0 );
         }
         {
             //[test_put_put_ragged
-            typedef double data_; typedef std::vector<data_> variable_size_;
-            variable_size_ a( 3 ); a[0] = 0.71; a[1] = 0.63; a[2] = 0.85;
-            variable_size_ b( 4 ); b[0] = 0.61; b[1] = 0.69; b[2] = 0.92; b[3] = 0.55;
-            array<variable_size_, 4> ragged;
+            typedef double data_; typedef std::vector<data_> uneven_;
+            uneven_ a( 3 ); a[0] = 0.71; a[1] = 0.63; a[2] = 0.85;
+            uneven_ b( 4 ); b[0] = 0.61; b[1] = 0.69; b[2] = 0.92; b[3] = 0.55;
+            array<uneven_, 4> ragged;
             as2::put( ragged )
-                /*<<Calls `ragged.push_back( variable_size_( begin( a ), end( a ) ) )`>>*/( boost::begin( a ), boost::end( a ) )
-                /*<<Calls `ragged.push_back( variable_size_( b ) )`>>*/( b )
-                /*<<Calls `ragged.push_back( variable_size_( 1, -99.99 ) )`>>*/( 1, -99.99 )
-                /*<<Calls `ragged.push_back( variable_size_( ) )`>>*/( );
+                /*<<Calls `ragged.push_back( uneven_( begin( a ), end( a ) ) )`>>*/( boost::begin( a ), boost::end( a ) )
+                /*<<Calls `ragged.push_back( uneven_( b ) )`>>*/( b )
+                /*<<Calls `ragged.push_back( uneven_( 1, -99.99 ) )`>>*/( 1, -99.99 )
+                /*<<Calls `ragged.push_back( uneven_( ) )`>>*/( );
 
             BOOST_ASSIGN_V2_CHECK( ragged[0].size() == a.size() );
             BOOST_ASSIGN_V2_CHECK( ragged[3].size() == 0 );
@@ -123,32 +123,36 @@ namespace xxx_put{
             // http://bioinfo.mbb.yale.edu/~mbg/dom/fun3/area-codes/
             //[test_put_put_area_codes
             typedef const char us_state_ [3]; us_state_ ct = "CT", nj = "NJ", ny = "NY";
-            typedef int area_code_; typedef tuple<us_state_/*<<Notice the [*reference]>>*/&,  area_code_> data_; std::deque< data_ > tri_state_area;
+            typedef int area_code_; typedef tuple<us_state_/*<<Notice the [*reference]>>*/&,  area_code_> data_; std::deque< data_ > region;
             /*<<Calls `tri_state.push_back( data_( s, c ) )` for [^( s, c ) =( ny, 212 )...( ct, 203 )]>>*/
-            as2::put( tri_state_area )( ny, 212 )( ny, 718 )( ny, 516 )( ny, 914 )( nj, 210 )( nj, 908 )( nj, 609 )( ct, 203 );
+            as2::put( region )( ny, 212 )( ny, 718 )( ny, 516 )( ny, 914 )( nj, 210 )( nj, 908 )( nj, 609 )( ct, 203 );
 
-            BOOST_ASSIGN_V2_CHECK(  get<0>( tri_state_area.front() ) == ny );
-            BOOST_ASSIGN_V2_CHECK(  get<1>( tri_state_area.back()  ) == 203 );
+            BOOST_ASSIGN_V2_CHECK(  get<0>( region.front() ) == ny );
+            BOOST_ASSIGN_V2_CHECK(  get<1>( region.back()  ) == 203 );
             //]
-            BOOST_ASSIGN_V2_CHECK(  get<1>( tri_state_area.front() ) == 212 );
-            BOOST_ASSIGN_V2_CHECK(  get<0>( tri_state_area.back()  ) == ct );
+            BOOST_ASSIGN_V2_CHECK(  get<1>( region.front() ) == 212 );
+            BOOST_ASSIGN_V2_CHECK(  get<0>( region.back()  ) == ct );
         }
         {    
             //[test_put_put_unordered_map
-            boost::unordered_map<std::string, int> map; 
-            as2::put( map )("foo", 1)("bar", 2)("baz", 3);
+            typedef std::string word_; 
+            const char foo[] = "foo";
+            const char bar[4] = { 'b', 'a', 'r', '\0' };
+            word_ baz = "***baz";
+            boost::unordered_map<int, word_> map;
+            as2::put( map )/*<<Calls `map.insert( 1, str_( foo, 3 ) )`>>*/( 1, foo, 3 )( 2, bar )( 3, baz, 3, 3 )( 4, "qux");
 
-            BOOST_ASSIGN_V2_CHECK( map["foo"] == 1 );
-            BOOST_ASSIGN_V2_CHECK( map["baz"] == 3 );
+            assert( map[1] == "foo" ); assert( map[2] == "bar" );
+            assert( map[3] == "baz" ); assert( map[4] == "qux" );
             //]
         }
         {    
             //[test_put_put_unordered_set
             boost::unordered_set<std::string> set; 
-            as2::put( set )("foo")("bar")("baz");
+            as2::put( set )( "foo" )( "bar" )( "baz" );
 
-            BOOST_ASSIGN_V2_CHECK( set.count("foo") == 1 );
-            BOOST_ASSIGN_V2_CHECK( set.count("baz") == 1 );
+            BOOST_ASSIGN_V2_CHECK( set.count( "foo" ) == 1 );
+            BOOST_ASSIGN_V2_CHECK( set.count( "baz" ) == 1 );
             //]
         }
         {

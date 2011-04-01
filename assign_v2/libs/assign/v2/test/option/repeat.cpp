@@ -29,9 +29,11 @@ namespace xxx_repeat{
         {
             //[test_option_repeat_simple
             std::vector<int> cont;
-            ( as2::put( cont ) % ( as2::_repeat = 2  ) )( 72 )( 31 )( 48 );
+            ( as2::put( cont ) % ( as2::_repeat = 2  ) )( 1 )( 10 )( 100 );
 
-            BOOST_ASSIGN_V2_CHECK( range::equal( cont, as2::csv_deque( 72, 72, 31, 31, 48, 48 ) ) );
+            BOOST_ASSIGN_V2_CHECK( 
+                range::equal( cont, as2::csv_deque( 1, 1, 10, 10, 100, 100 ) ) 
+            );
             //]
         }
         {
@@ -39,10 +41,12 @@ namespace xxx_repeat{
             BOOST_AUTO(
                 cont, (
                     as2::deque<int>( as2::_nil ) % as2::_push_front % ( as2::_repeat = 2 )
-                )( 72 )( 31 )( 48 )
+                )( 1 )( 10 )( 100 )
             );
             
-            BOOST_ASSIGN_V2_CHECK( range::equal( cont, as2::csv_deque( 48, 48, 31, 31, 72, 72 ) ) );
+            BOOST_ASSIGN_V2_CHECK( 
+                range::equal( cont, as2::csv_deque( 100, 100, 10, 10, 1, 1 ) ) 
+            );
             //]
         }
     }

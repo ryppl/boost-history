@@ -31,11 +31,11 @@ namespace xxx_array{
         {
             //[test_ref_array_temporaries
             boost::array<int, 3> ar; 
-            ar[0] = 72; ar[1] = 31; ar[2] = 48;
+            ar[0] = 1; ar[1] = 10; ar[2] = 100;
             
             BOOST_ASSIGN_V2_CHECK(
                 range::equal(
-                    as2::ref::array( 72 )( 31 )( 48 ),
+                    as2::ref::array( 1 )( 10 )( 100 ),
                     ar        
                 )
             )/*<<Temporaries destroyed past semicolon>>*/;

@@ -40,22 +40,22 @@ namespace xxx_std_modifier{
 
         {
             //[test_pipe_option_push_front
-            std::deque<int> powers; int front = (
-                powers | ( as2::_csv_put % as2::_push_front )( 16, 8, 4, 2, 1 )
+            std::deque<int> two_power_n; int front = (
+                two_power_n | ( as2::_csv_put % as2::_push_front )( 16, 8, 4, 2, 1 )
             ).front();
 
             BOOST_ASSIGN_V2_CHECK( front == 1  );
-            BOOST_ASSIGN_V2_CHECK( powers[4] == 16 );
+            BOOST_ASSIGN_V2_CHECK( two_power_n[4] == 16 );
             //]
         }
         {
             //[test_pipe_option_push
             typedef int int_; std::queue<int_> fifo; int_ front = ( 
-                fifo | ( as2::_csv_put % as2::_push )( 72, 31, 48 ) 
+                fifo | ( as2::_csv_put % as2::_push )( 1, 10, 100 ) 
             ).front();
                 
-            BOOST_ASSIGN_V2_CHECK( front == 72 );
-            BOOST_ASSIGN_V2_CHECK( fifo.back() == 48 );
+            BOOST_ASSIGN_V2_CHECK( front == 1 );
+            BOOST_ASSIGN_V2_CHECK( fifo.back() == 100 );
             //]
         }
         {

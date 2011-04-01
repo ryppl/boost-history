@@ -29,11 +29,11 @@ namespace xxx_csv_array{
         {
             //[test_ref_csv_array_temporaries
             boost::array<int, 3> ar; 
-            ar[0] = 72; ar[1] = 31; ar[2] = 48;
+            ar[0] = 1; ar[1] = 10; ar[2] = 100;
             
             BOOST_ASSIGN_V2_CHECK(
                 range::equal(
-                    as2::ref::csv_array( 72, 31, 48 ),
+                    as2::ref::csv_array( 1, 10, 100 ),
                     ar        
                 )
             )/*<<Temporaries destroyed past semicolon>>*/;
@@ -42,7 +42,7 @@ namespace xxx_csv_array{
         {
             //[test_ref_csv_array_read
             typedef int const T;
-            T x = 72, y = 31, z = 48;
+            T x = 1, y = 10, z = 100;
             as2::ref::nth_result_of::csv_array<3, T>::type ar 
                 = as2::ref::csv_array( x, y, z );
             /*<-*/{/*->*/
@@ -69,7 +69,7 @@ namespace xxx_csv_array{
         {
             //[test_ref_csv_array_write
             typedef int T; T x, y, z;
-            std::vector<T> r( 3 ); r[0] = 72; r[1] = 31; r[2] = 48;
+            std::vector<T> r( 3 ); r[0] = 1; r[1] = 10; r[2] = 100;
             boost::copy( r,boost::begin( as2::ref::csv_array( x, y, z ) | as2::ref::_get ) );
 
             BOOST_ASSIGN_V2_CHECK( x == r[0] );

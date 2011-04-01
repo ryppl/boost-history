@@ -90,12 +90,22 @@ namespace interpreter_aux{
             return result_( *this, option );
         }
 
-        template<arg_list_size_type N, typename U = na_> // size?
+        template<arg_list_size_type N, typename U = na_>
         struct result{
             typedef interpreter_aux::arg_list<Head, Tail, N, U> type;
         };
+
+        typename result<0>::type
+        operator()()const
+        {
+            typedef typename result<0>::type result_;
+            return result_(
+                *this,
+                ref::csv_array<na_>( _nil )
+            );
+        }
  
-#if BOOST_ASSIGN_V2_ENABLE_CPP0X
+#if BOOST_ASSIGN_V2_ENABLE_CPP0X    
 
         protected:
         template<typename T, typename...Args>
@@ -127,16 +137,6 @@ namespace interpreter_aux{
         }
 
 #else
-
-        typename result<0>::type
-        operator()()const
-        {
-            typedef typename result<0>::type result_;
-            return result_(
-                *this,
-                ref::csv_array<na_>( _nil )
-            );
-        }
 
 #define BOOST_ASSIGN_V2_MACRO1(N, U)\
         return result_( \

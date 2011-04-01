@@ -28,9 +28,9 @@ namespace v2{
 namespace functor_aux{
 
     template<
-    	typename T 		// Value
-        , typename K 	// Key
-        , typename M	// Mapped
+        typename T         // Value
+        , typename K     // Key
+        , typename M    // Mapped
     >
     class pair/*<-*/
 #if !BOOST_ASSIGN_V2_ENABLE_CPP0X

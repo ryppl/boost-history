@@ -72,21 +72,13 @@ namespace xxx_standard{
             );    
 
             //]
-
-            /*std::deque<double> sqrt2;
-            ( as2::put( sqrt2 ) % as2::_push_front )( 1.41421 )( 1.4142 )( 1.414 )( 1.41 );
-
-
-            BOOST_ASSIGN_V2_CHECK( boost::lower_bound( sqrt2, 1.41 ) == boost::begin( sqrt2 ) );
-            BOOST_ASSIGN_V2_CHECK( boost::upper_bound( sqrt2, 1.41421 ) == boost::end( sqrt2 ) );*/
-
         }
         {
             //[test_option_push
-            std::queue<int> fifo; ( as2::put( fifo ) % as2::_push )( 72 )( 31 )( 48 );
+            std::queue<int> fifo; ( as2::put( fifo ) % as2::_push )( 1 )( 10 )( 100 );
 
-            BOOST_ASSIGN_V2_CHECK( fifo.front() == 72 );
-            BOOST_ASSIGN_V2_CHECK( fifo.back() == 48 );
+            BOOST_ASSIGN_V2_CHECK( fifo.front() == 1 );
+            BOOST_ASSIGN_V2_CHECK( fifo.back() == 100 );
             //]
         }
         {
@@ -100,9 +92,9 @@ namespace xxx_standard{
         {
             //[test_option_push_back
             std::list<int> list;
-            ( as2::put( list ) % as2::_push_back )( 72 )( 31 )( 48 );
+            ( as2::put( list ) % as2::_push_back )( 1 )( 10 )( 100 );
 
-            BOOST_ASSIGN_V2_CHECK( range::equal( list, as2::csv_deque( 72, 31, 48 ) ) );
+            BOOST_ASSIGN_V2_CHECK( range::equal( list, as2::csv_deque( 1, 10, 100 ) ) );
             //]
         }
         // DEQUE
@@ -120,11 +112,11 @@ namespace xxx_standard{
         {
             //[test_option_push_front_deque
             BOOST_AUTO(
-                powers,
+                two_power_n,
                 ( as2::deque<int>( as2::_nil ) % as2::_push_front )( 16 )( 8 )( 4 )( 2 )( 1 )
             );
 
-            BOOST_ASSIGN_V2_CHECK( range::equal( powers, as2::csv_deque( 1, 2, 4, 8, 16 ) ) );
+            BOOST_ASSIGN_V2_CHECK( range::equal( two_power_n, as2::csv_deque( 1, 2, 4, 8, 16 ) ) );
             //]
         }
     }

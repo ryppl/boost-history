@@ -7,6 +7,7 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
+#include <vector>
 #include <boost/array.hpp>
 #include <boost/assign/v2/detail/config/check.hpp>
 
@@ -48,10 +49,21 @@ namespace xxx_iterate{
         {
             //[test_option_iterate_shifted
             using namespace lambda;
-            typedef int T; array<T, 4> powers; powers[0] = 1; powers[1] = 10;
-            int index = 2; ( as2::put( powers ) % ( as2::_iterate = var( index )++ ) )( 100 )( 1000 );
+            typedef int T; array<T, 10> alternating; 
+            alternating[0] = -1; alternating[1] = +1;
+            alternating[2] = -2; 
 
-            BOOST_ASSIGN_V2_CHECK( range::equal( powers, as2::csv_deque( 1, 10, 100, 1000 ) ) );
+            int index = 3; 
+            ( 
+                as2::put( alternating ) % ( as2::_iterate = var( index )++ ) 
+            )( +2 )( -3 )( +3 )( -4 )( +4 )( -5 )( +5 );
+
+            BOOST_ASSIGN_V2_CHECK(     
+                range::equal( 
+                    alternating, 
+                    as2::csv_deque( -1, +1, -2, +2, -3, +3, -4, +4, -5, +5 ) 
+                ) 
+            );
             //]
         }
         {
@@ -69,15 +81,25 @@ namespace xxx_iterate{
         {
             //[test_option_iterate_shifted_deque
             using namespace lambda;
-            as2::result_of::deque<int>::type missing_tail = as2::deque<int>( 1 )( 10 )( -1 )( -1 );
-            int index = 2; 
+            
+            as2::result_of::deque<int>::type incomplete 
+                = as2::deque<int>( -1 )( +1 )( -2 )
+                    ( as2::as_arg_list( std::vector<int>( 7 ) ) );
+            int index = 3; 
             
             BOOST_AUTO(
-                powers,
-                ( missing_tail % ( as2::_iterate = var( index )++ ) )( 100 )( 1000 )
+                alternating ,
+                ( 
+                    incomplete  % ( as2::_iterate = var( index )++ ) 
+                )( +2 )( -3 )( +3 )( -4 )( +4 )( -5 )( +5 )
             );
 
-            BOOST_ASSIGN_V2_CHECK( range::equal( powers, as2::csv_deque( 1, 10, 100, 1000 ) ) );
+            BOOST_ASSIGN_V2_CHECK( 
+                range::equal( 
+                    alternating, 
+                    as2::csv_deque( -1, +1, -2, +2, -3, +3, -4, +4, -5, +5 ) 
+                ) 
+            );
             //]
         }
     }

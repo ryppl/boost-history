@@ -30,14 +30,19 @@ namespace xxx_iterate{
         
         {
             //[test_pipe_option_iterate
-            typedef int T; boost::array<T, 4> powers; powers[0] = 1; powers[1] = 10;
+            typedef int T; 
+            boost::array<T, 10> alternating; 
+            alternating[0] = -1; alternating[1] = +1;
+            alternating[2] = -2;
 
-            int i = 2; 
+            int i = 3; 
             using namespace lambda;
             BOOST_ASSIGN_V2_CHECK(
                 boost::range::equal(
-                    powers | ( as2::_csv_put % ( as2::_iterate = var( i )++ ) )( 100, 1000 ),
-                    as2::csv_deque<T>( 1, 10, 100, 1000 )    
+                    alternating | ( 
+                        as2::_csv_put % ( as2::_iterate = var( i )++ ) 
+                    )( +2, -3, +3, -4, +4, -5, +5 ),
+                    as2::csv_deque<T>( -1, +1, -2, +2, -3, +3, -4, +4, -5, +5 )    
                 )
             );
             //]

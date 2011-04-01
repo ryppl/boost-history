@@ -40,24 +40,24 @@ namespace xxx_conversion{
         // External containers (fully qualified)
         {
             //[test_conversion_vec_array
-            std::vector<int> r( 3 ); r[0] = 72; r[1] = 31; r[2] = 48;
+            std::vector<int> r( 3 ); r[0] = 1 ; r[1] = 10; r[2] = 100;
             typedef array<int, 3> ar_; 
             ar_ const& ar = ( r | as2::_convert<ar_>() );
             
-            BOOST_ASSIGN_V2_CHECK( range::equal( ar, as2::csv_deque( 72, 31, 48 ) ) );
+            BOOST_ASSIGN_V2_CHECK( range::equal( ar, as2::csv_deque( 1 , 10, 100 ) ) );
             //]
         }
         {
             //[test_conversion_vec_stack
-            std::vector<int> r( 3 ); r[0] = 72; r[1] = 31; r[2] = 48;
+            std::vector<int> r( 3 ); r[0] = 1 ; r[1] = 10; r[2] = 100;
             std::stack<int> lifo = as2::converter( r );
             
-            BOOST_ASSIGN_V2_CHECK( lifo.top() == 48 );
+            BOOST_ASSIGN_V2_CHECK( lifo.top() == 100 );
             //]
         }
         {
             //[test_conversion_stl
-            typedef int T; typedef std::vector<T> R; R r( 3 ); r[0] = 72; r[1] = 31; r[2] = 48; 
+            typedef int T; typedef std::vector<T> R; R r( 3 ); r[0] = 1 ; r[1] = 10; r[2] = 100; 
             f< std::vector<T> >( as2::converter( r ), r );
             f< std::deque<T> >( as2::converter( r ), r );
             f< std::list<T> >( as2::converter( r ), r );
@@ -84,32 +84,34 @@ namespace xxx_conversion{
         // Boost.Assign.2.0 containers - name lookup
         {
             //[test_conversion_as2_deque_array
-            std::vector<int> r( 3 ); r[0] = 72; r[1] = 31; r[2] = 48;
+            std::vector<int> r( 3 ); r[0] = 1 ; r[1] = 10; r[2] = 100;
             typedef array<int, 3> ar_; 
-            ar_ const& ar = ( as2::csv_deque( 72, 31, 48 ) | as2::_convert<ar_>() );
+            ar_ const& ar = ( as2::csv_deque( 1 , 10, 100 ) | as2::_convert<ar_>() );
             
-            BOOST_ASSIGN_V2_CHECK( range::equal( ar, as2::csv_deque( 72, 31, 48 ) ) );
+            BOOST_ASSIGN_V2_CHECK( 
+                range::equal( ar, as2::csv_deque( 1 , 10, 100 ) ) 
+            );
             //]
         }
         {
             //[test_conversion_ref_array_stack
-            std::stack<int> lifo = /*<<Notice unqualified (name lookup)>>*/converter( as2::ref::array( 72 )( 31 )( 48 ) );
+            std::stack<int> lifo = /*<<Notice unqualified (name lookup)>>*/converter( as2::ref::array( 1  )( 10 )( 100 ) );
             
-            BOOST_ASSIGN_V2_CHECK( lifo.top() == 48 );
+            BOOST_ASSIGN_V2_CHECK( lifo.top() == 100 );
             //]
         }
         {
             //[test_conversion_ref_array_queue
-            std::queue<int> fifo = /*<<Notice unqualified (name lookup)>>*/converter( as2::ref::csv_array( 72, 31, 48 ) );
+            std::queue<int> fifo = /*<<Notice unqualified (name lookup)>>*/converter( as2::ref::csv_array( 1 , 10, 100 ) );
             
-            BOOST_ASSIGN_V2_CHECK( fifo.front() == 72 );
+            BOOST_ASSIGN_V2_CHECK( fifo.front() == 1  );
             //]
         }
         {
             //[test_conversion_as2_deque_stack
-            std::stack<int> lifo = /*<<Notice unqualified (name lookup)>>*/converter( as2::csv_deque( 72, 31, 48 ) );
+            std::stack<int> lifo = /*<<Notice unqualified (name lookup)>>*/converter( as2::csv_deque( 1 , 10, 100 ) );
             
-            BOOST_ASSIGN_V2_CHECK( lifo.top() == 48 );
+            BOOST_ASSIGN_V2_CHECK( lifo.top() == 100 );
             //]
         }
     }

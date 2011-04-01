@@ -29,7 +29,7 @@ namespace xxx_wrapper{
             w.assign( b ); BOOST_ASSIGN_V2_CHECK( a == b );
             w = c; BOOST_ASSIGN_V2_CHECK( a == c );
         }
-        {
+        {    
             typedef as2::ref::copy_wrapper<val_ const>::type w_;
             w_ w;
             val_ a = 1;

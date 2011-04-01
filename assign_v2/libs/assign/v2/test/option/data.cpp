@@ -10,6 +10,7 @@
 #include <cmath> // MSVC #include <math.h>
 #include <deque>
 #include <list>
+#include <map>
 #include <vector>
 #include <boost/array.hpp>
 #include <boost/assign/v2/detail/config/check.hpp>
@@ -42,11 +43,11 @@ namespace xxx_data{
             typedef function<double(double)> f_;
             (
                 as2::put( exponent ) % ( as2::_data = f_( /*<-*/fp(/*->*/ log10 /*<-*/)/*->*/ ) )
-            )/*<<Equivalent to `as2::put( exponent )( log10( 1000.0 ) )( log10( 10.0 ) )( log10( 10000.0 ) )( log10( 1.0 ) )( log10( 100.0 ) )`>>*/( 1000.0 )( 10.0 )( 10000.0 )( 1.0 )( 100.0 );
+            )( 1.0 )( 10.0 )( 100.0 )( 1000.0 )( 10000.0 );
 
             double eps = numeric::bounds<double>::smallest();
-            BOOST_ASSIGN_V2_CHECK( fabs( exponent.front() - 3.0 ) < eps );
-            BOOST_ASSIGN_V2_CHECK( fabs( exponent.back() - 2.0 ) < eps );
+            BOOST_ASSIGN_V2_CHECK( fabs( exponent.front() - 0.0 ) < eps );
+            BOOST_ASSIGN_V2_CHECK( fabs( exponent.back() - 4.0 ) < eps );
             //]
         }
         {
@@ -62,6 +63,24 @@ namespace xxx_data{
             );
 
             BOOST_ASSIGN_V2_CHECK( range::equal( factorials, as2::csv_deque( 1, 2, 6, 24, 120 ) ) );
+            //]
+        }
+        {
+            //[test_option_data_value
+            typedef std::string word_; 
+            const char foo[] = "foo";
+            const char bar[4] = { 'b', 'a', 'r', '\0' };
+            word_ baz = "***baz";
+            typedef std::map<int, word_> C; 
+            typedef C::value_type T;
+            typedef C::mapped_type D;
+            C map;
+            (
+                as2::put( map )  % ( as2::_data = as2::_value )
+            )( 1, D( foo, 3 ) )( 2, bar )( 3, D( baz, 3, 3 ) )( 4, "qux");
+
+            BOOST_ASSIGN_V2_CHECK( map[1] == "foo" ); BOOST_ASSIGN_V2_CHECK( map[2] == "bar" );
+            BOOST_ASSIGN_V2_CHECK( map[3] == "baz" ); BOOST_ASSIGN_V2_CHECK( map[4] == "qux" );
             //]
         }
 

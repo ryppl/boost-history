@@ -31,13 +31,13 @@ namespace xxx_deque{
             typedef as2::result_of::deque<int>::type C;
 
             C empty_cont = as2::deque<int>( as2::_nil );
-            C cont1 = empty_cont( 72 )( 31 )( 48 );
-            C cont2 = as2::deque<int>( 72 )( 31 )( 48 );
+            C cont1 = empty_cont( 1 )( 10 )( 100 );
+            C cont2 = as2::deque<int>( 1 )( 10 )( 100 );
     
             std::deque<int> benchmark; 
-            benchmark.push_back( 72 );
-            benchmark.push_back( 31 );
-            benchmark.push_back( 48 );
+            benchmark.push_back( 1 );
+            benchmark.push_back( 10 );
+            benchmark.push_back( 100 );
 
             BOOST_ASSIGN_V2_CHECK( range::equal( benchmark, cont1 ) );
             BOOST_ASSIGN_V2_CHECK( range::equal( benchmark, cont2 ) );
@@ -79,13 +79,13 @@ namespace xxx_deque{
             
             BOOST_MPL_ASSERT(( is_same<C, as2::result_of::deque<int>::type> ));
 
-            C cont1 = as2::csv_deque( 72, 31, 48 );
-            C cont2 = as2::csv_deque( 72, 31 )( 48 );
+            C cont1 = as2::csv_deque( 1, 10, 100 );
+            C cont2 = as2::csv_deque( 1, 10 )( 100 );
     
             std::deque<int> benchmark; 
-            benchmark.push_back( 72 );
-            benchmark.push_back( 31 );
-            benchmark.push_back( 48 );
+            benchmark.push_back( 1 );
+            benchmark.push_back( 10 );
+            benchmark.push_back( 100 );
 
             BOOST_ASSIGN_V2_CHECK( range::equal( benchmark, cont1 ) );
             BOOST_ASSIGN_V2_CHECK( range::equal( benchmark, cont2 ) );

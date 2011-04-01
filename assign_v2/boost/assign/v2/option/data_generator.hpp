@@ -120,6 +120,21 @@ namespace result_of{
         
     }/*->*/;
 
+    template<>
+    struct option_data_generator<keyword_aux::value>/*<-*/
+    {
+        option_data_generator(){}
+        option_data_generator(keyword_aux::ignore){}
+
+        template<typename C>
+        typename deduce_value_generator<C>::type 
+        data_generator()const
+        { 
+            return typename deduce_value_generator<C>::type(); 
+        }
+        
+    }/*->*/;
+
     // Overrides data generator
     template<typename C, typename F, typename ModifierTag
         , typename DataTag, typename D, typename F1>
