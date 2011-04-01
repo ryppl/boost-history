@@ -70,7 +70,12 @@ namespace xxx_csv_array{
             //[test_ref_csv_array_write
             typedef int T; T x, y, z;
             std::vector<T> r( 3 ); r[0] = 1; r[1] = 10; r[2] = 100;
-            boost::copy( r,boost::begin( as2::ref::csv_array( x, y, z ) | as2::ref::_get ) );
+            boost::copy( 
+            	r,
+                boost::begin( 
+                	as2::ref::csv_array( x, y, z ) | as2::ref::_get 
+                ) 
+            );
 
             BOOST_ASSIGN_V2_CHECK( x == r[0] );
             BOOST_ASSIGN_V2_CHECK( z == r[2] );
@@ -78,7 +83,8 @@ namespace xxx_csv_array{
         }
         {
             //[test_ref_csv_array_assign
-            int x, y, z; as2::ref::csv_array( x, y, z ).assign( -1 );
+            int x, y, z; 
+            as2::ref::csv_array( x, y, z ).assign( -1 );
 
             BOOST_ASSIGN_V2_CHECK( x == -1 );
             BOOST_ASSIGN_V2_CHECK( z == -1 );

@@ -33,7 +33,9 @@ namespace xxx_get{
         );
         boost::copy( 
             as2::csv_deque( 314, 3141, 31415 ), 
-            boost::begin( ref_array | as2::ref::_get )
+            boost::begin( 
+            	ref_array | as2::ref::_get 
+            )
         );
 
         BOOST_ASSIGN_V2_CHECK( x == 314 );
