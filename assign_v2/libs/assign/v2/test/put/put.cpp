@@ -123,9 +123,14 @@ namespace xxx_put{
             // http://bioinfo.mbb.yale.edu/~mbg/dom/fun3/area-codes/
             //[test_put_put_area_codes
             typedef const char us_state_ [3]; us_state_ ct = "CT", nj = "NJ", ny = "NY";
-            typedef int area_code_; typedef tuple<us_state_/*<<Notice the [*reference]>>*/&,  area_code_> data_; std::deque< data_ > region;
+            typedef int area_code_; 
+            typedef tuple<us_state_/*<<Notice the [*reference]>>*/&,  area_code_> data_; 
+            std::deque< data_ > region;
             /*<<Calls `tri_state.push_back( data_( s, c ) )` for [^( s, c ) =( ny, 212 )...( ct, 203 )]>>*/
-            as2::put( region )( ny, 212 )( ny, 718 )( ny, 516 )( ny, 914 )( nj, 210 )( nj, 908 )( nj, 609 )( ct, 203 );
+            as2::put( region )
+            	( ny, 212 )( ny, 718 )( ny, 516 )( ny, 914 )
+                ( nj, 210 )( nj, 908 )( nj, 609 )
+                ( ct, 203 );
 
             BOOST_ASSIGN_V2_CHECK(  get<0>( region.front() ) == ny );
             BOOST_ASSIGN_V2_CHECK(  get<1>( region.back()  ) == 203 );
