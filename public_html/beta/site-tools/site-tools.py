@@ -4,7 +4,7 @@
 # Distributed under the Boost Software License, Version 1.0.
 # (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
 
-"""Usage: python build.py [command]
+"""Usage: python site-tools.py [command]
 
 Commands:
 
@@ -18,9 +18,6 @@ refresh     Reconvert all the quickbook files and regenerate the html
 
 docs        Update the documentation list from doc/libraries.xml.
             Requires php to be on the path and the site to be configured.
-
-start       Setup the state file and regenerate html files from the old
-            hashes files.
 
 """
 
@@ -36,22 +33,22 @@ settings = {
     'pages': {
         'users/history/': {
             'src_files' : ['feed/history/*.qbk'],
-            'template' : 'build/templates/entry-template.html'
+            'template' : 'site-tools/templates/entry-template.html'
         },
         'users/news/': {
             'src_files' : ['feed/news/*.qbk'],
-            'template' : 'build/templates/entry-template.html'
+            'template' : 'site-tools/templates/entry-template.html'
         },
         'users/download/': {
             'src_files' : ['feed/downloads/*.qbk'],
-            'template' : 'build/templates/entry-template.html'
+            'template' : 'site-tools/templates/entry-template.html'
         }
     },
     'index-pages' : {
-        'users/download/index.html' : 'build/templates/download-template.html',
-        'users/history/index.html' : 'build/templates/history-template.html',
-        'users/news/index.html' : 'build/templates/news-template.html',
-        'index.html' : 'build/templates/index-src.html'
+        'users/download/index.html' : 'site-tools/templates/download-template.html',
+        'users/history/index.html' : 'site-tools/templates/history-template.html',
+        'users/news/index.html' : 'site-tools/templates/news-template.html',
+        'index.html' : 'site-tools/templates/index-src.html'
     },
     'feeds' : {
         'feed/downloads.rss' : {
@@ -88,46 +85,15 @@ def main(argv):
         return update_quickbook(False)
     elif command == 'refresh':
         return update_quickbook(True)
-    elif command == 'start':
-        status = convert_hash_files()
-        if(status != 0): return status
-        return update_quickbook(True)
     else:
         print __doc__
         return
 
 def update_php_docs():
     try:
-        subprocess.check_call(['php', 'build/php/build.php'])
+        subprocess.check_call(['php', 'site-tools/php/update-doc-list.php'])
     except:
         print "PHP documentation serialization failed."
-
-def convert_hash_files():
-    hashes = {}
-
-    for hash_file in glob.glob('feed/*-hashes.txt'):
-        new_hashes = load_hashes(hash_file)
-
-        for qbk_file in new_hashes:
-            full_path = 'feed/%s' % qbk_file
-            if(full_path in hashes and hashes[full_path] != new_hashes[qbk_file]):
-                print "Contradiction for %s" % qbk_file
-                return -1
-            else:
-                hashes[full_path] = new_hashes[qbk_file]
-
-    state = {}
-
-    for location in settings['pages']:
-        pages_data = settings['pages'][location]
-        for src_file_pattern in pages_data['src_files']:
-            for qbk_file in glob.glob(src_file_pattern):
-                if qbk_file in hashes:
-                    state = hashes[qbk_file]
-                    state['dir_location'] = location
-
-    boost_site.state.save(hashes, 'build/state/feed-pages.txt')
-    return 0
 
 def load_hashes(hash_file):
     qbk_hashes = {}
@@ -144,7 +110,7 @@ def load_hashes(hash_file):
 def update_quickbook(refresh):
     # Now check quickbook files.
     
-    pages = boost_site.pages.Pages('build/state/feed-pages.txt')
+    pages = boost_site.pages.Pages('site-tools/state/feed-pages.txt')
 
     if not refresh:
         for location in settings['pages']:
