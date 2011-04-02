@@ -315,12 +315,8 @@ class BoostBook2RSS:
             *self.x_children(node))
 
     def x_emphasis(self,node):
-        if node.getAttribute('role') == 'bold':
-            return self.new_node('strong',
-                *self.x_children(node))
-        else:
-            return self.new_node('em',
-                *self.x_children(node))
+        return self.new_node('em',
+            *self.x_children(node))
 
     def x_inlinemediaobject(self,node):
         image = self.get_child(node,'imageobject')
