@@ -1,7 +1,13 @@
-// Boost.Geometry (aka GGL, Generic Geometry Library) test file
-//
-// Copyright Barend Gehrels 2007-2009, Geodan, Amsterdam, the Netherlands
-// Copyright Bruno Lalande 2008-2009
+// Boost.Geometry (aka GGL, Generic Geometry Library)
+// Unit Test
+
+// Copyright (c) 2007-2011 Barend Gehrels, Amsterdam, the Netherlands.
+// Copyright (c) 2008-2011 Bruno Lalande, Paris, France.
+// Copyright (c) 2009-2011 Mateusz Loskot, London, UK.
+
+// Parts of Boost.Geometry are redesigned from Geodan's Geographic Library
+// (geolib/GGL), copyright (c) 1995-2010 Geodan, Amsterdam, the Netherlands.
+
 // Use, modification and distribution is subject to the Boost Software License,
 // Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -29,7 +35,7 @@
 
 
 template <typename G>
-void test_wkt(std::string const& wkt, int n, double len = 0,
+void test_wkt(std::string const& wkt, std::size_t n, double len = 0,
             double ar = 0, double peri = 0)
 {
     G geometry;
@@ -176,8 +182,9 @@ void test_all()
         test_wkt<P>("POINT(1.1 2.1)", 1);
     }
 
-    test_wkt_output_iterator<bg::model::linestring<P> >("LINESTRING(1 1,2 2,3 3)");
-    test_wkt_output_iterator<bg::model::ring<P> >("POLYGON((1 1,2 2,3 3))");
+    // Deprecated:
+    // test_wkt_output_iterator<bg::model::linestring<P> >("LINESTRING(1 1,2 2,3 3)");
+    // test_wkt_output_iterator<bg::model::ring<P> >("POLYGON((1 1,2 2,3 3))");
 }
 #endif
 
