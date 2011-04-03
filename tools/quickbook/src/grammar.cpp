@@ -30,12 +30,11 @@ namespace quickbook
 
     quickbook_grammar::impl::impl(quickbook::actions& a)
         : actions(a)
-        , no_eols(true)
-        , store_()
+        , cleanup_()
     {
         init_main();
-        init_block_markup();
-        init_phrase_markup();
+        init_block_elements();
+        init_phrase_elements();
         init_doc_info();
     }
 }
