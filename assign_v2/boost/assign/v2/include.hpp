@@ -16,5 +16,6 @@
 #include <boost/assign/v2/include/csv_put.hpp>
 #include <boost/assign/v2/include/deque.hpp>
 #include <boost/assign/v2/include/put.hpp>
+#include <boost/assign/v2/include/ref.hpp>
 
 #endif // BOOST_ASSIGN_V2_INCLUDE_ER_2010_HPP
