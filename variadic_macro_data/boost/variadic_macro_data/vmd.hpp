@@ -8,8 +8,7 @@
 #include <boost/preprocessor/array/data.hpp>
 #include <boost/preprocessor/list/to_tuple.hpp>
 #include <boost/preprocessor/seq/to_tuple.hpp>
-#include <boost/preprocessor/repetition/repeat.hpp>
-#include "detail/VMDDetail.hpp"
+#include "detail/vmd_detail.hpp"
 
 /*
 
@@ -31,7 +30,7 @@
     The value returned can be between 1 and 64.
     
 */
-#define VMD_DATA_SIZE(...) \
+#define BOOST_VMD_DATA_SIZE(...) \
   VMD_DETAIL_DATA_SIZE(__VA_ARGS__) \
 /**/
 
@@ -50,7 +49,7 @@
               preprocessing token.
               
 */
-#define VMD_DATA_ELEM(n,...) \
+#define BOOST_VMD_DATA_ELEM(n,...) \
   VMD_DETAIL_DATA_ELEM(n,__VA_ARGS__) \
 /**/
 
@@ -66,7 +65,7 @@
     data to a Boost PP library macro.
     
 */
-#define VMD_DATA_TO_PP_TUPLE(...) \
+#define BOOST_VMD_DATA_TO_PP_TUPLE(...) \
   VMD_DETAIL_DATA_TO_PP_TUPLE(__VA_ARGS__) \
 /**/
 
@@ -82,7 +81,7 @@
     data to a Boost PP library macro.
     
 */
-#define VMD_DATA_TO_PP_ARRAY(...) \
+#define BOOST_VMD_DATA_TO_PP_ARRAY(...) \
   VMD_DETAIL_DATA_TO_PP_ARRAY(__VA_ARGS__) \
 /**/
 
@@ -98,7 +97,7 @@
     data to a Boost PP library macro.
     
 */
-#define VMD_DATA_TO_PP_LIST(...) \
+#define BOOST_VMD_DATA_TO_PP_LIST(...) \
   VMD_DETAIL_DATA_TO_PP_LIST(__VA_ARGS__) \
 /**/
 
@@ -114,7 +113,7 @@
     data to a Boost PP library macro.
     
 */
-#define VMD_DATA_TO_PP_SEQ(...) \
+#define BOOST_VMD_DATA_TO_PP_SEQ(...) \
   VMD_DETAIL_DATA_TO_PP_SEQ(__VA_ARGS__) \
 /**/
 
@@ -133,7 +132,7 @@
     calculated from the tuple itself.
     
 */
-#define VMD_PP_TUPLE_SIZE(tuple) \
+#define BOOST_VMD_PP_TUPLE_SIZE(tuple) \
   VMD_DETAIL_PP_TUPLE_SIZE(tuple) \
 /**/
 
@@ -159,8 +158,8 @@
     macro without the necessity of having to pass a size.
     
 */
-#define VMD_PP_TUPLE_ELEM(n,tuple) \
-  VMD_DETAIL_PP_TUPLE_ELEM(VMD_PP_TUPLE_SIZE(tuple),n,tuple) \
+#define BOOST_VMD_PP_TUPLE_ELEM(n,tuple) \
+  VMD_DETAIL_PP_TUPLE_ELEM(BOOST_VMD_PP_TUPLE_SIZE(tuple),n,tuple) \
 /**/
 
 /// Expands to a series of tokens which are equivalent to removing the parentheses from a tuple.
@@ -171,7 +170,7 @@
     returns = a series of comma-separated tokens equivalent to removing the parentheses from a tuple.
     
               This result is actually equivalent to the form of variadic macro data
-              and can be used as an alternative to VMD_PP_TUPLE_TO_DATA to convert
+              and can be used as an alternative to BOOST_VMD_PP_TUPLE_TO_DATA to convert
               the tuple to variadic macro data.
               
     In the Boost PP library there is no way to calculate 
@@ -184,8 +183,8 @@
     macro without the necessity of having to pass a size.
     
 */
-#define VMD_PP_TUPLE_REM_CTOR(tuple) \
-  VMD_DETAIL_PP_TUPLE_REM_CTOR(VMD_PP_TUPLE_SIZE(tuple),tuple) \
+#define BOOST_VMD_PP_TUPLE_REM_CTOR(tuple) \
+  VMD_DETAIL_PP_TUPLE_REM_CTOR(BOOST_VMD_PP_TUPLE_SIZE(tuple),tuple) \
 /**/
 
 /// Expands to a tuple whose elements are in reversed order.
@@ -206,8 +205,8 @@
     macro without the necessity of having to pass a size.
     
 */
-#define VMD_PP_TUPLE_REVERSE(tuple) \
-  VMD_DETAIL_PP_TUPLE_REVERSE(VMD_PP_TUPLE_SIZE(tuple),tuple) \
+#define BOOST_VMD_PP_TUPLE_REVERSE(tuple) \
+  VMD_DETAIL_PP_TUPLE_REVERSE(BOOST_VMD_PP_TUPLE_SIZE(tuple),tuple) \
 /**/
 
 /// Expands to a list whose elements are the same as a tuple.
@@ -228,8 +227,8 @@
     macro without the necessity of having to pass a size.
     
 */
-#define VMD_PP_TUPLE_TO_LIST(tuple) \
-  VMD_DETAIL_PP_TUPLE_TO_LIST(VMD_PP_TUPLE_SIZE(tuple),tuple) \
+#define BOOST_VMD_PP_TUPLE_TO_LIST(tuple) \
+  VMD_DETAIL_PP_TUPLE_TO_LIST(BOOST_VMD_PP_TUPLE_SIZE(tuple),tuple) \
 /**/
 
 /// Expands to a sequence whose elements are the same as a tuple.
@@ -250,8 +249,8 @@
     macro without the necessity of having to pass a size.
     
 */
-#define VMD_PP_TUPLE_TO_SEQ(tuple) \
-  VMD_DETAIL_PP_TUPLE_TO_SEQ(VMD_PP_TUPLE_SIZE(tuple),tuple) \
+#define BOOST_VMD_PP_TUPLE_TO_SEQ(tuple) \
+  VMD_DETAIL_PP_TUPLE_TO_SEQ(BOOST_VMD_PP_TUPLE_SIZE(tuple),tuple) \
 /**/
 
 /// Expands to variadic macro data whose arguments are the same as a tuple's elements.
@@ -268,7 +267,7 @@
     of a final variadic macro data '...' macro parameter.
     
 */
-#define VMD_PP_TUPLE_TO_DATA(tuple) \
+#define BOOST_VMD_PP_TUPLE_TO_DATA(tuple) \
   VMD_DETAIL_PP_TUPLE_TO_DATA(tuple) \
 /**/
 
@@ -286,8 +285,8 @@
     of a final variadic macro data '...' macro parameter.
     
 */
-#define VMD_PP_ARRAY_TO_DATA(array) \
-  VMD_PP_TUPLE_TO_DATA(BOOST_PP_ARRAY_DATA(array)) \
+#define BOOST_VMD_PP_ARRAY_TO_DATA(array) \
+  BOOST_VMD_PP_TUPLE_TO_DATA(BOOST_PP_ARRAY_DATA(array)) \
 /**/
 
 /// Expands to variadic macro data whose arguments are the same as a list's elements.
@@ -304,8 +303,8 @@
     of a final variadic macro data '...' macro parameter.
     
 */
-#define VMD_PP_LIST_TO_DATA(list) \
-  VMD_PP_TUPLE_TO_DATA(BOOST_PP_LIST_TO_TUPLE(list)) \
+#define BOOST_VMD_PP_LIST_TO_DATA(list) \
+  BOOST_VMD_PP_TUPLE_TO_DATA(BOOST_PP_LIST_TO_TUPLE(list)) \
 /**/
 
 /// Expands to variadic macro data whose arguments are the same as a sequence's elements.
@@ -322,8 +321,8 @@
     of a final variadic macro data '...' macro parameter.
     
 */
-#define VMD_PP_SEQ_TO_DATA(seq) \
-  VMD_PP_TUPLE_TO_DATA(BOOST_PP_SEQ_TO_TUPLE(seq)) \
+#define BOOST_VMD_PP_SEQ_TO_DATA(seq) \
+  BOOST_VMD_PP_TUPLE_TO_DATA(BOOST_PP_SEQ_TO_TUPLE(seq)) \
 /**/
 
 #endif // BOOST_NO_VARIADIC_MACROS
