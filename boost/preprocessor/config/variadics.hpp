@@ -12,15 +12,7 @@
 # ifndef BOOST_PREPROCESSOR_CONFIG_VARIADICS_HPP
 # define BOOST_PREPROCESSOR_CONFIG_VARIADICS_HPP
 #
-# if defined(BOOST_PP_NO_VARIADICS)
-/* 
-   This macro allows an end-user to turn off variadic macro 
-   support in Boost PP even on compilers that support variadic 
-   macros.
-*/
-# define BOOST_PP_VARIADICS 0
-#
-# else // !defined(BOOST_PP_NO_VARIADICS)
+# if !defined(BOOST_PP_VARIADICS)
 #
 # if 1
 /* This is the code we will use. It is essentially a duplication
@@ -46,8 +38,11 @@
 # define BOOST_PP_VARIADICS 0
 #endif
 #
-#elif defined(__PATHSCALE__) && (__PATHCC__ >= 4)
+#elif defined(__PATHSCALE__)
 // PathScale EKOPath compiler (has to come before clang and gcc)
+#if (__PATHCC__ >= 4)
+# define BOOST_PP_VARIADICS 0
+#endif
 #
 #elif defined __clang__
 //  Clang C++ emulates GCC, so it has to appear early.
@@ -168,6 +163,6 @@
 #
 # endif // 1
 #
-# endif // BOOST_PP_NO_VARIADICS
+# endif // BOOST_PP_VARIADICS
 #
 # endif // BOOST_PREPROCESSOR_CONFIG_VARIADICS_HPP

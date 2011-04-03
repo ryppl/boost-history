@@ -18,7 +18,7 @@
 #
 # include <boost/preprocessor/variadic/detail/to_list.hpp>
 #
-#define BOOST_PP_TO_LIST(...) \
+#define BOOST_PP_VARIADIC_TO_LIST(...) \
   BOOST_PP_VARIADIC_DETAIL_TO_LIST(__VA_ARGS__) \
 /**/
 #endif // BOOST_PP_VARIADICS

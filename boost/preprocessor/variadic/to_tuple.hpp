@@ -18,7 +18,7 @@
 #
 # include <boost/preprocessor/variadic/detail/to_tuple.hpp>
 #
-#define BOOST_PP_TO_TUPLE(...) \
+#define BOOST_PP_VARIADIC_TO_TUPLE(...) \
   BOOST_PP_VARIADIC_DETAIL_TO_TUPLE(__VA_ARGS__) \
 /**/
 #endif // BOOST_PP_VARIADICS
