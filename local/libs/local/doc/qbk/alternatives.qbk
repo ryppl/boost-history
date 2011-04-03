@@ -15,24 +15,45 @@ The following table compares local function features.
 [table
 [
     [ Local Function Feature ]
-    [ This Library ]
-    [ Local Classes ]
-    [ __CPP0x_lambda__ ]
+    [ Boost.Local (this library) ]
+    [ Local Functor ]
+    [ Global Functor (not local) ]
+    [ __CPP0x_lambda__ (not ISO C++) ]
     [ __Boost_Lambda__ ]
     [ __Boost_Phoenix__ ]
 ]
 [
-    [ ['Program body using usual C++ syntax] ]
+    [ ['Can be defined locally] ]
+    [ Yes. ]
+    [ Yes. ]
+    [ No so this not an alternative implementation of local functions. ]
     [ Yes. ]
     [ Yes. ]
     [ Yes. ]
+]
+[
+    [ ['Can be defined using regular C++ statements] ]
+    [ Yes (also reporting compiler error messages usual for function statements). ]
+    [ Yes (also reporting compiler error messages usual for function statements). ]
+    [ Yes (also reporting compiler error messages usual for function statements). ]
+    [ Yes (also reporting compiler error messages usual for function statements). ]
     [ No. ]
     [ No. ]
 ]
 [
+    [ ['Can be defined within expressions] ]
+    [ No, defined only within declarations. ]
+    [ No, defined only within declarations. ]
+    [ No, defined only within declarations. ]
+    [ Yes. ]
+    [ Yes. ]
+    [ Yes. ]
+]
+[
     [ ['Can be passed as template parameter (e.g., to STL algorithms)] ]
     [ Yes. ]
-    [ No (see "local class" in __StroustrupGlossary__). ]
+    [ No with ISO C++ standard (see "local class" in __StroustrupGlossary__). (Yes with C++0x standard and some compilers like MSVC.) ]
+    [ No. ]
     [ Yes. ]
     [ Yes. ]
     [ Yes. ]
@@ -41,19 +62,42 @@ The following table compares local function features.
     [ ['Bind variables in scope] ]
     [ Yes, bind by value, constant value, reference, and constant reference (also bind the object `this`).
 However, the names of the bound variables must be repeated one by one.]
-    [ No. ]
+    [ No, programmers must manually manage functor member variable and specify their types. ]
+    [ No, programmers must manually manage functor member variable and specify their types. ]
     [ Yes, plus there is short-hand syntax to bind all variables in scope at once (by value or by reference).
-However, there is no bind by constant value nor by constant reference. ]
+However, there is no bind by constant reference. ]
     [ No. ]
-    [ Yes. ]
+    [ Yes, using `let` which also allows to bind by constant reference. ]
 ]
 [
-    [ ['Can be defined within expressions] ]
-    [ No, defined only within declarations. ]
-    [ No, defined only within declarations. ]
-    [ Yes. ]
-    [ Yes. ]
-    [ Yes. ]
+    [ ['Compile-Time]
+[footnote
+Compilation times have been measured in seconds using the Linux command [^$ time g++ -O3 -Wall -Wextra -I<BOOST_DIR> <CPP_FILE>] for the examples listed below for all the different approaches.
+The [^real] time is the overall time that took to execute the command.
+The actual time values can change from execution to execution therefore they have been measured 3 times and the time reported it the one with the middle [^real] time value.
+The time values are machine dependent so they have no absolute meaning but they can be used in this context to compare the performances of the different approaches relative to each other (because all these values were measured on the same system).
+]
+    ]
+    [ 0 seconds ]
+    [ 0 seconds ]
+    [ 0 seconds ]
+    [ 0 seconds ]
+    [ 0 seconds ]
+    [ 0 seconds ]
+]
+[
+    [ ['Run-Time]
+[footnote
+run times have been measured in seconds using the Linux command [^$ time <COMPILED_PROGRAM>] for the compiled examples listed below for all the different approaches.
+The same statistical approach as for compilation time was followed.
+]
+    ]
+    [ 0 seconds ]
+    [ 0 seconds ]
+    [ 0 seconds ]
+    [ 0 seconds ]
+    [ 0 seconds ]
+    [ 0 seconds ]
 ]
 ]
 
@@ -61,24 +105,28 @@ For example, using this library local functions:
 
 [table
 [ [__Variadic_Macro_Syntax__] [__Sequencing_Macro_Syntax__] ]
-[ [ [add_boost_local_va_cpp] ] [ [add_boost_local_cpp] ] ]
+[ [ [add_using_boost_local_va_cpp] ] [ [add_using_boost_local_cpp] ] ]
 ]
 
-Or using C++ member functions of local classes:
+Or using C++ local functors:
 
-[add_local_class_cpp]
+[add_using_local_functor_cpp]
 
-Or using __CPP0x_lambda__ functions:
+Or using C++ global functors (but these do not allow to define the function locally so they are not an alternative implementation of local functions):
 
-[add_cpp0x_lambda_cpp]
+[add_using_global_functor_cpp]
+
+Or using __CPP0x_lambda__ functions (but not part of ISO C++ standard):
+
+[add_using_cpp0x_lambda_cpp]
 
 Or using __Boost_Lambda__ functions:
 
-[add_boost_lambda_cpp]
+[add_using_boost_lambda_cpp]
 
 Or using __Boost_Phoenix__:
 
-[add_boost_phoenix_cpp]
+[add_using_boost_phoenix_cpp]
 
 [endsect]
 

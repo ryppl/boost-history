@@ -46,7 +46,7 @@ See the __Tutorial__ section for more details.
 
 [table
 [ [Notes] [__Variadic_Macro_Syntax__] [__Sequencing_Macro_Syntax__] ]
-[ [ [add_callouts_cpp] ] [ [add_va_cpp] ] [ [add_cpp] ] ]
+[ [ [add_function_block_exit_callouts_cpp] ] [ [add_function_block_exit_va_cpp] ] [ [add_function_block_exit_cpp] ] ]
 ]
 
 Notes:

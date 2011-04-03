@@ -10,6 +10,7 @@
 
 #       include "file.hpp"
 #       include "../config.hpp"
+#       include <boost/call_traits.hpp>
 #       include <boost/preprocessor/iteration/iterate.hpp>
 #       include <boost/preprocessor/repetition/repeat.hpp>
 #       include <boost/preprocessor/repetition/enum.hpp>
@@ -23,10 +24,14 @@
 
 #define BOOST_LOCAL_AUX_arg_typename(z, arg_n, unused) \
     typename BOOST_LOCAL_AUX_arg_type(z, arg_n, unused)
-                
+
+#define BOOST_LOCAL_AUX_param_type(z, arg_n, unused) \
+    typename ::boost::call_traits<BOOST_LOCAL_AUX_arg_type(z, arg_n, unused) \
+            >::param_type
+
 #define BOOST_LOCAL_AUX_abstract_operator_call(z, defaults_n, arity) \
     virtual R operator()(BOOST_PP_ENUM_ ## z(BOOST_PP_SUB(arity, defaults_n), \
-                BOOST_LOCAL_AUX_arg_type, ~)) = 0;
+                BOOST_LOCAL_AUX_param_type, ~)) = 0;
 
 #define BOOST_LOCAL_AUX_template_name(defaults_count) \
     BOOST_PP_CAT(BOOST_PP_CAT(functor_defaults, defaults_count), _base) 
@@ -46,6 +51,7 @@ struct abstract_function {}; // Empty so never used directly.
 
 #   undef BOOST_LOCAL_AUX_arg_type
 #   undef BOOST_LOCAL_AUX_arg_typename
+#   undef BOOST_LOCAL_AUX_param_type
 #   undef BOOST_LOCAL_AUX_abstract_operator_call
 #   undef BOOST_LOCAL_AUX_template_name
 

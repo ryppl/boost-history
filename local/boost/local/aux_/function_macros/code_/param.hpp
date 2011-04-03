@@ -10,6 +10,7 @@
 #include "../../symbol.hpp"
 #include "../../scope_exit/scope_exit.hpp" // Use this lib's ScopeExit impl.
 #include "../../type_traits/add_pointed_const.hpp"
+#include <boost/call_traits.hpp>
 #include <boost/detail/preprocessor/keyword/this.hpp>
 #include <boost/detail/preprocessor/keyword/auto.hpp>
 #include <boost/detail/preprocessor/keyword/register.hpp>
@@ -172,7 +173,9 @@
         r, typename_keyword, i, param) \
     BOOST_PP_COMMA_IF(i) \
     typename_keyword \
-    BOOST_LOCAL_AUX_FUNCTION_CODE_PARAM_UNBIND_ARG_TYPE_(BOOST_PP_INC(i)) \
+    ::boost::call_traits< \
+            BOOST_LOCAL_AUX_FUNCTION_CODE_PARAM_UNBIND_ARG_TYPE_( \
+            BOOST_PP_INC(i))>::param_type \
     BOOST_LOCAL_AUX_FUNCTION_CODE_PARAM_UNBIND_ARG_NAME_(BOOST_PP_INC(i))
 
 #endif // #include guard

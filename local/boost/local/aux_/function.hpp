@@ -11,6 +11,7 @@
 #       include "abstract_function.hpp"
 #       include "file.hpp"
 #       include "../config.hpp"
+#       include <boost/call_traits.hpp>
 #       include <boost/preprocessor/iteration/iterate.hpp>
 #       include <boost/preprocessor/repetition/repeat.hpp>
 #       include <boost/preprocessor/repetition/enum.hpp>
@@ -27,7 +28,8 @@
     BOOST_PP_CAT(a, arg_n)
 
 #define BOOST_LOCAL_AUX_arg(z, arg_n, unused) \
-    BOOST_LOCAL_AUX_arg_type(z, arg_n, unused) \
+    typename ::boost::call_traits<BOOST_LOCAL_AUX_arg_type(z, arg_n, unused) \
+            >::param_type \
     BOOST_LOCAL_AUX_arg_name(z, arg_n, unused)
 
 #define BOOST_LOCAL_AUX_arg_typename(z, arg_n, unused) \
