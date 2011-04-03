@@ -10,15 +10,18 @@
 #ifndef BOOST_ASSIGN_V2_PIPE_CSV_PUT_HPP_ER_2010
 #define BOOST_ASSIGN_V2_PIPE_CSV_PUT_HPP_ER_2010
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
-#include <boost/assign/v2/put.hpp>
+#include <boost/assign/v2/detail/keyword.hpp>
+#include <boost/assign/v2/detail/traits.hpp>
+#include <boost/assign/v2/put/put.hpp>
 #include <boost/assign/v2/option/list.hpp>
 #include <boost/assign/v2/option/data_generator.hpp>
 #include <boost/assign/v2/ref/array/as_arg_list.hpp>
 #include <boost/assign/v2/ref/array/csv_array.hpp>
 #include <boost/assign/v2/ref/wrapper/copy.hpp>
 #include <boost/mpl/apply.hpp>
-#include <boost/mpl/vector/vector0.hpp>
+#include <boost/mpl/if.hpp>
 #include <boost/mpl/size.hpp>
+#include <boost/mpl/vector/vector0.hpp>
 #if !BOOST_ASSIGN_V2_ENABLE_CPP0X
 #include <boost/assign/v2/detail/config/limit_csv_arity.hpp>
 #include <boost/mpl/aux_/na.hpp>
@@ -180,10 +183,16 @@ BOOST_PP_REPEAT_FROM_TO(
     >
     C& operator|(C& cont, interpreter_aux::arg_list<H, T, N, U> const& arg_list)/*<-*/
     {
-        typedef typename deduce_value_generator<C>::type data_gen_;
-        typedef typename v2::result_of::put<C, data_gen_>::type put_;
+    	typedef typename ::boost::mpl::if_c<
+        	!container_aux::is_map<C>::value,
+            use_default_,
+            value_
+        >::type arg_;
+
         v2::ref::as_arg_list(    
-            arg_list.apply( put_( cont ) ),
+            arg_list.apply( 
+            	put( cont ) % ( _data = arg_() ) 
+            ),
             arg_list.arg_list_cont()
         );
         return cont;

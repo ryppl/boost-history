@@ -13,7 +13,7 @@
 #include <set>
 #include <string>
 #include <boost/assign/v2/detail/config/check.hpp>
-#include <boost/assign/v2/put.hpp>
+#include <boost/assign/v2/put/csv_put.hpp>
 #include <boost/assign/v2/deque.hpp>
 // Options come next
 #include <boost/assign/v2/option/modifier/std.hpp>
@@ -21,8 +21,6 @@
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
 #include <boost/range/algorithm/equal.hpp>
-#include <boost/range/algorithm/lower_bound.hpp>
-#include <boost/range/algorithm/upper_bound.hpp>
 #include <boost/lambda/lambda.hpp>
 #include <boost/mpl/apply.hpp>
 #include <boost/mpl/assert.hpp>
@@ -48,7 +46,7 @@ namespace xxx_standard{
             typedef as2::result_of::put<std::vector<int> >::type put_;
             typedef as2::modifier_tag::push_front tag_;
             typedef as2::result_of::option_std_modifier<
-                put_, tag_
+            	put_, tag_
             >::type result1_;
             typedef as2:: interpreter_aux::replace_modifier_tag<put_> meta2_;
             typedef ::boost::mpl::apply1<meta2_, tag_>::type result2_;
@@ -58,14 +56,14 @@ namespace xxx_standard{
         {
             // fully qual boost::begin/end demanded by MSVC - error C2668
             //[test_option_push_front
-            boost::circular_buffer<int> cb(3); 
-            ( as2::put( cb ) % as2::_push_front)( 3 )( 2 )( 1 );
+            boost::circular_buffer<int> cb( 3 ); 
+            as2::csv_put( cb, as2::_push_front, 3, 2, 1 );
              
             BOOST_ASSIGN_V2_CHECK(
                 range::equal(cb, as2::csv_deque(1, 2, 3) )
             );
 
-            as2::put( cb )( 4 )( 5 );
+            as2::csv_put( cb, 4, 5 );
 
             BOOST_ASSIGN_V2_CHECK(
                 range::equal(cb, as2::csv_deque(3, 4, 5) )
@@ -75,7 +73,8 @@ namespace xxx_standard{
         }
         {
             //[test_option_push
-            std::queue<int> fifo; ( as2::put( fifo ) % as2::_push )( 1 )( 10 )( 100 );
+            // NB: This option is dedundant with the default
+            std::queue<int> fifo; as2::csv_put( fifo, as2::_push, 1, 10, 100 );
 
             BOOST_ASSIGN_V2_CHECK( fifo.front() == 1 );
             BOOST_ASSIGN_V2_CHECK( fifo.back() == 100 );
@@ -83,7 +82,8 @@ namespace xxx_standard{
         }
         {
             //[test_option_insert
-            std::set<std::string> letters; ( as2::put( letters ) % as2::_insert )( "d" )( "a" )( "c" )( "b" );
+            // NB: This option is dedundant with the default
+            std::set<std::string> letters; as2::csv_put( letters, as2::_insert, "d", "a", "c", "b" );
 
             BOOST_ASSIGN_V2_CHECK( letters.lower_bound( "a" ) == boost::begin( letters ) );
             BOOST_ASSIGN_V2_CHECK( letters.upper_bound( "d" ) == boost::end( letters ) );
@@ -91,10 +91,13 @@ namespace xxx_standard{
         }
         {
             //[test_option_push_back
+            // NB: This option is dedundant with the default
             std::list<int> list;
-            ( as2::put( list ) % as2::_push_back )( 1 )( 10 )( 100 );
+            as2::csv_put( list, as2::_push_back, 1, 10, 100 );
 
-            BOOST_ASSIGN_V2_CHECK( range::equal( list, as2::csv_deque( 1, 10, 100 ) ) );
+            BOOST_ASSIGN_V2_CHECK( 
+            	range::equal( list, as2::csv_deque( 1, 10, 100 ) ) 
+            );
             //]
         }
         // DEQUE

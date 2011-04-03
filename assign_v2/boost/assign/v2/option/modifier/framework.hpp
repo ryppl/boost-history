@@ -12,8 +12,8 @@
 #include <boost/assign/v2/detail/keyword.hpp>
 #include <boost/assign/v2/detail/pp/ignore.hpp>
 #include <boost/assign/v2/interpreter/fwd.hpp>
-#include <boost/assign/v2/interpreter/modifier.hpp>
 #include <boost/assign/v2/interpreter/replace.hpp>
+#include <boost/assign/v2/option/list.hpp>
 #include <boost/mpl/apply.hpp>
 #include <boost/preprocessor/cat.hpp>
 
@@ -25,9 +25,13 @@ namespace interpreter_aux{
 
     template<
         typename Keyword // A class of modifiers
-        , typename Arg /*<-*/= keyword_aux::ignore/*->*/ // Specifies an aspect of the implementation
+        , typename Arg /*<-*/= ignore_/*->*/ // Specifies an aspect of the implementation
     >
-    struct option_modifier
+    struct option_modifier/*<-*/
+    	: option_listable<
+         	option_modifier<Keyword, Arg> 
+        >
+    /*->*/
     {
         
         option_modifier(){}
@@ -130,7 +134,11 @@ namespace result_of{\
 \
     template<typename D, typename Arg>\
     struct BOOST_PP_CAT(option_, NAME)\
-        : result_of::option_modifier<D, interpreter_aux::BOOST_PP_CAT(keyword_,NAME), Arg>\
+        : result_of::option_modifier<\
+        	D,\
+            interpreter_aux::BOOST_PP_CAT(keyword_,NAME),\
+            Arg\
+        >\
     {};\
 \
 }\

@@ -53,7 +53,7 @@ namespace nth_result_of{
         nth_result_of::list<Tag>, 
         ::boost::mpl::vector0<>
     >::type
-    list( keyword_aux::nil )
+    list( nil_ )
     {
         return typename ::boost::mpl::apply1<
             nth_result_of::list<Tag>, 

@@ -7,8 +7,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_INTERPRETER_ADAPTER_CRTP_ER_2010_HPP
-#define BOOST_ASSIGN_V2_INTERPRETER_ADAPTER_CRTP_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_INTERPRETER_CRTP_ER_2010_HPP
+#define BOOST_ASSIGN_V2_INTERPRETER_CRTP_ER_2010_HPP
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
 #include <boost/assign/v2/detail/pp/forward.hpp>
 #include <boost/assign/v2/detail/pp/ignore.hpp>
@@ -116,10 +116,10 @@ namespace interpreter_aux{
 
     };
 
-    template<typename C, typename F, typename ModifierTag, typename D>
+    template<typename C, typename F, typename MTag, typename D>
     struct ConceptDerivedInterpreter2 : ConceptDerivedInterpreter1<C, D>{
 
-        typedef interpreter_aux::interpreter_modifier<ModifierTag> modifier_;
+        typedef interpreter_aux::interpreter_modifier<MTag> modifier_;
 
         BOOST_CONCEPT_USAGE(ConceptDerivedInterpreter2)
         {
@@ -136,17 +136,17 @@ namespace interpreter_aux{
     template<
         typename C              // Container, 
         , typename F            // Data generator
-        , typename ModifierTag  // Modifier tag
-        , typename DataTag      // Data tag
+        , typename MTag  		// Modifier tag
+        , typename DTag      	// Data tag
         , typename D            // Derived
     >
     class interpreter_crtp
 //<-
         : public data_gen_holder<F>
-        , public modifier_holder<ModifierTag>
+        , public modifier_holder<MTag>
 #if !BOOST_ASSIGN_V2_ENABLE_CPP0X
         , public functor_aux::crtp_unary_and_up<
-            interpreter_crtp<C, F, ModifierTag, DataTag, D>,
+            interpreter_crtp<C, F, MTag, DTag, D>,
             ::boost::mpl::always< D const& >
         >
 #endif // BOOST_ASSIGN_V2_ENABLE_CPP0X
@@ -160,7 +160,7 @@ namespace interpreter_aux{
         protected:
 
         typedef data_gen_holder<F> data_gen_holder_;
-        typedef modifier_holder<ModifierTag> modifier_holder_;
+        typedef modifier_holder<MTag> modifier_holder_;
 //->
 
         public:
@@ -239,7 +239,7 @@ BOOST_PP_REPEAT_FROM_TO(
         template<typename T>
         void check_modifier( BOOST_ASSIGN_V2_FORWARD_PARAM(T, t) )const
         {
-            typedef ConceptModifier<ModifierTag, DataTag, C,
+            typedef ConceptModifier<MTag, DTag, C,
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
                 T&&
 #else
@@ -259,7 +259,7 @@ BOOST_PP_REPEAT_FROM_TO(
             this->modifier.impl(
                 this->derived().container(),
                 std::forward<T>( t ),
-                DataTag()
+                DTag()
             );
             return this->derived();
         }
@@ -268,7 +268,7 @@ BOOST_PP_REPEAT_FROM_TO(
         result_type modify(T& t)const
         {
             check_modifier( t );
-            this->modifier.impl( this->derived().container(), t, DataTag() );
+            this->modifier.impl( this->derived().container(), t, DTag() );
             return this->derived();
         }
 
@@ -276,7 +276,7 @@ BOOST_PP_REPEAT_FROM_TO(
         result_type modify(T const& t)const
         {
             check_modifier( t );
-            this->modifier.impl( this->derived().container(), t, DataTag() );
+            this->modifier.impl( this->derived().container(), t, DTag() );
             return this->derived();
         }
 
@@ -291,4 +291,4 @@ BOOST_PP_REPEAT_FROM_TO(
 }// assign
 }// boost
 
-#endif // BOOST_ASSIGN_V2_INTERPRETER_ADAPTER_CRTP_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_INTERPRETER_CRTP_ER_2010_HPP

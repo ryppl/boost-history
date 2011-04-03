@@ -30,48 +30,12 @@
 namespace boost{
 namespace assign{
 namespace v2{
-namespace csv_aux{
-
-    template<typename F, typename T>
-    struct unary_result
-    {
-        static F f;
-        static T t;
-#ifdef BOOST_MSVC
-        BOOST_TYPEOF_NESTED_TYPEDEF_TPL(nested, f( t ) )
-        typedef typename nested::type type;
-#else        
-        typedef BOOST_TYPEOF_TPL( f( t ) ) type;
-#endif
-
-    };
-
-    template<typename F>
-    struct result
-    {
-
-        typedef F state_;
-
-        template<typename Vec>
-        struct apply : ::boost::mpl::fold<
-            Vec,
-            state_,
-            unary_result< ::boost::mpl::_1, ::boost::mpl::_2>
-        >{};
-
-    };
-
-}// csv_aux
 //[syntax_csv
 namespace result_of{
 
-    template<typename F, typename V>
+    template<typename F>
     struct csv/*<-*/
-        : ::boost::mpl::apply1<
-        csv_aux::result<F>,
-        V
-        >
-    {}/*->*/;
+    { typedef F type; }/*->*/;
 
 }// nth_result_of
 //<-
@@ -88,8 +52,7 @@ namespace result_of{
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
     template<typename F, typename T, typename... Args>
-    typename result_of::csv<F const&,
-        typename ::boost::mpl::detail::variadic_vector<T, Args...>::type
+    typename result_of::csv<F const&>::type
     >::type
     csv( F const& functor, T&& t, Args&&... args )/*<-*/
     {
@@ -103,9 +66,7 @@ namespace result_of{
 #define BOOST_ASSIGN_V2_MACRO3(z, N, data)\
 \
     template<typename F BOOST_PP_ENUM_TRAILING_PARAMS(N, typename T)>\
-    typename result_of::csv<F const&, \
-        ::boost::mpl::vector<BOOST_PP_ENUM(N, BOOST_ASSIGN_V2_MACRO1, &)>\
-    >::type\
+    typename result_of::csv<F const&>::type\
     csv( \
         F const& functor\
         BOOST_PP_ENUM_TRAILING_BINARY_PARAMS(N, T, & _)\
@@ -115,9 +76,7 @@ namespace result_of{
     }\
 \
     template<typename F BOOST_PP_ENUM_TRAILING_PARAMS(N, typename T)>\
-    typename result_of::csv<F const&,\
-        ::boost::mpl::vector<BOOST_PP_ENUM(N, BOOST_ASSIGN_V2_MACRO1, const &)>\
-    >::type\
+    typename result_of::csv<F const&>::type\
     csv( \
         F const& functor\
         BOOST_PP_ENUM_TRAILING_BINARY_PARAMS(N, T, const & _)\

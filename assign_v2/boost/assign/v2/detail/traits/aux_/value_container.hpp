@@ -15,6 +15,7 @@
 #include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/seq.hpp>
 #include <boost/type_traits/add_const.hpp>
+#include <boost/type_traits/is_base_of.hpp>
 #include <boost/type_traits/detail/yes_no_type.hpp>
 
 namespace boost{
@@ -41,6 +42,13 @@ namespace container_aux{
 
     template<typename C> 
     struct value_is_map : ::boost::mpl::false_{};
+
+	typedef ::boost::detail::multi_array::multi_array_base multi_array_base_;
+
+	template<typename C>
+    struct value_is_multi_array
+    	: boost::is_base_of<multi_array_base_, C>
+    {};
 
 }// container_aux
 
@@ -69,7 +77,7 @@ namespace container_aux{\
 /**/
     
 BOOST_ASSIGN_V2_TRAITS_CONTAINER_CATEGORIES( 
-    (typename T)( std::size_t sz), (is_array),
+    (typename T)( std::size_t sz ), (is_array),
     boost::array, (T)(sz)
 )    
 BOOST_ASSIGN_V2_TRAITS_CONTAINER_CATEGORIES( 
@@ -107,6 +115,11 @@ namespace container_aux{
         typename C    // Ptr or value container
     >
     struct value_key{ typedef typename C::key_type type; };
+
+    template<
+        typename C    // Ptr or value multi-array
+    >
+    struct value_element{ typedef typename C::element type; };
 
     template<
         typename C    // Ptr or value container

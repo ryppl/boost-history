@@ -10,7 +10,7 @@
 #ifndef BOOST_ASSIGN_V2_CONVERSION_CONVERT_ER_2010_HPP
 #define BOOST_ASSIGN_V2_CONVERSION_CONVERT_ER_2010_HPP
 #include <boost/assign/v2/detail/pp/ignore.hpp>
-#include <boost/assign/v2/put.hpp>
+#include <boost/assign/v2/put/put.hpp>
 #include <boost/range/algorithm/for_each.hpp>
 
 namespace boost{
@@ -73,7 +73,7 @@ namespace result_of{
 }//result_of
 
 template<typename C>
-conversion_aux::convert_adapter<C> _convert()/*<-*/
+conversion_aux::convert_adapter<C> convert()/*<-*/
 {
     return conversion_aux::convert_adapter<C>();
 }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/

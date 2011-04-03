@@ -9,9 +9,9 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_INTERPRETER_DATA_ER_2010_HPP
 #define BOOST_ASSIGN_V2_INTERPRETER_DATA_ER_2010_HPP
-#include <boost/assign/v2/detail/traits/container.hpp>
 #include <boost/assign/v2/detail/functor/pair.hpp>
 #include <boost/assign/v2/detail/functor/value.hpp>
+#include <boost/assign/v2/interpreter/fwd.hpp>
     
 namespace boost{
 namespace assign{
@@ -20,9 +20,9 @@ namespace v2{
 namespace interpreter_aux{
 
     template<
-        typename C // Value or pointer-container
-        , typename T/*<-*/ = typename v2::container_aux::value<C>::type/*->*/
-        , bool is_map/*<-*/ = v2::container_aux::is_map<C>::value/*->*/
+        typename C 		// Value or pointer-container
+        , typename T
+        , bool is_map
     >
     struct deduce_data_generator/*<-*/
     {

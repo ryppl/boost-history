@@ -11,7 +11,6 @@
 #define BOOST_ASSIGN_V2_OPTION_MODIFIER_STD_ER_2010_HPP
 #include <boost/assign/v2/detail/keyword.hpp>
 #include <boost/assign/v2/detail/traits/container.hpp>
-#include <boost/assign/v2/interpreter/fwd.hpp>
 #include <boost/assign/v2/option/modifier/framework.hpp>
 #include <boost/preprocessor/cat.hpp>
 
@@ -75,7 +74,6 @@ namespace interpreter_aux{\
     template<>\
     class interpreter_modifier<modifier_tag::FUN>\
     {\
-        typedef keyword_aux::ignore ignore_;\
         public:\
         interpreter_modifier(){}\
         interpreter_modifier( ignore_, ignore_ ){}\

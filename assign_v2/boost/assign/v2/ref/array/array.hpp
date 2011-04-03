@@ -56,15 +56,15 @@ namespace result_of{
         : nth_result_of::array<1, U>{}/*->*/;
 
     template<typename U>
-    struct array<U, keyword_aux::nil>/*<-*/
+    struct array<U, nil_>/*<-*/
         : nth_result_of::array<0, U>{}/*->*/;
 
 }// result_of
 
     // Generates an empty array
     template<typename T>
-    typename result_of::array<T, keyword_aux::nil>::type
-    array( keyword_aux::nil ) 
+    typename result_of::array<T, nil_>::type
+    array( nil_ ) 
     /*<-*/
     {
         return ref::list<list_aux::array_tag>( v2::_nil );

@@ -10,12 +10,15 @@
 #ifndef BOOST_ASSIGN_V2_OPTION_LIST_ER_2010_HPP
 #define BOOST_ASSIGN_V2_OPTION_LIST_ER_2010_HPP
 #include <boost/assign/v2/detail/keyword.hpp>
-#include <boost/assign/v2/interpreter/crtp.hpp>
-#include <boost/mpl/empty_base.hpp>
+#include <boost/assign/v2/interpreter/fwd.hpp>
+#include <boost/mpl/bool.hpp>
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/identity.hpp>
 #include <boost/typeof/typeof.hpp>
+#include <boost/type_traits/is_base_of.hpp>
 #include <boost/type_traits/is_same.hpp>
+#include <boost/type_traits/remove_cv.hpp>
+#include <boost/type_traits/remove_reference.hpp>
 #include <boost/utility/enable_if.hpp>
 
 namespace boost{
@@ -23,11 +26,11 @@ namespace assign{
 namespace v2{
 namespace interpreter_aux{
 
-    template<typename Lhs, typename Option>
+    template<typename Lhs, typename O>
     struct modulo_result
     {
         static Lhs lhs;
-        static Option option;
+        static O option;
 
         #ifdef BOOST_MSVC
         BOOST_TYPEOF_NESTED_TYPEDEF_TPL(nested, lhs % option )
@@ -39,7 +42,7 @@ namespace interpreter_aux{
 
     template<typename Head>
     struct option_list_exit 
-        : boost::is_same<Head, keyword_aux::nil>
+        : boost::is_same<Head, nil_>
     {};
 
 namespace result_of{
@@ -71,9 +74,11 @@ namespace result_of{
     
 }// result_of
     
+    struct list_option_base{};
+    
     template<
-        typename Head = keyword_aux::nil, 
-        typename Tail = boost::mpl::empty_base, 
+        typename Head = nil_, 
+        typename Tail = list_option_base, 
         bool exit = option_list_exit<Head>::value
     >
     struct list_option : public Tail
@@ -87,17 +92,17 @@ namespace result_of{
             : Tail( tail ), head_( h )
         {}
     
-        template<typename Option>
+        template<typename O>
         struct result
         {
-            typedef list_option<Option, list_option> type;
+            typedef list_option<O, list_option> type;
         };
     
-        template<typename Option>
-        typename result<Option>::type
-        operator%(Option option)const
+        template<typename O>
+        typename result<O>::type
+        operator%(O option)const
         {
-            typedef typename result<Option>::type result_;
+            typedef typename result<O>::type result_;
             return result_( *this, option );
         }
                         
@@ -126,24 +131,74 @@ namespace result_of{
     typedef list_option<> empty_list_option;
 
     template<
-        typename C, typename F, typename ModifierTag, 
-        typename DataTag, typename D,
+        typename C, typename F, typename MTag, 
+        typename DTag, typename D,
         typename H, typename T
     >
     typename result_of::apply_list_option<H, T, D>::type
     operator%(
-        interpreter_crtp<C, F, ModifierTag, DataTag, D> const& lhs,
+        interpreter_crtp<C, F, MTag, DTag, D> const& lhs,
         list_option<H, T> const& list
     )
     {
         return list.apply( lhs );
     }
-    
+
+namespace result_of{
+
+	template<typename L, typename O1>
+	struct list_option_modulo
+    	: L:: template result<O1>
+    {};
+
+
+}// result_of
 }// interpreter_aux
 namespace{
     interpreter_aux::empty_list_option _list_option
         = interpreter_aux::empty_list_option();
 }
+namespace interpreter_aux{
+
+	template<typename O> 
+    struct option_listable 
+    	: list_option_base
+    {};
+
+namespace result_of{
+
+	template<typename O1, typename O2>
+    struct option_modulo 
+    	: result_of::list_option_modulo<
+    		typename result_of::list_option_modulo<
+    			empty_list_option,
+        		O1
+    		>::type, 
+        	O2
+    	>
+    {};
+
+}// result_of
+    
+    template<typename O1, typename O2>
+    typename result_of::option_modulo<O1, O2>::type
+    operator%(option_listable<O1> const option1, O2 const& option2)
+    {
+    	O1 const& ref = static_cast<O1 const&>( option1 );
+		return _list_option % ref % option2;
+    }
+
+	template<typename Os>
+    struct is_option_listable 
+    	 : boost::is_base_of<
+         	list_option_base, 
+         	typename boost::remove_cv<
+            	typename boost::remove_reference<Os>::type
+            >::type
+         >
+    {};
+
+}// interpreter_aux
 }// v2
 }// assign
 }// boost

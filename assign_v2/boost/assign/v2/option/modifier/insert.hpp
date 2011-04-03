@@ -10,18 +10,15 @@
 #ifndef BOOST_ASSIGN_V2_OPTION_MODIFIER_INSERT_ER_2010_HPP
 #define BOOST_ASSIGN_V2_OPTION_MODIFIER_INSERT_ER_2010_HPP
 #include <cstddef>
-#include <boost/assign/v2/detail/keyword.hpp>
-#include <boost/assign/v2/detail/traits/container.hpp>
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
+#include <boost/assign/v2/detail/keyword.hpp>
 #include <boost/assign/v2/detail/pp/ignore.hpp>
-#include <boost/assign/v2/interpreter/fwd.hpp>
+#include <boost/assign/v2/detail/traits/container.hpp>
 #include <boost/assign/v2/option/modifier/framework.hpp>
 #include <boost/call_traits.hpp>
 #include <boost/shared_ptr.hpp>
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 #include <utility>
-#include <boost/type_traits/is_reference.hpp>
-#include <boost/utility/enable_if.hpp>
 #endif
 
 namespace boost{
@@ -39,8 +36,6 @@ namespace interpreter_aux{
     class interpreter_modifier< modifier_tag::insert >/*<-*/
     {
 
-        typedef keyword_aux::ignore ignore_;
-        
         public:
         interpreter_modifier(){}
         interpreter_modifier( ignore_, ignore_ ){}
@@ -96,4 +91,4 @@ BOOST_ASSIGN_V2_OPTION_MODIFIER_META_MODIFIER_TAG(insert, modifier_tag::insert)
 }// boost
 
 
-#endif // BOOST_ASSIGN_V2_OPTION_MODIFIER_ITERATE_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_OPTION_MODIFIER_INSERT_ER_2010_HPP

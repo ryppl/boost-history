@@ -12,13 +12,14 @@
 #include <boost/assign/v2/detail/pp/ignore.hpp>
 #include <boost/assign/v2/detail/traits/container.hpp>
 #include <boost/assign/v2/detail/traits/switch.hpp>
+#include <boost/assign/v2/interpreter/fwd.hpp>
 #include <boost/assign/v2/option/modifier/insert.hpp>
 #include <boost/assign/v2/option/modifier/iterate.hpp>
 #include <boost/assign/v2/option/modifier/std.hpp>
 #include <boost/concept_check.hpp>
+#include <boost/mpl/apply.hpp>
 #include <boost/mpl/assert.hpp>
 #include <boost/mpl/if.hpp>
-#include <boost/mpl/apply.hpp>
 #include <boost/preprocessor/cat.hpp>
 #include <boost/type_traits/is_same.hpp>
 

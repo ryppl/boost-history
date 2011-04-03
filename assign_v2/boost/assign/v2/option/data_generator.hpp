@@ -16,6 +16,7 @@
 #include <boost/assign/v2/interpreter/data_generator.hpp>
 #include <boost/assign/v2/interpreter/fwd.hpp>
 #include <boost/assign/v2/interpreter/replace.hpp>
+#include <boost/assign/v2/option/list.hpp>
 #include <boost/mpl/apply.hpp>
 
 namespace boost{
@@ -26,18 +27,38 @@ namespace v2{
 namespace interpreter_aux{
 
     template<
-        typename C // Value or pointer-container
+        typename C 		// Value or pointer-container
+        , typename F	// Functor or keyword	
     >
-    struct deduce_key_generator/*<-*/
+    struct deduce_generator/*<-*/
     {
-        typedef typename container_aux::key<C>::type key_;
-        typedef functor_aux::value<key_> type;
+    	typedef F type;
     }/*->*/;
 
     template<
-        typename C // Value or pointer-container
+        typename C // Multi-array
     >
-    struct deduce_value_generator/*<-*/
+    struct deduce_generator<C, element_>/*<-*/
+    {
+        typedef functor_aux::value<
+            typename container_aux::element<C>::type
+        > type;
+    }/*->*/;
+
+    template<typename C>
+    struct deduce_generator<C, key_>/*<-*/
+    {
+        typedef typename container_aux::key<C>::type key_;
+        typedef functor_aux::value<key_> type;
+	}/*->*/;
+
+    template<typename C>
+    struct deduce_generator<C, use_default_>/*<-*/
+		: deduce_data_generator<C>
+    {}/*->*/;
+
+    template<typename C>
+    struct deduce_generator<C, value_>/*<-*/
     {
         typedef functor_aux::value<
             typename container_aux::value<C>::type
@@ -46,39 +67,21 @@ namespace interpreter_aux{
 
 namespace result_of{
 
-    template<typename D, typename C, typename F = keyword_aux::use_default>
+    template<typename D, typename C, typename F = use_default_>
     struct option_data_generator/*<-*/
         : ::boost::mpl::apply1<
             interpreter_aux::replace_data_generator<D>, 
-            F
-        >
-    {}/*->*/;
-
-    template<typename D, typename C>
-    struct option_data_generator<D, C, keyword_aux::key>/*<-*/
-        : option_data_generator<
-            D, C, typename deduce_key_generator<C>::type
-        >
-    {}/*->*/;
-
-    template<typename D, typename C>
-    struct option_data_generator<D, C, keyword_aux::use_default>/*<-*/
-        : option_data_generator<
-            D, C, typename deduce_data_generator<C>::type
-        >
-    {}/*->*/;
-
-    template<typename D, typename C>
-    struct option_data_generator<D, C, keyword_aux::value>/*<-*/
-        : option_data_generator<
-            D, C, typename deduce_value_generator<C>::type
+            typename deduce_generator<C, F>::type
         >
     {}/*->*/;
         
 }// result_of
 
-    template<typename F/*<-*/= keyword_aux::ignore/*->*/>
+    template<typename F/*<-*/= ignore_/*->*/>
     struct option_data_generator/*<-*/
+    	: option_listable<
+        	option_data_generator<F> 
+        >
     {
         option_data_generator(){}
         option_data_generator(F f) : f_( f ){}
@@ -90,49 +93,44 @@ namespace result_of{
         F f_;
     }/*->*/;
 
-    template<>
-    struct option_data_generator<use_default>/*<-*/
+	template<typename Kwd>
+    struct option_data_generator_helper
     {
-        option_data_generator(){}
-        option_data_generator(keyword_aux::ignore){}
 
-        template<typename C>
-        typename deduce_data_generator<C>::type 
+		template<typename C>
+        typename deduce_generator<C, Kwd>::type 
         data_generator()const
         { 
-            return typename deduce_data_generator<C>::type(); 
+            return typename deduce_generator<C, Kwd>::type(); 
         }
+    
+    };
+
+    template<>
+    struct option_data_generator<use_default_>/*<-*/
+    	: option_data_generator_helper<use_default_>
+    {
+        option_data_generator(){}
+        option_data_generator(ignore_){}
         
     }/*->*/;
 
     template<>
-    struct option_data_generator<keyword_aux::key>/*<-*/
+    struct option_data_generator<key_>/*<-*/
+    	: option_data_generator_helper<key_>
     {
         option_data_generator(){}
-        option_data_generator(keyword_aux::ignore){}
+        option_data_generator(ignore_){}
 
-        template<typename C>
-        typename deduce_key_generator<C>::type 
-        data_generator()const
-        { 
-            return typename deduce_key_generator<C>::type(); 
-        }
-        
     }/*->*/;
 
     template<>
-    struct option_data_generator<keyword_aux::value>/*<-*/
+    struct option_data_generator<value_>/*<-*/
+    	: option_data_generator_helper<value_>
     {
         option_data_generator(){}
-        option_data_generator(keyword_aux::ignore){}
+        option_data_generator(ignore_){}
 
-        template<typename C>
-        typename deduce_value_generator<C>::type 
-        data_generator()const
-        { 
-            return typename deduce_value_generator<C>::type(); 
-        }
-        
     }/*->*/;
 
     // Overrides data generator

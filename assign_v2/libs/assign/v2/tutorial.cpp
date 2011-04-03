@@ -38,9 +38,10 @@ namespace tutorial_assign_v2{
             std::vector<int> numeric( 10 ); iota( numeric, 0 ); 
             typedef std::string str_; typedef variant< int, str_ > data_; 
             array<data_, 16> keypad;
-            put( keypad )
-                ( "+" )( "-" )( "*" )( "/" )( "=" )( "." )
-                ( as_arg_list( numeric ) );
+            csv_put( keypad
+                , "+", "-", "*", "/", "=", "." 
+                , as_arg_list( numeric ) 
+            );
 
             assert( get<str_>( keypad.front() ) == "+" );
             assert( get<int>( keypad.back()  ) == 9 );
@@ -105,11 +106,11 @@ namespace tutorial_assign_v2{
         {
             //[tutorial_data_gen
             typedef std::string word_; 
-            const char foo[] = "foo";
-            const char bar[4] = { 'b', 'a', 'r', '\0' };
-            word_ baz = "***baz";
+            const char x[] = "foo";
+            const char y[4] = { 'b', 'a', 'r', '\0' };
+            word_ z = "***baz";
             std::map<int, word_> map;
-            put( map )/*<<Calls `map.insert( 1, str_( foo, 3 ) )`>>*/( 1, foo, 3 )( 2, bar )( 3, baz, 3, 3 )( 4, "qux");
+             put( map )/*<<Calls `map.insert( 1, str_( foo, 3 ) )`>>*/( 1, x, 3 )( 2, y )( 3, z, 3, 3 )( 4, "qux");
 
             assert( map[1] == "foo" ); assert( map[2] == "bar" );
             assert( map[3] == "baz" ); assert( map[4] == "qux" );

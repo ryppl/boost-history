@@ -9,6 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_INTERPRETER_FWD_ER_2010_HPP
 #define BOOST_ASSIGN_V2_INTERPRETER_FWD_ER_2010_HPP
+#include <boost/assign/v2/detail/traits/container.hpp>
 
 namespace boost{
     struct use_default;
@@ -28,7 +29,6 @@ namespace data_tag{
     template<typename Storage, typename Assign> struct plus : Storage{};
 
     // Shortcuts
-
     typedef plus<storage_ptr, assign> ptr;
     typedef plus<storage_ptr, assign_map> ptr_map;
     typedef plus<storage_value, assign> value;
@@ -37,12 +37,23 @@ namespace data_tag{
 }// data_tag
 namespace interpreter_aux{
 
-    template<typename C, typename F, 
-        typename ModifierTag, typename DataTag, typename D> 
+    template<
+        typename C // Value or pointer-container
+        , typename T = typename v2::container_aux::value<C>::type
+        , bool is_map = v2::container_aux::is_map<C>::value
+    >
+    struct deduce_data_generator;
+
+    template<typename C> struct deduce_data_tag;
+
+    template<typename C, typename F, typename MTag, typename DTag, typename D>
     class interpreter_crtp;
 
-    template<typename Tag> 
-    struct interpreter_modifier;
+    template<typename Tag> struct interpreter_modifier;
+
+    template<typename Derived> struct replace_data_generator;
+    template<typename Derived> struct replace_modifier_tag;
+    template<typename Derived> struct replace_data_tag;
 
 }// interpreter_aux
 }// v2

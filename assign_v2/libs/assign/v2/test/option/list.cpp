@@ -9,10 +9,10 @@
 //////////////////////////////////////////////////////////////////////////////
 #include <deque>
 #include <boost/assign/v2/detail/config/check.hpp>
+#include <boost/assign/v2/put/put.hpp>
 #include <boost/assign/v2/option/list.hpp>
 #include <boost/assign/v2/option/data_generator.hpp>
 #include <boost/assign/v2/option/modifier/std.hpp>
-#include <boost/assign/v2/put.hpp>
 #include <boost/lambda/lambda.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/typeof/typeof.hpp>
@@ -24,8 +24,6 @@ namespace xxx_list{
 
     void test()
     {
-        //xxx_csv_put::test();
-        //xxx_option::test();
         using namespace boost::assign::v2;
         std::deque<int> cont;
 
@@ -35,13 +33,12 @@ namespace xxx_list{
         BOOST_AUTO( 
             apply, 
             ( 
-                _list_option % _push_front % ( _data = ( _1 % 10 ) ) 
+                _push_front % ( _data = ( _1 % 10 ) ) 
             ).apply( put( cont ) ) 
         );
         apply( 15 );
         BOOST_ASSIGN_V2_CHECK( cont[0] == 5 );
         BOOST_ASSIGN_V2_CHECK( cont[1] == 1 );
-
     }
 
 }// xxx_list

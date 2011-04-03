@@ -10,6 +10,8 @@
 #ifndef BOOST_ASSIGN_V2_PIPE_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PIPE_ER_2010_HPP
 
+#include <boost/assign/v2/pipe/chain.hpp>
+#include <boost/assign/v2/pipe/convert.hpp>
 #include <boost/assign/v2/pipe/csv_put.hpp>
 
 #endif // BOOST_ASSIGN_V2_PIPE_ER_2010_HPP

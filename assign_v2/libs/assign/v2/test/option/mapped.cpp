@@ -11,7 +11,7 @@
 #include <string>
 #include <cmath>
 #include <boost/assign/v2/detail/config/check.hpp>
-#include <boost/assign/v2/put.hpp>
+#include <boost/assign/v2/put/put.hpp>
 #include <boost/assign/v2/deque.hpp>
 // Options come next
 #include <boost/assign/v2/option/data_generator.hpp>
@@ -36,11 +36,13 @@ namespace xxx_mapped{
         {
             //[test_option_mapped_map
             using namespace lambda;
-            typedef std::string str_; typedef std::map<str_, int> C; C year;
+            typedef std::string month_; typedef int days_;
+            typedef std::map<month_, days_> C; C year;
             (
                 as2::put( year )( "feb", 28 )( "apr", 30 )( "jun", 30 )( "sep", 30 )( "nov", 30 )
-                    % (as2::_data = as2::_key) % ( as2::_mapped = ( _1 = 31 ) )
-            )/*<<Calls `year["jan"] = 31` etc.>>*/( "jan" )( "mar" )( "may" )( "jul" )( "aug" )( "oct" )( "dec" );
+                    % (as2::_data = as2::_key) 
+                    	% ( as2::_mapped = ( _1 = 31 ) )
+            )/*<<Calls `year[ month_( "jan" ) ] = 31`>>*/( "jan" )( "mar" )( "may" )( "jul" )( "aug" )( "oct" )( "dec" );
 
             BOOST_ASSIGN_V2_CHECK( year["jan"] == 31 );
             BOOST_ASSIGN_V2_CHECK( year["dec"] == 31 );

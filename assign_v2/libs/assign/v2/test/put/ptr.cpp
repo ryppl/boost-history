@@ -11,7 +11,8 @@
 #include <utility>
 #include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/detail/pp/ignore.hpp>
-#include <boost/assign/v2/put.hpp>
+#include <boost/assign/v2/put/csv_put.hpp>
+#include <boost/assign/v2/put/put.hpp>
 #include <boost/scoped_ptr.hpp>
 #include <boost/ptr_container/ptr_array.hpp>
 #include <boost/ptr_container/ptr_deque.hpp>
@@ -31,45 +32,30 @@ namespace xxx_ptr{
 
         namespace as2 = boost::assign::v2;
 
-        {
+		// ARRAY
+        {	
             //[test_put_ptr_array
             typedef int T;
             T x = 1, y = 2, z = 3; boost::ptr_array<T, 3> cont;
-            as2::put( cont )/*<<Calls `assoc[i++] = new T( t )` for `i = 0` and `t`[^ = ] `x`, `y`, and `z`>>*/( x )( y )( z );
+            /*<<Calls `assoc[i++] = new T( t )` for `i = 0` and `t`[^ = ] `x`, `y`, and `z`>>*/as2::csv_put( cont, x, y, z );
             
             BOOST_ASSIGN_V2_CHECK( cont.front() == x );
             BOOST_ASSIGN_V2_CHECK( cont.back() == z );
             //]
         }
+		// SEQUENCE
         {
             //[test_put_ptr_deque
             typedef int T; T x = 1, y = 2, z = 0; boost::ptr_deque<T> cont;
-            as2::put( cont )/*<<Calls `assoc.push_back( new T( t ) )` for `t` [^=] `x`, `y`, and `z`>>*/( x )( y )( z );
+            /*<<Calls `assoc.push_back( new T( t ) )` for `t` [^=] `x`, `y`, and `z`>>*/as2::csv_put( cont, x, y, z );
 
             BOOST_ASSIGN_V2_CHECK( cont.front() == x );
             BOOST_ASSIGN_V2_CHECK( cont.back() == z );
             //]
         }
+        // MAP
         {
-            //[test_put_ptr_list
-            typedef int T; T x = 1, y = 2, z = 0; boost::ptr_list<T> cont;
-            as2::put( cont )/*<<Calls `assoc.push_back( new T( t ) )` for `t` [^=] `x`, `y`, and `z`>>*/( x )( y )( z );
-
-            BOOST_ASSIGN_V2_CHECK( cont.front() == x );
-            BOOST_ASSIGN_V2_CHECK( cont.back() == z );
-            //]
-        }
-        {
-            //[test_put_ptr_vector
-            typedef int T; T x = 1, y = 2, z = 0; boost::ptr_vector<T> cont;
-            as2::put( cont )/*<<Calls `assoc.push_back( new T( t ) )` for `t` [^=] `x`, `y`, and `z`>>*/( x )( y )( z );
-
-            BOOST_ASSIGN_V2_CHECK( cont.front() == x );
-            BOOST_ASSIGN_V2_CHECK( cont.back() == z );
-            //]
-        }
-        {
-            //[put_ptr_map
+            //[test_put_ptr_map
             typedef std::string key_;
             boost::ptr_map<key_, int> assoc;
             as2::put( assoc )( "jan", 31 )( "feb", 28 )( "mar", 31 );
@@ -79,33 +65,47 @@ namespace xxx_ptr{
             BOOST_ASSIGN_V2_CHECK( assoc["mar"] == 31 );
             //]
         }
+        {    
+            //[test_put_ptr_unordered_map
+            typedef std::string word_; 
+            const char x[] = "foo";
+            const char y[4] = { 'b', 'a', 'r', '\0' };
+            word_ z = "***baz";
+            boost::ptr_unordered_map<int, word_> map;
+            as2::put( map )( 1, x, 3 )( 2, y )( 3, z, 3, 3 )( 4, "qux");
+
+            assert( map[1] == "foo" ); assert( map[2] == "bar" );
+            assert( map[3] == "baz" ); assert( map[4] == "qux" );
+            //]
+        }
         {
-            //[put_ptr_set
+            //[test_csv_put_ptr_map
+            typedef std::string key_; typedef int days_;
+            typedef boost::ptr_map<key_, days_> C; 
+            typedef as2::value_container_value<C>::type /*<<Same as `std::map<key_, days_>::value_type`>>*/T;
+            C map; as2::csv_put( map, T("jan", 31 ), T( "feb", 28 ), T( "mar", 31 ) );
+
+            
+            BOOST_ASSIGN_V2_CHECK( map["jan"] == 31 );
+            BOOST_ASSIGN_V2_CHECK( map["mar"] == 31 );
+            //]
+        }
+        // SET
+        {
+        	// Shows that x, y, z can be variadic
+            //[test_put_ptr_set
             typedef std::string T; boost::ptr_set<T> assoc;
             T x = "isomer", y = "ephemeral", z = "prosaic";
-            as2::put( assoc )/*<<Calls `assoc.insert( new T( t ) )` for `t` [^=] `x`, `y`, and `z`>>*/( x )( z )( y );
+            /*<<Calls `assoc.insert( new T( t ) )` for `t` [^=] `x`, `y`, and `z`>>*/as2::csv_put( assoc, x, z, y );
 
             BOOST_ASSIGN_V2_CHECK( assoc.count( x ) == 1 );
             BOOST_ASSIGN_V2_CHECK( assoc.count( z ) == 1 );
             //]
         }
         {    
-            //[test_put_put_unordered_map
-            typedef std::string word_; 
-            const char foo[] = "foo";
-            const char bar[4] = { 'b', 'a', 'r', '\0' };
-            word_ baz = "***baz";
-            boost::ptr_unordered_map<int, word_> map;
-            as2::put( map )( 1, foo, 3 )( 2, bar )( 3, baz, 3, 3 )( 4, "qux");
-
-            assert( map[1] == "foo" ); assert( map[2] == "bar" );
-            assert( map[3] == "baz" ); assert( map[4] == "qux" );
-            //]
-        }
-        {    
-            //[test_put_put_unordered_set
+            //[test_put_ptr_unordered_set
             boost::ptr_unordered_set<std::string> set; 
-            as2::put( set )( "foo" )( "bar" )( "baz" );
+            as2::csv_put( set, "foo", "bar", "baz" );
 
             BOOST_ASSIGN_V2_CHECK( set.count( "foo" ) == 1 );
             BOOST_ASSIGN_V2_CHECK( set.count( "baz" ) == 1 );

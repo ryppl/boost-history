@@ -15,10 +15,7 @@
 #include <boost/assign/v2/detail/traits/container.hpp>
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 #include <utility>
-#include <boost/utility/enable_if.hpp>
-#include <boost/type_traits/is_reference.hpp>
 #endif
-#include <boost/assign/v2/interpreter/fwd.hpp>
 #include <boost/assign/v2/option/modifier/framework.hpp>
 
 namespace boost{

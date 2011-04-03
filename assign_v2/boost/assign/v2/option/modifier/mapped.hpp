@@ -12,7 +12,6 @@
 #include <boost/assign/v2/detail/keyword.hpp>
 #include <boost/assign/v2/detail/pp/ignore.hpp>
 #include <boost/assign/v2/detail/traits/container.hpp>
-#include <boost/assign/v2/interpreter/fwd.hpp>
 #include <boost/assign/v2/option/modifier/framework.hpp>
 #include <boost/call_traits.hpp>
 #include <boost/shared_ptr.hpp>
@@ -23,10 +22,7 @@ namespace v2{
 //[syntax_option_mapped
 namespace modifier_tag{ 
 
-    template<
-        typename Arg
-    > 
-    struct mapped; 
+    template<typename Arg> struct mapped{}; 
 
 }// modifier_tag
 namespace interpreter_aux{
@@ -38,7 +34,6 @@ namespace interpreter_aux{
         typedef Arg arg_;
         // storing a copy of lambda::something has caused pbs, hence ptr
         typedef boost::shared_ptr<arg_> ptr_; 
-        typedef keyword_aux::ignore ignore_;
         
         public:
 

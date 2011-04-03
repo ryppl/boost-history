@@ -15,13 +15,12 @@
 #include <boost/array.hpp>
 #include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/deque.hpp>
-#include <boost/assign/v2/put.hpp>
-// Options come next
 #include <boost/assign/v2/option/data_generator.hpp>
+#include <boost/assign/v2/put/csv_put.hpp>
+#include <boost/assign/v2/put/put.hpp>
 #include <boost/function.hpp>
 #include <boost/lambda/bind.hpp>
 #include <boost/lambda/lambda.hpp>
-#include <boost/lambda/construct.hpp>
 #include <boost/numeric/conversion/bounds.hpp>
 #include <boost/range/algorithm/equal.hpp>
 #include <boost/typeof/typeof.hpp>
@@ -41,9 +40,11 @@ namespace xxx_data{
             std::vector<double> exponent;
             /*<-*/typedef double(*fp)(double);/*->*/
             typedef function<double(double)> f_;
-            (
-                as2::put( exponent ) % ( as2::_data = f_( /*<-*/fp(/*->*/ log10 /*<-*/)/*->*/ ) )
-            )( 1.0 )( 10.0 )( 100.0 )( 1000.0 )( 10000.0 );
+            as2::csv_put( 
+            	exponent
+                , as2::_data = f_( /*<-*/fp(/*->*/ log10 /*<-*/)/*->*/ ) 
+            	, 1.0, 10.0, 100.0, 1000.0, 10000.0 
+            );
 
             double eps = numeric::bounds<double>::smallest();
             BOOST_ASSIGN_V2_CHECK( fabs( exponent.front() - 0.0 ) < eps );
@@ -68,16 +69,16 @@ namespace xxx_data{
         {
             //[test_option_data_value
             typedef std::string word_; 
-            const char foo[] = "foo";
-            const char bar[4] = { 'b', 'a', 'r', '\0' };
-            word_ baz = "***baz";
+            const char x[] = "foo";
+            const char y[4] = { 'b', 'a', 'r', '\0' };
+            word_ z = "***baz";
             typedef std::map<int, word_> C; 
             typedef C::value_type T;
             typedef C::mapped_type D;
             C map;
             (
                 as2::put( map )  % ( as2::_data = as2::_value )
-            )( 1, D( foo, 3 ) )( 2, bar )( 3, D( baz, 3, 3 ) )( 4, "qux");
+            )( 1, D( x, 3 ) )( 2, y )( 3, D( z, 3, 3 ) )( 4, "qux");
 
             BOOST_ASSIGN_V2_CHECK( map[1] == "foo" ); BOOST_ASSIGN_V2_CHECK( map[2] == "bar" );
             BOOST_ASSIGN_V2_CHECK( map[3] == "baz" ); BOOST_ASSIGN_V2_CHECK( map[4] == "qux" );

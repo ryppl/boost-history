@@ -11,12 +11,13 @@
 #include <map>
 #include <string>
 #include <boost/assign/v2/detail/config/check.hpp>
-#include <boost/assign/v2/csv.hpp>
+//#include <boost/assign/v2/csv.hpp>
 #include <boost/assign/v2/deque.hpp>
-#include <boost/assign/v2/put.hpp>
 // Options come after
 #include <boost/assign/v2/option/data_generator.hpp>
 #include <boost/assign/v2/option/modifier/std.hpp>
+#include <boost/assign/v2/put/csv_put.hpp> // Really?
+#include <boost/assign/v2/put/put.hpp>
 #include <boost/range/algorithm/equal.hpp>
 #include <libs/assign/v2/test/csv.h>
 
@@ -30,7 +31,7 @@ namespace xxx_csv{
         {
             //[test_csv_put
             std::deque<int> cont;    
-            as2::csv( as2::put( cont ), 1, 10, 100 );
+            as2::csv_put( cont, 1, 10, 100 );
 
             BOOST_ASSIGN_V2_CHECK( range::equal( cont, as2::csv_deque( 1, 10, 100 ) ) );
             //]
@@ -40,10 +41,7 @@ namespace xxx_csv{
             typedef std::map<std::string, int> C; typedef C::value_type T;
             C cont;
 
-            as2::csv( 
-                as2::put( cont ) % (as2::_data = as2::_value), 
-                T("jan", 31), T("feb", 28), T("mar", 31) 
-            );
+            as2::csv_put( cont, T("jan", 31), T("feb", 28), T("mar", 31) );
 
             BOOST_ASSIGN_V2_CHECK( cont["jan"] == 31 );
             BOOST_ASSIGN_V2_CHECK( cont["mar"] == 31 );
@@ -52,21 +50,18 @@ namespace xxx_csv{
         {
             //[test_csv_put_modulo
             std::deque<int> cont;
-            as2::csv( 
-                as2::put( cont ) % as2::_push_front, 
-                100, 10, 1 
-            );
+            as2::csv_put( cont, as2::_push_front, 100, 10, 1 );
 
             BOOST_ASSIGN_V2_CHECK( 
                 range::equal( cont, as2::csv_deque( 1, 10, 100 ) ) 
             );
             //]
         }
-        {
+        /*{
             //[test_csv_deque_modulo
             BOOST_AUTO(    
                 cont,
-                as2::csv( 
+                csv( 
                     as2::deque<int>( as2::_nil ) % as2::_push_front, 
                     1, 10, 100 
                 )
@@ -76,7 +71,7 @@ namespace xxx_csv{
                 range::equal( cont, as2::csv_deque( 1, 10, 100 ) ) 
             );
             //]
-        }
+        }*/
     }
 
 }// xxx_csv

@@ -10,11 +10,10 @@
 #include <vector>
 #include <boost/array.hpp>
 #include <boost/assign/v2/detail/config/check.hpp>
-
-#include <boost/assign/v2/put.hpp>
-// Options come next
-#include <boost/assign/v2/option/modifier/iterate.hpp> 
 #include <boost/assign/v2/deque.hpp>
+#include <boost/assign/v2/option/modifier/iterate.hpp> 
+#include <boost/assign/v2/put/csv_put.hpp>
+#include <boost/assign/v2/put/put.hpp>
 #include <boost/lambda/lambda.hpp>
 #include <boost/lambda/bind.hpp>
 #include <boost/lambda/construct.hpp>
@@ -36,7 +35,7 @@ namespace xxx_iterate{
         using namespace boost;
         namespace as2 = assign::v2;        {
             //[test_option_iterate_meta
-            typedef as2::modifier_tag::iterate_arg arg_;
+            typedef as2::functor_aux::iterate arg_;
             typedef array<int, 4> cont_;
             typedef as2::result_of::put<cont_>::type put_;
             typedef as2::result_of::option_iterate<put_, arg_>::type result1_;
@@ -54,9 +53,11 @@ namespace xxx_iterate{
             alternating[2] = -2; 
 
             int index = 3; 
-            ( 
-                as2::put( alternating ) % ( as2::_iterate = var( index )++ ) 
-            )( +2 )( -3 )( +3 )( -4 )( +4 )( -5 )( +5 );
+            as2::csv_put( 
+            	alternating
+                , as2::_iterate = var( index )++
+            	, +2, -3, +3, -4, +4, -5, +5 
+            );
 
             BOOST_ASSIGN_V2_CHECK(     
                 range::equal( 
@@ -66,10 +67,11 @@ namespace xxx_iterate{
             );
             //]
         }
+/*
         {
             //[test_option_iterate_meta_deque
             typedef as2:: interpreter_aux::keyword_iterate keyword_;
-            typedef as2::modifier_tag::iterate_arg arg_;
+            typedef as2::functor_aux::iterate arg_;
             typedef as2::result_of::deque<int>::type put_;
             typedef as2::result_of::option_iterate<put_, arg_>::type result1_;
             typedef as2::modifier_tag::iterate<arg_> tag1_;
@@ -102,6 +104,7 @@ namespace xxx_iterate{
             );
             //]
         }
+*/
     }
 
 }// xxx_iterate

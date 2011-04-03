@@ -28,7 +28,7 @@ namespace v2{
 //syntax_detail_functor_value
 namespace functor_aux{
 
-    template<typename T = keyword_aux::nil>
+    template<typename T = nil_>
     class value/*<-*/
 #if !BOOST_ASSIGN_V2_ENABLE_CPP0X
     : public functor_aux::crtp_unary_and_up<

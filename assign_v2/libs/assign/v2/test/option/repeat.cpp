@@ -10,7 +10,7 @@
 #include <vector>
 #include <boost/typeof/typeof.hpp>
 #include <boost/assign/v2/detail/config/check.hpp>
-#include <boost/assign/v2/put.hpp>
+#include <boost/assign/v2/put/csv_put.hpp>
 // Options come next
 #include <boost/assign/v2/option/modifier/std.hpp>
 #include <boost/assign/v2/option/modifier/repeat.hpp>
@@ -29,10 +29,13 @@ namespace xxx_repeat{
         {
             //[test_option_repeat_simple
             std::vector<int> cont;
-            ( as2::put( cont ) % ( as2::_repeat = 2  ) )( 1 )( 10 )( 100 );
+            as2::csv_put( cont, as2::_repeat = 2, 1, 10, 100 );
 
             BOOST_ASSIGN_V2_CHECK( 
-                range::equal( cont, as2::csv_deque( 1, 1, 10, 10, 100, 100 ) ) 
+                range::equal( 
+                	cont, 
+                    as2::csv_deque( 1, 1, 10, 10, 100, 100 ) 
+                ) 
             );
             //]
         }

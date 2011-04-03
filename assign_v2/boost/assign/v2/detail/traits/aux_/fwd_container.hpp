@@ -43,6 +43,14 @@ namespace boost{
     // http://www.boost.org/doc/libs/release/libs/circular_buffer/index.html
     template<typename T, typename Alloc> class circular_buffer;
 
+namespace detail{
+namespace multi_array{
+
+	struct multi_array_base;
+
+}// multi_array
+}// detail
+
    template <
         class Key,
         class Hash, 

@@ -47,7 +47,7 @@ namespace nth_result_of{
 
     template<typename U>
     typename nth_result_of::csv_array<0, U>::type
-    csv_array( keyword_aux::nil )/*<-*/
+    csv_array( nil_ )/*<-*/
     {
         typedef typename nth_result_of::csv_array<0, U>::type result_;
         return result_();

@@ -12,6 +12,7 @@
 #include <libs/assign/v2/test/option/list.h>
 #include <libs/assign/v2/test/option/mapped.h>
 #include <libs/assign/v2/test/option/repeat.h>
+#include <libs/assign/v2/test/option/row_major.h>
 #include <libs/assign/v2/test/option/std_modifier.h>
 #include <libs/assign/v2/test/option.h>
 
@@ -24,6 +25,7 @@ namespace xxx_option{
         xxx_mapped::test();
         xxx_list::test();
         xxx_repeat::test();
+        // xxx_row_major::test(); // TODO
         xxx_standard::test();
     }
 

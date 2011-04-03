@@ -173,7 +173,7 @@ namespace interpreter_aux{
 
     template<typename T>
     typename result_of::deque<T>::type
-    deque( keyword_aux::nil )/*<-*/
+    deque( nil_ )/*<-*/
     {
         return typename result_of::deque<T>::type();
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/

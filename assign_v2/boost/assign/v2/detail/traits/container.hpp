@@ -37,7 +37,7 @@ namespace container_aux{
         >
     {};
 
-// DATA-MEMBER
+// ACCESS
 
     template<typename C>
     struct key : through_value_container<value_key, C>{};
@@ -48,21 +48,17 @@ namespace container_aux{
     template<typename C>
     struct value : through_value_container<value_value, C>{};
 
-// STORAGE
+    template<
+    	typename C	// Multi-array
+    >
+    struct element : through_value_container<value_element, C>{};
 
-    template<typename C>
-    struct is_ptr_container : ::boost::mpl::not_<
-        boost::is_same<C, typename to_value_container<C>::type>
-    >{};
-
-// MEMBERS
+// PREDICATE
 
     template<typename C>
     struct has_push_deduced_value
         : through_value_container<value_has_push_deduced_value, C>
     {};
-
-// CATEGORY
 
     template<typename C> struct is_array
         : through_value_container<value_is_array, C>
@@ -87,6 +83,11 @@ namespace container_aux{
         : through_value_container<value_is_map, C>
     {};
     
+    template<typename C>
+    struct is_ptr_container : ::boost::mpl::not_<
+        boost::is_same<C, typename to_value_container<C>::type>
+    >{};
+
     template<typename C>
     struct is_sorted 
         : through_value_container<value_is_sorted, C>

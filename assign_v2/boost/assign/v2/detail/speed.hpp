@@ -21,7 +21,7 @@
 #include <boost/assign/list_inserter.hpp>
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
-#include <boost/assign/v2/put.hpp>
+#include <boost/assign/v2/put/put.hpp>
 #include <boost/assign/v2/deque.hpp>
 #include <boost/assign/v2/pipe/csv_put.hpp>
 #include <boost/assign/v2/ref/array/array.hpp>
