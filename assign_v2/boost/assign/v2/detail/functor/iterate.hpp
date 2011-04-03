@@ -7,9 +7,37 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_PIPE_ER_2010_HPP
-#define BOOST_ASSIGN_V2_PIPE_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_DETAIL_FUNCTOR_ITERATE_ER_2010_HPP
+#define BOOST_ASSIGN_V2_DETAIL_FUNCTOR_ITERATE_ER_2010_HPP
+#include <cstddef>
 
-#include <boost/assign/v2/pipe/csv_put.hpp>
+namespace boost{
+namespace assign{
+namespace v2{
+//syntax_detail_functor_iterate
+namespace functor_aux{
 
-#endif // BOOST_ASSIGN_V2_PIPE_ER_2010_HPP
+    struct iterate
+    {
+        
+        typedef std::size_t result_type;
+        
+        iterate():i( 0 ){}
+        iterate( result_type i_ ):i( i_ ){}
+        
+        result_type operator()()const{ return this->i++; }
+
+        typedef iterate type;
+
+        private:
+        mutable result_type i;
+
+    };
+
+}// functor_aux
+//]
+}// v2
+}// assign
+}// boost
+
+#endif // BOOST_ASSIGN_V2_DETAIL_FUNCTOR_ITERATE_ER_2010_HPP
