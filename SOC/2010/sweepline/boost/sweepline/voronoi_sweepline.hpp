@@ -28,8 +28,11 @@ typedef boost::ulong_long_type polygon_ulong_long_type;
 #endif
 #endif
 
+//#pragma warning(disable:4800)
+//#include <gmpxx.h>
+
 #include "voronoi_output.hpp"
-//#include "detail/mpz_arithmetic.hpp"
+#include "detail/mpz_arithmetic.hpp"
 #include "detail/voronoi_formation.hpp"
 
 namespace boost {

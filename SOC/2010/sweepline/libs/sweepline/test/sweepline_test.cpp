@@ -637,38 +637,38 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(segment_grid_test, T, test_types) {
 }
 #endif
 
-//#ifdef NDEBUG
-//BOOST_AUTO_TEST_CASE_TEMPLATE(segment_random_test1, T, test_types) {
-//    srand(static_cast<unsigned int>(time(NULL)));
-//    voronoi_output<T> test_output;
-//    std::vector< point_2d<T> > point_vec;
-//    std::vector< std::pair< point_2d<T>, point_2d<T> > > segm_vec;
-//    int num_runs = 10000;
-//    int num_segments = 5;
-//    point_vec.push_back(make_point_2d<T>(-100, -100));
-//    point_vec.push_back(make_point_2d<T>(-100, 100));
-//    point_vec.push_back(make_point_2d<T>(100, -100));
-//    point_vec.push_back(make_point_2d<T>(100, 100));
-//    for (int i = 0; i < num_runs; i++) {
-//        for (int j = 0; j < num_segments; j++) {
-//            T x1 = 0, y1 = 0, x2 = 0, y2 = 0;
-//            while (x1 == x2 && y1 == y2) {
-//                x1 = (rand() % 100) - 50;
-//                y1 = (rand() % 100) - 50;
-//                x2 = (rand() % 100) - 50;
-//                y2 = (rand() % 100) - 50;
-//            }
-//            point_2d<T> point1(x1, y1);
-//            point_2d<T> point2(x2, y2);
-//            segm_vec.push_back(std::make_pair(point1, point2));
-//        }
-//        remove_intersections(segm_vec);
-//        build_voronoi(point_vec, segm_vec, test_output);
-//        VERIFY_VORONOI_OUTPUT(test_output, NO_HALF_EDGE_INTERSECTIONS);
-//        segm_vec.clear();
-//    }
-//}
-//#endif
+#ifdef NDEBUG
+BOOST_AUTO_TEST_CASE_TEMPLATE(segment_random_test1, T, test_types) {
+    srand(static_cast<unsigned int>(time(NULL)));
+    voronoi_output<T> test_output;
+    std::vector< point_2d<T> > point_vec;
+    std::vector< std::pair< point_2d<T>, point_2d<T> > > segm_vec;
+    int num_runs = 10000;
+    int num_segments = 5;
+    point_vec.push_back(make_point_2d<T>(-100, -100));
+    point_vec.push_back(make_point_2d<T>(-100, 100));
+    point_vec.push_back(make_point_2d<T>(100, -100));
+    point_vec.push_back(make_point_2d<T>(100, 100));
+    for (int i = 0; i < num_runs; i++) {
+        for (int j = 0; j < num_segments; j++) {
+            T x1 = 0, y1 = 0, x2 = 0, y2 = 0;
+            while (x1 == x2 && y1 == y2) {
+                x1 = (rand() % 100) - 50;
+                y1 = (rand() % 100) - 50;
+                x2 = (rand() % 100) - 50;
+                y2 = (rand() % 100) - 50;
+            }
+            point_2d<T> point1(x1, y1);
+            point_2d<T> point2(x2, y2);
+            segm_vec.push_back(std::make_pair(point1, point2));
+        }
+        remove_intersections(segm_vec);
+        build_voronoi(point_vec, segm_vec, test_output);
+        VERIFY_VORONOI_OUTPUT(test_output, NO_HALF_EDGE_INTERSECTIONS);
+        segm_vec.clear();
+    }
+}
+#endif
 
 //#ifdef NDEBUG
 //BOOST_AUTO_TEST_CASE_TEMPLATE(segment_random_test2, T, test_types) {

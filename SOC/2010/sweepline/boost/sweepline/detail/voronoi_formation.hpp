@@ -1296,222 +1296,386 @@ namespace detail {
         return dif_x * dif_x + dif_y * dif_y;
     }
 
-	/*
-    // Recompute parameters of the circle event using high-precision library.
-	// In the worst case parameters of the circle have next relative errors:
-	//    r(c_x) = 4 * EPS;
-	//    r(c_y) = 4 * EPS;
-	//    r(lower_x) = 8 * EPS.
-	template <typename T>
-	static bool create_circle_event_ppp_gmpxx(const site_event<T> &site1,
-											  const site_event<T> &site2,
-											  const site_event<T> &site3,
-											  circle_event<T> &c_event) {
-		static mpz_wrapper mpz_dif_x[3], mpz_dif_y[3], mpz_sum_x[3], mpz_sum_y[3],
-						   mpz_numerator[3], mpz_c_x, mpz_c_y, mpz_sqr_r;
-		mpz_dif_x[0] = site1.x() - site2.x();
-		mpz_dif_x[1] = site2.x() - site3.x();
-		mpz_dif_x[2] = site1.x() - site3.x();
-		mpz_dif_y[0] = site1.y() - site2.y();
-		mpz_dif_y[1] = site2.y() - site3.y();
-		mpz_dif_y[2] = site1.y() - site3.y();
-	
-		// Evaluate orientation.
-		double orientation = (mpz_dif_x[0] * mpz_dif_y[1] - mpz_dif_x[1] * mpz_dif_y[0]).get_d();
+    //// Recompute parameters of the circle event using high-precision library.
+    //template <typename T>
+    //static bool create_circle_event_ppp_gmpxx(const site_event<T> &site1,
+    //                                          const site_event<T> &site2,
+    //                                          const site_event<T> &site3,
+    //                                          circle_event<T> &c_event) {
+    //    typedef mpt_wrapper<mpz_class, 8> mpt_type;
+    //    static mpt_type mpz_dif_x[3], mpz_dif_y[3], mpz_sum_x[3], mpz_sum_y[3],
+    //                    mpz_numerator[3], mpz_c_x, mpz_c_y, mpz_sqr_r;
+    //    mpz_dif_x[0] = site1.x() - site2.x();
+    //    mpz_dif_x[1] = site2.x() - site3.x();
+    //    mpz_dif_x[2] = site1.x() - site3.x();
+    //    mpz_dif_y[0] = site1.y() - site2.y();
+    //    mpz_dif_y[1] = site2.y() - site3.y();
+    //    mpz_dif_y[2] = site1.y() - site3.y();
+    //
+    //    // Evaluate orientation.
+    //    double orientation = (mpz_dif_x[0] * mpz_dif_y[1] - mpz_dif_x[1] * mpz_dif_y[0]).get_d();
 
-		// If use this function only to recompute parameters of the circle
-		// event, this check won't be required.
-		if (orientation_test(orientation) != RIGHT_ORIENTATION)
-			return false;
+    //    // If use this function only to recompute parameters of the circle
+    //    // event, this check won't be required.
+    //    if (orientation_test(orientation) != RIGHT_ORIENTATION)
+    //        return false;
 
-		// Evaluate inverse orientation to avoid division in calculations.
-		// r(inv_orientation) = 2 * EPS.
-		double inv_orientation = 0.5 / orientation;
-	
-		mpz_sum_x[0] = site1.x() + site2.x();
-		mpz_sum_x[1] = site2.x() + site3.x();
-		mpz_sum_y[0] = site1.y() + site2.y();
-		mpz_sum_y[1] = site2.y() + site3.y();
-	
-		mpz_numerator[1] = mpz_dif_x[0] * mpz_sum_x[0] + mpz_dif_y[0] * mpz_sum_y[0];
-		mpz_numerator[2] = mpz_dif_x[1] * mpz_sum_x[1] + mpz_dif_y[1] * mpz_sum_y[1];
+    //    // Evaluate inverse orientation to avoid division in calculations.
+    //    // r(inv_orientation) = 2 * EPS.
+    //    double inv_orientation = 0.5 / orientation;
+    //
+    //    mpz_sum_x[0] = site1.x() + site2.x();
+    //    mpz_sum_x[1] = site2.x() + site3.x();
+    //    mpz_sum_y[0] = site1.y() + site2.y();
+    //    mpz_sum_y[1] = site2.y() + site3.y();
+    //
+    //    mpz_numerator[1] = mpz_dif_x[0] * mpz_sum_x[0] + mpz_dif_y[0] * mpz_sum_y[0];
+    //    mpz_numerator[2] = mpz_dif_x[1] * mpz_sum_x[1] + mpz_dif_y[1] * mpz_sum_y[1];
 
-		mpz_c_x = mpz_numerator[1] * mpz_dif_y[1] - mpz_numerator[2] * mpz_dif_y[0];
-		mpz_c_y = mpz_numerator[2] * mpz_dif_x[0] - mpz_numerator[1] * mpz_dif_x[1];
+    //    mpz_c_x = mpz_numerator[1] * mpz_dif_y[1] - mpz_numerator[2] * mpz_dif_y[0];
+    //    mpz_c_y = mpz_numerator[2] * mpz_dif_x[0] - mpz_numerator[1] * mpz_dif_x[1];
 
-		// Evaluate radius of the circle.
-		mpz_sqr_r = 1.0;
-		for (int i = 0; i < 3; ++i)
-			mpz_sqr_r *= mpz_dif_x[i] * mpz_dif_x[i] + mpz_dif_y[i] * mpz_dif_y[i];
+    //    // Evaluate radius of the circle.
+    //    mpz_sqr_r = 1.0;
+    //    for (int i = 0; i < 3; ++i)
+    //        mpz_sqr_r *= mpz_dif_x[i] * mpz_dif_x[i] + mpz_dif_y[i] * mpz_dif_y[i];
 
-		// Evaluate coordinates of the center of the circle.
-		// r(c_x) = r(c_y) = 4 * EPS.
-		double c_x = mpz_c_x.get_d() * inv_orientation;
-		double c_y = mpz_c_y.get_d() * inv_orientation;
+    //    // Evaluate coordinates of the center of the circle.
+    //    // r(c_x) = r(c_y) = 4 * EPS.
+    //    double c_x = mpz_c_x.get_d() * inv_orientation;
+    //    double c_y = mpz_c_y.get_d() * inv_orientation;
 
-		// r(r) = 1.5 * EPS < 2 * EPS.
-		double r = sqrt(mpz_sqr_r.get_d());
+    //    // r(r) = 1.5 * EPS < 2 * EPS.
+    //    double r = sqrt(mpz_sqr_r.get_d());
 
-		// If c_x >= 0 then lower_x = c_x + r,
-		// else lower_x = (c_x * c_x - r * r) / (c_x - r).
-		// To guarantee epsilon relative error.
-		if (c_x >= 0) {
-			// r(lower_x) = 5 * EPS.
-			c_event = circle_event<double>(c_x, c_y, c_x + r * fabs(inv_orientation));
-		} else {
-			mpz_numerator[0] = mpz_c_x * mpz_c_x - mpz_sqr_r;
-			// r(lower_x) = 8 * EPS.
-			double lower_x = mpz_numerator[0].get_d() * fabs(inv_orientation);
-			lower_x /= (!mpz_c_x.is_negative()) ? (-mpz_c_x.get_d() - r) : (mpz_c_x.get_d() - r);
-			c_event = circle_event<double>(c_x, c_y, lower_x);
-		}
-		return true;
-	}
+    //    // If c_x >= 0 then lower_x = c_x + r,
+    //    // else lower_x = (c_x * c_x - r * r) / (c_x - r).
+    //    // To guarantee epsilon relative error.
+    //    if (c_x >= 0) {
+    //        // r(lower_x) = 5 * EPS.
+    //        c_event = circle_event<double>(c_x, c_y, c_x + r * fabs(inv_orientation));
+    //    } else {
+    //        mpz_numerator[0] = mpz_c_x * mpz_c_x - mpz_sqr_r;
+    //        // r(lower_x) = 8 * EPS.
+    //        double lower_x = mpz_numerator[0].get_d() * fabs(inv_orientation);
+    //        lower_x /= (mpz_c_x >= 0) ? (-mpz_c_x.get_d() - r) : (mpz_c_x.get_d() - r);
+    //        c_event = circle_event<double>(c_x, c_y, lower_x);
+    //    }
+    //    return true;
+    //}
 
-	template <typename T>
-	static bool create_circle_event_pps_gmpxx(const site_event<T> &site1,
-											  const site_event<T> &site2,
-											  const site_event<T> &site3,
-											  int segment_index,
-											  circle_event<T> &c_event) {
-		// TODO(asydorchuk): Checks are not required if we recompute event parameters.
-		if (segment_index != 2) {
-            kOrientation orient1 = orientation_test(site1.point0(),
-                site2.point0(), site3.point0(true));
-            kOrientation orient2 = orientation_test(site1.point0(),
-                site2.point0(), site3.point1(true));
-            if (segment_index == 1 && site1.x0() >= site2.x0()) {
-                if (orient1 != RIGHT_ORIENTATION)
-                    return false;
-            } else if (segment_index == 3 && site2.x0() >= site1.x0()) {
-                if (orient2 != RIGHT_ORIENTATION)
-                    return false;
-            } else if (orient1 != RIGHT_ORIENTATION && orient2 != RIGHT_ORIENTATION) {
-                return false;
-            }
-        } else {
-            if (site3.point0(true) == site1.point0() &&
-                site3.point1(true) == site2.point0())
-                return false;
-        }
+    //// Recompute parameters of the circle event using high-precision library.
+    //template <typename T>
+    //static bool create_circle_event_pps_gmpxx(const site_event<T> &site1,
+    //                                          const site_event<T> &site2,
+    //                                          const site_event<T> &site3,
+    //                                          int segment_index,
+    //                                          circle_event<T> &c_event) {
+    //    typedef mpt_wrapper<mpz_class, 8> mpt_type;
+    //    // TODO(asydorchuk): Checks are not required if we recompute event parameters.
+    //    if (segment_index != 2) {
+    //        kOrientation orient1 = orientation_test(site1.point0(),
+    //            site2.point0(), site3.point0(true));
+    //        kOrientation orient2 = orientation_test(site1.point0(),
+    //            site2.point0(), site3.point1(true));
+    //        if (segment_index == 1 && site1.x0() >= site2.x0()) {
+    //            if (orient1 != RIGHT_ORIENTATION)
+    //                return false;
+    //        } else if (segment_index == 3 && site2.x0() >= site1.x0()) {
+    //            if (orient2 != RIGHT_ORIENTATION)
+    //                return false;
+    //        } else if (orient1 != RIGHT_ORIENTATION && orient2 != RIGHT_ORIENTATION) {
+    //            return false;
+    //        }
+    //    } else {
+    //        if (site3.point0(true) == site1.point0() &&
+    //            site3.point1(true) == site2.point0())
+    //            return false;
+    //    }
 
-		static mpz_wrapper line_a, line_b, segm_len, vec_x, vec_y, sum_x, sum_y, teta,
-			               denom, A, B, sum_AB, dif[2], numer, cA[4], cB[4], det;
+    //    static mpt_type line_a, line_b, segm_len, vec_x, vec_y, sum_x, sum_y, teta,
+    //                    denom, A, B, sum_AB, dif[2], numer, cA[4], cB[4], det;
 
-		line_a = site3.point1(true).y() - site3.point0(true).y();
-		line_b = site3.point0(true).x() - site3.point1(true).x();
-		segm_len = line_a * line_a + line_b * line_b;
-		vec_x = site2.y() - site1.y();
-		vec_y = site1.x() - site2.x();
-		sum_x = site1.x() + site2.x();
-		sum_y = site1.y() + site2.y();
-		teta = line_a * vec_x + line_b * vec_y;
-		denom = vec_x * line_b - vec_y * line_a;
-		
-		dif[0] = site3.point1().y() - site1.y();
-		dif[1] = site1.x() - site3.point1().x();
-		A = line_a * dif[1] - line_b * dif[0];
-		dif[0] = site3.point1().y() - site2.y();
-		dif[1] = site2.x() - site3.point1().x();
-		B = line_a * dif[1] - line_b * dif[0];
-		sum_AB = A + B;
+    //    line_a = site3.point1(true).y() - site3.point0(true).y();
+    //    line_b = site3.point0(true).x() - site3.point1(true).x();
+    //    segm_len = line_a * line_a + line_b * line_b;
+    //    vec_x = site2.y() - site1.y();
+    //    vec_y = site1.x() - site2.x();
+    //    sum_x = site1.x() + site2.x();
+    //    sum_y = site1.y() + site2.y();
+    //    teta = line_a * vec_x + line_b * vec_y;
+    //    denom = vec_x * line_b - vec_y * line_a;
+    //    
+    //    dif[0] = site3.point1().y() - site1.y();
+    //    dif[1] = site1.x() - site3.point1().x();
+    //    A = line_a * dif[1] - line_b * dif[0];
+    //    dif[0] = site3.point1().y() - site2.y();
+    //    dif[1] = site2.x() - site3.point1().x();
+    //    B = line_a * dif[1] - line_b * dif[0];
+    //    sum_AB = A + B;
 
-        if (!denom.is_negative() && !denom.is_positive()) {
-			numer = teta * teta - sum_AB * sum_AB;
-			denom = teta * sum_AB;
-			cA[0] = denom * sum_x * 2.0 + numer * vec_x;
-			cB[0] = segm_len;
-			cA[1] = denom * sum_AB * 2.0 + numer * teta;
-			cB[1] = 1;
-			cA[2] = denom * sum_y * 2.0 + numer * vec_y;
-			double c_x = 0.25 * cA[0].get_d() / denom.get_d();
-			double c_y = 0.25 * cA[2].get_d() / denom.get_d();
-			double lower_x = 0.25 * sqr_expr_evaluator<2>::eval(cA, cB) / 
-				(denom.get_d() * sqrt(segm_len.get_d()));
-			c_event = circle_event<double>(c_x, c_y, lower_x);
-			return true;
-        }
+    //    if (denom == 0) {
+    //        numer = teta * teta - sum_AB * sum_AB;
+    //        denom = teta * sum_AB;
+    //        cA[0] = denom * sum_x * 2 + numer * vec_x;
+    //        cB[0] = segm_len;
+    //        cA[1] = denom * sum_AB * 2 + numer * teta;
+    //        cB[1] = 1;
+    //        cA[2] = denom * sum_y * 2 + numer * vec_y;
+    //        double c_x = 0.25 * cA[0].get_d() / denom.get_d();
+    //        double c_y = 0.25 * cA[2].get_d() / denom.get_d();
+    //        double lower_x = 0.25 * sqr_expr_evaluator<2>::eval(cA, cB) /
+    //            (denom.get_d() * sqrt(segm_len.get_d()));
+    //        c_event = circle_event<double>(c_x, c_y, lower_x);
+    //        return true;
+    //    }
 
-		det = (teta * teta + denom * denom) * A * B * 4.0;
-		cA[0] = sum_x * denom * denom + teta * sum_AB * vec_x;
-		cB[0] = 1.0;
-		cA[1] = (segment_index == 2) ? -vec_x : vec_x;
-		cB[1] = det;
-		double c_x = 0.5 * sqr_expr_evaluator<2>::eval(cA, cB) / (denom.get_d() * denom.get_d());
-		
-		cA[2] = sum_y * denom * denom + teta * sum_AB * vec_y;
-		cB[2] = 1.0;
-		cA[3] = (segment_index == 2) ? -vec_y : vec_y;
-		cB[3] = det;
-		double c_y = 0.5 * sqr_expr_evaluator<2>::eval(&cA[2], &cB[2]) / (denom.get_d() * denom.get_d());
-		
-		cB[0] *= segm_len;
-		cB[1] *= segm_len;
-		cA[2] = sum_AB * (denom * denom + teta * teta);
-		cB[2] = 1.0;
-		cA[3] = (segment_index == 2) ? -teta : teta;
-		cB[3] = det;
-		double lower_x = 0.5 * sqr_expr_evaluator<4>::eval(cA, cB) / 
-			(denom.get_d() * denom.get_d() * sqrt(segm_len.get_d()));
-		
-        c_event = circle_event<double>(c_x, c_y, lower_x);
-        return true;
-	}
+    //    det = (teta * teta + denom * denom) * A * B * 4;
+    //    cA[0] = sum_x * denom * denom + teta * sum_AB * vec_x;
+    //    cB[0] = 1;
+    //    cA[1] = (segment_index == 2) ? -vec_x : vec_x;
+    //    cB[1] = det;
+    //    double c_x = 0.5 * sqr_expr_evaluator<2>::eval(cA, cB) / (denom.get_d() * denom.get_d());
+    //    
+    //    cA[2] = sum_y * denom * denom + teta * sum_AB * vec_y;
+    //    cB[2] = 1;
+    //    cA[3] = (segment_index == 2) ? -vec_y : vec_y;
+    //    cB[3] = det;
+    //    double c_y = 0.5 * sqr_expr_evaluator<2>::eval(&cA[2], &cB[2]) / (denom.get_d() * denom.get_d());
+    //    
+    //    cB[0] *= segm_len;
+    //    cB[1] *= segm_len;
+    //    cA[2] = sum_AB * (denom * denom + teta * teta);
+    //    cB[2] = 1;
+    //    cA[3] = (segment_index == 2) ? -teta : teta;
+    //    cB[3] = det;
+    //    double lower_x = 0.5 * sqr_expr_evaluator<4>::eval(cA, cB) /
+    //        (denom.get_d() * denom.get_d() * sqrt(segm_len.get_d()));
+    //    
+    //    c_event = circle_event<double>(c_x, c_y, lower_x);
+    //    return true;
+    //}
 
-	template <typename T>
-	static bool create_circle_event_sss_gmpxx(const site_event<T> &site1,
-											  const site_event<T> &site2,
-											  const site_event<T> &site3,
-											  circle_event<T> &c_event) {
-		if (site1.index() == site2.index() || site2.index() == site3.index())
-			return false;
-		static mpz_wrapper a[3], b[3], c[3], sqr_len[4], cross[4];
-		a[0] = site1.x1(true) - site1.x0(true);
-		a[1] = site2.x1(true) - site2.x0(true);
-		a[2] = site3.x1(true) - site3.x0(true);
-	
-		b[0] = site1.y1(true) - site1.y0(true);
-		b[1] = site2.y1(true) - site2.y0(true);
-		b[2] = site3.y1(true) - site3.y0(true);
+    //// Evaluates A[3] + A[0] * sqrt(B[0]) + A[1] * sqrt(B[1]) +
+    ////           A[2] * sqrt(B[3] * (sqrt(B[0] * B[1]) + B[2]));
+    //template <typename mpt>
+    //static double sqr_expr_evaluator_pss(mpt *A, mpt *B) {
+    //    static mpt cA[4], cB[4];
+    //    if (A[3] == 0) {
+    //        double lh = sqr_expr_evaluator<2>::eval<mpt>(A, B);
+    //        cA[0] = 1;
+    //        cB[0] = B[0] * B[1];
+    //        cA[1] = B[2];
+    //        cB[1] = 1;
+    //        double rh = A[2].get_d() * sqrt(B[3].get_d() *
+    //            sqr_expr_evaluator<2>::eval<mpt>(cA, cB));
+    //        if (((lh >= 0.0) && (rh >= 0.0) || (lh <= 0.0) && (rh <= 0.0))) {
+    //            return lh + rh;
+    //        }
+    //        cA[0] = A[0] * A[0] * B[0] + A[1] * A[1] * B[1];
+    //        cA[0] -= A[2] * A[2] * B[3] * B[2];
+    //        cB[0] = 1;
+    //        cA[1] = A[0] * A[1] * 2 - A[2] * A[2] * B[3];
+    //        cB[1] = B[0] * B[1];
+    //        return sqr_expr_evaluator<2>::eval(cA, cB) / (lh - rh);
+    //    }
+    //    cA[0] = A[3];
+    //    cB[0] = 1;
+    //    cA[1] = A[0];
+    //    cB[1] = B[0];
+    //    cA[2] = A[1];
+    //    cB[2] = B[1];
+    //    double lh = sqr_expr_evaluator<3>::eval<mpt>(cA, cB);
+    //    cA[0] = 1;
+    //    cB[0] = B[0] * B[1];
+    //    cA[1] = B[2];
+    //    cB[1] = 1;
+    //    double rh = A[2].get_d() * sqrt(B[3].get_d() *
+    //        sqr_expr_evaluator<2>::eval<mpt>(cA, cB));
+    //    if ((lh >= 0.0) && (rh >= 0.0) || (lh <= 0.0) && (rh <= 0.0)) {
+    //        return lh + rh;
+    //    }
+    //    cA[0] = A[0] * A[0] * B[0] + A[1] * A[1] * B[1];
+    //    cA[0] += A[3] * A[3] - A[2] * A[2] * B[2] * B[3];
+    //    cB[0] = 1;
+    //    cA[1] = A[3] * A[0] * 2;
+    //    cB[1] = B[0];
+    //    cA[2] = A[3] * A[1] * 2;
+    //    cB[2] = B[1];
+    //    cA[3] = A[0] * A[1] * 2 - A[2] * A[2] * B[3];
+    //    cB[3] = B[0] * B[1];
+    //    return sqr_expr_evaluator<4>::eval(cA, cB) / (lh - rh);
+    //}
 
-		c[0] = mpz_cross(site1.x0(true), site1.y0(true), site1.x1(true), site1.y1(true));										
-		c[1] = mpz_cross(site2.x0(true), site2.y0(true), site2.x1(true), site2.y1(true));
-		c[2] = mpz_cross(site3.x0(true), site3.y0(true), site3.x1(true), site3.y1(true));
+    //// Recompute parameters of the circle event using high-precision library.
+    //template <typename T>
+    //static bool create_circle_event_pss_gmpxx(const site_event<T> &site1,
+    //                                          const site_event<T> &site2,
+    //                                          const site_event<T> &site3,
+    //                                          int point_index,
+    //                                          circle_event<T> &c_event) {
+    //    typedef mpt_wrapper<mpz_class, 8> mpt_type;
+    //    if (site2.index() == site3.index()) {
+    //        return false;
+    //    }
 
-		for (int i = 0; i < 3; ++i) {
-			int j = (i+1) % 3;
-			int k = (i+2) % 3;
-			cross[i] = a[j] * b[k] - a[k] * b[j];
-			sqr_len[i] = a[i] * a[i] + b[i] * b[i];
-		}
-		double denom = sqr_expr_evaluator<3>::eval(cross, sqr_len);
+    //    const point_2d<T> &segm_start1 = site2.point1(true);
+    //    const point_2d<T> &segm_end1 = site2.point0(true);
+    //    const point_2d<T> &segm_start2 = site3.point0(true);
+    //    const point_2d<T> &segm_end2 = site3.point1(true);
 
-		for (int i = 0; i < 3; ++i) {
-			int j = (i+1) % 3;
-			int k = (i+2) % 3;
-			cross[i] = b[j] * c[k] - b[k] * c[j];
-			sqr_len[i] = a[i] * a[i] + b[i] * b[i];
-		}
-		double c_y = sqr_expr_evaluator<3>::eval(cross, sqr_len) / denom;
+    //    if (point_index == 2) {
+    //        if (!site2.is_inverse() && site3.is_inverse())
+    //            return false;
+    //        if (site2.is_inverse() == site3.is_inverse() &&
+    //            orientation_test(segm_end1, site1.point0(), segm_end2) != RIGHT_ORIENTATION)
+    //            return false;
+    //    }
 
-		cross[3] = 0;
-		for (int i = 0; i < 3; ++i) {
-			int j = (i+1) % 3;
-			int k = (i+2) % 3;
-			cross[i] = a[j] * c[k] - a[k] * c[j];
-			sqr_len[i] = a[i] * a[i] + b[i] * b[i];
-			cross[3] += cross[i] * b[i];
-		}
-		double c_x = sqr_expr_evaluator<3>::eval(cross, sqr_len) / denom;
-		
-		sqr_len[3] = 1;
-		double lower_x = sqr_expr_evaluator<4>::eval(cross, sqr_len) / denom;
-		
-		c_event = circle_event<double>(c_x, c_y, lower_x);
-		return true;
-	}
-	*/
-	
+    //    static mpt_type a[2], b[2], c[2], cA[4], cB[4], or, dx, dy, ix, iy;
+    //    a[0] = segm_end1.x() - segm_start1.x();
+    //    b[0] = segm_end1.y() - segm_start1.y();
+    //    a[1] = segm_end2.x() - segm_start2.x();
+    //    b[1] = segm_end2.y() - segm_start2.y();
+    //    or = a[1] * b[0] - a[0] * b[1];
+    //    if (or == 0) {
+    //        double denom = (a[0] * a[0] + b[0] * b[0]).get_d() * 2.0;
+
+    //        c[0] = b[0] * (segm_start2.x() - segm_start1.x()) -
+    //               a[0] * (segm_start2.y() - segm_start1.y());
+    //        dx = a[0] * (site1.y() - segm_start1.y()) -
+    //             b[0] * (site1.x() - segm_start1.x());
+    //        dy = b[0] * (site1.x() - segm_start2.x()) -
+    //             a[0] * (site1.y() - segm_start2.y());
+    //        cA[0] = b[0] * ((point_index == 2) ? 2 : -2);
+    //        cB[0] = dx * dy;
+    //        cA[1] = a[0] * a[0] * (segm_start1.y() + segm_start2.y()) -
+    //                a[0] * b[0] * (segm_start1.x() + segm_start2.x() - 2.0 * site1.x()) +
+    //                b[0] * b[0] * (2.0 * site1.y());
+    //        cB[1] = 1;
+    //        double c_y = sqr_expr_evaluator<2>::eval(cA, cB);
+
+    //        cA[0] = a[0] * ((point_index == 2) ? 2 : -2);
+    //        cA[1] = b[0] * b[0] * (segm_start1.x() + segm_start2.x()) -
+    //                a[0] * b[0] * (segm_start1.y() + segm_start2.y() - 2.0 * site1.y()) +
+    //                a[0] * a[0] * (2.0 * site1.x());
+    //        double c_x = sqr_expr_evaluator<2>::eval(cA, cB);
+
+    //        cA[2] = (c[0] < 0) ? -c[0] : c[0];
+    //        cB[2] = a[0] * a[0] + b[0] * b[0];
+    //        double lower_x = sqr_expr_evaluator<3>::eval(cA, cB);
+    //        c_event = circle_event<T>(c_x / denom, c_y / denom, lower_x / denom);
+    //        return true;
+    //    }
+    //    c[0] = b[0] * segm_end1.x() - a[0] * segm_end1.y();
+    //    c[1] = a[1] * segm_end2.y() - b[1] * segm_end2.x();
+    //    ix = a[0] * c[1] + a[1] * c[0];
+    //    iy = b[0] * c[1] + b[1] * c[0];
+    //    dx = ix - or * site1.x();
+    //    dy = iy - or * site1.y();
+    //    if ((dx == 0) && (dy == 0)) {
+    //        double denom = or.get_d();
+    //        double c_x = ix.get_d() / denom;
+    //        double c_y = iy.get_d() / denom;
+    //        c_event = circle_event<T>(c_x, c_y, c_x);
+    //        return true;
+    //    }
+
+    //    double sign = ((point_index == 2) ? 1 : -1) * ((or < 0) ? 1 : -1);
+    //    cA[0] = a[1] * -dx + b[1] * -dy;
+    //    cA[1] = a[0] * -dx + b[0] * -dy;
+    //    cA[2] = sign;
+    //    cA[3] = 0;
+    //    cB[0] = a[0] * a[0] + b[0] * b[0];
+    //    cB[1] = a[1] * a[1] + b[1] * b[1];
+    //    cB[2] = a[0] * a[1] + b[0] * b[1];
+    //    cB[3] = (a[0] * dy - b[0] * dx) * (a[1] * dy - b[1] * dx) * -2;
+    //    double denom = sqr_expr_evaluator_pss<mpt_type>(cA, cB);
+
+    //    cA[0] = b[1] * (dx * dx + dy * dy) - iy * (dx * a[1] + dy * b[1]);
+    //    cA[1] = b[0] * (dx * dx + dy * dy) - iy * (dx * a[0] + dy * b[0]);
+    //    cA[2] = iy * sign;
+    //    double cy = sqr_expr_evaluator_pss<mpt_type>(cA, cB);
+
+    //    cA[0] = a[1] * (dx * dx + dy * dy) - ix * (dx * a[1] + dy * b[1]);
+    //    cA[1] = a[0] * (dx * dx + dy * dy) - ix * (dx * a[0] + dy * b[0]);
+    //    cA[2] = ix * sign;
+    //    double cx = sqr_expr_evaluator_pss<mpt_type>(cA, cB);
+
+    //    cA[3] = or * (dx * dx + dy * dy) * (denom < 0 ? -1 : 1);
+    //    double lower_x = sqr_expr_evaluator_pss<mpt_type>(cA, cB);
+    //    denom *= or.get_d();
+    //    c_event = circle_event<T>(cx / denom, cy / denom, lower_x / denom);
+    //    return true;
+    //}
+
+    //template <typename T>
+    //static mpt_wrapper<mpz_class, 8> &mpt_cross(T a0, T b0, T a1, T b1) {
+    //    static mpt_wrapper<mpz_class, 8> temp[2];
+    //    temp[0] = a0;
+    //    temp[1] = b0;
+    //    temp[0] = temp[0] * b1;
+    //    temp[1] = temp[1] * a1;
+    //    temp[0] -= temp[1];
+    //    return temp[0];
+    //}
+
+    //// Recompute parameters of the circle event using high-precision library.
+    //template <typename T>
+    //static bool create_circle_event_sss_gmpxx(const site_event<T> &site1,
+    //                                          const site_event<T> &site2,
+    //                                          const site_event<T> &site3,
+    //                                          circle_event<T> &c_event) {
+    //    typedef mpt_wrapper<mpz_class, 8> mpt_type;
+    //    if (site1.index() == site2.index() ||
+    //        site2.index() == site3.index())
+    //        return false;
+    //    static mpt_type a[3], b[3], c[3], sqr_len[4], cross[4];
+    //    a[0] = site1.x1(true) - site1.x0(true);
+    //    a[1] = site2.x1(true) - site2.x0(true);
+    //    a[2] = site3.x1(true) - site3.x0(true);
+    //
+    //    b[0] = site1.y1(true) - site1.y0(true);
+    //    b[1] = site2.y1(true) - site2.y0(true);
+    //    b[2] = site3.y1(true) - site3.y0(true);
+
+    //    c[0] = mpt_cross(site1.x0(true), site1.y0(true), site1.x1(true), site1.y1(true));										
+    //    c[1] = mpt_cross(site2.x0(true), site2.y0(true), site2.x1(true), site2.y1(true));
+    //    c[2] = mpt_cross(site3.x0(true), site3.y0(true), site3.x1(true), site3.y1(true));
+
+    //    for (int i = 0; i < 3; ++i) {
+    //        int j = (i+1) % 3;
+    //        int k = (i+2) % 3;
+    //        cross[i] = a[j] * b[k] - a[k] * b[j];
+    //        sqr_len[i] = a[i] * a[i] + b[i] * b[i];
+    //    }
+    //    double denom = sqr_expr_evaluator<3>::eval(cross, sqr_len);
+
+    //    for (int i = 0; i < 3; ++i) {
+    //        int j = (i+1) % 3;
+    //        int k = (i+2) % 3;
+    //        cross[i] = b[j] * c[k] - b[k] * c[j];
+    //        sqr_len[i] = a[i] * a[i] + b[i] * b[i];
+    //    }
+    //    double c_y = sqr_expr_evaluator<3>::eval(cross, sqr_len) / denom;
+
+    //    cross[3] = 0;
+    //    for (int i = 0; i < 3; ++i) {
+    //        int j = (i+1) % 3;
+    //        int k = (i+2) % 3;
+    //        cross[i] = a[j] * c[k] - a[k] * c[j];
+    //        sqr_len[i] = a[i] * a[i] + b[i] * b[i];
+    //        cross[3] += cross[i] * b[i];
+    //    }
+    //    double c_x = sqr_expr_evaluator<3>::eval(cross, sqr_len) / denom;
+    //    
+    //    sqr_len[3] = 1;
+    //    double lower_x = sqr_expr_evaluator<4>::eval(cross, sqr_len) / denom;
+    //    
+    //    c_event = circle_event<double>(c_x, c_y, lower_x);
+    //    return true;
+    //}
+
     // Find parameters of the inscribed circle that is tangent to three
     // point sites.
     template <typename T>
@@ -1519,6 +1683,7 @@ namespace detail {
                                         const site_event<T> &site2,
                                         const site_event<T> &site3,
                                         circle_event<T> &c_event) {
+        //return create_circle_event_ppp_gmpxx(site1, site2, site3, c_event);
         double dif_x1 = site1.x() - site2.x();
         double dif_x2 = site2.x() - site3.x();
         double dif_y1 = site1.y() - site2.y();
@@ -1550,7 +1715,7 @@ namespace detail {
         c_event = circle_event<double>(c_x, c_y, lower_x);
         return true;
     }
-	
+
     // Find parameters of the inscribed circle that is tangent to two
     // point sites and on segment site.
     template <typename T>
@@ -1559,6 +1724,7 @@ namespace detail {
                                         const site_event<T> &site3,
                                         int segment_index,
                                         circle_event<T> &c_event) {
+        //return create_circle_event_pps_gmpxx(site1, site2, site3, segment_index, c_event);
         if (segment_index != 2) {
             kOrientation orient1 = orientation_test(site1.point0(),
                 site2.point0(), site3.point0(true));
@@ -1615,7 +1781,7 @@ namespace detail {
         r -= line_b * site3.y0();
         r += line_a * c_x;
         r += line_b * c_y;
-		r.abs();
+        r.abs();
         lower_x += r * inv_segm_len;
         c_event = circle_event<double>(c_x, c_y, lower_x);
         return true;
@@ -1629,6 +1795,7 @@ namespace detail {
                                         const site_event<T> &site3,
                                         int point_index,
                                         circle_event<T> &c_event) {
+        //return create_circle_event_pss_gmpxx(site1, site2, site3, point_index, c_event);
         if (site2.index() == site3.index()) {
             return false;
         }
@@ -1733,9 +1900,10 @@ namespace detail {
                                         const site_event<T> &site2,
                                         const site_event<T> &site3,
                                         circle_event<T> &c_event) {
-		if (orientation_test(site1.point0(true), site1.point1(true), site2.point1(true)) != RIGHT_ORIENTATION ||
-			orientation_test(site2.point0(true), site2.point1(true), site3.point1(true)) != RIGHT_ORIENTATION)
-			return false;
+        //return create_circle_event_sss_gmpxx(site1, site2, site3, c_event);
+        if (site1.index() == site2.index() ||
+            site2.index() == site3.index())
+            return false;
         double a1 = site1.x1(true) - site1.x0(true);
         double b1 = site1.y1(true) - site1.y0(true);
         double c1 = robust_cross_product(site1.x0(true), site1.y0(true),
@@ -2233,8 +2401,7 @@ namespace detail {
             site_event_type site_event = *site_event_iterator_;
 
             // Move the site's iterator.
-            site_event_iterator_;
-			site_event_iterator_type last = site_event_iterator_ + 1;
+            site_event_iterator_type last = site_event_iterator_ + 1;
 
             // If a new site is an end point of some segment,
             // remove temporary nodes from the beach line data structure.
@@ -2244,93 +2411,93 @@ namespace detail {
                     beach_line_.erase(end_points_.top().second);
                     end_points_.pop();
                 }
-			} else {
-				while (last != site_events_.end() &&
-					   last->is_segment() && last->point0() == site_event.point0())
-					last++;
-			}
+            } else {
+                while (last != site_events_.end() &&
+                       last->is_segment() && last->point0() == site_event.point0())
+                    last++;
+            }
 
-			for (; site_event_iterator_ != last; ++site_event_iterator_) {
-				site_event = *site_event_iterator_;
-				// Create degenerate node.
-				key_type new_key(site_event);
+            for (; site_event_iterator_ != last; ++site_event_iterator_) {
+                site_event = *site_event_iterator_;
+                // Create degenerate node.
+                key_type new_key(site_event);
 
-				// Find the node in the binary search tree with left arc
-				// lying above the new site point.
-				beach_line_iterator it = beach_line_.lower_bound(new_key);
-				int it_dist = site_event.is_segment() ? 2 : 1;
+                // Find the node in the binary search tree with left arc
+                // lying above the new site point.
+                beach_line_iterator it = beach_line_.lower_bound(new_key);
+                int it_dist = site_event.is_segment() ? 2 : 1;
 
-				// Do further processing depending on the above node position.
-				// For any two neighbouring nodes the second site of the first node
-				// is the same as the first site of the second arc.
-				if (it == beach_line_.end()) {
-					// The above arc corresponds to the second arc of the last node.
-					// Move the iterator to the last node.
-					--it;
+                // Do further processing depending on the above node position.
+                // For any two neighbouring nodes the second site of the first node
+                // is the same as the first site of the second arc.
+                if (it == beach_line_.end()) {
+                    // The above arc corresponds to the second arc of the last node.
+                    // Move the iterator to the last node.
+                    --it;
 
-					// Get the second site of the last node
-					const site_event_type &site_arc = it->first.right_site();
+                    // Get the second site of the last node
+                    const site_event_type &site_arc = it->first.right_site();
 
-					// Insert new nodes into the beach line. Update the output.
-					beach_line_iterator new_node_it =
-						insert_new_arc(site_arc, site_arc, site_event, it);
+                    // Insert new nodes into the beach line. Update the output.
+                    beach_line_iterator new_node_it =
+                        insert_new_arc(site_arc, site_arc, site_event, it);
 
-					// Add a candidate circle to the circle event queue.
-					// There could be only one new circle event formed by
-					// a new bisector and the one on the left.
-					std::advance(new_node_it, -it_dist);
-					activate_circle_event(it->first.left_site(),
-										  it->first.right_site(),
-										  site_event, new_node_it);
-				} else if (it == beach_line_.begin()) {
-					// The above arc corresponds to the first site of the first node.
-					const site_event_type &site_arc = it->first.left_site();
+                    // Add a candidate circle to the circle event queue.
+                    // There could be only one new circle event formed by
+                    // a new bisector and the one on the left.
+                    std::advance(new_node_it, -it_dist);
+                    activate_circle_event(it->first.left_site(),
+                                          it->first.right_site(),
+                                          site_event, new_node_it);
+                } else if (it == beach_line_.begin()) {
+                    // The above arc corresponds to the first site of the first node.
+                    const site_event_type &site_arc = it->first.left_site();
 
-					// Insert new nodes into the beach line. Update the output.
-					insert_new_arc(site_arc, site_arc, site_event, it);
+                    // Insert new nodes into the beach line. Update the output.
+                    insert_new_arc(site_arc, site_arc, site_event, it);
 
-					// If the site event is a segment, update its direction.
-					if (site_event.is_segment()) {
-						site_event.inverse();
-					}
+                    // If the site event is a segment, update its direction.
+                    if (site_event.is_segment()) {
+                        site_event.inverse();
+                    }
 
-					// Add a candidate circle to the circle event queue.
-					// There could be only one new circle event formed by
-					// a new bisector and the one on the right.
-					activate_circle_event(site_event, it->first.left_site(),
-										  it->first.right_site(), it);
-				} else {
-					// The above arc corresponds neither to the first,
-					// nor to the last site in the beach line.
-					const site_event_type &site_arc2 = it->first.left_site();
-					const site_event_type &site3 = it->first.right_site();
+                    // Add a candidate circle to the circle event queue.
+                    // There could be only one new circle event formed by
+                    // a new bisector and the one on the right.
+                    activate_circle_event(site_event, it->first.left_site(),
+                                          it->first.right_site(), it);
+                } else {
+                    // The above arc corresponds neither to the first,
+                    // nor to the last site in the beach line.
+                    const site_event_type &site_arc2 = it->first.left_site();
+                    const site_event_type &site3 = it->first.right_site();
 
-					// Remove the candidate circle from the event queue.
-					it->second.deactivate_circle_event();
-					--it;
-					const site_event_type &site_arc1 = it->first.right_site();
-					const site_event_type &site1 = it->first.left_site();
+                    // Remove the candidate circle from the event queue.
+                    it->second.deactivate_circle_event();
+                    --it;
+                    const site_event_type &site_arc1 = it->first.right_site();
+                    const site_event_type &site1 = it->first.left_site();
 
-					// Insert new nodes into the beach line. Update the output.
-					beach_line_iterator new_node_it =
-						insert_new_arc(site_arc1, site_arc2, site_event, it);
+                    // Insert new nodes into the beach line. Update the output.
+                    beach_line_iterator new_node_it =
+                        insert_new_arc(site_arc1, site_arc2, site_event, it);
 
-					// Add candidate circles to the circle event queue.
-					// There could be up to two circle events formed by
-					// a new bisector and the one on the left or right.
-					std::advance(new_node_it, -it_dist);
-					activate_circle_event(site1, site_arc1, site_event,
-										  new_node_it);
+                    // Add candidate circles to the circle event queue.
+                    // There could be up to two circle events formed by
+                    // a new bisector and the one on the left or right.
+                    std::advance(new_node_it, -it_dist);
+                    activate_circle_event(site1, site_arc1, site_event,
+                                          new_node_it);
 
-					// If the site event is a segment, update its direction.
-					if (site_event.is_segment()) {
-						site_event.inverse();
-					}
-					std::advance(new_node_it, it_dist + 1);
-					activate_circle_event(site_event, site_arc2, site3,
-										  new_node_it);
-				}
-			}
+                    // If the site event is a segment, update its direction.
+                    if (site_event.is_segment()) {
+                        site_event.inverse();
+                    }
+                    std::advance(new_node_it, it_dist + 1);
+                    activate_circle_event(site_event, site_arc2, site3,
+                                          new_node_it);
+                }
+            }
         }
 
         // Process a single circle event.
