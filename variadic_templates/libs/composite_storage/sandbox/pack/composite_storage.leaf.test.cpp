@@ -137,19 +137,19 @@ charvec_double
 : charvec_u<I>
 {
     double d;
-    charvec_double(char c,double _d)
-    : charvec_u<I>(c)
-    , d(_d)
+    charvec_double()
+    : d(-1000.0-double(I))
     {}
     charvec_double(char c)
     : charvec_u<I>(c)
-    , d(-999.9)
+    , d(-100.0-double(I))
     {}
     charvec_double(double _d)
     : d(_d)
     {}
-    charvec_double()
-    : d(-99.9)
+    charvec_double(char c,double _d)
+    : charvec_u<I>(c)
+    , d(_d)
     {}
  private:
     charvec_double(charvec_double const&)
@@ -628,6 +628,7 @@ void test(void)
           , charvec_double<0>
           , charvec_double<1>
           , charvec_double<2>
+          , charvec_double<3>
           >
         tagged_type
         ;
@@ -637,9 +638,16 @@ void test(void)
           >
         ndx0
         ;
+          index
+          < index_numerals
+          , index_3
+          >
+        ndx3
+        ;
           tagged_type
         tagged_arg
-        ( ndx0='x'
+        ( ndx3=double(1000.3) //show out-of-order intialization
+        , ndx0='x'
       #if 1
         , index<index_numerals,index_2>() = 'z'
       #else
@@ -653,6 +661,7 @@ void test(void)
           <<":project<index_0>="<<tagged_arg.project<index_0>()<<"\n"
           <<":project<index_1>="<<tagged_arg.project<index_1>()<<"\n"
           <<":project<index_2>="<<tagged_arg.project<index_2>()<<"\n"
+          <<":project<index_3>="<<tagged_arg.project<index_3>()<<"\n"
         ;
     }
 #endif
