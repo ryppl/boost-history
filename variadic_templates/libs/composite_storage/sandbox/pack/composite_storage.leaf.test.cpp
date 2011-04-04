@@ -7,12 +7,13 @@
 //    WHY:
 //      Modify for use with variadic template version of similar composite classes.
 //
-//#include <boost/composite_storage/pack/container_all_of_aligned.hpp>
-#include <boost/composite_storage/pack/container_one_of_maybe.hpp>
+#include <iostream>
 #include <boost/composite_storage/pack/container_all_of_aligned.hpp>
+#include <boost/composite_storage/pack/container_one_of_maybe.hpp>
+#include <boost/composite_storage/pack/indexed_ctor_args_all_of_aligned.hpp>
+#include <boost/composite_storage/index.hpp>
 
 #include <boost/iostreams/utility/indent_scoped_ostreambuf.hpp>
-#include <iostream>
 #include <string>
 static std::ostream& ind_out=std::cout;
 
@@ -103,6 +104,12 @@ charvec_u
         v[0]='a';
         v[1]='\0';
     }
+    charvec_u(char c)
+    {
+        v[0]=c;
+        v[1]='\0';
+    }
+      
 };
 
   template
@@ -118,6 +125,54 @@ operator<<
       <<"charvec_u<"<<I<<">"
       <<":id_get="<<x.id_get()
       <<":v[0]="<<x.v[0]
+      ;
+    return sout;
+}  
+
+  template
+  < unsigned I
+  >
+  struct
+charvec_double
+: charvec_u<I>
+{
+    double d;
+    charvec_double(char c,double _d)
+    : charvec_u<I>(c)
+    , d(_d)
+    {}
+    charvec_double(char c)
+    : charvec_u<I>(c)
+    , d(-999.9)
+    {}
+    charvec_double(double _d)
+    : d(_d)
+    {}
+    charvec_double()
+    : d(-99.9)
+    {}
+ private:
+    charvec_double(charvec_double const&)
+    /**@brief
+     * Disallow copy CTOR
+     */
+    ;    
+};  
+
+  template
+  < unsigned I
+  >
+  std::ostream&
+operator<<
+  ( std::ostream& sout
+  , charvec_double<I>const& x
+  )
+{
+    sout
+      <<"charvec_double<"<<I<<">"
+      <<":id_get="<<x.id_get()
+      <<":v[0]="<<x.v[0]
+      <<":d="<<x.d
       ;
     return sout;
 }  
@@ -260,16 +315,31 @@ void test(void)
         {
             trace_scope ts("index_component CTOR");
                 typedef
-              tagged_type::index_component<index_1,charvec_u<1>const&>
+              index_component<index_numerals,index_1,charvec_u<1> >
             index_component_1_type
             ;
               tagged_type 
             tagged_values
-              ( index_component_1_type::_()
+              ( index_component_1_type('z')
               )
             ;
             ind_out
               <<"which="<<tagged_values.which()<<"\n";
+        }
+        {
+            trace_scope ts("index= CTOR");
+              index<index_numerals,index_0>
+            index_0v
+            ;
+              tagged_type 
+            tagged_values
+              ( index_0v=charvec_u<0>('y')
+              )
+            ;
+            auto prj0=tagged_values.project<index_0>();
+            ind_out
+              <<"which="<<tagged_values.which()<<"\n"
+              <<"project="<<prj0<<"\n";
         }
       #if 0
         {
@@ -455,7 +525,7 @@ void test(void)
           
     }
 #endif    
-#if 1
+#if 0
     ind_out<<"object_number="<<object_number<<"\n";
     {    
         trace_scope ts("all_of_aligned composite_storage TESTS");
@@ -474,7 +544,7 @@ void test(void)
         cur_off
         ;
             typedef
-          tagged_type::layout_comp::scanned
+          tagged_type::ctor_prot::scanned
         layout_scanned
         ;
             typedef
@@ -501,7 +571,92 @@ void test(void)
         ;
     }
 #endif
+#if 0
+    ind_out<<"object_number="<<object_number<<"\n";
+    {    
+        trace_scope ts("all_of_aligned non_copyable DEMO");
+          struct
+        tagged_type
+        : pack::ctor_protected
+          < tags::all_of_aligned
+          , mpl::integral_c<index_numerals,index_0>
+          , charvec_double<0>
+          , charvec_double<1>
+          , charvec_double<2>
+          >
+        {
+            
+            tagged_type
+              ( char c0
+              , double d0
+              )
+            {
+                this->inject<index_0>
+                  ( c0
+                  , d0
+                  );
+                this->inject<index_numerals(index_0+1)>
+                  ( char(c0+1)
+                  , d0*2
+                  );
+                this->inject<index_numerals(index_0+2)>
+                  ( char(c0+2)
+                  , d0*3
+                  );
+            }
+                
+        };
+          tagged_type
+        tagged_valu('a',100.1)
+        ;
+        ind_out
+          <<"***composite_storage<all_of_aligned>:\n"
+          <<":project<index_0>="<<tagged_valu.project<index_0>()<<"\n"
+          <<":project<index_1>="<<tagged_valu.project<index_1>()<<"\n"
+          <<":project<index_2>="<<tagged_valu.project<index_2>()<<"\n"
+        ;
+    }
+#endif
 #if 1
+    ind_out<<"object_number="<<object_number<<"\n";
+    {    
+
+        trace_scope ts("all_of_aligned index_component DEMO");
+            typedef
+          pack::indexed_ctor_args_all_of_aligned
+          < mpl::integral_c<index_numerals,index_0>
+          , charvec_double<0>
+          , charvec_double<1>
+          , charvec_double<2>
+          >
+        tagged_type
+        ;
+          index
+          < index_numerals
+          , index_0
+          >
+        ndx0
+        ;
+          tagged_type
+        tagged_arg
+        ( ndx0='x'
+      #if 1
+        , index<index_numerals,index_2>() = 'z'
+      #else
+        //This should produce compile-time error because of multiple index_0 associations.
+        , ndx0='z'
+      #endif
+        )
+        ;
+        ind_out
+          <<"***indexed_ctor_args.arg:\n"
+          <<":project<index_0>="<<tagged_arg.project<index_0>()<<"\n"
+          <<":project<index_1>="<<tagged_arg.project<index_1>()<<"\n"
+          <<":project<index_2>="<<tagged_arg.project<index_2>()<<"\n"
+        ;
+    }
+#endif
+#if 0
     ind_out<<"object_number="<<object_number<<"\n";
     {    
         trace_scope ts("all_of_aligned min end pad DEMO");
