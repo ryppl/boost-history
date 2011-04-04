@@ -126,6 +126,24 @@ struct operators< tags::all_of_aligned>
               using HeadLayout::
             inject
             ;
+            
+         #define VARIADIC_INJECT
+         #ifdef VARIADIC_INJECT
+              template
+              < typename... InjArgs
+              >
+                static
+              void
+            inject
+              ( index_part index_arg
+              , char*buffer_composite
+              , InjArgs&&... inj_args
+              )
+            {
+                void*tail_buffer=buffer_composite+comp_part::offset;
+                new(tail_buffer) TailComponent(std::forward<InjArgs>(inj_args)...);
+            }
+         #else
                 static
               void
             inject
@@ -148,6 +166,7 @@ struct operators< tags::all_of_aligned>
                 void*tail_buffer=buffer_composite+comp_part::offset;
                 new(tail_buffer) TailComponent(tail_component);
             }
+         #endif
               using HeadLayout::
             inject_default
             ;
@@ -159,8 +178,8 @@ struct operators< tags::all_of_aligned>
               )
             
             {
-                TailComponent tail_component;
-                inject(index_arg,buffer_composite,std::move(tail_component));
+                void*tail_buffer=buffer_composite+comp_part::offset;
+                new(tail_buffer) TailComponent;
             }
               using HeadLayout::
             project

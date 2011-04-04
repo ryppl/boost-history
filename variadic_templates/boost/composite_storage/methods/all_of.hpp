@@ -26,8 +26,10 @@ namespace methods
   , typename IndexBegin
   >
   struct
-all_of
+layout_indices
+: Layout
 {
+
         typedef
       IndexBegin
     index_begin
@@ -46,6 +48,18 @@ all_of
       , index_begin::value
       , index_end::value
       >::type
+    indices
+    ;
+};
+
+  template
+  < typename Layout
+  >
+  struct
+all_of
+{
+        typedef
+      typename Layout::indices
     indices
     ;
       template

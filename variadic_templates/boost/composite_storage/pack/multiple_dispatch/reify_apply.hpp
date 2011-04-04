@@ -4,6 +4,7 @@
 //#include <boost/mpl/assert.hpp>
 #include <boost/composite_storage/pack/multiple_dispatch/replace_source_with_target_ptr.hpp>
 #include <boost/composite_storage/pack/multiple_dispatch/apply_unpack.hpp>
+#include <boost/type_traits/remove_reference.hpp>
 
 namespace boost
 {
@@ -109,8 +110,14 @@ struct reify_apply_impl
   >
   typename Functor::result_type
 reify_apply
-  ( Functor & a_functor
-  , ArgsAbstract&&... a_args_abstract
+  ( Functor& a_functor
+  ,   ArgsAbstract
+  #if 0
+      &&
+  #else
+      &
+  #endif
+    ... a_args_abstract
   )
   /**@brief
    *  Applies Reifier to each argument in a_args_abstract 
@@ -119,7 +126,7 @@ reify_apply
    */  
 {
       typename ptrs_target0_source
-      < ArgsAbstract...
+      < typename remove_reference<ArgsAbstract>::type...
       >::type
     ptrs_target_src_v(a_args_abstract...)
     //creates container of void pointers to a_args_abstract...

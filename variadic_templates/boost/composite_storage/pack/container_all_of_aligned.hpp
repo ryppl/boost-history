@@ -8,11 +8,8 @@
 //  This software is provided "as is" without express or implied
 //  warranty, and with no claim as to its suitability for any purpose.
 //====================================================================
-#include <boost/composite_storage/layout/operators_all_of_aligned.hpp>
-#include <boost/composite_storage/pack/layout_composite.hpp>
+#include <boost/composite_storage/pack/ctor_protected_all_of_aligned.hpp>
 #include <boost/composite_storage/pack/container_fwd.hpp>
-#include <boost/composite_storage/methods/all_of.hpp>
-#include <boost/composite_storage/buffers/layout_buf.hpp>
 
 namespace boost
 {
@@ -30,40 +27,23 @@ container
   , Index0
   , Components...
   >
-: buffers::layout_buf
-  < layout_composite
-    < tags::all_of_aligned
-    , Index0
-    , Components...
-    >
+: ctor_protected
+  < tags::all_of_aligned
+  , Index0
+  , Components...
   >
 {
+
         typedef
-      layout_composite
+      ctor_protected
       < tags::all_of_aligned
       , Index0
       , Components...
       >
-    layout_comp
+    ctor_prot
     ;
         typedef
-      typename layout_comp::scanned
-    scanned
-    ;
-        typedef
-      typename layout_comp::index_base
-    index_base
-    ;
-        typedef
-      typename layout_comp::index_undefined
-    index_undefined
-    ;
-        typedef
-      typename layout_comp::index_type
-    index_type
-    ;
-        typedef
-      methods::all_of<scanned,Index0>
+      typename ctor_prot::methods_all
     methods_all
     ;
  public:
@@ -92,61 +72,6 @@ container
         , fr_buf
         );
     }
-      container const&
-    operator=(container const& from)
-    {
-        char      *to_buf=this->address();
-        char const*fr_buf=from.address();
-          methods_all::
-        assign_all
-        ( to_buf
-        , fr_buf
-        );
-        return *this;
-    }
-      container const&
-    operator=(container&& from)
-    {
-        char      *to_buf=this->address();
-        buffers::rval_ref_buf fr_buf(from.address());
-          methods_all::
-        assign_all
-        ( to_buf
-        , fr_buf
-        );
-        return *this;
-    }
-    ~container(void)
-    {
-        scanned::destroy( this->address());
-    }   
- 
-      template
-      < index_type IndexValu
-      >
-    struct result_type
-    : layout_comp::template result_type<IndexValu>
-    {
-    };
-    
-      template
-      < index_type IndexValu
-      >
-      typename result_type<IndexValu>::type const&
-    project(void)const
-    {
-        mpl::integral_c<index_base,IndexValu> index;
-        return scanned::project(index,this->address());
-    }        
-      template
-      < index_type IndexValu
-      >
-      typename result_type<IndexValu>::type &
-    project(void)
-    {
-        mpl::integral_c<index_base,IndexValu> index;
-        return scanned::project(index,this->address());
-    }        
 };
 
 }//exit pack namespace

@@ -74,8 +74,8 @@ void_ptr_array
         ptr_type
       my_ptrs[size]
         ;
-    //#define VOID_PTR_ARRAY_NO_INIT_LIST defined(__clang__)
-    #define VOID_PTR_ARRAY_NO_INIT_LIST 1
+    #define VOID_PTR_ARRAY_NO_INIT_LIST defined(__clang__)
+    //#define VOID_PTR_ARRAY_NO_INIT_LIST 1
     #if VOID_PTR_ARRAY_NO_INIT_LIST
         template
         < typename... Refs
@@ -95,7 +95,8 @@ void_ptr_array
         , RefsTail&... refs_tail
         )
       {
-          my_ptrs[sizeof...(Types)-sizeof...(RefsTail)-1]=remove_cv_ptr(ref_head);
+          const unsigned ndx=sizeof...(Types)-sizeof...(RefsTail)-1;
+          my_ptrs[ndx]=remove_cv_ptr(ref_head);
           assign_ptrs(refs_tail...);
       }
         void
@@ -249,11 +250,9 @@ ptrs_target_source
         >
       super_type
       ;
-      
-      ptrs_target_source(void)
+      ptrs_target_source()
         {}
   };
-
   
   template
   < typename... ArgsSource
@@ -266,7 +265,7 @@ struct ptrs_target0_source
 {
         typedef
       ptrs_target_source
-      < mpl::package<>
+      < mpl::package<> //empty targets
       , ArgsSource...
       >
     type

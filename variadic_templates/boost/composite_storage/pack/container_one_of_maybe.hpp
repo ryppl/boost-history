@@ -9,6 +9,7 @@
 //  warranty, and with no claim as to its suitability for any purpose.
 //====================================================================
 #include <boost/composite_storage/functor_indexed.hpp>
+#include <boost/composite_storage/index_component.hpp>
 
 namespace boost
 {
@@ -330,63 +331,11 @@ container
       >
     container
       ( mpl::integral_c<index_type,IndexValu>
-      , Component index_component
+      , Component a_component
       )
     {
         mpl::integral_c<index_base,IndexValu> index;
-        scanned::inject( index, buffer.address(), std::forward<Component>(index_component));
-        which_put(IndexValu);
-    }
-      template
-      < index_type IndexValu
-      , typename Component
-      >
-    struct index_component
-    : fusion::pair
-      < mpl::integral_c< index_type, IndexValu>
-      , Component
-      >
-    {
-            typedef
-          fusion::pair
-          < mpl::integral_c< index_type, IndexValu>
-          , Component
-          >
-        super_type
-        ;
-            typedef
-          typename utility::remove_cv_ref
-          < Component
-          >::type
-        comp_type
-        ;
-        index_component(void)
-        : super_type(comp_type())
-        {}
-        index_component(Component a_comp)
-        : super_type(a_comp)
-        {}
-            static
-          index_component
-        _(void)
-        {
-            return index_component();
-        }
-    };
-      template
-      < index_type IndexValu
-      , typename Component
-      >
-    container
-      ( index_component<IndexValu,Component const&> index_component
-      )
-    {
-        mpl::integral_c<index_base,IndexValu> index;
-        scanned::inject
-          ( index
-          , buffer.address()
-          , index_component.second
-          );
+        scanned::inject( index, buffer.address(), std::forward<Component>(a_component));
         which_put(IndexValu);
     }
       template
@@ -394,14 +343,14 @@ container
       , typename Component
       >
     container
-      ( index_component<IndexValu,Component&&> index_component
+      ( index_component<index_type,IndexValu,Component> a_component
       )
     {
         mpl::integral_c<index_base,IndexValu> index;
         scanned::inject
           ( index
           , buffer.address()
-          , std::move(index_component.second)
+          , a_component.my_comp
           );
         which_put(IndexValu);
     }
@@ -411,7 +360,7 @@ container
       >
       container const&
     operator=
-      ( index_component<IndexValu,Component const&> index_component
+      ( index_component<index_type,IndexValu,Component> a_component
       )
     {
         destroy();
@@ -419,26 +368,7 @@ container
         scanned::inject
           ( index
           , buffer.address()
-          , index_component.second
-          );
-        which_put(IndexValu);
-        return *this;
-    }
-      template
-      < index_type IndexValu
-      , typename Component
-      >
-      container const&
-    operator=
-      ( index_component<IndexValu,Component&&> index_component
-      )
-    {
-        destroy();
-        mpl::integral_c<index_base,IndexValu> index;
-        scanned::inject
-          ( index
-          , buffer.address()
-          , std::move(index_component.second)
+          , a_component.my_comp
           );
         which_put(IndexValu);
         return *this;
