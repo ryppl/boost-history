@@ -15,6 +15,7 @@
 # include <boost/preprocessor/seq/elem.hpp>
 # include <boost/preprocessor/tuple/elem.hpp>
 # if BOOST_PP_VARIADICS
+# include <boost/preprocessor/variadic/size.hpp>
 # include <boost/preprocessor/variadic/elem.hpp>
 # endif
 
@@ -36,6 +37,7 @@ BEGIN BOOST_PP_ARRAY_SIZE((5, (0, 1, 2, 3, 4))) == 5 END
 
 BEGIN BOOST_PP_VARIADIC_ELEM(2,BOOST_PP_ARRAY_ENUM(ARRAY)) == 2 END
 BEGIN BOOST_PP_VARIADIC_ELEM(3,BOOST_PP_ARRAY_ENUM((5, (0, 1, 2, 3, 4)))) == 3 END
+BEGIN BOOST_PP_VARIADIC_SIZE(BOOST_PP_ARRAY_ENUM((5, (0, 1, 2, 3, 4)))) == 5 END
 
 # endif
 
