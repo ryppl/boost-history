@@ -14,7 +14,7 @@
 #
 # if !defined(BOOST_PP_VARIADICS)
 #
-# if 1
+# if !defined(BOOST_PP_USE_BOOST_CONFIG)
 /* This is the code we will use. It is essentially a duplication
    of the code in Boost Config. If we could ever use Boost Config
    in the future, we can change the above line to #if 0.
@@ -148,20 +148,16 @@
 #define BOOST_PP_VARIADICS 1
 #endif
 #
-# else // !1
-/* This is the ideal code, but will not work until Boost Config 
-   works with C compilers or C++ compilers in C mode. I will be 
-   working on that to see if I can make it happen in the future.
-*/
+# else
 # include <boost/config.hpp>
 #
 # if defined(BOOST_NO_VARIADIC_MACROS)
 # define BOOST_PP_VARIADICS 0
 # else
 # define BOOST_PP_VARIADICS 1
-# endif // !BOOST_NO_VARIADIC_MACROS
+# endif // BOOST_NO_VARIADIC_MACROS
 #
-# endif // 1
+# endif // BOOST_PP_USE_BOOST_CONFIG
 #
 # endif // BOOST_PP_VARIADICS
 #

@@ -12,9 +12,6 @@
 # /* See http://www.boost.org for most recent version. */
 #
 # include <boost/preprocessor/tuple.hpp>
-# include <boost/preprocessor/arithmetic/add.hpp>
-# include <boost/preprocessor/cat.hpp>
-# include <boost/preprocessor/control/if.hpp>
 # include <boost/preprocessor/array/elem.hpp>
 # include <boost/preprocessor/list/at.hpp>
 # include <boost/preprocessor/seq/elem.hpp>

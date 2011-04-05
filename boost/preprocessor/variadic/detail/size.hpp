@@ -24,6 +24,14 @@
 # include <boost/preprocessor/facilities/empty.hpp>
 # endif
 #
+/*
+  The maximum size currently supported for variadic 
+  data in the library is 25, as given by the following
+  two macros. If we change this we also
+  need to change it in the internal copy ( under a different 
+  name to avoid recursion ) of the same functionality in 
+  the header file 'facilities/overload.hpp'.
+*/
 #define BOOST_PP_VARIADIC_DETAIL_ARG_N( \
   A1,A2,A3,A4,A5,A6,A7,A8,A9,A10, \
   A11,A12,A13,A14,A15,A16,A17,A18,A19,A20, \
