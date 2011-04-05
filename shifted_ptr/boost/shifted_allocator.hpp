@@ -52,8 +52,8 @@ template <typename T>
         typedef shifted<T>              value_type;
         typedef size_t                  size_type;
         typedef ptrdiff_t               difference_type;
-        typedef shifted_ptr<T>          pointer;
-        typedef shifted_ptr<const T>    const_pointer;
+        typedef T *                     pointer;
+        typedef const T *               const_pointer;
         typedef element_type &          reference;
         typedef const element_type &    const_reference;
 
@@ -77,26 +77,26 @@ template <typename T>
             return size_t(-1) / sizeof(T);
         }
 
-        value_type * allocate(size_type s, const void * = 0)
+        pointer allocate(size_type s, const void * = 0)
         {
             //value_type * p = (value_type *) value_type::operator new(sizeof(value_type));
             value_type * p = new value_type();
 
-            return p;
+            return p->element();
         }
 
-        void construct(value_type * p, const T & x)
+        void construct(pointer p, const T & x)
         {
             //::new (p) owned_base;
             //::new (p->element()) T(x);
         }
 
-        void destroy(pointer & p)
+        void destroy(pointer p)
         {
-            p.reset();
+            p->reset();
         }
 
-        void deallocate(pointer & p, size_type)
+        void deallocate(pointer p, size_type)
         {
         }
     };
