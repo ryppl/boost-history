@@ -14,6 +14,7 @@
 # include <boost/preprocessor/comparison/less.hpp>
 # include <boost/preprocessor/seq.hpp>
 # include <boost/preprocessor/tuple/elem.hpp>
+# include <boost/preprocessor/list/at.hpp>
 # include <libs/preprocessor/test/test.h>
 
 # define SEQ (4)(1)(5)(2)
@@ -83,3 +84,5 @@ BEGIN BOOST_PP_SEQ_FOR_EACH_PRODUCT(F2, ((1)(0)) ((2)(3))) == 0 END
 #define SEQ_APPEND(s, state, elem) state elem
 BEGIN BOOST_PP_SEQ_CAT(BOOST_PP_SEQ_TAIL(BOOST_PP_SEQ_FOLD_LEFT(SEQ_APPEND, (~), LL))) == 0x0a1b2c3d END
 BEGIN BOOST_PP_SEQ_SIZE(BOOST_PP_SEQ_TAIL(BOOST_PP_SEQ_FOLD_LEFT(SEQ_APPEND, (~), LL))) == 9 END
+
+BEGIN BOOST_PP_LIST_AT(BOOST_PP_SEQ_TO_LIST(SEQ), 2) == 5 END

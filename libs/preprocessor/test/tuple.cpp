@@ -10,6 +10,9 @@
 # /* See http://www.boost.org for most recent version. */
 #
 # include <boost/preprocessor/tuple.hpp>
+# include <boost/preprocessor/arithmetic/add.hpp>
+# include <boost/preprocessor/cat.hpp>
+# include <boost/preprocessor/control/if.hpp>
 # include <libs/preprocessor/test/test.h>
 
 # define TUPLE (0, 1, 2, 3, 4, 5)
@@ -40,3 +43,15 @@ BEGIN CALC(T2) == 7 END
 BEGIN CALC(BOOST_PP_TUPLE_REVERSE(T2)) == 6 END
 
 #endif
+
+#if BOOST_PP_VARIADICS
+
+#define TEST_EAT BOOST_PP_TUPLE_EAT()(1, 2) 4
+
+#else
+
+#define TEST_EAT BOOST_PP_TUPLE_EAT(2)(1, 2) 4
+
+#endif
+
+BEGIN TEST_EAT == 4 END

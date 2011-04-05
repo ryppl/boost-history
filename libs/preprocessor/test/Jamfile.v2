@@ -34,3 +34,21 @@ test-suite preprocessor
         [ compile slot.cpp ]
         [ compile tuple.cpp ]
   ;
+
+test-suite preprocessor_nvm
+   :   
+        [ compile arithmetic.cpp : <define>BOOST_PP_VARIADICS=0 : arithmetic_nvm ]
+        [ compile array.cpp : <define>BOOST_PP_VARIADICS=0 : array_nvm ]
+        [ compile comparison.cpp : <define>BOOST_PP_VARIADICS=0 : comparison_nvm ]
+        [ compile control.cpp : <define>BOOST_PP_VARIADICS=0 : control_nvm ]
+        [ compile debug.cpp : <define>BOOST_PP_VARIADICS=0 : debug_nvm ]
+        [ compile facilities.cpp : <define>BOOST_PP_VARIADICS=0 : facilities_nvm ]
+        [ compile iteration.cpp : <define>BOOST_PP_VARIADICS=0 : iteration_nvm ]
+        [ compile list.cpp : <define>BOOST_PP_VARIADICS=0 : list_nvm ]
+        [ compile logical.cpp : <define>BOOST_PP_VARIADICS=0 : logical_nvm ]
+        [ compile repetition.cpp : <define>BOOST_PP_VARIADICS=0 : repetition_nvm ]
+        [ compile selection.cpp : <define>BOOST_PP_VARIADICS=0 : selection_nvm ]
+        [ compile seq.cpp : <define>BOOST_PP_VARIADICS=0 : seq_nvm ]
+        [ compile slot.cpp : <define>BOOST_PP_VARIADICS=0 : slot_nvm ]
+        [ compile tuple.cpp : <define>BOOST_PP_VARIADICS=0 : tuple_nvm ]
+  ;
