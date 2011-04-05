@@ -11890,7 +11890,7 @@ These typedefs should be available if the
 corresponding typedefs from are available.
 </suggestion>
 <notes></notes>
-<rationale>
+<rationale>There is no concensus for a change to the standard.
 </rationale>
 </comment>
 <comment nb="CA" num="16" type="ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
@@ -11916,7 +11916,6 @@ should be removed.
 </suggestion>
 <notes></notes>
 <rationale>
-There is no concensus for a change to the standard.
 </rationale>
 </comment>
 <comment nb="US" num="142" type="ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
