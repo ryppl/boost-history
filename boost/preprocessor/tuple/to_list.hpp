@@ -39,7 +39,7 @@
 #
 #    define BOOST_PP_TUPLE_TO_LIST(size, tuple) BOOST_PP_TUPLE_TO_LIST_COMMON(size, tuple)
 #
-# endif // BOOST_PP_VARIADICS
+# endif /* BOOST_PP_VARIADICS */
 #
 # if ~BOOST_PP_CONFIG_FLAGS() & BOOST_PP_CONFIG_MWCC()
 #    define BOOST_PP_TUPLE_TO_LIST_COMMON(size, tuple) BOOST_PP_TUPLE_TO_LIST_I(size, tuple)

@@ -41,7 +41,7 @@
 #
 #    define BOOST_PP_TUPLE_ELEM(size, index, tuple) BOOST_PP_TUPLE_ELEM_COMMON(size, index, tuple)
 #
-# endif // BOOST_PP_VARIADICS
+# endif /* BOOST_PP_VARIADICS */
 #
 # if ~BOOST_PP_CONFIG_FLAGS() & BOOST_PP_CONFIG_MWCC()
 #    define BOOST_PP_TUPLE_ELEM_COMMON(size, index, tuple) BOOST_PP_TUPLE_ELEM_I(size, index, tuple)

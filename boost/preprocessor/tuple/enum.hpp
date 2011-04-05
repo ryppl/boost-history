@@ -30,5 +30,5 @@
 #define BOOST_PP_TUPLE_ENUM(size, tuple) \
   BOOST_PP_TUPLE_REM_CTOR(size, tuple) \
 /**/
-#endif // BOOST_PP_VARIADICS
-#endif // BOOST_PREPROCESSOR_TUPLE_ENUM_HPP
+#endif /* BOOST_PP_VARIADICS */
+#endif /* BOOST_PREPROCESSOR_TUPLE_ENUM_HPP */

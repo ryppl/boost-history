@@ -1,6 +1,6 @@
 # /* **************************************************************************
 #  *                                                                          *
-#  *     (C) Copyright Edward Diener 2011.
+#  *     (C) Copyright Paul Mensonides 2002.
 #  *     Distributed under the Boost Software License, Version 1.0. (See
 #  *     accompanying file LICENSE_1_0.txt or copy at
 #  *     http://www.boost.org/LICENSE_1_0.txt)
@@ -9,17 +9,19 @@
 #
 # /* See http://www.boost.org for most recent version. */
 #
-# ifndef BOOST_PREPROCESSOR_VARIADIC_TO_LIST_HPP
-# define BOOST_PREPROCESSOR_VARIADIC_TO_LIST_HPP
-#
-# include <boost/preprocessor/config/variadics.hpp>
-#
-#if BOOST_PP_VARIADICS
-#
-# include <boost/preprocessor/variadic/detail/to_list.hpp>
-#
-#define BOOST_PP_VARIADIC_TO_LIST(...) \
-  BOOST_PP_VARIADIC_DETAIL_TO_LIST(__VA_ARGS__) \
-/**/
-#endif /* BOOST_PP_VARIADICS */
-#endif /* BOOST_PREPROCESSOR_VARIADIC_TO_LIST_HPP */
+# include <boost/preprocessor/slot.hpp>
+# include <libs/preprocessor/test/test.h>
+
+# define X() 4
+
+# define BOOST_PP_VALUE 1 + 2 + 3 + X()
+# include BOOST_PP_ASSIGN_SLOT(1)
+
+# undef X
+
+BEGIN BOOST_PP_SLOT(1) == 10 END
+
+# define BOOST_PP_VALUE BOOST_PP_SLOT(1) * BOOST_PP_SLOT(1)
+# include BOOST_PP_ASSIGN_SLOT(1)
+
+BEGIN BOOST_PP_SLOT(1) == 100 END

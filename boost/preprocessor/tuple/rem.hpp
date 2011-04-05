@@ -45,7 +45,7 @@
 #
 #    define BOOST_PP_TUPLE_REM_CTOR(size, tuple) BOOST_PP_TUPLE_REM_CTOR_COMMON(size, tuple)
 #
-# endif // BOOST_PP_VARIADICS
+# endif /* BOOST_PP_VARIADICS */
 #
 # if ~BOOST_PP_CONFIG_FLAGS() & BOOST_PP_CONFIG_MWCC()
 #    define BOOST_PP_TUPLE_REM_COMMON(size) BOOST_PP_TUPLE_REM_I(size)

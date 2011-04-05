@@ -39,5 +39,5 @@
   ( size, tuple ) \
 /**/
 #
-# endif // BOOST_PP_VARIADICS
-# endif // BOOST_PREPROCESSOR_TUPLE_TO_ARRAY_HPP
+# endif /* BOOST_PP_VARIADICS */
+# endif /* BOOST_PREPROCESSOR_TUPLE_TO_ARRAY_HPP */

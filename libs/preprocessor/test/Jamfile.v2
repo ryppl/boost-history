@@ -33,6 +33,7 @@ test-suite preprocessor
         [ compile seq.cpp ]
         [ compile slot.cpp ]
         [ compile tuple.cpp ]
+        [ compile variadic.cpp ]
   ;
 
 test-suite preprocessor_nvm
@@ -51,4 +52,60 @@ test-suite preprocessor_nvm
         [ compile seq.cpp : <define>BOOST_PP_VARIADICS=0 : seq_nvm ]
         [ compile slot.cpp : <define>BOOST_PP_VARIADICS=0 : slot_nvm ]
         [ compile tuple.cpp : <define>BOOST_PP_VARIADICS=0 : tuple_nvm ]
+  ;
+
+test-suite preprocessor_c
+   :   
+        [ compile arithmetic.c 
+          : 
+          : arithmetic_c 
+        ]
+        [ compile array.c 
+          : 
+          : array_c 
+        ]
+        [ compile comparison.c 
+          : 
+          : comparison_c 
+        ]
+        [ compile control.c 
+          : 
+          : control_c 
+        ]
+        [ compile debug.c 
+          : 
+          : debug_c 
+        ]
+        [ compile facilities.c 
+          : 
+          : facilities_c 
+        ]
+        [ compile list.c 
+          : 
+          : list_c 
+        ]
+        [ compile logical.c 
+          : 
+          : logical_c 
+        ]
+        [ compile selection.c 
+          : 
+          : selection_c 
+        ]
+        [ compile seq.c 
+          : 
+          : seq_c 
+        ]
+        [ compile slot.c 
+          : 
+          : slot_c 
+        ]
+        [ compile tuple.c 
+          : 
+          : tuple_c 
+        ]
+        [ compile variadic.c 
+          : 
+          : variadic_c 
+        ]
   ;
