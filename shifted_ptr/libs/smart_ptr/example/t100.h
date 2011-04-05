@@ -48,7 +48,7 @@ struct neuron_base
     neuron_base(std::string const & s) : exp_(s)/*, sub_(exp_.mark_count())*/ {}
     virtual ~neuron_base() {};
 
-    virtual double operator () (std::string const & input) {};
+    virtual double operator () (std::string const & input) { return 0; };
 };
 
 
