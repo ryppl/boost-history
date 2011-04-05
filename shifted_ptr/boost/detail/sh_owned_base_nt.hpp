@@ -66,43 +66,44 @@ class owned_base;
     Syntax helper.
 */
 
-typedef std::list< numeric::interval<int>, fast_pool_allocator< numeric::interval<int> > > pool_lii;
+typedef std::list< numeric::interval<long>, fast_pool_allocator< numeric::interval<long> > > pool_lii;
 
 
 /**
     Allocator wrapper tracking allocations.
 */
 
-struct pool : boost::pool<>,
-#ifndef BOOST_SH_DISABLE_THREADS
-    thread_specific_ptr<pool_lii>
-#else
-    std::auto_ptr<pool_lii>
-#endif
+struct pool : boost::pool<>
 {
+#ifndef BOOST_SH_DISABLE_THREADS
+    thread_specific_ptr<pool_lii> plii_;
+#else
+    std::auto_ptr<pool_lii> plii_;
+#endif
+
     pool() : boost::pool<>(1)
     {
-        reset(new pool_lii());
+        plii_.reset(new pool_lii());
     }
-    
+	
     owned_base * top(void * p)
     {
         pool_lii::reverse_iterator i;
         
-        for (i = get()->rbegin(); i != get()->rend(); i ++)
-            if (in((int)(p), * i))
+        for (i = plii_->rbegin(); i != plii_->rend(); i ++)
+            if (in((long)(p), * i))
                 break;
 
-        get()->erase(i.base(), get()->end());
+        plii_->erase(i.base(), plii_->end());
         
-        return (owned_base *)(i->lower());
+        return (owned_base *)(plii_->rbegin()->lower());
     }
     
     void * allocate(std::size_t s)
     {
         void * p = ordered_malloc(s);
         
-        get()->push_back(numeric::interval<int>((int) p, int((char *)(p) + s)));
+        plii_->push_back(numeric::interval<long>((long) p, long((char *)(p) + s)));
         
         return p;
     }
@@ -111,11 +112,11 @@ struct pool : boost::pool<>,
     {
         pool_lii::reverse_iterator i;
         
-        for (i = get()->rbegin(); i != get()->rend(); i ++)
-            if (in((int)(p), * i))
+        for (i = plii_->rbegin(); i != plii_->rend(); i ++)
+            if (in((long)(p), * i))
                 break;
-        
-        get()->erase(i.base(), get()->end());
+
+        plii_->erase(i.base(), plii_->end());
         free(p, s);
     }
 };
