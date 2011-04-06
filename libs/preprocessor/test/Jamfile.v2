@@ -172,9 +172,4 @@ test-suite preprocessor_c_nvm
             <toolset>gcc:<cflags>-std=c99
           : tuple_c_nvm 
         ]
-        [ compile variadic.c 
-          : <define>BOOST_PP_VARIADICS=0
-            <toolset>gcc:<cflags>-std=c99
-          : variadic_c_nvm 
-        ]
   ;
