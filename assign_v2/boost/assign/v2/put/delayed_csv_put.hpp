@@ -73,97 +73,97 @@ namespace interpreter_aux{
 
 namespace result_of{
 
-	template<arg_list_size_type N, typename U, typename Os = empty_list_option>
+    template<arg_list_size_type N, typename U, typename Os = empty_list_option>
     struct delayed_csv_put
     {
         typedef delayed_csv_put_holder<
-        	typename ref::wrapper_param<U>::type, N, Os
+            typename ref::wrapper_param<U>::type, N, Os
         > type;
     };
 
 }// result_of
 
-	// Explicit U
+    // Explicit U
 
-	template<typename U, typename...Args>
-	typename result_of::delayed_csv_put<U, size_of...(Args)>::type
-	delayed_csv_put(Args&&... args)
-	{
-		return typename result_of::delayed_csv_put<U, size_of...(Args)>::type(
-			ref::csv_array<U>( std::forward<Args>( args )... )
-		);
-	}
+    template<typename U, typename...Args>
+    typename result_of::delayed_csv_put<U, size_of...(Args)>::type
+    delayed_csv_put(Args&&... args)
+    {
+        return typename result_of::delayed_csv_put<U, size_of...(Args)>::type(
+            ref::csv_array<U>( std::forward<Args>( args )... )
+        );
+    }
 
-	template<typename U, typename O, bool is, typename...Args>
-	typename result_of::delayed_csv_put<U, size_of...(Args), O>::type
-	delayed_csv_put(option_crtp<O, is> const& crtp, Args&&... args)
-	{
-    	typedef O const& options_;
+    template<typename U, typename O, bool is, typename...Args>
+    typename result_of::delayed_csv_put<U, size_of...(Args), O>::type
+    delayed_csv_put(option_crtp<O, is> const& crtp, Args&&... args)
+    {
+        typedef O const& options_;
         options_ options = static_cast<options_>( crtp );
-		return typename result_of::delayed_csv_put<
-        	U, size_of...(Args), O
+        return typename result_of::delayed_csv_put<
+            U, size_of...(Args), O
         >::type(
-			options,
-			ref::csv_array<U>( std::forward<Args>( args )... )
-		);
-	}
+            options,
+            ref::csv_array<U>( std::forward<Args>( args )... )
+        );
+    }
 
-	// Implicit U
+    // Implicit U
 
-	template<typename U, typename...Args>
-	typename result_of::delayed_csv_put<U, 1 + size_of...(Args)>::type
-	delayed_csv_put(U&& u, Args&&... args)
-	{
-    	return delayed_csv_put<U>( 
-        	std::forward<U>( u ), 
+    template<typename U, typename...Args>
+    typename result_of::delayed_csv_put<U, 1 + size_of...(Args)>::type
+    delayed_csv_put(U&& u, Args&&... args)
+    {
+        return delayed_csv_put<U>( 
+            std::forward<U>( u ), 
             std::forward<Args>( args ) ... 
         );
     }
 
-	template<typename U, typename O, bool is, typename...Args>
-	typename result_of::delayed_csv_put<U, 1 + size_of...(Args), O>::type
-	delayed_csv_put(option_crtp<O, is> const& crtp, U&& u, Args&&... args)
-	{
-    	return delayed_csv_put<U>( 
-        	crtp,  
+    template<typename U, typename O, bool is, typename...Args>
+    typename result_of::delayed_csv_put<U, 1 + size_of...(Args), O>::type
+    delayed_csv_put(option_crtp<O, is> const& crtp, U&& u, Args&&... args)
+    {
+        return delayed_csv_put<U>( 
+            crtp,  
             std::forward<U>( u ), 
             std::forward<Args>( args ) ... 
         );
-	}
+    }
     
 #else
 
-	template<typename U>
-	typename result_of::delayed_csv_put<U, 0>::type
-	delayed_csv_put()
-	{
-		return typename result_of::delayed_csv_put<U, 0>::type(
-			ref::csv_array<U>();
-		);
-	}
+    template<typename U>
+    typename result_of::delayed_csv_put<U, 0>::type
+    delayed_csv_put()
+    {
+        return typename result_of::delayed_csv_put<U, 0>::type(
+            ref::csv_array<U>();
+        );
+    }
 
 #define BOOST_ASSIGN_V2_MACRO2(z, N, U)\
-	template<typename T, arg_list_size_type N>\
-	typename result_of::delayed_csv_put<U, N>::type\
-	delayed_csv_put( BOOST_PP_ENUM_PARAMS(N, U &_) )\
-	{\
-		return typename result_of::delayed_csv_put<U, N>::type(\
-			ref::csv_array<U>( BOOST_PP_ENUM_PARAMS(N, _) )\
-		);\
-	}\
-	template<typename T, typename O, bool is, arg_list_size_type N>\
-	typename result_of::delayed_csv_put<U, N>::type\
-	delayed_csv_put(\
-    	option_crtp<O, is> const& crtp,\
+    template<typename T, arg_list_size_type N>\
+    typename result_of::delayed_csv_put<U, N>::type\
+    delayed_csv_put( BOOST_PP_ENUM_PARAMS(N, U &_) )\
+    {\
+        return typename result_of::delayed_csv_put<U, N>::type(\
+            ref::csv_array<U>( BOOST_PP_ENUM_PARAMS(N, _) )\
+        );\
+    }\
+    template<typename T, typename O, bool is, arg_list_size_type N>\
+    typename result_of::delayed_csv_put<U, N>::type\
+    delayed_csv_put(\
+        option_crtp<O, is> const& crtp,\
         BOOST_PP_ENUM_PARAMS(N, U &_)\
     )\
-	{\
-    	typedef O const& options_;\
+    {\
+        typedef O const& options_;\
         options_ options = static_cast<options_>( crtp );\
-		return typename result_of::delayed_csv_put<U, N>::type(\
-			ref::csv_array<U>( BOOST_PP_ENUM_PARAMS(N, _) )\
-		);\
-	}\
+        return typename result_of::delayed_csv_put<U, N>::type(\
+            ref::csv_array<U>( BOOST_PP_ENUM_PARAMS(N, _) )\
+        );\
+    }\
 /**/
 
 BOOST_PP_REPEAT_FROM_TO(
@@ -189,7 +189,7 @@ BOOST_PP_REPEAT_FROM_TO(
     C& operator|(C& cont, delayed_csv_put_holder<N, U, Os> const& rhs)/*<-*/
     {
         v2::ref::as_arg_list( 
-        	make_csv_ready( put( cont ) % rhs.options() ), 
+            make_csv_ready( put( cont ) % rhs.options() ), 
             rhs.arg_list() 
         );
         return cont;

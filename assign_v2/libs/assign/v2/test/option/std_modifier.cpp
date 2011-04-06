@@ -13,9 +13,8 @@
 #include <set>
 #include <string>
 #include <boost/assign/v2/detail/config/check.hpp>
-#include <boost/assign/v2/put/csv_put.hpp>
+#include <boost/assign/v2/include/csv_put.hpp>
 #include <boost/assign/v2/deque.hpp>
-// Options come next
 #include <boost/assign/v2/option/modifier/std.hpp>
 #include <boost/circular_buffer.hpp>
 #include <boost/range/begin.hpp>
@@ -46,7 +45,7 @@ namespace xxx_standard{
             typedef as2::result_of::put<std::vector<int> >::type put_;
             typedef as2::modifier_tag::push_front tag_;
             typedef as2::result_of::option_std_modifier<
-            	put_, tag_
+                put_, tag_
             >::type result1_;
             typedef as2:: interpreter_aux::replace_modifier_tag<put_> meta2_;
             typedef ::boost::mpl::apply1<meta2_, tag_>::type result2_;
@@ -97,7 +96,7 @@ namespace xxx_standard{
             as2::csv_put( list, as2::_push_back, 1, 10, 100 );
 
             BOOST_ASSIGN_V2_CHECK( 
-            	range::equal( list, as2::csv_deque( 1, 10, 100 ) ) 
+                range::equal( list, as2::csv_deque( 1, 10, 100 ) ) 
             );
             //]
         }
@@ -121,7 +120,7 @@ namespace xxx_standard{
             );
 
             BOOST_ASSIGN_V2_CHECK( 
-            	range::equal( two_power_n, as2::csv_deque( 1, 2, 4, 8, 16 ) ) 
+                range::equal( two_power_n, as2::csv_deque( 1, 2, 4, 8, 16 ) ) 
             );
             //]
         }

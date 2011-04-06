@@ -32,14 +32,14 @@ BOOST_ASSIGN_V2_SWITCH_CASE_DEFAULT(2, convert_tag::copy)
 namespace conversion_aux{
 
     template<
-    	typename C		// Container
-        , typename R	// Range
+        typename C        // Container
+        , typename R    // Range
     >
     struct deduce_tag 
-    	: switch_aux::result<
-        	switch_tag::conversion,
-        	C
-    	>
+        : switch_aux::result<
+            switch_tag::conversion,
+            C
+        >
     {};
 
 }// conversion_aux

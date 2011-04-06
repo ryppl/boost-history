@@ -13,8 +13,8 @@
 #include <boost/mpl/assert.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/assign/v2/detail/config/check.hpp>
-#include <boost/assign/v2/deque/csv_deque.hpp>
-#include <boost/assign/v2/deque/deque.hpp>
+#include <boost/assign/v2/include/csv_deque.hpp>
+#include <boost/assign/v2/include/deque.hpp>
 #include <boost/range/algorithm/equal.hpp>
 #include <libs/assign/v2/test/deque.h>
 
@@ -56,12 +56,12 @@ namespace xxx_deque{
             benchmark.push_back( T("LHR", "London") );
             benchmark.push_back( T("PEK", "Beijing") );
             BOOST_ASSIGN_V2_CHECK( 
-            	range::equal( benchmark, airports1 )
+                range::equal( benchmark, airports1 )
             ); 
             
             C airports2 = as2::deque<T>("AUH", "Abu Dhabi")("JFK", "New York")("LHR", "London")("PEK", "Beijing");
             BOOST_ASSIGN_V2_CHECK( 
-            	range::equal( benchmark, airports2 )
+                range::equal( benchmark, airports2 )
             ); 
             //]
         }

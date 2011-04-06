@@ -77,21 +77,21 @@ namespace result_of{
     
     template<typename O, bool is_list = false> 
     struct option_crtp{};
-	
+    
     template<typename O>
     struct is_option_crtp 
-    	: boost::mpl::or_<
-        	boost::is_base_of< option_crtp<O, false>, O>,
-        	boost::is_base_of< option_crtp<O, true>, O>
+        : boost::mpl::or_<
+            boost::is_base_of< option_crtp<O, false>, O>,
+            boost::is_base_of< option_crtp<O, true>, O>
         >
     {};
 
-	template<
-    	typename O	// O&&, O&
+    template<
+        typename O    // O&&, O&
     >
     struct is_option_crtp_cpp0x : is_option_crtp<
-    	typename boost::remove_cv<
-        	typename boost::remove_reference<O>::type
+        typename boost::remove_cv<
+            typename boost::remove_reference<O>::type
         >::type
     >{};
             
@@ -104,34 +104,34 @@ namespace result_of{
 
     template<typename Head, typename Tail, bool exit>
     struct list_option_inherit 
-    	: Tail
+        : Tail
     {
-    	list_option_inherit(){}
-    	list_option_inherit( Tail tail ) 
-        	: Tail( tail )
+        list_option_inherit(){}
+        list_option_inherit( Tail tail ) 
+            : Tail( tail )
         {}
     };
 
     template<typename Head, typename Tail>
     struct list_option_inherit<Head, Tail, true> 
-    	: Tail, 
+        : Tail, 
         option_crtp< 
-        	list_option<Head, Tail, true>,
+            list_option<Head, Tail, true>,
             true
         >
     {
-    	list_option_inherit(){}
-    	list_option_inherit( Tail tail ) 
-        	: Tail( tail )
+        list_option_inherit(){}
+        list_option_inherit( Tail tail ) 
+            : Tail( tail )
         {}
     };
 
     template<typename Head, typename Tail, bool exit>
     struct list_option 
-    	: list_option_inherit<Head, Tail, exit>
+        : list_option_inherit<Head, Tail, exit>
     {
 
-		typedef list_option_inherit<Head, Tail, exit> super_t;
+        typedef list_option_inherit<Head, Tail, exit> super_t;
         typedef Head head_type;
         typedef Tail tail_type;
 
@@ -194,9 +194,9 @@ namespace result_of{
 
 namespace result_of{
 
-	template<typename L, typename O1>
-	struct list_option_modulo
-    	: L:: template result<O1>
+    template<typename L, typename O1>
+    struct list_option_modulo
+        : L:: template result<O1>
     {};
 
 
@@ -209,15 +209,15 @@ namespace{
 namespace interpreter_aux{
 namespace result_of{
 
-	template<typename O1, typename O2>
+    template<typename O1, typename O2>
     struct option_modulo 
-    	: result_of::list_option_modulo<
-    		typename result_of::list_option_modulo<
-    			empty_list_option,
-        		O1
-    		>::type, 
-        	O2
-    	>
+        : result_of::list_option_modulo<
+            typename result_of::list_option_modulo<
+                empty_list_option,
+                O1
+            >::type, 
+            O2
+        >
     {};
 
 }// result_of
@@ -226,8 +226,8 @@ namespace result_of{
     typename result_of::option_modulo<O1, O2>::type
     operator%(option_crtp<O1, false> const option1, O2 const& option2)
     {
-    	O1 const& ref = static_cast<O1 const&>( option1 );
-		return _list_option % ref % option2;
+        O1 const& ref = static_cast<O1 const&>( option1 );
+        return _list_option % ref % option2;
     }
 
 }// interpreter_aux

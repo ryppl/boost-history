@@ -55,7 +55,7 @@ BOOST_PP_REPEAT_FROM_TO(
 #undef BOOST_ASSIGN_V2_MACRO3
 
 }// array_aux
-	using array_aux::csv_array;
+    using array_aux::csv_array;
 }// ref
 }// v2
 }// assign

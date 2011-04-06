@@ -12,7 +12,8 @@
 #include <boost/array.hpp>
 #include <boost/assign/v2/detail/check/equal_container.hpp>
 #include <boost/assign/v2/detail/config/check.hpp>
-#include <boost/assign/v2/conversion.hpp>
+#include <boost/assign/v2/include/convert.hpp>
+#include <boost/assign/v2/include/converter.hpp>
 #include <boost/assign/v2/conversion/check.hpp>
 #include <boost/assign/v2/ref/array.hpp>
 #include <boost/assign/v2/deque.hpp>
@@ -46,7 +47,7 @@ namespace xxx_conversion{
             ar_ const& ar = ( r | as2::convert<ar_>() );
             
             BOOST_ASSIGN_V2_CHECK( 
-            	range::equal( ar, as2::csv_deque( 1 , 10, 100 ) ) 
+                range::equal( ar, as2::csv_deque( 1 , 10, 100 ) ) 
             );
             //]
         }

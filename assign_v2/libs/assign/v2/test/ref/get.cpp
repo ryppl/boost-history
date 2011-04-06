@@ -9,9 +9,9 @@
 //////////////////////////////////////////////////////////////////////////////
 #include <boost/array.hpp>
 #include <boost/range/begin.hpp>
-#include <boost/assign/v2/ref/array/get.hpp>
+#include <boost/assign/v2/include/ref/get.hpp>
 #include <boost/assign/v2/ref/wrapper/copy.hpp>
-#include <boost/assign/v2/deque/csv_deque.hpp>
+#include <boost/assign/v2/include/csv_deque.hpp>
 #include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/range/algorithm/copy.hpp>
 #include <libs/assign/v2/test/ref/wrapper.h>

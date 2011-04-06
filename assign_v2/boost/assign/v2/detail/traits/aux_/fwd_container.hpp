@@ -46,7 +46,7 @@ namespace boost{
 namespace detail{
 namespace multi_array{
 
-	struct multi_array_base;
+    struct multi_array_base;
 
 }// multi_array
 }// detail

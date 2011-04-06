@@ -21,10 +21,10 @@ namespace v2{
 namespace ref{
 namespace list_aux{
 
-	template<typename T>
+    template<typename T>
     struct ptr_wrapper
     {
-    	typedef boost::shared_ptr<T const> type;
+        typedef boost::shared_ptr<T const> type;
     };
 
     template<typename T>
@@ -32,10 +32,10 @@ namespace list_aux{
     {
         typedef T tail_type;
         typedef ::boost::mpl::int_<
-        	T::static_size::value + 1
+            T::static_size::value + 1
         > static_size;
         typedef T const& result_of_tail_type;
-		typedef typename ptr_wrapper<T>::type ptr_wrapper_;
+        typedef typename ptr_wrapper<T>::type ptr_wrapper_;
 
         tail_holder(ptr_wrapper_ w) : tail_( w ){}
         result_of_tail_type tail()const{ return *this->tail_; }

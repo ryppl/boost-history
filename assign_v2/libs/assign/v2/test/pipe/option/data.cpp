@@ -11,9 +11,8 @@
 #include <list>
 #include <vector>
 #include <boost/assign/v2/detail/config/check.hpp>
-#include <boost/assign/v2/deque/csv_deque.hpp>
+#include <boost/assign/v2/include/csv_deque.hpp>
 #include <boost/assign/v2/pipe/csv_put.hpp>
-// Options come next
 #include <boost/assign/v2/option/data_generator.hpp>
 #include <boost/lambda/lambda.hpp>
 #include <boost/range/algorithm/equal.hpp>
@@ -36,7 +35,7 @@ namespace xxx_data{
                 range::equal(
                     factorials | ( 
                         as2::_csv_put 
-                        	% ( as2::_data = ( lambda::var(k) *= lambda::_1 ) ) 
+                            % ( as2::_data = ( lambda::var(k) *= lambda::_1 ) ) 
                     )/*<<Equivalent to calling `factorials.push_back( k *= ++i )`>>*/( 1, 2, 3, 4, 5 ),
                     as2::csv_deque<int>( 1, 2, 6, 24, 120 )
                 )

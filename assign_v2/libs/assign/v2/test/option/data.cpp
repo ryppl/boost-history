@@ -16,8 +16,8 @@
 #include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/deque.hpp>
 #include <boost/assign/v2/option/data_generator.hpp>
-#include <boost/assign/v2/put/csv_put.hpp>
-#include <boost/assign/v2/put/put.hpp>
+#include <boost/assign/v2/include/csv_put.hpp>
+#include <boost/assign/v2/include/put.hpp>
 #include <boost/function.hpp>
 #include <boost/lambda/bind.hpp>
 #include <boost/lambda/lambda.hpp>
@@ -41,9 +41,9 @@ namespace xxx_data{
             /*<-*/typedef double(*fp)(double);/*->*/
             typedef function<double(double)> f_;
             as2::csv_put( 
-            	exponent
+                exponent
                 , as2::_data = f_( /*<-*/fp(/*->*/ log10 /*<-*/)/*->*/ ) 
-            	, 1.0, 10.0, 100.0, 1000.0, 10000.0 
+                , 1.0, 10.0, 100.0, 1000.0, 10000.0 
             );
 
             double eps = numeric::bounds<double>::smallest();
@@ -54,7 +54,7 @@ namespace xxx_data{
         {
             //[test_option_data_recursive
             int i = 1, k = 1;
-			
+            
             BOOST_AUTO(
                 factorials, (
                     as2::deque<int>( as2::_nil ) % (
@@ -64,8 +64,8 @@ namespace xxx_data{
             );
 
             BOOST_ASSIGN_V2_CHECK( 
-            	range::equal( 
-                	factorials, 
+                range::equal( 
+                    factorials, 
                     as2::csv_deque( 1, 2, 6, 24, 120 ) 
                 ) 
             );

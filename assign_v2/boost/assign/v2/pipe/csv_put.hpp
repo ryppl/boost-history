@@ -183,15 +183,15 @@ BOOST_PP_REPEAT_FROM_TO(
     >
     C& operator|(C& cont, interpreter_aux::arg_list<H, T, N, U> const& arg_list)/*<-*/
     {
-    	typedef typename ::boost::mpl::if_c<
-        	!container_aux::is_map<C>::value,
+        typedef typename ::boost::mpl::if_c<
+            !container_aux::is_map<C>::value,
             use_default_,
             value_
         >::type arg_;
 
         v2::ref::as_arg_list(    
             arg_list.apply( 
-            	put( cont ) % ( _data = arg_() ) 
+                put( cont ) % ( _data = arg_() ) 
             ),
             arg_list.arg_list_cont()
         );

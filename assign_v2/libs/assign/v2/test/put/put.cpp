@@ -24,9 +24,9 @@
 
 #include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/detail/traits.hpp>
-#include <boost/assign/v2/deque/csv_deque.hpp>
-#include <boost/assign/v2/put/put.hpp>
-#include <boost/assign/v2/put/csv_put.hpp>
+#include <boost/assign/v2/include/csv_deque.hpp>
+#include <boost/assign/v2/include/put.hpp>
+#include <boost/assign/v2/include/csv_put.hpp>
 #include <boost/tuple/tuple.hpp>
 #include <boost/range/algorithm_ext/iota.hpp>
 #include <boost/range/begin.hpp>
@@ -48,13 +48,13 @@ namespace xxx_put{
         using namespace boost;
         namespace as2 = assign::v2;
 
-		// STL
+        // STL
         {
             //[test_csv_put_stl
-            std::queue<int> adapter; 	as2::csv_put( adapter, 1, 10, 100 );
-            array<int, 3> array; 		as2::csv_put( array,   1, 10, 100 );
-            std::set<int> assoc; 		as2::csv_put( assoc,   1, 10, 100 );
-            std::list<int> seq; 		as2::csv_put( seq,     1, 10, 100 );
+            std::queue<int> adapter;     as2::csv_put( adapter, 1, 10, 100 );
+            array<int, 3> array;         as2::csv_put( array,   1, 10, 100 );
+            std::set<int> assoc;         as2::csv_put( assoc,   1, 10, 100 );
+            std::list<int> seq;         as2::csv_put( seq,     1, 10, 100 );
             //]
             BOOST_ASSIGN_V2_CHECK(  adapter.front()    == 1 );
             BOOST_ASSIGN_V2_CHECK(  adapter.back()     == 100 );
@@ -65,7 +65,7 @@ namespace xxx_put{
             BOOST_ASSIGN_V2_CHECK(  seq.front()        == 1 );
             BOOST_ASSIGN_V2_CHECK(  seq.back()         == 100 );
         }
-		// ARRAY
+        // ARRAY
         {
              //[test_csv_put_keypad
             std::vector<int> numeric( 10 ); iota( numeric, 0 ); typedef std::string str_;
@@ -106,7 +106,7 @@ namespace xxx_put{
             BOOST_ASSIGN_V2_CHECK(  fabs( ragged[2].front() + 99.99     ) < eps );
             BOOST_ASSIGN_V2_CHECK(  fabs( ragged[2].back()  + 99.99     ) < eps );
         }
-		// SEQUENCE
+        // SEQUENCE
         {
             //[test_csv_put_bitset
             typedef std::string str_; typedef std::bitset<3> number; 
@@ -154,7 +154,7 @@ namespace xxx_put{
             BOOST_ASSIGN_V2_CHECK( set.count( "baz" ) == 1 );
             //]
         }
-		// MAP
+        // MAP
         {    
             //[test_put_unordered_map
             typedef std::string word_; 
@@ -186,13 +186,13 @@ namespace xxx_put{
             as2::csv_put( cb, 1, 2, 3 );
              
             BOOST_ASSIGN_V2_CHECK(
-            	range::equal(cb, as2::csv_deque(1, 2, 3) )
+                range::equal(cb, as2::csv_deque(1, 2, 3) )
             );
 
             as2::csv_put( cb, 4, 5 );
 
             BOOST_ASSIGN_V2_CHECK(
-            	range::equal(cb, as2::csv_deque(3, 4, 5) )
+                range::equal(cb, as2::csv_deque(3, 4, 5) )
             );
             //]
         }

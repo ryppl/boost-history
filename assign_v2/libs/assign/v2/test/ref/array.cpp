@@ -14,7 +14,7 @@
 
 #include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/range/algorithm/copy.hpp>
-#include <boost/assign/v2/ref/array/array.hpp>
+#include <boost/assign/v2/include/ref/array.hpp>
 #include <libs/assign/v2/test/ref/array.h>
 
 namespace test_assign_v2{
@@ -29,7 +29,7 @@ namespace xxx_array{
         using namespace boost;
         namespace as2 = assign::v2;
         {
-        	
+            
             //[test_ref_array_temporaries
             boost::array<int, 3> ar; 
             ar[0] = 1; ar[1] = 10; ar[2] = 100;

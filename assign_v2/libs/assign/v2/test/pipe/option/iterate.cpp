@@ -10,8 +10,7 @@
 #include <boost/assign/v2/detail/config/check.hpp>
 
 #include <boost/assign/v2/pipe/csv_put.hpp>
-#include <boost/assign/v2/deque/csv_deque.hpp>
-// Options come next
+#include <boost/assign/v2/include/csv_deque.hpp>
 #include <boost/assign/v2/option/modifier/iterate.hpp>
 #include <boost/array.hpp>
 #include <boost/lambda/lambda.hpp>

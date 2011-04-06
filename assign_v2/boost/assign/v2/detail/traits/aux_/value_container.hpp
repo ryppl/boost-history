@@ -44,11 +44,11 @@ namespace container_aux{
     template<typename C> 
     struct value_is_map : ::boost::mpl::false_{};
 
-	typedef ::boost::detail::multi_array::multi_array_base multi_array_base_;
+    typedef ::boost::detail::multi_array::multi_array_base multi_array_base_;
 
-	template<typename C>
+    template<typename C>
     struct value_is_multi_array
-    	: boost::is_base_of<multi_array_base_, C>
+        : boost::is_base_of<multi_array_base_, C>
     {};
 
 }// container_aux

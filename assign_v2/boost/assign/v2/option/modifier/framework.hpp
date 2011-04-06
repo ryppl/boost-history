@@ -28,8 +28,8 @@ namespace interpreter_aux{
         , typename Arg /*<-*/= ignore_/*->*/ // Specifies an aspect of the implementation
     >
     struct option_modifier/*<-*/
-    	: option_crtp<
-         	option_modifier<Keyword, Arg> 
+        : option_crtp<
+             option_modifier<Keyword, Arg> 
         >
     /*->*/
     {
@@ -135,7 +135,7 @@ namespace result_of{\
     template<typename D, typename Arg>\
     struct BOOST_PP_CAT(option_, NAME)\
         : result_of::option_modifier<\
-        	D,\
+            D,\
             interpreter_aux::BOOST_PP_CAT(keyword_,NAME),\
             Arg\
         >\

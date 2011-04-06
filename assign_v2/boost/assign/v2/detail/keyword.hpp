@@ -28,13 +28,13 @@ namespace keyword_aux{
     struct value/*<-*/{}/*->*/;
 
 }//keyword_aux
-	typedef keyword_aux::ignore			ignore_;
-	typedef keyword_aux::element		element_;
-	typedef keyword_aux::key			key_;
-	typedef keyword_aux::map			map_;
-	typedef keyword_aux::nil			nil_;
-	typedef keyword_aux::use_default	use_default_;
-	typedef keyword_aux::value			value_;	
+    typedef keyword_aux::ignore            ignore_;
+    typedef keyword_aux::element        element_;
+    typedef keyword_aux::key            key_;
+    typedef keyword_aux::map            map_;
+    typedef keyword_aux::nil            nil_;
+    typedef keyword_aux::use_default    use_default_;
+    typedef keyword_aux::value            value_;    
 /*<-*/namespace{/*->*/
     const ignore_ _ignore/*<-*/ = ignore_()/*->*/;
     const element_ _element/*<-*/ = element_()/*->*/;

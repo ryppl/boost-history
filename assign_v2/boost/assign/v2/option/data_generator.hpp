@@ -7,8 +7,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_OPTION_DATA_GENERATOR_ER_2010_HPP
-#define BOOST_ASSIGN_V2_OPTION_DATA_GENERATOR_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_OPTION_DATA_ER_2010_HPP
+#define BOOST_ASSIGN_V2_OPTION_DATA_ER_2010_HPP
 #include <boost/assign/v2/detail/functor/value.hpp>
 #include <boost/assign/v2/detail/keyword.hpp>
 #include <boost/assign/v2/detail/pp/ignore.hpp>
@@ -22,16 +22,16 @@ namespace boost{
     struct use_default;
 namespace assign{
 namespace v2{
-//[syntax_option_data_generator
+//[syntax_option_data
 namespace interpreter_aux{
 
     template<
-        typename C 		// Value or pointer-container
-        , typename F	// Functor or keyword	
+        typename C         // Value or pointer-container
+        , typename F    // Functor or keyword    
     >
     struct data_generator/*<-*/
     {
-    	typedef F type;
+        typedef F type;
     }/*->*/;
 
     template<
@@ -39,7 +39,7 @@ namespace interpreter_aux{
     >
     struct data_generator<C, element_>/*<-*/
     {
-    	typedef typename container_aux::element<C>::type element_;
+        typedef typename container_aux::element<C>::type element_;
         typedef functor_aux::value<element_> type;
     }/*->*/;
 
@@ -48,7 +48,7 @@ namespace interpreter_aux{
     {
         typedef typename container_aux::key<C>::type key_;
         typedef functor_aux::value<key_> type;
-	}/*->*/;
+    }/*->*/;
 
     template<typename C>
     struct data_generator<C, map_>/*<-*/
@@ -57,11 +57,11 @@ namespace interpreter_aux{
         typedef typename container_aux::mapped<C>::type mapped_;
         typedef typename container_aux::value<C>::type value_;
         typedef functor_aux::pair<value_, key_, mapped_> type;
-	}/*->*/;
+    }/*->*/;
 
     template<typename C>
     struct data_generator<C, use_default_>/*<-*/
-		: deduce_data_generator<C>
+        : deduce_data_generator<C>
     {}/*->*/;
 
     template<typename C>
@@ -75,7 +75,7 @@ namespace interpreter_aux{
 namespace result_of{
 
     template<typename D, typename C, typename F = use_default_>
-    struct option_data_generator/*<-*/
+    struct option_data/*<-*/
         : ::boost::mpl::apply1<
             interpreter_aux::replace_data_generator<D>, 
             typename data_generator<C, F>::type
@@ -85,13 +85,13 @@ namespace result_of{
 }// result_of
 
     template<typename F/*<-*/= ignore_/*->*/>
-    struct option_data_generator/*<-*/
-    	: option_crtp<
-        	option_data_generator<F> 
+    struct option_data/*<-*/
+        : option_crtp<
+            option_data<F> 
         >
     {
-        option_data_generator(){}
-        option_data_generator(F f) : f_( f ){}
+        option_data(){}
+        option_data(F f) : f_( f ){}
 
         template<typename C>
         F const& get()const{ return this->f_; }
@@ -101,13 +101,13 @@ namespace result_of{
     }/*->*/;
 
 //<-
-	template<typename Kwd>
-    struct option_data_generator_helper
-    	: option_crtp<
-        	option_data_generator<Kwd> 
+    template<typename Kwd>
+    struct option_data_helper
+        : option_crtp<
+            option_data<Kwd> 
         >
     {
-		template<typename C>
+        template<typename C>
         typename data_generator<C, Kwd>::type 
         get()const
         { 
@@ -117,11 +117,11 @@ namespace result_of{
 
 #define BOOST_ASSIGN_V2_MACRO(Kwd)\
     template<>\
-    struct option_data_generator<Kwd>\
-    	: option_data_generator_helper<Kwd>\
+    struct option_data<Kwd>\
+        : option_data_helper<Kwd>\
     {\
-        option_data_generator(){}\
-        option_data_generator(ignore_){}\
+        option_data(){}\
+        option_data(ignore_){}\
     };\
 /**/    
 BOOST_ASSIGN_V2_MACRO(element_)
@@ -135,13 +135,13 @@ BOOST_ASSIGN_V2_MACRO(value_)
     // Overrides data generator
     template<typename C, typename F, typename MTag
         , typename DTag, typename D, typename F1>
-    typename result_of::option_data_generator<D, C, F1>::type
+    typename result_of::option_data<D, C, F1>::type
     operator%(
         interpreter_crtp<C, F, MTag, DTag, D> const& lhs,
-        option_data_generator<F1> const& rhs
+        option_data<F1> const& rhs
     )/*<-*/
     {
-        typedef typename result_of::option_data_generator<
+        typedef typename result_of::option_data<
             D, C, F1
         >::type result_;
         return result_( 
@@ -151,26 +151,26 @@ BOOST_ASSIGN_V2_MACRO(value_)
         );
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
-    struct keyword_data_generator
+    struct keyword_data
     /*<-*/{
 
         template<typename F>
-        option_data_generator<F> operator=(F const& f)const{
-            return option_data_generator<F>( f );
+        option_data<F> operator=(F const& f)const{
+            return option_data<F>( f );
         }
 
     }/*->*/;
 
 }// interpreter_aux
 namespace{
-    const interpreter_aux::keyword_data_generator _data/*<-*/ 
-        = interpreter_aux::keyword_data_generator()/*->*/;
+    const interpreter_aux::keyword_data _data/*<-*/ 
+        = interpreter_aux::keyword_data()/*->*/;
 }
 namespace result_of{
 
     template<typename D, typename C, typename F>
-    struct option_data_generator/*<-*/
-        : interpreter_aux::result_of::option_data_generator<D, C, F>
+    struct option_data/*<-*/
+        : interpreter_aux::result_of::option_data<D, C, F>
     {}/*->*/;
 
 }// result_of
@@ -190,7 +190,7 @@ namespace v2{\
 namespace interpreter_aux{\
 \
     template<typename T>\
-    option_data_generator< FUN > NAME()\
+    option_data< FUN > NAME()\
     {\
         return ( v2::_data = FUN() );\
     }\
@@ -223,4 +223,4 @@ namespace{\
 #include <boost/lambda/lambda.hpp>
 BOOST_ASSIGN_V2_OPTION_DATA_KEYWORD(identity, ::boost::lambda::_1)
 
-#endif // BOOST_ASSIGN_V2_OPTION_DATA_GENERATOR_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_OPTION_DATA_ER_2010_HPP

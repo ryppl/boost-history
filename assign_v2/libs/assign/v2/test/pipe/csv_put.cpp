@@ -12,7 +12,7 @@
 #include <string>
 #include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/detail/traits/container.hpp>
-#include <boost/assign/v2/deque/csv_deque.hpp>
+#include <boost/assign/v2/include/csv_deque.hpp>
 #include <boost/assign/v2/pipe/csv_put.hpp> 
 #include <boost/ptr_container/ptr_map.hpp>
 #include <boost/range/algorithm/equal.hpp>

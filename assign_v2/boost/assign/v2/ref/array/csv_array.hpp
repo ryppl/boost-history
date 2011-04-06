@@ -57,9 +57,9 @@ namespace result_of{
 
     template<typename U, typename... Args>
     struct csv_array/*<-*/ 
-    	: nth_result_of::csv_array<
-        	1 + sizeof...(Args),  U
-    	>
+        : nth_result_of::csv_array<
+            1 + sizeof...(Args),  U
+        >
     {}/*->*/;
 
 }// result_of
@@ -117,13 +117,13 @@ namespace result_of{
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 /*->*/
 
-	using array_aux::csv_array;
+    using array_aux::csv_array;
 
 namespace result_of{
 
     template<typename U, typename... Args>
     struct csv_array/*<-*/ 
-    	: array_aux::csv_array<U, ...Args>
+        : array_aux::csv_array<U, ...Args>
     {}/*->*/;
 
 }// result_of

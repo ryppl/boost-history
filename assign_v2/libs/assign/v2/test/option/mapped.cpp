@@ -12,7 +12,7 @@
 #include <cmath>
 #include <list>
 #include <boost/assign/v2/detail/config/check.hpp>
-#include <boost/assign/v2/put/put.hpp>
+#include <boost/assign/v2/include/put.hpp>
 #include <boost/assign/v2/deque.hpp>
 #include <boost/assign/v2/option/data_generator.hpp>
 #include <boost/assign/v2/option/modifier/mapped.hpp>
@@ -39,10 +39,10 @@ namespace xxx_mapped{
             typedef std::map<month_, days_> C; C year;
             (
                 as2::put( year )
-                	( "feb", 28 )( "apr", 30 )( "jun", 30 )( "sep", 30 )( "nov", 30 )
+                    ( "feb", 28 )( "apr", 30 )( "jun", 30 )( "sep", 30 )( "nov", 30 )
                     % ( as2::_data = as2::_key ) % ( as2::_mapped = ( lambda::_1 = 31 ) )
             )/*<<Calls `year[ month_( "jan" ) ] = 31`>>*/( "jan" )( "mar" )( "may" )( "jul" )( "aug" )( "oct" )( "dec" );
-			
+            
             BOOST_ASSIGN_V2_CHECK( year["jan"] == 31 );
             BOOST_ASSIGN_V2_CHECK( year["dec"] == 31 );
             //]
@@ -65,13 +65,13 @@ namespace xxx_mapped{
                 alternating,
                 (
                     as2::deque<int>( 
-                    	as2::as_arg_list( std::list<int>( 10, 1 ) ) 
+                        as2::as_arg_list( std::list<int>( 10, 1 ) ) 
                     ) % ( as2::_mapped = ( lambda::_1 *= -1 ) )
                 )( 1 )( 3 )( 5 )( 7 )( 9 )
             );
             BOOST_ASSIGN_V2_CHECK( 
-            	range::equal(
-                	alternating,
+                range::equal(
+                    alternating,
                     as2::csv_deque( +1, -1, +1, -1, +1, -1, +1, -1, +1, -1 )
                 )
             );

@@ -136,8 +136,8 @@ namespace interpreter_aux{
     template<
         typename C              // Container, 
         , typename F            // Data generator
-        , typename MTag  		// Modifier tag
-        , typename DTag      	// Data tag
+        , typename MTag          // Modifier tag
+        , typename DTag          // Data tag
         , typename D            // Derived
     >
     class interpreter_crtp

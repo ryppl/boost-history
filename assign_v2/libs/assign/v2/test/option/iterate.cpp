@@ -12,7 +12,7 @@
 #include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/deque.hpp>
 #include <boost/assign/v2/option/modifier/iterate.hpp> 
-#include <boost/assign/v2/put/csv_put.hpp>
+#include <boost/assign/v2/include/csv_put.hpp>
 #include <boost/lambda/lambda.hpp>
 #include <boost/mpl/assert.hpp>
 #include <boost/mpl/apply.hpp>
@@ -50,9 +50,9 @@ namespace xxx_iterate{
 
             int index = 3; 
             as2::csv_put( 
-            	alternating
+                alternating
                 , as2::_iterate = lambda::var( index )++
-            	, +2, -3, +3, -4, +4, -5, +5 
+                , +2, -3, +3, -4, +4, -5, +5 
             );
 
             BOOST_ASSIGN_V2_CHECK(     

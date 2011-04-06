@@ -10,8 +10,7 @@
 #include <vector>
 #include <boost/typeof/typeof.hpp>
 #include <boost/assign/v2/detail/config/check.hpp>
-#include <boost/assign/v2/put/csv_put.hpp>
-// Options come next
+#include <boost/assign/v2/include/csv_put.hpp>
 #include <boost/assign/v2/option/modifier/std.hpp>
 #include <boost/assign/v2/option/modifier/repeat.hpp>
 #include <boost/assign/v2/deque.hpp>
@@ -33,7 +32,7 @@ namespace xxx_repeat{
 
             BOOST_ASSIGN_V2_CHECK( 
                 range::equal( 
-                	cont, 
+                    cont, 
                     as2::csv_deque( 1, 1, 10, 10, 100, 100 ) 
                 ) 
             );

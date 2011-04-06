@@ -25,14 +25,14 @@ namespace switch_aux{
 
     template<typename SwitchTag, int CaseNumber> struct case_
     {
-    	// Specialize like this:
+        // Specialize like this:
         // template<>
-    	// struct case_<SwitchTag, CaseNumber> : helper<Value, Predicate>{};
+        // struct case_<SwitchTag, CaseNumber> : helper<Value, Predicate>{};
     };
 
     template<typename Expression>
     struct always_true_ 
-    	: ::boost::mpl::true_
+        : ::boost::mpl::true_
     {};
 
     template<typename Value, template<typename> class Predicate = always_true_>
@@ -42,7 +42,7 @@ namespace switch_aux{
         
         template<typename Expression> 
         struct apply 
-        	: Predicate<Expression>
+            : Predicate<Expression>
         {};
         
     };
@@ -56,14 +56,14 @@ namespace switch_aux{
     template<typename SwitchTag, typename Expression, int CaseNumber = 0>
     struct result : ::boost::mpl::eval_if<
         ::boost::mpl::apply1< 
-        	switch_aux::case_<SwitchTag, CaseNumber>, 
+            switch_aux::case_<SwitchTag, CaseNumber>, 
             Expression 
         >,
         switch_aux::extract_value< 
-        	switch_aux::case_<SwitchTag, CaseNumber> 
+            switch_aux::case_<SwitchTag, CaseNumber> 
         >,
         switch_aux::result< 
-        	SwitchTag, Expression, CaseNumber + 1
+            SwitchTag, Expression, CaseNumber + 1
         >
     >{};
 
@@ -90,11 +90,11 @@ namespace switch_aux{\
 /**/
 
 // Usage:
-// 	#define BOOST_ASSIGN_V2_SWITCH_TAG unspecified
+//     #define BOOST_ASSIGN_V2_SWITCH_TAG unspecified
 // for i = 0,...,n-1
-// 	BOOST_ASSIGN_V2_OPTION_MODIFIER_SWITCH_CASE(i, Fi, Valuei)
+//     BOOST_ASSIGN_V2_OPTION_MODIFIER_SWITCH_CASE(i, Fi, Valuei)
 // and
-// 	BOOST_ASSIGN_V2_OPTION_MODIFIER_SWITCH_CASE(n, Valuen)
+//     BOOST_ASSIGN_V2_OPTION_MODIFIER_SWITCH_CASE(n, Valuen)
 
 }// v2
 }// assign

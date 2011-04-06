@@ -34,20 +34,20 @@ namespace interpreter_aux{
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 //->
 
-	template<typename C, typename F, typename MTag, typename DTag, typename D>
-	void csv( 
-    	interpreter_crtp<C, F, MTag, DTag, D> const& interpreter
+    template<typename C, typename F, typename MTag, typename DTag, typename D>
+    void csv( 
+        interpreter_crtp<C, F, MTag, DTag, D> const& interpreter
     )/*<-*/
     {
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
-	template<typename C, typename F, typename MTag, typename DTag, typename D>
+    template<typename C, typename F, typename MTag, typename DTag, typename D>
     void csv( 
-    	interpreter_crtp<C, F, MTag, DTag, D> const& interpreter, 
-    	T&& t, Args&&... args 
+        interpreter_crtp<C, F, MTag, DTag, D> const& interpreter, 
+        T&& t, Args&&... args 
     )/*<-*/
     {
         return csv( 
-        	interpreter( std::forward<T>( t ) ), 
+            interpreter( std::forward<T>( t ) ), 
             std::forward<Args>( args )... 
         );
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
@@ -57,22 +57,22 @@ namespace interpreter_aux{
 #define BOOST_ASSIGN_V2_MACRO1(z, i, data) ( BOOST_PP_CAT(_, i) )
 #define BOOST_ASSIGN_V2_MACRO2(z, N, is_const)\
     template<\
-    	typename C, typename F, typename MTag, typename DTag, typename D\
+        typename C, typename F, typename MTag, typename DTag, typename D\
         BOOST_PP_ENUM_TRAILING_PARAMS(N, typename T)\
     >\
     void csv(\
-    	interpreter_crtp<C, F, MTag, DTag, D> const& interpreter\
-		BOOST_PP_ENUM_TRAILING_BINARY_PARAMS(\
-        	N, T, BOOST_PP_EXPR_IF(is_const, const) & _\
+        interpreter_crtp<C, F, MTag, DTag, D> const& interpreter\
+        BOOST_PP_ENUM_TRAILING_BINARY_PARAMS(\
+            N, T, BOOST_PP_EXPR_IF(is_const, const) & _\
         )\
     )\
     {\
-	    interpreter BOOST_PP_REPEAT(N, BOOST_ASSIGN_V2_MACRO1, ~ );\
+        interpreter BOOST_PP_REPEAT(N, BOOST_ASSIGN_V2_MACRO1, ~ );\
     }\
 /**/
 
 BOOST_PP_REPEAT_FROM_TO(
-	1, // otherwise redefintion of csv()
+    1, // otherwise redefintion of csv()
     BOOST_PP_INC(BOOST_ASSIGN_V2_LIMIT_CSV_ARITY),
     BOOST_ASSIGN_V2_MACRO2,
     0

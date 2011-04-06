@@ -49,7 +49,7 @@ namespace container_aux{
     struct value : through_value_container<value_value, C>{};
 
     template<
-    	typename C	// Multi-array
+        typename C    // Multi-array
     >
     struct element : through_value_container<value_element, C>{};
 

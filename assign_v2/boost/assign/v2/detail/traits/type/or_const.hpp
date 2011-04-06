@@ -21,20 +21,20 @@ namespace v2{
 namespace type_traits{
 
 template<typename ...Args> struct or_const 
-	: ::boost::mpl::false_
+    : ::boost::mpl::false_
 {};
 
 template<typename T, typename ...Args>
 struct or_const<T, Args...> 
-	: ::boost::mpl::or_<
-    	boost::is_const<T>,
-    	or_const<Args...>
-	>
+    : ::boost::mpl::or_<
+        boost::is_const<T>,
+        or_const<Args...>
+    >
 {};
 
 template<typename T, typename ...Args>
 struct or_const<T const, Args...> 
-	: ::boost::mpl::true_
+    : ::boost::mpl::true_
 {};
 
 }// type_traits

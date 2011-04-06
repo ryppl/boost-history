@@ -31,67 +31,67 @@ namespace v2{
 //[syntax_csv_put
 namespace interpreter_aux{
 
-	template<typename F>
+    template<typename F>
     struct csv_ready
-    	: ::boost::mpl::true_
+        : ::boost::mpl::true_
     {};
 
-	template<typename T, typename K, typename M>
+    template<typename T, typename K, typename M>
     struct csv_ready<
-		functor_aux::pair<T, K, M>
+        functor_aux::pair<T, K, M>
     > 
-    	: ::boost::mpl::false_
+        : ::boost::mpl::false_
     {};
 
 namespace result_of{
 
-	template<typename C, typename F, typename MTag, typename DTag>
-	struct if_csv_ready : ::boost::mpl::identity<
-    	put_interpreter<C, F, MTag, DTag>
+    template<typename C, typename F, typename MTag, typename DTag>
+    struct if_csv_ready : ::boost::mpl::identity<
+        put_interpreter<C, F, MTag, DTag>
     >
     {};
 
-	template<typename C, typename F, typename MTag, typename DTag>
-	struct else_csv_ready : result_of::option_data_generator<
-    	put_interpreter<C, F, MTag, DTag>, C, value_
+    template<typename C, typename F, typename MTag, typename DTag>
+    struct else_csv_ready : result_of::option_data<
+        put_interpreter<C, F, MTag, DTag>, C, value_
     >
     {};
 
-	template<typename C, typename F, typename MTag, typename DTag>
-	struct make_csv_ready : ::boost::mpl::eval_if<
-		csv_ready<F>,
+    template<typename C, typename F, typename MTag, typename DTag>
+    struct make_csv_ready : ::boost::mpl::eval_if<
+        csv_ready<F>,
         if_csv_ready<C, F, MTag, DTag>,
         else_csv_ready<C, F, MTag, DTag>
     >{};
 
 }// result_of
 
-	template<typename C, typename F, typename MTag, typename DTag>
+    template<typename C, typename F, typename MTag, typename DTag>
     typename result_of::if_csv_ready<C, F, MTag, DTag>::type
-	make_csv_ready( 
-    	put_interpreter<C, F, MTag, DTag> const& interpreter, 
+    make_csv_ready( 
+        put_interpreter<C, F, MTag, DTag> const& interpreter, 
         boost::mpl::true_ suitable
     )
     {
-		return interpreter;
-	}
+        return interpreter;
+    }
 
-	template<typename C, typename F, typename MTag, typename DTag>
+    template<typename C, typename F, typename MTag, typename DTag>
     typename result_of::else_csv_ready<C, F, MTag, DTag>::type
-	make_csv_ready( 
-    	put_interpreter<C, F, MTag, DTag> const& interpreter, 
+    make_csv_ready( 
+        put_interpreter<C, F, MTag, DTag> const& interpreter, 
         boost::mpl::false_ suitable
     )
     {
-		return interpreter % ( _data = _value );
-	}
+        return interpreter % ( _data = _value );
+    }
 
-	template<typename C, typename F, typename MTag, typename DTag>
+    template<typename C, typename F, typename MTag, typename DTag>
     typename result_of::make_csv_ready<C, F, MTag, DTag>::type
-	make_csv_ready( put_interpreter<C, F, MTag, DTag> const& interpreter)
+    make_csv_ready( put_interpreter<C, F, MTag, DTag> const& interpreter)
     {
-		return make_csv_ready( 
-        	interpreter, 
+        return make_csv_ready( 
+            interpreter, 
             typename csv_ready<F>::type() 
         );
     }
@@ -101,56 +101,56 @@ namespace result_of{
 //->
 
 
-	template<typename C, typename O, bool is, typename Args>
+    template<typename C, typename O, bool is, typename Args>
     typename boost::enable_if< 
-    	is_option_crtp<O> 
+        is_option_crtp<O> 
     >::type csv_put( C& cont, option_crtp<O, is> const& crtp, Args&&... args )
     {
-    	O const& options = static_cast<O const&>( crtp );
-    	csv(
-    		make_csv_ready( 
+        O const& options = static_cast<O const&>( crtp );
+        csv(
+            make_csv_ready( 
                 put( cont ) % options
-        	),
-          	std::forward<Args>( args )...  
+            ),
+              std::forward<Args>( args )...  
         );
     }
 
-	template<typename C, typename Args>
+    template<typename C, typename Args>
     typename boost::disable_if< 
-    	is_option_crtp<O> 
+        is_option_crtp<O> 
     >::type csv_put( C& cont, Args&&... args)
     {
-    	csv(
-    		make_csv_ready( put( cont ) ),
-          	std::forward<Args>( args )...  
+        csv(
+            make_csv_ready( put( cont ) ),
+              std::forward<Args>( args )...  
         );
     }
 
 //]
 #else
 
-	template<typename C>
+    template<typename C>
     void csv_put( C& cont ){}
 
 #define BOOST_ASSIGN_V2_MACRO(z, N, is_const)\
     template<typename C, typename O, BOOST_PP_ENUM_PARAMS(N, typename T)>\
-	typename boost::enable_if<\
-    	is_option_crtp<O>\
+    typename boost::enable_if<\
+        is_option_crtp<O>\
     >::type csv_put(\
-    	C& cont, O const& options,\
+        C& cont, O const& options,\
         BOOST_PP_ENUM_BINARY_PARAMS(N, T, BOOST_PP_EXPR_IF(is_const, const)& _)\
     )\
     {\
         csv(\
-        	make_csv_ready( put( cont ) % options ) \
-        	, BOOST_PP_ENUM_PARAMS(N, _)\
+            make_csv_ready( put( cont ) % options ) \
+            , BOOST_PP_ENUM_PARAMS(N, _)\
         );\
     }\
     template<typename C, BOOST_PP_ENUM_PARAMS(N, typename T)>\
     typename boost::disable_if<\
-    	is_option_crtp<T0>\
+        is_option_crtp<T0>\
     >::type csv_put(\
-    	C& cont,\
+        C& cont,\
         BOOST_PP_ENUM_BINARY_PARAMS(N, T, BOOST_PP_EXPR_IF(is_const, const)& _)\
     )\
     {\

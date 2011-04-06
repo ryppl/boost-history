@@ -11,8 +11,8 @@
 #include <utility>
 #include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/detail/pp/ignore.hpp>
-#include <boost/assign/v2/put/csv_put.hpp>
-#include <boost/assign/v2/put/put.hpp>
+#include <boost/assign/v2/include/csv_put.hpp>
+#include <boost/assign/v2/include/put.hpp>
 #include <boost/scoped_ptr.hpp>
 #include <boost/ptr_container/ptr_array.hpp>
 #include <boost/ptr_container/ptr_deque.hpp>
@@ -32,8 +32,8 @@ namespace xxx_ptr{
 
         namespace as2 = boost::assign::v2;
 
-		// ARRAY
-        {	
+        // ARRAY
+        {    
             //[test_put_ptr_array
             typedef int T;
             T x = 1, y = 2, z = 3; boost::ptr_array<T, 3> cont;
@@ -43,7 +43,7 @@ namespace xxx_ptr{
             BOOST_ASSIGN_V2_CHECK( cont.back() == z );
             //]
         }
-		// SEQUENCE
+        // SEQUENCE
         {
             //[test_put_ptr_deque
             typedef int T; T x = 1, y = 2, z = 0; boost::ptr_deque<T> cont;
@@ -92,7 +92,7 @@ namespace xxx_ptr{
         }
         // SET
         {
-        	// Shows that x, y, z can be variadic
+            // Shows that x, y, z can be variadic
             //[test_put_ptr_set
             typedef std::string T; boost::ptr_set<T> assoc;
             T x = "isomer", y = "ephemeral", z = "prosaic";

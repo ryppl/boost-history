@@ -33,13 +33,13 @@ BOOST_ASSIGN_V2_SWITCH_CASE_DEFAULT(2, value_)
 namespace interpreter_aux{
 
     template<
-        typename C 		// Value or pointer-container
+        typename C         // Value or pointer-container
     >
     struct deduce_data_generator/*<-*/
-    	: data_generator<
-        	C, 
-        	typename switch_aux::result< 
-            	switch_tag::data_generator,
+        : data_generator<
+            C, 
+            typename switch_aux::result< 
+                switch_tag::data_generator,
                 C
             >::type
         >

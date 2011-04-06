@@ -16,8 +16,8 @@
 #include <boost/range/end.hpp>
 #include <boost/range/algorithm/copy.hpp>
 #include <boost/range/algorithm/equal.hpp>
-#include <boost/assign/v2/ref/array/csv_array.hpp>
-#include <boost/assign/v2/deque/csv_deque.hpp>
+#include <boost/assign/v2/include/ref/csv_array.hpp>
+#include <boost/assign/v2/include/csv_deque.hpp>
 #include <boost/assign/v2/chain/check.hpp>
 #include <boost/assign/v2/chain.hpp>
 #include <boost/assign/v2/chain/logical_and.hpp>

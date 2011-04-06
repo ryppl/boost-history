@@ -34,12 +34,12 @@ namespace list_aux{
         typedef tail_holder<T> tail_holder_;
         typedef head_holder<H> head_holder_;
 
-		typedef boost::mpl::false_ false_;
-		typedef boost::mpl::true_ true_;
+        typedef boost::mpl::false_ false_;
+        typedef boost::mpl::true_ true_;
 
         public:
 
-		typedef boost::is_same<T, nil_> is_empty;
+        typedef boost::is_same<T, nil_> is_empty;
 
         container(){}
 
@@ -50,28 +50,28 @@ namespace list_aux{
         };
 
         explicit container(typename ptr_wrapper<T>::type t, H h)
-        	: tail_holder_( t ), 
-            	head_holder_( h )
+            : tail_holder_( t ), 
+                head_holder_( h )
         {}
 
         template<typename H1>
         typename result<H1&>::type
         operator()(H1& h)const{ 
-    		return this->impl( h ); 
+            return this->impl( h ); 
         }
 
         template<typename H1>
         typename result<H1 const&>::type
         operator()(H1 const& h)const{ 
-        	return this->impl( h ); 
+            return this->impl( h ); 
         }
         
         protected:
 
-		typename ptr_wrapper<container>::type clone()const
+        typename ptr_wrapper<container>::type clone()const
         {
-        	return typename ptr_wrapper<container>::type( 
-            	new container( *this ) 
+            return typename ptr_wrapper<container>::type( 
+                new container( *this ) 
             ); 
         }
 
