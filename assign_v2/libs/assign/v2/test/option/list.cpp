@@ -11,7 +11,7 @@
 #include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/include/csv_deque.hpp>
 #include <boost/assign/v2/option/list.hpp>
-#include <boost/assign/v2/option/data_generator.hpp>
+#include <boost/assign/v2/option/data.hpp>
 #include <boost/assign/v2/option/modifier/std.hpp>
 #include <boost/assign/v2/include/put.hpp>
 #include <boost/lambda/lambda.hpp>

@@ -14,7 +14,7 @@
 #include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/include/put.hpp>
 #include <boost/assign/v2/deque.hpp>
-#include <boost/assign/v2/option/data_generator.hpp>
+#include <boost/assign/v2/option/data.hpp>
 #include <boost/assign/v2/option/modifier/mapped.hpp>
 #include <boost/lambda/lambda.hpp>
 #include <boost/mpl/assert.hpp>
