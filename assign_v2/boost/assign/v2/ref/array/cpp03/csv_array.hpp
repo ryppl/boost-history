@@ -19,6 +19,7 @@ namespace boost{
 namespace assign{
 namespace v2{
 namespace ref{
+namespace array_aux{
 
 #define BOOST_ASSIGN_V2_MACRO1(z, i, data) result.rebind(i, BOOST_PP_CAT(data, i) );
 #define BOOST_ASSIGN_V2_MACRO2(N, U)\
@@ -43,9 +44,6 @@ namespace ref{
 \
 /**/
 
-
-namespace array_aux{
-
 BOOST_PP_REPEAT_FROM_TO(
     1,
     BOOST_PP_INC(BOOST_ASSIGN_V2_LIMIT_CSV_ARITY),
@@ -57,9 +55,7 @@ BOOST_PP_REPEAT_FROM_TO(
 #undef BOOST_ASSIGN_V2_MACRO3
 
 }// array_aux
-
-using array_aux::csv_array;
-
+	using array_aux::csv_array;
 }// ref
 }// v2
 }// assign

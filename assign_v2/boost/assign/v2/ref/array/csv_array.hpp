@@ -33,15 +33,14 @@ namespace nth_result_of{
 
     template<
         array_size_type N
-        , typename U // U& has to be a reference
+        , typename U // U& is a reference
     >
     struct csv_array/*<-*/
     {
-        typedef array_aux::instant_alloc<N, U> type;
+        typedef instant_alloc<N, U> type;
     }/*->*/;
 
-}// result_of
-
+}// nth_result_of
 
     template<typename U>
     typename nth_result_of::csv_array<0, U>::type
@@ -51,26 +50,16 @@ namespace nth_result_of{
         return result_();
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
-}// array_aux
-using array_aux::csv_array;
-namespace nth_result_of{
-
-    template<array_size_type N, typename U>
-    struct csv_array/*<-*/
-        : array_aux::nth_result_of::csv_array<N, U>
-    {}/*->*/;
-
-}// nth_result_of
 /*<-*/
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 /*->*/
-namespace array_aux{
 namespace result_of{
 
     template<typename U, typename... Args>
-    struct csv_array/*<-*/ : nth_result_of::csv_array<
-        1 + sizeof...(Args),  U
-    >
+    struct csv_array/*<-*/ 
+    	: nth_result_of::csv_array<
+        	1 + sizeof...(Args),  U
+    	>
     {}/*->*/;
 
 }// result_of
@@ -119,19 +108,37 @@ namespace result_of{
         return csv_helper<T const, Args const ...>::call( t, args... );
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
+/*<-*/
+#endif // BOOST_ASSIGN_V2_ENABLE_CPP0X
+/*->*/
+
 }// array_aux
+/*<-*/
+#if BOOST_ASSIGN_V2_ENABLE_CPP0X
+/*->*/
+
+	using array_aux::csv_array;
+
 namespace result_of{
 
     template<typename U, typename... Args>
-    struct csv_array/*<-*/ : nth_result_of::csv_array<
-        1 + sizeof...(Args),  U
-    >
+    struct csv_array/*<-*/ 
+    	: array_aux::csv_array<U, ...Args>
     {}/*->*/;
 
 }// result_of
-//<-
+/*<-*/
 #endif // BOOST_ASSIGN_V2_ENABLE_CPP0X
-//->
+/*->*/
+namespace nth_result_of{
+
+    template<array_size_type N, typename U>
+    struct csv_array/*<-*/
+        : array_aux::nth_result_of::csv_array<N, U>
+    {}/*->*/;
+
+}// nth_result_of
+
 }// ref
 //]
 }// v2

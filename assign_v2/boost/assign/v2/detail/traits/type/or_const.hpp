@@ -20,7 +20,9 @@ namespace assign{
 namespace v2{
 namespace type_traits{
 
-template<typename ...Args> struct or_const : ::boost::mpl::false_{};
+template<typename ...Args> struct or_const 
+	: ::boost::mpl::false_
+{};
 
 template<typename T, typename ...Args>
 struct or_const<T, Args...> 
