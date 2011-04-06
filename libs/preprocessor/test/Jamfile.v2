@@ -57,55 +57,124 @@ test-suite preprocessor_nvm
 test-suite preprocessor_c
    :   
         [ compile arithmetic.c 
-          : 
+          : <toolset>gcc:<cflags>-std=c99
           : arithmetic_c 
         ]
         [ compile array.c 
-          : 
+          : <toolset>gcc:<cflags>-std=c99
           : array_c 
         ]
         [ compile comparison.c 
-          : 
+          : <toolset>gcc:<cflags>-std=c99
           : comparison_c 
         ]
         [ compile control.c 
-          : 
+          : <toolset>gcc:<cflags>-std=c99
           : control_c 
         ]
         [ compile debug.c 
-          : 
+          : <toolset>gcc:<cflags>-std=c99
           : debug_c 
         ]
         [ compile facilities.c 
-          : 
+          : <toolset>gcc:<cflags>-std=c99
           : facilities_c 
         ]
         [ compile list.c 
-          : 
+          : <toolset>gcc:<cflags>-std=c99
           : list_c 
         ]
         [ compile logical.c 
-          : 
+          : <toolset>gcc:<cflags>-std=c99
           : logical_c 
         ]
         [ compile selection.c 
-          : 
+          : <toolset>gcc:<cflags>-std=c99
           : selection_c 
         ]
         [ compile seq.c 
-          : 
+          : <toolset>gcc:<cflags>-std=c99
           : seq_c 
         ]
         [ compile slot.c 
-          : 
+          : <toolset>gcc:<cflags>-std=c99
           : slot_c 
         ]
         [ compile tuple.c 
-          : 
+          : <toolset>gcc:<cflags>-std=c99
           : tuple_c 
         ]
         [ compile variadic.c 
-          : 
+          : <toolset>gcc:<cflags>-std=c99
           : variadic_c 
+        ]
+  ;
+
+test-suite preprocessor_c_nvm
+   :   
+        [ compile arithmetic.c 
+          : <define>BOOST_PP_VARIADICS=0
+            <toolset>gcc:<cflags>-std=c99
+          : arithmetic_c_nvm 
+        ]
+        [ compile array.c 
+          : <define>BOOST_PP_VARIADICS=0
+            <toolset>gcc:<cflags>-std=c99
+          : array_c_nvm 
+        ]
+        [ compile comparison.c 
+          : <define>BOOST_PP_VARIADICS=0
+            <toolset>gcc:<cflags>-std=c99
+          : comparison_c_nvm 
+        ]
+        [ compile control.c 
+          : <define>BOOST_PP_VARIADICS=0
+            <toolset>gcc:<cflags>-std=c99
+          : control_c_nvm 
+        ]
+        [ compile debug.c 
+          : <define>BOOST_PP_VARIADICS=0
+            <toolset>gcc:<cflags>-std=c99
+          : debug_c_nvm 
+        ]
+        [ compile facilities.c 
+          : <define>BOOST_PP_VARIADICS=0
+            <toolset>gcc:<cflags>-std=c99
+          : facilities_c_nvm 
+        ]
+        [ compile list.c 
+          : <define>BOOST_PP_VARIADICS=0
+            <toolset>gcc:<cflags>-std=c99
+          : list_c_nvm 
+        ]
+        [ compile logical.c 
+          : <define>BOOST_PP_VARIADICS=0
+            <toolset>gcc:<cflags>-std=c99
+          : logical_c_nvm 
+        ]
+        [ compile selection.c 
+          : <define>BOOST_PP_VARIADICS=0
+            <toolset>gcc:<cflags>-std=c99
+          : selection_c_nvm 
+        ]
+        [ compile seq.c 
+          : <define>BOOST_PP_VARIADICS=0
+            <toolset>gcc:<cflags>-std=c99
+          : seq_c_nvm 
+        ]
+        [ compile slot.c 
+          : <define>BOOST_PP_VARIADICS=0
+            <toolset>gcc:<cflags>-std=c99
+          : slot_c_nvm 
+        ]
+        [ compile tuple.c 
+          : <define>BOOST_PP_VARIADICS=0
+            <toolset>gcc:<cflags>-std=c99
+          : tuple_c_nvm 
+        ]
+        [ compile variadic.c 
+          : <define>BOOST_PP_VARIADICS=0
+            <toolset>gcc:<cflags>-std=c99
+          : variadic_c_nvm 
         ]
   ;

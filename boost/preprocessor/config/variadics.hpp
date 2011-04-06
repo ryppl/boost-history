@@ -14,10 +14,9 @@
 #
 # if !defined(BOOST_PP_VARIADICS)
 #
-# if !defined(BOOST_PP_USE_BOOST_CONFIG)
-/* This is the code we will use. It is essentially a duplication
-   of the code in Boost Config. If we could ever use Boost Config
-   in the future, we can change the above line to #if 0.
+# if defined(BOOST_PP_NO_USE_BOOST_CONFIG)
+/* This is the code we will use if not using Boost config. 
+   It is essentially a duplication of the code in Boost Config.
 */
 #if defined(__GCCXML__)
 /* GCC-XML emulates other compilers, it has to appear first here! */
