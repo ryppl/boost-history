@@ -61,11 +61,11 @@ int main (int argc, char * const argv[])
     }
     {
         using namespace test_assign_v2;
-        //xxx_chain::test();
-        //xxx_conversion::test();
-        //xxx_detail::test();
+        xxx_chain::test();
+        xxx_conversion::test();
+        xxx_detail::test();
         xxx_deque::test();
-        //xxx_interpreter::test();
+        xxx_interpreter::test();
         xxx_option::test();
         //xxx_pipe::test();
         xxx_put::test();
