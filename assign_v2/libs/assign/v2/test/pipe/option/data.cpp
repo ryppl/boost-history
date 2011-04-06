@@ -31,12 +31,12 @@ namespace xxx_data{
         {
             //[test_pipe_option_data_math
             int k = 1; std::list<int> factorials;
-            using namespace lambda;
             
             BOOST_ASSIGN_V2_CHECK(
                 range::equal(
                     factorials | ( 
-                        as2::_csv_put % ( as2::_data = ( var(k) *= _1 ) ) 
+                        as2::_csv_put 
+                        	% ( as2::_data = ( lambda::var(k) *= lambda::_1 ) ) 
                     )/*<<Equivalent to calling `factorials.push_back( k *= ++i )`>>*/( 1, 2, 3, 4, 5 ),
                     as2::csv_deque<int>( 1, 2, 6, 24, 120 )
                 )

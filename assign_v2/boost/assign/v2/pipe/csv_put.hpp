@@ -79,17 +79,17 @@ namespace interpreter_aux{
             : list_option_( t, h )
         {}
 
-        template<typename Option>
+        template<typename O>
         struct modulo_result
         {
-            typedef arg_list_generator<Option, arg_list_generator> type;
+            typedef arg_list_generator<O, arg_list_generator> type;
         };
     
-        template<typename Option>
-        typename modulo_result<Option>::type
-        operator%(Option option)const
+        template<typename O>
+        typename modulo_result<O>::type
+        operator%(O option)const
         {
-            typedef typename modulo_result<Option>::type result_;
+            typedef typename modulo_result<O>::type result_;
             return result_( *this, option );
         }
 
@@ -104,7 +104,7 @@ namespace interpreter_aux{
             typedef typename result<0>::type result_;
             return result_(
                 *this,
-                ref::csv_array<na_>( _nil )
+                ref::csv_array<na_>()
             );
         }
  

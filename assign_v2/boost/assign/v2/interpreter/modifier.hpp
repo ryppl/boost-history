@@ -60,46 +60,15 @@ namespace interpreter_aux{
 /*<-*/
 
 namespace switch_tag{
-    struct deduce_put{};
+    struct modifier_tag{};
 }// switch_tag
 
-#ifdef BOOST_ASSIGN_V2_OPTION_MODIFIER_SWITCH_CASE
-#error
-#else
-#define BOOST_ASSIGN_V2_OPTION_MODIFIER_SWITCH_CASE(Tag, BooleanMetaF, CaseNumber)\
-namespace switch_aux{\
-    template<>\
-    struct case_<switch_tag::deduce_put, CaseNumber> :\
-        switch_aux::helper<\
-            v2::modifier_tag::Tag,\
-            BooleanMetaF\
-        >{};\
-}\
-/**/
-#endif
-
-#ifdef BOOST_ASSIGN_V2_OPTION_MODIFIER_SWITCH_DEFAULT
-#error
-#else
-#define BOOST_ASSIGN_V2_OPTION_MODIFIER_SWITCH_DEFAULT(CaseNumber)\
-namespace switch_aux{\
-    template<>\
-    struct case_<switch_tag::deduce_put, CaseNumber> :\
-        switch_aux::helper<v2::modifier_tag::push_back>\
-    {};\
-}\
-/**/
-#endif
-
-#ifdef BOOST_ASSIGN_V2_OPTION_MODIFIER_SWITCH
-#warning
-#else
-BOOST_ASSIGN_V2_OPTION_MODIFIER_SWITCH_CASE(insert, container_aux::is_associative, 0)
-BOOST_ASSIGN_V2_OPTION_MODIFIER_SWITCH_CASE(iterate<>, container_aux::is_array, 1)
-BOOST_ASSIGN_V2_OPTION_MODIFIER_SWITCH_CASE(push, container_aux::has_push_deduced_value, 2)
-BOOST_ASSIGN_V2_OPTION_MODIFIER_SWITCH_DEFAULT(3)
-#define BOOST_ASSIGN_V2_OPTION_MODIFIER_SWITCH
-#endif
+#define BOOST_ASSIGN_V2_SWITCH_TAG modifier_tag
+BOOST_ASSIGN_V2_SWITCH_CASE( 0, container_aux::is_associative, modifier_tag::insert )
+BOOST_ASSIGN_V2_SWITCH_CASE( 1, container_aux::is_array, modifier_tag::iterate<> )
+BOOST_ASSIGN_V2_SWITCH_CASE( 2, container_aux::has_push_deduced_value, 	modifier_tag::push )
+BOOST_ASSIGN_V2_SWITCH_CASE_DEFAULT( 3, modifier_tag::push_back )
+#undef BOOST_ASSIGN_V2_SWITCH_TAG
 
 /*->*/
 namespace interpreter_aux{
@@ -108,7 +77,7 @@ namespace interpreter_aux{
         typename C // Container
     >
     struct deduce_modifier_tag/*<-*/
-        : switch_aux::result< switch_tag::deduce_put, C>
+        : switch_aux::result< switch_tag::modifier_tag, C>
     {}/*->*/;
 
 //<-

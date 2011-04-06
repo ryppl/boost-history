@@ -9,9 +9,11 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_REF_AUX_LIST_HOLDER_TAIL_ER_2010_HPP
 #define BOOST_ASSIGN_V2_REF_AUX_LIST_HOLDER_TAIL_ER_2010_HPP
+#include <boost/assign/v2/detail/keyword.hpp>
+#include <boost/assign/v2/ref/aux_/list/fwd.hpp>
 #include <boost/config.hpp>
 #include <boost/mpl/int.hpp>
-#include <boost/assign/v2/ref/aux_/list/fwd.hpp>
+#include <boost/shared_ptr.hpp>
 
 namespace boost{
 namespace assign{
@@ -19,28 +21,33 @@ namespace v2{
 namespace ref{
 namespace list_aux{
 
-    struct nil{ nil(){} };
+	template<typename T>
+    struct ptr_wrapper
+    {
+    	typedef boost::shared_ptr<T const> type;
+    };
 
     template<typename T>
     struct tail_holder
     {
-
-
         typedef T tail_type;
-        typedef ::boost::mpl::int_<T::static_size::value + 1> static_size;
+        typedef ::boost::mpl::int_<
+        	T::static_size::value + 1
+        > static_size;
         typedef T const& result_of_tail_type;
+		typedef typename ptr_wrapper<T>::type ptr_wrapper_;
 
-        tail_holder(T const& t) : tail_( t ){}
-        result_of_tail_type tail()const{ return this->tail_; }
+        tail_holder(ptr_wrapper_ w) : tail_( w ){}
+        result_of_tail_type tail()const{ return *this->tail_; }
 
         private:
-        T const tail_; // A reference would cause ref to temporary
+        typename ptr_wrapper<T>::type const tail_; 
     };
 
     template<>
-    struct tail_holder<nil>
+    struct tail_holder<nil_>
     {
-        typedef nil tail_type;
+        typedef nil_ tail_type;
         typedef ::boost::mpl::int_<0> static_size;
         tail_holder(){}
 

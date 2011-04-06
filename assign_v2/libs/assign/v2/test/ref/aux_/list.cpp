@@ -24,9 +24,9 @@ namespace xxx_ref{
 namespace xxx_aux_{
 namespace xxx_list{
 
-    // --User may skip this file-- //
-    // It checks internal details. //
-    // --------------------------- //        
+    // ------------------------ //        
+    // Checks internal details. //
+    // -------------------------//
 
     void test()
     {
@@ -44,7 +44,7 @@ namespace xxx_list{
             typedef add_reference<t1_>::type r1_;
             typedef add_reference<t2_>::type r2_;
 
-            t0_ a = 0;
+            t0_ a = 100;
             t2_ c = "c";
 
             typedef as2::ref::nth_result_of::list<tag_> result_;
@@ -54,10 +54,9 @@ namespace xxx_list{
 
 // Reminder : temporaries destroyed at the semi-colon
 // Implication : don't try to save the result.
-#define BOOST_ASSIGN_V2_macro as2::ref::list<tag_>( as2::_nil )( a )( 2 )( c )
-
+#define BOOST_ASSIGN_V2_macro as2::ref::list<tag_>( as2::_nil )( a )( -1 )( c )
             BOOST_ASSIGN_V2_CHECK( &as2::ref::at<0>( BOOST_ASSIGN_V2_macro ) == &a );
-            BOOST_ASSIGN_V2_CHECK( as2::ref::at<1>( BOOST_ASSIGN_V2_macro ) == 2 );
+            BOOST_ASSIGN_V2_CHECK( as2::ref::at<1>( BOOST_ASSIGN_V2_macro ) == -1 ); 
             BOOST_ASSIGN_V2_CHECK( str_( as2::ref::at<2>( BOOST_ASSIGN_V2_macro ) ) == c );
 #undef BOOST_ASSIGN_V2_macro
         }
@@ -82,7 +81,7 @@ namespace xxx_list{
         {
             typedef as2::ref::alloc_tag::lazy_alloc tag_;
             typedef as2::ref::list_aux::void_ void_;
-            typedef as2::ref::list_aux::nil nil_;
+            typedef as2::nil_ nil_;
             typedef as2::ref::empty_list<tag_>::type empty_;
             {
                 typedef void_ u1_; typedef nil_ l_;
@@ -93,7 +92,7 @@ namespace xxx_list{
                 typedef mpl::apply2<
                     as2::ref::list_aux::policy<tag_>,
                     as2::ref::list_aux::void_,
-                    as2::ref::list_aux::nil
+                    nil_
                 >::type po_; // just see that it compiles
             }
             {
@@ -114,7 +113,6 @@ namespace xxx_list{
                     BOOST_MPL_ASSERT(( is_same<val_, int const> ));
                 }
             }
-
         }
         {
             typedef int t_; typedef add_reference<t_>::type r_;

@@ -65,7 +65,7 @@ namespace list_aux{
     };
 
     template<typename U1>
-    struct policy_helper2<U1, void_, nil >
+    struct policy_helper2<U1, void_, nil_ >
     {
         // Reached root
         typedef U1 type;
@@ -79,7 +79,7 @@ namespace list_aux{
     >{};
 
     template<>
-    struct policy_helper3<void_, nil >
+    struct policy_helper3<void_, nil_ >
     {
         // Empty container
         typedef void_ type;
@@ -89,7 +89,7 @@ namespace list_aux{
     struct policy<array_tag>
     {
 
-        template<typename H = void_, typename T = nil>
+        template<typename H = void_, typename T = nil_>
         struct apply
         {
             typedef alloc_tag::lazy_alloc tag_;

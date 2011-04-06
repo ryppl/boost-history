@@ -27,23 +27,6 @@ namespace xxx_deque{
         using namespace boost;
         namespace as2 = assign::v2;
         {
-            //[test_deque_ints
-            typedef as2::result_of::deque<int>::type C;
-
-            C empty_cont = as2::deque<int>( as2::_nil );
-            C cont1 = empty_cont( 1 )( 10 )( 100 );
-            C cont2 = as2::deque<int>( 1 )( 10 )( 100 );
-    
-            std::deque<int> benchmark; 
-            benchmark.push_back( 1 );
-            benchmark.push_back( 10 );
-            benchmark.push_back( 100 );
-
-            BOOST_ASSIGN_V2_CHECK( range::equal( benchmark, cont1 ) );
-            BOOST_ASSIGN_V2_CHECK( range::equal( benchmark, cont2 ) );
-            //]
-        }
-        {
             //[test_deque_str_literal
             typedef as2::result_of::deque<char*>::type C;
             
@@ -59,39 +42,30 @@ namespace xxx_deque{
         }
         {
             //[test_deque_pair
-            typedef std::string str_;
-            typedef std::pair<str_, str_> T;
+            typedef std::string code_; typedef std::string name_;
+            typedef std::pair<code_, name_> T;
             typedef as2::result_of::deque<T>::type C;
-            C airports = as2::deque<T>("AUH", "Abu Dhabi")("JFK", "New York")("LHR", "London")("PEK", "Beijing");
+            
+            C airports1 = as2::deque<T>( as2::_nil );
+            BOOST_ASSIGN_V2_CHECK( airports1.empty() );
+            airports1("AUH", "Abu Dhabi")("JFK", "New York")("LHR", "London")("PEK", "Beijing");
             
             std::deque<T> benchmark;
             benchmark.push_back( T("AUH", "Abu Dhabi") );
             benchmark.push_back( T("JFK", "New York") );
-            benchmark.push_back( T("LHR", "Heathrow") );
+            benchmark.push_back( T("LHR", "London") );
             benchmark.push_back( T("PEK", "Beijing") );
+            BOOST_ASSIGN_V2_CHECK( 
+            	range::equal( benchmark, airports1 )
+            ); 
             
-            range::equal( benchmark, airports );            
+            C airports2 = as2::deque<T>("AUH", "Abu Dhabi")("JFK", "New York")("LHR", "London")("PEK", "Beijing");
+            BOOST_ASSIGN_V2_CHECK( 
+            	range::equal( benchmark, airports2 )
+            ); 
             //]
         }
-        {
-            //[test_csv_deque_ints
-            typedef as2::result_of::csv_deque<int>::type C;
-            
-            BOOST_MPL_ASSERT(( is_same<C, as2::result_of::deque<int>::type> ));
-
-            C cont1 = as2::csv_deque( 1, 10, 100 );
-            C cont2 = as2::csv_deque( 1, 10 )( 100 );
-    
-            std::deque<int> benchmark; 
-            benchmark.push_back( 1 );
-            benchmark.push_back( 10 );
-            benchmark.push_back( 100 );
-
-            BOOST_ASSIGN_V2_CHECK( range::equal( benchmark, cont1 ) );
-            BOOST_ASSIGN_V2_CHECK( range::equal( benchmark, cont2 ) );
-            //]
-        }
-        {
+       {
             //[test_csv_deque_str_literal
             typedef as2::result_of::csv_deque<const char[2]>::type C;
             
@@ -105,6 +79,31 @@ namespace xxx_deque{
             benchmark.push_back( "z" );
             
             BOOST_ASSIGN_V2_CHECK( range::equal( benchmark, deque ) );
+            //]
+        }
+
+        {
+            //[test_csv_deque_ints
+            typedef as2::result_of::csv_deque<int>::type C;
+            
+            BOOST_MPL_ASSERT(( is_same<C, as2::result_of::deque<int>::type> ));
+
+            C series1 = as2::csv_deque( 0, 1, 1, 2, 3, 5, 8 );
+    
+            std::deque<int> benchmark; 
+            benchmark.push_back( 0 );
+            benchmark.push_back( 1 );
+            benchmark.push_back( 1 );
+            benchmark.push_back( 2 );
+            benchmark.push_back( 3 );
+            benchmark.push_back( 5 );
+            benchmark.push_back( 8 );
+
+            BOOST_ASSIGN_V2_CHECK( range::equal( benchmark, series1 ) );
+
+            C series2 = as2::csv_deque( 0, 1, 1 )( 2 )( 3 )( 5 )( 8 );
+
+            BOOST_ASSIGN_V2_CHECK( range::equal( benchmark, series2 ) );
             //]
         }
     }

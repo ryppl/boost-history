@@ -83,6 +83,10 @@ namespace container_aux{
         : through_value_container<value_is_map, C>
     {};
     
+    template<typename C> struct is_multi_array 
+        : through_value_container<value_is_multi_array, C>
+    {};
+
     template<typename C>
     struct is_ptr_container : ::boost::mpl::not_<
         boost::is_same<C, typename to_value_container<C>::type>

@@ -30,9 +30,9 @@ namespace test_assign_v2{
 namespace xxx_interpreter{
 namespace xxx_modifier{
 
-    // --User may skip this file-- //
-    // It checks internal details. //
-    // --------------------------- //        
+    // ------------------------ //        
+    // Checks internal details. //
+    // ------------------------ //        
 
     void test()
     {

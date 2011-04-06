@@ -28,7 +28,7 @@ namespace interpreter_aux{
         , typename Arg /*<-*/= ignore_/*->*/ // Specifies an aspect of the implementation
     >
     struct option_modifier/*<-*/
-    	: option_listable<
+    	: option_crtp<
          	option_modifier<Keyword, Arg> 
         >
     /*->*/

@@ -10,7 +10,6 @@
 #ifndef BOOST_ASSIGN_V2_REF_AUX_LIST_ER_2010_HPP
 #define BOOST_ASSIGN_V2_REF_AUX_LIST_ER_2010_HPP
 #include <boost/assign/v2/ref/aux_/list/array.hpp>
-#include <boost/assign/v2/ref/aux_/list/as_modulo_list.hpp>
 #include <boost/assign/v2/ref/aux_/list/at.hpp>
 #include <boost/assign/v2/ref/aux_/list/container.hpp>
 #include <boost/assign/v2/ref/aux_/list/fwd.hpp>

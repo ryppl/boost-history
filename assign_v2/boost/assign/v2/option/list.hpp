@@ -14,6 +14,7 @@
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/identity.hpp>
+#include <boost/mpl/or.hpp>
 #include <boost/typeof/typeof.hpp>
 #include <boost/type_traits/is_base_of.hpp>
 #include <boost/type_traits/is_same.hpp>
@@ -41,7 +42,7 @@ namespace interpreter_aux{
     };
 
     template<typename Head>
-    struct option_list_exit 
+    struct list_option_exit 
         : boost::is_same<Head, nil_>
     {};
 
@@ -51,7 +52,7 @@ namespace result_of{
         typename Head, 
         typename Tail, 
         typename Lhs, 
-        bool exit = option_list_exit<Head>::value
+        bool exit = list_option_exit<Head>::value
     >
     struct apply_list_option
     {
@@ -69,27 +70,74 @@ namespace result_of{
     >
     struct apply_list_option<Head, Tail, Lhs, true>
     {
-        typedef Lhs type;    
+        typedef Lhs const& type;    
     };
     
 }// result_of
     
-    struct list_option_base{};
-    
+    template<typename O, bool is_list = false> 
+    struct option_crtp{};
+	
+    template<typename O>
+    struct is_option_crtp 
+    	: boost::mpl::or_<
+        	boost::is_base_of< option_crtp<O, false>, O>,
+        	boost::is_base_of< option_crtp<O, true>, O>
+        >
+    {};
+
+	template<
+    	typename O	// O&&, O&
+    >
+    struct is_option_crtp_cpp0x : is_option_crtp<
+    	typename boost::remove_cv<
+        	typename boost::remove_reference<O>::type
+        >::type
+    >{};
+            
     template<
         typename Head = nil_, 
-        typename Tail = list_option_base, 
-        bool exit = option_list_exit<Head>::value
+        typename Tail = nil_, 
+        bool exit = list_option_exit<Head>::value
     >
-    struct list_option : public Tail
+    struct list_option;
+
+    template<typename Head, typename Tail, bool exit>
+    struct list_option_inherit 
+    	: Tail
+    {
+    	list_option_inherit(){}
+    	list_option_inherit( Tail tail ) 
+        	: Tail( tail )
+        {}
+    };
+
+    template<typename Head, typename Tail>
+    struct list_option_inherit<Head, Tail, true> 
+    	: Tail, 
+        option_crtp< 
+        	list_option<Head, Tail, true>,
+            true
+        >
+    {
+    	list_option_inherit(){}
+    	list_option_inherit( Tail tail ) 
+        	: Tail( tail )
+        {}
+    };
+
+    template<typename Head, typename Tail, bool exit>
+    struct list_option 
+    	: list_option_inherit<Head, Tail, exit>
     {
 
+		typedef list_option_inherit<Head, Tail, exit> super_t;
         typedef Head head_type;
         typedef Tail tail_type;
 
         list_option(){ /*exit = true*/ }
         list_option(Tail tail, Head h)
-            : Tail( tail ), head_( h )
+            : super_t( tail ), head_( h )
         {}
     
         template<typename O>
@@ -141,7 +189,7 @@ namespace result_of{
         list_option<H, T> const& list
     )
     {
-        return list.apply( lhs );
+        return list.apply( static_cast<D const&>( lhs ) );
     }
 
 namespace result_of{
@@ -159,12 +207,6 @@ namespace{
         = interpreter_aux::empty_list_option();
 }
 namespace interpreter_aux{
-
-	template<typename O> 
-    struct option_listable 
-    	: list_option_base
-    {};
-
 namespace result_of{
 
 	template<typename O1, typename O2>
@@ -182,21 +224,11 @@ namespace result_of{
     
     template<typename O1, typename O2>
     typename result_of::option_modulo<O1, O2>::type
-    operator%(option_listable<O1> const option1, O2 const& option2)
+    operator%(option_crtp<O1, false> const option1, O2 const& option2)
     {
     	O1 const& ref = static_cast<O1 const&>( option1 );
 		return _list_option % ref % option2;
     }
-
-	template<typename Os>
-    struct is_option_listable 
-    	 : boost::is_base_of<
-         	list_option_base, 
-         	typename boost::remove_cv<
-            	typename boost::remove_reference<Os>::type
-            >::type
-         >
-    {};
 
 }// interpreter_aux
 }// v2

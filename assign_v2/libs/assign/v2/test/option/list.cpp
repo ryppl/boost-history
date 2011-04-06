@@ -9,12 +9,13 @@
 //////////////////////////////////////////////////////////////////////////////
 #include <deque>
 #include <boost/assign/v2/detail/config/check.hpp>
-#include <boost/assign/v2/put/put.hpp>
+#include <boost/assign/v2/deque/csv_deque.hpp>
 #include <boost/assign/v2/option/list.hpp>
 #include <boost/assign/v2/option/data_generator.hpp>
 #include <boost/assign/v2/option/modifier/std.hpp>
+#include <boost/assign/v2/put/put.hpp>
 #include <boost/lambda/lambda.hpp>
-#include <boost/static_assert.hpp>
+#include <boost/range/algorithm/equal.hpp>
 #include <boost/typeof/typeof.hpp>
 #include <libs/assign/v2/test/option/list.h>
 
@@ -24,23 +25,31 @@ namespace xxx_list{
 
     void test()
     {
-        using namespace boost::assign::v2;
-        std::deque<int> cont;
+    	using namespace boost;
+        namespace as2 = assign::v2;
+        
+        {
+        	//[test_option_list
+        	std::deque<int> cont;
+			( as2::put( cont ) % as2::_list_option )( 4 )( 5 );
+            
+            BOOST_ASSIGN_V2_CHECK( cont[0] == 4 );
+        	BOOST_ASSIGN_V2_CHECK( cont[1] == 5 );
 
-        ( _list_option ).apply( put( cont ) )( 1 );
-        BOOST_ASSIGN_V2_CHECK( cont[0] == 1 );
-        using namespace boost::lambda;
-        BOOST_AUTO( 
-            apply, 
-            ( 
-                _push_front % ( _data = ( _1 % 10 ) ) 
-            ).apply( put( cont ) ) 
-        );
-        apply( 15 );
-        BOOST_ASSIGN_V2_CHECK( cont[0] == 5 );
-        BOOST_ASSIGN_V2_CHECK( cont[1] == 1 );
+        	BOOST_AUTO( 
+            	options, 
+            	as2::_push_front % ( as2::_data = ( lambda::_1 % 10 ) ) 
+        	);
+        	( as2::put( cont ) % options )( 13 )( 12 )( 11 );
+
+        	BOOST_ASSIGN_V2_CHECK( 
+            	range::equal( cont, as2::csv_deque( 1, 2, 3, 4, 5 ) ) 
+            );
+            //]
+    	}
+
     }
-
+    
 }// xxx_list
 }// xxx_option
 }// xxx_test_assign

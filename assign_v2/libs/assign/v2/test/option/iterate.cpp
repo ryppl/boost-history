@@ -7,16 +7,13 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#include <vector>
+#include <list>
 #include <boost/array.hpp>
 #include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/deque.hpp>
 #include <boost/assign/v2/option/modifier/iterate.hpp> 
 #include <boost/assign/v2/put/csv_put.hpp>
-#include <boost/assign/v2/put/put.hpp>
 #include <boost/lambda/lambda.hpp>
-#include <boost/lambda/bind.hpp>
-#include <boost/lambda/construct.hpp>
 #include <boost/mpl/assert.hpp>
 #include <boost/mpl/apply.hpp>
 #include <boost/range/algorithm/equal.hpp>
@@ -47,7 +44,6 @@ namespace xxx_iterate{
         }
         {
             //[test_option_iterate_shifted
-            using namespace lambda;
             typedef int T; array<T, 10> alternating; 
             alternating[0] = -1; alternating[1] = +1;
             alternating[2] = -2; 
@@ -55,7 +51,7 @@ namespace xxx_iterate{
             int index = 3; 
             as2::csv_put( 
             	alternating
-                , as2::_iterate = var( index )++
+                , as2::_iterate = lambda::var( index )++
             	, +2, -3, +3, -4, +4, -5, +5 
             );
 
@@ -67,7 +63,6 @@ namespace xxx_iterate{
             );
             //]
         }
-/*
         {
             //[test_option_iterate_meta_deque
             typedef as2:: interpreter_aux::keyword_iterate keyword_;
@@ -82,17 +77,14 @@ namespace xxx_iterate{
         }
         {
             //[test_option_iterate_shifted_deque
-            using namespace lambda;
-            
-            as2::result_of::deque<int>::type incomplete 
-                = as2::deque<int>( -1 )( +1 )( -2 )
-                    ( as2::as_arg_list( std::vector<int>( 7 ) ) );
+            as2::result_of::csv_deque<int>::type tmp = as2::csv_deque<int>
+                ( -1, +1, -2, as2::as_arg_list( std::list<int>( 7 ) ) );
+
             int index = 3; 
-            
             BOOST_AUTO(
                 alternating ,
                 ( 
-                    incomplete  % ( as2::_iterate = var( index )++ ) 
+                    tmp  % ( as2::_iterate = lambda::var( index )++ ) 
                 )( +2 )( -3 )( +3 )( -4 )( +4 )( -5 )( +5 )
             );
 
@@ -104,7 +96,6 @@ namespace xxx_iterate{
             );
             //]
         }
-*/
     }
 
 }// xxx_iterate

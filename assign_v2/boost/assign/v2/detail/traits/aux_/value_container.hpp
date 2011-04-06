@@ -12,6 +12,7 @@
 #include <boost/assign/v2/detail/traits/aux_/fwd_container.hpp>
 #include <boost/config.hpp>
 #include <boost/mpl/bool.hpp>
+#include <boost/multi_array/base.hpp> 
 #include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/seq.hpp>
 #include <boost/type_traits/add_const.hpp>

@@ -10,10 +10,10 @@
 #include <map>
 #include <string>
 #include <cmath>
+#include <list>
 #include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/put/put.hpp>
 #include <boost/assign/v2/deque.hpp>
-// Options come next
 #include <boost/assign/v2/option/data_generator.hpp>
 #include <boost/assign/v2/option/modifier/mapped.hpp>
 #include <boost/lambda/lambda.hpp>
@@ -35,23 +35,21 @@ namespace xxx_mapped{
         namespace as2 = assign::v2;
         {
             //[test_option_mapped_map
-            using namespace lambda;
             typedef std::string month_; typedef int days_;
             typedef std::map<month_, days_> C; C year;
             (
-                as2::put( year )( "feb", 28 )( "apr", 30 )( "jun", 30 )( "sep", 30 )( "nov", 30 )
-                    % (as2::_data = as2::_key) 
-                    	% ( as2::_mapped = ( _1 = 31 ) )
+                as2::put( year )
+                	( "feb", 28 )( "apr", 30 )( "jun", 30 )( "sep", 30 )( "nov", 30 )
+                    % ( as2::_data = as2::_key ) % ( as2::_mapped = ( lambda::_1 = 31 ) )
             )/*<<Calls `year[ month_( "jan" ) ] = 31`>>*/( "jan" )( "mar" )( "may" )( "jul" )( "aug" )( "oct" )( "dec" );
-
+			
             BOOST_ASSIGN_V2_CHECK( year["jan"] == 31 );
             BOOST_ASSIGN_V2_CHECK( year["dec"] == 31 );
             //]
         }
         {
             //[test_option_mapped_meta_deque
-            using namespace lambda;
-            typedef BOOST_TYPEOF(_1) arg_;
+            typedef BOOST_TYPEOF(lambda::_1) arg_;
             typedef as2:: interpreter_aux::keyword_mapped keyword_;
             typedef as2::result_of::deque<int>::type put_;
             typedef as2::result_of::option_mapped<put_, arg_>::type result1_;
@@ -62,17 +60,21 @@ namespace xxx_mapped{
             //]
         }
         {
-            //[test_option_mapped_map_deque
-            using namespace lambda;
+            //[test_option_mapped_deque
             BOOST_AUTO(
-                days_in_first_quater,
+                alternating,
                 (
-                    as2::deque<int>( 31 )( 31 )( 31 ) % ( as2::_mapped = ( _1 -= 3 ) )
-                )( 1 )
+                    as2::deque<int>( 
+                    	as2::as_arg_list( std::list<int>( 10, 1 ) ) 
+                    ) % ( as2::_mapped = ( lambda::_1 *= -1 ) )
+                )( 1 )( 3 )( 5 )( 7 )( 9 )
             );
-            BOOST_ASSIGN_V2_CHECK( days_in_first_quater[0] == 31 );
-            BOOST_ASSIGN_V2_CHECK( days_in_first_quater[1] == 28 );
-            BOOST_ASSIGN_V2_CHECK( days_in_first_quater[2] == 31 );
+            BOOST_ASSIGN_V2_CHECK( 
+            	range::equal(
+                	alternating,
+                    as2::csv_deque( +1, -1, +1, -1, +1, -1, +1, -1, +1, -1 )
+                )
+            );
             //]
         }
     }

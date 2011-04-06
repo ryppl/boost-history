@@ -11,7 +11,6 @@
 #define BOOST_ASSIGN_V2_REF_ARRAY_CSV_ARRAY_ER_2010_HPP
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
 #include <boost/assign/v2/detail/pp/ignore.hpp>
-#include <boost/assign/v2/detail/keyword.hpp>
 #include <boost/assign/v2/ref/array/alloc/instant.hpp>
 #include <boost/assign/v2/ref/array/size_type.hpp>
 
@@ -29,9 +28,7 @@ namespace assign{
 namespace v2{
 //[syntax_ref_array_csv_array
 namespace ref{
-//<-
 namespace array_aux{
-//->
 namespace nth_result_of{
 
     template<
@@ -45,28 +42,29 @@ namespace nth_result_of{
 
 }// result_of
 
+
     template<typename U>
     typename nth_result_of::csv_array<0, U>::type
-    csv_array( nil_ )/*<-*/
+    csv_array()/*<-*/
     {
         typedef typename nth_result_of::csv_array<0, U>::type result_;
         return result_();
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
-//<-
 }// array_aux
 using array_aux::csv_array;
 namespace nth_result_of{
 
     template<array_size_type N, typename U>
-    struct csv_array
+    struct csv_array/*<-*/
         : array_aux::nth_result_of::csv_array<N, U>
-    {};
+    {}/*->*/;
 
 }// nth_result_of
+/*<-*/
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
+/*->*/
 namespace array_aux{
-//->
 namespace result_of{
 
     template<typename U, typename... Args>
@@ -121,11 +119,7 @@ namespace result_of{
         return csv_helper<T const, Args const ...>::call( t, args... );
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
-//<-
 }// array_aux
-
-using array_aux::csv_array;
-
 namespace result_of{
 
     template<typename U, typename... Args>
@@ -135,7 +129,8 @@ namespace result_of{
     {}/*->*/;
 
 }// result_of
-#endif
+//<-
+#endif // BOOST_ASSIGN_V2_ENABLE_CPP0X
 //->
 }// ref
 //]

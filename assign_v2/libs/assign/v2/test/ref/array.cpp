@@ -29,6 +29,7 @@ namespace xxx_array{
         using namespace boost;
         namespace as2 = assign::v2;
         {
+        	
             //[test_ref_array_temporaries
             boost::array<int, 3> ar; 
             ar[0] = 1; ar[1] = 10; ar[2] = 100;
@@ -44,7 +45,7 @@ namespace xxx_array{
         {
             //[test_ref_array_read
             typedef int const T;
-            T w = 11, x = 72, y = 31, z = 48;
+            T w = 1, x = 10, y = 100, z = 1000;
             as2::ref::nth_result_of::array<3, T>::type ar3 
                 = as2::ref::array( w )( x )( y );
             {

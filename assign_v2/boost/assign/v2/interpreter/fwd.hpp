@@ -39,8 +39,6 @@ namespace interpreter_aux{
 
     template<
         typename C // Value or pointer-container
-        , typename T = typename v2::container_aux::value<C>::type
-        , bool is_map = v2::container_aux::is_map<C>::value
     >
     struct deduce_data_generator;
 

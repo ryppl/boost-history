@@ -25,7 +25,7 @@ namespace xxx_option{
         xxx_mapped::test();
         xxx_list::test();
         xxx_repeat::test();
-        // xxx_row_major::test(); // TODO
+        xxx_row_major::test();
         xxx_standard::test();
     }
 

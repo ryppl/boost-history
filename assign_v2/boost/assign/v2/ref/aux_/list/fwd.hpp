@@ -9,6 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_REF_AUX_LIST_FWD_ER_2010_HPP
 #define BOOST_ASSIGN_V2_REF_AUX_LIST_FWD_ER_2010_HPP
+#include <boost/assign/v2/detail/keyword.hpp>
 
 namespace boost{
 namespace assign{
@@ -21,9 +22,8 @@ namespace list_aux{
     template<typename Tag> struct empty_list;
 
     struct void_;
-    struct nil;
 
-    template<typename Tag, typename H = void_, typename T = nil>
+    template<typename Tag, typename H = void_, typename T = nil_>
     class container;
 
 }// list_aux

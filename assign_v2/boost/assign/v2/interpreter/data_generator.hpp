@@ -9,35 +9,41 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_INTERPRETER_DATA_ER_2010_HPP
 #define BOOST_ASSIGN_V2_INTERPRETER_DATA_ER_2010_HPP
+#include <boost/assign/v2/detail/traits/container.hpp>
+#include <boost/assign/v2/detail/traits/switch.hpp>
 #include <boost/assign/v2/detail/functor/pair.hpp>
 #include <boost/assign/v2/detail/functor/value.hpp>
 #include <boost/assign/v2/interpreter/fwd.hpp>
+#include <boost/assign/v2/option/data_generator.hpp>
     
 namespace boost{
 namespace assign{
 namespace v2{
-//[syntax_interpreter_data
+//[syntax_interpreter_data_generator
+namespace switch_tag{
+    struct data_generator{};
+}// switch_tag
+
+#define BOOST_ASSIGN_V2_SWITCH_TAG data_generator
+BOOST_ASSIGN_V2_SWITCH_CASE(0, container_aux::is_multi_array, element_)
+BOOST_ASSIGN_V2_SWITCH_CASE(1, container_aux::is_map, map_)
+BOOST_ASSIGN_V2_SWITCH_CASE_DEFAULT(2, value_)
+#undef BOOST_ASSIGN_V2_SWITCH_TAG
+
 namespace interpreter_aux{
 
     template<
         typename C 		// Value or pointer-container
-        , typename T
-        , bool is_map
     >
     struct deduce_data_generator/*<-*/
-    {
-        typedef v2::functor_aux::value<T> type; 
-    }/*->*/;
-
-    template<typename C, typename T>
-    struct deduce_data_generator<C, T, true>/*<-*/
-    {
-        typedef v2::functor_aux::pair<
-            T, 
-            typename container_aux::key<C>::type,
-            typename container_aux::mapped<C>::type
-        > type; 
-    }/*->*/;
+    	: data_generator<
+        	C, 
+        	typename switch_aux::result< 
+            	switch_tag::data_generator,
+                C
+            >::type
+        >
+    {}/*->*/;
 
 }// interpreter_aux
 //]

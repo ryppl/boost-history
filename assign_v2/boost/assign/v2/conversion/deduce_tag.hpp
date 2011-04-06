@@ -20,56 +20,26 @@ namespace boost{
 namespace assign{
 namespace v2{
 namespace switch_tag{
-    struct deduce_convert{};
+    struct conversion{};
 }// switch_tag
+
+#define BOOST_ASSIGN_V2_SWITCH_TAG conversion
+BOOST_ASSIGN_V2_SWITCH_CASE(0, container_aux::is_array, convert_tag::put)
+BOOST_ASSIGN_V2_SWITCH_CASE(1, container_aux::has_push_deduced_value, convert_tag::put)
+BOOST_ASSIGN_V2_SWITCH_CASE_DEFAULT(2, convert_tag::copy)
+#undef BOOST_ASSIGN_V2_SWITCH_TAG
+
 namespace conversion_aux{
 
-    // This is in replacement of switch_aux::helper since here we need
-    // two arguments.
-
-    template<typename T, typename U>
-    struct default_f : ::boost::mpl::true_{};
-
-    template<typename Tag,
-        template<typename, typename> class F = conversion_aux::default_f>
-    struct helper
-    {
-        typedef Tag tag;
-        template<typename T>  // T must derive from mpl::pair<>
-        struct apply
-            : F<typename T::first, typename T::second>
-        {
-        };
-    };
-
-    template<typename C, typename R>
-    struct use_put : ::boost::mpl::or_<
-        container_aux::is_array<C>,
-        container_aux::has_push_deduced_value<C>
-    >{};
-
-}// conversion_aux
-namespace switch_aux{
-
-    template<>
-    struct case_<switch_tag::deduce_convert, 0> :
-        conversion_aux::helper<
-            v2::convert_tag::put,
-            v2::conversion_aux::use_put
-        >{};
-
-    template<>
-    struct case_<switch_tag::deduce_convert, 1> :
-        conversion_aux::helper<v2::convert_tag::copy>{};
-
-}// switch_aux
-namespace conversion_aux{
-
-    template<typename C, typename R>
-    struct deduce_tag : v2::switch_aux::result<
-        v2::switch_tag::deduce_convert,
-        boost::mpl::pair<C, R>
+    template<
+    	typename C		// Container
+        , typename R	// Range
     >
+    struct deduce_tag 
+    	: switch_aux::result<
+        	switch_tag::conversion,
+        	C
+    	>
     {};
 
 }// conversion_aux

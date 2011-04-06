@@ -49,9 +49,8 @@ namespace tutorial_assign_v2{
         }
         {
             //[tutorial_piping
-            using namespace lambda;
             std::deque<int> cont;
-            range::stable_partition( cont | _csv_put( 0, 1, 2, 3, 4, 5 ), _1 % 2 );
+            range::stable_partition( cont | _csv_put( 0, 1, 2, 3, 4, 5 ), lambda::_1 % 2 );
             //]
             //[tutorial_container_generation
             assert( range::equal( cont, csv_deque(1, 3, 5, 0, 2, 4) ) );
@@ -122,9 +121,9 @@ namespace tutorial_assign_v2{
             alternating[0] = -1; alternating[1] = +1; 
             alternating[2] = -2;
 
-            C::size_type index = 3; using namespace lambda;
+            C::size_type index = 3; 
             ( 
-                put( alternating ) % ( _iterate = var( index )++ ) 
+                put( alternating ) % ( _iterate = lambda::var( index )++ ) 
             )( +2 )( -3 )( +3 )( -4 )( +4 )( -5 )( +5 );
 
             assert( 

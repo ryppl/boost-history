@@ -18,13 +18,11 @@ namespace test_assign_v2{
 namespace xxx_ref{
 
     void test(){
-
         xxx_array::test();
         xxx_csv_array::test();
         xxx_aux_::test();
         xxx_get::test();
         xxx_wrapper::test();
-
     }
 
 }// xxx_ref

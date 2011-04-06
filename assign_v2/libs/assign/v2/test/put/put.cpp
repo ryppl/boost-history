@@ -182,18 +182,18 @@ namespace xxx_put{
         // OTHER
         {
             //test_csv_put_cb
-              boost::circular_buffer<int> cb(3);
-             as2::csv_put( cb, 1, 2, 3 );
+            boost::circular_buffer<int> cb(3);
+            as2::csv_put( cb, 1, 2, 3 );
              
-             BOOST_ASSIGN_V2_CHECK(
-                 range::equal(cb, as2::csv_deque(1, 2, 3) )
-             );
+            BOOST_ASSIGN_V2_CHECK(
+            	range::equal(cb, as2::csv_deque(1, 2, 3) )
+            );
 
-             as2::csv_put( cb, 4, 5 );
+            as2::csv_put( cb, 4, 5 );
 
-             BOOST_ASSIGN_V2_CHECK(
-                 range::equal(cb, as2::csv_deque(3, 4, 5) )
-             );
+            BOOST_ASSIGN_V2_CHECK(
+            	range::equal(cb, as2::csv_deque(3, 4, 5) )
+            );
             //]
         }
     }// test()

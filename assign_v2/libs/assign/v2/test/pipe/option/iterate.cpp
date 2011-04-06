@@ -36,11 +36,10 @@ namespace xxx_iterate{
             alternating[2] = -2;
 
             int i = 3; 
-            using namespace lambda;
             BOOST_ASSIGN_V2_CHECK(
                 boost::range::equal(
                     alternating | ( 
-                        as2::_csv_put % ( as2::_iterate = var( i )++ ) 
+                        as2::_csv_put % ( as2::_iterate = lambda::var( i )++ ) 
                     )( +2, -3, +3, -4, +4, -5, +5 ),
                     as2::csv_deque<T>( -1, +1, -2, +2, -3, +3, -4, +4, -5, +5 )    
                 )

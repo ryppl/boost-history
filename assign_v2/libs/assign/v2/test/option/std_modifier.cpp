@@ -83,7 +83,8 @@ namespace xxx_standard{
         {
             //[test_option_insert
             // NB: This option is dedundant with the default
-            std::set<std::string> letters; as2::csv_put( letters, as2::_insert, "d", "a", "c", "b" );
+            std::set<std::string> letters; 
+            as2::csv_put( letters, as2::_insert, "d", "a", "c", "b" );
 
             BOOST_ASSIGN_V2_CHECK( letters.lower_bound( "a" ) == boost::begin( letters ) );
             BOOST_ASSIGN_V2_CHECK( letters.upper_bound( "d" ) == boost::end( letters ) );
@@ -116,10 +117,12 @@ namespace xxx_standard{
             //[test_option_push_front_deque
             BOOST_AUTO(
                 two_power_n,
-                ( as2::deque<int>( as2::_nil ) % as2::_push_front )( 16 )( 8 )( 4 )( 2 )( 1 )
+                as2::csv_deque( as2::_push_front, 16, 8, 4, 2, 1 )
             );
 
-            BOOST_ASSIGN_V2_CHECK( range::equal( two_power_n, as2::csv_deque( 1, 2, 4, 8, 16 ) ) );
+            BOOST_ASSIGN_V2_CHECK( 
+            	range::equal( two_power_n, as2::csv_deque( 1, 2, 4, 8, 16 ) ) 
+            );
             //]
         }
     }
