@@ -15,7 +15,7 @@
 #include <boost/assign/v2/detail/check/equal_container/lifo.hpp>
 #include <boost/assign/v2/detail/check/equal_container/range.hpp>
 #include <boost/assign/v2/detail/check/equal_container/sorted.hpp>
-#include <boost/assign/v2/detail/traits/switch.hpp>
+#include <boost/assign/v2/detail/switch.hpp>
 
 namespace boost{
 namespace assign{
