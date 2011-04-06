@@ -14,7 +14,7 @@
 #
 # if !defined(BOOST_PP_VARIADICS)
 #
-# if defined(BOOST_PP_NO_USE_BOOST_CONFIG)
+# if defined(BOOST_PP_NO_BOOST_CONFIG)
 /* This is the code we will use if not using Boost config. 
    It is essentially a duplication of the code in Boost Config.
 */
