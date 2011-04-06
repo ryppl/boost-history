@@ -14,7 +14,7 @@
 #include <boost/assign/v2/detail/traits.hpp>
 #include <boost/assign/v2/put/put.hpp>
 #include <boost/assign/v2/option/list.hpp>
-#include <boost/assign/v2/option/data_generator.hpp>
+#include <boost/assign/v2/option/data.hpp>
 #include <boost/assign/v2/ref/array/as_arg_list.hpp>
 #include <boost/assign/v2/ref/array/csv_array.hpp>
 #include <boost/assign/v2/ref/wrapper/copy.hpp>

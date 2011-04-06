@@ -14,7 +14,7 @@
 #include <boost/assign/v2/detail/functor/pair.hpp>
 #include <boost/assign/v2/detail/functor/value.hpp>
 #include <boost/assign/v2/interpreter/fwd.hpp>
-#include <boost/assign/v2/option/data_generator.hpp>
+#include <boost/assign/v2/option/data.hpp>
     
 namespace boost{
 namespace assign{

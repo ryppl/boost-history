@@ -10,7 +10,7 @@
 #ifndef BOOST_ASSIGN_V2_INTERPRETER_ER_2010_HPP
 #define BOOST_ASSIGN_V2_INTERPRETER_ER_2010_HPP
 #include <boost/assign/v2/interpreter/as_arg_list.hpp>
-#include <boost/assign/v2/interpreter/data_generator.hpp>
+#include <boost/assign/v2/interpreter/data.hpp>
 #include <boost/assign/v2/interpreter/crtp.hpp>
 #include <boost/assign/v2/interpreter/modifier.hpp>
 #include <boost/assign/v2/interpreter/replace.hpp>

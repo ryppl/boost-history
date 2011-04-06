@@ -12,7 +12,7 @@
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
 #include <boost/assign/v2/interpreter/csv.hpp>
 #include <boost/assign/v2/put/put.hpp>
-#include <boost/assign/v2/option/data_generator.hpp>
+#include <boost/assign/v2/option/data.hpp>
 #include <boost/assign/v2/option/list.hpp>
 #include <boost/config.hpp>
 #include <boost/mpl/bool.hpp>
