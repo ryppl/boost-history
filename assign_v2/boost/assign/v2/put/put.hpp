@@ -19,7 +19,7 @@
 namespace boost{
 namespace assign{
 namespace v2{
-//[syntax_put_put
+//[syntax_put
 namespace interpreter_aux{
 
     template<typename C, typename F, typename MTag, typename DTag>
