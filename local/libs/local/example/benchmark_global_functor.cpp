@@ -2,12 +2,14 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <cassert>
 
-#define N 10000
+#define N 1e4
+#define S N * 1e2
 
 struct global_add {
     global_add(double& _sum, int _factor): sum(_sum), factor(_factor) {}
-    void operator()(double num) {
+    void operator()(const double& num) {
         sum += factor * num;
     }
 private:
@@ -17,10 +19,10 @@ private:
 
 int main() {
     double sum = 0.0;
-    int factor = 10;
+    int factor = 1;
 
-    std::vector<double> v(N * 100);
-    std::fill(v.begin(), v.end(), 10);
+    std::vector<double> v(S);
+    std::fill(v.begin(), v.end(), 1.0);
 
     global_add add(sum, factor);
 
@@ -29,6 +31,7 @@ int main() {
     }
 
     std::cout << sum << std::endl;
+    assert(sum == N * S);
     return 0;
 }
 

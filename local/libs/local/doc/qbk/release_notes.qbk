@@ -42,6 +42,13 @@ From John Bytheway:
 
 * Shall `this_` be named `_this` instead? Ask Boosters if there is some guideline for consistency. Maybe Boost uses `..._` is for statements (like `if_`) and `_...` for variables (like `_1`)... if that is the case then I should use `_this`.
 
+* Rename `abstract_function` to `function_interface`.
+
+* Provide a special macro `BOOST_LOCAL_FUNCTION_NAME_OPTIMIZED` that runs faster (by using the local functor directly without using the global `boost::local::function` functor instead).
+Make both local blocks and exits use this optimized local function variant.
+Document that this optimized local function variant cannot be passed as template parameter unless it is first manually reassigned to the global `boost::local::function` functor or C++03 feature is supported by the compiler.
+On C++03, make `BOOST_LOCAL_FUNCTION_NAME` be the same as `BOOST_LOCAL_FUNCTION_NAME_OPTIMIZED`.
+
 [endsect]
 
 [endsect]
