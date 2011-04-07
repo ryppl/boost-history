@@ -12,7 +12,6 @@
 #include <libs/assign/v2/test/deque.h>
 #include <libs/assign/v2/test/interpreter.h>
 #include <libs/assign/v2/test/option.h>
-#include <libs/assign/v2/test/pipe.h>
 #include <libs/assign/v2/test/put.h>
 #include <libs/assign/v2/test/ref.h>
 
