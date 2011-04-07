@@ -65,10 +65,10 @@ namespace switch_tag{
 }// switch_tag
 
 #define BOOST_ASSIGN_V2_SWITCH_TAG modifier_tag
-BOOST_ASSIGN_V2_SWITCH_CASE( 0, container_aux::is_multi_array, modifier_tag::row_major )
+BOOST_ASSIGN_V2_SWITCH_CASE( 0, container_aux::is_multi_array, modifier_tag::row_major<> )
 BOOST_ASSIGN_V2_SWITCH_CASE( 1, container_aux::is_associative, modifier_tag::insert )
 BOOST_ASSIGN_V2_SWITCH_CASE( 2, container_aux::is_array, modifier_tag::iterate<> )
-BOOST_ASSIGN_V2_SWITCH_CASE( 3, container_aux::has_push_deduced_value,     modifier_tag::push )
+BOOST_ASSIGN_V2_SWITCH_CASE( 3, container_aux::has_push_deduced_value, modifier_tag::push )
 BOOST_ASSIGN_V2_SWITCH_CASE_DEFAULT( 4, modifier_tag::push_back )
 #undef BOOST_ASSIGN_V2_SWITCH_TAG
 

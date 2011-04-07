@@ -67,7 +67,6 @@ int main (int argc, char * const argv[])
         xxx_deque::test();
         xxx_interpreter::test();
         xxx_option::test();
-        //xxx_pipe::test();
         xxx_put::test();
         xxx_ref::test();
     }

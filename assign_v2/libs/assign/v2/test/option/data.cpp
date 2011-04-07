@@ -53,19 +53,14 @@ namespace xxx_data{
         }
         {
             //[test_option_data_recursive
-            int i = 1, k = 1;
+            int k = 1;
             
-            BOOST_AUTO(
-                factorials, (
-                    as2::deque<int>( as2::_nil ) % (
-                        as2::_data = ( lambda::var( k ) *= ( lambda::var( i )++ ) )
-                    )
-                )()()()()()
-            );
-
             BOOST_ASSIGN_V2_CHECK( 
                 range::equal( 
-                    factorials, 
+                    as2::csv_deque<int>( 
+                    	as2::_data = ( lambda::var( k ) *= lambda::_1 ), 
+                        1, 2, 3, 4, 5 
+                    ), 
                     as2::csv_deque( 1, 2, 6, 24, 120 ) 
                 ) 
             );

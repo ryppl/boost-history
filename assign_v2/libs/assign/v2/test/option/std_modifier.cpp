@@ -36,9 +36,6 @@ namespace xxx_standard{
         using namespace boost;
         namespace as2 = assign::v2;
 
-        // Note: In many cases, the default is already set at that invoked with 
-        // operator% 
-
         // PUT
         {
             //[test_option_standard_meta
@@ -56,16 +53,19 @@ namespace xxx_standard{
             // fully qual boost::begin/end demanded by MSVC - error C2668
             //[test_option_push_front
             boost::circular_buffer<int> cb( 3 ); 
-            as2::csv_put( cb, as2::_push_front, 3, 2, 1 );
-             
+            
             BOOST_ASSIGN_V2_CHECK(
-                range::equal(cb, as2::csv_deque(1, 2, 3) )
+                range::equal(
+                	cb | as2::delay_csv_put( as2::_push_front, as2::csv_deque( 3, 2, 1 ) ), 
+                    as2::csv_deque( 1, 2, 3 ) 
+                )
             );
 
-            as2::csv_put( cb, 4, 5 );
-
             BOOST_ASSIGN_V2_CHECK(
-                range::equal(cb, as2::csv_deque(3, 4, 5) )
+                range::equal(
+                	cb | as2::delay_csv_put( as2::csv_deque( 4, 5 ) ), 
+                    as2::csv_deque( 3, 4, 5 ) 
+                )
             );    
 
             //]

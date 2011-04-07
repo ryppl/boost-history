@@ -61,17 +61,15 @@ namespace xxx_mapped{
         }
         {
             //[test_option_mapped_deque
-            BOOST_AUTO(
-                alternating,
-                (
-                    as2::deque<int>( 
-                        as2::as_arg_list( std::list<int>( 10, 1 ) ) 
-                    ) % ( as2::_mapped = ( lambda::_1 *= -1 ) )
-                )( 1 )( 3 )( 5 )( 7 )( 9 )
-            );
+            std::list<int> source(10, 1); 
+            BOOST_AUTO( option, ( as2::_mapped = ( lambda::_1 *= -1 ) ) );
+            
             BOOST_ASSIGN_V2_CHECK( 
                 range::equal(
-                    alternating,
+                    (
+                    	as2::deque<int>( as2::as_arg_list( source ) ) 
+                        % option
+                	)( 1 )( 3 )( 5 )( 7 )( 9 ),
                     as2::csv_deque( +1, -1, +1, -1, +1, -1, +1, -1, +1, -1 )
                 )
             );
