@@ -17,7 +17,10 @@
 #include <boost/assign/v2/conversion/check.hpp>
 #include <boost/assign/v2/ref/array.hpp>
 #include <boost/assign/v2/deque.hpp>
+#include <boost/multi_array.hpp>
 #include <boost/range/algorithm/equal.hpp>
+#include <boost/range/algorithm_ext/iota.hpp>
+#include <boost/range/iterator_range.hpp>
 #include <libs/assign/v2/test/conversion.h>
 
 namespace test_assign_v2{
@@ -40,45 +43,70 @@ namespace xxx_conversion{
 
         // External containers (fully qualified)
         {
-            //[test_conversion_vec_array
-            std::vector<int> r( 3 ); r[0] = 1 ; r[1] = 10; r[2] = 100;
-
-            typedef array<int, 3> ar_; 
-            ar_ const& ar = ( r | as2::convert<ar_>() );
+            //[tutorial_convert
+            typedef std::stack<int> C;
             
-            BOOST_ASSIGN_V2_CHECK( 
-                range::equal( ar, as2::csv_deque( 1 , 10, 100 ) ) 
+            C lifo; lifo.push( 3 ); lifo.push( 2 ); lifo.push( 1 );
+
+            BOOST_ASSIGN_V2_CHECK(
+                ( as2::csv_deque( 3, 1, 1 ) | as2::convert<C>() ) < lifo
             );
             //]
+        
         }
         {
-            //[test_conversion_vec_stack
-            std::vector<int> r( 3 ); r[0] = 1 ; r[1] = 10; r[2] = 100;
+            //[test_converter
+            std::list<int> source( 3 ); iota( source, 1 );
             
-            std::stack<int> lifo = as2::converter( r );
+            std::queue<int> fifo = as2::converter( source );
             
-            BOOST_ASSIGN_V2_CHECK( lifo.top() == 100 );
+            BOOST_ASSIGN_V2_CHECK( fifo.front() == 1 ); 
+            BOOST_ASSIGN_V2_CHECK( fifo.back() == 3 );
             //]
         }
         {
-            //[test_conversion_stl
-            typedef int T; typedef std::vector<T> R; 
-            R r( 3 ); r[0] = 1 ; r[1] = 10; r[2] = 100; 
-            f< std::vector<T> >( as2::converter( r ), r );
-            f< std::deque<T> >( as2::converter( r ), r );
-            f< std::list<T> >( as2::converter( r ), r );
-            f< std::stack<T> >( as2::converter( r ), r );
-            f< std::queue<T> >( as2::converter( r ), r );
+            //[test_converter_f
+            typedef int T; typedef std::vector<T> R;
+            R benchmark( 10 ); iota( benchmark, 0 ); 
+            
+            as2::result_of::converter<R>::type source( benchmark );
+            
+            { 
+            	typedef boost::array<T, 10> C;
+                f<C>( source, benchmark );
+            }
+            { 
+            	typedef std::deque<T> C;
+                f<C>( source, benchmark );
+            }
+            { 
+            	typedef std::list<T> C;
+                f<C>( source, benchmark );
+            }
+            { 
+            	typedef std::queue<T> C;
+                f<C>( source, benchmark );
+            }
+            { 
+            	typedef std::stack<T> C;
+                f<C>( source, benchmark );
+            }
+            { 
+            	typedef std::vector<T> C;
+                f<C>( source, benchmark );
+            }
             //]
         }
         {
             //[test_conversion_matrix3x3
             const int sz = 3; typedef array<int, sz>  row_;
+            
+            as2::convert<row_> as_row;
             array<row_, sz>  matrix3x3 = converter(
                 as2::ref::array
-                    ( as2::ref::csv_array( 1, 2, 3 ) | as2::convert<row_>() )
-                    ( as2::ref::csv_array( 4, 5, 6 ) | as2::convert<row_>() )
-                    ( as2::ref::csv_array( 7, 8, 9 ) | as2::convert<row_>() )
+                    ( as2::ref::csv_array( 1, 2, 3 ) | as_row )
+                    ( as2::ref::csv_array( 4, 5, 6 ) | as_row )
+                    ( as2::ref::csv_array( 7, 8, 9 ) | as_row )
             );
             
             for(int i = 0; i < 9; i++)
@@ -89,35 +117,46 @@ namespace xxx_conversion{
         }
         // Boost.Assign.2.0 containers - name lookup
         {
-            //[test_conversion_as2_deque_array
-            std::vector<int> r( 3 ); r[0] = 1 ; r[1] = 10; r[2] = 100;
-            typedef array<int, 3> ar_; 
-            ar_ const& ar = ( as2::csv_deque( 1 , 10, 100 ) | as2::convert<ar_>() );
+            //[test_converter_from_deque
+            typedef array<int, 5> C; C const& ar = /*<<Notice unqualified>>*/converter( 
+            	as2::csv_deque( 1, 2, 3, 4, 5 )
+            );
             
             BOOST_ASSIGN_V2_CHECK( 
-                range::equal( ar, as2::csv_deque( 1 , 10, 100 ) ) 
+                range::equal( ar, as2::csv_deque( 1, 2, 3, 4, 5 ) ) 
             );
             //]
         }
         {
-            //[test_conversion_ref_array_stack
-            std::stack<int> lifo = /*<<Notice unqualified (name lookup)>>*/converter( as2::ref::array( 1 )( 10 )( 100 ) );
-            
-            BOOST_ASSIGN_V2_CHECK( lifo.top() == 100 );
-            //]
-        }
-        {
-            //[test_conversion_ref_array_queue
-            std::queue<int> fifo = /*<<Notice unqualified (name lookup)>>*/converter( as2::ref::csv_array( 1 , 10, 100 ) );
+            //[test_converter_from_ref_array
+            std::queue<int> fifo = /*<<Notice unqualified>>*/converter( as2::ref::csv_array( 1, 2, 3, 4, 5 ) );
             
             BOOST_ASSIGN_V2_CHECK( fifo.front() == 1  );
             //]
         }
         {
-            //[test_conversion_as2_deque_stack
-            std::stack<int> lifo = /*<<Notice unqualified (name lookup)>>*/converter( as2::csv_deque( 1 , 10, 100 ) );
+        	//[test_converter_multi_array
+        	typedef boost::multi_array<int, 2> array2_;
+        	typedef array2_::size_type size_;
+        	typedef size_ const dim_;
+        	dim_ dim1 = 3, dim2 = 3;
+        	array2_ array2 = converter( 
+            	extents[dim1][dim2], 
+                as2::csv_deque(-1, +1, -1, +1, -1, +1, -1, +1, -1) 
+            );
             
-            BOOST_ASSIGN_V2_CHECK( lifo.top() == 100 );
+        	const int benchmark [] = {
+            	-1, +1, -1,
+            	+1, -1, +1,
+            	-1, +1, -1
+        	};
+        	size_ const n = array2.num_elements();
+        	BOOST_ASSIGN_V2_CHECK(
+            	range::equal(
+                	make_iterator_range( array2.data(), n + array2.data() ),
+                	make_iterator_range( benchmark, n + benchmark )
+            	)
+        	);
             //]
         }
     }

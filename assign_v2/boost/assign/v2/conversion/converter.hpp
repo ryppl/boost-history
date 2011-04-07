@@ -10,11 +10,12 @@
 #ifndef BOOST_ASSIGN_V2_CONVERSION_CONVERTER_ER_2010_HPP
 #define BOOST_ASSIGN_V2_CONVERSION_CONVERTER_ER_2010_HPP
 #include <boost/assign/v2/detail/pp/ignore.hpp>
-#include <boost/assign/v2/ref/wrapper.hpp>
 #include <boost/assign/v2/conversion/convert.hpp>
 #include <boost/call_traits.hpp>
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
+#include <boost/range/iterator.hpp>
+#include <boost/range/iterator_range.hpp>
 #include <boost/type_traits/add_const.hpp>
 
 namespace boost{
@@ -23,19 +24,27 @@ namespace v2{
 //[syntax_conversion_converter
 namespace conversion_aux{
 
-    template<typename R>
+    template<typename R, typename Arg = nil_>
     class converter
     {
-//<-
-         typedef typename ref::copy_wrapper<
-            typename boost::add_const<R>::type
-        >::type wrapper_;
-//->
+
+		typedef boost::iterator_range<
+        	typename boost::range_iterator<
+            	typename boost::add_const<R>::type
+            >::type
+        > source_type;
 
         public:
 
-        explicit converter(typename call_traits<R>::param_type r)/*<-*/
-             : w( r )
+        explicit converter(
+        	Arg const& arg, 
+            typename call_traits<R>::param_type source
+        )/*<-*/
+             : arg_( arg ), source_( boost::make_iterator_range( source ) )
+        {}BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
+
+        explicit converter(typename call_traits<R>::param_type source)/*<-*/
+             : source_( boost::make_iterator_range( source ) )
         {}BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
         template<typename C>
@@ -47,22 +56,24 @@ namespace conversion_aux{
         template<typename C>
         C type()const/*<-*/
         {
-            return conversion_aux::convert<C>( this->w.get() );
+        	typedef convert<C, Arg> convert_;
+            return this->source_ | convert_( this->arg_ );
         }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
 //<-
         private:
-        wrapper_ w;
+        Arg arg_;
+		source_type source_;
 //->
     };
 
 }// conversion_aux
 namespace result_of{
 
-    template<typename R>
+    template<typename R, typename Arg = nil_>
     struct converter/*<-*/
     {
-        typedef conversion_aux::converter<R> type;
+        typedef conversion_aux::converter<R, Arg> type;
     }/*->*/;
 
 }//result_of
@@ -72,6 +83,13 @@ namespace result_of{
     converter(R const& r)/*<-*/{
         typedef typename result_of::converter<R>::type result_;
         return result_( r );
+    }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
+
+    template<typename Arg, typename R>
+    typename result_of::converter<R, Arg>::type
+    converter(Arg const& arg, R const& r)/*<-*/{
+        typedef typename result_of::converter<R, Arg>::type result_;
+        return result_( arg, r );
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
 //]
@@ -99,6 +117,18 @@ namespace result_of{
     converter( R const& range )\
     {\
         return ::boost::assign::v2::converter( range );\
+    }\
+    template<typename Arg, BOOST_PP_SEQ_ENUM(\
+        BOOST_PP_SEQ_TRANSFORM(\
+            BOOST_ASSIGN_V2_CONVERSION_CONVERTER_NAME_LOOKUP_PARAM,\
+            ~,\
+            Seq\
+        )\
+    )>\
+    typename ::boost::assign::v2::result_of::converter<R, Arg>::type \
+    converter(Arg const& arg, R const& range )\
+    {\
+        return ::boost::assign::v2::converter( arg, range );\
     }\
 /**/
 

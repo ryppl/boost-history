@@ -45,25 +45,25 @@ namespace result_of{
 
     template<typename C, typename F, typename MTag, typename DTag>
     struct if_csv_ready/*<-*/ 
-    	: ::boost::mpl::identity<
-        	put_interpreter<C, F, MTag, DTag>
-    	>
+        : ::boost::mpl::identity<
+            put_interpreter<C, F, MTag, DTag>
+        >
     {}/*->*/;
 
     template<typename C, typename F, typename MTag, typename DTag>
     struct else_csv_ready/*<-*/
-    	: result_of::option_data<
-        	put_interpreter<C, F, MTag, DTag>, C, value_
-    	>
+        : result_of::option_data<
+            put_interpreter<C, F, MTag, DTag>, C, value_
+        >
     {}/*->*/;
 
     template<typename C, typename F, typename MTag, typename DTag>
     struct make_csv_ready/*<-*/
-    	: ::boost::mpl::eval_if<
-        	csv_ready<F>,
-        	if_csv_ready<C, F, MTag, DTag>,
-        	else_csv_ready<C, F, MTag, DTag>
-    	>
+        : ::boost::mpl::eval_if<
+            csv_ready<F>,
+            if_csv_ready<C, F, MTag, DTag>,
+            else_csv_ready<C, F, MTag, DTag>
+        >
     {}/*->*/;
 
 }// result_of
@@ -136,27 +136,27 @@ namespace result_of{
 
     template<typename R, typename Os = empty_list_option>
     struct delayed_csv_put/*<-*/
-    	: Os, as_arg_list_adapter<R>
+        : Os, as_arg_list_adapter<R>
     {
 
-		typedef Os super1_t;
-		typedef as_arg_list_adapter<R> super2_t;
+        typedef Os super1_t;
+        typedef as_arg_list_adapter<R> super2_t;
 
         explicit delayed_csv_put(R& r)
-        	: super2_t( r )
+            : super2_t( r )
         {}
 
         explicit delayed_csv_put(Os options, R& r)
-        	: super1_t( options ), super2_t( r )
+            : super1_t( options ), super2_t( r )
         {}
 
-		template<typename C>
-		C& apply(C& cont)const
+        template<typename C>
+        C& apply(C& cont)const
         {
-			make_csv_ready(
-            	put( cont ) % static_cast<super1_t const&>( *this )
+            make_csv_ready(
+                put( cont ) % static_cast<super1_t const&>( *this )
             )(
-            	static_cast<super2_t const&>( *this )
+                static_cast<super2_t const&>( *this )
             );
             
             return cont;
@@ -174,10 +174,10 @@ namespace result_of{
 
 namespace result_of{
 
-	template<typename R, typename Os = empty_list_option>
-	struct delay_csv_put/*<-*/
+    template<typename R, typename Os = empty_list_option>
+    struct delay_csv_put/*<-*/
     {
-    	typedef delayed_csv_put<R, Os> type;
+        typedef delayed_csv_put<R, Os> type;
     }/*->*/;
 
 
@@ -209,13 +209,13 @@ using interpreter_aux::csv_put;
 #endif // BOOST_ASSIGN_V2_ENABLE_CPP0X
 //->
 
-	using interpreter_aux::delay_csv_put;
+    using interpreter_aux::delay_csv_put;
 
 namespace result_of{
 
-	template<typename R, typename Os = empty_list_option_>
-	struct delay_csv_put 
-    	: interpreter_aux::result_of::delay_csv_put<R, Os>
+    template<typename R, typename Os = empty_list_option_>
+    struct delay_csv_put 
+        : interpreter_aux::result_of::delay_csv_put<R, Os>
     {};
 
 }// result_of

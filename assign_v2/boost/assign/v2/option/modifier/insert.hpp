@@ -39,15 +39,17 @@ namespace interpreter_aux{
         public:
         interpreter_modifier(){}
         interpreter_modifier( ignore_, ignore_ ){}
-
+//<-
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
+//->
 #define BOOST_ASSIGN_V2_arg T&& t
 #define BOOST_ASSIGN_V2_forward std::forward<T>( t )
+//<-
 #else
 #define BOOST_ASSIGN_V2_arg T& t
 #define BOOST_ASSIGN_V2_forward t
 #endif
-
+//->
         template<typename C, typename T>
         void impl(C& cont, BOOST_ASSIGN_V2_arg, data_tag::value )const
         {
@@ -79,8 +81,10 @@ namespace interpreter_aux{
 
     };
 
+//<-
 #undef BOOST_ASSIGN_V2_arg
 #undef BOOST_ASSIGN_V2_forward
+//->
 
 }// interpreter_aux
 BOOST_ASSIGN_V2_OPTION_MODIFIER_KEYWORD(insert)

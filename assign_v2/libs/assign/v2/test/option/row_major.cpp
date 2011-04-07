@@ -38,24 +38,24 @@ namespace xxx_row_major{
         dim_ dim1 = 3, dim2 = 3;
         array2_ array2( extents[dim1][dim2] );
 
-		int k = -2;
+        int k = -2;
         BOOST_AUTO( option,  as2::_row_major = ( lambda::var( k ) += 2 ) );
-		as2::csv_put( array2, option, -1, -1, -1, -1, -1 );
-		k = -1; as2::csv_put( array2, option, +1, +1, +1, +1 );
+        as2::csv_put( array2, option, -1, -1, -1, -1, -1 );
+        k = -1; as2::csv_put( array2, option, +1, +1, +1, +1 );
         
-		const int benchmark [] = {
-        	-1, +1, -1,
+        const int benchmark [] = {
+            -1, +1, -1,
             +1, -1, +1,
             -1, +1, -1
         };
         size_ const n = array2.num_elements();
-		BOOST_ASSIGN_V2_CHECK(
-        	range::equal(
-            	make_iterator_range( array2.data(), n + array2.data() ),
-            	make_iterator_range( benchmark, n + benchmark )
+        BOOST_ASSIGN_V2_CHECK(
+            range::equal(
+                make_iterator_range( array2.data(), n + array2.data() ),
+                make_iterator_range( benchmark, n + benchmark )
             )
         );
-		//]
+        //]
     }
 
 }// xxx_row_major

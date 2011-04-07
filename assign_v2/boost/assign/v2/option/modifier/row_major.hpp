@@ -21,7 +21,7 @@
 #include <utility>
 #endif
 
-#include <iostream>
+    
 
 namespace boost{
 namespace assign{
@@ -34,11 +34,14 @@ namespace modifier_tag{
 }// modifier_tag
 namespace interpreter_aux{
 
+//<-
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
+//->
 #define BOOST_ASSIGN_V2_arg T&& t
 #define BOOST_ASSIGN_V2_forward std::forward<T>( t )
+//<-
 #else
-#define BOOST_ASSIGN_V2_arg T const& t
+#define BOOST_ASSIGN_V2_arg T& t
 #define BOOST_ASSIGN_V2_forward t
 #endif
 
@@ -77,8 +80,10 @@ namespace interpreter_aux{
         row_major_::assign( array, index, BOOST_ASSIGN_V2_forward );
     }
 
+//->
+
     template<typename Arg>
-    class interpreter_modifier< modifier_tag::row_major<Arg> >
+    class interpreter_modifier< modifier_tag::row_major<Arg> >/*<-*/
     {
 
         typedef Arg arg_;
@@ -86,29 +91,29 @@ namespace interpreter_aux{
 
         public:
         interpreter_modifier()
-        	: ptr( new arg_() )
+            : ptr( new arg_() )
         {}
         interpreter_modifier(
             ignore_,  
             typename boost::call_traits<arg_>::param_type arg 
         ) 
-        	: ptr( new arg_( arg ) )
+            : ptr( new arg_( arg ) )
         {}
 
         template<typename C, typename T>
         void impl(C& cont, BOOST_ASSIGN_V2_arg, data_tag::value )const
         {
-        	int n = (*this->ptr)();
-            std::cout << "n = " << n << std::endl;
-            row_major_assign( cont, n, BOOST_ASSIGN_V2_forward );
+            row_major_assign( cont, (*this->ptr)(), BOOST_ASSIGN_V2_forward );
         }
 
         private:
         mutable ptr_ ptr;
-    };
+    }/*->*/;
 
+//<-
 #undef BOOST_ASSIGN_V2_arg
 #undef BOOST_ASSIGN_V2_forward
+//->
     
 }// interpreter_aux
 //]

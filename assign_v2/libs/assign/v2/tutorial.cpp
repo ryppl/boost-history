@@ -35,15 +35,12 @@ namespace tutorial_assign_v2{
         using namespace boost;
         using namespace assign::v2;
         {
-            //[tutorial_assign1
+            //[tutorial_csv_put
             std::vector<int> numeric( 10 ); iota( numeric, 0 ); 
             typedef std::string str_; typedef variant< int, str_ > data_; 
             array<data_, 16> keypad;
             
-            csv_put( keypad
-                , "+", "-", "*", "/", "=", "." 
-                , as_arg_list( numeric ) 
-            );
+            csv_put( keypad, "+", "-", "*", "/", "=", "." , as_arg_list( numeric ) );
 
             assert( get<str_>( keypad.front() ) == "+" );
             assert( get<int>( keypad.back()  ) == 9 );
@@ -57,10 +54,10 @@ namespace tutorial_assign_v2{
             	sorted | delay_csv_put( source ), 
                 lambda::_1 % 2 
             );
-			//]
-			//[tutorial_csv_deque
+            //]
+            //[tutorial_csv_deque
             assert( 
-            	range::equal( sorted, csv_deque(1, 3, 5, 0, 2, 4) ) 
+                range::equal( sorted, csv_deque(1, 3, 5, 0, 2, 4) ) 
             );
             //]
         }
@@ -91,7 +88,7 @@ namespace tutorial_assign_v2{
                 source,
                 boost::begin(
                     copies | _chain( 
-                    	ref::csv_array( x, y, z ) | ref::_get 
+                        ref::csv_array( x, y, z ) | ref::_get 
                     )
                 )
             );
@@ -106,11 +103,11 @@ namespace tutorial_assign_v2{
             
             C fifo = converter( csv_deque( 1, 2, 3 ) );
             assert( fifo.front() == 1 ); assert( fifo.back() == 3 );
-			//]
+            //]
 
             //[tutorial_convert
             assert(
-            	( csv_deque( 1, 1, 3 ) | convert<C>() ) < fifo
+                ( csv_deque( 1, 1, 3 ) | convert<C>() ) < fifo
             );
             //]
         }
@@ -135,9 +132,9 @@ namespace tutorial_assign_v2{
 
             C::size_type index = 3; 
             csv_put( 
-            	series
+                series
                 , _iterate = lambda::var( index )++
-            	, +2, -3, +3, -4, +4, -5 , +5 
+                , +2, -3, +3, -4, +4, -5 , +5 
             );
 
             assert( 

@@ -202,7 +202,7 @@ namespace result_of{
 
 }// result_of
 }// interpreter_aux
-	typedef interpreter_aux::empty_list_option empty_list_option_;
+    typedef interpreter_aux::empty_list_option empty_list_option_;
 namespace{
     empty_list_option_ _list_option = empty_list_option_();
 }

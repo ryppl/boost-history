@@ -15,7 +15,6 @@
 #include <boost/assign/v2/detail.hpp>
 #include <boost/assign/v2/deque.hpp>
 #include <boost/assign/v2/option.hpp>
-#include <boost/assign/v2/pipe.hpp>
 #include <boost/assign/v2/put.hpp>
 #include <boost/assign/v2/ref.hpp>
 

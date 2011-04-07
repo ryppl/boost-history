@@ -58,7 +58,7 @@ namespace xxx_data{
             BOOST_ASSIGN_V2_CHECK( 
                 range::equal( 
                     as2::csv_deque<int>( 
-                    	as2::_data = ( lambda::var( k ) *= lambda::_1 ), 
+                        as2::_data = ( lambda::var( k ) *= lambda::_1 ), 
                         1, 2, 3, 4, 5 
                     ), 
                     as2::csv_deque( 1, 2, 6, 24, 120 ) 

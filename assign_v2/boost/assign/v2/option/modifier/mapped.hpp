@@ -44,13 +44,17 @@ namespace interpreter_aux{
         ) : ptr( new arg_( arg ) )
         {}
 
+//<-
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
+//->
 #define BOOST_ASSIGN_V2_arg T&& t
 #define BOOST_ASSIGN_V2_forward std::forward<T>( t )
+//<-
 #else
 #define BOOST_ASSIGN_V2_arg T& t
 #define BOOST_ASSIGN_V2_forward t
 #endif
+//->
 
         template<typename C, typename T>
         void impl(C& cont, BOOST_ASSIGN_V2_arg, data_tag::storage )const
@@ -58,8 +62,10 @@ namespace interpreter_aux{
             cont[ t/*key*/ ] = (*this->ptr)( cont[ BOOST_ASSIGN_V2_forward ] );
         }
 
+//<-
 #undef BOOST_ASSIGN_V2_arg
 #undef BOOST_ASSIGN_V2_forward
+//->
 
         private:
         ptr_ ptr;

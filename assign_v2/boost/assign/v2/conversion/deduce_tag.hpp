@@ -25,8 +25,9 @@ namespace switch_tag{
 
 #define BOOST_ASSIGN_V2_SWITCH_TAG conversion
 BOOST_ASSIGN_V2_SWITCH_CASE(0, container_aux::is_array, convert_tag::put)
-BOOST_ASSIGN_V2_SWITCH_CASE(1, container_aux::has_push_deduced_value, convert_tag::put)
-BOOST_ASSIGN_V2_SWITCH_CASE_DEFAULT(2, convert_tag::copy)
+BOOST_ASSIGN_V2_SWITCH_CASE(1, container_aux::is_multi_array, convert_tag::put)
+BOOST_ASSIGN_V2_SWITCH_CASE(2, container_aux::has_push_deduced_value, convert_tag::put)
+BOOST_ASSIGN_V2_SWITCH_CASE_DEFAULT(3, convert_tag::copy)
 #undef BOOST_ASSIGN_V2_SWITCH_TAG
 
 namespace conversion_aux{

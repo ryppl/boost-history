@@ -84,7 +84,13 @@ namespace result_of{
         
 }// result_of
 
-    template<typename F/*<-*/= ignore_/*->*/>
+    // F is a functor or either of the keywors:
+    //     element_
+    //    key_
+    //    map_
+    //  use_default_
+    //    value_
+    template<typename F = ignore_>
     struct option_data/*<-*/
         : option_crtp<
             option_data<F> 

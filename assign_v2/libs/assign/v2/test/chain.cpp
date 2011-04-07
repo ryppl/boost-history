@@ -11,16 +11,17 @@
 #include <vector>
 #include <list>
 #include <string>
-#include <boost/next_prior.hpp>
-#include <boost/range/begin.hpp>
-#include <boost/range/end.hpp>
-#include <boost/range/algorithm/copy.hpp>
-#include <boost/range/algorithm/equal.hpp>
 #include <boost/assign/v2/include/ref/csv_array.hpp>
 #include <boost/assign/v2/include/csv_deque.hpp>
 #include <boost/assign/v2/chain/check.hpp>
 #include <boost/assign/v2/chain.hpp>
 #include <boost/assign/v2/chain/logical_and.hpp>
+#include <boost/next_prior.hpp>
+#include <boost/range/algorithm/copy.hpp>
+#include <boost/range/algorithm/equal.hpp>
+#include <boost/range/algorithm_ext/iota.hpp>
+#include <boost/range/begin.hpp>
+#include <boost/range/end.hpp>
 #include <libs/assign/v2/test/chain.h>
 
 namespace test_assign_v2{
@@ -41,66 +42,56 @@ namespace xxx_chain{
         {
             //[test_chain_read
             typedef std::string T;
-            array<T, 2> head;  head[0] = "A"; head[1] = "B";
-            std::list<T> tail; tail.push_back( "C" ); tail.push_back( "D" );
-            std::vector<T> joined; 
+            std::vector<T> word; 
+
             copy( 
-                head | as2::_chain( tail ), 
-                std::back_inserter( joined ) 
+                as2::csv_deque( "O", "R" ) | as2::_chain( as2::csv_deque( "B", "I", "T" ) ), 
+                std::back_inserter( word ) 
             );
 
             BOOST_ASSIGN_V2_CHECK(
-                range::equal( joined, as2::csv_deque<T>("A", "B", "C", "D") )
+                range::equal( word, as2::csv_deque<T>("O", "R", "B", "I", "T") )
             );
             //]
         }
         {
             //[test_chain_write
-            typedef std::string word; std::vector<word> words( 6 );
-            words[0] = "foo"; words[1] = "bar"; words[2] = "baz";
-            words[3] = "qux"; words[4] = "quux"; words[5] = "grault";
-            array<word, 3> head; std::list<word> tail( 3 );
+            typedef int T; array<T, 3> head; std::list<T> tail( 2 );
             
             copy( 
-                words,
+                as2::csv_deque( 1, 2, 3, 4, 5 ),
                 boost::begin( head | as2::_chain( tail ) ) 
             );
 
             BOOST_ASSIGN_V2_CHECK( 
-                range::equal( 
-                    head, 
-                    as2::csv_deque<word>( "foo", "bar", "baz" ) 
-                ) 
+                range::equal( head, as2::csv_deque( 1, 2, 3 ) ) 
             );
             BOOST_ASSIGN_V2_CHECK( 
-                range::equal( 
-                    tail, 
-                    as2::csv_deque<word>( "qux", "quux", "grault" ) 
-                ) 
+                range::equal( tail, as2::csv_deque( 4, 5 ) ) 
             );
             //]
         }
         // Boost.Assign.v2 containers
         {    
             //[test_chain_write_refs
-            /*<< Needed to bring && into scope >>*/ using namespace assign::v2;
-            std::vector<int> iota8( 8 ); 
-            for(int i = 0; i < 8; i++){ iota8[i] = 1 + i; }
-            array<int, 5> iota5; int six, seven, eight;
+            /*<< Needed to bring && into scope >>*/ 
+            std::vector<int> source( 8 ); iota(source, 1);
+            array<int, 5> copies; int x, y, z;
             
+            /*<<Brings `&&` to scope>>*/using namespace assign::v2;
             boost::copy(
-                iota8,
+                source,
                 boost::begin( 
-                    iota5 && (/*<< rvalue! >>*/ as2::ref::csv_array( six, seven, eight ) | as2::ref::_get ) 
+                    copies && (/*<< rvalue! >>*/ as2::ref::csv_array( x, y, z ) | as2::ref::_get ) 
                 )
             );
 
             BOOST_ASSIGN_V2_CHECK( 
-                range::equal( iota5, as2::csv_deque( 1, 2, 3, 4, 5 ) ) 
+                range::equal( copies, as2::csv_deque( 1, 2, 3, 4, 5 ) ) 
             );
-            BOOST_ASSIGN_V2_CHECK( six   == 6 ); 
-            BOOST_ASSIGN_V2_CHECK( seven == 7 ); 
-            BOOST_ASSIGN_V2_CHECK( eight == 8 );
+            BOOST_ASSIGN_V2_CHECK( x == 6 ); 
+            BOOST_ASSIGN_V2_CHECK( y == 7 ); 
+            BOOST_ASSIGN_V2_CHECK( z == 8 );
             //]
         }
 

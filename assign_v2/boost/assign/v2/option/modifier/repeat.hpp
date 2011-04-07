@@ -43,13 +43,17 @@ namespace interpreter_aux{
             : inner_( inner ), n_( n )
         {}
 
+//<-
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
+//->
 #define BOOST_ASSIGN_V2_arg T&& t
 #define BOOST_ASSIGN_V2_forward std::forward<T>( t )
+//<-
 #else
 #define BOOST_ASSIGN_V2_arg T& t
 #define BOOST_ASSIGN_V2_forward t
 #endif
+//->
         template<typename C, typename T, typename DataTag>
         void impl(C& cont, BOOST_ASSIGN_V2_arg, DataTag tag )const
         {
@@ -57,8 +61,10 @@ namespace interpreter_aux{
             while(m--) this->inner_.impl( cont, BOOST_ASSIGN_V2_forward, tag );
         }
 
+//<-
 #undef BOOST_ASSIGN_V2_arg
 #undef BOOST_ASSIGN_V2_forward
+//->
 
         size_type const& size()const{ return this->n_; }
 

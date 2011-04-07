@@ -19,13 +19,11 @@
 #include <string>
 #include <utility>
 
-#include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
-#if !BOOST_ASSIGN_V2_ENABLE_CPP0X
-#define BOOST_ASSIGN_V2_LIMIT_CSV_ARITY 30
-#endif // BOOST_ASSIGN_V2_ENABLE_CPP0X
-
 #include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/detail/traits.hpp>
+
+#define BOOST_ASSIGN_V2_LIMIT_CSV_ARITY 24
+
 #include <boost/assign/v2/include/csv_deque.hpp>
 #include <boost/assign/v2/include/put.hpp>
 #include <boost/assign/v2/include/csv_put.hpp>
@@ -92,7 +90,7 @@ namespace xxx_put{
             uneven_ b( 4 ); b[0] = 0.61; b[1] = 0.69; b[2] = 0.92; b[3] = 0.55;
             array<uneven_, 4> ragged;
             as2::put( ragged )
-                /*<<Calls `ragged.push_back( uneven_( begin( a ), end( a ) ) )`>>*/( boost::begin( a ), boost::end( a ) )
+                ( boost::begin( a ), boost::end( a ) )
                 ( b )
                 ( 1, -99.99 )
                 ( );
@@ -112,10 +110,13 @@ namespace xxx_put{
         }
         // SEQUENCE
         {
+			// Note that although `number( str_( "011" ) )`, for instance, 
+            // is valid, `range_3bit.push_back( str_( "011" ) )` isn't
             //[test_csv_put_bitset
             typedef std::string str_; typedef std::bitset<3> number; 
-            std::vector<number> /*<<Note that although `number( str_( "011" ) )`, for instance, is valid, `range_3bit.push_back( str_( "011" ) )`>>*/ range_3bit;
-            /*<<Calls `range_3bit.push_back( number( t ) );` for [^t = ]`str_( "000" )`[^, ..., ]`str_( "111" )`>>*/as2::csv_put( range_3bit
+            std::vector<number> range_3bit;
+            as2::csv_put( 
+            	range_3bit
                 , str_( "000" ), str_( "001" )
                 , str_( "010" ), str_( "011" )
                 , str_( "100" ), str_( "101" )
@@ -132,11 +133,10 @@ namespace xxx_put{
         {
             // http://bioinfo.mbb.yale.edu/~mbg/dom/fun3/area-codes/
             //[test_put_area_codes
-            typedef const char us_state_ [3]; us_state_ ct = "CT", nj = "NJ", ny = "NY";
-            typedef int area_code_; 
-            typedef tuple<us_state_/*<<Notice the [*reference]>>*/&,  area_code_> data_; 
+            typedef const char state_ [3]; state_ ct = "CT", nj = "NJ", ny = "NY";
+            typedef int code_; 
+            typedef tuple<state_/*<<Notice the [*reference]>>*/&,  code_> data_; 
             std::deque< data_ > region;
-            /*<<Calls `tri_state.push_back( data_( s, c ) )` for [^( s, c ) =( ny, 212 )...( ct, 203 )]>>*/
             as2::put( region )
                 ( ny, 212 )( ny, 718 )( ny, 516 )( ny, 914 )
                 ( nj, 210 )( nj, 908 )( nj, 609 )
@@ -160,9 +160,9 @@ namespace xxx_put{
             benchmark.insert( "baz" );
             
             BOOST_ASSIGN_V2_CHECK(
-            	range::equal(
-                	set | as2::delay_csv_put( 
-                    	as2::csv_deque<word_>( "foo", "bar", "baz" ) 
+                range::equal(
+                    set | as2::delay_csv_put( 
+                        as2::csv_deque<word_>( "foo", "bar", "baz" ) 
                     ),
                     benchmark
                 )
@@ -200,64 +200,64 @@ namespace xxx_put{
         }
         // MULTI-ARRAY
         {
-        	//[test_csv_put_multi_array
-        	typedef boost::multi_array<int, 3> array3_;
-        	typedef array3_::size_type size_;
+            //[test_csv_put_multi_array
+            typedef boost::multi_array<int, 3> array3_;
+            typedef array3_::size_type size_;
         
-        	typedef const int dim_;
+            typedef const int dim_;
             dim_ dim1 = 2, dim2 = 3, dim3 = 4; 
             
-	        using boost::extents;
-        	array3_ array3( extents[dim1][dim2][dim3] );
+            using boost::extents;
+            array3_ array3( extents[dim1][dim2][dim3] );
 
-	        as2::csv_put( 
-    	        array3,
-        	     0,  1,  2,  3,    
-            	 4,  5,  6,  7,    
+            as2::csv_put( 
+                array3,
+                 0,  1,  2,  3,    
+                 4,  5,  6,  7,    
                  8,  9, 10, 11,    
 
-   		         12, 13, 14, 15,    
-        	     16, 17, 18, 19,    
-            	 20, 21, 22, 23    
-        	);
+                12, 13, 14, 15,    
+                16, 17, 18, 19,    
+                20, 21, 22, 23    
+            );
             
-        	size_ i = 0;
-        	for( size_ i1 = 0; i1 < dim1; i1++ )
-        	{
-            	for( size_ i2 = 0; i2 < dim2; i2++ )
-              	{
-                	for( size_ i3 = 0; i3 < dim3; i3++ )
-                	{
-                    	BOOST_ASSIGN_V2_CHECK( array3[ i1 ][ i2 ][ i3 ] == i++ );
-                	}
-            	}
-        	}
+            size_ i = 0;
+            for( size_ i1 = 0; i1 < dim1; i1++ )
+            {
+                for( size_ i2 = 0; i2 < dim2; i2++ )
+                  {
+                    for( size_ i3 = 0; i3 < dim3; i3++ )
+                    {
+                        BOOST_ASSIGN_V2_CHECK( array3[ i1 ][ i2 ][ i3 ] == i++ );
+                    }
+                }
+            }
 
-			//]
+            //]
 
-	        using boost::indices;
-    	    typedef boost::multi_array_types::index_range range;
-    	    array3_::array_view<2>::type view =
-    	    array3[ indices[1][range(0,2)][range(1,3)] ];
+            using boost::indices;
+            typedef boost::multi_array_types::index_range range;
+            array3_::array_view<2>::type view =
+            array3[ indices[1][range(0,2)][range(1,3)] ];
 
-        	as2::csv_put(
-            	view,
-            	99, 98,
-            	97, 96
-        	);
+            as2::csv_put(
+                view,
+                99, 98,
+                97, 96
+            );
 
-        	BOOST_ASSIGN_V2_CHECK(
-            	boost::range::equal(
-                	as2::csv_deque( 
-                    	view[0][0], view[0][1], 
-                    	view[1][0], view[1][1]
-                	),
-                	as2::csv_deque( 
-                    	99, 98, 
-                    	97, 96
-                	)
-            	)
-        	);
+            BOOST_ASSIGN_V2_CHECK(
+                boost::range::equal(
+                    as2::csv_deque( 
+                        view[0][0], view[0][1], 
+                        view[1][0], view[1][1]
+                    ),
+                    as2::csv_deque( 
+                        99, 98, 
+                        97, 96
+                    )
+                )
+            );
         
         }
         // OTHER
@@ -272,7 +272,7 @@ namespace xxx_put{
 
             BOOST_ASSIGN_V2_CHECK(
                 range::equal(
-                	cb | as2::delay_csv_put( as2::csv_deque( 4, 5 ) ), 
+                    cb | as2::delay_csv_put( as2::csv_deque( 4, 5 ) ), 
                     as2::csv_deque(3, 4, 5) 
                 )
             );

@@ -22,7 +22,6 @@ test-suite assign :
     [ assign-test detail ]
     [ assign-test interpreter ]
     [ assign-test option ]
-    [ assign-test pipe ]
     [ assign-test put ]
     [ assign-test ref ]
 ;

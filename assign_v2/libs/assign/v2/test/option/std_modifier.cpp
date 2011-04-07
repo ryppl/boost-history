@@ -56,14 +56,14 @@ namespace xxx_standard{
             
             BOOST_ASSIGN_V2_CHECK(
                 range::equal(
-                	cb | as2::delay_csv_put( as2::_push_front, as2::csv_deque( 3, 2, 1 ) ), 
+                    cb | as2::delay_csv_put( as2::_push_front, as2::csv_deque( 3, 2, 1 ) ), 
                     as2::csv_deque( 1, 2, 3 ) 
                 )
             );
 
             BOOST_ASSIGN_V2_CHECK(
                 range::equal(
-                	cb | as2::delay_csv_put( as2::csv_deque( 4, 5 ) ), 
+                    cb | as2::delay_csv_put( as2::csv_deque( 4, 5 ) ), 
                     as2::csv_deque( 3, 4, 5 ) 
                 )
             );    
