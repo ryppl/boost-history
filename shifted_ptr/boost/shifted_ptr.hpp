@@ -53,27 +53,40 @@ class owned_base;
 
 /**
 	Set header.
+	
+	Proxy object used to count the number of pointers from the stack are referencing pointee objects belonging to the same @c set .
 */
 
 class set
 {
-    long count_;
-    mutable set * redir_;
+    long count_;									/**< Count of the number of pointers from the stack referencing the same @c set .*/
+    mutable set * redir_;							/**< Redirection in the case of an union multiple @c set s.*/
 
-    intrusive_list includes_;
-    intrusive_list elements_;
+    intrusive_list includes_;						/**< List of all @c set s of an union. */
+    intrusive_list elements_;						/**< List of all pointee objects belonging to a @c set . */
 
-    static fast_pool_allocator<set> pool_;
+    static fast_pool_allocator<set> pool_;			/**< Pool where all @c set s are allocated. */
 
 public:
-    intrusive_list::node tag_;
+    intrusive_list::node tag_;						/**< Tag used to enlist to @c set::includes_ . */
 
 
+	/**
+		Initialization of a single @c set .
+	*/
+	
     set() : count_(1), redir_(this)
     {
         includes_.push_back(& tag_);
     }
 
+	
+	/**
+		Release of a @c set with possible destruction of all its elements and other @c set s unified to it.
+		
+		@return		True if the @c set was released.
+	*/
+	
     bool release()
     {
         set * p = redir();
@@ -99,11 +112,25 @@ public:
         return false;
     }
 
+	
+	/**
+		Recursive search for the @c set header of an union.
+		
+		@return		@c set responsible for managing the counter of an union.
+	*/
+	
     set * redir() const
     {
         if (redir_ == this) return redir_;
         else return redir_ = redir_->redir();
     }
+	
+	
+	/**
+		Unification with a new @c set .
+		
+		@param	p	New @c set to unify with.
+	*/
 
     void redir(set * p)
     {
@@ -116,21 +143,52 @@ public:
         }
     }
 
+	
+	/**
+		Finds the elements constituting one or many @c set s unified.
+		
+		@return		List of all elements.
+	*/
+	
     intrusive_list * elements() const
     {
         return & redir()->elements_;
     }
     
+	
+	/**
+		Allocates a new @c set using the fast pool allocator.
+		
+		@param	s	Size of the @c set .
+		@return		Pointer of the new memory block.
+	*/
+	
     void * operator new (size_t s)
     {
         return pool_.allocate(s);
     }
     
+	
+	/**
+		Placement new.
+		
+		@param	s	Size of the @c set .
+		@param	p	Address to construct the @c set on.
+		@return		Address to construct the @c set on.
+	*/
+	
     void * operator new (size_t s, set * p)
     {
         return p;
     }
 
+	
+	/**
+		Deallocates a @c set from the fast pool allocator.
+		
+		@param	p	Address of the @c set to deallocate.
+	*/
+	
     void operator delete (void * p)
     {
         pool_.deallocate(static_cast<set *>(p), sizeof(set));
@@ -143,6 +201,8 @@ fast_pool_allocator<set> set::pool_;
 
 /**
 	Deterministic memory manager of constant complexity.
+	
+	Complete memory management utility on top of standard reference counting.
 */
 
 template <typename T>
@@ -157,8 +217,8 @@ template <typename T>
 
         union
         {
-            set * ps_;
-            intrusive_stack::node pn_;
+            set * ps_;								/**< Pointer to the @c set node @c shifted_ptr<> belongs to. */
+            intrusive_stack::node pn_;				/**< Tag used for enlisting a pointer on the heap to later share the @c set it belongs to. */
         };
 
     public:
@@ -166,12 +226,19 @@ template <typename T>
         typedef shifted<value_type>     element_type;
 
 
+		/**
+			Initialization of a pointer living on the stack or proper enlistment if living on the heap.
+			
+			@param	p	New pointee object or pointer to manage.
+			@{
+		*/
+		
         shifted_ptr() : ps_(0)
         {
             if (! owned_base::pool_.is_from(this))
                 ps_ = new set();
             else
-                owned_base::pool_.top(this)->ptrs()->push(& pn_);
+                owned_base::pool_.top(this)->ptrs_.push(& pn_);
         }
 
         template <typename V>
@@ -185,8 +252,8 @@ template <typename T>
                 }
                 else
                 {
-                    owned_base::pool_.top(this)->ptrs()->push(& pn_);
-                    owned_base::pool_.top(this)->inits()->merge(* p->inits());
+                    owned_base::pool_.top(this)->ptrs_.push(& pn_);
+                    owned_base::pool_.top(this)->inits_.merge(p->inits_);
                 }
             }
 
@@ -196,7 +263,7 @@ template <typename T>
                 if (! owned_base::pool_.is_from(this))
                     ps_ = new set();
                 else
-                    owned_base::pool_.top(this)->ptrs()->push(& pn_);
+                    owned_base::pool_.top(this)->ptrs_.push(& pn_);
 
                 ps_->redir(p.ps_);
             }
@@ -206,11 +273,22 @@ template <typename T>
                 if (! owned_base::pool_.is_from(this))
                     ps_ = new set();
                 else
-                    owned_base::pool_.top(this)->ptrs()->push(& pn_);
+                    owned_base::pool_.top(this)->ptrs_.push(& pn_);
 
                 ps_->redir(p.ps_);
             }
 
+		/**
+			@}
+		*/
+
+		/**
+			Affectators & union of 2 @c set s if the pointee is residing the heap.
+			
+			@param	p	New pointee object or pointer to manage.
+			@{
+		*/
+		
         template <typename V>
             shifted_ptr & operator = (shifted<V> * p)
             {
@@ -245,6 +323,10 @@ template <typename T>
                 return operator = <T>(p);
             }
 
+		/**
+			@}
+		*/
+
         void reset()
         {
             release(false);
@@ -256,6 +338,12 @@ template <typename T>
         }
 
     private:
+		/**
+			Release of the pointee object with or without destroying the entire @c set it belongs to.
+			
+			@param	d	Destroy (true) or reuse (false) the @c set it is releasing.
+		*/
+		
         void release(bool d)
         {
             if (! owned_base::pool_.is_from(this))
@@ -281,20 +369,27 @@ template <typename T>
                 base::reset();
         }
 
+		
+		/**
+			Enlist & initialize pointee objects belonging to the same @c set .  This initialization occurs when a pointee object is affected to the first pointer living on the stack it encounters.
+			
+			@param	p	Pointee object to initialize.
+		*/
+		
         void init(owned_base * p)
         {
-            if (p->init())
+            if (p->init_)
                 return;
         
-            for (intrusive_list::iterator<owned_base, & owned_base::init_tag_> i = p->inits()->begin(), j; j = i, ++ j, i != p->inits()->end(); i = j)
+            for (intrusive_list::iterator<owned_base, & owned_base::init_tag_> i = p->inits_.begin(), j; j = i, ++ j, i != p->inits_.end(); i = j)
             {
-                ps_->elements()->push_back(i->set_tag());
+                ps_->elements()->push_back(& i->set_tag_);
                 
-                for (intrusive_stack::iterator<shifted_ptr, & shifted_ptr::pn_> m = i->ptrs()->begin(), n; n = m, ++ n, m != i->ptrs()->end(); m = n)
+                for (intrusive_stack::iterator<shifted_ptr, & shifted_ptr::pn_> m = i->ptrs_.begin(), n; n = m, ++ n, m != i->ptrs_.end(); m = n)
                     m->ps_ = ps_;
             }
             
-            p->init(true);
+            p->init_ = true;
         }
     };
 

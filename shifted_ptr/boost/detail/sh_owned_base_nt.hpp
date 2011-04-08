@@ -63,28 +63,38 @@ class owned_base;
 
 
 /**
-    Syntax helper.
-*/
-
-typedef std::list< numeric::interval<long>, fast_pool_allocator< numeric::interval<long> > > pool_lii;
-
-
-/**
     Allocator wrapper tracking allocations.
+	
+	Pool where all pointee objects are allocated and tracks memory blocks for later enlisting & marking the @c set the pointee object belongs to.
 */
 
 struct pool : boost::pool<>
 {
+	typedef std::list< numeric::interval<long>, fast_pool_allocator< numeric::interval<long> > > pool_lii;	/**< Syntax helper. */
+
 #ifndef BOOST_SH_DISABLE_THREADS
-    thread_specific_ptr<pool_lii> plii_;
+    thread_specific_ptr<pool_lii> plii_;			/**< Thread specific list of memory boundaries. */
 #else
-    std::auto_ptr<pool_lii> plii_;
+    std::auto_ptr<pool_lii> plii_;					/**< List of memory boundaries. */
 #endif
 
+
+	/**
+		Initialization of a pool instance.
+	*/
+	
     pool() : boost::pool<>(1)
     {
         plii_.reset(new pool_lii());
     }
+	
+	
+	/**
+		Tracks the memory boundaries where a pointer belongs to.  Also gets rid of the boundaries that were allocated before the pointer was allocated.
+		
+		@param	p	Pointer that is being tracked.
+		@return		Pointer to the pointee object where @c p belongs to.
+	*/
 	
     owned_base * top(void * p)
     {
@@ -99,6 +109,14 @@ struct pool : boost::pool<>
         return (owned_base *)(plii_->rbegin()->lower());
     }
     
+	
+	/**
+		Pointee object allocator and stacking of the newly allocated memory boundary.
+		
+		@param	s	Size of the memory block to allocate.
+		@return		Address of the newly allocated block.
+	*/
+	
     void * allocate(std::size_t s)
     {
         void * p = ordered_malloc(s);
@@ -108,6 +126,14 @@ struct pool : boost::pool<>
         return p;
     }
 
+	
+	/**
+		Pointee object deallocator and removal of the boundaries that were allocated before the pointer was allocated.
+		
+		@param	p	Address of the memory block to deallocate.
+		@param	s	Size of the memory block.
+	*/
+	
     void deallocate(void * p, std::size_t s)
     {
         pool_lii::reverse_iterator i;
@@ -123,36 +149,31 @@ struct pool : boost::pool<>
 
 
 /**
-	Root class of all pointees.
+	Root class of all pointee objects.
 */
 
 class owned_base : public sp_counted_base
 {
-    bool init_;
-	intrusive_stack ptrs_;
-	intrusive_list inits_;
-
-protected:
-    virtual void dispose() 				                    {} // dummy
-    virtual void * get_deleter( std::type_info const & ti ) { return 0; } // dummy
-
 public:
-    intrusive_list::node set_tag_;
-    intrusive_list::node init_tag_;
+    bool init_;										/**< Flag marking initialization of the pointee object to its @c set . */
+
+	intrusive_stack ptrs_;							/**< Stack of all @c shifted_ptr s on the heap that will later need to be initlialized to a specific @c set . */
+	intrusive_list inits_;							/**< List of all pointee objects that will later need to be initlialized to a specific @c set .*/
+
+    intrusive_list::node set_tag_;					/**< Tag used to enlist to @c set::elements_ . */
+    intrusive_list::node init_tag_;					/**< Tag used to enlist to @c owned_base::inits_ . */
+
 
     owned_base() : init_(false)
     {
         inits_.push_back(& init_tag_); 
     }
 
-    bool init()                                     { return init_; }
-    void init(bool i)                               { init_ = i; }
-    intrusive_stack * ptrs() 						{ return & ptrs_; }
-    intrusive_list * inits()						{ return & inits_; }
-    intrusive_list::node * set_tag() 				{ return & set_tag_; }
-    intrusive_list::node * init_tag() 				{ return & init_tag_; }
+    static pool pool_;								/**< Pool where all pointee objects are allocated from. */
 
-    static pool pool_;
+protected:
+    virtual void dispose() 				                    {} 				/**< dummy */
+    virtual void * get_deleter( std::type_info const & ti ) { return 0; } 	/**< dummy */
 };
 
 
@@ -176,7 +197,7 @@ template <typename T>
     {
         typedef T data_type;
 
-        T elem_; // need alignas<long>
+        T elem_; 									/**< Pointee object.  @note Needs alignas<long>. */
         
     public:
         class roofof;
@@ -189,6 +210,10 @@ template <typename T>
         BOOST_PP_REPEAT_FROM_TO(1, 10, CONSTRUCT_OWNED, shifted)
 
 
+		/**
+			@return		Pointee object address.
+		*/
+		
         data_type * element() 				{ return & elem_; }
         operator data_type & ()             { return * element(); }
         operator data_type const & () const { return * element(); }
@@ -199,21 +224,51 @@ template <typename T>
         }
 
     public:
+		/**
+			Cast operator used by @c shifted_ptr_common::header() .
+		*/
+		
         class roofof
         {
-            shifted<data_type> * p_;
+            shifted * p_;							/**< Address of the @c shifted the element belong to. */
 
         public:
-            roofof(data_type * p) : p_(sh::roofof((data_type shifted<data_type>::*)(& shifted<data_type>::elem_), p)) {}
+			/**
+				Casts from a @c data_type to its parent @c shifted object.
+				
+				@param	p	Address of a @c data_type member object to cast from.
+			*/
+			
+            roofof(data_type * p) : p_(sh::roofof((data_type shifted::*)(& shifted::elem_), p)) {}
             
-            operator shifted<data_type> * () const { return p_; }
+			
+			/**
+				@return		Address of the parent @c shifted object.
+			*/
+			
+            operator shifted * () const { return p_; }
         };
+
         
+		/**
+			Allocates a new @c set using the pool.
+			
+			@param	s	Size of the @c set .
+			@return		Pointer of the new memory block.
+		*/
+		
         void * operator new (size_t s)
         {
             return pool_.allocate(s);
         }
         
+
+		/**
+			Deallocates a @c set from the pool.
+			
+			@param	p	Address of the @c set to deallocate.
+		*/
+		
         void operator delete (void * p)
         {
             pool_.deallocate(p, sizeof(shifted));
@@ -226,7 +281,7 @@ template <>
     {
         typedef void data_type;
 
-        long elem_;
+        long elem_; 									/**< Pointee placeholder.  @note Aligned. */
 
         shifted();
 
@@ -242,14 +297,29 @@ template <>
         virtual void * get_deleter( std::type_info const & ti ) {}
 
     public:
+		/**
+			Cast operator used by @c shifted_ptr_common::header() .
+		*/
+		
         class roofof
         {
-            shifted<data_type> * p_;
+            shifted * p_;							/**< Address of the @c shifted the element belong to. */
 
         public:
-            roofof(data_type * p) : p_(sh::roofof((long shifted<data_type>::*)(& shifted<data_type>::elem_), static_cast<long *>(p))) {}
+			/**
+				Casts from a @c data_type to its parent @c shifted object.
+				
+				@param	p	Address of a @c data_type member object to cast from.
+			*/
+			
+            roofof(data_type * p) : p_(sh::roofof((long shifted::*)(& shifted::elem_), static_cast<long *>(p))) {}
             
-            operator shifted<data_type> * () const { return p_; }
+			
+			/**
+				@return		Address of the parent @c shifted object.
+			*/
+			
+            operator shifted * () const { return p_; }
         };
     };
 
