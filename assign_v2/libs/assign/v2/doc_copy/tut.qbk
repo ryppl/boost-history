@@ -1,0 +1,104 @@
+[heading Requisites]
+
+We assume in this tutorial that all the header files are included, as shown in section [link full_include Organization]
+and
+``
+	using namespace boost::assign::v2;
+``
+
+Headers from other libraries will not be shown in the code snippets of this tutorial, but they can be found in the tutorial's 
+actual [@../../tutorial.cpp source file].
+
+[heading Automatic behavior]
+
+We refer, here, to the [link boost_assign_v2.intro introduction]'s example and recall that the ['interpreter] returned by 
+[link put `__fun_put__`] is variadic and 
+
+* that its arguments are forwarded to a data-generator. See [link data_gen_rules here] for further detail. 
+* determines an appropriate ['modifier], `insert` in case of a map, based on a set of [link modifier_rules rules],
+such that the interface is uniform across different container categories.
+
+[heading Csv syntax]
+
+Consider this example:
+[tutorial_csv_put]
+
+Prefix `csv`[footnote ['csv] stands for comma separated values] indicates an [link csv_put alternative syntax] that is dual to a functor 
+(here, the one returned by `__fun_put__`). Each argument must be convertible to the container's data-member.
+
+Here, the interpreter is invoked over one set of values (`"+"`, `"-"`, etc.), each specified 
+individually, and a [tpl_concept_range range] with a special wrapper around it, `__fun_as_arg_list__`, which instructs the interpreter to 
+process each element individually.  
+
+[heading Pipe syntax]
+
+Suppose we wish to put a set of integers in a container and, in the same statement, pass it through a mutating [tpl_range_algo algorithm]:
+[tutorial_delay_csv_put]
+The vertical bar, `|`, expresses the on-the-fly modification we were looking for, and call it [link boost_assign_v2.reference.pipe ['piping]]
+after the related [tpl_pipe idiom] by the same name. On this topic, it is recommended to read Boost.Range's section on [tpl_range_adaptor range adaptors].
+
+[heading Container generation]
+
+After having assigned `target` and, in the same statement, passed it through a 
+[@http://www.boost.org/doc/libs/1_46_0/libs/range/doc/html/range/reference/algorithms/mutating/stable_partition.html stable partition] algorithm, 
+let's verify the state of the container against that of an in place generated container:
+[tutorial_csv_deque]
+
+In keeping with our previously established ['csv] convention, container generating function [link csv_deque `__fun_csv_deque__`] is paired with a 
+functor form, [link deque `__fun_deque__`]. Another convention, that we now introduce by way of example, is that which governs the generation of an
+empty container:
+
+[tutorial_empty_deque]
+
+[heading Pointer-containers]
+
+To insert elements in a [tpl_ptr_container pointer container], pretend it is a value-container:
+[tutorial_ptr_container]
+
+[heading Options]
+
+Either of the automatically deduced data-generator or the modifier can be overriden by an [link option ['option]].
+In addition to the [link std_modifier  standard modifiers] such as 
+`__kwd_push_back__`,  the library caters to more complex needs, e.g.
+[tutorial_modifier]
+
+Using the functor form, an option is specified using `operator%`. In our example,
+``
+	( put( series ) % ( _iterate = lambda::var( index )++ )( +2 )( -3 )( +3 )( -4 )( +4 )( -5 )( +5 );
+``
+
+Operator `%` also serves to compose options. For [^m] options, this gives : `__compose_options__`.  
+
+Extending the library with a new modifier-option is fairly easy, thanks to [link option_modifier macros] that manage the overhead.
+
+[/* Create a class template, called a ['tag], that identifies the new class of modifiers. The template parameter specifies a variable aspect of the implementation.
+* Specialize a library declared [link interpreter_modifier modifier] on ['tag] to model a concept, with the desired semantics.
+* Register the above by expanding two macros taking as input the desired option name and some meta-information.]
+
+[heading Reference arrays]
+
+In the examples that precede, [link ref_csv_array  `__fun_ref_csv_array__`] could be substituted for `__fun_csv_deque__`. 
+The reciprocal is not true, in general, because [link boost_assign_v2.reference.ref  `__fun_ref_csv_array__`] returns a reference-array. 
+The latter is preferable if the values are expensive to copy, and is necessary for working specifically with references, such as as follows:
+[tutorial_ref_array]
+
+In keeping with our ['csv] convention, [link ref_array  `__fun_ref_csv_array__`] has a functor dual, [link boost_assign_v2.reference.ref  `__fun_ref_array__`].
+Unlike `__fun_put__` or `__fun_deque__`, it is unary (not variadic).
+
+[heading Chaining]
+
+Chaining ranges is already provided as [tpl_range_join `join`] in __url_boost__. Here's a [link chain variant] that caters to reference arrays:
+[tutorial_chain]
+
+It is noteworthy that this algorithm modifies `six`, `seven` and `eight` even though the array returned by `ref::csv_array` is 
+an rvalue. The keyword `ref::_get` is necessary in conjunction with a reference array whose references are to be modified (in read mode, instead, 
+implicit conversion takes care of it). 
+
+[heading Conversion]
+
+[tpl_concept_range Range]-to-container [link converter conversion] is performed as follows:
+[tutorial_converter]
+
+The conversion, here, is implicit, and is made possible by a conversion operator fitted to the object returned by `__fun_converter__`. Sometimes,
+[link convert explicit conversion] is unavoidable and, continuing the above snippet, is illustrated as follows:
+[tutorial_convert]

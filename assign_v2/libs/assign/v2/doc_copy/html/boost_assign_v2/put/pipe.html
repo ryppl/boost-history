@@ -1,0 +1,359 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Pipe</title>
+<link rel="stylesheet" href="../../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="../../index.html" title="Chapter&#160;1.&#160;Boost.Assign 2.0">
+<link rel="up" href="../put.html" title="Put">
+<link rel="prev" href="modifier.html" title="Modifier">
+<link rel="next" href="put.html" title="Put">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../boost.png"></td>
+<td align="center"><a href="../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="modifier.html"><img src="../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../put.html"><img src="../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="put.html"><img src="../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_assign_v2.put.pipe"></a><a class="link" href="pipe.html" title="Pipe">Pipe</a>
+</h3></div></div></div>
+<a name="boost_assign_v2.put.pipe.header"></a><h5>
+<a name="id36355151"></a>
+        <a class="link" href="pipe.html#boost_assign_v2.put.pipe.header">Header</a>
+      </h5>
+<p>
+        
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><a href="../../../../../../../boost/assign/v2/put/pipe.hpp" target="_top">boost/assign/v2/put/pipe.hpp</a><span class="special">&gt;</span>
+</pre>
+<p>
+      </p>
+<a name="boost_assign_v2.put.pipe.description"></a><h5>
+<a name="id36355196"></a>
+        <a class="link" href="pipe.html#boost_assign_v2.put.pipe.description">Description</a>
+      </h5>
+<p>
+        Overloads <code class="computeroutput"><span class="keyword">operator</span><span class="special">|</span></code><sup>[<a name="id36355223" href="#ftn.id36355223" class="footnote">4</a>]</sup>, such as to make <a class="link" href="put.html" title="Put"><code class="computeroutput"><span class="identifier">put</span><span class="special">()</span></code></a>
+        composable.
+      </p>
+<a name="boost_assign_v2.put.pipe.synopsis"></a><h5>
+<a name="id36355269"></a>
+        <a class="link" href="pipe.html#boost_assign_v2.put.pipe.synopsis">Synopsis</a>
+      </h5>
+<p>
+        
+</p>
+<pre class="programlisting"><span class="comment">// put syntax
+</span><span class="keyword">namespace</span> <span class="identifier">put_pipe_aux</span><span class="special">{</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">ParList</span> <span class="special">=</span> <em class="replaceable"><code>unspecified</code></em><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">ArgsList</span> <span class="special">=</span> <em class="replaceable"><code>unspecified</code></em><span class="special">,</span> 	
+    	<span class="keyword">bool</span> <span class="identifier">enable_pars</span> <span class="special">=</span> <span class="identifier">mpl</span><span class="special">::</span><span class="identifier">size</span><span class="special">&lt;</span><span class="identifier">ArgsList</span><span class="special">&gt;::</span><span class="identifier">value</span> <span class="special">==</span> <span class="number">0</span>
+    <span class="special">&gt;</span>
+    <span class="keyword">class</span> <span class="identifier">args_list</span><span class="special">;</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">C</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">ParList</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">ArgsList</span><span class="special">,</span> <span class="keyword">bool</span> <span class="identifier">enable_pars</span><span class="special">&gt;</span>
+    <span class="identifier">C</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">|(</span>
+        <span class="identifier">C</span><span class="special">&amp;</span> <span class="identifier">cont</span><span class="special">,</span>
+        <span class="identifier">put_pipe_aux</span><span class="special">::</span><span class="identifier">args_list</span><span class="special">&lt;</span><span class="identifier">ParList</span><span class="special">,</span> <span class="identifier">ArgsList</span><span class="special">,</span> <span class="identifier">enable_pars</span><span class="special">&gt;</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">args_list_</span>
+    <span class="special">);</span>
+
+<span class="special">}//</span> <span class="identifier">put_pipe_aux</span>
+
+    <span class="identifier">put_pipe_aux</span><span class="special">::</span><span class="identifier">args_list</span><span class="special">&lt;&gt;</span> <span class="keyword">const</span> <span class="identifier">_put</span> <span class="special">=</span> <span class="identifier">put_pipe_aux</span><span class="special">::</span><span class="identifier">args_list</span><span class="special">&lt;&gt;();</span>
+
+<span class="comment">// csv_put syntax
+</span><span class="keyword">namespace</span> <span class="identifier">put_pipe_aux</span><span class="special">{</span>
+
+    <span class="keyword">typedef</span> <em class="replaceable"><code>unspecified</code></em> <span class="identifier">arg_list_size_type</span><span class="special">;</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Pars</span><span class="special">,</span> <span class="identifier">arg_list_size_type</span> <span class="identifier">N</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">U</span><span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">arg_list</span><span class="special">;</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">ParList</span> <span class="special">=</span> <span class="identifier">mpl</span><span class="special">::</span><span class="identifier">vector0</span><span class="special">&lt;&gt;</span> <span class="special">&gt;</span>
+    <span class="keyword">class</span> <span class="identifier">arg_list_generator</span><span class="special">;</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">C</span><span class="special">,</span><span class="keyword">typename</span> <span class="identifier">ParList</span><span class="special">,</span> <span class="identifier">arg_list_size_type</span> <span class="identifier">N</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">U</span><span class="special">&gt;</span>
+    <span class="identifier">C</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">|(</span><span class="identifier">C</span><span class="special">&amp;</span> <span class="identifier">cont</span><span class="special">,</span> <span class="identifier">put_pipe_aux</span><span class="special">::</span><span class="identifier">arg_list</span><span class="special">&lt;</span><span class="identifier">ParList</span><span class="special">,</span> <span class="identifier">N</span><span class="special">,</span> <span class="identifier">U</span><span class="special">&gt;</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">arg_list</span><span class="special">);</span>
+
+<span class="special">}//</span> <span class="identifier">put_pipe_aux</span>
+
+	<span class="identifier">put_pipe_aux</span><span class="special">::</span><span class="identifier">arg_list_generator</span><span class="special">&lt;&gt;</span> <span class="keyword">const</span> <span class="identifier">_csv_put</span><span class="special">;</span>
+
+</pre>
+<p>
+      </p>
+<a name="boost_assign_v2.put.pipe.semantics"></a><h5>
+<a name="id36356060"></a>
+        <a class="link" href="pipe.html#boost_assign_v2.put.pipe.semantics">Semantics</a>
+      </h5>
+<p>
+        <span class="bold"><strong>Notation</strong></span>
+      </p>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term"><code class="computeroutput">t<span class="number">1</span><span class="special">,</span>
+          <span class="special">...,</span> tn</code></span></dt>
+<dd><p>
+              Indivual elements of the argument list, <code class="computeroutput"><span class="identifier">args</span><span class="special">...</span></code>
+            </p></dd>
+<dt><span class="term"> <code class="computeroutput">p1, ..., pm</code> </span></dt>
+<dd><p>
+              Parameters passed in the right hand side of <code class="computeroutput"><span class="keyword">operator</span><span class="special">%</span></code>. The special case <code class="literal">m = 0</code>
+              means an empty list
+            </p></dd>
+</dl>
+</div>
+<p>
+        <span class="bold"><strong>Invocation</strong></span>
+      </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Expression
+                </p>
+              </th>
+<th>
+                <p>
+                  Returns
+                </p>
+              </th>
+<th>
+                <p>
+                  Description
+                </p>
+              </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                <p>
+                  
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="special">(</span> _csv_put % p1 ... % pm <span class="special">)(</span> <span class="identifier">args</span><span class="special">...</span> <span class="special">)</span>
+</pre>
+<p>
+                </p>
+              </td>
+<td>
+                <p>
+                  Returns an instance of <code class="computeroutput"><span class="identifier">put_pipe_aux</span><span class="special">::</span><span class="identifier">arg_list</span><span class="special">&lt;&gt;</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  Keeps the arguments by reference (no copying)
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="special">(</span> _put % p1 ... % pm <span class="special">)(</span> <span class="identifier">args1</span><span class="special">...</span> <span class="special">)...(</span>
+                  <span class="identifier">argsn</span><span class="special">...</span>
+                  <span class="special">)</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  Returns an instance of <code class="computeroutput"><span class="identifier">put_pipe_aux</span><span class="special">::</span><span class="identifier">args_list</span><span class="special">&lt;&gt;</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  Keeps the arguments of each invocation by reference (no copying)
+                </p>
+              </td>
+</tr>
+</tbody>
+</table></div>
+<p>
+        <span class="bold"><strong>Notation</strong></span>
+      </p>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term"><code class="computeroutput"><span class="identifier">arg_list</span></code></span></dt>
+<dd><p>
+              Result of <code class="computeroutput"><span class="special">(</span> _csv_put % p1 ...
+              % pm <span class="special">)(</span> <span class="identifier">args</span><span class="special">...</span> <span class="special">)</span></code>
+            </p></dd>
+<dt><span class="term"><code class="computeroutput"><span class="identifier">args_list</span></code></span></dt>
+<dd><p>
+              Result of <code class="computeroutput"><span class="special">(</span> _put % p1 ... % pm
+              <span class="special">)(</span> <span class="identifier">args1</span><span class="special">...</span> <span class="special">)...(</span>
+              <span class="identifier">argsn</span><span class="special">...</span>
+              <span class="special">)</span></code>
+            </p></dd>
+</dl>
+</div>
+<p>
+        <span class="bold"><strong>Operator|</strong></span>
+      </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Symbol
+                </p>
+              </th>
+<th>
+                <p>
+                  Description
+                </p>
+              </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput">cont <span class="special">|</span> <span class="identifier">arg_list</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="special">(</span> put<span class="special">(</span> cont <span class="special">)</span> <span class="special">%</span> <span class="identifier">p1</span> <span class="special">...</span> <span class="special">%</span> <span class="identifier">pm</span> <span class="special">)(</span> t<span class="number">1</span> <span class="special">)...(</span> tn <span class="special">).</span><span class="identifier">container</span><span class="special">()</span>
+</pre>
+<p>
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput">cont <span class="special">|</span> <span class="identifier">args_list</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="special">(</span> put<span class="special">(</span> cont <span class="special">)</span> <span class="special">%</span> <span class="identifier">p1</span> <span class="special">...</span> <span class="special">%</span> <span class="identifier">pm</span> <span class="special">)(</span> <span class="identifier">args1</span> <span class="special">)...(</span> <span class="identifier">argsn</span> <span class="special">).</span><span class="identifier">container</span><span class="special">()</span>
+</pre>
+<p>
+                </p>
+              </td>
+</tr>
+</tbody>
+</table></div>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../doc/src/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+          The semantics above are borrowed from <a href="http://svn.boost.org/svn/boost/trunk/libs/range/doc/html/range/reference/adaptors.html" target="_top">range
+          adaptors</a>, but they differ in that the latter transforms a range,
+          whereas, here, the state of a container is modified. In each case, however,
+          composability follows, which is explained <a href="http://svn.boost.org/svn/boost/trunk/libs/range/doc/html/range/reference/adaptors/introduction.html#range.reference.adaptors.introduction.composition_of_adaptors" target="_top">here</a>
+        </p></td></tr>
+</table></div>
+<a name="boost_assign_v2.put.pipe.example"></a><h5>
+<a name="id36356802"></a>
+        <a class="link" href="pipe.html#boost_assign_v2.put.pipe.example">Example</a>
+      </h5>
+<a name="ex_put_pipe"></a><p>
+        <span class="bold"><strong>Example 1</strong></span>
+      </p>
+<p>
+        
+</p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="keyword">const</span> <span class="keyword">char</span><span class="special">*</span> <span class="identifier">T</span><span class="special">;</span> <span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">str_</span><span class="special">;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">deque</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">cont</span><span class="special">;</span>
+<span class="identifier">assert</span><span class="special">(</span> 
+    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">range</span><span class="special">::</span><span class="identifier">equal</span><span class="special">(</span>
+        <span class="identifier">cont</span> <span class="special">|</span> <a class="co" name="boost_assign_v228co" href="pipe.html#boost_assign_v228"><img src="../../../../doc/src/images/callouts/1.png" alt="1" border="0"></a><span class="identifier">as2</span><span class="special">::</span><span class="identifier">_csv_put</span><span class="special">(</span> <span class="string">"x"</span><span class="special">,</span> <span class="string">"y"</span><span class="special">,</span> <span class="string">"z"</span> <span class="special">),</span>
+        <span class="identifier">as2</span><span class="special">::</span><span class="identifier">csv_deque</span><span class="special">(</span> <span class="string">"x"</span> <span class="special">)(</span> <span class="string">"y"</span> <span class="special">)(</span> <span class="string">"z"</span> <span class="special">)</span>
+    <span class="special">)</span>
+<span class="special">);</span>
+<span class="identifier">assert</span><span class="special">(</span> <span class="identifier">str_</span><span class="special">(</span> <span class="identifier">cont</span><span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">)</span> <span class="special">==</span> <span class="string">"y"</span> <span class="special">);</span>
+<span class="identifier">assert</span><span class="special">(</span> <span class="identifier">str_</span><span class="special">(</span> <span class="identifier">cont</span><span class="special">[</span><span class="number">2</span><span class="special">]</span> <span class="special">)</span> <span class="special">==</span> <span class="string">"z"</span> <span class="special">);</span>
+</pre>
+<p>
+      </p>
+<div class="calloutlist"><table border="0" summary="Callout list"><tr>
+<td width="5%" valign="top" align="left"><p><a name="boost_assign_v228"></a><a href="#boost_assign_v228co"><img src="../../../../doc/src/images/callouts/1.png" alt="1" border="0"></a> </p></td>
+<td valign="top" align="left"><p>
+            <code class="computeroutput"><span class="string">"x"</span></code>, <code class="computeroutput"><span class="string">"y"</span></code> and <code class="computeroutput"><span class="string">"z"</span></code>
+            are kept as <code class="computeroutput"><span class="keyword">const</span> <span class="keyword">char</span><span class="special">(&amp;)[</span><span class="number">2</span><span class="special">]</span></code>
+          </p></td>
+</tr></table></div>
+<p>
+        <span class="bold"><strong>Example 2</strong></span>
+      </p>
+<p>
+        
+</p>
+<pre class="programlisting"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">array</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="number">2</span><span class="special">&gt;</span> <span class="identifier">interval</span><span class="special">;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">array</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="number">6</span><span class="special">&gt;</span> <span class="identifier">all6</span><span class="special">;</span>
+<span class="identifier">BOOST_ASSIGN_V2_CHECK</span><span class="special">(</span>
+    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">range</span><span class="special">::</span><span class="identifier">equal</span><span class="special">(</span>
+        <span class="identifier">all6</span> <span class="special">|</span> <span class="identifier">as2</span><span class="special">::</span><span class="identifier">_put</span><span class="special">(</span> <span class="number">1</span> <span class="special">)(</span> <span class="number">2</span> <span class="special">)(</span> <span class="identifier">as2</span><span class="special">::</span><span class="identifier">_as_arg_list</span><span class="special">(</span> <span class="identifier">interval</span> <span class="special">|</span> <span class="identifier">as2</span><span class="special">::</span><span class="identifier">_csv_put</span><span class="special">(</span> <span class="number">3</span><span class="special">,</span> <span class="number">4</span> <span class="special">)</span> <span class="special">)</span> <span class="special">)(</span> <span class="number">5</span> <span class="special">)(</span> <span class="number">6</span> <span class="special">),</span>
+        <span class="identifier">as2</span><span class="special">::</span><span class="identifier">csv_deque</span><span class="special">(</span> <span class="number">1</span><span class="special">,</span> <span class="number">2</span><span class="special">,</span> <span class="number">3</span><span class="special">,</span> <span class="number">4</span><span class="special">,</span> <span class="number">5</span><span class="special">,</span> <span class="number">6</span> <span class="special">)</span>
+    <span class="special">)</span>
+<span class="special">);</span>
+<span class="identifier">BOOST_ASSIGN_V2_CHECK</span><span class="special">(</span>
+    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">range</span><span class="special">::</span><span class="identifier">equal</span><span class="special">(</span> <span class="identifier">interval</span><span class="special">,</span> <span class="identifier">as2</span><span class="special">::</span><span class="identifier">csv_deque</span><span class="special">(</span> <span class="number">3</span><span class="special">,</span> <span class="number">4</span> <span class="special">)</span> <span class="special">)</span>
+<span class="special">);</span>
+</pre>
+<p>
+      </p>
+<p>
+        <span class="bold"><strong>Example 3</strong></span>
+      </p>
+<p>
+        
+</p>
+<pre class="programlisting"><span class="identifier">std</span><span class="special">::</span><span class="identifier">deque</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">powers</span><span class="special">;</span> <span class="keyword">int</span> <span class="identifier">front</span> <span class="special">=</span> <span class="special">(</span>
+    <span class="identifier">powers</span> <span class="special">|</span> <span class="special">(</span> <span class="identifier">as2</span><span class="special">::</span><span class="identifier">_csv_put</span> <span class="special">%</span> <span class="identifier">as2</span><span class="special">::</span><span class="identifier">_push_front</span> <span class="special">)(</span> <span class="number">16</span><span class="special">,</span> <span class="number">8</span><span class="special">,</span> <span class="number">4</span><span class="special">,</span> <span class="number">2</span><span class="special">,</span> <span class="number">1</span> <span class="special">)</span>
+<span class="special">).</span><span class="identifier">front</span><span class="special">();</span>
+
+<span class="identifier">assert</span><span class="special">(</span> <span class="identifier">front</span> <span class="special">==</span> <span class="number">1</span>  <span class="special">);</span>
+<span class="identifier">assert</span><span class="special">(</span> <span class="identifier">powers</span><span class="special">[</span><span class="number">4</span><span class="special">]</span> <span class="special">==</span> <span class="number">16</span> <span class="special">);</span>
+</pre>
+<p>
+      </p>
+<div class="footnotes">
+<br><hr width="100" align="left">
+<div class="footnote"><p><sup>[<a name="ftn.id36355223" href="#id36355223" class="para">4</a>] </sup>
+          The reason for calling it <span class="emphasis"><em>pipe</em></span> rather than <span class="emphasis"><em>bitwise
+          or</em></span>, the C++ convention, is that the former speaks better to
+          the semantics that it implements in this particular context, in reference
+          to the <a href="http://en.wikipedia.org/wiki/Vertical_bar#Pipe" target="_top">idiom</a>
+          by the same name.
+        </p></div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2003 -2004 Thorsten Ottosen, 2010 Erwann Rogard<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="modifier.html"><img src="../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../put.html"><img src="../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="put.html"><img src="../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

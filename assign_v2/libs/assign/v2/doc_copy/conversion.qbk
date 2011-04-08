@@ -1,0 +1,69 @@
+[import ../test/conversion.cpp]
+
+[tpl_module
+	[@../../../../../boost/assign/v2/conversion.hpp boost/assign/v2/conversion.hpp]
+	..Range-to-container conversion
+]
+
+[section:convert Convert]
+[#convert]
+
+[heading Header]
+[@../../../../../boost/assign/v2/conversion/convert.hpp [^boost/assign/v2/conversion/convert.hpp]]
+
+[heading Description]
+Explicit conversion.
+
+[heading Synopsis]
+[import ../../../../boost/assign/v2/conversion/convert.hpp]
+[syntax_conversion_convert]
+
+
+[heading Semantics]
+[*Expressions]
+
+`__range__ | __fun_convert__<__cont_type__>()` is defined as the switch below:
+
+[table
+	[[Case][Statement]]
+	[
+		[`__cont_type__` is either an [tpl_boost_array Array] or an [tpl_stl_adapter Adapter]]
+		[`__cont_type__ __cont__; __fun_csv_put__( cont, __fun_as_arg_list__( __range__ ) )` and returns `__cont__`]
+	]
+	[
+		[`__cont_type__` is a [tpl_multi_array multi_array]]
+		[`__cont_type__ __cont__( arg ); __fun_csv_put__( cont, __fun_as_arg_list__( __range__ ) )` and returns `__cont__`]
+	]
+	[
+		[Otherwise]
+		[`__cont_type__( begin( __range__ ), end( __range__ ) )`]
+	]
+]
+
+[heading Example]
+[*Example 1]
+[test_convert]
+
+[endsect][/convert]
+[section:converter Converter]
+[#converter]
+
+[heading Header]
+[@../../../../../boost/assign/v2/utility/conversion/converter.hpp boost/assign/v2/utility/conversion/converter.hpp]
+
+[heading Description]
+Implicit conversion.
+
+[heading Synopsis]
+[import ../../../../boost/assign/v2/conversion/converter.hpp]
+[syntax_conversion_converter]
+
+[heading Example]
+[*Example 1]
+[test_converter]
+[*Example 2]
+[test_converter_multi_array]
+[*Example 3]
+[test_conversion_matrix3x3]
+
+[endsect][/converter]
