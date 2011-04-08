@@ -31,7 +31,6 @@
 #include <boost/progress.hpp>
 #include <boost/range/algorithm/for_each.hpp>
 #include <boost/static_assert.hpp>
-#//include <boost/typeof/typeof.hpp>
 
 #include <libs/assign/v2/speed/tools.h>
 #include <libs/assign/v2/speed/test.h>
@@ -180,11 +179,15 @@ void fill_vec_stat(std::size_t scale_factor,
         n, elapsed, cont, std::forward<Args>( args )... ),
        "v2_put"
     )
+    MACRO( as2::speed_aux::v2_csv_put<timer_>(
+        n, elapsed, cont, std::forward<Args>( args )... ),
+       "v2_csv_put"
+    )
     //MACRO( as2::speed_aux::v2_pipe_put<timer_>(
     //    n, elapsed, cont, std::forward<Args>( args )... ),
     //   "v2_pipe_put"
     //)
-    MACRO( as2::speed_aux::v2_pipe_csv_put<timer_>(
+    MACRO( as2::speed_aux::v2_delay_csv_put<timer_>(
         n, elapsed, cont, std::forward<Args>( args )... ),
        "v2_pipe_csv_put"
     )
@@ -224,6 +227,7 @@ void fill_vec_stat(std::size_t scale_factor,
 void test( std::ostream& os )
 {
     namespace lambda = boost::lambda;
+    typedef std::string str_;
     const std::size_t T_size = 1000;
     typedef std::vector<int> T; boost::array<T, 128> args_list;
     typedef std::deque<T> C;
@@ -238,42 +242,43 @@ void test( std::ostream& os )
 
     BOOST_STATIC_ASSERT( total_sz/(128 * n) > 0); // Invariant : k * n * m = total_sz;
 
-    std::map<std::string, std::string> cols;
-    cols["stl_push_back"] =   "cont.push_back( arg1 ); ...; cont.push_back( argm )";
-    cols["v1_push_back"] =    "assign::push_back( cont )( arg1 )...( argm )";
-    cols["v2_put"] =          "assign::v2::put( cont )( arg1 )...( argm )";
-    //cols["v2_pipe_put"] =     "cont | assign::v2::_put( arg1 )...( argm )";
-    cols["v2_pipe_csv_put"] = "cont | assign::v2::_csv_put( args... )";
-    cols["v1_list_of"] =      "assign::list_of( arg1 )...( argm )";
-    cols["v2_deque"] =        "assign::v2::deque<T>( arg1 )...( argm )";
-    cols["v2_csv_deque"] =    "assign::v2::csv_deque( args... )";
-    cols["v1_cref_list_of"] = "assign::cref_list_of<m>( arg1 )...( argm )";
-    cols["v2_ref_array"] =    "assign::v2::ref::array( arg1 )...( argm )";
-    cols["v2_ref_csv_array"] = "assign::v2::ref::csv_array( args...)";
+    std::map<str_, str_> cols;
+    cols["stl_push_back"] 		= 	"cont.push_back( arg1 ); ...; cont.push_back( argm )";
+    cols["v1_push_back"] 		=   "push_back( cont )( arg1 )...( argm )";
+    cols["v2_put"] 			=   "v2::put( cont )( arg1 )...( argm )";
+    //cols["v2_pipe_put"] 		=   "cont | v2::_put( arg1 )...( argm )";
+    cols["v2_csv_put"] 		= 	"cont | v2::csv_put( cont, args )";
+    cols["v2_pipe_csv_put"] 	= 	"cont | v2::delay_csv_put( v2::ref::csv_array( args... ) )";
+    cols["v1_list_of"] 		=   "list_of( arg1 )...( argm )";
+    cols["v2_deque"] 			=   "v2::deque<T>( arg1 )...( argm )";
+    cols["v2_csv_deque"] 		=   "v2::csv_deque( args... )";
+    cols["v1_cref_list_of"] 	= 	"cref_list_of<m>( arg1 )...( argm )";
+    cols["v2_ref_array"] 		=   "v2::ref::array( arg1 )...( argm )";
+    cols["v2_ref_csv_array"]	= 	"v2::ref::csv_array( args...)";
 
     boost::format fn("%1% : %|30t|%2%\n");
-    boost::format title("[%|=80|]\n");
-    std::string delimiter = ( boost::format("[%|=80|]\n") % " " ).str();
+    boost::format title("[%|=90|]\n");
+    str_ delimiter = ( boost::format("[%|=90|]\n") % " " ).str();
 
     os << (title % "Machine").str();
     os << BOOST_PLATFORM << std::endl << BOOST_COMPILER << std::endl << std::endl;
 
-    std::map<std::string, std::string> defs;
+    std::map<str_, str_> defs;
     boost::format fstat("%1% value of %1% * var_scaled, over k repetitions");
-    defs["T"] = "std::vector<int>";
-    defs["n"] = "Control a number of loops";
-    defs["k"] = "Control a number of loops";
-    defs["args..."] = "list of arguments, each of type T and max size ";
-    defs["args..."] += ( boost::format("%1%") % T_size ).str();
-    defs["var"] = "time to eval method(args...) n times";
-    defs["var_scaled"] = ( boost::format("%1% * var") % scale_factor ).str();
-    defs["m"] = "size(args...)";
-    defs["min"] = ( fstat % "min" ).str();
-    defs["average"] = ( fstat % "average" ).str();
-    defs["min"] = ( fstat % "max" ).str();
-    defs["cumulated"] = ( fstat % "cumulate" ).str();
+    defs["T"] 			= "std::vector<int>";
+    defs["n"] 			= "Control a number of loops";
+    defs["k"] 			= "Control a number of loops";
+    defs["args..."] 	= "list of arguments, each of type T and max size ";
+    defs["args..."] 	+= ( boost::format("%1%") % T_size ).str();
+    defs["var"] 		= "time to eval method(args...) n times";
+    defs["var_scaled"] 	= ( boost::format("%1% * var") % scale_factor ).str();
+    defs["m"] 			= "size(args...)";
+    defs["min"] 		= ( fstat % "min" ).str();
+    defs["average"] 	= ( fstat % "average" ).str();
+    defs["min"] 		= ( fstat % "max" ).str();
+    defs["cumulated"] 	= ( fstat % "cumulate" ).str();
 
-    std::string notation = ( title % "Notation").str()
+    str_ notation = ( title % "Notation").str()
         + (fn % "T" % defs["T"]).str()
         + (fn % "n" % defs["n"]).str()
         + (fn % "k" % defs["k"]).str()
@@ -291,20 +296,28 @@ void test( std::ostream& os )
     os << std::endl << (title % "Methods").str();
     {
         boost::format f("%1% : %|30t|%2%\n");
-        os
-            << ( title % "Assign" ).str()
-            << ( f %"stl_push_back" % cols["stl_push_back"] ).str()
-            << ( f % "v1_push_back"% cols["v1_push_back"] ).str()
-            << ( f % "v2_put" % cols["v2_put"] ).str()
-            //<< ( f % "v2_pipe_put" % cols["v2_pipe_put"] ).str()
-            << ( f % "v2_pipe_csv_put" % cols["v2_pipe_csv_put"] ).str()
-            << ( title % "Generate" ).str()
-            << ( f % "v1_list_of" % cols["v1_list_of"] ).str()
-            << ( f % "v2_deque" % cols["v2_deque"] ).str()
-            << ( f % "v2_csv_deque" % cols["v2_csv_deque"] ).str()
-            << ( f % "v1_cref_list_of" % cols["v1_cref_list_of"] ).str()
-            << ( f % "v2_ref_array" % cols["v2_ref_array"] ).str()
-            << ( f % "v2_ref_csv_array" % cols["v2_ref_csv_array"] ).str();
+
+        std::vector<str_> methods;
+
+        methods.push_back( "stl_push_back" );
+        methods.push_back( "v1_push_back" );
+        methods.push_back( "v2_put" );
+        methods.push_back( "v2_csv_put" );
+        methods.push_back( "v2_pipe_csv_put" );
+
+        methods.push_back( "v1_list_of" );
+        methods.push_back( "v2_deque" );
+        methods.push_back( "v2_csv_deque" );
+
+        methods.push_back( "v1_cref_list_of" );
+        methods.push_back( "v2_ref_array" );
+        methods.push_back( "v2_ref_csv_array" );
+
+        for(int i = 0; i!= methods.size(); i++ )
+        {
+        	str_ method = methods[i];
+            os << ( f % method % cols[ method ] ).str();
+        }
     }
     os << std::endl<< (title % "Results").str();
 

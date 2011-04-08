@@ -9,7 +9,6 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_PUT_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_ER_2010_HPP
-//#include <boost/assign/v2/put/delay_csv_put.hpp> TODO
 #include <boost/assign/v2/put/csv_put.hpp>
 #include <boost/assign/v2/put/put.hpp>
 
