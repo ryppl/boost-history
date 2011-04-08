@@ -7,7 +7,7 @@
 #ifndef BOOST_LOCAL_AUX_FUNCTION_CODE_BINDING_HPP_
 #define BOOST_LOCAL_AUX_FUNCTION_CODE_BINDING_HPP_
 
-#include "param.hpp"
+#include "bind_this.hpp"
 #include "../../symbol.hpp"
 #include "../../scope_exit/scope_exit.hpp" // Use this lib's ScopeExit impl.
 #include "../../preprocessor/sign/params_any_bind.hpp"
@@ -19,23 +19,28 @@
 
 // PRIVATE //
 
+// Adapted from `BOOST_SCOPE_EXIT_AUX_TAG_DECL()`.
+#define BOOST_LOCAL_AUX_FUNCTION_CODE_BINDING_TAG_DECL_(r, id, i, var) \
+    typedef void (*BOOST_SCOPE_EXIT_AUX_TAG(id,i))(int \
+            BOOST_LOCAL_AUX_FUNCTION_CODE_BIND_THIS_RENAME(var));
+
 // Adapted from `BOOST_SCOPE_EXIT_AUX_IMPL()`.
 #define BOOST_LOCAL_AUX_FUNCTION_CODE_BINDING_WITH_TAGS_SEQ_( \
         all_binds, has_any_bind_this, id, typename_keyword) \
     /* binding tags */ \
     BOOST_PP_EXPR_IIF(has_any_bind_this, \
         BOOST_SCOPE_EXIT_TYPEDEF_TYPEOF_THIS() \
-        BOOST_LOCAL_AUX_FUNCTION_CODE_PARAM_THIS_TYPE(id); \
+        BOOST_LOCAL_AUX_FUNCTION_CODE_BIND_THIS_TYPE(id); \
     ) \
-    BOOST_PP_LIST_FOR_EACH_I(BOOST_LOCAL_AUX_FUNCTION_CODE_PARAM_TAG_DECL, \
+    BOOST_PP_LIST_FOR_EACH_I(BOOST_LOCAL_AUX_FUNCTION_CODE_BINDING_TAG_DECL_, \
             id, all_binds) \
     BOOST_PP_LIST_FOR_EACH_I(BOOST_SCOPE_EXIT_AUX_CAPTURE_DECL, \
             (id, typename_keyword), all_binds) \
     /* binding class */ \
     struct BOOST_SCOPE_EXIT_AUX_PARAMS_T(id) { \
         BOOST_PP_EXPR_IIF(has_any_bind_this, \
-            BOOST_LOCAL_AUX_FUNCTION_CODE_PARAM_THIS_TYPE(id) \
-            BOOST_LOCAL_AUX_FUNCTION_CODE_PARAM_THIS_NAME; \
+            BOOST_LOCAL_AUX_FUNCTION_CODE_BIND_THIS_TYPE(id) \
+            BOOST_LOCAL_AUX_FUNCTION_CODE_BIND_THIS_NAME; \
         ) \
         BOOST_PP_LIST_FOR_EACH_I(BOOST_SCOPE_EXIT_AUX_PARAM_DECL, \
                 (id, typename_keyword), all_binds) \

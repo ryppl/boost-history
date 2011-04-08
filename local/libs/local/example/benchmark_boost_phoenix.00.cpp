@@ -3,36 +3,50 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <cassert>
 
-#define N 10000
+#define N 1e4
+#define S N * 1e2
 
-int f() { return -1; }
+template<typename T>
+struct number_interface { 
+    virtual T complement(T x) = 0; 
+};
+
+template<typename T>
+struct number: number_interface<T> {
+    T complement(T x) { return -x; } 
+};
+
+const double& identity(const double& x) { return x; }
 
 int main() {
     using boost::phoenix::let;
-    using boost::phoenix::local_names::_f;
-    using boost::phoenix::cref;
     using boost::phoenix::ref;
+    using boost::phoenix::cref;
     using boost::phoenix::arg_names::_1;
-    using boost::phoenix::val;
+    using boost::phoenix::local_names::_f;
+    using boost::phoenix::local_names::_x;
+    using boost::phoenix::bind;
 
     double sum = 0.0;
-    int factor = 10;
+    int factor = 1;
+    const double& (*p)(const double&) = &identity;
+    number<double> d;
 
-    struct l {
-        double f(const double& x) { return x; }
-    } ll;
-
-    std::vector<double> v(N * 100);
-    std::fill(v.begin(), v.end(), 10);
+    std::vector<double> v(S);
+    std::fill(v.begin(), v.end(), 1.0);
 
     for (size_t n = 0; n < N; ++n) {
-        std::for_each(v.begin(), v.end(), (
-            ref(sum) += factor * ll.f(1.0 * _1)
-        ));
+        std::for_each(v.begin(), v.end(), let(_f = cref(factor), _x = 0.0)[
+            _x = _f * bind(&identity, _1),
+            _x = -bind(&number<double>::complement, d, _x),
+            ref(sum) += bind(p, _x)
+        ]);
     }
 
     std::cout << sum << std::endl;
+    assert(sum == N * S);
     return 0;
 }
 
