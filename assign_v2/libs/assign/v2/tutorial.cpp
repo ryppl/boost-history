@@ -48,17 +48,23 @@ namespace tutorial_assign_v2{
         }
         {
             //[tutorial_delay_csv_put
-            std::deque<int> source( 6 ), sorted; iota( source, 0 );
+            std::deque<int> source( 6 ), target; iota( source, 0 );
             
             range::stable_partition( 
-            	sorted | delay_csv_put( source ), 
+                target | delay_csv_put( source ), 
                 lambda::_1 % 2 
             );
             //]
             //[tutorial_csv_deque
-            assert( 
-                range::equal( sorted, csv_deque(1, 3, 5, 0, 2, 4) ) 
+            assert(    
+                range::equal( target, csv_deque(1, 3, 5, 0, 2, 4) ) 
             );
+            //]
+        }
+        {
+            //[tutorial_empty_deque
+            assert( deque<int>( _nil ).size() == 0 );	// Functor form
+            assert( csv_deque<int>().size() == 0 );		// Csv form
             //]
         }
         {
@@ -102,7 +108,9 @@ namespace tutorial_assign_v2{
             typedef std::queue<int> C;
             
             C fifo = converter( csv_deque( 1, 2, 3 ) );
-            assert( fifo.front() == 1 ); assert( fifo.back() == 3 );
+            
+            assert( fifo.front() == 1 ); 
+            assert( fifo.back() == 3 );
             //]
 
             //[tutorial_convert
@@ -118,7 +126,7 @@ namespace tutorial_assign_v2{
             const char y[4] = { 'b', 'a', 'r', '\0' };
             word_ z = "***baz";
             std::map<int, word_> map;
-            put( map )/*<<Calls `map.insert( 1, str_( foo, 3 ) )`>>*/( 1, x, 3 )( 2, y )( 3, z, 3, 3 )( 4, "qux");
+            put( map )/*<<Calls `map.insert( 1, word_( x, 3 ) )`>>*/( 1, x, 3 )( 2, y )( 3, z, 3, 3 )( 4, "qux");
 
             assert( map[1] == "foo" ); assert( map[2] == "bar" );
             assert( map[3] == "baz" ); assert( map[4] == "qux" );

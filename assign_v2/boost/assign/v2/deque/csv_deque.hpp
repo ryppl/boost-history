@@ -45,7 +45,7 @@ namespace result_of{
     {}/*->*/;
 
     template<typename Os, typename T>
-    struct csv_deque_option/*<-*/    
+    struct csv_deque_option/*<-*/
         : modulo_result<
             typename result_of::csv_deque<T>::type,
             Os
@@ -58,23 +58,20 @@ namespace result_of{
     typename result_of::csv_deque<T>::type
     csv_deque()/*<-*/{
         return typename result_of::csv_deque<T>::type();
-    }/*->*/;
+    }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
 //<-
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 //->
-        
-    // Explicit T
-    
-    template<typename T, typename U, typename... Args>
+    template<typename T, typename... Args>
     typename boost::lazy_disable_if<
-        is_option_crtp_cpp0x<U>,
+        is_option_crtp_cpp0x<T>,
         result_of::csv_deque<T>
     >::type
-    csv_deque(U&& u, Args&& ...  args)/*<-*/
+    csv_deque(T&& t, Args&& ...  args)/*<-*/
     {
         typename result_of::csv_deque<T>::type result;
-        csv( result, std::forward<U>( u ), std::forward<Args>( args )... );
+        csv( result, std::forward<T>( t ), std::forward<Args>( args )... );
         return result;
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
@@ -83,43 +80,14 @@ namespace result_of{
         is_option_crtp<O>,
         result_of::csv_deque_option<O, T>
     >::type
-    csv_deque(O const& options, Args&& ...  args)/*<-*/
+    csv_deque(O const& options, T&& t, Args&& ...  args)/*<-*/
     {
         typedef typename result_of::csv_deque<T>::type before_op_;
         typename result_of::csv_deque_option<
             O, T
         >::type result = before_op_() % options;
-        csv( result, std::forward<Args>( args )... );
+        csv( result, std::forward<T>( t ), std::forward<Args>( args )... );
         return result;
-    }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
-
-    // Implicit T
-    
-    template<typename T, typename... Args>
-    typename boost::lazy_disable_if<
-        is_option_crtp_cpp0x<T>,
-        result_of::csv_deque<T>
-    >::type
-    csv_deque(T&& t, Args&& ...  args)/*<-*/
-    {
-        csv_deque<T>( 
-            std::forward<T>( t ), 
-            std::forward<Args>( args )... 
-        );
-    }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
-
-    template<typename O, typename T, typename... Args>
-    typename boost::lazy_enable_if
-        is_option_crtp<O>,
-        result_of::csv_deque_option<Os, T>
-    >::type
-    csv_deque(O const& options, T&& t, Args&& ...  args)/*<-*/
-    {
-        csv_deque<T>( 
-            options, 
-            std::forward<T>( t ), 
-            std::forward<Args>( args )... 
-        );
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
 //<-
@@ -143,7 +111,7 @@ namespace result_of{
     {}/*->*/;
 
     template<typename Os, typename T>
-    struct csv_deque_option/*<-*/    
+    struct csv_deque_option/*<-*/
         : interpreter_aux::result_of::csv_deque_option<Os, T>
     {}/*->*/;
 

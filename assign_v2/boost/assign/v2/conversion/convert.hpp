@@ -34,10 +34,10 @@ namespace conversion_aux{
         return cont;
     }
 
-	template<typename C, typename Arg>
+    template<typename C, typename Arg>
     Arg const& initializer( Arg const& arg )
     {
-    	return arg;
+        return arg;
     }
 
     template<typename C, typename Arg, typename R>
@@ -75,7 +75,7 @@ namespace conversion_aux{
     template<typename C, typename Arg = nil_>
     struct convert/*<-*/{
     
-    	convert(){}
+        convert(){}
         convert(Arg arg):arg_( arg ){}
         
         Arg const& arg()const{ return this->arg_; }
@@ -93,23 +93,23 @@ namespace conversion_aux{
 
 }// conversion_aux
 
-	template<typename C, typename Arg = nil_>
-	struct convert/*<-*/
-    	: conversion_aux::convert<C, Arg>
+    template<typename C, typename Arg = nil_>
+    struct convert/*<-*/
+        : conversion_aux::convert<C, Arg>
     {
     
-    	typedef conversion_aux::convert<C> super_t;
+        typedef conversion_aux::convert<C> super_t;
         
-    	convert()/*<-*/{}/*->*/
+        convert()/*<-*/{}/*->*/
         convert(Arg const& arg)
-        	: super_t( arg )
+            : super_t( arg )
         {}
                 
         template<typename Arg1>
         convert<C, Arg1>
         operator+=(Arg1 const& arg1)
         {
-        	return convert<C, Arg1>( arg1 );
+            return convert<C, Arg1>( arg1 );
         }
     
     }/*->*/;

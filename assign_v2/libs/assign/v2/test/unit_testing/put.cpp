@@ -13,8 +13,8 @@
 #include <boost/test/test_tools.hpp>
 #define BOOST_ASSIGN_V2_CHECK( p ) BOOST_CHECK( p )
 
+#include <libs/assign/v2/test/put/put.cpp> // has to come first as overrides LIMIT_CSV_ARITY
 #include <libs/assign/v2/test/put/ptr.cpp>
-#include <libs/assign/v2/test/put/put.cpp>
 
 #include <boost/test/unit_test.hpp>
 using boost::unit_test::test_suite;

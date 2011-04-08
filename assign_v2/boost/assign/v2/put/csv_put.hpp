@@ -44,7 +44,7 @@ namespace interpreter_aux{
 namespace result_of{
 
     template<typename C, typename F, typename MTag, typename DTag>
-    struct if_csv_ready/*<-*/ 
+    struct if_csv_ready/*<-*/
         : ::boost::mpl::identity<
             put_interpreter<C, F, MTag, DTag>
         >
@@ -71,8 +71,8 @@ namespace result_of{
 /*<-*/
     template<typename C, typename F, typename MTag, typename DTag>
     typename result_of::if_csv_ready<C, F, MTag, DTag>::type
-    make_csv_ready( 
-        put_interpreter<C, F, MTag, DTag> const& interpreter, 
+    make_csv_ready(
+        put_interpreter<C, F, MTag, DTag> const& interpreter,
         boost::mpl::true_ suitable
     )
     {
@@ -81,8 +81,8 @@ namespace result_of{
 
     template<typename C, typename F, typename MTag, typename DTag>
     typename result_of::else_csv_ready<C, F, MTag, DTag>::type
-    make_csv_ready( 
-        put_interpreter<C, F, MTag, DTag> const& interpreter, 
+    make_csv_ready(
+        put_interpreter<C, F, MTag, DTag> const& interpreter,
         boost::mpl::false_ suitable
     )
     {
@@ -93,9 +93,9 @@ namespace result_of{
     typename result_of::make_csv_ready<C, F, MTag, DTag>::type
     make_csv_ready( put_interpreter<C, F, MTag, DTag> const& interpreter)
     /*->*/{
-        return make_csv_ready( 
-            interpreter, 
-            typename csv_ready<F>::type() 
+        return make_csv_ready(
+            interpreter,
+            typename csv_ready<F>::type()
         );
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
@@ -103,29 +103,42 @@ namespace result_of{
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 //->
 
-    template<typename C, typename O, bool is, typename Args>
-    typename boost::enable_if< 
-        is_option_crtp<O> 
-    >::type csv_put( C& cont, option_crtp<O, is> const& crtp, Args&&... args )
+    template<typename C, typename O, bool is, typename... Args>
+    typename boost::enable_if<
+        is_option_crtp<O>
+    >::type csv_put(
+        C& cont,
+        option_crtp<O, is> const& crtp,
+        Args&&... args
+    )
     /*<-*/
     {
         O const& options = static_cast<O const&>( crtp );
         csv(
-            make_csv_ready( 
+            make_csv_ready(
                 put( cont ) % options
             ),
-              std::forward<Args>( args )...  
+              std::forward<Args>( args )...
         );
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
-    template<typename C, typename Args>
-    typename boost::disable_if< 
-        is_option_crtp<O> 
-    >::type csv_put( C& cont, Args&&... args)/*<-*/
+    template<typename C, typename T, typename... Args>
+    typename boost::disable_if<
+        is_option_crtp_cpp0x<T>
+    >::type csv_put( C& cont, T&& t, Args&&... args)/*<-*/
     {
         csv(
             make_csv_ready( put( cont ) ),
-              std::forward<Args>( args )...  
+              std::forward<T>( t ),
+              std::forward<Args>( args )...
+        );
+    }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
+
+    template<typename C>
+    void csv_put( C& cont)/*<-*/
+    {
+        csv(
+            make_csv_ready( put( cont ) )
         );
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
@@ -158,7 +171,7 @@ namespace result_of{
             )(
                 static_cast<super2_t const&>( *this )
             );
-            
+
             return cont;
         }
 
@@ -182,7 +195,7 @@ namespace result_of{
 
 
 }// result_of
-    
+
     template<typename R>
     typename result_of::delay_csv_put<R const>::type
     delay_csv_put(R const& range)/*<-*/
@@ -195,12 +208,12 @@ namespace result_of{
     typename result_of::delay_csv_put<R const, Os>::type
     delay_csv_put(option_crtp<Os> const& options, R const& range)/*<-*/
     {
-        return delayed_csv_put<R const, Os>( 
-            static_cast<Os const&>( options ), range 
+        return delayed_csv_put<R const, Os>(
+            static_cast<Os const&>( options ), range
         );
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
-}// interpreter_aux 
+}// interpreter_aux
 //<-
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 //->
@@ -214,7 +227,7 @@ using interpreter_aux::csv_put;
 namespace result_of{
 
     template<typename R, typename Os = empty_list_option_>
-    struct delay_csv_put 
+    struct delay_csv_put
         : interpreter_aux::result_of::delay_csv_put<R, Os>
     {};
 

@@ -53,14 +53,6 @@ namespace check_aux{
         typedef std::stack<int> stack_;
         typedef std::vector<int> vec_;
 
-        BOOST_MPL_ASSERT(( as2::conversion_aux::use_put<ar_, R> ));
-        BOOST_MPL_ASSERT(( as2::conversion_aux::use_put<stack_, R> ));
-        BOOST_MPL_ASSERT(( as2::conversion_aux::use_put<queue_, R> ));
-        BOOST_MPL_ASSERT_NOT(( as2::conversion_aux::use_put<deque_, R> ));
-        BOOST_MPL_ASSERT_NOT(( as2::conversion_aux::use_put<list_, R> ));
-        BOOST_MPL_ASSERT_NOT(( as2::conversion_aux::use_put<set_, R> ));
-        BOOST_MPL_ASSERT_NOT(( as2::conversion_aux::use_put<vec_, R> ));
-
         BOOST_MPL_ASSERT(( boost::is_same<
                 typename as2::conversion_aux::deduce_tag<ar_, R>::type,
                 convert_tag::put

@@ -72,27 +72,27 @@ namespace xxx_conversion{
             as2::result_of::converter<R>::type source( benchmark );
             
             { 
-            	typedef boost::array<T, 10> C;
+                typedef boost::array<T, 10> C;
                 f<C>( source, benchmark );
             }
             { 
-            	typedef std::deque<T> C;
+                typedef std::deque<T> C;
                 f<C>( source, benchmark );
             }
             { 
-            	typedef std::list<T> C;
+                typedef std::list<T> C;
                 f<C>( source, benchmark );
             }
             { 
-            	typedef std::queue<T> C;
+                typedef std::queue<T> C;
                 f<C>( source, benchmark );
             }
             { 
-            	typedef std::stack<T> C;
+                typedef std::stack<T> C;
                 f<C>( source, benchmark );
             }
             { 
-            	typedef std::vector<T> C;
+                typedef std::vector<T> C;
                 f<C>( source, benchmark );
             }
             //]
@@ -119,7 +119,7 @@ namespace xxx_conversion{
         {
             //[test_converter_from_deque
             typedef array<int, 5> C; C const& ar = /*<<Notice unqualified>>*/converter( 
-            	as2::csv_deque( 1, 2, 3, 4, 5 )
+                as2::csv_deque( 1, 2, 3, 4, 5 )
             );
             
             BOOST_ASSIGN_V2_CHECK( 
@@ -135,28 +135,28 @@ namespace xxx_conversion{
             //]
         }
         {
-        	//[test_converter_multi_array
-        	typedef boost::multi_array<int, 2> array2_;
-        	typedef array2_::size_type size_;
-        	typedef size_ const dim_;
-        	dim_ dim1 = 3, dim2 = 3;
-        	array2_ array2 = converter( 
-            	extents[dim1][dim2], 
+            //[test_converter_multi_array
+            typedef boost::multi_array<int, 2> array2_;
+            typedef array2_::size_type size_;
+            typedef size_ const dim_;
+            dim_ dim1 = 3, dim2 = 3;
+            array2_ array2 = converter( 
+                extents[dim1][dim2], 
                 as2::csv_deque(-1, +1, -1, +1, -1, +1, -1, +1, -1) 
             );
             
-        	const int benchmark [] = {
-            	-1, +1, -1,
-            	+1, -1, +1,
-            	-1, +1, -1
-        	};
-        	size_ const n = array2.num_elements();
-        	BOOST_ASSIGN_V2_CHECK(
-            	range::equal(
-                	make_iterator_range( array2.data(), n + array2.data() ),
-                	make_iterator_range( benchmark, n + benchmark )
-            	)
-        	);
+            const int benchmark [] = {
+                -1, +1, -1,
+                +1, -1, +1,
+                -1, +1, -1
+            };
+            size_ const n = array2.num_elements();
+            BOOST_ASSIGN_V2_CHECK(
+                range::equal(
+                    make_iterator_range( array2.data(), n + array2.data() ),
+                    make_iterator_range( benchmark, n + benchmark )
+                )
+            );
             //]
         }
     }

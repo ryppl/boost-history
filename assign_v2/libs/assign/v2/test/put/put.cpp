@@ -73,8 +73,8 @@ namespace xxx_put{
             std::vector<int> numeric( 10 ); iota( numeric, 0 ); typedef std::string str_;
             typedef variant< int, str_ > key_; array<key_, 16> keypad;
             as2::csv_put( keypad
-                , "+", "-", "*", "/", "=", "." 
-                , as2::as_arg_list( numeric ) 
+                , "+", "-", "*", "/", "=", "."
+                , as2::as_arg_list( numeric )
             );
 
             BOOST_ASSIGN_V2_CHECK(  get<str_>( keypad.front() ) == "+" );
@@ -110,13 +110,13 @@ namespace xxx_put{
         }
         // SEQUENCE
         {
-			// Note that although `number( str_( "011" ) )`, for instance, 
+            // Note that although `number( str_( "011" ) )`, for instance,
             // is valid, `range_3bit.push_back( str_( "011" ) )` isn't
             //[test_csv_put_bitset
-            typedef std::string str_; typedef std::bitset<3> number; 
+            typedef std::string str_; typedef std::bitset<3> number;
             std::vector<number> range_3bit;
-            as2::csv_put( 
-            	range_3bit
+            as2::csv_put(
+                range_3bit
                 , str_( "000" ), str_( "001" )
                 , str_( "010" ), str_( "011" )
                 , str_( "100" ), str_( "101" )
@@ -134,8 +134,8 @@ namespace xxx_put{
             // http://bioinfo.mbb.yale.edu/~mbg/dom/fun3/area-codes/
             //[test_put_area_codes
             typedef const char state_ [3]; state_ ct = "CT", nj = "NJ", ny = "NY";
-            typedef int code_; 
-            typedef tuple<state_/*<<Notice the [*reference]>>*/&,  code_> data_; 
+            typedef int code_;
+            typedef tuple<state_/*<<Notice the [*reference]>>*/&,  code_> data_;
             std::deque< data_ > region;
             as2::put( region )
                 ( ny, 212 )( ny, 718 )( ny, 516 )( ny, 914 )
@@ -149,20 +149,20 @@ namespace xxx_put{
             BOOST_ASSIGN_V2_CHECK(  get<0>( region.back()  ) == ct );
         }
         //SET
-        {    
+        {
             //[test_csv_put_unordered_set
             typedef std::string word_;
             typedef boost::unordered_set<word_> C;
-            
+
             C set, benchmark;
             benchmark.insert( "foo" );
             benchmark.insert( "bar" );
             benchmark.insert( "baz" );
-            
+
             BOOST_ASSIGN_V2_CHECK(
                 range::equal(
-                    set | as2::delay_csv_put( 
-                        as2::csv_deque<word_>( "foo", "bar", "baz" ) 
+                    set | as2::delay_csv_put(
+                        as2::csv_deque<word_>( "foo", "bar", "baz" )
                     ),
                     benchmark
                 )
@@ -170,14 +170,14 @@ namespace xxx_put{
             //]
         }
         // MAP
-        {    
+        {
             //[test_put_unordered_map
-            typedef std::string word_; 
+            typedef std::string word_;
             const char x[] = "foo";
             const char y[4] = { 'b', 'a', 'r', '\0' };
             word_ z = "***baz";
             boost::unordered_map<int, word_> map;
-                        
+
             as2::put( map )( 1, x, 3 )( 2, y )( 3, z, 3, 3 )( 4, "qux");
 
             assert( map[1] == "foo" ); assert( map[2] == "bar" );
@@ -187,10 +187,10 @@ namespace xxx_put{
         {
             //[test_csv_put_map
             typedef std::string month_; typedef int days_;
-            typedef std::map<month_, days_> C; 
+            typedef std::map<month_, days_> C;
             typedef C::value_type T;
             C map, benchmark;
-                        
+
             as2::csv_put( map, T("jan", 31 ), T( "feb", 28 ), T( "mar", 31 ) );
 
             BOOST_ASSIGN_V2_CHECK( map["jan"] == 31 );
@@ -203,25 +203,25 @@ namespace xxx_put{
             //[test_csv_put_multi_array
             typedef boost::multi_array<int, 3> array3_;
             typedef array3_::size_type size_;
-        
-            typedef const int dim_;
-            dim_ dim1 = 2, dim2 = 3, dim3 = 4; 
-            
+
+            typedef const size_ dim_;
+            dim_ dim1 = 2, dim2 = 3, dim3 = 4;
+
             using boost::extents;
             array3_ array3( extents[dim1][dim2][dim3] );
 
-            as2::csv_put( 
+            as2::csv_put(
                 array3,
-                 0,  1,  2,  3,    
-                 4,  5,  6,  7,    
-                 8,  9, 10, 11,    
+                 0,  1,  2,  3,
+                 4,  5,  6,  7,
+                 8,  9, 10, 11,
 
-                12, 13, 14, 15,    
-                16, 17, 18, 19,    
-                20, 21, 22, 23    
+                12, 13, 14, 15,
+                16, 17, 18, 19,
+                20, 21, 22, 23
             );
-            
-            size_ i = 0;
+
+            int i = 0;
             for( size_ i1 = 0; i1 < dim1; i1++ )
             {
                 for( size_ i2 = 0; i2 < dim2; i2++ )
@@ -248,32 +248,32 @@ namespace xxx_put{
 
             BOOST_ASSIGN_V2_CHECK(
                 boost::range::equal(
-                    as2::csv_deque( 
-                        view[0][0], view[0][1], 
+                    as2::csv_deque(
+                        view[0][0], view[0][1],
                         view[1][0], view[1][1]
                     ),
-                    as2::csv_deque( 
-                        99, 98, 
+                    as2::csv_deque(
+                        99, 98,
                         97, 96
                     )
                 )
             );
-        
+
         }
         // OTHER
         {
             //test_csv_put_cb
             boost::circular_buffer<int> cb(3);
             as2::csv_put( cb, 1, 2, 3 );
-             
+
             BOOST_ASSIGN_V2_CHECK(
                 range::equal(cb, as2::csv_deque(1, 2, 3) )
             );
 
             BOOST_ASSIGN_V2_CHECK(
                 range::equal(
-                    cb | as2::delay_csv_put( as2::csv_deque( 4, 5 ) ), 
-                    as2::csv_deque(3, 4, 5) 
+                    cb | as2::delay_csv_put( as2::csv_deque( 4, 5 ) ),
+                    as2::csv_deque(3, 4, 5)
                 )
             );
             //]

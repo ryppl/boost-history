@@ -56,7 +56,7 @@ namespace nth_result_of{
 namespace result_of{
 
     template<typename U, typename... Args>
-    struct csv_array/*<-*/ 
+    struct csv_array/*<-*/
         : nth_result_of::csv_array<
             1 + sizeof...(Args),  U
         >
@@ -122,8 +122,8 @@ namespace result_of{
 namespace result_of{
 
     template<typename U, typename... Args>
-    struct csv_array/*<-*/ 
-        : array_aux::csv_array<U, ...Args>
+    struct csv_array/*<-*/
+        : array_aux::result_of::csv_array<U, Args...>
     {}/*->*/;
 
 }// result_of

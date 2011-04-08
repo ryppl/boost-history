@@ -35,20 +35,21 @@ namespace interpreter_aux{
 //->
 
     template<typename C, typename F, typename MTag, typename DTag, typename D>
-    void csv( 
+    void csv(
         interpreter_crtp<C, F, MTag, DTag, D> const& interpreter
     )/*<-*/
     {
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
-    template<typename C, typename F, typename MTag, typename DTag, typename D>
-    void csv( 
-        interpreter_crtp<C, F, MTag, DTag, D> const& interpreter, 
-        T&& t, Args&&... args 
+    template<typename C, typename F, typename MTag, typename DTag, typename D
+        , typename T, typename... Args>
+    void csv(
+        interpreter_crtp<C, F, MTag, DTag, D> const& interpreter,
+        T&& t, Args&&... args
     )/*<-*/
     {
-        return csv( 
-            interpreter( std::forward<T>( t ) ), 
-            std::forward<Args>( args )... 
+        return csv(
+            interpreter( std::forward<T>( t ) ),
+            std::forward<Args>( args )...
         );
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 

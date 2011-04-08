@@ -28,16 +28,16 @@ namespace conversion_aux{
     class converter
     {
 
-		typedef boost::iterator_range<
-        	typename boost::range_iterator<
-            	typename boost::add_const<R>::type
+        typedef boost::iterator_range<
+            typename boost::range_iterator<
+                typename boost::add_const<R>::type
             >::type
         > source_type;
 
         public:
 
         explicit converter(
-        	Arg const& arg, 
+            Arg const& arg, 
             typename call_traits<R>::param_type source
         )/*<-*/
              : arg_( arg ), source_( boost::make_iterator_range( source ) )
@@ -56,14 +56,14 @@ namespace conversion_aux{
         template<typename C>
         C type()const/*<-*/
         {
-        	typedef convert<C, Arg> convert_;
+            typedef convert<C, Arg> convert_;
             return this->source_ | convert_( this->arg_ );
         }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
 //<-
         private:
         Arg arg_;
-		source_type source_;
+        source_type source_;
 //->
     };
 
