@@ -74,7 +74,6 @@ namespace xxx_chain{
         // Boost.Assign.v2 containers
         {    
             //[test_chain_write_refs
-            /*<< Needed to bring && into scope >>*/ 
             std::vector<int> source( 8 ); iota(source, 1);
             array<int, 5> copies; int x, y, z;
             
