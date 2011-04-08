@@ -63,8 +63,8 @@ namespace tutorial_assign_v2{
         }
         {
             //[tutorial_empty_deque
-            assert( deque<int>( _nil ).size() == 0 );	// Functor form
-            assert( csv_deque<int>().size() == 0 );		// Csv form
+            assert( deque<int>( _nil ).size() == 0 );    // Functor form
+            assert( csv_deque<int>().size() == 0 );        // Csv form
             //]
         }
         {
