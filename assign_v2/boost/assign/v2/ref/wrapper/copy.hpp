@@ -30,9 +30,10 @@ namespace assign_copy{ typedef assign_tag::copy assign_tag_; }
     :
         public ref::wrapper_crtp< wrapper<ref::assign_tag::copy, T>, T>
     {
-        typedef T type;
+        
+        typedef T type;/*<-*/
 
-        /*<-*/BOOST_STATIC_CONSTANT( bool, is_const = boost::is_const<T>::value );/*->*/
+        BOOST_STATIC_CONSTANT( bool, is_const = boost::is_const<T>::value );/*->*/
 
         wrapper()/*<-*/
             {/*TODO or null pointer?*/}BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/

@@ -80,11 +80,11 @@ namespace result_of{
             
 }// result_of
 
-    template<typename C, typename F, typename ModifierTag, typename DataTag, typename D, 
+    template<typename C, typename F, typename MTag, typename DTag, typename D, 
         typename Keyword, typename Arg>
     typename result_of::option_modifier<D, Keyword, Arg>::type
     operator%(
-        interpreter_crtp<C, F, ModifierTag, DataTag, D> const& lhs,
+        interpreter_crtp<C, F, MTag, DTag, D> const& lhs,
         option_modifier<Keyword, Arg> const& rhs
     )/*<-*/
     {

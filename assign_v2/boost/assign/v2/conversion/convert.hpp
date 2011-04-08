@@ -97,22 +97,23 @@ namespace conversion_aux{
     struct convert/*<-*/
         : conversion_aux::convert<C, Arg>
     {
-    
+//<-    
         typedef conversion_aux::convert<C> super_t;
+//->
         
-        convert()/*<-*/{}/*->*/
-        convert(Arg const& arg)
+        convert()/*<-*/{}BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
+        convert(Arg const& arg)/*<-*/
             : super_t( arg )
-        {}
+        {}BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
                 
         template<typename Arg1>
         convert<C, Arg1>
-        operator+=(Arg1 const& arg1)
+        operator^(Arg1 const& arg1)/*<-*/
         {
             return convert<C, Arg1>( arg1 );
-        }
+        }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
     
-    }/*->*/;
+    };
 
 //]
 }// v2

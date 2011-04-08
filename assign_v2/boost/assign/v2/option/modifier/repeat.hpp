@@ -54,8 +54,8 @@ namespace interpreter_aux{
 #define BOOST_ASSIGN_V2_forward t
 #endif
 //->
-        template<typename C, typename T, typename DataTag>
-        void impl(C& cont, BOOST_ASSIGN_V2_arg, DataTag tag )const
+        template<typename C, typename T, typename DTag>
+        void impl(C& cont, BOOST_ASSIGN_V2_arg, DTag tag )const
         {
             size_type m = this->size();\
             while(m--) this->inner_.impl( cont, BOOST_ASSIGN_V2_forward, tag );

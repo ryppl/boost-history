@@ -10,9 +10,11 @@
 #include <deque>
 #include <string>
 #include <utility>
+#include <boost/array.hpp>
 #include <boost/mpl/assert.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/assign/v2/detail/config/check.hpp>
+#include <boost/assign/v2/deque/conversion.hpp>
 #include <boost/assign/v2/include/csv_deque.hpp>
 #include <boost/assign/v2/include/deque.hpp>
 #include <boost/range/algorithm/equal.hpp>
@@ -41,37 +43,60 @@ namespace xxx_deque{
             //]
         }
         {
-            //[test_deque_pair
-            typedef std::string code_; typedef std::string name_;
-            typedef std::pair<code_, name_> T;
-            typedef as2::result_of::deque<T>::type C;
+            //[test_deque_variadic
+            typedef std::string word_;
+            const char x[] = "foo";
+            const char y[4] = { 'b', 'a', 'r', '\0' };
+            word_ z = "***baz";
+
+            std::deque<word_> benchmark;
+            benchmark.push_back( word_( x, 3 ) );
+            benchmark.push_back( word_( y ) );
+            benchmark.push_back( word_( z, 3, 3 ) );
+            benchmark.push_back( word_( "qux" ) );
+
+            typedef as2::result_of::deque<word_>::type C;
+            C cont1 = as2::deque<word_>( as2::_nil );
+
+            BOOST_ASSIGN_V2_CHECK( cont1.empty() );
+
+            cont1( x, 3 )( y )( z, 3, 3 )( "qux" );
             
-            C airports1 = as2::deque<T>( as2::_nil );
-            BOOST_ASSIGN_V2_CHECK( airports1.empty() );
-            airports1("AUH", "Abu Dhabi")("JFK", "New York")("LHR", "London")("PEK", "Beijing");
+            BOOST_ASSIGN_V2_CHECK( range::equal( benchmark, cont1 ) ); 
             
-            std::deque<T> benchmark;
-            benchmark.push_back( T("AUH", "Abu Dhabi") );
-            benchmark.push_back( T("JFK", "New York") );
-            benchmark.push_back( T("LHR", "London") );
-            benchmark.push_back( T("PEK", "Beijing") );
-            BOOST_ASSIGN_V2_CHECK( 
-                range::equal( benchmark, airports1 )
-            ); 
+            C cont2 = as2::deque<word_>( x, 3 )( y )( z, 3, 3 )( "qux" );
             
-            C airports2 = as2::deque<T>("AUH", "Abu Dhabi")("JFK", "New York")("LHR", "London")("PEK", "Beijing");
-            BOOST_ASSIGN_V2_CHECK( 
-                range::equal( benchmark, airports2 )
-            ); 
+            BOOST_ASSIGN_V2_CHECK( range::equal( benchmark, cont2 ) ); 
             //]
         }
-       {
+        {
             //[test_csv_deque_str_literal
-            typedef as2::result_of::csv_deque<const char[2]>::type C;
+            typedef as2::result_of::csv_deque<const char[2]>::type C1;
+            typedef as2::result_of::csv_deque<std::string>::type C2;
             
-            BOOST_MPL_ASSERT(( is_same<C, as2::result_of::deque<char*>::type> ));
+            BOOST_MPL_ASSERT(( is_same<C1, as2::result_of::deque<char*>::type> ));
+            BOOST_MPL_ASSERT(( is_same<C2, as2::result_of::deque<std::string>::type> ));
             
-            C  deque = as2::csv_deque( "x", "y", "z" ); 
+            C1 deque1 = as2::csv_deque( "x", "y", "z" ); 
+            C2 deque2 = as2::csv_deque<std::string>( "x", "y", "z" ); 
+            
+            std::deque<std::string> benchmark; 
+            benchmark.push_back( "x" ); 
+            benchmark.push_back( "y" ); 
+            benchmark.push_back( "z" );
+            
+            BOOST_ASSIGN_V2_CHECK( range::equal( benchmark, deque1 ) );
+            BOOST_ASSIGN_V2_CHECK( range::equal( benchmark, deque2 ) );
+            //]
+        }
+        {
+            //[test_csv_deque_str
+            typedef std::string T;
+            typedef as2::result_of::csv_deque<T>::type C;
+            
+            BOOST_MPL_ASSERT(( is_same<C, as2::result_of::deque<std::string>::type> ));
+            
+            C  deque = as2::csv_deque<T>( "x", "y", "z" ); 
             
             std::deque<std::string> benchmark; 
             benchmark.push_back( "x" ); 
@@ -81,7 +106,6 @@ namespace xxx_deque{
             BOOST_ASSIGN_V2_CHECK( range::equal( benchmark, deque ) );
             //]
         }
-
         {
             //[test_csv_deque_ints
             typedef as2::result_of::csv_deque<int>::type C;
@@ -104,6 +128,17 @@ namespace xxx_deque{
             C series2 = as2::csv_deque( 0, 1, 1 )( 2 )( 3 )( 5 )( 8 );
 
             BOOST_ASSIGN_V2_CHECK( range::equal( benchmark, series2 ) );
+            //]
+        }
+        {
+            //[test_csv_deque_converter
+            typedef array<int, 5> C; C const& ar = /*<<Notice unqualified>>*/converter( 
+                as2::csv_deque( 1, 2, 3, 4, 5 )
+            );
+            
+            BOOST_ASSIGN_V2_CHECK( 
+                range::equal( ar, as2::csv_deque( 1, 2, 3, 4, 5 ) ) 
+            );
             //]
         }
     }

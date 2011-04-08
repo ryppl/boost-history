@@ -28,11 +28,11 @@ namespace conversion_aux{
     class converter
     {
 
-        typedef boost::iterator_range<
+        /*<-*/typedef boost::iterator_range<
             typename boost::range_iterator<
                 typename boost::add_const<R>::type
             >::type
-        > source_type;
+        > source_type;/*->*/
 
         public:
 
@@ -47,14 +47,15 @@ namespace conversion_aux{
              : source_( boost::make_iterator_range( source ) )
         {}BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
+        // Implicit conversion
         template<typename C>
-        operator C () const/*<-*/
+        operator C() const/*<-*/
         {
             return this->type<C>();
         }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
-        template<typename C>
-        C type()const/*<-*/
+        // Explicit converion
+        template<typename C> C type()const/*<-*/
         {
             typedef convert<C, Arg> convert_;
             return this->source_ | convert_( this->arg_ );

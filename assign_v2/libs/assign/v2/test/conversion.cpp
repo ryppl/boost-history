@@ -43,7 +43,7 @@ namespace xxx_conversion{
 
         // External containers (fully qualified)
         {
-            //[tutorial_convert
+            //[test_convert
             typedef std::stack<int> C;
             
             C lifo; lifo.push( 3 ); lifo.push( 2 ); lifo.push( 1 );
@@ -116,24 +116,6 @@ namespace xxx_conversion{
             //]
         }
         // Boost.Assign.2.0 containers - name lookup
-        {
-            //[test_converter_from_deque
-            typedef array<int, 5> C; C const& ar = /*<<Notice unqualified>>*/converter( 
-                as2::csv_deque( 1, 2, 3, 4, 5 )
-            );
-            
-            BOOST_ASSIGN_V2_CHECK( 
-                range::equal( ar, as2::csv_deque( 1, 2, 3, 4, 5 ) ) 
-            );
-            //]
-        }
-        {
-            //[test_converter_from_ref_array
-            std::queue<int> fifo = /*<<Notice unqualified>>*/converter( as2::ref::csv_array( 1, 2, 3, 4, 5 ) );
-            
-            BOOST_ASSIGN_V2_CHECK( fifo.front() == 1  );
-            //]
-        }
         {
             //[test_converter_multi_array
             typedef boost::multi_array<int, 2> array2_;

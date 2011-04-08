@@ -7,11 +7,13 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
+#include <queue>
 #include <vector>
 #include <boost/range/begin.hpp>
 #include <boost/range/algorithm/copy.hpp>
 #include <boost/typeof/typeof.hpp>
 #include <boost/assign/v2/detail/config/check.hpp>
+#include <boost/assign/v2/ref/array/conversion.hpp>
 #include <boost/assign/v2/include/ref/csv_array.hpp>
 #include <boost/assign/v2/ref/wrapper.hpp>
 #include <libs/assign/v2/test/ref/csv_array.h>
@@ -36,7 +38,7 @@ namespace xxx_csv_array{
                     as2::ref::csv_array( 1, 10, 100 ),
                     ar        
                 )
-            )/*<<Temporaries destroyed past semicolon>>*/;
+            );
             //]
         }
         {
@@ -88,6 +90,13 @@ namespace xxx_csv_array{
 
             BOOST_ASSIGN_V2_CHECK( x == -1 );
             BOOST_ASSIGN_V2_CHECK( z == -1 );
+            //]
+        }
+        {
+            //[test_ref_csv_array_converter
+            std::queue<int> fifo = /*<<Notice unqualified>>*/converter( as2::ref::csv_array( 1, 2, 3, 4, 5 ) );
+            
+            BOOST_ASSIGN_V2_CHECK( fifo.front() == 1  );
             //]
         }
     }

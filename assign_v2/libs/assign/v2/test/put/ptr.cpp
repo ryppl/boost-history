@@ -93,17 +93,17 @@ namespace xxx_ptr{
         // SET
         {
             // Shows that x, y, z can be variadic
-            //[test_put_ptr_set
+            //[test_csv_put_ptr_set
             typedef std::string T; boost::ptr_set<T> assoc;
             T x = "isomer", y = "ephemeral", z = "prosaic";
-            /*<<Calls `assoc.insert( new T( t ) )` for `t` [^=] `x`, `y`, and `z`>>*/as2::csv_put( assoc, x, z, y );
+            as2::csv_put( assoc, x, z, y );
 
             BOOST_ASSIGN_V2_CHECK( assoc.count( x ) == 1 );
             BOOST_ASSIGN_V2_CHECK( assoc.count( z ) == 1 );
             //]
         }
         {    
-            //[test_put_ptr_unordered_set
+            //[test_csv_put_ptr_unordered_set
             boost::ptr_unordered_set<std::string> set; 
             as2::csv_put( set, "foo", "bar", "baz" );
 

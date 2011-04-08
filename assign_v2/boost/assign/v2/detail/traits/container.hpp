@@ -26,6 +26,8 @@
 namespace boost{
 namespace assign{
 namespace v2{
+//[syntax_detail_traits_container
+/*<-*/
 namespace container_aux{
 
 // HELPER
@@ -98,12 +100,29 @@ namespace container_aux{
     {};
 
 }// container_aux
+/*->*/
+
+    template<typename C>
+    struct value_container_element/*<-*/
+        : container_aux::element<C>{}
+    /*->*/;
+
+    template<typename C>
+    struct value_container_key/*<-*/
+        : container_aux::key<C>{}
+    /*->*/;
+
+    template<typename C>
+    struct value_container_mapped/*<-*/
+        : container_aux::mapped<C>{}
+    /*->*/;
 
     template<typename C>
     struct value_container_value/*<-*/
         : container_aux::value<C>{}
     /*->*/;
 
+//]
 }// v2
 }// assign
 }// boost

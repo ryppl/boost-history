@@ -36,23 +36,23 @@ namespace modifier_tag{
 namespace interpreter_aux{
 
 
-    template<typename ModifierTag>
+    template<typename MTag>
     struct interpreter_modifier
     {
         // Specialize on Tag to model ConceptModifier 
     };
 
-    template<typename ModifierTag, typename DataTag, typename C, typename T>
+    template<typename MTag, typename DTag, typename C, typename T>
     struct ConceptModifier
     {
 
         BOOST_CONCEPT_USAGE(ConceptModifier)
         {
-            m.impl( cont, t, DataTag() ); 
+            m.impl( cont, t, DTag() ); 
         }
 
         private:
-        static interpreter_aux::interpreter_modifier<ModifierTag>& m;
+        static interpreter_aux::interpreter_modifier<MTag>& m;
         static C& cont;
         static T t;
     };

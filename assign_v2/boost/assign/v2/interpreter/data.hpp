@@ -19,7 +19,7 @@
 namespace boost{
 namespace assign{
 namespace v2{
-//[syntax_interpreter_data_generator
+//[syntax_interpreter_data
 namespace switch_tag{
     struct data_generator{};
 }// switch_tag
