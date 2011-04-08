@@ -1,0 +1,192 @@
+                  Boost IndexList library README file.
+
+                    Copyright Pierre-Andre Noel 2011.
+        Distributed under the Boost Software License, Version 1.0.
+            (See accompanying file LICENSE_1_0.txt or copy at
+                  http://www.boost.org/LICENSE_1_0.txt)
+
+
+For now, no actual documentation is ready. However, I strongly suggest you to
+take a look at sandbox/index_list/libs/index_list/examples.cpp for exhaustive
+examples and comments on the need and functionalities of an IndexList library.
+An automatically-generated (read Doxygen) documentation is also available at
+sandbox/index_list/libs/index_list/doc/index.html .
+
+     **************************** Priorities ****************************
+
+I request the input of the community on the following topics, prioritizing those
+that are at the top of the list. My personal efforts will be spent in the same
+order.
+
+- Probe the interest of the community for an IndexList library.
+
+- Find and rectify design flaws in the interface of the library. This includes
+  badly-chosen class/functions/member names.
+
+- Freeze the interface as soon as possible.
+
+- Add relatively simple new capabilities, maybe including the family of classes
+  indexable_space/indexable_space_ref/const_indexable_space_ref (see examples),
+  if interest is shown for such constructs. Note that I do not really like the
+  name "indexable_space" and alternatives suggestions are welcomed.
+
+- Do some template specialization. Among other things, the operator++/-- of the
+  domain_index_list< box_domain< CollectionMaker > > are easy to implement
+  without any calls to box_domain::expand and box_domain::reduce.
+
+- Make a real documentation.
+
+- Add Boost.ConceptCheck capabilities.
+
+- Do compiler-specific fixes. For now, I use gcc with "-ansi -pedantic".
+
+- Submit the library for review (?!).
+
+Suggestions for new Domains or similar functionalities are welcomed. However,
+their implementation may not be prioritized, depending strongly on the
+complexity of the task.
+
+
+     **************************** Concepts ****************************
+
+     ---------------------------- IndexList ----------------------------
+
+An IndexList is a Collection whose elements is of integer-convertible type.
+
+Models:
+boost::array< int, 5 >
+std::vector< unsigned int >
+boost::index_list::domain_index_list< Domain >
+
+
+---------------------------- ConstrainedIndexList ----------------------------
+
+A ConstrainedIndexList is an IndexList that has a "bool is_valid(void) const"
+member.
+
+Model:
+boost::index_list::domain_index_list< Domain >
+
+
+* BoundedIndexList *
+A BoundedIndexList is a ConstrainedIndexList that have the following members.
+- BoundedIndexList& set_to_first(void)
+- BoundedIndexList& set_to_last(void)
+- BoundedIndexList& set_to_past_the_last(void)
+- BoundedIndexList& operator++(void)
+- BoundedIndexList& operator--(void)
+
+The "valid values" that a BoundedIndexList can take have the range-like
+structure [first,...,last,past_the_last). Moreover, operator--/operator++ change
+the current value of the BoundedIndexList by one step left/right. Hence, given a
+BoundedIndexList "x", the following assertions are all passed.
+
+BoundedIndexList past_the_last( x.set_to_past_the_last() );
+BOOST_ASSERT( !past_the_last.is_valid() );
+x.set_to_last();
+++x;
+BOOST_ASSERT( x == past_the_last );
+x.set_to_first();
+for (; x != past_the_last; ++x)
+{
+  BOOST_ASSERT( x.is_valid() );
+  BoundedIndexList y(x);
+  --(++y);
+  BOOST_ASSERT( y == x );
+}
+
+Every value that "x" can take that was not tested here should return "false" to
+"x.is_valid()". Calling "operator--" or "operator++" on an invalid
+BoundedIndexList is undefined behaviour (except for the notable exception
+"--x.set_to_past_the_last()" that has the same effect as "x.set_to_last()").
+Ther is thus no guarantee that "++(--x)" returns the initial "x" if it was
+initially in its "first" value.
+
+If a BoundedIndexList is also LessThanComparable (and such), then the result
+should be consistent with this ordering.
+
+Model:
+boost::index_list::domain_index_list< Domain >
+
+
+       ---------------------------- Domain ----------------------------
+
+A Domain has the following members (assuming that IndexList is a Collection
+of num_dimensions() elements that are each convertible to index_type).
+- typedef [convertible to unsigned integer type]        dimension_type;
+- typedef [convertible to integer type]                 index_type;
+- typedef [a Collection of num_dimensions() index_type] index_list_type;
+- dimension_type num_dimensions(void) const;
+- index_type num_elements(void) const;
+- bool is_valid(const IndexList&) const;
+- index_type reduce(const IndexList&) const;
+- index_list_type expand(index_type reduced) const;
+
+For any index_type i within the range [ 0, num_elements() ), these assertions
+are always passed.
+
+BOOST_ASSERT( i == reduce( expand(i) ) );
+BOOST_ASSERT( is_valid( expand(i) ) );
+
+The special case i = num_elements() is slightly different.
+
+BOOST_ASSERT( num_elements() == reduce( expand( num_elements() ) ) );
+BOOST_ASSERT( !is_valid( expand( num_elements() ) ) );
+
+Any IndexList "l" that does not correspond to one of the "expand(i)" for "i"
+within the range [ 0, num_elements() ) will return "false" to "is_valid(l)".
+Calling "expand(i)" for an "i" outside of the range [0,num_elements()] is an
+undefined behaviour. Calling "reduce(l)" on an IndexList for which "is_valid(l)"
+returns false is an undefined behaviour (except for the special case
+"l = expand( num_elements() )"). Using an IndexList of whose "size()" does not
+match "num_dimensions()" is an error.
+
+Models:
+boost::index_list::box_domain< CollectionMaker >
+boost::index_list::simplex_domain< CollectionMaker >
+
+Note:
+Other candidates of domains could be as general as the following: "is_valid"
+returns true if the provided index_list is contained in an ordered set, "expand"
+returns the the n-th object of that ordered set and "reduce" finds the object in
+the set and returns its position.
+
+   ---------------------------- CollectionMaker ----------------------------
+
+A CollectionMaker contains a "template < typename T > class collection_of" that
+itself has the following elements.
+- typedef [Collection of T] type;
+- static const bool is_static_size
+- static type make(const typename type::size_type);
+- static void resize(type&, const typename type::size_type);
+
+A call to "make(n)" returns a collection of n elements of type T. A call to
+"resize(x,n)" resizes the Collection x such that it has n elements of type T.
+A false "is_static_size" guarantees that proper "make(n)" and "resize(x,n)" are
+implemented. When "is_static_size" is true, "make(n)" and "resize(x,n)" will
+produce an error if "n" is different from "type::size()".
+
+Models:
+boost::collection_maker::array< 3 >
+boost::collection_maker::vector
+
+Note:
+Personally, I do not like CollectionMaker. I had to introduce them in order to
+specify the return value of box_domain::expand() and simplex_domain::expand().
+The problem is that boost::array<T,n> cannot be resized and have no
+constructors, while the default constructor of std::vector produces an empty
+Collection. Any suggestion is welcomed for alternative approaches that allow the
+same level of configurability, while being less "ugly" than CollectionMakers.
+
+On a related note, if no alternative is found, should these remain in the
+collection_maker folder/namespace, or should they be placed together with the
+other index_list components?
+
+
+     **************************** Final note ****************************
+
+I am not a computer scientist, but a physicist. Although I have been coding for
+some time now, I learned most of it "on the spot". Some of my codes may thus be
+ugly, unoptimal or simply violate some fundamental holy principles that I am
+currently unaware of. Hence, do not hesitate to inform me of such heresies if
+you happen to find one. I won't be insulted, but instead grateful.

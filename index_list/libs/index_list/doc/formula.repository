@@ -1,0 +1,4 @@
+\form#0:$\mathbf{x}=[x_{d-1},x_{d-2},\ldots x_1,x_0]$
+\form#1:$s_0, s_1, \ldots, s_{d-1}$
+\form#2:$s_i = \sum_{i = 0}^{d-1} x_i$
+\form#3:$\sum_{j=0}^d {s_j + j \choose j+1}$
