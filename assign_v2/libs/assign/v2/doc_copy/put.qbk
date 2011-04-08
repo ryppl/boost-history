@@ -1,0 +1,35 @@
+[import ../test/put/put.cpp]
+
+[heading Header]
+[@../../../../../boost/assign/v2/put.hpp [^boost/assign/v2/put.hpp]]
+
+[heading Description]
+Interpreter for modifying a container
+
+[section:put Put]
+
+[heading Header]
+[@../../../../../boost/assign/v2/put/put.hpp [^boost/assign/v2/put/put.hpp]]
+
+[heading Description]
+__functor_form__
+
+[heading Synopsis]
+[import ../../../../boost/assign/v2/put/put.hpp]
+[syntax_put]
+
+[heading Example]
+
+[#ex_put]
+[*Example 1]
+[test_put_ragged]
+[*Example 2]
+[test_put_area_codes]
+[*Example 3]
+[test_put_unordered_map]
+
+[endsect][/put]
+[section:csv_put Csv_put]
+
+
+[endsect][/csv_put]

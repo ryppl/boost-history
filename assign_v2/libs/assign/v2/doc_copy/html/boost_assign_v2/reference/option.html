@@ -1,0 +1,1116 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Option</title>
+<link rel="stylesheet" href="../../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="../../index.html" title="Chapter&#160;1.&#160;Boost.Assign 2.0">
+<link rel="up" href="../reference.html" title="Reference">
+<link rel="prev" href="deque.html" title="Deque">
+<link rel="next" href="pipe.html" title="Pipe">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../boost.png"></td>
+<td align="center"><a href="../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="deque.html"><img src="../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="pipe.html"><img src="../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_assign_v2.reference.option"></a><a class="link" href="option.html" title="Option">Option</a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="option.html#boost_assign.reference.option.data_generator">Data_generator</a></span></dt>
+<dt><span class="section"><a href="option.html#boost_assign.reference.option.modifier">Modifier</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="option.html#boost_assign.reference.option.modifier.iterate">Iterate</a></span></dt>
+<dt><span class="section"><a href="option.html#boost_assign.reference.option.modifier.mapped">Mapped</a></span></dt>
+<dt><span class="section"><a href="option.html#boost_assign.reference.option.modifier.framework">Framework</a></span></dt>
+<dt><span class="section"><a href="option.html#boost_assign.reference.option.modifier.repeat">Repeat</a></span></dt>
+<dt><span class="section"><a href="option.html#boost_assign.reference.option.modifier.std_modifier">Std_modifier</a></span></dt>
+</dl></dd>
+</dl></div>
+<a name="boost_assign.reference.option.header"></a><h5>
+<a name="id36352814"></a>
+        <a class="link" href="option.html#boost_assign.reference.option.header">Header</a>
+      </h5>
+<p>
+        <a href="../../../../../../../boost/assign/v2/option.hpp" target="_top"><code class="computeroutput"><span class="identifier">boost</span><span class="special">/</span><span class="identifier">assign</span><span class="special">/</span><span class="identifier">v2</span><span class="special">/</span><span class="identifier">option</span><span class="special">.</span><span class="identifier">hpp</span></code></a>
+      </p>
+<div class="warning"><table border="0" summary="Warning">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Warning]" src="../../../../doc/src/images/warning.png"></td>
+<th align="left">Warning</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+          Headers in directory <a class="link" href="option.html" title="Option"><code class="literal">boost/assign/v2/option</code></a>
+          overload <code class="computeroutput"><span class="keyword">operator</span><span class="special">%</span></code>.
+          A header from this directory has to be included <span class="bold"><strong>after</strong></span>
+          that of the object to be passed as first argument to <code class="computeroutput"><span class="keyword">operator</span><span class="special">%</span></code>.
+        </p></td></tr>
+</table></div>
+<a name="boost_assign.reference.option.description"></a><h5>
+<a name="id36352932"></a>
+        <a class="link" href="option.html#boost_assign.reference.option.description">Description</a>
+      </h5>
+<p>
+        Options to alter the semantics of an <a class="link" href="interpreter.html" title="Interpreter">interpreter</a>.
+      </p>
+<a name="boost_assign.reference.option.semantics"></a><h5>
+<a name="id36352960"></a>
+        <a class="link" href="option.html#boost_assign.reference.option.semantics">Semantics</a>
+      </h5>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Expression
+                </p>
+              </th>
+<th>
+                <p>
+                  Description
+                </p>
+              </th>
+</tr></thead>
+<tbody><tr>
+<td>
+                <p>
+                  <code class="computeroutput">interpreter % option1 ... % optionm</code>
+                </p>
+              </td>
+<td>
+                <p>
+                  Returns an interpreter with a modified type or state
+                </p>
+              </td>
+</tr></tbody>
+</table></div>
+<a name="boost_assign.reference.option.notation"></a><h5>
+<a name="id36353034"></a>
+        <a class="link" href="option.html#boost_assign.reference.option.notation">Notation</a>
+      </h5>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term"><code class="computeroutput"><span class="identifier">args</span><span class="special">...</span></code></span></dt>
+<dd><p>
+              Arguments passed to <code class="computeroutput">interpreter</code>
+            </p></dd>
+<dt><span class="term"><code class="computeroutput">t</code></span></dt>
+<dd><p>
+              Data member internally generated by invoking <code class="computeroutput">interpreter<span class="special">(</span> <span class="identifier">args</span><span class="special">...</span> <span class="special">)</span></code>
+            </p></dd>
+<dt><span class="term"><code class="computeroutput">cont</code></span></dt>
+<dd><p>
+              Container that <code class="computeroutput">interpreter</code> internally modifies
+            </p></dd>
+<dt><span class="term"><code class="computeroutput">C</code></span></dt>
+<dd><p>
+              Type of <code class="computeroutput">cont</code>
+            </p></dd>
+</dl>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_assign.reference.option.data_generator"></a><a class="link" href="option.html#boost_assign.reference.option.data_generator" title="Data_generator">Data_generator</a>
+</h4></div></div></div>
+<a name="boost_assign.reference.option.data_generator.header"></a><h6>
+<a name="id36353192"></a>
+          <a class="link" href="option.html#boost_assign.reference.option.data_generator.header">Header</a>
+        </h6>
+<p>
+          <a href="../../../../../../../boost/assign/v2/option/data_generator.hpp" target="_top"><code class="computeroutput"><span class="identifier">boost</span><span class="special">/</span><span class="identifier">assign</span><span class="special">/</span><span class="identifier">v2</span><span class="special">/</span><span class="identifier">option</span><span class="special">/</span><span class="identifier">data_generator</span><span class="special">.</span><span class="identifier">hpp</span></code></a>
+        </p>
+<div class="warning"><table border="0" summary="Warning">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Warning]" src="../../../../doc/src/images/warning.png"></td>
+<th align="left">Warning</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+            Headers in directory <a class="link" href="option.html" title="Option"><code class="literal">boost/assign/v2/option</code></a>
+            overload <code class="computeroutput"><span class="keyword">operator</span><span class="special">%</span></code>.
+            A header from this directory has to be included <span class="bold"><strong>after</strong></span>
+            that of the object to be passed as first argument to <code class="computeroutput"><span class="keyword">operator</span><span class="special">%</span></code>.
+          </p></td></tr>
+</table></div>
+<a name="boost_assign.reference.option.data_generator.description"></a><h6>
+<a name="id36353318"></a>
+          <a class="link" href="option.html#boost_assign.reference.option.data_generator.description">Description</a>
+        </h6>
+<p>
+          Options to alter the data-generator of an <a class="link" href="interpreter.html" title="Interpreter">interpreter</a>.
+        </p>
+<a name="boost_assign.reference.option.data_generator.synopsis"></a><h6>
+<a name="id36353347"></a>
+          <a class="link" href="option.html#boost_assign.reference.option.data_generator.synopsis">Synopsis</a>
+        </h6>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">interpreter_aux</span><span class="special">{</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span>
+        <span class="keyword">typename</span> <span class="identifier">C</span> <span class="comment">// Value or pointer-container
+</span>    <span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">deduce_key_generator</span><span class="special">;</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span>
+        <span class="keyword">typename</span> <span class="identifier">C</span> <span class="comment">// Value or pointer-container
+</span>    <span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">deduce_value_generator</span><span class="special">;</span>
+
+<span class="keyword">namespace</span> <span class="identifier">result_of</span><span class="special">{</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">D</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">C</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">F</span> <span class="special">=</span> <span class="identifier">keyword_aux</span><span class="special">::</span><span class="identifier">use_default</span><span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">option_data_generator</span><span class="special">;</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">D</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">C</span><span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">option_data_generator</span><span class="special">&lt;</span><span class="identifier">D</span><span class="special">,</span> <span class="identifier">C</span><span class="special">,</span> <span class="identifier">keyword_aux</span><span class="special">::</span><span class="identifier">key</span><span class="special">&gt;;</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">D</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">C</span><span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">option_data_generator</span><span class="special">&lt;</span><span class="identifier">D</span><span class="special">,</span> <span class="identifier">C</span><span class="special">,</span> <span class="identifier">keyword_aux</span><span class="special">::</span><span class="identifier">use_default</span><span class="special">&gt;;</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">D</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">C</span><span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">option_data_generator</span><span class="special">&lt;</span><span class="identifier">D</span><span class="special">,</span> <span class="identifier">C</span><span class="special">,</span> <span class="identifier">keyword_aux</span><span class="special">::</span><span class="identifier">value</span><span class="special">&gt;;</span>
+        
+<span class="special">}//</span> <span class="identifier">result_of</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">F</span><span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">option_data_generator</span><span class="special">;</span>
+
+    <span class="keyword">template</span><span class="special">&lt;&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">option_data_generator</span><span class="special">&lt;</span><span class="identifier">use_default</span><span class="special">&gt;;</span>
+
+    <span class="keyword">template</span><span class="special">&lt;&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">option_data_generator</span><span class="special">&lt;</span><span class="identifier">keyword_aux</span><span class="special">::</span><span class="identifier">key</span><span class="special">&gt;;</span>
+
+    <span class="keyword">template</span><span class="special">&lt;&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">option_data_generator</span><span class="special">&lt;</span><span class="identifier">keyword_aux</span><span class="special">::</span><span class="identifier">value</span><span class="special">&gt;;</span>
+
+    <span class="comment">// Overrides data generator
+</span>    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">C</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">F</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">ModifierTag</span>
+        <span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">DataTag</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">D</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">F1</span><span class="special">&gt;</span>
+    <span class="keyword">typename</span> <span class="identifier">result_of</span><span class="special">::</span><span class="identifier">option_data_generator</span><span class="special">&lt;</span><span class="identifier">D</span><span class="special">,</span> <span class="identifier">C</span><span class="special">,</span> <span class="identifier">F1</span><span class="special">&gt;::</span><span class="identifier">type</span>
+    <span class="keyword">operator</span><span class="special">%(</span>
+        <span class="identifier">interpreter_crtp</span><span class="special">&lt;</span><span class="identifier">C</span><span class="special">,</span> <span class="identifier">F</span><span class="special">,</span> <span class="identifier">ModifierTag</span><span class="special">,</span> <span class="identifier">DataTag</span><span class="special">,</span> <span class="identifier">D</span><span class="special">&gt;</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">lhs</span><span class="special">,</span>
+        <span class="identifier">option_data_generator</span><span class="special">&lt;</span><span class="identifier">F1</span><span class="special">&gt;</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">rhs</span>
+    <span class="special">);</span>
+
+    <span class="keyword">struct</span> <span class="identifier">keyword_data_generator</span>
+    <span class="special">;</span>
+
+<span class="special">}//</span> <span class="identifier">interpreter_aux</span>
+<span class="keyword">namespace</span><span class="special">{</span>
+    <span class="keyword">const</span> <span class="identifier">interpreter_aux</span><span class="special">::</span><span class="identifier">keyword_data_generator</span> <span class="identifier">_data</span><span class="special">;</span>
+<span class="special">}</span>
+<span class="keyword">namespace</span> <span class="identifier">result_of</span><span class="special">{</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">D</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">C</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">F</span><span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">option_data_generator</span><span class="special">;</span>
+
+<span class="special">}//</span> <span class="identifier">result_of</span>
+</pre>
+<p>
+        </p>
+<a name="boost_assign.reference.option.data_generator.semantics"></a><h6>
+<a name="id36354457"></a>
+          <a class="link" href="option.html#boost_assign.reference.option.data_generator.semantics">Semantics</a>
+        </h6>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Option
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Data-generation
+                  </p>
+                </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput">_data <span class="special">=</span> f</code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput">f<span class="special">(</span> args... <span class="special">)</span></code>
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput">_data <span class="special">=</span> _use_default</code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Data generator reset to the default
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput">_data <span class="special">=</span> _key</code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput">T<span class="special">(</span> args... <span class="special">)</span></code>
+                  </p>
+                </td>
+</tr>
+</tbody>
+</table></div>
+<a name="boost_assign.reference.option.data_generator.examples"></a><h6>
+<a name="id36354623"></a>
+          <a class="link" href="option.html#boost_assign.reference.option.data_generator.examples">Examples</a>
+        </h6>
+<p>
+          <span class="bold"><strong>Example1</strong></span>
+        </p>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;</span> <span class="identifier">exponent</span><span class="special">;</span>
+
+<span class="keyword">typedef</span> <span class="identifier">function</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">(</span><span class="keyword">double</span><span class="special">)&gt;</span> <span class="identifier">f_</span><span class="special">;</span>
+<span class="special">(</span>
+    <span class="identifier">as2</span><span class="special">::</span><span class="identifier">put</span><span class="special">(</span> <span class="identifier">exponent</span> <span class="special">)</span> <span class="special">%</span> <span class="special">(</span> <span class="identifier">as2</span><span class="special">::</span><span class="identifier">_data</span> <span class="special">=</span> <span class="identifier">f_</span><span class="special">(</span>  <span class="identifier">log10</span>  <span class="special">)</span> <span class="special">)</span>
+<span class="special">)(</span> <span class="number">1.0</span> <span class="special">)(</span> <span class="number">10.0</span> <span class="special">)(</span> <span class="number">100.0</span> <span class="special">)(</span> <span class="number">1000.0</span> <span class="special">)(</span> <span class="number">10000.0</span> <span class="special">);</span>
+
+<span class="keyword">double</span> <span class="identifier">eps</span> <span class="special">=</span> <span class="identifier">numeric</span><span class="special">::</span><span class="identifier">bounds</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;::</span><span class="identifier">smallest</span><span class="special">();</span>
+<span class="identifier">BOOST_ASSIGN_V2_CHECK</span><span class="special">(</span> <span class="identifier">fabs</span><span class="special">(</span> <span class="identifier">exponent</span><span class="special">.</span><span class="identifier">front</span><span class="special">()</span> <span class="special">-</span> <span class="number">0.0</span> <span class="special">)</span> <span class="special">&lt;</span> <span class="identifier">eps</span> <span class="special">);</span>
+<span class="identifier">BOOST_ASSIGN_V2_CHECK</span><span class="special">(</span> <span class="identifier">fabs</span><span class="special">(</span> <span class="identifier">exponent</span><span class="special">.</span><span class="identifier">back</span><span class="special">()</span> <span class="special">-</span> <span class="number">4.0</span> <span class="special">)</span> <span class="special">&lt;</span> <span class="identifier">eps</span> <span class="special">);</span>
+</pre>
+<p>
+        </p>
+<p>
+          <span class="bold"><strong>Example2</strong></span>
+        </p>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">lambda</span><span class="special">;</span>
+<span class="keyword">int</span> <span class="identifier">i</span> <span class="special">=</span> <span class="number">1</span><span class="special">,</span> <span class="identifier">k</span> <span class="special">=</span> <span class="number">1</span><span class="special">;</span>
+<span class="identifier">BOOST_AUTO</span><span class="special">(</span>
+    <span class="identifier">factorials</span><span class="special">,</span> <span class="special">(</span>
+        <span class="identifier">as2</span><span class="special">::</span><span class="identifier">deque</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;(</span> <span class="identifier">as2</span><span class="special">::</span><span class="identifier">_nil</span> <span class="special">)</span> <span class="special">%</span> <span class="special">(</span>
+            <span class="identifier">as2</span><span class="special">::</span><span class="identifier">_data</span> <span class="special">=</span> <span class="special">(</span> <span class="identifier">var</span><span class="special">(</span><span class="identifier">k</span><span class="special">)</span> <span class="special">*=</span> <span class="special">(</span> <span class="identifier">var</span><span class="special">(</span><span class="identifier">i</span><span class="special">)++</span> <span class="special">)</span> <span class="special">)</span>
+        <span class="special">)</span>
+    <span class="special">)</span><a class="co" name="boost_assign4co" href="option.html#boost_assign4"><img src="../../../../doc/src/images/callouts/1.png" alt="1" border="0"></a><span class="special">()()()()()</span>
+<span class="special">);</span>
+
+<span class="identifier">BOOST_ASSIGN_V2_CHECK</span><span class="special">(</span> <span class="identifier">range</span><span class="special">::</span><span class="identifier">equal</span><span class="special">(</span> <span class="identifier">factorials</span><span class="special">,</span> <span class="identifier">as2</span><span class="special">::</span><span class="identifier">csv_deque</span><span class="special">(</span> <span class="number">1</span><span class="special">,</span> <span class="number">2</span><span class="special">,</span> <span class="number">6</span><span class="special">,</span> <span class="number">24</span><span class="special">,</span> <span class="number">120</span> <span class="special">)</span> <span class="special">)</span> <span class="special">);</span>
+</pre>
+<p>
+        </p>
+<div class="calloutlist"><table border="0" summary="Callout list"><tr>
+<td width="5%" valign="top" align="left"><p><a name="boost_assign4"></a><a href="#boost_assign4co"><img src="../../../../doc/src/images/callouts/1.png" alt="1" border="0"></a> </p></td>
+<td valign="top" align="left"><p>
+              Equivalent to <code class="computeroutput"><span class="identifier">factorials</span><span class="special">(</span> <span class="identifier">k</span> <span class="special">*=</span> <span class="identifier">i</span><span class="special">++</span> <span class="special">)</span></code>
+              for <code class="literal">i = 1, ..., 5</code>
+            </p></td>
+</tr></table></div>
+<p>
+          <span class="bold"><strong>Example3</strong></span>
+        </p>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">word_</span><span class="special">;</span> 
+<span class="keyword">const</span> <span class="keyword">char</span> <span class="identifier">foo</span><span class="special">[]</span> <span class="special">=</span> <span class="string">"foo"</span><span class="special">;</span>
+<span class="keyword">const</span> <span class="keyword">char</span> <span class="identifier">bar</span><span class="special">[</span><span class="number">4</span><span class="special">]</span> <span class="special">=</span> <span class="special">{</span> <span class="char">'b'</span><span class="special">,</span> <span class="char">'a'</span><span class="special">,</span> <span class="char">'r'</span><span class="special">,</span> <span class="char">'\0'</span> <span class="special">};</span>
+<span class="identifier">word_</span> <span class="identifier">baz</span> <span class="special">=</span> <span class="string">"***baz"</span><span class="special">;</span>
+<span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">word_</span><span class="special">&gt;</span> <span class="identifier">C</span><span class="special">;</span> 
+<span class="keyword">typedef</span> <span class="identifier">C</span><span class="special">::</span><span class="identifier">value_type</span> <span class="identifier">T</span><span class="special">;</span>
+<span class="keyword">typedef</span> <span class="identifier">C</span><span class="special">::</span><span class="identifier">mapped_type</span> <span class="identifier">D</span><span class="special">;</span>
+<span class="identifier">C</span> <span class="identifier">map</span><span class="special">;</span>
+<span class="special">(</span>
+    <span class="identifier">as2</span><span class="special">::</span><span class="identifier">put</span><span class="special">(</span> <span class="identifier">map</span> <span class="special">)</span>  <span class="special">%</span> <span class="special">(</span> <span class="identifier">as2</span><span class="special">::</span><span class="identifier">_data</span> <span class="special">=</span> <span class="identifier">as2</span><span class="special">::</span><span class="identifier">_value</span> <span class="special">)</span>
+<span class="special">)(</span> <span class="number">1</span><span class="special">,</span> <span class="identifier">D</span><span class="special">(</span> <span class="identifier">foo</span><span class="special">,</span> <span class="number">3</span> <span class="special">)</span> <span class="special">)(</span> <span class="number">2</span><span class="special">,</span> <span class="identifier">bar</span> <span class="special">)(</span> <span class="number">3</span><span class="special">,</span> <span class="identifier">D</span><span class="special">(</span> <span class="identifier">baz</span><span class="special">,</span> <span class="number">3</span><span class="special">,</span> <span class="number">3</span> <span class="special">)</span> <span class="special">)(</span> <span class="number">4</span><span class="special">,</span> <span class="string">"qux"</span><span class="special">);</span>
+
+<span class="identifier">BOOST_ASSIGN_V2_CHECK</span><span class="special">(</span> <span class="identifier">map</span><span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">==</span> <span class="string">"foo"</span> <span class="special">);</span> <span class="identifier">BOOST_ASSIGN_V2_CHECK</span><span class="special">(</span> <span class="identifier">map</span><span class="special">[</span><span class="number">2</span><span class="special">]</span> <span class="special">==</span> <span class="string">"bar"</span> <span class="special">);</span>
+<span class="identifier">BOOST_ASSIGN_V2_CHECK</span><span class="special">(</span> <span class="identifier">map</span><span class="special">[</span><span class="number">3</span><span class="special">]</span> <span class="special">==</span> <span class="string">"baz"</span> <span class="special">);</span> <span class="identifier">BOOST_ASSIGN_V2_CHECK</span><span class="special">(</span> <span class="identifier">map</span><span class="special">[</span><span class="number">4</span><span class="special">]</span> <span class="special">==</span> <span class="string">"qux"</span> <span class="special">);</span>
+</pre>
+<p>
+        </p>
+<p>
+          <span class="bold"><strong>Example4</strong></span>
+        </p>
+<p>
+          See <a class="link" href="option.html#option_mapped"><code class="computeroutput">_mapped</code></a>
+        </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_assign.reference.option.modifier"></a><a class="link" href="option.html#boost_assign.reference.option.modifier" title="Modifier">Modifier</a>
+</h4></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="option.html#boost_assign.reference.option.modifier.iterate">Iterate</a></span></dt>
+<dt><span class="section"><a href="option.html#boost_assign.reference.option.modifier.mapped">Mapped</a></span></dt>
+<dt><span class="section"><a href="option.html#boost_assign.reference.option.modifier.framework">Framework</a></span></dt>
+<dt><span class="section"><a href="option.html#boost_assign.reference.option.modifier.repeat">Repeat</a></span></dt>
+<dt><span class="section"><a href="option.html#boost_assign.reference.option.modifier.std_modifier">Std_modifier</a></span></dt>
+</dl></div>
+<a name="boost_assign.reference.option.modifier.header"></a><h6>
+<a name="id36356247"></a>
+          <a class="link" href="option.html#boost_assign.reference.option.modifier.header">Header</a>
+        </h6>
+<p>
+          <a href="../../../../../../../boost/assign/v2/option/modifier.hpp" target="_top"><code class="literal">boost/assign/v2/option/modifier.hpp</code></a>
+        </p>
+<div class="warning"><table border="0" summary="Warning">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Warning]" src="../../../../doc/src/images/warning.png"></td>
+<th align="left">Warning</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+            Headers in directory <a class="link" href="option.html" title="Option"><code class="literal">boost/assign/v2/option</code></a>
+            overload <code class="computeroutput"><span class="keyword">operator</span><span class="special">%</span></code>.
+            A header from this directory has to be included <span class="bold"><strong>after</strong></span>
+            that of the object to be passed as first argument to <code class="computeroutput"><span class="keyword">operator</span><span class="special">%</span></code>.
+          </p></td></tr>
+</table></div>
+<a name="boost_assign.reference.option.modifier.description"></a><h6>
+<a name="id36356328"></a>
+          <a class="link" href="option.html#boost_assign.reference.option.modifier.description">Description</a>
+        </h6>
+<p>
+          Options to alter the modifier of an <a class="link" href="interpreter.html" title="Interpreter">interpreter</a>.
+        </p>
+<div class="section">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_assign.reference.option.modifier.iterate"></a><a class="link" href="option.html#boost_assign.reference.option.modifier.iterate" title="Iterate">Iterate</a>
+</h5></div></div></div>
+<a name="option_iterate"></a><a name="boost_assign.reference.option.modifier.iterate.header"></a><h6>
+<a name="id36356375"></a>
+            <a class="link" href="option.html#boost_assign.reference.option.modifier.iterate.header">Header</a>
+          </h6>
+<p>
+            <a href="../../../../../../../boost/assign/v2/option/modifier/iterate.hpp" target="_top"><code class="computeroutput"><span class="identifier">boost</span><span class="special">/</span><span class="identifier">assign</span><span class="special">/</span><span class="identifier">v2</span><span class="special">/</span><span class="identifier">option</span><span class="special">/</span><span class="identifier">modifier</span><span class="special">/</span><span class="identifier">iterate</span><span class="special">.</span><span class="identifier">hpp</span></code></a>
+          </p>
+<a name="boost_assign.reference.option.modifier.iterate.description"></a><h6>
+<a name="id36356460"></a>
+            <a class="link" href="option.html#boost_assign.reference.option.modifier.iterate.description">Description</a>
+          </h6>
+<p>
+            Modifier option.
+          </p>
+<a name="boost_assign.reference.option.modifier.iterate.semantics"></a><h6>
+<a name="id36356483"></a>
+            <a class="link" href="option.html#boost_assign.reference.option.modifier.iterate.semantics">Semantics</a>
+          </h6>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                    <p>
+                      Option
+                    </p>
+                  </th>
+<th>
+                    <p>
+                      Default
+                    </p>
+                  </th>
+<th>
+                    <p>
+                      Modifier
+                    </p>
+                  </th>
+</tr></thead>
+<tbody><tr>
+<td>
+                    <p>
+                      <code class="computeroutput">_iterate <span class="special">=</span> arg</code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      <code class="computeroutput">arg<span class="special">()</span></code> increments
+                      a counter initalized at zero
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      <code class="computeroutput">cont<span class="special">[</span> arg<span class="special">()</span>
+                      <span class="special">]</span> <span class="special">=</span>
+                      t</code>
+                    </p>
+                  </td>
+</tr></tbody>
+</table></div>
+<a name="boost_assign.reference.option.modifier.iterate.example"></a><h6>
+<a name="id36356614"></a>
+            <a class="link" href="option.html#boost_assign.reference.option.modifier.iterate.example">Example</a>
+          </h6>
+<p>
+            
+</p>
+<pre class="programlisting"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">lambda</span><span class="special">;</span>
+<span class="keyword">typedef</span> <span class="keyword">int</span> <span class="identifier">T</span><span class="special">;</span> <span class="identifier">array</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">,</span> <span class="number">10</span><span class="special">&gt;</span> <span class="identifier">alternating</span><span class="special">;</span> 
+<span class="identifier">alternating</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="special">-</span><span class="number">1</span><span class="special">;</span> <span class="identifier">alternating</span><span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">=</span> <span class="special">+</span><span class="number">1</span><span class="special">;</span>
+<span class="identifier">alternating</span><span class="special">[</span><span class="number">2</span><span class="special">]</span> <span class="special">=</span> <span class="special">-</span><span class="number">2</span><span class="special">;</span> 
+
+<span class="keyword">int</span> <span class="identifier">index</span> <span class="special">=</span> <span class="number">3</span><span class="special">;</span> 
+<span class="special">(</span> 
+    <span class="identifier">as2</span><span class="special">::</span><span class="identifier">put</span><span class="special">(</span> <span class="identifier">alternating</span> <span class="special">)</span> <span class="special">%</span> <span class="special">(</span> <span class="identifier">as2</span><span class="special">::</span><span class="identifier">_iterate</span> <span class="special">=</span> <span class="identifier">var</span><span class="special">(</span> <span class="identifier">index</span> <span class="special">)++</span> <span class="special">)</span> 
+<span class="special">)(</span> <span class="special">+</span><span class="number">2</span> <span class="special">)(</span> <span class="special">-</span><span class="number">3</span> <span class="special">)(</span> <span class="special">+</span><span class="number">3</span> <span class="special">)(</span> <span class="special">-</span><span class="number">4</span> <span class="special">)(</span> <span class="special">+</span><span class="number">4</span> <span class="special">)(</span> <span class="special">-</span><span class="number">5</span> <span class="special">)(</span> <span class="special">+</span><span class="number">5</span> <span class="special">);</span>
+
+<span class="identifier">BOOST_ASSIGN_V2_CHECK</span><span class="special">(</span>     
+    <span class="identifier">range</span><span class="special">::</span><span class="identifier">equal</span><span class="special">(</span> 
+        <span class="identifier">alternating</span><span class="special">,</span> 
+        <span class="identifier">as2</span><span class="special">::</span><span class="identifier">csv_deque</span><span class="special">(</span> <span class="special">-</span><span class="number">1</span><span class="special">,</span> <span class="special">+</span><span class="number">1</span><span class="special">,</span> <span class="special">-</span><span class="number">2</span><span class="special">,</span> <span class="special">+</span><span class="number">2</span><span class="special">,</span> <span class="special">-</span><span class="number">3</span><span class="special">,</span> <span class="special">+</span><span class="number">3</span><span class="special">,</span> <span class="special">-</span><span class="number">4</span><span class="special">,</span> <span class="special">+</span><span class="number">4</span><span class="special">,</span> <span class="special">-</span><span class="number">5</span><span class="special">,</span> <span class="special">+</span><span class="number">5</span> <span class="special">)</span> 
+    <span class="special">)</span> 
+<span class="special">);</span>
+</pre>
+<p>
+          </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_assign.reference.option.modifier.mapped"></a><a class="link" href="option.html#boost_assign.reference.option.modifier.mapped" title="Mapped">Mapped</a>
+</h5></div></div></div>
+<a name="option_mapped"></a><a name="boost_assign.reference.option.modifier.mapped.header"></a><h6>
+<a name="id36357268"></a>
+            <a class="link" href="option.html#boost_assign.reference.option.modifier.mapped.header">Header</a>
+          </h6>
+<p>
+            <a href="../../../../../../../boost/assign/v2/option/modifier/mapped.hpp" target="_top"><code class="computeroutput"><span class="identifier">boost</span><span class="special">/</span><span class="identifier">assign</span><span class="special">/</span><span class="identifier">v2</span><span class="special">/</span><span class="identifier">option</span><span class="special">/</span><span class="identifier">modifier</span><span class="special">/</span><span class="identifier">mapped</span><span class="special">.</span><span class="identifier">hpp</span></code></a>
+          </p>
+<a name="boost_assign.reference.option.modifier.mapped.description"></a><h6>
+<a name="id36357353"></a>
+            <a class="link" href="option.html#boost_assign.reference.option.modifier.mapped.description">Description</a>
+          </h6>
+<p>
+            Modifier option.
+          </p>
+<a name="boost_assign.reference.option.modifier.mapped.semantics"></a><h6>
+<a name="id36357376"></a>
+            <a class="link" href="option.html#boost_assign.reference.option.modifier.mapped.semantics">Semantics</a>
+          </h6>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                    <p>
+                      Option
+                    </p>
+                  </th>
+<th>
+                    <p>
+                      Default
+                    </p>
+                  </th>
+<th>
+                    <p>
+                      Modifier
+                    </p>
+                  </th>
+</tr></thead>
+<tbody><tr>
+<td>
+                    <p>
+                      <code class="computeroutput">_mapped <span class="special">=</span> arg</code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      None
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">cont</span><span class="special">[</span>
+                      t <span class="special">]</span> <span class="special">=</span>
+                      arg<span class="special">(</span> <span class="identifier">cont</span><span class="special">[</span> t <span class="special">]</span>
+                      <span class="special">)</span></code>
+                    </p>
+                  </td>
+</tr></tbody>
+</table></div>
+<a name="boost_assign.reference.option.modifier.mapped.example"></a><h6>
+<a name="id36357519"></a>
+            <a class="link" href="option.html#boost_assign.reference.option.modifier.mapped.example">Example</a>
+          </h6>
+<p>
+            
+</p>
+<pre class="programlisting"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">lambda</span><span class="special">;</span>
+<span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">str_</span><span class="special">;</span> <span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;</span><span class="identifier">str_</span><span class="special">,</span> <span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">C</span><span class="special">;</span> <span class="identifier">C</span> <span class="identifier">year</span><span class="special">;</span>
+<span class="special">(</span>
+    <span class="identifier">as2</span><span class="special">::</span><span class="identifier">put</span><span class="special">(</span> <span class="identifier">year</span> <span class="special">)(</span> <span class="string">"feb"</span><span class="special">,</span> <span class="number">28</span> <span class="special">)(</span> <span class="string">"apr"</span><span class="special">,</span> <span class="number">30</span> <span class="special">)(</span> <span class="string">"jun"</span><span class="special">,</span> <span class="number">30</span> <span class="special">)(</span> <span class="string">"sep"</span><span class="special">,</span> <span class="number">30</span> <span class="special">)(</span> <span class="string">"nov"</span><span class="special">,</span> <span class="number">30</span> <span class="special">)</span>
+        <span class="special">%</span> <span class="special">(</span><span class="identifier">as2</span><span class="special">::</span><span class="identifier">_data</span> <span class="special">=</span> <span class="identifier">as2</span><span class="special">::</span><span class="identifier">_key</span><span class="special">)</span> <span class="special">%</span> <span class="special">(</span> <span class="identifier">as2</span><span class="special">::</span><span class="identifier">_mapped</span> <span class="special">=</span> <span class="special">(</span> <span class="identifier">_1</span> <span class="special">=</span> <span class="number">31</span> <span class="special">)</span> <span class="special">)</span>
+<span class="special">)</span><a class="co" name="boost_assign5co" href="option.html#boost_assign5"><img src="../../../../doc/src/images/callouts/1.png" alt="1" border="0"></a><span class="special">(</span> <span class="string">"jan"</span> <span class="special">)(</span> <span class="string">"mar"</span> <span class="special">)(</span> <span class="string">"may"</span> <span class="special">)(</span> <span class="string">"jul"</span> <span class="special">)(</span> <span class="string">"aug"</span> <span class="special">)(</span> <span class="string">"oct"</span> <span class="special">)(</span> <span class="string">"dec"</span> <span class="special">);</span>
+
+<span class="identifier">BOOST_ASSIGN_V2_CHECK</span><span class="special">(</span> <span class="identifier">year</span><span class="special">[</span><span class="string">"jan"</span><span class="special">]</span> <span class="special">==</span> <span class="number">31</span> <span class="special">);</span>
+<span class="identifier">BOOST_ASSIGN_V2_CHECK</span><span class="special">(</span> <span class="identifier">year</span><span class="special">[</span><span class="string">"dec"</span><span class="special">]</span> <span class="special">==</span> <span class="number">31</span> <span class="special">);</span>
+</pre>
+<p>
+          </p>
+<div class="calloutlist"><table border="0" summary="Callout list"><tr>
+<td width="5%" valign="top" align="left"><p><a name="boost_assign5"></a><a href="#boost_assign5co"><img src="../../../../doc/src/images/callouts/1.png" alt="1" border="0"></a> </p></td>
+<td valign="top" align="left"><p>
+                Calls <code class="computeroutput"><span class="identifier">year</span><span class="special">[</span><span class="string">"jan"</span><span class="special">]</span>
+                <span class="special">=</span> <span class="number">31</span></code>
+                etc.
+              </p></td>
+</tr></table></div>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_assign.reference.option.modifier.framework"></a><a class="link" href="option.html#boost_assign.reference.option.modifier.framework" title="Framework">Framework</a>
+</h5></div></div></div>
+<a name="option_modifier"></a><a name="boost_assign.reference.option.modifier.framework.header"></a><h6>
+<a name="id36358143"></a>
+            <a class="link" href="option.html#boost_assign.reference.option.modifier.framework.header">Header</a>
+          </h6>
+<p>
+            <a href="../../../../../../../boost/assign/v2/option/modifier/framework.hpp" target="_top">boost/assign/v2/option/modifier/framework.hpp</a>
+          </p>
+<a name="boost_assign.reference.option.modifier.framework.description"></a><h6>
+<a name="id36358170"></a>
+            <a class="link" href="option.html#boost_assign.reference.option.modifier.framework.description">Description</a>
+          </h6>
+<p>
+            Option modifier framework
+          </p>
+<a name="boost_assign.reference.option.modifier.framework.synopsis"></a><h6>
+<a name="id36358193"></a>
+            <a class="link" href="option.html#boost_assign.reference.option.modifier.framework.synopsis">Synopsis</a>
+          </h6>
+<p>
+            
+</p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">interpreter_aux</span><span class="special">{</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span>
+        <span class="keyword">typename</span> <span class="identifier">Keyword</span> <span class="comment">// A class of modifiers
+</span>        <span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Arg</span>  <span class="comment">// Specifies an aspect of the implementation
+</span>    <span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">option_modifier</span>
+    <span class="special">{</span>
+        
+        <span class="identifier">option_modifier</span><span class="special">(){}</span>
+        <span class="identifier">option_modifier</span><span class="special">(</span><span class="identifier">Arg</span> <span class="identifier">arg</span><span class="special">);</span>
+        
+        <span class="identifier">Arg</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">arg</span><span class="special">()</span><span class="keyword">const</span><span class="special">;</span>
+
+        <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Arg1</span><span class="special">&gt;</span>
+        <span class="identifier">option_modifier</span><span class="special">&lt;</span><span class="identifier">Keyword</span><span class="special">,</span> <span class="identifier">Arg1</span><span class="special">&gt;</span>
+        <span class="keyword">operator</span><span class="special">=(</span><span class="keyword">const</span> <span class="identifier">Arg1</span><span class="special">&amp;</span> <span class="identifier">arg1</span><span class="special">)</span><span class="keyword">const</span><span class="special">;</span>
+        
+    <span class="special">};</span>
+
+    <span class="comment">// Specialize on Keyword
+</span>    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Keyword</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Arg</span><span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">meta_modifier_tag</span>
+    <span class="special">{</span>
+        <span class="keyword">template</span><span class="special">&lt;</span>
+            <span class="keyword">typename</span> <span class="identifier">D</span> <span class="comment">// Inherits interpreter_crtp&lt;&gt;
+</span>        <span class="special">&gt;</span>
+        <span class="keyword">struct</span> <span class="identifier">apply</span><span class="special">;</span>
+    <span class="special">};</span>
+
+<span class="keyword">namespace</span> <span class="identifier">result_of</span><span class="special">{</span>
+        
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">D</span><span class="special">,</span><span class="keyword">typename</span> <span class="identifier">Keyword</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Arg</span><span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">option_modifier</span> <span class="special">;</span>
+            
+<span class="special">}//</span> <span class="identifier">result_of</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">C</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">F</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">ModifierTag</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">DataTag</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">D</span><span class="special">,</span> 
+        <span class="keyword">typename</span> <span class="identifier">Keyword</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Arg</span><span class="special">&gt;</span>
+    <span class="keyword">typename</span> <span class="identifier">result_of</span><span class="special">::</span><span class="identifier">option_modifier</span><span class="special">&lt;</span><span class="identifier">D</span><span class="special">,</span> <span class="identifier">Keyword</span><span class="special">,</span> <span class="identifier">Arg</span><span class="special">&gt;::</span><span class="identifier">type</span>
+    <span class="keyword">operator</span><span class="special">%(</span>
+        <span class="identifier">interpreter_crtp</span><span class="special">&lt;</span><span class="identifier">C</span><span class="special">,</span> <span class="identifier">F</span><span class="special">,</span> <span class="identifier">ModifierTag</span><span class="special">,</span> <span class="identifier">DataTag</span><span class="special">,</span> <span class="identifier">D</span><span class="special">&gt;</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">lhs</span><span class="special">,</span>
+        <span class="identifier">option_modifier</span><span class="special">&lt;</span><span class="identifier">Keyword</span><span class="special">,</span> <span class="identifier">Arg</span><span class="special">&gt;</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">rhs</span>
+    <span class="special">);</span>
+
+<span class="special">}//</span> <span class="identifier">interpreter_aux</span>
+
+<span class="preprocessor">#define</span> <span class="identifier">BOOST_ASSIGN_V2_OPTION_MODIFIER_KEYWORD</span><span class="special">(</span><span class="identifier">NAME</span><span class="special">)</span> <span class="identifier">unspecified</span>
+<span class="preprocessor">#define</span> <span class="identifier">BOOST_ASSIGN_V2_OPTION_MODIFIER_META_MODIFIER_TAG</span><span class="special">(</span><span class="identifier">NAME</span><span class="special">,</span> <span class="identifier">Result</span><span class="special">)</span> <span class="identifier">unspecified</span>
+
+</pre>
+<p>
+          </p>
+<a name="boost_assign.reference.option.modifier.framework.semantics"></a><h6>
+<a name="id36359045"></a>
+            <a class="link" href="option.html#boost_assign.reference.option.modifier.framework.semantics">Semantics</a>
+          </h6>
+<p>
+            <span class="bold"><strong>Requirement</strong></span>
+          </p>
+<p>
+            Specialize, such as to model <a class="link" href="interpreter.html#interpreter_modifier"><code class="computeroutput"><span class="identifier">interpreter_aux</span><span class="special">::</span><span class="identifier">ConceptModifier</span></code></a>, 
+</p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">interpreter_aux</span><span class="special">{</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Arg</span><span class="special">&gt;</span>
+    <span class="keyword">class</span> <span class="identifier">interpreter_modifier</span><span class="special">&lt;</span> <span class="identifier">Result</span> <span class="special">&gt;;</span>
+
+<span class="special">}</span>
+</pre>
+<p>
+          </p>
+<p>
+            <span class="bold"><strong>Expression</strong></span>
+          </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                    <p>
+                      Expression
+                    </p>
+                  </th>
+<th>
+                    <p>
+                      Description
+                    </p>
+                  </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">BOOST_ASSIGN_V2_OPTION_MODIFIER_KEYWORD</span><span class="special">(</span><span class="identifier">NAME</span><span class="special">)</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      Defines an empty class <code class="computeroutput"><span class="identifier">interpreter_aux</span><span class="special">::</span><span class="identifier">keyword_NAME</span><span class="special">;</span></code> and an associated keyword
+                      <code class="computeroutput"><span class="identifier">_keyword_NAME</span></code>
+                    </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">BOOST_ASSIGN_V2_OPTION_MODIFIER_META_MODIFIER_TAG</span><span class="special">(</span><span class="identifier">NAME</span><span class="special">,</span> <span class="identifier">Result</span><span class="special">)</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      Specializes metafunction class <code class="computeroutput"><span class="identifier">interpreter_aux</span><span class="special">::</span><span class="identifier">meta_modifier_tag</span></code>
+                      on <code class="computeroutput"><span class="identifier">interpreter_aux</span><span class="special">::</span><span class="identifier">keyword_NAME</span></code>
+                      to return <code class="computeroutput"><span class="identifier">Result</span></code>
+                    </p>
+                  </td>
+</tr>
+</tbody>
+</table></div>
+<a name="boost_assign.reference.option.modifier.framework.examples"></a><h6>
+<a name="id36359514"></a>
+            <a class="link" href="option.html#boost_assign.reference.option.modifier.framework.examples">Examples</a>
+          </h6>
+<p>
+            <span class="bold"><strong>Example1</strong></span>
+          </p>
+<p>
+            <a href="../../../../../../../boost/assign/v2/option/modifier/iterate.hpp" target="_top"><code class="literal">boost/assign/v2/option/modifier/iterate.hpp</code></a>
+          </p>
+<p>
+            <span class="bold"><strong>Example2</strong></span>
+          </p>
+<p>
+            <a href="../../../../../../../boost/assign/v2/option/modifier/mapped.hpp" target="_top"><code class="literal">boost/assign/v2/option/modifier/mapped.hpp</code></a>
+          </p>
+<p>
+            <span class="bold"><strong>Example3</strong></span>
+          </p>
+<p>
+            <a href="../../../../../../../boost/assign/v2/option/modifier/repeat.hpp" target="_top"><code class="literal">boost/assign/v2/option/modifier/repeat.hpp</code></a>
+          </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_assign.reference.option.modifier.repeat"></a><a class="link" href="option.html#boost_assign.reference.option.modifier.repeat" title="Repeat">Repeat</a>
+</h5></div></div></div>
+<a name="boost_assign.reference.option.modifier.repeat.header"></a><h6>
+<a name="id36359609"></a>
+            <a class="link" href="option.html#boost_assign.reference.option.modifier.repeat.header">Header</a>
+          </h6>
+<p>
+            <a href="../../../../../../../boost/assign/v2/option/modifier/repeat.hpp" target="_top"><code class="computeroutput"><span class="identifier">boost</span><span class="special">/</span><span class="identifier">assign</span><span class="special">/</span><span class="identifier">v2</span><span class="special">/</span><span class="identifier">option</span><span class="special">/</span><span class="identifier">modifier</span><span class="special">/</span><span class="identifier">repeat</span><span class="special">.</span><span class="identifier">hpp</span></code></a>
+          </p>
+<a name="boost_assign.reference.option.modifier.repeat.description"></a><h6>
+<a name="id36359693"></a>
+            <a class="link" href="option.html#boost_assign.reference.option.modifier.repeat.description">Description</a>
+          </h6>
+<p>
+            Modifier option.
+          </p>
+<a name="boost_assign.reference.option.modifier.repeat.semantics"></a><h6>
+<a name="id36359716"></a>
+            <a class="link" href="option.html#boost_assign.reference.option.modifier.repeat.semantics">Semantics</a>
+          </h6>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                    <p>
+                      Option
+                    </p>
+                  </th>
+<th>
+                    <p>
+                      Default
+                    </p>
+                  </th>
+<th>
+                    <p>
+                      Modifier
+                    </p>
+                  </th>
+</tr></thead>
+<tbody><tr>
+<td>
+                    <p>
+                      <code class="computeroutput">_repeat <span class="special">=</span> <span class="identifier">n</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      <code class="literal">n = 0</code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      Invokes <code class="literal">n</code> times the modifier that prevailed
+                      before passing this option
+                    </p>
+                  </td>
+</tr></tbody>
+</table></div>
+<a name="boost_assign.reference.option.modifier.repeat.example"></a><h6>
+<a name="id36359825"></a>
+            <a class="link" href="option.html#boost_assign.reference.option.modifier.repeat.example">Example</a>
+          </h6>
+<p>
+            <span class="bold"><strong>Example1</strong></span>
+          </p>
+<p>
+            
+</p>
+<pre class="programlisting"><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">cont</span><span class="special">;</span>
+<span class="special">(</span> <span class="identifier">as2</span><span class="special">::</span><span class="identifier">put</span><span class="special">(</span> <span class="identifier">cont</span> <span class="special">)</span> <span class="special">%</span> <span class="special">(</span> <span class="identifier">as2</span><span class="special">::</span><span class="identifier">_repeat</span> <span class="special">=</span> <span class="number">2</span>  <span class="special">)</span> <span class="special">)(</span> <span class="number">1</span> <span class="special">)(</span> <span class="number">10</span> <span class="special">)(</span> <span class="number">100</span> <span class="special">);</span>
+
+<span class="identifier">BOOST_ASSIGN_V2_CHECK</span><span class="special">(</span> 
+    <span class="identifier">range</span><span class="special">::</span><span class="identifier">equal</span><span class="special">(</span> <span class="identifier">cont</span><span class="special">,</span> <span class="identifier">as2</span><span class="special">::</span><span class="identifier">csv_deque</span><span class="special">(</span> <span class="number">1</span><span class="special">,</span> <span class="number">1</span><span class="special">,</span> <span class="number">10</span><span class="special">,</span> <span class="number">10</span><span class="special">,</span> <span class="number">100</span><span class="special">,</span> <span class="number">100</span> <span class="special">)</span> <span class="special">)</span> 
+<span class="special">);</span>
+</pre>
+<p>
+          </p>
+<p>
+            <span class="bold"><strong>Example2</strong></span>
+          </p>
+<p>
+            
+</p>
+<pre class="programlisting"><span class="identifier">BOOST_AUTO</span><span class="special">(</span>
+    <span class="identifier">cont</span><span class="special">,</span> <span class="special">(</span>
+        <span class="identifier">as2</span><span class="special">::</span><span class="identifier">deque</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;(</span> <span class="identifier">as2</span><span class="special">::</span><span class="identifier">_nil</span> <span class="special">)</span> <span class="special">%</span> <span class="identifier">as2</span><span class="special">::</span><span class="identifier">_push_front</span> <span class="special">%</span> <span class="special">(</span> <span class="identifier">as2</span><span class="special">::</span><span class="identifier">_repeat</span> <span class="special">=</span> <span class="number">2</span> <span class="special">)</span>
+    <span class="special">)(</span> <span class="number">1</span> <span class="special">)(</span> <span class="number">10</span> <span class="special">)(</span> <span class="number">100</span> <span class="special">)</span>
+<span class="special">);</span>
+
+<span class="identifier">BOOST_ASSIGN_V2_CHECK</span><span class="special">(</span> 
+    <span class="identifier">range</span><span class="special">::</span><span class="identifier">equal</span><span class="special">(</span> <span class="identifier">cont</span><span class="special">,</span> <span class="identifier">as2</span><span class="special">::</span><span class="identifier">csv_deque</span><span class="special">(</span> <span class="number">100</span><span class="special">,</span> <span class="number">100</span><span class="special">,</span> <span class="number">10</span><span class="special">,</span> <span class="number">10</span><span class="special">,</span> <span class="number">1</span><span class="special">,</span> <span class="number">1</span> <span class="special">)</span> <span class="special">)</span> 
+<span class="special">);</span>
+</pre>
+<p>
+          </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_assign.reference.option.modifier.std_modifier"></a><a class="link" href="option.html#boost_assign.reference.option.modifier.std_modifier" title="Std_modifier">Std_modifier</a>
+</h5></div></div></div>
+<a name="std_modifier"></a><a name="boost_assign.reference.option.modifier.std_modifier.header"></a><h6>
+<a name="id36360456"></a>
+            <a class="link" href="option.html#boost_assign.reference.option.modifier.std_modifier.header">Header</a>
+          </h6>
+<p>
+            <a href="../../../../../../../boost/assign/v2/option/modifier/std.hpp" target="_top"><code class="computeroutput"><span class="identifier">boost</span><span class="special">/</span><span class="identifier">assign</span><span class="special">/</span><span class="identifier">v2</span><span class="special">/</span><span class="identifier">option</span><span class="special">/</span><span class="identifier">modifier</span><span class="special">/</span><span class="identifier">std</span><span class="special">.</span><span class="identifier">hpp</span></code></a>
+          </p>
+<a name="boost_assign.reference.option.modifier.std_modifier.description"></a><h6>
+<a name="id36360540"></a>
+            <a class="link" href="option.html#boost_assign.reference.option.modifier.std_modifier.description">Description</a>
+          </h6>
+<p>
+            Modifier option
+          </p>
+<a name="boost_assign.reference.option.modifier.std_modifier.syntax"></a><h6>
+<a name="id36360563"></a>
+            <a class="link" href="option.html#boost_assign.reference.option.modifier.std_modifier.syntax">Syntax</a>
+          </h6>
+<p>
+            
+</p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">interpreter_aux</span><span class="special">{</span>
+    <span class="keyword">struct</span> <span class="identifier">option_std_modifier</span><span class="special">;</span>
+<span class="special">}</span>
+    <span class="identifier">interpreter_aux</span><span class="special">::</span><span class="identifier">option_std_modifier</span> <span class="keyword">const</span> _std_modifier<span class="special">;</span>
+    <span class="preprocessor">#define</span> <span class="identifier">BOOST_ASSIGN_V2_OPTION_STD_MODIFIER</span><span class="special">(</span><span class="identifier">Name</span><span class="special">)</span> <em class="replaceable"><code>unspecified</code></em>
+</pre>
+<p>
+          </p>
+<a name="boost_assign.reference.option.modifier.std_modifier.option"></a><h6>
+<a name="id36360676"></a>
+            <a class="link" href="option.html#boost_assign.reference.option.modifier.std_modifier.option">Option</a>
+          </h6>
+<p>
+            <span class="bold"><strong>Semantics</strong></span>
+          </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                    <p>
+                      Option
+                    </p>
+                  </th>
+<th>
+                    <p>
+                      Default
+                    </p>
+                  </th>
+<th>
+                    <p>
+                      Modifier
+                    </p>
+                  </th>
+</tr></thead>
+<tbody><tr>
+<td>
+                    <p>
+                      <code class="computeroutput">_std_modifier <span class="special">=</span> arg</code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      None
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      Semantics of <code class="computeroutput"><span class="identifier">interpreter_aux</span><span class="special">::</span><span class="identifier">modifier</span><span class="special">&lt;</span><span class="identifier">Arg</span><span class="special">&gt;</span></code>
+                    </p>
+                  </td>
+</tr></tbody>
+</table></div>
+<p>
+            <span class="bold"><strong>Instances</strong></span>
+          </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                    <p>
+                      Keyword
+                    </p>
+                  </th>
+<th>
+                    <p>
+                      Option
+                    </p>
+                  </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                    <p>
+                      <code class="computeroutput">_insert</code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      <code class="computeroutput">_std_modifier <span class="special">=</span> <span class="identifier">modifier_tag</span><span class="special">::</span><span class="identifier">insert</span><span class="special">()</span></code>
+                    </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      <code class="computeroutput">_push</code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      <code class="computeroutput">_std_modifier <span class="special">=</span> <span class="identifier">modifier_tag</span><span class="special">::</span><span class="identifier">push</span><span class="special">()</span></code>
+                    </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      <code class="computeroutput">_push_back</code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      <code class="computeroutput">_std_modifier <span class="special">=</span> <span class="identifier">modifier_tag</span><span class="special">::</span><span class="identifier">push_back</span><span class="special">()</span></code>
+                    </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      <code class="computeroutput">_push_front</code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      <code class="computeroutput">_std_modifier <span class="special">=</span> <span class="identifier">modifier_tag</span><span class="special">::</span><span class="identifier">push_front</span><span class="special">()</span></code>
+                    </p>
+                  </td>
+</tr>
+</tbody>
+</table></div>
+<p>
+            <span class="bold"><strong>Example</strong></span>
+          </p>
+<p>
+            
+</p>
+<pre class="programlisting"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">circular_buffer</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">cb</span><span class="special">(</span><span class="number">3</span><span class="special">);</span> 
+<span class="special">(</span> <span class="identifier">as2</span><span class="special">::</span><span class="identifier">put</span><span class="special">(</span> <span class="identifier">cb</span> <span class="special">)</span> <span class="special">%</span> <span class="identifier">as2</span><span class="special">::</span><span class="identifier">_push_front</span><span class="special">)(</span> <span class="number">3</span> <span class="special">)(</span> <span class="number">2</span> <span class="special">)(</span> <span class="number">1</span> <span class="special">);</span>
+ 
+<span class="identifier">BOOST_ASSIGN_V2_CHECK</span><span class="special">(</span>
+    <span class="identifier">range</span><span class="special">::</span><span class="identifier">equal</span><span class="special">(</span><span class="identifier">cb</span><span class="special">,</span> <span class="identifier">as2</span><span class="special">::</span><span class="identifier">csv_deque</span><span class="special">(</span><span class="number">1</span><span class="special">,</span> <span class="number">2</span><span class="special">,</span> <span class="number">3</span><span class="special">)</span> <span class="special">)</span>
+<span class="special">);</span>
+
+<span class="identifier">as2</span><span class="special">::</span><span class="identifier">put</span><span class="special">(</span> <span class="identifier">cb</span> <span class="special">)(</span> <span class="number">4</span> <span class="special">)(</span> <span class="number">5</span> <span class="special">);</span>
+
+<span class="identifier">BOOST_ASSIGN_V2_CHECK</span><span class="special">(</span>
+    <span class="identifier">range</span><span class="special">::</span><span class="identifier">equal</span><span class="special">(</span><span class="identifier">cb</span><span class="special">,</span> <span class="identifier">as2</span><span class="special">::</span><span class="identifier">csv_deque</span><span class="special">(</span><span class="number">3</span><span class="special">,</span> <span class="number">4</span><span class="special">,</span> <span class="number">5</span><span class="special">)</span> <span class="special">)</span>
+<span class="special">);</span>    
+
+</pre>
+<p>
+          </p>
+<a name="boost_assign.reference.option.modifier.std_modifier.macro"></a><h6>
+<a name="id36361431"></a>
+            <a class="link" href="option.html#boost_assign.reference.option.modifier.std_modifier.macro">Macro</a>
+          </h6>
+<p>
+            <span class="bold"><strong>Semantics</strong></span> 
+</p>
+<pre class="programlisting"><span class="identifier">BOOST_ASSIGN_V2_OPTION_STD_MODIFIER</span><span class="special">(</span><span class="identifier">Name</span><span class="special">)</span>
+</pre>
+<p>
+          </p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+                Defines <code class="computeroutput"><span class="keyword">namespace</span> <span class="identifier">modifier_tag</span><span class="special">{</span> <span class="keyword">struct</span>
+                <span class="identifier">Name</span><span class="special">{};</span>
+                <span class="special">}</span></code>
+              </li>
+<li class="listitem">
+                Creates a keyword <code class="computeroutput"><span class="identifier">_Name</span></code>,
+                shortcut for <code class="computeroutput">_std_modifier <span class="special">=</span>
+                <span class="identifier">modifier_tag</span><span class="special">::</span><span class="identifier">Name</span></code>
+              </li>
+<li class="listitem">
+                Specializes <code class="computeroutput"><span class="identifier">interpreter_aux</span><span class="special">::</span><span class="identifier">modifier</span><span class="special">&lt;</span><span class="identifier">modifier_tag</span><span class="special">::</span><span class="identifier">Name</span><span class="special">&gt;</span></code> with the following semantics:
+              </li>
+</ul></div>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                    <p>
+                      Option
+                    </p>
+                  </th>
+<th>
+                    <p>
+                      Modifier
+                    </p>
+                  </th>
+</tr></thead>
+<tbody><tr>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">_Name</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      <code class="computeroutput">cont<span class="special">.</span><span class="identifier">Name</span><span class="special">(</span> t <span class="special">)</span></code>
+                    </p>
+                  </td>
+</tr></tbody>
+</table></div>
+<p>
+            <span class="bold"><strong>Example</strong></span> 
+</p>
+<pre class="programlisting"><span class="identifier">BOOST_ASSIGN_V2_OPTION_STD_MODIFIER</span><span class="special">(</span><span class="identifier">push_back</span><span class="special">)</span>
+</pre>
+<p>
+          </p>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2003 -2004 Thorsten Ottosen, 2010 Erwann Rogard<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="deque.html"><img src="../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="pipe.html"><img src="../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

@@ -1,0 +1,8 @@
+[import ../../../../boost/assign/v2/detail/keyword.hpp]
+
+[tpl_feature 
+	[@../../../../../boost/assign/v2/detail/keyword.hpp [^boost/assign/v2/detail/detail/keyword.hpp]]
+	..Keywords used by the rest of the library
+	..[syntax_detail_keyword]
+	..None
+]
