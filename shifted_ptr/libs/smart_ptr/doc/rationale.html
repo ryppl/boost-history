@@ -60,34 +60,49 @@
       <dl class="index">
     <dt><a href="#introduction">Introduction</a></dt>
 
-    <dt><a href="#topic1">First topic</a></dt>
+    <dt><a href="#cyclicism">Cyclicism</a></dt>
+	
+    <dt><a href="#initialization">Initialization</a></dt>
 
-    <dt><a href="#topic2">Second topic</a></dt>
+    <dt><a href="#union">Union</a></dt>
 
-    <dt><a href="#footnotes">Footnotes</a></dt>
+    <dt><a href="#naming">Naming Convention</a></dt>
   </dl>
 
   <h2><a name="introduction" id="introduction"></a>Introduction</h2>
 
-  <p>{{text}}</p>
+  <p>Shifted Pointer introduces the concept of <i>set</i> where it is defined to be a one or many memory blocks referencing each other allocated on the heap pointed 
+  to by one or many <i>shifted_ptr&#60;T&#62;</i>s allocated on the stack or the data segment (non heap) of the application.  Each <i>set</i> is consequently composed of a 
+  list of all memory blocks constituting it and a counter tracking the number of times the <i>set</i> is referenced by a <i>shifted_ptr&#60;T&#62;</i> from the stack or the data 
+  segment.</p>
+  
+  <h2><a name="cyclicism" id="cyclicism"></a>Cyclicism</h2>
+  
+  <p>Therefore whenever a <i>set</i> counter finds out the number of <i>shifted_ptr&#60;T&#62;</i> referencing it to be zero, the deallocation of each memory block composing 
+  the <i>set</i> is enforced.  Thus whether the <i>set</i> was composed of memory blocks referencing each other in a cyclic way or not, all of them will be subject to 
+  destruction and deallocation indifferent from the cyclicism problem presented by the reference counters.</p>
 
-  <h2><a name="topic1" id="topic1"></a>First Topic</h2>
+  <h2><a name="initialization" id="initialization"></a>Initialization</h2>
 
-  <p>{{text}}</p>
+  <p>A <i>shifted_ptr&#60;T&#62;</i> is initialized differently depending on the memory segment it is being instanciated on.  If it is found to be residing the stack or the data 
+  segment then a new <i>set</i> counter will also be instanciated.  If it is found to be living on the heap then a more complicated mechanism is involved to track the 
+  last memory block that was allocated in the same thread, find its address and stack up the <i>set</i> it will be part of until the first <i>shifted_ptr&#60;T&#62;</i> found on 
+  the stack is or data segment is initialized, where the new <i>set</i> counter will be shared with all of the newly allocated blocks of memory referencing each other.</p>
 
-  <h2><a name="topic2" id="topic2"></a>Second Topic</h2>
+  <h2><a name="union" id="union"></a>Union</h2>
 
-  <p>{{text}}</p>
+  <p>A <i>set</i> will be unified with another <i>set</i> whenever one of its member is found to reference a member from a different <i>set</i>.  The counter from the 
+  first <i>set</i> will be added to the counter from the second <i>set</i> and a redirection of the first counter to the second will occur so that all elements from the 
+  first <i>set</i> make direct use of the second counter.  Once two <i>set</i>s are unified they will stay unified even if the new reference responsible for unifying the 
+  <i>set</i>s is once again disjointed.</p>
 
-  <h2><a name="footnotes" id="footnotes"></a>Footnotes</h2>
+  <h2><a name="naming" id="naming"></a>Naming Convention</h2>
 
-  <dl>
-    <dt><a name="footnote1" class="footnote" id="footnote1">(1)</a>
-    {{text}}</dt>
-
-    <dt><a name="footnote2" class="footnote" id="footnote2">(2)</a>
-    {{text}}</dt>
-  </dl>
+  <p>The name <i>shifted_ptr&#60;T&#62;</i> first comes from one of its caracteristic where the reference counter is allocated at the same time the pointee object is.  Only the 
+  pointer to the object is known by <i>shifted_ptr&#60;T&#62;</i> and in order to access the reference counter, the pointer to the top of the object is "shifted" up.  The name of 
+  the class <i>shifted&#60;T&#62;</i> used to instanciate all pointee objects is simply taken from the name <i>shifted_ptr&#60;T&#62;</i> it will be affected to.
+  </p>
+  
   <hr>
 
   <p><a href="http://validator.w3.org/check?uri=referer"><img border="0" src=
