@@ -84,7 +84,12 @@
   
   <p>Therefore whenever a <i>set</i> counter finds out the number of <i>shifted_ptr&#60;T&#62;</i> referencing it to be zero, the deallocation of each memory block composing 
   the <i>set</i> is enforced.  Thus whether the <i>set</i> was composed of memory blocks referencing each other in a cyclic way or not, all of them will be subject to 
-  destruction and deallocation indifferent from the cyclicism problem presented by the reference counters.</p>
+  destruction and deallocation indifferent from the cyclicism problem presented by the reference counters.  As we can see in the following example, the <i>set</i> counter reaches 
+  0 and consequently every elements composing the <i>set</i> will be destructed and deallocated:</p>
+  
+  <center>
+    <img src="cyclicism.png"/>
+  </center>
 
   <h2><a name="initialization" id="initialization"></a>Initialization</h2>
 
