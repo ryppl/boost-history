@@ -81,7 +81,7 @@
 
   <p>Reference counting is a different approach where objects pointed to are aware of the number of times they are referenced.  This means a counter within the object
   is incremented or decremented according to the number of smart pointers that are referencing or dereferencing it.  There is a lost in performance as compared to 
-  garbage collection because of the extra time required to manage the counter every time the pointer is reaffected or dereferenced.  Reference counting can also leave
+  garbage collection because of the extra time required to manage the counter every time the pointer is reassigned or dereferenced.  Reference counting can also leave
   a group of blocks of memory referencing each other called "cyclic" (see <a href="ShiftedPointer.ppt">presentation</a>) unnoticed and therefore never freed by the 
   application.  On the other hand the destruction of the object is done instantaneously and thus the behavior or the application can be predicted.</p>
 
