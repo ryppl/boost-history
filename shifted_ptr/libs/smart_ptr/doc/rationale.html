@@ -74,8 +74,12 @@
   <p>Shifted Pointer introduces the concept of <i>set</i> where it is defined to be a one or many memory blocks referencing each other allocated on the heap pointed 
   to by one or many <i>shifted_ptr&#60;T&#62;</i>s allocated on the stack or the data segment (non heap) of the application.  Each <i>set</i> is consequently composed of a 
   list of all memory blocks constituting it and a counter tracking the number of times the <i>set</i> is referenced by a <i>shifted_ptr&#60;T&#62;</i> from the stack or the data 
-  segment.</p>
+  segment.  For example:</p>
   
+  <center>
+    <img src="introduction.png"/>
+  </center>
+
   <h2><a name="cyclicism" id="cyclicism"></a>Cyclicism</h2>
   
   <p>Therefore whenever a <i>set</i> counter finds out the number of <i>shifted_ptr&#60;T&#62;</i> referencing it to be zero, the deallocation of each memory block composing 
