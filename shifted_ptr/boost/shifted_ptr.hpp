@@ -228,9 +228,6 @@ template <typename T>
 
 		/**
 			Initialization of a pointer living on the stack or proper enlistment if living on the heap.
-			
-			@param	p	New pointee object or pointer to manage.
-			@{
 		*/
 		
         shifted_ptr() : ps_(0)
@@ -241,6 +238,13 @@ template <typename T>
                 owned_base::pool_.top(this)->ptrs_.push(& pn_);
         }
 
+		
+		/**
+			Initialization of a pointer living on the stack or proper enlistment if living on the heap.
+			
+			@param	p	New pointee object to manage.
+		*/
+		
         template <typename V>
             shifted_ptr(shifted<V> * p) : base(p)
             {
@@ -257,6 +261,13 @@ template <typename T>
                 }
             }
 
+		
+		/**
+			Initialization of a pointer living on the stack or proper enlistment if living on the heap.
+			
+			@param	p	New pointer to manage.
+		*/
+
         template <typename V>
             shifted_ptr(shifted_ptr<V> const & p) : base(p)
             {
@@ -268,7 +279,14 @@ template <typename T>
                 ps_->redir(p.ps_);
             }
 
-            shifted_ptr(shifted_ptr<T> const & p) : base(p)
+		
+		/**
+			Initialization of a pointer living on the stack or proper enlistment if living on the heap.
+			
+			@param	p	New pointer to manage.
+		*/
+
+			shifted_ptr(shifted_ptr<T> const & p) : base(p)
             {
                 if (! owned_base::pool_.is_from(this))
                     ps_ = new set();
@@ -278,15 +296,11 @@ template <typename T>
                 ps_->redir(p.ps_);
             }
 
-		/**
-			@}
-		*/
 
 		/**
-			Affectators & union of 2 @c set s if the pointee is residing the heap.
+			Assignment & union of 2 @c set s if the pointee resides a different @c set.
 			
-			@param	p	New pointee object or pointer to manage.
-			@{
+			@param	p	New pointee object to manage.
 		*/
 		
         template <typename V>
@@ -304,6 +318,13 @@ template <typename T>
                 return * this;
             }
 
+
+		/**
+			Assignment & union of 2 @c set s if the pointee resides a different @c set.
+			
+			@param	p	New pointer to manage.
+		*/
+			
         template <typename V>
             shifted_ptr & operator = (shifted_ptr<V> const & p)
             {
@@ -318,14 +339,17 @@ template <typename T>
                 return * this;
             }
 
+
+		/**
+			Assignment & union of 2 @c set s if the pointee resides a different @c set.
+			
+			@param	p	New pointer to manage.
+		*/
+
             shifted_ptr & operator = (shifted_ptr<T> const & p)
             {
                 return operator = <T>(p);
             }
-
-		/**
-			@}
-		*/
 
         void reset()
         {
