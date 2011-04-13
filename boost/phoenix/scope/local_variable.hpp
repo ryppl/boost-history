@@ -20,7 +20,6 @@
 
 namespace boost { namespace phoenix
 {
-
     namespace detail
     {
         template <typename Key>
@@ -70,7 +69,6 @@ namespace boost { namespace phoenix
         template <typename Map, typename Context>
         struct local_var_def_is_nullary;
 
-
         struct local_var_def_eval;
             
         #include <boost/phoenix/scope/detail/local_var_def.hpp>
@@ -84,12 +82,12 @@ namespace boost { namespace phoenix
         };
 
         template <typename Dummy>
-        struct scope_is_nullary_actions::when<rule::custom_terminal, Dummy>
+        struct scope_is_nullary_actions::when<boost::phoenix::rule::custom_terminal, Dummy>
             : proto::or_<
-                proto::when<rule::local_variable, mpl::true_()>
+                proto::when<boost::phoenix::rule::local_variable, mpl::true_()>
               , proto::otherwise<
                     boost::phoenix::result_of::is_nullary<
-                        custom_terminal<proto::_value>
+                        boost::phoenix::custom_terminal<proto::_value>
                     >()
                 >
             >
@@ -205,7 +203,12 @@ namespace boost { namespace phoenix
         struct result;
 
         template <typename This, typename Local, typename Context>
-        struct result<This(Local const &, Context)>
+        struct result<This(Local, Context)>
+            : result<This(Local const &, Context)>
+        {};
+
+        template <typename This, typename Local, typename Context>
+        struct result<This(Local &, Context)>
         {
             typedef
                 typename get_local::
@@ -256,32 +259,32 @@ namespace boost { namespace phoenix
         typedef expression::local_variable<struct _z_key>::type _z_type;
 
 #ifndef BOOST_PHOENIX_NO_PREDEFINED_TERMINALS
-        _a_type const _a = {};
-        _b_type const _b = {};
-        _c_type const _c = {};
-        _d_type const _d = {};
-        _e_type const _e = {};
-        _f_type const _f = {};
-        _g_type const _g = {};
-        _h_type const _h = {};
-        _i_type const _i = {};
-        _j_type const _j = {};
-        _k_type const _k = {};
-        _l_type const _l = {};
-        _m_type const _m = {};
-        _n_type const _n = {};
-        _o_type const _o = {};
-        _p_type const _p = {};
-        _q_type const _q = {};
-        _r_type const _r = {};
-        _s_type const _s = {};
-        _t_type const _t = {};
-        _u_type const _u = {};
-        _v_type const _v = {};
-        _w_type const _w = {};
-        _x_type const _x = {};
-        _y_type const _y = {};
-        _z_type const _z = {};
+        _a_type const _a = {{{}}};
+        _b_type const _b = {{{}}};
+        _c_type const _c = {{{}}};
+        _d_type const _d = {{{}}};
+        _e_type const _e = {{{}}};
+        _f_type const _f = {{{}}};
+        _g_type const _g = {{{}}};
+        _h_type const _h = {{{}}};
+        _i_type const _i = {{{}}};
+        _j_type const _j = {{{}}};
+        _k_type const _k = {{{}}};
+        _l_type const _l = {{{}}};
+        _m_type const _m = {{{}}};
+        _n_type const _n = {{{}}};
+        _o_type const _o = {{{}}};
+        _p_type const _p = {{{}}};
+        _q_type const _q = {{{}}};
+        _r_type const _r = {{{}}};
+        _s_type const _s = {{{}}};
+        _t_type const _t = {{{}}};
+        _u_type const _u = {{{}}};
+        _v_type const _v = {{{}}};
+        _w_type const _w = {{{}}};
+        _x_type const _x = {{{}}};
+        _y_type const _y = {{{}}};
+        _z_type const _z = {{{}}};
 #endif
     }
     
