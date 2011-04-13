@@ -12,13 +12,13 @@ int main() {
     double sum = 0.0;
     int factor = 1;
 
-    std::vector<double> v(S);
-    std::fill(v.begin(), v.end(), 1.0);
-
     void BOOST_LOCAL_FUNCTION_PARAMS( (const double& num)
             (bind& sum) (const bind& factor) ) {
         sum += factor * num;
     } BOOST_LOCAL_FUNCTION_NAME(add)
+
+    std::vector<double> v(S);
+    std::fill(v.begin(), v.end(), 1.0);
 
     for (size_t n = 0; n < N; ++n) {
         std::for_each(v.begin(), v.end(), add);

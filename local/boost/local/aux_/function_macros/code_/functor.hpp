@@ -8,7 +8,6 @@
 #define BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_HPP_
 
 #include "bind_this.hpp"
-#include "../../abstract_function.hpp"
 #include "../../symbol.hpp"
 #include "../../preprocessor/sign/params_unbind.hpp"
 #include "../../preprocessor/sign/params_const_bind.hpp"
@@ -86,6 +85,16 @@
 
 // Bound parameters.
 
+#define BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_BIND_PARAM_ \
+    bindings /* constructor parameter `void*` bindings pointer */
+
+#define BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_MAYBECONST_BIND_MEMBER_VAR_(i) \
+    /* named `bind0`, `bind1`, ... */ \
+    BOOST_LOCAL_AUX_INTERNAL_SYMBOL(BOOST_PP_CAT(bind, i))
+
+#define BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_BIND_MEMBER_THIS_ \
+    BOOST_LOCAL_AUX_INTERNAL_SYMBOL(bind_this)
+
 #define BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_MAYBECONST_BIND_TYPE_( \
         id_typename_offset, i, var) \
     BOOST_SCOPE_EXIT_AUX_PARAMS_T( \
@@ -95,13 +104,10 @@
             BOOST_PP_ADD(i, BOOST_PP_TUPLE_ELEM(3, 2, id_typename_offset)),\
             var)
 
-#define BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_MAYBECONST_BIND_VALUE_( \
-        id_offset, i, var) \
-    BOOST_LOCAL_AUX_SYMBOL_BINDS_VARIABLE_NAME-> \
-            BOOST_SCOPE_EXIT_AUX_PARAM( \
-                    BOOST_PP_TUPLE_ELEM(2, 0, id_offset), \
-                    BOOST_PP_ADD(i, BOOST_PP_TUPLE_ELEM(2, 1, id_offset)), \
-                    var).value
+#define BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_MAYBECONST_MEMBER_BIND_( \
+        r, offset, i, var) \
+    BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_MAYBECONST_BIND_MEMBER_VAR_( \
+            BOOST_PP_ADD(offset, i))
 
 // Adapted from `BOOST_SCOPE_EXIT_AUX_ARG_DECL()`.
 #define BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_MAYBECONST_BIND_DECL_( \
@@ -128,13 +134,6 @@
     BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_MAYBECONST_BIND_DECL_( \
             r, id_typename_offset, i, var, is_const)
     
-// Adapted from `BOOST_SCOPE_EXIT_AUX_ARG()`.
-#define BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_MAYBECONST_BIND_( \
-        r, id_offset, i, var) \
-    BOOST_PP_COMMA_IF(i) \
-    BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_MAYBECONST_BIND_VALUE_( \
-            id_offset, i, var)
-
 #define BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_BIND_DECL_( \
         r, id_typename_offset, i, var) \
     BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_MAYBECONST_BIND_DECL_ENUM_( \
@@ -144,6 +143,43 @@
         r, id_typename_offset, i, var) \
     BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_MAYBECONST_BIND_DECL_ENUM_( \
             r, id_typename_offset, i, var, 1 /* force const */)
+
+#define BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_MAYBECONST_BIND_MEMBER_DECL_( \
+        r, id_typename_offset, i, var, is_const) \
+    BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_MAYBECONST_BIND_DECL_( \
+            r, id_typename_offset, i, \
+            & /* all bind member vars are refs to ScopeExit struct members */ \
+            BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_MAYBECONST_BIND_MEMBER_VAR_(\
+                    BOOST_PP_ADD(i, BOOST_PP_TUPLE_ELEM(3, 2, \
+                            id_typename_offset))), \
+            is_const) \
+    ; /* end member variable declaration */
+
+#define BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_BIND_MEMBER_DECL_( \
+        r, id_typename_offset, i, var) \
+    BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_MAYBECONST_BIND_MEMBER_DECL_( \
+            r, id_typename_offset, i, var, 0 /* do not force const */) \
+
+#define BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_CONST_BIND_MEMBER_DECL_( \
+        r, id_typename_offset, i, var) \
+    BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_MAYBECONST_BIND_MEMBER_DECL_( \
+            r, id_typename_offset, i, var, 1 /* force const */) \
+
+// Adapted from `BOOST_SCOPE_EXIT_AUX_ARG()`.
+#define BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_MAYBECONST_BIND_MEMBER_INIT_( \
+        r, id_offset, i, var) \
+    BOOST_PP_COMMA_IF(i) \
+    BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_MAYBECONST_BIND_MEMBER_VAR_( \
+            BOOST_PP_ADD(i, BOOST_PP_TUPLE_ELEM(2, 1, id_offset))) \
+    ( /* member variable initialization */ \
+        static_cast< BOOST_SCOPE_EXIT_AUX_PARAMS_T( \
+                BOOST_PP_TUPLE_ELEM(2, 0, id_offset))* >( \
+                BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_BIND_PARAM_)-> \
+        BOOST_SCOPE_EXIT_AUX_PARAM( \
+                BOOST_PP_TUPLE_ELEM(2, 0, id_offset), \
+                BOOST_PP_ADD(i, BOOST_PP_TUPLE_ELEM(2, 1, id_offset)), \
+                var).value \
+    )
 
 // Typeof type-definitions.
 
@@ -179,26 +215,25 @@
                 BOOST_LOCAL_AUX_PP_SIGN_PARAMS_UNBIND(sign_params)) \
     )
 
-// Functor `operator()`.
+// Functor call operations.
 
 #define BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_CALL_(z, \
+        defaults_n, \
         sign_params, \
         unbinds, \
         const_binds, has_const_bind_this, \
         binds, has_bind_this, \
         id, typename_keyword) \
-    BOOST_LOCAL_AUX_SYMBOL_RESULT_TYPE(id) \
-    operator()( \
-            BOOST_PP_LIST_FOR_EACH_I( \
-                    BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_UNBIND_ARG_DECL_, \
-                    typename_keyword, unbinds) \
-            ) { \
+    inline BOOST_LOCAL_AUX_SYMBOL_RESULT_TYPE(id) operator()( \
+        BOOST_PP_LIST_FOR_EACH_I( \
+                BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_UNBIND_ARG_DECL_, \
+                typename_keyword, unbinds) \
+    ) { \
         /* just forward call to member function with local func name */ \
         return BOOST_LOCAL_AUX_SYMBOL_BODY_FUNCTION_NAME( \
             BOOST_PP_LIST_FOR_EACH_I( \
-                    BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_MAYBECONST_BIND_, \
-                    (id, 0 /* no offset */), \
-                    const_binds) \
+                    BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_MAYBECONST_MEMBER_BIND_, \
+                    0 /* no offset */, const_binds) \
             /* pass plain binds */ \
             BOOST_PP_COMMA_IF( \
                 BOOST_PP_BITAND( \
@@ -207,13 +242,10 @@
                 ) \
             ) \
             BOOST_PP_LIST_FOR_EACH_I( \
-                    BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_MAYBECONST_BIND_, \
-                    (id \
+                    BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_MAYBECONST_MEMBER_BIND_, \
                     /* offset param index of # of preceeding */ \
                     /* const-bind params (could be 0)*/ \
-                    , BOOST_PP_LIST_SIZE(const_binds) \
-                    ), \
-                    binds) \
+                    BOOST_PP_LIST_SIZE(const_binds), binds) \
             /* pass bind `this` */ \
             BOOST_PP_COMMA_IF( \
                 BOOST_PP_BITAND( \
@@ -226,8 +258,7 @@
             ) \
             BOOST_PP_EXPR_IIF( \
                     BOOST_PP_BITOR(has_const_bind_this, has_bind_this), \
-                BOOST_LOCAL_AUX_SYMBOL_BINDS_VARIABLE_NAME-> \
-                BOOST_LOCAL_AUX_FUNCTION_CODE_BIND_THIS_NAME \
+                BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_BIND_MEMBER_THIS_ \
             ) \
             /* pass unbind params */ \
             BOOST_PP_COMMA_IF( \
@@ -248,83 +279,151 @@
         ); \
     }
 
+#define BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_STATIC_CALL_FUNC_( \
+        z, defaults_n, unused) \
+    BOOST_LOCAL_AUX_INTERNAL_SYMBOL(BOOST_PP_CAT(call, defaults_n))
+
+#define BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_STATIC_CALL_FUNC_PTR_( \
+        z, defaults_n, unused) \
+    &BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_STATIC_CALL_FUNC_( \
+            z, defaults_n, unused)
+
+#define BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_STATIC_CALL_(z, \
+        defaults_n, \
+        sign_params, \
+        unbinds, \
+        const_binds, has_const_bind_this, \
+        binds, has_bind_this, \
+        id, typename_keyword) \
+    inline static BOOST_LOCAL_AUX_SYMBOL_RESULT_TYPE(id) \
+    BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_STATIC_CALL_FUNC_(z, defaults_n, ~)( \
+        void* object \
+        BOOST_PP_COMMA_IF(BOOST_PP_LIST_IS_CONS(unbinds)) \
+        BOOST_PP_LIST_FOR_EACH_I( \
+                BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_UNBIND_ARG_DECL_, \
+                typename_keyword, unbinds) \
+    ) { \
+        /* run-time: casting object to this class type and forward call to */ \
+        /* `operator()` (this performs better than doing multiple casting */ \
+        /* or using a casted object local variable here to call body */ \
+        /* directly from here without passing via `operator()`) */ \
+        /* compliance: passing local class type to `static_cast` is fully */ \
+        /* ISO C++ compliant because `static_cast` is not a template (even */ \
+        /* if its syntax resembles a function template call) in fact even */ \
+        /* in C is legal to cast to a local struct (using C-style casting) */ \
+        return static_cast< BOOST_LOCAL_AUX_SYMBOL_FUNCTOR_CLASS_NAME(id)* >( \
+                object)->operator()( \
+            BOOST_PP_LIST_FOR_EACH_I( \
+                    BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_UNBIND_ARG_NAME_ENUM_, \
+                    ~, unbinds) \
+        ); \
+    }
+
 // Return unbind params but without last (default) params specified by count.
 #define BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_UNBIND_REMOVE_LAST_N_(n, \
         unbinds) \
     BOOST_PP_LIST_FIRST_N(BOOST_PP_SUB(BOOST_PP_LIST_SIZE(unbinds), n), \
             unbinds)
 
-#define BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_CALL_FOR_DEFAULTS_(z, \
-        n, params_unbinds_constbinds_hasconstthis_binds_hasthis_id_typename) \
-    BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_CALL_(z \
-        , BOOST_PP_TUPLE_ELEM(8, 0, \
-            params_unbinds_constbinds_hasconstthis_binds_hasthis_id_typename) \
-        /* remove last n default params */ \
-        , BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_UNBIND_REMOVE_LAST_N_(n, \
-            BOOST_PP_TUPLE_ELEM(8, 1, \
-            params_unbinds_constbinds_hasconstthis_binds_hasthis_id_typename) \
+#define BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_CALL_FOR_DEFAULTS_(z, n, \
+        op_params_unbinds_constbinds_hasconstthis_binds_hasthis_id_typename) \
+    BOOST_PP_EXPAND( \
+    BOOST_PP_TUPLE_ELEM(9, 0, \
+        op_params_unbinds_constbinds_hasconstthis_binds_hasthis_id_typename) \
+    ( z, n \
+    , BOOST_PP_TUPLE_ELEM(9, 1, \
+        op_params_unbinds_constbinds_hasconstthis_binds_hasthis_id_typename) \
+    /* remove last n default params */ \
+    , BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_UNBIND_REMOVE_LAST_N_(n, \
+        BOOST_PP_TUPLE_ELEM(9, 2, \
+        op_params_unbinds_constbinds_hasconstthis_binds_hasthis_id_typename) \
+      ) \
+    , BOOST_PP_TUPLE_ELEM(9, 3, \
+        op_params_unbinds_constbinds_hasconstthis_binds_hasthis_id_typename) \
+    , BOOST_PP_TUPLE_ELEM(9, 4, \
+        op_params_unbinds_constbinds_hasconstthis_binds_hasthis_id_typename) \
+    , BOOST_PP_TUPLE_ELEM(9, 5, \
+        op_params_unbinds_constbinds_hasconstthis_binds_hasthis_id_typename) \
+    , BOOST_PP_TUPLE_ELEM(9, 6, \
+        op_params_unbinds_constbinds_hasconstthis_binds_hasthis_id_typename) \
+    , BOOST_PP_TUPLE_ELEM(9, 7, \
+        op_params_unbinds_constbinds_hasconstthis_binds_hasthis_id_typename) \
+    , BOOST_PP_TUPLE_ELEM(9, 8, \
+        op_params_unbinds_constbinds_hasconstthis_binds_hasthis_id_typename) \
+    ) /* end `op_macro(...)` */ \
+    ) /* end expand */
+
+#define BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_MEMBER_INITS_( \
+        const_binds, has_const_bind_this, \
+        binds, has_bind_this, \
+        id) \
+    BOOST_PP_EXPR_IIF(BOOST_PP_BITOR(BOOST_PP_BITOR(BOOST_PP_BITOR( \
+            BOOST_PP_LIST_IS_CONS(const_binds), BOOST_PP_LIST_IS_CONS(binds)), \
+            has_bind_this), has_const_bind_this), \
+        : \
+    ) \
+    /* init const binds */ \
+    BOOST_PP_LIST_FOR_EACH_I( \
+            BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_MAYBECONST_BIND_MEMBER_INIT_,\
+            (id, 0 /* no offset */), \
+            const_binds) \
+    /* init plain binds */ \
+    BOOST_PP_COMMA_IF( \
+        BOOST_PP_BITAND( \
+              BOOST_PP_LIST_IS_CONS(const_binds) \
+            , BOOST_PP_LIST_IS_CONS(binds) \
         ) \
-        , BOOST_PP_TUPLE_ELEM(8, 2, \
-            params_unbinds_constbinds_hasconstthis_binds_hasthis_id_typename) \
-        , BOOST_PP_TUPLE_ELEM(8, 3, \
-            params_unbinds_constbinds_hasconstthis_binds_hasthis_id_typename) \
-        , BOOST_PP_TUPLE_ELEM(8, 4, \
-            params_unbinds_constbinds_hasconstthis_binds_hasthis_id_typename) \
-        , BOOST_PP_TUPLE_ELEM(8, 5, \
-            params_unbinds_constbinds_hasconstthis_binds_hasthis_id_typename) \
-        , BOOST_PP_TUPLE_ELEM(8, 6, \
-            params_unbinds_constbinds_hasconstthis_binds_hasthis_id_typename) \
-        , BOOST_PP_TUPLE_ELEM(8, 7, \
-            params_unbinds_constbinds_hasconstthis_binds_hasthis_id_typename) \
+    ) \
+    BOOST_PP_LIST_FOR_EACH_I( \
+            BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_MAYBECONST_BIND_MEMBER_INIT_,\
+            (id \
+            /* offset param index of # of preceeding */ \
+            /* const-bind params (could be 0)*/ \
+            , BOOST_PP_LIST_SIZE(const_binds) \
+            ), \
+            binds) \
+    /* init `this` bind (const or not) */ \
+    BOOST_PP_COMMA_IF( \
+        BOOST_PP_BITAND( \
+              BOOST_PP_BITOR( \
+                  BOOST_PP_LIST_IS_CONS(const_binds) \
+                , BOOST_PP_LIST_IS_CONS(binds) \
+              ) \
+            , BOOST_PP_BITOR(has_const_bind_this, has_bind_this) \
+        ) \
+    ) \
+    BOOST_PP_EXPR_IIF(BOOST_PP_BITOR(has_const_bind_this, has_bind_this), \
+        BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_BIND_MEMBER_THIS_( \
+            static_cast< BOOST_SCOPE_EXIT_AUX_PARAMS_T(id)* >( \
+                    BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_BIND_PARAM_)-> \
+            BOOST_LOCAL_AUX_FUNCTION_CODE_BIND_THIS_NAME \
+        ) \
     )
 
 // Functor class.
 
 // Adapted from `BOOST_SCOPE_EXIT_AUX_IMPL()`.
 #define BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_(sign_params, \
-        unbinds, defaults_count, \
+        unbinds, default_count, \
         const_binds, has_const_bind_this, \
         binds, has_bind_this, \
         id, typename_keyword) \
-    class BOOST_LOCAL_AUX_SYMBOL_FUNCTOR_CLASS_NAME(id) :  \
-            public ::boost::local::aux::abstract_function< \
-                    BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_F_( \
-                            sign_params, id, 0 /* no type */, ~), \
-                    defaults_count> { \
+    class BOOST_LOCAL_AUX_SYMBOL_FUNCTOR_CLASS_NAME(id) \
+    /* run-time: do not use base class to allow for compiler optimizations */ \
+    { \
+        /* function type */ \
         typedef BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_F_(sign_params, id, \
                 1 /* has type */, BOOST_LOCAL_AUX_SYMBOL_FUNCTION_TYPE); \
-    public: \
-        /* constructor */ \
-        explicit BOOST_LOCAL_AUX_SYMBOL_FUNCTOR_CLASS_NAME(id)( \
-                void* binding_data) \
-            BOOST_PP_EXPR_IIF(BOOST_PP_EXPAND( /* expand for MSVC */ \
-                    BOOST_LOCAL_AUX_PP_SIGN_PARAMS_HAVE_ANY_BIND(sign_params)),\
-                /* member init (not a macro call) */ \
-                : BOOST_LOCAL_AUX_SYMBOL_BINDS_VARIABLE_NAME(static_cast< \
-                        BOOST_SCOPE_EXIT_AUX_PARAMS_T(id)*>(binding_data)) \
-            ) \
-        { \
-            /* init needs func name so programmed later by `NAME` macro */ \
-            BOOST_LOCAL_AUX_SYMBOL_INIT_RECURSION_FUNCTION_NAME(); \
-        } \
-        /* implement base functor `operator()` (and for all default params) */ \
-        BOOST_PP_REPEAT( \
-                /* PP_INC to handle no dflt (EXPAND for MVSC) */ \
-                BOOST_PP_EXPAND(BOOST_PP_INC(defaults_count)), \
-                BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_CALL_FOR_DEFAULTS_,\
-                (sign_params, unbinds, const_binds, has_const_bind_this, \
-                 binds, has_bind_this, id, typename_keyword) ) \
-    private: \
-        /* this type symbol cannot have ID postfix because it is used */ \
-        /* the `NAME` macro (because this symbol is within functor class */ \
-        /* it doesn't have to have ID postfix). */ \
+        /* functor type -- this type cannot have ID postfix because it is */ \
+        /* used the `NAME` macro (this symbol is within functor class so */ \
+        /* it does not have to have ID postfix) */ \
         typedef ::boost::local::function<BOOST_LOCAL_AUX_SYMBOL_FUNCTION_TYPE, \
-                defaults_count> BOOST_LOCAL_AUX_SYMBOL_FUNCTOR_TYPE; \
-        /* these types are qualified with extra eventual const and/or & if */ \
-        /* their variables are bound by const and/or & (this is because */ \
-        /* it is difficult strip the eventual & given that the var name is */ \
-        /* always attached to the & symbol plus programmers can always */ \
-        /* remove const& using type traits) */ \
+                default_count> BOOST_LOCAL_AUX_SYMBOL_FUNCTOR_TYPE; \
+        /* typeof types -- these types are qualified with extra eventual */ \
+        /* const and/or & if their variables are bound by const and/or & */ \
+        /* (this is because it is not possible to strip the eventual & */ \
+        /* given that the var name is always attached to the & symbol plus */ \
+        /* programmers can always remove const& using type traits) */ \
         /* const bind typeof types */ \
         BOOST_PP_LIST_FOR_EACH_I( \
                 BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_CONST_TYPEDEF_, \
@@ -338,7 +437,7 @@
                   /* const-bindparams (could be 0)*/ \
                   BOOST_PP_LIST_SIZE(const_binds)),\
                 binds) \
-        /* this (const or not) bind type */ \
+        /* this (const or not) bind typeof type */ \
         BOOST_PP_EXPR_IIF(has_const_bind_this, \
             typedef \
             BOOST_LOCAL_AUX_SYMBOL_TYPEOF_TYPE( \
@@ -354,15 +453,81 @@
                 this /* must not use `this_` for TYPEOF_TYPE */ \
             ) ; /* end typedef */ \
         ) \
-        /* bind params member variable (note -- signle bind param cannot */ \
-        /* be represented as single member variables because their names */ \
-        /* might be prefixed by `&` so they are not know to pp) */ \
-        BOOST_PP_EXPR_IIF(BOOST_PP_EXPAND( /* EXPAND for MSVC */ \
-                BOOST_LOCAL_AUX_PP_SIGN_PARAMS_HAVE_ANY_BIND(sign_params)), \
-            BOOST_SCOPE_EXIT_AUX_PARAMS_T(id)* \
-                    BOOST_LOCAL_AUX_SYMBOL_BINDS_VARIABLE_NAME; \
+    public: \
+        /* constructor */ \
+        inline explicit BOOST_LOCAL_AUX_SYMBOL_FUNCTOR_CLASS_NAME(id)( \
+                void* BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_BIND_PARAM_) \
+            BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_MEMBER_INITS_(const_binds, \
+                    has_const_bind_this, binds, has_bind_this, id) \
+        { /* do nothing */ } \
+        /* run-time: implement `operator()` (and for all default params) so */ \
+        /* this obj can be used directly as a functor for C++03 extensions */ \
+        /* and optimized macros */ \
+        BOOST_PP_REPEAT( \
+            /* PP_INC to handle no dflt (EXPAND for MVSC) */ \
+            BOOST_PP_EXPAND(BOOST_PP_INC(default_count)), \
+            BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_CALL_FOR_DEFAULTS_,\
+            ( BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_CALL_, sign_params \
+            , unbinds, const_binds, has_const_bind_this, binds \
+            , has_bind_this, id, typename_keyword ) \
         ) \
-        /* this allows for nesting (local functions, blocks, and exits) as */ \
+        /* compliance: trick to pass this local class as a template param */ \
+        /* on ISO C++ without non C++03 extension */ \
+        /* performance: this trick introduced _one_ indirect function call */ \
+        /* via a function pointer that cannot be inlined by the complier */ \
+        /* thus increasing run-time (also another trick using a base */ \
+        /* interface class was investigated but virtual calls also cannot */ \
+        /* inlined plus they require virtual table lookups to the "virtual */ \
+        /* call trick" measured longer run-times than this "static call */ \
+        /* trick") */ \
+        BOOST_PP_REPEAT( \
+            /* PP_INC to handle no dflt (EXPAND for MVSC) */ \
+            BOOST_PP_EXPAND(BOOST_PP_INC(default_count)), \
+            BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_CALL_FOR_DEFAULTS_,\
+            ( BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_STATIC_CALL_, sign_params \
+            , unbinds, const_binds, has_const_bind_this, binds \
+            , has_bind_this, id, typename_keyword ) \
+        ) \
+        inline static void BOOST_LOCAL_AUX_SYMBOL_INIT_CALL_FUNCTION_NAME( \
+                void* object, BOOST_LOCAL_AUX_SYMBOL_FUNCTOR_TYPE& functor) { \
+            functor.BOOST_LOCAL_AUX_SYMBOL_INIT_CALL_FUNCTION_NAME(object, \
+                BOOST_PP_ENUM( \
+                        /* PP_INC to handle no dflt (EXPAND for MVSC) */ \
+                        BOOST_PP_EXPAND(BOOST_PP_INC(default_count)), \
+                        BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_STATIC_CALL_FUNC_PTR_, \
+                        ~) \
+            ); \
+        } \
+    private: \
+        /* run-time: it is faster if call `operator()` just accesses member */ \
+        /* references to the ScopeExit struct instead of accessing the bind */ \
+        /* struct at each call (these mem refs are init by the constructor) */ \
+        BOOST_PP_LIST_FOR_EACH_I( /* const bind member references */ \
+                BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_CONST_BIND_MEMBER_DECL_,\
+                (id, typename_keyword, 0 /* no offset */), \
+                const_binds) \
+        BOOST_PP_LIST_FOR_EACH_I( /* bind member references */ \
+                BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_BIND_MEMBER_DECL_, \
+                (id, typename_keyword, \
+                        /* offset param index of # of preceeding */ \
+                        /* const-bindparams (could be 0)*/ \
+                        BOOST_PP_LIST_SIZE(const_binds)),\
+                binds) \
+        BOOST_PP_EXPR_IIF(has_const_bind_this, /* const bind `this` mem ref */ \
+            typename_keyword ::boost::local::aux::add_pointed_const< \
+                BOOST_LOCAL_AUX_FUNCTION_CODE_BIND_THIS_TYPE(id) \
+            >::type \
+            & /* all bind member vars are refs to ScopeExit struct members */ \
+            BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_BIND_MEMBER_THIS_ \
+            ; /* end member variable declaration */ \
+        ) \
+        BOOST_PP_EXPR_IIF(has_bind_this, /* bind `this` member reference */ \
+            BOOST_LOCAL_AUX_FUNCTION_CODE_BIND_THIS_TYPE(id) \
+            & /* all bind member vars are refs to ScopeExit struct members */ \
+            BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_BIND_MEMBER_THIS_ \
+            ; /* end member variable declaration */ \
+        ) \
+        /* this decl allows for nesting (local functions, etc) as */ \
         /* it makes the args variable visible within the body code (which */ \
         /* cannot be static); this is for compilation only as the args */ \
         /* variable is actually declared by the 1st enclosing local func */ \
@@ -371,7 +536,7 @@
         /* body function (unfortunately, cannot be static to allow access */ \
         /* to member var with local function name for recursion but doing */ \
         /* so also allows the body to misuse `this` instead of `this_`) */ \
-        BOOST_LOCAL_AUX_SYMBOL_RESULT_TYPE(id) \
+        inline BOOST_LOCAL_AUX_SYMBOL_RESULT_TYPE(id) \
         BOOST_LOCAL_AUX_SYMBOL_BODY_FUNCTION_NAME( \
                 /* const binds */ \
                 BOOST_PP_LIST_FOR_EACH_I( \

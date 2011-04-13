@@ -8,74 +8,83 @@
 #define BOOST_LOCAL_AUX_FUNCTION_NAME_HPP_
 
 #include "../symbol.hpp"
+#include "../config.hpp"
 // For BOOST_TYPEOF.
 #include "../scope_exit/scope_exit.hpp" // Use this lib's ScopeExit impl.
-#include <boost/preprocessor/control/iif.hpp>
 
 // PRIVATE //
 
+#define BOOST_LOCAL_AUX_FUNCTION_NAME_INIT_RECURSION_FUNC_ \
+    BOOST_LOCAL_AUX_INTERNAL_SYMBOL(init_recursion)
+
 #define BOOST_LOCAL_AUX_FUNCTION_NAME_END_LOCAL_FUNCTOR_( \
-        local_functor_name, local_function_name, \
-        is_local_function_member_public, id) \
+        local_function_name, local_functor_name, nonlocal_functor_name, id) \
     /* `PARAMS() { ... }` expandsion here -- still within functor class */ \
     /* class functor ## __LINE__ { ... */ \
-    BOOST_PP_IIF(is_local_function_member_public, \
+    public: \
         /* member var with function name for recursive calls; must be */ \
         /* `public` because is it also used by this macro but outside */ \
         /* the functor class to deduce the functor type; it cannot be */ \
         /* `const` because it is init after construction (because */ \
         /* constructor doesn't know local function name) */ \
-        public: \
-    , \
-        /* if optimized, then no need to access this for typeof */ \
-        private: \
-    ) \
+        /* run-time: even when optimizing, recursive calls cannot be */ \
+        /* optimized (i.e., they must be via the non-local functor) */ \
+        /* because this cannot be a mem ref because its name is not known */ \
+        /* by the constructor so it cannot be set by the mem init list */ \
         BOOST_LOCAL_AUX_SYMBOL_FUNCTOR_TYPE local_function_name; \
-    private: \
-        /* called by the constructor to init member variable for recursion */ \
-        void BOOST_LOCAL_AUX_SYMBOL_INIT_RECURSION_FUNCTION_NAME() { \
-            local_function_name = *this; \
+        /* run-time: the `init_recursion()` function cannot be called by */ \
+        /* the constructor to allow for compiler optimization (inlining) */ \
+        /* so it must be public */ \
+        inline void BOOST_LOCAL_AUX_FUNCTION_NAME_INIT_RECURSION_FUNC_( \
+                BOOST_LOCAL_AUX_SYMBOL_FUNCTOR_TYPE& functor) { \
+            local_function_name = functor; \
         } \
-    /* declares object for local class functor (but this functor cannot be */ \
-    /* passed as template parameter); cannot be `const` `abstract_function` */ \
-    /* is not passed as const to `function` to make the function call */ \
-    } local_functor_name(BOOST_LOCAL_AUX_SYMBOL_ARGS_VARIABLE_NAME.value);
+    /* local functor can be passed as tparam only on C++03 (faster) */ \
+    } local_functor_name(BOOST_LOCAL_AUX_SYMBOL_ARGS_VARIABLE_NAME.value); \
+    /* non-local functor can always be passed as tparam (but slower) */ \
+    BOOST_TYPEOF(local_functor_name.local_function_name) \
+            nonlocal_functor_name; \
+    /* run-time: the following order in which the functors are set is */ \
+    /* important to allow for compiler optimization (changing this order */ \
+    /* and/or moving some of these sets into the functor constructors might */ \
+    /* prevent compiler optimizations) */ \
+    local_functor_name.BOOST_LOCAL_AUX_FUNCTION_NAME_INIT_RECURSION_FUNC_( \
+            nonlocal_functor_name); \
+    local_functor_name.BOOST_LOCAL_AUX_SYMBOL_INIT_CALL_FUNCTION_NAME( \
+            &local_functor_name, nonlocal_functor_name);
 
-#define BOOST_LOCAL_AUX_FUNCTION_NAME_DECL_GLOBAL_FUNCTOR_( \
-        local_functor_name, local_function_name, id) \
-    /* declares actual functor for the local function (of type */ \
-    /* local::function which can be passed as template parameter); this */ \
-    /* is correctly `const` because it is directly visible to programmers */ \
-    /* which cannot re-assign the local functor (they can only call it) */ \
-    BOOST_TYPEOF(local_functor_name.local_function_name) const \
-            local_function_name(local_functor_name);
+#define BOOST_LOCAL_AUX_FUNCTION_NAME_FUNCTOR_(local_function_name) \
+    BOOST_LOCAL_AUX_INTERNAL_SYMBOL(local_function_name)
 
 // PUBLIC //
 
 // Limitation: This is faster (smaller run-time than `FUNCION_NAME`) but it
-// cannot be passed as template parameter on ISO C++.
+// cannot be passed as template parameter on ISO C++ but it can on C++03.
 #define BOOST_LOCAL_AUX_FUNCTION_NAME_OPTIMIZED(local_function_name) \
-    BOOST_LOCAL_AUX_FUNCTION_NAME_END_LOCAL_FUNCTOR_(local_function_name, \
-            local_function_name, 0 /* local func mem not public */, __LINE__)
+    BOOST_LOCAL_AUX_FUNCTION_NAME_END_LOCAL_FUNCTOR_( \
+            local_function_name, \
+            local_function_name, \
+            BOOST_LOCAL_AUX_FUNCTION_NAME_FUNCTOR_(local_function_name), \
+            __LINE__)
 
 // ISO C++ does not allow to pass local classes as template parameters. But
-// if can use no ISO C++ standard features and MSVC compiler (which allows to
+// if can use C++03 (no ISO C++) features and MSVC compiler (which allows to
 // pass local classes as template parameters), than pass local class as
 // template parameter without the extra global functor to reduce run-time.
-#if !defined(BOOST_LOCAL_CONFIG_COMPLIANT) && defined(_MSC_VER) 
-    #define BOOST_LOCAL_AUX_FUNCTION_NAME(local_function_name) \
-        BOOST_LOCAL_AUX_FUNCTION_NAME_OPTIMIZED(local_function_name)
+#ifdef BOOST_LOCAL_AUX_CONFIG_LOCAL_CLASS_AS_TEMPLATE_PARAMETER
+
+#define BOOST_LOCAL_AUX_FUNCTION_NAME(local_function_name) \
+    BOOST_LOCAL_AUX_FUNCTION_NAME_OPTIMIZED(local_function_name)
+
 #else
-    #define BOOST_LOCAL_AUX_FUNCTION_NAME(local_function_name) \
-        BOOST_LOCAL_AUX_FUNCTION_NAME_END_LOCAL_FUNCTOR_( \
-                BOOST_LOCAL_AUX_SYMBOL_FUNCTOR_OBJECT_NAME( \
-                        local_function_name), \
-                local_function_name, 1 /* local func mem public */, __LINE__) \
-        /* use the global functor increases run-time (because its uses one */ \
-        /* indirected function call that cannot be optimized awa) */ \
-        BOOST_LOCAL_AUX_FUNCTION_NAME_DECL_GLOBAL_FUNCTOR_( \
-                BOOST_LOCAL_AUX_SYMBOL_FUNCTOR_OBJECT_NAME( \
-                        local_function_name), local_function_name, __LINE__)
+
+#define BOOST_LOCAL_AUX_FUNCTION_NAME(local_function_name) \
+    BOOST_LOCAL_AUX_FUNCTION_NAME_END_LOCAL_FUNCTOR_( \
+            local_function_name, \
+            BOOST_LOCAL_AUX_FUNCTION_NAME_FUNCTOR_(local_function_name), \
+            local_function_name, \
+            __LINE__)
+
 #endif
 
 #endif // #include guard
