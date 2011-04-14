@@ -10,6 +10,8 @@
 #include <boost/config/warning_disable.hpp>
 #include <boost/detail/lightweight_test.hpp>
 
+#include <boost/functional/hash.hpp>
+#include <boost/spirit/include/phoenix.hpp>
 #include <boost/spirit/include/support_utree.hpp>
 
 #include <iostream>
@@ -33,6 +35,14 @@ struct one_two_three
     boost::spirit::utree operator()(boost::spirit::scope) const
     {
         return boost::spirit::utree(123);
+    }
+};
+
+struct this_
+{
+    boost::spirit::utree operator()(boost::spirit::scope) const
+    {
+        return boost::spirit::utree(static_cast<int>(boost::hash_value(this)));
     }
 };
 
@@ -301,9 +311,30 @@ int main()
 
     { // operators
 
-        BOOST_TEST((utree(true) && utree(true)) == utree(true));
-        BOOST_TEST((utree(true) || utree(false)) == utree(true));
-        BOOST_TEST(!utree(true) == utree(false));
+        BOOST_TEST((utree(false) && utree(false)) == utree(false));
+        BOOST_TEST((utree(false) && utree(true))  == utree(false));
+        BOOST_TEST((utree(true)  && utree(false)) == utree(false));
+        BOOST_TEST((utree(true)  && utree(true))  == utree(true));
+        
+        BOOST_TEST((utree(0) && utree(0)) == utree(false));
+        BOOST_TEST((utree(0) && utree(1)) == utree(false));
+        BOOST_TEST((utree(1) && utree(0)) == utree(false));
+        BOOST_TEST((utree(1) && utree(1)) == utree(true));
+        
+        BOOST_TEST((utree(false) || utree(false)) == utree(false));
+        BOOST_TEST((utree(false) || utree(true))  == utree(true));
+        BOOST_TEST((utree(true)  || utree(false)) == utree(true));
+        BOOST_TEST((utree(true)  || utree(true))  == utree(true));
+        
+        BOOST_TEST((utree(0) || utree(0)) == utree(false));
+        BOOST_TEST((utree(0) || utree(1)) == utree(true));
+        BOOST_TEST((utree(1) || utree(0)) == utree(true));
+        BOOST_TEST((utree(1) || utree(1)) == utree(true));
+
+        BOOST_TEST(!utree(true)   == utree(false));
+        BOOST_TEST(!utree(false)  == utree(true));
+        BOOST_TEST(!utree(1)      == utree(false));
+        BOOST_TEST(!utree(0)      == utree(true));
 
         BOOST_TEST((utree(456) + utree(123)) == utree(456 + 123));
         BOOST_TEST((utree(456) + utree(123.456)) == utree(456 + 123.456));
@@ -357,6 +388,16 @@ int main()
 
         utree f = stored_function<one_two_three>();
         f.eval(scope());
+    }
+    
+    {
+        // test referenced functions
+        using boost::spirit::referenced_function;
+        using boost::spirit::scope;
+
+        one_two_three f;
+        utree ff = referenced_function<one_two_three>(f);
+        BOOST_TEST_EQ(ff.eval(scope()), f(scope()));
     }
 
     {
