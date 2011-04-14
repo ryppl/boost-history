@@ -17,6 +17,8 @@
 # if defined(BOOST_PP_NO_BOOST_CONFIG)
 /* This is the code we will use if not using Boost config. 
    It is essentially a duplication of the code in Boost Config.
+   The only reason to use this duplicated code is if Boost Config 
+   can not handle C compilers or C++ compilers compiling in C mode.
 */
 #if defined(__GCCXML__)
 /* GCC-XML emulates other compilers, it has to appear first here! */
@@ -146,7 +148,7 @@
 #define BOOST_PP_VARIADICS 1
 #endif
 #
-# else
+# else /* !defined(BOOST_PP_NO_BOOST_CONFIG) */
 # include <boost/config.hpp>
 #
 # if defined(BOOST_NO_VARIADIC_MACROS)
@@ -155,7 +157,7 @@
 # define BOOST_PP_VARIADICS 1
 # endif /* BOOST_NO_VARIADIC_MACROS */
 #
-# endif /* BOOST_PP_USE_BOOST_CONFIG */
+# endif /* BOOST_PP_NO_BOOST_CONFIG
 #
 # endif /* BOOST_PP_VARIADICS */
 #
