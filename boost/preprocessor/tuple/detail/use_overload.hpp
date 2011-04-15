@@ -36,7 +36,7 @@
 # else
 #
 #    define BOOST_PP_TUPLE_DETAIL_ELEM_USE_OVERLOAD(prefix,...) \
-         BOOST_PP_OVERLOAD(prefix, __VA_ARGS__)(__VA_ARGS__) \
+         BOOST_PP_CALL_OVERLOAD(prefix, __VA_ARGS__) \
          /**/
 #
 # endif
@@ -55,7 +55,7 @@
 # else
 #
 #    define BOOST_PP_TUPLE_DETAIL_REM_USE_OVERLOAD(prefix,...) \
-         BOOST_PP_OVERLOAD(prefix, __VA_ARGS__)(__VA_ARGS__) \
+         BOOST_PP_CALL_OVERLOAD(prefix, __VA_ARGS__) \
          /**/
 #
 # endif
@@ -74,7 +74,7 @@
 # else
 #
 #    define BOOST_PP_TUPLE_DETAIL_REVERSE_USE_OVERLOAD(prefix,...) \
-         BOOST_PP_OVERLOAD(prefix, __VA_ARGS__)(__VA_ARGS__) \
+         BOOST_PP_CALL_OVERLOAD(prefix, __VA_ARGS__) \
          /**/
 #
 # endif
@@ -93,7 +93,7 @@
 # else
 #
 #    define BOOST_PP_TUPLE_DETAIL_TO_ARRAY_USE_OVERLOAD(prefix,...) \
-         BOOST_PP_OVERLOAD(prefix, __VA_ARGS__)(__VA_ARGS__) \
+         BOOST_PP_CALL_OVERLOAD(prefix, __VA_ARGS__) \
          /**/
 #
 # endif
@@ -112,7 +112,7 @@
 # else
 #
 #    define BOOST_PP_TUPLE_DETAIL_TO_LIST_USE_OVERLOAD(prefix,...) \
-         BOOST_PP_OVERLOAD(prefix, __VA_ARGS__)(__VA_ARGS__) \
+         BOOST_PP_CALL_OVERLOAD(prefix, __VA_ARGS__) \
          /**/
 #
 # endif
@@ -131,7 +131,7 @@
 # else
 #
 #    define BOOST_PP_TUPLE_DETAIL_TO_SEQ_USE_OVERLOAD(prefix,...) \
-         BOOST_PP_OVERLOAD(prefix, __VA_ARGS__)(__VA_ARGS__) \
+         BOOST_PP_CALL_OVERLOAD(prefix, __VA_ARGS__) \
          /**/
 #
 # endif
