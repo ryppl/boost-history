@@ -38,7 +38,7 @@ t100_test1: t100_test1.o
 
 
 Makefile.dep: $(SOURCES)
-	$(CXX) ${INCPATH} -MM $? > $@
+	$(CXX) ${INCPATH} -MM $^ > $@
 
 clean:
 	$(RM) shifted_ptr_test1 shifted_ptr_test2 shifted_ptr_test3 local_pool_test1 local_pool_test2 t100_test1
