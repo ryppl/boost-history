@@ -157,7 +157,7 @@
 # define BOOST_PP_VARIADICS 1
 # endif /* BOOST_NO_VARIADIC_MACROS */
 #
-# endif /* BOOST_PP_NO_BOOST_CONFIG
+# endif /* BOOST_PP_NO_BOOST_CONFIG */
 #
 # endif /* BOOST_PP_VARIADICS */
 #
