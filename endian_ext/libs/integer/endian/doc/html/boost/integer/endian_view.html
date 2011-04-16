@@ -1,0 +1,102 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Class template endian_view</title>
+<link rel="stylesheet" href="../../../../../../../doc/src/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.76.0">
+<link rel="home" href="../../index.html" title="Toward Boost.Integer.Endian 0.2.0">
+<link rel="up" href="../../reference.html#header.boost.integer.endian.endian_view_hpp" title="Header &lt;boost/integer/endian/endian_view.hpp&gt;">
+<link rel="prev" href="is_mixed.html" title="Struct template is_mixed">
+<link rel="next" href="as_endian.html" title="Function template as_endian">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="is_mixed.html"><img src="../../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../reference.html#header.boost.integer.endian.endian_view_hpp"><img src="../../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="as_endian.html"><img src="../../../../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+<div class="refentry">
+<a name="boost.integer.endian_view"></a><div class="titlepage"></div>
+<div class="refnamediv">
+<h2><span class="refentrytitle">Class template endian_view</span></h2>
+<p>boost::integer::endian_view</p>
+</div>
+<h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
+<div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="comment">// In header: &lt;<a class="link" href="../../reference.html#header.boost.integer.endian.endian_view_hpp" title="Header &lt;boost/integer/endian/endian_view.hpp&gt;">boost/integer/endian/endian_view.hpp</a>&gt;
+
+</span><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> Endian<span class="special">,</span> <span class="keyword">typename</span> T<span class="special">,</span> 
+         <span class="keyword">bool</span> IsFundamental <span class="special">=</span> <span class="identifier">is_fundamental</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span><span class="special">::</span><span class="identifier">value</span><span class="special">,</span> 
+         <span class="keyword">bool</span> IsSeq <span class="special">=</span> <span class="identifier">fusion</span><span class="special">::</span><span class="identifier">traits</span><span class="special">::</span><span class="identifier">is_sequence</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span><span class="special">::</span><span class="identifier">value</span><span class="special">&gt;</span> 
+<span class="keyword">class</span> <a class="link" href="endian_view.html" title="Class template endian_view">endian_view</a> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+  <span class="comment">// <a class="link" href="endian_view.html#boost.integer.endian_viewconstruct-copy-destruct">construct/copy/destruct</a></span>
+  <a class="link" href="endian_view.html#id35995118-bb"><span class="identifier">endian_view</span></a><span class="special">(</span><span class="identifier">value_type</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
+  endian_view&amp; <a class="link" href="endian_view.html#id35995136-bb"><span class="keyword">operator</span><span class="special">=</span></a><span class="special">(</span><span class="identifier">value_type</span><span class="special">)</span><span class="special">;</span>
+  endian_view&amp; <a class="link" href="endian_view.html#id35995158-bb"><span class="keyword">operator</span><span class="special">=</span></a><span class="special">(</span><a class="link" href="endian_view.html" title="Class template endian_view">endian_view</a> <span class="keyword">const</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
+  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> Endian2<span class="special">&gt;</span> 
+    endian_view&amp; <a class="link" href="endian_view.html#id35995182-bb"><span class="keyword">operator</span><span class="special">=</span></a><span class="special">(</span><a class="link" href="endian_view.html" title="Class template endian_view">endian_view</a><span class="special">&lt;</span> <span class="identifier">Endian2</span><span class="special">,</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">true</span><span class="special">,</span> <span class="keyword">false</span> <span class="special">&gt;</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
+
+  <span class="comment">// <a class="link" href="endian_view.html#id35995096-bb">private member functions</a></span>
+  <a class="link" href="endian_view.html#id35995099-bb"><span class="keyword">operator</span> <span class="identifier">value_type</span></a><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+<span class="special">}</span><span class="special">;</span></pre></div>
+<div class="refsect1">
+<a name="id36371645"></a><h2>Description</h2>
+<div class="refsect2">
+<a name="id36371648"></a><h3>
+<a name="boost.integer.endian_viewconstruct-copy-destruct"></a><code class="computeroutput">endian_view</code> 
+        public
+       construct/copy/destruct</h3>
+<div class="orderedlist"><ol class="orderedlist" type="1">
+<li class="listitem">
+<pre class="literallayout"><a name="id35995118-bb"></a><span class="identifier">endian_view</span><span class="special">(</span><span class="identifier">value_type</span> <span class="special">&amp;</span> ref<span class="special">)</span><span class="special">;</span></pre>
+<p><span class="bold"><strong>Effects:</strong></span> Constructs an object of type <code class="computeroutput">endian_view&lt;E, T, n_bits, A&gt;</code>. </p>
+</li>
+<li class="listitem">
+<pre class="literallayout">endian_view&amp; <a name="id35995136-bb"></a><span class="keyword">operator</span><span class="special">=</span><span class="special">(</span><span class="identifier">value_type</span> val<span class="special">)</span><span class="special">;</span></pre>
+<p><code class="computeroutput">value_type(this-&gt;ref_) == v</code>. </p>
+<p><span class="bold"><strong>Returns:</strong></span> <code class="computeroutput">*this</code>. </p>
+</li>
+<li class="listitem">
+<pre class="literallayout">endian_view&amp; <a name="id35995158-bb"></a><span class="keyword">operator</span><span class="special">=</span><span class="special">(</span><a class="link" href="endian_view.html" title="Class template endian_view">endian_view</a> <span class="keyword">const</span> <span class="special">&amp;</span> rhs<span class="special">)</span><span class="special">;</span></pre>
+<p><code class="computeroutput">this-&gt;ref_ == rhs.ref_</code>. </p>
+<p><span class="bold"><strong>Returns:</strong></span> <code class="computeroutput">*this</code>. </p>
+</li>
+<li class="listitem">
+<pre class="literallayout"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> Endian2<span class="special">&gt;</span> 
+  endian_view&amp; <a name="id35995182-bb"></a><span class="keyword">operator</span><span class="special">=</span><span class="special">(</span><a class="link" href="endian_view.html" title="Class template endian_view">endian_view</a><span class="special">&lt;</span> <span class="identifier">Endian2</span><span class="special">,</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">true</span><span class="special">,</span> <span class="keyword">false</span> <span class="special">&gt;</span> <span class="keyword">const</span> <span class="special">&amp;</span> rhs<span class="special">)</span><span class="special">;</span></pre>
+<p><code class="computeroutput">value_type(this-&gt;ref_) == value_type(rhs.ref_)</code>. </p>
+<p><span class="bold"><strong>Returns:</strong></span> <code class="computeroutput"></code>*this. </p>
+</li>
+</ol></div>
+</div>
+<div class="refsect2">
+<a name="id36371974"></a><h3>
+<a name="id35995096-bb"></a><code class="computeroutput">endian_view</code> private member functions</h3>
+<div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem">
+<pre class="literallayout"><a name="id35995099-bb"></a><span class="keyword">operator</span> <span class="identifier">value_type</span><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span></pre>
+<p><span class="bold"><strong>Returns:</strong></span> The converted <code class="computeroutput">value_type</code> of the referenced type as it was seen as an endian aware type. </p>
+</li></ol></div>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2006 -2010 Beman Dawes<br>Copyright &#169; 2010 -2011 Vicente J. Botet Escriba<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="is_mixed.html"><img src="../../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../reference.html#header.boost.integer.endian.endian_view_hpp"><img src="../../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="as_endian.html"><img src="../../../../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

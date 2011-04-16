@@ -909,9 +909,11 @@ After compiling and executing endian_example.cpp, a hex dump of test.dat shows:
 
 [endsect]
 
+[xinclude top_ref.xml]
+
 
 [/================]
-[section Reference]
+[section Reference2]
 [/================]
 
 [/==========================================================================================]
