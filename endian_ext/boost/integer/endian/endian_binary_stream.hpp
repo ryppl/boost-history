@@ -7,6 +7,13 @@
 
 //  See library home page at http://www.boost.org/libs/integer/endian
 
+
+/*!
+ \file
+ \brief provides operators @c <= and @c => for unformatted binary (as opposed to formatted character) stream
+ insertion and extraction of endian types.
+ */
+
 #ifndef BOOST_ENDIAN_BINARY_STREAM_HPP
 #define BOOST_ENDIAN_BINARY_STREAM_HPP
 

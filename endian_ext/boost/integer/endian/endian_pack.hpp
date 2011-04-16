@@ -11,6 +11,15 @@
 
 //--------------------------------------------------------------------------------------//
 
+
+/*!
+ \file
+ \brief This file contains the core class template of Boost.Integer.Endian.
+
+  Provides byte-holder binary types with explicit control over byte order, value type, size, and alignment.
+  Typedefs provide easy-to-use names for common configurations.
+ */
+
 //  Original design developed by Darin Adler based on classes developed by Mark
 //  Borgerding. Four original class templates were combined into a single endian
 //  class template by Beman Dawes, who also added the unrolled_byte_loops sign
@@ -21,11 +30,12 @@
 //  Definition of native depending on BOOST_BIG_ENDIAN to big or little done by Vicente J. Botet Escriba.
 //  Change the definition of endian_pack using types instead of enum endianness done by Vicente J. Botet Escriba.
 
-
-#define BOOST_ENDIAN_ALLOWS_UDT
-
 #ifndef BOOST_INTEGER_ENDIAN_PACK_HPP
 #define BOOST_INTEGER_ENDIAN_PACK_HPP
+
+#if !defined(BOOST_ENDIAN_DOXYGEN_INVOKED)
+#define BOOST_ENDIAN_ALLOWS_UDT
+#endif
 
 #ifdef BOOST_ENDIAN_LOG
 # include <iostream>
@@ -46,6 +56,7 @@
 
 # include <boost/integer/endian/endianness.hpp>
 
+#if !defined(BOOST_ENDIAN_DOXYGEN_INVOKED)
 # if CHAR_BIT != 8
 #   error Platforms with CHAR_BIT != 8 are not supported
 # endif
@@ -58,6 +69,7 @@
 
 # if defined(BOOST_ENDIAN_FORCE_PODNESS)
 #   define BOOST_ENDIAN_NO_CTORS
+# endif
 # endif
 
 
@@ -191,11 +203,52 @@ namespace boost
  
     BOOST_SCOPED_ENUM_START(alignment) { unaligned, aligned }; BOOST_SCOPED_ENUM_END
 
+    /**
+     An @c endian_pack is a byte-holder with user-specified endianness, value type, size, and alignment.
+
+    @Requires
+    - @c E is one of @c endianness::big or @c endianness::little.
+    - @c T must be a POD with value semantics.
+    - @c nbits is a multiple of @c 8
+    - If @c A is @c alignment::aligned then @c nbits must be equal to @c 8*sizeof(T)
+
+    */
     template <typename E,
         typename T, 
         std::size_t n_bits=sizeof(T)*8,
         BOOST_SCOPED_ENUM(alignment) A = alignment::aligned
-    > class endian_pack;
+    >
+#if !defined(BOOST_ENDIAN_DOXYGEN_INVOKED)
+    class endian_pack;
+#else
+    class endian_pack {
+    public:
+      typedef E endian_type;
+      typedef T value_type;
+      BOOST_STATIC_CONSTEXPR std::size_t width = n_bits;
+      BOOST_STATIC_CONSTEXPR BOOST_SCOPED_ENUM(alignment) alignment_value = A;
+      //! @Effects Constructs an object of type @c endian_pack<E,T,n_bits,A>
+      //! @Note if @c BOOST_ENDIAN_FORCE_PODNESS is defined && C++0x POD's are not available then this constructor will not be present
+      endian_pack() = default;
+      //! @Effects: Constructs an object of type @c endian_pack<E,T,n_bits,A>.
+      //! @Postcondition @c x==v, where @c x is the constructed object.
+      //! @Note if @c BOOST_ENDIAN_FORCE_PODNESS is defined && C++0x POD's are not available then this constructor will not be present
+      template <typename T2>
+      explicit endian_pack(T2 val);
+
+      //! @Postcondition @c value_type(*this)==val.
+      //! @Returns @c *this.
+      endian_pack & operator=(T val);
+
+      //! @Returns The current value stored in @c *this, converted to @c value_type.
+      operator T() const;
+
+      //! @Returns The pointer to current value stored in @c *this, converted to <c>const char*</c>.
+      const char* data() const;
+};
+
+#endif
+#if !defined(BOOST_ENDIAN_DOXYGEN_INVOKED)
 
     //  Specializations that represent unaligned bytes.
     //  Taking an integer type as a parameter provides a nice way to pass both
@@ -395,6 +448,7 @@ namespace boost
           T m_value;
     };
 #endif // defined(BOOST_ENDIAN_ALLOWS_UDT)
+#endif
 
   //  naming convention typedefs  ------------------------------------------------------//
 
@@ -458,10 +512,13 @@ namespace boost
     typedef endian_pack< native_endian, uint_least64_t, 56, alignment::unaligned >     unative56_pt;
     typedef endian_pack< native_endian, uint_least64_t, 64, alignment::unaligned >     unative64_pt;
 
+#if !defined(BOOST_ENDIAN_DOXYGEN_INVOKED)
+
 #define BOOST_HAS_INT16_T
 #define BOOST_HAS_INT32_T
 #define BOOST_HAS_INT64_T
-  
+#endif
+
   //  These types only present if platform has exact size integers:
   //     aligned big endian_pack signed integer types
   //     aligned big endian_pack unsigned integer types
@@ -471,21 +528,21 @@ namespace boost
   //     aligned native endian_pack typedefs are not provided because
   //     <cstdint> types are superior for this use case
 
-# if defined(BOOST_HAS_INT16_T)
+# if defined(BOOST_HAS_INT16_T) || defined(BOOST_ENDIAN_DOXYGEN_INVOKED)
     typedef endian_pack< big_endian, int16_t, 16, alignment::aligned >      aligned_big16_pt;
     typedef endian_pack< big_endian, uint16_t, 16, alignment::aligned >     aligned_ubig16_pt;
     typedef endian_pack< little_endian, int16_t, 16, alignment::aligned >   aligned_little16_pt;
     typedef endian_pack< little_endian, uint16_t, 16, alignment::aligned >  aligned_ulittle16_pt;
 # endif
 
-# if defined(BOOST_HAS_INT32_T)
+# if defined(BOOST_HAS_INT32_T) || defined(BOOST_ENDIAN_DOXYGEN_INVOKED)
     typedef endian_pack< big_endian, int32_t, 32, alignment::aligned >      aligned_big32_pt;
     typedef endian_pack< big_endian, uint32_t, 32, alignment::aligned >     aligned_ubig32_pt;
     typedef endian_pack< little_endian, int32_t, 32, alignment::aligned >   aligned_little32_pt;
     typedef endian_pack< little_endian, uint32_t, 32, alignment::aligned >  aligned_ulittle32_pt;
 # endif
 
-# if defined(BOOST_HAS_INT64_T)
+# if defined(BOOST_HAS_INT64_T) || defined(BOOST_ENDIAN_DOXYGEN_INVOKED)
     typedef endian_pack< big_endian, int64_t, 64, alignment::aligned >      aligned_big64_pt;
     typedef endian_pack< big_endian, uint64_t, 64, alignment::aligned >     aligned_ubig64_pt;
     typedef endian_pack< little_endian, int64_t, 64, alignment::aligned >   aligned_little64_pt;
@@ -511,3 +568,4 @@ namespace boost
 #endif
 
 #endif // BOOST_INTEGER_ENDIAN_PACK_HPP
+

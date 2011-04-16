@@ -9,6 +9,12 @@
 
 //--------------------------------------------------------------------------------------//
 
+/*!
+ \file
+ \brief This file contains the default implementation ofr the domain_map metafunction.
+
+ */
+
 
 #ifndef BOOST_ENDIAN_DOMAIN_MAP__HPP
 #define BOOST_ENDIAN_DOMAIN_MAP__HPP
@@ -42,11 +48,25 @@ namespace endianness {
 
     }
 
-    /// By default the shared endianess of a type depends on whether it is fundamental and or a fusion sequence.
+    /**
+    @Requires @c Domain any class. Can be also @c endianness::big or @c endianness::little.
+    @Result The member typedef type names a mpl tree of sequence of endianness types as view from the point of view of the @c Domain.
+     The default definition is a mpl tree having as leaves the @c Domain class for @c T fundamental types, and fusion sequences.
+
+    @Example
+    @code
+    is_same<domain_map<endianness::big, int>::type, endianness::big>::value == true
+    struct ifA {};
+    @endcode
+
+    The user needs to specialize this metafunction for specific domains.
+     */
+
     template <typename Domain, typename T>
     struct domain_map : endian_detail::domain_map_impl<Domain, T> {};
 
     namespace endian_detail {
+      // By default the shared endianess of a type depends on whether it is fundamental and or a fusion sequence.
 
         // fundamental types are native
         template <typename Domain, typename T, bool IsSeq>

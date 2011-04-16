@@ -9,6 +9,12 @@
 
 //--------------------------------------------------------------------------------------//
 
+
+/*!
+ \file
+ \brief
+ */
+
 #ifndef BOOST_INTEGER_ENDIAN_TYPE_HPP
 #define BOOST_INTEGER_ENDIAN_TYPE_HPP
 
@@ -43,6 +49,20 @@ struct endian_type_impl;
 
 }
 
+/**
+ The member typedef type names one of the endianness types @c big, @c little or @c mixed.
+ If all the leaves of the type T are of the same endianness type is this endiannes, otherwise it is mixed.
+
+The default behavior works for all the endian aware types, fundamental types and any type that is a fusion sequence.
+
+The user can specialize this metafunction for specific clases.
+
+@Example
+@code
+is_same<endian_type<endian<endianness::big, int> >::type, endianness::big>::value == true
+is_same<endian_type<int>::type, endianness::native>::value == true
+@endcode
+*/
 template <typename T>
 struct endian_type : integer_detail::endian_type_impl<T> {
 };

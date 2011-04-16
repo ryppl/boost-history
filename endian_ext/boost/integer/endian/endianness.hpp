@@ -9,6 +9,10 @@
 
 //--------------------------------------------------------------------------------------//
 
+/*!
+ \file
+ \brief Provides the endianness tags.
+ */
 
 #ifndef BOOST_ENDIAN_ENDIANNESS__HPP
 #define BOOST_ENDIAN_ENDIANNESS__HPP

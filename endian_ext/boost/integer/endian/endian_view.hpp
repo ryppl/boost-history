@@ -9,6 +9,11 @@
 
 //--------------------------------------------------------------------------------------//
 
+/*!
+ \file
+ \brief This file provides the @c endian_view<> class template as well as some factory helper functions.
+ */
+
 
 #ifndef BOOST_INTEGER_ENDIAN_VIEW_HPP
 #define BOOST_INTEGER_ENDIAN_VIEW_HPP
@@ -19,7 +24,8 @@
 
 namespace boost {
 namespace integer {
-namespace endianness {
+#if !defined(BOOST_ENDIAN_DOXYGEN_INVOKED)
+  namespace endianness {
 
     template <typename EndianSource, typename T>
     void convert_from(T& r);
@@ -27,12 +33,38 @@ namespace endianness {
     void convert_to(T& r);
     template <typename EndianTarget, typename EndianSource, typename T>
     void convert_to_from(T& r);
-}
+  }
+#endif
     template <typename Endian, typename T,
                     bool IsFundamental  = is_fundamental<T>::value,
                     bool IsSeq          = fusion::traits::is_sequence<T>::value
     >
+#if !defined(BOOST_ENDIAN_DOXYGEN_INVOKED)
     class endian_view;
+#else
+    class endian_view {
+      typedef T value_type;
+
+      //! @Effects Constructs an object of type @c endian_view<E, T, n_bits, A>.
+      endian_view(value_type& ref);
+
+      //! @Returns The converted @c value_type of the referenced type as it was seen as an endian aware type.
+      operator value_type() const;
+
+      //! @Postcondition <c>value_type(this->ref_) == v</c>.
+      //! @Returns @c *this.
+      endian_view& operator=(value_type val);
+      //! @Postcondition <c>this->ref_ == rhs.ref_</c>.
+      //! @Returns @c *this.
+      endian_view& operator=(endian_view const& rhs);
+
+      //! @Postcondition <c>value_type(this->ref_) == value_type(rhs.ref_)</c>.
+      //! @Returns @c*this.
+      template <typename Endian2 >
+      endian_view& operator=(endian_view<Endian2,T,true,false> const& rhs);
+  };
+#endif
+#if !defined(BOOST_ENDIAN_DOXYGEN_INVOKED)
 
     template <typename Endian, typename T >
     class endian_view<Endian,T,true,false>
@@ -44,22 +76,34 @@ namespace endianness {
         value_type &ref_;
         
         typedef endian_pack<Endian,value_type> endian_t;
+
+        //! @Effects Constructs an object of type @c endian_view<E, T, n_bits, A>.
         endian_view(value_type& ref) : ref_(ref) {};
+
+        //! @Returns The converted @c value_type of the referenced type as it was seen as an endian aware type.
         operator value_type() const { 
             endian_t& v=reinterpret_cast<endian_t&>(ref_);
             return v; 
         }
+
+        //! @Postcondition <c>value_type(this->ref_) == v</c>.
+        //! @Returns @c *this.
         endian_view& operator=(value_type val) { 
             endian_t& v=reinterpret_cast<endian_t&>(ref_);
             v=val;
             return *this; 
         }
+        //! @Postcondition <c>this->ref_ == rhs.ref_</c>.
+        //! @Returns @c *this.
         endian_view& operator=(endian_view const& rhs) { 
             if (this!=&rhs) {
                 ref_=rhs.ref_;
             }
             return *this; 
         }
+
+        //! @Postcondition <c>value_type(this->ref_) == value_type(rhs.ref_)</c>.
+        //! @Returns @c*this.
         template <typename Endian2 >
         endian_view& operator=(endian_view<Endian2,T,true,false> const& rhs) { 
             endian_t& v=reinterpret_cast<endian_t&>(ref_);
@@ -100,23 +144,29 @@ namespace endianness {
             return *this; 
         }
     };
+#endif
     
+    //! @Returns An @c endian_view<> that depend on the endianness parameter @c E referencing the pararameter @c v.
     template <typename E, typename T>    
     endian_view<E,T> as_endian(T& v) {
         return endian_view<E,T>(v);
     }
  
+    //! @Returns A native endian @c endian_view<native_endian> referencing the pararameter @c v.
     template <typename T>
     endian_view<native_endian,T> as(T& v) 
     { 
-        return as_endian<native_endian>(v); 
+        return as_endian<native_endian>(v);
     }
+
+    //! @Returns A little endian @c endian_view<little_endian> referencing the pararameter @c v.
     template <typename T>
     endian_view<little_endian,T> as_little(T& v)
     { 
         return as_endian<little_endian>(v); 
     }
     
+    //! @Returns A little endian @c endian_view<big_endian> referencing the pararameter @c v.
     template <typename T>
     endian_view<big_endian,T> as_big(T& v)
     { 
