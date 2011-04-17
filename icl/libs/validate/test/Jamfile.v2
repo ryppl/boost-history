@@ -63,7 +63,7 @@ test-suite "validate_itl"
     [ run test_icl_morphic_/test_icl_morphic.cpp ../src/gentor/gentorprofile.cpp ]
     
     # 12.10 msvc9 compilation time: 2:36  
-    # [ run test_signed_quantifier_/test_signed_quantifier.cpp ../src/gentor/gentorprofile.cpp ]
+    [ run test_signed_quantifier_/test_signed_quantifier.cpp ../src/gentor/gentorprofile.cpp ]
     
     # 13.15 msvc9 compilation time:  
     [ run test_sorted_assoc_set_/test_sorted_assoc_set.cpp ../src/gentor/gentorprofile.cpp ]
@@ -82,5 +82,89 @@ test-suite "validate_itl"
     
     # 18.14 msvc9 compilation time:  
     [ run test_sorted_assoc_map_back_/test_sorted_assoc_map_back.cpp ../src/gentor/gentorprofile.cpp ]
+
+    #---------------------------------------------------------------------------
+    # Tests for compare order std::greater
+    #[ run test_val_relations_/test_val_relations.cpp ../src/gentor/gentorprofile.cpp 
+    #    : : : <define>BOOST_ICL_USE_COMPARE_STD_GREATER
+    #    : test_val_relations_gt ]
+    #JODO Law violations for std::greater
+
+    [ run test_set_copy_conformity_/test_set_copy_conformity.cpp ../src/gentor/gentorprofile.cpp 
+        : : : <define>BOOST_ICL_USE_COMPARE_STD_GREATER
+        : test_set_copy_conformity_gt ]
     
+    [ run test_map_copy_conformity_/test_map_copy_conformity.cpp ../src/gentor/gentorprofile.cpp
+        : : : <define>BOOST_ICL_USE_COMPARE_STD_GREATER
+        : test_map_copy_conformity_gt ]
+    
+    [ run test_interval_bitset_/test_interval_bitset.cpp ../src/gentor/gentorprofile.cpp 
+        : : : <define>BOOST_ICL_USE_COMPARE_STD_GREATER
+        : test_interval_bitset_gt ]
+    
+    [ run test_icl_set_/test_icl_set.cpp ../src/gentor/gentorprofile.cpp 
+        : : : <define>BOOST_ICL_USE_COMPARE_STD_GREATER
+        : test_icl_set_gt ]
+    
+    [ run test_collector_/test_collector.cpp ../src/gentor/gentorprofile.cpp 
+        : : : <define>BOOST_ICL_USE_COMPARE_STD_GREATER
+        : test_collector_gt ]
+    
+    [ run test_bit_collector_/test_bit_collector.cpp ../src/gentor/gentorprofile.cpp 
+        : : : <define>BOOST_ICL_USE_COMPARE_STD_GREATER
+        : test_bit_collector_gt ]
+    
+    [ run test_unsigned_quantifier_/test_unsigned_quantifier.cpp ../src/gentor/gentorprofile.cpp 
+        : : : <define>BOOST_ICL_USE_COMPARE_STD_GREATER
+        : test_unsigned_quantifier_gt ]
+    
+    [ run test_set_order_/test_set_order.cpp ../src/gentor/gentorprofile.cpp 
+        : : : <define>BOOST_ICL_USE_COMPARE_STD_GREATER
+        : test_set_order_gt ]
+    
+    #[ run test_map_order_/test_map_order.cpp ../src/gentor/gentorprofile.cpp 
+    #    : : : <define>BOOST_ICL_USE_COMPARE_STD_GREATER
+    #    : test_map_order_gt ]
+    #JODO compiler err: op > ambiguous
+        
+    #[ run test_icl_morphic_/test_icl_morphic.cpp ../src/gentor/gentorprofile.cpp 
+    #    : : : <define>BOOST_ICL_USE_COMPARE_STD_GREATER
+    #    : test_icl_morphic_gt ]
+    #JODO compile err: RandomGentor<set<T, greater>>
+    
+    #[ run test_signed_quantifier_/test_signed_quantifier.cpp ../src/gentor/gentorprofile.cpp 
+    #    : : : <define>BOOST_ICL_USE_COMPARE_STD_GREATER
+    #    : test_signed_quantifier_gt ]
+    #JODO compile err: RandomGentor<set<T, greater>>    
+    
+    #[ run test_sorted_assoc_set_/test_sorted_assoc_set.cpp ../src/gentor/gentorprofile.cpp 
+    #    : : : <define>BOOST_ICL_USE_COMPARE_STD_GREATER
+    #    : test_sorted_assoc_set_gt ]
+    #JODO law violations and undefined behavior    
+    
+    #[ run test_sorted_assoc_set_back_/test_sorted_assoc_set_back.cpp ../src/gentor/gentorprofile.cpp 
+    #    : : : <define>BOOST_ICL_USE_COMPARE_STD_GREATER
+    #    : test_sorted_assoc_set_back_gt ]
+    #JODO law violations and undefined behavior    
+    
+    #[ run test_sorted_assoc_bitset_/test_sorted_assoc_bitset.cpp ../src/gentor/gentorprofile.cpp 
+    #    : : : <define>BOOST_ICL_USE_COMPARE_STD_GREATER
+    #    : test_sorted_assoc_bitset_gt ]
+    #JODO law violations and undefined behavior    
+    
+    #[ run test_sorted_assoc_bitset_back_/test_sorted_assoc_bitset_back.cpp ../src/gentor/gentorprofile.cpp 
+    #    : : : <define>BOOST_ICL_USE_COMPARE_STD_GREATER
+    #    : test_sorted_assoc_bitset_back_gt ]
+    #JODO law violations and undefined behavior    
+    
+    #[ run test_sorted_assoc_map_/test_sorted_assoc_map.cpp ../src/gentor/gentorprofile.cpp 
+    #    : : : <define>BOOST_ICL_USE_COMPARE_STD_GREATER
+    #    : test_sorted_assoc_map_gt ]
+    #JODO law violations and undefined behavior    
+    
+    #[ run test_sorted_assoc_map_back_/test_sorted_assoc_map_back.cpp ../src/gentor/gentorprofile.cpp 
+    #    : : : <define>BOOST_ICL_USE_COMPARE_STD_GREATER
+    #    : test_sorted_assoc_map_back_gt ]
+    #JODO law violations and undefined behavior    
+
     ;

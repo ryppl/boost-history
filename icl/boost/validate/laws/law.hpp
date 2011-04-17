@@ -85,6 +85,9 @@ namespace boost{namespace icl
         bool operator < (const Law& rhs)const
         { return size() < rhs.size(); }
 
+        bool operator > (const Law& rhs)const
+        { return size() > rhs.size(); }
+
         /// The name of the law
         std::string name()const       { return that()->name(); }
         /// A formula for the law

@@ -44,7 +44,7 @@ template
 <
     typename             SubType,
     typename             DomainT, 
-    ICL_COMPARE Compare  = ICL_COMPARE_INSTANCE(std::less, DomainT),
+    ICL_COMPARE Compare  = ICL_COMPARE_INSTANCE(ICL_COMPARE_DEFAULT, DomainT),
     ICL_INTERVAL(ICL_COMPARE) Interval = ICL_INTERVAL_INSTANCE(ICL_INTERVAL_DEFAULT, DomainT, Compare),
     ICL_ALLOC   Alloc    = std::allocator
 > 
@@ -205,7 +205,6 @@ public:
     const_iterator find(const element_type& key_value)const
     { 
         return icl::find(*this, key_value);
-        //CL return this->_set.find(icl::singleton<segment_type>(key)); 
     }
 
     /** Find the first interval, that collides with interval \c key_interval */

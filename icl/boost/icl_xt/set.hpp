@@ -42,7 +42,7 @@ namespace boost{namespace icl
 template 
 <
     typename DomainT, 
-    ICL_COMPARE Compare = ICL_COMPARE_INSTANCE(std::less, DomainT),
+    ICL_COMPARE Compare = ICL_COMPARE_INSTANCE(ICL_COMPARE_DEFAULT, DomainT),
     ICL_ALLOC   Alloc   = std::allocator 
 >
 class set: private ICL_IMPL_SPACE::set<DomainT, ICL_COMPARE_DOMAIN(Compare,DomainT), Alloc<DomainT> >
