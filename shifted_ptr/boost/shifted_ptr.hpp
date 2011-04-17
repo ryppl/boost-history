@@ -29,6 +29,7 @@
 #include <new.h>
 #endif
 
+#include <iostream>
 #include <boost/pool/pool_alloc.hpp>
 #include <boost/type_traits/add_pointer.hpp>
 
@@ -79,7 +80,7 @@ public:
     {
         includes_.push_back(& tag_);
     }
-
+	
 	
 	/**
 		Release of a @c set with possible destruction of all its elements and other @c set s unified to it.
@@ -306,13 +307,11 @@ template <typename T>
         template <typename V>
             shifted_ptr & operator = (shifted<V> * p)
             {
-                if (ps_ && ! owned_base::pool_.is_from(ps_))
-                {
-                    if (! owned_base::pool_.is_from(this))
-                        release(false);
+                if (! owned_base::pool_.is_from(this))
+                    release(false);
 
-                    init(p);
-                }
+                init(p);
+
                 base::operator = (p);
 
                 return * this;
@@ -328,12 +327,11 @@ template <typename T>
         template <typename V>
             shifted_ptr & operator = (shifted_ptr<V> const & p)
             {
-                if (ps_ && ! owned_base::pool_.is_from(ps_))
-                    if (ps_->redir() != p.ps_->redir())
-                    {
-                        release(false);
-                        ps_->redir(p.ps_);
-                    }
+                if (ps_->redir() != p.ps_->redir())
+                {
+                    release(false);
+                    ps_->redir(p.ps_);
+                }
                 base::operator = (p);
 
                 return * this;
@@ -377,7 +375,10 @@ template <typename T>
                     base::po_ = 0;
 
                     if (! d)
+					{
+						ps_->set::~set();
                         new (ps_) set();
+					}
                     else
                         delete ps_;
                 }
