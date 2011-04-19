@@ -21,7 +21,7 @@
         Operator Type Traits</a>
 </h4></div></div></div>
 <a name="boost_typetraits.category.value_traits.operators.introduction"></a><h6>
-<a name="id3406786"></a>
+<a name="id3308615"></a>
           <a class="link" href="operators.html#boost_typetraits.category.value_traits.operators.introduction">Introduction</a>
         </h6>
 <p>
@@ -32,7 +32,7 @@
           reflects the fact that given types can or not be used with given operators.
         </p>
 <p>
-          For example, <code class="computeroutput"><span class="identifier">has_operator_plus</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="keyword">double</span><span class="special">&gt;::</span><span class="identifier">value</span></code>
+          For example, <code class="computeroutput"><span class="identifier">can_call_addition</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="keyword">double</span><span class="special">&gt;::</span><span class="identifier">value</span></code>
           is a <code class="computeroutput"><span class="keyword">bool</span></code> which value is
           <code class="computeroutput"><span class="keyword">true</span></code> because it is possible
           to add a <code class="computeroutput"><span class="keyword">double</span></code> to an <code class="computeroutput"><span class="keyword">int</span></code> like in the following code: 
@@ -45,62 +45,60 @@
           It is also possible to know if the result of the operator is convertible
           or not to a given type: 
 </p>
-<pre class="programlisting"><span class="identifier">has_operator_plus</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="keyword">double</span><span class="special">,</span> <span class="keyword">double</span><span class="special">&gt;::</span><span class="identifier">value</span><span class="special">;</span> <span class="comment">// true: int+double is convertible to double
-</span><span class="identifier">has_operator_plus</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="keyword">double</span><span class="special">,</span> <span class="keyword">char</span><span class="special">*&gt;::</span><span class="identifier">value</span><span class="special">;</span> <span class="comment">// false: int+double is not convertible to char*
-</span><span class="identifier">has_operator_less</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="keyword">double</span><span class="special">,</span> <span class="keyword">bool</span><span class="special">&gt;::</span><span class="identifier">value</span><span class="special">;</span> <span class="comment">// true: int&lt;double is convertible to bool
+<pre class="programlisting"><span class="identifier">can_call_addition</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="keyword">double</span><span class="special">,</span> <span class="keyword">double</span><span class="special">&gt;::</span><span class="identifier">value</span><span class="special">;</span> <span class="comment">// true: int+double is convertible to double
+</span><span class="identifier">can_call_addition</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="keyword">double</span><span class="special">,</span> <span class="keyword">char</span><span class="special">*&gt;::</span><span class="identifier">value</span><span class="special">;</span> <span class="comment">// false: int+double is not convertible to char*
+</span><span class="identifier">can_call_subtraction</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="keyword">double</span><span class="special">,</span> <span class="keyword">bool</span><span class="special">&gt;::</span><span class="identifier">value</span><span class="special">;</span> <span class="comment">// true: int&lt;double is convertible to bool
 </span></pre>
 <p>
         </p>
 <p>
           The syntax for binary operators is the following: 
 </p>
-<pre class="programlisting"><span class="keyword">template</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">LHS</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">RHS</span><span class="special">=</span><span class="identifier">LHS</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">RET</span><span class="special">=</span><span class="keyword">void</span> <span class="special">&gt;</span></code> <span class="identifier">has_operator_op</span><span class="special">;</span>
+<pre class="programlisting"><span class="keyword">template</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">Lhs</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Rhs</span><span class="special">=</span><span class="identifier">Lhs</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Ret</span><span class="special">=</span><span class="identifier">dont_care</span> <span class="special">&gt;</span></code> <span class="identifier">can_call_op</span><span class="special">;</span>
 </pre>
 <p>
           where:
         </p>
 <div class="itemizedlist"><ul class="itemizedlist" type="disc">
 <li class="listitem">
-              <code class="computeroutput"><span class="identifier">LHS</span></code> is the type used
+              <code class="computeroutput"><span class="identifier">Lhs</span></code> is the type used
               at the left hand side of <code class="computeroutput"><span class="keyword">operator</span>
               <span class="identifier">op</span></code>,
             </li>
 <li class="listitem">
-              <code class="computeroutput"><span class="identifier">RHS</span></code> is the type used
+              <code class="computeroutput"><span class="identifier">Rhs</span></code> is the type used
               at the right hand side of <code class="computeroutput"><span class="keyword">operator</span>
               <span class="identifier">op</span></code>,
             </li>
 <li class="listitem">
-              <code class="computeroutput"><span class="identifier">RET</span></code> is the type for
+              <code class="computeroutput"><span class="identifier">Ret</span></code> is the type for
               which we want to know if the result of <code class="computeroutput"><span class="keyword">operator</span>
               <span class="identifier">op</span></code> can be converted to.
             </li>
 </ul></div>
 <p>
-          The default behaviour (<code class="computeroutput"><span class="identifier">RET</span><span class="special">=</span><span class="keyword">void</span></code>) is
-          to not check for the return value of the operator. Be careful that it does
-          not mean that the operator must return <code class="computeroutput"><span class="keyword">void</span></code>
-          to have the trait value to be <code class="computeroutput"><span class="keyword">true</span></code>.
-          If <code class="computeroutput"><span class="identifier">RET</span></code> is different from
-          the default <code class="computeroutput"><span class="keyword">void</span></code>, the return
-          value is checked to be convertible to <code class="computeroutput"><span class="identifier">RET</span></code>.
-          Convertible to <code class="computeroutput"><span class="identifier">RET</span></code> means
+          The default behaviour (<code class="computeroutput"><span class="identifier">Ret</span><span class="special">=</span><span class="identifier">dont_care</span></code>)
+          is to not check for the return value of the operator. If <code class="computeroutput"><span class="identifier">Ret</span></code> is different from the default <code class="computeroutput"><span class="identifier">dont_care</span></code>, the return value is checked
+          to be convertible to <code class="computeroutput"><span class="identifier">Ret</span></code>.
+          Convertible to <code class="computeroutput"><span class="identifier">Ret</span></code> means
           that the return value can be used as argument to a function expecting
-          <code class="computeroutput"><span class="identifier">RET</span></code>: 
+          <code class="computeroutput"><span class="identifier">Ret</span></code>: 
 </p>
-<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">f</span><span class="special">(</span><span class="identifier">RET</span><span class="special">);</span>
-<span class="identifier">LHS</span> <span class="identifier">lhs</span><span class="special">;</span>
-<span class="identifier">RHS</span> <span class="identifier">rhs</span><span class="special">;</span>
-<span class="identifier">f</span><span class="special">(</span><span class="identifier">lhs</span><span class="special">+</span><span class="identifier">rhs</span><span class="special">);</span> <span class="comment">// is valid if has_operator_plus&lt;LHS, RHS, RET&gt;::value==true
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">f</span><span class="special">(</span><span class="identifier">Ret</span><span class="special">);</span>
+<span class="identifier">Lhs</span> <span class="identifier">lhs</span><span class="special">;</span>
+<span class="identifier">Rhs</span> <span class="identifier">rhs</span><span class="special">;</span>
+<span class="identifier">f</span><span class="special">(</span><span class="identifier">lhs</span><span class="special">+</span><span class="identifier">rhs</span><span class="special">);</span> <span class="comment">// is valid if can_call_addition&lt;Lhs, Rhs, Ret&gt;::value==true
 </span></pre>
 <p>
+          If <code class="computeroutput"><span class="identifier">Ret</span><span class="special">=</span><span class="keyword">void</span></code>, the return type is checked to be exactly
+          <code class="computeroutput"><span class="keyword">void</span></code>.
         </p>
 <p>
           Similarly, the syntax for postfix and prefix operators is the following:
           
 </p>
-<pre class="programlisting"><span class="keyword">template</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">RHS</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">RET</span><span class="special">=</span><span class="keyword">void</span> <span class="special">&gt;</span></code> <span class="identifier">has_operator_prefixop</span><span class="special">;</span>
-<span class="keyword">template</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">LHS</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">RET</span><span class="special">=</span><span class="keyword">void</span> <span class="special">&gt;</span></code> <span class="identifier">has_operator_postfixop</span><span class="special">;</span>
+<pre class="programlisting"><span class="keyword">template</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">Rhs</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Ret</span><span class="special">=</span><span class="identifier">dont_care</span> <span class="special">&gt;</span></code> <span class="identifier">can_call_prefixop</span><span class="special">;</span>
+<span class="keyword">template</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">Lhs</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Ret</span><span class="special">=</span><span class="identifier">dont_care</span> <span class="special">&gt;</span></code> <span class="identifier">can_call_postfixop</span><span class="special">;</span>
 </pre>
 <p>
         </p>
@@ -109,7 +107,7 @@
           operators.
         </p>
 <div class="table">
-<a name="id3407621"></a><p class="title"><b>Table&#160;1.4.&#160;Supported binary operators</b></p>
+<a name="id3309458"></a><p class="title"><b>Table&#160;1.4.&#160;Supported binary operators</b></p>
 <div class="table-contents"><table class="table" summary="Supported binary operators">
 <colgroup>
 <col>
@@ -131,106 +129,15 @@
 <tr>
 <td>
                   <p>
-                    <code class="computeroutput"><span class="special">==</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <a class="link" href="../../reference/has_operator_equal_to.html" title="has_operator_equal_to"><code class="computeroutput"><span class="identifier">has_operator_equal_to</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span>
-                    <span class="identifier">LHS</span><span class="special">,</span>
-                    <span class="keyword">class</span> <span class="identifier">RHS</span><span class="special">=</span><span class="identifier">LHS</span><span class="special">,</span> <span class="keyword">class</span>
-                    <span class="identifier">RET</span><span class="special">=</span><span class="keyword">void</span> <span class="special">&gt;</span></code></code></a>
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="special">!=</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <a class="link" href="../../reference/has_operator_not_equal_to.html" title="has_operator_not_equal_to"><code class="computeroutput"><span class="identifier">has_operator_not_equal_to</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span>
-                    <span class="identifier">LHS</span><span class="special">,</span>
-                    <span class="keyword">class</span> <span class="identifier">RHS</span><span class="special">=</span><span class="identifier">LHS</span><span class="special">,</span> <span class="keyword">class</span>
-                    <span class="identifier">RET</span><span class="special">=</span><span class="keyword">void</span> <span class="special">&gt;</span></code></code></a>
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="special">&lt;</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <a class="link" href="../../reference/has_operator_less.html" title="has_operator_less"><code class="computeroutput"><span class="identifier">has_operator_less</span> <code class="computeroutput"><span class="special">&lt;</span>
-                    <span class="keyword">class</span> <span class="identifier">LHS</span><span class="special">,</span> <span class="keyword">class</span>
-                    <span class="identifier">RHS</span><span class="special">=</span><span class="identifier">LHS</span><span class="special">,</span>
-                    <span class="keyword">class</span> <span class="identifier">RET</span><span class="special">=</span><span class="keyword">void</span>
-                    <span class="special">&gt;</span></code></code></a>
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="special">&lt;=</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <a class="link" href="../../reference/has_operator_less_equal.html" title="has_operator_less_equal"><code class="computeroutput"><span class="identifier">has_operator_less_equal</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span>
-                    <span class="identifier">LHS</span><span class="special">,</span>
-                    <span class="keyword">class</span> <span class="identifier">RHS</span><span class="special">=</span><span class="identifier">LHS</span><span class="special">,</span> <span class="keyword">class</span>
-                    <span class="identifier">RET</span><span class="special">=</span><span class="keyword">void</span> <span class="special">&gt;</span></code></code></a>
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="special">&gt;</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <a class="link" href="../../reference/has_operator_greater.html" title="has_operator_greater"><code class="computeroutput"><span class="identifier">has_operator_greater</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span>
-                    <span class="identifier">LHS</span><span class="special">,</span>
-                    <span class="keyword">class</span> <span class="identifier">RHS</span><span class="special">=</span><span class="identifier">LHS</span><span class="special">,</span> <span class="keyword">class</span>
-                    <span class="identifier">RET</span><span class="special">=</span><span class="keyword">void</span> <span class="special">&gt;</span></code></code></a>
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="special">&gt;=</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <a class="link" href="../../reference/has_operator_greater_equal.html" title="has_operator_greater_equal"><code class="computeroutput"><span class="identifier">has_operator_greater_equal</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span>
-                    <span class="identifier">LHS</span><span class="special">,</span>
-                    <span class="keyword">class</span> <span class="identifier">RHS</span><span class="special">=</span><span class="identifier">LHS</span><span class="special">,</span> <span class="keyword">class</span>
-                    <span class="identifier">RET</span><span class="special">=</span><span class="keyword">void</span> <span class="special">&gt;</span></code></code></a>
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                  <p>
                     <code class="computeroutput"><span class="special">+</span></code>
                   </p>
                 </td>
 <td>
                   <p>
-                    <a class="link" href="../../reference/has_operator_plus.html" title="has_operator_plus"><code class="computeroutput"><span class="identifier">has_operator_plus</span> <code class="computeroutput"><span class="special">&lt;</span>
-                    <span class="keyword">class</span> <span class="identifier">LHS</span><span class="special">,</span> <span class="keyword">class</span>
-                    <span class="identifier">RHS</span><span class="special">=</span><span class="identifier">LHS</span><span class="special">,</span>
-                    <span class="keyword">class</span> <span class="identifier">RET</span><span class="special">=</span><span class="keyword">void</span>
+                    <a class="link" href="../../reference/can_call_addition.html" title="can_call_addition"><code class="computeroutput"><span class="identifier">can_call_addition</span> <code class="computeroutput"><span class="special">&lt;</span>
+                    <span class="keyword">class</span> <span class="identifier">Lhs</span><span class="special">,</span> <span class="keyword">class</span>
+                    <span class="identifier">Rhs</span><span class="special">=</span><span class="identifier">Lhs</span><span class="special">,</span>
+                    <span class="keyword">class</span> <span class="identifier">Ret</span><span class="special">=</span><span class="identifier">dont_care</span>
                     <span class="special">&gt;</span></code></code></a>
                   </p>
                 </td>
@@ -243,11 +150,10 @@
                 </td>
 <td>
                   <p>
-                    <a class="link" href="../../reference/has_operator_minus.html" title="has_operator_minus"><code class="computeroutput"><span class="identifier">has_operator_minus</span> <code class="computeroutput"><span class="special">&lt;</span>
-                    <span class="keyword">class</span> <span class="identifier">LHS</span><span class="special">,</span> <span class="keyword">class</span>
-                    <span class="identifier">RHS</span><span class="special">=</span><span class="identifier">LHS</span><span class="special">,</span>
-                    <span class="keyword">class</span> <span class="identifier">RET</span><span class="special">=</span><span class="keyword">void</span>
-                    <span class="special">&gt;</span></code></code></a>
+                    <a class="link" href="../../reference/can_call_subtraction.html" title="can_call_subtraction"><code class="computeroutput"><span class="identifier">can_call_subtraction</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span>
+                    <span class="identifier">Lhs</span><span class="special">,</span>
+                    <span class="keyword">class</span> <span class="identifier">Rhs</span><span class="special">=</span><span class="identifier">Lhs</span><span class="special">,</span> <span class="keyword">class</span>
+                    <span class="identifier">Ret</span><span class="special">=</span><span class="identifier">dont_care</span> <span class="special">&gt;</span></code></code></a>
                   </p>
                 </td>
 </tr>
@@ -259,10 +165,10 @@
                 </td>
 <td>
                   <p>
-                    <a class="link" href="../../reference/has_operator_multiplies.html" title="has_operator_multiplies"><code class="computeroutput"><span class="identifier">has_operator_multiplies</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span>
-                    <span class="identifier">LHS</span><span class="special">,</span>
-                    <span class="keyword">class</span> <span class="identifier">RHS</span><span class="special">=</span><span class="identifier">LHS</span><span class="special">,</span> <span class="keyword">class</span>
-                    <span class="identifier">RET</span><span class="special">=</span><span class="keyword">void</span> <span class="special">&gt;</span></code></code></a>
+                    <a class="link" href="../../reference/can_call_multiplication.html" title="can_call_multiplication"><code class="computeroutput"><span class="identifier">can_call_multiplication</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span>
+                    <span class="identifier">Lhs</span><span class="special">,</span>
+                    <span class="keyword">class</span> <span class="identifier">Rhs</span><span class="special">=</span><span class="identifier">Lhs</span><span class="special">,</span> <span class="keyword">class</span>
+                    <span class="identifier">Ret</span><span class="special">=</span><span class="identifier">dont_care</span> <span class="special">&gt;</span></code></code></a>
                   </p>
                 </td>
 </tr>
@@ -274,10 +180,11 @@
                 </td>
 <td>
                   <p>
-                    <a class="link" href="../../reference/has_operator_divides.html" title="has_operator_divides"><code class="computeroutput"><span class="identifier">has_operator_divides</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span>
-                    <span class="identifier">LHS</span><span class="special">,</span>
-                    <span class="keyword">class</span> <span class="identifier">RHS</span><span class="special">=</span><span class="identifier">LHS</span><span class="special">,</span> <span class="keyword">class</span>
-                    <span class="identifier">RET</span><span class="special">=</span><span class="keyword">void</span> <span class="special">&gt;</span></code></code></a>
+                    <a class="link" href="../../reference/can_call_division.html" title="can_call_division"><code class="computeroutput"><span class="identifier">can_call_division</span> <code class="computeroutput"><span class="special">&lt;</span>
+                    <span class="keyword">class</span> <span class="identifier">Lhs</span><span class="special">,</span> <span class="keyword">class</span>
+                    <span class="identifier">Rhs</span><span class="special">=</span><span class="identifier">Lhs</span><span class="special">,</span>
+                    <span class="keyword">class</span> <span class="identifier">Ret</span><span class="special">=</span><span class="identifier">dont_care</span>
+                    <span class="special">&gt;</span></code></code></a>
                   </p>
                 </td>
 </tr>
@@ -289,10 +196,11 @@
                 </td>
 <td>
                   <p>
-                    <a class="link" href="../../reference/has_operator_modulus.html" title="has_operator_modulus"><code class="computeroutput"><span class="identifier">has_operator_modulus</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span>
-                    <span class="identifier">LHS</span><span class="special">,</span>
-                    <span class="keyword">class</span> <span class="identifier">RHS</span><span class="special">=</span><span class="identifier">LHS</span><span class="special">,</span> <span class="keyword">class</span>
-                    <span class="identifier">RET</span><span class="special">=</span><span class="keyword">void</span> <span class="special">&gt;</span></code></code></a>
+                    <a class="link" href="../../reference/can_call_modulus.html" title="can_call_modulus"><code class="computeroutput"><span class="identifier">can_call_modulus</span> <code class="computeroutput"><span class="special">&lt;</span>
+                    <span class="keyword">class</span> <span class="identifier">Lhs</span><span class="special">,</span> <span class="keyword">class</span>
+                    <span class="identifier">Rhs</span><span class="special">=</span><span class="identifier">Lhs</span><span class="special">,</span>
+                    <span class="keyword">class</span> <span class="identifier">Ret</span><span class="special">=</span><span class="identifier">dont_care</span>
+                    <span class="special">&gt;</span></code></code></a>
                   </p>
                 </td>
 </tr>
@@ -304,10 +212,10 @@
                 </td>
 <td>
                   <p>
-                    <a class="link" href="../../reference/has_operator_plus_equal.html" title="has_operator_plus_equal"><code class="computeroutput"><span class="identifier">has_operator_plus_equal</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span>
-                    <span class="identifier">LHS</span><span class="special">,</span>
-                    <span class="keyword">class</span> <span class="identifier">RHS</span><span class="special">=</span><span class="identifier">LHS</span><span class="special">,</span> <span class="keyword">class</span>
-                    <span class="identifier">RET</span><span class="special">=</span><span class="keyword">void</span> <span class="special">&gt;</span></code></code></a>
+                    <a class="link" href="../../reference/can_call_addition_assignment.html" title="can_call_addition_assignment"><code class="computeroutput"><span class="identifier">can_call_addition_assignment</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span>
+                    <span class="identifier">Lhs</span><span class="special">,</span>
+                    <span class="keyword">class</span> <span class="identifier">Rhs</span><span class="special">=</span><span class="identifier">Lhs</span><span class="special">,</span> <span class="keyword">class</span>
+                    <span class="identifier">Ret</span><span class="special">=</span><span class="identifier">dont_care</span> <span class="special">&gt;</span></code></code></a>
                   </p>
                 </td>
 </tr>
@@ -319,10 +227,10 @@
                 </td>
 <td>
                   <p>
-                    <a class="link" href="../../reference/has_operator_minus_equal.html" title="has_operator_minus_equal"><code class="computeroutput"><span class="identifier">has_operator_minus_equal</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span>
-                    <span class="identifier">LHS</span><span class="special">,</span>
-                    <span class="keyword">class</span> <span class="identifier">RHS</span><span class="special">=</span><span class="identifier">LHS</span><span class="special">,</span> <span class="keyword">class</span>
-                    <span class="identifier">RET</span><span class="special">=</span><span class="keyword">void</span> <span class="special">&gt;</span></code></code></a>
+                    <a class="link" href="../../reference/can_call_subtraction_assignment.html" title="can_call_subtraction_assignment"><code class="computeroutput"><span class="identifier">can_call_subtraction_assignment</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span>
+                    <span class="identifier">Lhs</span><span class="special">,</span>
+                    <span class="keyword">class</span> <span class="identifier">Rhs</span><span class="special">=</span><span class="identifier">Lhs</span><span class="special">,</span> <span class="keyword">class</span>
+                    <span class="identifier">Ret</span><span class="special">=</span><span class="identifier">dont_care</span> <span class="special">&gt;</span></code></code></a>
                   </p>
                 </td>
 </tr>
@@ -334,10 +242,11 @@
                 </td>
 <td>
                   <p>
-                    <a class="link" href="../../reference/has_operator_multiplies_equal.html" title="has_operator_multiplies_equal"><code class="computeroutput"><span class="identifier">has_operator_multiplies_equal</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span>
-                    <span class="identifier">LHS</span><span class="special">,</span>
-                    <span class="keyword">class</span> <span class="identifier">RHS</span><span class="special">=</span><span class="identifier">LHS</span><span class="special">,</span> <span class="keyword">class</span>
-                    <span class="identifier">RET</span><span class="special">=</span><span class="keyword">void</span> <span class="special">&gt;</span></code></code></a>
+                    <a class="link" href="../../reference/can_call_multiplication_assignment.html" title="can_call_multiplication_assignment"><code class="computeroutput"><span class="identifier">can_call_multiplication_assignment</span>
+                    <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span>
+                    <span class="identifier">Lhs</span><span class="special">,</span>
+                    <span class="keyword">class</span> <span class="identifier">Rhs</span><span class="special">=</span><span class="identifier">Lhs</span><span class="special">,</span> <span class="keyword">class</span>
+                    <span class="identifier">Ret</span><span class="special">=</span><span class="identifier">dont_care</span> <span class="special">&gt;</span></code></code></a>
                   </p>
                 </td>
 </tr>
@@ -349,10 +258,10 @@
                 </td>
 <td>
                   <p>
-                    <a class="link" href="../../reference/has_operator_divides_equal.html" title="has_operator_divides_equal"><code class="computeroutput"><span class="identifier">has_operator_divides_equal</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span>
-                    <span class="identifier">LHS</span><span class="special">,</span>
-                    <span class="keyword">class</span> <span class="identifier">RHS</span><span class="special">=</span><span class="identifier">LHS</span><span class="special">,</span> <span class="keyword">class</span>
-                    <span class="identifier">RET</span><span class="special">=</span><span class="keyword">void</span> <span class="special">&gt;</span></code></code></a>
+                    <a class="link" href="../../reference/can_call_division_assignment.html" title="can_call_division_assignment"><code class="computeroutput"><span class="identifier">can_call_division_assignment</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span>
+                    <span class="identifier">Lhs</span><span class="special">,</span>
+                    <span class="keyword">class</span> <span class="identifier">Rhs</span><span class="special">=</span><span class="identifier">Lhs</span><span class="special">,</span> <span class="keyword">class</span>
+                    <span class="identifier">Ret</span><span class="special">=</span><span class="identifier">dont_care</span> <span class="special">&gt;</span></code></code></a>
                   </p>
                 </td>
 </tr>
@@ -364,40 +273,10 @@
                 </td>
 <td>
                   <p>
-                    <a class="link" href="../../reference/has_operator_modulus_equal.html" title="has_operator_modulus_equal"><code class="computeroutput"><span class="identifier">has_operator_modulus_equal</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span>
-                    <span class="identifier">LHS</span><span class="special">,</span>
-                    <span class="keyword">class</span> <span class="identifier">RHS</span><span class="special">=</span><span class="identifier">LHS</span><span class="special">,</span> <span class="keyword">class</span>
-                    <span class="identifier">RET</span><span class="special">=</span><span class="keyword">void</span> <span class="special">&gt;</span></code></code></a>
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="special">&amp;&amp;</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <a class="link" href="../../reference/has_operator_logical_and.html" title="has_operator_logical_and"><code class="computeroutput"><span class="identifier">has_operator_logical_and</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span>
-                    <span class="identifier">LHS</span><span class="special">,</span>
-                    <span class="keyword">class</span> <span class="identifier">RHS</span><span class="special">=</span><span class="identifier">LHS</span><span class="special">,</span> <span class="keyword">class</span>
-                    <span class="identifier">RET</span><span class="special">=</span><span class="keyword">void</span> <span class="special">&gt;</span></code></code></a>
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="special">||</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <a class="link" href="../../reference/has_operator_logical_or.html" title="has_operator_logical_or"><code class="computeroutput"><span class="identifier">has_operator_logical_or</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span>
-                    <span class="identifier">LHS</span><span class="special">,</span>
-                    <span class="keyword">class</span> <span class="identifier">RHS</span><span class="special">=</span><span class="identifier">LHS</span><span class="special">,</span> <span class="keyword">class</span>
-                    <span class="identifier">RET</span><span class="special">=</span><span class="keyword">void</span> <span class="special">&gt;</span></code></code></a>
+                    <a class="link" href="../../reference/can_call_modulus_assignment.html" title="can_call_modulus_assignment"><code class="computeroutput"><span class="identifier">can_call_modulus_assignment</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span>
+                    <span class="identifier">Lhs</span><span class="special">,</span>
+                    <span class="keyword">class</span> <span class="identifier">Rhs</span><span class="special">=</span><span class="identifier">Lhs</span><span class="special">,</span> <span class="keyword">class</span>
+                    <span class="identifier">Ret</span><span class="special">=</span><span class="identifier">dont_care</span> <span class="special">&gt;</span></code></code></a>
                   </p>
                 </td>
 </tr>
@@ -409,10 +288,10 @@
                 </td>
 <td>
                   <p>
-                    <a class="link" href="../../reference/has_operator_bit_and.html" title="has_operator_bit_and"><code class="computeroutput"><span class="identifier">has_operator_bit_and</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span>
-                    <span class="identifier">LHS</span><span class="special">,</span>
-                    <span class="keyword">class</span> <span class="identifier">RHS</span><span class="special">=</span><span class="identifier">LHS</span><span class="special">,</span> <span class="keyword">class</span>
-                    <span class="identifier">RET</span><span class="special">=</span><span class="keyword">void</span> <span class="special">&gt;</span></code></code></a>
+                    <a class="link" href="../../reference/can_call_bitwise_and.html" title="can_call_bitwise_and"><code class="computeroutput"><span class="identifier">can_call_bitwise_and</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span>
+                    <span class="identifier">Lhs</span><span class="special">,</span>
+                    <span class="keyword">class</span> <span class="identifier">Rhs</span><span class="special">=</span><span class="identifier">Lhs</span><span class="special">,</span> <span class="keyword">class</span>
+                    <span class="identifier">Ret</span><span class="special">=</span><span class="identifier">dont_care</span> <span class="special">&gt;</span></code></code></a>
                   </p>
                 </td>
 </tr>
@@ -424,10 +303,10 @@
                 </td>
 <td>
                   <p>
-                    <a class="link" href="../../reference/has_operator_bit_or.html" title="has_operator_bit_or"><code class="computeroutput"><span class="identifier">has_operator_bit_or</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span>
-                    <span class="identifier">LHS</span><span class="special">,</span>
-                    <span class="keyword">class</span> <span class="identifier">RHS</span><span class="special">=</span><span class="identifier">LHS</span><span class="special">,</span> <span class="keyword">class</span>
-                    <span class="identifier">RET</span><span class="special">=</span><span class="keyword">void</span> <span class="special">&gt;</span></code></code></a>
+                    <a class="link" href="../../reference/can_call_bitwise_or.html" title="can_call_bitwise_or"><code class="computeroutput"><span class="identifier">can_call_bitwise_or</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span>
+                    <span class="identifier">Lhs</span><span class="special">,</span>
+                    <span class="keyword">class</span> <span class="identifier">Rhs</span><span class="special">=</span><span class="identifier">Lhs</span><span class="special">,</span> <span class="keyword">class</span>
+                    <span class="identifier">Ret</span><span class="special">=</span><span class="identifier">dont_care</span> <span class="special">&gt;</span></code></code></a>
                   </p>
                 </td>
 </tr>
@@ -439,40 +318,10 @@
                 </td>
 <td>
                   <p>
-                    <a class="link" href="../../reference/has_operator_bit_xor.html" title="has_operator_bit_xor"><code class="computeroutput"><span class="identifier">has_operator_bit_xor</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span>
-                    <span class="identifier">LHS</span><span class="special">,</span>
-                    <span class="keyword">class</span> <span class="identifier">RHS</span><span class="special">=</span><span class="identifier">LHS</span><span class="special">,</span> <span class="keyword">class</span>
-                    <span class="identifier">RET</span><span class="special">=</span><span class="keyword">void</span> <span class="special">&gt;</span></code></code></a>
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="special">&lt;&lt;</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <a class="link" href="../../reference/has_operator_left_shift.html" title="has_operator_left_shift"><code class="computeroutput"><span class="identifier">has_operator_left_shift</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span>
-                    <span class="identifier">LHS</span><span class="special">,</span>
-                    <span class="keyword">class</span> <span class="identifier">RHS</span><span class="special">=</span><span class="identifier">LHS</span><span class="special">,</span> <span class="keyword">class</span>
-                    <span class="identifier">RET</span><span class="special">=</span><span class="keyword">void</span> <span class="special">&gt;</span></code></code></a>
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="special">&gt;&gt;</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <a class="link" href="../../reference/has_operator_right_shift.html" title="has_operator_right_shift"><code class="computeroutput"><span class="identifier">has_operator_right_shift</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span>
-                    <span class="identifier">LHS</span><span class="special">,</span>
-                    <span class="keyword">class</span> <span class="identifier">RHS</span><span class="special">=</span><span class="identifier">LHS</span><span class="special">,</span> <span class="keyword">class</span>
-                    <span class="identifier">RET</span><span class="special">=</span><span class="keyword">void</span> <span class="special">&gt;</span></code></code></a>
+                    <a class="link" href="../../reference/can_call_bitwise_xor.html" title="can_call_bitwise_xor"><code class="computeroutput"><span class="identifier">can_call_bitwise_xor</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span>
+                    <span class="identifier">Lhs</span><span class="special">,</span>
+                    <span class="keyword">class</span> <span class="identifier">Rhs</span><span class="special">=</span><span class="identifier">Lhs</span><span class="special">,</span> <span class="keyword">class</span>
+                    <span class="identifier">Ret</span><span class="special">=</span><span class="identifier">dont_care</span> <span class="special">&gt;</span></code></code></a>
                   </p>
                 </td>
 </tr>
@@ -484,10 +333,10 @@
                 </td>
 <td>
                   <p>
-                    <a class="link" href="../../reference/has_operator_bit_and_equal.html" title="has_operator_bit_and_equal"><code class="computeroutput"><span class="identifier">has_operator_bit_and_equal</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span>
-                    <span class="identifier">LHS</span><span class="special">,</span>
-                    <span class="keyword">class</span> <span class="identifier">RHS</span><span class="special">=</span><span class="identifier">LHS</span><span class="special">,</span> <span class="keyword">class</span>
-                    <span class="identifier">RET</span><span class="special">=</span><span class="keyword">void</span> <span class="special">&gt;</span></code></code></a>
+                    <a class="link" href="../../reference/can_call_bitwise_and_assignment.html" title="can_call_bitwise_and_assignment"><code class="computeroutput"><span class="identifier">can_call_bitwise_and_assignment</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span>
+                    <span class="identifier">Lhs</span><span class="special">,</span>
+                    <span class="keyword">class</span> <span class="identifier">Rhs</span><span class="special">=</span><span class="identifier">Lhs</span><span class="special">,</span> <span class="keyword">class</span>
+                    <span class="identifier">Ret</span><span class="special">=</span><span class="identifier">dont_care</span> <span class="special">&gt;</span></code></code></a>
                   </p>
                 </td>
 </tr>
@@ -499,10 +348,10 @@
                 </td>
 <td>
                   <p>
-                    <a class="link" href="../../reference/has_operator_bit_or_equal.html" title="has_operator_bit_or_equal"><code class="computeroutput"><span class="identifier">has_operator_bit_or_equal</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span>
-                    <span class="identifier">LHS</span><span class="special">,</span>
-                    <span class="keyword">class</span> <span class="identifier">RHS</span><span class="special">=</span><span class="identifier">LHS</span><span class="special">,</span> <span class="keyword">class</span>
-                    <span class="identifier">RET</span><span class="special">=</span><span class="keyword">void</span> <span class="special">&gt;</span></code></code></a>
+                    <a class="link" href="../../reference/can_call_bitwise_or_assignment.html" title="can_call_bitwise_or_assignment"><code class="computeroutput"><span class="identifier">can_call_bitwise_or_assignment</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span>
+                    <span class="identifier">Lhs</span><span class="special">,</span>
+                    <span class="keyword">class</span> <span class="identifier">Rhs</span><span class="special">=</span><span class="identifier">Lhs</span><span class="special">,</span> <span class="keyword">class</span>
+                    <span class="identifier">Ret</span><span class="special">=</span><span class="identifier">dont_care</span> <span class="special">&gt;</span></code></code></a>
                   </p>
                 </td>
 </tr>
@@ -514,10 +363,40 @@
                 </td>
 <td>
                   <p>
-                    <a class="link" href="../../reference/has_operator_bit_xor_equal.html" title="has_operator_bit_xor_equal"><code class="computeroutput"><span class="identifier">has_operator_bit_xor_equal</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span>
-                    <span class="identifier">LHS</span><span class="special">,</span>
-                    <span class="keyword">class</span> <span class="identifier">RHS</span><span class="special">=</span><span class="identifier">LHS</span><span class="special">,</span> <span class="keyword">class</span>
-                    <span class="identifier">RET</span><span class="special">=</span><span class="keyword">void</span> <span class="special">&gt;</span></code></code></a>
+                    <a class="link" href="../../reference/can_call_bitwise_xor_assignment.html" title="can_call_bitwise_xor_assignment"><code class="computeroutput"><span class="identifier">can_call_bitwise_xor_assignment</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span>
+                    <span class="identifier">Lhs</span><span class="special">,</span>
+                    <span class="keyword">class</span> <span class="identifier">Rhs</span><span class="special">=</span><span class="identifier">Lhs</span><span class="special">,</span> <span class="keyword">class</span>
+                    <span class="identifier">Ret</span><span class="special">=</span><span class="identifier">dont_care</span> <span class="special">&gt;</span></code></code></a>
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="special">&lt;&lt;</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <a class="link" href="../../reference/can_call_left_shift.html" title="can_call_left_shift"><code class="computeroutput"><span class="identifier">can_call_left_shift</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span>
+                    <span class="identifier">Lhs</span><span class="special">,</span>
+                    <span class="keyword">class</span> <span class="identifier">Rhs</span><span class="special">=</span><span class="identifier">Lhs</span><span class="special">,</span> <span class="keyword">class</span>
+                    <span class="identifier">Ret</span><span class="special">=</span><span class="identifier">dont_care</span> <span class="special">&gt;</span></code></code></a>
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="special">&gt;&gt;</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <a class="link" href="../../reference/can_call_right_shift.html" title="can_call_right_shift"><code class="computeroutput"><span class="identifier">can_call_right_shift</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span>
+                    <span class="identifier">Lhs</span><span class="special">,</span>
+                    <span class="keyword">class</span> <span class="identifier">Rhs</span><span class="special">=</span><span class="identifier">Lhs</span><span class="special">,</span> <span class="keyword">class</span>
+                    <span class="identifier">Ret</span><span class="special">=</span><span class="identifier">dont_care</span> <span class="special">&gt;</span></code></code></a>
                   </p>
                 </td>
 </tr>
@@ -529,10 +408,10 @@
                 </td>
 <td>
                   <p>
-                    <a class="link" href="../../reference/has_operator_left_shift_equal.html" title="has_operator_left_shift_equal"><code class="computeroutput"><span class="identifier">has_operator_left_shift_equal</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span>
-                    <span class="identifier">LHS</span><span class="special">,</span>
-                    <span class="keyword">class</span> <span class="identifier">RHS</span><span class="special">=</span><span class="identifier">LHS</span><span class="special">,</span> <span class="keyword">class</span>
-                    <span class="identifier">RET</span><span class="special">=</span><span class="keyword">void</span> <span class="special">&gt;</span></code></code></a>
+                    <a class="link" href="../../reference/can_call_left_shift_assignment.html" title="can_call_left_shift_assignment"><code class="computeroutput"><span class="identifier">can_call_left_shift_assignment</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span>
+                    <span class="identifier">Lhs</span><span class="special">,</span>
+                    <span class="keyword">class</span> <span class="identifier">Rhs</span><span class="special">=</span><span class="identifier">Lhs</span><span class="special">,</span> <span class="keyword">class</span>
+                    <span class="identifier">Ret</span><span class="special">=</span><span class="identifier">dont_care</span> <span class="special">&gt;</span></code></code></a>
                   </p>
                 </td>
 </tr>
@@ -544,10 +423,136 @@
                 </td>
 <td>
                   <p>
-                    <a class="link" href="../../reference/has_operator_right_shift_equal.html" title="has_operator_right_shift_equal"><code class="computeroutput"><span class="identifier">has_operator_right_shift_equal</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span>
-                    <span class="identifier">LHS</span><span class="special">,</span>
-                    <span class="keyword">class</span> <span class="identifier">RHS</span><span class="special">=</span><span class="identifier">LHS</span><span class="special">,</span> <span class="keyword">class</span>
-                    <span class="identifier">RET</span><span class="special">=</span><span class="keyword">void</span> <span class="special">&gt;</span></code></code></a>
+                    <a class="link" href="../../reference/can_call_right_shift_assignment.html" title="can_call_right_shift_assignment"><code class="computeroutput"><span class="identifier">can_call_right_shift_assignment</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span>
+                    <span class="identifier">Lhs</span><span class="special">,</span>
+                    <span class="keyword">class</span> <span class="identifier">Rhs</span><span class="special">=</span><span class="identifier">Lhs</span><span class="special">,</span> <span class="keyword">class</span>
+                    <span class="identifier">Ret</span><span class="special">=</span><span class="identifier">dont_care</span> <span class="special">&gt;</span></code></code></a>
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="special">==</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <a class="link" href="../../reference/can_call_equal.html" title="can_call_equal"><code class="computeroutput"><span class="identifier">can_call_equal</span> <code class="computeroutput"><span class="special">&lt;</span>
+                    <span class="keyword">class</span> <span class="identifier">Lhs</span><span class="special">,</span> <span class="keyword">class</span>
+                    <span class="identifier">Rhs</span><span class="special">=</span><span class="identifier">Lhs</span><span class="special">,</span>
+                    <span class="keyword">class</span> <span class="identifier">Ret</span><span class="special">=</span><span class="identifier">dont_care</span>
+                    <span class="special">&gt;</span></code></code></a>
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="special">!=</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <a class="link" href="../../reference/can_call_not_equal.html" title="can_call_not_equal"><code class="computeroutput"><span class="identifier">can_call_not_equal</span> <code class="computeroutput"><span class="special">&lt;</span>
+                    <span class="keyword">class</span> <span class="identifier">Lhs</span><span class="special">,</span> <span class="keyword">class</span>
+                    <span class="identifier">Rhs</span><span class="special">=</span><span class="identifier">Lhs</span><span class="special">,</span>
+                    <span class="keyword">class</span> <span class="identifier">Ret</span><span class="special">=</span><span class="identifier">dont_care</span>
+                    <span class="special">&gt;</span></code></code></a>
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="special">&lt;</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <a class="link" href="../../reference/can_call_less.html" title="can_call_less"><code class="computeroutput"><span class="identifier">can_call_less</span> <code class="computeroutput"><span class="special">&lt;</span>
+                    <span class="keyword">class</span> <span class="identifier">Lhs</span><span class="special">,</span> <span class="keyword">class</span>
+                    <span class="identifier">Rhs</span><span class="special">=</span><span class="identifier">Lhs</span><span class="special">,</span>
+                    <span class="keyword">class</span> <span class="identifier">Ret</span><span class="special">=</span><span class="identifier">dont_care</span>
+                    <span class="special">&gt;</span></code></code></a>
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="special">&lt;=</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <a class="link" href="../../reference/can_call_less_equal.html" title="can_call_less_equal"><code class="computeroutput"><span class="identifier">can_call_less_equal</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span>
+                    <span class="identifier">Lhs</span><span class="special">,</span>
+                    <span class="keyword">class</span> <span class="identifier">Rhs</span><span class="special">=</span><span class="identifier">Lhs</span><span class="special">,</span> <span class="keyword">class</span>
+                    <span class="identifier">Ret</span><span class="special">=</span><span class="identifier">dont_care</span> <span class="special">&gt;</span></code></code></a>
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="special">&gt;</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <a class="link" href="../../reference/can_call_greater.html" title="can_call_greater"><code class="computeroutput"><span class="identifier">can_call_greater</span> <code class="computeroutput"><span class="special">&lt;</span>
+                    <span class="keyword">class</span> <span class="identifier">Lhs</span><span class="special">,</span> <span class="keyword">class</span>
+                    <span class="identifier">Rhs</span><span class="special">=</span><span class="identifier">Lhs</span><span class="special">,</span>
+                    <span class="keyword">class</span> <span class="identifier">Ret</span><span class="special">=</span><span class="identifier">dont_care</span>
+                    <span class="special">&gt;</span></code></code></a>
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="special">&gt;=</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <a class="link" href="../../reference/can_call_greater_equal.html" title="can_call_greater_equal"><code class="computeroutput"><span class="identifier">can_call_greater_equal</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span>
+                    <span class="identifier">Lhs</span><span class="special">,</span>
+                    <span class="keyword">class</span> <span class="identifier">Rhs</span><span class="special">=</span><span class="identifier">Lhs</span><span class="special">,</span> <span class="keyword">class</span>
+                    <span class="identifier">Ret</span><span class="special">=</span><span class="identifier">dont_care</span> <span class="special">&gt;</span></code></code></a>
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="special">&amp;&amp;</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <a class="link" href="../../reference/can_call_and.html" title="can_call_and"><code class="computeroutput"><span class="identifier">can_call_and</span> <code class="computeroutput"><span class="special">&lt;</span>
+                    <span class="keyword">class</span> <span class="identifier">Lhs</span><span class="special">,</span> <span class="keyword">class</span>
+                    <span class="identifier">Rhs</span><span class="special">=</span><span class="identifier">Lhs</span><span class="special">,</span>
+                    <span class="keyword">class</span> <span class="identifier">Ret</span><span class="special">=</span><span class="identifier">dont_care</span>
+                    <span class="special">&gt;</span></code></code></a>
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="special">||</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <a class="link" href="../../reference/can_call_or.html" title="can_call_or"><code class="computeroutput"><span class="identifier">can_call_or</span> <code class="computeroutput"><span class="special">&lt;</span>
+                    <span class="keyword">class</span> <span class="identifier">Lhs</span><span class="special">,</span> <span class="keyword">class</span>
+                    <span class="identifier">Rhs</span><span class="special">=</span><span class="identifier">Lhs</span><span class="special">,</span>
+                    <span class="keyword">class</span> <span class="identifier">Ret</span><span class="special">=</span><span class="identifier">dont_care</span>
+                    <span class="special">&gt;</span></code></code></a>
                   </p>
                 </td>
 </tr>
@@ -555,7 +560,7 @@
 </table></div>
 </div>
 <br class="table-break"><div class="table">
-<a name="id3410697"></a><p class="title"><b>Table&#160;1.5.&#160;Supported prefix operators</b></p>
+<a name="id3312536"></a><p class="title"><b>Table&#160;1.5.&#160;Supported prefix operators</b></p>
 <div class="table-contents"><table class="table" summary="Supported prefix operators">
 <colgroup>
 <col>
@@ -577,30 +582,14 @@
 <tr>
 <td>
                   <p>
-                    <code class="computeroutput"><span class="special">++</span></code>
+                    <code class="computeroutput"><span class="special">!</span></code>
                   </p>
                 </td>
 <td>
                   <p>
-                    <a class="link" href="../../reference/has_operator_prefix_increment.html" title="has_operator_prefix_increment"><code class="computeroutput"><span class="identifier">has_operator_prefix_increment</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span>
-                    <span class="identifier">RHS</span><span class="special">,</span>
-                    <span class="keyword">class</span> <span class="identifier">RET</span><span class="special">=</span><span class="keyword">void</span>
-                    <span class="special">&gt;</span></code></code></a>
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="special">--</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <a class="link" href="../../reference/has_operator_prefix_decrement.html" title="has_operator_prefix_decrement"><code class="computeroutput"><span class="identifier">has_operator_prefix_decrement</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span>
-                    <span class="identifier">RHS</span><span class="special">,</span>
-                    <span class="keyword">class</span> <span class="identifier">RET</span><span class="special">=</span><span class="keyword">void</span>
-                    <span class="special">&gt;</span></code></code></a>
+                    <a class="link" href="../../reference/can_call_not.html" title="can_call_not"><code class="computeroutput"><span class="identifier">can_call_not</span> <code class="computeroutput"><span class="special">&lt;</span>
+                    <span class="keyword">class</span> <span class="identifier">Rhs</span><span class="special">,</span> <span class="keyword">class</span>
+                    <span class="identifier">Ret</span><span class="special">=</span><span class="identifier">dont_care</span> <span class="special">&gt;</span></code></code></a>
                   </p>
                 </td>
 </tr>
@@ -612,9 +601,9 @@
                 </td>
 <td>
                   <p>
-                    <a class="link" href="../../reference/has_operator_unary_plus.html" title="has_operator_unary_plus"><code class="computeroutput"><span class="identifier">has_operator_unary_plus</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span>
-                    <span class="identifier">RHS</span><span class="special">,</span>
-                    <span class="keyword">class</span> <span class="identifier">RET</span><span class="special">=</span><span class="keyword">void</span>
+                    <a class="link" href="../../reference/can_call_unary_plus.html" title="can_call_unary_plus"><code class="computeroutput"><span class="identifier">can_call_unary_plus</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span>
+                    <span class="identifier">Rhs</span><span class="special">,</span>
+                    <span class="keyword">class</span> <span class="identifier">Ret</span><span class="special">=</span><span class="identifier">dont_care</span>
                     <span class="special">&gt;</span></code></code></a>
                   </p>
                 </td>
@@ -627,24 +616,9 @@
                 </td>
 <td>
                   <p>
-                    <a class="link" href="../../reference/has_operator_unary_minus.html" title="has_operator_unary_minus"><code class="computeroutput"><span class="identifier">has_operator_unary_minus</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span>
-                    <span class="identifier">RHS</span><span class="special">,</span>
-                    <span class="keyword">class</span> <span class="identifier">RET</span><span class="special">=</span><span class="keyword">void</span>
-                    <span class="special">&gt;</span></code></code></a>
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="special">!</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <a class="link" href="../../reference/has_operator_logical_not.html" title="has_operator_logical_not"><code class="computeroutput"><span class="identifier">has_operator_logical_not</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span>
-                    <span class="identifier">RHS</span><span class="special">,</span>
-                    <span class="keyword">class</span> <span class="identifier">RET</span><span class="special">=</span><span class="keyword">void</span>
+                    <a class="link" href="../../reference/can_call_unary_minus.html" title="can_call_unary_minus"><code class="computeroutput"><span class="identifier">can_call_unary_minus</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span>
+                    <span class="identifier">Rhs</span><span class="special">,</span>
+                    <span class="keyword">class</span> <span class="identifier">Ret</span><span class="special">=</span><span class="identifier">dont_care</span>
                     <span class="special">&gt;</span></code></code></a>
                   </p>
                 </td>
@@ -657,9 +631,9 @@
                 </td>
 <td>
                   <p>
-                    <a class="link" href="../../reference/has_operator_complement.html" title="has_operator_complement"><code class="computeroutput"><span class="identifier">has_operator_complement</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span>
-                    <span class="identifier">RHS</span><span class="special">,</span>
-                    <span class="keyword">class</span> <span class="identifier">RET</span><span class="special">=</span><span class="keyword">void</span>
+                    <a class="link" href="../../reference/can_call_complement.html" title="can_call_complement"><code class="computeroutput"><span class="identifier">can_call_complement</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span>
+                    <span class="identifier">Rhs</span><span class="special">,</span>
+                    <span class="keyword">class</span> <span class="identifier">Ret</span><span class="special">=</span><span class="identifier">dont_care</span>
                     <span class="special">&gt;</span></code></code></a>
                   </p>
                 </td>
@@ -672,9 +646,39 @@
                 </td>
 <td>
                   <p>
-                    <a class="link" href="../../reference/has_operator_dereference.html" title="has_operator_dereference"><code class="computeroutput"><span class="identifier">has_operator_dereference</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span>
-                    <span class="identifier">RHS</span><span class="special">,</span>
-                    <span class="keyword">class</span> <span class="identifier">RET</span><span class="special">=</span><span class="keyword">void</span>
+                    <a class="link" href="../../reference/can_call_dereference.html" title="can_call_dereference"><code class="computeroutput"><span class="identifier">can_call_dereference</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span>
+                    <span class="identifier">Rhs</span><span class="special">,</span>
+                    <span class="keyword">class</span> <span class="identifier">Ret</span><span class="special">=</span><span class="identifier">dont_care</span>
+                    <span class="special">&gt;</span></code></code></a>
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="special">++</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <a class="link" href="../../reference/can_call_pre_increment.html" title="can_call_pre_increment"><code class="computeroutput"><span class="identifier">can_call_pre_increment</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span>
+                    <span class="identifier">Rhs</span><span class="special">,</span>
+                    <span class="keyword">class</span> <span class="identifier">Ret</span><span class="special">=</span><span class="identifier">dont_care</span>
+                    <span class="special">&gt;</span></code></code></a>
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="special">--</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <a class="link" href="../../reference/can_call_pre_decrement.html" title="can_call_pre_decrement"><code class="computeroutput"><span class="identifier">can_call_pre_decrement</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span>
+                    <span class="identifier">Rhs</span><span class="special">,</span>
+                    <span class="keyword">class</span> <span class="identifier">Ret</span><span class="special">=</span><span class="identifier">dont_care</span>
                     <span class="special">&gt;</span></code></code></a>
                   </p>
                 </td>
@@ -683,7 +687,7 @@
 </table></div>
 </div>
 <br class="table-break"><div class="table">
-<a name="id3411335"></a><p class="title"><b>Table&#160;1.6.&#160;Supported postfix operators</b></p>
+<a name="id3313172"></a><p class="title"><b>Table&#160;1.6.&#160;Supported postfix operators</b></p>
 <div class="table-contents"><table class="table" summary="Supported postfix operators">
 <colgroup>
 <col>
@@ -710,9 +714,9 @@
                 </td>
 <td>
                   <p>
-                    <a class="link" href="../../reference/has_operator_postfix_increment.html" title="has_operator_postfix_increment"><code class="computeroutput"><span class="identifier">has_operator_postfix_increment</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span>
-                    <span class="identifier">LHS</span><span class="special">,</span>
-                    <span class="keyword">class</span> <span class="identifier">RET</span><span class="special">=</span><span class="keyword">void</span>
+                    <a class="link" href="../../reference/can_call_post_increment.html" title="can_call_post_increment"><code class="computeroutput"><span class="identifier">can_call_post_increment</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span>
+                    <span class="identifier">Lhs</span><span class="special">,</span>
+                    <span class="keyword">class</span> <span class="identifier">Ret</span><span class="special">=</span><span class="identifier">dont_care</span>
                     <span class="special">&gt;</span></code></code></a>
                   </p>
                 </td>
@@ -725,919 +729,10 @@
                 </td>
 <td>
                   <p>
-                    <a class="link" href="../../reference/has_operator_postfix_decrement.html" title="has_operator_postfix_decrement"><code class="computeroutput"><span class="identifier">has_operator_postfix_decrement</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span>
-                    <span class="identifier">LHS</span><span class="special">,</span>
-                    <span class="keyword">class</span> <span class="identifier">RET</span><span class="special">=</span><span class="keyword">void</span>
+                    <a class="link" href="../../reference/can_call_post_decrement.html" title="can_call_post_decrement"><code class="computeroutput"><span class="identifier">can_call_post_decrement</span> <code class="computeroutput"><span class="special">&lt;</span> <span class="keyword">class</span>
+                    <span class="identifier">Lhs</span><span class="special">,</span>
+                    <span class="keyword">class</span> <span class="identifier">Ret</span><span class="special">=</span><span class="identifier">dont_care</span>
                     <span class="special">&gt;</span></code></code></a>
-                  </p>
-                </td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<br class="table-break"><p>
-          The choice of trait names may seem unconsistent but it has not been possible
-          to propose a more consistent naming convention because the standard is
-          itself inconsistent. The following table shows the names found in the standard
-          for each operator and the corresponding trait name.
-        </p>
-<div class="table">
-<a name="id3411554"></a><p class="title"><b>Table&#160;1.7.&#160;Operator names in the standard</b></p>
-<div class="table-contents"><table class="table" summary="Operator names in the standard">
-<colgroup>
-<col>
-<col>
-<col>
-<col>
-</colgroup>
-<thead><tr>
-<th>
-                  <p>
-                    operator
-                  </p>
-                </th>
-<th>
-                  <p>
-                    alternative token (<span class="bold"><strong>C++ Standard Reference:</strong></span>
-                    2.5)
-                  </p>
-                </th>
-<th>
-                  <p>
-                    name in <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">functionnal</span><span class="special">&gt;</span></code> or <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">iterator</span><span class="special">&gt;</span></code>
-                    (<span class="bold"><strong>C++ Standard Reference:</strong></span> 20.3
-                    and 24.2)
-                  </p>
-                </th>
-<th>
-                  <p>
-                    trait name
-                  </p>
-                </th>
-</tr></thead>
-<tbody>
-<tr>
-<td>
-                  <p>
-                    binary
-                  </p>
-                </td>
-<td class="auto-generated">&#160;</td>
-<td class="auto-generated">&#160;</td>
-<td class="auto-generated">&#160;</td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="special">==</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    &#248;
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="identifier">equal_to</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <a class="link" href="../../reference/has_operator_equal_to.html" title="has_operator_equal_to"><code class="computeroutput"><span class="identifier">has_operator_equal_to</span></code></a>
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="special">!=</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="keyword">not_eq</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="identifier">not_equal_to</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <a class="link" href="../../reference/has_operator_not_equal_to.html" title="has_operator_not_equal_to"><code class="computeroutput"><span class="identifier">has_operator_not_equal_to</span></code></a>
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="special">&lt;</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    &#248;
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="identifier">less</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <a class="link" href="../../reference/has_operator_less.html" title="has_operator_less"><code class="computeroutput"><span class="identifier">has_operator_less</span></code></a>
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="special">&lt;=</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    &#248;
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="identifier">less_equal</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <a class="link" href="../../reference/has_operator_less_equal.html" title="has_operator_less_equal"><code class="computeroutput"><span class="identifier">has_operator_less_equal</span></code></a>
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="special">&gt;</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    &#248;
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="identifier">greater</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <a class="link" href="../../reference/has_operator_greater.html" title="has_operator_greater"><code class="computeroutput"><span class="identifier">has_operator_greater</span></code></a>
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="special">&gt;=</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    &#248;
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="identifier">greater_equal</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <a class="link" href="../../reference/has_operator_greater_equal.html" title="has_operator_greater_equal"><code class="computeroutput"><span class="identifier">has_operator_greater_equal</span></code></a>
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                </td>
-<td class="auto-generated">&#160;</td>
-<td class="auto-generated">&#160;</td>
-<td class="auto-generated">&#160;</td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="special">+</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    &#248;
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="identifier">plus</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <a class="link" href="../../reference/has_operator_plus.html" title="has_operator_plus"><code class="computeroutput"><span class="identifier">has_operator_plus</span></code></a>
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="special">-</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    &#248;
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="identifier">minus</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <a class="link" href="../../reference/has_operator_minus.html" title="has_operator_minus"><code class="computeroutput"><span class="identifier">has_operator_minus</span></code></a>
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="special">*</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    &#248;
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="identifier">multiplies</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <a class="link" href="../../reference/has_operator_multiplies.html" title="has_operator_multiplies"><code class="computeroutput"><span class="identifier">has_operator_multiplies</span></code></a>
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="special">/</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    &#248;
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="identifier">divides</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <a class="link" href="../../reference/has_operator_divides.html" title="has_operator_divides"><code class="computeroutput"><span class="identifier">has_operator_divides</span></code></a>
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="special">%</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    &#248;
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="identifier">modulus</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <a class="link" href="../../reference/has_operator_modulus.html" title="has_operator_modulus"><code class="computeroutput"><span class="identifier">has_operator_modulus</span></code></a>
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="special">+=</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    &#248;
-                  </p>
-                </td>
-<td>
-                  <p>
-                    &#248;
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <a class="link" href="../../reference/has_operator_plus_equal.html" title="has_operator_plus_equal"><code class="computeroutput"><span class="identifier">has_operator_plus_equal</span></code></a>
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="special">-=</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    &#248;
-                  </p>
-                </td>
-<td>
-                  <p>
-                    &#248;
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <a class="link" href="../../reference/has_operator_minus_equal.html" title="has_operator_minus_equal"><code class="computeroutput"><span class="identifier">has_operator_minus_equal</span></code></a>
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="special">*=</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    &#248;
-                  </p>
-                </td>
-<td>
-                  <p>
-                    &#248;
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <a class="link" href="../../reference/has_operator_multiplies_equal.html" title="has_operator_multiplies_equal"><code class="computeroutput"><span class="identifier">has_operator_multiplies_equal</span></code></a>
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="special">/=</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    &#248;
-                  </p>
-                </td>
-<td>
-                  <p>
-                    &#248;
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <a class="link" href="../../reference/has_operator_divides_equal.html" title="has_operator_divides_equal"><code class="computeroutput"><span class="identifier">has_operator_divides_equal</span></code></a>
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="special">%=</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    &#248;
-                  </p>
-                </td>
-<td>
-                  <p>
-                    &#248;
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <a class="link" href="../../reference/has_operator_modulus_equal.html" title="has_operator_modulus_equal"><code class="computeroutput"><span class="identifier">has_operator_modulus_equal</span></code></a>
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                </td>
-<td class="auto-generated">&#160;</td>
-<td class="auto-generated">&#160;</td>
-<td class="auto-generated">&#160;</td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="special">&amp;&amp;</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="keyword">and</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="identifier">logical_and</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <a class="link" href="../../reference/has_operator_logical_and.html" title="has_operator_logical_and"><code class="computeroutput"><span class="identifier">has_operator_logical_and</span></code></a>
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="special">||</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="keyword">or</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="identifier">logical_or</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <a class="link" href="../../reference/has_operator_logical_or.html" title="has_operator_logical_or"><code class="computeroutput"><span class="identifier">has_operator_logical_or</span></code></a>
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                </td>
-<td class="auto-generated">&#160;</td>
-<td class="auto-generated">&#160;</td>
-<td class="auto-generated">&#160;</td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="special">&amp;</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="keyword">bitand</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="identifier">bit_and</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <a class="link" href="../../reference/has_operator_bit_and.html" title="has_operator_bit_and"><code class="computeroutput"><span class="identifier">has_operator_bit_and</span></code></a>
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="special">|</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="keyword">bitor</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="identifier">bit_or</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <a class="link" href="../../reference/has_operator_bit_or.html" title="has_operator_bit_or"><code class="computeroutput"><span class="identifier">has_operator_bit_or</span></code></a>
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="special">^</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="keyword">xor</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="identifier">bit_xor</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <a class="link" href="../../reference/has_operator_bit_xor.html" title="has_operator_bit_xor"><code class="computeroutput"><span class="identifier">has_operator_bit_xor</span></code></a>
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="special">&lt;&lt;</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    &#248;
-                  </p>
-                </td>
-<td>
-                  <p>
-                    &#248;
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <a class="link" href="../../reference/has_operator_left_shift.html" title="has_operator_left_shift"><code class="computeroutput"><span class="identifier">has_operator_left_shift</span></code></a>
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="special">&gt;&gt;</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    &#248;
-                  </p>
-                </td>
-<td>
-                  <p>
-                    &#248;
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <a class="link" href="../../reference/has_operator_right_shift.html" title="has_operator_right_shift"><code class="computeroutput"><span class="identifier">has_operator_right_shift</span></code></a>
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="special">&amp;=</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="keyword">and_eq</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    &#248;
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <a class="link" href="../../reference/has_operator_bit_and_equal.html" title="has_operator_bit_and_equal"><code class="computeroutput"><span class="identifier">has_operator_bit_and_equal</span></code></a>
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="special">|=</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="keyword">or_eq</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    &#248;
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <a class="link" href="../../reference/has_operator_bit_or_equal.html" title="has_operator_bit_or_equal"><code class="computeroutput"><span class="identifier">has_operator_bit_or_equal</span></code></a>
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="special">^=</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="keyword">xor_eq</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    &#248;
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <a class="link" href="../../reference/has_operator_bit_xor_equal.html" title="has_operator_bit_xor_equal"><code class="computeroutput"><span class="identifier">has_operator_bit_xor_equal</span></code></a>
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="special">&lt;&lt;=</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    &#248;
-                  </p>
-                </td>
-<td>
-                  <p>
-                    &#248;
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <a class="link" href="../../reference/has_operator_left_shift_equal.html" title="has_operator_left_shift_equal"><code class="computeroutput"><span class="identifier">has_operator_left_shift_equal</span></code></a>
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="special">&gt;&gt;=</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    &#248;
-                  </p>
-                </td>
-<td>
-                  <p>
-                    &#248;
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <a class="link" href="../../reference/has_operator_right_shift_equal.html" title="has_operator_right_shift_equal"><code class="computeroutput"><span class="identifier">has_operator_right_shift_equal</span></code></a>
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    prefix
-                  </p>
-                </td>
-<td class="auto-generated">&#160;</td>
-<td class="auto-generated">&#160;</td>
-<td class="auto-generated">&#160;</td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="special">++</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    &#248;
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="identifier">advance</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <a class="link" href="../../reference/has_operator_prefix_increment.html" title="has_operator_prefix_increment"><code class="computeroutput"><span class="identifier">has_operator_prefix_increment</span></code></a>
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="special">--</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    &#248;
-                  </p>
-                </td>
-<td>
-                  <p>
-                    &#248;
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <a class="link" href="../../reference/has_operator_prefix_decrement.html" title="has_operator_prefix_decrement"><code class="computeroutput"><span class="identifier">has_operator_prefix_decrement</span></code></a>
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="special">+</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    &#248;
-                  </p>
-                </td>
-<td>
-                  <p>
-                    &#248;
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <a class="link" href="../../reference/has_operator_unary_plus.html" title="has_operator_unary_plus"><code class="computeroutput"><span class="identifier">has_operator_unary_plus</span></code></a>
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="special">-</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    &#248;
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="identifier">negate</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <a class="link" href="../../reference/has_operator_unary_minus.html" title="has_operator_unary_minus"><code class="computeroutput"><span class="identifier">has_operator_unary_minus</span></code></a>
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="special">!</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="keyword">not</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="identifier">logical_not</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <a class="link" href="../../reference/has_operator_logical_not.html" title="has_operator_logical_not"><code class="computeroutput"><span class="identifier">has_operator_logical_not</span></code></a>
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="special">~</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="keyword">compl</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    &#248;
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <a class="link" href="../../reference/has_operator_complement.html" title="has_operator_complement"><code class="computeroutput"><span class="identifier">has_operator_complement</span></code></a>
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="special">*</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    &#248;
-                  </p>
-                </td>
-<td>
-                  <p>
-                    &#248;
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <a class="link" href="../../reference/has_operator_dereference.html" title="has_operator_dereference"><code class="computeroutput"><span class="identifier">has_operator_dereference</span></code></a>
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    postfix
-                  </p>
-                </td>
-<td class="auto-generated">&#160;</td>
-<td class="auto-generated">&#160;</td>
-<td class="auto-generated">&#160;</td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="special">++</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    &#248;
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="identifier">advance</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <a class="link" href="../../reference/has_operator_postfix_increment.html" title="has_operator_postfix_increment"><code class="computeroutput"><span class="identifier">has_operator_postfix_increment</span></code></a>
-                  </p>
-                </td>
-</tr>
-<tr>
-<td>
-                  <p>
-                    <code class="computeroutput"><span class="special">--</span></code>
-                  </p>
-                </td>
-<td>
-                  <p>
-                    &#248;
-                  </p>
-                </td>
-<td>
-                  <p>
-                    &#248;
-                  </p>
-                </td>
-<td>
-                  <p>
-                    <a class="link" href="../../reference/has_operator_postfix_decrement.html" title="has_operator_postfix_decrement"><code class="computeroutput"><span class="identifier">has_operator_postfix_decrement</span></code></a>
                   </p>
                 </td>
 </tr>
@@ -1645,18 +740,18 @@
 </table></div>
 </div>
 <br class="table-break"><a name="boost_typetraits.category.value_traits.operators.implementation"></a><h6>
-<a name="id3414084"></a>
+<a name="id3313387"></a>
           <a class="link" href="operators.html#boost_typetraits.category.value_traits.operators.implementation">Implementation</a>
         </h6>
 <p>
           The implementation consists in only header files. The following headers
           should included first: 
 </p>
-<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">type_traits</span><span class="special">/</span><span class="identifier">operators</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></pre>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">type_traits</span><span class="special">/</span><span class="identifier">can_call</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></pre>
 <p>
           or 
 </p>
-<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">type_traits</span><span class="special">/</span><span class="identifier">has_operator_name</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></pre>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">type_traits</span><span class="special">/</span><span class="identifier">can_call_name</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></pre>
 <p>
           where <code class="literal">name</code> is the textual name chosen for the wanted
           operator. The first method includes all operator traits.
@@ -1664,8 +759,8 @@
 <p>
           All traits are implemented the same way using preprocessor macros to avoid
           code duplication. The main files are in <code class="literal">boost/type_traits/detail</code>:
-          <code class="literal">has_binary_operator.hpp</code>, <code class="literal">has_prefix_operator.hpp</code>
-          and <code class="literal">has_postfix_operator.hpp</code>. The example of prefix
+          <code class="literal">can_call_binary_operator.hpp</code>, <code class="literal">can_call_prefix_operator.hpp</code>
+          and <code class="literal">can_call_postfix_operator.hpp</code>. The example of prefix
           <code class="computeroutput"><span class="keyword">operator</span><span class="special">-</span></code>
           is presented below:
         </p>
@@ -1674,34 +769,22 @@
 </p>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
 <span class="keyword">namespace</span> <span class="identifier">detail</span> <span class="special">{</span>
-<span class="keyword">namespace</span> <span class="identifier">has_operator_unary_minus_impl</span> <span class="special">{</span>
+
+<span class="comment">// This namespace ensures that ADL does not mess things up.
+</span><span class="keyword">namespace</span> <span class="identifier">can_call_unary_minus_impl</span> <span class="special">{</span>
 
 <span class="comment">// 1. a function to have an instance of type T without requiring T to be default
 </span><span class="comment">// constructible
-</span><span class="keyword">namespace</span> <span class="special">{</span>
-   <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">T</span> <span class="special">&amp;</span><span class="identifier">make</span><span class="special">();</span>
-<span class="special">}</span>
+</span><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">T</span> <span class="special">&amp;</span><span class="identifier">make</span><span class="special">();</span>
 
-<span class="comment">// 2. we provide operator- for types that do not have one already
-</span>
-<span class="comment">// a type returned from operator- when no such operator is found in the type's
-</span><span class="comment">// own namespace so that we have a means to know that our operator was used
-</span><span class="keyword">struct</span> <span class="identifier">tag</span> <span class="special">{</span> <span class="special">};</span>
 
-<span class="comment">// this class allows implicit conversions and makes the following operator
-</span><span class="comment">// definition less-preferred than any other such operators that might be found
-</span><span class="comment">// via argument-dependent name lookup
-</span><span class="keyword">struct</span> <span class="identifier">any</span> <span class="special">{</span> <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">any</span><span class="special">(</span><span class="identifier">T</span> <span class="keyword">const</span><span class="special">&amp;);</span> <span class="special">};</span>
-
-<span class="comment">// when operator- is not available, this one is used
-</span><span class="identifier">tag</span> <span class="keyword">operator</span><span class="special">-(</span><span class="keyword">const</span> <span class="identifier">any</span><span class="special">&amp;);</span>
-
-<span class="comment">// 3. if the return type has to be checked, we need to determine if operator-
-</span><span class="comment">// returns void or not
+<span class="comment">// 2. checks if operator- returns void or not
+</span><span class="comment">// conditions: Rhs!=void
 </span>
 <span class="comment">// we first redefine "operator," so that we have no compilation error if
 </span><span class="comment">// operator- returns void and we can use the return type of
-</span><span class="comment">// (-rhs, returns_void_t()) to deduce if operator- returns void or not:
+</span><span class="comment">// (-rhs, returns_void_t()) to deduce if
+</span><span class="comment">// operator- returns void or not:
 </span><span class="comment">// - operator- returns void   -&gt; (-rhs, returns_void_t()) returns returns_void_t
 </span><span class="comment">// - operator- returns !=void -&gt; (-rhs, returns_void_t()) returns int
 </span><span class="keyword">struct</span> <span class="identifier">returns_void_t</span> <span class="special">{};</span>
@@ -1710,109 +793,146 @@
 <span class="comment">// this intermediate trait has member value of type bool:
 </span><span class="comment">// - value==true -&gt; operator- returns void
 </span><span class="comment">// - value==false -&gt; operator- does not return void
-</span><span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">RHS</span> <span class="special">&gt;</span>
-<span class="keyword">struct</span> <span class="identifier">operator_unary_minus_returns_void</span> <span class="special">{</span>
+</span><span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">Rhs</span> <span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">operator_returns_void</span> <span class="special">{</span>
    <span class="comment">// overloads of function returns_void make the difference
 </span>   <span class="comment">// yes_type and no_type have different size by construction
 </span>   <span class="keyword">static</span> <span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">type_traits</span><span class="special">::</span><span class="identifier">yes_type</span> <span class="identifier">returns_void</span><span class="special">(</span><span class="identifier">returns_void_t</span><span class="special">);</span>
    <span class="keyword">static</span> <span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">type_traits</span><span class="special">::</span><span class="identifier">no_type</span> <span class="identifier">returns_void</span><span class="special">(</span><span class="keyword">int</span><span class="special">);</span>
-   <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">bool</span> <span class="identifier">value</span><span class="special">=(</span><span class="keyword">sizeof</span><span class="special">(::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">type_traits</span><span class="special">::</span><span class="identifier">yes_type</span><span class="special">)==</span><span class="keyword">sizeof</span><span class="special">(</span><span class="identifier">returns_void</span><span class="special">((-</span><span class="identifier">make</span><span class="special">&lt;</span><span class="identifier">RHS</span><span class="special">&gt;(),</span><span class="identifier">returns_void_t</span><span class="special">()))));</span>
+   <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">bool</span> <span class="identifier">value</span> <span class="special">=</span> <span class="special">(</span><span class="keyword">sizeof</span><span class="special">(::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">type_traits</span><span class="special">::</span><span class="identifier">yes_type</span><span class="special">)==</span><span class="keyword">sizeof</span><span class="special">(</span><span class="identifier">returns_void</span><span class="special">((-</span> <span class="identifier">make</span><span class="special">&lt;</span><span class="identifier">Rhs</span><span class="special">&gt;(),</span><span class="identifier">returns_void_t</span><span class="special">()))));</span>
 <span class="special">};</span>
 
-<span class="comment">// 4. check for return type when RET is non void
+
+<span class="comment">// 3. check for return type if Ret!=dont_care
+</span><span class="comment">// conditions: Rhs!=void
 </span>
-<span class="comment">// this class is used only when RET is non void, therefore it is specialized to
-</span><span class="comment">// have its value==false when the operator returns void
-</span><span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">RHS</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">RET</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">RETURNS_VOID</span> <span class="special">&gt;</span>
-<span class="keyword">struct</span> <span class="identifier">has_operator_unary_minus_impl2</span><span class="special">;</span>
+<span class="keyword">struct</span> <span class="identifier">dont_care</span> <span class="special">{</span> <span class="special">};</span>
 
-<span class="comment">// operator- does not return void, checks if it is convertible to RET using the
-</span><span class="comment">// sizeof trick based on overload resolution
-</span><span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">RHS</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">RET</span> <span class="special">&gt;</span>
-<span class="keyword">struct</span> <span class="identifier">has_operator_unary_minus_impl2</span><span class="special">&lt;</span> <span class="identifier">RHS</span><span class="special">,</span> <span class="identifier">RET</span><span class="special">,</span> <span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">false_type</span> <span class="special">&gt;</span> <span class="special">{</span>
-   <span class="keyword">static</span> <span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">type_traits</span><span class="special">::</span><span class="identifier">yes_type</span> <span class="identifier">is_convertible_to_RET</span><span class="special">(</span><span class="identifier">RET</span><span class="special">);</span>
-   <span class="keyword">static</span> <span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">type_traits</span><span class="special">::</span><span class="identifier">no_type</span> <span class="identifier">is_convertible_to_RET</span><span class="special">(...);</span>
-   <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">bool</span> <span class="identifier">value</span><span class="special">=(</span><span class="keyword">sizeof</span><span class="special">(</span><span class="identifier">is_convertible_to_RET</span><span class="special">(-</span> <span class="identifier">make</span><span class="special">&lt;</span><span class="identifier">RHS</span><span class="special">&gt;()))==</span><span class="keyword">sizeof</span><span class="special">(::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">type_traits</span><span class="special">::</span><span class="identifier">yes_type</span><span class="special">));</span>
+<span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">Rhs</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Ret</span><span class="special">,</span> <span class="keyword">bool</span> <span class="identifier">Returns_void</span> <span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">operator_returns_Ret</span><span class="special">;</span>
+
+<span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">Rhs</span> <span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">operator_returns_Ret</span> <span class="special">&lt;</span> <span class="identifier">Rhs</span><span class="special">,</span> <span class="identifier">dont_care</span><span class="special">,</span> <span class="keyword">true</span> <span class="special">&gt;</span> <span class="special">{</span>
+   <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">bool</span> <span class="identifier">value</span> <span class="special">=</span> <span class="keyword">true</span><span class="special">;</span>
 <span class="special">};</span>
 
-<span class="comment">// operator- returns void!=RET -&gt; specialization to return value==false
-</span><span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">RHS</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">RET</span> <span class="special">&gt;</span>
-<span class="keyword">struct</span> <span class="identifier">has_operator_unary_minus_impl2</span><span class="special">&lt;</span> <span class="identifier">RHS</span><span class="special">,</span> <span class="identifier">RET</span><span class="special">,</span> <span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">true_type</span> <span class="special">&gt;</span> <span class="special">{</span>
-   <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">bool</span> <span class="identifier">value</span><span class="special">=</span><span class="keyword">false</span><span class="special">;</span>
+<span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">Rhs</span> <span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">operator_returns_Ret</span> <span class="special">&lt;</span> <span class="identifier">Rhs</span><span class="special">,</span> <span class="identifier">dont_care</span><span class="special">,</span> <span class="keyword">false</span> <span class="special">&gt;</span> <span class="special">{</span>
+   <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">bool</span> <span class="identifier">value</span> <span class="special">=</span> <span class="keyword">true</span><span class="special">;</span>
 <span class="special">};</span>
 
-<span class="comment">// 5. main struct: to avoid any compilation error, this struct behaves
-</span><span class="comment">// differently when:
-</span><span class="comment">// - RET is void or non void
-</span><span class="comment">// - operator-(RHS) is forbidden by the standard
-</span><span class="comment">// forbidden_if is a bool that is:
-</span><span class="comment">// - true when the operator-(RHS) is forbidden by the standard (would yield
-</span><span class="comment">//   compilation error if used)
-</span><span class="comment">// - false otherwise
-</span><span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">RHS</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">RET</span><span class="special">,</span> <span class="keyword">bool</span> <span class="identifier">forbidden_if</span> <span class="special">&gt;</span>
-<span class="keyword">struct</span> <span class="identifier">has_operator_unary_minus_impl1</span><span class="special">;</span>
-
-<span class="comment">// specialization to avoid compilation error when forbidden by the standard
-</span><span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">RHS</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">RET</span> <span class="special">&gt;</span>
-<span class="keyword">struct</span> <span class="identifier">has_operator_unary_minus_impl1</span> <span class="special">&lt;</span> <span class="identifier">RHS</span><span class="special">,</span> <span class="identifier">RET</span><span class="special">,</span> <span class="keyword">true</span> <span class="special">&gt;</span> <span class="special">{</span>
-   <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">bool</span> <span class="identifier">value</span><span class="special">=</span><span class="keyword">false</span><span class="special">;</span>
+<span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">Rhs</span> <span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">operator_returns_Ret</span> <span class="special">&lt;</span> <span class="identifier">Rhs</span><span class="special">,</span> <span class="keyword">void</span><span class="special">,</span> <span class="keyword">true</span> <span class="special">&gt;</span> <span class="special">{</span>
+   <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">bool</span> <span class="identifier">value</span> <span class="special">=</span> <span class="keyword">true</span><span class="special">;</span>
 <span class="special">};</span>
 
-<span class="comment">// checks for return type if template parameter RET is non void: use previously
-</span><span class="comment">// defined struct
-</span><span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">RHS</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">RET</span> <span class="special">&gt;</span>
-<span class="keyword">struct</span> <span class="identifier">has_operator_unary_minus_impl1</span> <span class="special">&lt;</span> <span class="identifier">RHS</span><span class="special">,</span> <span class="identifier">RET</span><span class="special">,</span> <span class="keyword">false</span> <span class="special">&gt;</span> <span class="special">{</span>
-   <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">bool</span> <span class="identifier">value</span><span class="special">=(</span><span class="identifier">has_operator_unary_minus_impl2</span><span class="special">&lt;</span> <span class="identifier">RHS</span><span class="special">,</span> <span class="identifier">RET</span><span class="special">,</span> <span class="keyword">typename</span> <span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">integral_constant</span><span class="special">&lt;</span> <span class="keyword">bool</span><span class="special">,</span> <span class="identifier">operator_unary_minus_returns_void</span><span class="special">&lt;</span> <span class="identifier">RHS</span> <span class="special">&gt;::</span><span class="identifier">value</span> <span class="special">&gt;</span> <span class="special">&gt;::</span><span class="identifier">value</span><span class="special">);</span>
+<span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">Rhs</span> <span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">operator_returns_Ret</span> <span class="special">&lt;</span> <span class="identifier">Rhs</span><span class="special">,</span> <span class="keyword">void</span><span class="special">,</span> <span class="keyword">false</span> <span class="special">&gt;</span> <span class="special">{</span>
+   <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">bool</span> <span class="identifier">value</span> <span class="special">=</span> <span class="keyword">false</span><span class="special">;</span>
 <span class="special">};</span>
 
-<span class="comment">// in case we do not want to check for return type, we still need to know if our
-</span><span class="comment">// definition of operator BOOST_TT_TRAIT_OP is used or an other existing one;
+<span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">Rhs</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Ret</span> <span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">operator_returns_Ret</span> <span class="special">&lt;</span> <span class="identifier">Rhs</span><span class="special">,</span> <span class="identifier">Ret</span><span class="special">,</span> <span class="keyword">true</span> <span class="special">&gt;</span> <span class="special">{</span>
+   <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">bool</span> <span class="identifier">value</span> <span class="special">=</span> <span class="keyword">false</span><span class="special">;</span>
+<span class="special">};</span>
+
+<span class="comment">// when Ret!=void, checks if it is convertible to Ret using the sizeof trick
+</span><span class="comment">// based on overload resolution
+</span><span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">Rhs</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Ret</span> <span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">operator_returns_Ret</span> <span class="special">&lt;</span> <span class="identifier">Rhs</span><span class="special">,</span> <span class="identifier">Ret</span><span class="special">,</span> <span class="keyword">false</span> <span class="special">&gt;</span> <span class="special">{</span>
+   <span class="keyword">static</span> <span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">type_traits</span><span class="special">::</span><span class="identifier">yes_type</span> <span class="identifier">is_convertible_to_Ret</span><span class="special">(</span><span class="identifier">Ret</span><span class="special">);</span> <span class="comment">// this version is preferred for types convertible to Ret
+</span>   <span class="keyword">static</span> <span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">type_traits</span><span class="special">::</span><span class="identifier">no_type</span> <span class="identifier">is_convertible_to_Ret</span><span class="special">(...);</span> <span class="comment">// this version is used otherwise
+</span>
+   <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">bool</span> <span class="identifier">value</span> <span class="special">=</span> <span class="special">(</span><span class="keyword">sizeof</span><span class="special">(</span><span class="identifier">is_convertible_to_Ret</span><span class="special">(-</span> <span class="identifier">make</span><span class="special">&lt;</span><span class="identifier">Rhs</span><span class="special">&gt;()))==</span><span class="keyword">sizeof</span><span class="special">(::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">type_traits</span><span class="special">::</span><span class="identifier">yes_type</span><span class="special">));</span>
+<span class="special">};</span>
+
+
+<span class="comment">// 4. we provide our operator definition for types that do not have one already
+</span>
+<span class="comment">// a type returned from operator- when no such operator is
+</span><span class="comment">// found in the type's own namespace so that we have a means to know that our
+</span><span class="comment">// operator was used
+</span><span class="keyword">struct</span> <span class="identifier">tag</span> <span class="special">{</span> <span class="special">};</span>
+
+<span class="comment">// this class allows implicit conversions and makes the following operator
+</span><span class="comment">// definition less-preferred than any other such operators that might be found
+</span><span class="comment">// via argument-dependent name lookup
+</span><span class="keyword">struct</span> <span class="identifier">any</span> <span class="special">{</span> <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">any</span><span class="special">(</span><span class="identifier">T</span> <span class="keyword">const</span><span class="special">&amp;);</span> <span class="special">};</span>
+
+<span class="comment">// when operator- is not available, this one is used
+</span><span class="identifier">tag</span> <span class="keyword">operator</span> <span class="special">-</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">any</span><span class="special">&amp;);</span>
+
+
+<span class="comment">// 5. check for operator existence
+</span><span class="comment">// condition: Rhs!=void
+</span>
+<span class="comment">// check if our definition of operator- is used or an other
+</span><span class="comment">// existing one;
 </span><span class="comment">// this is done with redefinition of "operator," that returns tag or tag2
 </span><span class="keyword">struct</span> <span class="identifier">tag2</span> <span class="special">{</span> <span class="special">};</span>
 <span class="identifier">tag</span> <span class="keyword">operator</span><span class="special">,(</span><span class="identifier">tag</span><span class="special">,</span> <span class="identifier">tag2</span><span class="special">);</span>
 
-<span class="comment">// do not check for return type if 2nd template parameter RET is void
-</span><span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">RHS</span> <span class="special">&gt;</span>
-<span class="keyword">struct</span> <span class="identifier">has_operator_unary_minus_impl1</span><span class="special">&lt;</span> <span class="identifier">RHS</span><span class="special">,</span> <span class="keyword">void</span><span class="special">,</span> <span class="keyword">false</span> <span class="special">&gt;</span> <span class="special">{</span>
+<span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">Rhs</span> <span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">operator_exists</span> <span class="special">{</span>
    <span class="keyword">static</span> <span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">type_traits</span><span class="special">::</span><span class="identifier">yes_type</span> <span class="identifier">check</span><span class="special">(</span><span class="identifier">tag2</span><span class="special">);</span> <span class="comment">// this version is preferred when operator exists
 </span>   <span class="keyword">static</span> <span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">type_traits</span><span class="special">::</span><span class="identifier">no_type</span> <span class="identifier">check</span><span class="special">(</span><span class="identifier">tag</span><span class="special">);</span> <span class="comment">// this version is used otherwise
 </span>
-   <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">bool</span> <span class="identifier">value</span><span class="special">=(</span><span class="keyword">sizeof</span><span class="special">(</span><span class="identifier">check</span><span class="special">(((-</span><span class="identifier">make</span><span class="special">&lt;</span><span class="identifier">RHS</span><span class="special">&gt;()),</span><span class="identifier">make</span><span class="special">&lt;</span><span class="identifier">tag2</span><span class="special">&gt;())))==</span><span class="keyword">sizeof</span><span class="special">(::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">type_traits</span><span class="special">::</span><span class="identifier">yes_type</span><span class="special">));</span>
+   <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">bool</span> <span class="identifier">value</span> <span class="special">=</span> <span class="special">(</span><span class="keyword">sizeof</span><span class="special">(</span><span class="identifier">check</span><span class="special">(((-</span> <span class="identifier">make</span><span class="special">&lt;</span><span class="identifier">Rhs</span><span class="special">&gt;()),</span><span class="identifier">make</span><span class="special">&lt;</span><span class="identifier">tag2</span><span class="special">&gt;())))==</span><span class="keyword">sizeof</span><span class="special">(::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">type_traits</span><span class="special">::</span><span class="identifier">yes_type</span><span class="special">));</span>
 <span class="special">};</span>
 
-<span class="comment">// some specializations needs to be declared for the special void case
-</span><span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">RET</span> <span class="special">&gt;</span>
-<span class="keyword">struct</span> <span class="identifier">has_operator_unary_minus_impl1</span><span class="special">&lt;</span> <span class="keyword">void</span><span class="special">,</span> <span class="identifier">RET</span><span class="special">,</span> <span class="keyword">false</span> <span class="special">&gt;</span> <span class="special">{</span>
-   <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">bool</span> <span class="identifier">value</span><span class="special">=</span><span class="keyword">false</span><span class="special">;</span>
+
+<span class="comment">// 5. main trait: to avoid any compilation error, this struct behaves
+</span><span class="comment">// differently when:
+</span><span class="comment">// - operator-(Rhs) is forbidden by the standard
+</span><span class="comment">// Forbidden_if is a bool that is:
+</span><span class="comment">// - true when the operator-(Rhs) is forbidden by the standard
+</span><span class="comment">//   (would yield compilation error if used)
+</span><span class="comment">// - false otherwise
+</span><span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">Rhs</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Ret</span><span class="special">,</span> <span class="keyword">bool</span> <span class="identifier">Forbidden_if</span> <span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">trait_impl1</span><span class="special">;</span>
+
+<span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">Rhs</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Ret</span> <span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">trait_impl1</span> <span class="special">&lt;</span> <span class="identifier">Rhs</span><span class="special">,</span> <span class="identifier">Ret</span><span class="special">,</span> <span class="keyword">true</span> <span class="special">&gt;</span> <span class="special">{</span>
+   <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">bool</span> <span class="identifier">value</span> <span class="special">=</span> <span class="keyword">false</span><span class="special">;</span>
 <span class="special">};</span>
 
-<span class="keyword">template</span> <span class="special">&lt;&gt;</span>
-<span class="keyword">struct</span> <span class="identifier">has_operator_unary_minus_impl1</span><span class="special">&lt;</span> <span class="keyword">void</span><span class="special">,</span> <span class="keyword">void</span><span class="special">,</span> <span class="keyword">false</span> <span class="special">&gt;</span> <span class="special">{</span>
-   <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">bool</span> <span class="identifier">value</span><span class="special">=</span><span class="keyword">false</span><span class="special">;</span>
+<span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">Rhs</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Ret</span> <span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">trait_impl1</span> <span class="special">&lt;</span> <span class="identifier">Rhs</span><span class="special">,</span> <span class="identifier">Ret</span><span class="special">,</span> <span class="keyword">false</span> <span class="special">&gt;</span> <span class="special">{</span>
+   <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">bool</span>
+      <span class="identifier">value</span> <span class="special">=</span> <span class="special">(</span>
+         <span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">type_traits</span><span class="special">::</span><span class="identifier">ice_and</span><span class="special">&lt;</span>
+            <span class="identifier">operator_exists</span> <span class="special">&lt;</span> <span class="identifier">Rhs</span> <span class="special">&gt;::</span><span class="identifier">value</span><span class="special">,</span>
+            <span class="identifier">operator_returns_Ret</span> <span class="special">&lt;</span> <span class="identifier">Rhs</span><span class="special">,</span> <span class="identifier">Ret</span><span class="special">,</span> <span class="identifier">operator_returns_void</span> <span class="special">&lt;</span> <span class="identifier">Rhs</span> <span class="special">&gt;::</span><span class="identifier">value</span> <span class="special">&gt;::</span><span class="identifier">value</span>
+         <span class="special">&gt;::</span><span class="identifier">value</span>
+      <span class="special">);</span>
+<span class="special">};</span>
+
+<span class="comment">// specialization needs to be declared for the special void case
+</span><span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">Ret</span> <span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">trait_impl1</span> <span class="special">&lt;</span> <span class="keyword">void</span><span class="special">,</span> <span class="identifier">Ret</span><span class="special">,</span> <span class="keyword">false</span> <span class="special">&gt;</span> <span class="special">{</span>
+   <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">bool</span> <span class="identifier">value</span> <span class="special">=</span> <span class="keyword">false</span><span class="special">;</span>
 <span class="special">};</span>
 
 <span class="comment">// defines some typedef for convenience
-</span><span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">RHS</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">RET</span> <span class="special">&gt;</span>
-<span class="keyword">struct</span> <span class="identifier">has_operator_unary_minus_impl</span> <span class="special">{</span>
-   <span class="comment">// shortcuts for writing forbidden_if
-</span>   <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">remove_reference</span><span class="special">&lt;</span><span class="identifier">RHS</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">rhs_noref</span><span class="special">;</span>
-   <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">remove_cv</span><span class="special">&lt;</span><span class="identifier">rhs_noref</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">rhs_nocv</span><span class="special">;</span>
-   <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">remove_cv</span><span class="special">&lt;</span> <span class="keyword">typename</span> <span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">remove_reference</span><span class="special">&lt;</span> <span class="keyword">typename</span> <span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">remove_pointer</span><span class="special">&lt;</span><span class="identifier">rhs_noref</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="special">&gt;::</span><span class="identifier">type</span> <span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">rhs_noptr</span><span class="special">;</span>
-   <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">bool</span> <span class="identifier">value</span><span class="special">=(</span><span class="identifier">has_operator_unary_minus_impl1</span> <span class="special">&lt;</span> <span class="identifier">rhs_noref</span><span class="special">,</span> <span class="identifier">RET</span><span class="special">,</span> <span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">is_pointer</span><span class="special">&lt;</span> <span class="identifier">rhs_noref</span> <span class="special">&gt;::</span><span class="identifier">value</span> <span class="special">&gt;::</span><span class="identifier">value</span><span class="special">);</span>
+</span><span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">Rhs</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Ret</span> <span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">trait_impl</span> <span class="special">{</span>
+   <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">remove_reference</span><span class="special">&lt;</span><span class="identifier">Rhs</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">Rhs_noref</span><span class="special">;</span>
+   <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">bool</span> <span class="identifier">value</span> <span class="special">=</span> <span class="special">(</span><span class="identifier">trait_impl1</span> <span class="special">&lt;</span> <span class="identifier">Rhs_noref</span><span class="special">,</span> <span class="identifier">Ret</span><span class="special">,</span> <span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">is_pointer</span><span class="special">&lt;</span> <span class="identifier">Rhs_noref</span> <span class="special">&gt;::</span><span class="identifier">value</span> <span class="special">&gt;::</span><span class="identifier">value</span><span class="special">);</span>
 <span class="special">};</span>
-<span class="special">}</span> <span class="comment">// namespace has_operator_unary_minus_impl
+
+<span class="special">}</span> <span class="comment">// namespace can_call_unary_minus_impl
 </span><span class="special">}</span> <span class="comment">// namespace detail
 </span>
 <span class="comment">// this is the accessible definition of the trait to end user
-</span><span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">RHS</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">RET</span><span class="special">=</span><span class="keyword">void</span> <span class="special">&gt;</span>
-<span class="keyword">struct</span> <span class="identifier">has_operator_unary_minus</span> <span class="special">:</span> <span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">integral_constant</span><span class="special">&lt;</span> <span class="keyword">bool</span><span class="special">,</span> <span class="special">(::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">detail</span><span class="special">::</span><span class="identifier">has_operator_unary_minus_impl</span><span class="special">::</span><span class="identifier">has_operator_unary_minus_impl</span><span class="special">&lt;</span> <span class="identifier">RHS</span><span class="special">,</span> <span class="identifier">RET</span> <span class="special">&gt;::</span><span class="identifier">value</span><span class="special">)&gt;</span> <span class="special">{</span>
-<span class="special">};</span>
+</span><span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">Rhs</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Ret</span><span class="special">=::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">detail</span><span class="special">::</span><span class="identifier">can_call_unary_minus_impl</span><span class="special">::</span><span class="identifier">dont_care</span> <span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">can_call_unary_minus</span> <span class="special">:</span> <span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">integral_constant</span><span class="special">&lt;</span><span class="keyword">bool</span><span class="special">,(::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">detail</span><span class="special">::</span><span class="identifier">can_call_unary_minus_impl</span><span class="special">::</span><span class="identifier">trait_impl</span> <span class="special">&lt;</span> <span class="identifier">Rhs</span><span class="special">,</span> <span class="identifier">Ret</span> <span class="special">&gt;::</span><span class="identifier">value</span><span class="special">)&gt;</span> <span class="special">{</span> <span class="special">};</span>
+
 <span class="special">}</span> <span class="comment">// namespace boost
 </span></pre>
 <p>
         </p>
 <a name="boost_typetraits.category.value_traits.operators.known_issues"></a><h6>
-<a name="id3417429"></a>
+<a name="id3316872"></a>
           <a class="link" href="operators.html#boost_typetraits.category.value_traits.operators.known_issues">Known
           issues</a>
         </h6>
@@ -1826,7 +946,7 @@
           
 </p>
 <pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">A</span> <span class="special">{</span> <span class="keyword">private</span><span class="special">:</span> <span class="identifier">A</span> <span class="keyword">operator</span><span class="special">-();</span> <span class="special">};</span>
-<span class="identifier">boost</span><span class="special">::</span><span class="identifier">has_operator_unary_minus</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">&gt;::</span><span class="identifier">value</span><span class="special">;</span> <span class="comment">// error: A::operator-() is private
+<span class="identifier">boost</span><span class="special">::</span><span class="identifier">can_call_unary_minus</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">&gt;::</span><span class="identifier">value</span><span class="special">;</span> <span class="comment">// error: A::operator-() is private
 </span></pre>
 <p>
         </p>
@@ -1844,8 +964,8 @@
 <pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">A</span> <span class="special">{</span> <span class="special">};</span>
 <span class="keyword">void</span> <span class="keyword">operator</span><span class="special">-(</span><span class="keyword">const</span> <span class="identifier">A</span><span class="special">&amp;);</span>
 <span class="keyword">struct</span> <span class="identifier">B</span> <span class="special">{</span> <span class="keyword">operator</span> <span class="identifier">A</span><span class="special">();</span> <span class="special">};</span>
-<span class="identifier">boost</span><span class="special">::</span><span class="identifier">has_operator_unary_minus</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">&gt;::</span><span class="identifier">value</span><span class="special">;</span> <span class="comment">// this is fine
-</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">has_operator_unary_minus</span><span class="special">&lt;</span><span class="identifier">B</span><span class="special">&gt;::</span><span class="identifier">value</span><span class="special">;</span> <span class="comment">// error: ambigous overload between
+<span class="identifier">boost</span><span class="special">::</span><span class="identifier">can_call_unary_minus</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">&gt;::</span><span class="identifier">value</span><span class="special">;</span> <span class="comment">// this is fine
+</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">can_call_unary_minus</span><span class="special">&lt;</span><span class="identifier">B</span><span class="special">&gt;::</span><span class="identifier">value</span><span class="special">;</span> <span class="comment">// error: ambigous overload between
 </span>                                           <span class="comment">// operator-(const any&amp;) and
 </span>                                           <span class="comment">// operator-(const A&amp;)
 </span>                                           <span class="comment">// both need type conversion
@@ -1856,8 +976,8 @@
 <pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">B</span> <span class="special">{</span> <span class="special">};</span>
 <span class="keyword">struct</span> <span class="identifier">A</span> <span class="special">{</span> <span class="identifier">A</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">B</span><span class="special">&amp;)</span> <span class="special">{</span> <span class="special">}</span> <span class="special">};</span>
 <span class="keyword">void</span> <span class="keyword">operator</span><span class="special">-(</span><span class="keyword">const</span> <span class="identifier">A</span><span class="special">&amp;);</span>
-<span class="identifier">boost</span><span class="special">::</span><span class="identifier">has_operator_unary_minus</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">&gt;::</span><span class="identifier">value</span><span class="special">;</span> <span class="comment">// this is fine
-</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">has_operator_unary_minus</span><span class="special">&lt;</span><span class="identifier">B</span><span class="special">&gt;::</span><span class="identifier">value</span><span class="special">;</span> <span class="comment">// error: ambigous overload between
+<span class="identifier">boost</span><span class="special">::</span><span class="identifier">can_call_unary_minus</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">&gt;::</span><span class="identifier">value</span><span class="special">;</span> <span class="comment">// this is fine
+</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">can_call_unary_minus</span><span class="special">&lt;</span><span class="identifier">B</span><span class="special">&gt;::</span><span class="identifier">value</span><span class="special">;</span> <span class="comment">// error: ambigous overload between
 </span>                                           <span class="comment">// operator-(const any&amp;) and
 </span>                                           <span class="comment">// operator-(const A&amp;)
 </span>                                           <span class="comment">// both need type conversion
@@ -1865,7 +985,7 @@
 <p>
         </p>
 <a name="boost_typetraits.category.value_traits.operators.acknowledgments"></a><h6>
-<a name="id3418061"></a>
+<a name="id3317505"></a>
           <a class="link" href="operators.html#boost_typetraits.category.value_traits.operators.acknowledgments">Acknowledgments</a>
         </h6>
 <p>
@@ -1879,7 +999,7 @@
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
 <td align="right"><div class="copyright-footer">Copyright &#169; 2000, 2011 Adobe Systems Inc, David Abrahams,
-      Fr&#233;d&#233;ric Bron, Steve Cleary, Beman Dawes, Aleksey Gurtovoy, Howard Hinnant,
+      Frederic Bron, Steve Cleary, Beman Dawes, Aleksey Gurtovoy, Howard Hinnant,
       Jesse Jones, Mat Marcus, Itay Maman, John Maddock, Alexander Nasonov, Thorsten
       Ottosen, Roman Perepelitsa, Robert Ramey, Jeremy Siek, Robert Stewart and Steven
       Watanabe<p>

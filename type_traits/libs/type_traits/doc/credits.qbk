@@ -16,7 +16,7 @@ Beman Dawes, Howard Hinnant, and John Maddock.  John Maddock is the
 current maintainer of the library.
 
 This version of type traits library is based on contributions by 
-Adobe Systems Inc, David Abrahams, Frédéric Bron, Steve Cleary, 
+Adobe Systems Inc, David Abrahams, Frederic Bron, Steve Cleary, 
 Beman Dawes, Aleksey Gurtovoy, Howard Hinnant, Jesse Jones, Mat Marcus, 
 Itay Maman, John Maddock, Thorsten Ottosen, Roman Perepelitsa, Robert Ramey, 
 Jeremy Siek, Robert Stewart and Steven Watanabe.

@@ -12,7 +12,7 @@ import testing ;
 
 rule non-operator-tests {
      local result ;
-     for local source in [ glob *_test.cpp : has_operator_*_test.cpp ] udt_specialisations.cpp
+     for local source in [ glob *_test.cpp : can_call_*_test.cpp ] udt_specialisations.cpp
      {
          result += [ run $(source) ] ;
      }
@@ -21,7 +21,7 @@ rule non-operator-tests {
 
 rule operator-tests {
      local result ;
-     for local source in [ glob has_operator_*_test.cpp ]
+     for local source in [ glob can_call_*_test.cpp ]
      {
          result += [ run $(source) ] ;
      }
