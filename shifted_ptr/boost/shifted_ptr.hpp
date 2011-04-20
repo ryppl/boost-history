@@ -293,7 +293,7 @@ template <typename T>
                     ps_ = new set();
                 else
                     owned_base::pool_.top(this)->ptrs_.push(& pn_);
-
+				
                 ps_->redir(p.ps_);
             }
 
@@ -307,8 +307,7 @@ template <typename T>
         template <typename V>
             shifted_ptr & operator = (shifted<V> * p)
             {
-                if (! owned_base::pool_.is_from(this))
-                    release(false);
+                release(false);
 
                 init(p);
 
@@ -330,6 +329,7 @@ template <typename T>
                 if (ps_->redir() != p.ps_->redir())
                 {
                     release(false);
+					
                     ps_->redir(p.ps_);
                 }
                 base::operator = (p);
