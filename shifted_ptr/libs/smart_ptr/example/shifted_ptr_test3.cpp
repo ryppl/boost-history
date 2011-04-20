@@ -12,6 +12,7 @@
 
 
 #include <boost/shifted_ptr.hpp>
+#include <boost/shifted_allocator.hpp>
 
 #include <vector>
 #include <iostream>
@@ -29,6 +30,7 @@ static int count;
 
 using boost::shifted_ptr;
 using boost::shifted;
+using boost::shifted_allocator;
 
 struct node {
     node() {
@@ -69,7 +71,7 @@ struct vector {
     vector() { ++count; }
     ~vector() { --count; }
     vector(const vector& other) : elements(other.elements) { ++count; }
-    std::vector<shifted_ptr<vector> > elements;
+    std::vector<shifted_ptr<vector>, shifted_allocator<shifted_ptr<vector> > > elements;
 };
 
 struct create_type {
@@ -80,14 +82,14 @@ struct create_type {
 };
 
 BOOST_AUTO_TEST_CASE(test_shifted_ptr) {
-/*
+
     count = 0;
     {
         shifted_ptr<vector> v = new shifted<vector>();
         v->elements.push_back(v);
     }
     BOOST_CHECK_EQUAL(count, 0);
-*/
+/*
     count = 0;
     {
         list l;
@@ -99,7 +101,7 @@ BOOST_AUTO_TEST_CASE(test_shifted_ptr) {
         }
     }
     BOOST_CHECK_EQUAL(count, 0);
-/*
+*/
     count = 0;
     {
         shifted_ptr<int> test = new shifted<int>(5);
@@ -112,18 +114,18 @@ BOOST_AUTO_TEST_CASE(test_shifted_ptr) {
     for(int i = 0; i < 500; ++i) {
         boost::mpl::for_each<boost::mpl::range_c<int, 1, 100> >(create_type());
     }
-*/
-/*
+
     count = 0;
     {
         shifted_ptr<vector> v = new shifted<vector>();
         v->elements.push_back(v);
     }
     BOOST_CHECK_EQUAL(count, 0);
-*/
+
     {
         vector v;
         v.elements.push_back(new shifted<vector>());
     }
     BOOST_CHECK_EQUAL(count, 0);
+
 }
