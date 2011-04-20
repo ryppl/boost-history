@@ -26,387 +26,4412 @@
 # /* BOOST_PP_TUPLE_ELEM */
 #
 #    define BOOST_PP_TUPLE_ELEM(...) \
-         BOOST_PP_TUPLE_DETAIL_ELEM_USE_OVERLOAD(BOOST_PP_TUPLE_DETAIL_ELEM_,__VA_ARGS__) \
+         BOOST_PP_TUPLE_DETAIL_ELEM_USE_OVERLOAD(BOOST_PP_TUPLE_DETAIL_ELEM_SIZE_,__VA_ARGS__) \
          /**/
-#    define BOOST_PP_TUPLE_DETAIL_ELEM_2(i, tuple) \
-         BOOST_PP_TUPLE_DETAIL_ELEM_3(BOOST_PP_TUPLE_SIZE(tuple),i,tuple) \
+#
+#    define BOOST_PP_TUPLE_DETAIL_ELEM_SIZE_2(i, tuple) \
+         BOOST_PP_TUPLE_DETAIL_ELEM_SIZE_3(BOOST_PP_TUPLE_SIZE(tuple),i,tuple) \
          /**/
-#    define BOOST_PP_TUPLE_DETAIL_ELEM_3(size, i, tuple) \
-         BOOST_PP_TUPLE_ELEM_COMMON(size, i, tuple) \
+#
+#    define BOOST_PP_TUPLE_DETAIL_ELEM_SIZE_3(size, i, tuple) \
+         BOOST_PP_TUPLE_ELEM_COM(size, i, tuple) \
          /**/
+#
+#    define BOOST_PP_TUPLE_DETAIL_DEF
 #
 # else
 #
 # /* BOOST_PP_TUPLE_ELEM */
 #
-#    define BOOST_PP_TUPLE_ELEM(size, index, tuple) BOOST_PP_TUPLE_ELEM_COMMON(size, index, tuple)
+#    define BOOST_PP_TUPLE_ELEM(size, index, tuple) \
+         BOOST_PP_TUPLE_ELEM_COM(size, index, tuple) \
+         /**/
+#
+#    define BOOST_PP_TUPLE_DETAIL_DEF ?
 #
 # endif /* BOOST_PP_VARIADICS */
 #
 # if ~BOOST_PP_CONFIG_FLAGS() & BOOST_PP_CONFIG_MWCC()
-#    define BOOST_PP_TUPLE_ELEM_COMMON(size, index, tuple) BOOST_PP_TUPLE_ELEM_I(size, index, tuple)
+#    define BOOST_PP_TUPLE_ELEM_COMMON(size, tuple) BOOST_PP_TUPLE_ELEM_COMMON_I(size, tuple)
+#    define BOOST_PP_TUPLE_ELEM_FINISH(index, tuple) BOOST_PP_TUPLE_ELEM_FINISH_I(index, tuple)
 # else
-#    define BOOST_PP_TUPLE_ELEM_COMMON(size, index, tuple) BOOST_PP_TUPLE_ELEM_OO((size, index, tuple))
-#    define BOOST_PP_TUPLE_ELEM_OO(par) BOOST_PP_TUPLE_ELEM_I ## par
+#    define BOOST_PP_TUPLE_ELEM_COMMON(size, tuple) BOOST_PP_TUPLE_ELEM_COMMON_OO((size, tuple))
+#    define BOOST_PP_TUPLE_ELEM_COMMON_OO(par) BOOST_PP_TUPLE_ELEM_COMMON_I ## par
+#    define BOOST_PP_TUPLE_ELEM_FINISH(index, tuple) BOOST_PP_TUPLE_ELEM_FINISH_OO((index, tuple))
+#    define BOOST_PP_TUPLE_ELEM_FINISH_OO(par) BOOST_PP_TUPLE_ELEM_FINISH_I ## par
 # endif
 #
 # if BOOST_PP_CONFIG_FLAGS() & BOOST_PP_CONFIG_MWCC()
-#    define BOOST_PP_TUPLE_ELEM_I(s, i, t) BOOST_PP_TUPLE_ELEM_ ## s ## _ ## i ## t
+#    define BOOST_PP_TUPLE_ELEM_COMMON_I(s, t) BOOST_PP_TUPLE_DETAIL_EXPAND_ ## s ## t
+#    define BOOST_PP_TUPLE_ELEM_FINISH_I(i, t) BOOST_PP_TUPLE_DETAIL_ELEM_ ## i ## t
 # elif BOOST_PP_CONFIG_FLAGS() & BOOST_PP_CONFIG_MSVC()
-#    define BOOST_PP_TUPLE_ELEM_I(s, i, t) BOOST_PP_TUPLE_ELEM_II(BOOST_PP_TUPLE_ELEM_ ## s ## _ ## i t)
-#    define BOOST_PP_TUPLE_ELEM_II(res) res
+#    define BOOST_PP_TUPLE_ELEM_COMMON_I(s, t) BOOST_PP_TUPLE_ELEM_COMMON_II(BOOST_PP_TUPLE_DETAIL_EXPAND_ ## s t)
+#    define BOOST_PP_TUPLE_ELEM_COMMON_II(res) res
+#    define BOOST_PP_TUPLE_ELEM_FINISH_I(i, t) BOOST_PP_TUPLE_ELEM_FINISH_II(BOOST_PP_TUPLE_DETAIL_ELEM_ ## i t)
+#    define BOOST_PP_TUPLE_ELEM_FINISH_II(res) res
 # else
-#    define BOOST_PP_TUPLE_ELEM_I(s, i, t) BOOST_PP_TUPLE_ELEM_ ## s ## _ ## i t
+#    define BOOST_PP_TUPLE_ELEM_COMMON_I(s, t) BOOST_PP_TUPLE_DETAIL_EXPAND_ ## s t
+#    define BOOST_PP_TUPLE_ELEM_FINISH_I(i, t) BOOST_PP_TUPLE_DETAIL_ELEM_ ## i t
 # endif
 #
-# define BOOST_PP_TUPLE_ELEM_1_0(a) a
+#    define BOOST_PP_TUPLE_ELEM_COM(size, i, tuple) \
+         BOOST_PP_TUPLE_ELEM_FIN(i, BOOST_PP_TUPLE_ELEM_COMMON(size, tuple)) \
+         /**/
 #
-# define BOOST_PP_TUPLE_ELEM_2_0(a, b) a
-# define BOOST_PP_TUPLE_ELEM_2_1(a, b) b
+#    define BOOST_PP_TUPLE_ELEM_FIN(i, tuple) \
+         BOOST_PP_TUPLE_ELEM_FINISH(i, tuple) \
+         /**/
 #
-# define BOOST_PP_TUPLE_ELEM_3_0(a, b, c) a
-# define BOOST_PP_TUPLE_ELEM_3_1(a, b, c) b
-# define BOOST_PP_TUPLE_ELEM_3_2(a, b, c) c
+#    define BOOST_PP_TUPLE_DETAIL_EXPAND_1(a) \
+         ( \
+         a, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF \
+         ) \
+         /**/
+#    define BOOST_PP_TUPLE_DETAIL_EXPAND_2(a, b) \
+         ( \
+         a, \
+         b, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF \
+         ) \
+         /**/
+#    define BOOST_PP_TUPLE_DETAIL_EXPAND_3(a, b, c) \
+         ( \
+         a, \
+         b, \
+         c, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF \
+         ) \
+         /**/
+#    define BOOST_PP_TUPLE_DETAIL_EXPAND_4(a, b, c, d) \
+         ( \
+         a, \
+         b, \
+         c, \
+         d, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF \
+         ) \
+         /**/
+#    define BOOST_PP_TUPLE_DETAIL_EXPAND_5(a, b, c, d, e) \
+         ( \
+         a, \
+         b, \
+         c, \
+         d, \
+         e, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF \
+         ) \
+         /**/
+#    define BOOST_PP_TUPLE_DETAIL_EXPAND_6(a, b, c, d, e, f) \
+         ( \
+         a, \
+         b, \
+         c, \
+         d, \
+         e, \
+         f, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF \
+         ) \
+         /**/
+#    define BOOST_PP_TUPLE_DETAIL_EXPAND_7(a, b, c, d, e, f, g) \
+         ( \
+         a, \
+         b, \
+         c, \
+         d, \
+         e, \
+         f, \
+         g, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF \
+         ) \
+         /**/
+#    define BOOST_PP_TUPLE_DETAIL_EXPAND_8(a, b, c, d, e, f, g, h) \
+         ( \
+         a, \
+         b, \
+         c, \
+         d, \
+         e, \
+         f, \
+         g, \
+         h, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF \
+         ) \
+         /**/
+#    define BOOST_PP_TUPLE_DETAIL_EXPAND_9(a, b, c, d, e, f, g, h, i) \
+         ( \
+         a, \
+         b, \
+         c, \
+         d, \
+         e, \
+         f, \
+         g, \
+         h, \
+         i, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF \
+         ) \
+         /**/
+#    define BOOST_PP_TUPLE_DETAIL_EXPAND_10(a, b, c, d, e, f, g, h, i, j) \
+         ( \
+         a, \
+         b, \
+         c, \
+         d, \
+         e, \
+         f, \
+         g, \
+         h, \
+         i, \
+         j, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF \
+         ) \
+         /**/
+#    define BOOST_PP_TUPLE_DETAIL_EXPAND_11(a, b, c, d, e, f, g, h, i, j, k) \
+         ( \
+         a, \
+         b, \
+         c, \
+         d, \
+         e, \
+         f, \
+         g, \
+         h, \
+         i, \
+         j, \
+         k, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF \
+         ) \
+         /**/
+#    define BOOST_PP_TUPLE_DETAIL_EXPAND_12(a, b, c, d, e, f, g, h, i, j, k, l) \
+         ( \
+         a, \
+         b, \
+         c, \
+         d, \
+         e, \
+         f, \
+         g, \
+         h, \
+         i, \
+         j, \
+         k, \
+         l, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF \
+         ) \
+         /**/
+#    define BOOST_PP_TUPLE_DETAIL_EXPAND_13(a, b, c, d, e, f, g, h, i, j, k, l, m) \
+         ( \
+         a, \
+         b, \
+         c, \
+         d, \
+         e, \
+         f, \
+         g, \
+         h, \
+         i, \
+         j, \
+         k, \
+         l, \
+         m, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF \
+         ) \
+         /**/
+#    define BOOST_PP_TUPLE_DETAIL_EXPAND_14(a, b, c, d, e, f, g, h, i, j, k, l, m, n) \
+         ( \
+         a, \
+         b, \
+         c, \
+         d, \
+         e, \
+         f, \
+         g, \
+         h, \
+         i, \
+         j, \
+         k, \
+         l, \
+         m, \
+         n, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF \
+         ) \
+         /**/
+#    define BOOST_PP_TUPLE_DETAIL_EXPAND_15(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o) \
+         ( \
+         a, \
+         b, \
+         c, \
+         d, \
+         e, \
+         f, \
+         g, \
+         h, \
+         i, \
+         j, \
+         k, \
+         l, \
+         m, \
+         n, \
+         o, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF \
+         ) \
+         /**/
+#    define BOOST_PP_TUPLE_DETAIL_EXPAND_16(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p) \
+         ( \
+         a, \
+         b, \
+         c, \
+         d, \
+         e, \
+         f, \
+         g, \
+         h, \
+         i, \
+         j, \
+         k, \
+         l, \
+         m, \
+         n, \
+         o, \
+         p, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF \
+         ) \
+         /**/
+#    define BOOST_PP_TUPLE_DETAIL_EXPAND_17(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q) \
+         ( \
+         a, \
+         b, \
+         c, \
+         d, \
+         e, \
+         f, \
+         g, \
+         h, \
+         i, \
+         j, \
+         k, \
+         l, \
+         m, \
+         n, \
+         o, \
+         p, \
+         q, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF \
+         ) \
+         /**/
+#    define BOOST_PP_TUPLE_DETAIL_EXPAND_18(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r) \
+         ( \
+         a, \
+         b, \
+         c, \
+         d, \
+         e, \
+         f, \
+         g, \
+         h, \
+         i, \
+         j, \
+         k, \
+         l, \
+         m, \
+         n, \
+         o, \
+         p, \
+         q, \
+         r, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF \
+         ) \
+         /**/
+#    define BOOST_PP_TUPLE_DETAIL_EXPAND_19(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s) \
+         ( \
+         a, \
+         b, \
+         c, \
+         d, \
+         e, \
+         f, \
+         g, \
+         h, \
+         i, \
+         j, \
+         k, \
+         l, \
+         m, \
+         n, \
+         o, \
+         p, \
+         q, \
+         r, \
+         s, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF \
+         ) \
+         /**/
+#    define BOOST_PP_TUPLE_DETAIL_EXPAND_20(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t) \
+         ( \
+         a, \
+         b, \
+         c, \
+         d, \
+         e, \
+         f, \
+         g, \
+         h, \
+         i, \
+         j, \
+         k, \
+         l, \
+         m, \
+         n, \
+         o, \
+         p, \
+         q, \
+         r, \
+         s, \
+         t, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF \
+         ) \
+         /**/
+#    define BOOST_PP_TUPLE_DETAIL_EXPAND_21(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u) \
+         ( \
+         a, \
+         b, \
+         c, \
+         d, \
+         e, \
+         f, \
+         g, \
+         h, \
+         i, \
+         j, \
+         k, \
+         l, \
+         m, \
+         n, \
+         o, \
+         p, \
+         q, \
+         r, \
+         s, \
+         t, \
+         u, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF \
+         ) \
+         /**/
+#    define BOOST_PP_TUPLE_DETAIL_EXPAND_22(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v) \
+         ( \
+         a, \
+         b, \
+         c, \
+         d, \
+         e, \
+         f, \
+         g, \
+         h, \
+         i, \
+         j, \
+         k, \
+         l, \
+         m, \
+         n, \
+         o, \
+         p, \
+         q, \
+         r, \
+         s, \
+         t, \
+         u, \
+         v, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF \
+         ) \
+         /**/
+#    define BOOST_PP_TUPLE_DETAIL_EXPAND_23(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w) \
+         ( \
+         a, \
+         b, \
+         c, \
+         d, \
+         e, \
+         f, \
+         g, \
+         h, \
+         i, \
+         j, \
+         k, \
+         l, \
+         m, \
+         n, \
+         o, \
+         p, \
+         q, \
+         r, \
+         s, \
+         t, \
+         u, \
+         v, \
+         w, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF \
+         ) \
+         /**/
+#    define BOOST_PP_TUPLE_DETAIL_EXPAND_24(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x) \
+         ( \
+         a, \
+         b, \
+         c, \
+         d, \
+         e, \
+         f, \
+         g, \
+         h, \
+         i, \
+         j, \
+         k, \
+         l, \
+         m, \
+         n, \
+         o, \
+         p, \
+         q, \
+         r, \
+         s, \
+         t, \
+         u, \
+         v, \
+         w, \
+         x, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF \
+         ) \
+         /**/
+#    define BOOST_PP_TUPLE_DETAIL_EXPAND_25(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y) \
+         ( \
+         a, \
+         b, \
+         c, \
+         d, \
+         e, \
+         f, \
+         g, \
+         h, \
+         i, \
+         j, \
+         k, \
+         l, \
+         m, \
+         n, \
+         o, \
+         p, \
+         q, \
+         r, \
+         s, \
+         t, \
+         u, \
+         v, \
+         w, \
+         x, \
+         y, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF \
+         ) \
+         /**/
+#    define BOOST_PP_TUPLE_DETAIL_EXPAND_26(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z) \
+         ( \
+         a, \
+         b, \
+         c, \
+         d, \
+         e, \
+         f, \
+         g, \
+         h, \
+         i, \
+         j, \
+         k, \
+         l, \
+         m, \
+         n, \
+         o, \
+         p, \
+         q, \
+         r, \
+         s, \
+         t, \
+         u, \
+         v, \
+         w, \
+         x, \
+         y, \
+         z, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF \
+         ) \
+         /**/
+#    define BOOST_PP_TUPLE_DETAIL_EXPAND_27(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa) \
+         ( \
+         a, \
+         b, \
+         c, \
+         d, \
+         e, \
+         f, \
+         g, \
+         h, \
+         i, \
+         j, \
+         k, \
+         l, \
+         m, \
+         n, \
+         o, \
+         p, \
+         q, \
+         r, \
+         s, \
+         t, \
+         u, \
+         v, \
+         w, \
+         x, \
+         y, \
+         z, \
+         aa, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF \
+         ) \
+         /**/
+#    define BOOST_PP_TUPLE_DETAIL_EXPAND_28(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb) \
+         ( \
+         a, \
+         b, \
+         c, \
+         d, \
+         e, \
+         f, \
+         g, \
+         h, \
+         i, \
+         j, \
+         k, \
+         l, \
+         m, \
+         n, \
+         o, \
+         p, \
+         q, \
+         r, \
+         s, \
+         t, \
+         u, \
+         v, \
+         w, \
+         x, \
+         y, \
+         z, \
+         aa, \
+         bb, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF \
+         ) \
+         /**/
+#    define BOOST_PP_TUPLE_DETAIL_EXPAND_29(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc) \
+         ( \
+         a, \
+         b, \
+         c, \
+         d, \
+         e, \
+         f, \
+         g, \
+         h, \
+         i, \
+         j, \
+         k, \
+         l, \
+         m, \
+         n, \
+         o, \
+         p, \
+         q, \
+         r, \
+         s, \
+         t, \
+         u, \
+         v, \
+         w, \
+         x, \
+         y, \
+         z, \
+         aa, \
+         bb, \
+         cc, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF \
+         ) \
+         /**/
+#    define BOOST_PP_TUPLE_DETAIL_EXPAND_30(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd) \
+         ( \
+         a, \
+         b, \
+         c, \
+         d, \
+         e, \
+         f, \
+         g, \
+         h, \
+         i, \
+         j, \
+         k, \
+         l, \
+         m, \
+         n, \
+         o, \
+         p, \
+         q, \
+         r, \
+         s, \
+         t, \
+         u, \
+         v, \
+         w, \
+         x, \
+         y, \
+         z, \
+         aa, \
+         bb, \
+         cc, \
+         dd, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF \
+         ) \
+         /**/
+#    define BOOST_PP_TUPLE_DETAIL_EXPAND_31(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee) \
+         ( \
+         a, \
+         b, \
+         c, \
+         d, \
+         e, \
+         f, \
+         g, \
+         h, \
+         i, \
+         j, \
+         k, \
+         l, \
+         m, \
+         n, \
+         o, \
+         p, \
+         q, \
+         r, \
+         s, \
+         t, \
+         u, \
+         v, \
+         w, \
+         x, \
+         y, \
+         z, \
+         aa, \
+         bb, \
+         cc, \
+         dd, \
+         ee, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF \
+         ) \
+         /**/
+#    define BOOST_PP_TUPLE_DETAIL_EXPAND_32(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff) \
+         ( \
+         a, \
+         b, \
+         c, \
+         d, \
+         e, \
+         f, \
+         g, \
+         h, \
+         i, \
+         j, \
+         k, \
+         l, \
+         m, \
+         n, \
+         o, \
+         p, \
+         q, \
+         r, \
+         s, \
+         t, \
+         u, \
+         v, \
+         w, \
+         x, \
+         y, \
+         z, \
+         aa, \
+         bb, \
+         cc, \
+         dd, \
+         ee, \
+         ff, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF \
+         ) \
+         /**/
+#    define BOOST_PP_TUPLE_DETAIL_EXPAND_33(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg) \
+         ( \
+         a, \
+         b, \
+         c, \
+         d, \
+         e, \
+         f, \
+         g, \
+         h, \
+         i, \
+         j, \
+         k, \
+         l, \
+         m, \
+         n, \
+         o, \
+         p, \
+         q, \
+         r, \
+         s, \
+         t, \
+         u, \
+         v, \
+         w, \
+         x, \
+         y, \
+         z, \
+         aa, \
+         bb, \
+         cc, \
+         dd, \
+         ee, \
+         ff, \
+         gg, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF \
+         ) \
+         /**/
+#    define BOOST_PP_TUPLE_DETAIL_EXPAND_34(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh) \
+         ( \
+         a, \
+         b, \
+         c, \
+         d, \
+         e, \
+         f, \
+         g, \
+         h, \
+         i, \
+         j, \
+         k, \
+         l, \
+         m, \
+         n, \
+         o, \
+         p, \
+         q, \
+         r, \
+         s, \
+         t, \
+         u, \
+         v, \
+         w, \
+         x, \
+         y, \
+         z, \
+         aa, \
+         bb, \
+         cc, \
+         dd, \
+         ee, \
+         ff, \
+         gg, \
+         hh, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF \
+         ) \
+         /**/
+#    define BOOST_PP_TUPLE_DETAIL_EXPAND_35(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii) \
+         ( \
+         a, \
+         b, \
+         c, \
+         d, \
+         e, \
+         f, \
+         g, \
+         h, \
+         i, \
+         j, \
+         k, \
+         l, \
+         m, \
+         n, \
+         o, \
+         p, \
+         q, \
+         r, \
+         s, \
+         t, \
+         u, \
+         v, \
+         w, \
+         x, \
+         y, \
+         z, \
+         aa, \
+         bb, \
+         cc, \
+         dd, \
+         ee, \
+         ff, \
+         gg, \
+         hh, \
+         ii, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF \
+         ) \
+         /**/
+#    define BOOST_PP_TUPLE_DETAIL_EXPAND_36(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj) \
+         ( \
+         a, \
+         b, \
+         c, \
+         d, \
+         e, \
+         f, \
+         g, \
+         h, \
+         i, \
+         j, \
+         k, \
+         l, \
+         m, \
+         n, \
+         o, \
+         p, \
+         q, \
+         r, \
+         s, \
+         t, \
+         u, \
+         v, \
+         w, \
+         x, \
+         y, \
+         z, \
+         aa, \
+         bb, \
+         cc, \
+         dd, \
+         ee, \
+         ff, \
+         gg, \
+         hh, \
+         ii, \
+         jj, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF \
+         ) \
+         /**/
+#    define BOOST_PP_TUPLE_DETAIL_EXPAND_37(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk) \
+         ( \
+         a, \
+         b, \
+         c, \
+         d, \
+         e, \
+         f, \
+         g, \
+         h, \
+         i, \
+         j, \
+         k, \
+         l, \
+         m, \
+         n, \
+         o, \
+         p, \
+         q, \
+         r, \
+         s, \
+         t, \
+         u, \
+         v, \
+         w, \
+         x, \
+         y, \
+         z, \
+         aa, \
+         bb, \
+         cc, \
+         dd, \
+         ee, \
+         ff, \
+         gg, \
+         hh, \
+         ii, \
+         jj, \
+         kk, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF \
+         ) \
+         /**/
+#    define BOOST_PP_TUPLE_DETAIL_EXPAND_38(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll) \
+         ( \
+         a, \
+         b, \
+         c, \
+         d, \
+         e, \
+         f, \
+         g, \
+         h, \
+         i, \
+         j, \
+         k, \
+         l, \
+         m, \
+         n, \
+         o, \
+         p, \
+         q, \
+         r, \
+         s, \
+         t, \
+         u, \
+         v, \
+         w, \
+         x, \
+         y, \
+         z, \
+         aa, \
+         bb, \
+         cc, \
+         dd, \
+         ee, \
+         ff, \
+         gg, \
+         hh, \
+         ii, \
+         jj, \
+         kk, \
+         ll, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF \
+         ) \
+         /**/
+#    define BOOST_PP_TUPLE_DETAIL_EXPAND_39(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm) \
+         ( \
+         a, \
+         b, \
+         c, \
+         d, \
+         e, \
+         f, \
+         g, \
+         h, \
+         i, \
+         j, \
+         k, \
+         l, \
+         m, \
+         n, \
+         o, \
+         p, \
+         q, \
+         r, \
+         s, \
+         t, \
+         u, \
+         v, \
+         w, \
+         x, \
+         y, \
+         z, \
+         aa, \
+         bb, \
+         cc, \
+         dd, \
+         ee, \
+         ff, \
+         gg, \
+         hh, \
+         ii, \
+         jj, \
+         kk, \
+         ll, \
+         mm, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF \
+         ) \
+         /**/
+#    define BOOST_PP_TUPLE_DETAIL_EXPAND_40(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn) \
+         ( \
+         a, \
+         b, \
+         c, \
+         d, \
+         e, \
+         f, \
+         g, \
+         h, \
+         i, \
+         j, \
+         k, \
+         l, \
+         m, \
+         n, \
+         o, \
+         p, \
+         q, \
+         r, \
+         s, \
+         t, \
+         u, \
+         v, \
+         w, \
+         x, \
+         y, \
+         z, \
+         aa, \
+         bb, \
+         cc, \
+         dd, \
+         ee, \
+         ff, \
+         gg, \
+         hh, \
+         ii, \
+         jj, \
+         kk, \
+         ll, \
+         mm, \
+         nn, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF \
+         ) \
+         /**/
+#    define BOOST_PP_TUPLE_DETAIL_EXPAND_41(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo) \
+         ( \
+         a, \
+         b, \
+         c, \
+         d, \
+         e, \
+         f, \
+         g, \
+         h, \
+         i, \
+         j, \
+         k, \
+         l, \
+         m, \
+         n, \
+         o, \
+         p, \
+         q, \
+         r, \
+         s, \
+         t, \
+         u, \
+         v, \
+         w, \
+         x, \
+         y, \
+         z, \
+         aa, \
+         bb, \
+         cc, \
+         dd, \
+         ee, \
+         ff, \
+         gg, \
+         hh, \
+         ii, \
+         jj, \
+         kk, \
+         ll, \
+         mm, \
+         nn, \
+         oo, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF \
+         ) \
+         /**/
+#    define BOOST_PP_TUPLE_DETAIL_EXPAND_42(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp) \
+         ( \
+         a, \
+         b, \
+         c, \
+         d, \
+         e, \
+         f, \
+         g, \
+         h, \
+         i, \
+         j, \
+         k, \
+         l, \
+         m, \
+         n, \
+         o, \
+         p, \
+         q, \
+         r, \
+         s, \
+         t, \
+         u, \
+         v, \
+         w, \
+         x, \
+         y, \
+         z, \
+         aa, \
+         bb, \
+         cc, \
+         dd, \
+         ee, \
+         ff, \
+         gg, \
+         hh, \
+         ii, \
+         jj, \
+         kk, \
+         ll, \
+         mm, \
+         nn, \
+         oo, \
+         pp, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF \
+         ) \
+         /**/
+#    define BOOST_PP_TUPLE_DETAIL_EXPAND_43(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq) \
+         ( \
+         a, \
+         b, \
+         c, \
+         d, \
+         e, \
+         f, \
+         g, \
+         h, \
+         i, \
+         j, \
+         k, \
+         l, \
+         m, \
+         n, \
+         o, \
+         p, \
+         q, \
+         r, \
+         s, \
+         t, \
+         u, \
+         v, \
+         w, \
+         x, \
+         y, \
+         z, \
+         aa, \
+         bb, \
+         cc, \
+         dd, \
+         ee, \
+         ff, \
+         gg, \
+         hh, \
+         ii, \
+         jj, \
+         kk, \
+         ll, \
+         mm, \
+         nn, \
+         oo, \
+         pp, \
+         qq, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF \
+         ) \
+         /**/
+#    define BOOST_PP_TUPLE_DETAIL_EXPAND_44(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr) \
+         ( \
+         a, \
+         b, \
+         c, \
+         d, \
+         e, \
+         f, \
+         g, \
+         h, \
+         i, \
+         j, \
+         k, \
+         l, \
+         m, \
+         n, \
+         o, \
+         p, \
+         q, \
+         r, \
+         s, \
+         t, \
+         u, \
+         v, \
+         w, \
+         x, \
+         y, \
+         z, \
+         aa, \
+         bb, \
+         cc, \
+         dd, \
+         ee, \
+         ff, \
+         gg, \
+         hh, \
+         ii, \
+         jj, \
+         kk, \
+         ll, \
+         mm, \
+         nn, \
+         oo, \
+         pp, \
+         qq, \
+         rr, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF \
+         ) \
+         /**/
+#    define BOOST_PP_TUPLE_DETAIL_EXPAND_45(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss) \
+         ( \
+         a, \
+         b, \
+         c, \
+         d, \
+         e, \
+         f, \
+         g, \
+         h, \
+         i, \
+         j, \
+         k, \
+         l, \
+         m, \
+         n, \
+         o, \
+         p, \
+         q, \
+         r, \
+         s, \
+         t, \
+         u, \
+         v, \
+         w, \
+         x, \
+         y, \
+         z, \
+         aa, \
+         bb, \
+         cc, \
+         dd, \
+         ee, \
+         ff, \
+         gg, \
+         hh, \
+         ii, \
+         jj, \
+         kk, \
+         ll, \
+         mm, \
+         nn, \
+         oo, \
+         pp, \
+         qq, \
+         rr, \
+         ss, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF \
+         ) \
+         /**/
+#    define BOOST_PP_TUPLE_DETAIL_EXPAND_46(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt) \
+         ( \
+         a, \
+         b, \
+         c, \
+         d, \
+         e, \
+         f, \
+         g, \
+         h, \
+         i, \
+         j, \
+         k, \
+         l, \
+         m, \
+         n, \
+         o, \
+         p, \
+         q, \
+         r, \
+         s, \
+         t, \
+         u, \
+         v, \
+         w, \
+         x, \
+         y, \
+         z, \
+         aa, \
+         bb, \
+         cc, \
+         dd, \
+         ee, \
+         ff, \
+         gg, \
+         hh, \
+         ii, \
+         jj, \
+         kk, \
+         ll, \
+         mm, \
+         nn, \
+         oo, \
+         pp, \
+         qq, \
+         rr, \
+         ss, \
+         tt, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF \
+         ) \
+         /**/
+#    define BOOST_PP_TUPLE_DETAIL_EXPAND_47(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu) \
+         ( \
+         a, \
+         b, \
+         c, \
+         d, \
+         e, \
+         f, \
+         g, \
+         h, \
+         i, \
+         j, \
+         k, \
+         l, \
+         m, \
+         n, \
+         o, \
+         p, \
+         q, \
+         r, \
+         s, \
+         t, \
+         u, \
+         v, \
+         w, \
+         x, \
+         y, \
+         z, \
+         aa, \
+         bb, \
+         cc, \
+         dd, \
+         ee, \
+         ff, \
+         gg, \
+         hh, \
+         ii, \
+         jj, \
+         kk, \
+         ll, \
+         mm, \
+         nn, \
+         oo, \
+         pp, \
+         qq, \
+         rr, \
+         ss, \
+         tt, \
+         uu, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF \
+         ) \
+         /**/
+#    define BOOST_PP_TUPLE_DETAIL_EXPAND_48(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv) \
+         ( \
+         a, \
+         b, \
+         c, \
+         d, \
+         e, \
+         f, \
+         g, \
+         h, \
+         i, \
+         j, \
+         k, \
+         l, \
+         m, \
+         n, \
+         o, \
+         p, \
+         q, \
+         r, \
+         s, \
+         t, \
+         u, \
+         v, \
+         w, \
+         x, \
+         y, \
+         z, \
+         aa, \
+         bb, \
+         cc, \
+         dd, \
+         ee, \
+         ff, \
+         gg, \
+         hh, \
+         ii, \
+         jj, \
+         kk, \
+         ll, \
+         mm, \
+         nn, \
+         oo, \
+         pp, \
+         qq, \
+         rr, \
+         ss, \
+         tt, \
+         uu, \
+         vv, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF \
+         ) \
+         /**/
+#    define BOOST_PP_TUPLE_DETAIL_EXPAND_49(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww) \
+         ( \
+         a, \
+         b, \
+         c, \
+         d, \
+         e, \
+         f, \
+         g, \
+         h, \
+         i, \
+         j, \
+         k, \
+         l, \
+         m, \
+         n, \
+         o, \
+         p, \
+         q, \
+         r, \
+         s, \
+         t, \
+         u, \
+         v, \
+         w, \
+         x, \
+         y, \
+         z, \
+         aa, \
+         bb, \
+         cc, \
+         dd, \
+         ee, \
+         ff, \
+         gg, \
+         hh, \
+         ii, \
+         jj, \
+         kk, \
+         ll, \
+         mm, \
+         nn, \
+         oo, \
+         pp, \
+         qq, \
+         rr, \
+         ss, \
+         tt, \
+         uu, \
+         vv, \
+         ww, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF \
+         ) \
+         /**/
+#    define BOOST_PP_TUPLE_DETAIL_EXPAND_50(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx) \
+         ( \
+         a, \
+         b, \
+         c, \
+         d, \
+         e, \
+         f, \
+         g, \
+         h, \
+         i, \
+         j, \
+         k, \
+         l, \
+         m, \
+         n, \
+         o, \
+         p, \
+         q, \
+         r, \
+         s, \
+         t, \
+         u, \
+         v, \
+         w, \
+         x, \
+         y, \
+         z, \
+         aa, \
+         bb, \
+         cc, \
+         dd, \
+         ee, \
+         ff, \
+         gg, \
+         hh, \
+         ii, \
+         jj, \
+         kk, \
+         ll, \
+         mm, \
+         nn, \
+         oo, \
+         pp, \
+         qq, \
+         rr, \
+         ss, \
+         tt, \
+         uu, \
+         vv, \
+         ww, \
+         xx, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF \
+         ) \
+         /**/
+#    define BOOST_PP_TUPLE_DETAIL_EXPAND_51(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy) \
+         ( \
+         a, \
+         b, \
+         c, \
+         d, \
+         e, \
+         f, \
+         g, \
+         h, \
+         i, \
+         j, \
+         k, \
+         l, \
+         m, \
+         n, \
+         o, \
+         p, \
+         q, \
+         r, \
+         s, \
+         t, \
+         u, \
+         v, \
+         w, \
+         x, \
+         y, \
+         z, \
+         aa, \
+         bb, \
+         cc, \
+         dd, \
+         ee, \
+         ff, \
+         gg, \
+         hh, \
+         ii, \
+         jj, \
+         kk, \
+         ll, \
+         mm, \
+         nn, \
+         oo, \
+         pp, \
+         qq, \
+         rr, \
+         ss, \
+         tt, \
+         uu, \
+         vv, \
+         ww, \
+         xx, \
+         yy, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF \
+         ) \
+         /**/
+#    define BOOST_PP_TUPLE_DETAIL_EXPAND_52(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz) \
+         ( \
+         a, \
+         b, \
+         c, \
+         d, \
+         e, \
+         f, \
+         g, \
+         h, \
+         i, \
+         j, \
+         k, \
+         l, \
+         m, \
+         n, \
+         o, \
+         p, \
+         q, \
+         r, \
+         s, \
+         t, \
+         u, \
+         v, \
+         w, \
+         x, \
+         y, \
+         z, \
+         aa, \
+         bb, \
+         cc, \
+         dd, \
+         ee, \
+         ff, \
+         gg, \
+         hh, \
+         ii, \
+         jj, \
+         kk, \
+         ll, \
+         mm, \
+         nn, \
+         oo, \
+         pp, \
+         qq, \
+         rr, \
+         ss, \
+         tt, \
+         uu, \
+         vv, \
+         ww, \
+         xx, \
+         yy, \
+         zz, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF \
+         ) \
+         /**/
+#    define BOOST_PP_TUPLE_DETAIL_EXPAND_53(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, ab) \
+         ( \
+         a, \
+         b, \
+         c, \
+         d, \
+         e, \
+         f, \
+         g, \
+         h, \
+         i, \
+         j, \
+         k, \
+         l, \
+         m, \
+         n, \
+         o, \
+         p, \
+         q, \
+         r, \
+         s, \
+         t, \
+         u, \
+         v, \
+         w, \
+         x, \
+         y, \
+         z, \
+         aa, \
+         bb, \
+         cc, \
+         dd, \
+         ee, \
+         ff, \
+         gg, \
+         hh, \
+         ii, \
+         jj, \
+         kk, \
+         ll, \
+         mm, \
+         nn, \
+         oo, \
+         pp, \
+         qq, \
+         rr, \
+         ss, \
+         tt, \
+         uu, \
+         vv, \
+         ww, \
+         xx, \
+         yy, \
+         zz, \
+         ab, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF \
+         ) \
+         /**/
+#    define BOOST_PP_TUPLE_DETAIL_EXPAND_54(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, ab, cd) \
+         ( \
+         a, \
+         b, \
+         c, \
+         d, \
+         e, \
+         f, \
+         g, \
+         h, \
+         i, \
+         j, \
+         k, \
+         l, \
+         m, \
+         n, \
+         o, \
+         p, \
+         q, \
+         r, \
+         s, \
+         t, \
+         u, \
+         v, \
+         w, \
+         x, \
+         y, \
+         z, \
+         aa, \
+         bb, \
+         cc, \
+         dd, \
+         ee, \
+         ff, \
+         gg, \
+         hh, \
+         ii, \
+         jj, \
+         kk, \
+         ll, \
+         mm, \
+         nn, \
+         oo, \
+         pp, \
+         qq, \
+         rr, \
+         ss, \
+         tt, \
+         uu, \
+         vv, \
+         ww, \
+         xx, \
+         yy, \
+         zz, \
+         ab, \
+         cd, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF \
+         ) \
+         /**/
+#    define BOOST_PP_TUPLE_DETAIL_EXPAND_55(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, ab, cd, ef) \
+         ( \
+         a, \
+         b, \
+         c, \
+         d, \
+         e, \
+         f, \
+         g, \
+         h, \
+         i, \
+         j, \
+         k, \
+         l, \
+         m, \
+         n, \
+         o, \
+         p, \
+         q, \
+         r, \
+         s, \
+         t, \
+         u, \
+         v, \
+         w, \
+         x, \
+         y, \
+         z, \
+         aa, \
+         bb, \
+         cc, \
+         dd, \
+         ee, \
+         ff, \
+         gg, \
+         hh, \
+         ii, \
+         jj, \
+         kk, \
+         ll, \
+         mm, \
+         nn, \
+         oo, \
+         pp, \
+         qq, \
+         rr, \
+         ss, \
+         tt, \
+         uu, \
+         vv, \
+         ww, \
+         xx, \
+         yy, \
+         zz, \
+         ab, \
+         cd, \
+         ef, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF \
+         ) \
+         /**/
+#    define BOOST_PP_TUPLE_DETAIL_EXPAND_56(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, ab, cd, ef, gh) \
+         ( \
+         a, \
+         b, \
+         c, \
+         d, \
+         e, \
+         f, \
+         g, \
+         h, \
+         i, \
+         j, \
+         k, \
+         l, \
+         m, \
+         n, \
+         o, \
+         p, \
+         q, \
+         r, \
+         s, \
+         t, \
+         u, \
+         v, \
+         w, \
+         x, \
+         y, \
+         z, \
+         aa, \
+         bb, \
+         cc, \
+         dd, \
+         ee, \
+         ff, \
+         gg, \
+         hh, \
+         ii, \
+         jj, \
+         kk, \
+         ll, \
+         mm, \
+         nn, \
+         oo, \
+         pp, \
+         qq, \
+         rr, \
+         ss, \
+         tt, \
+         uu, \
+         vv, \
+         ww, \
+         xx, \
+         yy, \
+         zz, \
+         ab, \
+         cd, \
+         ef, \
+         gh, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF \
+         ) \
+         /**/
+#    define BOOST_PP_TUPLE_DETAIL_EXPAND_57(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, ab, cd, ef, gh, ij) \
+         ( \
+         a, \
+         b, \
+         c, \
+         d, \
+         e, \
+         f, \
+         g, \
+         h, \
+         i, \
+         j, \
+         k, \
+         l, \
+         m, \
+         n, \
+         o, \
+         p, \
+         q, \
+         r, \
+         s, \
+         t, \
+         u, \
+         v, \
+         w, \
+         x, \
+         y, \
+         z, \
+         aa, \
+         bb, \
+         cc, \
+         dd, \
+         ee, \
+         ff, \
+         gg, \
+         hh, \
+         ii, \
+         jj, \
+         kk, \
+         ll, \
+         mm, \
+         nn, \
+         oo, \
+         pp, \
+         qq, \
+         rr, \
+         ss, \
+         tt, \
+         uu, \
+         vv, \
+         ww, \
+         xx, \
+         yy, \
+         zz, \
+         ab, \
+         cd, \
+         ef, \
+         gh, \
+         ij, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF \
+         ) \
+         /**/
+#    define BOOST_PP_TUPLE_DETAIL_EXPAND_58(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, ab, cd, ef, gh, ij, kl) \
+         ( \
+         a, \
+         b, \
+         c, \
+         d, \
+         e, \
+         f, \
+         g, \
+         h, \
+         i, \
+         j, \
+         k, \
+         l, \
+         m, \
+         n, \
+         o, \
+         p, \
+         q, \
+         r, \
+         s, \
+         t, \
+         u, \
+         v, \
+         w, \
+         x, \
+         y, \
+         z, \
+         aa, \
+         bb, \
+         cc, \
+         dd, \
+         ee, \
+         ff, \
+         gg, \
+         hh, \
+         ii, \
+         jj, \
+         kk, \
+         ll, \
+         mm, \
+         nn, \
+         oo, \
+         pp, \
+         qq, \
+         rr, \
+         ss, \
+         tt, \
+         uu, \
+         vv, \
+         ww, \
+         xx, \
+         yy, \
+         zz, \
+         ab, \
+         cd, \
+         ef, \
+         gh, \
+         ij, \
+         kl, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF \
+         ) \
+         /**/
+#    define BOOST_PP_TUPLE_DETAIL_EXPAND_59(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, ab, cd, ef, gh, ij, kl, mn) \
+         ( \
+         a, \
+         b, \
+         c, \
+         d, \
+         e, \
+         f, \
+         g, \
+         h, \
+         i, \
+         j, \
+         k, \
+         l, \
+         m, \
+         n, \
+         o, \
+         p, \
+         q, \
+         r, \
+         s, \
+         t, \
+         u, \
+         v, \
+         w, \
+         x, \
+         y, \
+         z, \
+         aa, \
+         bb, \
+         cc, \
+         dd, \
+         ee, \
+         ff, \
+         gg, \
+         hh, \
+         ii, \
+         jj, \
+         kk, \
+         ll, \
+         mm, \
+         nn, \
+         oo, \
+         pp, \
+         qq, \
+         rr, \
+         ss, \
+         tt, \
+         uu, \
+         vv, \
+         ww, \
+         xx, \
+         yy, \
+         zz, \
+         ab, \
+         cd, \
+         ef, \
+         gh, \
+         ij, \
+         kl, \
+         mn, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF \
+         ) \
+         /**/
+#    define BOOST_PP_TUPLE_DETAIL_EXPAND_60(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, ab, cd, ef, gh, ij, kl, mn, op) \
+         ( \
+         a, \
+         b, \
+         c, \
+         d, \
+         e, \
+         f, \
+         g, \
+         h, \
+         i, \
+         j, \
+         k, \
+         l, \
+         m, \
+         n, \
+         o, \
+         p, \
+         q, \
+         r, \
+         s, \
+         t, \
+         u, \
+         v, \
+         w, \
+         x, \
+         y, \
+         z, \
+         aa, \
+         bb, \
+         cc, \
+         dd, \
+         ee, \
+         ff, \
+         gg, \
+         hh, \
+         ii, \
+         jj, \
+         kk, \
+         ll, \
+         mm, \
+         nn, \
+         oo, \
+         pp, \
+         qq, \
+         rr, \
+         ss, \
+         tt, \
+         uu, \
+         vv, \
+         ww, \
+         xx, \
+         yy, \
+         zz, \
+         ab, \
+         cd, \
+         ef, \
+         gh, \
+         ij, \
+         kl, \
+         mn, \
+         op, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF \
+         ) \
+         /**/
+#    define BOOST_PP_TUPLE_DETAIL_EXPAND_61(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, ab, cd, ef, gh, ij, kl, mn, op, qr) \
+         ( \
+         a, \
+         b, \
+         c, \
+         d, \
+         e, \
+         f, \
+         g, \
+         h, \
+         i, \
+         j, \
+         k, \
+         l, \
+         m, \
+         n, \
+         o, \
+         p, \
+         q, \
+         r, \
+         s, \
+         t, \
+         u, \
+         v, \
+         w, \
+         x, \
+         y, \
+         z, \
+         aa, \
+         bb, \
+         cc, \
+         dd, \
+         ee, \
+         ff, \
+         gg, \
+         hh, \
+         ii, \
+         jj, \
+         kk, \
+         ll, \
+         mm, \
+         nn, \
+         oo, \
+         pp, \
+         qq, \
+         rr, \
+         ss, \
+         tt, \
+         uu, \
+         vv, \
+         ww, \
+         xx, \
+         yy, \
+         zz, \
+         ab, \
+         cd, \
+         ef, \
+         gh, \
+         ij, \
+         kl, \
+         mn, \
+         op, \
+         qr, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF \
+         ) \
+         /**/
+#    define BOOST_PP_TUPLE_DETAIL_EXPAND_62(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, ab, cd, ef, gh, ij, kl, mn, op, qr, st) \
+         ( \
+         a, \
+         b, \
+         c, \
+         d, \
+         e, \
+         f, \
+         g, \
+         h, \
+         i, \
+         j, \
+         k, \
+         l, \
+         m, \
+         n, \
+         o, \
+         p, \
+         q, \
+         r, \
+         s, \
+         t, \
+         u, \
+         v, \
+         w, \
+         x, \
+         y, \
+         z, \
+         aa, \
+         bb, \
+         cc, \
+         dd, \
+         ee, \
+         ff, \
+         gg, \
+         hh, \
+         ii, \
+         jj, \
+         kk, \
+         ll, \
+         mm, \
+         nn, \
+         oo, \
+         pp, \
+         qq, \
+         rr, \
+         ss, \
+         tt, \
+         uu, \
+         vv, \
+         ww, \
+         xx, \
+         yy, \
+         zz, \
+         ab, \
+         cd, \
+         ef, \
+         gh, \
+         ij, \
+         kl, \
+         mn, \
+         op, \
+         qr, \
+         st, \
+         BOOST_PP_TUPLE_DETAIL_DEF, \
+         BOOST_PP_TUPLE_DETAIL_DEF \
+         ) \
+         /**/
+#    define BOOST_PP_TUPLE_DETAIL_EXPAND_63(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, ab, cd, ef, gh, ij, kl, mn, op, qr, st, uv) \
+         ( \
+         a, \
+         b, \
+         c, \
+         d, \
+         e, \
+         f, \
+         g, \
+         h, \
+         i, \
+         j, \
+         k, \
+         l, \
+         m, \
+         n, \
+         o, \
+         p, \
+         q, \
+         r, \
+         s, \
+         t, \
+         u, \
+         v, \
+         w, \
+         x, \
+         y, \
+         z, \
+         aa, \
+         bb, \
+         cc, \
+         dd, \
+         ee, \
+         ff, \
+         gg, \
+         hh, \
+         ii, \
+         jj, \
+         kk, \
+         ll, \
+         mm, \
+         nn, \
+         oo, \
+         pp, \
+         qq, \
+         rr, \
+         ss, \
+         tt, \
+         uu, \
+         vv, \
+         ww, \
+         xx, \
+         yy, \
+         zz, \
+         ab, \
+         cd, \
+         ef, \
+         gh, \
+         ij, \
+         kl, \
+         mn, \
+         op, \
+         qr, \
+         st, \
+         uv, \
+         BOOST_PP_TUPLE_DETAIL_DEF \
+         ) \
+         /**/
+#    define BOOST_PP_TUPLE_DETAIL_EXPAND_64
+         /**/
 #
-# define BOOST_PP_TUPLE_ELEM_4_0(a, b, c, d) a
-# define BOOST_PP_TUPLE_ELEM_4_1(a, b, c, d) b
-# define BOOST_PP_TUPLE_ELEM_4_2(a, b, c, d) c
-# define BOOST_PP_TUPLE_ELEM_4_3(a, b, c, d) d
-#
-# define BOOST_PP_TUPLE_ELEM_5_0(a, b, c, d, e) a
-# define BOOST_PP_TUPLE_ELEM_5_1(a, b, c, d, e) b
-# define BOOST_PP_TUPLE_ELEM_5_2(a, b, c, d, e) c
-# define BOOST_PP_TUPLE_ELEM_5_3(a, b, c, d, e) d
-# define BOOST_PP_TUPLE_ELEM_5_4(a, b, c, d, e) e
-#
-# define BOOST_PP_TUPLE_ELEM_6_0(a, b, c, d, e, f) a
-# define BOOST_PP_TUPLE_ELEM_6_1(a, b, c, d, e, f) b
-# define BOOST_PP_TUPLE_ELEM_6_2(a, b, c, d, e, f) c
-# define BOOST_PP_TUPLE_ELEM_6_3(a, b, c, d, e, f) d
-# define BOOST_PP_TUPLE_ELEM_6_4(a, b, c, d, e, f) e
-# define BOOST_PP_TUPLE_ELEM_6_5(a, b, c, d, e, f) f
-#
-# define BOOST_PP_TUPLE_ELEM_7_0(a, b, c, d, e, f, g) a
-# define BOOST_PP_TUPLE_ELEM_7_1(a, b, c, d, e, f, g) b
-# define BOOST_PP_TUPLE_ELEM_7_2(a, b, c, d, e, f, g) c
-# define BOOST_PP_TUPLE_ELEM_7_3(a, b, c, d, e, f, g) d
-# define BOOST_PP_TUPLE_ELEM_7_4(a, b, c, d, e, f, g) e
-# define BOOST_PP_TUPLE_ELEM_7_5(a, b, c, d, e, f, g) f
-# define BOOST_PP_TUPLE_ELEM_7_6(a, b, c, d, e, f, g) g
-#
-# define BOOST_PP_TUPLE_ELEM_8_0(a, b, c, d, e, f, g, h) a
-# define BOOST_PP_TUPLE_ELEM_8_1(a, b, c, d, e, f, g, h) b
-# define BOOST_PP_TUPLE_ELEM_8_2(a, b, c, d, e, f, g, h) c
-# define BOOST_PP_TUPLE_ELEM_8_3(a, b, c, d, e, f, g, h) d
-# define BOOST_PP_TUPLE_ELEM_8_4(a, b, c, d, e, f, g, h) e
-# define BOOST_PP_TUPLE_ELEM_8_5(a, b, c, d, e, f, g, h) f
-# define BOOST_PP_TUPLE_ELEM_8_6(a, b, c, d, e, f, g, h) g
-# define BOOST_PP_TUPLE_ELEM_8_7(a, b, c, d, e, f, g, h) h
-#
-# define BOOST_PP_TUPLE_ELEM_9_0(a, b, c, d, e, f, g, h, i) a
-# define BOOST_PP_TUPLE_ELEM_9_1(a, b, c, d, e, f, g, h, i) b
-# define BOOST_PP_TUPLE_ELEM_9_2(a, b, c, d, e, f, g, h, i) c
-# define BOOST_PP_TUPLE_ELEM_9_3(a, b, c, d, e, f, g, h, i) d
-# define BOOST_PP_TUPLE_ELEM_9_4(a, b, c, d, e, f, g, h, i) e
-# define BOOST_PP_TUPLE_ELEM_9_5(a, b, c, d, e, f, g, h, i) f
-# define BOOST_PP_TUPLE_ELEM_9_6(a, b, c, d, e, f, g, h, i) g
-# define BOOST_PP_TUPLE_ELEM_9_7(a, b, c, d, e, f, g, h, i) h
-# define BOOST_PP_TUPLE_ELEM_9_8(a, b, c, d, e, f, g, h, i) i
-#
-# define BOOST_PP_TUPLE_ELEM_10_0(a, b, c, d, e, f, g, h, i, j) a
-# define BOOST_PP_TUPLE_ELEM_10_1(a, b, c, d, e, f, g, h, i, j) b
-# define BOOST_PP_TUPLE_ELEM_10_2(a, b, c, d, e, f, g, h, i, j) c
-# define BOOST_PP_TUPLE_ELEM_10_3(a, b, c, d, e, f, g, h, i, j) d
-# define BOOST_PP_TUPLE_ELEM_10_4(a, b, c, d, e, f, g, h, i, j) e
-# define BOOST_PP_TUPLE_ELEM_10_5(a, b, c, d, e, f, g, h, i, j) f
-# define BOOST_PP_TUPLE_ELEM_10_6(a, b, c, d, e, f, g, h, i, j) g
-# define BOOST_PP_TUPLE_ELEM_10_7(a, b, c, d, e, f, g, h, i, j) h
-# define BOOST_PP_TUPLE_ELEM_10_8(a, b, c, d, e, f, g, h, i, j) i
-# define BOOST_PP_TUPLE_ELEM_10_9(a, b, c, d, e, f, g, h, i, j) j
-#
-# define BOOST_PP_TUPLE_ELEM_11_0(a, b, c, d, e, f, g, h, i, j, k) a
-# define BOOST_PP_TUPLE_ELEM_11_1(a, b, c, d, e, f, g, h, i, j, k) b
-# define BOOST_PP_TUPLE_ELEM_11_2(a, b, c, d, e, f, g, h, i, j, k) c
-# define BOOST_PP_TUPLE_ELEM_11_3(a, b, c, d, e, f, g, h, i, j, k) d
-# define BOOST_PP_TUPLE_ELEM_11_4(a, b, c, d, e, f, g, h, i, j, k) e
-# define BOOST_PP_TUPLE_ELEM_11_5(a, b, c, d, e, f, g, h, i, j, k) f
-# define BOOST_PP_TUPLE_ELEM_11_6(a, b, c, d, e, f, g, h, i, j, k) g
-# define BOOST_PP_TUPLE_ELEM_11_7(a, b, c, d, e, f, g, h, i, j, k) h
-# define BOOST_PP_TUPLE_ELEM_11_8(a, b, c, d, e, f, g, h, i, j, k) i
-# define BOOST_PP_TUPLE_ELEM_11_9(a, b, c, d, e, f, g, h, i, j, k) j
-# define BOOST_PP_TUPLE_ELEM_11_10(a, b, c, d, e, f, g, h, i, j, k) k
-#
-# define BOOST_PP_TUPLE_ELEM_12_0(a, b, c, d, e, f, g, h, i, j, k, l) a
-# define BOOST_PP_TUPLE_ELEM_12_1(a, b, c, d, e, f, g, h, i, j, k, l) b
-# define BOOST_PP_TUPLE_ELEM_12_2(a, b, c, d, e, f, g, h, i, j, k, l) c
-# define BOOST_PP_TUPLE_ELEM_12_3(a, b, c, d, e, f, g, h, i, j, k, l) d
-# define BOOST_PP_TUPLE_ELEM_12_4(a, b, c, d, e, f, g, h, i, j, k, l) e
-# define BOOST_PP_TUPLE_ELEM_12_5(a, b, c, d, e, f, g, h, i, j, k, l) f
-# define BOOST_PP_TUPLE_ELEM_12_6(a, b, c, d, e, f, g, h, i, j, k, l) g
-# define BOOST_PP_TUPLE_ELEM_12_7(a, b, c, d, e, f, g, h, i, j, k, l) h
-# define BOOST_PP_TUPLE_ELEM_12_8(a, b, c, d, e, f, g, h, i, j, k, l) i
-# define BOOST_PP_TUPLE_ELEM_12_9(a, b, c, d, e, f, g, h, i, j, k, l) j
-# define BOOST_PP_TUPLE_ELEM_12_10(a, b, c, d, e, f, g, h, i, j, k, l) k
-# define BOOST_PP_TUPLE_ELEM_12_11(a, b, c, d, e, f, g, h, i, j, k, l) l
-#
-# define BOOST_PP_TUPLE_ELEM_13_0(a, b, c, d, e, f, g, h, i, j, k, l, m) a
-# define BOOST_PP_TUPLE_ELEM_13_1(a, b, c, d, e, f, g, h, i, j, k, l, m) b
-# define BOOST_PP_TUPLE_ELEM_13_2(a, b, c, d, e, f, g, h, i, j, k, l, m) c
-# define BOOST_PP_TUPLE_ELEM_13_3(a, b, c, d, e, f, g, h, i, j, k, l, m) d
-# define BOOST_PP_TUPLE_ELEM_13_4(a, b, c, d, e, f, g, h, i, j, k, l, m) e
-# define BOOST_PP_TUPLE_ELEM_13_5(a, b, c, d, e, f, g, h, i, j, k, l, m) f
-# define BOOST_PP_TUPLE_ELEM_13_6(a, b, c, d, e, f, g, h, i, j, k, l, m) g
-# define BOOST_PP_TUPLE_ELEM_13_7(a, b, c, d, e, f, g, h, i, j, k, l, m) h
-# define BOOST_PP_TUPLE_ELEM_13_8(a, b, c, d, e, f, g, h, i, j, k, l, m) i
-# define BOOST_PP_TUPLE_ELEM_13_9(a, b, c, d, e, f, g, h, i, j, k, l, m) j
-# define BOOST_PP_TUPLE_ELEM_13_10(a, b, c, d, e, f, g, h, i, j, k, l, m) k
-# define BOOST_PP_TUPLE_ELEM_13_11(a, b, c, d, e, f, g, h, i, j, k, l, m) l
-# define BOOST_PP_TUPLE_ELEM_13_12(a, b, c, d, e, f, g, h, i, j, k, l, m) m
-#
-# define BOOST_PP_TUPLE_ELEM_14_0(a, b, c, d, e, f, g, h, i, j, k, l, m, n) a
-# define BOOST_PP_TUPLE_ELEM_14_1(a, b, c, d, e, f, g, h, i, j, k, l, m, n) b
-# define BOOST_PP_TUPLE_ELEM_14_2(a, b, c, d, e, f, g, h, i, j, k, l, m, n) c
-# define BOOST_PP_TUPLE_ELEM_14_3(a, b, c, d, e, f, g, h, i, j, k, l, m, n) d
-# define BOOST_PP_TUPLE_ELEM_14_4(a, b, c, d, e, f, g, h, i, j, k, l, m, n) e
-# define BOOST_PP_TUPLE_ELEM_14_5(a, b, c, d, e, f, g, h, i, j, k, l, m, n) f
-# define BOOST_PP_TUPLE_ELEM_14_6(a, b, c, d, e, f, g, h, i, j, k, l, m, n) g
-# define BOOST_PP_TUPLE_ELEM_14_7(a, b, c, d, e, f, g, h, i, j, k, l, m, n) h
-# define BOOST_PP_TUPLE_ELEM_14_8(a, b, c, d, e, f, g, h, i, j, k, l, m, n) i
-# define BOOST_PP_TUPLE_ELEM_14_9(a, b, c, d, e, f, g, h, i, j, k, l, m, n) j
-# define BOOST_PP_TUPLE_ELEM_14_10(a, b, c, d, e, f, g, h, i, j, k, l, m, n) k
-# define BOOST_PP_TUPLE_ELEM_14_11(a, b, c, d, e, f, g, h, i, j, k, l, m, n) l
-# define BOOST_PP_TUPLE_ELEM_14_12(a, b, c, d, e, f, g, h, i, j, k, l, m, n) m
-# define BOOST_PP_TUPLE_ELEM_14_13(a, b, c, d, e, f, g, h, i, j, k, l, m, n) n
-#
-# define BOOST_PP_TUPLE_ELEM_15_0(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o) a
-# define BOOST_PP_TUPLE_ELEM_15_1(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o) b
-# define BOOST_PP_TUPLE_ELEM_15_2(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o) c
-# define BOOST_PP_TUPLE_ELEM_15_3(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o) d
-# define BOOST_PP_TUPLE_ELEM_15_4(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o) e
-# define BOOST_PP_TUPLE_ELEM_15_5(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o) f
-# define BOOST_PP_TUPLE_ELEM_15_6(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o) g
-# define BOOST_PP_TUPLE_ELEM_15_7(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o) h
-# define BOOST_PP_TUPLE_ELEM_15_8(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o) i
-# define BOOST_PP_TUPLE_ELEM_15_9(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o) j
-# define BOOST_PP_TUPLE_ELEM_15_10(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o) k
-# define BOOST_PP_TUPLE_ELEM_15_11(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o) l
-# define BOOST_PP_TUPLE_ELEM_15_12(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o) m
-# define BOOST_PP_TUPLE_ELEM_15_13(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o) n
-# define BOOST_PP_TUPLE_ELEM_15_14(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o) o
-#
-# define BOOST_PP_TUPLE_ELEM_16_0(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p) a
-# define BOOST_PP_TUPLE_ELEM_16_1(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p) b
-# define BOOST_PP_TUPLE_ELEM_16_2(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p) c
-# define BOOST_PP_TUPLE_ELEM_16_3(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p) d
-# define BOOST_PP_TUPLE_ELEM_16_4(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p) e
-# define BOOST_PP_TUPLE_ELEM_16_5(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p) f
-# define BOOST_PP_TUPLE_ELEM_16_6(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p) g
-# define BOOST_PP_TUPLE_ELEM_16_7(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p) h
-# define BOOST_PP_TUPLE_ELEM_16_8(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p) i
-# define BOOST_PP_TUPLE_ELEM_16_9(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p) j
-# define BOOST_PP_TUPLE_ELEM_16_10(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p) k
-# define BOOST_PP_TUPLE_ELEM_16_11(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p) l
-# define BOOST_PP_TUPLE_ELEM_16_12(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p) m
-# define BOOST_PP_TUPLE_ELEM_16_13(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p) n
-# define BOOST_PP_TUPLE_ELEM_16_14(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p) o
-# define BOOST_PP_TUPLE_ELEM_16_15(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p) p
-#
-# define BOOST_PP_TUPLE_ELEM_17_0(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q) a
-# define BOOST_PP_TUPLE_ELEM_17_1(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q) b
-# define BOOST_PP_TUPLE_ELEM_17_2(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q) c
-# define BOOST_PP_TUPLE_ELEM_17_3(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q) d
-# define BOOST_PP_TUPLE_ELEM_17_4(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q) e
-# define BOOST_PP_TUPLE_ELEM_17_5(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q) f
-# define BOOST_PP_TUPLE_ELEM_17_6(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q) g
-# define BOOST_PP_TUPLE_ELEM_17_7(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q) h
-# define BOOST_PP_TUPLE_ELEM_17_8(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q) i
-# define BOOST_PP_TUPLE_ELEM_17_9(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q) j
-# define BOOST_PP_TUPLE_ELEM_17_10(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q) k
-# define BOOST_PP_TUPLE_ELEM_17_11(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q) l
-# define BOOST_PP_TUPLE_ELEM_17_12(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q) m
-# define BOOST_PP_TUPLE_ELEM_17_13(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q) n
-# define BOOST_PP_TUPLE_ELEM_17_14(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q) o
-# define BOOST_PP_TUPLE_ELEM_17_15(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q) p
-# define BOOST_PP_TUPLE_ELEM_17_16(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q) q
-#
-# define BOOST_PP_TUPLE_ELEM_18_0(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r) a
-# define BOOST_PP_TUPLE_ELEM_18_1(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r) b
-# define BOOST_PP_TUPLE_ELEM_18_2(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r) c
-# define BOOST_PP_TUPLE_ELEM_18_3(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r) d
-# define BOOST_PP_TUPLE_ELEM_18_4(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r) e
-# define BOOST_PP_TUPLE_ELEM_18_5(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r) f
-# define BOOST_PP_TUPLE_ELEM_18_6(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r) g
-# define BOOST_PP_TUPLE_ELEM_18_7(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r) h
-# define BOOST_PP_TUPLE_ELEM_18_8(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r) i
-# define BOOST_PP_TUPLE_ELEM_18_9(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r) j
-# define BOOST_PP_TUPLE_ELEM_18_10(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r) k
-# define BOOST_PP_TUPLE_ELEM_18_11(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r) l
-# define BOOST_PP_TUPLE_ELEM_18_12(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r) m
-# define BOOST_PP_TUPLE_ELEM_18_13(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r) n
-# define BOOST_PP_TUPLE_ELEM_18_14(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r) o
-# define BOOST_PP_TUPLE_ELEM_18_15(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r) p
-# define BOOST_PP_TUPLE_ELEM_18_16(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r) q
-# define BOOST_PP_TUPLE_ELEM_18_17(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r) r
-#
-# define BOOST_PP_TUPLE_ELEM_19_0(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s) a
-# define BOOST_PP_TUPLE_ELEM_19_1(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s) b
-# define BOOST_PP_TUPLE_ELEM_19_2(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s) c
-# define BOOST_PP_TUPLE_ELEM_19_3(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s) d
-# define BOOST_PP_TUPLE_ELEM_19_4(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s) e
-# define BOOST_PP_TUPLE_ELEM_19_5(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s) f
-# define BOOST_PP_TUPLE_ELEM_19_6(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s) g
-# define BOOST_PP_TUPLE_ELEM_19_7(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s) h
-# define BOOST_PP_TUPLE_ELEM_19_8(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s) i
-# define BOOST_PP_TUPLE_ELEM_19_9(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s) j
-# define BOOST_PP_TUPLE_ELEM_19_10(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s) k
-# define BOOST_PP_TUPLE_ELEM_19_11(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s) l
-# define BOOST_PP_TUPLE_ELEM_19_12(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s) m
-# define BOOST_PP_TUPLE_ELEM_19_13(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s) n
-# define BOOST_PP_TUPLE_ELEM_19_14(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s) o
-# define BOOST_PP_TUPLE_ELEM_19_15(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s) p
-# define BOOST_PP_TUPLE_ELEM_19_16(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s) q
-# define BOOST_PP_TUPLE_ELEM_19_17(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s) r
-# define BOOST_PP_TUPLE_ELEM_19_18(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s) s
-#
-# define BOOST_PP_TUPLE_ELEM_20_0(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t) a
-# define BOOST_PP_TUPLE_ELEM_20_1(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t) b
-# define BOOST_PP_TUPLE_ELEM_20_2(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t) c
-# define BOOST_PP_TUPLE_ELEM_20_3(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t) d
-# define BOOST_PP_TUPLE_ELEM_20_4(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t) e
-# define BOOST_PP_TUPLE_ELEM_20_5(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t) f
-# define BOOST_PP_TUPLE_ELEM_20_6(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t) g
-# define BOOST_PP_TUPLE_ELEM_20_7(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t) h
-# define BOOST_PP_TUPLE_ELEM_20_8(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t) i
-# define BOOST_PP_TUPLE_ELEM_20_9(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t) j
-# define BOOST_PP_TUPLE_ELEM_20_10(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t) k
-# define BOOST_PP_TUPLE_ELEM_20_11(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t) l
-# define BOOST_PP_TUPLE_ELEM_20_12(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t) m
-# define BOOST_PP_TUPLE_ELEM_20_13(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t) n
-# define BOOST_PP_TUPLE_ELEM_20_14(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t) o
-# define BOOST_PP_TUPLE_ELEM_20_15(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t) p
-# define BOOST_PP_TUPLE_ELEM_20_16(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t) q
-# define BOOST_PP_TUPLE_ELEM_20_17(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t) r
-# define BOOST_PP_TUPLE_ELEM_20_18(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t) s
-# define BOOST_PP_TUPLE_ELEM_20_19(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t) t
-#
-# define BOOST_PP_TUPLE_ELEM_21_0(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u) a
-# define BOOST_PP_TUPLE_ELEM_21_1(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u) b
-# define BOOST_PP_TUPLE_ELEM_21_2(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u) c
-# define BOOST_PP_TUPLE_ELEM_21_3(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u) d
-# define BOOST_PP_TUPLE_ELEM_21_4(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u) e
-# define BOOST_PP_TUPLE_ELEM_21_5(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u) f
-# define BOOST_PP_TUPLE_ELEM_21_6(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u) g
-# define BOOST_PP_TUPLE_ELEM_21_7(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u) h
-# define BOOST_PP_TUPLE_ELEM_21_8(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u) i
-# define BOOST_PP_TUPLE_ELEM_21_9(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u) j
-# define BOOST_PP_TUPLE_ELEM_21_10(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u) k
-# define BOOST_PP_TUPLE_ELEM_21_11(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u) l
-# define BOOST_PP_TUPLE_ELEM_21_12(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u) m
-# define BOOST_PP_TUPLE_ELEM_21_13(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u) n
-# define BOOST_PP_TUPLE_ELEM_21_14(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u) o
-# define BOOST_PP_TUPLE_ELEM_21_15(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u) p
-# define BOOST_PP_TUPLE_ELEM_21_16(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u) q
-# define BOOST_PP_TUPLE_ELEM_21_17(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u) r
-# define BOOST_PP_TUPLE_ELEM_21_18(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u) s
-# define BOOST_PP_TUPLE_ELEM_21_19(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u) t
-# define BOOST_PP_TUPLE_ELEM_21_20(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u) u
-#
-# define BOOST_PP_TUPLE_ELEM_22_0(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v) a
-# define BOOST_PP_TUPLE_ELEM_22_1(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v) b
-# define BOOST_PP_TUPLE_ELEM_22_2(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v) c
-# define BOOST_PP_TUPLE_ELEM_22_3(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v) d
-# define BOOST_PP_TUPLE_ELEM_22_4(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v) e
-# define BOOST_PP_TUPLE_ELEM_22_5(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v) f
-# define BOOST_PP_TUPLE_ELEM_22_6(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v) g
-# define BOOST_PP_TUPLE_ELEM_22_7(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v) h
-# define BOOST_PP_TUPLE_ELEM_22_8(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v) i
-# define BOOST_PP_TUPLE_ELEM_22_9(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v) j
-# define BOOST_PP_TUPLE_ELEM_22_10(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v) k
-# define BOOST_PP_TUPLE_ELEM_22_11(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v) l
-# define BOOST_PP_TUPLE_ELEM_22_12(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v) m
-# define BOOST_PP_TUPLE_ELEM_22_13(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v) n
-# define BOOST_PP_TUPLE_ELEM_22_14(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v) o
-# define BOOST_PP_TUPLE_ELEM_22_15(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v) p
-# define BOOST_PP_TUPLE_ELEM_22_16(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v) q
-# define BOOST_PP_TUPLE_ELEM_22_17(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v) r
-# define BOOST_PP_TUPLE_ELEM_22_18(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v) s
-# define BOOST_PP_TUPLE_ELEM_22_19(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v) t
-# define BOOST_PP_TUPLE_ELEM_22_20(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v) u
-# define BOOST_PP_TUPLE_ELEM_22_21(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v) v
-#
-# define BOOST_PP_TUPLE_ELEM_23_0(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w) a
-# define BOOST_PP_TUPLE_ELEM_23_1(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w) b
-# define BOOST_PP_TUPLE_ELEM_23_2(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w) c
-# define BOOST_PP_TUPLE_ELEM_23_3(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w) d
-# define BOOST_PP_TUPLE_ELEM_23_4(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w) e
-# define BOOST_PP_TUPLE_ELEM_23_5(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w) f
-# define BOOST_PP_TUPLE_ELEM_23_6(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w) g
-# define BOOST_PP_TUPLE_ELEM_23_7(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w) h
-# define BOOST_PP_TUPLE_ELEM_23_8(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w) i
-# define BOOST_PP_TUPLE_ELEM_23_9(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w) j
-# define BOOST_PP_TUPLE_ELEM_23_10(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w) k
-# define BOOST_PP_TUPLE_ELEM_23_11(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w) l
-# define BOOST_PP_TUPLE_ELEM_23_12(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w) m
-# define BOOST_PP_TUPLE_ELEM_23_13(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w) n
-# define BOOST_PP_TUPLE_ELEM_23_14(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w) o
-# define BOOST_PP_TUPLE_ELEM_23_15(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w) p
-# define BOOST_PP_TUPLE_ELEM_23_16(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w) q
-# define BOOST_PP_TUPLE_ELEM_23_17(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w) r
-# define BOOST_PP_TUPLE_ELEM_23_18(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w) s
-# define BOOST_PP_TUPLE_ELEM_23_19(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w) t
-# define BOOST_PP_TUPLE_ELEM_23_20(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w) u
-# define BOOST_PP_TUPLE_ELEM_23_21(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w) v
-# define BOOST_PP_TUPLE_ELEM_23_22(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w) w
-#
-# define BOOST_PP_TUPLE_ELEM_24_0(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x) a
-# define BOOST_PP_TUPLE_ELEM_24_1(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x) b
-# define BOOST_PP_TUPLE_ELEM_24_2(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x) c
-# define BOOST_PP_TUPLE_ELEM_24_3(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x) d
-# define BOOST_PP_TUPLE_ELEM_24_4(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x) e
-# define BOOST_PP_TUPLE_ELEM_24_5(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x) f
-# define BOOST_PP_TUPLE_ELEM_24_6(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x) g
-# define BOOST_PP_TUPLE_ELEM_24_7(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x) h
-# define BOOST_PP_TUPLE_ELEM_24_8(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x) i
-# define BOOST_PP_TUPLE_ELEM_24_9(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x) j
-# define BOOST_PP_TUPLE_ELEM_24_10(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x) k
-# define BOOST_PP_TUPLE_ELEM_24_11(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x) l
-# define BOOST_PP_TUPLE_ELEM_24_12(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x) m
-# define BOOST_PP_TUPLE_ELEM_24_13(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x) n
-# define BOOST_PP_TUPLE_ELEM_24_14(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x) o
-# define BOOST_PP_TUPLE_ELEM_24_15(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x) p
-# define BOOST_PP_TUPLE_ELEM_24_16(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x) q
-# define BOOST_PP_TUPLE_ELEM_24_17(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x) r
-# define BOOST_PP_TUPLE_ELEM_24_18(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x) s
-# define BOOST_PP_TUPLE_ELEM_24_19(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x) t
-# define BOOST_PP_TUPLE_ELEM_24_20(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x) u
-# define BOOST_PP_TUPLE_ELEM_24_21(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x) v
-# define BOOST_PP_TUPLE_ELEM_24_22(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x) w
-# define BOOST_PP_TUPLE_ELEM_24_23(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x) x
-#
-# define BOOST_PP_TUPLE_ELEM_25_0(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y) a
-# define BOOST_PP_TUPLE_ELEM_25_1(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y) b
-# define BOOST_PP_TUPLE_ELEM_25_2(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y) c
-# define BOOST_PP_TUPLE_ELEM_25_3(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y) d
-# define BOOST_PP_TUPLE_ELEM_25_4(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y) e
-# define BOOST_PP_TUPLE_ELEM_25_5(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y) f
-# define BOOST_PP_TUPLE_ELEM_25_6(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y) g
-# define BOOST_PP_TUPLE_ELEM_25_7(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y) h
-# define BOOST_PP_TUPLE_ELEM_25_8(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y) i
-# define BOOST_PP_TUPLE_ELEM_25_9(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y) j
-# define BOOST_PP_TUPLE_ELEM_25_10(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y) k
-# define BOOST_PP_TUPLE_ELEM_25_11(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y) l
-# define BOOST_PP_TUPLE_ELEM_25_12(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y) m
-# define BOOST_PP_TUPLE_ELEM_25_13(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y) n
-# define BOOST_PP_TUPLE_ELEM_25_14(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y) o
-# define BOOST_PP_TUPLE_ELEM_25_15(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y) p
-# define BOOST_PP_TUPLE_ELEM_25_16(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y) q
-# define BOOST_PP_TUPLE_ELEM_25_17(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y) r
-# define BOOST_PP_TUPLE_ELEM_25_18(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y) s
-# define BOOST_PP_TUPLE_ELEM_25_19(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y) t
-# define BOOST_PP_TUPLE_ELEM_25_20(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y) u
-# define BOOST_PP_TUPLE_ELEM_25_21(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y) v
-# define BOOST_PP_TUPLE_ELEM_25_22(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y) w
-# define BOOST_PP_TUPLE_ELEM_25_23(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y) x
-# define BOOST_PP_TUPLE_ELEM_25_24(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y) y
+# define BOOST_PP_TUPLE_DETAIL_ELEM_0(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, ab, cd, ef, gh, ij, kl, mn, op, qr, st, uv, wx) a
+# define BOOST_PP_TUPLE_DETAIL_ELEM_1(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, ab, cd, ef, gh, ij, kl, mn, op, qr, st, uv, wx) b
+# define BOOST_PP_TUPLE_DETAIL_ELEM_2(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, ab, cd, ef, gh, ij, kl, mn, op, qr, st, uv, wx) c
+# define BOOST_PP_TUPLE_DETAIL_ELEM_3(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, ab, cd, ef, gh, ij, kl, mn, op, qr, st, uv, wx) d
+# define BOOST_PP_TUPLE_DETAIL_ELEM_4(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, ab, cd, ef, gh, ij, kl, mn, op, qr, st, uv, wx) e
+# define BOOST_PP_TUPLE_DETAIL_ELEM_5(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, ab, cd, ef, gh, ij, kl, mn, op, qr, st, uv, wx) f
+# define BOOST_PP_TUPLE_DETAIL_ELEM_6(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, ab, cd, ef, gh, ij, kl, mn, op, qr, st, uv, wx) g
+# define BOOST_PP_TUPLE_DETAIL_ELEM_7(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, ab, cd, ef, gh, ij, kl, mn, op, qr, st, uv, wx) h
+# define BOOST_PP_TUPLE_DETAIL_ELEM_8(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, ab, cd, ef, gh, ij, kl, mn, op, qr, st, uv, wx) i
+# define BOOST_PP_TUPLE_DETAIL_ELEM_9(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, ab, cd, ef, gh, ij, kl, mn, op, qr, st, uv, wx) j
+# define BOOST_PP_TUPLE_DETAIL_ELEM_10(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, ab, cd, ef, gh, ij, kl, mn, op, qr, st, uv, wx) k
+# define BOOST_PP_TUPLE_DETAIL_ELEM_11(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, ab, cd, ef, gh, ij, kl, mn, op, qr, st, uv, wx) l
+# define BOOST_PP_TUPLE_DETAIL_ELEM_12(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, ab, cd, ef, gh, ij, kl, mn, op, qr, st, uv, wx) m
+# define BOOST_PP_TUPLE_DETAIL_ELEM_13(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, ab, cd, ef, gh, ij, kl, mn, op, qr, st, uv, wx) n
+# define BOOST_PP_TUPLE_DETAIL_ELEM_14(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, ab, cd, ef, gh, ij, kl, mn, op, qr, st, uv, wx) o
+# define BOOST_PP_TUPLE_DETAIL_ELEM_15(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, ab, cd, ef, gh, ij, kl, mn, op, qr, st, uv, wx) p
+# define BOOST_PP_TUPLE_DETAIL_ELEM_16(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, ab, cd, ef, gh, ij, kl, mn, op, qr, st, uv, wx) q
+# define BOOST_PP_TUPLE_DETAIL_ELEM_17(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, ab, cd, ef, gh, ij, kl, mn, op, qr, st, uv, wx) r
+# define BOOST_PP_TUPLE_DETAIL_ELEM_18(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, ab, cd, ef, gh, ij, kl, mn, op, qr, st, uv, wx) s
+# define BOOST_PP_TUPLE_DETAIL_ELEM_19(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, ab, cd, ef, gh, ij, kl, mn, op, qr, st, uv, wx) t
+# define BOOST_PP_TUPLE_DETAIL_ELEM_20(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, ab, cd, ef, gh, ij, kl, mn, op, qr, st, uv, wx) u
+# define BOOST_PP_TUPLE_DETAIL_ELEM_21(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, ab, cd, ef, gh, ij, kl, mn, op, qr, st, uv, wx) v
+# define BOOST_PP_TUPLE_DETAIL_ELEM_22(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, ab, cd, ef, gh, ij, kl, mn, op, qr, st, uv, wx) w
+# define BOOST_PP_TUPLE_DETAIL_ELEM_23(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, ab, cd, ef, gh, ij, kl, mn, op, qr, st, uv, wx) x
+# define BOOST_PP_TUPLE_DETAIL_ELEM_24(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, ab, cd, ef, gh, ij, kl, mn, op, qr, st, uv, wx) y
+# define BOOST_PP_TUPLE_DETAIL_ELEM_25(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, ab, cd, ef, gh, ij, kl, mn, op, qr, st, uv, wx) z
+# define BOOST_PP_TUPLE_DETAIL_ELEM_26(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, ab, cd, ef, gh, ij, kl, mn, op, qr, st, uv, wx) aa
+# define BOOST_PP_TUPLE_DETAIL_ELEM_27(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, ab, cd, ef, gh, ij, kl, mn, op, qr, st, uv, wx) bb
+# define BOOST_PP_TUPLE_DETAIL_ELEM_28(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, ab, cd, ef, gh, ij, kl, mn, op, qr, st, uv, wx) cc
+# define BOOST_PP_TUPLE_DETAIL_ELEM_29(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, ab, cd, ef, gh, ij, kl, mn, op, qr, st, uv, wx) dd
+# define BOOST_PP_TUPLE_DETAIL_ELEM_30(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, ab, cd, ef, gh, ij, kl, mn, op, qr, st, uv, wx) ee
+# define BOOST_PP_TUPLE_DETAIL_ELEM_31(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, ab, cd, ef, gh, ij, kl, mn, op, qr, st, uv, wx) ff
+# define BOOST_PP_TUPLE_DETAIL_ELEM_32(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, ab, cd, ef, gh, ij, kl, mn, op, qr, st, uv, wx) gg
+# define BOOST_PP_TUPLE_DETAIL_ELEM_33(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, ab, cd, ef, gh, ij, kl, mn, op, qr, st, uv, wx) hh
+# define BOOST_PP_TUPLE_DETAIL_ELEM_34(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, ab, cd, ef, gh, ij, kl, mn, op, qr, st, uv, wx) ii
+# define BOOST_PP_TUPLE_DETAIL_ELEM_35(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, ab, cd, ef, gh, ij, kl, mn, op, qr, st, uv, wx) jj
+# define BOOST_PP_TUPLE_DETAIL_ELEM_36(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, ab, cd, ef, gh, ij, kl, mn, op, qr, st, uv, wx) kk
+# define BOOST_PP_TUPLE_DETAIL_ELEM_37(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, ab, cd, ef, gh, ij, kl, mn, op, qr, st, uv, wx) ll
+# define BOOST_PP_TUPLE_DETAIL_ELEM_38(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, ab, cd, ef, gh, ij, kl, mn, op, qr, st, uv, wx) mm
+# define BOOST_PP_TUPLE_DETAIL_ELEM_39(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, ab, cd, ef, gh, ij, kl, mn, op, qr, st, uv, wx) nn
+# define BOOST_PP_TUPLE_DETAIL_ELEM_40(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, ab, cd, ef, gh, ij, kl, mn, op, qr, st, uv, wx) oo
+# define BOOST_PP_TUPLE_DETAIL_ELEM_41(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, ab, cd, ef, gh, ij, kl, mn, op, qr, st, uv, wx) pp
+# define BOOST_PP_TUPLE_DETAIL_ELEM_42(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, ab, cd, ef, gh, ij, kl, mn, op, qr, st, uv, wx) qq
+# define BOOST_PP_TUPLE_DETAIL_ELEM_43(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, ab, cd, ef, gh, ij, kl, mn, op, qr, st, uv, wx) rr
+# define BOOST_PP_TUPLE_DETAIL_ELEM_44(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, ab, cd, ef, gh, ij, kl, mn, op, qr, st, uv, wx) ss
+# define BOOST_PP_TUPLE_DETAIL_ELEM_45(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, ab, cd, ef, gh, ij, kl, mn, op, qr, st, uv, wx) tt
+# define BOOST_PP_TUPLE_DETAIL_ELEM_46(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, ab, cd, ef, gh, ij, kl, mn, op, qr, st, uv, wx) uu
+# define BOOST_PP_TUPLE_DETAIL_ELEM_47(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, ab, cd, ef, gh, ij, kl, mn, op, qr, st, uv, wx) vv
+# define BOOST_PP_TUPLE_DETAIL_ELEM_48(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, ab, cd, ef, gh, ij, kl, mn, op, qr, st, uv, wx) ww
+# define BOOST_PP_TUPLE_DETAIL_ELEM_49(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, ab, cd, ef, gh, ij, kl, mn, op, qr, st, uv, wx) xx
+# define BOOST_PP_TUPLE_DETAIL_ELEM_50(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, ab, cd, ef, gh, ij, kl, mn, op, qr, st, uv, wx) yy
+# define BOOST_PP_TUPLE_DETAIL_ELEM_51(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, ab, cd, ef, gh, ij, kl, mn, op, qr, st, uv, wx) zz
+# define BOOST_PP_TUPLE_DETAIL_ELEM_52(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, ab, cd, ef, gh, ij, kl, mn, op, qr, st, uv, wx) ab
+# define BOOST_PP_TUPLE_DETAIL_ELEM_53(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, ab, cd, ef, gh, ij, kl, mn, op, qr, st, uv, wx) cd
+# define BOOST_PP_TUPLE_DETAIL_ELEM_54(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, ab, cd, ef, gh, ij, kl, mn, op, qr, st, uv, wx) ef
+# define BOOST_PP_TUPLE_DETAIL_ELEM_55(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, ab, cd, ef, gh, ij, kl, mn, op, qr, st, uv, wx) gh
+# define BOOST_PP_TUPLE_DETAIL_ELEM_56(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, ab, cd, ef, gh, ij, kl, mn, op, qr, st, uv, wx) ij
+# define BOOST_PP_TUPLE_DETAIL_ELEM_57(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, ab, cd, ef, gh, ij, kl, mn, op, qr, st, uv, wx) kl
+# define BOOST_PP_TUPLE_DETAIL_ELEM_58(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, ab, cd, ef, gh, ij, kl, mn, op, qr, st, uv, wx) mn
+# define BOOST_PP_TUPLE_DETAIL_ELEM_59(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, ab, cd, ef, gh, ij, kl, mn, op, qr, st, uv, wx) op
+# define BOOST_PP_TUPLE_DETAIL_ELEM_60(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, ab, cd, ef, gh, ij, kl, mn, op, qr, st, uv, wx) qr
+# define BOOST_PP_TUPLE_DETAIL_ELEM_61(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, ab, cd, ef, gh, ij, kl, mn, op, qr, st, uv, wx) st
+# define BOOST_PP_TUPLE_DETAIL_ELEM_62(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, ab, cd, ef, gh, ij, kl, mn, op, qr, st, uv, wx) uv
+# define BOOST_PP_TUPLE_DETAIL_ELEM_63(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, ab, cd, ef, gh, ij, kl, mn, op, qr, st, uv, wx) wx
 #
 # endif
