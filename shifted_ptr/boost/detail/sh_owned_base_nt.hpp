@@ -47,6 +47,8 @@
 #include <boost/detail/intrusive_stack.hpp>
 #include <boost/detail/sh_utility.h>
 
+#include <set>
+
 
 namespace boost
 {
@@ -68,7 +70,43 @@ class owned_base;
 	Pool where all pointee objects are allocated and tracks memory blocks for later enlisting & marking the @c set the pointee object belongs to.
 */
 
-struct pool : boost::pool<>
+struct malloc_pool
+{
+	std::set<void *> alloc;
+	
+	void * ordered_malloc(size_t n)
+	{
+		void * p = malloc(n);
+		
+		alloc.insert(p);
+		
+		return p;
+	}
+
+	void ordered_free(void * p, size_t n)
+	{
+		std::set<void *>::iterator i = alloc.find(p);
+		
+		if (i == alloc.end())
+			abort();
+		else
+			alloc.erase(i);
+		
+		free(p);
+	}
+	
+	bool is_from(void * p)
+	{
+		static char * upper = (char *) sbrk(0);
+		static char * lower = upper - 0x100000;
+
+		return lower <= p && p < upper;
+	}
+};
+
+
+////struct pool : boost::pool<>
+struct pool : malloc_pool
 {
 	typedef std::list< numeric::interval<long>, fast_pool_allocator< numeric::interval<long> > > pool_lii;	/**< Syntax helper. */
 
@@ -83,7 +121,7 @@ struct pool : boost::pool<>
 		Initialization of a pool instance.
 	*/
 	
-    pool() : boost::pool<>(1)
+    pool() ////: boost::pool<>(1)
     {
         plii_.reset(new pool_lii());
     }
@@ -143,7 +181,7 @@ struct pool : boost::pool<>
                 break;
 
         plii_->erase(i.base(), plii_->end());
-        free(p, s);
+        ordered_free(p, s);
     }
 };
 

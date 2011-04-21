@@ -82,14 +82,14 @@ struct create_type {
 };
 
 BOOST_AUTO_TEST_CASE(test_shifted_ptr) {
-
+	
     count = 0;
     {
         shifted_ptr<vector> v = new shifted<vector>();
         v->elements.push_back(v);
     }
     BOOST_CHECK_EQUAL(count, 0);
-/*
+	
     count = 0;
     {
         list l;
@@ -101,7 +101,7 @@ BOOST_AUTO_TEST_CASE(test_shifted_ptr) {
         }
     }
     BOOST_CHECK_EQUAL(count, 0);
-*/
+
     count = 0;
     {
         shifted_ptr<int> test = new shifted<int>(5);

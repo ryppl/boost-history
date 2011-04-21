@@ -412,18 +412,16 @@ template <typename T>
 			// iterate memory blocks
             for (intrusive_list::iterator<owned_base, & owned_base::init_tag_> i = p->inits_.begin(); i != p->inits_.end(); ++ i)
             {
+                i->init_ = true;
                 ps_->elements()->push_back(& i->set_tag_);
 
 				// iterate shifted_ptr elements
                 for (intrusive_stack::iterator<shifted_ptr, & shifted_ptr::pn_> j = i->ptrs_.begin(), k; k = j, j != i->ptrs_.end(); j = k)
 				{
 					++ k;
-					
                     j->ps_ = ps_;
 				}
             }
-            
-            p->init_ = true;
         }
     };
 
