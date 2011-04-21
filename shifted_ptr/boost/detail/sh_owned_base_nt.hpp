@@ -121,7 +121,8 @@ struct pool : malloc_pool
 		Initialization of a pool instance.
 	*/
 	
-    pool() ////: boost::pool<>(1)
+////    pool() : boost::pool<>(1)
+    pool()
     {
         plii_.reset(new pool_lii());
     }
