@@ -105,7 +105,7 @@ struct malloc_pool
 };
 
 
-////struct pool : boost::pool<>
+//struct pool : boost::pool<>
 struct pool : malloc_pool
 {
 	typedef std::list< numeric::interval<long>, fast_pool_allocator< numeric::interval<long> > > pool_lii;	/**< Syntax helper. */
@@ -121,7 +121,7 @@ struct pool : malloc_pool
 		Initialization of a pool instance.
 	*/
 	
-////    pool() : boost::pool<>(1)
+//    pool() : boost::pool<>(1)
     pool()
     {
         plii_.reset(new pool_lii());

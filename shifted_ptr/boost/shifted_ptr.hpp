@@ -359,6 +359,13 @@ template <typename T>
 
         ~shifted_ptr()
         {
+			std::set<void *>::iterator i = owned_base::pool_.alloc.find(base::po_);
+		
+			if (i == owned_base::pool_.alloc.end())
+				abort();
+			else
+				owned_base::pool_.alloc.erase(i);
+
             release(true);
         }
 
