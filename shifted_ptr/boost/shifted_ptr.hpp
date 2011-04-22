@@ -69,6 +69,7 @@ class set
     static fast_pool_allocator<set> pool_;			/**< Pool where all @c set s are allocated. */
 
 public:
+	bool destroy_;									/**< Destruction sequence initiated. */
     intrusive_list::node tag_;						/**< Tag used to enlist to @c set::includes_ . */
 
 
@@ -76,7 +77,7 @@ public:
 		Initialization of a single @c set .
 	*/
 	
-    set() : count_(1), redir_(this)
+    set() : count_(1), redir_(this), destroy_(false)
     {
         includes_.push_back(& tag_);
     }
@@ -94,12 +95,11 @@ public:
 
         if (-- p->count_ == 0)
         {
+			p->destroy_ = true;
             for (intrusive_list::iterator<owned_base, & owned_base::set_tag_> i; i = p->elements_.begin(), i != p->elements_.end(); )
-            {
-                i->add_ref_copy();
                 delete &* i;
-            }
-                
+			p->destroy_ = false;
+            
             for (intrusive_list::iterator<set, & set::tag_> i = p->includes_.begin(), j; j = i, i != p->includes_.end(); i = j)
 			{ 
 				++ j;
@@ -359,14 +359,10 @@ template <typename T>
 
         ~shifted_ptr()
         {
-			std::set<void *>::iterator i = owned_base::pool_.alloc.find(base::po_);
-		
-			if (i == owned_base::pool_.alloc.end())
-				abort();
-			else
-				owned_base::pool_.alloc.erase(i);
-
             release(true);
+			
+			if (ps_->destroy_)
+				base::po_ = 0;
         }
 
     private:
