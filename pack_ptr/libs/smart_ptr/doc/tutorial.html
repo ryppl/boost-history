@@ -6,7 +6,7 @@
   <meta http-equiv="Content-Type" content="text/html; charpack=us-ascii">
   <link rel="stylesheet" type="text/css" href="http://www.boost.org/doc/libs/1_46_1/boost.css">
 
-  <title>Pack Pointer - Boost 1.46.1</title>
+  <title>Pack Pointer - Tutorial - Boost 1.46.1</title>
 <link rel="icon" href="http://www.boost.org/favicon.ico" type="image/ico"><link rel="stylesheet" type="text/css" href="http://www.boost.org/style-v2/section-basic.css"></head>
 
 <body link="#0000FF" vlink="#800080">  <div id="boost-common-heading-doc">
@@ -56,22 +56,46 @@
   
         <h1 align="center">Pack Pointer</h1>
 
-        <h2 align="center">Index</h2>
-      <h2>Contents</h2>
+        <h2 align="center">Tutorial</h2>
+      <dl class="index">
+    <dt><a href="#basic">Basic</a></dt>
 
-  <dl class="index">
-    <dt><a href="overview.html">Overview</a></dt>
-
-    <dt><a href="PackPointer.ppt">Presentation</a></dt>
-
-    <dt><a href="html/index.html">Reference</a></dt>
-
-    <dt><a href="rationale.html">Rationale</a></dt>
-
-    <dt><a href="tutorial.html">Tutorial</a></dt>
-
-    <dt><a href="acknowledgments.html">Acknowledgments</a></dt>
+    <dt><a href="#advanced">Advanced</a></dt>
   </dl>
+
+  <h2><a name="basic" id="basic"></a>Basic</h2>
+  
+  <p>Pack Pointer was designed to be easy to use and to be versatile in terms of object variants it can refer to.  Its only requirement is limited to the usage 
+  of a special type needed to instanciate objects referred to.  For example:</p>
+
+  <pre>  
+  pack_ptr&#60;int&#62; p = new pack&#60;int&#62;(11);
+  </pre>
+
+  <p>Will instanciate a special object <i>pack&#60;int&#62;</i> having an integer as one of its member.  The pointer to the object is then passed to the 
+  <i>pack_ptr&#60;int&#62;</i> that will manage its existence and later destroy and deallocate it when it is found to be no longer referenced.<p>
+
+  <p>Variants of the object type can also be used.  In order to instanciate an array of integer for example, all that will be needed is to change the 
+  type to the following:<p>
+
+  <pre>  
+  pack_ptr&#60;int[10]&#62; p = new pack&#60;int[10]&#62;();
+  </pre>
+
+  See the following <a href="../example/pack_ptr_test1.cpp">example</a> for different cases of its usage.
+  
+  <h2><a name="advanced" id="advanced"></a>Advanced</h2>
+
+  <p>When STL containers are made out of objects having members of type <i>pack_ptr&#60;T&#62;</i> then it will be desirable to have all of the allocated nodes 
+  and its members part of the same <i>pack</i>.  This way all of the newly allocated <i>pack_ptr&#60;T&#62;</i> will be referring to the same <i>pack</i> header.
+  In order to do so, we must tell the container in question a new allocator that will be used to instanciate the nodes.  This allocator is called: 
+  <i>pack_allocator&#60;T&#62;</i>.  For example:</p>
+
+  <pre>  
+  list&#60; pack_ptr&#60;int&#62;, pack_allocator&#60; pack_ptr&#60;int&#62; &#62; &#62; c;
+  c.push_back(new pack&#60;int&#62;(11));
+  </pre>
+
   <hr>
 
   <p><a href="http://validator.w3.org/check?uri=referer"><img border="0" src=
@@ -79,7 +103,7 @@
   height="31" width="88"></a></p>
 
   <p>Revised 
-  <!--webbot bot="Timestamp" s-type="EDITED" s-format="%d %B, %Y" startspan -->08
+  <!--webbot bot="Timestamp" s-type="EDITED" s-format="%d %B, %Y" startspan -->22
   April, 2011<!--webbot bot="Timestamp" endspan i-checksum="38514" --></p>
 
   <p><i>Copyright &copy; 2011 <a href=
