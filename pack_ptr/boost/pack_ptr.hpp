@@ -375,7 +375,6 @@ template <typename T>
         void release(bool d)
         {
             if (! owned_base::pool_.is_from(this))
-            {
                 if (ps_->release())
                 {
                     base::po_ = 0;
@@ -392,7 +391,6 @@ template <typename T>
 					if (! d)
                     	ps_ = new pack_header();
                 }
-            }
             else
                 base::reset();
         }
