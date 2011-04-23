@@ -359,10 +359,10 @@ template <typename T>
 
         ~pack_ptr()
         {
-            release(true);
-			
 			if (ps_->destroy_)
 				base::po_ = 0;
+			else
+				release(true);
         }
 
     private:
@@ -396,8 +396,10 @@ template <typename T>
                         ps_ = new pack_header();
                 }
             }
-            else if (! d)
+            else
+			{
                 base::reset();
+			}
         }
 
 		
