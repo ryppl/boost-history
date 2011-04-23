@@ -394,7 +394,10 @@ template <typename T>
                 {
                     base::reset();
 
-                    ps_ = new pack_header();
+					if (! d)
+					{
+                    	ps_ = new pack_header();
+                    }
                 }
             }
             else
