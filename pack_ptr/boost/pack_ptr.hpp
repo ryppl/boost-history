@@ -386,14 +386,15 @@ template <typename T>
                         new (ps_) pack_header();
 					}
                     else
+                    {
                         delete ps_;
+                    }
                 }
                 else 
                 {
                     base::reset();
 
-                    if (! d)
-                        ps_ = new pack_header();
+                    ps_ = new pack_header();
                 }
             }
             else
