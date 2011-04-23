@@ -1,0 +1,16 @@
+[section:convert_intro Introduction]
+
+/Boost.Convert/ builds on the /boost::lexical_cast/ (see __ref_1__) experience and still offers simple, minimal interface, familiar conversion behavior and more:
+
+* throwing and non-throwing behavior when conversion fails;
+* support for the default\/fallback value to be returned when conversion fails;
+* two types of the conversion-failure check - basic\/simple and better\/safe;
+* formatting support based on the standard /std::streams/ and /std::stream/-based manipulators (like /std::hex/, /std::scientific/, etc.);
+* support for different locales;
+* support for /boost::range/-compliant char and /wchar_t/-based string containers (std::string, std::wstring, char const\*, wchar_t const\*, char array[], etc.);
+* no DefaultConstructibility requirement for the Target/Destination type;
+* extendibility and additional room to grow.
+
+It needs to be mentioned though that /Boost.Convert/ is not an attempt to provide a full-blown parser/generator. For serious parsing tasks one might like to consider /Boost.Spirit/.
+
+[endsect]
