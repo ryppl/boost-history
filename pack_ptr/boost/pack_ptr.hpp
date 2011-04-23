@@ -381,29 +381,20 @@ template <typename T>
                     base::po_ = 0;
 
                     if (! d)
-					{
-						ps_->~pack_header();
                         new (ps_) pack_header();
-					}
                     else
-                    {
                         delete ps_;
-                    }
                 }
                 else 
                 {
                     base::reset();
 
 					if (! d)
-					{
                     	ps_ = new pack_header();
-                    }
                 }
             }
             else
-			{
                 base::reset();
-			}
         }
 
 		
