@@ -382,7 +382,7 @@ template <typename T>
 
                     if (! d)
 					{
-						ps_->pack_header::~pack_header();
+						ps_->~pack_header();
                         new (ps_) pack_header();
 					}
                     else
