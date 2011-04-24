@@ -87,7 +87,7 @@
   <h2><a name="advanced" id="advanced"></a>Advanced</h2>
 
   <p>When STL containers are made out of objects having members of type <i>mm_ptr&#60;T&#62;</i> then it will be desirable to have all of the allocated nodes 
-  and its members part of the same <i>mm</i>.  This way all of the newly allocated <i>mm_ptr&#60;T&#62;</i> will be referring to the same <i>mm</i> header.
+  and its members part of the same <i>set</i>.  This way all of the newly allocated <i>mm_ptr&#60;T&#62;</i> will be referring to the same <i>set</i> header.
   In order to do so, we must tell the container in question a new allocator that will be used to instanciate the nodes.  This allocator is called: 
   <i>mm_allocator&#60;T&#62;</i>.  For example:</p>
 
