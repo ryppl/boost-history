@@ -22,43 +22,58 @@ struct A
 	
 	A(int i = 0) : i(i) 
 	{
-		std::cout << __FUNCTION__ << ": " << i << std::endl;
+		cout << __FUNCTION__ << ": " << i << endl;
 	}
 	
 	~A()
 	{
-		std::cout << __FUNCTION__ << ": " << i << std::endl;
+		cout << __FUNCTION__ << ": " << i << endl;
 	}
 };
 
 
 int main()
 {
-	mm_ptr<A> p = new mm<A>(7);
-	mm_ptr<A> q = new mm<A>(8);
-	mm_ptr<A> r = new mm<A>(9);
+	cout << "Cyclicism:" << endl;
+	{
+		mm_ptr<A> p = new mm<A>(7);
+		mm_ptr<A> q = new mm<A>(8);
+		mm_ptr<A> r = new mm<A>(9);
 
-	mm_ptr<void> t = new mm<A>(10);
-	mm_ptr<int const volatile> v = new mm<int const volatile>(11);
+		mm_ptr<void> t = new mm<A>(10);
+		mm_ptr<int const volatile> v = new mm<int const volatile>(11);
 
-	p->p = p;
-	q = r;
-	v = new mm<int const volatile>(12);
+		p->p = p;
+		q = r;
+		v = new mm<int const volatile>(12);
 
-	cout << "p->i = " << p->i << endl;
-	cout << "q->i = " << q->i << endl;
-	cout << "r->i = " << r->i << endl;
-	cout << "* v = " << * v << endl;
+		cout << "p->i = " << p->i << endl;
+		cout << "q->i = " << q->i << endl;
+		cout << "r->i = " << r->i << endl;
+		cout << "* v = " << * v << endl;
+	}
+	cout << endl;
 
 	// The following don't work with MSVC:
 #if ! defined(_MSC_VER)
-	mm_ptr<A[5]> s = new mm<A[5]>();
-	mm_ptr<char[9]> u = new mm<char[9]>();
+	cout << "Array access:" << endl;
+	{
+		mm_ptr<A[5]> s = new mm<A[5]>();
+		mm_ptr<char[9]> u = new mm<char[9]>();
 
-	u[4] = 'Z';
+		u[4] = 'Z';
 
-	cout << "u[4] = " << u[4] << endl;
+		cout << "u[4] = " << u[4] << endl;
+	}
+	cout << endl;
 #endif
 
-	cout << "Done." << endl;
+	cout << "Order of destruction:" << endl;
+	{
+		mm_ptr<A> v = new mm<A>(0);
+		v->p = new mm<A>(1);
+		v->p->p = new mm<A>(2);
+		v->p->p->p = new mm<A>(3);
+	}
+	cout << endl;
 }
