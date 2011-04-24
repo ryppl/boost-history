@@ -105,6 +105,11 @@ public:
 
 	bool empty() const 								{ return impl.next == & impl; }
 	
+	void push_front(pointer i)
+	{
+		begin()->insert(i);
+	}
+	
 	void push_back(pointer i)
 	{
 		end()->insert(i);

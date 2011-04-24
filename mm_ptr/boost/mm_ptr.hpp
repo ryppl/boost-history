@@ -411,7 +411,7 @@ template <typename T>
             for (intrusive_list::iterator<owned_base, & owned_base::init_tag_> i = p->inits_.begin(); i != p->inits_.end(); ++ i)
             {
                 i->init_ = true;
-                ps_->elements()->push_back(& i->mm_tag_);
+                ps_->elements()->push_front(& i->mm_tag_);
 
 				// iterate mm_ptr elements
                 for (intrusive_stack::iterator<mm_ptr, & mm_ptr::pn_> j = i->ptrs_.begin(), k; k = j, j != i->ptrs_.end(); j = k)
