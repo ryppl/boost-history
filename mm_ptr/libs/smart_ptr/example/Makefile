@@ -1,8 +1,8 @@
 CXX             := g++
 CXXFLAGS        := -ggdb3
-INCPATH         := -I../../.. -I../../../../../include
+INCPATH         := -I../../..
 LINK            := g++
-LFLAGS          := -L../../../../../lib
+LFLAGS          := 
 RM              := rm
 HEADERS         := $(wildcard *.h)
 SOURCES         := $(wildcard *.cpp)
