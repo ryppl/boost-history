@@ -288,12 +288,12 @@ template <typename T, size_t N>
 
 		T & operator [] (std::size_t n)
 		{
-			return ** (po_ + n);
+			return * (* po_ + n);
 		}
 
 		T const & operator [] (std::size_t n) const
 		{
-			return ** (po_ + n);
+			return * (* po_ + n);
 		}
 	};
 #endif
