@@ -226,8 +226,7 @@
         cannot be passed as template parameter (for example to the <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">for_each</span></code>
         algorithm), this is instead possible on C++03 and later standards. To work
         around this limitation, this library investigated the following two tricks
-        (both these approaches can be extended to support eventual function default
-        parameters):
+        (both tricks can be extended to support eventual function default parameters):
       </p>
 <div class="orderedlist"><ol class="orderedlist" type="1">
 <li class="listitem">
@@ -316,13 +315,14 @@
 <p>
         The casting functor trick had slightly better run-time performances than
         the virtual functor trick so the current implementation of this library uses
-        the casting functor trick. However, both methods do not allow for compiler
+        the casting functor trick. However, both tricks do not allow for compiler
         optimizations that inline the local function calls because they rely on one
-        indirect function call (via either a function pointer or a virtual function)
-        that can only be resolved at run-time. Therefore, on C++03 compilers this
-        library generates code that passes the local class functor as template parameter
-        directly without using neither one of these two tricks in order to take full
-        advantage of compiler optimizations that inline the local function calls.
+        indirect function call (via either a function pointer or a virtual function
+        respectively) that can only be resolved at run-time. Therefore, on C++03
+        compilers this library generates code that passes the local class functor
+        as template parameter directly without using neither one of these two tricks
+        in order to take full advantage of compiler optimizations that inline the
+        local function calls.
       </p>
 </div>
 <div class="section">

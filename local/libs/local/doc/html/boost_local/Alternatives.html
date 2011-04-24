@@ -587,16 +587,17 @@
         the different alternatives.
       </p>
 <p>
-        This library has compile-times and generates binary size similar to the ones
-        of the other approaches. This library run-times on ISO C++ compliant compilers
-        "<a href="http://www.boost.org/doc/libs/release/libs/local/doc/html/index.html" target="_top">Boost.Local</a>
-        Compliant" were measured to be similar to "Local Functor"
+        This library has compile-times and generates binary sizes similar to the
+        ones of the other approaches. This library run-times on ISO C++ compliant
+        compilers (see "<a href="http://www.boost.org/doc/libs/release/libs/local/doc/html/index.html" target="_top">Boost.Local</a>
+        Compliant" below) were measured to be similar to "Local Functor"
         but larger than other approaches like "Global Functor", "<a href="http://www.boost.org/doc/libs/release/doc/html/lambda.html" target="_top">Boost.Lambda</a>",
         or "<a href="http://www.boost.org/doc/libs/release/libs/spirit/phoenix/index.html" target="_top">Boost.Phoenix</a>"
         when compiler optimization is enabled. However, on C++03 compilers (e.g.,
-        MSVC) this library generates optimized code "<a href="http://www.boost.org/doc/libs/release/libs/local/doc/html/index.html" target="_top">Boost.Local</a>"
-        that runs as fast as the fastest of the other approaches. Finally, this library
-        run-times are always among the fastest when no compiler optimization is used.
+        MSVC) this library generates optimized code (see "<a href="http://www.boost.org/doc/libs/release/libs/local/doc/html/index.html" target="_top">Boost.Local</a>"
+        below) that runs as fast as the fastest of the other approaches. Finally,
+        this library run-times are always among the fastest when no compiler optimization
+        is used.
       </p>
 <div class="note"><table border="0" summary="Note">
 <tr>
@@ -614,18 +615,19 @@
           allows the compiler to inline all the function calls.
         </p>
 <p>
-          This performance hit on non C++03 compilers might or not be a problem depending
-          on the performance requirements of your application. For example, your
-          application might already be using a number of indirect function calls
-          (function pointers, virtual functions, etc) because of which the overload
-          added by using the one extra function pointer required by the local function
-          might not be noticeable within your overall program run-time.
+          This run-time performance cost on non C++03 compilers might or not be a
+          problem depending on the performance requirements of your application.
+          For example, your application might already be using a number of indirect
+          function calls (function pointers, virtual functions, etc) for which the
+          overhead added by using the one extra function pointer required by the
+          local function call might not be noticeable within your overall program
+          run-time.
         </p>
 </td></tr>
 </table></div>
 <p>
         Finally, note that a very simple local function body with only one instruction
-        was used for this profiling (see files <a href="../../../example/profile_boost_local.cpp" target="_top"><code class="literal">profile_boost_local.cpp</code></a>,
+        was used for the profiling presented here (see files <a href="../../../example/profile_boost_local.cpp" target="_top"><code class="literal">profile_boost_local.cpp</code></a>,
         <a href="../../../example/profile_boost_local_for_loop.cpp" target="_top"><code class="literal">profile_boost_local_for_loop.cpp</code></a>,
         <a href="../../../example/profile_boost_local_optimized.cpp" target="_top"><code class="literal">profile_boost_local_optimized.cpp</code></a>,
         <a href="../../../example/profile_local_functor.cpp" target="_top"><code class="literal">profile_local_functor.cpp</code></a>,
@@ -633,9 +635,9 @@
         <a href="../../../example/profile_0x_lambda.cpp" target="_top"><code class="literal">profile_0x_lambda.cpp</code></a>,
         <a href="../../../example/profile_boost_lambda.cpp" target="_top"><code class="literal">profile_boost_lambda.cpp</code></a>,
         and <a href="../../../example/profile_boost_phoenix.cpp" target="_top"><code class="literal">profile_boost_phoenix.cpp</code></a>).
-        It has not been studied how this library and the other approaches will perform
-        with respect to each other when a more complex set of instructions is programmed
-        by the local function body.
+        The authors have not studied how this library and the other approaches will
+        perform with respect to each other when a more complex set of instructions
+        is programmed for the local function body.
       </p>
 <div class="informaltable"><table class="table">
 <colgroup>
