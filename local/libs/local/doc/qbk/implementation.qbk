@@ -20,6 +20,26 @@ The expansion of the local function macros of the `factorial` example presented 
 
 [endsect]
 
+[section Local Classes as Template Parameters]
+
+This library uses a local class to implement the local functor object.
+However, in ISO standard C++ a local classes, and therefore the local functor object, cannot be passed as template parameter (for example to the `std::for_each` algorithm), this is instead possible on C++03 and later standards.
+To work around this limitation, this library investigated the following two tricks (both tricks can be extended to support eventual function default parameters):
+
+# The /casting functor trick/ uses a non-local functor class that calls a static member function of the local class via a function pointer.
+The static member function then calls the correct local function body after type casting the object.
+
+# The /virtual functor trick/ uses a non-local virtual base class for the local functor class.
+The correct implementation of the `operator()` is called via polymorphism.
+
+[tparam_trick_cpp]
+
+The casting functor trick had slightly better run-time performances than the virtual functor trick so the current implementation of this library uses the casting functor trick.
+However, both tricks do not allow for compiler optimizations that inline the local function calls because they rely on one indirect function call (via either a function pointer or a virtual function respectively) that can only be resolved at run-time.
+Therefore, on C++03 compilers this library generates code that passes the local class functor as template parameter directly without using neither one of these two tricks in order to take full advantage of compiler optimizations that inline the local function calls.
+
+[endsect]
+
 [section Local Blocks]
 
 The expansion of the local block macros for the main local block example presented in the __Tutorial__ section generates code equivalent to the following:

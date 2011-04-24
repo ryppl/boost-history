@@ -2,17 +2,15 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <cmath>
 #include <cassert>
 
-#define N 1e4
-#define S N * 1e2
+int main(int argc, char* argv[]) {
+    assert(argc == 2);
+    unsigned long n = sqrt(double(atol(argv[1])));
 
-int main() {
     double sum = 0.0;
     int factor = 1;
-
-    std::vector<double> v(S);
-    std::fill(v.begin(), v.end(), 1.0);
 
     struct local_add {
         local_add(double& _sum, int _factor): sum(_sum), factor(_factor) {}
@@ -25,12 +23,14 @@ int main() {
     };
     local_add add(sum, factor);
 
-    for (size_t n = 0; n < N; ++n) {
-        for (size_t i = 0; i < v.size(); ++i) add(v[i]); // Can't use for_each.
+    std::vector<double> v(n);
+    std::fill(v.begin(), v.end(), 1.0);
+    for (unsigned long i = 0; i < n; ++i) {
+//        for (size_t j = 0; j < v.size(); ++j) add(v[j]); // Can't use for_each.
     }
 
     std::cout << sum << std::endl;
-    assert(sum == N * S);
+//    assert(sum == n * n);
     return 0;
 }
 

@@ -27,11 +27,11 @@ int main() {
     global_add add(sum, factor);
 
     for (size_t n = 0; n < N; ++n) {
-        std::for_each(v.begin(), v.end(), add);
+//        std::for_each(v.begin(), v.end(), add);
     }
 
     std::cout << sum << std::endl;
-    assert(sum == N * S);
+//    assert(sum == N * S);
     return 0;
 }
 

@@ -81,7 +81,8 @@
 <span class="special">&gt;</span> <span class="identifier">C</span><span class="special">++</span><span class="number">03</span><span class="special">,</span> <span class="identifier">with</span> <span class="identifier">the</span> <span class="keyword">virtual</span> <span class="identifier">function</span> <span class="identifier">business</span> <span class="identifier">in</span> <span class="identifier">only</span> <span class="identifier">those</span> <span class="identifier">compilers</span><span class="special">/</span><span class="identifier">modes</span>
 <span class="special">&gt;</span> <span class="identifier">where</span> <span class="identifier">it</span> <span class="identifier">is</span> <span class="identifier">necessary</span><span class="special">.</span>
 </pre>
-<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
             Shall <code class="computeroutput"><span class="identifier">this_</span></code> be named
             <code class="computeroutput"><span class="identifier">_this</span></code> instead? Ask Boosters
             if there is some guideline for consistency. Maybe Boost uses <code class="computeroutput"><span class="special">...</span><span class="identifier">_</span></code>
@@ -89,7 +90,22 @@
             and <code class="computeroutput"><span class="identifier">_</span><span class="special">...</span></code>
             for variables (like <code class="computeroutput"><span class="identifier">_1</span></code>)...
             if that is the case then I should use <code class="computeroutput"><span class="identifier">_this</span></code>.
-          </li></ul></div>
+          </li>
+<li class="listitem">
+            Rename <code class="computeroutput"><span class="identifier">abstract_function</span></code>
+            to <code class="computeroutput"><span class="identifier">function_interface</span></code>.
+          </li>
+<li class="listitem">
+            Provide a special macro <code class="computeroutput"><span class="identifier">BOOST_LOCAL_FUNCTION_NAME_OPTIMIZED</span></code>
+            that runs faster (by using the local functor directly without using the
+            global <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">local</span><span class="special">::</span><span class="identifier">function</span></code> functor instead). Make both
+            local blocks and exits use this optimized local function variant. Document
+            that this optimized local function variant cannot be passed as template
+            parameter unless it is first manually reassigned to the global <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">local</span><span class="special">::</span><span class="identifier">function</span></code> functor or C++03 feature is
+            supported by the compiler. On C++03, make <code class="computeroutput"><span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span></code>
+            be the same as <code class="computeroutput"><span class="identifier">BOOST_LOCAL_FUNCTION_NAME_OPTIMIZED</span></code>.
+          </li>
+</ul></div>
 </div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>

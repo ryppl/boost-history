@@ -289,104 +289,12 @@
                 </p>
               </td>
 </tr>
-<tr>
-<td>
-                <p>
-                  <span class="emphasis"><em>Compile-Time</em></span> <sup>[<a name="id944627" href="#ftn.id944627" class="footnote">a</a>]</sup>
-                </p>
-              </td>
-<td>
-                <p>
-                  0 seconds
-                </p>
-              </td>
-<td>
-                <p>
-                  0 seconds
-                </p>
-              </td>
-<td>
-                <p>
-                  0 seconds
-                </p>
-              </td>
-<td>
-                <p>
-                  0 seconds
-                </p>
-              </td>
-<td>
-                <p>
-                  0 seconds
-                </p>
-              </td>
-<td>
-                <p>
-                  0 seconds
-                </p>
-              </td>
-</tr>
-<tr>
-<td>
-                <p>
-                  <span class="emphasis"><em>Run-Time</em></span> <sup>[<a name="id944729" href="#ftn.id944729" class="footnote">b</a>]</sup>
-                </p>
-              </td>
-<td>
-                <p>
-                  0 seconds
-                </p>
-              </td>
-<td>
-                <p>
-                  0 seconds
-                </p>
-              </td>
-<td>
-                <p>
-                  0 seconds
-                </p>
-              </td>
-<td>
-                <p>
-                  0 seconds
-                </p>
-              </td>
-<td>
-                <p>
-                  0 seconds
-                </p>
-              </td>
-<td>
-                <p>
-                  0 seconds
-                </p>
-              </td>
-</tr>
 </tbody>
-<tbody class="footnotes"><tr><td colspan="7">
-<div class="footnote"><p><sup>[<a id="ftn.id944627" href="#id944627" class="para">a</a>] </sup>
-                    Compilation times have been measured in seconds using the Linux
-                    command <code class="literal">$ time g++ -O3 -Wall -Wextra -I&lt;BOOST_DIR&gt;
-                    &lt;CPP_FILE&gt;</code> for the examples listed below for
-                    all the different approaches. The <code class="literal">real</code> time
-                    is the overall time that took to execute the command. The actual
-                    time values can change from execution to execution therefore
-                    they have been measured 3 times and the time reported it the
-                    one with the middle <code class="literal">real</code> time value. The time
-                    values are machine dependent so they have no absolute meaning
-                    but they can be used in this context to compare the performances
-                    of the different approaches relative to each other (because all
-                    these values were measured on the same system).
-                  </p></div>
-<div class="footnote"><p><sup>[<a id="ftn.id944729" href="#id944729" class="para">b</a>] </sup>
-                    run times have been measured in seconds using the Linux command
-                    <code class="literal">$ time &lt;COMPILED_PROGRAM&gt;</code> for the compiled
-                    examples listed below for all the different approaches. The same
-                    statistical approach as for compilation time was followed.
-                  </p></div>
-</td></tr></tbody>
 </table></div>
+<a name="boost_local.Alternatives.local_functions.examples"></a><h6>
+<a name="id944670"></a>
+        <a class="link" href="Alternatives.html#boost_local.Alternatives.local_functions.examples">Examples</a>
+      </h6>
 <p>
         For example, using this library local functions:
       </p>
@@ -670,6 +578,147 @@
 </pre>
 <p>
       </p>
+<a name="boost_local.Alternatives.local_functions.profiling"></a><h6>
+<a name="id950582"></a>
+        <a class="link" href="Alternatives.html#boost_local.Alternatives.local_functions.profiling">Profiling</a>
+      </h6>
+<p>
+        The following table compares compile-time, binary size, and run-time among
+        the different alternatives.
+      </p>
+<p>
+        This library has compile-times and generates binary size similar to the ones
+        of the other approaches. This library run-times on ISO C++ compliant compilers
+        "<a href="http://www.boost.org/doc/libs/release/libs/local/doc/html/index.html" target="_top">Boost.Local</a>
+        Compliant" were measured to be similar to "Local Functor"
+        but larger than other approaches like "Global Functor", "<a href="http://www.boost.org/doc/libs/release/doc/html/lambda.html" target="_top">Boost.Lambda</a>",
+        or "<a href="http://www.boost.org/doc/libs/release/libs/spirit/phoenix/index.html" target="_top">Boost.Phoenix</a>"
+        when compiler optimization is enabled. However, on C++03 compilers (e.g.,
+        MSVC) this library generates optimized code "<a href="http://www.boost.org/doc/libs/release/libs/local/doc/html/index.html" target="_top">Boost.Local</a>"
+        that runs as fast as the fastest of the other approaches. Finally, this library
+        run-times are always among the fastest when no compiler optimization is used.
+      </p>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../../doc/src/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top">
+<p>
+          This is because on non C++03 compilers (e.g., GCC) this library needs to
+          use a function pointer in order to pass the local functor class as a template
+          parameter (see the <a class="link" href="Implementation.html" title="Appendix: Implementation">Implementation</a>
+          section). This function pointer prevents the compiler from inlining all
+          the function calls while the functors used by other approaches like "<a href="http://www.boost.org/doc/libs/release/doc/html/lambda.html" target="_top">Boost.Lambda</a>"
+          and "<a href="http://www.boost.org/doc/libs/release/libs/spirit/phoenix/index.html" target="_top">Boost.Phoenix</a>"
+          allows the compiler to inline all the function calls.
+        </p>
+<p>
+          This performance hit on non C++03 compilers might or not be a problem depending
+          on the performance requirements of your application. For example, your
+          application might already be using a number of indirect function calls
+          (function pointers, virtual functions, etc) because of which the overload
+          added by using the one extra function pointer required by the local function
+          might not be noticeable within your overall program run-time.
+        </p>
+</td></tr>
+</table></div>
+<p>
+        Finally, note that a very simple local function body with only one instruction
+        was used for this profiling (see files <a href="../../../example/profile_boost_local.cpp" target="_top"><code class="literal">profile_boost_local.cpp</code></a>,
+        <a href="../../../example/profile_boost_local_for_loop.cpp" target="_top"><code class="literal">profile_boost_local_for_loop.cpp</code></a>,
+        <a href="../../../example/profile_boost_local_optimized.cpp" target="_top"><code class="literal">profile_boost_local_optimized.cpp</code></a>,
+        <a href="../../../example/profile_local_functor.cpp" target="_top"><code class="literal">profile_local_functor.cpp</code></a>,
+        <a href="../../../example/profile_global_functor.cpp" target="_top"><code class="literal">profile_global_functor.cpp</code></a>,
+        <a href="../../../example/profile_0x_lambda.cpp" target="_top"><code class="literal">profile_0x_lambda.cpp</code></a>,
+        <a href="../../../example/profile_boost_lambda.cpp" target="_top"><code class="literal">profile_boost_lambda.cpp</code></a>,
+        and <a href="../../../example/profile_boost_phoenix.cpp" target="_top"><code class="literal">profile_boost_phoenix.cpp</code></a>).
+        It has not been studied how this library and the other approaches will perform
+        with respect to each other when a more complex set of instructions is programmed
+        by the local function body.
+      </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  <code class="literal">bjam release</code> on MSVC 8.0 (maximum optimization
+                  <code class="literal">/O2 /Ob2</code>)
+                </p>
+              </th>
+<th>
+                <p>
+                  <code class="literal">bjam debug</code> on MSVC 8.0 (no optimization <code class="literal">/O0
+                  /Ob0</code>)
+                </p>
+              </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                <p>
+                  The local function was called <code class="literal">1e8</code> times to add
+                  together all the elements of a vector. The run-time was measured
+                  using <a href="http://www.boost.org/doc/libs/release/libs/chrono/doc/html/index.html" target="_top">Boost.Chrono</a>
+                  and averaged over <code class="literal">100</code> executions of the vector
+                  summation (see the relative <code class="literal">profile_...</code> example
+                  files).
+                </p>
+              </td>
+<td>
+                <p>
+                  The local function was called <code class="literal">1e8</code> times to add
+                  together all the elements of a vector. The run-time was measured
+                  using <a href="http://www.boost.org/doc/libs/release/libs/chrono/doc/html/index.html" target="_top">Boost.Chrono</a>
+                  and averaged over <code class="literal">1</code> execution of the vector
+                  summation (see the relative <code class="literal">profile_...</code> example
+                  files).
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <span class="inlinemediaobject"><img src="../../../example/profile_msvc-8.0_release.png" width="630" alt="profile_msvc-8.0_release"></span>
+                </p>
+              </td>
+<td>
+                <p>
+                  <span class="inlinemediaobject"><img src="../../../example/profile_msvc-8.0_debug.png" width="630" alt="profile_msvc-8.0_debug"></span>
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  Commands used to measure compile-time, binary size, and run-time
+                  from the library example directory: 
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="special">&gt;</span> <span class="identifier">python</span> <span class="identifier">chrono</span><span class="special">.</span><span class="identifier">py</span> <span class="identifier">bjam</span> <span class="identifier">release</span> <span class="special">&lt;</span><span class="identifier">PROGRAM</span><span class="special">&gt;</span>
+<span class="special">&gt;</span> <span class="identifier">size</span> <span class="special">&lt;</span><span class="identifier">PROGRAM</span><span class="special">&gt;</span>    <span class="preprocessor"># Cygwin</span> <span class="identifier">command</span>
+<span class="special">&gt;</span> <span class="special">&lt;</span><span class="identifier">PROGRAM</span><span class="special">&gt;</span> <span class="number">100000000</span> <span class="number">100</span>
+</pre>
+<p>
+                </p>
+              </td>
+<td>
+                <p>
+                  Commands used to measure compile-time, binary size, and run-time
+                  from the library example directory: 
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="special">&gt;</span> <span class="identifier">python</span> <span class="identifier">chrono</span><span class="special">.</span><span class="identifier">py</span> <span class="identifier">bjam</span> <span class="identifier">debug</span> <span class="special">&lt;</span><span class="identifier">PROGRAM</span><span class="special">&gt;</span>
+<span class="special">&gt;</span> <span class="identifier">size</span> <span class="special">&lt;</span><span class="identifier">PROGRAM</span><span class="special">&gt;</span>    <span class="preprocessor"># Cygwin</span> <span class="identifier">command</span>
+<span class="special">&gt;</span> <span class="special">&lt;</span><span class="identifier">PROGRAM</span><span class="special">&gt;</span> <span class="number">100000000</span> <span class="number">1</span>
+</pre>
+<p>
+                </p>
+              </td>
+</tr>
+</tbody>
+</table></div>
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h3 class="title">

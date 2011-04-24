@@ -20,6 +20,7 @@
 ]
 
 [def __Boost__ [@http://www.boost.org/ Boost]]
+[def __Boost_Local__ [@http://www.boost.org/doc/libs/release/libs/local/doc/html/index.html Boost.Local]]
 [def __Boost_ScopeExit__ [@http://www.boost.org/doc/libs/release/libs/scope_exit/doc/html/index.html Boost.ScopeExit]]
 [def __Boost_Lambda__ [@http://www.boost.org/doc/libs/release/doc/html/lambda.html Boost.Lambda]]
 [def __Boost_Phoenix__ [@http://www.boost.org/doc/libs/release/libs/spirit/phoenix/index.html Boost.Phoenix]]
@@ -30,6 +31,7 @@
 [def __Boost_Typeof__ [@http://www.boost.org/doc/libs/release/doc/html/typeof.html Boost.Typeof]]
 [def __Boost_Function__ [@http://www.boost.org/doc/libs/release/doc/html/function.html Boost.Function]]
 [def __Boost_TypeTraits__ [@http://www.boost.org/doc/libs/release/libs/type_traits/doc/html/index.html Boost.TypeTraits]]
+[def __Boost_Chrono__ [@http://www.boost.org/doc/libs/release/libs/chrono/doc/html/index.html Boost.Chrono]]
 [def __CPP0x_lambda__ [@http://en.wikipedia.org/wiki/C%2B%2B0x#Lambda_functions_and_expressions C++0x lambda]]
 [def __LISP__ [@http://en.wikipedia.org/wiki/Lisp_(programming_language) LISP]]
 [def __Contractpp__ [@http://sourceforge.net/projects/contractpp Contract++]]
@@ -134,6 +136,7 @@
 [import ../../example/factorial_impl.cpp]
 [import ../../example/add_block_impl.cpp]
 [import ../../example/add_exit_impl.cpp]
+[import ../../example/tparam_trick.cpp]
 [import ../../example/add_using_boost_local.cpp]
 [import ../../example/add_using_boost_local_va.cpp]
 [import ../../example/add_using_local_functor.cpp]

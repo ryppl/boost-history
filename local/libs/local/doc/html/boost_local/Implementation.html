@@ -28,6 +28,8 @@
 </h2></div></div></div>
 <div class="toc"><dl>
 <dt><span class="section"><a href="Implementation.html#boost_local.Implementation.local_functions">Local Functions</a></span></dt>
+<dt><span class="section"><a href="Implementation.html#boost_local.Implementation.local_classes_as_template_parameters">Local
+      Classes as Template Parameters</a></span></dt>
 <dt><span class="section"><a href="Implementation.html#boost_local.Implementation.local_blocks">Local Blocks</a></span></dt>
 <dt><span class="section"><a href="Implementation.html#boost_local.Implementation.local_exits">Local Exits</a></span></dt>
 <dt><span class="section"><a href="Implementation.html#boost_local.Implementation.parsing_macros">Parsing Macros</a></span></dt>
@@ -211,6 +213,116 @@
 <span class="special">}</span>
 </pre>
 <p>
+      </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_local.Implementation.local_classes_as_template_parameters"></a><a class="link" href="Implementation.html#boost_local.Implementation.local_classes_as_template_parameters" title="Local Classes as Template Parameters">Local
+      Classes as Template Parameters</a>
+</h3></div></div></div>
+<p>
+        This library uses a local class to implement the local functor object. However,
+        in ISO standard C++ a local classes, and therefore the local functor object,
+        cannot be passed as template parameter (for example to the <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">for_each</span></code>
+        algorithm), this is instead possible on C++03 and later standards. To work
+        around this limitation, this library investigated the following two tricks
+        (both these approaches can be extended to support eventual function default
+        parameters):
+      </p>
+<div class="orderedlist"><ol class="orderedlist" type="1">
+<li class="listitem">
+            The <span class="emphasis"><em>casting functor trick</em></span> uses a non-local functor
+            class that calls a static member function of the local class via a function
+            pointer. The static member function then calls the correct local function
+            body after type casting the object.
+          </li>
+<li class="listitem">
+            The <span class="emphasis"><em>virtual functor trick</em></span> uses a non-local virtual
+            base class for the local functor class. The correct implementation of
+            the <code class="computeroutput"><span class="keyword">operator</span><span class="special">()</span></code>
+            is called via polymorphism.
+          </li>
+</ol></div>
+<p>
+        
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">vector</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">algorithm</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">cassert</span><span class="special">&gt;</span>
+
+<span class="comment">// Casting Functor Trick
+</span><span class="keyword">struct</span> <span class="identifier">casting_func</span> <span class="special">{</span>
+    <span class="keyword">explicit</span> <span class="identifier">casting_func</span><span class="special">(</span><span class="keyword">void</span><span class="special">*</span> <span class="identifier">obj</span><span class="special">,</span> <span class="keyword">void</span> <span class="special">(*</span><span class="identifier">call</span><span class="special">)(</span><span class="keyword">void</span><span class="special">*,</span> <span class="keyword">const</span> <span class="keyword">double</span><span class="special">&amp;)):</span>
+            <span class="identifier">obj_</span><span class="special">(</span><span class="identifier">obj</span><span class="special">),</span> <span class="identifier">call_</span><span class="special">(</span><span class="identifier">call</span><span class="special">)</span> <span class="special">{}</span>
+    <span class="keyword">inline</span> <span class="keyword">void</span> <span class="keyword">operator</span><span class="special">()(</span><span class="keyword">const</span> <span class="keyword">double</span><span class="special">&amp;</span> <span class="identifier">num</span><span class="special">)</span>
+        <span class="special">{</span> <span class="identifier">call_</span><span class="special">(</span><span class="identifier">obj_</span><span class="special">,</span> <span class="identifier">num</span><span class="special">);</span> <span class="special">}</span> <span class="comment">// function pointer call cannot be inlined
+</span><span class="keyword">private</span><span class="special">:</span>
+    <span class="keyword">void</span><span class="special">*</span> <span class="identifier">obj_</span><span class="special">;</span>
+    <span class="keyword">void</span> <span class="special">(*</span><span class="identifier">call_</span><span class="special">)(</span><span class="keyword">void</span><span class="special">*,</span> <span class="keyword">const</span> <span class="keyword">double</span><span class="special">&amp;);</span>
+<span class="special">};</span>
+
+<span class="comment">// Virtual Functor Trick
+</span><span class="keyword">struct</span> <span class="identifier">func_interface</span> <span class="special">{</span>
+    <span class="keyword">inline</span> <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="keyword">operator</span><span class="special">()(</span><span class="keyword">const</span> <span class="keyword">double</span><span class="special">&amp;)</span>
+        <span class="special">=</span> <span class="number">0</span><span class="special">;</span> <span class="comment">// virtual call cannot be inlined
+</span><span class="special">};</span>
+<span class="keyword">struct</span> <span class="identifier">virtual_func</span> <span class="special">{</span>
+    <span class="keyword">explicit</span> <span class="identifier">virtual_func</span><span class="special">(</span><span class="identifier">func_interface</span><span class="special">&amp;</span> <span class="identifier">ref</span><span class="special">):</span> <span class="identifier">ptr_</span><span class="special">(&amp;</span><span class="identifier">ref</span><span class="special">)</span> <span class="special">{}</span>
+    <span class="keyword">inline</span> <span class="keyword">void</span> <span class="keyword">operator</span><span class="special">()(</span><span class="keyword">const</span> <span class="keyword">double</span><span class="special">&amp;</span> <span class="identifier">num</span><span class="special">)</span>
+        <span class="special">{</span> <span class="special">(*</span><span class="identifier">ptr_</span><span class="special">)(</span><span class="identifier">num</span><span class="special">);</span> <span class="special">}</span>
+<span class="keyword">private</span><span class="special">:</span>
+    <span class="identifier">func_interface</span><span class="special">*</span> <span class="identifier">ptr_</span><span class="special">;</span>
+<span class="special">};</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
+    <span class="keyword">double</span> <span class="identifier">sum</span> <span class="special">=</span> <span class="number">0.0</span><span class="special">;</span>
+    <span class="keyword">int</span> <span class="identifier">factor</span> <span class="special">=</span> <span class="number">10</span><span class="special">;</span>
+
+    <span class="keyword">struct</span> <span class="identifier">local_add</span> <span class="special">:</span> <span class="identifier">func_interface</span> <span class="special">{</span>
+        <span class="keyword">explicit</span> <span class="identifier">local_add</span><span class="special">(</span><span class="keyword">double</span><span class="special">&amp;</span> <span class="identifier">_sum</span><span class="special">,</span> <span class="keyword">const</span> <span class="keyword">int</span><span class="special">&amp;</span> <span class="identifier">_factor</span><span class="special">):</span>
+                <span class="identifier">sum_</span><span class="special">(</span><span class="identifier">_sum</span><span class="special">),</span> <span class="identifier">factor_</span><span class="special">(</span><span class="identifier">_factor</span><span class="special">)</span> <span class="special">{}</span>
+        <span class="keyword">inline</span> <span class="keyword">void</span> <span class="keyword">operator</span><span class="special">()(</span><span class="keyword">const</span> <span class="keyword">double</span><span class="special">&amp;</span> <span class="identifier">num</span><span class="special">)</span> <span class="special">{</span>
+            <span class="identifier">body</span><span class="special">(</span><span class="identifier">sum_</span><span class="special">,</span> <span class="identifier">factor_</span><span class="special">,</span> <span class="identifier">num</span><span class="special">);</span>
+        <span class="special">}</span>
+        <span class="keyword">inline</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">call</span><span class="special">(</span>
+                <span class="keyword">void</span><span class="special">*</span> <span class="identifier">obj</span><span class="special">,</span> <span class="keyword">const</span> <span class="keyword">double</span><span class="special">&amp;</span> <span class="identifier">num</span><span class="special">)</span> <span class="special">{</span>
+            <span class="identifier">local_add</span><span class="special">*</span> <span class="identifier">self</span> <span class="special">=</span> <span class="keyword">static_cast</span><span class="special">&lt;</span><span class="identifier">local_add</span><span class="special">*&gt;(</span><span class="identifier">obj</span><span class="special">);</span>
+            <span class="identifier">self</span><span class="special">-&gt;</span><span class="identifier">body</span><span class="special">(</span><span class="identifier">self</span><span class="special">-&gt;</span><span class="identifier">sum_</span><span class="special">,</span> <span class="identifier">self</span><span class="special">-&gt;</span><span class="identifier">factor_</span><span class="special">,</span> <span class="identifier">num</span><span class="special">);</span>
+        <span class="special">}</span>
+    <span class="keyword">private</span><span class="special">:</span>
+        <span class="keyword">double</span><span class="special">&amp;</span> <span class="identifier">sum_</span><span class="special">;</span>
+        <span class="keyword">const</span> <span class="keyword">int</span><span class="special">&amp;</span> <span class="identifier">factor_</span><span class="special">;</span>
+        <span class="keyword">inline</span> <span class="keyword">void</span> <span class="identifier">body</span><span class="special">(</span><span class="keyword">double</span><span class="special">&amp;</span> <span class="identifier">sum</span><span class="special">,</span> <span class="keyword">const</span> <span class="keyword">int</span><span class="special">&amp;</span> <span class="identifier">factor</span><span class="special">,</span> <span class="keyword">const</span> <span class="keyword">double</span><span class="special">&amp;</span> <span class="identifier">num</span><span class="special">)</span> <span class="special">{</span>
+            <span class="identifier">sum</span> <span class="special">+=</span> <span class="identifier">factor</span> <span class="special">*</span> <span class="identifier">num</span><span class="special">;</span>
+        <span class="special">}</span>
+    <span class="special">}</span> <span class="identifier">add_local</span><span class="special">(</span><span class="identifier">sum</span><span class="special">,</span> <span class="identifier">factor</span><span class="special">);</span>
+    <span class="identifier">casting_func</span> <span class="identifier">add_casting</span><span class="special">(&amp;</span><span class="identifier">add_local</span><span class="special">,</span> <span class="special">&amp;</span><span class="identifier">local_add</span><span class="special">::</span><span class="identifier">call</span><span class="special">);</span>
+    <span class="identifier">virtual_func</span> <span class="identifier">add_virtual</span><span class="special">(</span><span class="identifier">add_local</span><span class="special">);</span>
+
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;</span> <span class="identifier">v</span><span class="special">(</span><span class="number">10</span><span class="special">);</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">fill</span><span class="special">(</span><span class="identifier">v</span><span class="special">.</span><span class="identifier">begin</span><span class="special">(),</span> <span class="identifier">v</span><span class="special">.</span><span class="identifier">end</span><span class="special">(),</span> <span class="number">1.0</span><span class="special">);</span>
+    
+<span class="comment">//  std::for_each(v.begin(), v.end(), add_local); // Error but OK on C++03.
+</span>    <span class="identifier">std</span><span class="special">::</span><span class="identifier">for_each</span><span class="special">(</span><span class="identifier">v</span><span class="special">.</span><span class="identifier">begin</span><span class="special">(),</span> <span class="identifier">v</span><span class="special">.</span><span class="identifier">end</span><span class="special">(),</span> <span class="identifier">add_casting</span><span class="special">);</span> <span class="comment">// OK.
+</span>    <span class="identifier">std</span><span class="special">::</span><span class="identifier">for_each</span><span class="special">(</span><span class="identifier">v</span><span class="special">.</span><span class="identifier">begin</span><span class="special">(),</span> <span class="identifier">v</span><span class="special">.</span><span class="identifier">end</span><span class="special">(),</span> <span class="identifier">add_virtual</span><span class="special">);</span> <span class="comment">// OK.
+</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">sum</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+      </p>
+<p>
+        The casting functor trick had slightly better run-time performances than
+        the virtual functor trick so the current implementation of this library uses
+        the casting functor trick. However, both methods do not allow for compiler
+        optimizations that inline the local function calls because they rely on one
+        indirect function call (via either a function pointer or a virtual function)
+        that can only be resolved at run-time. Therefore, on C++03 compilers this
+        library generates code that passes the local class functor as template parameter
+        directly without using neither one of these two tricks in order to take full
+        advantage of compiler optimizations that inline the local function calls.
       </p>
 </div>
 <div class="section">

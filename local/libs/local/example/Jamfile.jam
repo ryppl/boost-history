@@ -104,6 +104,8 @@ exe typeof_tpl_va : typeof_tpl_va.cpp ;
 exe world_exit : world_exit.cpp ;
 exe world_exit_va : world_exit_va.cpp ;
 
+exe tparam_trick : tparam_trick.cpp ;
+
 exe add_using_boost_local : add_using_boost_local.cpp ;
 exe add_using_boost_local_va : add_usign_boost_local_va.cpp ;
 exe add_using_local_functor : add_using_local_functor.cpp ;
@@ -112,5 +114,11 @@ exe add_using_cpp0x_lambda : add_using_cpp0x_lambda.cpp ;
 exe add_using_boost_lambda : add_using_boost_lambda.cpp ;
 exe add_using_boost_phoenix : add_using_boost_phoenix.cpp ;
 
-exe l10 : l10.cpp ;
+exe profile_boost_local : profile_boost_local.cpp ;
+exe profile_boost_local_optimized : profile_boost_local_optimized.cpp ;
+exe profile_boost_local_for_loop : profile_boost_local_for_loop.cpp ;
+exe profile_local_functor : profile_local_functor.cpp ;
+exe profile_global_functor : profile_global_functor.cpp ;
+exe profile_boost_lambda : profile_boost_lambda.cpp ;
+exe profile_boost_phoenix : profile_boost_phoenix.cpp ;
 

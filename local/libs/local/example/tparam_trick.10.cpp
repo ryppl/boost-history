@@ -1,16 +1,10 @@
 
 // Tricks to "pass" a local class as a template parameter.
 
-// compile-time:    $ time g++ -O3 -Wall <THIS_FILE>
-// run-time:        $ time ./a
-
 #include <iostream>
 #include <vector>
 #include <algorithm>
 #include <cassert>
-
-#define N 1e4
-#define S N * 1e2
 
 // Trick A: Virtual Base
 

@@ -174,6 +174,9 @@
 #define BOOST_LOCAL_FUNCTION_NAME(name) \
     BOOST_LOCAL_AUX_FUNCTION_NAME(name)
 
+#define BOOST_LOCAL_FUNCTION_NAME_OPTIMIZED(name) \
+    BOOST_LOCAL_AUX_FUNCTION_NAME_OPTIMIZED(name)
+
 namespace boost { namespace local {
 
 /**

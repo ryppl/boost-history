@@ -18,13 +18,13 @@ int main() {
     std::fill(v.begin(), v.end(), 1.0);
 
     for (size_t n = 0; n < N; ++n) {
-        std::for_each(v.begin(), v.end(), (
-            sum += factor * _1
-        ));
+//        std::for_each(v.begin(), v.end(), (
+//            sum += factor * _1
+//        ));
     }
 
     std::cout << sum << std::endl;
-    assert(sum == N * S);
+//    assert(sum == N * S);
     return 0;
 }
 

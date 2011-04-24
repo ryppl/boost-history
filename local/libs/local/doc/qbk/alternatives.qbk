@@ -69,37 +69,9 @@ However, there is no bind by constant reference. ]
     [ No. ]
     [ Yes, using `let` which also allows to bind by constant reference. ]
 ]
-[
-    [ ['Compile-Time]
-[footnote
-Compilation times have been measured in seconds using the Linux command [^$ time g++ -O3 -Wall -Wextra -I<BOOST_DIR> <CPP_FILE>] for the examples listed below for all the different approaches.
-The [^real] time is the overall time that took to execute the command.
-The actual time values can change from execution to execution therefore they have been measured 3 times and the time reported it the one with the middle [^real] time value.
-The time values are machine dependent so they have no absolute meaning but they can be used in this context to compare the performances of the different approaches relative to each other (because all these values were measured on the same system).
 ]
-    ]
-    [ 0 seconds ]
-    [ 0 seconds ]
-    [ 0 seconds ]
-    [ 0 seconds ]
-    [ 0 seconds ]
-    [ 0 seconds ]
-]
-[
-    [ ['Run-Time]
-[footnote
-run times have been measured in seconds using the Linux command [^$ time <COMPILED_PROGRAM>] for the compiled examples listed below for all the different approaches.
-The same statistical approach as for compilation time was followed.
-]
-    ]
-    [ 0 seconds ]
-    [ 0 seconds ]
-    [ 0 seconds ]
-    [ 0 seconds ]
-    [ 0 seconds ]
-    [ 0 seconds ]
-]
-]
+
+[h5 Examples]
 
 For example, using this library local functions:
 
@@ -127,6 +99,73 @@ Or using __Boost_Lambda__ functions:
 Or using __Boost_Phoenix__:
 
 [add_using_boost_phoenix_cpp]
+
+[h5 Profiling]
+
+The following table compares compile-time, binary size, and run-time among the different alternatives.
+
+This library has compile-times and generates binary sizes similar to the ones of the other approaches.
+This library run-times on ISO C++ compliant compilers (see "__Boost_Local__ Compliant" below) were measured to be similar to "Local Functor" but larger than other approaches like "Global Functor", "__Boost_Lambda__", or "__Boost_Phoenix__" when compiler optimization is enabled.
+However, on C++03 compilers (e.g., MSVC) this library generates optimized code (see "__Boost_Local__" below) that runs as fast as the fastest of the other approaches.
+Finally, this library run-times are always among the fastest when no compiler optimization is used.
+
+[note
+This is because on non C++03 compilers (e.g., GCC) this library needs to use a function pointer in order to pass the local functor class as a template parameter (see the __Implementation__ section).
+This function pointer prevents the compiler from inlining all the function calls while the functors used by other approaches like "__Boost_Lambda__" and "__Boost_Phoenix__" allows the compiler to inline all the function calls.
+
+This run-time performance cost on non C++03 compilers might or not be a problem depending on the performance requirements of your application.
+For example, your application might already be using a number of indirect function calls (function pointers, virtual functions, etc) for which the overhead added by using the one extra function pointer required by the local function call might not be noticeable within your overall program run-time.
+]
+
+Finally, note that a very simple local function body with only one instruction was used for the profiling presented here (see files
+[@../../example/profile_boost_local.cpp =profile_boost_local.cpp=],
+[@../../example/profile_boost_local_for_loop.cpp =profile_boost_local_for_loop.cpp=],
+[@../../example/profile_boost_local_optimized.cpp =profile_boost_local_optimized.cpp=],
+[@../../example/profile_local_functor.cpp =profile_local_functor.cpp=],
+[@../../example/profile_global_functor.cpp =profile_global_functor.cpp=],
+[@../../example/profile_0x_lambda.cpp =profile_0x_lambda.cpp=],
+[@../../example/profile_boost_lambda.cpp =profile_boost_lambda.cpp=], and
+[@../../example/profile_boost_phoenix.cpp =profile_boost_phoenix.cpp=]).
+The authors have not studied how this library and the other approaches will perform with respect to each other when a more complex set of instructions is programmed for the local function body.
+
+[table
+[
+    [ =bjam release= on MSVC 8.0 (maximum optimization =/O2 /Ob2=)]
+    [ =bjam debug= on MSVC 8.0 (no optimization =/O0 /Ob0=)]
+]
+[
+    [
+The local function was called =1e8= times to add together all the elements of a vector.
+The run-time was measured using __Boost_Chrono__ and averaged over =100= executions of the vector summation (see the relative =profile_...= example files).
+    ]
+    [
+The local function was called =1e8= times to add together all the elements of a vector.
+The run-time was measured using __Boost_Chrono__ and averaged over =1= execution of the vector summation (see the relative =profile_...= example files).
+    ]
+]
+[
+    [ [$../../example/profile_msvc-8.0_release.png [width 7in] [height 10in]] ]
+    [ [$../../example/profile_msvc-8.0_debug.png [width 7in] [height 10in]] ]
+]
+[
+    [
+Commands used to measure compile-time, binary size, and run-time from the library example directory:
+``
+> python chrono.py bjam release <PROGRAM>
+> size <PROGRAM>    # Cygwin command
+> <PROGRAM> 100000000 100
+``
+    ] 
+    [
+Commands used to measure compile-time, binary size, and run-time from the library example directory:
+``
+> python chrono.py bjam debug <PROGRAM>
+> size <PROGRAM>    # Cygwin command
+> <PROGRAM> 100000000 1
+``
+    ] 
+]
+]
 
 [endsect]
 

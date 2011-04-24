@@ -1,31 +1,42 @@
 
+#include <boost/chrono.hpp>
 #include <boost/local/function.hpp>
 #include <vector>
 #include <algorithm>
 #include <iostream>
-#include <cassert>
+#include "benchmark_helpers.hpp"
 
-#define N 1e4
-#define S N * 1e2
+int main(int argc, char* argv[]) {
+    boost::chrono::duration<double> sec;
+    unsigned long loop; unsigned long size; bool verbose; double n;
+    begin(argc, argv, loop, size, verbose, n);
 
-int main() {
     double sum = 0.0;
     int factor = 1;
 
+    boost::chrono::system_clock::time_point start =
+            boost::chrono::system_clock::now();
     void BOOST_LOCAL_FUNCTION_PARAMS( (const double& num)
             (bind& sum) (const bind& factor) ) {
         sum += factor * num;
     } BOOST_LOCAL_FUNCTION_NAME(add)
-
-    std::vector<double> v(S);
-    std::fill(v.begin(), v.end(), 1.0);
-
-    for (size_t n = 0; n < N; ++n) {
-        std::for_each(v.begin(), v.end(), add);
+    sec += boost::chrono::system_clock::now() - start;
+    if (verbose) {
+        std::clog << "declaration run-time = " << sec.count() << "s" <<
+                std::endl;
     }
 
-    std::cout << sum << std::endl;
-    assert(sum == N * S);
+    std::vector<double> v(size);
+    std::fill(v.begin(), v.end(), 1.0);
+
+    for (unsigned long i = 0; i < loop; ++i) {
+        boost::chrono::system_clock::time_point start =
+                boost::chrono::system_clock::now();
+        std::for_each(v.begin(), v.end(), add);
+        sec += boost::chrono::system_clock::now() - start;
+    }
+
+    end(verbose, n, sum, sec);
     return 0;
 }
 
