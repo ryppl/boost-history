@@ -37,8 +37,7 @@ namespace xxx_conversion{
     
     void test()
     {
-        using namespace boost;
-        namespace as2 = assign::v2;
+        namespace as2 = boost::assign::v2;
         namespace ns = as2::check_aux;
 
         // External containers (fully qualified)
@@ -56,7 +55,7 @@ namespace xxx_conversion{
         }
         {
             //[test_converter
-            std::list<int> source( 3 ); iota( source, 1 );
+            std::list<int> source( 3 ); boost::iota( source, 1 );
             
             std::queue<int> fifo = as2::converter( source );
             
@@ -67,7 +66,7 @@ namespace xxx_conversion{
         {
             //[test_converter_f
             typedef int T; typedef std::vector<T> R;
-            R benchmark( 10 ); iota( benchmark, 0 ); 
+            R benchmark( 10 ); boost::iota( benchmark, 0 ); 
             
             as2::result_of::converter<R>::type source( benchmark );
             
@@ -99,10 +98,10 @@ namespace xxx_conversion{
         }
         {
             //[test_conversion_matrix3x3
-            const int sz = 3; typedef array<int, sz>  row_;
+            const int sz = 3; typedef boost::array<int, sz>  row_;
             
             as2::convert<row_> as_row;
-            array<row_, sz>  matrix3x3 = converter(
+            boost::array<row_, sz>  matrix3x3 = converter(
                 as2::ref::array
                     ( as2::ref::csv_array( 1, 2, 3 ) | as_row )
                     ( as2::ref::csv_array( 4, 5, 6 ) | as_row )
@@ -123,7 +122,7 @@ namespace xxx_conversion{
             typedef size_ const dim_;
             dim_ dim1 = 3, dim2 = 3;
             array2_ array2 = converter( 
-                extents[dim1][dim2], 
+                boost::extents[dim1][dim2], 
                 as2::csv_deque(-1, +1, -1, +1, -1, +1, -1, +1, -1) 
             );
             
@@ -134,9 +133,9 @@ namespace xxx_conversion{
             };
             size_ const n = array2.num_elements();
             BOOST_ASSIGN_V2_CHECK(
-                range::equal(
-                    make_iterator_range( array2.data(), n + array2.data() ),
-                    make_iterator_range( benchmark, n + benchmark )
+                boost::range::equal(
+                    boost::make_iterator_range( array2.data(), n + array2.data() ),
+                    boost::make_iterator_range( benchmark, n + benchmark )
                 )
             );
             //]

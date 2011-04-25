@@ -13,19 +13,13 @@
 #include <boost/assign/v2/ref/aux_/list/fwd.hpp>
 #include <boost/config.hpp>
 #include <boost/mpl/int.hpp>
-#include <boost/shared_ptr.hpp>
+#include <boost/call_traits.hpp>
 
 namespace boost{
 namespace assign{
 namespace v2{
 namespace ref{
 namespace list_aux{
-
-    template<typename T>
-    struct ptr_wrapper
-    {
-        typedef boost::shared_ptr<T const> type;
-    };
 
     template<typename T>
     struct tail_holder
@@ -35,13 +29,15 @@ namespace list_aux{
             T::static_size::value + 1
         > static_size;
         typedef T const& result_of_tail_type;
-        typedef typename ptr_wrapper<T>::type ptr_wrapper_;
 
-        tail_holder(ptr_wrapper_ w) : tail_( w ){}
-        result_of_tail_type tail()const{ return *this->tail_; }
+        tail_holder(typename boost::call_traits<T>::param_type t) 
+        	: tail_( t )
+        {}
+        
+        result_of_tail_type tail()const{ return this->tail_; }
 
         private:
-        typename ptr_wrapper<T>::type const tail_; 
+        typename boost::call_traits<T>::value_type tail_; 
     };
 
     template<>

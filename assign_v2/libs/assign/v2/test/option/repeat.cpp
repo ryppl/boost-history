@@ -23,15 +23,14 @@ namespace xxx_repeat{
 
     void test()
     {
-        using namespace boost;
-        namespace as2 = assign::v2;
+        namespace as2 = boost::assign::v2;
         {
             //[test_option_repeat_simple
             std::vector<int> cont;
             as2::csv_put( cont, as2::_repeat = 2, 1, 10, 100 );
 
             BOOST_ASSIGN_V2_CHECK( 
-                range::equal( 
+                boost::range::equal( 
                     cont, 
                     as2::csv_deque( 1, 1, 10, 10, 100, 100 ) 
                 ) 
@@ -47,7 +46,7 @@ namespace xxx_repeat{
             );
             
             BOOST_ASSIGN_V2_CHECK( 
-                range::equal( cont, as2::csv_deque( 100, 100, 10, 10, 1, 1 ) ) 
+                boost::range::equal( cont, as2::csv_deque( 100, 100, 10, 10, 1, 1 ) ) 
             );
             //]
         }

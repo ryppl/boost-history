@@ -26,15 +26,14 @@ namespace xxx_csv_array{
 
     void test()
     {
-        using namespace boost;
-        namespace as2 = assign::v2;
+        namespace as2 = boost::assign::v2;
         {
             //[test_ref_csv_array_temporaries
             boost::array<int, 3> ar; 
             ar[0] = 1; ar[1] = 10; ar[2] = 100;
             
             BOOST_ASSIGN_V2_CHECK(
-                range::equal(
+                boost::range::equal(
                     as2::ref::csv_array( 1, 10, 100 ),
                     ar        
                 )
@@ -61,8 +60,8 @@ namespace xxx_csv_array{
                 BOOST_ASSIGN_V2_CHECK( &back == &z );
             }
             {
-                T& front = ( *begin( ar ) );
-                T& back = *next( boost::begin( ar ), 2 );
+                T& front = ( *boost::begin( ar ) );
+                T& back = *boost::next( boost::begin( ar ), 2 );
 
                 BOOST_ASSIGN_V2_CHECK( &front == &x );
                 BOOST_ASSIGN_V2_CHECK( &back == &z );

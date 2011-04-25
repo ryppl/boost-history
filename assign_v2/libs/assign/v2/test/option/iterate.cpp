@@ -29,34 +29,34 @@ namespace xxx_iterate{
 
     void test()
     {
-        using namespace boost;
-        namespace as2 = assign::v2;        {
+        namespace as2 = boost::assign::v2;        
+        {
             //[test_option_iterate_meta
             typedef as2::functor_aux::iterate arg_;
-            typedef array<int, 4> cont_;
+            typedef boost::array<int, 4> cont_;
             typedef as2::result_of::put<cont_>::type put_;
             typedef as2::result_of::option_iterate<put_, arg_>::type result1_;
             typedef as2::modifier_tag::iterate<arg_> tag1_;
-            typedef as2:: interpreter_aux::replace_modifier_tag<put_> meta2_;
+            typedef as2::interpreter_aux::replace_modifier_tag<put_> meta2_;
             typedef ::boost::mpl::apply1<meta2_, tag1_>::type result2_;
             BOOST_MPL_ASSERT(( is_same<result1_, result2_> ));
             //]
         }
         {
             //[test_option_iterate_shifted
-            typedef int T; array<T, 10> alternating; 
+            typedef int T; boost::array<T, 10> alternating; 
             alternating[0] = -1; alternating[1] = +1;
             alternating[2] = -2; 
 
             int index = 3; 
             as2::csv_put( 
                 alternating
-                , as2::_iterate = lambda::var( index )++
+                , as2::_iterate = boost::lambda::var( index )++
                 , +2, -3, +3, -4, +4, -5, +5 
             );
 
             BOOST_ASSIGN_V2_CHECK(     
-                range::equal( 
+                boost::range::equal( 
                     alternating, 
                     as2::csv_deque( -1, +1, -2, +2, -3, +3, -4, +4, -5, +5 ) 
                 ) 
@@ -84,12 +84,12 @@ namespace xxx_iterate{
             BOOST_AUTO(
                 alternating ,
                 ( 
-                    tmp  % ( as2::_iterate = lambda::var( index )++ ) 
+                    tmp  % ( as2::_iterate = boost::lambda::var( index )++ ) 
                 )( +2 )( -3 )( +3 )( -4 )( +4 )( -5 )( +5 )
             );
 
             BOOST_ASSIGN_V2_CHECK( 
-                range::equal( 
+                boost::range::equal( 
                     alternating, 
                     as2::csv_deque( -1, +1, -2, +2, -3, +3, -4, +4, -5, +5 ) 
                 ) 

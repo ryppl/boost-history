@@ -26,8 +26,7 @@ namespace xxx_array{
 
     void test()
     {
-        using namespace boost;
-        namespace as2 = assign::v2;
+        namespace as2 = boost::assign::v2;
         {
             
             //[test_ref_array_temporaries
@@ -35,7 +34,7 @@ namespace xxx_array{
             ar[0] = 1; ar[1] = 10; ar[2] = 100;
             
             BOOST_ASSIGN_V2_CHECK(
-                range::equal(
+                boost::range::equal(
                     as2::ref::array( 1 )( 10 )( 100 ),
                     ar        
                 )
@@ -63,8 +62,8 @@ namespace xxx_array{
             }
             //]
             {
-                T& a = ( *begin( ar4 ) );
-                T& b = *next(boost::begin( ar4 ), ar4.size() - 1 );
+                T& a = ( *boost::begin( ar4 ) );
+                T& b = *boost::next(boost::begin( ar4 ), ar4.size() - 1 );
 
                 BOOST_ASSIGN_V2_CHECK( &a == &w );
                 BOOST_ASSIGN_V2_CHECK( &b == &z );

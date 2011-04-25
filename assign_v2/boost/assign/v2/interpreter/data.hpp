@@ -24,11 +24,13 @@ namespace switch_tag{
     struct data_generator{};
 }// switch_tag
 
+/*<-*/
 #define BOOST_ASSIGN_V2_SWITCH_TAG data_generator
 BOOST_ASSIGN_V2_SWITCH_CASE(0, container_aux::is_multi_array, element_)
 BOOST_ASSIGN_V2_SWITCH_CASE(1, container_aux::is_map, map_)
 BOOST_ASSIGN_V2_SWITCH_CASE_DEFAULT(2, value_)
 #undef BOOST_ASSIGN_V2_SWITCH_TAG
+/*->*/
 
 namespace interpreter_aux{
 

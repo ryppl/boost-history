@@ -49,9 +49,9 @@ namespace list_aux{
             typedef container<Tag, H1, this_> type;
         };
 
-        explicit container(typename ptr_wrapper<T>::type t, H h)
+        explicit container(typename call_traits<T>::param_type t, H h)
             : tail_holder_( t ), 
-                head_holder_( h )
+            head_holder_( h )
         {}
 
         template<typename H1>
@@ -68,18 +68,12 @@ namespace list_aux{
         
         protected:
 
-        typename ptr_wrapper<container>::type clone()const
-        {
-            return typename ptr_wrapper<container>::type( 
-                new container( *this ) 
-            ); 
-        }
-
         template<typename H1>
         typename result<H1&>::type
-        impl(H1 & h)const{
+        impl(H1 & h)const
+        {
             typedef typename result<H1&>::type result_;
-            return result_( this->clone(), h );
+            return result_( *this, h );
         }
 
     };

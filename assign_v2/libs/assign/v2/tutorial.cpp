@@ -89,18 +89,21 @@ namespace tutorial_assign_v2{
             //[tutorial_chain
             std::vector<int> source( 8 ); boost::iota( source, 1 );
             
-            array<int, 5> copies; int x, y, z;
+            array<int, 4> head; int t, a, i, l;
             boost::copy(
                 source,
                 boost::begin(
-                    copies | _chain( 
-                        ref::csv_array( x, y, z ) | ref::_get 
+                    head | _chain( 
+                        ref::csv_array( t, a, i, l ) | ref::_get 
                     )
                 )
             );
 
-            assert( range::equal( copies, csv_deque(1, 2, 3, 4, 5) ) );
-            assert( x == 6 ); assert( y == 7 ); assert( z == 8 );
+            assert( range::equal( head, csv_deque( 1, 2, 3, 4 ) ) );
+            assert( t == 5 ); 
+            assert( a == 6 ); 
+            assert( i == 7 ); 
+            assert( l == 8 );
             //]
         }
         {

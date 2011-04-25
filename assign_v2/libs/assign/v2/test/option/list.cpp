@@ -25,8 +25,7 @@ namespace xxx_list{
 
     void test()
     {
-        using namespace boost;
-        namespace as2 = assign::v2;
+        namespace as2 = boost::assign::v2;
         
         {
             //[test_option_list
@@ -38,12 +37,12 @@ namespace xxx_list{
 
             BOOST_AUTO( 
                 options, 
-                as2::_push_front % ( as2::_data = ( lambda::_1 % 10 ) ) 
+                as2::_push_front % ( as2::_data = ( boost::lambda::_1 % 10 ) ) 
             );
             ( as2::put( cont ) % options )( 13 )( 12 )( 11 );
 
             BOOST_ASSIGN_V2_CHECK( 
-                range::equal( cont, as2::csv_deque( 1, 2, 3, 4, 5 ) ) 
+                boost::range::equal( cont, as2::csv_deque( 1, 2, 3, 4, 5 ) ) 
             );
             //]
         }

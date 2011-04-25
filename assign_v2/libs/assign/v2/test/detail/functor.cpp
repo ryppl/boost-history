@@ -19,8 +19,7 @@ namespace xxx_functor{
 
 
     void test(){
-        using namespace boost;
-        namespace as2 = assign::v2;
+        namespace as2 = boost::assign::v2;
 #if !BOOST_ASSIGN_V2_ENABLE_CPP0X
 // Requirement specific to this test file
 #if BOOST_ASSIGN_V2_LIMIT_LVALUE_CONST_ARITY != 2
@@ -38,8 +37,8 @@ namespace xxx_functor{
             typedef boost::tuple<e_&, e_&> tuple_;
             typedef as2::functor_aux::value<tuple_> value_;
 
-            BOOST_ASSIGN_V2_CHECK( &get<0>( value_()( x, y ) ) == &x );
-            BOOST_ASSIGN_V2_CHECK( &get<1>( value_()( x, y ) ) == &y );
+            BOOST_ASSIGN_V2_CHECK( &boost::get<0>( value_()( x, y ) ) == &x );
+            BOOST_ASSIGN_V2_CHECK( &boost::get<1>( value_()( x, y ) ) == &y );
 
         }
         {
@@ -48,15 +47,15 @@ namespace xxx_functor{
                 typedef boost::tuple<e_&, e_ const&> tuple_;
                 typedef as2::functor_aux::value<tuple_> value_;
 
-                BOOST_ASSIGN_V2_CHECK( &get<0>( value_()( x, 1 ) ) == &x );
-                BOOST_ASSIGN_V2_CHECK(  get<1>( value_()( x, 1 ) ) == 1  );
+                BOOST_ASSIGN_V2_CHECK( &boost::get<0>( value_()( x, 1 ) ) == &x );
+                BOOST_ASSIGN_V2_CHECK(  boost::get<1>( value_()( x, 1 ) ) == 1 );
             }
             {
                 typedef boost::tuple< e_ const&, e_&> tuple_;
                 typedef as2::functor_aux::value<tuple_> value_;
 
-                BOOST_ASSIGN_V2_CHECK(  get<0>( value_()( 1, x ) ) == 1 );
-                BOOST_ASSIGN_V2_CHECK( &get<1>( value_()( 1, x ) ) == &x  );
+                BOOST_ASSIGN_V2_CHECK(  boost::get<0>( value_()( 1, x ) ) == 1 );
+                BOOST_ASSIGN_V2_CHECK( &boost::get<1>( value_()( 1, x ) ) == &x );
             }
         }
         {
@@ -64,8 +63,8 @@ namespace xxx_functor{
             typedef boost::tuple<e_&, e_&, e_&> tuple_;
             typedef as2::functor_aux::value<tuple_> value_;
 
-            BOOST_ASSIGN_V2_CHECK( &get<0>( value_()( x, y, z ) ) == &x );
-            BOOST_ASSIGN_V2_CHECK( &get<1>( value_()( x, y, z ) ) == &y );
+            BOOST_ASSIGN_V2_CHECK( &boost::get<0>( value_()( x, y, z ) ) == &x );
+            BOOST_ASSIGN_V2_CHECK( &boost::get<1>( value_()( x, y, z ) ) == &y );
         }
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
         {
@@ -73,9 +72,9 @@ namespace xxx_functor{
             typedef boost::tuple<e_ const&, e_ &, e_ const&> tuple_;
             typedef as2::functor_aux::value<tuple_> value_;
 
-            BOOST_ASSIGN_V2_CHECK(  get<0>( value_()( -1, y, 1 ) ) == -1 );
-            BOOST_ASSIGN_V2_CHECK( &get<1>( value_()( -1, y, 1 ) ) == &y );
-            BOOST_ASSIGN_V2_CHECK(  get<2>( value_()( -1, y, 1 ) ) == 1 );
+            BOOST_ASSIGN_V2_CHECK(  boost::get<0>( value_()( -1, y, 1 ) ) == -1 );
+            BOOST_ASSIGN_V2_CHECK( &boost::get<1>( value_()( -1, y, 1 ) ) == &y );
+            BOOST_ASSIGN_V2_CHECK(  boost::get<2>( value_()( -1, y, 1 ) ) == 1 );
         }
 #endif
         {
@@ -83,9 +82,9 @@ namespace xxx_functor{
             typedef boost::tuple<e_ const&, e_ const&, e_ const&> tuple_;
             typedef as2::functor_aux::value<tuple_> value_;
 
-            BOOST_ASSIGN_V2_CHECK( get<0>( value_()( -1, 0, 1 ) ) == -1 );
-            BOOST_ASSIGN_V2_CHECK( get<1>( value_()( -1, 0, 1 ) ) == 0 );
-            BOOST_ASSIGN_V2_CHECK( get<2>( value_()( -1, 0, 1 ) ) == 1 );
+            BOOST_ASSIGN_V2_CHECK( boost::get<0>( value_()( -1, 0, 1 ) ) == -1 );
+            BOOST_ASSIGN_V2_CHECK( boost::get<1>( value_()( -1, 0, 1 ) ) == 0 );
+            BOOST_ASSIGN_V2_CHECK( boost::get<2>( value_()( -1, 0, 1 ) ) == 1 );
         }
     }
 

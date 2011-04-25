@@ -47,14 +47,13 @@ namespace xxx_put{
 
     void test(){
 
-        using namespace boost;
-        namespace as2 = assign::v2;
+        namespace as2 = boost::assign::v2;
 
         // STL
         {
             //[test_csv_put_stl
             std::queue<int> adapter;     as2::csv_put( adapter, 1, 10, 100 );
-            array<int, 3> array;         as2::csv_put( array,   1, 10, 100 );
+            boost::array<int, 3> array;  as2::csv_put( array,   1, 10, 100 );
             std::set<int> assoc;         as2::csv_put( assoc,   1, 10, 100 );
             std::list<int> seq;          as2::csv_put( seq,     1, 10, 100 );
             //]
@@ -70,25 +69,26 @@ namespace xxx_put{
         // ARRAY
         {
              //[test_csv_put_keypad
-            std::vector<int> numeric( 10 ); iota( numeric, 0 ); typedef std::string str_;
-            typedef variant< int, str_ > key_; array<key_, 16> keypad;
+            std::vector<int> numeric( 10 ); boost::iota( numeric, 0 ); 
+            typedef std::string str_; typedef boost::variant< int, str_ > key_; 
+            boost::array<key_, 16> keypad;
             as2::csv_put( keypad
                 , "+", "-", "*", "/", "=", "."
                 , as2::as_arg_list( numeric )
             );
 
-            BOOST_ASSIGN_V2_CHECK(  get<str_>( keypad.front() ) == "+" );
-            BOOST_ASSIGN_V2_CHECK(  get<int>( keypad.back() ) == 9 );
+            BOOST_ASSIGN_V2_CHECK(  boost::get<str_>( keypad.front() ) == "+" );
+            BOOST_ASSIGN_V2_CHECK(  boost::get<int>( keypad.back() ) == 9 );
             //]
-            BOOST_ASSIGN_V2_CHECK(  get<str_>( keypad[ 5 ] ) == "." );
-            BOOST_ASSIGN_V2_CHECK(  get<int>( keypad[ 6 ] ) == 0 );
+            BOOST_ASSIGN_V2_CHECK(  boost::get<str_>( keypad[ 5 ] ) == "." );
+            BOOST_ASSIGN_V2_CHECK(  boost::get<int>( keypad[ 6 ] ) == 0 );
         }
         {
             //[test_put_ragged
             typedef double data_; typedef std::vector<data_> uneven_;
             uneven_ a( 3 ); a[0] = 0.71; a[1] = 0.63; a[2] = 0.85;
             uneven_ b( 4 ); b[0] = 0.61; b[1] = 0.69; b[2] = 0.92; b[3] = 0.55;
-            array<uneven_, 4> ragged;
+            boost::array<uneven_, 4> ragged;
             as2::put( ragged )
                 ( boost::begin( a ), boost::end( a ) )
                 ( b )
@@ -100,7 +100,7 @@ namespace xxx_put{
             //]
             BOOST_ASSIGN_V2_CHECK(  ragged[1].size() == b.size() );
             BOOST_ASSIGN_V2_CHECK(  ragged[2].size() == 1        );
-            data_ eps = numeric::bounds<data_>::smallest();
+            data_ eps = boost::numeric::bounds<data_>::smallest();
             BOOST_ASSIGN_V2_CHECK(  fabs( ragged[0].front() - a.front() ) < eps );
             BOOST_ASSIGN_V2_CHECK(  fabs( ragged[0].back()  - a.back()  ) < eps );
             BOOST_ASSIGN_V2_CHECK(  fabs( ragged[1].front() - b.front() ) < eps );
@@ -135,18 +135,18 @@ namespace xxx_put{
             //[test_put_area_codes
             typedef const char state_ [3]; state_ ct = "CT", nj = "NJ", ny = "NY";
             typedef int code_;
-            typedef tuple<state_/*<<Notice the [*reference]>>*/&,  code_> data_;
+            typedef boost::tuple<state_/*<<Notice the [*reference]>>*/&,  code_> data_;
             std::deque< data_ > region;
             as2::put( region )
                 ( ny, 212 )( ny, 718 )( ny, 516 )( ny, 914 )
                 ( nj, 210 )( nj, 908 )( nj, 609 )
                 ( ct, 203 );
 
-            BOOST_ASSIGN_V2_CHECK(  get<0>( region.front() ) == ny );
-            BOOST_ASSIGN_V2_CHECK(  get<1>( region.back()  ) == 203 );
+            BOOST_ASSIGN_V2_CHECK(  boost::get<0>( region.front() ) == ny );
+            BOOST_ASSIGN_V2_CHECK(  boost::get<1>( region.back()  ) == 203 );
             //]
-            BOOST_ASSIGN_V2_CHECK(  get<1>( region.front() ) == 212 );
-            BOOST_ASSIGN_V2_CHECK(  get<0>( region.back()  ) == ct );
+            BOOST_ASSIGN_V2_CHECK(  boost::get<1>( region.front() ) == 212 );
+            BOOST_ASSIGN_V2_CHECK(  boost::get<0>( region.back()  ) == ct );
         }
         //SET
         {
@@ -160,7 +160,7 @@ namespace xxx_put{
             benchmark.insert( "baz" );
 
             BOOST_ASSIGN_V2_CHECK(
-                range::equal(
+                boost::range::equal(
                     set | as2::delay_csv_put(
                         as2::csv_deque<word_>( "foo", "bar", "baz" )
                     ),
@@ -207,8 +207,7 @@ namespace xxx_put{
             typedef const size_ dim_;
             dim_ dim1 = 2, dim2 = 3, dim3 = 4;
 
-            using boost::extents;
-            array3_ array3( extents[dim1][dim2][dim3] );
+            array3_ array3( boost::extents[dim1][dim2][dim3] );
 
             as2::csv_put(
                 array3,
@@ -225,7 +224,7 @@ namespace xxx_put{
             for( size_ i1 = 0; i1 < dim1; i1++ )
             {
                 for( size_ i2 = 0; i2 < dim2; i2++ )
-                  {
+                {
                     for( size_ i3 = 0; i3 < dim3; i3++ )
                     {
                         BOOST_ASSIGN_V2_CHECK( array3[ i1 ][ i2 ][ i3 ] == i++ );
@@ -235,10 +234,9 @@ namespace xxx_put{
 
             //]
 
-            using boost::indices;
-            typedef boost::multi_array_types::index_range range;
+            typedef boost::multi_array_types::index_range range_;
             array3_::array_view<2>::type view =
-            array3[ indices[1][range(0,2)][range(1,3)] ];
+            array3[ boost::indices[1][range_(0,2)][range_(1,3)] ];
 
             as2::csv_put(
                 view,
@@ -267,11 +265,11 @@ namespace xxx_put{
             as2::csv_put( cb, 1, 2, 3 );
 
             BOOST_ASSIGN_V2_CHECK(
-                range::equal(cb, as2::csv_deque(1, 2, 3) )
+                boost::range::equal(cb, as2::csv_deque(1, 2, 3) )
             );
 
             BOOST_ASSIGN_V2_CHECK(
-                range::equal(
+                boost::range::equal(
                     cb | as2::delay_csv_put( as2::csv_deque( 4, 5 ) ),
                     as2::csv_deque(3, 4, 5)
                 )

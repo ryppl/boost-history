@@ -31,8 +31,7 @@ namespace xxx_chain{
 
     void test()
     {
-        using namespace boost;
-        namespace as2 = assign::v2;
+        namespace as2 = boost::assign::v2;
         {
             namespace ns = as2::check_chain_aux;
             {    typedef int T; ns::static_<T>(); ns::static_<T>(); }
@@ -50,47 +49,48 @@ namespace xxx_chain{
             );
 
             BOOST_ASSIGN_V2_CHECK(
-                range::equal( word, as2::csv_deque<T>("O", "R", "B", "I", "T") )
+                boost::range::equal( word, as2::csv_deque<T>("O", "R", "B", "I", "T") )
             );
             //]
         }
         {
             //[test_chain_write
-            typedef int T; array<T, 3> head; std::list<T> tail( 2 );
+            typedef int T; boost::array<T, 3> head; std::list<T> tail( 2 );
             
-            copy( 
+            boost::copy( 
                 as2::csv_deque( 1, 2, 3, 4, 5 ),
                 boost::begin( head | as2::_chain( tail ) ) 
             );
 
             BOOST_ASSIGN_V2_CHECK( 
-                range::equal( head, as2::csv_deque( 1, 2, 3 ) ) 
+                boost::range::equal( head, as2::csv_deque( 1, 2, 3 ) ) 
             );
             BOOST_ASSIGN_V2_CHECK( 
-                range::equal( tail, as2::csv_deque( 4, 5 ) ) 
+                boost::range::equal( tail, as2::csv_deque( 4, 5 ) ) 
             );
             //]
         }
         // Boost.Assign.v2 containers
         {    
             //[test_chain_write_refs
-            std::vector<int> source( 8 ); iota(source, 1);
-            array<int, 5> copies; int x, y, z;
+            std::vector<int> source( 8 ); boost::iota(source, 1);
+            boost::array<int, 4> head; int t, a, i, l;
             
-            /*<<Brings `&&` to scope>>*/using namespace assign::v2;
+            /*<<Brings `&&` to scope>>*/using namespace boost::assign::v2;
             boost::copy(
                 source,
                 boost::begin( 
-                    copies && (/*<< rvalue! >>*/ as2::ref::csv_array( x, y, z ) | as2::ref::_get ) 
+                    head && (/*<< rvalue! >>*/ as2::ref::csv_array( t, a, i, l ) | as2::ref::_get ) 
                 )
             );
 
             BOOST_ASSIGN_V2_CHECK( 
-                range::equal( copies, as2::csv_deque( 1, 2, 3, 4, 5 ) ) 
+                boost::range::equal( head, as2::csv_deque( 1, 2, 3, 4 ) ) 
             );
-            BOOST_ASSIGN_V2_CHECK( x == 6 ); 
-            BOOST_ASSIGN_V2_CHECK( y == 7 ); 
-            BOOST_ASSIGN_V2_CHECK( z == 8 );
+            BOOST_ASSIGN_V2_CHECK( t == 5 ); 
+            BOOST_ASSIGN_V2_CHECK( a == 6 ); 
+            BOOST_ASSIGN_V2_CHECK( i == 7 ); 
+            BOOST_ASSIGN_V2_CHECK( l == 8 );
             //]
         }
 

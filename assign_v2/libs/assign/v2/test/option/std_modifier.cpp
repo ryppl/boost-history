@@ -33,8 +33,7 @@ namespace xxx_standard{
 
     void test()
     {
-        using namespace boost;
-        namespace as2 = assign::v2;
+        namespace as2 = boost::assign::v2;
 
         // PUT
         {
@@ -55,14 +54,14 @@ namespace xxx_standard{
             boost::circular_buffer<int> cb( 3 ); 
             
             BOOST_ASSIGN_V2_CHECK(
-                range::equal(
+                boost::range::equal(
                     cb | as2::delay_csv_put( as2::_push_front, as2::csv_deque( 3, 2, 1 ) ), 
                     as2::csv_deque( 1, 2, 3 ) 
                 )
             );
 
             BOOST_ASSIGN_V2_CHECK(
-                range::equal(
+                boost::range::equal(
                     cb | as2::delay_csv_put( as2::csv_deque( 4, 5 ) ), 
                     as2::csv_deque( 3, 4, 5 ) 
                 )
@@ -96,7 +95,7 @@ namespace xxx_standard{
             as2::csv_put( list, as2::_push_back, 1, 10, 100 );
 
             BOOST_ASSIGN_V2_CHECK( 
-                range::equal( list, as2::csv_deque( 1, 10, 100 ) ) 
+                boost::range::equal( list, as2::csv_deque( 1, 10, 100 ) ) 
             );
             //]
         }
@@ -120,7 +119,7 @@ namespace xxx_standard{
             );
 
             BOOST_ASSIGN_V2_CHECK( 
-                range::equal( two_power_n, as2::csv_deque( 1, 2, 4, 8, 16 ) ) 
+                boost::range::equal( two_power_n, as2::csv_deque( 1, 2, 4, 8, 16 ) ) 
             );
             //]
         }

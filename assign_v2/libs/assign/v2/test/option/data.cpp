@@ -26,30 +26,26 @@
 #include <boost/typeof/typeof.hpp>
 #include <libs/assign/v2/test/option/data.h>
 
-// TODO
-#include <iostream>
-
 namespace test_assign_v2{
 namespace xxx_option{
 namespace xxx_data{
 
     void test()
     {
-        using namespace boost;
-        namespace as2 = assign::v2;
+        namespace as2 = boost::assign::v2;
         {
             // (*fp) resolves error C2440 using MSVC
             //[test_option_data_math
             std::vector<double> exponent;
             /*<-*/typedef double(*fp)(double);/*->*/
-            typedef function<double(double)> f_;
+            typedef boost::function<double(double)> f_;
             as2::csv_put(
                 exponent
                 , as2::_data = f_( /*<-*/fp(/*->*/ log10 /*<-*/)/*->*/ )
                 , 1.0, 10.0, 100.0, 1000.0, 10000.0
             );
 
-            double eps = numeric::bounds<double>::smallest();
+            double eps = boost::numeric::bounds<double>::smallest();
             BOOST_ASSIGN_V2_CHECK( fabs( exponent.front() - 0.0 ) < eps );
             BOOST_ASSIGN_V2_CHECK( fabs( exponent.back() - 4.0 ) < eps );
             //]
@@ -59,9 +55,9 @@ namespace xxx_data{
             int k = 1;
 
             BOOST_ASSIGN_V2_CHECK(
-                range::equal(
+                boost::range::equal(
                     as2::csv_deque(
-                        as2::_data = ( lambda::var( k ) *= lambda::_1 ),
+                        as2::_data = ( boost::lambda::var( k ) *= boost::lambda::_1 ),
                         1, 2, 3, 4, 5
                     ),
                     as2::csv_deque( 1, 2, 6, 24, 120 )

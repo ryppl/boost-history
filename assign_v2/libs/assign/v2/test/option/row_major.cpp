@@ -27,8 +27,6 @@ namespace xxx_row_major{
 
     void test()
     {
-    
-        using namespace boost;
         namespace as2 = boost::assign::v2;
         
         //[test_option_row_major
@@ -36,10 +34,10 @@ namespace xxx_row_major{
         typedef array2_::size_type size_;
         typedef size_ const dim_;
         dim_ dim1 = 3, dim2 = 3;
-        array2_ array2( extents[dim1][dim2] );
+        array2_ array2( boost::extents[dim1][dim2] );
 
         int k = -2;
-        BOOST_AUTO( option,  as2::_row_major = ( lambda::var( k ) += 2 ) );
+        BOOST_AUTO( option,  as2::_row_major = ( boost::lambda::var( k ) += 2 ) );
         as2::csv_put( array2, option, -1, -1, -1, -1, -1 );
         k = -1; as2::csv_put( array2, option, +1, +1, +1, +1 );
         
@@ -50,9 +48,9 @@ namespace xxx_row_major{
         };
         size_ const n = array2.num_elements();
         BOOST_ASSIGN_V2_CHECK(
-            range::equal(
-                make_iterator_range( array2.data(), n + array2.data() ),
-                make_iterator_range( benchmark, n + benchmark )
+            boost::range::equal(
+                boost::make_iterator_range( array2.data(), n + array2.data() ),
+                boost::make_iterator_range( benchmark, n + benchmark )
             )
         );
         //]

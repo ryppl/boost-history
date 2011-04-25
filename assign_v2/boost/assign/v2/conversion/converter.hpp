@@ -27,12 +27,13 @@ namespace conversion_aux{
     template<typename R, typename Arg = nil_>
     class converter
     {
-
-        /*<-*/typedef boost::iterator_range<
+//<-
+        typedef boost::iterator_range<
             typename boost::range_iterator<
                 typename boost::add_const<R>::type
             >::type
-        > source_type;/*->*/
+        > source_type;
+//->
 
         public:
 
