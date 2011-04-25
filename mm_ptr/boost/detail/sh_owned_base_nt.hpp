@@ -42,7 +42,6 @@
 #include <boost/preprocessor/punctuation/comma_if.hpp>
 #include <boost/preprocessor/repetition/repeat.hpp>
 #include <boost/preprocessor/repetition/repeat_from_to.hpp>
-#include <boost/smart_ptr/detail/sp_counted_base.hpp>
 
 #include <boost/detail/intrusive_list.hpp>
 #include <boost/detail/intrusive_stack.hpp>
