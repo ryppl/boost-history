@@ -70,13 +70,12 @@ class mm_header
     intrusive_list includes_;						/**< List of all sets of an union. */
     intrusive_list elements_;						/**< List of all pointee objects belonging to a @c mm_header . */
 
-#ifndef BOOST_DISABLE_THREADS
-	mutex mutex_;
-#endif
-
     static fast_pool_allocator<mm_header> pool_;	/**< Pool where all sets are allocated. */
 
 public:
+#ifndef BOOST_DISABLE_THREADS
+	mutex mutex_;
+#endif
 	bool destroy_;									/**< Destruction sequence initiated. */
     intrusive_list::node tag_;						/**< Tag used to enlist to @c mm_header::includes_ . */
 
@@ -412,6 +411,10 @@ template <typename T>
         {
             if (p->init_)
                 return;
+
+#ifndef BOOST_DISABLE_THREADS
+        	mutex::scoped_lock scoped_lock(ps_->mutex_);
+#endif
         
 			// iterate memory blocks
             for (intrusive_list::iterator<mm_base, & mm_base::init_tag_> i = p->inits_.begin(); i != p->inits_.end(); ++ i)
