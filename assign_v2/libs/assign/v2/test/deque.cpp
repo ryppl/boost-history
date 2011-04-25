@@ -25,7 +25,7 @@ namespace xxx_deque{
 
     void test()
     {
-    	namespace as2 = boost::assign::v2;
+        namespace as2 = boost::assign::v2;
         {
             //[test_deque_str_literal
             typedef as2::result_of::deque<char*>::type C;

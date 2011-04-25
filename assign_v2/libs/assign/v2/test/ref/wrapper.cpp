@@ -12,7 +12,7 @@
 #include <boost/assign/v2/detail/config/check.hpp>
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
 #include <libs/assign/v2/test/ref/wrapper.h>
-
+    
 namespace test_assign_v2{
 namespace xxx_ref{
 namespace xxx_wrapper{

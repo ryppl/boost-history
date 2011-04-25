@@ -31,7 +31,7 @@ namespace list_aux{
         typedef T const& result_of_tail_type;
 
         tail_holder(typename boost::call_traits<T>::param_type t) 
-        	: tail_( t )
+            : tail_( t )
         {}
         
         result_of_tail_type tail()const{ return this->tail_; }
