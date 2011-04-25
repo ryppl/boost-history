@@ -61,12 +61,12 @@ class owned_base;
 class mm_header
 {
     long count_;									/**< Count of the number of pointers from the stack referencing the same @c mm_header .*/
-    mutable mm_header * redir_;					/**< Redirection in the case of an union multiple @c mm_header s.*/
+    mutable mm_header * redir_;					/**< Redirection in the case of an union multiple sets.*/
 
-    intrusive_list includes_;						/**< List of all @c mm_header s of an union. */
+    intrusive_list includes_;						/**< List of all sets of an union. */
     intrusive_list elements_;						/**< List of all pointee objects belonging to a @c mm_header . */
 
-    static fast_pool_allocator<mm_header> pool_;	/**< Pool where all @c mm_header s are allocated. */
+    static fast_pool_allocator<mm_header> pool_;	/**< Pool where all sets are allocated. */
 
 public:
 	bool destroy_;									/**< Destruction sequence initiated. */
@@ -84,7 +84,7 @@ public:
 	
 	
 	/**
-		Release of a @c mm_header with possible destruction of all its elements and other @c mm_header s unified to it.
+		Release of a @c mm_header with possible destruction of all its elements and other sets unified to it.
 		
 		@return		True if the @c mm_header was released.
 	*/
@@ -149,7 +149,7 @@ public:
 
 	
 	/**
-		Finds the elements constituting one or many @c mm_header s unified.
+		Finds the elements constituting one or many sets unified.
 		
 		@return		List of all elements.
 	*/
@@ -302,7 +302,7 @@ template <typename T>
 
 
 		/**
-			Assignment & union of 2 @c mm_header s if the pointee resides a different @c mm_header.
+			Assignment & union of 2 sets if the pointee resides a different @c mm_header.
 			
 			@param	p	New pointee object to manage.
 		*/
@@ -321,7 +321,7 @@ template <typename T>
 
 
 		/**
-			Assignment & union of 2 @c mm_header s if the pointee resides a different @c mm_header.
+			Assignment & union of 2 sets if the pointee resides a different @c mm_header.
 			
 			@param	p	New pointer to manage.
 		*/
@@ -342,7 +342,7 @@ template <typename T>
 
 
 		/**
-			Assignment & union of 2 @c mm_header s if the pointee resides a different @c mm_header.
+			Assignment & union of 2 sets if the pointee resides a different @c mm_header.
 			
 			@param	p	New pointer to manage.
 		*/
