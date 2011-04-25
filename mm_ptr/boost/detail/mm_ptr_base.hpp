@@ -20,7 +20,7 @@
 
 
 #include <boost/detail/sh_utility.h>
-#include <boost/detail/sh_owned_base.hpp>
+#include <boost/detail/sh_mm_base.hpp>
 
 
 namespace boost
@@ -175,9 +175,9 @@ template <typename T>
         }
 
 	protected:
-		detail::sh::owned_base * header() const
+		detail::sh::mm_base * header() const
 		{
-			detail::sh::owned_base * p = (mm<value_type> *) (typename mm<value_type>::roofof) static_cast<value_type *>(rootof<is_polymorphic<value_type>::value>::get(po_));
+			detail::sh::mm_base * p = (mm<value_type> *) (typename mm<value_type>::roofof) static_cast<value_type *>(rootof<is_polymorphic<value_type>::value>::get(po_));
 			return p;
 		}
 	};

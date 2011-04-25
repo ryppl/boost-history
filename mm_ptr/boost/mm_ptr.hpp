@@ -32,6 +32,7 @@
 #include <iostream>
 #include <boost/pool/pool_alloc.hpp>
 #include <boost/type_traits/add_pointer.hpp>
+#include <boost/smart_ptr/detail/atomic_count.hpp>
 
 #include <boost/detail/intrusive_list.hpp>
 #include <boost/detail/intrusive_stack.hpp>
@@ -49,7 +50,7 @@ namespace sh
 {
 
 
-class owned_base;
+class mm_base;
 
 
 /**
@@ -60,8 +61,10 @@ class owned_base;
 
 class mm_header
 {
-    long count_;									/**< Count of the number of pointers from the stack referencing the same @c mm_header .*/
-    mutable mm_header * redir_;					/**< Redirection in the case of an union multiple sets.*/
+    typedef detail::atomic_count count_type;
+
+    count_type count_;								/**< Count of the number of pointers from the stack referencing the same @c mm_header .*/
+    mutable mm_header * redir_;						/**< Redirection in the case of an union multiple sets.*/
 
     intrusive_list includes_;						/**< List of all sets of an union. */
     intrusive_list elements_;						/**< List of all pointee objects belonging to a @c mm_header . */
@@ -96,7 +99,7 @@ public:
         if (-- p->count_ == 0)
         {
 			p->destroy_ = true;
-            for (intrusive_list::iterator<owned_base, & owned_base::mm_tag_> i; i = p->elements_.begin(), i != p->elements_.end(); )
+            for (intrusive_list::iterator<mm_base, & mm_base::mm_tag_> i; i = p->elements_.begin(), i != p->elements_.end(); )
                 delete &* i;
 			p->destroy_ = false;
             
@@ -143,7 +146,7 @@ public:
             redir_ = p->redir();
             redir_->includes_.merge(includes_);
             redir_->elements_.merge(elements_);
-            redir_->count_ += count_;
+            new (& redir_->count_) count_type(redir_->count_ + count_); /**< Hack */
         }
     }
 
@@ -236,10 +239,10 @@ template <typename T>
 		
         mm_ptr() : ps_(0)
         {
-            if (! owned_base::pool_.is_from(this))
+            if (! mm_base::pool_.is_from(this))
                 ps_ = new mm_header();
             else
-                owned_base::pool_.top(this)->ptrs_.push(& pn_);
+                mm_base::pool_.top(this)->ptrs_.push(& pn_);
         }
 
 		
@@ -252,7 +255,7 @@ template <typename T>
         template <typename V>
             mm_ptr(mm<V> * p) : base(p)
             {
-                if (! owned_base::pool_.is_from(this))
+                if (! mm_base::pool_.is_from(this))
                 {
                     ps_ = new mm_header();
 
@@ -260,8 +263,8 @@ template <typename T>
                 }
                 else
                 {
-                    owned_base::pool_.top(this)->ptrs_.push(& pn_);
-                    owned_base::pool_.top(this)->inits_.merge(p->inits_);
+                    mm_base::pool_.top(this)->ptrs_.push(& pn_);
+                    mm_base::pool_.top(this)->inits_.merge(p->inits_);
                 }
             }
 
@@ -275,10 +278,10 @@ template <typename T>
         template <typename V>
             mm_ptr(mm_ptr<V> const & p) : base(p)
             {
-                if (! owned_base::pool_.is_from(this))
+                if (! mm_base::pool_.is_from(this))
                     ps_ = new mm_header();
                 else
-                    owned_base::pool_.top(this)->ptrs_.push(& pn_);
+                    mm_base::pool_.top(this)->ptrs_.push(& pn_);
 
                 ps_->redir(p.ps_);
             }
@@ -292,10 +295,10 @@ template <typename T>
 
 			mm_ptr(mm_ptr<T> const & p) : base(p)
             {
-                if (! owned_base::pool_.is_from(this))
+                if (! mm_base::pool_.is_from(this))
                     ps_ = new mm_header();
                 else
-                    owned_base::pool_.top(this)->ptrs_.push(& pn_);
+                    mm_base::pool_.top(this)->ptrs_.push(& pn_);
 				
                 ps_->redir(p.ps_);
             }
@@ -376,7 +379,7 @@ template <typename T>
         {
             base::reset();
             
-            if (! owned_base::pool_.is_from(this))
+            if (! mm_base::pool_.is_from(this))
                 if (ps_->release())
                     if (! d)
                         new (ps_) mm_header();
@@ -394,13 +397,13 @@ template <typename T>
 			@param	p	Pointee object to initialize.
 		*/
 		
-        void init(owned_base * p)
+        void init(mm_base * p)
         {
             if (p->init_)
                 return;
         
 			// iterate memory blocks
-            for (intrusive_list::iterator<owned_base, & owned_base::init_tag_> i = p->inits_.begin(); i != p->inits_.end(); ++ i)
+            for (intrusive_list::iterator<mm_base, & mm_base::init_tag_> i = p->inits_.begin(); i != p->inits_.end(); ++ i)
             {
                 i->init_ = true;
                 ps_->elements()->push_back(& i->mm_tag_);
