@@ -33,6 +33,7 @@
 #include <boost/pool/pool_alloc.hpp>
 #include <boost/type_traits/add_pointer.hpp>
 #include <boost/smart_ptr/detail/atomic_count.hpp>
+#include <boost/thread/thread.hpp>
 
 #include <boost/detail/intrusive_list.hpp>
 #include <boost/detail/intrusive_stack.hpp>
@@ -69,6 +70,10 @@ class mm_header
     intrusive_list includes_;						/**< List of all sets of an union. */
     intrusive_list elements_;						/**< List of all pointee objects belonging to a @c mm_header . */
 
+#ifndef BOOST_DISABLE_THREADS
+	mutex mutex_;
+#endif
+
     static fast_pool_allocator<mm_header> pool_;	/**< Pool where all sets are allocated. */
 
 public:
@@ -98,6 +103,9 @@ public:
 
         if (-- p->count_ == 0)
         {
+#ifndef BOOST_DISABLE_THREADS
+        	mutex::scoped_lock scoped_lock(mutex_);
+#endif
 			p->destroy_ = true;
             for (intrusive_list::iterator<mm_base, & mm_base::mm_tag_> i; i = p->elements_.begin(), i != p->elements_.end(); )
                 delete &* i;
@@ -143,6 +151,9 @@ public:
     {
         if (redir_ != p->redir())
         {
+#ifndef BOOST_DISABLE_THREADS
+        	mutex::scoped_lock scoped_lock(mutex_);
+#endif
             redir_ = p->redir();
             redir_->includes_.merge(includes_);
             redir_->elements_.merge(elements_);

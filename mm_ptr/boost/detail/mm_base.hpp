@@ -26,9 +26,6 @@
 #include <stack>
 #include <limits>
 
-// Bypassing linkage by default
-#define BOOST_SH_DISABLE_THREADS
-
 #include <boost/thread.hpp>
 #include <boost/thread/tss.hpp>
 #include <boost/pool/pool.hpp>
@@ -72,7 +69,7 @@ struct pool : boost::pool<>
 {
 	typedef std::list< numeric::interval<long>, fast_pool_allocator< numeric::interval<long> > > pool_lii;	/**< Syntax helper. */
 
-#ifndef BOOST_SH_DISABLE_THREADS
+#ifndef BOOST_DISABLE_THREADS
     thread_specific_ptr<pool_lii> plii_;			/**< Thread specific list of memory boundaries. */
 #else
     std::auto_ptr<pool_lii> plii_;					/**< List of memory boundaries. */
