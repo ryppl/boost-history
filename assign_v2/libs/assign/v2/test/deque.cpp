@@ -29,14 +29,14 @@ namespace xxx_deque{
         {
             //[test_deque_str_literal
             typedef as2::result_of::deque<char*>::type C;
-            
+
             C deque = as2::deque<char*>( "x" )( "y" )( "z" );
-            
-            std::deque<std::string> benchmark; 
-            benchmark.push_back( "x" ); 
-            benchmark.push_back( "y" ); 
+
+            std::deque<std::string> benchmark;
+            benchmark.push_back( "x" );
+            benchmark.push_back( "y" );
             benchmark.push_back( "z" );
-            
+
             BOOST_ASSIGN_V2_CHECK( boost::range::equal( benchmark, deque ) );
             //]
         }
@@ -59,30 +59,30 @@ namespace xxx_deque{
             BOOST_ASSIGN_V2_CHECK( cont1.empty() );
 
             cont1( x, 3 )( y )( z, 3, 3 )( "qux" );
-            
-            BOOST_ASSIGN_V2_CHECK( boost::range::equal( benchmark, cont1 ) ); 
-            
+
+            BOOST_ASSIGN_V2_CHECK( boost::range::equal( benchmark, cont1 ) );
+
             C cont2 = as2::deque<word_>( x, 3 )( y )( z, 3, 3 )( "qux" );
-            
-            BOOST_ASSIGN_V2_CHECK( boost::range::equal( benchmark, cont2 ) ); 
+
+            BOOST_ASSIGN_V2_CHECK( boost::range::equal( benchmark, cont2 ) );
             //]
         }
         {
             //[test_csv_deque_str_literal
             typedef as2::result_of::csv_deque<const char[2]>::type C1;
             typedef as2::result_of::csv_deque<std::string>::type C2;
-            
-            BOOST_MPL_ASSERT(( is_same<C1, as2::result_of::deque<char*>::type> ));
-            BOOST_MPL_ASSERT(( is_same<C2, as2::result_of::deque<std::string>::type> ));
-            
-            C1 deque1 = as2::csv_deque( "x", "y", "z" ); 
-            C2 deque2 = as2::csv_deque<std::string>( "x", "y", "z" ); 
-            
-            std::deque<std::string> benchmark; 
-            benchmark.push_back( "x" ); 
-            benchmark.push_back( "y" ); 
+
+            BOOST_MPL_ASSERT(( boost::is_same<C1, as2::result_of::deque<char*>::type> ));
+            BOOST_MPL_ASSERT(( boost::is_same<C2, as2::result_of::deque<std::string>::type> ));
+
+            C1 deque1 = as2::csv_deque( "x", "y", "z" );
+            C2 deque2 = as2::csv_deque<std::string>( "x", "y", "z" );
+
+            std::deque<std::string> benchmark;
+            benchmark.push_back( "x" );
+            benchmark.push_back( "y" );
             benchmark.push_back( "z" );
-            
+
             BOOST_ASSIGN_V2_CHECK( boost::range::equal( benchmark, deque1 ) );
             BOOST_ASSIGN_V2_CHECK( boost::range::equal( benchmark, deque2 ) );
             //]
@@ -91,28 +91,28 @@ namespace xxx_deque{
             //[test_csv_deque_str
             typedef std::string T;
             typedef as2::result_of::csv_deque<T>::type C;
-            
-            BOOST_MPL_ASSERT(( is_same<C, as2::result_of::deque<std::string>::type> ));
-            
-            C  deque = as2::csv_deque<T>( "x", "y", "z" ); 
-            
-            std::deque<std::string> benchmark; 
-            benchmark.push_back( "x" ); 
-            benchmark.push_back( "y" ); 
+
+            BOOST_MPL_ASSERT(( boost::is_same<C, as2::result_of::deque<std::string>::type> ));
+
+            C  deque = as2::csv_deque<T>( "x", "y", "z" );
+
+            std::deque<std::string> benchmark;
+            benchmark.push_back( "x" );
+            benchmark.push_back( "y" );
             benchmark.push_back( "z" );
-            
+
             BOOST_ASSIGN_V2_CHECK( boost::range::equal( benchmark, deque ) );
             //]
         }
         {
             //[test_csv_deque_ints
             typedef as2::result_of::csv_deque<int>::type C;
-            
+
             BOOST_MPL_ASSERT(( boost::is_same<C, as2::result_of::deque<int>::type> ));
 
             C series1 = as2::csv_deque( 0, 1, 1, 2, 3, 5, 8 );
-    
-            std::deque<int> benchmark; 
+
+            std::deque<int> benchmark;
             benchmark.push_back( 0 );
             benchmark.push_back( 1 );
             benchmark.push_back( 1 );
@@ -130,12 +130,12 @@ namespace xxx_deque{
         }
         {
             //[test_csv_deque_converter
-            typedef boost::array<int, 5> C; C const& ar = /*<<Notice unqualified>>*/converter( 
+            typedef boost::array<int, 5> C; C const& ar = /*<<Notice unqualified>>*/converter(
                 as2::csv_deque( 1, 2, 3, 4, 5 )
             );
-            
-            BOOST_ASSIGN_V2_CHECK( 
-                boost::range::equal( ar, as2::csv_deque( 1, 2, 3, 4, 5 ) ) 
+
+            BOOST_ASSIGN_V2_CHECK(
+                boost::range::equal( ar, as2::csv_deque( 1, 2, 3, 4, 5 ) )
             );
             //]
         }
