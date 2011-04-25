@@ -73,7 +73,7 @@ int main()
 		mm_ptr<A> v = new mm<A>(0);
 		v->p = new mm<A>(1);
 		v->p->p = new mm<A>(2);
-		v->p->p->p = new mm<A>(3);
+		v->p->p->p = v;
 	}
 	cout << endl;
 }
