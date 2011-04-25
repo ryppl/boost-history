@@ -18,7 +18,7 @@
 #define BOOST_INTRUSIVE_STACK_HPP_INCLUDED
 
 
-#include <boost/detail/sh_utility.h>
+#include <boost/detail/roofof.hpp>
 
 
 namespace boost

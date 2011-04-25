@@ -15,12 +15,12 @@
 */
 
 
-#ifndef BOOST_SHIFTED_PTR_HPP
-#define BOOST_SHIFTED_PTR_HPP
+#ifndef BOOST_DETAIL_MM_PTR_BASE_HPP
+#define BOOST_DETAIL_MM_PTR_BASE_HPP
 
 
-#include <boost/detail/sh_utility.h>
-#include <boost/detail/sh_mm_base.hpp>
+#include <boost/detail/roofof.hpp>
+#include <boost/detail/mm_base.hpp>
 
 
 namespace boost

@@ -18,8 +18,8 @@
 */
 
 
-#ifndef BOOST_DETAIL_SH_RTCMM_H_INCLUDED
-#define BOOST_DETAIL_SH_RTCMM_H_INCLUDED
+#ifndef BOOST_DETAIL_MM_PTR_INCLUDED
+#define BOOST_DETAIL_MM_PTR_INCLUDED
 
 
 #if defined(_MSC_VER)
@@ -36,7 +36,7 @@
 
 #include <boost/detail/intrusive_list.hpp>
 #include <boost/detail/intrusive_stack.hpp>
-#include <boost/detail/sh_utility.h>
+#include <boost/detail/roofof.hpp>
 #include <boost/detail/mm_ptr_base.hpp>
 
 

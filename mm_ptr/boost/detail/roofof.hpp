@@ -14,8 +14,8 @@
 */
 
 
-#ifndef BOOST_DETAIL_SH_UTILITY_H_INCLUDED
-#define BOOST_DETAIL_SH_UTILITY_H_INCLUDED
+#ifndef BOOST_DETAIL_ROOFOF_HPP_INCLUDED
+#define BOOST_DETAIL_ROOFOF_HPP_INCLUDED
 
 
 #include <boost/type_traits/remove_const.hpp>
