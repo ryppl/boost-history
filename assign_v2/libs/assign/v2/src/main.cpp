@@ -1,14 +1,14 @@
 #include <string>
 #include <iostream>
 #include <boost/config.hpp>
-#include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
+#include <boost/assign/v2/support/config/enable_cpp0x.hpp>
 #include <boost/format.hpp>
 #include <boost/version.hpp>
 
 // Test
 #include <libs/assign/v2/test/chain.h>
 #include <libs/assign/v2/test/conversion.h>
-#include <libs/assign/v2/test/detail.h>
+#include <libs/assign/v2/test/support.h>
 #include <libs/assign/v2/test/deque.h>
 #include <libs/assign/v2/test/interpreter.h>
 #include <libs/assign/v2/test/option.h>
@@ -62,7 +62,7 @@ int main (int argc, char * const argv[])
         using namespace test_assign_v2;
         xxx_chain::test();
         xxx_conversion::test();
-        xxx_detail::test();
+        xxx_support::test();
         xxx_deque::test();
         xxx_interpreter::test();
         xxx_option::test();

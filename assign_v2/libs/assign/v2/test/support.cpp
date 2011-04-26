@@ -7,17 +7,17 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#include <libs/assign/v2/test/detail/functor.h>
-#include <libs/assign/v2/test/detail/traits.h>
-#include <libs/assign/v2/test/detail.h>
+#include <libs/assign/v2/test/support/functor.h>
+#include <libs/assign/v2/test/support/traits.h>
+#include <libs/assign/v2/test/support.h>
 
 namespace test_assign_v2{
-namespace xxx_detail{
+namespace xxx_support{
 
     void test(){
         xxx_functor::test();
         xxx_traits::test();
     }
 
-}// xxx_detail
+}// xxx_support
 }// test_assign_v2

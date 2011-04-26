@@ -12,7 +12,7 @@
 
 #include <boost/assign/v2/chain.hpp>
 #include <boost/assign/v2/conversion.hpp>
-#include <boost/assign/v2/detail.hpp>
+#include <boost/assign/v2/support.hpp>
 #include <boost/assign/v2/deque.hpp>
 #include <boost/assign/v2/option.hpp>
 #include <boost/assign/v2/put.hpp>

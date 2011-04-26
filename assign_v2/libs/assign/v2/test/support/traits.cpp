@@ -14,10 +14,10 @@
 #include <boost/assign/v2/detail/traits.hpp>
 #include <boost/mpl/assert.hpp>
 #include <boost/static_assert.hpp>
-#include <libs/assign/v2/test/detail/traits.h>
+#include <libs/assign/v2/test/support/traits.h>
 
 namespace test_assign_v2{
-namespace xxx_detail{
+namespace xxx_support{
 namespace xxx_traits{
 
     void test()
@@ -49,6 +49,6 @@ namespace xxx_traits{
     }
 
 }// xxx_traits
-}// xxx_detail
+}// xxx_support
 }// xxx_test_assign
 

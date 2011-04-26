@@ -11,10 +11,10 @@
 #include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
 #include <boost/assign/v2/detail/functor/value.hpp>
 #include <boost/tuple/tuple.hpp>
-#include <libs/assign/v2/test/detail/functor.h>
+#include <libs/assign/v2/test/support/functor.h>
 
 namespace test_assign_v2{
-namespace xxx_detail{
+namespace xxx_support{
 namespace xxx_functor{
 
 
@@ -89,5 +89,5 @@ namespace xxx_functor{
     }
 
 }// xxx_functor
-}// xxx_detail
+}// xxx_support
 }// test_assign_v2
