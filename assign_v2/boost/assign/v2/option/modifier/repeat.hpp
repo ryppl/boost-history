@@ -39,7 +39,7 @@ namespace interpreter_aux{
         typedef std::size_t size_type;
 
         interpreter_modifier() : n_( 0 ){}
-        explicit interpreter_modifier( inner_type inner, size_type n )
+        interpreter_modifier( inner_type inner, size_type n )
             : inner_( inner ), n_( n )
         {}
 

@@ -51,7 +51,7 @@ namespace xxx_iterate{
             int index = 3;
             as2::csv_put(
                 alternating
-                , as2::_iterate = boost::lambda::var( index )++
+                , as2::_option % ( as2::_iterate = boost::lambda::var( index )++ )
                 , +2, -3, +3, -4, +4, -5, +5
             );
 

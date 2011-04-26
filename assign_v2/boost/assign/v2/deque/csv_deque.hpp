@@ -38,11 +38,11 @@ namespace interpreter_aux{
 namespace result_of{
 
     template<typename T>
-    struct csv_deque/*<-*/
+    struct csv_deque
         : result_of::deque<
             typename csv_deque_deduce_value<T>::type
         >
-    {}/*->*/;
+    {};
 
     template<typename O, typename T>
     struct csv_deque_option/*<-*/
@@ -66,7 +66,7 @@ namespace result_of{
 //->
     template<typename T, typename... Args>
     typename /*<-*/boost::lazy_disable_if<
-        is_option_crtp_cpp0x<T>,
+        is_list_option_cpp0x<T>,
         /*->*/result_of::csv_deque<T>/*<-*/
     >/*->*/::type
     csv_deque(T&& t, Args&& ...  args)/*<-*/
@@ -78,7 +78,7 @@ namespace result_of{
 
     template<typename T, typename O, typename... Args>
     typename /*<-*/boost::lazy_enable_if<
-        is_option_crtp<O>,
+        is_list_option<O>,
         /*->*/result_of::csv_deque_option<O, T>/*<-*/
     >/*->*/::type
     csv_deque(O const& options, T&& t, Args&& ...  args)/*<-*/

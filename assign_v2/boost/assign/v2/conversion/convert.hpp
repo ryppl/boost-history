@@ -24,8 +24,8 @@ namespace convert_tag{
     struct copy{};
 
 }// convert_tag
-//<-
 namespace conversion_aux{
+//<-
 
     template<typename C, typename R>
     C csv_put_copy(C& cont, R const& range)
@@ -69,11 +69,11 @@ namespace conversion_aux{
         return dispatch<C>( arg, r, tag_() );
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
-
 //->
 
     template<typename C, typename Arg = nil_>
-    struct convert/*<-*/{
+    struct convert/*<-*/
+    {
     
         convert(){}
         convert(Arg arg):arg_( arg ){}
@@ -96,6 +96,7 @@ namespace conversion_aux{
     template<typename C, typename Arg = nil_>
     struct convert/*<-*/
         : conversion_aux::convert<C, Arg>
+    /*->*/
     {
 //<-    
         typedef conversion_aux::convert<C> super_t;

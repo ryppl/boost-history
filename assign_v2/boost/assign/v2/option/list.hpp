@@ -74,27 +74,7 @@ namespace result_of{
     };
     
 }// result_of
-    
-    template<typename O, bool is_list = false> 
-    struct option_crtp{};
-    
-    template<typename O>
-    struct is_option_crtp 
-        : boost::mpl::or_<
-            boost::is_base_of< option_crtp<O, false>, O>,
-            boost::is_base_of< option_crtp<O, true>, O>
-        >
-    {};
-
-    template<
-        typename O    // O&&, O&
-    >
-    struct is_option_crtp_cpp0x : is_option_crtp<
-        typename boost::remove_cv<
-            typename boost::remove_reference<O>::type
-        >::type
-    >{};
-            
+                    
     template<
         typename Head = nil_, 
         typename Tail = nil_, 
@@ -105,20 +85,6 @@ namespace result_of{
     template<typename Head, typename Tail, bool exit>
     struct list_option_inherit 
         : Tail
-    {
-        list_option_inherit(){}
-        list_option_inherit( Tail tail ) 
-            : Tail( tail )
-        {}
-    };
-
-    template<typename Head, typename Tail>
-    struct list_option_inherit<Head, Tail, true> 
-        : Tail, 
-        option_crtp< 
-            list_option<Head, Tail, true>,
-            true
-        >
     {
         list_option_inherit(){}
         list_option_inherit( Tail tail ) 
@@ -178,14 +144,27 @@ namespace result_of{
 
     typedef list_option<> empty_list_option;
 
+    template<typename O>
+    struct is_list_option 
+        : boost::is_base_of< empty_list_option, O>
+    {};
+
     template<
-        typename C, typename F, typename MTag, 
-        typename DTag, typename D,
+        typename O    // O&&, O&
+    >
+    struct is_list_option_cpp0x : is_list_option<
+        typename boost::remove_cv<
+            typename boost::remove_reference<O>::type
+        >::type
+    >{};
+
+    template<
+        typename D, typename C, typename F, typename MTag, typename DTag, 
         typename H, typename T
     >
     typename result_of::apply_list_option<H, T, D>::type
     operator%(
-        interpreter_crtp<C, F, MTag, DTag, D> const& lhs,
+        interpreter_crtp<D, C, F, MTag, DTag> const& lhs,
         list_option<H, T> const& list
     )
     {
@@ -196,15 +175,19 @@ namespace result_of{
 
     template<typename L, typename O1>
     struct list_option_modulo
-        : L:: template result<O1>
+        : L::template result<O1>
     {};
 
 
 }// result_of
 }// interpreter_aux
+
     typedef interpreter_aux::empty_list_option empty_list_option_;
+
 namespace{
-    empty_list_option_ _list_option = empty_list_option_();
+
+    empty_list_option_ _option = empty_list_option_();
+
 }
 namespace interpreter_aux{
 namespace result_of{
@@ -222,12 +205,14 @@ namespace result_of{
 
 }// result_of
     
+    template<typename O> struct option_crtp{};
+
     template<typename O1, typename O2>
     typename result_of::option_modulo<O1, O2>::type
-    operator%(option_crtp<O1, false> const option1, O2 const& option2)
+    operator%(option_crtp<O1> const option1, O2 const& option2)
     {
         O1 const& ref = static_cast<O1 const&>( option1 );
-        return _list_option % ref % option2;
+        return _option % ref % option2;
     }
 
 }// interpreter_aux

@@ -39,7 +39,7 @@ namespace xxx_mapped{
             (
                 as2::put( year )
                     ( "feb", 28 )( "apr", 30 )( "jun", 30 )( "sep", 30 )( "nov", 30 )
-                    % ( as2::_data = as2::_key ) % ( as2::_mapped = ( boost::lambda::_1 = 31 ) )
+                    % ( as2::_data = as2::_key ) % ( as2::_mapped = ( boost::lambda::constant( 31 ) ) )
             )/*<<Calls `year[ month_( "jan" ) ] = 31`>>*/( "jan" )( "mar" )( "may" )( "jul" )( "aug" )( "oct" )( "dec" );
             
             BOOST_ASSIGN_V2_CHECK( year["jan"] == 31 );

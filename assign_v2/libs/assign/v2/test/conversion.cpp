@@ -122,8 +122,8 @@ namespace xxx_conversion{
             typedef size_ const dim_;
             dim_ dim1 = 3, dim2 = 3;
             array2_ array2 = converter( 
-                boost::extents[dim1][dim2], 
-                as2::csv_deque(-1, +1, -1, +1, -1, +1, -1, +1, -1) 
+                as2::csv_deque(-1, +1, -1, +1, -1, +1, -1, +1, -1),
+                boost::extents[dim1][dim2]
             );
             
             const int benchmark [] = {

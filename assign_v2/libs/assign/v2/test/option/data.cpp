@@ -41,7 +41,7 @@ namespace xxx_data{
             typedef boost::function<double(double)> f_;
             as2::csv_put(
                 exponent
-                , as2::_data = f_( /*<-*/fp(/*->*/ log10 /*<-*/)/*->*/ )
+                , as2::_option % ( as2::_data = f_( /*<-*/fp(/*->*/ log10 /*<-*/)/*->*/ ) )
                 , 1.0, 10.0, 100.0, 1000.0, 10000.0
             );
 
@@ -57,7 +57,7 @@ namespace xxx_data{
             BOOST_ASSIGN_V2_CHECK(
                 boost::range::equal(
                     as2::csv_deque(
-                        as2::_data = ( boost::lambda::var( k ) *= boost::lambda::_1 ),
+                        as2::_option % ( as2::_data = ( boost::lambda::var( k ) *= boost::lambda::_1 ) ),
                         1, 2, 3, 4, 5
                     ),
                     as2::csv_deque( 1, 2, 6, 24, 120 )

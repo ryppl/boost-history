@@ -37,7 +37,7 @@ namespace xxx_row_major{
         array2_ array2( boost::extents[dim1][dim2] );
 
         int k = -2;
-        BOOST_AUTO( option,  as2::_row_major = ( boost::lambda::var( k ) += 2 ) );
+        BOOST_AUTO( option, as2::_option % ( as2::_row_major = ( boost::lambda::var( k ) += 2 ) ) );
         as2::csv_put( array2, option, -1, -1, -1, -1, -1 );
         k = -1; as2::csv_put( array2, option, +1, +1, +1, +1 );
         

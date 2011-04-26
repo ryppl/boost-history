@@ -38,7 +38,7 @@ namespace interpreter_aux{
         public:
 
         interpreter_modifier() : ptr( new arg_() ){}
-        explicit interpreter_modifier(
+        interpreter_modifier(
             ignore_,
             typename boost::call_traits<arg_>::param_type arg
         ) : ptr( new arg_( arg ) )

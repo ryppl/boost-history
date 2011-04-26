@@ -27,7 +27,7 @@ namespace xxx_repeat{
         {
             //[test_option_repeat_simple
             std::vector<int> cont;
-            as2::csv_put( cont, as2::_repeat = 2, 1, 10, 100 );
+            as2::csv_put( cont, as2::_option % ( as2::_repeat = 2 ) , 1, 10, 100 );
 
             BOOST_ASSIGN_V2_CHECK( 
                 boost::range::equal( 

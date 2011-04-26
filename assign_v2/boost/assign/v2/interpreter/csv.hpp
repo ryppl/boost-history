@@ -34,16 +34,16 @@ namespace interpreter_aux{
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 //->
 
-    template<typename C, typename F, typename MTag, typename DTag, typename D>
+    template<typename D, typename C, typename F, typename MTag, typename DTag>
     void csv(
-        interpreter_crtp<C, F, MTag, DTag, D> const& interpreter
+        interpreter_crtp<D, C, F, MTag, DTag> const& interpreter
     )/*<-*/
     {
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
-    template<typename C, typename F, typename MTag, typename DTag, typename D
-        , typename T, typename... Args>
+    template<typename D, typename C, typename F, typename MTag, typename DTag,  
+    	typename T, typename... Args>
     void csv(
-        interpreter_crtp<C, F, MTag, DTag, D> const& interpreter,
+        interpreter_crtp<D, C, F, MTag, DTag> const& interpreter,
         T&& t, Args&&... args
     )/*<-*/
     {
@@ -58,11 +58,11 @@ namespace interpreter_aux{
 #define BOOST_ASSIGN_V2_MACRO1(z, i, data) ( BOOST_PP_CAT(_, i) )
 #define BOOST_ASSIGN_V2_MACRO2(z, N, is_const)\
     template<\
-        typename C, typename F, typename MTag, typename DTag, typename D\
+         typename D, typename C, typename F, typename MTag, typename DTag\
         BOOST_PP_ENUM_TRAILING_PARAMS(N, typename T)\
     >\
     void csv(\
-        interpreter_crtp<C, F, MTag, DTag, D> const& interpreter\
+        interpreter_crtp<D, C, F, MTag, DTag> const& interpreter\
         BOOST_PP_ENUM_TRAILING_BINARY_PARAMS(\
             N, T, BOOST_PP_EXPR_IF(is_const, const) & _\
         )\

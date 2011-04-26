@@ -23,7 +23,7 @@ namespace interpreter_aux{
 #define BOOST_ASSIGN_V2_MACRO(z, N, is_const)\
     template<typename T BOOST_PP_ENUM_TRAILING_PARAMS(N, typename T)>\
     typename boost::lazy_disable_if<\
-        is_option_crtp<T0>,\
+        is_list_option<T0>,\
         result_of::csv_deque<T>\
     >::type\
     csv_deque(BOOST_PP_ENUM_BINARY_PARAMS(\
@@ -39,7 +39,7 @@ namespace interpreter_aux{
         BOOST_PP_ENUM_TRAILING_PARAMS(N, typename T)\
     >\
     typename boost::lazy_enable_if<\
-        is_option_crtp<O>,\
+        is_list_option<O>,\
         result_of::csv_deque_option<O, T>\
     >::type\
     csv_deque(\
@@ -75,7 +75,7 @@ BOOST_PP_REPEAT_FROM_TO(
 #define BOOST_ASSIGN_V2_MACRO(z, N, is_const)\
     template<typename T>\
     typename boost::lazy_disable_if<\
-        is_option_crtp<T>,\
+        is_list_option<T>,\
         result_of::csv_deque<T>\
     >::type\
     csv_deque(\
@@ -88,7 +88,7 @@ BOOST_PP_REPEAT_FROM_TO(
     }\
     template<typename O, typename T>\
     typename boost::lazy_enable_if<\
-        is_option_crtp<O>,\
+        is_list_option<O>,\
         result_of::csv_deque_option<O, T>\
     >::type\
     csv_deque(\

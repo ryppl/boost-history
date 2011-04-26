@@ -37,15 +37,16 @@ namespace conversion_aux{
 
         public:
 
-        explicit converter(
-            Arg const& arg, 
-            typename call_traits<R>::param_type source
-        )/*<-*/
-             : arg_( arg ), source_( boost::make_iterator_range( source ) )
-        {}BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
-
         explicit converter(typename call_traits<R>::param_type source)/*<-*/
              : source_( boost::make_iterator_range( source ) )
+        {}BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
+
+        converter(
+            typename call_traits<R>::param_type source,
+            Arg const& arg
+        )/*<-*/
+             : arg_( arg ), 
+             source_( boost::make_iterator_range( source ) )
         {}BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
         // Implicit conversion
@@ -82,16 +83,18 @@ namespace result_of{
 
     template<typename R>
     typename result_of::converter<R>::type
-    converter(R const& r)/*<-*/{
+    converter(R const& r)/*<-*/
+    {
         typedef typename result_of::converter<R>::type result_;
         return result_( r );
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
-    template<typename Arg, typename R>
+    template<typename R, typename Arg>
     typename result_of::converter<R, Arg>::type
-    converter(Arg const& arg, R const& r)/*<-*/{
+    converter(R const& r, Arg const& arg)/*<-*/
+    {
         typedef typename result_of::converter<R, Arg>::type result_;
-        return result_( arg, r );
+        return result_( r, arg );
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
 //]
@@ -120,17 +123,17 @@ namespace result_of{
     {\
         return ::boost::assign::v2::converter( range );\
     }\
-    template<typename Arg, BOOST_PP_SEQ_ENUM(\
+    template<BOOST_PP_SEQ_ENUM(\
         BOOST_PP_SEQ_TRANSFORM(\
             BOOST_ASSIGN_V2_CONVERSION_CONVERTER_NAME_LOOKUP_PARAM,\
             ~,\
             Seq\
         )\
-    )>\
+    ), typename Arg>\
     typename ::boost::assign::v2::result_of::converter<R, Arg>::type \
-    converter(Arg const& arg, R const& range )\
+    converter(R const& range, Arg const& arg )\
     {\
-        return ::boost::assign::v2::converter( arg, range );\
+        return ::boost::assign::v2::converter( range, arg );\
     }\
 /**/
 

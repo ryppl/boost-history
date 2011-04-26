@@ -38,13 +38,13 @@ namespace data_tag{
 namespace interpreter_aux{
 
     template<
-        typename C // Value or pointer-container
+        typename C // Value- or pointer-container
     >
     struct deduce_data_generator;
 
     template<typename C> struct deduce_data_tag;
 
-    template<typename C, typename F, typename MTag, typename DTag, typename D>
+    template<typename D, typename C, typename F, typename MTag, typename DTag>
     class interpreter_crtp;
 
     template<typename Tag> struct interpreter_modifier;

@@ -28,20 +28,20 @@ namespace interpreter_aux{
         protected ref::copy_wrapper< C >::type,
 //->
         public interpreter_aux::interpreter_crtp< 
-            C, F, MTag, DTag, 
             put_interpreter<C, F, MTag, DTag> 
+            , C, F, MTag, DTag
         >
     {
 //<-
         typedef interpreter_aux::interpreter_crtp< 
-            C, F, MTag, DTag, put_interpreter 
+        	put_interpreter
+            , C, F, MTag, DTag 
         > super2_t;
 //->
         public:
 
         typedef /*<-*/ typename super2_t::result_type 
-            BOOST_ASSIGN_V2_IGNORE(/*->*/ unspecified /*<-*/)/*->*/
-        result_type;
+            BOOST_ASSIGN_V2_IGNORE(/*->*/ unspecified /*<-*/)/*->*/result_type;
 //<-
         protected:
 
@@ -56,7 +56,7 @@ namespace interpreter_aux{
         explicit put_interpreter( C& cont )/*<-*/
             : super1_t( cont )
         {}BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
-        explicit put_interpreter( C& cont, F const& f, modifier_ const& m )/*<-*/
+        put_interpreter( C& cont, F const& f, modifier_ const& m )/*<-*/
             : super1_t( cont ), super2_t( f, m )
         {}BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 

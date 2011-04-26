@@ -105,7 +105,7 @@ namespace result_of{
 
     template<typename C, typename O, bool is, typename... Args>
     /*<-*/typename boost::enable_if<
-        is_option_crtp<O>
+        is_list_option<O>
     >::type BOOST_ASSIGN_V2_IGNORE(/*->*/void /*<-*/)
     /*->*/csv_put(
         C& cont,
@@ -124,7 +124,7 @@ namespace result_of{
 
     template<typename C, typename T, typename... Args>
     /*<-*/typename boost::disable_if<
-        is_option_crtp_cpp0x<T>
+        is_list_option_cpp0x<T>
     >::type BOOST_ASSIGN_V2_IGNORE(/*->*/void /*<-*/)
     /*->*/csv_put( C& cont, T&& t, Args&&... args)/*<-*/
     {
@@ -158,7 +158,7 @@ namespace result_of{
             : super2_t( r )
         {}
 
-        explicit delayed_csv_put(O options, R& r)
+        delayed_csv_put(O options, R& r)
             : super1_t( options ), super2_t( r )
         {}
 

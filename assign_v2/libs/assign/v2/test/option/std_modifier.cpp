@@ -72,7 +72,7 @@ namespace xxx_standard{
         {
             //[test_option_push
             // NB: This option is dedundant with the default
-            std::queue<int> fifo; as2::csv_put( fifo, as2::_push, 1, 10, 100 );
+            std::queue<int> fifo; as2::csv_put( fifo, as2::_option % as2::_push, 1, 10, 100 );
 
             BOOST_ASSIGN_V2_CHECK( fifo.front() == 1 );
             BOOST_ASSIGN_V2_CHECK( fifo.back() == 100 );
@@ -82,7 +82,7 @@ namespace xxx_standard{
             //[test_option_insert
             // NB: This option is dedundant with the default
             std::set<std::string> letters; 
-            as2::csv_put( letters, as2::_insert, "d", "a", "c", "b" );
+            as2::csv_put( letters, as2::_option % as2::_insert, "d", "a", "c", "b" );
 
             BOOST_ASSIGN_V2_CHECK( letters.lower_bound( "a" ) == boost::begin( letters ) );
             BOOST_ASSIGN_V2_CHECK( letters.upper_bound( "d" ) == boost::end( letters ) );
@@ -92,7 +92,7 @@ namespace xxx_standard{
             //[test_option_push_back
             // NB: This option is dedundant with the default
             std::list<int> list;
-            as2::csv_put( list, as2::_push_back, 1, 10, 100 );
+            as2::csv_put( list, as2::_option % as2::_push_back, 1, 10, 100 );
 
             BOOST_ASSIGN_V2_CHECK( 
                 boost::range::equal( list, as2::csv_deque( 1, 10, 100 ) ) 
@@ -115,7 +115,7 @@ namespace xxx_standard{
             //[test_option_push_front_deque
             BOOST_AUTO(
                 two_power_n,
-                as2::csv_deque( as2::_push_front, 16, 8, 4, 2, 1 )
+                as2::csv_deque( as2::_option % as2::_push_front, 16, 8, 4, 2, 1 )
             );
 
             BOOST_ASSIGN_V2_CHECK( 

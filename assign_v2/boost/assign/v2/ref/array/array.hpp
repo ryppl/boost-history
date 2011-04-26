@@ -42,7 +42,7 @@ namespace nth_result_of{
 
     template<
         array_size_type N
-        , typename U // U& has to be a reference
+        , typename U // U must not be a reference
     >
     struct array/*<-*/
         : array_aux::recursive_result<N, U>

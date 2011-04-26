@@ -102,6 +102,7 @@ namespace interpreter_aux{
 //[syntax_interpreter_crtp
 namespace interpreter_aux{
 
+/*<-*/
     template<typename C, typename D>
     struct ConceptDerivedInterpreter1{
 
@@ -132,13 +133,14 @@ namespace interpreter_aux{
         static modifier_ m;
 
     };
+/*->*/
 
     template<
-        typename C              // Container, 
+        typename D              // Derived
+        , typename C            // Container
         , typename F            // Data generator
         , typename MTag         // Modifier tag
         , typename DTag         // Data tag
-        , typename D            // Derived
     >
     class interpreter_crtp
 //<-
@@ -146,7 +148,7 @@ namespace interpreter_aux{
         , public modifier_holder<MTag>
 #if !BOOST_ASSIGN_V2_ENABLE_CPP0X
         , public functor_aux::crtp_unary_and_up<
-            interpreter_crtp<C, F, MTag, DTag, D>,
+            interpreter_crtp<D, C, F, MTag, DTag>,
             ::boost::mpl::always< D const& >
         >
 #endif // BOOST_ASSIGN_V2_ENABLE_CPP0X
@@ -173,7 +175,7 @@ namespace interpreter_aux{
         explicit interpreter_crtp( F const& f )/*<-*/ 
             : data_gen_holder_( f )
         {}BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
-        explicit interpreter_crtp( F const& f, modifier_type const& m )/*<-*/
+        interpreter_crtp( F const& f, modifier_type const& m )/*<-*/
             : data_gen_holder_( f ), modifier_holder_( m )
         {}BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 

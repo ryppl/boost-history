@@ -49,7 +49,7 @@ namespace list_aux{
             typedef container<Tag, H1, this_> type;
         };
 
-        explicit container(typename call_traits<T>::param_type t, H h)
+        container(typename call_traits<T>::param_type t, H h)
             : tail_holder_( t ), 
             head_holder_( h )
         {}

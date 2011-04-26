@@ -42,8 +42,8 @@ namespace interpreter_aux{
     template<typename T, typename F, typename MTag>
     class deque_interpreter 
         : public interpreter_crtp<
-            typename deque_impl<T>::type, F, MTag, data_tag::value,
-            deque_interpreter<T, F, MTag>
+            deque_interpreter<T, F, MTag>,
+            typename deque_impl<T>::type, F, MTag, data_tag::value
         >
     {
         typedef typename deque_impl<T>::type impl_;
@@ -51,7 +51,8 @@ namespace interpreter_aux{
 //<-
         typedef impl_ const cimpl_;
         typedef interpreter_crtp<
-            impl_, F, MTag, data_tag::value, deque_interpreter
+         	deque_interpreter
+            , impl_, F, MTag, data_tag::value
         > put_crtp_;
 //->
 
@@ -74,7 +75,7 @@ namespace interpreter_aux{
         // Constructor
         deque_interpreter()/*<-*/
             {}BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
-        explicit deque_interpreter( 
+        deque_interpreter( 
             impl_ const& cont, F const& f, modifier_ const& m 
         )/*<-*/
             : put_crtp_( f, m ), impl( cont )
@@ -163,14 +164,14 @@ namespace interpreter_aux{
 namespace result_of{
 
     template<typename T>
-    struct deque/*<-*/
+    struct deque
     {
         typedef typename boost::remove_cv<T>::type t_;
         typedef typename deque_impl<t_>::type impl_;
         typedef typename deduce_data_generator<impl_>::type f_;
         typedef typename deduce_modifier_tag<impl_>::type modifier_tag_;
         typedef deque_interpreter<t_, f_, modifier_tag_> type;
-    }/*->*/;
+    };
 
 }// result_of
 

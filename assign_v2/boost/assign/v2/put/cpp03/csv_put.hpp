@@ -21,7 +21,7 @@ namespace interpreter_aux{
 #define BOOST_ASSIGN_V2_MACRO(z, N, is_const)\
     template<typename C, typename O, BOOST_PP_ENUM_PARAMS(N, typename T)>\
     typename boost::enable_if<\
-        is_option_crtp<O>\
+        is_list_option<O>\
     >::type csv_put(\
         C& cont, O const& options,\
         BOOST_PP_ENUM_BINARY_PARAMS(N, T, BOOST_PP_EXPR_IF(is_const, const)& _)\
@@ -34,7 +34,7 @@ namespace interpreter_aux{
     }\
     template<typename C, BOOST_PP_ENUM_PARAMS(N, typename T)>\
     typename boost::disable_if<\
-        is_option_crtp<T0>\
+        is_list_option<T0>\
     >::type csv_put(\
         C& cont,\
         BOOST_PP_ENUM_BINARY_PARAMS(N, T, BOOST_PP_EXPR_IF(is_const, const)& _)\

@@ -26,7 +26,7 @@ namespace v2{
 namespace interpreter_aux{
 
     template<
-        typename C      // Value or pointer-container
+        typename C      // Value- or pointer-container
         , typename F    // Functor or keyword    
     >
     struct data_generator/*<-*/
@@ -84,12 +84,8 @@ namespace result_of{
         
 }// result_of
 
-    // F is a functor or either of the keywors:
-    //    element_
-    //    key_
-    //    map_
-    //    use_default_
-    //     value_
+    // F is either a functor or one of the keywords : 
+    //  element_, key_, map_, use_default_, value_
     template<typename F = ignore_>
     struct option_data/*<-*/
         : option_crtp<
@@ -139,11 +135,11 @@ BOOST_ASSIGN_V2_MACRO(value_)
 //->
 
     // Overrides data generator
-    template<typename C, typename F, typename MTag
-        , typename DTag, typename D, typename F1>
+    template<typename D, typename C, typename F, typename MTag
+        , typename DTag, typename F1>
     typename result_of::option_data<D, C, F1>::type
     operator%(
-        interpreter_crtp<C, F, MTag, DTag, D> const& lhs,
+        interpreter_crtp<D, C, F, MTag, DTag> const& lhs,
         option_data<F1> const& rhs
     )/*<-*/
     {

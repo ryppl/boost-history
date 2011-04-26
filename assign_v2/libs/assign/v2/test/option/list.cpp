@@ -30,7 +30,7 @@ namespace xxx_list{
         {
             //[test_option_list
             std::deque<int> cont;
-            ( as2::put( cont ) % as2::_list_option )( 4 )( 5 );
+            ( as2::put( cont ) % as2::_option )( 4 )( 5 );
             
             BOOST_ASSIGN_V2_CHECK( cont[0] == 4 );
             BOOST_ASSIGN_V2_CHECK( cont[1] == 5 );
