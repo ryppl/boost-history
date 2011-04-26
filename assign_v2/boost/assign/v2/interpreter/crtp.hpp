@@ -165,7 +165,7 @@ namespace interpreter_aux{
         typedef modifier_holder<MTag> modifier_holder_;
 //->
 
-        public:
+        /*<-*/public:/*->*/
 
         typedef /*<-*/ typename modifier_holder_::modifier_type 
             BOOST_ASSIGN_V2_IGNORE(/*->*/ interpreter_modifier<Tag> /*<-*/)/*->*/

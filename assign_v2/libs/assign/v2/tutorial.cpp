@@ -144,7 +144,7 @@ namespace tutorial_assign_v2{
             typedef function<double(double)> f_;
             /*<<Equivalent to `( put( exponent ) % ( _data = f_( log10 ) ) )( 1.0 ) ...( 10000.0 )`>>*/csv_put(
                 exponent
-                ,     _option % ( _data = f_( /*<-*/fp(/*->*/ log10 /*<-*/)/*->*/ ) )
+                , _option % ( _data = f_( /*<-*/fp(/*->*/ log10 /*<-*/)/*->*/ ) )
                 , 1.0, 10.0, 100.0, 1000.0, 10000.0
             );
 
@@ -160,7 +160,7 @@ namespace tutorial_assign_v2{
             assert(
                 range::equal(
                     cb | delay_csv_put( _push_front, csv_deque( 3, 2, 1 ) ), 
-                        csv_deque( 1, 2, 3 ) 
+                    csv_deque( 1, 2, 3 ) 
                 )
             );
             //]
