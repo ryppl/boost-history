@@ -9,8 +9,8 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_DEQUE_CSV_DEQUE_ER_2010_HPP
 #define BOOST_ASSIGN_V2_DEQUE_CSV_DEQUE_ER_2010_HPP
-#include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
-#include <boost/assign/v2/detail/pp/ignore.hpp>
+#include <boost/assign/v2/support/config/enable_cpp0x.hpp>
+#include <boost/assign/v2/support/pp/ignore.hpp>
 #include <boost/assign/v2/deque/deque.hpp>
 #include <boost/assign/v2/interpreter/csv.hpp>
 #include <boost/assign/v2/option/list.hpp>

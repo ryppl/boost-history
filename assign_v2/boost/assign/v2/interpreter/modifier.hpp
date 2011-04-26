@@ -9,9 +9,9 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_INTERPRETER_MODIFIER_ER_2010_HPP
 #define BOOST_ASSIGN_V2_INTERPRETER_MODIFIER_ER_2010_HPP
-#include <boost/assign/v2/detail/pp/ignore.hpp>
-#include <boost/assign/v2/detail/traits/container.hpp>
-#include <boost/assign/v2/detail/switch.hpp>
+#include <boost/assign/v2/support/pp/ignore.hpp>
+#include <boost/assign/v2/support/traits/container.hpp>
+#include <boost/assign/v2/support/switch.hpp>
 #include <boost/assign/v2/interpreter/fwd.hpp>
 #include <boost/assign/v2/option/modifier/insert.hpp>
 #include <boost/assign/v2/option/modifier/iterate.hpp>

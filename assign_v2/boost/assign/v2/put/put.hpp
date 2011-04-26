@@ -13,7 +13,7 @@
 #include <boost/assign/v2/interpreter/data.hpp>
 #include <boost/assign/v2/interpreter/modifier.hpp>
 #include <boost/assign/v2/interpreter/replace.hpp>
-#include <boost/assign/v2/detail/pp/ignore.hpp>
+#include <boost/assign/v2/support/pp/ignore.hpp>
 #include <boost/assign/v2/ref/wrapper/copy.hpp>
 
 namespace boost{

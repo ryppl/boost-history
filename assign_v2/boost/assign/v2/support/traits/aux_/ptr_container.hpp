@@ -7,12 +7,12 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_DETAIL_TRAITS_AUX_PTR_CONTAINER_ER_2010_HPP
-#define BOOST_ASSIGN_V2_DETAIL_TRAITS_AUX_PTR_CONTAINER_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_SUPPORT_TRAITS_AUX_PTR_CONTAINER_ER_2010_HPP
+#define BOOST_ASSIGN_V2_SUPPORT_TRAITS_AUX_PTR_CONTAINER_ER_2010_HPP
 #include <cstddef>
 #include <memory> // std::allocator
 #include <utility> // std::pair
-#include <boost/assign/v2/detail/traits/aux_/fwd_container.hpp>
+#include <boost/assign/v2/support/traits/aux_/fwd_container.hpp>
 #include <boost/mpl/size_t.hpp>
 #include <boost/type_traits/remove_reference.hpp>
 
@@ -299,4 +299,4 @@ namespace container_aux{
 }// assign
 }// boost
 
-#endif // BOOST_ASSIGN_V2_DETAIL_TRAITS_AUX_PTR_CONTAINER_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_SUPPORT_TRAITS_AUX_PTR_CONTAINER_ER_2010_HPP

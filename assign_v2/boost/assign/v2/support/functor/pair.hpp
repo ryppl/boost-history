@@ -7,15 +7,15 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_DETAIL_FUNCTOR_PAIR_ER_2010_HPP
-#define BOOST_ASSIGN_V2_DETAIL_FUNCTOR_PAIR_ER_2010_HPP
-#include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
-#include <boost/assign/v2/detail/pp/ignore.hpp>
+#ifndef BOOST_ASSIGN_V2_SUPPORT_FUNCTOR_PAIR_ER_2010_HPP
+#define BOOST_ASSIGN_V2_SUPPORT_FUNCTOR_PAIR_ER_2010_HPP
+#include <boost/assign/v2/support/config/enable_cpp0x.hpp>
+#include <boost/assign/v2/support/pp/ignore.hpp>
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 #include <utility>
 #else
-#include <boost/assign/v2/detail/config/limit_arity.hpp>
-#include <boost/assign/v2/detail/functor/crtp_unary_and_up.hpp>
+#include <boost/assign/v2/support/config/limit_arity.hpp>
+#include <boost/assign/v2/support/functor/crtp_unary_and_up.hpp>
 #include <boost/mpl/always.hpp>
 #include <boost/preprocessor/arithmetic.hpp>
 #include <boost/preprocessor/repetition.hpp>
@@ -96,4 +96,4 @@ BOOST_PP_REPEAT_FROM_TO(
 }// assign
 }// boost
 
-#endif // BOOST_ASSIGN_V2_DETAIL_FUNCTOR_PAIR_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_SUPPORT_FUNCTOR_PAIR_ER_2010_HPP

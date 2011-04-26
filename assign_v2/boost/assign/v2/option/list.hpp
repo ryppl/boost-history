@@ -9,7 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_OPTION_LIST_ER_2010_HPP
 #define BOOST_ASSIGN_V2_OPTION_LIST_ER_2010_HPP
-#include <boost/assign/v2/detail/keyword.hpp>
+#include <boost/assign/v2/support/keyword.hpp>
 #include <boost/assign/v2/interpreter/fwd.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/eval_if.hpp>

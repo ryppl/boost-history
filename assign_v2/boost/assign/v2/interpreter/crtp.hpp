@@ -9,10 +9,10 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_INTERPRETER_CRTP_ER_2010_HPP
 #define BOOST_ASSIGN_V2_INTERPRETER_CRTP_ER_2010_HPP
-#include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
-#include <boost/assign/v2/detail/pp/forward.hpp>
-#include <boost/assign/v2/detail/pp/ignore.hpp>
-#include <boost/assign/v2/detail/traits/container.hpp>
+#include <boost/assign/v2/support/config/enable_cpp0x.hpp>
+#include <boost/assign/v2/support/pp/forward.hpp>
+#include <boost/assign/v2/support/pp/ignore.hpp>
+#include <boost/assign/v2/support/traits/container.hpp>
 #include <boost/assign/v2/interpreter/as_arg_list.hpp>
 #include <boost/assign/v2/interpreter/fwd.hpp>
 #include <boost/assign/v2/interpreter/modifier.hpp>
@@ -25,9 +25,9 @@
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 #include <utility>
 #else
-#include <boost/assign/v2/detail/config/limit_arity.hpp>
-#include <boost/assign/v2/detail/config/limit_csv_arity.hpp>
-#include <boost/assign/v2/detail/functor/crtp_unary_and_up.hpp>
+#include <boost/assign/v2/support/config/limit_arity.hpp>
+#include <boost/assign/v2/support/config/limit_csv_arity.hpp>
+#include <boost/assign/v2/support/functor/crtp_unary_and_up.hpp>
 #include <boost/preprocessor/arithmetic.hpp>
 #include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/repetition.hpp>

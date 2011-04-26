@@ -9,10 +9,10 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_DEQUE_CPP03_DEQUE_ER_2010_HPP
 #define BOOST_ASSIGN_V2_DEQUE_CPP03_DEQUE_ER_2010_HPP
-#include <boost/assign/v2/detail/config/limit_arity.hpp>
-#include <boost/assign/v2/detail/config/limit_lvalue_const_arity.hpp>
-#include <boost/assign/v2/detail/keyword.hpp>
-#include <boost/assign/v2/detail/pp/parameter_list.hpp>
+#include <boost/assign/v2/support/config/limit_arity.hpp>
+#include <boost/assign/v2/support/config/limit_lvalue_const_arity.hpp>
+#include <boost/assign/v2/support/keyword.hpp>
+#include <boost/assign/v2/support/pp/parameter_list.hpp>
 #include <boost/assign/v2/deque/fwd.hpp>
 #include <boost/preprocessor/arithmetic.hpp>
 #include <boost/preprocessor/repetition.hpp>

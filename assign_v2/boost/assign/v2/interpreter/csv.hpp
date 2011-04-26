@@ -9,15 +9,15 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_INTERPRETER_CSV_ER_2010_HPP
 #define BOOST_ASSIGN_V2_INTERPRETER_CSV_ER_2010_HPP
-#include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
-#include <boost/assign/v2/detail/pp/ignore.hpp>
+#include <boost/assign/v2/support/config/enable_cpp0x.hpp>
+#include <boost/assign/v2/support/pp/ignore.hpp>
 #include <boost/assign/v2/interpreter/fwd.hpp>
 #include <boost/config.hpp>
 #include <boost/mpl/bool.hpp>
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 #include <utility>
 #else
-#include <boost/assign/v2/detail/config/limit_csv_arity.hpp>
+#include <boost/assign/v2/support/config/limit_csv_arity.hpp>
 #include <boost/preprocessor/arithmetic/inc.hpp>
 #include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/control/expr_if.hpp>

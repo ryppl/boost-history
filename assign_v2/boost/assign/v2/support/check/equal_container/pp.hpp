@@ -7,9 +7,9 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_DETAIL_CHECK_EQUAL_CONTAINER_PP_ER_2010_HPP
-#define BOOST_ASSIGN_V2_DETAIL_CHECK_EQUAL_CONTAINER_PP_ER_2010_HPP
-#include <boost/assign/v2/detail/config/check.hpp>
+#ifndef BOOST_ASSIGN_V2_SUPPORT_CHECK_EQUAL_CONTAINER_PP_ER_2010_HPP
+#define BOOST_ASSIGN_V2_SUPPORT_CHECK_EQUAL_CONTAINER_PP_ER_2010_HPP
+#include <boost/assign/v2/support/config/check.hpp>
 #include <boost/range/size.hpp>
 #include <boost/range/size_type.hpp>
 #define BOOST_ASSIGN_V2_CHECK_AUX_CONTAINER_SIZE\
@@ -25,4 +25,4 @@
         >::type elem_at_;\
         elem_at_ elem_at = boost::make_iterator_range( r );\
 /**/
-#endif // BOOST_ASSIGN_V2_DETAIL_CHECK_EQUAL_CONTAINER_PP_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_SUPPORT_CHECK_EQUAL_CONTAINER_PP_ER_2010_HPP

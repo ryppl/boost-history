@@ -9,10 +9,10 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_INTERPRETER_DATA_ER_2010_HPP
 #define BOOST_ASSIGN_V2_INTERPRETER_DATA_ER_2010_HPP
-#include <boost/assign/v2/detail/traits/container.hpp>
-#include <boost/assign/v2/detail/switch.hpp>
-#include <boost/assign/v2/detail/functor/pair.hpp>
-#include <boost/assign/v2/detail/functor/value.hpp>
+#include <boost/assign/v2/support/traits/container.hpp>
+#include <boost/assign/v2/support/switch.hpp>
+#include <boost/assign/v2/support/functor/pair.hpp>
+#include <boost/assign/v2/support/functor/value.hpp>
 #include <boost/assign/v2/interpreter/fwd.hpp>
 #include <boost/assign/v2/option/data.hpp>
     

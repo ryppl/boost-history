@@ -11,7 +11,7 @@
 #ifndef BOOST_ASSIGN_V2_REF_WRAPPER_CRTP_ER_MPG_2010_HPP
 #define BOOST_ASSIGN_V2_REF_WRAPPER_CRTP_ER_MPG_2010_HPP
 #include <iosfwd>
-#include <boost/assign/v2/detail/pp/ignore.hpp>
+#include <boost/assign/v2/support/pp/ignore.hpp>
 #include <boost/call_traits.hpp>
 #include <boost/operators.hpp>
 #include <boost/type_traits/is_same.hpp>

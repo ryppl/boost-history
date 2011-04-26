@@ -9,7 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_INTERPRETER_REPLACE_ER_2010_HPP
 #define BOOST_ASSIGN_V2_INTERPRETER_REPLACE_ER_2010_HPP
-#include <boost/assign/v2/detail/pp/ignore.hpp>
+#include <boost/assign/v2/support/pp/ignore.hpp>
 #include <boost/assign/v2/interpreter/fwd.hpp>
 #include <boost/mpl/apply.hpp>
 

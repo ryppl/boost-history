@@ -10,9 +10,9 @@
 #ifndef BOOST_ASSIGN_V2_OPTION_MODIFIER_REPEAT_ER_2010_HPP
 #define BOOST_ASSIGN_V2_OPTION_MODIFIER_REPEAT_ER_2010_HPP
 #include <cstddef>
-#include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
-#include <boost/assign/v2/detail/pp/ignore.hpp>
-#include <boost/assign/v2/detail/traits/container.hpp>
+#include <boost/assign/v2/support/config/enable_cpp0x.hpp>
+#include <boost/assign/v2/support/pp/ignore.hpp>
+#include <boost/assign/v2/support/traits/container.hpp>
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 #include <utility>
 #endif

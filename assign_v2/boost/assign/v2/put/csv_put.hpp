@@ -9,8 +9,8 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_PUT_CSV_PUT_ER_2010_HPP
 #define BOOST_ASSIGN_V2_PUT_CSV_PUT_ER_2010_HPP
-#include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
-#include <boost/assign/v2/detail/pp/ignore.hpp>
+#include <boost/assign/v2/support/config/enable_cpp0x.hpp>
+#include <boost/assign/v2/support/pp/ignore.hpp>
 #include <boost/assign/v2/interpreter/as_arg_list.hpp>
 #include <boost/assign/v2/interpreter/csv.hpp>
 #include <boost/assign/v2/put/put.hpp>

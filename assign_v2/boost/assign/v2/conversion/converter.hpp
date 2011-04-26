@@ -9,7 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_CONVERSION_CONVERTER_ER_2010_HPP
 #define BOOST_ASSIGN_V2_CONVERSION_CONVERTER_ER_2010_HPP
-#include <boost/assign/v2/detail/pp/ignore.hpp>
+#include <boost/assign/v2/support/pp/ignore.hpp>
 #include <boost/assign/v2/conversion/convert.hpp>
 #include <boost/call_traits.hpp>
 #include <boost/range/begin.hpp>

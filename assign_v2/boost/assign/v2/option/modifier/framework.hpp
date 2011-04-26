@@ -9,8 +9,8 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_OPTION_MODIFIER_FRAMEWORK_ER_2010_HPP
 #define BOOST_ASSIGN_V2_OPTION_MODIFIER_FRAMEWORK_ER_2010_HPP
-#include <boost/assign/v2/detail/keyword.hpp>
-#include <boost/assign/v2/detail/pp/ignore.hpp>
+#include <boost/assign/v2/support/keyword.hpp>
+#include <boost/assign/v2/support/pp/ignore.hpp>
 #include <boost/assign/v2/interpreter/fwd.hpp>
 #include <boost/assign/v2/interpreter/replace.hpp>
 #include <boost/assign/v2/option/list.hpp>

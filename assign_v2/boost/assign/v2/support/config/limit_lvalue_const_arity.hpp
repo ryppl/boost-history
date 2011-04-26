@@ -9,7 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_LIMIT_LVALUE_CONST_ARITY_ER_2010_HPP
 #define BOOST_ASSIGN_V2_LIMIT_LVALUE_CONST_ARITY_ER_2010_HPP
-#include <boost/assign/v2/detail/config/limit_arity.hpp>
+#include <boost/assign/v2/support/config/limit_arity.hpp>
 #include <boost/preprocessor/comparison/greater.hpp>
 //[limit_lvalue_const_arity
 /*

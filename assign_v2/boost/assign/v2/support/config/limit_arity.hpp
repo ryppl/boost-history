@@ -9,7 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_LIMIT_ARITY_ER_2010_HPP
 #define BOOST_ASSIGN_V2_LIMIT_ARITY_ER_2010_HPP
-#include <boost/assign/v2/detail/pp/parameter_list.hpp>
+#include <boost/assign/v2/support/pp/parameter_list.hpp>
 #include <boost/mpl/limits/arity.hpp>
 #include <boost/preprocessor/comparison/greater.hpp>
 #include <boost/preprocessor/selection/min.hpp>

@@ -9,7 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_DEQUE_CPP03_CSV_DEQUE_ER_2010_HPP
 #define BOOST_ASSIGN_V2_DEQUE_CPP03_CSV_DEQUE_ER_2010_HPP
-#include <boost/assign/v2/detail/config/limit_csv_arity.hpp>
+#include <boost/assign/v2/support/config/limit_csv_arity.hpp>
 #include <boost/preprocessor/arithmetic/inc.hpp>
 #include <boost/preprocessor/control/expr_if.hpp>
 #include <boost/preprocessor/repetition.hpp>

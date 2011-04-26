@@ -10,11 +10,11 @@
 #ifndef BOOST_ASSIGN_V2_OPTION_MODIFIER_ITERATE_ER_2010_HPP
 #define BOOST_ASSIGN_V2_OPTION_MODIFIER_ITERATE_ER_2010_HPP
 #include <cstddef>
-#include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
-#include <boost/assign/v2/detail/keyword.hpp>
-#include <boost/assign/v2/detail/functor/iterate.hpp>
-#include <boost/assign/v2/detail/pp/ignore.hpp>
-#include <boost/assign/v2/detail/traits/container.hpp>
+#include <boost/assign/v2/support/config/enable_cpp0x.hpp>
+#include <boost/assign/v2/support/keyword.hpp>
+#include <boost/assign/v2/support/functor/iterate.hpp>
+#include <boost/assign/v2/support/pp/ignore.hpp>
+#include <boost/assign/v2/support/traits/container.hpp>
 #include <boost/assign/v2/option/modifier/framework.hpp>
 #include <boost/call_traits.hpp>
 #include <boost/shared_ptr.hpp>

@@ -9,10 +9,10 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_OPTION_DATA_ER_2010_HPP
 #define BOOST_ASSIGN_V2_OPTION_DATA_ER_2010_HPP
-#include <boost/assign/v2/detail/functor/value.hpp>
-#include <boost/assign/v2/detail/keyword.hpp>
-#include <boost/assign/v2/detail/pp/ignore.hpp>
-#include <boost/assign/v2/detail/traits/container.hpp>
+#include <boost/assign/v2/support/functor/value.hpp>
+#include <boost/assign/v2/support/keyword.hpp>
+#include <boost/assign/v2/support/pp/ignore.hpp>
+#include <boost/assign/v2/support/traits/container.hpp>
 #include <boost/assign/v2/interpreter/fwd.hpp>
 #include <boost/assign/v2/interpreter/replace.hpp>
 #include <boost/assign/v2/option/list.hpp>
@@ -204,7 +204,7 @@ using interpreter_aux::NAME;\
 }\
 /**/
 
-#include <boost/assign/v2/detail/functor/value.hpp>
+#include <boost/assign/v2/support/functor/value.hpp>
 BOOST_ASSIGN_V2_OPTION_DATA_GENERATE(value, v2::functor_aux::value<T>)
 
 #include <boost/typeof/typeof.hpp>

@@ -9,14 +9,14 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_REF_ARRAY_CSV_ARRAY_ER_2010_HPP
 #define BOOST_ASSIGN_V2_REF_ARRAY_CSV_ARRAY_ER_2010_HPP
-#include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
-#include <boost/assign/v2/detail/pp/ignore.hpp>
+#include <boost/assign/v2/support/config/enable_cpp0x.hpp>
+#include <boost/assign/v2/support/pp/ignore.hpp>
 #include <boost/assign/v2/ref/array/alloc/instant.hpp>
 #include <boost/assign/v2/ref/array/size_type.hpp>
 
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 #include <utility>
-#include <boost/assign/v2/detail/traits/type/or_const.hpp>
+#include <boost/assign/v2/support/traits/type/or_const.hpp>
 #include <boost/config.hpp>
 #include <boost/mpl/assert.hpp>
 #include <boost/utility/enable_if.hpp>

@@ -15,9 +15,9 @@
 #include <boost/assign/v2/interpreter/modifier.hpp>
 #include <boost/assign/v2/interpreter/replace.hpp>
 #include <boost/assign/v2/deque/fwd.hpp>
-#include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
-#include <boost/assign/v2/detail/keyword.hpp>
-#include <boost/assign/v2/detail/pp/ignore.hpp>
+#include <boost/assign/v2/support/config/enable_cpp0x.hpp>
+#include <boost/assign/v2/support/keyword.hpp>
+#include <boost/assign/v2/support/pp/ignore.hpp>
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
 #include <boost/range/iterator.hpp>

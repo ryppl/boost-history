@@ -7,13 +7,13 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_DETAIL_CONFIG_LIMIT_TUPLE_ARITY_ER_2010_HPP
-#define BOOST_ASSIGN_V2_DETAIL_CONFIG_LIMIT_TUPLE_ARITY_ER_2010_HPP
-#include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
+#ifndef BOOST_ASSIGN_V2_SUPPORT_CONFIG_LIMIT_TUPLE_ARITY_ER_2010_HPP
+#define BOOST_ASSIGN_V2_SUPPORT_CONFIG_LIMIT_TUPLE_ARITY_ER_2010_HPP
+#include <boost/assign/v2/support/config/enable_cpp0x.hpp>
 #ifndef BOOST_ASSIGN_V2_LIMIT_CPP03_TUPLE_ARITY
 //[limit_tuple_arity
 /*Do not override. Source: boost/tuple/detail/tuple_basic.hpp*/
 #define BOOST_ASSIGN_V2_LIMIT_CPP03_TUPLE_ARITY 10
 //]
 #endif // BOOST_ASSIGN_V2_LIMIT_CPP03_TUPLE_ARITY
-#endif // BOOST_ASSIGN_V2_DETAIL_CONFIG_LIMIT_CPP03_TUPLE_ARITY_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_SUPPORT_CONFIG_LIMIT_CPP03_TUPLE_ARITY_ER_2010_HPP

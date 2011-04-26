@@ -7,10 +7,10 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_DETAIL_FUNCTOR_CRTP_UNARY_AND_UP_ER_2010_HPP
-#define BOOST_ASSIGN_V2_DETAIL_FUNCTOR_CRTP_UNARY_AND_UP_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_SUPPORT_FUNCTOR_CRTP_UNARY_AND_UP_ER_2010_HPP
+#define BOOST_ASSIGN_V2_SUPPORT_FUNCTOR_CRTP_UNARY_AND_UP_ER_2010_HPP
 
-#include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
+#include <boost/assign/v2/support/config/enable_cpp0x.hpp>
 #ifndef BOOST_ASSIGN_V2_ENABLE_CPP0X
 #error
 #endif
@@ -50,9 +50,9 @@
 #include <boost/type_traits/is_const.hpp>
 #include <boost/utility/enable_if.hpp>
 
-#include <boost/assign/v2/detail/config/limit_arity.hpp>
-#include <boost/assign/v2/detail/config/limit_lvalue_const_arity.hpp>
-#include <boost/assign/v2/detail/pp/parameter_list.hpp>
+#include <boost/assign/v2/support/config/limit_arity.hpp>
+#include <boost/assign/v2/support/config/limit_lvalue_const_arity.hpp>
+#include <boost/assign/v2/support/pp/parameter_list.hpp>
 
 namespace boost{
 namespace assign{
@@ -142,4 +142,4 @@ BOOST_PP_REPEAT_FROM_TO(
 }// boost
 
 #endif // !BOOST_ASSIGN_V2_ENABLE_CPP0X
-#endif // BOOST_ASSIGN_V2_DETAIL_FUNCTOR_CRTP_UNARY_AND_UP_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_SUPPORT_FUNCTOR_CRTP_UNARY_AND_UP_ER_2010_HPP

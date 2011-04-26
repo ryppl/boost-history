@@ -7,8 +7,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_DETAIL_SPEED_ER_2010_HPP
-#define BOOST_ASSIGN_V2_DETAIL_SPEED_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_SUPPORT_SPEED_ER_2010_HPP
+#define BOOST_ASSIGN_V2_SUPPORT_SPEED_ER_2010_HPP
 #include <cstddef>
 #include <deque>
 #include <ostream>
@@ -19,7 +19,7 @@
 #include <boost/array.hpp>
 #include <boost/assign/list_of.hpp>
 #include <boost/assign/list_inserter.hpp>
-#include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
+#include <boost/assign/v2/support/config/enable_cpp0x.hpp>
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 #include <boost/assign/v2/put.hpp>
 #include <boost/assign/v2/deque.hpp>
@@ -300,4 +300,4 @@ void v2_ref_csv_array(std::size_t n, E& elapsed, Args&&... args)
 }// boost
 
 #endif // BOOST_ASSIGN_V2_ENABLE_CPP0X
-#endif // BOOST_ASSIGN_V2_DETAIL_SPEED_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_SUPPORT_SPEED_ER_2010_HPP

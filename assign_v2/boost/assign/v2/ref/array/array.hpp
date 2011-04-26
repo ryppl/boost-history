@@ -9,7 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_REF_ARRAY_ARRAY_ER_2010_HPP
 #define BOOST_ASSIGN_V2_REF_ARRAY_ARRAY_ER_2010_HPP
-#include <boost/assign/v2/detail/pp/ignore.hpp>
+#include <boost/assign/v2/support/pp/ignore.hpp>
 #include <boost/assign/v2/ref/array/alloc/lazy.hpp>
 #include <boost/assign/v2/ref/array/size_type.hpp>
 #include <boost/assign/v2/ref/aux_/list/list.hpp>

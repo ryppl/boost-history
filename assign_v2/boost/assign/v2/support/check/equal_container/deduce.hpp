@@ -7,15 +7,15 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_DETAIL_CHECK_EQUAL_CONTAINER_DEDUCE_ER_2010_HPP
-#define BOOST_ASSIGN_V2_DETAIL_CHECK_EQUAL_CONTAINER_DEDUCE_ER_2010_HPP
-#include <boost/assign/v2/detail/traits/container.hpp>
-#include <boost/assign/v2/detail/check/equal_container/array.hpp>
-#include <boost/assign/v2/detail/check/equal_container/fifo.hpp>
-#include <boost/assign/v2/detail/check/equal_container/lifo.hpp>
-#include <boost/assign/v2/detail/check/equal_container/range.hpp>
-#include <boost/assign/v2/detail/check/equal_container/sorted.hpp>
-#include <boost/assign/v2/detail/switch.hpp>
+#ifndef BOOST_ASSIGN_V2_SUPPORT_CHECK_EQUAL_CONTAINER_DEDUCE_ER_2010_HPP
+#define BOOST_ASSIGN_V2_SUPPORT_CHECK_EQUAL_CONTAINER_DEDUCE_ER_2010_HPP
+#include <boost/assign/v2/support/traits/container.hpp>
+#include <boost/assign/v2/support/check/equal_container/array.hpp>
+#include <boost/assign/v2/support/check/equal_container/fifo.hpp>
+#include <boost/assign/v2/support/check/equal_container/lifo.hpp>
+#include <boost/assign/v2/support/check/equal_container/range.hpp>
+#include <boost/assign/v2/support/check/equal_container/sorted.hpp>
+#include <boost/assign/v2/support/switch.hpp>
 
 namespace boost{
 namespace assign{
@@ -74,4 +74,4 @@ namespace check_aux{
 }// assign
 }// boost
 
-#endif // BOOST_ASSIGN_V2_DETAIL_CHECK_EQUAL_CONTAINER_DEDUCE_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_SUPPORT_CHECK_EQUAL_CONTAINER_DEDUCE_ER_2010_HPP
