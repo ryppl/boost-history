@@ -1,0 +1,60 @@
+# quickautodoxindex index.idx list of files to be indexed.
+# Copyright (c) 2011 Paul A. Bristow
+#
+# Use, modification and distribution is subject to the Boost Software
+# License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+# http://www.boost.org/LICENSE_1_0.txt)
+
+!debug regular-expression
+
+# Recursively scan through directories looking for all the files to scan
+# whose name matches a particular regular expression.
+# Note *regular expression* !, so must be ".*\.hpp" to find all .hpp!
+
+# Assume all header files are in boost/quick_auto_dox_index and sub-folders.
+!scan-path boost/quick_auto_dox_index ".*\.hpp" true
+
+# Assume all Quickbook files are in /docs (none in sub-folders).
+!scan-path "libs/quick_auto_dox_index" ".*\.qbk"
+
+# Safest to always use " quotes around paths.
+
+!exclude type arg1_type arg2_type arg3_type arg4_type arg5_type B D
+
+#!exclude result
+#!exclude if
+
+acknowledgements
+bold
+C++ \<C|C++\>
+CSS
+deprecated
+Doxygen
+example \<example\w*\>
+equations \<equation\w*\>
+FOP
+graphics \<graphic\w*\>
+links \<link\w*\>
+icons \<icon\w*\>
+images \<image\w*\>
+Inkscape  \<Ink\w*\>
+italic \<italic\w*\>
+# index index and indexes (assume not using plural indices!)
+index  \<index\w*\>
+path  \<path\w*\>
+pre-conditions \<pre\w*\>
+post-conditions \<post\w*\>
+remark \<remark\w*\>
+snippet  \<snippet\w*\>
+png
+Quickbook
+svg
+version \<version\w*\>
+warning \<warning\w*\>
+
+# Remove leading "A" or "The" prefixes from section titles.
+!rewrite-name "(?:A|An|The)\s+(.*)" "\1"
+
+
+
+
