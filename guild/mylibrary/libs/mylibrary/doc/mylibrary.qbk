@@ -25,7 +25,7 @@
 [def __boost [@http://www.boost.org/ Boost]] [/Boost.org]
 [def __boostroot [@boost: Boost root]] [/ Your boost root]
 [/Note the custom boost root url schema for linking to files within the Boost distribution.]
-[/Note It can't be used for images.]
+[/Note It can't be used for images, nor for pdf, so not so useful.]
 [/def __boostlicense [@http://www.boost.org/LICENSE_1_0.txt Boost License]]
 [/ Or refer to your most recent version of Boost.]
 [def __boostlicense [@boost:/LICENSE_1_0.txt Boost License]]
@@ -109,10 +109,9 @@ a [@http://en.wikipedia.org/wiki/Wikiwiki Wiki-Wiki-style language].
   both in __quickbook automatically added reference section,
   and also in __doxygen standalone documentation.
 
-* Automatic indexing to __doxygen -generated entities
+* Automatic indexing to __doxygen generated entities
   (namespaces, classes, functions, typedefs).
-  and author-chosen indexing of text
-  see __autoindex.
+  and author-chosen indexing of text, see __autoindex.
 
 * Macro system for simple text substitution.
 
@@ -164,7 +163,7 @@ and import C++ file snippets that may turn one or more sections into templates t
 Users get great benefit from an *index* of nearly all documentation, however short.
 The only downside is that total size of documentation can be much increased by the index.
 Since space is not usually an issue, hyperlinking (in both html and pdf)
-makes the size increase not a significant disadvantage.
+makes the size increase an insignificant disadvantage.
 
 A C++ Reference section, using __doxygen
 (and __doxygen comments in the C++ code
@@ -246,6 +245,8 @@ Last edit to Quickbook file __FILENAME__ was at __TIME__ on __DATE__.
 
 [tip This should appear on the pdf version 
 (but may be redundant on a html version where the last edit date is on the first (home) page).]
+
+[warning Home page "Last revised" is GMT, not local time.  Last edit date is local time.]
 [/See also Adobe Reader pdf File Properties for creation date, and PDF producer, version and page count.]
 
 [endsect] [/section:version_id Version Info]
