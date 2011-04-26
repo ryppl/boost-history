@@ -1,0 +1,30 @@
+[section:acknowledgements Acknowledgements]
+
+* [@http://oasis-open.org Docbook] authors and maintainers.
+
+* __boostbook (an extension of __docbook) was developed by Douglas Gregor.
+
+* __quickbook was developed by Joel de Guzman and Eric Niebler, and now maintained by Daniel James.
+
+* The link to __doxygen was pioneered by Doug Gregor, and developed by Steven Watanabe.
+
+* Rendering to PDF was made to work by John Maddock.
+
+* Improvements to the tool chain, especially XSLT, by Daniel James and a welcome speedup by Steven Watanabe.
+
+* [@http://www.renderx.com/reference.html RenderX] kindly provide free use of XEP to render the PDF files from XML.
+
+* Automatic Indexing was developed by John Maddock.
+
+* __doxygen is maintained by Dimitri van Heesch.
+It was developed by many people who are acknowledged at the __doxygen site.
+
+[endsect] [/section:acknowledgements Acknowledgements]
+
+[/ Acknowledgements.qbk
+  Copyright 2011 Paul A. Bristow.
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+
