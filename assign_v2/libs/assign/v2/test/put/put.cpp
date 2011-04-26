@@ -19,8 +19,8 @@
 #include <string>
 #include <utility>
 
-#include <boost/assign/v2/detail/config/check.hpp>
-#include <boost/assign/v2/detail/traits.hpp>
+#include <boost/assign/v2/support/config/check.hpp>
+#include <boost/assign/v2/support/traits.hpp>
 
 #define BOOST_ASSIGN_V2_LIMIT_CSV_ARITY 24
 

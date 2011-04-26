@@ -12,7 +12,7 @@
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
 
-#include <boost/assign/v2/detail/config/check.hpp>
+#include <boost/assign/v2/support/config/check.hpp>
 #include <boost/range/algorithm/copy.hpp>
 #include <boost/assign/v2/include/ref/array.hpp>
 #include <libs/assign/v2/test/ref/array.h>

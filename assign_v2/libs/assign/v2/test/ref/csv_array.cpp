@@ -12,7 +12,7 @@
 #include <boost/range/begin.hpp>
 #include <boost/range/algorithm/copy.hpp>
 #include <boost/typeof/typeof.hpp>
-#include <boost/assign/v2/detail/config/check.hpp>
+#include <boost/assign/v2/support/config/check.hpp>
 #include <boost/assign/v2/ref/array/conversion.hpp>
 #include <boost/assign/v2/include/ref/csv_array.hpp>
 #include <boost/assign/v2/ref/wrapper.hpp>

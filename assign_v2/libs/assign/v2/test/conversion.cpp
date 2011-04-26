@@ -10,8 +10,8 @@
 #include <vector>
 #include <stack>
 #include <boost/array.hpp>
-#include <boost/assign/v2/detail/check/equal_container.hpp>
-#include <boost/assign/v2/detail/config/check.hpp>
+#include <boost/assign/v2/support/check/equal_container.hpp>
+#include <boost/assign/v2/support/config/check.hpp>
 #include <boost/assign/v2/include/convert.hpp>
 #include <boost/assign/v2/include/converter.hpp>
 #include <boost/assign/v2/conversion/check.hpp>

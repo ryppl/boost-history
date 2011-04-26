@@ -8,7 +8,7 @@
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
 #include <deque>
-#include <boost/assign/v2/detail/config/check.hpp>
+#include <boost/assign/v2/support/config/check.hpp>
 #include <boost/assign/v2/include/csv_deque.hpp>
 #include <boost/assign/v2/option/list.hpp>
 #include <boost/assign/v2/option/data.hpp>

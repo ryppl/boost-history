@@ -9,8 +9,8 @@
 //////////////////////////////////////////////////////////////////////////////
 #include <boost/mpl/assert.hpp>
 #include <boost/assign/v2/ref/wrapper.hpp>
-#include <boost/assign/v2/detail/config/check.hpp>
-#include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
+#include <boost/assign/v2/support/config/check.hpp>
+#include <boost/assign/v2/support/config/enable_cpp0x.hpp>
 #include <libs/assign/v2/test/ref/wrapper.h>
     
 namespace test_assign_v2{

@@ -9,7 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #include <string>
 #include <boost/array.hpp>
-#include <boost/assign/v2/detail/config/check.hpp>
+#include <boost/assign/v2/support/config/check.hpp>
 #include <boost/assign/v2/ref/wrapper/copy.hpp>
 #include <boost/assign/v2/ref/aux_/list.hpp>
 #include <boost/mpl/apply.hpp>

@@ -7,9 +7,9 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
+#include <boost/assign/v2/support/config/enable_cpp0x.hpp>
 
-#include <boost/assign/v2/detail/config/check.hpp>
+#include <boost/assign/v2/support/config/check.hpp>
 #include <boost/assign/v2/include/csv_put.hpp>
 #include <boost/assign/v2/option/data.hpp>
 #include <boost/assign/v2/option/modifier/row_major.hpp>

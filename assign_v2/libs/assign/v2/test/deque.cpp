@@ -13,7 +13,7 @@
 #include <boost/array.hpp>
 #include <boost/mpl/assert.hpp>
 #include <boost/type_traits/is_same.hpp>
-#include <boost/assign/v2/detail/config/check.hpp>
+#include <boost/assign/v2/support/config/check.hpp>
 #include <boost/assign/v2/deque/conversion.hpp>
 #include <boost/assign/v2/include/csv_deque.hpp>
 #include <boost/assign/v2/include/deque.hpp>
