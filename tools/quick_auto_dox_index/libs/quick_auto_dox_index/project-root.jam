@@ -1,0 +1,81 @@
+# Copyright 2010 Paul A. Bristow
+# Copyright (c) 2006 João Abecasis
+#
+# Distributed under the Boost Software License, Version 1.0. (See
+# accompanying file LICENSE_1_0.txt or copy at
+# http://www.boost.org/LICENSE_1_0.txt)
+
+##  IMPORTANT NOTE: This file MUST NOT be copied over a boost installation
+
+import modules ; # Neeeded for modules.peek
+import path ; # ? needed for path-constant?
+import os ; # Needed to get environment variables.
+
+path-constant top : . ; # quick_auto_dox_index/libs/ for this project-root.jam
+ECHO "top = " $(top) ;
+
+local BOOST_ROOT = [ os.environ BOOST_ROOT ] ;
+# or
+# local BOOST_ROOT = [ modules.peek : BOOST_ROOT ] ;
+
+if ! $(BOOST_ROOT)
+{
+    BOOST_ROOT = [ modules.peek : BOOST_ROOT ] ;
+}
+
+#ECHO "os.environ BOOST_ROOT boost-root = " $(BOOST_ROOT) ;
+# os.environ BOOST_ROOT boost-root =  I:\boost_1_41_0
+
+#path-constant boost-root : $(BOOST_ROOT)  ; # Default is to use this,
+
+#local boost-root = [ modules.peek : BOOST_ROOT ] ;
+# use-project /boost : $(BOOST_ROOT) ;
+
+
+# Search for a sensible Boost root.
+#if ! $(boost-root)
+#{ # No environment variable, so try to find boost-root other ways.
+#   ECHO "Warning: No environment variable, so try to find boost-root." ;
+#   local boost-search-dirs = [ modules.peek : BOOST_BUILD_PATH ] ;
+#
+#    for local dir in $(boost-search-dirs)
+#    {
+#        if [ path.glob $(dir)/../../../ : boost/version.hpp ]
+#        {
+#            boost-root += $(dir)/../../../ ;
+#        }
+#    }
+#
+#    if $(boost-root)
+#    {
+#        boost-root = [ path.make $(boost-root[1]) ] ;
+#    }
+#    else
+#    {
+#        ECHO "Warning: couldn't find BOOST_ROOT in" $(boost-root) ;
+#    }
+#    ECHO "boost-root = " $(boost-root) ; # Boost root found by search above.
+#}
+
+local quickdoxautoindex-header-include = $(top)/../.. ;
+ECHO "quickdoxautoindex-header-include= " $(quickdoxautoindex-header-include) ;
+
+#path-constant local-boost-root : $(boost-root)  ; # Default is to use this,
+# but you can can optionally override your chosen boost version here,
+# for example, for trunk or sandbox, using an environment variable:
+#local-boost-root = [ modules.peek : BOOST_SANDBOX ] ; #  Assumes you have set an environment variable $BOOST_SANDBOX
+#ECHO "local-boost-root = " $(local-boost-root) ; # Final root used.
+
+#path-constant boostbookcss : [ glob $(boost-root)/doc/src/boostbook.css ] ;
+#ECHO "boostbook.css location = " $(boostbookcss) ;
+#
+#path-constant boostlogo : [ glob $(BOOST_ROOT)/boost.png ] ; # Boost log
+## But you might want to use a not-yet-Boost version instead?
+#ECHO "boost.png location = " $(boostlogo) ;
+
+
+project quick_auto_dox_index # project id is quick_auto_dox_index
+ : requirements
+   <include>$(quickdoxautoindex-header-include) #
+ : build-dir bin.v2  # build directory - build everything in ./bin.v2
+ ;
