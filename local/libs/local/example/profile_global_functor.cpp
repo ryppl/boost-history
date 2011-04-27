@@ -5,9 +5,9 @@
 #include <iostream>
 #include "profile_helpers.hpp"
 
-struct add_global_functor {
-    add_global_functor(double& sum_, const int& factor_):
-                sum(sum_), factor(factor_) {}
+struct global_add {
+    global_add(double& _sum, const int& _factor):
+                sum(_sum), factor(_factor) {}
     inline void operator()(const double& num) {
         sum += factor * num;
     }
@@ -25,7 +25,7 @@ int main(int argc, char* argv[]) {
 
     boost::chrono::system_clock::time_point start =
             boost::chrono::system_clock::now();
-    add_global_functor add(sum, factor);
+    global_add add(sum, factor);
     boost::chrono::duration<double> decl_sec =
             boost::chrono::system_clock::now() - start;
 

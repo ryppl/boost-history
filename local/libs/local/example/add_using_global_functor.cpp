@@ -14,7 +14,7 @@
 struct global_add { // Unfortunately, boilerplate code to program the class.
     global_add(double& _sum, int _factor): sum(_sum), factor(_factor) {}
 
-    void operator()(double num) {
+    inline void operator()(double num) {
         // Body uses C++ statement syntax.
         sum += factor * num;
         std::cout << "Summed: " << sum << std::endl;
@@ -23,7 +23,7 @@ struct global_add { // Unfortunately, boilerplate code to program the class.
 private:
     // Unfortunately, cannot bind so repeat variable types.
     double& sum; // Access `sum` by reference.
-    const int factor; // Make `factor` constant.
+    const int& factor; // Make `factor` constant.
 };
 
 int main() {

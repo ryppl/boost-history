@@ -4,8 +4,7 @@ import time
 import os
 
 cmd = ""
-for arg in sys.argv[1:]:
-    cmd += str(arg) + " "
+for arg in sys.argv[1:]: cmd += str(arg) + " "
 
 start = time.time()
 ret = os.system(cmd)

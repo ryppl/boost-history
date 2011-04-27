@@ -14,9 +14,9 @@ int main(int argc, char* argv[]) {
 
     boost::chrono::system_clock::time_point start =
             boost::chrono::system_clock::now();
-    struct add_local_functor {
-        add_local_functor(double& sum_, const int& factor_):
-                sum(sum_), factor(factor_) {}
+    struct local_add {
+        local_add(double& _sum, const int& _factor):
+                sum(_sum), factor(_factor) {}
         inline void operator()(const double& num) {
             sum += factor * num;
         }

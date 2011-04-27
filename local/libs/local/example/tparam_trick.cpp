@@ -24,11 +24,11 @@ struct func_interface {
         = 0; // virtual call cannot be inlined
 };
 struct virtual_func {
-    explicit virtual_func(func_interface& ref): ptr_(&ref) {}
+    explicit virtual_func(func_interface& func): func_(&func) {}
     inline void operator()(const double& num)
-        { (*ptr_)(num); }
+        { (*func_)(num); }
 private:
-    func_interface* ptr_;
+    func_interface* func_;
 };
 
 int main() {
