@@ -6,7 +6,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
   <link rel="stylesheet" type="text/css" href="http://www.boost.org/doc/libs/1_46_1/boost.css">
 
-  <title>Memory Managed Pointer - Overview - Boost 1.46.1</title>
+  <title>Mutual Pointer - Overview - Boost 1.46.1</title>
 <link rel="icon" href="http://www.boost.org/favicon.ico" type="image/ico"><link rel="stylesheet" type="text/css" href="http://www.boost.org/style-v2/section-basic.css"></head>
 
 <body link="#0000FF" vlink="#800080">  <div id="boost-common-heading-doc">
@@ -54,7 +54,7 @@
   <div id="boost-common-heading-doc-spacer"></div>
 
   
-        <h1 align="center">Memory Managed Pointer</h1>
+        <h1 align="center">Mutual Pointer</h1>
 
         <h2 align="center">Overview</h2>
       <dl class="index">
@@ -64,7 +64,7 @@
 
     <dt><a href="#rc">Reference Counting</a></dt>
 
-    <dt><a href="#sp">Memory Managed Pointer</a></dt>
+    <dt><a href="#sp">Mutual Pointer</a></dt>
   </dl>
 
   <h2><a name="introduction" id="introduction"></a>Introduction</h2>
@@ -85,9 +85,9 @@
   a group of blocks of memory referencing each other called "cyclic" (see <a href="MutualPointer.ppt">presentation</a>) unnoticed and therefore never freed by the 
   application.  On the other hand the destruction of the object is done instantaneously and thus the behavior or the application can be predicted.</p>
 
-  <h2><a name="sp" id="sp"></a>Memory Managed Pointer</h2>
+  <h2><a name="sp" id="sp"></a>Mutual Pointer</h2>
 
-  <p>Memory Managed Pointer is a memory manager on top of reference counting and is also able to detect outright unreferenced cyclic blocks of memory.  It is a fast as
+  <p>Mutual Pointer is a memory manager on top of reference counting and is also able to detect outright unreferenced cyclic blocks of memory.  It is a fast as
   the popular smart pointer <i>boost::shared_ptr&#60;T&#62;</i> but is not requiring a bigger memory usage per pointer (2 times <i>sizeof(void *)</i>), given its 
   ability to detect cyclic blocks of memory with no coding overhead.  In terms of programing requirements, <i>mutual_ptr&#60;T&#62;</i> simply requires to point 
   to instantiations of the <i>mm&#60;T&#62;</i> type.  For example:</p>

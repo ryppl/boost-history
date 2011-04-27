@@ -6,7 +6,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
   <link rel="stylesheet" type="text/css" href="http://www.boost.org/doc/libs/1_46_1/boost.css">
 
-  <title>Memory Managed Pointer - Tutorial - Boost 1.46.1</title>
+  <title>Mutual Pointer - Tutorial - Boost 1.46.1</title>
 <link rel="icon" href="http://www.boost.org/favicon.ico" type="image/ico"><link rel="stylesheet" type="text/css" href="http://www.boost.org/style-v2/section-basic.css"></head>
 
 <body link="#0000FF" vlink="#800080">  <div id="boost-common-heading-doc">
@@ -54,7 +54,7 @@
   <div id="boost-common-heading-doc-spacer"></div>
 
   
-        <h1 align="center">Memory Managed Pointer</h1>
+        <h1 align="center">Mutual Pointer</h1>
 
         <h2 align="center">Tutorial</h2>
       <dl class="index">
@@ -65,35 +65,35 @@
 
   <h2><a name="basic" id="basic"></a>Basic</h2>
   
-  <p>Memory Managed Pointer was designed to be easy to use and to be versatile in terms of object variants it can refer to.  Its only requirement is limited to the usage 
+  <p>Mutual Pointer was designed to be easy to use and to be versatile in terms of object variants it can refer to.  Its only requirement is limited to the usage 
   of a special type needed to instanciate objects referred to.  For example:</p>
 
   <pre>  
-  mm_ptr&#60;int&#62; p = new mm&#60;int&#62;(11);
+  mutual_ptr&#60;int&#62; p = new mutual&#60;int&#62;(11);
   </pre>
 
   <p>Will instanciate a special object <i>mm&#60;int&#62;</i> having an integer as one of its member.  The pointer to the object is then passed to the 
-  <i>mm_ptr&#60;int&#62;</i> that will manage its existence and later destroy and deallocate it when it is found to be no longer referenced.<p>
+  <i>mutual_ptr&#60;int&#62;</i> that will manage its existence and later destroy and deallocate it when it is found to be no longer referenced.<p>
 
   <p>Variants of the object type can also be used.  In order to instanciate an array of integer for example, all that will be needed is to change the 
   type to the following:<p>
 
   <pre>  
-  mm_ptr&#60;int[10]&#62; p = new mm&#60;int[10]&#62;();
+  mutual_ptr&#60;int[10]&#62; p = new mutual&#60;int[10]&#62;();
   </pre>
 
-  See the following <a href="../example/mm_ptr_test1.cpp">example</a> for different cases of its usage.
+  See the following <a href="../example/mutual_ptr_test1.cpp">example</a> for different cases of its usage.
   
   <h2><a name="advanced" id="advanced"></a>Advanced</h2>
 
-  <p>When STL containers are made out of objects having members of type <i>mm_ptr&#60;T&#62;</i> then it will be desirable to have all of the allocated nodes 
-  and its members part of the same <i>set</i>.  This way all of the newly allocated <i>mm_ptr&#60;T&#62;</i> will be referring to the same <i>set</i> header.
+  <p>When STL containers are made out of objects having members of type <i>mutual_ptr&#60;T&#62;</i> then it will be desirable to have all of the allocated nodes 
+  and its members part of the same <i>set</i>.  This way all of the newly allocated <i>mutual_ptr&#60;T&#62;</i> will be referring to the same <i>set</i> header.
   In order to do so, we must tell the container in question a new allocator that will be used to instanciate the nodes.  This allocator is called: 
-  <i>mm_allocator&#60;T&#62;</i>.  For example:</p>
+  <i>mutual_allocator&#60;T&#62;</i>.  For example:</p>
 
   <pre>  
-  list&#60; mm_ptr&#60;int&#62;, mm_allocator&#60; mm_ptr&#60;int&#62; &#62; &#62; c;
-  c.push_back(new mm&#60;int&#62;(11));
+  list&#60; mutual_ptr&#60;int&#62;, mutual_allocator&#60; mutual_ptr&#60;int&#62; &#62; &#62; c;
+  c.push_back(new mutual&#60;int&#62;(11));
   </pre>
 
   <hr>
