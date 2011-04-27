@@ -16,11 +16,11 @@
 #include <vector>
 
 #include <boost/array.hpp>
-#include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
+#include <boost/assign/v2/support/config/enable_cpp0x.hpp>
 #if! BOOST_ASSIGN_V2_ENABLE_CPP0X
 #error
 #endif
-#include <boost/assign/v2/detail/speed.hpp>
+#include <boost/assign/v2/support/speed.hpp>
 #include <boost/config.hpp>
 #include <boost/format.hpp>
 #include <boost/lambda/lambda.hpp>
@@ -183,13 +183,13 @@ void fill_vec_stat(std::size_t scale_factor,
         n, elapsed, cont, std::forward<Args>( args )... ),
        "v2_csv_put"
     )
-    //MACRO( as2::speed_aux::v2_pipe_put<timer_>(
+    //MACRO( as2::speed_aux::v2_delay_put<timer_>(
     //    n, elapsed, cont, std::forward<Args>( args )... ),
-    //   "v2_pipe_put"
+    //   "v2_delay_put"
     //)
     MACRO( as2::speed_aux::v2_delay_csv_put<timer_>(
         n, elapsed, cont, std::forward<Args>( args )... ),
-       "v2_pipe_csv_put"
+       "v2_delay_csv_put"
     )
 
 // Generate containers
@@ -246,9 +246,9 @@ void test( std::ostream& os )
     cols["stl_push_back"]         =     "cont.push_back( arg1 ); ...; cont.push_back( argm )";
     cols["v1_push_back"]         =   "push_back( cont )( arg1 )...( argm )";
     cols["v2_put"]             =   "v2::put( cont )( arg1 )...( argm )";
-    //cols["v2_pipe_put"]         =   "cont | v2::_put( arg1 )...( argm )";
+    //cols["v2_delay_put"]         =   "cont | v2::_put( arg1 )...( argm )";
     cols["v2_csv_put"]         =     "cont | v2::csv_put( cont, args )";
-    cols["v2_pipe_csv_put"]     =     "cont | v2::delay_csv_put( v2::ref::csv_array( args... ) )";
+    cols["v2_delay_csv_put"]     =     "cont | v2::delay_csv_put( v2::ref::csv_array( args... ) )";
     cols["v1_list_of"]         =   "list_of( arg1 )...( argm )";
     cols["v2_deque"]             =   "v2::deque<T>( arg1 )...( argm )";
     cols["v2_csv_deque"]         =   "v2::csv_deque( args... )";
@@ -303,7 +303,7 @@ void test( std::ostream& os )
         methods.push_back( "v1_push_back" );
         methods.push_back( "v2_put" );
         methods.push_back( "v2_csv_put" );
-        methods.push_back( "v2_pipe_csv_put" );
+        methods.push_back( "v2_delay_csv_put" );
 
         methods.push_back( "v1_list_of" );
         methods.push_back( "v2_deque" );
@@ -340,7 +340,7 @@ void test( std::ostream& os )
         os << vec_stat;\
     }\
 /**/
-    
+
 MACRO2(1)
 MACRO2(2)
 MACRO2(4)
