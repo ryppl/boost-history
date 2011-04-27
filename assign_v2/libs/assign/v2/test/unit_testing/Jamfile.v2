@@ -19,11 +19,11 @@ test-suite assign :
     [ assign-test chain ]
     [ assign-test conversion ]
     [ assign-test deque ]
-    [ assign-test detail ]
     [ assign-test interpreter ]
     [ assign-test option ]
     [ assign-test put ]
     [ assign-test ref ]
+    [ assign-test support ]
 ;
 
 
