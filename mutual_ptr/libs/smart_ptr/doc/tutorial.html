@@ -61,6 +61,8 @@
     <dt><a href="#basic">Basic</a></dt>
 
     <dt><a href="#advanced">Advanced</a></dt>
+
+    <dt><a href="#caveat">Caveat</a></dt>
   </dl>
 
   <h2><a name="basic" id="basic"></a>Basic</h2>
@@ -94,6 +96,33 @@
   <pre>  
   list&#60; mutual_ptr&#60;int&#62;, mutual_allocator&#60; mutual_ptr&#60;int&#62; &#62; &#62; c;
   c.push_back(new mutual&#60;int&#62;(11));
+  </pre>
+
+  <h2><a name="caveat" id="caveat"></a>Caveat</h2>
+  
+  <p>Hierarchies with multiple inheritance without virtual tables will cause undefined behavior if a pointer to a derived class is assigned to a pointer of one 
+  of its base class.  For example:</p>
+
+  <pre>  
+  struct M { int i; };
+  struct N { int i; };
+  struct O : N, M { int i; };
+
+  mutual_ptr&#60;O&#62; po = new mutual&#60;O&#62;;
+  mutual_ptr&#60;N&#62; pn = po; // incorrect
+  mutual_ptr&#60;M&#62; pm = po; // incorrect
+  </pre>
+  
+  <p>A way to bypass any problem that might be created by the example above is to add virtual destructors to the classes:</p>
+
+  <pre>  
+  struct M { int i; virtual ~M() {} };
+  struct N { int i; virtual ~N() {} };
+  struct O : N, M { int i; };
+
+  mutual_ptr&#60;O&#62; po = new mutual&#60;O&#62;;
+  mutual_ptr&#60;N&#62; pn = po; // correct
+  mutual_ptr&#60;M&#62; pm = po; // correct
   </pre>
 
   <hr>
