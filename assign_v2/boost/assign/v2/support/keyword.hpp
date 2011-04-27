@@ -16,7 +16,8 @@ namespace assign{
 namespace v2{
 //[syntax_detail_keyword
 namespace keyword_aux{
-    struct ignore{ 
+
+    struct ignore{    
         ignore(){} 
         template<typename Anything> ignore(Anything){}
     };

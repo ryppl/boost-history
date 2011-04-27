@@ -51,7 +51,7 @@ namespace interpreter_aux{
 //<-
         typedef impl_ const cimpl_;
         typedef interpreter_crtp<
-         	deque_interpreter
+             deque_interpreter
             , impl_, F, MTag, data_tag::value
         > put_crtp_;
 //->

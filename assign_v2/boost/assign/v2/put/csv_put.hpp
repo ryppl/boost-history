@@ -37,7 +37,7 @@ namespace interpreter_aux{
     template<typename T, typename K, typename M>
     struct csv_ready<
         functor_aux::pair<T, K, M>
-    > 
+    >
         : ::boost::mpl::false_
     {};
 
@@ -103,20 +103,19 @@ namespace result_of{
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 //->
 
-    template<typename C, typename O, bool is, typename... Args>
+    template<typename C, typename O, typename... Args>
     /*<-*/typename boost::enable_if<
         is_list_option<O>
     >::type BOOST_ASSIGN_V2_IGNORE(/*->*/void /*<-*/)
     /*->*/csv_put(
         C& cont,
-        option_crtp<O, is> const& crtp,
+        O const& option,
         Args&&... args
     )/*<-*/
     {
-        O const& options = static_cast<O const&>( crtp );
         csv(
             make_csv_ready(
-                put( cont ) % options
+                put( cont ) % option
             ),
               std::forward<Args>( args )...
         );
@@ -218,7 +217,7 @@ namespace result_of{
 //<-
 #endif // BOOST_ASSIGN_V2_ENABLE_CPP0X
 //->
-    using interpreter_aux::delay_csv_put;    
+    using interpreter_aux::delay_csv_put;
 
 namespace result_of{
 

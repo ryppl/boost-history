@@ -7,9 +7,9 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#include <boost/assign/v2/detail/config/check.hpp>
-#include <boost/assign/v2/detail/config/enable_cpp0x.hpp>
-#include <boost/assign/v2/detail/functor/value.hpp>
+#include <boost/assign/v2/support/config/check.hpp>
+#include <boost/assign/v2/support/config/enable_cpp0x.hpp>
+#include <boost/assign/v2/support/functor/value.hpp>
 #include <boost/tuple/tuple.hpp>
 #include <libs/assign/v2/test/support/functor.h>
 
@@ -27,7 +27,7 @@ namespace xxx_functor{
 #endif
 #endif
 
-        // Primarily tests whether a functor is overloaded on any combination of 
+        // Primarily tests whether a functor is overloaded on any combination of
         // non-const/cont within BOOST_ASSIGN_V2_LIMIT_LVALUE_CONST_ARITY
         // (relevant only for CPP03) and on all-non-const and all-const above
         // this limit.
@@ -78,7 +78,7 @@ namespace xxx_functor{
         }
 #endif
         {
-            typedef int e_; 
+            typedef int e_;
             typedef boost::tuple<e_ const&, e_ const&, e_ const&> tuple_;
             typedef as2::functor_aux::value<tuple_> value_;
 

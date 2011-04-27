@@ -11,7 +11,7 @@
 #include <queue>
 #include <stack>
 #include <vector>
-#include <boost/assign/v2/detail/traits.hpp>
+#include <boost/assign/v2/support/traits.hpp>
 #include <boost/mpl/assert.hpp>
 #include <boost/static_assert.hpp>
 #include <libs/assign/v2/test/support/traits.h>
