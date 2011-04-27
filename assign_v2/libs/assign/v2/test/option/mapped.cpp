@@ -39,9 +39,9 @@ namespace xxx_mapped{
             (
                 as2::put( year )
                     ( "feb", 28 )( "apr", 30 )( "jun", 30 )( "sep", 30 )( "nov", 30 )
-                    % ( as2::_data = as2::_key ) % ( as2::_mapped = ( boost::lambda::constant( 31 ) ) )
+                    % ( as2::_data = as2::_key ) % ( as2::_mapped = boost::lambda::constant( 31 ) )
             )/*<<Calls `year[ month_( "jan" ) ] = 31`>>*/( "jan" )( "mar" )( "may" )( "jul" )( "aug" )( "oct" )( "dec" );
-            
+
             BOOST_ASSIGN_V2_CHECK( year["jan"] == 31 );
             BOOST_ASSIGN_V2_CHECK( year["dec"] == 31 );
             //]
@@ -62,11 +62,11 @@ namespace xxx_mapped{
             //[test_option_mapped_deque
             std::list<int> source(10, 1); boost::iota( source, 1 );
             BOOST_AUTO( option, ( as2::_mapped = ( boost::lambda::_1 *= -1 ) ) );
-            
-            BOOST_ASSIGN_V2_CHECK( 
+
+            BOOST_ASSIGN_V2_CHECK(
                 boost::range::equal(
                     (
-                        as2::deque<int>( as2::as_arg_list( source ) ) 
+                        as2::deque<int>( as2::as_arg_list( source ) )
                         % option
                     )( 1 )( 3 )( 5 )( 7 )( 9 ),
                     as2::csv_deque( +1, -2, +3, -4, +5, -6, +7, -8, +9, -10 )
