@@ -45,14 +45,13 @@
     /* non-local functor can always be passed as tparam (but slower) */ \
     BOOST_TYPEOF(local_functor_name.local_function_name) \
             nonlocal_functor_name; \
-    /* run-time: the following order in which the functors are set is */ \
-    /* important to allow for compiler optimization (changing this order */ \
-    /* and/or moving some of these sets into the functor constructors might */ \
-    /* prevent compiler optimizations) */ \
-    local_functor_name.BOOST_LOCAL_AUX_FUNCTION_NAME_INIT_RECURSION_FUNC_( \
-            nonlocal_functor_name); \
+    /* the following order should not be changed because init_recurion can */ \
+    /* be called only after init_call (because init_call init the glocal */ \
+    /* functor used by init_recursion) -- otherwise run-time error */ \
     local_functor_name.BOOST_LOCAL_AUX_SYMBOL_INIT_CALL_FUNCTION_NAME( \
-            &local_functor_name, nonlocal_functor_name);
+            &local_functor_name, nonlocal_functor_name); \
+    local_functor_name.BOOST_LOCAL_AUX_FUNCTION_NAME_INIT_RECURSION_FUNC_( \
+            nonlocal_functor_name);
 
 #define BOOST_LOCAL_AUX_FUNCTION_NAME_FUNCTOR_(local_function_name) \
     BOOST_LOCAL_AUX_INTERNAL_SYMBOL(local_function_name)

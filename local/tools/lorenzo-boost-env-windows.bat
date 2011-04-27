@@ -16,8 +16,8 @@ ECHO Before running this script you must have downloaded and compiled Boost.Buil
 ECHO However, you do not strictly need to do this because you can use any compiler to build the examples (just add this headers-only library to your #include path) and you do not need to re-build the documentation.
 ECHO.
 
-set BOOST_ROOT=C:\PROGRA~1\boost\boost_1_46_1
-REM set BOOST_ROOT=e:\sandbox\boost-trunk
+REM set BOOST_ROOT=C:\PROGRA~1\boost\boost_1_46_1
+set BOOST_ROOT=e:\sandbox\boost-trunk
 set LIBPATH=%LIBPATH%;%BOOST_ROOT%\stage\lib
 set BOOST=%BOOST_ROOT%
 set BOOST_BUILD_PATH=%BOOST_ROOT%\tools\build\v2

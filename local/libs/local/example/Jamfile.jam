@@ -22,6 +22,8 @@ local BOOST_ROOT = [ os.environ BOOST_ROOT ] ;
 # Boost.Chrono (which needs Boost.System) for GCC (not part of official Boost release yet).
 lib libboost_chrono : : <file>$(BOOST_ROOT)/stage/lib/libboost_chrono.so ;
 lib libboost_system : : <file>$(BOOST_ROOT)/stage/lib/libboost_system.so ;
+#lib libboost_chrono : : ;
+#lib libboost_system : : ;
 
 exe add : add.cpp ;
 exe add_va : add_va.cpp ;
