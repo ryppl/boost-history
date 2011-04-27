@@ -11,6 +11,7 @@
 #include "../config.hpp"
 // For BOOST_TYPEOF.
 #include "../scope_exit/scope_exit.hpp" // Use this lib's ScopeExit impl.
+#include <boost/detail/preprocessor/keyword/inline.hpp>
 
 // PRIVATE //
 
@@ -56,36 +57,46 @@
 #define BOOST_LOCAL_AUX_FUNCTION_NAME_FUNCTOR_(local_function_name) \
     BOOST_LOCAL_AUX_INTERNAL_SYMBOL(local_function_name)
 
+
+// This is faster on some compilers but not all (e.g., it is faster on GCC
+// because its optimization inlines it but not on MSVC). However, it cannot be
+// passed as a template parameter on non C++03 compilers.
+#define BOOST_LOCAL_AUX_FUNCTION_NAME_INLINE_(local_function_name) \
+    BOOST_LOCAL_AUX_FUNCTION_NAME_END_LOCAL_FUNCTOR_( \
+            local_function_name, \
+            local_function_name, \
+            BOOST_LOCAL_AUX_FUNCTION_NAME_FUNCTOR_(local_function_name), \
+            __LINE__)
+
+// This can always be passed as a template parameters (on all compilers).
+// However, it is slower because it cannot be inlined.
+#define BOOST_LOCAL_AUX_FUNCTION_NAME_(local_function_name) \
+    BOOST_LOCAL_AUX_FUNCTION_NAME_END_LOCAL_FUNCTOR_( \
+            local_function_name, \
+            BOOST_LOCAL_AUX_FUNCTION_NAME_FUNCTOR_(local_function_name), \
+            local_function_name, \
+            __LINE__)
+
 // PUBLIC //
 
-// Limitation: This is faster (smaller run-time than `FUNCION_NAME`) but it
-// cannot be passed as template parameter on ISO C++ but it can on C++03.
-#define BOOST_LOCAL_AUX_FUNCTION_NAME_OPTIMIZED(local_function_name) \
-    BOOST_LOCAL_AUX_FUNCTION_NAME_END_LOCAL_FUNCTOR_( \
-            local_function_name, \
-            local_function_name, \
-            BOOST_LOCAL_AUX_FUNCTION_NAME_FUNCTOR_(local_function_name), \
-            __LINE__)
-
-// ISO C++ does not allow to pass local classes as template parameters. But
-// if can use C++03 (no ISO C++) features and MSVC compiler (which allows to
-// pass local classes as template parameters), than pass local class as
-// template parameter without the extra global functor to reduce run-time.
-#ifdef BOOST_LOCAL_AUX_CONFIG_LOCAL_CLASS_AS_TEMPLATE_PARAMETER
-
-#define BOOST_LOCAL_AUX_FUNCTION_NAME(local_function_name) \
-    BOOST_LOCAL_AUX_FUNCTION_NAME_OPTIMIZED(local_function_name)
-
-#else
-
-#define BOOST_LOCAL_AUX_FUNCTION_NAME(local_function_name) \
-    BOOST_LOCAL_AUX_FUNCTION_NAME_END_LOCAL_FUNCTOR_( \
-            local_function_name, \
-            BOOST_LOCAL_AUX_FUNCTION_NAME_FUNCTOR_(local_function_name), \
-            local_function_name, \
-            __LINE__)
-
-#endif
+// If the function name is specified as `inline name` then the local function
+// can be faster on some compilers that can inline it (like GCC but not MSVC)
+// but inlined local functions can be passed as template parameters only on
+// C++03 compilers. On C++03 compilers, the local function will be inlined if
+// possible even if `inline name` is not specified.
+#define BOOST_LOCAL_AUX_FUNCTION_NAME(maybe_inline_name) \
+    BOOST_PP_IIF(BOOST_PP_BITOR( \
+            BOOST_LOCAL_AUX_CONFIG_LOCAL_TYPES_AS_TPARAMS_01, \
+            BOOST_DETAIL_PP_KEYWORD_IS_INLINE_FRONT(maybe_inline_name)), \
+        /* on C++03 always use inlining because compilers might optimize */ \
+        /* it to be faster and it can also be passed as tparam */ \
+        BOOST_LOCAL_AUX_FUNCTION_NAME_INLINE_ \
+    , \
+        /* on non C++03 don't use liniling unless explicitly specified by */ \
+        /* programmers `inline name` the inlined local function cannot be */ \
+        /* passed as tparam */ \
+        BOOST_LOCAL_AUX_FUNCTION_NAME_ \
+    )(BOOST_DETAIL_PP_KEYWORD_INLINE_REMOVE_FRONT(maybe_inline_name))
 
 #endif // #include guard
 

@@ -10,8 +10,7 @@ local BOOST_ROOT = [ os.environ BOOST_ROOT ] ;
 
 project
     : requirements
-        <include>"."            # For this library within Boost libraries.
-        <include>"src"          # For this library within Contract++.
-        <include>$(BOOST_ROOT)  # Boost libraries.
+        <include>"."            # For this library.
+        <include>$(BOOST_ROOT)  # For Boost libraries.
     ;
 

@@ -18,7 +18,7 @@ int main(int argc, char* argv[]) {
     void BOOST_LOCAL_FUNCTION_PARAMS( (const double& num)
             (bind& sum) (const bind& factor) ) {
         sum += factor * num;
-    } BOOST_LOCAL_FUNCTION_NAME_OPTIMIZED(add)
+    } BOOST_LOCAL_FUNCTION_NAME(inline add) // Note the `inline` specifier.
     boost::chrono::duration<double> decl_sec =
             boost::chrono::system_clock::now() - start;
 

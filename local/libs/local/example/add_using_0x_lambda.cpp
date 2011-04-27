@@ -13,7 +13,7 @@ int main() {
 }
 #else
 
-//[ add_cpp0x_lambda_cpp
+//[ add_using_cpp0x_lambda_cpp
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -26,8 +26,9 @@ int main() {
     v[0] = 1.0; v[1] = 2.0; v[2] = 3.0;
 
     // Passed as template parameter and also defined at expression level.
-    std::for_each(v.begin(), v.end(), [&sum, &factor](double num) {
-        // Unfortunately, cannot make `factor` constant.
+    std::for_each(v.begin(), v.end(), [&sum, factor](double num) {
+        // Unfortunately, cannot bind `factor` by constant reference (but only
+        // by constant value requiring copy constructor and extra operation).
         // Body uses normal C++ syntax.
         sum += factor * num;
         std::cout << "Summed: " << sum << std::endl;

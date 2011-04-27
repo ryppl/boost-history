@@ -160,9 +160,16 @@
  *
  * @Params
  * @Param{name,
- *  The name of the local function. This name cannot be the name of an operator
+ *  The name of the local function. 
+ *  The local function name can be prefixed by the keyword <c>inline</c> as in
+ *  <c>BOOST_LOCAL_FUNCTION_NAME(inline <em>name</em>)</c> to increases the
+ *  likelihood that the compiler will inline the local function (thus reducing
+ *  its run-time) but inlined local functions can be passed as template
+ *  parameters only on C++03 compilers (and not on ISO C++ standard compilers)
+ *  -- see the @RefSect2{Advanced_Topics\, Advanced Topics} section.
+ *  The local function name cannot be the name of an operator
  *  <c>operator...</c> and it cannot be the same name of another local function
- *  declared within the same enclosing scope (i.e.\, it is not possible to
+ *  declared within the same enclosing scope (i.e.\, it is not possible to 
  *  overload local function declarations) -- see the
  *  @RefSect2{Advanced_Topics\, Advanced Topics} section.
  * }
@@ -173,9 +180,6 @@
  */
 #define BOOST_LOCAL_FUNCTION_NAME(name) \
     BOOST_LOCAL_AUX_FUNCTION_NAME(name)
-
-#define BOOST_LOCAL_FUNCTION_NAME_OPTIMIZED(name) \
-    BOOST_LOCAL_AUX_FUNCTION_NAME_OPTIMIZED(name)
 
 namespace boost { namespace local {
 

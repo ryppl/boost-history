@@ -7,7 +7,7 @@
 
 void begin(int argc, char* argv[], unsigned long& size, unsigned long& trials) {
     size = 100000000; // Defaults.
-    trials = 100; // Default.
+    trials = 10; // Default.
     if (argc != 1 && argc != 2 && argc != 3) {
         std::cerr << "ERROR: Incorrect argument(s)" << std::endl;
         std::cerr << "Usage: " << argv[0] << " [SIZE] [TRIALS]" <<

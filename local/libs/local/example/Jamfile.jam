@@ -4,19 +4,24 @@
 # License, Version 1.0 (see accompanying file LICENSE_1_0.txt or a
 # copy at http://www.boost.org/LICENSE_1_0.txt).
 
+# Usages:
+# bjam define=BOOST_LOCAL_CONFIG_COMPLIANT ...
+#       Disable Boost.Local variadic macro  syntax and  local types as template
+#       parameters optimization.
+# bjam define=BOOST_TYPEOF_COMPLIANT ...
+#       Disable Boost.Typeof compiler specific type-of support.
+# bjam cxxflags=-std=c++0x ...
+#       Enable GCC C++0x features like lambdas and local types as template
+#       parameters.
+
 import feature ;
+import os ;
 
-# `bjam boost_local_config_compliant ...` for pure ISO C++ (no variadic, etc).
-feature.feature boost_local_config_compliant : off on
-    : composite propagated link-incompatible ;
-feature.compose <boost_local_config_compliant>on
-    : <define>BOOST_LOCAL_CONFIG_COMPLIANT ;
+local BOOST_ROOT = [ os.environ BOOST_ROOT ] ;
 
-# `biam boost_local_compliant_typeof ...` for ISO C++ compliant `typeof`.
-feature.feature boost_local_compliant_typeof : off on
-    : composite propagated link-incompatible ;
-feature.compose <boost_local_compliant_typeof>on
-    : <define>BOOST_TYPEOF_COMPLIANT ;
+# Boost.Chrono (which needs Boost.System) for GCC (not part of official Boost release yet).
+lib libboost_chrono : : <file>$(BOOST_ROOT)/stage/lib/libboost_chrono.so ;
+lib libboost_system : : <file>$(BOOST_ROOT)/stage/lib/libboost_system.so ;
 
 exe add : add.cpp ;
 exe add_va : add_va.cpp ;
@@ -110,15 +115,24 @@ exe add_using_boost_local : add_using_boost_local.cpp ;
 exe add_using_boost_local_va : add_usign_boost_local_va.cpp ;
 exe add_using_local_functor : add_using_local_functor.cpp ;
 exe add_using_global_functor : add_using_global_functor.cpp ;
-exe add_using_cpp0x_lambda : add_using_cpp0x_lambda.cpp ;
+exe add_using_0x_lambda : add_using_0x_lambda.cpp ;
 exe add_using_boost_lambda : add_using_boost_lambda.cpp ;
 exe add_using_boost_phoenix : add_using_boost_phoenix.cpp ;
 
-exe profile_boost_local : profile_boost_local.cpp ;
-exe profile_boost_local_optimized : profile_boost_local_optimized.cpp ;
-exe profile_boost_local_for_loop : profile_boost_local_for_loop.cpp ;
-exe profile_local_functor : profile_local_functor.cpp ;
-exe profile_global_functor : profile_global_functor.cpp ;
-exe profile_boost_lambda : profile_boost_lambda.cpp ;
-exe profile_boost_phoenix : profile_boost_phoenix.cpp ;
+exe profile_boost_local : profile_boost_local.cpp
+        libboost_chrono libboost_system ;
+exe profile_boost_local_inline : profile_boost_local_inline.cpp 
+        libboost_chrono libboost_system ;
+exe profile_boost_local_for_loop : profile_boost_local_for_loop.cpp 
+        libboost_chrono libboost_system ;
+exe profile_local_functor : profile_local_functor.cpp 
+        libboost_chrono libboost_system ;
+exe profile_global_functor : profile_global_functor.cpp 
+        libboost_chrono libboost_system ;
+exe profile_0x_lambda : profile_0x_lambda.cpp 
+        libboost_chrono libboost_system ;
+exe profile_boost_lambda : profile_boost_lambda.cpp 
+        libboost_chrono libboost_system ;
+exe profile_boost_phoenix : profile_boost_phoenix.cpp 
+        libboost_chrono libboost_system ;
 
