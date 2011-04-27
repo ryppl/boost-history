@@ -14,7 +14,8 @@
 namespace test_assign_v2{
 namespace xxx_support{
 
-    void test(){
+    void test()
+    {
         xxx_functor::test();
         xxx_traits::test();
     }
