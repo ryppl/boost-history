@@ -1,6 +1,6 @@
 /**
 	@file
-	mm_ptr_test3.cpp
+	mutual_ptr_test3.cpp
 
 	@note
 	MinGW users must link with: -Wl,--enable-runtime-pseudo-reloc
@@ -11,8 +11,8 @@
 
 
 
-#include <boost/mm_ptr.hpp>
-#include <boost/mm_allocator.hpp>
+#include <boost/mutual_ptr.hpp>
+#include <boost/mutual_allocator.hpp>
 
 #include <vector>
 #include <iostream>
@@ -28,9 +28,9 @@
 
 static int count;
 
-using boost::mm_ptr;
-using boost::mm;
-using boost::mm_allocator;
+using boost::mutual_ptr;
+using boost::mutual;
+using boost::mutual_allocator;
 
 struct node {
     node() {
@@ -42,8 +42,8 @@ struct node {
     node(const node&) {
         ++count;
     }
-    mm_ptr<node> prior;
-    mm_ptr<node> next;
+    mutual_ptr<node> prior;
+    mutual_ptr<node> next;
 };
 
 struct list {
@@ -55,37 +55,37 @@ public:
     }
     void insert() {
         if(front.get() == 0) {
-            front = back = new mm<node>();
+            front = back = new mutual<node>();
         } else {
-            back->next = new mm<node>();
+            back->next = new mutual<node>();
             back->next->prior = back;
             back = back->next;
         }
     }
 private:
-    mm_ptr<node> front;
-    mm_ptr<node> back;
+    mutual_ptr<node> front;
+    mutual_ptr<node> back;
 };
 
 struct vector {
     vector() { ++count; }
     ~vector() { --count; }
     vector(const vector& other) : elements(other.elements) { ++count; }
-    std::vector<mm_ptr<vector>, mm_allocator<mm_ptr<vector> > > elements;
+    std::vector<mutual_ptr<vector>, mutual_allocator<mutual_ptr<vector> > > elements;
 };
 
 struct create_type {
     template<class T>
     void operator()(T) const {
-        new mm<boost::array<char, T::value> >();
+        new mutual<boost::array<char, T::value> >();
     }
 };
 
-BOOST_AUTO_TEST_CASE(test_mm_ptr) {
+BOOST_AUTO_TEST_CASE(test_mutual_ptr) {
 
     count = 0;
     {
-        mm_ptr<vector> v = new mm<vector>();
+        mutual_ptr<vector> v = new mutual<vector>();
         v->elements.push_back(v);
     }
     BOOST_CHECK_EQUAL(count, 0);
@@ -104,7 +104,7 @@ BOOST_AUTO_TEST_CASE(test_mm_ptr) {
 
     count = 0;
     {
-        mm_ptr<int> test = new mm<int>(5);
+        mutual_ptr<int> test = new mutual<int>(5);
         test = test;
         
         BOOST_CHECK_NE(test.get(), static_cast<int*>(0));
@@ -117,14 +117,14 @@ BOOST_AUTO_TEST_CASE(test_mm_ptr) {
 
     count = 0;
     {
-        mm_ptr<vector> v = new mm<vector>();
+        mutual_ptr<vector> v = new mutual<vector>();
         v->elements.push_back(v);
     }
     BOOST_CHECK_EQUAL(count, 0);
 
     {
         vector v;
-        v.elements.push_back(new mm<vector>());
+        v.elements.push_back(new mutual<vector>());
     }
     BOOST_CHECK_EQUAL(count, 0);
 

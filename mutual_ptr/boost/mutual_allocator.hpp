@@ -1,6 +1,6 @@
 /**
 	@file
-	Boost mm_allocator.hpp header file.
+	Boost mutual_allocator.hpp header file.
 
 	@note
 	Copyright (c) 2008 Phil Bouchard <phil@fornux.com>.
@@ -14,8 +14,8 @@
 */
 
 
-#ifndef BOOST_SHIFTED_ALLOCATOR_HPP_INCLUDED
-#define BOOST_SHIFTED_ALLOCATOR_HPP_INCLUDED
+#ifndef BOOST_MUTUAL_ALLOCATOR_HPP_INCLUDED
+#define BOOST_MUTUAL_ALLOCATOR_HPP_INCLUDED
 
 // MS compatible compilers support #pragma once
 
@@ -23,7 +23,7 @@
 # pragma once
 #endif
 
-#include <boost/mm_ptr.hpp>
+#include <boost/mutual_ptr.hpp>
 
 
 namespace boost
@@ -44,12 +44,12 @@ namespace sh
 */
 
 template <typename T>
-    class mm_allocator
+    class mutual_allocator
     {
         typedef T                       element_type;
 
     public:
-        typedef mm<T>              value_type;
+        typedef mutual<T>              value_type;
         typedef size_t                  size_type;
         typedef ptrdiff_t               difference_type;
         typedef T *                     pointer;
@@ -60,15 +60,15 @@ template <typename T>
         template <typename U>
             struct rebind
             {
-                typedef mm_allocator<U> other;
+                typedef mutual_allocator<U> other;
             };
 
-        mm_allocator() throw()                                 {}
-        mm_allocator(const mm_allocator &) throw()        {}
+        mutual_allocator() throw()                                 {}
+        mutual_allocator(const mutual_allocator &) throw()        {}
         template <typename U>
-            mm_allocator(const mm_allocator<U> &) throw() {}
+            mutual_allocator(const mutual_allocator<U> &) throw() {}
 
-        ~mm_allocator() throw()                                {}
+        ~mutual_allocator() throw()                                {}
         pointer address(reference x) const                          { return & x; }
         const_pointer address(const_reference x) const              { return & x; }
 
@@ -102,13 +102,13 @@ template <typename T>
     };
 
 template <typename T>
-    inline bool operator == (const mm_allocator<T> &, const mm_allocator<T> &)
+    inline bool operator == (const mutual_allocator<T> &, const mutual_allocator<T> &)
     {
         return true;
     }
 
 template <typename T>
-    inline bool operator != (const mm_allocator<T> &, const mm_allocator<T> &)
+    inline bool operator != (const mutual_allocator<T> &, const mutual_allocator<T> &)
     {
         return false;
     }
@@ -118,7 +118,7 @@ template <typename T>
 
 } // namespace detail
 
-using detail::sh::mm_allocator;
+using detail::sh::mutual_allocator;
 using detail::sh::operator ==;
 using detail::sh::operator !=;
 

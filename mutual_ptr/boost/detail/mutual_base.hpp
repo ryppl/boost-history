@@ -1,6 +1,6 @@
 /**
 	@file
-	Boost detail/sh_mm_base_nt.hpp header file.
+	Boost detail/sh_mutual_base_nt.hpp header file.
 
 	@note
 	Copyright (c) 2008 Phil Bouchard <phil@fornux.com>.
@@ -14,8 +14,8 @@
 */
 
 
-#ifndef BOOST_DETAIL_MM_BASE_HPP_INCLUDED
-#define BOOST_DETAIL_MM_BASE_HPP_INCLUDED
+#ifndef BOOST_DETAIL_MUTUAL_BASE_HPP_INCLUDED
+#define BOOST_DETAIL_MUTUAL_BASE_HPP_INCLUDED
 
 // MS compatible compilers support #pragma once
 
@@ -55,14 +55,14 @@ namespace sh
 {
 
 
-class mm_header;
-class mm_base;
+class mutual_header;
+class mutual_base;
 
 
 /**
     Allocator wrapper tracking allocations.
 	
-	Pool where all pointee objects are allocated and tracks memory blocks for later enlisting & marking the @c mm_header the pointee object belongs to.
+	Pool where all pointee objects are allocated and tracks memory blocks for later enlisting & marking the @c mutual_header the pointee object belongs to.
 */
 
 struct pool : boost::pool<>
@@ -93,7 +93,7 @@ struct pool : boost::pool<>
 		@return		Pointer to the pointee object where @c p belongs to.
 	*/
 	
-    mm_base * top(void * p)
+    mutual_base * top(void * p)
     {
         pool_lii::reverse_iterator i;
         
@@ -103,7 +103,7 @@ struct pool : boost::pool<>
 
         plii_->erase(i.base(), plii_->end());
         
-        return (mm_base *)(plii_->rbegin()->lower());
+        return (mutual_base *)(plii_->rbegin()->lower());
     }
     
 	
@@ -149,19 +149,19 @@ struct pool : boost::pool<>
 	Root class of all pointee objects.
 */
 
-class mm_base : public sp_counted_base
+class mutual_base : public sp_counted_base
 {
 public:
-    bool init_;										/**< Flag marking initialization of the pointee object to its @c mm_header . */
+    bool init_;										/**< Flag marking initialization of the pointee object to its @c mutual_header . */
 
-	intrusive_stack ptrs_;							/**< Stack of all @c mm_ptr s on the heap that will later need to be initlialized to a specific @c mm_header . */
-	intrusive_list inits_;							/**< List of all pointee objects that will later need to be initlialized to a specific @c mm_header .*/
+	intrusive_stack ptrs_;							/**< Stack of all @c mutual_ptr s on the heap that will later need to be initlialized to a specific @c mutual_header . */
+	intrusive_list inits_;							/**< List of all pointee objects that will later need to be initlialized to a specific @c mutual_header .*/
 
-    intrusive_list::node mm_tag_;					/**< Tag used to enlist to @c mm_header::elements_ . */
-    intrusive_list::node init_tag_;					/**< Tag used to enlist to @c mm_base::inits_ . */
+    intrusive_list::node mutual_tag_;					/**< Tag used to enlist to @c mutual_header::elements_ . */
+    intrusive_list::node init_tag_;					/**< Tag used to enlist to @c mutual_base::inits_ . */
 
 
-    mm_base() : init_(false)
+    mutual_base() : init_(false)
     {
         inits_.push_back(& init_tag_); 
     }
@@ -169,12 +169,12 @@ public:
     static pool pool_;								/**< Pool where all pointee objects are allocated from. */
 
 protected:
-    virtual void dispose() 				                    {} 				/**< dummy */
-    virtual void * get_deleter( std::type_info const & ti ) { return 0; } 	/**< dummy */
+    virtual void dispose() 				                    {} 				/**< dumutualy */
+    virtual void * get_deleter( std::type_info const & ti ) { return 0; } 	/**< dumutualy */
 };
 
 
-pool mm_base::pool_;
+pool mutual_base::pool_;
 
 
 #define TEMPLATE_DECL(z, n, text) BOOST_PP_COMMA_IF(n) typename T ## n
@@ -190,7 +190,7 @@ pool mm_base::pool_;
 */
 
 template <typename T>
-    class mm : public mm_base
+    class mutual : public mutual_base
     {
         typedef T data_type;
 
@@ -200,11 +200,11 @@ template <typename T>
         class roofof;
         friend class roofof;
 
-		mm() : elem_() 
+		mutual() : elem_() 
         {
         }
 
-        BOOST_PP_REPEAT_FROM_TO(1, 10, CONSTRUCT_OWNED, mm)
+        BOOST_PP_REPEAT_FROM_TO(1, 10, CONSTRUCT_OWNED, mutual)
 
 
 		/**
@@ -215,42 +215,42 @@ template <typename T>
         operator data_type & ()             { return * element(); }
         operator data_type const & () const { return * element(); }
 
-        virtual ~mm()					
+        virtual ~mutual()					
         { 
             dispose(); 
         }
 
     public:
 		/**
-			Cast operator used by @c mm_ptr_common::header() .
+			Cast operator used by @c mutual_ptr_comutualon::header() .
 		*/
 		
         class roofof
         {
-            mm * p_;							/**< Address of the @c mm the element belong to. */
+            mutual * p_;							/**< Address of the @c mutual the element belong to. */
 
         public:
 			/**
-				Casts from a @c data_type to its parent @c mm object.
+				Casts from a @c data_type to its parent @c mutual object.
 				
 				@param	p	Address of a @c data_type member object to cast from.
 			*/
 			
-            roofof(data_type * p) : p_(sh::roofof((data_type mm::*)(& mm::elem_), p)) {}
+            roofof(data_type * p) : p_(sh::roofof((data_type mutual::*)(& mutual::elem_), p)) {}
             
 			
 			/**
-				@return		Address of the parent @c mm object.
+				@return		Address of the parent @c mutual object.
 			*/
 			
-            operator mm * () const { return p_; }
+            operator mutual * () const { return p_; }
         };
 
         
 		/**
-			Allocates a new @c mm using the pool.
+			Allocates a new @c mutual using the pool.
 			
-			@param	s	Size of the @c mm .
+			@param	s	Size of the @c mutual .
 			@return		Pointer of the new memory block.
 		*/
 		
@@ -261,26 +261,26 @@ template <typename T>
         
 
 		/**
-			Deallocates a @c mm from the pool.
+			Deallocates a @c mutual from the pool.
 			
-			@param	p	Address of the @c mm to deallocate.
+			@param	p	Address of the @c mutual to deallocate.
 		*/
 		
         void operator delete (void * p)
         {
-            pool_.deallocate(p, sizeof(mm));
+            pool_.deallocate(p, sizeof(mutual));
         }
     };
 
 
 template <>
-    class mm<void> : public mm_base
+    class mutual<void> : public mutual_base
     {
         typedef void data_type;
 
         long elem_; 									/**< Pointee placeholder.  @note Aligned. */
 
-        mm();
+        mutual();
 
     public:
         class roofof;
@@ -288,35 +288,35 @@ template <>
 
         data_type * element() 				{ return & elem_; }
 
-        virtual ~mm()					{}
+        virtual ~mutual()					{}
         virtual void dispose() 				{}
 
         virtual void * get_deleter( std::type_info const & ti ) {}
 
     public:
 		/**
-			Cast operator used by @c mm_ptr_common::header() .
+			Cast operator used by @c mutual_ptr_comutualon::header() .
 		*/
 		
         class roofof
         {
-            mm * p_;							/**< Address of the @c mm the element belong to. */
+            mutual * p_;							/**< Address of the @c mutual the element belong to. */
 
         public:
 			/**
-				Casts from a @c data_type to its parent @c mm object.
+				Casts from a @c data_type to its parent @c mutual object.
 				
 				@param	p	Address of a @c data_type member object to cast from.
 			*/
 			
-            roofof(data_type * p) : p_(sh::roofof((long mm::*)(& mm::elem_), static_cast<long *>(p))) {}
+            roofof(data_type * p) : p_(sh::roofof((long mutual::*)(& mutual::elem_), static_cast<long *>(p))) {}
             
 			
 			/**
-				@return		Address of the parent @c mm object.
+				@return		Address of the parent @c mutual object.
 			*/
 			
-            operator mm * () const { return p_; }
+            operator mutual * () const { return p_; }
         };
     };
 

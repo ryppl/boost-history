@@ -1,6 +1,6 @@
 /**
 	@file
-	Boost mm_ptr_base.hpp header file.
+	Boost mutual_ptr_base.hpp header file.
 
 	@note
 	Copyright (c) 2003 - 2008 Phil Bouchard <phil@fornux.com>.
@@ -15,12 +15,12 @@
 */
 
 
-#ifndef BOOST_DETAIL_MM_PTR_BASE_HPP
-#define BOOST_DETAIL_MM_PTR_BASE_HPP
+#ifndef BOOST_DETAIL_MUTUAL_PTR_BASE_HPP
+#define BOOST_DETAIL_MUTUAL_PTR_BASE_HPP
 
 
 #include <boost/detail/roofof.hpp>
-#include <boost/detail/mm_base.hpp>
+#include <boost/detail/mutual_base.hpp>
 
 
 namespace boost
@@ -40,25 +40,25 @@ namespace sh
 */
 
 template <typename T>
-	class mm_ptr_common
+	class mutual_ptr_comutualon
 	{
-		template <typename> friend class mm_ptr_common;
+		template <typename> friend class mutual_ptr_comutualon;
 
         // Borland 5.5.1 specific workaround
-        typedef mm_ptr_common<T> this_type;
+        typedef mutual_ptr_comutualon<T> this_type;
 
 	protected:
 		typedef T value_type;
-		typedef mm<value_type> element_type;
+		typedef mutual<value_type> element_type;
 
 		value_type * po_;
 
 	public:
-		mm_ptr_common() : po_(0)
+		mutual_ptr_comutualon() : po_(0)
 		{
 		}
 
-        ~mm_ptr_common()
+        ~mutual_ptr_comutualon()
 		{
 			if (po_)
 			{
@@ -67,21 +67,21 @@ template <typename T>
 		}
 
 		template <typename V>
-			mm_ptr_common(detail::sh::mm<V> * p) : po_(p->element())
+			mutual_ptr_comutualon(detail::sh::mutual<V> * p) : po_(p->element())
 			{
 			}
 
 		template <typename V>
-			mm_ptr_common(mm_ptr_common<V> const & p) : po_(p.share())
+			mutual_ptr_comutualon(mutual_ptr_comutualon<V> const & p) : po_(p.share())
 			{
 			}
 
-			mm_ptr_common(mm_ptr_common<value_type> const & p) : po_(p.share())
+			mutual_ptr_comutualon(mutual_ptr_comutualon<value_type> const & p) : po_(p.share())
 			{
 			}
 
 		template <typename V>
-			mm_ptr_common & operator = (detail::sh::mm<V> * p)
+			mutual_ptr_comutualon & operator = (detail::sh::mutual<V> * p)
 			{
 				reset(p->element());
 
@@ -89,7 +89,7 @@ template <typename T>
 			}
 
 		template <typename V>
-			mm_ptr_common & operator = (mm_ptr_common<V> const & p)
+			mutual_ptr_comutualon & operator = (mutual_ptr_comutualon<V> const & p)
 			{
 				if (p.po_ != po_)
 				{
@@ -98,7 +98,7 @@ template <typename T>
 				return * this;
 			}
 
-			mm_ptr_common & operator = (mm_ptr_common<value_type> const & p)
+			mutual_ptr_comutualon & operator = (mutual_ptr_comutualon<value_type> const & p)
 			{
 				return operator = <value_type>(p);
 			}
@@ -175,57 +175,57 @@ template <typename T>
         }
 
 	protected:
-		detail::sh::mm_base * header() const
+		detail::sh::mutual_base * header() const
 		{
-			detail::sh::mm_base * p = (mm<value_type> *) (typename mm<value_type>::roofof) static_cast<value_type *>(rootof<is_polymorphic<value_type>::value>::get(po_));
+			detail::sh::mutual_base * p = (mutual<value_type> *) (typename mutual<value_type>::roofof) static_cast<value_type *>(rootof<is_polymorphic<value_type>::value>::get(po_));
 			return p;
 		}
 	};
 
 
 template <typename T>
-	class mm_ptr_base : public mm_ptr_common<T>
+	class mutual_ptr_base : public mutual_ptr_comutualon<T>
 	{
-        typedef mm_ptr_common<T> base;
+        typedef mutual_ptr_comutualon<T> base;
         typedef typename base::value_type value_type;
 		
 	protected:
 		using base::po_;
 
 	public:
-		mm_ptr_base() : base()
+		mutual_ptr_base() : base()
 		{
 		}
 
 		template <typename V>
-			mm_ptr_base(detail::sh::mm<V> * p) : base(p)
+			mutual_ptr_base(detail::sh::mutual<V> * p) : base(p)
 			{
 			}
 
 		template <typename V>
-			mm_ptr_base(mm_ptr_base<V> const & p) : base(p)
+			mutual_ptr_base(mutual_ptr_base<V> const & p) : base(p)
 			{
 			}
 
-			mm_ptr_base(mm_ptr_base<value_type> const & p) : base(p)
+			mutual_ptr_base(mutual_ptr_base<value_type> const & p) : base(p)
 			{
-			}
-
-		template <typename V>
-			mm_ptr_base & operator = (detail::sh::mm<V> * p)
-			{
-				return static_cast<mm_ptr_base &>(base::operator = (p));
 			}
 
 		template <typename V>
-			mm_ptr_base & operator = (mm_ptr_base<V> const & p)
+			mutual_ptr_base & operator = (detail::sh::mutual<V> * p)
 			{
-				return static_cast<mm_ptr_base &>(base::operator = (p));
+				return static_cast<mutual_ptr_base &>(base::operator = (p));
 			}
 
-			mm_ptr_base & operator = (mm_ptr_base<value_type> const & p)
+		template <typename V>
+			mutual_ptr_base & operator = (mutual_ptr_base<V> const & p)
 			{
-				return static_cast<mm_ptr_base &>(base::operator = (p));
+				return static_cast<mutual_ptr_base &>(base::operator = (p));
+			}
+
+			mutual_ptr_base & operator = (mutual_ptr_base<value_type> const & p)
+			{
+				return static_cast<mutual_ptr_base &>(base::operator = (p));
 			}
 
 		value_type & operator * () const
@@ -242,48 +242,48 @@ template <typename T>
 
 #if !defined(_MSC_VER)
 template <typename T, size_t N>
-	class mm_ptr_base<T [N]> : public mm_ptr_common<T [N]>
+	class mutual_ptr_base<T [N]> : public mutual_ptr_comutualon<T [N]>
 	{
-        typedef mm_ptr_common<T [N]> base;
+        typedef mutual_ptr_comutualon<T [N]> base;
         typedef typename base::value_type value_type;
 
 	protected:
 		using base::po_;
 
 	public:
-		mm_ptr_base() : base()
+		mutual_ptr_base() : base()
 		{
 		}
 
 		template <typename V>
-			mm_ptr_base(detail::sh::mm<V> * p) : base(p)
+			mutual_ptr_base(detail::sh::mutual<V> * p) : base(p)
 			{
 			}
 
 		template <typename V>
-			mm_ptr_base(mm_ptr_base<V> const & p) : base(p)
+			mutual_ptr_base(mutual_ptr_base<V> const & p) : base(p)
 			{
 			}
 
-			mm_ptr_base(mm_ptr_base<value_type> const & p) : base(p)
+			mutual_ptr_base(mutual_ptr_base<value_type> const & p) : base(p)
 			{
-			}
-
-		template <typename V>
-			mm_ptr_base & operator = (detail::sh::mm<V> * p)
-			{
-				return static_cast<mm_ptr_base &>(base::operator = (p));
 			}
 
 		template <typename V>
-			mm_ptr_base & operator = (mm_ptr_base<V> const & p)
+			mutual_ptr_base & operator = (detail::sh::mutual<V> * p)
 			{
-				return static_cast<mm_ptr_base &>(base::operator = (p));
+				return static_cast<mutual_ptr_base &>(base::operator = (p));
 			}
 
-			mm_ptr_base & operator = (mm_ptr_base<value_type> const & p)
+		template <typename V>
+			mutual_ptr_base & operator = (mutual_ptr_base<V> const & p)
 			{
-				return static_cast<mm_ptr_base &>(base::operator = (p));
+				return static_cast<mutual_ptr_base &>(base::operator = (p));
+			}
+
+			mutual_ptr_base & operator = (mutual_ptr_base<value_type> const & p)
+			{
+				return static_cast<mutual_ptr_base &>(base::operator = (p));
 			}
 
 		T & operator [] (std::size_t n)
@@ -300,48 +300,48 @@ template <typename T, size_t N>
 
 
 template <>
-	class mm_ptr_base<void> : public mm_ptr_common<void>
+	class mutual_ptr_base<void> : public mutual_ptr_comutualon<void>
 	{
-        typedef mm_ptr_common<void> base;
+        typedef mutual_ptr_comutualon<void> base;
         typedef base::value_type value_type;
 
 	protected:
 		using base::po_;
 
 	public:
-		mm_ptr_base() : base()
+		mutual_ptr_base() : base()
 		{
 		}
 
 		template <typename V>
-			mm_ptr_base(detail::sh::mm<V> * p) : base(p)
+			mutual_ptr_base(detail::sh::mutual<V> * p) : base(p)
 			{
 			}
 
 		template <typename V>
-			mm_ptr_base(mm_ptr_base<V> const & p) : base(p)
+			mutual_ptr_base(mutual_ptr_base<V> const & p) : base(p)
 			{
 			}
 
-			mm_ptr_base(mm_ptr_base<value_type> const & p) : base(p)
+			mutual_ptr_base(mutual_ptr_base<value_type> const & p) : base(p)
 			{
-			}
-
-		template <typename V>
-			mm_ptr_base & operator = (detail::sh::mm<V> * p)
-			{
-				return static_cast<mm_ptr_base &>(base::operator = (p));
 			}
 
 		template <typename V>
-			mm_ptr_base & operator = (mm_ptr_base<V> const & p)
+			mutual_ptr_base & operator = (detail::sh::mutual<V> * p)
 			{
-				return static_cast<mm_ptr_base &>(base::operator = (p));
+				return static_cast<mutual_ptr_base &>(base::operator = (p));
 			}
 
-			mm_ptr_base & operator = (mm_ptr_base<value_type> const & p)
+		template <typename V>
+			mutual_ptr_base & operator = (mutual_ptr_base<V> const & p)
 			{
-				return static_cast<mm_ptr_base &>(base::operator = (p));
+				return static_cast<mutual_ptr_base &>(base::operator = (p));
+			}
+
+			mutual_ptr_base & operator = (mutual_ptr_base<value_type> const & p)
+			{
+				return static_cast<mutual_ptr_base &>(base::operator = (p));
 			}
 	};
 

@@ -1,6 +1,6 @@
 /**
 	@file
-	Boost mm_ptr.hpp header file.
+	Boost mutual_ptr.hpp header file.
 
 	@author
 	Copyright (c) 2008 Phil Bouchard <phil@fornux.com>.
@@ -18,8 +18,8 @@
 */
 
 
-#ifndef BOOST_DETAIL_MM_PTR_INCLUDED
-#define BOOST_DETAIL_MM_PTR_INCLUDED
+#ifndef BOOST_DETAIL_MUTUAL_PTR_INCLUDED
+#define BOOST_DETAIL_MUTUAL_PTR_INCLUDED
 
 
 #if defined(_MSC_VER)
@@ -38,7 +38,7 @@
 #include <boost/detail/intrusive_list.hpp>
 #include <boost/detail/intrusive_stack.hpp>
 #include <boost/detail/roofof.hpp>
-#include <boost/detail/mm_ptr_base.hpp>
+#include <boost/detail/mutual_ptr_base.hpp>
 
 
 namespace boost
@@ -51,54 +51,54 @@ namespace sh
 {
 
 
-class mm_base;
+class mutual_base;
 
 
 /**
 	Set header.
 	
-	Proxy object used to count the number of pointers from the stack are referencing pointee objects belonging to the same @c mm_header .
+	Proxy object used to count the number of pointers from the stack are referencing pointee objects belonging to the same @c mutual_header .
 */
 
-class mm_header
+class mutual_header
 {
     typedef detail::atomic_count count_type;
 
-    count_type count_;								/**< Count of the number of pointers from the stack referencing the same @c mm_header .*/
-    mutable mm_header * redir_;						/**< Redirection in the case of an union multiple sets.*/
+    count_type count_;								/**< Count of the number of pointers from the stack referencing the same @c mutual_header .*/
+    mutable mutual_header * redir_;					/**< Redirection in the case of an union multiple sets.*/
 
     intrusive_list includes_;						/**< List of all sets of an union. */
-    intrusive_list elements_;						/**< List of all pointee objects belonging to a @c mm_header . */
+    intrusive_list elements_;						/**< List of all pointee objects belonging to a @c mutual_header . */
 
-    static fast_pool_allocator<mm_header> pool_;	/**< Pool where all sets are allocated. */
+    static fast_pool_allocator<mutual_header> pool_;/**< Pool where all sets are allocated. */
 
 public:
 #ifndef BOOST_DISABLE_THREADS
 	mutex mutex_;
 #endif
 	bool destroy_;									/**< Destruction sequence initiated. */
-    intrusive_list::node tag_;						/**< Tag used to enlist to @c mm_header::includes_ . */
+    intrusive_list::node tag_;						/**< Tag used to enlist to @c mutual_header::includes_ . */
 
 
 	/**
-		Initialization of a single @c mm_header .
+		Initialization of a single @c mutual_header .
 	*/
 	
-    mm_header() : count_(1), redir_(this), destroy_(false)
+    mutual_header() : count_(1), redir_(this), destroy_(false)
     {
         includes_.push_back(& tag_);
     }
 	
 	
 	/**
-		Release of a @c mm_header with possible destruction of all its elements and other sets unified to it.
+		Release of a @c mutual_header with possible destruction of all its elements and other sets unified to it.
 		
-		@return		True if the @c mm_header was released.
+		@return		True if the @c mutual_header was released.
 	*/
 	
     bool release()
     {
-        mm_header * p = redir();
+        mutual_header * p = redir();
 
         if (-- p->count_ == 0)
         {
@@ -106,11 +106,11 @@ public:
         	mutex::scoped_lock scoped_lock(mutex_);
 #endif
 			p->destroy_ = true;
-            for (intrusive_list::iterator<mm_base, & mm_base::mm_tag_> i; i = p->elements_.begin(), i != p->elements_.end(); )
+            for (intrusive_list::iterator<mutual_base, & mutual_base::mutual_tag_> i; i = p->elements_.begin(), i != p->elements_.end(); )
                 delete &* i;
 			p->destroy_ = false;
             
-            for (intrusive_list::iterator<mm_header, & mm_header::tag_> i = p->includes_.begin(), j; j = i, i != p->includes_.end(); i = j)
+            for (intrusive_list::iterator<mutual_header, & mutual_header::tag_> i = p->includes_.begin(), j; j = i, i != p->includes_.end(); i = j)
 			{ 
 				++ j;
                 if (&* i != this && &* i != p)
@@ -128,12 +128,12 @@ public:
 
 	
 	/**
-		Recursive search for the @c mm_header header of an union.
+		Recursive search for the @c mutual_header header of an union.
 		
-		@return		@c mm_header responsible for managing the counter of an union.
+		@return		@c mutual_header responsible for managing the counter of an union.
 	*/
 	
-    mm_header * redir() const
+    mutual_header * redir() const
     {
         if (redir_ == this) return redir_;
         else return redir_ = redir_->redir();
@@ -141,12 +141,12 @@ public:
 	
 	
 	/**
-		Unification with a new @c mm_header .
+		Unification with a new @c mutual_header .
 		
-		@param	p	New @c mm_header to unify with.
+		@param	p	New @c mutual_header to unify with.
 	*/
 
-    void redir(mm_header * p)
+    void redir(mutual_header * p)
     {
         if (redir_ != p->redir())
         {
@@ -174,9 +174,9 @@ public:
     
 	
 	/**
-		Allocates a new @c mm_header using the fast pool allocator.
+		Allocates a new @c mutual_header using the fast pool allocator.
 		
-		@param	s	Size of the @c mm_header .
+		@param	s	Size of the @c mutual_header .
 		@return		Pointer of the new memory block.
 	*/
 	
@@ -189,31 +189,31 @@ public:
 	/**
 		Placement new.
 		
-		@param	s	Size of the @c mm_header .
-		@param	p	Address to construct the @c mm_header on.
-		@return		Address to construct the @c mm_header on.
+		@param	s	Size of the @c mutual_header .
+		@param	p	Address to construct the @c mutual_header on.
+		@return		Address to construct the @c mutual_header on.
 	*/
 	
-    void * operator new (size_t s, mm_header * p)
+    void * operator new (size_t s, mutual_header * p)
     {
         return p;
     }
 
 	
 	/**
-		Deallocates a @c mm_header from the fast pool allocator.
+		Deallocates a @c mutual_header from the fast pool allocator.
 		
-		@param	p	Address of the @c mm_header to deallocate.
+		@param	p	Address of the @c mutual_header to deallocate.
 	*/
 	
     void operator delete (void * p)
     {
-        pool_.deallocate(static_cast<mm_header *>(p), sizeof(mm_header));
+        pool_.deallocate(static_cast<mutual_header *>(p), sizeof(mutual_header));
     }
 };
 
 
-fast_pool_allocator<mm_header> mm_header::pool_;
+fast_pool_allocator<mutual_header> mutual_header::pool_;
 
 
 /**
@@ -223,36 +223,36 @@ fast_pool_allocator<mm_header> mm_header::pool_;
 */
 
 template <typename T>
-    class mm_ptr : public mm_ptr_base<T>
+    class mutual_ptr : public mutual_ptr_base<T>
     {
-        template <typename> friend class mm_ptr;
+        template <typename> friend class mutual_ptr;
 
-        typedef mm_ptr_base<T> base;
+        typedef mutual_ptr_base<T> base;
         
         using base::share;
 		using base::po_;
 
         union
         {
-            mm_header * ps_;						/**< Pointer to the @c mm_header node @c mm_ptr<> belongs to. */
-            intrusive_stack::node pn_;				/**< Tag used for enlisting a pointer on the heap to later share the @c mm_header it belongs to. */
+            mutual_header * ps_;						/**< Pointer to the @c mutual_header node @c mutual_ptr<> belongs to. */
+            intrusive_stack::node pn_;				/**< Tag used for enlisting a pointer on the heap to later share the @c mutual_header it belongs to. */
         };
 
     public:
         typedef T                       value_type;
-        typedef mm<value_type>     element_type;
+        typedef mutual<value_type>     element_type;
 
 
 		/**
 			Initialization of a pointer living on the stack or proper enlistment if living on the heap.
 		*/
 		
-        mm_ptr() : ps_(0)
+        mutual_ptr() : ps_(0)
         {
-            if (! mm_base::pool_.is_from(this))
-                ps_ = new mm_header();
+            if (! mutual_base::pool_.is_from(this))
+                ps_ = new mutual_header();
             else
-                mm_base::pool_.top(this)->ptrs_.push(& pn_);
+                mutual_base::pool_.top(this)->ptrs_.push(& pn_);
         }
 
 		
@@ -263,18 +263,18 @@ template <typename T>
 		*/
 		
         template <typename V>
-            mm_ptr(mm<V> * p) : base(p)
+            mutual_ptr(mutual<V> * p) : base(p)
             {
-                if (! mm_base::pool_.is_from(this))
+                if (! mutual_base::pool_.is_from(this))
                 {
-                    ps_ = new mm_header();
+                    ps_ = new mutual_header();
 
                     init(p);
                 }
                 else
                 {
-                    mm_base::pool_.top(this)->ptrs_.push(& pn_);
-                    mm_base::pool_.top(this)->inits_.merge(p->inits_);
+                    mutual_base::pool_.top(this)->ptrs_.push(& pn_);
+                    mutual_base::pool_.top(this)->inits_.merge(p->inits_);
                 }
             }
 
@@ -286,12 +286,12 @@ template <typename T>
 		*/
 
         template <typename V>
-            mm_ptr(mm_ptr<V> const & p) : base(p)
+            mutual_ptr(mutual_ptr<V> const & p) : base(p)
             {
-                if (! mm_base::pool_.is_from(this))
-                    ps_ = new mm_header();
+                if (! mutual_base::pool_.is_from(this))
+                    ps_ = new mutual_header();
                 else
-                    mm_base::pool_.top(this)->ptrs_.push(& pn_);
+                    mutual_base::pool_.top(this)->ptrs_.push(& pn_);
 
                 ps_->redir(p.ps_);
             }
@@ -303,25 +303,25 @@ template <typename T>
 			@param	p	New pointer to manage.
 		*/
 
-			mm_ptr(mm_ptr<T> const & p) : base(p)
+			mutual_ptr(mutual_ptr<T> const & p) : base(p)
             {
-                if (! mm_base::pool_.is_from(this))
-                    ps_ = new mm_header();
+                if (! mutual_base::pool_.is_from(this))
+                    ps_ = new mutual_header();
                 else
-                    mm_base::pool_.top(this)->ptrs_.push(& pn_);
+                    mutual_base::pool_.top(this)->ptrs_.push(& pn_);
 				
                 ps_->redir(p.ps_);
             }
 
 
 		/**
-			Assignment & union of 2 sets if the pointee resides a different @c mm_header.
+			Assignment & union of 2 sets if the pointee resides a different @c mutual_header.
 			
 			@param	p	New pointee object to manage.
 		*/
 		
         template <typename V>
-            mm_ptr & operator = (mm<V> * p)
+            mutual_ptr & operator = (mutual<V> * p)
             {
                 release(false);
 
@@ -334,13 +334,13 @@ template <typename T>
 
 
 		/**
-			Assignment & union of 2 sets if the pointee resides a different @c mm_header.
+			Assignment & union of 2 sets if the pointee resides a different @c mutual_header.
 			
 			@param	p	New pointer to manage.
 		*/
 			
         template <typename V>
-            mm_ptr & operator = (mm_ptr<V> const & p)
+            mutual_ptr & operator = (mutual_ptr<V> const & p)
             {
                 if (ps_->redir() != p.ps_->redir())
                 {
@@ -355,12 +355,12 @@ template <typename T>
 
 
 		/**
-			Assignment & union of 2 sets if the pointee resides a different @c mm_header.
+			Assignment & union of 2 sets if the pointee resides a different @c mutual_header.
 			
 			@param	p	New pointer to manage.
 		*/
 
-            mm_ptr & operator = (mm_ptr<T> const & p)
+            mutual_ptr & operator = (mutual_ptr<T> const & p)
             {
                 return operator = <T>(p);
             }
@@ -370,7 +370,7 @@ template <typename T>
             release(false);
         }
 
-        ~mm_ptr()
+        ~mutual_ptr()
         {
 			if (ps_->destroy_)
 				base::po_ = 0;
@@ -380,34 +380,34 @@ template <typename T>
 
     private:
 		/**
-			Release of the pointee object with or without destroying the entire @c mm_header it belongs to.
+			Release of the pointee object with or without destroying the entire @c mutual_header it belongs to.
 			
-			@param	d	Destroy (true) or reuse (false) the @c mm_header it is releasing.
+			@param	d	Destroy (true) or reuse (false) the @c mutual_header it is releasing.
 		*/
 		
         void release(bool d)
         {
             base::reset();
             
-            if (! mm_base::pool_.is_from(this))
+            if (! mutual_base::pool_.is_from(this))
                 if (ps_->release())
                     if (! d)
-                        new (ps_) mm_header();
+                        new (ps_) mutual_header();
                     else
                         delete ps_;
                 else 
 					if (! d)
-                    	ps_ = new mm_header();
+                    	ps_ = new mutual_header();
         }
 
 		
 		/**
-			Enlist & initialize pointee objects belonging to the same @c mm_header .  This initialization occurs when a pointee object is affected to the first pointer living on the stack it encounters.
+			Enlist & initialize pointee objects belonging to the same @c mutual_header .  This initialization occurs when a pointee object is affected to the first pointer living on the stack it encounters.
 			
 			@param	p	Pointee object to initialize.
 		*/
 		
-        void init(mm_base * p)
+        void init(mutual_base * p)
         {
             if (p->init_)
                 return;
@@ -417,13 +417,13 @@ template <typename T>
 #endif
         
 			// iterate memory blocks
-            for (intrusive_list::iterator<mm_base, & mm_base::init_tag_> i = p->inits_.begin(); i != p->inits_.end(); ++ i)
+            for (intrusive_list::iterator<mutual_base, & mutual_base::init_tag_> i = p->inits_.begin(); i != p->inits_.end(); ++ i)
             {
                 i->init_ = true;
-                ps_->elements()->push_back(& i->mm_tag_);
+                ps_->elements()->push_back(& i->mutual_tag_);
 
-				// iterate mm_ptr elements
-                for (intrusive_stack::iterator<mm_ptr, & mm_ptr::pn_> j = i->ptrs_.begin(), k; k = j, j != i->ptrs_.end(); j = k)
+				// iterate mutual_ptr elements
+                for (intrusive_stack::iterator<mutual_ptr, & mutual_ptr::pn_> j = i->ptrs_.begin(), k; k = j, j != i->ptrs_.end(); j = k)
 				{
 					++ k;
                     j->ps_ = ps_;
@@ -437,8 +437,8 @@ template <typename T>
 
 } // namespace detail
 
-using detail::sh::mm_ptr;
-using detail::sh::mm;
+using detail::sh::mutual_ptr;
+using detail::sh::mutual;
 
 } // namespace boost
 

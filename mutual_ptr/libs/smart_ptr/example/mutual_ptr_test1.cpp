@@ -1,6 +1,6 @@
 /**
 	@file
-	mm_ptr_test2.cpp
+	mutual_ptr_test2.cpp
 
 	@note
 	Memory manager handling heap deallocations in constant time.
@@ -8,7 +8,7 @@
 
 #include <iostream>
 
-#include <boost/mm_ptr.hpp>
+#include <boost/mutual_ptr.hpp>
 
 
 using namespace std;
@@ -18,7 +18,7 @@ using namespace boost;
 struct A
 {
 	int i;
-	mm_ptr<A> p;
+	mutual_ptr<A> p;
 	
 	A(int i = 0) : i(i) 
 	{
@@ -36,16 +36,16 @@ int main()
 {
 	cout << "Cyclicism:" << endl;
 	{
-		mm_ptr<A> p = new mm<A>(7);
-		mm_ptr<A> q = new mm<A>(8);
-		mm_ptr<A> r = new mm<A>(9);
+		mutual_ptr<A> p = new mutual<A>(7);
+		mutual_ptr<A> q = new mutual<A>(8);
+		mutual_ptr<A> r = new mutual<A>(9);
 
-		mm_ptr<void> t = new mm<A>(10);
-		mm_ptr<int const volatile> v = new mm<int const volatile>(11);
+		mutual_ptr<void> t = new mutual<A>(10);
+		mutual_ptr<int const volatile> v = new mutual<int const volatile>(11);
 
 		p->p = p;
 		q = r;
-		v = new mm<int const volatile>(12);
+		v = new mutual<int const volatile>(12);
 
 		cout << "p->i = " << p->i << endl;
 		cout << "q->i = " << q->i << endl;
@@ -58,8 +58,8 @@ int main()
 #if ! defined(_MSC_VER)
 	cout << "Array access:" << endl;
 	{
-		mm_ptr<A[5]> s = new mm<A[5]>();
-		mm_ptr<char[9]> u = new mm<char[9]>();
+		mutual_ptr<A[5]> s = new mutual<A[5]>();
+		mutual_ptr<char[9]> u = new mutual<char[9]>();
 
 		u[4] = 'Z';
 
@@ -70,9 +70,9 @@ int main()
 
 	cout << "Order of destruction:" << endl;
 	{
-		mm_ptr<A> v = new mm<A>(0);
-		v->p = new mm<A>(1);
-		v->p->p = new mm<A>(2);
+		mutual_ptr<A> v = new mutual<A>(0);
+		v->p = new mutual<A>(1);
+		v->p->p = new mutual<A>(2);
 		v->p->p->p = v;
 	}
 	cout << endl;
