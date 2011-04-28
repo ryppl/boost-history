@@ -412,10 +412,6 @@ template <typename T>
             if (p->init_)
                 return;
 
-#ifndef BOOST_DISABLE_THREADS
-        	mutex::scoped_lock scoped_lock(ps_->mutex_);
-#endif
-        
 			// iterate memory blocks
             for (intrusive_list::iterator<block_base, & block_base::init_tag_> i = p->inits_.begin(); i != p->inits_.end(); ++ i)
             {
