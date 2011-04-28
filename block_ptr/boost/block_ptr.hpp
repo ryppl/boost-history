@@ -65,7 +65,7 @@ class block_header
     typedef detail::atomic_count count_type;
 
     count_type count_;								/**< Count of the number of pointers from the stack referencing the same @c block_header .*/
-    mutable block_header * redir_;					/**< Redirection in the case of an union multiple sets.*/
+    block_header * redir_;							/**< Redirection in the case of an union multiple sets.*/
 
     intrusive_list includes_;						/**< List of all sets of an union. */
     intrusive_list elements_;						/**< List of all pointee objects belonging to a @c block_header . */
@@ -128,17 +128,19 @@ public:
 
 	
 	/**
-		Recursive search for the @c block_header header of an union.
+		Search for the @c block_header header of an union.
 		
 		@return		@c block_header responsible for managing the counter of an union.
 	*/
 	
     block_header * redir() const
     {
-        while (redir_ != redir_->redir_)
-        	redir_ = redir_->redir_;
+    	block_header * p = redir_;
+    	
+        while (p != p->redir_)
+        	p = p->redir_;
         
-        return redir_;
+        return p;
     }
 	
 	
