@@ -135,8 +135,10 @@ public:
 	
     block_header * redir() const
     {
-        if (redir_ == this) return redir_;
-        else return redir_ = redir_->redir();
+        while (redir_ != redir_->redir_)
+        	redir_ = redir_->redir_;
+        
+        return redir_;
     }
 	
 	
