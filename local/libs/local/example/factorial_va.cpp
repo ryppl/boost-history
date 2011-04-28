@@ -35,7 +35,7 @@ struct calculator {
 
             if (!recursion) this_->output << result << separator;
             return result;
-        } BOOST_LOCAL_FUNCTION_NAME(factorial)
+        } BOOST_LOCAL_FUNCTION_NAME(recursive factorial) // Specified recursive.
     
         std::for_each(nums.begin(), nums.end(), factorial);
     }

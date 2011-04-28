@@ -79,9 +79,9 @@
 </p>
 <pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">local</span><span class="special">/</span><span class="identifier">exit</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">foreach</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
-<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">typeof</span><span class="special">/</span><span class="identifier">std</span><span class="special">/</span><span class="identifier">vector</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span> <span class="comment">// Typeof emulation mode.
-</span><span class="preprocessor">#include</span> <span class="identifier">BOOST_TYPEOF_INCREMENT_REGISTRATION_GROUP</span><span class="special">()</span> <span class="comment">// Typeof emulation mode.
-</span><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">vector</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">typeof</span><span class="special">/</span><span class="identifier">std</span><span class="special">/</span><span class="identifier">vector</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span> <span class="comment">// Typeof emulation mode.</span>
+<span class="preprocessor">#include</span> <span class="identifier">BOOST_TYPEOF_INCREMENT_REGISTRATION_GROUP</span><span class="special">()</span> <span class="comment">// Typeof emulation mode.</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">vector</span><span class="special">&gt;</span>
 <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">ostream</span><span class="special">&gt;</span>
 <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
 <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">cassert</span><span class="special">&gt;</span>
@@ -131,23 +131,23 @@
 <span class="keyword">void</span> <span class="identifier">world</span><span class="special">::</span><span class="identifier">add_person</span><span class="special">(</span><span class="identifier">person</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">a_person</span><span class="special">)</span> <span class="special">{</span>
     <span class="identifier">persons_</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span><span class="identifier">a_person</span><span class="special">);</span>
 
-    <span class="comment">// This block must be no-throw.
-</span>    <span class="identifier">person</span><span class="special">&amp;</span> <span class="identifier">p</span> <span class="special">=</span> <span class="identifier">persons_</span><span class="special">.</span><span class="identifier">back</span><span class="special">();</span>
+    <span class="comment">// This block must be no-throw.</span>
+    <span class="identifier">person</span><span class="special">&amp;</span> <span class="identifier">p</span> <span class="special">=</span> <span class="identifier">persons_</span><span class="special">.</span><span class="identifier">back</span><span class="special">();</span>
     <span class="identifier">person</span><span class="special">::</span><span class="identifier">evolution_t</span> <span class="identifier">checkpoint</span> <span class="special">=</span> <span class="identifier">p</span><span class="special">.</span><span class="identifier">evolution_</span><span class="special">;</span>
 
     <span class="identifier">BOOST_LOCAL_EXIT</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">checkpoint</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">p</span><span class="special">,</span> <span class="identifier">bind</span> <span class="keyword">this</span><span class="special">)</span> <span class="special">{</span>
         <span class="keyword">if</span> <span class="special">(</span><span class="identifier">checkpoint</span> <span class="special">==</span> <span class="identifier">p</span><span class="special">.</span><span class="identifier">evolution_</span><span class="special">)</span> <span class="identifier">this_</span><span class="special">-&gt;</span><span class="identifier">persons_</span><span class="special">.</span><span class="identifier">pop_back</span><span class="special">();</span>
         <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"1st local exit"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
-        <span class="keyword">return</span><span class="special">;</span> <span class="comment">// Exit local scope (not enclosing function).
-</span>        <span class="identifier">assert</span><span class="special">(</span><span class="keyword">false</span><span class="special">);</span>
+        <span class="keyword">return</span><span class="special">;</span> <span class="comment">// Exit local scope (not enclosing function).</span>
+        <span class="identifier">assert</span><span class="special">(</span><span class="keyword">false</span><span class="special">);</span>
     <span class="special">}</span> <span class="identifier">BOOST_LOCAL_EXIT_END</span>
 
-    <span class="comment">// ...
-</span>
+    <span class="comment">// ...</span>
+
     <span class="identifier">checkpoint</span> <span class="special">=</span> <span class="special">++</span><span class="identifier">p</span><span class="special">.</span><span class="identifier">evolution_</span><span class="special">;</span>
 
-    <span class="comment">// Assign new id to the person.
-</span>    <span class="identifier">world</span><span class="special">::</span><span class="identifier">id_t</span> <span class="keyword">const</span> <span class="identifier">prev_id</span> <span class="special">=</span> <span class="identifier">p</span><span class="special">.</span><span class="identifier">id_</span><span class="special">;</span>
+    <span class="comment">// Assign new id to the person.</span>
+    <span class="identifier">world</span><span class="special">::</span><span class="identifier">id_t</span> <span class="keyword">const</span> <span class="identifier">prev_id</span> <span class="special">=</span> <span class="identifier">p</span><span class="special">.</span><span class="identifier">id_</span><span class="special">;</span>
     <span class="identifier">p</span><span class="special">.</span><span class="identifier">id_</span> <span class="special">=</span> <span class="identifier">next_id_</span><span class="special">++;</span>
     <span class="identifier">BOOST_LOCAL_EXIT</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">checkpoint</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">prev_id</span><span class="special">,</span>
             <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">p</span><span class="special">,</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">next_id_</span><span class="special">)</span> <span class="special">{</span>
@@ -158,8 +158,8 @@
         <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"2nd local exit"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
     <span class="special">}</span> <span class="identifier">BOOST_LOCAL_EXIT_END</span>
 
-    <span class="comment">// ...
-</span>
+    <span class="comment">// ...</span>
+
     <span class="identifier">checkpoint</span> <span class="special">=</span> <span class="special">++</span><span class="identifier">p</span><span class="special">.</span><span class="identifier">evolution_</span><span class="special">;</span>
 <span class="special">}</span>
 
@@ -183,9 +183,9 @@
 </p>
 <pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">local</span><span class="special">/</span><span class="identifier">exit</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">foreach</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
-<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">typeof</span><span class="special">/</span><span class="identifier">std</span><span class="special">/</span><span class="identifier">vector</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span> <span class="comment">// Typeof emulation mode.
-</span><span class="preprocessor">#include</span> <span class="identifier">BOOST_TYPEOF_INCREMENT_REGISTRATION_GROUP</span><span class="special">()</span> <span class="comment">// Typeof emulation mode.
-</span><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">vector</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">typeof</span><span class="special">/</span><span class="identifier">std</span><span class="special">/</span><span class="identifier">vector</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span> <span class="comment">// Typeof emulation mode.</span>
+<span class="preprocessor">#include</span> <span class="identifier">BOOST_TYPEOF_INCREMENT_REGISTRATION_GROUP</span><span class="special">()</span> <span class="comment">// Typeof emulation mode.</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">vector</span><span class="special">&gt;</span>
 <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">ostream</span><span class="special">&gt;</span>
 <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
 <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">cassert</span><span class="special">&gt;</span>
@@ -235,23 +235,23 @@
 <span class="keyword">void</span> <span class="identifier">world</span><span class="special">::</span><span class="identifier">add_person</span><span class="special">(</span><span class="identifier">person</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">a_person</span><span class="special">)</span> <span class="special">{</span>
     <span class="identifier">persons_</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span><span class="identifier">a_person</span><span class="special">);</span>
 
-    <span class="comment">// This block must be no-throw.
-</span>    <span class="identifier">person</span><span class="special">&amp;</span> <span class="identifier">p</span> <span class="special">=</span> <span class="identifier">persons_</span><span class="special">.</span><span class="identifier">back</span><span class="special">();</span>
+    <span class="comment">// This block must be no-throw.</span>
+    <span class="identifier">person</span><span class="special">&amp;</span> <span class="identifier">p</span> <span class="special">=</span> <span class="identifier">persons_</span><span class="special">.</span><span class="identifier">back</span><span class="special">();</span>
     <span class="identifier">person</span><span class="special">::</span><span class="identifier">evolution_t</span> <span class="identifier">checkpoint</span> <span class="special">=</span> <span class="identifier">p</span><span class="special">.</span><span class="identifier">evolution_</span><span class="special">;</span>
 
     <span class="identifier">BOOST_LOCAL_EXIT</span><span class="special">(</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">checkpoint</span><span class="special">)</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">p</span><span class="special">)</span> <span class="special">(</span><span class="identifier">bind</span> <span class="keyword">this</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span>
         <span class="keyword">if</span> <span class="special">(</span><span class="identifier">checkpoint</span> <span class="special">==</span> <span class="identifier">p</span><span class="special">.</span><span class="identifier">evolution_</span><span class="special">)</span> <span class="identifier">this_</span><span class="special">-&gt;</span><span class="identifier">persons_</span><span class="special">.</span><span class="identifier">pop_back</span><span class="special">();</span>
         <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"1st local exit"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
-        <span class="keyword">return</span><span class="special">;</span> <span class="comment">// Exit local scope (not enclosing function).
-</span>        <span class="identifier">assert</span><span class="special">(</span><span class="keyword">false</span><span class="special">);</span>
+        <span class="keyword">return</span><span class="special">;</span> <span class="comment">// Exit local scope (not enclosing function).</span>
+        <span class="identifier">assert</span><span class="special">(</span><span class="keyword">false</span><span class="special">);</span>
     <span class="special">}</span> <span class="identifier">BOOST_LOCAL_EXIT_END</span>
 
-    <span class="comment">// ...
-</span>
+    <span class="comment">// ...</span>
+
     <span class="identifier">checkpoint</span> <span class="special">=</span> <span class="special">++</span><span class="identifier">p</span><span class="special">.</span><span class="identifier">evolution_</span><span class="special">;</span>
 
-    <span class="comment">// Assign new id to the person.
-</span>    <span class="identifier">world</span><span class="special">::</span><span class="identifier">id_t</span> <span class="keyword">const</span> <span class="identifier">prev_id</span> <span class="special">=</span> <span class="identifier">p</span><span class="special">.</span><span class="identifier">id_</span><span class="special">;</span>
+    <span class="comment">// Assign new id to the person.</span>
+    <span class="identifier">world</span><span class="special">::</span><span class="identifier">id_t</span> <span class="keyword">const</span> <span class="identifier">prev_id</span> <span class="special">=</span> <span class="identifier">p</span><span class="special">.</span><span class="identifier">id_</span><span class="special">;</span>
     <span class="identifier">p</span><span class="special">.</span><span class="identifier">id_</span> <span class="special">=</span> <span class="identifier">next_id_</span><span class="special">++;</span>
     <span class="identifier">BOOST_LOCAL_EXIT</span><span class="special">(</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">checkpoint</span><span class="special">)</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">prev_id</span><span class="special">)</span>
             <span class="special">(</span><span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">p</span><span class="special">)</span> <span class="special">(</span><span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">next_id_</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span>
@@ -262,8 +262,8 @@
         <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"2nd local exit"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
     <span class="special">}</span> <span class="identifier">BOOST_LOCAL_EXIT_END</span>
 
-    <span class="comment">// ...
-</span>
+    <span class="comment">// ...</span>
+
     <span class="identifier">checkpoint</span> <span class="special">=</span> <span class="special">++</span><span class="identifier">p</span><span class="special">.</span><span class="identifier">evolution_</span><span class="special">;</span>
 <span class="special">}</span>
 
@@ -324,22 +324,22 @@
 <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
 
 <span class="keyword">int</span> <span class="identifier">f</span><span class="special">()</span> <span class="special">{</span>
-    <span class="keyword">int</span> <span class="identifier">error</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span> <span class="comment">// No error to start with.
-</span>
-    <span class="identifier">BOOST_LOCAL_EXIT</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">{</span> <span class="comment">// Same as D's `scope(exit)`.
-</span>        <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"exit"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    <span class="keyword">int</span> <span class="identifier">error</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span> <span class="comment">// No error to start with.</span>
+
+    <span class="identifier">BOOST_LOCAL_EXIT</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">{</span> <span class="comment">// Same as D's `scope(exit)`.</span>
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"exit"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
     <span class="special">}</span> <span class="identifier">BOOST_LOCAL_EXIT_END</span>
 
-    <span class="identifier">BOOST_LOCAL_EXIT</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">error</span><span class="special">)</span> <span class="special">{</span> <span class="comment">// Sane as D's `scope(success)`.
-</span>        <span class="keyword">if</span> <span class="special">(!</span><span class="identifier">error</span><span class="special">)</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"success"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    <span class="identifier">BOOST_LOCAL_EXIT</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">error</span><span class="special">)</span> <span class="special">{</span> <span class="comment">// Sane as D's `scope(success)`.</span>
+        <span class="keyword">if</span> <span class="special">(!</span><span class="identifier">error</span><span class="special">)</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"success"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
     <span class="special">}</span> <span class="identifier">BOOST_LOCAL_EXIT_END</span>
     
-    <span class="identifier">BOOST_LOCAL_EXIT</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">error</span><span class="special">)</span> <span class="special">{</span> <span class="comment">// Same as D's `scope(failure)`.
-</span>        <span class="keyword">if</span> <span class="special">(</span><span class="identifier">error</span><span class="special">)</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"failure"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    <span class="identifier">BOOST_LOCAL_EXIT</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">error</span><span class="special">)</span> <span class="special">{</span> <span class="comment">// Same as D's `scope(failure)`.</span>
+        <span class="keyword">if</span> <span class="special">(</span><span class="identifier">error</span><span class="special">)</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"failure"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
     <span class="special">}</span> <span class="identifier">BOOST_LOCAL_EXIT_END</span>
     
-    <span class="keyword">return</span> <span class="identifier">error</span> <span class="special">=</span> <span class="special">-</span><span class="number">1</span><span class="special">;</span> <span class="comment">// Must set error.
-</span><span class="special">}</span>
+    <span class="keyword">return</span> <span class="identifier">error</span> <span class="special">=</span> <span class="special">-</span><span class="number">1</span><span class="special">;</span> <span class="comment">// Must set error.</span>
+<span class="special">}</span>
 
 <span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
     <span class="keyword">return</span> <span class="identifier">f</span><span class="special">();</span>
@@ -356,22 +356,22 @@
 <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
 
 <span class="keyword">int</span> <span class="identifier">f</span><span class="special">()</span> <span class="special">{</span>
-    <span class="keyword">int</span> <span class="identifier">error</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span> <span class="comment">// No error to start with.
-</span>
-    <span class="identifier">BOOST_LOCAL_EXIT</span><span class="special">(</span> <span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span> <span class="comment">// Same as D's `scope(exit)`.
-</span>        <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"exit"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    <span class="keyword">int</span> <span class="identifier">error</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span> <span class="comment">// No error to start with.</span>
+
+    <span class="identifier">BOOST_LOCAL_EXIT</span><span class="special">(</span> <span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span> <span class="comment">// Same as D's `scope(exit)`.</span>
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"exit"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
     <span class="special">}</span> <span class="identifier">BOOST_LOCAL_EXIT_END</span>
 
-    <span class="identifier">BOOST_LOCAL_EXIT</span><span class="special">(</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">error</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span> <span class="comment">// Sane as D's `scope(success)`.
-</span>        <span class="keyword">if</span> <span class="special">(!</span><span class="identifier">error</span><span class="special">)</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"success"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    <span class="identifier">BOOST_LOCAL_EXIT</span><span class="special">(</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">error</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span> <span class="comment">// Sane as D's `scope(success)`.</span>
+        <span class="keyword">if</span> <span class="special">(!</span><span class="identifier">error</span><span class="special">)</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"success"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
     <span class="special">}</span> <span class="identifier">BOOST_LOCAL_EXIT_END</span>
     
-    <span class="identifier">BOOST_LOCAL_EXIT</span><span class="special">(</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">error</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span> <span class="comment">// Same as D's `scope(failure)`.
-</span>        <span class="keyword">if</span> <span class="special">(</span><span class="identifier">error</span><span class="special">)</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"failure"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    <span class="identifier">BOOST_LOCAL_EXIT</span><span class="special">(</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">error</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span> <span class="comment">// Same as D's `scope(failure)`.</span>
+        <span class="keyword">if</span> <span class="special">(</span><span class="identifier">error</span><span class="special">)</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"failure"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
     <span class="special">}</span> <span class="identifier">BOOST_LOCAL_EXIT_END</span>
     
-    <span class="keyword">return</span> <span class="identifier">error</span> <span class="special">=</span> <span class="special">-</span><span class="number">1</span><span class="special">;</span> <span class="comment">// Must set error.
-</span><span class="special">}</span>
+    <span class="keyword">return</span> <span class="identifier">error</span> <span class="special">=</span> <span class="special">-</span><span class="number">1</span><span class="special">;</span> <span class="comment">// Must set error.</span>
+<span class="special">}</span>
 
 <span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
     <span class="keyword">return</span> <span class="identifier">f</span><span class="special">();</span>
@@ -412,27 +412,27 @@
 <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">stdexcept</span><span class="special">&gt;</span>
 
 <span class="keyword">void</span> <span class="identifier">f</span><span class="special">()</span> <span class="special">{</span>
-    <span class="keyword">bool</span> <span class="identifier">error</span> <span class="special">=</span> <span class="keyword">false</span><span class="special">;</span> <span class="comment">// No error to start with.
-</span>
-    <span class="identifier">BOOST_LOCAL_EXIT</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">{</span> <span class="comment">// Same as D's `scope(exit)`.
-</span>        <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"exit"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    <span class="keyword">bool</span> <span class="identifier">error</span> <span class="special">=</span> <span class="keyword">false</span><span class="special">;</span> <span class="comment">// No error to start with.</span>
+
+    <span class="identifier">BOOST_LOCAL_EXIT</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">{</span> <span class="comment">// Same as D's `scope(exit)`.</span>
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"exit"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
     <span class="special">}</span> <span class="identifier">BOOST_LOCAL_EXIT_END</span>
 
-    <span class="identifier">BOOST_LOCAL_EXIT</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">error</span><span class="special">)</span> <span class="special">{</span> <span class="comment">// Same as D's `scope(success)`.
-</span>        <span class="keyword">if</span> <span class="special">(!</span><span class="identifier">error</span><span class="special">)</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"success"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    <span class="identifier">BOOST_LOCAL_EXIT</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">error</span><span class="special">)</span> <span class="special">{</span> <span class="comment">// Same as D's `scope(success)`.</span>
+        <span class="keyword">if</span> <span class="special">(!</span><span class="identifier">error</span><span class="special">)</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"success"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
     <span class="special">}</span> <span class="identifier">BOOST_LOCAL_EXIT_END</span>
     
-    <span class="identifier">BOOST_LOCAL_EXIT</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">error</span><span class="special">)</span> <span class="special">{</span> <span class="comment">// Same as D's `scope(failure)`.
-</span>        <span class="keyword">if</span> <span class="special">(</span><span class="identifier">error</span><span class="special">)</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"failure"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    <span class="identifier">BOOST_LOCAL_EXIT</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">error</span><span class="special">)</span> <span class="special">{</span> <span class="comment">// Same as D's `scope(failure)`.</span>
+        <span class="keyword">if</span> <span class="special">(</span><span class="identifier">error</span><span class="special">)</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"failure"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
     <span class="special">}</span> <span class="identifier">BOOST_LOCAL_EXIT_END</span>
     
-    <span class="identifier">error</span> <span class="special">=</span> <span class="keyword">true</span><span class="special">;</span> <span class="keyword">throw</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">runtime_error</span><span class="special">(</span><span class="string">"some error"</span><span class="special">);</span> <span class="comment">// Must set error.
-</span><span class="special">}</span>
+    <span class="identifier">error</span> <span class="special">=</span> <span class="keyword">true</span><span class="special">;</span> <span class="keyword">throw</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">runtime_error</span><span class="special">(</span><span class="string">"some error"</span><span class="special">);</span> <span class="comment">// Must set error.</span>
+<span class="special">}</span>
 
 <span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
-    <span class="comment">// Program cannot terminate with uncaught exception (otherwise local exit
-</span>    <span class="comment">// code is not guaranteed to be executed).
-</span>    <span class="keyword">try</span> <span class="special">{</span>
+    <span class="comment">// Program cannot terminate with uncaught exception (otherwise local exit</span>
+    <span class="comment">// code is not guaranteed to be executed).</span>
+    <span class="keyword">try</span> <span class="special">{</span>
         <span class="identifier">f</span><span class="special">();</span>
         <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
     <span class="special">}</span> <span class="keyword">catch</span><span class="special">(...)</span> <span class="special">{</span>
@@ -452,27 +452,27 @@
 <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">stdexcept</span><span class="special">&gt;</span>
 
 <span class="keyword">void</span> <span class="identifier">f</span><span class="special">()</span> <span class="special">{</span>
-    <span class="keyword">bool</span> <span class="identifier">error</span> <span class="special">=</span> <span class="keyword">false</span><span class="special">;</span> <span class="comment">// No error to start with.
-</span>
-    <span class="identifier">BOOST_LOCAL_EXIT</span><span class="special">(</span> <span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span> <span class="comment">// Same as D's `scope(exit)`.
-</span>        <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"exit"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    <span class="keyword">bool</span> <span class="identifier">error</span> <span class="special">=</span> <span class="keyword">false</span><span class="special">;</span> <span class="comment">// No error to start with.</span>
+
+    <span class="identifier">BOOST_LOCAL_EXIT</span><span class="special">(</span> <span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span> <span class="comment">// Same as D's `scope(exit)`.</span>
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"exit"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
     <span class="special">}</span> <span class="identifier">BOOST_LOCAL_EXIT_END</span>
 
-    <span class="identifier">BOOST_LOCAL_EXIT</span><span class="special">(</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">error</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span> <span class="comment">// Same as D's `scope(success)`.
-</span>        <span class="keyword">if</span> <span class="special">(!</span><span class="identifier">error</span><span class="special">)</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"success"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    <span class="identifier">BOOST_LOCAL_EXIT</span><span class="special">(</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">error</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span> <span class="comment">// Same as D's `scope(success)`.</span>
+        <span class="keyword">if</span> <span class="special">(!</span><span class="identifier">error</span><span class="special">)</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"success"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
     <span class="special">}</span> <span class="identifier">BOOST_LOCAL_EXIT_END</span>
     
-    <span class="identifier">BOOST_LOCAL_EXIT</span><span class="special">(</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">error</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span> <span class="comment">// Same as D's `scope(failure)`.
-</span>        <span class="keyword">if</span> <span class="special">(</span><span class="identifier">error</span><span class="special">)</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"failure"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    <span class="identifier">BOOST_LOCAL_EXIT</span><span class="special">(</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">error</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span> <span class="comment">// Same as D's `scope(failure)`.</span>
+        <span class="keyword">if</span> <span class="special">(</span><span class="identifier">error</span><span class="special">)</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"failure"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
     <span class="special">}</span> <span class="identifier">BOOST_LOCAL_EXIT_END</span>
     
-    <span class="identifier">error</span> <span class="special">=</span> <span class="keyword">true</span><span class="special">;</span> <span class="keyword">throw</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">runtime_error</span><span class="special">(</span><span class="string">"some error"</span><span class="special">);</span> <span class="comment">// Must set error.
-</span><span class="special">}</span>
+    <span class="identifier">error</span> <span class="special">=</span> <span class="keyword">true</span><span class="special">;</span> <span class="keyword">throw</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">runtime_error</span><span class="special">(</span><span class="string">"some error"</span><span class="special">);</span> <span class="comment">// Must set error.</span>
+<span class="special">}</span>
 
 <span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
-    <span class="comment">// Program cannot terminate with uncaught exception (otherwise local exit
-</span>    <span class="comment">// code is not guaranteed to be executed).
-</span>    <span class="keyword">try</span> <span class="special">{</span>
+    <span class="comment">// Program cannot terminate with uncaught exception (otherwise local exit</span>
+    <span class="comment">// code is not guaranteed to be executed).</span>
+    <span class="keyword">try</span> <span class="special">{</span>
         <span class="identifier">f</span><span class="special">();</span>
         <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
     <span class="special">}</span> <span class="keyword">catch</span><span class="special">(...)</span> <span class="special">{</span>
@@ -545,9 +545,9 @@
         <span class="keyword">return</span> <span class="identifier">e</span><span class="special">.</span><span class="identifier">salary</span><span class="special">()</span> <span class="special">&gt;=</span> <span class="identifier">min_salary</span> <span class="special">&amp;&amp;</span> <span class="identifier">e</span><span class="special">.</span><span class="identifier">salary</span><span class="special">()</span> <span class="special">&lt;</span> <span class="identifier">u_limit</span><span class="special">;</span>
     <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">between</span><span class="special">)</span>
     
-    <span class="comment">// Pass local function to an STL algorithm as a template paramter (this
-</span>    <span class="comment">// cannot be done with plain member funcitons of local classes).
-</span>    <span class="identifier">std</span><span class="special">::</span><span class="identifier">list</span><span class="special">&lt;</span><span class="identifier">employee</span><span class="special">&gt;::</span><span class="identifier">iterator</span> <span class="identifier">i</span> <span class="special">=</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">find_if</span><span class="special">(</span>
+    <span class="comment">// Pass local function to an STL algorithm as a template paramter (this</span>
+    <span class="comment">// cannot be done with plain member funcitons of local classes).</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">list</span><span class="special">&lt;</span><span class="identifier">employee</span><span class="special">&gt;::</span><span class="identifier">iterator</span> <span class="identifier">i</span> <span class="special">=</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">find_if</span><span class="special">(</span>
             <span class="identifier">employees</span><span class="special">.</span><span class="identifier">begin</span><span class="special">(),</span> <span class="identifier">employees</span><span class="special">.</span><span class="identifier">end</span><span class="special">(),</span> <span class="identifier">between</span><span class="special">);</span>
 
     <span class="keyword">if</span> <span class="special">(</span><span class="identifier">i</span> <span class="special">!=</span> <span class="identifier">employees</span><span class="special">.</span><span class="identifier">end</span><span class="special">())</span> <span class="special">{</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">i</span><span class="special">-&gt;</span><span class="identifier">salary</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span> <span class="special">}</span>
@@ -588,9 +588,9 @@
         <span class="keyword">return</span> <span class="identifier">e</span><span class="special">.</span><span class="identifier">salary</span><span class="special">()</span> <span class="special">&gt;=</span> <span class="identifier">min_salary</span> <span class="special">&amp;&amp;</span> <span class="identifier">e</span><span class="special">.</span><span class="identifier">salary</span><span class="special">()</span> <span class="special">&lt;</span> <span class="identifier">u_limit</span><span class="special">;</span>
     <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">between</span><span class="special">)</span>
     
-    <span class="comment">// Pass local function to an STL algorithm as a template paramter (this
-</span>    <span class="comment">// cannot be done with plain member funcitons of local classes).
-</span>    <span class="identifier">std</span><span class="special">::</span><span class="identifier">list</span><span class="special">&lt;</span><span class="identifier">employee</span><span class="special">&gt;::</span><span class="identifier">iterator</span> <span class="identifier">i</span> <span class="special">=</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">find_if</span><span class="special">(</span>
+    <span class="comment">// Pass local function to an STL algorithm as a template paramter (this</span>
+    <span class="comment">// cannot be done with plain member funcitons of local classes).</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">list</span><span class="special">&lt;</span><span class="identifier">employee</span><span class="special">&gt;::</span><span class="identifier">iterator</span> <span class="identifier">i</span> <span class="special">=</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">find_if</span><span class="special">(</span>
             <span class="identifier">employees</span><span class="special">.</span><span class="identifier">begin</span><span class="special">(),</span> <span class="identifier">employees</span><span class="special">.</span><span class="identifier">end</span><span class="special">(),</span> <span class="identifier">between</span><span class="special">);</span>
 
     <span class="keyword">if</span> <span class="special">(</span><span class="identifier">i</span> <span class="special">!=</span> <span class="identifier">employees</span><span class="special">.</span><span class="identifier">end</span><span class="special">())</span> <span class="special">{</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">i</span><span class="special">-&gt;</span><span class="identifier">salary</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span> <span class="special">}</span>
@@ -644,9 +644,9 @@
     <span class="identifier">a</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;&amp;</span> <span class="identifier">numbers</span><span class="special">):</span> <span class="identifier">v_</span><span class="special">(</span><span class="identifier">numbers</span><span class="special">)</span> <span class="special">{}</span>
 
     <span class="keyword">void</span> <span class="identifier">change_sign_all</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;&amp;</span> <span class="identifier">indices</span><span class="special">)</span> <span class="special">{</span>
-        <span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">i</span><span class="special">,</span> <span class="identifier">bind</span> <span class="keyword">this</span><span class="special">)</span> <span class="special">{</span> <span class="comment">// Bind this.
-</span>            <span class="comment">// Local function uses special name `this_` to access bound object.
-</span>            <span class="identifier">this_</span><span class="special">-&gt;</span><span class="identifier">v_</span><span class="special">[</span><span class="identifier">i</span><span class="special">]</span> <span class="special">=</span> <span class="special">-</span><span class="identifier">this_</span><span class="special">-&gt;</span><span class="identifier">v_</span><span class="special">[</span><span class="identifier">i</span><span class="special">];</span>
+        <span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">i</span><span class="special">,</span> <span class="identifier">bind</span> <span class="keyword">this</span><span class="special">)</span> <span class="special">{</span> <span class="comment">// Bind this.</span>
+            <span class="comment">// Local function uses special name `this_` to access bound object.</span>
+            <span class="identifier">this_</span><span class="special">-&gt;</span><span class="identifier">v_</span><span class="special">[</span><span class="identifier">i</span><span class="special">]</span> <span class="special">=</span> <span class="special">-</span><span class="identifier">this_</span><span class="special">-&gt;</span><span class="identifier">v_</span><span class="special">[</span><span class="identifier">i</span><span class="special">];</span>
         <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">complement</span><span class="special">)</span>
         <span class="identifier">std</span><span class="special">::</span><span class="identifier">for_each</span><span class="special">(</span><span class="identifier">indices</span><span class="special">.</span><span class="identifier">begin</span><span class="special">(),</span> <span class="identifier">indices</span><span class="special">.</span><span class="identifier">end</span><span class="special">(),</span> <span class="identifier">complement</span><span class="special">);</span>
     <span class="special">}</span>
@@ -694,9 +694,9 @@
     <span class="identifier">a</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;&amp;</span> <span class="identifier">numbers</span><span class="special">):</span> <span class="identifier">v_</span><span class="special">(</span><span class="identifier">numbers</span><span class="special">)</span> <span class="special">{}</span>
 
     <span class="keyword">void</span> <span class="identifier">change_sign_all</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;&amp;</span> <span class="identifier">indices</span><span class="special">)</span> <span class="special">{</span>
-        <span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">i</span><span class="special">)</span> <span class="special">(</span><span class="identifier">bind</span> <span class="keyword">this</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span> <span class="comment">// Bind this.
-</span>            <span class="comment">// Local function uses special name `this_` to access bound object.
-</span>            <span class="identifier">this_</span><span class="special">-&gt;</span><span class="identifier">v_</span><span class="special">[</span><span class="identifier">i</span><span class="special">]</span> <span class="special">=</span> <span class="special">-</span><span class="identifier">this_</span><span class="special">-&gt;</span><span class="identifier">v_</span><span class="special">[</span><span class="identifier">i</span><span class="special">];</span>
+        <span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">i</span><span class="special">)</span> <span class="special">(</span><span class="identifier">bind</span> <span class="keyword">this</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span> <span class="comment">// Bind this.</span>
+            <span class="comment">// Local function uses special name `this_` to access bound object.</span>
+            <span class="identifier">this_</span><span class="special">-&gt;</span><span class="identifier">v_</span><span class="special">[</span><span class="identifier">i</span><span class="special">]</span> <span class="special">=</span> <span class="special">-</span><span class="identifier">this_</span><span class="special">-&gt;</span><span class="identifier">v_</span><span class="special">[</span><span class="identifier">i</span><span class="special">];</span>
         <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">complement</span><span class="special">)</span>
         <span class="identifier">std</span><span class="special">::</span><span class="identifier">for_each</span><span class="special">(</span><span class="identifier">indices</span><span class="special">.</span><span class="identifier">begin</span><span class="special">(),</span> <span class="identifier">indices</span><span class="special">.</span><span class="identifier">end</span><span class="special">(),</span> <span class="identifier">complement</span><span class="special">);</span>
     <span class="special">}</span>
@@ -963,13 +963,13 @@
 
 <span class="keyword">struct</span> <span class="identifier">s</span> <span class="special">{</span>
     <span class="keyword">void</span> <span class="identifier">f</span><span class="special">(</span><span class="keyword">double</span> <span class="identifier">p</span> <span class="special">=</span> <span class="number">1.23</span><span class="special">,</span> <span class="keyword">double</span> <span class="identifier">q</span> <span class="special">=</span> <span class="special">-</span><span class="number">1.23</span><span class="special">)</span> <span class="special">{</span>
-        <span class="special">{</span> <span class="comment">// Only params.
-</span>            <span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">x</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">y</span><span class="special">,</span> <span class="keyword">default</span> <span class="number">0</span><span class="special">)</span> <span class="special">{</span>
+        <span class="special">{</span> <span class="comment">// Only params.</span>
+            <span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">x</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">y</span><span class="special">,</span> <span class="keyword">default</span> <span class="number">0</span><span class="special">)</span> <span class="special">{</span>
             <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">l</span><span class="special">)</span>
             <span class="identifier">l</span><span class="special">(</span><span class="number">1</span><span class="special">);</span>
         <span class="special">}</span>
-        <span class="special">{</span> <span class="comment">// Only const binds.
-</span>            <span class="keyword">int</span> <span class="identifier">a</span><span class="special">,</span> <span class="identifier">b</span><span class="special">;</span>
+        <span class="special">{</span> <span class="comment">// Only const binds.</span>
+            <span class="keyword">int</span> <span class="identifier">a</span><span class="special">,</span> <span class="identifier">b</span><span class="special">;</span>
 
             <span class="keyword">const</span> <span class="keyword">int</span><span class="special">&amp;</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">a</span><span class="special">,</span>
                     <span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">b</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">p</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">q</span><span class="special">)</span> <span class="special">{</span>
@@ -989,8 +989,8 @@
             <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">lt</span><span class="special">)</span>
             <span class="identifier">lt</span><span class="special">();</span>
         <span class="special">}</span>
-        <span class="special">{</span> <span class="comment">// Only plain binds.
-</span>            <span class="keyword">int</span> <span class="identifier">c</span><span class="special">,</span> <span class="identifier">d</span><span class="special">;</span>
+        <span class="special">{</span> <span class="comment">// Only plain binds.</span>
+            <span class="keyword">int</span> <span class="identifier">c</span><span class="special">,</span> <span class="identifier">d</span><span class="special">;</span>
 
             <span class="keyword">int</span><span class="special">&amp;</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span><span class="identifier">bind</span> <span class="identifier">c</span><span class="special">,</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">d</span><span class="special">,</span>
                     <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">p</span><span class="special">,</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">q</span><span class="special">)</span> <span class="special">{</span>
@@ -1010,8 +1010,8 @@
             <span class="identifier">lt</span><span class="special">();</span>
         <span class="special">}</span>
 
-        <span class="special">{</span> <span class="comment">// Both params and const binds.
-</span>            <span class="keyword">int</span> <span class="identifier">a</span><span class="special">,</span> <span class="identifier">b</span><span class="special">;</span>
+        <span class="special">{</span> <span class="comment">// Both params and const binds.</span>
+            <span class="keyword">int</span> <span class="identifier">a</span><span class="special">,</span> <span class="identifier">b</span><span class="special">;</span>
 
             <span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">x</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">y</span><span class="special">,</span> <span class="keyword">default</span> <span class="number">0</span><span class="special">,</span>
                     <span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">a</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">b</span><span class="special">,</span>
@@ -1030,8 +1030,8 @@
             <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">lt</span><span class="special">)</span>
             <span class="identifier">lt</span><span class="special">(</span><span class="number">1</span><span class="special">);</span>
         <span class="special">}</span>
-        <span class="special">{</span> <span class="comment">// Both params and plain binds.
-</span>            <span class="keyword">int</span> <span class="identifier">c</span><span class="special">,</span> <span class="identifier">d</span><span class="special">;</span>
+        <span class="special">{</span> <span class="comment">// Both params and plain binds.</span>
+            <span class="keyword">int</span> <span class="identifier">c</span><span class="special">,</span> <span class="identifier">d</span><span class="special">;</span>
 
             <span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">x</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">y</span><span class="special">,</span> <span class="keyword">default</span> <span class="number">0</span><span class="special">,</span>
                     <span class="identifier">bind</span> <span class="identifier">c</span><span class="special">,</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">d</span><span class="special">,</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">p</span><span class="special">,</span> <span class="identifier">bind</span> <span class="identifier">q</span><span class="special">)</span> <span class="special">{</span>
@@ -1049,8 +1049,8 @@
             <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">lt</span><span class="special">)</span>
             <span class="identifier">lt</span><span class="special">(</span><span class="number">1</span><span class="special">);</span>
         <span class="special">}</span>
-        <span class="special">{</span> <span class="comment">// Both const and plain binds.
-</span>            <span class="keyword">int</span> <span class="identifier">a</span><span class="special">,</span> <span class="identifier">b</span><span class="special">,</span> <span class="identifier">c</span><span class="special">,</span> <span class="identifier">d</span><span class="special">;</span>
+        <span class="special">{</span> <span class="comment">// Both const and plain binds.</span>
+            <span class="keyword">int</span> <span class="identifier">a</span><span class="special">,</span> <span class="identifier">b</span><span class="special">,</span> <span class="identifier">c</span><span class="special">,</span> <span class="identifier">d</span><span class="special">;</span>
 
             <span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">a</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">b</span><span class="special">,</span>
                     <span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">p</span><span class="special">,</span> <span class="identifier">bind</span> <span class="identifier">c</span><span class="special">,</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">d</span><span class="special">,</span> <span class="identifier">bind</span> <span class="identifier">q</span><span class="special">)</span> <span class="special">{</span>
@@ -1077,8 +1077,8 @@
             <span class="identifier">lpt</span><span class="special">();</span>
         <span class="special">}</span>
 
-        <span class="special">{</span> <span class="comment">// All params, const binds, and plain binds.
-</span>            <span class="keyword">int</span> <span class="identifier">a</span><span class="special">,</span> <span class="identifier">b</span><span class="special">,</span> <span class="identifier">c</span><span class="special">,</span> <span class="identifier">d</span><span class="special">;</span>
+        <span class="special">{</span> <span class="comment">// All params, const binds, and plain binds.</span>
+            <span class="keyword">int</span> <span class="identifier">a</span><span class="special">,</span> <span class="identifier">b</span><span class="special">,</span> <span class="identifier">c</span><span class="special">,</span> <span class="identifier">d</span><span class="special">;</span>
             
             <span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">x</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">y</span><span class="special">,</span> <span class="keyword">default</span> <span class="number">0</span><span class="special">,</span>
                     <span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">a</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">b</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">p</span><span class="special">,</span>
@@ -1126,13 +1126,13 @@
 
 <span class="keyword">struct</span> <span class="identifier">s</span> <span class="special">{</span>
     <span class="keyword">void</span> <span class="identifier">f</span><span class="special">(</span><span class="keyword">double</span> <span class="identifier">p</span> <span class="special">=</span> <span class="number">1.23</span><span class="special">,</span> <span class="keyword">double</span> <span class="identifier">q</span> <span class="special">=</span> <span class="special">-</span><span class="number">1.23</span><span class="special">)</span> <span class="special">{</span>
-        <span class="special">{</span> <span class="comment">// Only params.
-</span>            <span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">x</span><span class="special">)</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">y</span><span class="special">)(</span><span class="keyword">default</span> <span class="number">0</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span>
+        <span class="special">{</span> <span class="comment">// Only params.</span>
+            <span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">x</span><span class="special">)</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">y</span><span class="special">)(</span><span class="keyword">default</span> <span class="number">0</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span>
             <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">l</span><span class="special">)</span>
             <span class="identifier">l</span><span class="special">(</span><span class="number">1</span><span class="special">);</span>
         <span class="special">}</span>
-        <span class="special">{</span> <span class="comment">// Only const binds.
-</span>            <span class="keyword">int</span> <span class="identifier">a</span><span class="special">,</span> <span class="identifier">b</span><span class="special">;</span>
+        <span class="special">{</span> <span class="comment">// Only const binds.</span>
+            <span class="keyword">int</span> <span class="identifier">a</span><span class="special">,</span> <span class="identifier">b</span><span class="special">;</span>
 
             <span class="keyword">const</span> <span class="keyword">int</span><span class="special">&amp;</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">a</span><span class="special">)</span>
                     <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">b</span><span class="special">)</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">p</span><span class="special">)</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">q</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span>
@@ -1152,8 +1152,8 @@
             <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">lt</span><span class="special">)</span>
             <span class="identifier">lt</span><span class="special">();</span>
         <span class="special">}</span>
-        <span class="special">{</span> <span class="comment">// Only plain binds.
-</span>            <span class="keyword">int</span> <span class="identifier">c</span><span class="special">,</span> <span class="identifier">d</span><span class="special">;</span>
+        <span class="special">{</span> <span class="comment">// Only plain binds.</span>
+            <span class="keyword">int</span> <span class="identifier">c</span><span class="special">,</span> <span class="identifier">d</span><span class="special">;</span>
 
             <span class="keyword">int</span><span class="special">&amp;</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span> <span class="special">(</span><span class="identifier">bind</span> <span class="identifier">c</span><span class="special">)</span> <span class="special">(</span><span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">d</span><span class="special">)</span>
                     <span class="special">(</span><span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">p</span><span class="special">)</span> <span class="special">(</span><span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">q</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span>
@@ -1173,8 +1173,8 @@
             <span class="identifier">lt</span><span class="special">();</span>
         <span class="special">}</span>
 
-        <span class="special">{</span> <span class="comment">// Both params and const binds.
-</span>            <span class="keyword">int</span> <span class="identifier">a</span><span class="special">,</span> <span class="identifier">b</span><span class="special">;</span>
+        <span class="special">{</span> <span class="comment">// Both params and const binds.</span>
+            <span class="keyword">int</span> <span class="identifier">a</span><span class="special">,</span> <span class="identifier">b</span><span class="special">;</span>
 
             <span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">x</span><span class="special">)</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">y</span><span class="special">)(</span><span class="keyword">default</span> <span class="number">0</span><span class="special">)</span>
                     <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">a</span><span class="special">)</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">b</span><span class="special">)</span>
@@ -1193,8 +1193,8 @@
             <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">lt</span><span class="special">)</span>
             <span class="identifier">lt</span><span class="special">(</span><span class="number">1</span><span class="special">);</span>
         <span class="special">}</span>
-        <span class="special">{</span> <span class="comment">// Both params and plain binds.
-</span>            <span class="keyword">int</span> <span class="identifier">c</span><span class="special">,</span> <span class="identifier">d</span><span class="special">;</span>
+        <span class="special">{</span> <span class="comment">// Both params and plain binds.</span>
+            <span class="keyword">int</span> <span class="identifier">c</span><span class="special">,</span> <span class="identifier">d</span><span class="special">;</span>
 
             <span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">x</span><span class="special">)</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">y</span><span class="special">)(</span><span class="keyword">default</span> <span class="number">0</span><span class="special">)</span>
                     <span class="special">(</span><span class="identifier">bind</span> <span class="identifier">c</span><span class="special">)</span> <span class="special">(</span><span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">d</span><span class="special">)</span> <span class="special">(</span><span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">p</span><span class="special">)</span> <span class="special">(</span><span class="identifier">bind</span> <span class="identifier">q</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span>
@@ -1212,8 +1212,8 @@
             <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">lt</span><span class="special">)</span>
             <span class="identifier">lt</span><span class="special">(</span><span class="number">1</span><span class="special">);</span>
         <span class="special">}</span>
-        <span class="special">{</span> <span class="comment">// Both const and plain binds.
-</span>            <span class="keyword">int</span> <span class="identifier">a</span><span class="special">,</span> <span class="identifier">b</span><span class="special">,</span> <span class="identifier">c</span><span class="special">,</span> <span class="identifier">d</span><span class="special">;</span>
+        <span class="special">{</span> <span class="comment">// Both const and plain binds.</span>
+            <span class="keyword">int</span> <span class="identifier">a</span><span class="special">,</span> <span class="identifier">b</span><span class="special">,</span> <span class="identifier">c</span><span class="special">,</span> <span class="identifier">d</span><span class="special">;</span>
 
             <span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">a</span><span class="special">)</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">b</span><span class="special">)</span>
                     <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">p</span><span class="special">)</span> <span class="special">(</span><span class="identifier">bind</span> <span class="identifier">c</span><span class="special">)</span> <span class="special">(</span><span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">d</span><span class="special">)</span> <span class="special">(</span><span class="identifier">bind</span> <span class="identifier">q</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span>
@@ -1240,8 +1240,8 @@
             <span class="identifier">lpt</span><span class="special">();</span>
         <span class="special">}</span>
 
-        <span class="special">{</span> <span class="comment">// All params, const binds, and plain binds.
-</span>            <span class="keyword">int</span> <span class="identifier">a</span><span class="special">,</span> <span class="identifier">b</span><span class="special">,</span> <span class="identifier">c</span><span class="special">,</span> <span class="identifier">d</span><span class="special">;</span>
+        <span class="special">{</span> <span class="comment">// All params, const binds, and plain binds.</span>
+            <span class="keyword">int</span> <span class="identifier">a</span><span class="special">,</span> <span class="identifier">b</span><span class="special">,</span> <span class="identifier">c</span><span class="special">,</span> <span class="identifier">d</span><span class="special">;</span>
             
             <span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">x</span><span class="special">)</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">y</span><span class="special">)(</span><span class="keyword">default</span> <span class="number">0</span><span class="special">)</span>
                     <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">a</span><span class="special">)</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">b</span><span class="special">)</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">p</span><span class="special">)</span>
@@ -1287,7 +1287,7 @@
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><div class="copyright-footer">Copyright &#169; 2009 -2011 Lorenzo Caminiti<p>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2009-2011 Lorenzo Caminiti<p>
         Use, modification, and distribution is subject to the Boost Software License,
         Version 1.0 (see accompanying file LICENSE_1_0.txt or a copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>).
       </p>

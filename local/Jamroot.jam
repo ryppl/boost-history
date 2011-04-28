@@ -5,7 +5,6 @@
 # copy at http://www.boost.org/LICENSE_1_0.txt).
 
 import os ;
-
 local BOOST_ROOT = [ os.environ BOOST_ROOT ] ;
 
 project

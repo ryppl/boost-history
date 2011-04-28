@@ -292,7 +292,7 @@
 </tbody>
 </table></div>
 <a name="boost_local.Alternatives.local_functions.examples"></a><h6>
-<a name="id944631"></a>
+<a name="boost_local.Alternatives.local_functions.examples-heading"></a>
         <a class="link" href="Alternatives.html#boost_local.Alternatives.local_functions.examples">Examples</a>
       </h6>
 <p>
@@ -332,17 +332,17 @@
     <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;</span> <span class="identifier">v</span><span class="special">(</span><span class="number">3</span><span class="special">);</span>
     <span class="identifier">v</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="number">1.0</span><span class="special">;</span> <span class="identifier">v</span><span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">=</span> <span class="number">2.0</span><span class="special">;</span> <span class="identifier">v</span><span class="special">[</span><span class="number">2</span><span class="special">]</span> <span class="special">=</span> <span class="number">3.0</span><span class="special">;</span>
 
-    <span class="comment">// Unfortunately, cannot be defined at expression level.
-</span>    <span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span><span class="keyword">double</span> <span class="identifier">num</span><span class="special">,</span>
-            <span class="comment">// Bind `sum` as reference and `factor` as constant reference.
-</span>            <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">sum</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">factor</span><span class="special">)</span> <span class="special">{</span>
-        <span class="comment">// Body uses C++ statement syntax.
-</span>        <span class="identifier">sum</span> <span class="special">+=</span> <span class="identifier">factor</span> <span class="special">*</span> <span class="identifier">num</span><span class="special">;</span>
+    <span class="comment">// Unfortunately, cannot be defined at expression level.</span>
+    <span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span><span class="keyword">double</span> <span class="identifier">num</span><span class="special">,</span>
+            <span class="comment">// Bind `sum` as reference and `factor` as constant reference.</span>
+            <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">sum</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">factor</span><span class="special">)</span> <span class="special">{</span>
+        <span class="comment">// Body uses C++ statement syntax.</span>
+        <span class="identifier">sum</span> <span class="special">+=</span> <span class="identifier">factor</span> <span class="special">*</span> <span class="identifier">num</span><span class="special">;</span>
         <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Summed: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">sum</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
     <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">add</span><span class="special">)</span>
 
-    <span class="identifier">std</span><span class="special">::</span><span class="identifier">for_each</span><span class="special">(</span><span class="identifier">v</span><span class="special">.</span><span class="identifier">begin</span><span class="special">(),</span> <span class="identifier">v</span><span class="special">.</span><span class="identifier">end</span><span class="special">(),</span> <span class="identifier">add</span><span class="special">);</span> <span class="comment">// Passed as template parameter.
-</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">for_each</span><span class="special">(</span><span class="identifier">v</span><span class="special">.</span><span class="identifier">begin</span><span class="special">(),</span> <span class="identifier">v</span><span class="special">.</span><span class="identifier">end</span><span class="special">(),</span> <span class="identifier">add</span><span class="special">);</span> <span class="comment">// Passed as template parameter.</span>
+
     <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">sum</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
     <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
 <span class="special">}</span>
@@ -366,17 +366,17 @@
     <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;</span> <span class="identifier">v</span><span class="special">(</span><span class="number">3</span><span class="special">);</span>
     <span class="identifier">v</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="number">1.0</span><span class="special">;</span> <span class="identifier">v</span><span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">=</span> <span class="number">2.0</span><span class="special">;</span> <span class="identifier">v</span><span class="special">[</span><span class="number">2</span><span class="special">]</span> <span class="special">=</span> <span class="number">3.0</span><span class="special">;</span>
 
-    <span class="comment">// Unfortunately, cannot be defined at expression level.
-</span>    <span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span> <span class="special">(</span><span class="keyword">double</span> <span class="identifier">num</span><span class="special">)</span>
-            <span class="comment">// Bind `sum` as ref and `factor` as const ref.
-</span>            <span class="special">(</span><span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">sum</span><span class="special">)</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">factor</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span>
-        <span class="comment">// Body uses C++ statement syntax.
-</span>        <span class="identifier">sum</span> <span class="special">+=</span> <span class="identifier">factor</span> <span class="special">*</span> <span class="identifier">num</span><span class="special">;</span>
+    <span class="comment">// Unfortunately, cannot be defined at expression level.</span>
+    <span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span> <span class="special">(</span><span class="keyword">double</span> <span class="identifier">num</span><span class="special">)</span>
+            <span class="comment">// Bind `sum` as ref and `factor` as const ref.</span>
+            <span class="special">(</span><span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">sum</span><span class="special">)</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">factor</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span>
+        <span class="comment">// Body uses C++ statement syntax.</span>
+        <span class="identifier">sum</span> <span class="special">+=</span> <span class="identifier">factor</span> <span class="special">*</span> <span class="identifier">num</span><span class="special">;</span>
         <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Summed: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">sum</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
     <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">add</span><span class="special">)</span>
 
-    <span class="identifier">std</span><span class="special">::</span><span class="identifier">for_each</span><span class="special">(</span><span class="identifier">v</span><span class="special">.</span><span class="identifier">begin</span><span class="special">(),</span> <span class="identifier">v</span><span class="special">.</span><span class="identifier">end</span><span class="special">(),</span> <span class="identifier">add</span><span class="special">);</span> <span class="comment">// Passed as template parameter.
-</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">for_each</span><span class="special">(</span><span class="identifier">v</span><span class="special">.</span><span class="identifier">begin</span><span class="special">(),</span> <span class="identifier">v</span><span class="special">.</span><span class="identifier">end</span><span class="special">(),</span> <span class="identifier">add</span><span class="special">);</span> <span class="comment">// Passed as template parameter.</span>
+
     <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">sum</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
     <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
 <span class="special">}</span>
@@ -403,22 +403,22 @@
     <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;</span> <span class="identifier">v</span><span class="special">(</span><span class="number">3</span><span class="special">);</span>
     <span class="identifier">v</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="number">1.0</span><span class="special">;</span> <span class="identifier">v</span><span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">=</span> <span class="number">2.0</span><span class="special">;</span> <span class="identifier">v</span><span class="special">[</span><span class="number">2</span><span class="special">]</span> <span class="special">=</span> <span class="number">3.0</span><span class="special">;</span>
 
-    <span class="keyword">struct</span> <span class="identifier">local_add</span> <span class="special">{</span> <span class="comment">// Unfortunately, boilerplate code to program the class.
-</span>        <span class="identifier">local_add</span><span class="special">(</span><span class="keyword">double</span><span class="special">&amp;</span> <span class="identifier">_sum</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">_factor</span><span class="special">):</span> <span class="identifier">sum</span><span class="special">(</span><span class="identifier">_sum</span><span class="special">),</span> <span class="identifier">factor</span><span class="special">(</span><span class="identifier">_factor</span><span class="special">)</span> <span class="special">{}</span>
+    <span class="keyword">struct</span> <span class="identifier">local_add</span> <span class="special">{</span> <span class="comment">// Unfortunately, boilerplate code to program the class.</span>
+        <span class="identifier">local_add</span><span class="special">(</span><span class="keyword">double</span><span class="special">&amp;</span> <span class="identifier">_sum</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">_factor</span><span class="special">):</span> <span class="identifier">sum</span><span class="special">(</span><span class="identifier">_sum</span><span class="special">),</span> <span class="identifier">factor</span><span class="special">(</span><span class="identifier">_factor</span><span class="special">)</span> <span class="special">{}</span>
 
-        <span class="keyword">inline</span> <span class="keyword">void</span> <span class="keyword">operator</span><span class="special">()(</span><span class="keyword">double</span> <span class="identifier">num</span><span class="special">)</span> <span class="special">{</span> <span class="comment">// Body uses C++ statement syntax.
-</span>            <span class="identifier">sum</span> <span class="special">+=</span> <span class="identifier">factor</span> <span class="special">*</span> <span class="identifier">num</span><span class="special">;</span>
+        <span class="keyword">inline</span> <span class="keyword">void</span> <span class="keyword">operator</span><span class="special">()(</span><span class="keyword">double</span> <span class="identifier">num</span><span class="special">)</span> <span class="special">{</span> <span class="comment">// Body uses C++ statement syntax.</span>
+            <span class="identifier">sum</span> <span class="special">+=</span> <span class="identifier">factor</span> <span class="special">*</span> <span class="identifier">num</span><span class="special">;</span>
             <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Summed: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">sum</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
         <span class="special">}</span>
 
     <span class="keyword">private</span><span class="special">:</span>
-        <span class="comment">// Unfortunately, cannot bind so repeat variable types.
-</span>        <span class="keyword">double</span><span class="special">&amp;</span> <span class="identifier">sum</span><span class="special">;</span> <span class="comment">// Access `sum` by reference.
-</span>        <span class="keyword">const</span> <span class="keyword">int</span><span class="special">&amp;</span> <span class="identifier">factor</span><span class="special">;</span> <span class="comment">// Make `factor` constant.
-</span>    <span class="special">}</span> <span class="identifier">add</span><span class="special">(</span><span class="identifier">sum</span><span class="special">,</span> <span class="identifier">factor</span><span class="special">);</span>
+        <span class="comment">// Unfortunately, cannot bind so repeat variable types.</span>
+        <span class="keyword">double</span><span class="special">&amp;</span> <span class="identifier">sum</span><span class="special">;</span> <span class="comment">// Access `sum` by reference.</span>
+        <span class="keyword">const</span> <span class="keyword">int</span><span class="special">&amp;</span> <span class="identifier">factor</span><span class="special">;</span> <span class="comment">// Make `factor` constant.</span>
+    <span class="special">}</span> <span class="identifier">add</span><span class="special">(</span><span class="identifier">sum</span><span class="special">,</span> <span class="identifier">factor</span><span class="special">);</span>
 
-    <span class="comment">// Unfortunately, cannot pass as template parameter to `std::for_each`.
-</span>    <span class="keyword">for</span> <span class="special">(</span><span class="identifier">size_t</span> <span class="identifier">i</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span> <span class="identifier">i</span> <span class="special">&lt;</span> <span class="identifier">v</span><span class="special">.</span><span class="identifier">size</span><span class="special">();</span> <span class="special">++</span><span class="identifier">i</span><span class="special">)</span> <span class="identifier">add</span><span class="special">(</span><span class="identifier">v</span><span class="special">[</span><span class="identifier">i</span><span class="special">]);</span>
+    <span class="comment">// Unfortunately, cannot pass as template parameter to `std::for_each`.</span>
+    <span class="keyword">for</span> <span class="special">(</span><span class="identifier">size_t</span> <span class="identifier">i</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span> <span class="identifier">i</span> <span class="special">&lt;</span> <span class="identifier">v</span><span class="special">.</span><span class="identifier">size</span><span class="special">();</span> <span class="special">++</span><span class="identifier">i</span><span class="special">)</span> <span class="identifier">add</span><span class="special">(</span><span class="identifier">v</span><span class="special">[</span><span class="identifier">i</span><span class="special">]);</span>
 
     <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">sum</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
     <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
@@ -437,22 +437,22 @@
 <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">vector</span><span class="special">&gt;</span>
 <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">algorithm</span><span class="special">&gt;</span>
 
-<span class="comment">// Unfortunately, cannot be defined locally (so this is not an alternative
-</span><span class="comment">// implementation of local functions).
-</span><span class="keyword">struct</span> <span class="identifier">global_add</span> <span class="special">{</span> <span class="comment">// Unfortunately, boilerplate code to program the class.
-</span>    <span class="identifier">global_add</span><span class="special">(</span><span class="keyword">double</span><span class="special">&amp;</span> <span class="identifier">_sum</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">_factor</span><span class="special">):</span> <span class="identifier">sum</span><span class="special">(</span><span class="identifier">_sum</span><span class="special">),</span> <span class="identifier">factor</span><span class="special">(</span><span class="identifier">_factor</span><span class="special">)</span> <span class="special">{}</span>
+<span class="comment">// Unfortunately, cannot be defined locally (so this is not an alternative</span>
+<span class="comment">// implementation of local functions).</span>
+<span class="keyword">struct</span> <span class="identifier">global_add</span> <span class="special">{</span> <span class="comment">// Unfortunately, boilerplate code to program the class.</span>
+    <span class="identifier">global_add</span><span class="special">(</span><span class="keyword">double</span><span class="special">&amp;</span> <span class="identifier">_sum</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">_factor</span><span class="special">):</span> <span class="identifier">sum</span><span class="special">(</span><span class="identifier">_sum</span><span class="special">),</span> <span class="identifier">factor</span><span class="special">(</span><span class="identifier">_factor</span><span class="special">)</span> <span class="special">{}</span>
 
     <span class="keyword">inline</span> <span class="keyword">void</span> <span class="keyword">operator</span><span class="special">()(</span><span class="keyword">double</span> <span class="identifier">num</span><span class="special">)</span> <span class="special">{</span>
-        <span class="comment">// Body uses C++ statement syntax.
-</span>        <span class="identifier">sum</span> <span class="special">+=</span> <span class="identifier">factor</span> <span class="special">*</span> <span class="identifier">num</span><span class="special">;</span>
+        <span class="comment">// Body uses C++ statement syntax.</span>
+        <span class="identifier">sum</span> <span class="special">+=</span> <span class="identifier">factor</span> <span class="special">*</span> <span class="identifier">num</span><span class="special">;</span>
         <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Summed: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">sum</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
     <span class="special">}</span>
 
 <span class="keyword">private</span><span class="special">:</span>
-    <span class="comment">// Unfortunately, cannot bind so repeat variable types.
-</span>    <span class="keyword">double</span><span class="special">&amp;</span> <span class="identifier">sum</span><span class="special">;</span> <span class="comment">// Access `sum` by reference.
-</span>    <span class="keyword">const</span> <span class="keyword">int</span><span class="special">&amp;</span> <span class="identifier">factor</span><span class="special">;</span> <span class="comment">// Make `factor` constant.
-</span><span class="special">};</span>
+    <span class="comment">// Unfortunately, cannot bind so repeat variable types.</span>
+    <span class="keyword">double</span><span class="special">&amp;</span> <span class="identifier">sum</span><span class="special">;</span> <span class="comment">// Access `sum` by reference.</span>
+    <span class="keyword">const</span> <span class="keyword">int</span><span class="special">&amp;</span> <span class="identifier">factor</span><span class="special">;</span> <span class="comment">// Make `factor` constant.</span>
+<span class="special">};</span>
 
 <span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
     <span class="keyword">double</span> <span class="identifier">sum</span> <span class="special">=</span> <span class="number">0.0</span><span class="special">;</span>
@@ -462,8 +462,8 @@
     <span class="identifier">v</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="number">1.0</span><span class="special">;</span> <span class="identifier">v</span><span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">=</span> <span class="number">2.0</span><span class="special">;</span> <span class="identifier">v</span><span class="special">[</span><span class="number">2</span><span class="special">]</span> <span class="special">=</span> <span class="number">3.0</span><span class="special">;</span>
 
     <span class="identifier">global_add</span> <span class="identifier">add</span><span class="special">(</span><span class="identifier">sum</span><span class="special">,</span> <span class="identifier">factor</span><span class="special">);</span>
-    <span class="identifier">std</span><span class="special">::</span><span class="identifier">for_each</span><span class="special">(</span><span class="identifier">v</span><span class="special">.</span><span class="identifier">begin</span><span class="special">(),</span> <span class="identifier">v</span><span class="special">.</span><span class="identifier">end</span><span class="special">(),</span> <span class="identifier">add</span><span class="special">);</span> <span class="comment">// Passed as template parameter.
-</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">for_each</span><span class="special">(</span><span class="identifier">v</span><span class="special">.</span><span class="identifier">begin</span><span class="special">(),</span> <span class="identifier">v</span><span class="special">.</span><span class="identifier">end</span><span class="special">(),</span> <span class="identifier">add</span><span class="special">);</span> <span class="comment">// Passed as template parameter.</span>
+
     <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">sum</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
     <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
 <span class="special">}</span>
@@ -488,12 +488,12 @@
     <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;</span> <span class="identifier">v</span><span class="special">(</span><span class="number">3</span><span class="special">);</span>
     <span class="identifier">v</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="number">1.0</span><span class="special">;</span> <span class="identifier">v</span><span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">=</span> <span class="number">2.0</span><span class="special">;</span> <span class="identifier">v</span><span class="special">[</span><span class="number">2</span><span class="special">]</span> <span class="special">=</span> <span class="number">3.0</span><span class="special">;</span>
 
-    <span class="comment">// Passed as template parameter and also defined at expression level.
-</span>    <span class="identifier">std</span><span class="special">::</span><span class="identifier">for_each</span><span class="special">(</span><span class="identifier">v</span><span class="special">.</span><span class="identifier">begin</span><span class="special">(),</span> <span class="identifier">v</span><span class="special">.</span><span class="identifier">end</span><span class="special">(),</span> <span class="special">[&amp;</span><span class="identifier">sum</span><span class="special">,</span> <span class="identifier">factor</span><span class="special">](</span><span class="keyword">double</span> <span class="identifier">num</span><span class="special">)</span> <span class="special">{</span>
-        <span class="comment">// Unfortunately, cannot bind `factor` by constant reference (but only
-</span>        <span class="comment">// by constant value requiring copy constructor and extra operation).
-</span>        <span class="comment">// Body uses normal C++ syntax.
-</span>        <span class="identifier">sum</span> <span class="special">+=</span> <span class="identifier">factor</span> <span class="special">*</span> <span class="identifier">num</span><span class="special">;</span>
+    <span class="comment">// Passed as template parameter and also defined at expression level.</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">for_each</span><span class="special">(</span><span class="identifier">v</span><span class="special">.</span><span class="identifier">begin</span><span class="special">(),</span> <span class="identifier">v</span><span class="special">.</span><span class="identifier">end</span><span class="special">(),</span> <span class="special">[&amp;</span><span class="identifier">sum</span><span class="special">,</span> <span class="identifier">factor</span><span class="special">](</span><span class="keyword">double</span> <span class="identifier">num</span><span class="special">)</span> <span class="special">{</span>
+        <span class="comment">// Unfortunately, cannot bind `factor` by constant reference (but only</span>
+        <span class="comment">// by constant value requiring copy constructor and extra operation).</span>
+        <span class="comment">// Body uses normal C++ syntax.</span>
+        <span class="identifier">sum</span> <span class="special">+=</span> <span class="identifier">factor</span> <span class="special">*</span> <span class="identifier">num</span><span class="special">;</span>
         <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Summed: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">sum</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
     <span class="special">});</span>
 
@@ -525,11 +525,11 @@
     <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;</span> <span class="identifier">v</span><span class="special">(</span><span class="number">3</span><span class="special">);</span>
     <span class="identifier">v</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="number">1.0</span><span class="special">;</span> <span class="identifier">v</span><span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">=</span> <span class="number">2.0</span><span class="special">;</span> <span class="identifier">v</span><span class="special">[</span><span class="number">2</span><span class="special">]</span> <span class="special">=</span> <span class="number">3.0</span><span class="special">;</span>
 
-    <span class="comment">// Passed as template parameter and also defined at expression level.
-</span>    <span class="identifier">std</span><span class="special">::</span><span class="identifier">for_each</span><span class="special">(</span><span class="identifier">v</span><span class="special">.</span><span class="identifier">begin</span><span class="special">(),</span> <span class="identifier">v</span><span class="special">.</span><span class="identifier">end</span><span class="special">(),</span> <span class="special">(</span>
-        <span class="comment">// Unfortunately, cannot make `factor` constant.
-</span>        <span class="comment">// Unfortunately, body cannot use C++ statement syntax.
-</span>        <span class="identifier">sum</span> <span class="special">+=</span> <span class="identifier">factor</span> <span class="special">*</span> <span class="identifier">_1</span><span class="special">,</span>
+    <span class="comment">// Passed as template parameter and also defined at expression level.</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">for_each</span><span class="special">(</span><span class="identifier">v</span><span class="special">.</span><span class="identifier">begin</span><span class="special">(),</span> <span class="identifier">v</span><span class="special">.</span><span class="identifier">end</span><span class="special">(),</span> <span class="special">(</span>
+        <span class="comment">// Unfortunately, cannot make `factor` constant.</span>
+        <span class="comment">// Unfortunately, body cannot use C++ statement syntax.</span>
+        <span class="identifier">sum</span> <span class="special">+=</span> <span class="identifier">factor</span> <span class="special">*</span> <span class="identifier">_1</span><span class="special">,</span>
         <span class="identifier">var</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span><span class="special">)</span> <span class="special">&lt;&lt;</span> <span class="string">"Summed: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">var</span><span class="special">(</span><span class="identifier">sum</span><span class="special">)</span> <span class="special">&lt;&lt;</span> <span class="string">"\n"</span>
     <span class="special">));</span>
 
@@ -564,12 +564,12 @@
     <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;</span> <span class="identifier">v</span><span class="special">(</span><span class="number">3</span><span class="special">);</span>
     <span class="identifier">v</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="number">1.0</span><span class="special">;</span> <span class="identifier">v</span><span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">=</span> <span class="number">2.0</span><span class="special">;</span> <span class="identifier">v</span><span class="special">[</span><span class="number">2</span><span class="special">]</span> <span class="special">=</span> <span class="number">3.0</span><span class="special">;</span>
 
-    <span class="comment">// Passed as template parameter and also defined at expression level.
-</span>    <span class="comment">// Bind `factor` by constant.
-</span>    <span class="identifier">std</span><span class="special">::</span><span class="identifier">for_each</span><span class="special">(</span><span class="identifier">v</span><span class="special">.</span><span class="identifier">begin</span><span class="special">(),</span> <span class="identifier">v</span><span class="special">.</span><span class="identifier">end</span><span class="special">(),</span> <span class="identifier">let</span><span class="special">(</span><span class="identifier">_f</span> <span class="special">=</span> <span class="identifier">cref</span><span class="special">(</span><span class="identifier">factor</span><span class="special">))[</span>
-        <span class="comment">// Unfortunately, body cannot use C++ statement syntax.
-</span>        <span class="identifier">ref</span><span class="special">(</span><span class="identifier">sum</span><span class="special">)</span> <span class="special">+=</span> <span class="identifier">_f</span> <span class="special">*</span> <span class="identifier">_1</span><span class="special">,</span> <span class="comment">// Access `sum` by reference.
-</span>        <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">val</span><span class="special">(</span><span class="string">"Summed: "</span><span class="special">)</span> <span class="special">&lt;&lt;</span> <span class="identifier">ref</span><span class="special">(</span><span class="identifier">sum</span><span class="special">)</span> <span class="special">&lt;&lt;</span> <span class="string">"\n"</span>
+    <span class="comment">// Passed as template parameter and also defined at expression level.</span>
+    <span class="comment">// Bind `factor` by constant.</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">for_each</span><span class="special">(</span><span class="identifier">v</span><span class="special">.</span><span class="identifier">begin</span><span class="special">(),</span> <span class="identifier">v</span><span class="special">.</span><span class="identifier">end</span><span class="special">(),</span> <span class="identifier">let</span><span class="special">(</span><span class="identifier">_f</span> <span class="special">=</span> <span class="identifier">cref</span><span class="special">(</span><span class="identifier">factor</span><span class="special">))[</span>
+        <span class="comment">// Unfortunately, body cannot use C++ statement syntax.</span>
+        <span class="identifier">ref</span><span class="special">(</span><span class="identifier">sum</span><span class="special">)</span> <span class="special">+=</span> <span class="identifier">_f</span> <span class="special">*</span> <span class="identifier">_1</span><span class="special">,</span> <span class="comment">// Access `sum` by reference.</span>
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">val</span><span class="special">(</span><span class="string">"Summed: "</span><span class="special">)</span> <span class="special">&lt;&lt;</span> <span class="identifier">ref</span><span class="special">(</span><span class="identifier">sum</span><span class="special">)</span> <span class="special">&lt;&lt;</span> <span class="string">"\n"</span>
     <span class="special">]);</span>
 
     <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">sum</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
@@ -579,7 +579,7 @@
 <p>
       </p>
 <a name="boost_local.Alternatives.local_functions.profiling"></a><h6>
-<a name="id950566"></a>
+<a name="boost_local.Alternatives.local_functions.profiling-heading"></a>
         <a class="link" href="Alternatives.html#boost_local.Alternatives.local_functions.profiling">Profiling</a>
       </h6>
 <p>
@@ -752,7 +752,7 @@
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><div class="copyright-footer">Copyright &#169; 2009 -2011 Lorenzo Caminiti<p>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2009-2011 Lorenzo Caminiti<p>
         Use, modification, and distribution is subject to the Boost Software License,
         Version 1.0 (see accompanying file LICENSE_1_0.txt or a copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>).
       </p>

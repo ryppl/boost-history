@@ -1,9 +1,12 @@
 
+import os ;
+local BOOST_ROOT = [ os.environ BOOST_ROOT ] ;
+
 # Toolset.
 using msvc ;
  
 # Boost.QuickBook (and related tools).
-using quickbook : "C:/Program Files/boost/boost_1_46_1/bin.v2/tools/quickbook/src/msvc-8.0/release/link-static/threading-multi/quickbook.exe" : ; 
+using quickbook : $(BOOST_ROOT)"/bin.v2/tools/quickbook/src/msvc-8.0/release/link-static/threading-multi/quickbook.exe" : ; 
 using xsltproc : "C:/Program Files/boost/xml/bin/xsltproc.exe" ; 
 using boostbook : "C:/Program Files/boost/xml/docbook-xsl" : "C:/Program Files/boost/xml/docbook-xml" ; 
 using doxygen : "C:/Program Files/doxygen/bin/doxygen.exe" ; 
