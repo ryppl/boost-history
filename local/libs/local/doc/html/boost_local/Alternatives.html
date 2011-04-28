@@ -292,7 +292,7 @@
 </tbody>
 </table></div>
 <a name="boost_local.Alternatives.local_functions.examples"></a><h6>
-<a name="id944670"></a>
+<a name="id944631"></a>
         <a class="link" href="Alternatives.html#boost_local.Alternatives.local_functions.examples">Examples</a>
       </h6>
 <p>
@@ -406,7 +406,7 @@
     <span class="keyword">struct</span> <span class="identifier">local_add</span> <span class="special">{</span> <span class="comment">// Unfortunately, boilerplate code to program the class.
 </span>        <span class="identifier">local_add</span><span class="special">(</span><span class="keyword">double</span><span class="special">&amp;</span> <span class="identifier">_sum</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">_factor</span><span class="special">):</span> <span class="identifier">sum</span><span class="special">(</span><span class="identifier">_sum</span><span class="special">),</span> <span class="identifier">factor</span><span class="special">(</span><span class="identifier">_factor</span><span class="special">)</span> <span class="special">{}</span>
 
-        <span class="keyword">void</span> <span class="keyword">operator</span><span class="special">()(</span><span class="keyword">double</span> <span class="identifier">num</span><span class="special">)</span> <span class="special">{</span> <span class="comment">// Body uses C++ statement syntax.
+        <span class="keyword">inline</span> <span class="keyword">void</span> <span class="keyword">operator</span><span class="special">()(</span><span class="keyword">double</span> <span class="identifier">num</span><span class="special">)</span> <span class="special">{</span> <span class="comment">// Body uses C++ statement syntax.
 </span>            <span class="identifier">sum</span> <span class="special">+=</span> <span class="identifier">factor</span> <span class="special">*</span> <span class="identifier">num</span><span class="special">;</span>
             <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Summed: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">sum</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
         <span class="special">}</span>
@@ -414,7 +414,7 @@
     <span class="keyword">private</span><span class="special">:</span>
         <span class="comment">// Unfortunately, cannot bind so repeat variable types.
 </span>        <span class="keyword">double</span><span class="special">&amp;</span> <span class="identifier">sum</span><span class="special">;</span> <span class="comment">// Access `sum` by reference.
-</span>        <span class="keyword">const</span> <span class="keyword">int</span> <span class="identifier">factor</span><span class="special">;</span> <span class="comment">// Make `factor` constant.
+</span>        <span class="keyword">const</span> <span class="keyword">int</span><span class="special">&amp;</span> <span class="identifier">factor</span><span class="special">;</span> <span class="comment">// Make `factor` constant.
 </span>    <span class="special">}</span> <span class="identifier">add</span><span class="special">(</span><span class="identifier">sum</span><span class="special">,</span> <span class="identifier">factor</span><span class="special">);</span>
 
     <span class="comment">// Unfortunately, cannot pass as template parameter to `std::for_each`.
@@ -442,7 +442,7 @@
 </span><span class="keyword">struct</span> <span class="identifier">global_add</span> <span class="special">{</span> <span class="comment">// Unfortunately, boilerplate code to program the class.
 </span>    <span class="identifier">global_add</span><span class="special">(</span><span class="keyword">double</span><span class="special">&amp;</span> <span class="identifier">_sum</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">_factor</span><span class="special">):</span> <span class="identifier">sum</span><span class="special">(</span><span class="identifier">_sum</span><span class="special">),</span> <span class="identifier">factor</span><span class="special">(</span><span class="identifier">_factor</span><span class="special">)</span> <span class="special">{}</span>
 
-    <span class="keyword">void</span> <span class="keyword">operator</span><span class="special">()(</span><span class="keyword">double</span> <span class="identifier">num</span><span class="special">)</span> <span class="special">{</span>
+    <span class="keyword">inline</span> <span class="keyword">void</span> <span class="keyword">operator</span><span class="special">()(</span><span class="keyword">double</span> <span class="identifier">num</span><span class="special">)</span> <span class="special">{</span>
         <span class="comment">// Body uses C++ statement syntax.
 </span>        <span class="identifier">sum</span> <span class="special">+=</span> <span class="identifier">factor</span> <span class="special">*</span> <span class="identifier">num</span><span class="special">;</span>
         <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Summed: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">sum</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
@@ -451,7 +451,7 @@
 <span class="keyword">private</span><span class="special">:</span>
     <span class="comment">// Unfortunately, cannot bind so repeat variable types.
 </span>    <span class="keyword">double</span><span class="special">&amp;</span> <span class="identifier">sum</span><span class="special">;</span> <span class="comment">// Access `sum` by reference.
-</span>    <span class="keyword">const</span> <span class="keyword">int</span> <span class="identifier">factor</span><span class="special">;</span> <span class="comment">// Make `factor` constant.
+</span>    <span class="keyword">const</span> <span class="keyword">int</span><span class="special">&amp;</span> <span class="identifier">factor</span><span class="special">;</span> <span class="comment">// Make `factor` constant.
 </span><span class="special">};</span>
 
 <span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
@@ -579,7 +579,7 @@
 <p>
       </p>
 <a name="boost_local.Alternatives.local_functions.profiling"></a><h6>
-<a name="id950582"></a>
+<a name="id950566"></a>
         <a class="link" href="Alternatives.html#boost_local.Alternatives.local_functions.profiling">Profiling</a>
       </h6>
 <p>

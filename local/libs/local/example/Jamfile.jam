@@ -17,14 +17,6 @@
 import feature ;
 import os ;
 
-local BOOST_ROOT = [ os.environ BOOST_ROOT ] ;
-
-# Boost.Chrono (which needs Boost.System) for GCC (not part of official Boost release yet).
-lib libboost_chrono : : <file>$(BOOST_ROOT)/stage/lib/libboost_chrono.so ;
-lib libboost_system : : <file>$(BOOST_ROOT)/stage/lib/libboost_system.so ;
-#lib libboost_chrono : : ;
-#lib libboost_system : : ;
-
 exe add : add.cpp ;
 exe add_va : add_va.cpp ;
 
@@ -122,19 +114,19 @@ exe add_using_boost_lambda : add_using_boost_lambda.cpp ;
 exe add_using_boost_phoenix : add_using_boost_phoenix.cpp ;
 
 exe profile_boost_local : profile_boost_local.cpp
-        libboost_chrono libboost_system ;
+        ../../..//libboost_chrono ../../..//libboost_system ;
 exe profile_boost_local_inline : profile_boost_local_inline.cpp 
-        libboost_chrono libboost_system ;
+        ../../..//libboost_chrono ../../..//libboost_system ;
 exe profile_boost_local_for_loop : profile_boost_local_for_loop.cpp 
-        libboost_chrono libboost_system ;
+        ../../..//libboost_chrono ../../..//libboost_system ;
 exe profile_local_functor : profile_local_functor.cpp 
-        libboost_chrono libboost_system ;
+        ../../..//libboost_chrono ../../..//libboost_system ;
 exe profile_global_functor : profile_global_functor.cpp 
-        libboost_chrono libboost_system ;
+        ../../..//libboost_chrono ../../..//libboost_system ;
 exe profile_0x_lambda : profile_0x_lambda.cpp 
-        libboost_chrono libboost_system ;
+        ../../..//libboost_chrono ../../..//libboost_system ;
 exe profile_boost_lambda : profile_boost_lambda.cpp 
-        libboost_chrono libboost_system ;
+        ../../..//libboost_chrono ../../..//libboost_system ;
 exe profile_boost_phoenix : profile_boost_phoenix.cpp 
-        libboost_chrono libboost_system ;
+        ../../..//libboost_chrono ../../..//libboost_system ;
 

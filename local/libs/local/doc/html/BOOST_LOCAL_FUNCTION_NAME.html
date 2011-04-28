@@ -7,7 +7,7 @@
 <link rel="home" href="index.html" title="Boost.Local 0.2.0">
 <link rel="up" href="reference.html#header.boost.local.function_hpp" title="Header &lt;boost/local/function.hpp&gt;">
 <link rel="prev" href="BOOST_LOCAL_FUNCTION_PARAMS_TPL.html" title="Macro BOOST_LOCAL_FUNCTION_PARAMS_TPL">
-<link rel="next" href="BOOST_LOCAL_FUNCTION_NAME_OPTIMIZED.html" title="Macro BOOST_LOCAL_FUNCTION_NAME_OPTIMIZED">
+<link rel="next" href="BOOST_LOCAL_TYPEOF.html" title="Macro BOOST_LOCAL_TYPEOF">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
@@ -20,7 +20,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="BOOST_LOCAL_FUNCTION_PARAMS_TPL.html"><img src="../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="reference.html#header.boost.local.function_hpp"><img src="../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="index.html"><img src="../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="BOOST_LOCAL_FUNCTION_NAME_OPTIMIZED.html"><img src="../../../../doc/src/images/next.png" alt="Next"></a>
+<a accesskey="p" href="BOOST_LOCAL_FUNCTION_PARAMS_TPL.html"><img src="../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="reference.html#header.boost.local.function_hpp"><img src="../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="index.html"><img src="../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="BOOST_LOCAL_TYPEOF.html"><img src="../../../../doc/src/images/next.png" alt="Next"></a>
 </div>
 <div class="refentry">
 <a name="BOOST_LOCAL_FUNCTION_NAME"></a><div class="titlepage"></div>
@@ -33,7 +33,7 @@
 
 </span>BOOST_LOCAL_FUNCTION_NAME(name)</pre></div>
 <div class="refsect1">
-<a name="id915424"></a><h2>Description</h2>
+<a name="id915394"></a><h2>Description</h2>
 <p>This macro must follow the local function body code block <code class="computeroutput">{ ... }</code> as shown in the  <code class="computeroutput"><a class="link" href="BOOST_LOCAL_FUNCTION_PARAMS.html" title="Macro BOOST_LOCAL_FUNCTION_PARAMS">BOOST_LOCAL_FUNCTION_PARAMS</a></code> documentation.</p>
 <p><span class="bold"><strong>Parameters:</strong></span> </p>
 <div class="informaltable"><table class="table">
@@ -43,7 +43,7 @@
 </colgroup>
 <tbody><tr>
 <td><span class="bold"><strong><code class="computeroutput">name</code></strong></span></td>
-<td>The name of the local function. This name cannot be the name of an operator <code class="computeroutput">operator...</code> and it cannot be the same name of another local function declared within the same enclosing scope (i.e., it is not possible to overload local function declarations) -- see the  <a class="link" href="boost_local/Advanced_Topics.html" title="Advanced Topics"> Advanced Topics</a> section.  </td>
+<td>The name of the local function. The local function name can be prefixed by the keyword <code class="computeroutput">inline</code> as in <code class="computeroutput">BOOST_LOCAL_FUNCTION_NAME(inline <span class="emphasis"><em>name</em></span>)</code> to increases the likelihood that the compiler will inline the local function (thus reducing its run-time) but inlined local functions can be passed as template parameters only on C++03 compilers (and not on ISO C++ standard compilers) -- see the  <a class="link" href="boost_local/Advanced_Topics.html" title="Advanced Topics"> Advanced Topics</a> section. The local function name cannot be the name of an operator <code class="computeroutput">operator...</code> and it cannot be the same name of another local function declared within the same enclosing scope (i.e., it is not possible to overload local function declarations) -- see the  <a class="link" href="boost_local/Advanced_Topics.html" title="Advanced Topics"> Advanced Topics</a> section.  </td>
 </tr></tbody>
 </table></div>
 <p>
@@ -61,7 +61,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="BOOST_LOCAL_FUNCTION_PARAMS_TPL.html"><img src="../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="reference.html#header.boost.local.function_hpp"><img src="../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="index.html"><img src="../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="BOOST_LOCAL_FUNCTION_NAME_OPTIMIZED.html"><img src="../../../../doc/src/images/next.png" alt="Next"></a>
+<a accesskey="p" href="BOOST_LOCAL_FUNCTION_PARAMS_TPL.html"><img src="../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="reference.html#header.boost.local.function_hpp"><img src="../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="index.html"><img src="../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="BOOST_LOCAL_TYPEOF.html"><img src="../../../../doc/src/images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>

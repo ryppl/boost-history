@@ -14,3 +14,26 @@ project
         <include>$(BOOST_ROOT)  # For Boost libraries.
     ;
 
+# Boost.Chrono (which needs Boost.System) for GCC (not part of official Boost
+# release yet so assumed it was pre-built separately).
+lib libboost_chrono
+    : 
+#    : <file>$(BOOST_ROOT)/stage/lib/libboost_chrono.so <toolset>gcc
+    : <file>$(BOOST_ROOT)/stage/lib/libboost_chrono.a <toolset>gcc
+    ;
+lib libboost_chrono
+    : 
+    : <file>$(BOOST_ROOT)/stage/lib/libboost_chrono-vc80-mt-gd-1_47.lib <toolset>msvc
+    ;
+
+# Boost.System as used to build Boost.Chrono.
+lib libboost_system
+    :
+#    : <file>$(BOOST_ROOT)/stage/lib/libboost_system.so <toolset>gcc
+    : <file>$(BOOST_ROOT)/stage/lib/libboost_system.a <toolset>gcc
+    ;
+lib libboost_system
+    :
+    : <file>$(BOOST_ROOT)/stage/lib/libboost_system-vc80-mt-gd-1_47.lib <toolset>msvc
+    ;
+

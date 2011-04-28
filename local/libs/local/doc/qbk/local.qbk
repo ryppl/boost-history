@@ -141,7 +141,7 @@
 [import ../../example/add_using_boost_local_va.cpp]
 [import ../../example/add_using_local_functor.cpp]
 [import ../../example/add_using_global_functor.cpp]
-[import ../../example/add_using_cpp0x_lambda.cpp]
+[import ../../example/add_using_0x_lambda.cpp]
 [import ../../example/add_using_boost_lambda.cpp]
 [import ../../example/add_using_boost_phoenix.cpp]
 

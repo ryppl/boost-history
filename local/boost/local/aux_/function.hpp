@@ -155,11 +155,12 @@ public:
         object_ = object;
         BOOST_PP_REPEAT(BOOST_PP_INC(BOOST_LOCAL_AUX_defaults),
                 BOOST_LOCAL_AUX_call_init, ~)
+        unused_ = 0; // To avoid a GCC uninitialized variable error.
     }
     
-    // Result operator(Arg1, ..., ArgN-1, ArgN) // iff defaults >= 0
-    // Result operator(Arg1, ..., ArgN-1)       // iff defaults >= 1
-    // ...                                      // etc
+    // Result operator(Arg1, ..., ArgN-1, ArgN) -- iff defaults >= 0
+    // Result operator(Arg1, ..., ArgN-1)       -- iff defaults >= 1
+    // ...                                      -- etc
     BOOST_PP_REPEAT(BOOST_PP_INC(BOOST_LOCAL_AUX_defaults), // INC for no dflt.
             BOOST_LOCAL_AUX_operator_call, BOOST_LOCAL_AUX_arity)
 

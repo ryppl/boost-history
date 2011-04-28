@@ -267,11 +267,11 @@
         <span class="special">=</span> <span class="number">0</span><span class="special">;</span> <span class="comment">// virtual call cannot be inlined
 </span><span class="special">};</span>
 <span class="keyword">struct</span> <span class="identifier">virtual_func</span> <span class="special">{</span>
-    <span class="keyword">explicit</span> <span class="identifier">virtual_func</span><span class="special">(</span><span class="identifier">func_interface</span><span class="special">&amp;</span> <span class="identifier">ref</span><span class="special">):</span> <span class="identifier">ptr_</span><span class="special">(&amp;</span><span class="identifier">ref</span><span class="special">)</span> <span class="special">{}</span>
+    <span class="keyword">explicit</span> <span class="identifier">virtual_func</span><span class="special">(</span><span class="identifier">func_interface</span><span class="special">&amp;</span> <span class="identifier">func</span><span class="special">):</span> <span class="identifier">func_</span><span class="special">(&amp;</span><span class="identifier">func</span><span class="special">)</span> <span class="special">{}</span>
     <span class="keyword">inline</span> <span class="keyword">void</span> <span class="keyword">operator</span><span class="special">()(</span><span class="keyword">const</span> <span class="keyword">double</span><span class="special">&amp;</span> <span class="identifier">num</span><span class="special">)</span>
-        <span class="special">{</span> <span class="special">(*</span><span class="identifier">ptr_</span><span class="special">)(</span><span class="identifier">num</span><span class="special">);</span> <span class="special">}</span>
+        <span class="special">{</span> <span class="special">(*</span><span class="identifier">func_</span><span class="special">)(</span><span class="identifier">num</span><span class="special">);</span> <span class="special">}</span>
 <span class="keyword">private</span><span class="special">:</span>
-    <span class="identifier">func_interface</span><span class="special">*</span> <span class="identifier">ptr_</span><span class="special">;</span>
+    <span class="identifier">func_interface</span><span class="special">*</span> <span class="identifier">func_</span><span class="special">;</span>
 <span class="special">};</span>
 
 <span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
