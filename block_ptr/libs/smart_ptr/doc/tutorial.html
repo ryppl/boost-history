@@ -68,16 +68,16 @@
   <h2><a name="basic" id="basic"></a>Basic</h2>
   
   <p>Block Pointer was designed to be easy to use and to be versatile in terms of object variants it can refer to.  Its only requirement is limited to the usage 
-  of a special type needed to instanciate objects referred to.  For example:</p>
+  of a special type needed to instantiate objects referred to.  For example:</p>
 
   <pre>  
   block_ptr&#60;int&#62; p = new block&#60;int&#62;(11);
   </pre>
 
-  <p>Will instanciate a special object <i>mm&#60;int&#62;</i> having an integer as one of its member.  The pointer to the object is then passed to the 
+  <p>Will instantiate a special object <i>mm&#60;int&#62;</i> having an integer as one of its member.  The pointer to the object is then passed to the 
   <i>block_ptr&#60;int&#62;</i> that will manage its existence and later destroy and deallocate it when it is found to be no longer referenced.<p>
 
-  <p>Variants of the object type can also be used.  In order to instanciate an array of integer for example, all that will be needed is to change the 
+  <p>Variants of the object type can also be used.  In order to instantiate an array of integer for example, all that will be needed is to change the 
   type to the following:<p>
 
   <pre>  
@@ -90,7 +90,7 @@
 
   <p>When STL containers are made out of objects having members of type <i>block_ptr&#60;T&#62;</i> then it will be desirable to have all of the allocated nodes 
   and its members part of the same <i>set</i>.  This way all of the newly allocated <i>block_ptr&#60;T&#62;</i> will be referring to the same <i>set</i> header.
-  In order to do so, we must tell the container in question a new allocator that will be used to instanciate the nodes.  This allocator is called: 
+  In order to do so, we must tell the container in question a new allocator that will be used to instantiate the nodes.  This allocator is called: 
   <i>block_allocator&#60;T&#62;</i>.  For example:</p>
 
   <pre>  
