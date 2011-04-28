@@ -1,4 +1,5 @@
-#pragma once
+#if !defined(PROPERTY_INDEX_MAP_HPP)
+#define PROPERTY_INDEX_MAP_HPP
 
 #include "detail/PropertyIndexMapDetail.h"
 
@@ -23,3 +24,5 @@ namespace properties
   };
   
 }
+
+#endif

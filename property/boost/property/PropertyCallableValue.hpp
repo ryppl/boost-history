@@ -1,4 +1,5 @@
-#pragma once
+#if !defined(PROPERTY_CALLABLE_VALUE_HPP)
+#define PROPERTY_CALLABLE_VALUE_HPP
 
 #include "PropertyInterface.h"
 #include "PropertyTag.h"
@@ -8,8 +9,12 @@
 #include <boost/type_traits/is_const.hpp>
 #include <boost/mpl/if.hpp>
 
+#if defined(BOOST_MSVC)
+
 #pragma warning (push)
 #pragma warning (disable: 4250)
+
+#endif
 
 namespace properties
 {
@@ -506,4 +511,10 @@ operator |= (propCallable<T,ReadWriteTag> & first,U second)
   }
 }
 
+#if defined(BOOST_MSVC)
+
 #pragma warning (pop)
+
+#endif
+
+#endif

@@ -1,4 +1,5 @@
-#pragma once
+#if !defined(PROPERTY_NOTIFICATION_BOOST_SIGNAL_HPP)
+#define PROPERTY_NOTIFICATION_BOOST_SIGNAL_HPP
 
 #include <boost/signal.hpp>
 #include <boost/optional.hpp>
@@ -24,3 +25,5 @@ namespace properties
     };
 
 }
+
+#endif

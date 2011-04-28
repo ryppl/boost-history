@@ -1,4 +1,5 @@
-#pragma once
+#if !defined(PROPERTY_OPERATORS_HPP)
+#define PROPERTY_OPERATORS_HPP
 
 #include "PropertyInterface.h"
 #include "PropertyOperatorsEnabling.h"
@@ -375,3 +376,5 @@ operator |= (IPropertyReadWrite<T> & first,U second)
   }
 
 }
+
+#endif

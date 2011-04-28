@@ -1,4 +1,5 @@
-#pragma once
+#if !defined(PROPERTY_MEMBER_DATA_VALUE_HPP)
+#define PROPERTY_MEMBER_DATA_VALUE_HPP
 
 #include "PropertyInterface.h"
 #include "PropertyTag.h"
@@ -7,8 +8,12 @@
 #include <boost/mpl/if.hpp>
 #include <boost/optional.hpp>
 
+#if defined(BOOST_MSVC)
+
 #pragma warning (push)
 #pragma warning (disable: 4250)
+
+#endif
 
 namespace properties
 {
@@ -603,4 +608,10 @@ operator |= (propMemberData<T,C,d,NotificationPolicy,ReadWriteTag> & first,U sec
   
 }
 
+#if defined(BOOST_MSVC)
+
 #pragma warning (pop)
+
+#endif
+
+#endif

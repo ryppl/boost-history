@@ -1,4 +1,5 @@
-#pragma once
+#if !defined(PROPERTY_OPERATORS_DETAIL_HPP)
+#define PROPERTY_OPERATORS_DETAIL_HPP
 
 #include <boost/typeof/typeof.hpp>
 
@@ -250,3 +251,5 @@ namespace properties
   
   }
 }
+
+#endif

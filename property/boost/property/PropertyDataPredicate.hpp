@@ -1,12 +1,17 @@
-#pragma once
+#if !defined(PROPERTY_DATA_PREDICATE_HPP)
+#define PROPERTY_DATA_PREDICATE_HPP
 
 #include "PropertyTag.h"
 #include "PropertyDataValue.h"
 #include "PropertyOperators.h"
 #include <boost/function.hpp>
 
+#if defined(BOOST_MSVC)
+
 #pragma warning (push)
 #pragma warning (disable: 4250)
+
+#endif
 
 namespace properties
 {
@@ -629,4 +634,10 @@ operator |= (propDataPredicate<T,d,NotificationPolicy,PredicateFailurePolicy,Rea
   
 }
 
+#if defined(BOOST_MSVC)
+
 #pragma warning (pop)
+
+#endif
+
+#endif

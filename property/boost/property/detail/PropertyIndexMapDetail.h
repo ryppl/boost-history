@@ -1,4 +1,5 @@
-#pragma once
+#if !defined(PROPERTY_INDEX_MAP_DETAIL_HPP)
+#define PROPERTY_INDEX_MAP_DETAIL_HPP
 
 #include <boost/property_map/property_map.hpp>
 #include <boost/type_traits/is_const.hpp>
@@ -186,3 +187,5 @@ namespace properties
       };
   }
 }
+
+#endif

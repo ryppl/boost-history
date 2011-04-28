@@ -1,4 +1,5 @@
-#pragma once
+#if !defined(PROPERTY_AUTO_VALUE_HPP)
+#define PROPERTY_AUTO_VALUE_HPP
 
 #include "PropertyInterface.h"
 #include "PropertyTag.h"
@@ -8,8 +9,12 @@
 #include <boost/mpl/if.hpp>
 #include <boost/optional.hpp>
 
+#if defined(BOOST_MSVC)
+
 #pragma warning (push)
 #pragma warning (disable: 4250)
+
+#endif
 
 namespace properties
 {
@@ -507,4 +512,10 @@ operator |= (propAuto<T,NotificationPolicy,ReadWriteTag> & first,U second)
   }
 }
 
+#if defined(BOOST_MSVC)
+
 #pragma warning (pop)
+
+#endif
+
+#endif

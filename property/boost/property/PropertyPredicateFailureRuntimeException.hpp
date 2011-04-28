@@ -1,4 +1,5 @@
-#pragma once
+#if !defined(PROPERTY_PREDICATE_FAILURE_RUNTIME_EXCEPTION_HPP)
+#define PROPERTY_PREDICATE_FAILURE_RUNTIME_EXCEPTION_HPP
 
 #include <boost/optional.hpp>
 #include <boost/function.hpp>
@@ -27,3 +28,5 @@ namespace properties
     };
 
 }
+
+#endif

@@ -1,4 +1,5 @@
-#pragma once
+#if !defined(PROPERTY_REFERENCE_INTERFACE_HPP)
+#define PROPERTY_REFERENCE_INTERFACE_HPP
 
 #include <boost/mpl/assert.hpp>
 #include <boost/type_traits/is_reference.hpp>
@@ -18,3 +19,5 @@ namespace properties
   };
 
 }
+
+#endif

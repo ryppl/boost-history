@@ -1,12 +1,17 @@
-#pragma once
+#if !defined(PROPERTY_MEMBER_FUNCTION_VALUE_HPP)
+#define PROPERTY_MEMBER_FUNCTION_VALUE_HPP
 
 #include "PropertyInterface.h"
 #include "PropertyTag.h"
 #include "PropertyException.h"
 #include "PropertyOperators.h"
 
+#if defined(BOOST_MSVC)
+
 #pragma warning (push)
 #pragma warning (disable: 4250)
+
+#endif
 
 namespace properties
 {
@@ -589,4 +594,10 @@ operator |= (propMemberFunction<T,C,g,s> & first,U second)
   
 }
 
+#if defined(BOOST_MSVC)
+
 #pragma warning (pop)
+
+#endif
+
+#endif

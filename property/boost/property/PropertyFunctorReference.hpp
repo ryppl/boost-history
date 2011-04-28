@@ -1,4 +1,5 @@
-#pragma once
+#if !defined(PROPERTY_FUNCTOR_REFERENCE_HPP)
+#define PROPERTY_FUNCTOR_REFERENCE_HPP
 
 #include "PropertyReferenceInterface.h"
 
@@ -44,3 +45,5 @@ namespace properties
   };
 
 }
+
+#endif

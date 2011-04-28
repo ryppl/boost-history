@@ -1,4 +1,5 @@
-#pragma once
+#if !defined(PROPERTY_OPERATORS_ENABLING_HPP)
+#define PROPERTY_OPERATORS_ENABLING_HPP
 
 #include "PropertyInterface.h"
 #include "PropertyOperatorsDetail.h"
@@ -473,3 +474,5 @@ namespace properties
   }
   
 }
+
+#endif

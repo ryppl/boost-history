@@ -1,4 +1,5 @@
-#pragma once
+#if !defined(PROPERTY_TAG_HPP)
+#define PROPERTY_TAG_HPP
 
 namespace properties
 {
@@ -9,3 +10,5 @@ namespace properties
   template <class T> class DefaultPolicyTag { };
 
 }
+
+#endif

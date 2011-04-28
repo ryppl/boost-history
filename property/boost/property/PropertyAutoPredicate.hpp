@@ -1,4 +1,5 @@
-#pragma once
+#if !defined(PROPERTY_AUTO_PREDICATE_HPP)
+#define PROPERTY_AUTO_PREDICATE_HPP
 
 #include "PropertyTag.h"
 #include "PropertyAutoValue.h"
@@ -7,8 +8,12 @@
 #include <boost/mpl/assert.hpp>
 #include <boost/type_traits/is_const.hpp>
 
+#if defined(BOOST_MSVC)
+
 #pragma warning (push)
 #pragma warning (disable: 4250)
+
+#endif
 
 namespace properties
 {
@@ -572,4 +577,10 @@ operator |= (propAutoPredicate<T,NotificationPolicy,PredicateFailurePolicy> & fi
   
 }
 
+#if defined(BOOST_MSVC)
+
 #pragma warning (pop)
+
+#endif
+
+#endif

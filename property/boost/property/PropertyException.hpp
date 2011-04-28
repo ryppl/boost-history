@@ -1,4 +1,5 @@
-#pragma once
+#if !defined(PROPERTY_EXCEPTION_HPP)
+#define PROPERTY_EXCEPTION_HPP
 
 #include <stdexcept>
 
@@ -30,3 +31,5 @@ namespace properties
   };
   
 }
+
+#endif

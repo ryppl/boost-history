@@ -1,4 +1,5 @@
-#pragma once
+#if !defined(PROPERTY_AUTO_REFERENCE_HPP)
+#define PROPERTY_AUTO_REFERENCE_HPP
 
 #include "PropertyReferenceInterface.h"
 #include <boost/utility/value_init.hpp>
@@ -28,3 +29,5 @@ namespace properties
   };
   
 }
+
+#endif

@@ -1,4 +1,5 @@
-#pragma once
+#if !defined(PROPERTY_DATA_REFERENCE_HPP)
+#define PROPERTY_DATA_REFERENCE_HPP
 
 #include "PropertyReferenceInterface.h"
 
@@ -33,3 +34,5 @@ namespace properties
     };
   
 }
+
+#endif
