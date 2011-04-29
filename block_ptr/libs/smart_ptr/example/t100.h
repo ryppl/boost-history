@@ -82,14 +82,14 @@ template <neuron_base::sense_t>
         
         static map_sn_t search_;
     
-        neuron(std::string const & s, pointee * p1 = 0, pointee * p2 = 0, pointee * p3 = 0) : neuron_base(s)
+        neuron(std::string const & s) : neuron_base(s)
         {
             /// FIXME
             //search_[s] = (pointee *) (typename pointee::roofof) static_cast<neuron *>(rootof<is_polymorphic<neuron>::value>::get(this));
-        
-            if (p1) sub_[0].second = p1;
-            if (p2) sub_[1].second = p2;
-            if (p3) sub_[2].second = p3;
+
+            //if (p1) sub_[0].second = p1;
+            //if (p2) sub_[1].second = p2;
+            //if (p3) sub_[2].second = p3;
         }
 
         double operator () (std::string const & input)

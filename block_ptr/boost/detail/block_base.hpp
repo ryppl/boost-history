@@ -181,7 +181,7 @@ pool block_base::pool_;
 #define ARGUMENT_DECL(z, n, text) BOOST_PP_COMMA_IF(n) T ## n const & t ## n
 #define PARAMETER_DECL(z, n, text) BOOST_PP_COMMA_IF(n) t ## n
 
-#define CONSTRUCT_OWNED(z, n, text)																			    \
+#define CONSTRUCT_BLOCK(z, n, text)																			    \
 	template <BOOST_PP_REPEAT(n, TEMPLATE_DECL, 0)>										                        \
 		text(BOOST_PP_REPEAT(n, ARGUMENT_DECL, 0)) : elem_(BOOST_PP_REPEAT(n, PARAMETER_DECL, 0)) {}																										
 
@@ -204,7 +204,7 @@ template <typename T>
         {
         }
 
-        BOOST_PP_REPEAT_FROM_TO(1, 10, CONSTRUCT_OWNED, block)
+        BOOST_PP_REPEAT_FROM_TO(1, 10, CONSTRUCT_BLOCK, block)
 
 
 		/**

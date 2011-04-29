@@ -222,6 +222,22 @@ public:
 fast_pool_allocator<block_header> block_header::pool_;
 
 
+#define TEMPLATE_DECL(z, n, text) BOOST_PP_COMMA_IF(n) typename T ## n
+#define ARGUMENT_DECL(z, n, text) BOOST_PP_COMMA_IF(n) T ## n const & t ## n
+#define PARAMETER_DECL(z, n, text) BOOST_PP_COMMA_IF(n) t ## n
+
+#define CONSTRUCT_MAKE_BLOCK(z, n, text)																			    \
+	template <typename V, BOOST_PP_REPEAT(n, TEMPLATE_DECL, 0)>										                    \
+		block_ptr<V> text(BOOST_PP_REPEAT(n, ARGUMENT_DECL, 0))															\
+		{																												\
+			return block_ptr<V>(new block<V>(BOOST_PP_REPEAT(n, PARAMETER_DECL, 0)));									\
+		}
+
+#define BEFRIEND_MAKE_BLOCK(z, n, text)																			    	\
+	template <typename V, BOOST_PP_REPEAT(n, TEMPLATE_DECL, 0)>										                    \
+		friend block_ptr<V> text(BOOST_PP_REPEAT(n, ARGUMENT_DECL, 0));
+
+
 /**
 	Deterministic memory manager of constant complexity.
 	
@@ -244,24 +260,6 @@ template <typename T>
             intrusive_stack::node pn_;				/**< Tag used for enlisting a pointer on the heap to later share the @c block_header it belongs to. */
         };
 
-    public:
-        typedef T                       value_type;
-        typedef block<value_type>     element_type;
-
-
-		/**
-			Initialization of a pointer living on the stack or proper enlistment if living on the heap.
-		*/
-		
-        block_ptr() : ps_(0)
-        {
-            if (! block_base::pool_.is_from(this))
-                ps_ = new block_header();
-            else
-                block_base::pool_.top(this)->ptrs_.push(& pn_);
-        }
-
-		
 		/**
 			Initialization of a pointer living on the stack or proper enlistment if living on the heap.
 			
@@ -283,6 +281,44 @@ template <typename T>
                     block_base::pool_.top(this)->inits_.merge(p->inits_);
                 }
             }
+
+		
+		/**
+			Assignment & union of 2 sets if the pointee resides a different @c block_header.
+			
+			@param	p	New pointee object to manage.
+		*/
+		
+        template <typename V>
+            block_ptr & operator = (block<V> * p)
+            {
+                release(false);
+
+                init(p);
+
+                base::operator = (p);
+
+                return * this;
+            }
+
+		BOOST_PP_REPEAT_FROM_TO(1, 10, BEFRIEND_MAKE_BLOCK, make_block)
+
+    public:
+        typedef T                       value_type;
+        typedef block<value_type>     element_type;
+
+
+		/**
+			Initialization of a pointer living on the stack or proper enlistment if living on the heap.
+		*/
+		
+        block_ptr() : ps_(0)
+        {
+            if (! block_base::pool_.is_from(this))
+                ps_ = new block_header();
+            else
+                block_base::pool_.top(this)->ptrs_.push(& pn_);
+        }
 
 		
 		/**
@@ -317,25 +353,6 @@ template <typename T>
                     block_base::pool_.top(this)->ptrs_.push(& pn_);
 				
                 ps_->redir(p.ps_);
-            }
-
-
-		/**
-			Assignment & union of 2 sets if the pointee resides a different @c block_header.
-			
-			@param	p	New pointee object to manage.
-		*/
-		
-        template <typename V>
-            block_ptr & operator = (block<V> * p)
-            {
-                release(false);
-
-                init(p);
-
-                base::operator = (p);
-
-                return * this;
             }
 
 
@@ -435,12 +452,15 @@ template <typename T>
     };
 
 
+BOOST_PP_REPEAT_FROM_TO(1, 10, CONSTRUCT_MAKE_BLOCK, make_block)
+
 } // namespace sh
 
 } // namespace detail
 
 using detail::sh::block_ptr;
 using detail::sh::block;
+using detail::sh::make_block;
 
 } // namespace boost
 
