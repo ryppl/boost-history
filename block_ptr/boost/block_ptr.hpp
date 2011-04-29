@@ -226,16 +226,16 @@ fast_pool_allocator<block_header> block_header::pool_;
 #define ARGUMENT_DECL(z, n, text) BOOST_PP_COMMA_IF(n) T ## n const & t ## n
 #define PARAMETER_DECL(z, n, text) BOOST_PP_COMMA_IF(n) t ## n
 
+#define BEFRIEND_MAKE_BLOCK(z, n, text)																			    	\
+	template <typename V, BOOST_PP_REPEAT(n, TEMPLATE_DECL, 0)>										                    \
+		friend block_ptr<V> text(BOOST_PP_REPEAT(n, ARGUMENT_DECL, 0));
+
 #define CONSTRUCT_MAKE_BLOCK(z, n, text)																			    \
 	template <typename V, BOOST_PP_REPEAT(n, TEMPLATE_DECL, 0)>										                    \
 		block_ptr<V> text(BOOST_PP_REPEAT(n, ARGUMENT_DECL, 0))															\
 		{																												\
 			return block_ptr<V>(new block<V>(BOOST_PP_REPEAT(n, PARAMETER_DECL, 0)));									\
 		}
-
-#define BEFRIEND_MAKE_BLOCK(z, n, text)																			    	\
-	template <typename V, BOOST_PP_REPEAT(n, TEMPLATE_DECL, 0)>										                    \
-		friend block_ptr<V> text(BOOST_PP_REPEAT(n, ARGUMENT_DECL, 0));
 
 
 /**
@@ -300,6 +300,9 @@ template <typename T>
 
                 return * this;
             }
+            
+		template <typename V>
+			friend block_ptr<V> make_block();
 
 		BOOST_PP_REPEAT_FROM_TO(1, 10, BEFRIEND_MAKE_BLOCK, make_block)
 
@@ -451,6 +454,11 @@ template <typename T>
         }
     };
 
+template <typename V>
+	block_ptr<V> make_block()
+	{
+		return block_ptr<V>(new block<V>());
+	}
 
 BOOST_PP_REPEAT_FROM_TO(1, 10, CONSTRUCT_MAKE_BLOCK, make_block)
 
