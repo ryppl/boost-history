@@ -22,7 +22,7 @@
 
 #include <boost/config.hpp>
 #if defined(BOOST_MSVC)
-#   pragma warning(disable: 4244 4512 4267 4996)
+#   pragma warning(disable: 4100 4127 4244 4512 4267 4996)
 #endif
 
 #include <boost/mapreduce.hpp>
