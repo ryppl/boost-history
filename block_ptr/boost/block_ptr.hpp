@@ -152,12 +152,14 @@ public:
 
     void redir(block_header * p)
     {
-        if (redir_ != p->redir())
+    	block_header * q = p->redir();
+    	
+        if (redir_ != q)
         {
 #ifndef BOOST_DISABLE_THREADS
         	mutex::scoped_lock scoped_lock(mutex_);
 #endif
-            redir_ = p->redir();
+            redir_ = q;
             redir_->includes_.merge(includes_);
             redir_->elements_.merge(elements_);
             new (& redir_->count_) count_type(redir_->count_ + count_); /**< Hack */
