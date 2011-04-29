@@ -74,11 +74,11 @@ std::basic_string<Char> &get_temporary_filename(std::basic_string<Char> &pathnam
 {
     Char path[_MAX_PATH+1];
     if (!detail::os_temporary_file_api_traits<Char>::get_temp_path(sizeof(path)/sizeof(path[0]), path))
-        BOOST_THROW_EXCEPTION(boost::system::system_error(GetLastError(), boost::system::system_category));
+        BOOST_THROW_EXCEPTION(boost::system::system_error(GetLastError(), boost::system::system_category()));
 
     Char file[_MAX_PATH+1];
     if (!detail::os_temporary_file_api_traits<Char>::get_temp_filename(path, "mr_", 0, file))
-        BOOST_THROW_EXCEPTION(boost::system::system_error(GetLastError(), boost::system::system_category));
+        BOOST_THROW_EXCEPTION(boost::system::system_error(GetLastError(), boost::system::system_category()));
 
     pathname = file;
     return pathname;
