@@ -20,11 +20,7 @@
 
 static int count;
 
-using boost::block_ptr;
-using boost::block;
-using boost::block_allocator;
-using boost::operator ==;
-using boost::operator !=;
+using namespace boost;
 
 struct node {
     node() {
@@ -46,9 +42,9 @@ public:
     }
     void insert() {
         if(front.get() == 0) {
-            back = new block<node>();
+            back = make_block<node>();
         } else {
-            back->next = new block<node>();
+            back->next = make_block<node>();
             back->next->prior = back;
             back = back->next;
         }
@@ -72,7 +68,7 @@ struct vector {
 struct create_type {
     template<class T>
     void operator()(T) const {
-        new block<boost::array<char, T::value> >();
+        make_block<boost::array<char, T::value> >();
     }
 };
 
@@ -91,27 +87,27 @@ int main() {
 
     count = 0;
     {
-        block_ptr<vector> v = new block<vector>();
+        block_ptr<vector> v = make_block<vector>();
         v->elements.push_back(v);
     }
     std::cout << count << std::endl;
 
     count = 0;
     {
-        block_ptr<vector> v = new block<vector>();
+        block_ptr<vector> v = make_block<vector>();
         v->elements.push_back(v);
     }
     std::cout << count << std::endl;
 
     {
         vector v;
-        v.elements.push_back(new block<vector>());
+        v.elements.push_back(make_block<vector>());
     }
     std::cout << count << std::endl;
 
     count = 0;
     {
-        block_ptr<int> test = new block<int>(5);
+        block_ptr<int> test = make_block<int>(5);
         test = test;
         
         std::cout << "test = " << * test << std::endl;

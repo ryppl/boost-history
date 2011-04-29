@@ -28,9 +28,7 @@
 
 static int count;
 
-using boost::block_ptr;
-using boost::block;
-using boost::block_allocator;
+using namespace boost;
 
 struct node {
     node() {
@@ -55,9 +53,9 @@ public:
     }
     void insert() {
         if(front.get() == 0) {
-            front = back = new block<node>();
+            front = back = make_block<node>();
         } else {
-            back->next = new block<node>();
+            back->next = make_block<node>();
             back->next->prior = back;
             back = back->next;
         }
@@ -77,7 +75,7 @@ struct vector {
 struct create_type {
     template<class T>
     void operator()(T) const {
-        new block<boost::array<char, T::value> >();
+        make_block<boost::array<char, T::value> >();
     }
 };
 
@@ -85,7 +83,7 @@ BOOST_AUTO_TEST_CASE(test_block_ptr) {
 
     count = 0;
     {
-        block_ptr<vector> v = new block<vector>();
+        block_ptr<vector> v = make_block<vector>();
         v->elements.push_back(v);
     }
     BOOST_CHECK_EQUAL(count, 0);
@@ -104,7 +102,7 @@ BOOST_AUTO_TEST_CASE(test_block_ptr) {
 
     count = 0;
     {
-        block_ptr<int> test = new block<int>(5);
+        block_ptr<int> test = make_block<int>(5);
         test = test;
         
         BOOST_CHECK_NE(test.get(), static_cast<int*>(0));
@@ -117,14 +115,14 @@ BOOST_AUTO_TEST_CASE(test_block_ptr) {
 
     count = 0;
     {
-        block_ptr<vector> v = new block<vector>();
+        block_ptr<vector> v = make_block<vector>();
         v->elements.push_back(v);
     }
     BOOST_CHECK_EQUAL(count, 0);
 
     {
         vector v;
-        v.elements.push_back(new block<vector>());
+        v.elements.push_back(make_block<vector>());
     }
     BOOST_CHECK_EQUAL(count, 0);
 

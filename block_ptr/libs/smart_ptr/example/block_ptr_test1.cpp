@@ -36,16 +36,16 @@ int main()
 {
 	cout << "Cyclicism:" << endl;
 	{
-		block_ptr<A> p = new block<A>(7);
-		block_ptr<A> q = new block<A>(8);
-		block_ptr<A> r = new block<A>(9);
+		block_ptr<A> p = make_block<A>(7);
+		block_ptr<A> q = make_block<A>(8);
+		block_ptr<A> r = make_block<A>(9);
 
-		block_ptr<void> t = new block<A>(10);
-		block_ptr<int const volatile> v = new block<int const volatile>(11);
+		block_ptr<void> t = make_block<A>(10);
+		block_ptr<int const volatile> v = make_block<int const volatile>(11);
 
 		p->p = p;
 		q = r;
-		v = new block<int const volatile>(12);
+		v = make_block<int const volatile>(12);
 
 		cout << "p->i = " << p->i << endl;
 		cout << "q->i = " << q->i << endl;
@@ -58,8 +58,8 @@ int main()
 #if ! defined(_MSC_VER)
 	cout << "Array access:" << endl;
 	{
-		block_ptr<A[5]> s = new block<A[5]>();
-		block_ptr<char[9]> u = new block<char[9]>();
+		block_ptr<A[5]> s = make_block<A[5]>();
+		block_ptr<char[9]> u = make_block<char[9]>();
 
 		u[4] = 'Z';
 
@@ -70,9 +70,9 @@ int main()
 
 	cout << "Order of destruction:" << endl;
 	{
-		block_ptr<A> v = new block<A>(0);
-		v->p = new block<A>(1);
-		v->p->p = new block<A>(2);
+		block_ptr<A> v = make_block<A>(0);
+		v->p = make_block<A>(1);
+		v->p->p = make_block<A>(2);
 		v->p->p->p = v;
 	}
 	cout << endl;
