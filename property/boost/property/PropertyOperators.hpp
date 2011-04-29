@@ -12,10 +12,10 @@ namespace properties
 template <class T> 
 typename boost::enable_if
   <
-  typename detail::OMFIncrement<T>::type,
-  IPropertyReadWrite<T> &
+  typename detail::omf_increment<T>::type,
+  i_property_read_write<T> &
   >::type
-operator ++ (IPropertyReadWrite<T> & value)
+operator ++ (i_property_read_write<T> & value)
   {
   
   T t(value.get());
@@ -28,10 +28,10 @@ operator ++ (IPropertyReadWrite<T> & value)
 template <class T> 
 typename boost::enable_if
   <
-  typename detail::OMFDecrement<T>::type,
-  IPropertyReadWrite<T> &
+  typename detail::omf_decrement<T>::type,
+  i_property_read_write<T> &
   >::type
-operator -- (IPropertyReadWrite<T> & value)
+operator -- (i_property_read_write<T> & value)
   {
   
   T t(value.get());
@@ -44,10 +44,10 @@ operator -- (IPropertyReadWrite<T> & value)
 template <class T> 
 typename boost::enable_if
   <
-  typename detail::OMFPostIncrement<T>::type,
+  typename detail::omf_post_increment<T>::type,
   T
   >::type
-operator ++ (IPropertyReadWrite<T> & value,int)
+operator ++ (i_property_read_write<T> & value,int)
   {
   
   T ret(value.get());
@@ -61,10 +61,10 @@ operator ++ (IPropertyReadWrite<T> & value,int)
 template <class T> 
 typename boost::enable_if
   <
-  typename detail::OMFPostDecrement<T>::type,
+  typename detail::omf_post_decrement<T>::type,
   T
   >::type
-operator -- (IPropertyReadWrite<T> & value,int)
+operator -- (i_property_read_write<T> & value,int)
   {
   
   T ret(value.get());
@@ -78,13 +78,13 @@ operator -- (IPropertyReadWrite<T> & value,int)
 template <class T> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignMultiplySame<T>::type,
-  IPropertyReadWrite<T> &
+  typename detail::omf_assign_multiply_same<T>::type,
+  i_property_read_write<T> &
   >::type
-operator *= (IPropertyReadWrite<T> & first,T second)
+operator *= (i_property_read_write<T> & first,T second)
   {
   
-  typename detail::BinaryROMultiplySame<T>::type t(first.get() * second);
+  typename detail::binary_ro_multiply_same<T>::type t(first.get() * second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -93,13 +93,13 @@ operator *= (IPropertyReadWrite<T> & first,T second)
 template <class T,class U>
 typename boost::enable_if
   <
-  typename detail::OMFAssignMultiply<T,U>::type,
-  IPropertyReadWrite<T> &
+  typename detail::omf_assign_multiply<T,U>::type,
+  i_property_read_write<T> &
   >::type
-operator *= (IPropertyReadWrite<T> & first,U second)
+operator *= (i_property_read_write<T> & first,U second)
   {
   
-  typename detail::BinaryROMultiply<T,U>::type t(first.get() * second);
+  typename detail::binary_ro_multiply<T,U>::type t(first.get() * second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -108,13 +108,13 @@ operator *= (IPropertyReadWrite<T> & first,U second)
 template <class T> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignDivideSame<T>::type,
-  IPropertyReadWrite<T> &
+  typename detail::omf_assign_divide_same<T>::type,
+  i_property_read_write<T> &
   >::type
-operator /= (IPropertyReadWrite<T> & first,T second)
+operator /= (i_property_read_write<T> & first,T second)
   {
   
-  typename detail::BinaryRODivideSame<T>::type t(first.get() / second);
+  typename detail::binary_ro_divide_same<T>::type t(first.get() / second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -123,13 +123,13 @@ operator /= (IPropertyReadWrite<T> & first,T second)
 template <class T,class U>
 typename boost::enable_if
   <
-  typename detail::OMFAssignDivide<T,U>::type,
-  IPropertyReadWrite<T> &
+  typename detail::omf_assign_divide<T,U>::type,
+  i_property_read_write<T> &
   >::type
-operator /= (IPropertyReadWrite<T> & first,U second)
+operator /= (i_property_read_write<T> & first,U second)
   {
   
-  typename detail::BinaryRODivide<T,U>::type t(first.get() / second);
+  typename detail::binary_ro_divide<T,U>::type t(first.get() / second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -138,13 +138,13 @@ operator /= (IPropertyReadWrite<T> & first,U second)
 template <class T> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignModuloSame<T>::type,
-  IPropertyReadWrite<T> &
+  typename detail::omf_assign_modulo_same<T>::type,
+  i_property_read_write<T> &
   >::type
-operator %= (IPropertyReadWrite<T> & first,T second)
+operator %= (i_property_read_write<T> & first,T second)
   {
   
-  typename detail::BinaryROModuloSame<T>::type t(first.get() % second);
+  typename detail::binary_ro_modulo_same<T>::type t(first.get() % second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -153,13 +153,13 @@ operator %= (IPropertyReadWrite<T> & first,T second)
 template <class T,class U> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignModulo<T,U>::type,
-  IPropertyReadWrite<T> &
+  typename detail::omf_assign_modulo<T,U>::type,
+  i_property_read_write<T> &
   >::type
-operator %= (IPropertyReadWrite<T> & first,U second)
+operator %= (i_property_read_write<T> & first,U second)
   {
   
-  typename detail::BinaryROModulo<T,U>::type t(first.get() % second);
+  typename detail::binary_ro_modulo<T,U>::type t(first.get() % second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -168,13 +168,13 @@ operator %= (IPropertyReadWrite<T> & first,U second)
 template <class T> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignAddSame<T>::type,
-  IPropertyReadWrite<T> &
+  typename detail::omf_assign_add_same<T>::type,
+  i_property_read_write<T> &
   >::type
-operator += (IPropertyReadWrite<T> & first,T second)
+operator += (i_property_read_write<T> & first,T second)
   {
   
-  typename detail::BinaryROAddSame<T>::type t(first.get() + second);
+  typename detail::binary_ro_add_same<T>::type t(first.get() + second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -183,13 +183,13 @@ operator += (IPropertyReadWrite<T> & first,T second)
 template <class T,class U> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignAdd<T,U>::type,
-  IPropertyReadWrite<T> &
+  typename detail::omf_assign_add<T,U>::type,
+  i_property_read_write<T> &
   >::type
-operator += (IPropertyReadWrite<T> & first,U second)
+operator += (i_property_read_write<T> & first,U second)
   {
   
-  typename detail::BinaryROAdd<T,U>::type t(first.get() + second);
+  typename detail::binary_ro_add<T,U>::type t(first.get() + second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -198,13 +198,13 @@ operator += (IPropertyReadWrite<T> & first,U second)
 template <class T> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignSubtractSame<T>::type,
-  IPropertyReadWrite<T> &
+  typename detail::omf_assign_subtract_same<T>::type,
+  i_property_read_write<T> &
   >::type
-operator -= (IPropertyReadWrite<T> & first,T second)
+operator -= (i_property_read_write<T> & first,T second)
   {
   
-  typename detail::BinaryROSubtractSame<T>::type t(first.get() - second);
+  typename detail::binary_ro_subtract_same<T>::type t(first.get() - second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -213,13 +213,13 @@ operator -= (IPropertyReadWrite<T> & first,T second)
 template <class T,class U> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignSubtract<T,U>::type,
-  IPropertyReadWrite<T> &
+  typename detail::omf_assign_subtract<T,U>::type,
+  i_property_read_write<T> &
   >::type
-operator -= (IPropertyReadWrite<T> & first,U second)
+operator -= (i_property_read_write<T> & first,U second)
   {
   
-  typename detail::BinaryROSubtract<T,U>::type t(first.get() - second);
+  typename detail::binary_ro_subtract<T,U>::type t(first.get() - second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -228,13 +228,13 @@ operator -= (IPropertyReadWrite<T> & first,U second)
 template <class T> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignLeftShiftSame<T>::type,
-  IPropertyReadWrite<T> &
+  typename detail::omf_assign_left_shift_same<T>::type,
+  i_property_read_write<T> &
   >::type
-operator <<= (IPropertyReadWrite<T> & first,T second)
+operator <<= (i_property_read_write<T> & first,T second)
   {
   
-  typename detail::BinaryROLeftShiftSame<T>::type t(first.get() << second);
+  typename detail::binary_ro_left_shift_same<T>::type t(first.get() << second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -243,13 +243,13 @@ operator <<= (IPropertyReadWrite<T> & first,T second)
 template <class T,class U> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignLeftShift<T,U>::type,
-  IPropertyReadWrite<T> &
+  typename detail::omf_assign_left_shift<T,U>::type,
+  i_property_read_write<T> &
   >::type
-operator <<= (IPropertyReadWrite<T> & first,U second)
+operator <<= (i_property_read_write<T> & first,U second)
   {
   
-  typename detail::BinaryROLeftShift<T,U>::type t(first.get() << second);
+  typename detail::binary_ro_left_shift<T,U>::type t(first.get() << second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -258,13 +258,13 @@ operator <<= (IPropertyReadWrite<T> & first,U second)
 template <class T> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignRightShiftSame<T>::type,
-  IPropertyReadWrite<T> &
+  typename detail::omf_assign_right_shift_same<T>::type,
+  i_property_read_write<T> &
   >::type
-operator >>= (IPropertyReadWrite<T> & first,T second)
+operator >>= (i_property_read_write<T> & first,T second)
   {
   
-  typename detail::BinaryRORightShiftSame<T>::type t(first.get() >> second);
+  typename detail::binary_ro_right_shift_same<T>::type t(first.get() >> second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -273,13 +273,13 @@ operator >>= (IPropertyReadWrite<T> & first,T second)
 template <class T,class U>
 typename boost::enable_if
   <
-  typename detail::OMFAssignRightShift<T,U>::type,
-  IPropertyReadWrite<T> &
+  typename detail::omf_assign_right_shift<T,U>::type,
+  i_property_read_write<T> &
   >::type
-operator >>= (IPropertyReadWrite<T> & first,U second)
+operator >>= (i_property_read_write<T> & first,U second)
   {
   
-  typename detail::BinaryRORightShift<T,U>::type t(first.get() >> second);
+  typename detail::binary_ro_right_shift<T,U>::type t(first.get() >> second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -288,13 +288,13 @@ operator >>= (IPropertyReadWrite<T> & first,U second)
 template <class T> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignAndSame<T>::type,
-  IPropertyReadWrite<T> &
+  typename detail::omf_assign_and_same<T>::type,
+  i_property_read_write<T> &
   >::type
-operator &= (IPropertyReadWrite<T> & first,T second)
+operator &= (i_property_read_write<T> & first,T second)
   {
   
-  typename detail::BinaryROAndSame<T>::type t(first.get() & second);
+  typename detail::binary_ro_and_same<T>::type t(first.get() & second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -303,13 +303,13 @@ operator &= (IPropertyReadWrite<T> & first,T second)
 template <class T,class U>
 typename boost::enable_if
   <
-  typename detail::OMFAssignAnd<T,U>::type,
-  IPropertyReadWrite<T> &
+  typename detail::omf_assign_and<T,U>::type,
+  i_property_read_write<T> &
   >::type
-operator &= (IPropertyReadWrite<T> & first,U second)
+operator &= (i_property_read_write<T> & first,U second)
   {
   
-  typename detail::BinaryROAnd<T,U>::type t(first.get() & second);
+  typename detail::binary_ro_and<T,U>::type t(first.get() & second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -318,13 +318,13 @@ operator &= (IPropertyReadWrite<T> & first,U second)
 template <class T> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignXOrSame<T>::type,
-  IPropertyReadWrite<T> &
+  typename detail::omf_assign_xor_same<T>::type,
+  i_property_read_write<T> &
   >::type
-operator ^= (IPropertyReadWrite<T> & first,T second)
+operator ^= (i_property_read_write<T> & first,T second)
   {
   
-  typename detail::BinaryROXOrSame<T>::type t(first.get() ^ second);
+  typename detail::binary_ro_xor_same<T>::type t(first.get() ^ second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -333,13 +333,13 @@ operator ^= (IPropertyReadWrite<T> & first,T second)
 template <class T,class U> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignXOr<T,U>::type,
-  IPropertyReadWrite<T> &
+  typename detail::omf_assign_xor<T,U>::type,
+  i_property_read_write<T> &
   >::type
-operator ^= (IPropertyReadWrite<T> & first,U second)
+operator ^= (i_property_read_write<T> & first,U second)
   {
   
-  typename detail::BinaryROXOr<T,U>::type t(first.get() ^ second);
+  typename detail::binary_ro_xor<T,U>::type t(first.get() ^ second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -348,13 +348,13 @@ operator ^= (IPropertyReadWrite<T> & first,U second)
 template <class T> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignOrSame<T>::type,
-  IPropertyReadWrite<T> &
+  typename detail::omf_assign_or_same<T>::type,
+  i_property_read_write<T> &
   >::type
-operator |= (IPropertyReadWrite<T> & first,T second)
+operator |= (i_property_read_write<T> & first,T second)
   {
   
-  typename detail::BinaryROOrSame<T>::type t(first.get() | second);
+  typename detail::binary_ro_or_same<T>::type t(first.get() | second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -363,13 +363,13 @@ operator |= (IPropertyReadWrite<T> & first,T second)
 template <class T,class U> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignOr<T,U>::type,
-  IPropertyReadWrite<T> &
+  typename detail::omf_assign_or<T,U>::type,
+  i_property_read_write<T> &
   >::type
-operator |= (IPropertyReadWrite<T> & first,U second)
+operator |= (i_property_read_write<T> & first,U second)
   {
   
-  typename detail::BinaryROOr<T,U>::type t(first.get() | second);
+  typename detail::binary_ro_or<T,U>::type t(first.get() | second);
   
   first.set(static_cast<T>(t));
   return(first);

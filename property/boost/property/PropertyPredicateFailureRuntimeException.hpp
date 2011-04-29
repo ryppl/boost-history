@@ -10,12 +10,12 @@
 namespace properties
 {
 
-  template <class T> class PredicateFailureRuntimeException
+  template <class T> class predicate_failure_runtime_exception
     {
     
     protected:
       
-    void PredicateFailure(const IPropertyWrite<T> & prop,const boost::function<bool (T)> & f,boost::optional<T> oldValue,T newValue)
+    void PredicateFailure(const i_property_write<T> & prop,const boost::function<bool (T)> & f,boost::optional<T> oldValue,T newValue)
       {
       
       std::ostringstream oss;

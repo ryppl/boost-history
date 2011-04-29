@@ -31,7 +31,7 @@ namespace properties
 
     template <class PMAP,class bref>
     struct PropertyIndexMapBase<PMAP,bref,boost::readable_property_map_tag> : 
-      IPropertyIndexRead<typename boost::property_traits<PMAP>::value_type,typename boost::property_traits<PMAP>::key_type>,
+      i_property_index_read<typename boost::property_traits<PMAP>::value_type,typename boost::property_traits<PMAP>::key_type>,
       PropertyIndexMapBaseTypedefs<PMAP>
       {
       
@@ -52,7 +52,7 @@ namespace properties
 
     template <class PMAP,class bref>
     struct PropertyIndexMapBase<PMAP,bref,boost::writable_property_map_tag> : 
-      IPropertyIndexWrite<typename boost::property_traits<PMAP>::value_type,typename boost::property_traits<PMAP>::key_type>,
+      i_property_index_write<typename boost::property_traits<PMAP>::value_type,typename boost::property_traits<PMAP>::key_type>,
       PropertyIndexMapBaseTypedefs<PMAP>
       {
       
@@ -73,8 +73,8 @@ namespace properties
 
     template <class PMAP,class bref>
     struct PropertyIndexMapBase<PMAP,bref,boost::read_write_property_map_tag> : 
-      IPropertyIndexRead<typename boost::property_traits<PMAP>::value_type,typename boost::property_traits<PMAP>::key_type>,
-      IPropertyIndexWrite<typename boost::property_traits<PMAP>::value_type,typename boost::property_traits<PMAP>::key_type>,
+      i_property_index_read<typename boost::property_traits<PMAP>::value_type,typename boost::property_traits<PMAP>::key_type>,
+      i_property_index_write<typename boost::property_traits<PMAP>::value_type,typename boost::property_traits<PMAP>::key_type>,
       PropertyIndexMapBaseTypedefs<PMAP>
       {
       
@@ -100,7 +100,7 @@ namespace properties
 
     template <class PMAP>
     struct PropertyIndexMapBase<PMAP,boost::mpl::false_,boost::lvalue_property_map_tag> : 
-      IPropertyIndexReadWriteLValue<typename boost::property_traits<PMAP>::value_type,typename boost::property_traits<PMAP>::key_type,typename boost::property_traits<PMAP>::reference>,
+      i_property_index_read_write_lvalue<typename boost::property_traits<PMAP>::value_type,typename boost::property_traits<PMAP>::key_type,typename boost::property_traits<PMAP>::reference>,
       PropertyIndexMapBaseTypedefs<PMAP>
       {
       
@@ -131,7 +131,7 @@ namespace properties
 
     template <class PMAP>
     struct PropertyIndexMapBase<PMAP,boost::mpl::true_,boost::lvalue_property_map_tag> : 
-      IPropertyIndexReadImmutable<typename boost::property_traits<PMAP>::value_type,typename boost::property_traits<PMAP>::key_type,typename boost::property_traits<PMAP>::reference>,
+      i_property_index_read_immutable<typename boost::property_traits<PMAP>::value_type,typename boost::property_traits<PMAP>::key_type,typename boost::property_traits<PMAP>::reference>,
       PropertyIndexMapBaseTypedefs<PMAP>
       {
       

@@ -7,12 +7,12 @@ namespace properties
 {
 
   template <class T, class C, T C::*d>
-  class propMemberDataReference : 
-    public IPropertyReferenceRead<T>
+  class prop_member_data_reference : 
+    public i_property_reference_read<T>
   {
     public:
     
-    propMemberDataReference(C & c) : 
+    prop_member_data_reference(C & c) : 
       cf(c) 
       { 
       }

@@ -9,7 +9,7 @@ namespace properties
 {
 
   template <class T,class I>
-  struct IPropertyIndexRead
+  struct i_property_index_read
   {
 
     BOOST_MPL_ASSERT_NOT((boost::is_reference<T>));
@@ -19,7 +19,7 @@ namespace properties
   };
 
   template <class T,class I>
-  struct IPropertyIndexWrite
+  struct i_property_index_write
   {
   
     BOOST_MPL_ASSERT_NOT((boost::is_reference<T>));
@@ -30,7 +30,7 @@ namespace properties
   };
   
   template <class T,class I,class R>
-  struct IPropertyIndexReadWriteLValue : IPropertyIndexRead<T,I>, public IPropertyIndexWrite<T,I>
+  struct i_property_index_read_write_lvalue : i_property_index_read<T,I>, public i_property_index_write<T,I>
   {
   
     virtual R operator [] (I) = 0;
@@ -38,7 +38,7 @@ namespace properties
   };
 
   template <class T,class I,class R>
-  struct IPropertyIndexReadImmutable : IPropertyIndexRead<T,I>
+  struct i_property_index_read_immutable : i_property_index_read<T,I>
   {
 
     virtual R operator [] (I) const = 0;

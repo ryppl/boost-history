@@ -17,8 +17,8 @@ namespace properties
 {
 
   template <class T, T (*g)()>
-  struct propReadFunction : 
-    virtual IPropertyRead<T>
+  struct prop_read_function : 
+    virtual i_property_read<T>
   {
   
     operator T() const 
@@ -30,55 +30,55 @@ namespace properties
       { 
       if (g == 0) 
         { 
-        throw PropertyReadException(); 
+        throw property_read_exception(); 
         } 
       return((*g)()); 
       }
       
     private:
     
-    propReadFunction & operator = (const propReadFunction &);
+    prop_read_function & operator = (const prop_read_function &);
     
   };
   
   template <class T, 
             void (*s)(T) 
            >
-  struct propWriteFunction : 
-    virtual IPropertyWrite<T>
+  struct prop_write_function : 
+    virtual i_property_write<T>
   {
   
-    propWriteFunction() 
+    prop_write_function() 
       { 
       }
       
-    explicit propWriteFunction(T arg) 
+    explicit prop_write_function(T arg) 
       { 
       if (s == 0) 
         { 
-        throw PropertyWriteException(); 
+        throw property_write_exception(); 
         } 
       (*s)(arg); 
       }
     
     template<class U>
-    explicit propWriteFunction(U arg) 
+    explicit prop_write_function(U arg) 
       { 
       if (s == 0) 
         { 
-        throw PropertyWriteException(); 
+        throw property_write_exception(); 
         } 
       (*s)(static_cast<T>(arg)); 
       }
     
-    propWriteFunction & operator = (T arg) 
+    prop_write_function & operator = (T arg) 
       { 
       set(arg); 
       return(*this); 
       }
     
     template<class U>
-    propWriteFunction & operator = (U arg) 
+    prop_write_function & operator = (U arg) 
       { 
       set(static_cast<T>(arg)); 
       return(*this); 
@@ -88,60 +88,60 @@ namespace properties
       { 
       if (s == 0) 
         { 
-        throw PropertyWriteException(); 
+        throw property_write_exception(); 
         } 
       (*s)(arg); 
       }
       
     private:
     
-    propWriteFunction & operator = (const propWriteFunction &);
+    prop_write_function & operator = (const prop_write_function &);
     
   };
 
 
   template <class T, T (*g)(), void (*s)(T)>
-  struct propFunction : 
-    propReadFunction<T,g>, 
-    propWriteFunction<T,s>
+  struct prop_function : 
+    prop_read_function<T,g>, 
+    prop_write_function<T,s>
   {
   
-    propFunction() 
+    prop_function() 
       { 
       }
       
-    explicit propFunction(T arg) : 
-      propWriteFunction<T,s>(arg) 
+    explicit prop_function(T arg) : 
+      prop_write_function<T,s>(arg) 
       { 
       }
     
-    propFunction(const propFunction & arg) :
-      propReadFunction<T,g>(arg),
-      propWriteFunction<T,s>(static_cast<const propWriteFunction<T,s> &>(arg))
+    prop_function(const prop_function & arg) :
+      prop_read_function<T,g>(arg),
+      prop_write_function<T,s>(static_cast<const prop_write_function<T,s> &>(arg))
       { 
       }
       
     template<class U>
-    explicit propFunction(U arg) : 
-      propWriteFunction<T,s>(arg) 
+    explicit prop_function(U arg) : 
+      prop_write_function<T,s>(arg) 
       { 
       }
     
-    propFunction & operator = (const propFunction & arg)
+    prop_function & operator = (const prop_function & arg)
       {
       return(*this = static_cast<T>(arg));
       }
     
-    propFunction & operator = (T arg) 
+    prop_function & operator = (T arg) 
       { 
-      (static_cast<propWriteFunction<T,s> &>(*this)) = arg; 
+      (static_cast<prop_write_function<T,s> &>(*this)) = arg; 
       return(*this); 
       }
     
     template<class U>
-    propFunction & operator = (U arg) 
+    prop_function & operator = (U arg) 
       { 
-      (static_cast<propWriteFunction<T,s> &>(*this)) = arg; 
+      (static_cast<prop_write_function<T,s> &>(*this)) = arg; 
       return(*this); 
       }
     
@@ -153,10 +153,10 @@ template <class T,
           >
 typename boost::enable_if
   <
-  typename detail::OMFIncrement<T>::type,
-  propFunction<T,g,s> &
+  typename detail::omf_increment<T>::type,
+  prop_function<T,g,s> &
   >::type
-operator ++ (propFunction<T,g,s> & value)
+operator ++ (prop_function<T,g,s> & value)
   {
   
   T t(value.get());
@@ -172,10 +172,10 @@ template <class T,
           >
 typename boost::enable_if
   <
-  typename detail::OMFDecrement<T>::type,
-  propFunction<T,g,s> &
+  typename detail::omf_decrement<T>::type,
+  prop_function<T,g,s> &
   >::type
-operator -- (propFunction<T,g,s> & value)
+operator -- (prop_function<T,g,s> & value)
   {
   
   T t(value.get());
@@ -191,13 +191,13 @@ template <class T,
           >
 typename boost::enable_if
   <
-  typename detail::OMFAssignMultiplySame<T>::type,
-  propFunction<T,g,s> &
+  typename detail::omf_assign_multiply_same<T>::type,
+  prop_function<T,g,s> &
   >::type
-operator *= (propFunction<T,g,s> & first,T second)
+operator *= (prop_function<T,g,s> & first,T second)
   {
   
-  typename detail::BinaryROMultiplySame<T>::type t(first.get() * second);
+  typename detail::binary_ro_multiply_same<T>::type t(first.get() * second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -209,13 +209,13 @@ template <class T,
           class U>
 typename boost::enable_if
   <
-  typename detail::OMFAssignMultiply<T,U>::type,
-  propFunction<T,g,s> &
+  typename detail::omf_assign_multiply<T,U>::type,
+  prop_function<T,g,s> &
   >::type
-operator *= (propFunction<T,g,s> & first,U second)
+operator *= (prop_function<T,g,s> & first,U second)
   {
   
-  typename detail::BinaryROMultiply<T,U>::type t(first.get() * second);
+  typename detail::binary_ro_multiply<T,U>::type t(first.get() * second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -227,13 +227,13 @@ template <class T,
           >
 typename boost::enable_if
   <
-  typename detail::OMFAssignDivideSame<T>::type,
-  propFunction<T,g,s> &
+  typename detail::omf_assign_divide_same<T>::type,
+  prop_function<T,g,s> &
   >::type
-operator /= (propFunction<T,g,s> & first,T second)
+operator /= (prop_function<T,g,s> & first,T second)
   {
   
-  typename detail::BinaryRODivideSame<T>::type t(first.get() / second);
+  typename detail::binary_ro_divide_same<T>::type t(first.get() / second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -245,13 +245,13 @@ template <class T,
           class U>
 typename boost::enable_if
   <
-  typename detail::OMFAssignDivide<T,U>::type,
-  propFunction<T,g,s> &
+  typename detail::omf_assign_divide<T,U>::type,
+  prop_function<T,g,s> &
   >::type
-operator /= (propFunction<T,g,s> & first,U second)
+operator /= (prop_function<T,g,s> & first,U second)
   {
   
-  typename detail::BinaryRODivide<T,U>::type t(first.get() / second);
+  typename detail::binary_ro_divide<T,U>::type t(first.get() / second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -263,13 +263,13 @@ template <class T,
           >
 typename boost::enable_if
   <
-  typename detail::OMFAssignModuloSame<T>::type,
-  propFunction<T,g,s> &
+  typename detail::omf_assign_modulo_same<T>::type,
+  prop_function<T,g,s> &
   >::type
-operator %= (propFunction<T,g,s> & first,T second)
+operator %= (prop_function<T,g,s> & first,T second)
   {
   
-  typename detail::BinaryROModuloSame<T>::type t(first.get() % second);
+  typename detail::binary_ro_modulo_same<T>::type t(first.get() % second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -281,13 +281,13 @@ template <class T,
           class U> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignModulo<T,U>::type,
-  propFunction<T,g,s> &
+  typename detail::omf_assign_modulo<T,U>::type,
+  prop_function<T,g,s> &
   >::type
-operator %= (propFunction<T,g,s> & first,U second)
+operator %= (prop_function<T,g,s> & first,U second)
   {
   
-  typename detail::BinaryROModulo<T,U>::type t(first.get() % second);
+  typename detail::binary_ro_modulo<T,U>::type t(first.get() % second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -299,13 +299,13 @@ template <class T,
           >
 typename boost::enable_if
   <
-  typename detail::OMFAssignAddSame<T>::type,
-  propFunction<T,g,s> &
+  typename detail::omf_assign_add_same<T>::type,
+  prop_function<T,g,s> &
   >::type
-operator += (propFunction<T,g,s> & first,T second)
+operator += (prop_function<T,g,s> & first,T second)
   {
   
-  typename detail::BinaryROAddSame<T>::type t(first.get() + second);
+  typename detail::binary_ro_add_same<T>::type t(first.get() + second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -317,13 +317,13 @@ template <class T,
           class U> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignAdd<T,U>::type,
-  propFunction<T,g,s> &
+  typename detail::omf_assign_add<T,U>::type,
+  prop_function<T,g,s> &
   >::type
-operator += (propFunction<T,g,s> & first,U second)
+operator += (prop_function<T,g,s> & first,U second)
   {
   
-  typename detail::BinaryROAdd<T,U>::type t(first.get() + second);
+  typename detail::binary_ro_add<T,U>::type t(first.get() + second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -335,13 +335,13 @@ template <class T,
           >
 typename boost::enable_if
   <
-  typename detail::OMFAssignSubtractSame<T>::type,
-  propFunction<T,g,s> &
+  typename detail::omf_assign_subtract_same<T>::type,
+  prop_function<T,g,s> &
   >::type
-operator -= (propFunction<T,g,s> & first,T second)
+operator -= (prop_function<T,g,s> & first,T second)
   {
   
-  typename detail::BinaryROSubtractSame<T>::type t(first.get() - second);
+  typename detail::binary_ro_subtract_same<T>::type t(first.get() - second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -353,13 +353,13 @@ template <class T,
           class U> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignSubtract<T,U>::type,
-  propFunction<T,g,s> &
+  typename detail::omf_assign_subtract<T,U>::type,
+  prop_function<T,g,s> &
   >::type
-operator -= (propFunction<T,g,s> & first,U second)
+operator -= (prop_function<T,g,s> & first,U second)
   {
   
-  typename detail::BinaryROSubtract<T,U>::type t(first.get() - second);
+  typename detail::binary_ro_subtract<T,U>::type t(first.get() - second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -371,13 +371,13 @@ template <class T,
           >
 typename boost::enable_if
   <
-  typename detail::OMFAssignLeftShiftSame<T>::type,
-  propFunction<T,g,s> &
+  typename detail::omf_assign_left_shift_same<T>::type,
+  prop_function<T,g,s> &
   >::type
-operator <<= (propFunction<T,g,s> & first,T second)
+operator <<= (prop_function<T,g,s> & first,T second)
   {
   
-  typename detail::BinaryROLeftShiftSame<T>::type t(first.get() << second);
+  typename detail::binary_ro_left_shift_same<T>::type t(first.get() << second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -389,13 +389,13 @@ template <class T,
           class U> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignLeftShift<T,U>::type,
-  propFunction<T,g,s> &
+  typename detail::omf_assign_left_shift<T,U>::type,
+  prop_function<T,g,s> &
   >::type
-operator <<= (propFunction<T,g,s> & first,U second)
+operator <<= (prop_function<T,g,s> & first,U second)
   {
   
-  typename detail::BinaryROLeftShift<T,U>::type t(first.get() << second);
+  typename detail::binary_ro_left_shift<T,U>::type t(first.get() << second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -407,13 +407,13 @@ template <class T,
           >
 typename boost::enable_if
   <
-  typename detail::OMFAssignRightShiftSame<T>::type,
-  propFunction<T,g,s> &
+  typename detail::omf_assign_right_shift_same<T>::type,
+  prop_function<T,g,s> &
   >::type
-operator >>= (propFunction<T,g,s> & first,T second)
+operator >>= (prop_function<T,g,s> & first,T second)
   {
   
-  typename detail::BinaryRORightShiftSame<T>::type t(first.get() >> second);
+  typename detail::binary_ro_right_shift_same<T>::type t(first.get() >> second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -425,13 +425,13 @@ template <class T,
           class U>
 typename boost::enable_if
   <
-  typename detail::OMFAssignRightShift<T,U>::type,
-  propFunction<T,g,s> &
+  typename detail::omf_assign_right_shift<T,U>::type,
+  prop_function<T,g,s> &
   >::type
-operator >>= (propFunction<T,g,s> & first,U second)
+operator >>= (prop_function<T,g,s> & first,U second)
   {
   
-  typename detail::BinaryRORightShift<T,U>::type t(first.get() >> second);
+  typename detail::binary_ro_right_shift<T,U>::type t(first.get() >> second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -443,13 +443,13 @@ template <class T,
           >
 typename boost::enable_if
   <
-  typename detail::OMFAssignAndSame<T>::type,
-  propFunction<T,g,s> &
+  typename detail::omf_assign_and_same<T>::type,
+  prop_function<T,g,s> &
   >::type
-operator &= (propFunction<T,g,s> & first,T second)
+operator &= (prop_function<T,g,s> & first,T second)
   {
   
-  typename detail::BinaryROAndSame<T>::type t(first.get() & second);
+  typename detail::binary_ro_and_same<T>::type t(first.get() & second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -461,13 +461,13 @@ template <class T,
           class U>
 typename boost::enable_if
   <
-  typename detail::OMFAssignAnd<T,U>::type,
-  propFunction<T,g,s> &
+  typename detail::omf_assign_and<T,U>::type,
+  prop_function<T,g,s> &
   >::type
-operator &= (propFunction<T,g,s> & first,U second)
+operator &= (prop_function<T,g,s> & first,U second)
   {
   
-  typename detail::BinaryROAnd<T,U>::type t(first.get() & second);
+  typename detail::binary_ro_and<T,U>::type t(first.get() & second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -479,13 +479,13 @@ template <class T,
           >
 typename boost::enable_if
   <
-  typename detail::OMFAssignXOrSame<T>::type,
-  propFunction<T,g,s> &
+  typename detail::omf_assign_xor_same<T>::type,
+  prop_function<T,g,s> &
   >::type
-operator ^= (propFunction<T,g,s> & first,T second)
+operator ^= (prop_function<T,g,s> & first,T second)
   {
   
-  typename detail::BinaryROXOrSame<T>::type t(first.get() ^ second);
+  typename detail::binary_ro_xor_same<T>::type t(first.get() ^ second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -497,13 +497,13 @@ template <class T,
           class U> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignXOr<T,U>::type,
-  propFunction<T,g,s> &
+  typename detail::omf_assign_xor<T,U>::type,
+  prop_function<T,g,s> &
   >::type
-operator ^= (propFunction<T,g,s> & first,U second)
+operator ^= (prop_function<T,g,s> & first,U second)
   {
   
-  typename detail::BinaryROXOr<T,U>::type t(first.get() ^ second);
+  typename detail::binary_ro_xor<T,U>::type t(first.get() ^ second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -515,13 +515,13 @@ template <class T,
           >
 typename boost::enable_if
   <
-  typename detail::OMFAssignOrSame<T>::type,
-  propFunction<T,g,s> &
+  typename detail::omf_assign_or_same<T>::type,
+  prop_function<T,g,s> &
   >::type
-operator |= (propFunction<T,g,s> & first,T second)
+operator |= (prop_function<T,g,s> & first,T second)
   {
   
-  typename detail::BinaryROOrSame<T>::type t(first.get() | second);
+  typename detail::binary_ro_or_same<T>::type t(first.get() | second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -533,13 +533,13 @@ template <class T,
           class U> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignOr<T,U>::type,
-  propFunction<T,g,s> &
+  typename detail::omf_assign_or<T,U>::type,
+  prop_function<T,g,s> &
   >::type
-operator |= (propFunction<T,g,s> & first,U second)
+operator |= (prop_function<T,g,s> & first,U second)
   {
   
-  typename detail::BinaryROOr<T,U>::type t(first.get() | second);
+  typename detail::binary_ro_or<T,U>::type t(first.get() | second);
   
   first.set(static_cast<T>(t));
   return(first);

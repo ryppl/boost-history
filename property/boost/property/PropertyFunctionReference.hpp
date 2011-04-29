@@ -8,8 +8,8 @@ namespace properties
 {
 
   template <class T, T & (*g)()>
-  struct propFunctionReference : 
-    IPropertyReferenceRead<T>
+  struct prop_function_reference : 
+    i_property_reference_read<T>
   {
   
     operator T const & () const 
@@ -26,7 +26,7 @@ namespace properties
       { 
       if (g == 0) 
         { 
-        throw PropertyReadException(); 
+        throw property_read_exception(); 
         } 
       return((*g)()); 
       }
@@ -35,7 +35,7 @@ namespace properties
       { 
       if (g == 0) 
         { 
-        throw PropertyReadException(); 
+        throw property_read_exception(); 
         } 
       return((*g)()); 
       }

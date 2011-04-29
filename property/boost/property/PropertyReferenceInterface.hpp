@@ -8,7 +8,7 @@ namespace properties
 {
   
   template <class T>
-  struct IPropertyReferenceRead
+  struct i_property_reference_read
   {
 
     BOOST_MPL_ASSERT_NOT((boost::is_reference<T>));

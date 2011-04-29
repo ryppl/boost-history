@@ -10,243 +10,243 @@ namespace properties
   {
   
   template <class T>
-  struct UnaryROPlus
+  struct unary_ro_plus
     {
     typedef BOOST_TYPEOF_TPL(+T()) type;
     };
   
   template <class T>
-  struct UnaryROMinus
+  struct unary_ro_minus
     {
     typedef BOOST_TYPEOF_TPL(-T()) type;
     };
   
   template <class T>
-  struct UnaryRONegate
+  struct unary_ro_negate
     {
     typedef BOOST_TYPEOF_TPL(~T()) type;
     };
   
   template <class T>
-  struct UnaryRONot
+  struct unary_ro_not
     {
     typedef BOOST_TYPEOF_TPL(!T()) type;
     };
   
   template <class T,class U>
-  struct BinaryROMultiply
+  struct binary_ro_multiply
     {
     typedef BOOST_TYPEOF_TPL(T() * U()) type;
     };
   
   template <class T,class U>
-  struct BinaryRODivide
+  struct binary_ro_divide
     {
     typedef BOOST_TYPEOF_TPL(T() / U()) type;
     };
   
   template <class T,class U>
-  struct BinaryROModulo
+  struct binary_ro_modulo
     {
     typedef BOOST_TYPEOF_TPL(T() % U()) type;
     };
   
   template <class T,class U>
-  struct BinaryROAdd
+  struct binary_ro_add
     {
     typedef BOOST_TYPEOF_TPL(T() + U()) type;
     };
   
   template <class T,class U>
-  struct BinaryROSubtract
+  struct binary_ro_subtract
     {
     typedef BOOST_TYPEOF_TPL(T() - U()) type;
     };
   
   template <class T,class U>
-  struct BinaryROLeftShift
+  struct binary_ro_left_shift
     {
     typedef BOOST_TYPEOF_TPL(T() << U()) type;
     };
   
   template <class T,class U>
-  struct BinaryRORightShift
+  struct binary_ro_right_shift
     {
     typedef BOOST_TYPEOF_TPL(T() >> U()) type;
     };
   
   template <class T,class U>
-  struct BinaryROAnd
+  struct binary_ro_and
     {
     typedef BOOST_TYPEOF_TPL(T() & U()) type;
     };
   
   template <class T,class U>
-  struct BinaryROOr
+  struct binary_ro_or
     {
     typedef BOOST_TYPEOF_TPL(T() | U()) type;
     };
   
   template <class T,class U>
-  struct BinaryROXOr
+  struct binary_ro_xor
     {
     typedef BOOST_TYPEOF_TPL(T() ^ U()) type;
     };
   
   template <class T,class U>
-  struct BinaryROGreater
+  struct binary_ro_greater
     {
     typedef BOOST_TYPEOF_TPL(T() > U()) type;
     };
   
   template <class T,class U>
-  struct BinaryROLess
+  struct binary_ro_less
     {
     typedef BOOST_TYPEOF_TPL(T() < U()) type;
     };
   
   template <class T,class U>
-  struct BinaryROGreaterOrEqual
+  struct binary_ro_greater_or_equal
     {
     typedef BOOST_TYPEOF_TPL(T() >= U()) type;
     };
   
   template <class T,class U>
-  struct BinaryROLessOrEqual
+  struct binary_ro_less_or_equal
     {
     typedef BOOST_TYPEOF_TPL(T() <= U()) type;
     };
   
   template <class T,class U>
-  struct BinaryROEqual
+  struct binary_ro_equal
     {
     typedef BOOST_TYPEOF_TPL(T() == U()) type;
     };
   
   template <class T,class U>
-  struct BinaryRONotEqual
+  struct binary_ro_not_equal
     {
     typedef BOOST_TYPEOF_TPL(T() != U()) type;
     };
   
   template <class T,class U>
-  struct BinaryROLogicalAnd
+  struct binary_ro_logical_and
     {
     typedef BOOST_TYPEOF_TPL(T() && U()) type;
     };
   
   template <class T,class U>
-  struct BinaryROLogicalOr
+  struct binary_ro_logical_or
     {
     typedef BOOST_TYPEOF_TPL(T() || U()) type;
     };
   
   template <class T>
-  struct BinaryROMultiplySame
+  struct binary_ro_multiply_same
     {
-    typedef typename BinaryROMultiply<T,T>::type type;
+    typedef typename binary_ro_multiply<T,T>::type type;
     };
   
   template <class T>
-  struct BinaryRODivideSame
+  struct binary_ro_divide_same
     {
-    typedef typename BinaryRODivide<T,T>::type type;
+    typedef typename binary_ro_divide<T,T>::type type;
     };
   
   template <class T>
-  struct BinaryROModuloSame
+  struct binary_ro_modulo_same
     {
-    typedef typename BinaryROModulo<T,T>::type type;
+    typedef typename binary_ro_modulo<T,T>::type type;
     };
   
   template <class T>
-  struct BinaryROAddSame
+  struct binary_ro_add_same
     {
-    typedef typename BinaryROAdd<T,T>::type type;
+    typedef typename binary_ro_add<T,T>::type type;
     };
   
   template <class T>
-  struct BinaryROSubtractSame
+  struct binary_ro_subtract_same
     {
-    typedef typename BinaryROSubtract<T,T>::type type;
+    typedef typename binary_ro_subtract<T,T>::type type;
     };
   
   template <class T>
-  struct BinaryROLeftShiftSame
+  struct binary_ro_left_shift_same
     {
-    typedef typename BinaryROLeftShift<T,T>::type type;
+    typedef typename binary_ro_left_shift<T,T>::type type;
     };
   
   template <class T>
-  struct BinaryRORightShiftSame
+  struct binary_ro_right_shift_same
     {
-    typedef typename BinaryRORightShift<T,T>::type type;
+    typedef typename binary_ro_right_shift<T,T>::type type;
     };
   
   template <class T>
-  struct BinaryROAndSame
+  struct binary_ro_and_same
     {
-    typedef typename BinaryROAnd<T,T>::type type;
+    typedef typename binary_ro_and<T,T>::type type;
     };
   
   template <class T>
-  struct BinaryROOrSame
+  struct binary_ro_or_same
     {
-    typedef typename BinaryROOr<T,T>::type type;
+    typedef typename binary_ro_or<T,T>::type type;
     };
   
   template <class T>
-  struct BinaryROXOrSame
+  struct binary_ro_xor_same
     {
-    typedef typename BinaryROXOr<T,T>::type type;
+    typedef typename binary_ro_xor<T,T>::type type;
     };
   
   template <class T>
-  struct BinaryROGreaterSame
+  struct binary_ro_greater_same
     {
-    typedef typename BinaryROGreater<T,T>::type type;
+    typedef typename binary_ro_greater<T,T>::type type;
     };
   
   template <class T>
-  struct BinaryROLessSame
+  struct binary_ro_less_same
     {
-    typedef typename BinaryROLess<T,T>::type type;
+    typedef typename binary_ro_less<T,T>::type type;
     };
   
   template <class T>
-  struct BinaryROGreaterOrEqualSame
+  struct binary_ro_greater_or_equal_same
     {
-    typedef typename BinaryROGreaterOrEqual<T,T>::type type;
+    typedef typename binary_ro_greater_or_equal<T,T>::type type;
     };
   
   template <class T>
-  struct BinaryROLessOrEqualSame
+  struct binary_ro_less_or_equal_same
     {
-    typedef typename BinaryROLessOrEqual<T,T>::type type;
+    typedef typename binary_ro_less_or_equal<T,T>::type type;
     };
   
   template <class T>
-  struct BinaryROEqualSame
+  struct binary_ro_equal_same
     {
-    typedef typename BinaryROEqual<T,T>::type type;
+    typedef typename binary_ro_equal<T,T>::type type;
     };
   
   template <class T>
-  struct BinaryRONotEqualSame
+  struct binary_ro_not_equal_same
     {
-    typedef typename BinaryRONotEqual<T,T>::type type;
+    typedef typename binary_ro_not_equal<T,T>::type type;
     };
   
   template <class T>
-  struct BinaryROLogicalAndSame
+  struct binary_ro_logical_and_same
     {
-    typedef typename BinaryROLogicalAnd<T,T>::type type;
+    typedef typename binary_ro_logical_and<T,T>::type type;
     };
   
   template <class T>
-  struct BinaryROLogicalOrSame
+  struct binary_ro_logical_or_same
     {
-    typedef typename BinaryROLogicalOr<T,T>::type type;
+    typedef typename binary_ro_logical_or<T,T>::type type;
     };
   
   }

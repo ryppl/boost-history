@@ -8,13 +8,13 @@ namespace properties
 {
 
   template <class T>
-  class propAutoReference : public IPropertyReferenceRead<T>
+  class prop_auto_reference : public i_property_reference_read<T>
   {
   
     public:
 
-    propAutoReference() { }
-    explicit propAutoReference(T arg) : data(arg) { }
+    prop_auto_reference() { }
+    explicit prop_auto_reference(T arg) : data(arg) { }
     
     operator const T & () const { return(get()); }
     operator T & () { return(get()); }

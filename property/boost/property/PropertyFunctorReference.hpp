@@ -7,13 +7,13 @@ namespace properties
 {
 
   template <class T, class C>
-  class propFunctorReference : 
-    public IPropertyReferenceRead<T>
+  class prop_functor_reference : 
+    public i_property_reference_read<T>
   {
   
     public:
     
-    propFunctorReference(C & c) : 
+    prop_functor_reference(C & c) : 
       cf(c) 
       { 
       }

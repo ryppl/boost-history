@@ -22,19 +22,19 @@ namespace properties
 
   template <class T, 
             T *d, 
-            template <class> class NotificationPolicy = DefaultPolicyTag,
+            template <class> class NotificationPolicy = default_policy_tag,
             class Access = typename boost::mpl::if_
                         <
                         boost::is_const<T>,
-                        ReadTag,
-                        ReadWriteTag
+                        read_tag,
+                        read_write_tag
                         >::type
            >
-  class propData;
+  class prop_data;
   
   template <class T, T *d>
-  struct propData<T,d,DefaultPolicyTag,ReadTag> : 
-    virtual IPropertyRead<T>
+  struct prop_data<T,d,default_policy_tag,read_tag> : 
+    virtual i_property_read<T>
   {
   
     operator T() const 
@@ -49,38 +49,38 @@ namespace properties
       
     private:  
     
-    propData & operator = (const propData &);
+    prop_data & operator = (const prop_data &);
     
   };
 
   template <class T, T *d>
-  struct propData<T,d,DefaultPolicyTag,WriteTag> : 
-    virtual IPropertyWrite<T>
+  struct prop_data<T,d,default_policy_tag,write_tag> : 
+    virtual i_property_write<T>
   {
   
-    propData() 
+    prop_data() 
       { 
       }
       
-    explicit propData(T arg) 
+    explicit prop_data(T arg) 
       { 
       *d = arg; 
       }
       
     template<class U>
-    explicit propData(U arg) 
+    explicit prop_data(U arg) 
       { 
       *d = static_cast<T>(arg); 
       }
       
-    propData & operator = (T arg) 
+    prop_data & operator = (T arg) 
       { 
       set(arg); 
       return(*this); 
       }
       
     template<class U>
-    propData & operator = (U arg) 
+    prop_data & operator = (U arg) 
       { 
       set(static_cast<T>(arg)); 
       return(*this); 
@@ -93,39 +93,39 @@ namespace properties
     
     private:  
     
-    propData & operator = (const propData &);
+    prop_data & operator = (const prop_data &);
     
   };
 
   template <class T, T *d,template <class> class NotificationPolicy>
-  struct propData<T,d,NotificationPolicy,WriteTag> : 
-    virtual IPropertyWrite<T>, 
+  struct prop_data<T,d,NotificationPolicy,write_tag> : 
+    virtual i_property_write<T>, 
     NotificationPolicy<T>
   {
   
-    propData() 
+    prop_data() 
       { 
       }
       
-    explicit propData(T arg) 
+    explicit prop_data(T arg) 
       { 
       *d = arg; 
       }
       
     template<class U>
-    explicit propData(U arg) 
+    explicit prop_data(U arg) 
       { 
       *d = static_cast<T>(arg); 
       }
       
-    propData & operator = (T arg) 
+    prop_data & operator = (T arg) 
       { 
       set(arg); 
       return(*this); 
       }
       
     template<class U>
-    propData & operator = (U arg) 
+    prop_data & operator = (U arg) 
       { 
       set(static_cast<T>(arg)); 
       return(*this); 
@@ -134,7 +134,7 @@ namespace properties
     void set(T arg) 
       { 
       *d = arg; 
-      PropertyChanged(*this,oldT,arg);
+      property_changed(*this,oldT,arg);
       }
       
     protected:
@@ -143,103 +143,103 @@ namespace properties
     
     private:  
     
-    propData & operator = (const propData &);
+    prop_data & operator = (const prop_data &);
     
   };
 
   template <class T, T *d>
-  struct propData<T,d,DefaultPolicyTag,ReadWriteTag> : 
-    propData<T,d,DefaultPolicyTag,ReadTag> , 
-    propData<T,d,DefaultPolicyTag,WriteTag>,
-    IPropertyReadWrite<T>
+  struct prop_data<T,d,default_policy_tag,read_write_tag> : 
+    prop_data<T,d,default_policy_tag,read_tag> , 
+    prop_data<T,d,default_policy_tag,write_tag>,
+    i_property_read_write<T>
   {
   
-    propData() 
+    prop_data() 
       { 
       }
       
-    propData(const propData & arg) :
-      propData<T,d,DefaultPolicyTag,ReadTag>(arg),
-      propData<T,d,DefaultPolicyTag,WriteTag>(static_cast<const propData<T,d,DefaultPolicyTag,WriteTag> &>(arg))
+    prop_data(const prop_data & arg) :
+      prop_data<T,d,default_policy_tag,read_tag>(arg),
+      prop_data<T,d,default_policy_tag,write_tag>(static_cast<const prop_data<T,d,default_policy_tag,write_tag> &>(arg))
       { 
       }
       
-    explicit propData(T arg) : 
-      propData<T,d,DefaultPolicyTag,WriteTag>(arg) 
+    explicit prop_data(T arg) : 
+      prop_data<T,d,default_policy_tag,write_tag>(arg) 
       { 
       }
       
     template<class U>
-    explicit propData(U arg) : 
-      propData<T,d,DefaultPolicyTag,WriteTag>(arg) 
+    explicit prop_data(U arg) : 
+      prop_data<T,d,default_policy_tag,write_tag>(arg) 
       { 
       }
       
-    propData & operator = (const propData & arg)
+    prop_data & operator = (const prop_data & arg)
       {
       return(*this = static_cast<T>(arg));
       }
       
-    propData & operator = (T arg) 
+    prop_data & operator = (T arg) 
       { 
-      (static_cast<propData<T,d,DefaultPolicyTag,WriteTag> & >(*this)) = arg; 
+      (static_cast<prop_data<T,d,default_policy_tag,write_tag> & >(*this)) = arg; 
       return(*this); 
       }
     
     template<class U>
-    propData & operator = (U arg) 
+    prop_data & operator = (U arg) 
       { 
-      (static_cast<propData<T,d,DefaultPolicyTag,WriteTag> & >(*this)) = arg; 
+      (static_cast<prop_data<T,d,default_policy_tag,write_tag> & >(*this)) = arg; 
       return(*this); 
       }
     
   };
 
   template <class T, T *d,template <class> class NotificationPolicy>
-  struct propData<T,d,NotificationPolicy,ReadWriteTag> : 
-    propData<T,d,NotificationPolicy,ReadTag> , 
-    propData<T,d,NotificationPolicy,WriteTag>,
-    IPropertyReadWrite<T>
+  struct prop_data<T,d,NotificationPolicy,read_write_tag> : 
+    prop_data<T,d,NotificationPolicy,read_tag> , 
+    prop_data<T,d,NotificationPolicy,write_tag>,
+    i_property_read_write<T>
   {
   
-    propData() 
+    prop_data() 
       { 
       }
       
-    propData(const propData & arg) :
-      propData<T,d,DefaultPolicyTag,ReadTag>(arg),
-      propData<T,d,NotificationPolicy,WriteTag>(static_cast<const propData<T,d,NotificationPolicy,WriteTag> &>(arg))
+    prop_data(const prop_data & arg) :
+      prop_data<T,d,default_policy_tag,read_tag>(arg),
+      prop_data<T,d,NotificationPolicy,write_tag>(static_cast<const prop_data<T,d,NotificationPolicy,write_tag> &>(arg))
       { 
       }
       
-    explicit propData(T arg) : 
-      propData<T,d,NotificationPolicy,WriteTag>(arg) 
+    explicit prop_data(T arg) : 
+      prop_data<T,d,NotificationPolicy,write_tag>(arg) 
       { 
       }
       
     template<class U>
-    explicit propData(U arg) : 
-      propData<T,d,NotificationPolicy,WriteTag>(arg) 
+    explicit prop_data(U arg) : 
+      prop_data<T,d,NotificationPolicy,write_tag>(arg) 
       { 
       }
       
-    propData & operator = (const propData & arg)
+    prop_data & operator = (const prop_data & arg)
       {
       return(*this = static_cast<T>(arg));
       }
       
-    propData & operator = (T arg) 
+    prop_data & operator = (T arg) 
       { 
       oldT = *this;
-      (static_cast<propData<T,d,NotificationPolicy,WriteTag> & >(*this)) = arg; 
+      (static_cast<prop_data<T,d,NotificationPolicy,write_tag> & >(*this)) = arg; 
       return(*this); 
       }
       
     template<class U>
-    propData & operator = (U arg) 
+    prop_data & operator = (U arg) 
       { 
       oldT = *this;
-      (static_cast<propData<T,d,NotificationPolicy,WriteTag> & >(*this)) = arg; 
+      (static_cast<prop_data<T,d,NotificationPolicy,write_tag> & >(*this)) = arg; 
       return(*this); 
       }
       
@@ -248,10 +248,10 @@ namespace properties
 template <class T, T *d,template <class> class NotificationPolicy> 
 typename boost::enable_if
   <
-  typename detail::OMFIncrement<T>::type,
-  propData<T,d,NotificationPolicy,ReadWriteTag> &
+  typename detail::omf_increment<T>::type,
+  prop_data<T,d,NotificationPolicy,read_write_tag> &
   >::type
-operator ++ (propData<T,d,NotificationPolicy,ReadWriteTag> & value)
+operator ++ (prop_data<T,d,NotificationPolicy,read_write_tag> & value)
   {
   
   T t(value.get());
@@ -264,10 +264,10 @@ operator ++ (propData<T,d,NotificationPolicy,ReadWriteTag> & value)
 template <class T, T *d,template <class> class NotificationPolicy> 
 typename boost::enable_if
   <
-  typename detail::OMFDecrement<T>::type,
-  propData<T,d,NotificationPolicy,ReadWriteTag> &
+  typename detail::omf_decrement<T>::type,
+  prop_data<T,d,NotificationPolicy,read_write_tag> &
   >::type
-operator -- (propData<T,d,NotificationPolicy,ReadWriteTag> & value)
+operator -- (prop_data<T,d,NotificationPolicy,read_write_tag> & value)
   {
   
   T t(value.get());
@@ -280,13 +280,13 @@ operator -- (propData<T,d,NotificationPolicy,ReadWriteTag> & value)
 template <class T, T *d,template <class> class NotificationPolicy> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignMultiplySame<T>::type,
-  propData<T,d,NotificationPolicy,ReadWriteTag> &
+  typename detail::omf_assign_multiply_same<T>::type,
+  prop_data<T,d,NotificationPolicy,read_write_tag> &
   >::type
-operator *= (propData<T,d,NotificationPolicy,ReadWriteTag> & first,T second)
+operator *= (prop_data<T,d,NotificationPolicy,read_write_tag> & first,T second)
   {
   
-  typename detail::BinaryROMultiplySame<T>::type t(first.get() * second);
+  typename detail::binary_ro_multiply_same<T>::type t(first.get() * second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -295,13 +295,13 @@ operator *= (propData<T,d,NotificationPolicy,ReadWriteTag> & first,T second)
 template <class T, T *d,template <class> class NotificationPolicy,class U>
 typename boost::enable_if
   <
-  typename detail::OMFAssignMultiply<T,U>::type,
-  propData<T,d,NotificationPolicy,ReadWriteTag> &
+  typename detail::omf_assign_multiply<T,U>::type,
+  prop_data<T,d,NotificationPolicy,read_write_tag> &
   >::type
-operator *= (propData<T,d,NotificationPolicy,ReadWriteTag> & first,U second)
+operator *= (prop_data<T,d,NotificationPolicy,read_write_tag> & first,U second)
   {
   
-  typename detail::BinaryROMultiply<T,U>::type t(first.get() * second);
+  typename detail::binary_ro_multiply<T,U>::type t(first.get() * second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -310,13 +310,13 @@ operator *= (propData<T,d,NotificationPolicy,ReadWriteTag> & first,U second)
 template <class T, T *d,template <class> class NotificationPolicy> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignDivideSame<T>::type,
-  propData<T,d,NotificationPolicy,ReadWriteTag> &
+  typename detail::omf_assign_divide_same<T>::type,
+  prop_data<T,d,NotificationPolicy,read_write_tag> &
   >::type
-operator /= (propData<T,d,NotificationPolicy,ReadWriteTag> & first,T second)
+operator /= (prop_data<T,d,NotificationPolicy,read_write_tag> & first,T second)
   {
   
-  typename detail::BinaryRODivideSame<T>::type t(first.get() / second);
+  typename detail::binary_ro_divide_same<T>::type t(first.get() / second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -325,13 +325,13 @@ operator /= (propData<T,d,NotificationPolicy,ReadWriteTag> & first,T second)
 template <class T, T *d,template <class> class NotificationPolicy,class U>
 typename boost::enable_if
   <
-  typename detail::OMFAssignDivide<T,U>::type,
-  propData<T,d,NotificationPolicy,ReadWriteTag> &
+  typename detail::omf_assign_divide<T,U>::type,
+  prop_data<T,d,NotificationPolicy,read_write_tag> &
   >::type
-operator /= (propData<T,d,NotificationPolicy,ReadWriteTag> & first,U second)
+operator /= (prop_data<T,d,NotificationPolicy,read_write_tag> & first,U second)
   {
   
-  typename detail::BinaryRODivide<T,U>::type t(first.get() / second);
+  typename detail::binary_ro_divide<T,U>::type t(first.get() / second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -340,13 +340,13 @@ operator /= (propData<T,d,NotificationPolicy,ReadWriteTag> & first,U second)
 template <class T, T *d,template <class> class NotificationPolicy> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignModuloSame<T>::type,
-  propData<T,d,NotificationPolicy,ReadWriteTag> &
+  typename detail::omf_assign_modulo_same<T>::type,
+  prop_data<T,d,NotificationPolicy,read_write_tag> &
   >::type
-operator %= (propData<T,d,NotificationPolicy,ReadWriteTag> & first,T second)
+operator %= (prop_data<T,d,NotificationPolicy,read_write_tag> & first,T second)
   {
   
-  typename detail::BinaryROModuloSame<T>::type t(first.get() % second);
+  typename detail::binary_ro_modulo_same<T>::type t(first.get() % second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -355,13 +355,13 @@ operator %= (propData<T,d,NotificationPolicy,ReadWriteTag> & first,T second)
 template <class T, T *d,template <class> class NotificationPolicy,class U> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignModulo<T,U>::type,
-  propData<T,d,NotificationPolicy,ReadWriteTag> &
+  typename detail::omf_assign_modulo<T,U>::type,
+  prop_data<T,d,NotificationPolicy,read_write_tag> &
   >::type
-operator %= (propData<T,d,NotificationPolicy,ReadWriteTag> & first,U second)
+operator %= (prop_data<T,d,NotificationPolicy,read_write_tag> & first,U second)
   {
   
-  typename detail::BinaryROModulo<T,U>::type t(first.get() % second);
+  typename detail::binary_ro_modulo<T,U>::type t(first.get() % second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -370,13 +370,13 @@ operator %= (propData<T,d,NotificationPolicy,ReadWriteTag> & first,U second)
 template <class T, T *d,template <class> class NotificationPolicy> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignAddSame<T>::type,
-  propData<T,d,NotificationPolicy,ReadWriteTag> &
+  typename detail::omf_assign_add_same<T>::type,
+  prop_data<T,d,NotificationPolicy,read_write_tag> &
   >::type
-operator += (propData<T,d,NotificationPolicy,ReadWriteTag> & first,T second)
+operator += (prop_data<T,d,NotificationPolicy,read_write_tag> & first,T second)
   {
   
-  typename detail::BinaryROAddSame<T>::type t(first.get() + second);
+  typename detail::binary_ro_add_same<T>::type t(first.get() + second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -385,13 +385,13 @@ operator += (propData<T,d,NotificationPolicy,ReadWriteTag> & first,T second)
 template <class T, T *d,template <class> class NotificationPolicy,class U> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignAdd<T,U>::type,
-  propData<T,d,NotificationPolicy,ReadWriteTag> &
+  typename detail::omf_assign_add<T,U>::type,
+  prop_data<T,d,NotificationPolicy,read_write_tag> &
   >::type
-operator += (propData<T,d,NotificationPolicy,ReadWriteTag> & first,U second)
+operator += (prop_data<T,d,NotificationPolicy,read_write_tag> & first,U second)
   {
   
-  typename detail::BinaryROAdd<T,U>::type t(first.get() + second);
+  typename detail::binary_ro_add<T,U>::type t(first.get() + second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -400,13 +400,13 @@ operator += (propData<T,d,NotificationPolicy,ReadWriteTag> & first,U second)
 template <class T, T *d,template <class> class NotificationPolicy> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignSubtractSame<T>::type,
-  propData<T,d,NotificationPolicy,ReadWriteTag> &
+  typename detail::omf_assign_subtract_same<T>::type,
+  prop_data<T,d,NotificationPolicy,read_write_tag> &
   >::type
-operator -= (propData<T,d,NotificationPolicy,ReadWriteTag> & first,T second)
+operator -= (prop_data<T,d,NotificationPolicy,read_write_tag> & first,T second)
   {
   
-  typename detail::BinaryROSubtractSame<T>::type t(first.get() - second);
+  typename detail::binary_ro_subtract_same<T>::type t(first.get() - second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -415,13 +415,13 @@ operator -= (propData<T,d,NotificationPolicy,ReadWriteTag> & first,T second)
 template <class T, T *d,template <class> class NotificationPolicy,class U> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignSubtract<T,U>::type,
-  propData<T,d,NotificationPolicy,ReadWriteTag> &
+  typename detail::omf_assign_subtract<T,U>::type,
+  prop_data<T,d,NotificationPolicy,read_write_tag> &
   >::type
-operator -= (propData<T,d,NotificationPolicy,ReadWriteTag> & first,U second)
+operator -= (prop_data<T,d,NotificationPolicy,read_write_tag> & first,U second)
   {
   
-  typename detail::BinaryROSubtract<T,U>::type t(first.get() - second);
+  typename detail::binary_ro_subtract<T,U>::type t(first.get() - second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -430,13 +430,13 @@ operator -= (propData<T,d,NotificationPolicy,ReadWriteTag> & first,U second)
 template <class T, T *d,template <class> class NotificationPolicy> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignLeftShiftSame<T>::type,
-  propData<T,d,NotificationPolicy,ReadWriteTag> &
+  typename detail::omf_assign_left_shift_same<T>::type,
+  prop_data<T,d,NotificationPolicy,read_write_tag> &
   >::type
-operator <<= (propData<T,d,NotificationPolicy,ReadWriteTag> & first,T second)
+operator <<= (prop_data<T,d,NotificationPolicy,read_write_tag> & first,T second)
   {
   
-  typename detail::BinaryROLeftShiftSame<T>::type t(first.get() << second);
+  typename detail::binary_ro_left_shift_same<T>::type t(first.get() << second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -445,13 +445,13 @@ operator <<= (propData<T,d,NotificationPolicy,ReadWriteTag> & first,T second)
 template <class T, T *d,template <class> class NotificationPolicy,class U> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignLeftShift<T,U>::type,
-  propData<T,d,NotificationPolicy,ReadWriteTag> &
+  typename detail::omf_assign_left_shift<T,U>::type,
+  prop_data<T,d,NotificationPolicy,read_write_tag> &
   >::type
-operator <<= (propData<T,d,NotificationPolicy,ReadWriteTag> & first,U second)
+operator <<= (prop_data<T,d,NotificationPolicy,read_write_tag> & first,U second)
   {
   
-  typename detail::BinaryROLeftShift<T,U>::type t(first.get() << second);
+  typename detail::binary_ro_left_shift<T,U>::type t(first.get() << second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -460,13 +460,13 @@ operator <<= (propData<T,d,NotificationPolicy,ReadWriteTag> & first,U second)
 template <class T, T *d,template <class> class NotificationPolicy> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignRightShiftSame<T>::type,
-  propData<T,d,NotificationPolicy,ReadWriteTag> &
+  typename detail::omf_assign_right_shift_same<T>::type,
+  prop_data<T,d,NotificationPolicy,read_write_tag> &
   >::type
-operator >>= (propData<T,d,NotificationPolicy,ReadWriteTag> & first,T second)
+operator >>= (prop_data<T,d,NotificationPolicy,read_write_tag> & first,T second)
   {
   
-  typename detail::BinaryRORightShiftSame<T>::type t(first.get() >> second);
+  typename detail::binary_ro_right_shift_same<T>::type t(first.get() >> second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -475,13 +475,13 @@ operator >>= (propData<T,d,NotificationPolicy,ReadWriteTag> & first,T second)
 template <class T, T *d,template <class> class NotificationPolicy,class U>
 typename boost::enable_if
   <
-  typename detail::OMFAssignRightShift<T,U>::type,
-  propData<T,d,NotificationPolicy,ReadWriteTag> &
+  typename detail::omf_assign_right_shift<T,U>::type,
+  prop_data<T,d,NotificationPolicy,read_write_tag> &
   >::type
-operator >>= (propData<T,d,NotificationPolicy,ReadWriteTag> & first,U second)
+operator >>= (prop_data<T,d,NotificationPolicy,read_write_tag> & first,U second)
   {
   
-  typename detail::BinaryRORightShift<T,U>::type t(first.get() >> second);
+  typename detail::binary_ro_right_shift<T,U>::type t(first.get() >> second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -490,13 +490,13 @@ operator >>= (propData<T,d,NotificationPolicy,ReadWriteTag> & first,U second)
 template <class T, T *d,template <class> class NotificationPolicy> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignAndSame<T>::type,
-  propData<T,d,NotificationPolicy,ReadWriteTag> &
+  typename detail::omf_assign_and_same<T>::type,
+  prop_data<T,d,NotificationPolicy,read_write_tag> &
   >::type
-operator &= (propData<T,d,NotificationPolicy,ReadWriteTag> & first,T second)
+operator &= (prop_data<T,d,NotificationPolicy,read_write_tag> & first,T second)
   {
   
-  typename detail::BinaryROAndSame<T>::type t(first.get() & second);
+  typename detail::binary_ro_and_same<T>::type t(first.get() & second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -505,13 +505,13 @@ operator &= (propData<T,d,NotificationPolicy,ReadWriteTag> & first,T second)
 template <class T, T *d,template <class> class NotificationPolicy,class U>
 typename boost::enable_if
   <
-  typename detail::OMFAssignAnd<T,U>::type,
-  propData<T,d,NotificationPolicy,ReadWriteTag> &
+  typename detail::omf_assign_and<T,U>::type,
+  prop_data<T,d,NotificationPolicy,read_write_tag> &
   >::type
-operator &= (propData<T,d,NotificationPolicy,ReadWriteTag> & first,U second)
+operator &= (prop_data<T,d,NotificationPolicy,read_write_tag> & first,U second)
   {
   
-  typename detail::BinaryROAnd<T,U>::type t(first.get() & second);
+  typename detail::binary_ro_and<T,U>::type t(first.get() & second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -520,13 +520,13 @@ operator &= (propData<T,d,NotificationPolicy,ReadWriteTag> & first,U second)
 template <class T, T *d,template <class> class NotificationPolicy> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignXOrSame<T>::type,
-  propData<T,d,NotificationPolicy,ReadWriteTag> &
+  typename detail::omf_assign_xor_same<T>::type,
+  prop_data<T,d,NotificationPolicy,read_write_tag> &
   >::type
-operator ^= (propData<T,d,NotificationPolicy,ReadWriteTag> & first,T second)
+operator ^= (prop_data<T,d,NotificationPolicy,read_write_tag> & first,T second)
   {
   
-  typename detail::BinaryROXOrSame<T>::type t(first.get() ^ second);
+  typename detail::binary_ro_xor_same<T>::type t(first.get() ^ second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -535,13 +535,13 @@ operator ^= (propData<T,d,NotificationPolicy,ReadWriteTag> & first,T second)
 template <class T, T *d,template <class> class NotificationPolicy,class U> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignXOr<T,U>::type,
-  propData<T,d,NotificationPolicy,ReadWriteTag> &
+  typename detail::omf_assign_xor<T,U>::type,
+  prop_data<T,d,NotificationPolicy,read_write_tag> &
   >::type
-operator ^= (propData<T,d,NotificationPolicy,ReadWriteTag> & first,U second)
+operator ^= (prop_data<T,d,NotificationPolicy,read_write_tag> & first,U second)
   {
   
-  typename detail::BinaryROXOr<T,U>::type t(first.get() ^ second);
+  typename detail::binary_ro_xor<T,U>::type t(first.get() ^ second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -550,13 +550,13 @@ operator ^= (propData<T,d,NotificationPolicy,ReadWriteTag> & first,U second)
 template <class T, T *d,template <class> class NotificationPolicy> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignOrSame<T>::type,
-  propData<T,d,NotificationPolicy,ReadWriteTag> &
+  typename detail::omf_assign_or_same<T>::type,
+  prop_data<T,d,NotificationPolicy,read_write_tag> &
   >::type
-operator |= (propData<T,d,NotificationPolicy,ReadWriteTag> & first,T second)
+operator |= (prop_data<T,d,NotificationPolicy,read_write_tag> & first,T second)
   {
   
-  typename detail::BinaryROOrSame<T>::type t(first.get() | second);
+  typename detail::binary_ro_or_same<T>::type t(first.get() | second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -565,13 +565,13 @@ operator |= (propData<T,d,NotificationPolicy,ReadWriteTag> & first,T second)
 template <class T, T *d,template <class> class NotificationPolicy,class U> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignOr<T,U>::type,
-  propData<T,d,NotificationPolicy,ReadWriteTag> &
+  typename detail::omf_assign_or<T,U>::type,
+  prop_data<T,d,NotificationPolicy,read_write_tag> &
   >::type
-operator |= (propData<T,d,NotificationPolicy,ReadWriteTag> & first,U second)
+operator |= (prop_data<T,d,NotificationPolicy,read_write_tag> & first,U second)
   {
   
-  typename detail::BinaryROOr<T,U>::type t(first.get() | second);
+  typename detail::binary_ro_or<T,U>::type t(first.get() | second);
   
   first.set(static_cast<T>(t));
   return(first);

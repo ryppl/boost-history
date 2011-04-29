@@ -23,20 +23,20 @@ namespace properties
             class Access = typename boost::mpl::if_
                         <
                         boost::is_const<T>,
-                        ReadTag,
-                        ReadWriteTag
+                        read_tag,
+                        read_write_tag
                         >::type
            >
-  class propCallable;
+  class prop_callable;
   
   template <class T>
-  class propCallable<T,ReadTag> : 
-    public virtual IPropertyRead<T>
+  class prop_callable<T,read_tag> : 
+    public virtual i_property_read<T>
   {
 
     public:
   
-    explicit propCallable(boost::function<T ()> g) : 
+    explicit prop_callable(boost::function<T ()> g) : 
       fg(g) 
       { 
       }
@@ -50,7 +50,7 @@ namespace properties
       { 
       if (fg == 0) 
         { 
-        throw PropertyReadException(); 
+        throw property_read_exception(); 
         } 
       return(fg()); 
       }
@@ -59,51 +59,51 @@ namespace properties
   
     boost::function<T ()> fg;
     
-    propCallable & operator = (const propCallable & arg);
+    prop_callable & operator = (const prop_callable & arg);
     
   };
 
   template <class T>
-  class propCallable<T,WriteTag> : 
-    public virtual IPropertyWrite<T>
+  class prop_callable<T,write_tag> : 
+    public virtual i_property_write<T>
   {
 
     public:
   
-    explicit propCallable(boost::function<void (T)> s) : 
+    explicit prop_callable(boost::function<void (T)> s) : 
       fs(s) 
       { 
       }
       
-    propCallable(boost::function<void (T)> s,T arg) : 
+    prop_callable(boost::function<void (T)> s,T arg) : 
       fs(s) 
       { 
       if (fs == 0) 
         { 
-        throw PropertyWriteException(); 
+        throw property_write_exception(); 
         } 
       fs(arg); 
       }
       
     template<class U>
-    propCallable(boost::function<void (T)> s,U arg) : 
+    prop_callable(boost::function<void (T)> s,U arg) : 
       fs(s)
       { 
       if (fs == 0) 
         { 
-        throw PropertyWriteException(); 
+        throw property_write_exception(); 
         } 
       fs(static_cast<T>(arg)); 
       }
       
-    propCallable & operator = (T arg) 
+    prop_callable & operator = (T arg) 
       { 
       set(arg); 
       return(*this); 
       }
       
     template<class U>
-    propCallable & operator = (U arg) 
+    prop_callable & operator = (U arg) 
       { 
       set(static_cast<T>(arg)); 
       return(*this); 
@@ -113,7 +113,7 @@ namespace properties
       { 
       if (fs == 0) 
         { 
-        throw PropertyWriteException(); 
+        throw property_write_exception(); 
         } 
       fs(arg); 
       }
@@ -122,57 +122,57 @@ namespace properties
   
     boost::function<void (T)> fs;
     
-    propCallable & operator = (const propCallable & arg);
+    prop_callable & operator = (const prop_callable & arg);
     
   };
     
   template <class T>
-  struct propCallable<T,ReadWriteTag> : 
-    propCallable<T,ReadTag>, 
-    propCallable<T,WriteTag>,
-    IPropertyReadWrite<T>
+  struct prop_callable<T,read_write_tag> : 
+    prop_callable<T,read_tag>, 
+    prop_callable<T,write_tag>,
+    i_property_read_write<T>
   {
   
-    propCallable(const propCallable & arg) :
-      propCallable<T,ReadTag>(arg),
-      propCallable<T,WriteTag>(static_cast<const propCallable<T,WriteTag> &>(arg)) 
+    prop_callable(const prop_callable & arg) :
+      prop_callable<T,read_tag>(arg),
+      prop_callable<T,write_tag>(static_cast<const prop_callable<T,write_tag> &>(arg)) 
       {
       }
     
-    propCallable(boost::function<T ()> g,boost::function<void (T)> s) : 
-      propCallable<T,ReadTag>(g),
-      propCallable<T,WriteTag>(s) 
+    prop_callable(boost::function<T ()> g,boost::function<void (T)> s) : 
+      prop_callable<T,read_tag>(g),
+      prop_callable<T,write_tag>(s) 
       { 
       }
       
-    propCallable(boost::function<T ()> g,boost::function<void (T)> s,T arg) : 
-      propCallable<T,ReadTag>(g),
-      propCallable<T,WriteTag>(s,arg) 
+    prop_callable(boost::function<T ()> g,boost::function<void (T)> s,T arg) : 
+      prop_callable<T,read_tag>(g),
+      prop_callable<T,write_tag>(s,arg) 
       { 
       }
       
     template<class U>
-    propCallable(boost::function<T ()> g,boost::function<void (T)> s,U arg) : 
-      propCallable<T,ReadTag>(g),
-      propCallable<T,WriteTag>(s,arg) 
+    prop_callable(boost::function<T ()> g,boost::function<void (T)> s,U arg) : 
+      prop_callable<T,read_tag>(g),
+      prop_callable<T,write_tag>(s,arg) 
       { 
       }
       
-    propCallable & operator = (const propCallable & arg)
+    prop_callable & operator = (const prop_callable & arg)
       {
       return(*this = static_cast<T>(arg));
       }
       
-    propCallable & operator = (T arg) 
+    prop_callable & operator = (T arg) 
       { 
-      (static_cast<propCallable<T,WriteTag> &>(*this)) = arg; 
+      (static_cast<prop_callable<T,write_tag> &>(*this)) = arg; 
       return(*this); 
       }
       
     template<class U>
-    propCallable & operator = (U arg) 
+    prop_callable & operator = (U arg) 
       { 
-      (static_cast<propCallable<T,WriteTag> &>(*this)) = arg; 
+      (static_cast<prop_callable<T,write_tag> &>(*this)) = arg; 
       return(*this); 
       }
       
@@ -181,10 +181,10 @@ namespace properties
 template <class T> 
 typename boost::enable_if
   <
-  typename detail::OMFIncrement<T>::type,
-  propCallable<T,ReadWriteTag> &
+  typename detail::omf_increment<T>::type,
+  prop_callable<T,read_write_tag> &
   >::type
-operator ++ (propCallable<T,ReadWriteTag> & value)
+operator ++ (prop_callable<T,read_write_tag> & value)
   {
   
   T t(value.get());
@@ -197,10 +197,10 @@ operator ++ (propCallable<T,ReadWriteTag> & value)
 template <class T> 
 typename boost::enable_if
   <
-  typename detail::OMFDecrement<T>::type,
-  propCallable<T,ReadWriteTag> &
+  typename detail::omf_decrement<T>::type,
+  prop_callable<T,read_write_tag> &
   >::type
-operator -- (propCallable<T,ReadWriteTag> & value)
+operator -- (prop_callable<T,read_write_tag> & value)
   {
   
   T t(value.get());
@@ -213,13 +213,13 @@ operator -- (propCallable<T,ReadWriteTag> & value)
 template <class T> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignMultiplySame<T>::type,
-  propCallable<T,ReadWriteTag> &
+  typename detail::omf_assign_multiply_same<T>::type,
+  prop_callable<T,read_write_tag> &
   >::type
-operator *= (propCallable<T,ReadWriteTag> & first,T second)
+operator *= (prop_callable<T,read_write_tag> & first,T second)
   {
   
-  typename detail::BinaryROMultiplySame<T>::type t(first.get() * second);
+  typename detail::binary_ro_multiply_same<T>::type t(first.get() * second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -228,13 +228,13 @@ operator *= (propCallable<T,ReadWriteTag> & first,T second)
 template <class T,class U>
 typename boost::enable_if
   <
-  typename detail::OMFAssignMultiply<T,U>::type,
-  propCallable<T,ReadWriteTag> &
+  typename detail::omf_assign_multiply<T,U>::type,
+  prop_callable<T,read_write_tag> &
   >::type
-operator *= (propCallable<T,ReadWriteTag> & first,U second)
+operator *= (prop_callable<T,read_write_tag> & first,U second)
   {
   
-  typename detail::BinaryROMultiply<T,U>::type t(first.get() * second);
+  typename detail::binary_ro_multiply<T,U>::type t(first.get() * second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -243,13 +243,13 @@ operator *= (propCallable<T,ReadWriteTag> & first,U second)
 template <class T> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignDivideSame<T>::type,
-  propCallable<T,ReadWriteTag> &
+  typename detail::omf_assign_divide_same<T>::type,
+  prop_callable<T,read_write_tag> &
   >::type
-operator /= (propCallable<T,ReadWriteTag> & first,T second)
+operator /= (prop_callable<T,read_write_tag> & first,T second)
   {
   
-  typename detail::BinaryRODivideSame<T>::type t(first.get() / second);
+  typename detail::binary_ro_divide_same<T>::type t(first.get() / second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -258,13 +258,13 @@ operator /= (propCallable<T,ReadWriteTag> & first,T second)
 template <class T,class U>
 typename boost::enable_if
   <
-  typename detail::OMFAssignDivide<T,U>::type,
-  propCallable<T,ReadWriteTag> &
+  typename detail::omf_assign_divide<T,U>::type,
+  prop_callable<T,read_write_tag> &
   >::type
-operator /= (propCallable<T,ReadWriteTag> & first,U second)
+operator /= (prop_callable<T,read_write_tag> & first,U second)
   {
   
-  typename detail::BinaryRODivide<T,U>::type t(first.get() / second);
+  typename detail::binary_ro_divide<T,U>::type t(first.get() / second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -273,13 +273,13 @@ operator /= (propCallable<T,ReadWriteTag> & first,U second)
 template <class T> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignModuloSame<T>::type,
-  propCallable<T,ReadWriteTag> &
+  typename detail::omf_assign_modulo_same<T>::type,
+  prop_callable<T,read_write_tag> &
   >::type
-operator %= (propCallable<T,ReadWriteTag> & first,T second)
+operator %= (prop_callable<T,read_write_tag> & first,T second)
   {
   
-  typename detail::BinaryROModuloSame<T>::type t(first.get() % second);
+  typename detail::binary_ro_modulo_same<T>::type t(first.get() % second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -288,13 +288,13 @@ operator %= (propCallable<T,ReadWriteTag> & first,T second)
 template <class T,class U> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignModulo<T,U>::type,
-  propCallable<T,ReadWriteTag> &
+  typename detail::omf_assign_modulo<T,U>::type,
+  prop_callable<T,read_write_tag> &
   >::type
-operator %= (propCallable<T,ReadWriteTag> & first,U second)
+operator %= (prop_callable<T,read_write_tag> & first,U second)
   {
   
-  typename detail::BinaryROModulo<T,U>::type t(first.get() % second);
+  typename detail::binary_ro_modulo<T,U>::type t(first.get() % second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -303,13 +303,13 @@ operator %= (propCallable<T,ReadWriteTag> & first,U second)
 template <class T> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignAddSame<T>::type,
-  propCallable<T,ReadWriteTag> &
+  typename detail::omf_assign_add_same<T>::type,
+  prop_callable<T,read_write_tag> &
   >::type
-operator += (propCallable<T,ReadWriteTag> & first,T second)
+operator += (prop_callable<T,read_write_tag> & first,T second)
   {
   
-  typename detail::BinaryROAddSame<T>::type t(first.get() + second);
+  typename detail::binary_ro_add_same<T>::type t(first.get() + second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -318,13 +318,13 @@ operator += (propCallable<T,ReadWriteTag> & first,T second)
 template <class T,class U> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignAdd<T,U>::type,
-  propCallable<T,ReadWriteTag> &
+  typename detail::omf_assign_add<T,U>::type,
+  prop_callable<T,read_write_tag> &
   >::type
-operator += (propCallable<T,ReadWriteTag> & first,U second)
+operator += (prop_callable<T,read_write_tag> & first,U second)
   {
   
-  typename detail::BinaryROAdd<T,U>::type t(first.get() + second);
+  typename detail::binary_ro_add<T,U>::type t(first.get() + second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -333,13 +333,13 @@ operator += (propCallable<T,ReadWriteTag> & first,U second)
 template <class T> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignSubtractSame<T>::type,
-  propCallable<T,ReadWriteTag> &
+  typename detail::omf_assign_subtract_same<T>::type,
+  prop_callable<T,read_write_tag> &
   >::type
-operator -= (propCallable<T,ReadWriteTag> & first,T second)
+operator -= (prop_callable<T,read_write_tag> & first,T second)
   {
   
-  typename detail::BinaryROSubtractSame<T>::type t(first.get() - second);
+  typename detail::binary_ro_subtract_same<T>::type t(first.get() - second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -348,13 +348,13 @@ operator -= (propCallable<T,ReadWriteTag> & first,T second)
 template <class T,class U> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignSubtract<T,U>::type,
-  propCallable<T,ReadWriteTag> &
+  typename detail::omf_assign_subtract<T,U>::type,
+  prop_callable<T,read_write_tag> &
   >::type
-operator -= (propCallable<T,ReadWriteTag> & first,U second)
+operator -= (prop_callable<T,read_write_tag> & first,U second)
   {
   
-  typename detail::BinaryROSubtract<T,U>::type t(first.get() - second);
+  typename detail::binary_ro_subtract<T,U>::type t(first.get() - second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -363,13 +363,13 @@ operator -= (propCallable<T,ReadWriteTag> & first,U second)
 template <class T> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignLeftShiftSame<T>::type,
-  propCallable<T,ReadWriteTag> &
+  typename detail::omf_assign_left_shift_same<T>::type,
+  prop_callable<T,read_write_tag> &
   >::type
-operator <<= (propCallable<T,ReadWriteTag> & first,T second)
+operator <<= (prop_callable<T,read_write_tag> & first,T second)
   {
   
-  typename detail::BinaryROLeftShiftSame<T>::type t(first.get() << second);
+  typename detail::binary_ro_left_shift_same<T>::type t(first.get() << second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -378,13 +378,13 @@ operator <<= (propCallable<T,ReadWriteTag> & first,T second)
 template <class T,class U> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignLeftShift<T,U>::type,
-  propCallable<T,ReadWriteTag> &
+  typename detail::omf_assign_left_shift<T,U>::type,
+  prop_callable<T,read_write_tag> &
   >::type
-operator <<= (propCallable<T,ReadWriteTag> & first,U second)
+operator <<= (prop_callable<T,read_write_tag> & first,U second)
   {
   
-  typename detail::BinaryROLeftShift<T,U>::type t(first.get() << second);
+  typename detail::binary_ro_left_shift<T,U>::type t(first.get() << second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -393,13 +393,13 @@ operator <<= (propCallable<T,ReadWriteTag> & first,U second)
 template <class T> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignRightShiftSame<T>::type,
-  propCallable<T,ReadWriteTag> &
+  typename detail::omf_assign_right_shift_same<T>::type,
+  prop_callable<T,read_write_tag> &
   >::type
-operator >>= (propCallable<T,ReadWriteTag> & first,T second)
+operator >>= (prop_callable<T,read_write_tag> & first,T second)
   {
   
-  typename detail::BinaryRORightShiftSame<T>::type t(first.get() >> second);
+  typename detail::binary_ro_right_shift_same<T>::type t(first.get() >> second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -408,13 +408,13 @@ operator >>= (propCallable<T,ReadWriteTag> & first,T second)
 template <class T,class U>
 typename boost::enable_if
   <
-  typename detail::OMFAssignRightShift<T,U>::type,
-  propCallable<T,ReadWriteTag> &
+  typename detail::omf_assign_right_shift<T,U>::type,
+  prop_callable<T,read_write_tag> &
   >::type
-operator >>= (propCallable<T,ReadWriteTag> & first,U second)
+operator >>= (prop_callable<T,read_write_tag> & first,U second)
   {
   
-  typename detail::BinaryRORightShift<T,U>::type t(first.get() >> second);
+  typename detail::binary_ro_right_shift<T,U>::type t(first.get() >> second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -423,13 +423,13 @@ operator >>= (propCallable<T,ReadWriteTag> & first,U second)
 template <class T> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignAndSame<T>::type,
-  propCallable<T,ReadWriteTag> &
+  typename detail::omf_assign_and_same<T>::type,
+  prop_callable<T,read_write_tag> &
   >::type
-operator &= (propCallable<T,ReadWriteTag> & first,T second)
+operator &= (prop_callable<T,read_write_tag> & first,T second)
   {
   
-  typename detail::BinaryROAndSame<T>::type t(first.get() & second);
+  typename detail::binary_ro_and_same<T>::type t(first.get() & second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -438,13 +438,13 @@ operator &= (propCallable<T,ReadWriteTag> & first,T second)
 template <class T,class U>
 typename boost::enable_if
   <
-  typename detail::OMFAssignAnd<T,U>::type,
-  propCallable<T,ReadWriteTag> &
+  typename detail::omf_assign_and<T,U>::type,
+  prop_callable<T,read_write_tag> &
   >::type
-operator &= (propCallable<T,ReadWriteTag> & first,U second)
+operator &= (prop_callable<T,read_write_tag> & first,U second)
   {
   
-  typename detail::BinaryROAnd<T,U>::type t(first.get() & second);
+  typename detail::binary_ro_and<T,U>::type t(first.get() & second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -453,13 +453,13 @@ operator &= (propCallable<T,ReadWriteTag> & first,U second)
 template <class T> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignXOrSame<T>::type,
-  propCallable<T,ReadWriteTag> &
+  typename detail::omf_assign_xor_same<T>::type,
+  prop_callable<T,read_write_tag> &
   >::type
-operator ^= (propCallable<T,ReadWriteTag> & first,T second)
+operator ^= (prop_callable<T,read_write_tag> & first,T second)
   {
   
-  typename detail::BinaryROXOrSame<T>::type t(first.get() ^ second);
+  typename detail::binary_ro_xor_same<T>::type t(first.get() ^ second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -468,13 +468,13 @@ operator ^= (propCallable<T,ReadWriteTag> & first,T second)
 template <class T,class U> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignXOr<T,U>::type,
-  propCallable<T,ReadWriteTag> &
+  typename detail::omf_assign_xor<T,U>::type,
+  prop_callable<T,read_write_tag> &
   >::type
-operator ^= (propCallable<T,ReadWriteTag> & first,U second)
+operator ^= (prop_callable<T,read_write_tag> & first,U second)
   {
   
-  typename detail::BinaryROXOr<T,U>::type t(first.get() ^ second);
+  typename detail::binary_ro_xor<T,U>::type t(first.get() ^ second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -483,13 +483,13 @@ operator ^= (propCallable<T,ReadWriteTag> & first,U second)
 template <class T> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignOrSame<T>::type,
-  propCallable<T,ReadWriteTag> &
+  typename detail::omf_assign_or_same<T>::type,
+  prop_callable<T,read_write_tag> &
   >::type
-operator |= (propCallable<T,ReadWriteTag> & first,T second)
+operator |= (prop_callable<T,read_write_tag> & first,T second)
   {
   
-  typename detail::BinaryROOrSame<T>::type t(first.get() | second);
+  typename detail::binary_ro_or_same<T>::type t(first.get() | second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -498,13 +498,13 @@ operator |= (propCallable<T,ReadWriteTag> & first,T second)
 template <class T,class U> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignOr<T,U>::type,
-  propCallable<T,ReadWriteTag> &
+  typename detail::omf_assign_or<T,U>::type,
+  prop_callable<T,read_write_tag> &
   >::type
-operator |= (propCallable<T,ReadWriteTag> & first,U second)
+operator |= (prop_callable<T,read_write_tag> & first,U second)
   {
   
-  typename detail::BinaryROOr<T,U>::type t(first.get() | second);
+  typename detail::binary_ro_or<T,U>::type t(first.get() | second);
   
   first.set(static_cast<T>(t));
   return(first);

@@ -7,19 +7,19 @@ namespace properties
 {
 
   template <class PMAP>
-  struct PropertyIndexMap : 
+  struct prop_index_map : 
     detail::PropertyIndexMapMakeBase<PMAP>::type
   {
   
-    PropertyIndexMap(PMAP & pmap) : 
+    prop_index_map(PMAP & pmap) : 
       detail::PropertyIndexMapMakeBase<PMAP>::type(pmap) 
       { 
       }
     
     private:
     
-    PropertyIndexMap(const PropertyIndexMap<PMAP> &);
-    PropertyIndexMap & operator = (const PropertyIndexMap<PMAP> &);
+    prop_index_map(const prop_index_map<PMAP> &);
+    prop_index_map & operator = (const prop_index_map<PMAP> &);
     
   };
   

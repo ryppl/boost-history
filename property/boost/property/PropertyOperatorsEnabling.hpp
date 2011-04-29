@@ -18,7 +18,7 @@ namespace properties
   // Arithmetic, pointer, not bool
 
   template <class T> 
-  struct OMFIncrement
+  struct omf_increment
     {
     typedef typename boost::mpl::or_
       <
@@ -37,7 +37,7 @@ namespace properties
   // Arithmetic, pointer, not bool
 
   template <class T> 
-  struct OMFDecrement
+  struct omf_decrement
     {
     typedef typename boost::mpl::or_
       <
@@ -56,7 +56,7 @@ namespace properties
   // Arithmetic, pointer, not bool
 
   template <class T> 
-  struct OMFPostIncrement
+  struct omf_post_increment
     {
     typedef typename boost::mpl::or_
       <
@@ -75,7 +75,7 @@ namespace properties
   // Arithmetic, pointer, not bool
 
   template <class T> 
-  struct OMFPostDecrement
+  struct omf_post_decrement
     {
     typedef typename boost::mpl::or_
       <
@@ -94,7 +94,7 @@ namespace properties
   // Arithmetic, enumeration
 
   template <class T> 
-  struct OMFAssignMultiplySame 
+  struct omf_assign_multiply_same 
     {
     typedef typename boost::mpl::or_
       <
@@ -106,7 +106,7 @@ namespace properties
   // Arithmetic, enumeration
 
   template <class T,class U> 
-  struct OMFAssignMultiply
+  struct omf_assign_multiply
     {
     typedef typename boost::mpl::and_
       <
@@ -127,7 +127,7 @@ namespace properties
   // Arithmetic, enumeration
 
   template <class T> 
-  struct OMFAssignDivideSame
+  struct omf_assign_divide_same
     {
     typedef typename boost::mpl::or_
       <
@@ -139,7 +139,7 @@ namespace properties
   // Arithmetic, enumeration
 
   template <class T,class U> 
-  struct OMFAssignDivide
+  struct omf_assign_divide
     {
     typedef typename boost::mpl::and_
       <
@@ -160,7 +160,7 @@ namespace properties
   // Integral, enumeration
 
   template <class T> 
-  struct OMFAssignModuloSame
+  struct omf_assign_modulo_same
     {
     typedef typename boost::mpl::or_
       <
@@ -172,7 +172,7 @@ namespace properties
   // Integral, enumeration
 
   template <class T,class U> 
-  struct OMFAssignModulo
+  struct omf_assign_modulo
     {
     typedef typename boost::mpl::and_
       <
@@ -196,7 +196,7 @@ namespace properties
   */
 
   template <class T> 
-  struct OMFAssignAddSame
+  struct omf_assign_add_same
     {
     typedef typename boost::mpl::or_
       <
@@ -211,7 +211,7 @@ namespace properties
   */
 
   template <class T,class U> 
-  struct OMFAssignAdd
+  struct omf_assign_add
     {
     typedef typename boost::mpl::or_
       <
@@ -249,7 +249,7 @@ namespace properties
   */
 
   template <class T> 
-  struct OMFAssignSubtractSame
+  struct omf_assign_subtract_same
     {
     typedef typename boost::mpl::or_
       <
@@ -267,7 +267,7 @@ namespace properties
   */
 
   template <class T,class U> 
-  struct OMFAssignSubtract
+  struct omf_assign_subtract
     {
     typedef typename boost::mpl::or_
       <
@@ -310,7 +310,7 @@ namespace properties
   // Integral, enumeration
 
   template <class T> 
-  struct OMFAssignLeftShiftSame
+  struct omf_assign_left_shift_same
     {
     typedef typename boost::mpl::or_
       <
@@ -322,7 +322,7 @@ namespace properties
   // Integral, enumeration
 
   template <class T,class U> 
-  struct OMFAssignLeftShift
+  struct omf_assign_left_shift
     {
     typedef typename boost::mpl::and_
       <
@@ -343,7 +343,7 @@ namespace properties
   // Integral, enumeration
 
   template <class T> 
-  struct OMFAssignRightShiftSame
+  struct omf_assign_right_shift_same
     {
     typedef typename boost::mpl::or_
       <
@@ -355,7 +355,7 @@ namespace properties
   // Integral, enumeration
 
   template <class T,class U> 
-  struct OMFAssignRightShift
+  struct omf_assign_right_shift
     {
     typedef typename boost::mpl::and_
       <
@@ -376,7 +376,7 @@ namespace properties
   // Integral, enumeration
 
   template <class T> 
-  struct OMFAssignAndSame
+  struct omf_assign_and_same
     {
     typedef typename boost::mpl::or_
       <
@@ -388,7 +388,7 @@ namespace properties
   // Integral, enumeration
 
   template <class T,class U> 
-  struct OMFAssignAnd
+  struct omf_assign_and
     {
     typedef typename boost::mpl::and_
       <
@@ -409,7 +409,7 @@ namespace properties
   // Integral, enumeration
 
   template <class T> 
-  struct OMFAssignXOrSame
+  struct omf_assign_xor_same
     {
     typedef typename boost::mpl::or_
       <
@@ -421,7 +421,7 @@ namespace properties
   // Integral, enumeration
 
   template <class T,class U> 
-  struct OMFAssignXOr
+  struct omf_assign_xor
     {
     typedef typename boost::mpl::and_
       <
@@ -442,7 +442,7 @@ namespace properties
   // Integral, enumeration
 
   template <class T> 
-  struct OMFAssignOrSame
+  struct omf_assign_or_same
     {
     typedef typename boost::mpl::or_
       <
@@ -454,7 +454,7 @@ namespace properties
   // Integral, enumeration
 
   template <class T,class U> 
-  struct OMFAssignOr
+  struct omf_assign_or
     {
     typedef typename boost::mpl::and_
       <

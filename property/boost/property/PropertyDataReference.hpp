@@ -7,8 +7,8 @@ namespace properties
 {
 
   template <class T, T *d>
-  struct propDataReference : 
-    IPropertyReferenceRead<T>
+  struct prop_data_reference : 
+    i_property_reference_read<T>
     {
     
     operator const T & () const 

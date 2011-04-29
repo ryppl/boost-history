@@ -8,13 +8,13 @@
 namespace properties
 {
   template <class T>
-  class propCallableReference : 
-    public IPropertyReferenceRead<T>
+  class prop_callable_reference : 
+    public i_property_reference_read<T>
   {
 
     public:
   
-    propCallableReference(boost::function<T & ()> g) : 
+    prop_callable_reference(boost::function<T & ()> g) : 
       fg(g) 
       { 
       }
@@ -33,7 +33,7 @@ namespace properties
       { 
       if (fg == 0) 
         { 
-        throw PropertyReadException(); 
+        throw property_read_exception(); 
         } 
       return(fg()); 
       }
@@ -42,7 +42,7 @@ namespace properties
       { 
       if (fg == 0) 
         { 
-        throw PropertyReadException(); 
+        throw property_read_exception(); 
         } 
       return(fg()); 
       }

@@ -8,12 +8,12 @@ namespace properties
 {
 
   template <class T, class C, T & (C::*g)()>
-  class propMemberFunctionReference : 
-    public IPropertyReferenceRead<T>
+  class prop_member_function_reference : 
+    public i_property_reference_read<T>
   {
     public:
     
-    propMemberFunctionReference(C & c) : 
+    prop_member_function_reference(C & c) : 
       cf(c) 
       { 
       }
@@ -32,7 +32,7 @@ namespace properties
       { 
       if (g == 0) 
         { 
-        throw PropertyReadException(); 
+        throw property_read_exception(); 
         } 
       return((cf.*g)()); 
       }
@@ -41,7 +41,7 @@ namespace properties
       { 
       if (g == 0) 
         { 
-        throw PropertyReadException(); 
+        throw property_read_exception(); 
         } 
       return((cf.*g)()); 
       }

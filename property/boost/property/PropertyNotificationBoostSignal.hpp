@@ -8,16 +8,16 @@
 namespace properties
 {
 
-  template <class T> class NotificationBoostSignal
+  template <class T> class notification_boost_signal
     {
     
     public:
     
-    boost::signal<void (const IPropertyWrite<T> &,boost::optional<T>,T)> sig;
+    boost::signal<void (const i_property_write<T> &,boost::optional<T>,T)> sig;
     
     protected:
       
-    void PropertyChanged(const IPropertyWrite<T> & signaller,boost::optional<T> oldValue,T newValue) 
+    void property_changed(const i_property_write<T> & signaller,boost::optional<T> oldValue,T newValue) 
       {
       sig(signaller,oldValue,newValue);
       }

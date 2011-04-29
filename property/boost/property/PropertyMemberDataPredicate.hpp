@@ -19,32 +19,32 @@ namespace properties
   template <class T, 
             class C, 
             T C::*d, 
-            template <class> class NotificationPolicy = DefaultPolicyTag,
-            template <class> class PredicateFailurePolicy = DefaultPolicyTag,
-            class Access = ReadWriteTag
+            template <class> class NotificationPolicy = default_policy_tag,
+            template <class> class PredicateFailurePolicy = default_policy_tag,
+            class Access = read_write_tag
            >
-  class propMemberDataPredicate;
+  class prop_member_data_predicate;
   
   template <class T, class C, T C::*d,template <class> class NotificationPolicy,template <class> class PredicateFailurePolicy>
-  struct propMemberDataPredicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,WriteTag> : 
-    propMemberData<T,C,d,NotificationPolicy,WriteTag>,
+  struct prop_member_data_predicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,write_tag> : 
+    prop_member_data<T,C,d,NotificationPolicy,write_tag>,
     PredicateFailurePolicy<T>
   {
     
-    propMemberDataPredicate(const propMemberDataPredicate & arg) : 
-      propMemberData<T,C,d,NotificationPolicy,WriteTag>(static_cast<const propMemberData<T,C,d,NotificationPolicy,WriteTag> &>(arg)),
+    prop_member_data_predicate(const prop_member_data_predicate & arg) : 
+      prop_member_data<T,C,d,NotificationPolicy,write_tag>(static_cast<const prop_member_data<T,C,d,NotificationPolicy,write_tag> &>(arg)),
       fs(f)
       { 
       }
       
-    propMemberDataPredicate(boost::function<bool (T)> f,C & c) : 
-      propMemberData<T,C,d,NotificationPolicy,WriteTag>(c),
+    prop_member_data_predicate(boost::function<bool (T)> f,C & c) : 
+      prop_member_data<T,C,d,NotificationPolicy,write_tag>(c),
       fs(f)
       { 
       }
       
-    propMemberDataPredicate(boost::function<bool (T)> f,C & c,T arg) : 
-      propMemberData<T,C,d,NotificationPolicy,WriteTag>(c),
+    prop_member_data_predicate(boost::function<bool (T)> f,C & c,T arg) : 
+      prop_member_data<T,C,d,NotificationPolicy,write_tag>(c),
       fs(f)
       { 
       if (!fs || fs(arg))
@@ -54,8 +54,8 @@ namespace properties
       }
     
     template<class U>
-    propMemberDataPredicate(boost::function<bool (T)> f,C & c,U arg) : 
-      propMemberData<T,C,d,NotificationPolicy,WriteTag>(c),
+    prop_member_data_predicate(boost::function<bool (T)> f,C & c,U arg) : 
+      prop_member_data<T,C,d,NotificationPolicy,write_tag>(c),
       fs(f)
       { 
       if (!fs || fs(arg))
@@ -64,16 +64,16 @@ namespace properties
         }
       }
     
-    propMemberDataPredicate & operator = (T arg) 
+    prop_member_data_predicate & operator = (T arg) 
       { 
-      static_cast<propMemberData<T,C,d,NotificationPolicy,WriteTag> &>(*this) = arg;
+      static_cast<prop_member_data<T,C,d,NotificationPolicy,write_tag> &>(*this) = arg;
       return(*this); 
       }
     
     template<class U>
-    propMemberDataPredicate & operator = (U arg) 
+    prop_member_data_predicate & operator = (U arg) 
       { 
-      static_cast<propMemberData<T,C,d,NotificationPolicy,WriteTag> &>(*this) = arg;
+      static_cast<prop_member_data<T,C,d,NotificationPolicy,write_tag> &>(*this) = arg;
       return(*this); 
       }
     
@@ -81,7 +81,7 @@ namespace properties
       { 
       if (!fs || fs(arg))
         {
-        propMemberData<T,C,d,NotificationPolicy,WriteTag>::set(arg);
+        prop_member_data<T,C,d,NotificationPolicy,write_tag>::set(arg);
         }
       else
         {
@@ -93,29 +93,29 @@ namespace properties
     
     boost::function<bool (T)> fs;
     
-    propMemberDataPredicate & operator = (const propMemberDataPredicate & arg);
+    prop_member_data_predicate & operator = (const prop_member_data_predicate & arg);
     
   };
 
   template <class T, class C, T C::*d,template <class> class NotificationPolicy>
-  struct propMemberDataPredicate<T,C,d,NotificationPolicy,DefaultPolicyTag,WriteTag> : 
-    propMemberData<T,C,d,NotificationPolicy,WriteTag>
+  struct prop_member_data_predicate<T,C,d,NotificationPolicy,default_policy_tag,write_tag> : 
+    prop_member_data<T,C,d,NotificationPolicy,write_tag>
   {
     
-    propMemberDataPredicate(const propMemberDataPredicate & arg) : 
-      propMemberData<T,C,d,NotificationPolicy,WriteTag>(static_cast<const propMemberData<T,C,d,NotificationPolicy,WriteTag> &>(arg)),
+    prop_member_data_predicate(const prop_member_data_predicate & arg) : 
+      prop_member_data<T,C,d,NotificationPolicy,write_tag>(static_cast<const prop_member_data<T,C,d,NotificationPolicy,write_tag> &>(arg)),
       fs(f)
       { 
       }
       
-    propMemberDataPredicate(boost::function<bool (T)> f,C & c) : 
-      propMemberData<T,C,d,NotificationPolicy,WriteTag>(c),
+    prop_member_data_predicate(boost::function<bool (T)> f,C & c) : 
+      prop_member_data<T,C,d,NotificationPolicy,write_tag>(c),
       fs(f)
       { 
       }
       
-    propMemberDataPredicate(boost::function<bool (T)> f,C & c,T arg) : 
-      propMemberData<T,C,d,NotificationPolicy,WriteTag>(c),
+    prop_member_data_predicate(boost::function<bool (T)> f,C & c,T arg) : 
+      prop_member_data<T,C,d,NotificationPolicy,write_tag>(c),
       fs(f)
       { 
       if (!fs || fs(arg))
@@ -125,8 +125,8 @@ namespace properties
       }
     
     template<class U>
-    propMemberDataPredicate(boost::function<bool (T)> f,C & c,U arg) : 
-      propMemberData<T,C,d,NotificationPolicy,WriteTag>(c),
+    prop_member_data_predicate(boost::function<bool (T)> f,C & c,U arg) : 
+      prop_member_data<T,C,d,NotificationPolicy,write_tag>(c),
       fs(f)
       { 
       if (!fs || fs(arg))
@@ -135,16 +135,16 @@ namespace properties
         }
       }
     
-    propMemberDataPredicate & operator = (T arg) 
+    prop_member_data_predicate & operator = (T arg) 
       { 
-      static_cast<propMemberData<T,C,d,NotificationPolicy,WriteTag> &>(*this) = arg;
+      static_cast<prop_member_data<T,C,d,NotificationPolicy,write_tag> &>(*this) = arg;
       return(*this); 
       }
     
     template<class U>
-    propMemberDataPredicate & operator = (U arg) 
+    prop_member_data_predicate & operator = (U arg) 
       { 
-      static_cast<propMemberData<T,C,d,NotificationPolicy,WriteTag> &>(*this) = arg;
+      static_cast<prop_member_data<T,C,d,NotificationPolicy,write_tag> &>(*this) = arg;
       return(*this); 
       }
     
@@ -152,7 +152,7 @@ namespace properties
       { 
       if (!fs || fs(arg))
         {
-        propMemberData<T,C,d,NotificationPolicy,WriteTag>::set(arg);
+        prop_member_data<T,C,d,NotificationPolicy,write_tag>::set(arg);
         }
       }
     
@@ -160,30 +160,30 @@ namespace properties
     
     boost::function<bool (T)> fs;
     
-    propMemberDataPredicate & operator = (const propMemberDataPredicate & arg);
+    prop_member_data_predicate & operator = (const prop_member_data_predicate & arg);
     
   };
 
   template <class T, class C, T C::*d,template <class> class NotificationPolicy,template <class> class PredicateFailurePolicy>
-  struct propMemberDataPredicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,ReadWriteTag> : 
-    propMemberData<T,C,d,NotificationPolicy,ReadWriteTag>,
+  struct prop_member_data_predicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,read_write_tag> : 
+    prop_member_data<T,C,d,NotificationPolicy,read_write_tag>,
     PredicateFailurePolicy<T>
   {
     
-    propMemberDataPredicate(const propMemberDataPredicate & arg) : 
-      propMemberData<T,C,d,NotificationPolicy,ReadWriteTag>(static_cast<const propMemberData<T,C,d,NotificationPolicy,ReadWriteTag> &>(arg)),
+    prop_member_data_predicate(const prop_member_data_predicate & arg) : 
+      prop_member_data<T,C,d,NotificationPolicy,read_write_tag>(static_cast<const prop_member_data<T,C,d,NotificationPolicy,read_write_tag> &>(arg)),
       fs(f)
       { 
       }
       
-    propMemberDataPredicate(boost::function<bool (T)> f,C & c) : 
-      propMemberData<T,C,d,NotificationPolicy,ReadWriteTag>(c),
+    prop_member_data_predicate(boost::function<bool (T)> f,C & c) : 
+      prop_member_data<T,C,d,NotificationPolicy,read_write_tag>(c),
       fs(f)
       { 
       }
       
-    propMemberDataPredicate(boost::function<bool (T)> f,C & c,T arg) : 
-      propMemberData<T,C,d,NotificationPolicy,ReadWriteTag>(c),
+    prop_member_data_predicate(boost::function<bool (T)> f,C & c,T arg) : 
+      prop_member_data<T,C,d,NotificationPolicy,read_write_tag>(c),
       fs(f)
       { 
       if (!fs || fs(arg))
@@ -193,8 +193,8 @@ namespace properties
       }
     
     template<class U>
-    propMemberDataPredicate(boost::function<bool (T)> f,C & c,U arg) : 
-      propMemberData<T,C,d,NotificationPolicy,ReadWriteTag>(c),
+    prop_member_data_predicate(boost::function<bool (T)> f,C & c,U arg) : 
+      prop_member_data<T,C,d,NotificationPolicy,read_write_tag>(c),
       fs(f)
       { 
       if (!fs || fs(arg))
@@ -203,22 +203,22 @@ namespace properties
         }
       }
     
-    propMemberDataPredicate & operator = (const propMemberDataPredicate & arg)
+    prop_member_data_predicate & operator = (const prop_member_data_predicate & arg)
       {
-      static_cast<propMemberData<T,C,d,NotificationPolicy,ReadWriteTag> &>(*this) = static_cast<const propMemberData<T,C,d,NotificationPolicy,ReadWriteTag> &>(arg);
+      static_cast<prop_member_data<T,C,d,NotificationPolicy,read_write_tag> &>(*this) = static_cast<const prop_member_data<T,C,d,NotificationPolicy,read_write_tag> &>(arg);
       return(*this); 
       }
     
-    propMemberDataPredicate & operator = (T arg) 
+    prop_member_data_predicate & operator = (T arg) 
       { 
-      static_cast<propMemberData<T,C,d,NotificationPolicy,ReadWriteTag> &>(*this) = arg;
+      static_cast<prop_member_data<T,C,d,NotificationPolicy,read_write_tag> &>(*this) = arg;
       return(*this); 
       }
     
     template<class U>
-    propMemberDataPredicate & operator = (U arg) 
+    prop_member_data_predicate & operator = (U arg) 
       { 
-      static_cast<propMemberData<T,C,d,NotificationPolicy,ReadWriteTag> &>(*this) = arg;
+      static_cast<prop_member_data<T,C,d,NotificationPolicy,read_write_tag> &>(*this) = arg;
       return(*this); 
       }
     
@@ -226,7 +226,7 @@ namespace properties
       { 
       if (!fs || fs(arg))
         {
-        propMemberData<T,C,d,NotificationPolicy,ReadWriteTag>::set(arg);
+        prop_member_data<T,C,d,NotificationPolicy,read_write_tag>::set(arg);
         }
       else
         {
@@ -244,24 +244,24 @@ namespace properties
   };
 
   template <class T, class C, T C::*d,template <class> class NotificationPolicy>
-  struct propMemberDataPredicate<T,C,d,NotificationPolicy,DefaultPolicyTag,ReadWriteTag> : 
-    propMemberData<T,C,d,NotificationPolicy,ReadWriteTag>
+  struct prop_member_data_predicate<T,C,d,NotificationPolicy,default_policy_tag,read_write_tag> : 
+    prop_member_data<T,C,d,NotificationPolicy,read_write_tag>
   {
     
-    propMemberDataPredicate(const propMemberDataPredicate & arg) : 
-      propMemberData<T,C,d,NotificationPolicy,ReadWriteTag>(static_cast<const propMemberData<T,C,d,NotificationPolicy,ReadWriteTag> &>(arg)),
+    prop_member_data_predicate(const prop_member_data_predicate & arg) : 
+      prop_member_data<T,C,d,NotificationPolicy,read_write_tag>(static_cast<const prop_member_data<T,C,d,NotificationPolicy,read_write_tag> &>(arg)),
       fs(f)
       { 
       }
       
-    propMemberDataPredicate(boost::function<bool (T)> f,C & c) : 
-      propMemberData<T,C,d,NotificationPolicy,ReadWriteTag>(c),
+    prop_member_data_predicate(boost::function<bool (T)> f,C & c) : 
+      prop_member_data<T,C,d,NotificationPolicy,read_write_tag>(c),
       fs(f)
       { 
       }
       
-    propMemberDataPredicate(boost::function<bool (T)> f,C & c,T arg) : 
-      propMemberData<T,C,d,NotificationPolicy,ReadWriteTag>(c),
+    prop_member_data_predicate(boost::function<bool (T)> f,C & c,T arg) : 
+      prop_member_data<T,C,d,NotificationPolicy,read_write_tag>(c),
       fs(f)
       { 
       if (!fs || fs(arg))
@@ -271,8 +271,8 @@ namespace properties
       }
     
     template<class U>
-    propMemberDataPredicate(boost::function<bool (T)> f,C & c,U arg) : 
-      propMemberData<T,C,d,NotificationPolicy,ReadWriteTag>(c),
+    prop_member_data_predicate(boost::function<bool (T)> f,C & c,U arg) : 
+      prop_member_data<T,C,d,NotificationPolicy,read_write_tag>(c),
       fs(f)
       { 
       if (!fs || fs(arg))
@@ -281,22 +281,22 @@ namespace properties
         }
       }
     
-    propMemberDataPredicate & operator = (const propMemberDataPredicate & arg)
+    prop_member_data_predicate & operator = (const prop_member_data_predicate & arg)
       {
-      static_cast<propMemberData<T,C,d,NotificationPolicy,ReadWriteTag> &>(*this) = static_cast<const propMemberData<T,C,d,NotificationPolicy,ReadWriteTag> &>(arg);
+      static_cast<prop_member_data<T,C,d,NotificationPolicy,read_write_tag> &>(*this) = static_cast<const prop_member_data<T,C,d,NotificationPolicy,read_write_tag> &>(arg);
       return(*this); 
       }
     
-    propMemberDataPredicate & operator = (T arg) 
+    prop_member_data_predicate & operator = (T arg) 
       { 
-      static_cast<propMemberData<T,C,d,NotificationPolicy,ReadWriteTag> &>(*this) = arg;
+      static_cast<prop_member_data<T,C,d,NotificationPolicy,read_write_tag> &>(*this) = arg;
       return(*this); 
       }
     
     template<class U>
-    propMemberDataPredicate & operator = (U arg) 
+    prop_member_data_predicate & operator = (U arg) 
       { 
-      static_cast<propMemberData<T,C,d,NotificationPolicy,ReadWriteTag> &>(*this) = arg;
+      static_cast<prop_member_data<T,C,d,NotificationPolicy,read_write_tag> &>(*this) = arg;
       return(*this); 
       }
     
@@ -304,7 +304,7 @@ namespace properties
       { 
       if (!fs || fs(arg))
         {
-        propMemberData<T,C,d,NotificationPolicy,ReadWriteTag>::set(arg);
+        prop_member_data<T,C,d,NotificationPolicy,read_write_tag>::set(arg);
         }
       }
     
@@ -317,10 +317,10 @@ namespace properties
 template <class T, class C, T C::*d,template <class> class NotificationPolicy,template <class> class PredicateFailurePolicy> 
 typename boost::enable_if
   <
-  typename detail::OMFIncrement<T>::type,
-  propMemberDataPredicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,ReadWriteTag> &
+  typename detail::omf_increment<T>::type,
+  prop_member_data_predicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,read_write_tag> &
   >::type
-operator ++ (propMemberDataPredicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,ReadWriteTag> & value)
+operator ++ (prop_member_data_predicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,read_write_tag> & value)
   {
   
   T t(value.get());
@@ -333,10 +333,10 @@ operator ++ (propMemberDataPredicate<T,C,d,NotificationPolicy,PredicateFailurePo
 template <class T, class C, T C::*d,template <class> class NotificationPolicy,template <class> class PredicateFailurePolicy> 
 typename boost::enable_if
   <
-  typename detail::OMFDecrement<T>::type,
-  propMemberDataPredicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,ReadWriteTag> &
+  typename detail::omf_decrement<T>::type,
+  prop_member_data_predicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,read_write_tag> &
   >::type
-operator -- (propMemberDataPredicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,ReadWriteTag> & value)
+operator -- (prop_member_data_predicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,read_write_tag> & value)
   {
   
   T t(value.get());
@@ -349,13 +349,13 @@ operator -- (propMemberDataPredicate<T,C,d,NotificationPolicy,PredicateFailurePo
 template <class T, class C, T C::*d,template <class> class NotificationPolicy,template <class> class PredicateFailurePolicy> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignMultiplySame<T>::type,
-  propMemberDataPredicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,ReadWriteTag> &
+  typename detail::omf_assign_multiply_same<T>::type,
+  prop_member_data_predicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,read_write_tag> &
   >::type
-operator *= (propMemberDataPredicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,ReadWriteTag> & first,T second)
+operator *= (prop_member_data_predicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,read_write_tag> & first,T second)
   {
   
-  typename detail::BinaryROMultiplySame<T>::type t(first.get() * second);
+  typename detail::binary_ro_multiply_same<T>::type t(first.get() * second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -364,13 +364,13 @@ operator *= (propMemberDataPredicate<T,C,d,NotificationPolicy,PredicateFailurePo
 template <class T, class C, T C::*d,template <class> class NotificationPolicy,template <class> class PredicateFailurePolicy, class U>
 typename boost::enable_if
   <
-  typename detail::OMFAssignMultiply<T,U>::type,
-  propMemberDataPredicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,ReadWriteTag> &
+  typename detail::omf_assign_multiply<T,U>::type,
+  prop_member_data_predicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,read_write_tag> &
   >::type
-operator *= (propMemberDataPredicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,ReadWriteTag> & first,U second)
+operator *= (prop_member_data_predicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,read_write_tag> & first,U second)
   {
   
-  typename detail::BinaryROMultiply<T,U>::type t(first.get() * second);
+  typename detail::binary_ro_multiply<T,U>::type t(first.get() * second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -379,13 +379,13 @@ operator *= (propMemberDataPredicate<T,C,d,NotificationPolicy,PredicateFailurePo
 template <class T, class C, T C::*d,template <class> class NotificationPolicy,template <class> class PredicateFailurePolicy> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignDivideSame<T>::type,
-  propMemberDataPredicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,ReadWriteTag> &
+  typename detail::omf_assign_divide_same<T>::type,
+  prop_member_data_predicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,read_write_tag> &
   >::type
-operator /= (propMemberDataPredicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,ReadWriteTag> & first,T second)
+operator /= (prop_member_data_predicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,read_write_tag> & first,T second)
   {
   
-  typename detail::BinaryRODivideSame<T>::type t(first.get() / second);
+  typename detail::binary_ro_divide_same<T>::type t(first.get() / second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -394,13 +394,13 @@ operator /= (propMemberDataPredicate<T,C,d,NotificationPolicy,PredicateFailurePo
 template <class T, class C, T C::*d,template <class> class NotificationPolicy,template <class> class PredicateFailurePolicy, class U>
 typename boost::enable_if
   <
-  typename detail::OMFAssignDivide<T,U>::type,
-  propMemberDataPredicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,ReadWriteTag> &
+  typename detail::omf_assign_divide<T,U>::type,
+  prop_member_data_predicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,read_write_tag> &
   >::type
-operator /= (propMemberDataPredicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,ReadWriteTag> & first,U second)
+operator /= (prop_member_data_predicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,read_write_tag> & first,U second)
   {
   
-  typename detail::BinaryRODivide<T,U>::type t(first.get() / second);
+  typename detail::binary_ro_divide<T,U>::type t(first.get() / second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -409,13 +409,13 @@ operator /= (propMemberDataPredicate<T,C,d,NotificationPolicy,PredicateFailurePo
 template <class T, class C, T C::*d,template <class> class NotificationPolicy,template <class> class PredicateFailurePolicy> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignModuloSame<T>::type,
-  propMemberDataPredicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,ReadWriteTag> &
+  typename detail::omf_assign_modulo_same<T>::type,
+  prop_member_data_predicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,read_write_tag> &
   >::type
-operator %= (propMemberDataPredicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,ReadWriteTag> & first,T second)
+operator %= (prop_member_data_predicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,read_write_tag> & first,T second)
   {
   
-  typename detail::BinaryROModuloSame<T>::type t(first.get() % second);
+  typename detail::binary_ro_modulo_same<T>::type t(first.get() % second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -424,13 +424,13 @@ operator %= (propMemberDataPredicate<T,C,d,NotificationPolicy,PredicateFailurePo
 template <class T, class C, T C::*d,template <class> class NotificationPolicy,template <class> class PredicateFailurePolicy, class U> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignModulo<T,U>::type,
-  propMemberDataPredicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,ReadWriteTag> &
+  typename detail::omf_assign_modulo<T,U>::type,
+  prop_member_data_predicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,read_write_tag> &
   >::type
-operator %= (propMemberDataPredicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,ReadWriteTag> & first,U second)
+operator %= (prop_member_data_predicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,read_write_tag> & first,U second)
   {
   
-  typename detail::BinaryROModulo<T,U>::type t(first.get() % second);
+  typename detail::binary_ro_modulo<T,U>::type t(first.get() % second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -439,13 +439,13 @@ operator %= (propMemberDataPredicate<T,C,d,NotificationPolicy,PredicateFailurePo
 template <class T, class C, T C::*d,template <class> class NotificationPolicy,template <class> class PredicateFailurePolicy> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignAddSame<T>::type,
-  propMemberDataPredicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,ReadWriteTag> &
+  typename detail::omf_assign_add_same<T>::type,
+  prop_member_data_predicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,read_write_tag> &
   >::type
-operator += (propMemberDataPredicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,ReadWriteTag> & first,T second)
+operator += (prop_member_data_predicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,read_write_tag> & first,T second)
   {
   
-  typename detail::BinaryROAddSame<T>::type t(first.get() + second);
+  typename detail::binary_ro_add_same<T>::type t(first.get() + second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -454,13 +454,13 @@ operator += (propMemberDataPredicate<T,C,d,NotificationPolicy,PredicateFailurePo
 template <class T, class C, T C::*d,template <class> class NotificationPolicy,template <class> class PredicateFailurePolicy, class U> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignAdd<T,U>::type,
-  propMemberDataPredicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,ReadWriteTag> &
+  typename detail::omf_assign_add<T,U>::type,
+  prop_member_data_predicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,read_write_tag> &
   >::type
-operator += (propMemberDataPredicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,ReadWriteTag> & first,U second)
+operator += (prop_member_data_predicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,read_write_tag> & first,U second)
   {
   
-  typename detail::BinaryROAdd<T,U>::type t(first.get() + second);
+  typename detail::binary_ro_add<T,U>::type t(first.get() + second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -469,13 +469,13 @@ operator += (propMemberDataPredicate<T,C,d,NotificationPolicy,PredicateFailurePo
 template <class T, class C, T C::*d,template <class> class NotificationPolicy,template <class> class PredicateFailurePolicy> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignSubtractSame<T>::type,
-  propMemberDataPredicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,ReadWriteTag> &
+  typename detail::omf_assign_subtract_same<T>::type,
+  prop_member_data_predicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,read_write_tag> &
   >::type
-operator -= (propMemberDataPredicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,ReadWriteTag> & first,T second)
+operator -= (prop_member_data_predicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,read_write_tag> & first,T second)
   {
   
-  typename detail::BinaryROSubtractSame<T>::type t(first.get() - second);
+  typename detail::binary_ro_subtract_same<T>::type t(first.get() - second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -484,13 +484,13 @@ operator -= (propMemberDataPredicate<T,C,d,NotificationPolicy,PredicateFailurePo
 template <class T, class C, T C::*d,template <class> class NotificationPolicy,template <class> class PredicateFailurePolicy, class U> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignSubtract<T,U>::type,
-  propMemberDataPredicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,ReadWriteTag> &
+  typename detail::omf_assign_subtract<T,U>::type,
+  prop_member_data_predicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,read_write_tag> &
   >::type
-operator -= (propMemberDataPredicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,ReadWriteTag> & first,U second)
+operator -= (prop_member_data_predicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,read_write_tag> & first,U second)
   {
   
-  typename detail::BinaryROSubtract<T,U>::type t(first.get() - second);
+  typename detail::binary_ro_subtract<T,U>::type t(first.get() - second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -499,13 +499,13 @@ operator -= (propMemberDataPredicate<T,C,d,NotificationPolicy,PredicateFailurePo
 template <class T, class C, T C::*d,template <class> class NotificationPolicy,template <class> class PredicateFailurePolicy> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignLeftShiftSame<T>::type,
-  propMemberDataPredicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,ReadWriteTag> &
+  typename detail::omf_assign_left_shift_same<T>::type,
+  prop_member_data_predicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,read_write_tag> &
   >::type
-operator <<= (propMemberDataPredicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,ReadWriteTag> & first,T second)
+operator <<= (prop_member_data_predicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,read_write_tag> & first,T second)
   {
   
-  typename detail::BinaryROLeftShiftSame<T>::type t(first.get() << second);
+  typename detail::binary_ro_left_shift_same<T>::type t(first.get() << second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -514,13 +514,13 @@ operator <<= (propMemberDataPredicate<T,C,d,NotificationPolicy,PredicateFailureP
 template <class T, class C, T C::*d,template <class> class NotificationPolicy,template <class> class PredicateFailurePolicy, class U> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignLeftShift<T,U>::type,
-  propMemberDataPredicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,ReadWriteTag> &
+  typename detail::omf_assign_left_shift<T,U>::type,
+  prop_member_data_predicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,read_write_tag> &
   >::type
-operator <<= (propMemberDataPredicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,ReadWriteTag> & first,U second)
+operator <<= (prop_member_data_predicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,read_write_tag> & first,U second)
   {
   
-  typename detail::BinaryROLeftShift<T,U>::type t(first.get() << second);
+  typename detail::binary_ro_left_shift<T,U>::type t(first.get() << second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -529,13 +529,13 @@ operator <<= (propMemberDataPredicate<T,C,d,NotificationPolicy,PredicateFailureP
 template <class T, class C, T C::*d,template <class> class NotificationPolicy,template <class> class PredicateFailurePolicy> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignRightShiftSame<T>::type,
-  propMemberDataPredicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,ReadWriteTag> &
+  typename detail::omf_assign_right_shift_same<T>::type,
+  prop_member_data_predicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,read_write_tag> &
   >::type
-operator >>= (propMemberDataPredicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,ReadWriteTag> & first,T second)
+operator >>= (prop_member_data_predicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,read_write_tag> & first,T second)
   {
   
-  typename detail::BinaryRORightShiftSame<T>::type t(first.get() >> second);
+  typename detail::binary_ro_right_shift_same<T>::type t(first.get() >> second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -544,13 +544,13 @@ operator >>= (propMemberDataPredicate<T,C,d,NotificationPolicy,PredicateFailureP
 template <class T, class C, T C::*d,template <class> class NotificationPolicy,template <class> class PredicateFailurePolicy, class U>
 typename boost::enable_if
   <
-  typename detail::OMFAssignRightShift<T,U>::type,
-  propMemberDataPredicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,ReadWriteTag> &
+  typename detail::omf_assign_right_shift<T,U>::type,
+  prop_member_data_predicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,read_write_tag> &
   >::type
-operator >>= (propMemberDataPredicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,ReadWriteTag> & first,U second)
+operator >>= (prop_member_data_predicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,read_write_tag> & first,U second)
   {
   
-  typename detail::BinaryRORightShift<T,U>::type t(first.get() >> second);
+  typename detail::binary_ro_right_shift<T,U>::type t(first.get() >> second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -559,13 +559,13 @@ operator >>= (propMemberDataPredicate<T,C,d,NotificationPolicy,PredicateFailureP
 template <class T, class C, T C::*d,template <class> class NotificationPolicy,template <class> class PredicateFailurePolicy> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignAndSame<T>::type,
-  propMemberDataPredicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,ReadWriteTag> &
+  typename detail::omf_assign_and_same<T>::type,
+  prop_member_data_predicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,read_write_tag> &
   >::type
-operator &= (propMemberDataPredicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,ReadWriteTag> & first,T second)
+operator &= (prop_member_data_predicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,read_write_tag> & first,T second)
   {
   
-  typename detail::BinaryROAndSame<T>::type t(first.get() & second);
+  typename detail::binary_ro_and_same<T>::type t(first.get() & second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -574,13 +574,13 @@ operator &= (propMemberDataPredicate<T,C,d,NotificationPolicy,PredicateFailurePo
 template <class T, class C, T C::*d,template <class> class NotificationPolicy,template <class> class PredicateFailurePolicy, class U>
 typename boost::enable_if
   <
-  typename detail::OMFAssignAnd<T,U>::type,
-  propMemberDataPredicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,ReadWriteTag> &
+  typename detail::omf_assign_and<T,U>::type,
+  prop_member_data_predicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,read_write_tag> &
   >::type
-operator &= (propMemberDataPredicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,ReadWriteTag> & first,U second)
+operator &= (prop_member_data_predicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,read_write_tag> & first,U second)
   {
   
-  typename detail::BinaryROAnd<T,U>::type t(first.get() & second);
+  typename detail::binary_ro_and<T,U>::type t(first.get() & second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -589,13 +589,13 @@ operator &= (propMemberDataPredicate<T,C,d,NotificationPolicy,PredicateFailurePo
 template <class T, class C, T C::*d,template <class> class NotificationPolicy,template <class> class PredicateFailurePolicy> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignXOrSame<T>::type,
-  propMemberDataPredicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,ReadWriteTag> &
+  typename detail::omf_assign_xor_same<T>::type,
+  prop_member_data_predicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,read_write_tag> &
   >::type
-operator ^= (propMemberDataPredicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,ReadWriteTag> & first,T second)
+operator ^= (prop_member_data_predicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,read_write_tag> & first,T second)
   {
   
-  typename detail::BinaryROXOrSame<T>::type t(first.get() ^ second);
+  typename detail::binary_ro_xor_same<T>::type t(first.get() ^ second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -604,13 +604,13 @@ operator ^= (propMemberDataPredicate<T,C,d,NotificationPolicy,PredicateFailurePo
 template <class T, class C, T C::*d,template <class> class NotificationPolicy,template <class> class PredicateFailurePolicy, class U> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignXOr<T,U>::type,
-  propMemberDataPredicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,ReadWriteTag> &
+  typename detail::omf_assign_xor<T,U>::type,
+  prop_member_data_predicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,read_write_tag> &
   >::type
-operator ^= (propMemberDataPredicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,ReadWriteTag> & first,U second)
+operator ^= (prop_member_data_predicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,read_write_tag> & first,U second)
   {
   
-  typename detail::BinaryROXOr<T,U>::type t(first.get() ^ second);
+  typename detail::binary_ro_xor<T,U>::type t(first.get() ^ second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -619,13 +619,13 @@ operator ^= (propMemberDataPredicate<T,C,d,NotificationPolicy,PredicateFailurePo
 template <class T, class C, T C::*d,template <class> class NotificationPolicy,template <class> class PredicateFailurePolicy> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignOrSame<T>::type,
-  propMemberDataPredicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,ReadWriteTag> &
+  typename detail::omf_assign_or_same<T>::type,
+  prop_member_data_predicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,read_write_tag> &
   >::type
-operator |= (propMemberDataPredicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,ReadWriteTag> & first,T second)
+operator |= (prop_member_data_predicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,read_write_tag> & first,T second)
   {
   
-  typename detail::BinaryROOrSame<T>::type t(first.get() | second);
+  typename detail::binary_ro_or_same<T>::type t(first.get() | second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -634,13 +634,13 @@ operator |= (propMemberDataPredicate<T,C,d,NotificationPolicy,PredicateFailurePo
 template <class T, class C, T C::*d,template <class> class NotificationPolicy,template <class> class PredicateFailurePolicy, class U> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignOr<T,U>::type,
-  propMemberDataPredicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,ReadWriteTag> &
+  typename detail::omf_assign_or<T,U>::type,
+  prop_member_data_predicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,read_write_tag> &
   >::type
-operator |= (propMemberDataPredicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,ReadWriteTag> & first,U second)
+operator |= (prop_member_data_predicate<T,C,d,NotificationPolicy,PredicateFailurePolicy,read_write_tag> & first,U second)
   {
   
-  typename detail::BinaryROOr<T,U>::type t(first.get() | second);
+  typename detail::binary_ro_or<T,U>::type t(first.get() | second);
   
   first.set(static_cast<T>(t));
   return(first);

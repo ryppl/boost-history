@@ -19,56 +19,56 @@ namespace properties
 {
   
   template <class T, 
-            template <class> class NotificationPolicy = DefaultPolicyTag,
-            template <class> class PredicateFailurePolicy = DefaultPolicyTag
+            template <class> class NotificationPolicy = default_policy_tag,
+            template <class> class PredicateFailurePolicy = default_policy_tag
            >
-  struct propAutoPredicate: 
-    propAuto<T,NotificationPolicy>,
+  struct prop_auto_predicate: 
+    prop_auto<T,NotificationPolicy>,
     PredicateFailurePolicy<T>
   {
 
     BOOST_MPL_ASSERT_NOT((boost::is_const<T>));
     
-    explicit propAutoPredicate(boost::function<bool (T)> f) : 
+    explicit prop_auto_predicate(boost::function<bool (T)> f) : 
       fs(f) 
       { 
       }
       
-    propAutoPredicate(const propAutoPredicate & arg) : 
-      propAuto<T,NotificationPolicy>(static_cast<const propAuto<T,NotificationPolicy> &>(arg)),
+    prop_auto_predicate(const prop_auto_predicate & arg) : 
+      prop_auto<T,NotificationPolicy>(static_cast<const prop_auto<T,NotificationPolicy> &>(arg)),
       fs(arg.fs)
       { 
       }
       
-    propAutoPredicate(boost::function<bool (T)> f,T arg) : 
-      propAuto<T,NotificationPolicy>(init(f,arg)),
+    prop_auto_predicate(boost::function<bool (T)> f,T arg) : 
+      prop_auto<T,NotificationPolicy>(init(f,arg)),
       fs(f)
       { 
       }
       
     template<class U>
-    propAutoPredicate(boost::function<bool (T)> f,U arg) : 
-      propAuto<T,NotificationPolicy>(init(f,arg)),
+    prop_auto_predicate(boost::function<bool (T)> f,U arg) : 
+      prop_auto<T,NotificationPolicy>(init(f,arg)),
       fs(f)
       { 
       }
       
-    propAutoPredicate & operator = (const propAutoPredicate & arg) 
+    prop_auto_predicate & operator = (const prop_auto_predicate & arg) 
       {
-      static_cast<propAuto<T,NotificationPolicy> &>(*this) = static_cast<const propAuto<T,NotificationPolicy> &>(arg); 
+      static_cast<prop_auto<T,NotificationPolicy> &>(*this) = static_cast<const prop_auto<T,NotificationPolicy> &>(arg); 
       return(*this); 
       }
       
-    propAutoPredicate & operator = (T arg) 
+    prop_auto_predicate & operator = (T arg) 
       { 
-      static_cast<propAuto<T,NotificationPolicy> &>(*this) = arg; 
+      static_cast<prop_auto<T,NotificationPolicy> &>(*this) = arg; 
       return(*this); 
       }
       
     template<class U>
-    propAutoPredicate & operator = (U arg) 
+    prop_auto_predicate & operator = (U arg) 
       { 
-      static_cast<propAuto<T,NotificationPolicy> &>(*this) = arg; 
+      static_cast<prop_auto<T,NotificationPolicy> &>(*this) = arg; 
       return(*this); 
       }
       
@@ -76,7 +76,7 @@ namespace properties
       { 
       if (!fs || fs(arg))
         {
-        propAuto<T,NotificationPolicy>::set(arg);
+        prop_auto<T,NotificationPolicy>::set(arg);
         }
       else
         {
@@ -138,52 +138,52 @@ namespace properties
   template <class T, 
             template <class> class NotificationPolicy
            >
-  struct propAutoPredicate<T,NotificationPolicy,DefaultPolicyTag> : 
-    propAuto<T,NotificationPolicy>
+  struct prop_auto_predicate<T,NotificationPolicy,default_policy_tag> : 
+    prop_auto<T,NotificationPolicy>
   {
 
     BOOST_MPL_ASSERT_NOT((boost::is_const<T>));
     
-    explicit propAutoPredicate(boost::function<bool (T)> f) : 
+    explicit prop_auto_predicate(boost::function<bool (T)> f) : 
       fs(f) 
       { 
       }
       
-    propAutoPredicate(const propAutoPredicate & arg) : 
-      propAuto<T,NotificationPolicy>(static_cast<const propAuto<T,NotificationPolicy> &>(arg)),
+    prop_auto_predicate(const prop_auto_predicate & arg) : 
+      prop_auto<T,NotificationPolicy>(static_cast<const prop_auto<T,NotificationPolicy> &>(arg)),
       fs(arg.fs)
       { 
       }
       
-    propAutoPredicate(boost::function<bool (T)> f,T arg) : 
-      propAuto<T,NotificationPolicy>(init(f,arg)),
+    prop_auto_predicate(boost::function<bool (T)> f,T arg) : 
+      prop_auto<T,NotificationPolicy>(init(f,arg)),
       fs(f)
       { 
       }
       
     template<class U>
-    propAutoPredicate(boost::function<bool (T)> f,U arg) : 
-      propAuto<T,NotificationPolicy>(init(f,arg)),
+    prop_auto_predicate(boost::function<bool (T)> f,U arg) : 
+      prop_auto<T,NotificationPolicy>(init(f,arg)),
       fs(f)
       { 
       }
       
-    propAutoPredicate & operator = (const propAutoPredicate & arg) 
+    prop_auto_predicate & operator = (const prop_auto_predicate & arg) 
       {
-      static_cast<propAuto<T,NotificationPolicy> &>(*this) = static_cast<const propAuto<T,NotificationPolicy> &>(arg); 
+      static_cast<prop_auto<T,NotificationPolicy> &>(*this) = static_cast<const prop_auto<T,NotificationPolicy> &>(arg); 
       return(*this); 
       }
       
-    propAutoPredicate & operator = (T arg) 
+    prop_auto_predicate & operator = (T arg) 
       { 
-      static_cast<propAuto<T,NotificationPolicy> &>(*this) = arg; 
+      static_cast<prop_auto<T,NotificationPolicy> &>(*this) = arg; 
       return(*this); 
       }
       
     template<class U>
-    propAutoPredicate & operator = (U arg) 
+    prop_auto_predicate & operator = (U arg) 
       { 
-      static_cast<propAuto<T,NotificationPolicy> &>(*this) = arg; 
+      static_cast<prop_auto<T,NotificationPolicy> &>(*this) = arg; 
       return(*this); 
       }
       
@@ -191,7 +191,7 @@ namespace properties
       { 
       if (!fs || fs(arg))
         {
-        propAuto<T,NotificationPolicy>::set(arg);
+        prop_auto<T,NotificationPolicy>::set(arg);
         }
       }
     
@@ -246,10 +246,10 @@ namespace properties
 template <class T,template <class> class NotificationPolicy,template <class> class PredicateFailurePolicy> 
 typename boost::enable_if
   <
-  typename detail::OMFIncrement<T>::type,
-  propAutoPredicate<T,NotificationPolicy,PredicateFailurePolicy> &
+  typename detail::omf_increment<T>::type,
+  prop_auto_predicate<T,NotificationPolicy,PredicateFailurePolicy> &
   >::type
-operator ++ (propAutoPredicate<T,NotificationPolicy,PredicateFailurePolicy> & value)
+operator ++ (prop_auto_predicate<T,NotificationPolicy,PredicateFailurePolicy> & value)
   {
   
   T t(value.get());
@@ -262,10 +262,10 @@ operator ++ (propAutoPredicate<T,NotificationPolicy,PredicateFailurePolicy> & va
 template <class T,template <class> class NotificationPolicy,template <class> class PredicateFailurePolicy> 
 typename boost::enable_if
   <
-  typename detail::OMFDecrement<T>::type,
-  propAutoPredicate<T,NotificationPolicy,PredicateFailurePolicy> &
+  typename detail::omf_decrement<T>::type,
+  prop_auto_predicate<T,NotificationPolicy,PredicateFailurePolicy> &
   >::type
-operator -- (propAutoPredicate<T,NotificationPolicy,PredicateFailurePolicy> & value)
+operator -- (prop_auto_predicate<T,NotificationPolicy,PredicateFailurePolicy> & value)
   {
   
   T t(value.get());
@@ -278,13 +278,13 @@ operator -- (propAutoPredicate<T,NotificationPolicy,PredicateFailurePolicy> & va
 template <class T,template <class> class NotificationPolicy,template <class> class PredicateFailurePolicy> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignMultiplySame<T>::type,
-  propAutoPredicate<T,NotificationPolicy,PredicateFailurePolicy> &
+  typename detail::omf_assign_multiply_same<T>::type,
+  prop_auto_predicate<T,NotificationPolicy,PredicateFailurePolicy> &
   >::type
-operator *= (propAutoPredicate<T,NotificationPolicy,PredicateFailurePolicy> & first,T second)
+operator *= (prop_auto_predicate<T,NotificationPolicy,PredicateFailurePolicy> & first,T second)
   {
   
-  typename detail::BinaryROMultiplySame<T>::type t(first.get() * second);
+  typename detail::binary_ro_multiply_same<T>::type t(first.get() * second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -293,13 +293,13 @@ operator *= (propAutoPredicate<T,NotificationPolicy,PredicateFailurePolicy> & fi
 template <class T,template <class> class NotificationPolicy,template <class> class PredicateFailurePolicy,class U>
 typename boost::enable_if
   <
-  typename detail::OMFAssignMultiply<T,U>::type,
-  propAutoPredicate<T,NotificationPolicy,PredicateFailurePolicy> &
+  typename detail::omf_assign_multiply<T,U>::type,
+  prop_auto_predicate<T,NotificationPolicy,PredicateFailurePolicy> &
   >::type
-operator *= (propAutoPredicate<T,NotificationPolicy,PredicateFailurePolicy> & first,U second)
+operator *= (prop_auto_predicate<T,NotificationPolicy,PredicateFailurePolicy> & first,U second)
   {
   
-  typename detail::BinaryROMultiply<T,U>::type t(first.get() * second);
+  typename detail::binary_ro_multiply<T,U>::type t(first.get() * second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -308,13 +308,13 @@ operator *= (propAutoPredicate<T,NotificationPolicy,PredicateFailurePolicy> & fi
 template <class T,template <class> class NotificationPolicy,template <class> class PredicateFailurePolicy> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignDivideSame<T>::type,
-  propAutoPredicate<T,NotificationPolicy,PredicateFailurePolicy> &
+  typename detail::omf_assign_divide_same<T>::type,
+  prop_auto_predicate<T,NotificationPolicy,PredicateFailurePolicy> &
   >::type
-operator /= (propAutoPredicate<T,NotificationPolicy,PredicateFailurePolicy> & first,T second)
+operator /= (prop_auto_predicate<T,NotificationPolicy,PredicateFailurePolicy> & first,T second)
   {
   
-  typename detail::BinaryRODivideSame<T>::type t(first.get() / second);
+  typename detail::binary_ro_divide_same<T>::type t(first.get() / second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -323,13 +323,13 @@ operator /= (propAutoPredicate<T,NotificationPolicy,PredicateFailurePolicy> & fi
 template <class T,template <class> class NotificationPolicy,template <class> class PredicateFailurePolicy,class U>
 typename boost::enable_if
   <
-  typename detail::OMFAssignDivide<T,U>::type,
-  propAutoPredicate<T,NotificationPolicy,PredicateFailurePolicy> &
+  typename detail::omf_assign_divide<T,U>::type,
+  prop_auto_predicate<T,NotificationPolicy,PredicateFailurePolicy> &
   >::type
-operator /= (propAutoPredicate<T,NotificationPolicy,PredicateFailurePolicy> & first,U second)
+operator /= (prop_auto_predicate<T,NotificationPolicy,PredicateFailurePolicy> & first,U second)
   {
   
-  typename detail::BinaryRODivide<T,U>::type t(first.get() / second);
+  typename detail::binary_ro_divide<T,U>::type t(first.get() / second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -338,13 +338,13 @@ operator /= (propAutoPredicate<T,NotificationPolicy,PredicateFailurePolicy> & fi
 template <class T,template <class> class NotificationPolicy,template <class> class PredicateFailurePolicy> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignModuloSame<T>::type,
-  propAutoPredicate<T,NotificationPolicy,PredicateFailurePolicy> &
+  typename detail::omf_assign_modulo_same<T>::type,
+  prop_auto_predicate<T,NotificationPolicy,PredicateFailurePolicy> &
   >::type
-operator %= (propAutoPredicate<T,NotificationPolicy,PredicateFailurePolicy> & first,T second)
+operator %= (prop_auto_predicate<T,NotificationPolicy,PredicateFailurePolicy> & first,T second)
   {
   
-  typename detail::BinaryROModuloSame<T>::type t(first.get() % second);
+  typename detail::binary_ro_modulo_same<T>::type t(first.get() % second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -353,13 +353,13 @@ operator %= (propAutoPredicate<T,NotificationPolicy,PredicateFailurePolicy> & fi
 template <class T,template <class> class NotificationPolicy,template <class> class PredicateFailurePolicy,class U> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignModulo<T,U>::type,
-  propAutoPredicate<T,NotificationPolicy,PredicateFailurePolicy> &
+  typename detail::omf_assign_modulo<T,U>::type,
+  prop_auto_predicate<T,NotificationPolicy,PredicateFailurePolicy> &
   >::type
-operator %= (propAutoPredicate<T,NotificationPolicy,PredicateFailurePolicy> & first,U second)
+operator %= (prop_auto_predicate<T,NotificationPolicy,PredicateFailurePolicy> & first,U second)
   {
   
-  typename detail::BinaryROModulo<T,U>::type t(first.get() % second);
+  typename detail::binary_ro_modulo<T,U>::type t(first.get() % second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -368,13 +368,13 @@ operator %= (propAutoPredicate<T,NotificationPolicy,PredicateFailurePolicy> & fi
 template <class T,template <class> class NotificationPolicy,template <class> class PredicateFailurePolicy> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignAddSame<T>::type,
-  propAutoPredicate<T,NotificationPolicy,PredicateFailurePolicy> &
+  typename detail::omf_assign_add_same<T>::type,
+  prop_auto_predicate<T,NotificationPolicy,PredicateFailurePolicy> &
   >::type
-operator += (propAutoPredicate<T,NotificationPolicy,PredicateFailurePolicy> & first,T second)
+operator += (prop_auto_predicate<T,NotificationPolicy,PredicateFailurePolicy> & first,T second)
   {
   
-  typename detail::BinaryROAddSame<T>::type t(first.get() + second);
+  typename detail::binary_ro_add_same<T>::type t(first.get() + second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -383,13 +383,13 @@ operator += (propAutoPredicate<T,NotificationPolicy,PredicateFailurePolicy> & fi
 template <class T,template <class> class NotificationPolicy,template <class> class PredicateFailurePolicy,class U> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignAdd<T,U>::type,
-  propAutoPredicate<T,NotificationPolicy,PredicateFailurePolicy> &
+  typename detail::omf_assign_add<T,U>::type,
+  prop_auto_predicate<T,NotificationPolicy,PredicateFailurePolicy> &
   >::type
-operator += (propAutoPredicate<T,NotificationPolicy,PredicateFailurePolicy> & first,U second)
+operator += (prop_auto_predicate<T,NotificationPolicy,PredicateFailurePolicy> & first,U second)
   {
   
-  typename detail::BinaryROAdd<T,U>::type t(first.get() + second);
+  typename detail::binary_ro_add<T,U>::type t(first.get() + second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -398,13 +398,13 @@ operator += (propAutoPredicate<T,NotificationPolicy,PredicateFailurePolicy> & fi
 template <class T,template <class> class NotificationPolicy,template <class> class PredicateFailurePolicy> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignSubtractSame<T>::type,
-  propAutoPredicate<T,NotificationPolicy,PredicateFailurePolicy> &
+  typename detail::omf_assign_subtract_same<T>::type,
+  prop_auto_predicate<T,NotificationPolicy,PredicateFailurePolicy> &
   >::type
-operator -= (propAutoPredicate<T,NotificationPolicy,PredicateFailurePolicy> & first,T second)
+operator -= (prop_auto_predicate<T,NotificationPolicy,PredicateFailurePolicy> & first,T second)
   {
   
-  typename detail::BinaryROSubtractSame<T>::type t(first.get() - second);
+  typename detail::binary_ro_subtract_same<T>::type t(first.get() - second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -413,13 +413,13 @@ operator -= (propAutoPredicate<T,NotificationPolicy,PredicateFailurePolicy> & fi
 template <class T,template <class> class NotificationPolicy,template <class> class PredicateFailurePolicy,class U> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignSubtract<T,U>::type,
-  propAutoPredicate<T,NotificationPolicy,PredicateFailurePolicy> &
+  typename detail::omf_assign_subtract<T,U>::type,
+  prop_auto_predicate<T,NotificationPolicy,PredicateFailurePolicy> &
   >::type
-operator -= (propAutoPredicate<T,NotificationPolicy,PredicateFailurePolicy> & first,U second)
+operator -= (prop_auto_predicate<T,NotificationPolicy,PredicateFailurePolicy> & first,U second)
   {
   
-  typename detail::BinaryROSubtract<T,U>::type t(first.get() - second);
+  typename detail::binary_ro_subtract<T,U>::type t(first.get() - second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -428,13 +428,13 @@ operator -= (propAutoPredicate<T,NotificationPolicy,PredicateFailurePolicy> & fi
 template <class T,template <class> class NotificationPolicy,template <class> class PredicateFailurePolicy> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignLeftShiftSame<T>::type,
-  propAutoPredicate<T,NotificationPolicy,PredicateFailurePolicy> &
+  typename detail::omf_assign_left_shift_same<T>::type,
+  prop_auto_predicate<T,NotificationPolicy,PredicateFailurePolicy> &
   >::type
-operator <<= (propAutoPredicate<T,NotificationPolicy,PredicateFailurePolicy> & first,T second)
+operator <<= (prop_auto_predicate<T,NotificationPolicy,PredicateFailurePolicy> & first,T second)
   {
   
-  typename detail::BinaryROLeftShiftSame<T>::type t(first.get() << second);
+  typename detail::binary_ro_left_shift_same<T>::type t(first.get() << second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -443,13 +443,13 @@ operator <<= (propAutoPredicate<T,NotificationPolicy,PredicateFailurePolicy> & f
 template <class T,template <class> class NotificationPolicy,template <class> class PredicateFailurePolicy,class U> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignLeftShift<T,U>::type,
-  propAutoPredicate<T,NotificationPolicy,PredicateFailurePolicy> &
+  typename detail::omf_assign_left_shift<T,U>::type,
+  prop_auto_predicate<T,NotificationPolicy,PredicateFailurePolicy> &
   >::type
-operator <<= (propAutoPredicate<T,NotificationPolicy,PredicateFailurePolicy> & first,U second)
+operator <<= (prop_auto_predicate<T,NotificationPolicy,PredicateFailurePolicy> & first,U second)
   {
   
-  typename detail::BinaryROLeftShift<T,U>::type t(first.get() << second);
+  typename detail::binary_ro_left_shift<T,U>::type t(first.get() << second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -458,13 +458,13 @@ operator <<= (propAutoPredicate<T,NotificationPolicy,PredicateFailurePolicy> & f
 template <class T,template <class> class NotificationPolicy,template <class> class PredicateFailurePolicy> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignRightShiftSame<T>::type,
-  propAutoPredicate<T,NotificationPolicy,PredicateFailurePolicy> &
+  typename detail::omf_assign_right_shift_same<T>::type,
+  prop_auto_predicate<T,NotificationPolicy,PredicateFailurePolicy> &
   >::type
-operator >>= (propAutoPredicate<T,NotificationPolicy,PredicateFailurePolicy> & first,T second)
+operator >>= (prop_auto_predicate<T,NotificationPolicy,PredicateFailurePolicy> & first,T second)
   {
   
-  typename detail::BinaryRORightShiftSame<T>::type t(first.get() >> second);
+  typename detail::binary_ro_right_shift_same<T>::type t(first.get() >> second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -473,13 +473,13 @@ operator >>= (propAutoPredicate<T,NotificationPolicy,PredicateFailurePolicy> & f
 template <class T,template <class> class NotificationPolicy,template <class> class PredicateFailurePolicy,class U>
 typename boost::enable_if
   <
-  typename detail::OMFAssignRightShift<T,U>::type,
-  propAutoPredicate<T,NotificationPolicy,PredicateFailurePolicy> &
+  typename detail::omf_assign_right_shift<T,U>::type,
+  prop_auto_predicate<T,NotificationPolicy,PredicateFailurePolicy> &
   >::type
-operator >>= (propAutoPredicate<T,NotificationPolicy,PredicateFailurePolicy> & first,U second)
+operator >>= (prop_auto_predicate<T,NotificationPolicy,PredicateFailurePolicy> & first,U second)
   {
   
-  typename detail::BinaryRORightShift<T,U>::type t(first.get() >> second);
+  typename detail::binary_ro_right_shift<T,U>::type t(first.get() >> second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -488,13 +488,13 @@ operator >>= (propAutoPredicate<T,NotificationPolicy,PredicateFailurePolicy> & f
 template <class T,template <class> class NotificationPolicy,template <class> class PredicateFailurePolicy> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignAndSame<T>::type,
-  propAutoPredicate<T,NotificationPolicy,PredicateFailurePolicy> &
+  typename detail::omf_assign_and_same<T>::type,
+  prop_auto_predicate<T,NotificationPolicy,PredicateFailurePolicy> &
   >::type
-operator &= (propAutoPredicate<T,NotificationPolicy,PredicateFailurePolicy> & first,T second)
+operator &= (prop_auto_predicate<T,NotificationPolicy,PredicateFailurePolicy> & first,T second)
   {
   
-  typename detail::BinaryROAndSame<T>::type t(first.get() & second);
+  typename detail::binary_ro_and_same<T>::type t(first.get() & second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -503,13 +503,13 @@ operator &= (propAutoPredicate<T,NotificationPolicy,PredicateFailurePolicy> & fi
 template <class T,template <class> class NotificationPolicy,template <class> class PredicateFailurePolicy,class U>
 typename boost::enable_if
   <
-  typename detail::OMFAssignAnd<T,U>::type,
-  propAutoPredicate<T,NotificationPolicy,PredicateFailurePolicy> &
+  typename detail::omf_assign_and<T,U>::type,
+  prop_auto_predicate<T,NotificationPolicy,PredicateFailurePolicy> &
   >::type
-operator &= (propAutoPredicate<T,NotificationPolicy,PredicateFailurePolicy> & first,U second)
+operator &= (prop_auto_predicate<T,NotificationPolicy,PredicateFailurePolicy> & first,U second)
   {
   
-  typename detail::BinaryROAnd<T,U>::type t(first.get() & second);
+  typename detail::binary_ro_and<T,U>::type t(first.get() & second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -518,13 +518,13 @@ operator &= (propAutoPredicate<T,NotificationPolicy,PredicateFailurePolicy> & fi
 template <class T,template <class> class NotificationPolicy,template <class> class PredicateFailurePolicy> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignXOrSame<T>::type,
-  propAutoPredicate<T,NotificationPolicy,PredicateFailurePolicy> &
+  typename detail::omf_assign_xor_same<T>::type,
+  prop_auto_predicate<T,NotificationPolicy,PredicateFailurePolicy> &
   >::type
-operator ^= (propAutoPredicate<T,NotificationPolicy,PredicateFailurePolicy> & first,T second)
+operator ^= (prop_auto_predicate<T,NotificationPolicy,PredicateFailurePolicy> & first,T second)
   {
   
-  typename detail::BinaryROXOrSame<T>::type t(first.get() ^ second);
+  typename detail::binary_ro_xor_same<T>::type t(first.get() ^ second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -533,13 +533,13 @@ operator ^= (propAutoPredicate<T,NotificationPolicy,PredicateFailurePolicy> & fi
 template <class T,template <class> class NotificationPolicy,template <class> class PredicateFailurePolicy,class U> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignXOr<T,U>::type,
-  propAutoPredicate<T,NotificationPolicy,PredicateFailurePolicy> &
+  typename detail::omf_assign_xor<T,U>::type,
+  prop_auto_predicate<T,NotificationPolicy,PredicateFailurePolicy> &
   >::type
-operator ^= (propAutoPredicate<T,NotificationPolicy,PredicateFailurePolicy> & first,U second)
+operator ^= (prop_auto_predicate<T,NotificationPolicy,PredicateFailurePolicy> & first,U second)
   {
   
-  typename detail::BinaryROXOr<T,U>::type t(first.get() ^ second);
+  typename detail::binary_ro_xor<T,U>::type t(first.get() ^ second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -548,13 +548,13 @@ operator ^= (propAutoPredicate<T,NotificationPolicy,PredicateFailurePolicy> & fi
 template <class T,template <class> class NotificationPolicy,template <class> class PredicateFailurePolicy> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignOrSame<T>::type,
-  propAutoPredicate<T,NotificationPolicy,PredicateFailurePolicy> &
+  typename detail::omf_assign_or_same<T>::type,
+  prop_auto_predicate<T,NotificationPolicy,PredicateFailurePolicy> &
   >::type
-operator |= (propAutoPredicate<T,NotificationPolicy,PredicateFailurePolicy> & first,T second)
+operator |= (prop_auto_predicate<T,NotificationPolicy,PredicateFailurePolicy> & first,T second)
   {
   
-  typename detail::BinaryROOrSame<T>::type t(first.get() | second);
+  typename detail::binary_ro_or_same<T>::type t(first.get() | second);
   
   first.set(static_cast<T>(t));
   return(first);
@@ -563,13 +563,13 @@ operator |= (propAutoPredicate<T,NotificationPolicy,PredicateFailurePolicy> & fi
 template <class T,template <class> class NotificationPolicy,template <class> class PredicateFailurePolicy,class U> 
 typename boost::enable_if
   <
-  typename detail::OMFAssignOr<T,U>::type,
-  propAutoPredicate<T,NotificationPolicy,PredicateFailurePolicy> &
+  typename detail::omf_assign_or<T,U>::type,
+  prop_auto_predicate<T,NotificationPolicy,PredicateFailurePolicy> &
   >::type
-operator |= (propAutoPredicate<T,NotificationPolicy,PredicateFailurePolicy> & first,U second)
+operator |= (prop_auto_predicate<T,NotificationPolicy,PredicateFailurePolicy> & first,U second)
   {
   
-  typename detail::BinaryROOr<T,U>::type t(first.get() | second);
+  typename detail::binary_ro_or<T,U>::type t(first.get() | second);
   
   first.set(static_cast<T>(t));
   return(first);

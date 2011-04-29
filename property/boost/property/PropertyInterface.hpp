@@ -9,7 +9,7 @@ namespace properties
 {
   
   template <class T>
-  struct IPropertyRead
+  struct i_property_read
   {
 
     BOOST_MPL_ASSERT_NOT((boost::is_reference<T>));
@@ -19,7 +19,7 @@ namespace properties
   };
 
   template <class T>
-  struct IPropertyWrite
+  struct i_property_write
   {
 
     BOOST_MPL_ASSERT_NOT((boost::is_reference<T>));
@@ -30,9 +30,9 @@ namespace properties
   };
   
   template <class T>
-  struct IPropertyReadWrite : 
-    virtual IPropertyRead<T>, 
-    virtual IPropertyWrite<T>
+  struct i_property_read_write : 
+    virtual i_property_read<T>, 
+    virtual i_property_write<T>
   {
   
     BOOST_MPL_ASSERT_NOT((boost::is_reference<T>));
