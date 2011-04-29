@@ -40,12 +40,12 @@ namespace sh
 */
 
 template <typename T>
-	class block_ptr_coblockon
+	class block_ptr_common
 	{
-		template <typename> friend class block_ptr_coblockon;
+		template <typename> friend class block_ptr_common;
 
         // Borland 5.5.1 specific workaround
-        typedef block_ptr_coblockon<T> this_type;
+        typedef block_ptr_common<T> this_type;
 
 	protected:
 		typedef T value_type;
@@ -54,11 +54,11 @@ template <typename T>
 		value_type * po_;
 
 	public:
-		block_ptr_coblockon() : po_(0)
+		block_ptr_common() : po_(0)
 		{
 		}
 
-        ~block_ptr_coblockon()
+        ~block_ptr_common()
 		{
 			if (po_)
 			{
@@ -67,21 +67,21 @@ template <typename T>
 		}
 
 		template <typename V>
-			block_ptr_coblockon(detail::sh::block<V> * p) : po_(p->element())
+			block_ptr_common(detail::sh::block<V> * p) : po_(p->element())
 			{
 			}
 
 		template <typename V>
-			block_ptr_coblockon(block_ptr_coblockon<V> const & p) : po_(p.share())
+			block_ptr_common(block_ptr_common<V> const & p) : po_(p.share())
 			{
 			}
 
-			block_ptr_coblockon(block_ptr_coblockon<value_type> const & p) : po_(p.share())
+			block_ptr_common(block_ptr_common<value_type> const & p) : po_(p.share())
 			{
 			}
 
 		template <typename V>
-			block_ptr_coblockon & operator = (detail::sh::block<V> * p)
+			block_ptr_common & operator = (detail::sh::block<V> * p)
 			{
 				reset(p->element());
 
@@ -89,7 +89,7 @@ template <typename T>
 			}
 
 		template <typename V>
-			block_ptr_coblockon & operator = (block_ptr_coblockon<V> const & p)
+			block_ptr_common & operator = (block_ptr_common<V> const & p)
 			{
 				if (p.po_ != po_)
 				{
@@ -98,7 +98,7 @@ template <typename T>
 				return * this;
 			}
 
-			block_ptr_coblockon & operator = (block_ptr_coblockon<value_type> const & p)
+			block_ptr_common & operator = (block_ptr_common<value_type> const & p)
 			{
 				return operator = <value_type>(p);
 			}
@@ -184,9 +184,9 @@ template <typename T>
 
 
 template <typename T>
-	class block_ptr_base : public block_ptr_coblockon<T>
+	class block_ptr_base : public block_ptr_common<T>
 	{
-        typedef block_ptr_coblockon<T> base;
+        typedef block_ptr_common<T> base;
         typedef typename base::value_type value_type;
 		
 	protected:
@@ -242,9 +242,9 @@ template <typename T>
 
 #if !defined(_MSC_VER)
 template <typename T, size_t N>
-	class block_ptr_base<T [N]> : public block_ptr_coblockon<T [N]>
+	class block_ptr_base<T [N]> : public block_ptr_common<T [N]>
 	{
-        typedef block_ptr_coblockon<T [N]> base;
+        typedef block_ptr_common<T [N]> base;
         typedef typename base::value_type value_type;
 
 	protected:
@@ -300,9 +300,9 @@ template <typename T, size_t N>
 
 
 template <>
-	class block_ptr_base<void> : public block_ptr_coblockon<void>
+	class block_ptr_base<void> : public block_ptr_common<void>
 	{
-        typedef block_ptr_coblockon<void> base;
+        typedef block_ptr_common<void> base;
         typedef base::value_type value_type;
 
 	protected:
