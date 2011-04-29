@@ -10,5 +10,5 @@ echo "HOME=$HOME"
 echo "BOOST_ROOT=$BOOST_ROOT"
 echo "BOOST_BUILD_PATH=$BOOST_BUILD_PATH"
 echo
-echo 'Make sure your "\$HOME/user-config.jam" exists and it is correct.'
+echo "Make sure your \"$HOME/user-config.jam" exists and it is correct.\"
 
