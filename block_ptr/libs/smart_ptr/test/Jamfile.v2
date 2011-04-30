@@ -7,7 +7,7 @@
 # accompanying file LICENSE_1_0.txt or copy at
 # http://www.boost.org/LICENSE_1_0.txt
 
-using testing ;
+import testing ;
 
 if ! $(BOOST_ROOT)
 {
@@ -16,6 +16,7 @@ if ! $(BOOST_ROOT)
 
 # bjam -V2 threading=multi target-os=cygwin threadapi=pthread variant=debug
 
+lib boost_thread : : <name>boost_thread ;
 lib boost_unit_test_framework : : <name>boost_unit_test_framework ;
 
 project :
@@ -26,6 +27,6 @@ project :
 ;
 
 test-suite "block_ptr_tests" :
-    [ run block_ptr_test1.cpp boost_unit_test_framework ]
-    [ run block_ptr_test3.cpp boost_unit_test_framework ]
+    [ run block_ptr_test1.cpp boost_thread boost_unit_test_framework ]
+    [ run block_ptr_test3.cpp boost_thread boost_unit_test_framework ]
     ;
