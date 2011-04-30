@@ -391,7 +391,7 @@ template <typename T>
 				release(true);
         }
 
-//#if defined(BOOST_HAS_RVALUE_REFS)
+#if defined(BOOST_HAS_RVALUE_REFS)
     	block_ptr(block_ptr<T> && p): base(std::move(p.po_)), ps_(std::move(p.ps_))
     	{
     	}
@@ -417,7 +417,7 @@ template <typename T>
         		
         		return *this;
     		}
-//#endif
+#endif
 
     private:
 		/**
