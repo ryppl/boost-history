@@ -51,6 +51,7 @@ namespace sh
 {
 
 
+template <typename> class block_ptr;
 class block_base;
 
 
@@ -62,10 +63,19 @@ class block_base;
 
 class block_header
 {
+    template <typename> friend class block_ptr;
+
     typedef detail::atomic_count count_type;
+
+#ifndef BOOST_DISABLE_THREADS
+	mutex mutex_;
+#endif
 
     count_type count_;								/**< Count of the number of pointers from the stack referencing the same @c block_header .*/
     block_header * redir_;							/**< Redirection in the case of an union multiple sets.*/
+
+	bool destroy_;									/**< Destruction sequence initiated. */
+    intrusive_list::node tag_;						/**< Tag used to enlist to @c block_header::includes_ . */
 
     intrusive_list includes_;						/**< List of all sets of an union. */
     intrusive_list elements_;						/**< List of all pointee objects belonging to a @c block_header . */
@@ -73,13 +83,6 @@ class block_header
     static fast_pool_allocator<block_header> pool_;/**< Pool where all sets are allocated. */
 
 public:
-#ifndef BOOST_DISABLE_THREADS
-	mutex mutex_;
-#endif
-	bool destroy_;									/**< Destruction sequence initiated. */
-    intrusive_list::node tag_;						/**< Tag used to enlist to @c block_header::includes_ . */
-
-
 	/**
 		Initialization of a single @c block_header .
 	*/
@@ -166,18 +169,6 @@ public:
         }
     }
 
-	
-	/**
-		Finds the elements constituting one or many sets unified.
-		
-		@return		List of all elements.
-	*/
-	
-    intrusive_list * elements() const
-    {
-        return & redir()->elements_;
-    }
-    
 	
 	/**
 		Allocates a new @c block_header using the fast pool allocator.
@@ -398,7 +389,7 @@ template <typename T>
 
         ~block_ptr()
         {
-			if (ps_->destroy_)
+			if (ps_->redir()->destroy_)
 				base::po_ = 0;
 			else
 				release(true);
@@ -442,7 +433,7 @@ template <typename T>
             for (intrusive_list::iterator<block_base, & block_base::init_tag_> i = p->inits_.begin(); i != p->inits_.end(); ++ i)
             {
                 i->init_ = true;
-                ps_->elements()->push_back(& i->block_tag_);
+                ps_->redir()->elements_.push_back(& i->block_tag_);
 
 				// iterate block_ptr elements
                 for (intrusive_stack::iterator<block_ptr, & block_ptr::pn_> j = i->ptrs_.begin(), k; k = j, j != i->ptrs_.end(); j = k)
