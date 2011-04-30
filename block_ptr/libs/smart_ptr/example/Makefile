@@ -1,5 +1,5 @@
 CXX             := g++
-CXXFLAGS        := -ggdb3
+CXXFLAGS        := -O3
 INCPATH         := -I../../.. -I../../../../../include
 LINK            := g++
 LFLAGS          := -L../../../../../lib -lboost_thread
