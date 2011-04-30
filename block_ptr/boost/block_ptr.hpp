@@ -247,47 +247,6 @@ template <typename T>
             intrusive_stack::node pn_;				/**< Tag used for enlisting a pointer on the heap to later share the @c block_header it belongs to. */
         };
 
-		/**
-			Initialization of a pointer living on the stack or proper enlistment if living on the heap.
-			
-			@param	p	New pointee object to manage.
-		*/
-		
-        template <typename V>
-            block_ptr(block<V> * p) : base(p)
-            {
-                if (! block_base::pool_.is_from(this))
-                {
-                    ps_ = new block_header();
-
-                    init(p);
-                }
-                else
-                {
-                    block_base::pool_.top(this)->ptrs_.push(& pn_);
-                    block_base::pool_.top(this)->inits_.merge(p->inits_);
-                }
-            }
-
-		
-		/**
-			Assignment & union of 2 sets if the pointee resides a different @c block_header.
-			
-			@param	p	New pointee object to manage.
-		*/
-		
-        template <typename V>
-            block_ptr & operator = (block<V> * p)
-            {
-                release(false);
-
-                init(p);
-
-                base::operator = (p);
-
-                return * this;
-            }
-            
 		template <typename V>
 			friend block_ptr<V> make_block();
 
@@ -347,6 +306,29 @@ template <typename T>
 
 
 		/**
+			Initialization of a pointer living on the stack or proper enlistment if living on the heap.
+			
+			@param	p	New pointee object to manage.
+		*/
+		
+        template <typename V>
+            block_ptr(block<V> * p) : base(p)
+            {
+                if (! block_base::pool_.is_from(this))
+                {
+                    ps_ = new block_header();
+
+                    init(p);
+                }
+                else
+                {
+                    block_base::pool_.top(this)->ptrs_.push(& pn_);
+                    block_base::pool_.top(this)->inits_.merge(p->inits_);
+                }
+            }
+
+		
+		/**
 			Assignment & union of 2 sets if the pointee resides a different @c block_header.
 			
 			@param	p	New pointer to manage.
@@ -377,6 +359,26 @@ template <typename T>
             {
                 return operator = <T>(p);
             }
+
+
+		/**
+			Assignment & union of 2 sets if the pointee resides a different @c block_header.
+			
+			@param	p	New pointee object to manage.
+		*/
+		
+        template <typename V>
+            block_ptr & operator = (block<V> * p)
+            {
+                release(false);
+
+                init(p);
+
+                base::operator = (p);
+
+                return * this;
+            }
+            
 
         void reset()
         {
