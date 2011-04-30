@@ -51,7 +51,6 @@ namespace sh
 {
 
 
-template <typename> class block_ptr;
 class block_base;
 
 
@@ -61,10 +60,8 @@ class block_base;
 	Proxy object used to count the number of pointers from the stack are referencing pointee objects belonging to the same @c block_header .
 */
 
-class block_header
+struct block_header
 {
-    template <typename> friend class block_ptr;
-
     typedef detail::atomic_count count_type;
 
 #ifndef BOOST_DISABLE_THREADS
@@ -82,7 +79,6 @@ class block_header
 
     static fast_pool_allocator<block_header> pool_;/**< Pool where all sets are allocated. */
 
-public:
 	/**
 		Initialization of a single @c block_header .
 	*/
