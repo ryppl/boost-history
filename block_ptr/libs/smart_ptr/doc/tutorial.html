@@ -71,7 +71,7 @@
   of a special type needed to instantiate objects referred to.  For example:</p>
 
   <pre>  
-  block_ptr&#60;int&#62; p = new block&#60;int&#62;(11);
+  block_ptr&#60;int&#62; p = make_block&#60;int&#62;(11);
   </pre>
 
   <p>Will instantiate a special object <i>block&#60;int&#62;</i> having an integer as one of its member.  The pointer to the object is then passed to the 
@@ -81,7 +81,7 @@
   type to the following:<p>
 
   <pre>  
-  block_ptr&#60;int[10]&#62; p = new block&#60;int[10]&#62;();
+  block_ptr&#60;int[10]&#62; p = make_block&#60;int[10]&#62;();
   </pre>
 
   See the following <a href="../example/block_ptr_test1.cpp">example</a> for different cases of its usage.
@@ -95,7 +95,7 @@
 
   <pre>  
   list&#60; block_ptr&#60;int&#62;, block_allocator&#60; block_ptr&#60;int&#62; &#62; &#62; c;
-  c.push_back(new block&#60;int&#62;(11));
+  c.push_back(make_block&#60;int&#62;(11));
   </pre>
 
   <h2><a name="caveat" id="caveat"></a>Caveat</h2>
@@ -108,7 +108,7 @@
   struct N { int i; };
   struct O : N, M { int i; };
 
-  block_ptr&#60;O&#62; po = new block&#60;O&#62;;
+  block_ptr&#60;O&#62; po = make_block&#60;O&#62;;
   block_ptr&#60;N&#62; pn = po; // incorrect
   block_ptr&#60;M&#62; pm = po; // incorrect
   </pre>
@@ -120,7 +120,7 @@
   struct N { int i; virtual ~N() {} };
   struct O : N, M { int i; };
 
-  block_ptr&#60;O&#62; po = new block&#60;O&#62;;
+  block_ptr&#60;O&#62; po = make_block&#60;O&#62;;
   block_ptr&#60;N&#62; pn = po; // correct
   block_ptr&#60;M&#62; pm = po; // correct
   </pre>
