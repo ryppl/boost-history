@@ -9,6 +9,7 @@
 #include <iostream>
 
 #include <boost/block_ptr.hpp>
+#include <boost/current_function.hpp>
 
 
 using namespace std;
@@ -22,12 +23,12 @@ struct A
 	
 	A(int i = 0) : i(i) 
 	{
-		cout << __FUNCTION__ << ": " << i << endl;
+		cout << BOOST_CURRENT_FUNCTION << ": " << i << endl;
 	}
 	
 	~A()
 	{
-		cout << __FUNCTION__ << ": " << i << endl;
+		cout << BOOST_CURRENT_FUNCTION << ": " << i << endl;
 	}
 };
 
