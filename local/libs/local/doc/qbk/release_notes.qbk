@@ -28,6 +28,13 @@
 
 [section TODO]
 
+# Add Inline Local Function `..._NAME(inline <name>)` to Advanced Topics section.
+
+# Add `..._NAME(recursive <name>)` to recursion section in Advanced Topics.
+Indicate that recursive local function cannot be optimized even when declared inline.
+
+# Modify `..._NAME()` macro to parse also `recursive inline` and `inline recursive` as recursive (no reason to give an error, just ignore the inline request and document it).
+
 # *Code.* Optimize macro expansion code for C++0x, C++03, etc.
 From John Bytheway:
 

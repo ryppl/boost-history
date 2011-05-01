@@ -26,54 +26,64 @@ The following table compares local function features.
     [ ['Can be defined locally] ]
     [ Yes. ]
     [ Yes. ]
-    [ No so this not an alternative implementation of local functions. ]
+    [ No.
+Therefore so this not really an alternative implementation of local functions but it is listed here just for comparison. ]
     [ Yes. ]
     [ Yes. ]
     [ Yes. ]
 ]
 [
     [ ['Can be defined using regular C++ statements] ]
-    [ Yes (also reporting compiler error messages usual for function statements). ]
-    [ Yes (also reporting compiler error messages usual for function statements). ]
-    [ Yes (also reporting compiler error messages usual for function statements). ]
-    [ Yes (also reporting compiler error messages usual for function statements). ]
+    [ Yes.
+Moreover, eventual compiler errors follow the usual format of C++ statement errors.]
+    [ Yes.
+Moreover, eventual compiler errors follow the usual format of C++ statement errors.]
+    [ Yes.
+Moreover, eventual compiler errors follow the usual format of C++ statement errors.]
+    [ Yes.
+Moreover, eventual compiler errors follow the usual format of C++ statement errors.]
     [ No. ]
     [ No. ]
 ]
 [
     [ ['Can be defined within expressions] ]
-    [ No, defined only within declarations. ]
-    [ No, defined only within declarations. ]
-    [ No, defined only within declarations. ]
+    [ No. It can be defined only within declarations. ]
+    [ No. It can be defined only within declarations. ]
+    [ No. It can be defined only within declarations. ]
     [ Yes. ]
     [ Yes. ]
     [ Yes. ]
 ]
 [
     [ ['Can be passed as template parameter (e.g., to STL algorithms)] ]
+    [ Yes.
+The ISO C++ standard does not allow to pass local types as template parameters (see __N2657__) but this library implements a "trick" to get around this limitation (see the __Implementation__ section). ]
+    [ No on ISO C++ compilers but yes on C++0x compilers and some compilers like MSVC (see __N2657__). ]
     [ Yes. ]
-    [ No with ISO C++ standard (see "local class" in __StroustrupGlossary__). (Yes with C++0x standard and some compilers like MSVC.) ]
-    [ No. ]
     [ Yes. ]
     [ Yes. ]
     [ Yes. ]
 ]
 [
     [ ['Bind variables in scope] ]
-    [ Yes, bind by value, constant value, reference, and constant reference (also bind the object `this`).
-However, the names of the bound variables must be repeated one by one.]
-    [ No, programmers must manually manage functor member variable and specify their types. ]
-    [ No, programmers must manually manage functor member variable and specify their types. ]
-    [ Yes, plus there is short-hand syntax to bind all variables in scope at once (by value or by reference).
-However, there is no bind by constant reference. ]
-    [ No. ]
-    [ Yes, using `let` which also allows to bind by constant reference. ]
+    [ Yes.
+It can bind variables by value, constant value, reference, and constant reference (also it can bind the object `this`). ]
+    [ No.
+Programmers must manually manage functor member variables with explicit types to access variables in scope. ]
+    [ No.
+Programmers must manually manage functor member variables with explicit types to access variables in scope. ]
+    [ Yes.
+    In addition, there is "short-hand" syntax to bind all variables in scope at once (by value or by reference).
+However, it is not possible to bind by constant reference (only by constant value). ]
+    [ No (but variables in scope are accessible as usual within expressions). ]
+    [ Yes (using `let` which also allows to bind by constant reference). ]
 ]
 ]
 
 [h5 Examples]
 
-For example, using this library local functions:
+The same example is rewritten here for all the different alternatives to local functions so programmers can get a sense of the different syntaxes and programming styles that the alternatives require.
+The following example adds together all the elements of a vector using this library local functions:
 
 [table
 [ [__Variadic_Macro_Syntax__] [__Sequencing_Macro_Syntax__] ]
@@ -102,76 +112,97 @@ Or using __Boost_Phoenix__:
 
 [h5 Profiling]
 
-The following table compares compile-time, binary size, and run-time among the different alternatives.
+The following tables compare run-time, binary size, and compile-time for the different alternatives to local functions.
 
-This library has compile-times and generates binary sizes similar to the ones of the other approaches.
-This library run-times on ISO C++ compliant compilers (see "__Boost_Local__ Compliant" below) were measured to be similar to "Local Functor" but larger than other approaches like "Global Functor", "__Boost_Lambda__", or "__Boost_Phoenix__" when compiler optimization is enabled.
-However, on C++03 compilers (e.g., MSVC) this library generates optimized code (see "__Boost_Local__" below) that runs as fast as the fastest of the other approaches.
-Finally, this library run-times are always among the fastest when no compiler optimization is used.
+Overall, this library has compile-times and generates binary sizes similar to the ones of the other approaches.
+This library run-times on ISO C++ compliant compilers (see "__Boost_Local__ Compliant" below) were measured to be larger than other approaches when compiler optimization is enabled (using `bjam release ...`).
+However, on compilers that allow to pass local types as template parameters (e.g., MSVC 8.0 or GCC 4.5.1 with C++0x features enabled, see also __N2657__) this library generates optimized code that runs as fast as the fastest of the other approaches (see "__Boost_Local__" below).
+When this library local function is specified `inline` (see "__Boost_Local__ Inline For-Loop" below) its run-times are always comparable to both the "Local Functor" and "Global Functor" approaches (for all these approaches, the local function cannot be portably passed as template parameter, see __N2657__, so `std::for_each` is replaced by a for-loop).
+Finally, this library run-times are always among the fastest when no compiler optimization is enabled (using `bjam debug ...`).
 
 [note
-This is because on non C++03 compilers (e.g., GCC) this library needs to use a function pointer in order to pass the local functor class as a template parameter (see the __Implementation__ section).
-This function pointer prevents the compiler from inlining all the function calls while the functors used by other approaches like "__Boost_Lambda__" and "__Boost_Phoenix__" allows the compiler to inline all the function calls.
+The run-time performance of this library local function is explained because on ISO C++ compliant compilers (e.g., GCC 4.3.4) this library needs to use a function pointer in order to pass the local functor class as a template parameter (see __N2657__ and the __Implementation__ section).
+For all tested compilers, this function pointer prevents the compiler optimization algorithms from inlining all the function calls.
+Instead, the functor objects used by other approaches like "__Boost_Lambda__" and "__Boost_Phoenix__" have been observed to allow all tested compilers to inline all the function calls for optimization.
+This run-time performance cost is not present on compilers that allow to pass local types as template parameters (e.g., MSVC 8.0 or GCC 4.51 with C++0x features enabled) because this library does not have to use the extra function pointer to implement the local function call.
 
-This run-time performance cost on non C++03 compilers might or not be a problem depending on the performance requirements of your application.
-For example, your application might already be using a number of indirect function calls (function pointers, virtual functions, etc) for which the overhead added by using the one extra function pointer required by the local function call might not be noticeable within your overall program run-time.
+This run-time performance cost on ISO C++ compliant compilers might or might not be an issue depending on the performance requirements of specific applications.
+For example, an application might already be using a number of indirect function calls (function pointers, virtual functions, etc) for which the overhead added by using the one extra function pointer required by the local function call might not be noticeable within the overall program run-time.
 ]
 
-Finally, note that a very simple local function body with only one instruction was used for the profiling presented here (see files
+Finally, note that only a very simple local function body with just a single instruction was used for the anaylsis presented here (see the profile program source files linked below).
+The authors have not studied how this library and the other approaches will perform with respect to each other when a more complex set of instructions is programmed for the local function body (e.g., /if/ a more complex set of instructions in the local function body were to inhibit some compilers from inlining functor objects also other approaches like __Boost_Lambda__ and __Boost_Phoenix__ /could/ start to show higher run-times even when optimization is enabled).
+
+[table
+[ [ Legend, Source Files, and Commands ] ]
+[ [ [$../../example/profile_legend.png [width 13in] [height 10in]] ] ]
+[ [
+The local function was called =1e8= times to add together all the elements of a vector and the run-time was measured using __Boost_Chrono__ averaging over =10= executions of the vector summation (see source files at
 [@../../example/profile_boost_local.cpp =profile_boost_local.cpp=],
-[@../../example/profile_boost_local_for_loop.cpp =profile_boost_local_for_loop.cpp=],
-[@../../example/profile_boost_local_optimized.cpp =profile_boost_local_optimized.cpp=],
+[@../../example/profile_boost_local_inline.cpp =profile_boost_local_inline.cpp=],
 [@../../example/profile_local_functor.cpp =profile_local_functor.cpp=],
 [@../../example/profile_global_functor.cpp =profile_global_functor.cpp=],
 [@../../example/profile_0x_lambda.cpp =profile_0x_lambda.cpp=],
 [@../../example/profile_boost_lambda.cpp =profile_boost_lambda.cpp=], and
 [@../../example/profile_boost_phoenix.cpp =profile_boost_phoenix.cpp=]).
-The authors have not studied how this library and the other approaches will perform with respect to each other when a more complex set of instructions is programmed for the local function body.
+] ]
+[ [
+The following commands were executed from the library example directory to measure compile-time, binary size, and run-time respectively:
+``
+> python chrono.py bjam {release|debug} <PROGRAM> # compile-time
+> size <PROGRAM> # binary size (Linux and Gygwin)
+> <PROGRAM> # run-time
+``
+] ]
+]
 
 [table
-[
-    [ =bjam release= on MSVC 8.0 (maximum optimization =/O2 /Ob2=)]
-    [ =bjam debug= on MSVC 8.0 (no optimization =/O0 /Ob0=)]
+[ [
+GCC 4.5.1 With C++0x Lambdas and "Local Types as Template Parameters" ([^bjam cxxflags=-std=c++0x ...]) on Ubuntu Linux 10
+] ]
+[ [ 
+[*Compiled with =bjam release ...= for maximum optimization (=-O3 -finline-functions=)]
+[$../../example/profile_gcc-4.5.1-0x_release.png [width 13in] [height 10in]]
+] ]
+[ [ 
+[*Compiled with =bjam debug ...= for no optimization (=-O0 -fno-inline=)]
+[$../../example/profile_gcc-4.5.1-0x_debug.png [width 13in] [height 10in]]
+] ]
 ]
-[
-    [
-The local function was called =1e8= times to add together all the elements of a vector.
-The run-time was measured using __Boost_Chrono__ and averaged over =100= executions of the vector summation (see the relative =profile_...= example files).
-    ]
-    [
-The local function was called =1e8= times to add together all the elements of a vector.
-The run-time was measured using __Boost_Chrono__ and averaged over =1= execution of the vector summation (see the relative =profile_...= example files).
-    ]
+
+[table
+[ [
+MSVC 8.0 With "Local Types as Template Parameters" on Windows XP
+] ]
+[ [ 
+[*Compiled with =bjam release ...= for maximum optimization (=/O2 /Ob2=)]
+[$../../example/profile_msvc-8.0_release.png [width 13in] [height 10in]]
+] ]
+[ [ 
+[*Compiled with =bjam debug ...= for no optimization (=/Od /Ob0=)]
+[$../../example/profile_msvc-8.0_debug.png [width 13in] [height 10in]]
+] ]
 ]
-[
-    [ [$../../example/profile_msvc-8.0_release.png [width 7in] [height 10in]] ]
-    [ [$../../example/profile_msvc-8.0_debug.png [width 7in] [height 10in]] ]
-]
-[
-    [
-Commands used to measure compile-time, binary size, and run-time from the library example directory:
-``
-> python chrono.py bjam release <PROGRAM>
-> size <PROGRAM>    # Cygwin command
-> <PROGRAM> 100000000 100
-``
-    ] 
-    [
-Commands used to measure compile-time, binary size, and run-time from the library example directory:
-``
-> python chrono.py bjam debug <PROGRAM>
-> size <PROGRAM>    # Cygwin command
-> <PROGRAM> 100000000 1
-``
-    ] 
-]
+
+[table
+[ [
+GCC 4.3.4 With No C++0x Features on Cygwin
+] ]
+[ [ 
+[*Compiled with =bjam release ...= for maximum optimization (=-O3 -finline-functions=)]
+[$../../example/profile_gcc-4.3.4_release.png [width 13in] [height 10in]]
+] ]
+[ [ 
+[*Compiled with =bjam debug ...= for no optimization (=-O0 -fno-inline=)]
+[$../../example/profile_gcc-4.3.4_debug.png [width 13in] [height 10in]]
+] ]
 ]
 
 [endsect]
 
 [section Local Blocks]
 
-The authors know of no other library or language feature that supports local blocks (i.e., with the ability to bind by constant value or reference).
+The authors know of no other library or C++ language feature that supports local blocks (i.e., with the ability to bind by constant value or reference).
 
 [endsect]
 

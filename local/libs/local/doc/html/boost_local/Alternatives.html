@@ -109,7 +109,8 @@
               </td>
 <td>
                 <p>
-                  No so this not an alternative implementation of local functions.
+                  No. Therefore so this not really an alternative implementation
+                  of local functions but it is listed here just for comparison.
                 </p>
               </td>
 <td>
@@ -136,26 +137,26 @@
               </td>
 <td>
                 <p>
-                  Yes (also reporting compiler error messages usual for function
-                  statements).
+                  Yes. Moreover, eventual compiler errors follow the usual format
+                  of C++ statement errors.
                 </p>
               </td>
 <td>
                 <p>
-                  Yes (also reporting compiler error messages usual for function
-                  statements).
+                  Yes. Moreover, eventual compiler errors follow the usual format
+                  of C++ statement errors.
                 </p>
               </td>
 <td>
                 <p>
-                  Yes (also reporting compiler error messages usual for function
-                  statements).
+                  Yes. Moreover, eventual compiler errors follow the usual format
+                  of C++ statement errors.
                 </p>
               </td>
 <td>
                 <p>
-                  Yes (also reporting compiler error messages usual for function
-                  statements).
+                  Yes. Moreover, eventual compiler errors follow the usual format
+                  of C++ statement errors.
                 </p>
               </td>
 <td>
@@ -177,17 +178,17 @@
               </td>
 <td>
                 <p>
-                  No, defined only within declarations.
+                  No. It can be defined only within declarations.
                 </p>
               </td>
 <td>
                 <p>
-                  No, defined only within declarations.
+                  No. It can be defined only within declarations.
                 </p>
               </td>
 <td>
                 <p>
-                  No, defined only within declarations.
+                  No. It can be defined only within declarations.
                 </p>
               </td>
 <td>
@@ -214,18 +215,22 @@
               </td>
 <td>
                 <p>
+                  Yes. The ISO C++ standard does not allow to pass local types as
+                  template parameters (see <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2657.htm" target="_top">[2657]</a>)
+                  but this library implements a "trick" to get around this
+                  limitation (see the <a class="link" href="Implementation.html" title="Appendix: Implementation">Implementation</a>
+                  section).
+                </p>
+              </td>
+<td>
+                <p>
+                  No on ISO C++ compilers but yes on C++0x compilers and some compilers
+                  like MSVC (see <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2657.htm" target="_top">[2657]</a>).
+                </p>
+              </td>
+<td>
+                <p>
                   Yes.
-                </p>
-              </td>
-<td>
-                <p>
-                  No with ISO C++ standard (see "local class" in <a href="http://www2.research.att.com/~bs/glossary.html" target="_top">[StroustupGlossary]</a>).
-                  (Yes with C++0x standard and some compilers like MSVC.)
-                </p>
-              </td>
-<td>
-                <p>
-                  No.
                 </p>
               </td>
 <td>
@@ -252,40 +257,39 @@
               </td>
 <td>
                 <p>
-                  Yes, bind by value, constant value, reference, and constant reference
-                  (also bind the object <code class="computeroutput"><span class="keyword">this</span></code>).
-                  However, the names of the bound variables must be repeated one
-                  by one.
+                  Yes. It can bind variables by value, constant value, reference,
+                  and constant reference (also it can bind the object <code class="computeroutput"><span class="keyword">this</span></code>).
                 </p>
               </td>
 <td>
                 <p>
-                  No, programmers must manually manage functor member variable and
-                  specify their types.
+                  No. Programmers must manually manage functor member variables with
+                  explicit types to access variables in scope.
                 </p>
               </td>
 <td>
                 <p>
-                  No, programmers must manually manage functor member variable and
-                  specify their types.
+                  No. Programmers must manually manage functor member variables with
+                  explicit types to access variables in scope.
                 </p>
               </td>
 <td>
                 <p>
-                  Yes, plus there is short-hand syntax to bind all variables in scope
-                  at once (by value or by reference). However, there is no bind by
-                  constant reference.
+                  Yes. In addition, there is "short-hand" syntax to bind
+                  all variables in scope at once (by value or by reference). However,
+                  it is not possible to bind by constant reference (only by constant
+                  value).
                 </p>
               </td>
 <td>
                 <p>
-                  No.
+                  No (but variables in scope are accessible as usual within expressions).
                 </p>
               </td>
 <td>
                 <p>
-                  Yes, using <code class="computeroutput"><span class="identifier">let</span></code>
-                  which also allows to bind by constant reference.
+                  Yes (using <code class="computeroutput"><span class="identifier">let</span></code>
+                  which also allows to bind by constant reference).
                 </p>
               </td>
 </tr>
@@ -296,7 +300,10 @@
         <a class="link" href="Alternatives.html#boost_local.Alternatives.local_functions.examples">Examples</a>
       </h6>
 <p>
-        For example, using this library local functions:
+        The same example is rewritten here for all the different alternatives to
+        local functions so programmers can get a sense of the different syntaxes
+        and programming styles that the alternatives require. The following example
+        adds together all the elements of a vector using this library local functions:
       </p>
 <div class="informaltable"><table class="table">
 <colgroup>
@@ -583,21 +590,30 @@
         <a class="link" href="Alternatives.html#boost_local.Alternatives.local_functions.profiling">Profiling</a>
       </h6>
 <p>
-        The following table compares compile-time, binary size, and run-time among
-        the different alternatives.
+        The following tables compare run-time, binary size, and compile-time for
+        the different alternatives to local functions.
       </p>
 <p>
-        This library has compile-times and generates binary sizes similar to the
-        ones of the other approaches. This library run-times on ISO C++ compliant
+        Overall, this library has compile-times and generates binary sizes similar
+        to the ones of the other approaches. This library run-times on ISO C++ compliant
         compilers (see "<a href="http://www.boost.org/doc/libs/release/libs/local/doc/html/index.html" target="_top">Boost.Local</a>
-        Compliant" below) were measured to be similar to "Local Functor"
-        but larger than other approaches like "Global Functor", "<a href="http://www.boost.org/doc/libs/release/doc/html/lambda.html" target="_top">Boost.Lambda</a>",
-        or "<a href="http://www.boost.org/doc/libs/release/libs/spirit/phoenix/index.html" target="_top">Boost.Phoenix</a>"
-        when compiler optimization is enabled. However, on C++03 compilers (e.g.,
-        MSVC) this library generates optimized code (see "<a href="http://www.boost.org/doc/libs/release/libs/local/doc/html/index.html" target="_top">Boost.Local</a>"
-        below) that runs as fast as the fastest of the other approaches. Finally,
+        Compliant" below) were measured to be larger than other approaches when
+        compiler optimization is enabled (using <code class="computeroutput"><span class="identifier">bjam</span>
+        <span class="identifier">release</span> <span class="special">...</span></code>).
+        However, on compilers that allow to pass local types as template parameters
+        (e.g., MSVC 8.0 or GCC 4.5.1 with C++0x features enabled, see also <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2657.htm" target="_top">[2657]</a>)
+        this library generates optimized code that runs as fast as the fastest of
+        the other approaches (see "<a href="http://www.boost.org/doc/libs/release/libs/local/doc/html/index.html" target="_top">Boost.Local</a>"
+        below). When this library local function is specified <code class="computeroutput"><span class="keyword">inline</span></code>
+        (see "<a href="http://www.boost.org/doc/libs/release/libs/local/doc/html/index.html" target="_top">Boost.Local</a>
+        Inline For-Loop" below) its run-times are always comparable to both
+        the "Local Functor" and "Global Functor" approaches (for
+        all these approaches, the local function cannot be portably passed as template
+        parameter, see <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2657.htm" target="_top">[2657]</a>,
+        so <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">for_each</span></code> is replaced by a for-loop). Finally,
         this library run-times are always among the fastest when no compiler optimization
-        is used.
+        is enabled (using <code class="computeroutput"><span class="identifier">bjam</span> <span class="identifier">debug</span>
+        <span class="special">...</span></code>).
       </p>
 <div class="note"><table border="0" summary="Note">
 <tr>
@@ -606,119 +622,161 @@
 </tr>
 <tr><td align="left" valign="top">
 <p>
-          This is because on non C++03 compilers (e.g., GCC) this library needs to
+          The run-time performance of this library local function is explained because
+          on ISO C++ compliant compilers (e.g., GCC 4.3.4) this library needs to
           use a function pointer in order to pass the local functor class as a template
-          parameter (see the <a class="link" href="Implementation.html" title="Appendix: Implementation">Implementation</a>
-          section). This function pointer prevents the compiler from inlining all
-          the function calls while the functors used by other approaches like "<a href="http://www.boost.org/doc/libs/release/doc/html/lambda.html" target="_top">Boost.Lambda</a>"
+          parameter (see <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2657.htm" target="_top">[2657]</a>
+          and the <a class="link" href="Implementation.html" title="Appendix: Implementation">Implementation</a>
+          section). For all tested compilers, this function pointer prevents the
+          compiler optimization algorithms from inlining all the function calls.
+          Instead, the functor objects used by other approaches like "<a href="http://www.boost.org/doc/libs/release/doc/html/lambda.html" target="_top">Boost.Lambda</a>"
           and "<a href="http://www.boost.org/doc/libs/release/libs/spirit/phoenix/index.html" target="_top">Boost.Phoenix</a>"
-          allows the compiler to inline all the function calls.
+          have been observed to allow all tested compilers to inline all the function
+          calls for optimization. This run-time performance cost is not present on
+          compilers that allow to pass local types as template parameters (e.g.,
+          MSVC 8.0 or GCC 4.51 with C++0x features enabled) because this library
+          does not have to use the extra function pointer to implement the local
+          function call.
         </p>
 <p>
-          This run-time performance cost on non C++03 compilers might or not be a
-          problem depending on the performance requirements of your application.
-          For example, your application might already be using a number of indirect
-          function calls (function pointers, virtual functions, etc) for which the
-          overhead added by using the one extra function pointer required by the
-          local function call might not be noticeable within your overall program
+          This run-time performance cost on ISO C++ compliant compilers might or
+          might not be an issue depending on the performance requirements of specific
+          applications. For example, an application might already be using a number
+          of indirect function calls (function pointers, virtual functions, etc)
+          for which the overhead added by using the one extra function pointer required
+          by the local function call might not be noticeable within the overall program
           run-time.
         </p>
 </td></tr>
 </table></div>
 <p>
-        Finally, note that a very simple local function body with only one instruction
-        was used for the profiling presented here (see files <a href="../../../example/profile_boost_local.cpp" target="_top"><code class="literal">profile_boost_local.cpp</code></a>,
-        <a href="../../../example/profile_boost_local_for_loop.cpp" target="_top"><code class="literal">profile_boost_local_for_loop.cpp</code></a>,
-        <a href="../../../example/profile_boost_local_optimized.cpp" target="_top"><code class="literal">profile_boost_local_optimized.cpp</code></a>,
-        <a href="../../../example/profile_local_functor.cpp" target="_top"><code class="literal">profile_local_functor.cpp</code></a>,
-        <a href="../../../example/profile_global_functor.cpp" target="_top"><code class="literal">profile_global_functor.cpp</code></a>,
-        <a href="../../../example/profile_0x_lambda.cpp" target="_top"><code class="literal">profile_0x_lambda.cpp</code></a>,
-        <a href="../../../example/profile_boost_lambda.cpp" target="_top"><code class="literal">profile_boost_lambda.cpp</code></a>,
-        and <a href="../../../example/profile_boost_phoenix.cpp" target="_top"><code class="literal">profile_boost_phoenix.cpp</code></a>).
-        The authors have not studied how this library and the other approaches will
-        perform with respect to each other when a more complex set of instructions
-        is programmed for the local function body.
+        Finally, note that only a very simple local function body with just a single
+        instruction was used for the anaylsis presented here (see the profile program
+        source files linked below). The authors have not studied how this library
+        and the other approaches will perform with respect to each other when a more
+        complex set of instructions is programmed for the local function body (e.g.,
+        <span class="emphasis"><em>if</em></span> a more complex set of instructions in the local function
+        body were to inhibit some compilers from inlining functor objects also other
+        approaches like <a href="http://www.boost.org/doc/libs/release/doc/html/lambda.html" target="_top">Boost.Lambda</a>
+        and <a href="http://www.boost.org/doc/libs/release/libs/spirit/phoenix/index.html" target="_top">Boost.Phoenix</a>
+        <span class="emphasis"><em>could</em></span> start to show higher run-times even when optimization
+        is enabled).
       </p>
 <div class="informaltable"><table class="table">
-<colgroup>
-<col>
-<col>
-</colgroup>
-<thead><tr>
-<th>
+<colgroup><col></colgroup>
+<thead><tr><th>
                 <p>
-                  <code class="literal">bjam release</code> on MSVC 8.0 (maximum optimization
-                  <code class="literal">/O2 /Ob2</code>)
+                  Legend, Source Files, and Commands
                 </p>
-              </th>
-<th>
-                <p>
-                  <code class="literal">bjam debug</code> on MSVC 8.0 (no optimization <code class="literal">/O0
-                  /Ob0</code>)
-                </p>
-              </th>
-</tr></thead>
+              </th></tr></thead>
 <tbody>
-<tr>
-<td>
+<tr><td>
+                <p>
+                  <span class="inlinemediaobject"><img src="../../../example/profile_legend.png" width="1170" alt="profile_legend"></span>
+                </p>
+              </td></tr>
+<tr><td>
                 <p>
                   The local function was called <code class="literal">1e8</code> times to add
-                  together all the elements of a vector. The run-time was measured
+                  together all the elements of a vector and the run-time was measured
                   using <a href="http://www.boost.org/doc/libs/release/libs/chrono/doc/html/index.html" target="_top">Boost.Chrono</a>
-                  and averaged over <code class="literal">100</code> executions of the vector
-                  summation (see the relative <code class="literal">profile_...</code> example
-                  files).
+                  averaging over <code class="literal">10</code> executions of the vector summation
+                  (see source files at <a href="../../../example/profile_boost_local.cpp" target="_top"><code class="literal">profile_boost_local.cpp</code></a>,
+                  <a href="../../../example/profile_boost_local_inline.cpp" target="_top"><code class="literal">profile_boost_local_inline.cpp</code></a>,
+                  <a href="../../../example/profile_local_functor.cpp" target="_top"><code class="literal">profile_local_functor.cpp</code></a>,
+                  <a href="../../../example/profile_global_functor.cpp" target="_top"><code class="literal">profile_global_functor.cpp</code></a>,
+                  <a href="../../../example/profile_0x_lambda.cpp" target="_top"><code class="literal">profile_0x_lambda.cpp</code></a>,
+                  <a href="../../../example/profile_boost_lambda.cpp" target="_top"><code class="literal">profile_boost_lambda.cpp</code></a>,
+                  and <a href="../../../example/profile_boost_phoenix.cpp" target="_top"><code class="literal">profile_boost_phoenix.cpp</code></a>).
                 </p>
-              </td>
-<td>
+              </td></tr>
+<tr><td>
                 <p>
-                  The local function was called <code class="literal">1e8</code> times to add
-                  together all the elements of a vector. The run-time was measured
-                  using <a href="http://www.boost.org/doc/libs/release/libs/chrono/doc/html/index.html" target="_top">Boost.Chrono</a>
-                  and averaged over <code class="literal">1</code> execution of the vector
-                  summation (see the relative <code class="literal">profile_...</code> example
-                  files).
-                </p>
-              </td>
-</tr>
-<tr>
-<td>
-                <p>
-                  <span class="inlinemediaobject"><img src="../../../example/profile_msvc-8.0_release.png" width="630" alt="profile_msvc-8.0_release"></span>
-                </p>
-              </td>
-<td>
-                <p>
-                  <span class="inlinemediaobject"><img src="../../../example/profile_msvc-8.0_debug.png" width="630" alt="profile_msvc-8.0_debug"></span>
-                </p>
-              </td>
-</tr>
-<tr>
-<td>
-                <p>
-                  Commands used to measure compile-time, binary size, and run-time
-                  from the library example directory: 
+                  The following commands were executed from the library example directory
+                  to measure compile-time, binary size, and run-time respectively:
+                  
 </p>
-<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="special">&gt;</span> <span class="identifier">python</span> <span class="identifier">chrono</span><span class="special">.</span><span class="identifier">py</span> <span class="identifier">bjam</span> <span class="identifier">release</span> <span class="special">&lt;</span><span class="identifier">PROGRAM</span><span class="special">&gt;</span>
-<span class="special">&gt;</span> <span class="identifier">size</span> <span class="special">&lt;</span><span class="identifier">PROGRAM</span><span class="special">&gt;</span>    <span class="preprocessor"># Cygwin</span> <span class="identifier">command</span>
-<span class="special">&gt;</span> <span class="special">&lt;</span><span class="identifier">PROGRAM</span><span class="special">&gt;</span> <span class="number">100000000</span> <span class="number">100</span>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="special">&gt;</span> <span class="identifier">python</span> <span class="identifier">chrono</span><span class="special">.</span><span class="identifier">py</span> <span class="identifier">bjam</span> <span class="special">{</span><span class="identifier">release</span><span class="special">|</span><span class="identifier">debug</span><span class="special">}</span> <span class="special">&lt;</span><span class="identifier">PROGRAM</span><span class="special">&gt;</span> <span class="preprocessor"># compile</span><span class="special">-</span><span class="identifier">time</span>
+<span class="special">&gt;</span> <span class="identifier">size</span> <span class="special">&lt;</span><span class="identifier">PROGRAM</span><span class="special">&gt;</span> <span class="preprocessor"># binary</span> <span class="identifier">size</span> <span class="special">(</span><span class="identifier">Linux</span> <span class="keyword">and</span> <span class="identifier">Gygwin</span><span class="special">)</span>
+<span class="special">&gt;</span> <span class="special">&lt;</span><span class="identifier">PROGRAM</span><span class="special">&gt;</span> <span class="preprocessor"># run</span><span class="special">-</span><span class="identifier">time</span>
 </pre>
 <p>
                 </p>
-              </td>
-<td>
+              </td></tr>
+</tbody>
+</table></div>
+<div class="informaltable"><table class="table">
+<colgroup><col></colgroup>
+<thead><tr><th>
                 <p>
-                  Commands used to measure compile-time, binary size, and run-time
-                  from the library example directory: 
-</p>
-<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="special">&gt;</span> <span class="identifier">python</span> <span class="identifier">chrono</span><span class="special">.</span><span class="identifier">py</span> <span class="identifier">bjam</span> <span class="identifier">debug</span> <span class="special">&lt;</span><span class="identifier">PROGRAM</span><span class="special">&gt;</span>
-<span class="special">&gt;</span> <span class="identifier">size</span> <span class="special">&lt;</span><span class="identifier">PROGRAM</span><span class="special">&gt;</span>    <span class="preprocessor"># Cygwin</span> <span class="identifier">command</span>
-<span class="special">&gt;</span> <span class="special">&lt;</span><span class="identifier">PROGRAM</span><span class="special">&gt;</span> <span class="number">100000000</span> <span class="number">1</span>
-</pre>
-<p>
+                  GCC 4.5.1 With C++0x Lambdas and "Local Types as Template
+                  Parameters" (<code class="literal">bjam cxxflags=-std=c++0x ...</code>)
+                  on Ubuntu Linux 10
                 </p>
-              </td>
-</tr>
+              </th></tr></thead>
+<tbody>
+<tr><td>
+                <p>
+                  <span class="bold"><strong>Compiled with <code class="literal">bjam release ...</code>
+                  for maximum optimization (<code class="literal">-O3 -finline-functions</code>)</strong></span>
+                  <span class="inlinemediaobject"><img src="../../../example/profile_gcc-4.5.1-0x_release.png" width="1170" alt="profile_gcc-4.5.1-0x_release"></span>
+                </p>
+              </td></tr>
+<tr><td>
+                <p>
+                  <span class="bold"><strong>Compiled with <code class="literal">bjam debug ...</code>
+                  for no optimization (<code class="literal">-O0 -fno-inline</code>)</strong></span>
+                  <span class="inlinemediaobject"><img src="../../../example/profile_gcc-4.5.1-0x_debug.png" width="1170" alt="profile_gcc-4.5.1-0x_debug"></span>
+                </p>
+              </td></tr>
+</tbody>
+</table></div>
+<div class="informaltable"><table class="table">
+<colgroup><col></colgroup>
+<thead><tr><th>
+                <p>
+                  MSVC 8.0 With "Local Types as Template Parameters" on
+                  Windows XP
+                </p>
+              </th></tr></thead>
+<tbody>
+<tr><td>
+                <p>
+                  <span class="bold"><strong>Compiled with <code class="literal">bjam release ...</code>
+                  for maximum optimization (<code class="literal">/O2 /Ob2</code>)</strong></span>
+                  <span class="inlinemediaobject"><img src="../../../example/profile_msvc-8.0_release.png" width="1170" alt="profile_msvc-8.0_release"></span>
+                </p>
+              </td></tr>
+<tr><td>
+                <p>
+                  <span class="bold"><strong>Compiled with <code class="literal">bjam debug ...</code>
+                  for no optimization (<code class="literal">/Od /Ob0</code>)</strong></span> <span class="inlinemediaobject"><img src="../../../example/profile_msvc-8.0_debug.png" width="1170" alt="profile_msvc-8.0_debug"></span>
+                </p>
+              </td></tr>
+</tbody>
+</table></div>
+<div class="informaltable"><table class="table">
+<colgroup><col></colgroup>
+<thead><tr><th>
+                <p>
+                  GCC 4.3.4 With No C++0x Features on Cygwin
+                </p>
+              </th></tr></thead>
+<tbody>
+<tr><td>
+                <p>
+                  <span class="bold"><strong>Compiled with <code class="literal">bjam release ...</code>
+                  for maximum optimization (<code class="literal">-O3 -finline-functions</code>)</strong></span>
+                  <span class="inlinemediaobject"><img src="../../../example/profile_gcc-4.3.4_release.png" width="1170" alt="profile_gcc-4.3.4_release"></span>
+                </p>
+              </td></tr>
+<tr><td>
+                <p>
+                  <span class="bold"><strong>Compiled with <code class="literal">bjam debug ...</code>
+                  for no optimization (<code class="literal">-O0 -fno-inline</code>)</strong></span>
+                  <span class="inlinemediaobject"><img src="../../../example/profile_gcc-4.3.4_debug.png" width="1170" alt="profile_gcc-4.3.4_debug"></span>
+                </p>
+              </td></tr>
 </tbody>
 </table></div>
 </div>
@@ -727,8 +785,8 @@
 <a name="boost_local.Alternatives.local_blocks"></a><a class="link" href="Alternatives.html#boost_local.Alternatives.local_blocks" title="Local Blocks">Local Blocks</a>
 </h3></div></div></div>
 <p>
-        The authors know of no other library or language feature that supports local
-        blocks (i.e., with the ability to bind by constant value or reference).
+        The authors know of no other library or C++ language feature that supports
+        local blocks (i.e., with the ability to bind by constant value or reference).
       </p>
 </div>
 <div class="section">
