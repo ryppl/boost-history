@@ -108,7 +108,7 @@
   struct N { int i; };
   struct O : N, M { int i; };
 
-  block_ptr&#60;O&#62; po = make_block&#60;O&#62;;
+  block_ptr&#60;O&#62; po = make_block&#60;O&#62;();
   block_ptr&#60;N&#62; pn = po; // incorrect
   block_ptr&#60;M&#62; pm = po; // incorrect
   </pre>
@@ -120,7 +120,7 @@
   struct N { int i; virtual ~N() {} };
   struct O : N, M { int i; };
 
-  block_ptr&#60;O&#62; po = make_block&#60;O&#62;;
+  block_ptr&#60;O&#62; po = make_block&#60;O&#62;();
   block_ptr&#60;N&#62; pn = po; // correct
   block_ptr&#60;M&#62; pm = po; // correct
   </pre>
