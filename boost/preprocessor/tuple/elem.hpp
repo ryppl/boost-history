@@ -4434,4 +4434,13 @@
 # define BOOST_PP_TUPLE_DETAIL_ELEM_62(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, ab, cd, ef, gh, ij, kl, mn, op, qr, st, uv, wx) uv
 # define BOOST_PP_TUPLE_DETAIL_ELEM_63(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, ab, cd, ef, gh, ij, kl, mn, op, qr, st, uv, wx) wx
 #
+# define BOOST_PP_TUPLE_ELEM_1_0(a) a
+#
+# define BOOST_PP_TUPLE_ELEM_2_0(a, b) a
+# define BOOST_PP_TUPLE_ELEM_2_1(a, b) b
+#
+# define BOOST_PP_TUPLE_ELEM_3_0(a, b, c) a
+# define BOOST_PP_TUPLE_ELEM_3_1(a, b, c) b
+# define BOOST_PP_TUPLE_ELEM_3_2(a, b, c) c
+#
 # endif
