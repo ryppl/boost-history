@@ -35,6 +35,14 @@ Indicate that recursive local function cannot be optimized even when declared in
 
 # Modify `..._NAME()` macro to parse also `recursive inline` and `inline recursive` as recursive (no reason to give an error, just ignore the inline request and document it).
 
+# Document recursive, inline, and that recursive is never inlined in `..._NAME()` Doxygen.
+
+# Document limitation that inline local functions cannot be assigned to `local::function` and therefore they cannot be passed as function parameters, etc.
+
+# Rework factorial_impl and Implementation section.
+
+# Read all N-papers about "passing local types as template parameters".
+
 # *Code.* Optimize macro expansion code for C++0x, C++03, etc.
 From John Bytheway:
 

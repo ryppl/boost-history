@@ -68,10 +68,43 @@
 <div class="titlepage"><div><div><h3 class="title">
 <a name="boost_local.Release_Notes.todo"></a><a class="link" href="Release_Notes.html#boost_local.Release_Notes.todo" title="TODO">TODO</a>
 </h3></div></div></div>
-<div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem">
+<div class="orderedlist"><ol class="orderedlist" type="1">
+<li class="listitem">
+            Add Inline Local Function <code class="computeroutput"><span class="special">...</span><span class="identifier">_NAME</span><span class="special">(</span><span class="keyword">inline</span> <span class="special">&lt;</span><span class="identifier">name</span><span class="special">&gt;)</span></code>
+            to Advanced Topics section.
+          </li>
+<li class="listitem">
+            Add <code class="computeroutput"><span class="special">...</span><span class="identifier">_NAME</span><span class="special">(</span><span class="identifier">recursive</span>
+            <span class="special">&lt;</span><span class="identifier">name</span><span class="special">&gt;)</span></code> to recursion section in Advanced
+            Topics. Indicate that recursive local function cannot be optimized even
+            when declared inline.
+          </li>
+<li class="listitem">
+            Modify <code class="computeroutput"><span class="special">...</span><span class="identifier">_NAME</span><span class="special">()</span></code> macro to parse also <code class="computeroutput"><span class="identifier">recursive</span>
+            <span class="keyword">inline</span></code> and <code class="computeroutput"><span class="keyword">inline</span>
+            <span class="identifier">recursive</span></code> as recursive (no
+            reason to give an error, just ignore the inline request and document
+            it).
+          </li>
+<li class="listitem">
+            Document recursive, inline, and that recursive is never inlined in <code class="computeroutput"><span class="special">...</span><span class="identifier">_NAME</span><span class="special">()</span></code> Doxygen.
+          </li>
+<li class="listitem">
+            Document limitation that inline local functions cannot be assigned to
+            <code class="computeroutput"><span class="identifier">local</span><span class="special">::</span><span class="identifier">function</span></code> and therefore they cannot
+            be passed as function parameters, etc.
+          </li>
+<li class="listitem">
+            Rework factorial_impl and Implementation section.
+          </li>
+<li class="listitem">
+            Read all N-papers about "passing local types as template parameters".
+          </li>
+<li class="listitem">
             <span class="bold"><strong>Code.</strong></span> Optimize macro expansion code
             for C++0x, C++03, etc. From John Bytheway:
-          </li></ol></div>
+          </li>
+</ol></div>
 <pre class="programlisting"><span class="special">&gt;</span> <span class="identifier">Yes</span><span class="special">,</span> <span class="identifier">in</span> <span class="identifier">C</span><span class="special">++</span><span class="number">0</span><span class="identifier">x</span> <span class="identifier">local</span> <span class="identifier">structs</span> <span class="identifier">can</span> <span class="identifier">be</span> <span class="identifier">passed</span> <span class="identifier">as</span> <span class="keyword">template</span> <span class="identifier">parameters</span><span class="special">.</span>
 <span class="special">&gt;</span> <span class="identifier">Obviously</span><span class="special">,</span> <span class="identifier">in</span> <span class="identifier">C</span><span class="special">++</span><span class="number">0</span><span class="identifier">x</span> <span class="identifier">there</span> <span class="identifier">are</span> <span class="identifier">lambdas</span> <span class="identifier">too</span><span class="special">,</span> <span class="identifier">so</span> <span class="identifier">you</span> <span class="identifier">might</span> <span class="identifier">think</span> <span class="identifier">your</span>
 <span class="special">&gt;</span> <span class="identifier">library</span> <span class="identifier">is</span> <span class="identifier">useless</span><span class="special">,</span> <span class="identifier">but</span> <span class="identifier">I</span> <span class="identifier">would</span> <span class="identifier">expect</span> <span class="identifier">most</span> <span class="identifier">compilers</span> <span class="identifier">to</span> <span class="identifier">support</span> <span class="identifier">passing</span>

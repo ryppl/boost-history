@@ -50,9 +50,9 @@ Moreover, eventual compiler errors follow the usual format of C++ statement erro
     [ No. It can be defined only within declarations. ]
     [ No. It can be defined only within declarations. ]
     [ No. It can be defined only within declarations. ]
-    [ Yes. ]
-    [ Yes. ]
-    [ Yes. ]
+    [ Yes (plus the local function can be unnamed). ]
+    [ Yes (plus the local function can be unnamed). ]
+    [ Yes (plus the local function can be unnamed). ]
 ]
 [
     [ ['Can be passed as template parameter (e.g., to STL algorithms)] ]
@@ -76,7 +76,7 @@ Programmers must manually manage functor member variables with explicit types to
     In addition, there is "short-hand" syntax to bind all variables in scope at once (by value or by reference).
 However, it is not possible to bind by constant reference (only by constant value). ]
     [ No (but variables in scope are accessible as usual within expressions). ]
-    [ Yes (using `let` which also allows to bind by constant reference). ]
+    [ Yes (using `let` which also allows to bind by constant reference, plus variables in scope are accessible as usual within expressions). ]
 ]
 ]
 
