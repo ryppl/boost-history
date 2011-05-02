@@ -1,6 +1,9 @@
 
 #include <boost/chrono.hpp>
-#include <boost/spirit/include/phoenix.hpp>
+#include <boost/spirit/home/phoenix/statement/sequence.hpp>
+#include <boost/spirit/home/phoenix/core/reference.hpp>
+#include <boost/spirit/home/phoenix/core/argument.hpp>
+#include <boost/spirit/home/phoenix/operator/arithmetic.hpp>
 #include <iostream>
 #include <vector>
 #include <algorithm>

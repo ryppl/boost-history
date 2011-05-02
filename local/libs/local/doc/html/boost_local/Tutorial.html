@@ -892,7 +892,7 @@
 <tr><td align="left" valign="top"><p>
           A <code class="computeroutput"><span class="keyword">return</span><span class="special">;</span></code>
           instruction from within a local block jumps to the end of the local block
-          body and it does not return the enclosing function. <sup>[<a name="id875485" href="#ftn.id875485" class="footnote">10</a>]</sup>
+          body and it does not return the enclosing function. <sup>[<a name="id875486" href="#ftn.id875486" class="footnote">10</a>]</sup>
         </p></td></tr>
 </table></div>
 <p>
@@ -1328,9 +1328,9 @@
             behaviour of <code class="computeroutput"><span class="keyword">static_cast</span></code></a>
             (which might not work on all platforms at the cost of portability). Finally,
             the special name <code class="computeroutput"><span class="identifier">this_</span></code>
-            was chose following <a href="http://boost.2283326.n4.nabble.com/local-this-or-this-td3423912.html" target="_top">Boost
-            practise</a> to postfix with an underscore identifier named after
-            keywords (the C++ keyword <code class="computeroutput"><span class="keyword">this</span></code>
+            was chosen following <a href="http://boost.2283326.n4.nabble.com/local-this-or-this-td3423912.html" target="_top">Boost
+            practise</a> to postfix with an underscore identifiers that are named
+            after keywords (the C++ keyword <code class="computeroutput"><span class="keyword">this</span></code>
             in this case).
           </p></div>
 <div class="footnote"><p><sup>[<a id="ftn.id872165" href="#id872165" class="para">9</a>] </sup>
@@ -1346,7 +1346,7 @@
             is visible but it refers to the local functor object and not to the bound
             object.
           </p></div>
-<div class="footnote"><p><sup>[<a id="ftn.id875485" href="#id875485" class="para">10</a>] </sup>
+<div class="footnote"><p><sup>[<a id="ftn.id875486" href="#id875486" class="para">10</a>] </sup>
             <span class="bold"><strong>Rationale.</strong></span> Programmers might expect
             <code class="computeroutput"><span class="keyword">return</span><span class="special">;</span></code>
             to exit the enclosing function instead of the local block (or local exit),

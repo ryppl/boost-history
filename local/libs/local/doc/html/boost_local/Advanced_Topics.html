@@ -85,7 +85,7 @@
 <p>
         In addition, local function parameter types cannot start with non-alphanumeric
         symbols (alphanumeric symbols are <code class="computeroutput"><span class="identifier">A</span><span class="special">-</span><span class="identifier">Z</span></code>, <code class="computeroutput"><span class="identifier">a</span><span class="special">-</span><span class="identifier">z</span></code>,
-        and <code class="computeroutput"><span class="number">0</span><span class="special">-</span><span class="number">9</span></code>). <sup>[<a name="id881374" href="#ftn.id881374" class="footnote">14</a>]</sup> The library will generate (cryptic) preprocessor errors if a
+        and <code class="computeroutput"><span class="number">0</span><span class="special">-</span><span class="number">9</span></code>). <sup>[<a name="id881375" href="#ftn.id881375" class="footnote">14</a>]</sup> The library will generate (cryptic) preprocessor errors if a
         parameter type starts with a non-alphanumeric symbol.
       </p>
 <p>
@@ -208,7 +208,7 @@
 <li class="listitem">
             Parenthesis to wrap the type expression (and therefore any commas <code class="computeroutput"><span class="special">,</span></code> that it contains) passed as parameter
             to the <code class="computeroutput"><a class="link" href="../BOOST_IDENTITY_TYPE.html" title="Macro BOOST_IDENTITY_TYPE">BOOST_IDENTITY_TYPE</a></code>
-            macro. <sup>[<a name="id882734" href="#ftn.id882734" class="footnote">15</a>]</sup>
+            macro. <sup>[<a name="id882735" href="#ftn.id882735" class="footnote">15</a>]</sup>
           </li>
 </ol></div>
 <p>
@@ -409,7 +409,7 @@
         </p></td></tr>
 </table></div>
 <p>
-        Consider the following complete example: <sup>[<a name="id884038" href="#ftn.id884038" class="footnote">16</a>]</sup>
+        Consider the following complete example: <sup>[<a name="id884039" href="#ftn.id884039" class="footnote">16</a>]</sup>
       </p>
 <div class="informaltable"><table class="table">
 <colgroup>
@@ -2135,21 +2135,21 @@
 </div>
 <div class="footnotes">
 <br><hr width="100" align="left">
-<div class="footnote"><p><sup>[<a id="ftn.id881374" href="#id881374" class="para">14</a>] </sup>
+<div class="footnote"><p><sup>[<a id="ftn.id881375" href="#id881375" class="para">14</a>] </sup>
           <span class="bold"><strong>Rationale.</strong></span> This limitation derives from
           the fact that <code class="computeroutput"><a class="link" href="../BOOST_LOCAL_FUNCTION_PARAMS.html" title="Macro BOOST_LOCAL_FUNCTION_PARAMS">BOOST_LOCAL_FUNCTION_PARAMS</a></code>
           uses preprocessor token concatenation to inspect the parameter type token
           to see if the token is a parameter or a bound variable. The C++ preprocessor
           does not allow to concatenate non-alphanumeric tokens.
         </p></div>
-<div class="footnote"><p><sup>[<a id="ftn.id882734" href="#id882734" class="para">15</a>] </sup>
+<div class="footnote"><p><sup>[<a id="ftn.id882735" href="#id882735" class="para">15</a>] </sup>
               <span class="bold"><strong>Rationale.</strong></span> Using variadic macros,
               this extra set of parenthesis could be eliminated requiring only the
               parenthesis to invoke the <code class="computeroutput"><a class="link" href="../BOOST_IDENTITY_TYPE.html" title="Macro BOOST_IDENTITY_TYPE">BOOST_IDENTITY_TYPE</a></code>
               macro. However, this feature is currently not implemented and the double
               parenthesis are always needed when invoking this macro.
             </p></div>
-<div class="footnote"><p><sup>[<a id="ftn.id884038" href="#id884038" class="para">16</a>] </sup>
+<div class="footnote"><p><sup>[<a id="ftn.id884039" href="#id884039" class="para">16</a>] </sup>
           The authors recognize that the use of the <span class="emphasis"><em>identity macros</em></span>
           adds extra parenthesis to the already significant number of parenthesis
           required by the sequencing macro syntax. However, macro parameters usually

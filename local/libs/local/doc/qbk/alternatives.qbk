@@ -65,18 +65,20 @@ The ISO C++ standard does not allow to pass local types as template parameters (
     [ Yes. ]
 ]
 [
-    [ ['Bind variables in scope] ]
+    [ ['Access variables in scope] ]
     [ Yes.
-It can bind variables by value, constant value, reference, and constant reference (also it can bind the object `this`). ]
+The variables names are repeated in the function declaration so they can be bound by value, constant value, reference, and constant reference (also it can bind the object `this`). ]
     [ No.
 Programmers must manually manage functor member variables with explicit types to access variables in scope. ]
     [ No.
 Programmers must manually manage functor member variables with explicit types to access variables in scope. ]
     [ Yes.
-    In addition, there is "short-hand" syntax to bind all variables in scope at once (by value or by reference).
-However, it is not possible to bind by constant reference (only by constant value). ]
-    [ No (but variables in scope are accessible as usual within expressions). ]
-    [ Yes (using `let` which also allows to bind by constant reference, plus variables in scope are accessible as usual within expressions). ]
+The variables names are repeated in the function declaration so they can be bound by value, constant value, and reference (also it can bind the object `this`).
+However, variables cannot be bound by constant reference.
+In addition, there is "short-hand" syntax to bind all variables in scope at once (by value or by reference). ]
+    [ Yes (variables in scope are accessible as usual within expressions). ]
+    [ Yes (variables in scope are accessible as usual within expressions).
+In addition, `boost::phoenix::let` can be used to bind variables by constant reference. ]
 ]
 ]
 

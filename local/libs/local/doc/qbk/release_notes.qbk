@@ -28,8 +28,6 @@
 
 [section TODO]
 
-# Check if compilation times of Boost.Lambda and Boost.Phoenix change if only specific headers are included (instead of the entire library header).
-
 # Rework factorial_impl and Implementation section.
 
 [endsect]

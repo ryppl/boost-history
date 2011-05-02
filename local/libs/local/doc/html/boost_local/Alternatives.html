@@ -252,19 +252,14 @@
 <tr>
 <td>
                 <p>
-                  <span class="emphasis"><em>Bind variables in scope</em></span>
+                  <span class="emphasis"><em>Access variables in scope</em></span>
                 </p>
               </td>
 <td>
                 <p>
-                  Yes. It can bind variables by value, constant value, reference,
-                  and constant reference (also it can bind the object <code class="computeroutput"><span class="keyword">this</span></code>).
-                </p>
-              </td>
-<td>
-                <p>
-                  No. Programmers must manually manage functor member variables with
-                  explicit types to access variables in scope.
+                  Yes. The variables names are repeated in the function declaration
+                  so they can be bound by value, constant value, reference, and constant
+                  reference (also it can bind the object <code class="computeroutput"><span class="keyword">this</span></code>).
                 </p>
               </td>
 <td>
@@ -275,22 +270,30 @@
               </td>
 <td>
                 <p>
-                  Yes. In addition, there is "short-hand" syntax to bind
-                  all variables in scope at once (by value or by reference). However,
-                  it is not possible to bind by constant reference (only by constant
-                  value).
+                  No. Programmers must manually manage functor member variables with
+                  explicit types to access variables in scope.
                 </p>
               </td>
 <td>
                 <p>
-                  No (but variables in scope are accessible as usual within expressions).
+                  Yes. The variables names are repeated in the function declaration
+                  so they can be bound by value, constant value, and reference (also
+                  it can bind the object <code class="computeroutput"><span class="keyword">this</span></code>).
+                  However, variables cannot be bound by constant reference. In addition,
+                  there is "short-hand" syntax to bind all variables in
+                  scope at once (by value or by reference).
                 </p>
               </td>
 <td>
                 <p>
-                  Yes (using <code class="computeroutput"><span class="identifier">let</span></code>
-                  which also allows to bind by constant reference, plus variables
-                  in scope are accessible as usual within expressions).
+                  Yes (variables in scope are accessible as usual within expressions).
+                </p>
+              </td>
+<td>
+                <p>
+                  Yes (variables in scope are accessible as usual within expressions).
+                  In addition, <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">phoenix</span><span class="special">::</span><span class="identifier">let</span></code>
+                  can be used to bind by constant reference.
                 </p>
               </td>
 </tr>
