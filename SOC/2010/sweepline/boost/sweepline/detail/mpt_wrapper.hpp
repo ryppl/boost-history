@@ -1,4 +1,4 @@
-// Boost sweepline/mpz_arithmetic.hpp header file
+// Boost sweepline/mpt_wrapper.hpp header file
 
 //          Copyright Andrii Sydorchuk 2010.
 // Distributed under the Boost Software License, Version 1.0.
@@ -7,8 +7,8 @@
 
 // See http://www.boost.org for updates, documentation, and revision history.
 
-#ifndef BOOST_SWEEPLINE_MPZ_ARITHMETIC
-#define BOOST_SWEEPLINE_MPZ_ARITHMETIC
+#ifndef BOOST_SWEEPLINE_MPT_WRAPPER
+#define BOOST_SWEEPLINE_MPT_WRAPPER
 
 #include <cmath>
 #include <string>
@@ -33,9 +33,10 @@ namespace detail {
         
         mpt_wrapper(const mpt& input) : m_(input) {}
 
-        mpt_wrapper(const mpt_wrapper& w) : m_(w.m_) {
-            cur_ = 0;
-        }
+        mpt_wrapper(const mpt_wrapper& w) : m_(w.m_) {}
+
+        template <typename mpt2, int N2>
+        mpt_wrapper(const mpt_wrapper<mpt2, N2>& w) : m_(w.m_) {}
 
         mpt_wrapper& operator=(int that) {
             m_ = that;
@@ -52,12 +53,22 @@ namespace detail {
             return *this;
         }
 
+        template <typename mpt2, int N2>
+        mpt_wrapper& operator=(const mpt_wrapper<mpt2, N2>& that) {
+            m_ = that.get_mpt();
+            return *this;
+        }
+
         double get_d() const {
             return m_.get_d();
         }
 
         std::string get_str() const {
             return m_.get_str();
+        }
+
+        const mpt& get_mpt() const {
+            return m_;
         }
 
         bool operator==(const mpt_wrapper& that) const {
@@ -85,31 +96,40 @@ namespace detail {
         }
 
         bool operator==(int that) const {
+            if (that == 0)
+                return m_.__get_mp()->_mp_size == 0;
             temp_[cur_] = that;
             return m_ == temp_[cur_].m_;
         }
 
         bool operator!=(int that) const {
-            temp_[cur_] = that;
-            return m_ != temp_[cur_].m_;
+            return !(*this == that);
         }
 
         bool operator<(int that) const {
+            if (that == 0)
+                return m_.__get_mp()->_mp_size < 0;
             temp_[cur_] = that;
             return m_ < temp_[cur_].m_;
         }
 
         bool operator<=(int that) const {
+            if (that == 0)
+                return m_.__get_mp()->_mp_size <= 0;
             temp_[cur_] = that;
             return m_ <= temp_[cur_].m_;
         }
 
         bool operator>(int that) const {
+            if (that == 0)
+                return m_.__get_mp()->_mp_size > 0;
             temp_[cur_] = that;
             return m_ > temp_[cur_].m_;
         }
 
         bool operator>=(int that) const {
+            if (that == 0)
+                return m_.__get_mp()->_mp_size >= 0;
             temp_[cur_] = that;
             return m_ >= temp_[cur_].m_;
         }
@@ -134,6 +154,11 @@ namespace detail {
             return temp_[next_cur()];
         }
 
+        mpt_wrapper& operator/(const mpt_wrapper& that) const {
+            temp_[cur_].m_ = this->m_ / that.m_;
+            return temp_[next_cur()];
+        }
+
         mpt_wrapper& operator*(double that) const {
             temp_[cur_].m_ = that;
             temp_[cur_].m_ *= this->m_;
@@ -155,6 +180,16 @@ namespace detail {
             return *this;
         }
 
+        mpt_wrapper& operator/=(const mpt_wrapper& that) {
+            this->m_ /= that.m_;
+            return *this;
+        }
+
+        mpt_wrapper& get_sqrt() {
+            temp_[cur_].m_ = sqrt(m_);
+            return temp_[next_cur()];
+        }
+
     private:
         static int next_cur() {
             int ret_val = cur_++;
@@ -173,82 +208,11 @@ namespace detail {
     
     template <typename mpt, int N>
     mpt_wrapper<mpt, N> mpt_wrapper<mpt, N>::temp_[N];
-    
-    template <int N>
-    struct sqr_expr_evaluator {
-        template <typename mpt>
-        static double eval(mpt *A, mpt *B);
-    };
 
-    // Evaluates expression:
-    // A[0] * sqrt(B[0]) + A[1] * sqrt(B[1]) with
-    // 7 * EPS relative error in the worst case.
-    template <>
-    struct sqr_expr_evaluator<2> {
-        template <typename mpt>
-        static double eval(mpt *A, mpt *B) {
-#ifndef THREAD_SAFETY
-            static
-#endif
-            mpt numerator;
-            double lhs = A[0].get_d() * sqrt(B[0].get_d());
-            double rhs = A[1].get_d() * sqrt(B[1].get_d());
-            if ((lhs >= 0 && rhs >= 0) || (lhs <= 0 && rhs <= 0))
-                return lhs + rhs;
-            numerator = A[0] * A[0] * B[0] - A[1] * A[1] * B[1];
-            return numerator.get_d() / (lhs - rhs);
-        }
-    };
-
-    // Evaluates expression:
-    // A[0] * sqrt(B[0]) + A[1] * sqrt(B[1]) + A[2] * sqrt(B[2])
-    // with 16 * EPS relative error in the worst case.
-    template <>
-    struct sqr_expr_evaluator<3> {
-        template <typename mpt>
-        static double eval(mpt *A, mpt *B) {
-#ifndef THREAD_SAFETY
-            static
-#endif
-            mpt cA[2], cB[2];
-            double lhs = sqr_expr_evaluator<2>::eval<mpt>(A, B);
-            double rhs = A[2].get_d() * sqrt(B[2].get_d());
-            if ((lhs >= 0 && rhs >= 0) || (lhs <= 0 && rhs <= 0))
-                return lhs + rhs;
-            cA[0] = A[0] * A[0] * B[0] + A[1] * A[1] * B[1];
-            cA[0] -= A[2] * A[2] * B[2];
-            cB[0] = 1;
-            cA[1] = A[0] * A[1] * 2;
-            cB[1] = B[0] * B[1];
-            return sqr_expr_evaluator<2>::eval<mpt>(cA, cB) / (lhs - rhs);
-        }
-    };
-
-    // Evaluates expression:
-    // A[0] * sqrt(B[0]) + A[1] * sqrt(B[1]) + A[2] * sqrt(B[2]) + A[3] * sqrt(B[3])
-    // with 25 * EPS relative error in the worst case.
-    template <>
-    struct sqr_expr_evaluator<4> {
-        template <typename mpt>
-        static double eval(mpt *A, mpt *B) {
-#ifndef THREAD_SAFETY
-            static
-#endif
-            mpt cA[3], cB[3];
-            double lhs = sqr_expr_evaluator<2>::eval<mpt>(A, B);
-            double rhs = sqr_expr_evaluator<2>::eval<mpt>(A + 2, B + 2);
-            if ((lhs >= 0 && rhs >= 0) || (lhs <= 0 && rhs <= 0))
-                return lhs + rhs;
-            cA[0] = A[0] * A[0] * B[0] + A[1] * A[1] * B[1];
-            cA[0] -= A[2] * A[2] * B[2] + A[3] * A[3] * B[3];
-            cB[0] = 1;
-            cA[1] = A[0] * A[1] * 2;
-            cB[1] = B[0] * B[1];
-            cA[2] = A[2] * A[3] * -2;
-            cB[2] = B[2] * B[3];
-            return sqr_expr_evaluator<3>::eval<mpt>(cA, cB) / (lhs - rhs);
-        }
-    };
+    template<int N>
+    mpt_wrapper<mpf_class, N>& sqrt(mpt_wrapper<mpf_class, N>& value) {
+        return value.get_sqrt();
+    }
 
 } // detail
 } // sweepline

@@ -11,7 +11,7 @@ project
     ;
 
 
-alias "sweepline"
+alias "main"
     :
         [ run circle_event_creation_test.cpp ]
         [ run clipping_test.cpp ]
@@ -19,41 +19,12 @@ alias "sweepline"
         [ run event_types_test.cpp ]
         [ run node_comparer_test.cpp ]
         [ run predicates_test.cpp ]
+        [ run robust_fpt_test.cpp ]
+	[ run sqrt_expr_evaluator_test.cpp ]
         [ run sweepline_test.cpp ]
     ;
 
-alias "sweepline_benchmark"
+alias "benchmark"
     :
         [ run benchmark_test.cpp ]
-    ;
-
-path-constant GMP_PATH : "/usr/local" ;
-
-lib gmp
-    : # sources
-    : # requirements
-      <name>gmp <search>$(GMP_PATH)/lib
-    : #default-build
-    : # usage-requirements
-    ;
-
-lib gmpxx
-    : # sources
-    : # requirements
-      <name>gmpxx <search>$(GMP_PATH)/lib
-    : # default-build
-    : # usage-requirements
-    ;
-
-alias gmp_libs : gmp gmpxx : <link>static ;
-
-alias "mpz_arithmetic"
-    :
-        [ run mpz_arithmetic_test.cpp gmp_libs
-          : # args
-          : # input files
-          : # requirements
-            <include>$(GMP_PATH)/include
-          : # target-name
-        ]
     ;

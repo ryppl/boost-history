@@ -38,14 +38,6 @@ namespace detail {
         LEFT_ORIENTATION = 1,
     };
 
-    // Represents the result of the epsilon robust predicate.
-    // If the result is undefined some further processing is usually required.
-    enum kPredicateResult {
-        LESS = -1,
-        UNDEFINED = 0,
-        MORE = 1,
-    };
-
     // Site event type.
     // Occurs when the sweepline sweeps over one of the initial sites:
     //     1) point site;
@@ -348,7 +340,7 @@ namespace detail {
         typedef typename std::map< Key, Value, NodeComparer >::iterator
             beach_line_iterator;
 
-        circle_event() : is_active_(true) {}
+        circle_event() : denom_(1), is_active_(true) {}
 
         circle_event(coordinate_type c_x,
                      coordinate_type c_y,
@@ -452,14 +444,26 @@ namespace detail {
             return center_x_.dif() / denom_.dif();
         }
 
+        void x(coordinate_type center_x) {
+            center_x_ = center_x;
+        }
+
         // Evaluate y-coordinate of the center of the circle.
         coordinate_type y() const {
             return center_y_.dif() / denom_.dif();
         }
 
+        void y(coordinate_type center_y) {
+            center_y_ = center_y;
+        }
+
         // Evaluate x-coordinate of the rightmost point of the circle.
         coordinate_type lower_x() const {
             return lower_x_.dif() / denom_.dif();
+        }
+
+        void lower_x(coordinate_type lower_x) {
+            lower_x_ = lower_x;
         }
 
         point_2d_type center() const {
@@ -642,96 +646,6 @@ namespace detail {
         }
     }
 
-    // If two floating-point numbers in the same format are ordered (x < y),
-    // then they are ordered the same way when their bits are reinterpreted as
-    // sign-magnitude integers. Values are considered to be almost equal if
-    // their integer reinterpretatoins differ in not more than maxUlps units.
-    static inline bool almost_equal(double a, double b,
-                                    unsigned int maxUlps) {
-        polygon_ulong_long_type ll_a, ll_b;
-
-        // Reinterpret double bits as 64-bit signed integer.
-        memcpy(&ll_a, &a, sizeof(double));
-        memcpy(&ll_b, &b, sizeof(double));
-
-        // Positive 0.0 is integer zero. Negative 0.0 is 0x8000000000000000.
-        // Map negative zero to an integer zero representation - making it
-        // identical to positive zero - the smallest negative number is
-        // represented by negative one, and downwards from there.
-        if (ll_a < 0x8000000000000000ULL)
-            ll_a = 0x8000000000000000ULL - ll_a;
-        if (ll_b < 0x8000000000000000ULL)
-            ll_b = 0x8000000000000000ULL - ll_b;
-
-        // Compare 64-bit signed integer representations of input values.
-        // Difference in 1 Ulp is equivalent to a relative error of between
-        // 1/4,000,000,000,000,000 and 1/8,000,000,000,000,000.
-        if (ll_a > ll_b)
-            return ll_a - ll_b <= maxUlps;
-        return ll_b - ll_a <= maxUlps;
-    }
-
-    // Robust orientation test. Works correctly for any input type that
-    // can be casted without lose of data to the integer type within a range
-    // [-2^32, 2^32-1].
-    // Arguments: dif_x1_, dif_y1 - coordinates of the first vector.
-    //            dif_x2_, dif_y2 - coordinates of the second vector.
-    // Returns orientation test result for input vectors.
-    template <typename T>
-    static kOrientation orientation_test(T dif_x1_, T dif_y1_,
-                                         T dif_x2_, T dif_y2_) {
-        polygon_ulong_long_type dif_x1, dif_y1, dif_x2, dif_y2;
-        bool dif_x1_plus, dif_x2_plus, dif_y1_plus, dif_y2_plus;
-        dif_x1_plus = convert_to_65_bit(dif_x1_, dif_x1);
-        dif_y1_plus = convert_to_65_bit(dif_y1_, dif_y1);
-        dif_x2_plus = convert_to_65_bit(dif_x2_, dif_x2);
-        dif_y2_plus = convert_to_65_bit(dif_y2_, dif_y2);
-
-        polygon_ulong_long_type expr_l = dif_x1 * dif_y2;
-        polygon_ulong_long_type expr_r = dif_x2 * dif_y1;
-
-        bool expr_l_plus = (dif_x1_plus == dif_y2_plus) ? true : false;
-        bool expr_r_plus = (dif_x2_plus == dif_y1_plus) ? true : false;
-
-        if (expr_l == 0)
-            expr_l_plus = true;
-        if (expr_r == 0)
-            expr_r_plus = true;
-
-        if ((expr_l_plus == expr_r_plus) && (expr_l == expr_r))
-            return COLLINEAR;
-
-        if (!expr_l_plus) {
-            if (expr_r_plus)
-                return RIGHT_ORIENTATION;
-            else
-                return (expr_l > expr_r) ?
-                       RIGHT_ORIENTATION : LEFT_ORIENTATION;
-        } else {
-            if (!expr_r_plus)
-                return LEFT_ORIENTATION;
-            else
-                return (expr_l < expr_r) ?
-                       RIGHT_ORIENTATION : LEFT_ORIENTATION;
-        }
-    }
-
-    // Robust orientation test. Works correctly for any input coordinate type
-    // that can be casted without lose of data to integer type within a range
-    // [-2^31, 2^31 - 1] - signed integer type.
-    // Arguments: point1, point2 - represent the first vector;
-    //            point2, point3 - represent the second vector;
-    // Returns orientation test result for input vectors.
-    template <typename T>
-    static inline kOrientation orientation_test(const point_2d<T> &point1,
-                                                const point_2d<T> &point2,
-                                                const point_2d<T> &point3) {
-        return orientation_test(point1.x() - point2.x(),
-                                point1.y() - point2.y(),
-                                point2.x() - point3.x(),
-                                point2.y() - point3.y());
-    }
-
     // Value is a determinant of two vectors.
     // Return orientation based on the sign of the determinant.
     template <typename T>
@@ -785,186 +699,34 @@ namespace detail {
         }
     }
 
-    // Class used to make computations with epsilon relative error.
-    // ERC consists of two values: value1 and value2, both positive.
-    // The resulting expression is equal to the value1 - value2.
-    // The main idea is to represent any expression that consists of
-    // addition, substraction, multiplication and division operations
-    // to avoid using substraction. Substraction of a positive value
-    // is equivalent to the addition to value2 and substraction of
-    // a negative value is equivalent to the addition to value1.
-    // Cons: ERC gives error relative not to the resulting value,
-    //       but relative to some expression instead. Example:
-    //       center_x = 100, ERC's value1 = 10^20, value2 = 10^20,
-    //       center_x = 1000, ERC's value3 = 10^21, value4 = 10^21,
-    //       such two centers are considered equal(
-    //       value1 + value4 = value2 + value3), while they are not.
-    // Pros: ERC is much faster then approaches based on the use
-    //       of high-precision libraries. However this will give correct
-    //       answer for the previous example.
-    // Solution: Use ERCs in case of defined comparison results and use
-    //           high-precision libraries for undefined results.
+    // Robust orientation test. Works correctly for any input type that
+    // can be casted without lose of data to the integer type within a range
+    // [-2^32, 2^32-1].
+    // Arguments: dif_x1_, dif_y1 - coordinates of the first vector.
+    //            dif_x2_, dif_y2 - coordinates of the second vector.
+    // Returns orientation test result for input vectors.
     template <typename T>
-    class epsilon_robust_comparator {
-    public:
-        epsilon_robust_comparator() :
-          positive_sum_(0),
-          negative_sum_(0) {}
-
-        epsilon_robust_comparator(T value) :
-          positive_sum_((value>0)?value:0),
-          negative_sum_((value<0)?-value:0) {}
-
-        epsilon_robust_comparator(T pos, T neg) :
-          positive_sum_(pos),
-          negative_sum_(neg) {}
-
-        T dif() const {
-            return positive_sum_ - negative_sum_;
-        }
-
-        T pos() const {
-            return positive_sum_;
-        }
-
-        T neg() const {
-            return negative_sum_;
-        }
-
-        // Equivalent to the unary minus.
-        void swap() {
-            (std::swap)(positive_sum_, negative_sum_);
-        }
-
-        bool abs() {
-            if (positive_sum_ < negative_sum_) {
-                swap();
-                return true;
-            }
-            return false;
-        }
-
-        epsilon_robust_comparator<T> &operator+=(const T &val) {
-            if (val >= 0)
-                positive_sum_ += val;
-            else
-                negative_sum_ -= val;
-            return *this;
-        }
-
-        epsilon_robust_comparator<T> &operator+=(
-            const epsilon_robust_comparator<T> &erc) {
-            positive_sum_ += erc.positive_sum_;
-            negative_sum_ += erc.negative_sum_;
-            return *this;
-        }
-
-        epsilon_robust_comparator<T> &operator-=(const T &val) {
-            if (val >= 0)
-                negative_sum_ += val;
-            else
-                positive_sum_ -= val;
-            return *this;
-        }
-
-        epsilon_robust_comparator<T> &operator-=(
-            const epsilon_robust_comparator<T> &erc) {
-            positive_sum_ += erc.negative_sum_;
-            negative_sum_ += erc.positive_sum_;
-            return *this;
-        }
-
-        epsilon_robust_comparator<T> &operator*=(const T &val) {
-            positive_sum_ *= fabs(val);
-            negative_sum_ *= fabs(val);
-            if (val < 0) {
-                swap();
-            }
-            return *this;
-        }
-
-        epsilon_robust_comparator<T> &operator/=(const T &val) {
-            positive_sum_ /= fabs(val);
-            negative_sum_ /= fabs(val);
-            if (val < 0) {
-                swap();
-            }
-            return *this;
-        }
-
-        // Compare predicate with value using ulp precision.
-        kPredicateResult compare(T value, int ulp = 0) const {
-            T lhs = positive_sum_ - ((value < 0) ? value : 0);
-            T rhs = negative_sum_ + ((value > 0) ? value : 0);
-            if (almost_equal(lhs, rhs, ulp))
-                return UNDEFINED;
-            return (lhs < rhs) ? LESS : MORE;
-        }
-
-        // Compare two predicats using ulp precision.
-        kPredicateResult compare(const epsilon_robust_comparator &rc,
-                                 int ulp = 0) const {
-            T lhs = positive_sum_ + rc.neg();
-            T rhs = negative_sum_ + rc.pos();
-            if (almost_equal(lhs, rhs, ulp))
-                return UNDEFINED;
-            return (lhs < rhs) ? LESS : MORE;
-        }
-
-        // Check whether comparison has undefined result.
-        bool compares_undefined(const epsilon_robust_comparator &rc,
-                                int ulp) const {
-            return this->compare(rc, ulp) == UNDEFINED;
-        }
-
-    private:
-        T positive_sum_;
-        T negative_sum_;
-    };
-
-    template<typename T>
-    inline epsilon_robust_comparator<T> operator+(
-        const epsilon_robust_comparator<T>& lhs,
-        const epsilon_robust_comparator<T>& rhs) {
-        return epsilon_robust_comparator<T>(lhs.pos() + rhs.pos(),
-                                            lhs.neg() + rhs.neg());
+    static kOrientation orientation_test(T dif_x1_, T dif_y1_,
+                                         T dif_x2_, T dif_y2_) {
+        return orientation_test(
+            robust_cross_product(dif_x1_, dif_y1_, dif_x2_, dif_y2_));
     }
 
-    template<typename T>
-    inline epsilon_robust_comparator<T> operator-(
-        const epsilon_robust_comparator<T>& lhs,
-        const epsilon_robust_comparator<T>& rhs) {
-        return epsilon_robust_comparator<T>(lhs.pos() - rhs.neg(),
-                                            lhs.neg() + rhs.pos());
-    }
-
-    template<typename T>
-    inline epsilon_robust_comparator<T> operator*(
-        const epsilon_robust_comparator<T>& lhs,
-        const epsilon_robust_comparator<T>& rhs) {
-        double res_pos = lhs.pos() * rhs.pos() + lhs.neg() * rhs.neg();
-        double res_neg = lhs.pos() * rhs.neg() + lhs.neg() * rhs.pos();
-        return epsilon_robust_comparator<T>(res_pos, res_neg);
-    }
-
-    template<typename T>
-    inline epsilon_robust_comparator<T> operator*(
-        const epsilon_robust_comparator<T>& lhs, const T& val) {
-        if (val >= 0)
-            return epsilon_robust_comparator<T>(lhs.pos() * val,
-                                                lhs.neg() * val);
-        return epsilon_robust_comparator<T>(-lhs.neg() * val,
-                                            -lhs.pos() * val);
-    }
-
-    template<typename T>
-    inline epsilon_robust_comparator<T> operator*(
-        const T& val, const epsilon_robust_comparator<T>& rhs) {
-        if (val >= 0)
-            return epsilon_robust_comparator<T>(val * rhs.pos(),
-                                                val * rhs.neg());
-        return epsilon_robust_comparator<T>(-val * rhs.neg(),
-                                            -val * rhs.pos());
+    // Robust orientation test. Works correctly for any input coordinate type
+    // that can be casted without lose of data to integer type within a range
+    // [-2^31, 2^31 - 1] - signed integer type.
+    // Arguments: point1, point2 - represent the first vector;
+    //            point2, point3 - represent the second vector;
+    // Returns orientation test result for input vectors.
+    template <typename T>
+    static inline kOrientation orientation_test(const point_2d<T> &point1,
+                                                const point_2d<T> &point2,
+                                                const point_2d<T> &point3) {
+        return orientation_test(
+            robust_cross_product(point1.x() - point2.x(),
+                                 point1.y() - point2.y(),
+                                 point2.x() - point3.x(),
+                                 point2.y() - point3.y()));
     }
 
     // Robust voronoi vertex data structure. Used during removing degenerate
@@ -1034,7 +796,7 @@ namespace detail {
             double b1 = segment_end.y() - segment_start.y();
             double a3 = new_point.x() - segment_start.x();
             double b3 = new_point.y() - segment_start.y();
-            double k = sqrt(a1 * a1 + b1 * b1);
+            double k = std::sqrt(a1 * a1 + b1 * b1);
             // Avoid substraction while computing k.
             if (segment.is_inverse()) {
                 if (b1 >= 0.0) {
@@ -1296,385 +1058,416 @@ namespace detail {
         return dif_x * dif_x + dif_y * dif_y;
     }
 
-    //// Recompute parameters of the circle event using high-precision library.
-    //template <typename T>
-    //static bool create_circle_event_ppp_gmpxx(const site_event<T> &site1,
-    //                                          const site_event<T> &site2,
-    //                                          const site_event<T> &site3,
-    //                                          circle_event<T> &c_event) {
-    //    typedef mpt_wrapper<mpz_class, 8> mpt_type;
-    //    static mpt_type mpz_dif_x[3], mpz_dif_y[3], mpz_sum_x[3], mpz_sum_y[3],
-    //                    mpz_numerator[3], mpz_c_x, mpz_c_y, mpz_sqr_r;
-    //    mpz_dif_x[0] = site1.x() - site2.x();
-    //    mpz_dif_x[1] = site2.x() - site3.x();
-    //    mpz_dif_x[2] = site1.x() - site3.x();
-    //    mpz_dif_y[0] = site1.y() - site2.y();
-    //    mpz_dif_y[1] = site2.y() - site3.y();
-    //    mpz_dif_y[2] = site1.y() - site3.y();
-    //
-    //    // Evaluate orientation.
-    //    double orientation = (mpz_dif_x[0] * mpz_dif_y[1] - mpz_dif_x[1] * mpz_dif_y[0]).get_d();
+    // Recompute parameters of the circle event using high-precision library.
+    template <typename T>
+    static bool create_circle_event_ppp_gmpxx(const site_event<T> &site1,
+                                              const site_event<T> &site2,
+                                              const site_event<T> &site3,
+                                              circle_event<T> &c_event,
+                                              bool recompute_c_x = true,
+                                              bool recompute_c_y = true,
+                                              bool recompute_lower_x = true) {
+        typedef mpt_wrapper<mpz_class, 8> mpt_type;
+        static mpt_type mpz_dif_x[3], mpz_dif_y[3], mpz_sum_x[3], mpz_sum_y[3],
+                        mpz_numerator[3], mpz_c_x, mpz_c_y, mpz_sqr_r, denom,
+                        cA[2], cB[2];
+        mpz_dif_x[0] = site1.x() - site2.x();
+        mpz_dif_x[1] = site2.x() - site3.x();
+        mpz_dif_x[2] = site1.x() - site3.x();
+        mpz_dif_y[0] = site1.y() - site2.y();
+        mpz_dif_y[1] = site2.y() - site3.y();
+        mpz_dif_y[2] = site1.y() - site3.y();
+    
+        // Evaluate orientation.
+        denom = (mpz_dif_x[0] * mpz_dif_y[1] - mpz_dif_x[1] * mpz_dif_y[0]) * 2.0;
 
-    //    // If use this function only to recompute parameters of the circle
-    //    // event, this check won't be required.
-    //    if (orientation_test(orientation) != RIGHT_ORIENTATION)
-    //        return false;
+        // Evaluate inverse orientation to avoid division in calculations.
+        // r(inv_orientation) = 2 * EPS.
+        if (denom.get_d() >= 0)
+            return false;
+    
+        mpz_sum_x[0] = site1.x() + site2.x();
+        mpz_sum_x[1] = site2.x() + site3.x();
+        mpz_sum_y[0] = site1.y() + site2.y();
+        mpz_sum_y[1] = site2.y() + site3.y();
+    
+        mpz_numerator[1] = mpz_dif_x[0] * mpz_sum_x[0] + mpz_dif_y[0] * mpz_sum_y[0];
+        mpz_numerator[2] = mpz_dif_x[1] * mpz_sum_x[1] + mpz_dif_y[1] * mpz_sum_y[1];
 
-    //    // Evaluate inverse orientation to avoid division in calculations.
-    //    // r(inv_orientation) = 2 * EPS.
-    //    double inv_orientation = 0.5 / orientation;
-    //
-    //    mpz_sum_x[0] = site1.x() + site2.x();
-    //    mpz_sum_x[1] = site2.x() + site3.x();
-    //    mpz_sum_y[0] = site1.y() + site2.y();
-    //    mpz_sum_y[1] = site2.y() + site3.y();
-    //
-    //    mpz_numerator[1] = mpz_dif_x[0] * mpz_sum_x[0] + mpz_dif_y[0] * mpz_sum_y[0];
-    //    mpz_numerator[2] = mpz_dif_x[1] * mpz_sum_x[1] + mpz_dif_y[1] * mpz_sum_y[1];
+        if (recompute_c_x || recompute_lower_x) {
+            mpz_c_x = mpz_numerator[1] * mpz_dif_y[1] - mpz_numerator[2] * mpz_dif_y[0];
+            c_event.x(mpz_c_x.get_d() / denom.get_d());
 
-    //    mpz_c_x = mpz_numerator[1] * mpz_dif_y[1] - mpz_numerator[2] * mpz_dif_y[0];
-    //    mpz_c_y = mpz_numerator[2] * mpz_dif_x[0] - mpz_numerator[1] * mpz_dif_x[1];
+            if (recompute_lower_x) {
+                // Evaluate radius of the circle.
+                mpz_sqr_r = 1.0;
+                for (int i = 0; i < 3; ++i)
+                    mpz_sqr_r *= mpz_dif_x[i] * mpz_dif_x[i] + mpz_dif_y[i] * mpz_dif_y[i];
 
-    //    // Evaluate radius of the circle.
-    //    mpz_sqr_r = 1.0;
-    //    for (int i = 0; i < 3; ++i)
-    //        mpz_sqr_r *= mpz_dif_x[i] * mpz_dif_x[i] + mpz_dif_y[i] * mpz_dif_y[i];
+                // r(r) = 1.5 * EPS < 2 * EPS.
+                double r = std::sqrt(mpz_sqr_r.get_d());
 
-    //    // Evaluate coordinates of the center of the circle.
-    //    // r(c_x) = r(c_y) = 4 * EPS.
-    //    double c_x = mpz_c_x.get_d() * inv_orientation;
-    //    double c_y = mpz_c_y.get_d() * inv_orientation;
+                // If c_x >= 0 then lower_x = c_x + r,
+                // else lower_x = (c_x * c_x - r * r) / (c_x - r).
+                // To guarantee epsilon relative error.
+                if (c_event.x() >= 0) {
+                    // r(lower_x) = 5 * EPS.
+                    c_event.lower_x(c_event.x() + r / fabs(denom.get_d()));
+                } else {
+                    mpz_numerator[0] = mpz_c_x * mpz_c_x - mpz_sqr_r;
+                    // r(lower_x) = 8 * EPS.
+                    double lower_x = mpz_numerator[0].get_d() / fabs(denom.get_d());
+                    lower_x /= (mpz_c_x >= 0) ? (-mpz_c_x.get_d() - r) : (mpz_c_x.get_d() - r);
+                    c_event.lower_x(lower_x);
+                }
+            }
+        }
 
-    //    // r(r) = 1.5 * EPS < 2 * EPS.
-    //    double r = sqrt(mpz_sqr_r.get_d());
+        if (recompute_c_y) {
+            mpz_c_y = mpz_numerator[2] * mpz_dif_x[0] - mpz_numerator[1] * mpz_dif_x[1];
+            c_event.y(mpz_c_y.get_d() / denom.get_d());
+        }
 
-    //    // If c_x >= 0 then lower_x = c_x + r,
-    //    // else lower_x = (c_x * c_x - r * r) / (c_x - r).
-    //    // To guarantee epsilon relative error.
-    //    if (c_x >= 0) {
-    //        // r(lower_x) = 5 * EPS.
-    //        c_event = circle_event<double>(c_x, c_y, c_x + r * fabs(inv_orientation));
-    //    } else {
-    //        mpz_numerator[0] = mpz_c_x * mpz_c_x - mpz_sqr_r;
-    //        // r(lower_x) = 8 * EPS.
-    //        double lower_x = mpz_numerator[0].get_d() * fabs(inv_orientation);
-    //        lower_x /= (mpz_c_x >= 0) ? (-mpz_c_x.get_d() - r) : (mpz_c_x.get_d() - r);
-    //        c_event = circle_event<double>(c_x, c_y, lower_x);
-    //    }
-    //    return true;
-    //}
+        return true;
+    }
 
-    //// Recompute parameters of the circle event using high-precision library.
-    //template <typename T>
-    //static bool create_circle_event_pps_gmpxx(const site_event<T> &site1,
-    //                                          const site_event<T> &site2,
-    //                                          const site_event<T> &site3,
-    //                                          int segment_index,
-    //                                          circle_event<T> &c_event) {
-    //    typedef mpt_wrapper<mpz_class, 8> mpt_type;
-    //    // TODO(asydorchuk): Checks are not required if we recompute event parameters.
-    //    if (segment_index != 2) {
-    //        kOrientation orient1 = orientation_test(site1.point0(),
-    //            site2.point0(), site3.point0(true));
-    //        kOrientation orient2 = orientation_test(site1.point0(),
-    //            site2.point0(), site3.point1(true));
-    //        if (segment_index == 1 && site1.x0() >= site2.x0()) {
-    //            if (orient1 != RIGHT_ORIENTATION)
-    //                return false;
-    //        } else if (segment_index == 3 && site2.x0() >= site1.x0()) {
-    //            if (orient2 != RIGHT_ORIENTATION)
-    //                return false;
-    //        } else if (orient1 != RIGHT_ORIENTATION && orient2 != RIGHT_ORIENTATION) {
-    //            return false;
-    //        }
-    //    } else {
-    //        if (site3.point0(true) == site1.point0() &&
-    //            site3.point1(true) == site2.point0())
-    //            return false;
-    //    }
+    // Recompute parameters of the circle event using high-precision library.
+    template <typename T>
+    static bool create_circle_event_pps_gmpxx(const site_event<T> &site1,
+                                              const site_event<T> &site2,
+                                              const site_event<T> &site3,
+                                              int segment_index,
+                                              circle_event<T> &c_event) {
+        typedef mpt_wrapper<mpz_class, 8> mpt_type;
+        typedef mpt_wrapper<mpf_class, 2> mpf_type;
+        // TODO(asydorchuk): Checks are not required if we recompute event parameters.
+        if (segment_index != 2) {
+            kOrientation orient1 = orientation_test(site1.point0(),
+                site2.point0(), site3.point0(true));
+            kOrientation orient2 = orientation_test(site1.point0(),
+                site2.point0(), site3.point1(true));
+            if (segment_index == 1 && site1.x0() >= site2.x0()) {
+                if (orient1 != RIGHT_ORIENTATION)
+                    return false;
+            } else if (segment_index == 3 && site2.x0() >= site1.x0()) {
+                if (orient2 != RIGHT_ORIENTATION)
+                    return false;
+            } else if (orient1 != RIGHT_ORIENTATION && orient2 != RIGHT_ORIENTATION) {
+                return false;
+            }
+        } else {
+            if (site3.point0(true) == site1.point0() &&
+                site3.point1(true) == site2.point0())
+                return false;
+        }
 
-    //    static mpt_type line_a, line_b, segm_len, vec_x, vec_y, sum_x, sum_y, teta,
-    //                    denom, A, B, sum_AB, dif[2], numer, cA[4], cB[4], det;
+        static mpt_type line_a, line_b, segm_len, vec_x, vec_y, sum_x, sum_y, teta,
+                        denom, A, B, sum_AB, dif[2], numer, cA[4], cB[4], det;
 
-    //    line_a = site3.point1(true).y() - site3.point0(true).y();
-    //    line_b = site3.point0(true).x() - site3.point1(true).x();
-    //    segm_len = line_a * line_a + line_b * line_b;
-    //    vec_x = site2.y() - site1.y();
-    //    vec_y = site1.x() - site2.x();
-    //    sum_x = site1.x() + site2.x();
-    //    sum_y = site1.y() + site2.y();
-    //    teta = line_a * vec_x + line_b * vec_y;
-    //    denom = vec_x * line_b - vec_y * line_a;
-    //    
-    //    dif[0] = site3.point1().y() - site1.y();
-    //    dif[1] = site1.x() - site3.point1().x();
-    //    A = line_a * dif[1] - line_b * dif[0];
-    //    dif[0] = site3.point1().y() - site2.y();
-    //    dif[1] = site2.x() - site3.point1().x();
-    //    B = line_a * dif[1] - line_b * dif[0];
-    //    sum_AB = A + B;
+        line_a = site3.point1(true).y() - site3.point0(true).y();
+        line_b = site3.point0(true).x() - site3.point1(true).x();
+        segm_len = line_a * line_a + line_b * line_b;
+        vec_x = site2.y() - site1.y();
+        vec_y = site1.x() - site2.x();
+        sum_x = site1.x() + site2.x();
+        sum_y = site1.y() + site2.y();
+        teta = line_a * vec_x + line_b * vec_y;
+        denom = vec_x * line_b - vec_y * line_a;
+        
+        dif[0] = site3.point1().y() - site1.y();
+        dif[1] = site1.x() - site3.point1().x();
+        A = line_a * dif[1] - line_b * dif[0];
+        dif[0] = site3.point1().y() - site2.y();
+        dif[1] = site2.x() - site3.point1().x();
+        B = line_a * dif[1] - line_b * dif[0];
+        sum_AB = A + B;
 
-    //    if (denom == 0) {
-    //        numer = teta * teta - sum_AB * sum_AB;
-    //        denom = teta * sum_AB;
-    //        cA[0] = denom * sum_x * 2 + numer * vec_x;
-    //        cB[0] = segm_len;
-    //        cA[1] = denom * sum_AB * 2 + numer * teta;
-    //        cB[1] = 1;
-    //        cA[2] = denom * sum_y * 2 + numer * vec_y;
-    //        double c_x = 0.25 * cA[0].get_d() / denom.get_d();
-    //        double c_y = 0.25 * cA[2].get_d() / denom.get_d();
-    //        double lower_x = 0.25 * sqr_expr_evaluator<2>::eval(cA, cB) /
-    //            (denom.get_d() * sqrt(segm_len.get_d()));
-    //        c_event = circle_event<double>(c_x, c_y, lower_x);
-    //        return true;
-    //    }
+        if (denom == 0) {
+            numer = teta * teta - sum_AB * sum_AB;
+            denom = teta * sum_AB;
+            cA[0] = denom * sum_x * 2 + numer * vec_x;
+            cB[0] = segm_len;
+            cA[1] = denom * sum_AB * 2 + numer * teta;
+            cB[1] = 1;
+            cA[2] = denom * sum_y * 2 + numer * vec_y;
+            double c_x = 0.25 * cA[0].get_d() / denom.get_d();
+            double c_y = 0.25 * cA[2].get_d() / denom.get_d();
+            double lower_x = 0.25 * sqr_expr_evaluator<2>::eval<mpt_type, mpf_type>(cA, cB).get_d() /
+                (denom.get_d() * std::sqrt(segm_len.get_d()));
+            c_event = circle_event<double>(c_x, c_y, lower_x);
+            return true;
+        }
 
-    //    det = (teta * teta + denom * denom) * A * B * 4;
-    //    cA[0] = sum_x * denom * denom + teta * sum_AB * vec_x;
-    //    cB[0] = 1;
-    //    cA[1] = (segment_index == 2) ? -vec_x : vec_x;
-    //    cB[1] = det;
-    //    double c_x = 0.5 * sqr_expr_evaluator<2>::eval(cA, cB) / (denom.get_d() * denom.get_d());
-    //    
-    //    cA[2] = sum_y * denom * denom + teta * sum_AB * vec_y;
-    //    cB[2] = 1;
-    //    cA[3] = (segment_index == 2) ? -vec_y : vec_y;
-    //    cB[3] = det;
-    //    double c_y = 0.5 * sqr_expr_evaluator<2>::eval(&cA[2], &cB[2]) / (denom.get_d() * denom.get_d());
-    //    
-    //    cB[0] *= segm_len;
-    //    cB[1] *= segm_len;
-    //    cA[2] = sum_AB * (denom * denom + teta * teta);
-    //    cB[2] = 1;
-    //    cA[3] = (segment_index == 2) ? -teta : teta;
-    //    cB[3] = det;
-    //    double lower_x = 0.5 * sqr_expr_evaluator<4>::eval(cA, cB) /
-    //        (denom.get_d() * denom.get_d() * sqrt(segm_len.get_d()));
-    //    
-    //    c_event = circle_event<double>(c_x, c_y, lower_x);
-    //    return true;
-    //}
+        det = (teta * teta + denom * denom) * A * B * 4;
+        cA[0] = sum_x * denom * denom + teta * sum_AB * vec_x;
+        cB[0] = 1;
+        cA[1] = (segment_index == 2) ? -vec_x : vec_x;
+        cB[1] = det;
+        double c_x = 0.5 * sqr_expr_evaluator<2>::eval<mpt_type, mpf_type>(cA, cB).get_d() /
+            (denom.get_d() * denom.get_d());
+        
+        cA[2] = sum_y * denom * denom + teta * sum_AB * vec_y;
+        cB[2] = 1;
+        cA[3] = (segment_index == 2) ? -vec_y : vec_y;
+        cB[3] = det;
+        double c_y = 0.5 * sqr_expr_evaluator<2>::eval<mpt_type, mpf_type>(&cA[2], &cB[2]).get_d() /
+            (denom.get_d() * denom.get_d());
+        
+        cB[0] *= segm_len;
+        cB[1] *= segm_len;
+        cA[2] = sum_AB * (denom * denom + teta * teta);
+        cB[2] = 1;
+        cA[3] = (segment_index == 2) ? -teta : teta;
+        cB[3] = det;
+        double lower_x = 0.5 * sqr_expr_evaluator<4>::eval<mpt_type, mpf_type>(cA, cB).get_d() /
+            (denom.get_d() * denom.get_d() * std::sqrt(segm_len.get_d()));
+        
+        c_event = circle_event<double>(c_x, c_y, lower_x);
+        return true;
+    }
 
-    //// Evaluates A[3] + A[0] * sqrt(B[0]) + A[1] * sqrt(B[1]) +
-    ////           A[2] * sqrt(B[3] * (sqrt(B[0] * B[1]) + B[2]));
-    //template <typename mpt>
-    //static double sqr_expr_evaluator_pss(mpt *A, mpt *B) {
-    //    static mpt cA[4], cB[4];
-    //    if (A[3] == 0) {
-    //        double lh = sqr_expr_evaluator<2>::eval<mpt>(A, B);
-    //        cA[0] = 1;
-    //        cB[0] = B[0] * B[1];
-    //        cA[1] = B[2];
-    //        cB[1] = 1;
-    //        double rh = A[2].get_d() * sqrt(B[3].get_d() *
-    //            sqr_expr_evaluator<2>::eval<mpt>(cA, cB));
-    //        if (((lh >= 0.0) && (rh >= 0.0) || (lh <= 0.0) && (rh <= 0.0))) {
-    //            return lh + rh;
-    //        }
-    //        cA[0] = A[0] * A[0] * B[0] + A[1] * A[1] * B[1];
-    //        cA[0] -= A[2] * A[2] * B[3] * B[2];
-    //        cB[0] = 1;
-    //        cA[1] = A[0] * A[1] * 2 - A[2] * A[2] * B[3];
-    //        cB[1] = B[0] * B[1];
-    //        return sqr_expr_evaluator<2>::eval(cA, cB) / (lh - rh);
-    //    }
-    //    cA[0] = A[3];
-    //    cB[0] = 1;
-    //    cA[1] = A[0];
-    //    cB[1] = B[0];
-    //    cA[2] = A[1];
-    //    cB[2] = B[1];
-    //    double lh = sqr_expr_evaluator<3>::eval<mpt>(cA, cB);
-    //    cA[0] = 1;
-    //    cB[0] = B[0] * B[1];
-    //    cA[1] = B[2];
-    //    cB[1] = 1;
-    //    double rh = A[2].get_d() * sqrt(B[3].get_d() *
-    //        sqr_expr_evaluator<2>::eval<mpt>(cA, cB));
-    //    if ((lh >= 0.0) && (rh >= 0.0) || (lh <= 0.0) && (rh <= 0.0)) {
-    //        return lh + rh;
-    //    }
-    //    cA[0] = A[0] * A[0] * B[0] + A[1] * A[1] * B[1];
-    //    cA[0] += A[3] * A[3] - A[2] * A[2] * B[2] * B[3];
-    //    cB[0] = 1;
-    //    cA[1] = A[3] * A[0] * 2;
-    //    cB[1] = B[0];
-    //    cA[2] = A[3] * A[1] * 2;
-    //    cB[2] = B[1];
-    //    cA[3] = A[0] * A[1] * 2 - A[2] * A[2] * B[3];
-    //    cB[3] = B[0] * B[1];
-    //    return sqr_expr_evaluator<4>::eval(cA, cB) / (lh - rh);
-    //}
+    // Evaluates A[3] + A[0] * sqrt(B[0]) + A[1] * sqrt(B[1]) +
+    //           A[2] * sqrt(B[3] * (sqrt(B[0] * B[1]) + B[2]));
+    template <typename mpt, typename mpf>
+    static mpf sqr_expr_evaluator_pss(mpt *A, mpt *B) {
+        static mpt cA[4], cB[4];
+        static mpf lh, rh, numer;
+        if (A[3] == 0) {
+            lh = sqr_expr_evaluator<2>::eval<mpt, mpf>(A, B);
+            cA[0] = 1;
+            cB[0] = B[0] * B[1];
+            cA[1] = B[2];
+            cB[1] = 1;
+            rh = A[2].get_d() * std::sqrt(B[3].get_d() *
+                sqr_expr_evaluator<2>::eval<mpt, mpf>(cA, cB).get_d());
+            if (((lh >= 0) && (rh >= 0)) || ((lh <= 0) && (rh <= 0))) {
+                return lh + rh;
+            }
+            cA[0] = A[0] * A[0] * B[0] + A[1] * A[1] * B[1];
+            cA[0] -= A[2] * A[2] * B[3] * B[2];
+            cB[0] = 1;
+            cA[1] = A[0] * A[1] * 2 - A[2] * A[2] * B[3];
+            cB[1] = B[0] * B[1];
+            numer = sqr_expr_evaluator<2>::eval<mpt, mpf>(cA, cB);
+            return numer / (lh - rh);
+        }
+        cA[0] = A[3];
+        cB[0] = 1;
+        cA[1] = A[0];
+        cB[1] = B[0];
+        cA[2] = A[1];
+        cB[2] = B[1];
+        lh = sqr_expr_evaluator<3>::eval<mpt, mpf>(cA, cB);
+        cA[0] = 1;
+        cB[0] = B[0] * B[1];
+        cA[1] = B[2];
+        cB[1] = 1;
+        rh = A[2].get_d() * std::sqrt(B[3].get_d() *
+            sqr_expr_evaluator<2>::eval<mpt, mpf>(cA, cB).get_d());
+        if (((lh >= 0) && (rh >= 0)) || ((lh <= 0) && (rh <= 0))) {
+            return lh + rh;
+        }
+        cA[0] = A[0] * A[0] * B[0] + A[1] * A[1] * B[1];
+        cA[0] += A[3] * A[3] - A[2] * A[2] * B[2] * B[3];
+        cB[0] = 1;
+        cA[1] = A[3] * A[0] * 2;
+        cB[1] = B[0];
+        cA[2] = A[3] * A[1] * 2;
+        cB[2] = B[1];
+        cA[3] = A[0] * A[1] * 2 - A[2] * A[2] * B[3];
+        cB[3] = B[0] * B[1];
+        numer = sqr_expr_evaluator<4>::eval<mpt, mpf>(cA, cB);
+        return numer / (lh - rh);
+    }
 
-    //// Recompute parameters of the circle event using high-precision library.
-    //template <typename T>
-    //static bool create_circle_event_pss_gmpxx(const site_event<T> &site1,
-    //                                          const site_event<T> &site2,
-    //                                          const site_event<T> &site3,
-    //                                          int point_index,
-    //                                          circle_event<T> &c_event) {
-    //    typedef mpt_wrapper<mpz_class, 8> mpt_type;
-    //    if (site2.index() == site3.index()) {
-    //        return false;
-    //    }
+    // Recompute parameters of the circle event using high-precision library.
+    template <typename T>
+    static bool create_circle_event_pss_gmpxx(const site_event<T> &site1,
+                                              const site_event<T> &site2,
+                                              const site_event<T> &site3,
+                                              int point_index,
+                                              circle_event<T> &c_event) {
+        typedef mpt_wrapper<mpz_class, 8> mpt_type;
+        typedef mpt_wrapper<mpf_class, 2> mpf_type;
+        if (site2.index() == site3.index()) {
+            return false;
+        }
 
-    //    const point_2d<T> &segm_start1 = site2.point1(true);
-    //    const point_2d<T> &segm_end1 = site2.point0(true);
-    //    const point_2d<T> &segm_start2 = site3.point0(true);
-    //    const point_2d<T> &segm_end2 = site3.point1(true);
+        const point_2d<T> &segm_start1 = site2.point1(true);
+        const point_2d<T> &segm_end1 = site2.point0(true);
+        const point_2d<T> &segm_start2 = site3.point0(true);
+        const point_2d<T> &segm_end2 = site3.point1(true);
 
-    //    if (point_index == 2) {
-    //        if (!site2.is_inverse() && site3.is_inverse())
-    //            return false;
-    //        if (site2.is_inverse() == site3.is_inverse() &&
-    //            orientation_test(segm_end1, site1.point0(), segm_end2) != RIGHT_ORIENTATION)
-    //            return false;
-    //    }
+        if (point_index == 2) {
+            if (!site2.is_inverse() && site3.is_inverse())
+                return false;
+            if (site2.is_inverse() == site3.is_inverse() &&
+                orientation_test(segm_end1, site1.point0(), segm_end2) != RIGHT_ORIENTATION)
+                return false;
+        }
 
-    //    static mpt_type a[2], b[2], c[2], cA[4], cB[4], or, dx, dy, ix, iy;
-    //    a[0] = segm_end1.x() - segm_start1.x();
-    //    b[0] = segm_end1.y() - segm_start1.y();
-    //    a[1] = segm_end2.x() - segm_start2.x();
-    //    b[1] = segm_end2.y() - segm_start2.y();
-    //    or = a[1] * b[0] - a[0] * b[1];
-    //    if (or == 0) {
-    //        double denom = (a[0] * a[0] + b[0] * b[0]).get_d() * 2.0;
+        static mpt_type a[2], b[2], c[2], cA[4], cB[4], orientation, dx, dy, ix, iy;
+        a[0] = segm_end1.x() - segm_start1.x();
+        b[0] = segm_end1.y() - segm_start1.y();
+        a[1] = segm_end2.x() - segm_start2.x();
+        b[1] = segm_end2.y() - segm_start2.y();
+        orientation = a[1] * b[0] - a[0] * b[1];
+        if (orientation == 0) {
+            double denom = (a[0] * a[0] + b[0] * b[0]).get_d() * 2.0;
 
-    //        c[0] = b[0] * (segm_start2.x() - segm_start1.x()) -
-    //               a[0] * (segm_start2.y() - segm_start1.y());
-    //        dx = a[0] * (site1.y() - segm_start1.y()) -
-    //             b[0] * (site1.x() - segm_start1.x());
-    //        dy = b[0] * (site1.x() - segm_start2.x()) -
-    //             a[0] * (site1.y() - segm_start2.y());
-    //        cA[0] = b[0] * ((point_index == 2) ? 2 : -2);
-    //        cB[0] = dx * dy;
-    //        cA[1] = a[0] * a[0] * (segm_start1.y() + segm_start2.y()) -
-    //                a[0] * b[0] * (segm_start1.x() + segm_start2.x() - 2.0 * site1.x()) +
-    //                b[0] * b[0] * (2.0 * site1.y());
-    //        cB[1] = 1;
-    //        double c_y = sqr_expr_evaluator<2>::eval(cA, cB);
+            c[0] = b[0] * (segm_start2.x() - segm_start1.x()) -
+                   a[0] * (segm_start2.y() - segm_start1.y());
+            dx = a[0] * (site1.y() - segm_start1.y()) -
+                 b[0] * (site1.x() - segm_start1.x());
+            dy = b[0] * (site1.x() - segm_start2.x()) -
+                 a[0] * (site1.y() - segm_start2.y());
+            cA[0] = b[0] * ((point_index == 2) ? 2 : -2);
+            cB[0] = dx * dy;
+            cA[1] = a[0] * a[0] * (segm_start1.y() + segm_start2.y()) -
+                    a[0] * b[0] * (segm_start1.x() + segm_start2.x() - 2.0 * site1.x()) +
+                    b[0] * b[0] * (2.0 * site1.y());
+            cB[1] = 1;
+            double c_y = sqr_expr_evaluator<2>::eval<mpt_type, mpf_type>(cA, cB).get_d();
 
-    //        cA[0] = a[0] * ((point_index == 2) ? 2 : -2);
-    //        cA[1] = b[0] * b[0] * (segm_start1.x() + segm_start2.x()) -
-    //                a[0] * b[0] * (segm_start1.y() + segm_start2.y() - 2.0 * site1.y()) +
-    //                a[0] * a[0] * (2.0 * site1.x());
-    //        double c_x = sqr_expr_evaluator<2>::eval(cA, cB);
+            cA[0] = a[0] * ((point_index == 2) ? 2 : -2);
+            cA[1] = b[0] * b[0] * (segm_start1.x() + segm_start2.x()) -
+                    a[0] * b[0] * (segm_start1.y() + segm_start2.y() - 2.0 * site1.y()) +
+                    a[0] * a[0] * (2.0 * site1.x());
+            double c_x = sqr_expr_evaluator<2>::eval<mpt_type, mpf_type>(cA, cB).get_d();
 
-    //        cA[2] = (c[0] < 0) ? -c[0] : c[0];
-    //        cB[2] = a[0] * a[0] + b[0] * b[0];
-    //        double lower_x = sqr_expr_evaluator<3>::eval(cA, cB);
-    //        c_event = circle_event<T>(c_x / denom, c_y / denom, lower_x / denom);
-    //        return true;
-    //    }
-    //    c[0] = b[0] * segm_end1.x() - a[0] * segm_end1.y();
-    //    c[1] = a[1] * segm_end2.y() - b[1] * segm_end2.x();
-    //    ix = a[0] * c[1] + a[1] * c[0];
-    //    iy = b[0] * c[1] + b[1] * c[0];
-    //    dx = ix - or * site1.x();
-    //    dy = iy - or * site1.y();
-    //    if ((dx == 0) && (dy == 0)) {
-    //        double denom = or.get_d();
-    //        double c_x = ix.get_d() / denom;
-    //        double c_y = iy.get_d() / denom;
-    //        c_event = circle_event<T>(c_x, c_y, c_x);
-    //        return true;
-    //    }
+            cA[2] = (c[0] < 0) ? -c[0] : c[0];
+            cB[2] = a[0] * a[0] + b[0] * b[0];
+            double lower_x = sqr_expr_evaluator<3>::eval<mpt_type, mpf_type>(cA, cB).get_d();
+            c_event = circle_event<T>(c_x / denom, c_y / denom, lower_x / denom);
+            return true;
+        }
+        c[0] = b[0] * segm_end1.x() - a[0] * segm_end1.y();
+        c[1] = a[1] * segm_end2.y() - b[1] * segm_end2.x();
+        ix = a[0] * c[1] + a[1] * c[0];
+        iy = b[0] * c[1] + b[1] * c[0];
+        dx = ix - orientation * site1.x();
+        dy = iy - orientation * site1.y();
+        if ((dx == 0) && (dy == 0)) {
+            double denom = orientation.get_d();
+            double c_x = ix.get_d() / denom;
+            double c_y = iy.get_d() / denom;
+            c_event = circle_event<T>(c_x, c_y, c_x);
+            return true;
+        }
 
-    //    double sign = ((point_index == 2) ? 1 : -1) * ((or < 0) ? 1 : -1);
-    //    cA[0] = a[1] * -dx + b[1] * -dy;
-    //    cA[1] = a[0] * -dx + b[0] * -dy;
-    //    cA[2] = sign;
-    //    cA[3] = 0;
-    //    cB[0] = a[0] * a[0] + b[0] * b[0];
-    //    cB[1] = a[1] * a[1] + b[1] * b[1];
-    //    cB[2] = a[0] * a[1] + b[0] * b[1];
-    //    cB[3] = (a[0] * dy - b[0] * dx) * (a[1] * dy - b[1] * dx) * -2;
-    //    double denom = sqr_expr_evaluator_pss<mpt_type>(cA, cB);
+        double sign = ((point_index == 2) ? 1 : -1) * ((orientation < 0) ? 1 : -1);
+        cA[0] = a[1] * -dx + b[1] * -dy;
+        cA[1] = a[0] * -dx + b[0] * -dy;
+        cA[2] = sign;
+        cA[3] = 0;
+        cB[0] = a[0] * a[0] + b[0] * b[0];
+        cB[1] = a[1] * a[1] + b[1] * b[1];
+        cB[2] = a[0] * a[1] + b[0] * b[1];
+        cB[3] = (a[0] * dy - b[0] * dx) * (a[1] * dy - b[1] * dx) * -2;
+        double denom = sqr_expr_evaluator_pss<mpt_type, mpf_type>(cA, cB).get_d();
 
-    //    cA[0] = b[1] * (dx * dx + dy * dy) - iy * (dx * a[1] + dy * b[1]);
-    //    cA[1] = b[0] * (dx * dx + dy * dy) - iy * (dx * a[0] + dy * b[0]);
-    //    cA[2] = iy * sign;
-    //    double cy = sqr_expr_evaluator_pss<mpt_type>(cA, cB);
+        cA[0] = b[1] * (dx * dx + dy * dy) - iy * (dx * a[1] + dy * b[1]);
+        cA[1] = b[0] * (dx * dx + dy * dy) - iy * (dx * a[0] + dy * b[0]);
+        cA[2] = iy * sign;
+        double cy = sqr_expr_evaluator_pss<mpt_type, mpf_type>(cA, cB).get_d();
 
-    //    cA[0] = a[1] * (dx * dx + dy * dy) - ix * (dx * a[1] + dy * b[1]);
-    //    cA[1] = a[0] * (dx * dx + dy * dy) - ix * (dx * a[0] + dy * b[0]);
-    //    cA[2] = ix * sign;
-    //    double cx = sqr_expr_evaluator_pss<mpt_type>(cA, cB);
+        cA[0] = a[1] * (dx * dx + dy * dy) - ix * (dx * a[1] + dy * b[1]);
+        cA[1] = a[0] * (dx * dx + dy * dy) - ix * (dx * a[0] + dy * b[0]);
+        cA[2] = ix * sign;
+        double cx = sqr_expr_evaluator_pss<mpt_type, mpf_type>(cA, cB).get_d();
 
-    //    cA[3] = or * (dx * dx + dy * dy) * (denom < 0 ? -1 : 1);
-    //    double lower_x = sqr_expr_evaluator_pss<mpt_type>(cA, cB);
-    //    denom *= or.get_d();
-    //    c_event = circle_event<T>(cx / denom, cy / denom, lower_x / denom);
-    //    return true;
-    //}
+        cA[3] = orientation * (dx * dx + dy * dy) * (denom < 0 ? -1 : 1);
+        double lower_x = sqr_expr_evaluator_pss<mpt_type, mpf_type>(cA, cB).get_d();
+        denom *= orientation.get_d();
+        c_event = circle_event<T>(cx / denom, cy / denom, lower_x / denom);
+        return true;
+    }
 
-    //template <typename T>
-    //static mpt_wrapper<mpz_class, 8> &mpt_cross(T a0, T b0, T a1, T b1) {
-    //    static mpt_wrapper<mpz_class, 8> temp[2];
-    //    temp[0] = a0;
-    //    temp[1] = b0;
-    //    temp[0] = temp[0] * b1;
-    //    temp[1] = temp[1] * a1;
-    //    temp[0] -= temp[1];
-    //    return temp[0];
-    //}
+    template <typename T>
+    static mpt_wrapper<mpz_class, 8> &mpt_cross(T a0, T b0, T a1, T b1) {
+        static mpt_wrapper<mpz_class, 8> temp[2];
+        temp[0] = a0;
+        temp[1] = b0;
+        temp[0] = temp[0] * b1;
+        temp[1] = temp[1] * a1;
+        temp[0] -= temp[1];
+        return temp[0];
+    }
 
-    //// Recompute parameters of the circle event using high-precision library.
-    //template <typename T>
-    //static bool create_circle_event_sss_gmpxx(const site_event<T> &site1,
-    //                                          const site_event<T> &site2,
-    //                                          const site_event<T> &site3,
-    //                                          circle_event<T> &c_event) {
-    //    typedef mpt_wrapper<mpz_class, 8> mpt_type;
-    //    if (site1.index() == site2.index() ||
-    //        site2.index() == site3.index())
-    //        return false;
-    //    static mpt_type a[3], b[3], c[3], sqr_len[4], cross[4];
-    //    a[0] = site1.x1(true) - site1.x0(true);
-    //    a[1] = site2.x1(true) - site2.x0(true);
-    //    a[2] = site3.x1(true) - site3.x0(true);
-    //
-    //    b[0] = site1.y1(true) - site1.y0(true);
-    //    b[1] = site2.y1(true) - site2.y0(true);
-    //    b[2] = site3.y1(true) - site3.y0(true);
+    // Recompute parameters of the circle event using high-precision library.
+    template <typename T>
+    static bool create_circle_event_sss_gmpxx(const site_event<T> &site1,
+                                              const site_event<T> &site2,
+                                              const site_event<T> &site3,
+                                              circle_event<T> &c_event,
+                                              bool recompute_c_x = true,
+                                              bool recompute_c_y = true,
+                                              bool recompute_lower_x = true,
+                                              bool recompute_denom = true) {
+        typedef mpt_wrapper<mpz_class, 8> mpt_type;
+        typedef mpt_wrapper<mpf_class, 2> mpf_type;
+        if (site1.index() == site2.index() ||
+            site2.index() == site3.index())
+            return false;
+        static mpt_type a[3], b[3], c[3], sqr_len[4], cross[4];
+        a[0] = site1.x1(true) - site1.x0(true);
+        a[1] = site2.x1(true) - site2.x0(true);
+        a[2] = site3.x1(true) - site3.x0(true);
+    
+        b[0] = site1.y1(true) - site1.y0(true);
+        b[1] = site2.y1(true) - site2.y0(true);
+        b[2] = site3.y1(true) - site3.y0(true);
 
-    //    c[0] = mpt_cross(site1.x0(true), site1.y0(true), site1.x1(true), site1.y1(true));										
-    //    c[1] = mpt_cross(site2.x0(true), site2.y0(true), site2.x1(true), site2.y1(true));
-    //    c[2] = mpt_cross(site3.x0(true), site3.y0(true), site3.x1(true), site3.y1(true));
+        c[0] = mpt_cross(site1.x0(true), site1.y0(true), site1.x1(true), site1.y1(true));										
+        c[1] = mpt_cross(site2.x0(true), site2.y0(true), site2.x1(true), site2.y1(true));
+        c[2] = mpt_cross(site3.x0(true), site3.y0(true), site3.x1(true), site3.y1(true));
 
-    //    for (int i = 0; i < 3; ++i) {
-    //        int j = (i+1) % 3;
-    //        int k = (i+2) % 3;
-    //        cross[i] = a[j] * b[k] - a[k] * b[j];
-    //        sqr_len[i] = a[i] * a[i] + b[i] * b[i];
-    //    }
-    //    double denom = sqr_expr_evaluator<3>::eval(cross, sqr_len);
+        for (int i = 0; i < 3; ++i) {
+            sqr_len[i] = a[i] * a[i] + b[i] * b[i];
+        }
 
-    //    for (int i = 0; i < 3; ++i) {
-    //        int j = (i+1) % 3;
-    //        int k = (i+2) % 3;
-    //        cross[i] = b[j] * c[k] - b[k] * c[j];
-    //        sqr_len[i] = a[i] * a[i] + b[i] * b[i];
-    //    }
-    //    double c_y = sqr_expr_evaluator<3>::eval(cross, sqr_len) / denom;
+        for (int i = 0; i < 3; ++i) {
+            int j = (i+1) % 3;
+            int k = (i+2) % 3;
+            cross[i] = a[j] * b[k] - a[k] * b[j];
+        }
+        double denom = sqr_expr_evaluator<3>::eval<mpt_type, mpf_type>(cross, sqr_len).get_d();
 
-    //    cross[3] = 0;
-    //    for (int i = 0; i < 3; ++i) {
-    //        int j = (i+1) % 3;
-    //        int k = (i+2) % 3;
-    //        cross[i] = a[j] * c[k] - a[k] * c[j];
-    //        sqr_len[i] = a[i] * a[i] + b[i] * b[i];
-    //        cross[3] += cross[i] * b[i];
-    //    }
-    //    double c_x = sqr_expr_evaluator<3>::eval(cross, sqr_len) / denom;
-    //    
-    //    sqr_len[3] = 1;
-    //    double lower_x = sqr_expr_evaluator<4>::eval(cross, sqr_len) / denom;
-    //    
-    //    c_event = circle_event<double>(c_x, c_y, lower_x);
-    //    return true;
-    //}
+        if (recompute_c_y) {
+            for (int i = 0; i < 3; ++i) {
+                int j = (i+1) % 3;
+                int k = (i+2) % 3;
+                cross[i] = b[j] * c[k] - b[k] * c[j];
+            }
+            double c_y = sqr_expr_evaluator<3>::eval<mpt_type, mpf_type>(cross, sqr_len).get_d();
+            c_event.y(c_y / denom);
+        }
+
+        if (recompute_c_x || recompute_lower_x) {
+            cross[3] = 0;
+            for (int i = 0; i < 3; ++i) {
+                int j = (i+1) % 3;
+                int k = (i+2) % 3;
+                cross[i] = a[j] * c[k] - a[k] * c[j];
+                if (recompute_lower_x) {
+                    cross[3] += cross[i] * b[i];
+                }
+            }
+
+            if (recompute_c_x) {
+                double c_x = sqr_expr_evaluator<3>::eval<mpt_type, mpf_type>(cross, sqr_len).get_d();
+                c_event.x(c_x / denom);
+            }
+            
+            if (recompute_lower_x) {
+                sqr_len[3] = 1;
+                double lower_x = sqr_expr_evaluator<4>::eval<mpt_type, mpf_type>(cross, sqr_len).get_d();
+                c_event.lower_x(lower_x / denom);
+            }
+        }
+        
+        return true;
+    }
 
     // Find parameters of the inscribed circle that is tangent to three
     // point sites.
@@ -1683,7 +1476,6 @@ namespace detail {
                                         const site_event<T> &site2,
                                         const site_event<T> &site3,
                                         circle_event<T> &c_event) {
-        //return create_circle_event_ppp_gmpxx(site1, site2, site3, c_event);
         double dif_x1 = site1.x() - site2.x();
         double dif_x2 = site2.x() - site3.x();
         double dif_y1 = site1.y() - site2.y();
@@ -1691,28 +1483,36 @@ namespace detail {
         double orientation = robust_cross_product(dif_x1, dif_y1, dif_x2, dif_y2);
         if (orientation_test(orientation) != RIGHT_ORIENTATION)
             return false;
-        double inv_orientation = 0.5 / orientation;
+        robust_fpt<T> inv_orientation(0.5 / orientation, 3.0);
         double sum_x1 = site1.x() + site2.x();
         double sum_x2 = site2.x() + site3.x();
         double sum_y1 = site1.y() + site2.y();
         double sum_y2 = site2.y() + site3.y();
         double dif_x3 = site1.x() - site3.x();
         double dif_y3 = site1.y() - site3.y();
-        epsilon_robust_comparator<T> c_x, c_y;
-        c_x += dif_x1 * sum_x1 * dif_y2;
-        c_x += dif_y1 * sum_y1 * dif_y2;
-        c_x -= dif_x2 * sum_x2 * dif_y1;
-        c_x -= dif_y2 * sum_y2 * dif_y1;
-        c_y += dif_x2 * sum_x2 * dif_x1;
-        c_y += dif_y2 * sum_y2 * dif_x1;
-        c_y -= dif_x1 * sum_x1 * dif_x2;
-        c_y -= dif_y1 * sum_y1 * dif_x2;
-        c_x *= inv_orientation;
-        c_y *= inv_orientation;
-        epsilon_robust_comparator<T> lower_x(c_x);
-        lower_x += sqrt(sqr_distance(dif_x1, dif_y1) * sqr_distance(dif_x2, dif_y2) *
-                        sqr_distance(dif_x3, dif_y3)) * fabs(inv_orientation);
-        c_event = circle_event<double>(c_x, c_y, lower_x);
+        epsilon_robust_comparator< robust_fpt<T> > c_x, c_y;
+        c_x += robust_fpt<T>(dif_x1 * sum_x1 * dif_y2, 2.0);
+        c_x += robust_fpt<T>(dif_y1 * sum_y1 * dif_y2, 2.0);
+        c_x -= robust_fpt<T>(dif_x2 * sum_x2 * dif_y1, 2.0);
+        c_x -= robust_fpt<T>(dif_y2 * sum_y2 * dif_y1, 2.0);
+        c_y += robust_fpt<T>(dif_x2 * sum_x2 * dif_x1, 2.0);
+        c_y += robust_fpt<T>(dif_y2 * sum_y2 * dif_x1, 2.0);
+        c_y -= robust_fpt<T>(dif_x1 * sum_x1 * dif_x2, 2.0);
+        c_y -= robust_fpt<T>(dif_y1 * sum_y1 * dif_x2, 2.0);
+        epsilon_robust_comparator< robust_fpt<T> > lower_x(c_x);
+        lower_x -= robust_fpt<T>(std::sqrt(sqr_distance(dif_x1, dif_y1) *
+                                           sqr_distance(dif_x2, dif_y2) *
+                                           sqr_distance(dif_x3, dif_y3)), 5.0);
+        c_event = circle_event<double>(c_x.dif().fpv() * inv_orientation.fpv(),
+                                       c_y.dif().fpv() * inv_orientation.fpv(),
+                                       lower_x.dif().fpv() * inv_orientation.fpv());
+        bool recompute_c_x = c_x.dif().ulp() >= 128;
+        bool recompute_c_y = c_y.dif().ulp() >= 128;
+        bool recompute_lower_x = lower_x.dif().ulp() >= 128;
+        if (recompute_c_x || recompute_c_y || recompute_lower_x) {
+            return create_circle_event_ppp_gmpxx(
+                site1, site2, site3, c_event, recompute_c_x, recompute_c_y, recompute_lower_x);
+        }
         return true;
     }
 
@@ -1724,7 +1524,7 @@ namespace detail {
                                         const site_event<T> &site3,
                                         int segment_index,
                                         circle_event<T> &c_event) {
-        //return create_circle_event_pps_gmpxx(site1, site2, site3, segment_index, c_event);
+        return create_circle_event_pps_gmpxx(site1, site2, site3, segment_index, c_event);
         if (segment_index != 2) {
             kOrientation orient1 = orientation_test(site1.point0(),
                 site2.point0(), site3.point0(true));
@@ -1757,13 +1557,13 @@ namespace detail {
             site3.point1().y() - site2.y(),
             site2.x() - site3.point1().x());
         double denom = robust_cross_product(vec_x, vec_y, line_a, line_b);
-        double inv_segm_len = 1.0 / sqrt(sqr_distance(line_a, line_b));
+        double inv_segm_len = 1.0 / std::sqrt(sqr_distance(line_a, line_b));
         epsilon_robust_comparator<double> t;
         if (orientation_test(denom) == COLLINEAR) {
             t += teta / (4.0 * (A + B));
             t -= A * B / (teta * (A + B));
         } else {
-            double det = sqrt((teta * teta + denom * denom) * A * B);
+            double det = std::sqrt((teta * teta + denom * denom) * A * B);
             if (segment_index == 2) {
                 t -= det / (denom * denom);
             } else {
@@ -1795,7 +1595,7 @@ namespace detail {
                                         const site_event<T> &site3,
                                         int point_index,
                                         circle_event<T> &c_event) {
-        //return create_circle_event_pss_gmpxx(site1, site2, site3, point_index, c_event);
+        return create_circle_event_pss_gmpxx(site1, site2, site3, point_index, c_event);
         if (site2.index() == site3.index()) {
             return false;
         }
@@ -1830,9 +1630,9 @@ namespace detail {
             t -= a1 * ((segm_start1.x() + segm_start2.x()) * 0.5 - site1.x());
             t -= b1 * ((segm_start1.y() + segm_start2.y()) * 0.5 - site1.y());
             if (point_index == 2) {
-                t += sqrt(det);
+                t += std::sqrt(det);
             } else {
-                t -= sqrt(det);
+                t -= std::sqrt(det);
             }
             t /= a;
             epsilon_robust_comparator<double> c_x, c_y;
@@ -1841,12 +1641,12 @@ namespace detail {
             c_y += 0.5 * (segm_start1.y() + segm_start2.y());
             c_y += b1 * t;
             epsilon_robust_comparator<double> lower_x(c_x);
-            lower_x += 0.5 * fabs(c) / sqrt(a);
+            lower_x += 0.5 * fabs(c) / std::sqrt(a);
             c_event = circle_event<double>(c_x, c_y, lower_x);
             return true;
         } else {
-            double sqr_sum1 = sqrt(a1 * a1 + b1 * b1);
-            double sqr_sum2 = sqrt(a2 * a2 + b2 * b2);
+            double sqr_sum1 = std::sqrt(a1 * a1 + b1 * b1);
+            double sqr_sum2 = std::sqrt(a2 * a2 + b2 * b2);
             double a = robust_cross_product(a1, b1, -b2, a2);
             if (a >= 0) {
                 a += sqr_sum1 * sqr_sum2;
@@ -1875,9 +1675,9 @@ namespace detail {
             b -= sqr_sum2 * robust_cross_product(a1, b1, -site1.y(), site1.x());
             t -= b;
             if (point_index == 2) {
-                t += sqrt(det);
+                t += std::sqrt(det);
             } else {
-                t -= sqrt(det);
+                t -= std::sqrt(det);
             }
             t /= (a * a);
             epsilon_robust_comparator<double> c_x(ix), c_y(iy);
@@ -1888,6 +1688,7 @@ namespace detail {
             t.abs();
             epsilon_robust_comparator<double> lower_x(c_x);
             lower_x += t * fabs(orientation);
+            
             c_event = circle_event<double>(c_x, c_y, lower_x);
         }
         return true;
@@ -1900,29 +1701,29 @@ namespace detail {
                                         const site_event<T> &site2,
                                         const site_event<T> &site3,
                                         circle_event<T> &c_event) {
-        //return create_circle_event_sss_gmpxx(site1, site2, site3, c_event);
+        return create_circle_event_sss_gmpxx(site1, site2, site3, c_event);
         if (site1.index() == site2.index() ||
             site2.index() == site3.index())
             return false;
-        double a1 = site1.x1(true) - site1.x0(true);
-        double b1 = site1.y1(true) - site1.y0(true);
-        double c1 = robust_cross_product(site1.x0(true), site1.y0(true),
-                                         site1.x1(true), site1.y1(true));
-        double a2 = site2.x1(true) - site2.x0(true);
-        double b2 = site2.y1(true) - site2.y0(true);
-        double c2 = robust_cross_product(site2.x0(true), site2.y0(true),
-                                         site2.x1(true), site2.y1(true));
-        double a3 = site3.x1(true) - site3.x0(true);
-        double b3 = site3.y1(true) - site3.y0(true);
-        double c3 = robust_cross_product(site3.x0(true), site3.y0(true),
-                                         site3.x1(true), site3.y1(true));
-        double len1 = sqrt(a1 * a1 + b1 * b1);
-        double len2 = sqrt(a2 * a2 + b2 * b2);
-        double len3 = sqrt(a3 * a3 + b3 * b3);
-        double cross_12 = robust_cross_product(a1, b1, a2, b2);
-        double cross_23 = robust_cross_product(a2, b2, a3, b3);
-        double cross_31 = robust_cross_product(a3, b3, a1, b1);
-        epsilon_robust_comparator<double> denom, c_x, c_y, r;
+        robust_fpt<T> a1(site1.x1(true) - site1.x0(true), 0.0);
+        robust_fpt<T> b1(site1.y1(true) - site1.y0(true), 0.0);
+        robust_fpt<T> c1(robust_cross_product(site1.x0(true), site1.y0(true), site1.x1(true), site1.y1(true)), 2.0);
+        
+        robust_fpt<T> a2(site2.x1(true) - site2.x0(true), 0.0);
+        robust_fpt<T> b2(site2.y1(true) - site2.y0(true), 0.0);
+        robust_fpt<T> c2(robust_cross_product(site2.x0(true), site2.y0(true), site2.x1(true), site2.y1(true)), 2.0);
+        
+        robust_fpt<T> a3(site3.x1(true) - site3.x0(true), 0.0);
+        robust_fpt<T> b3(site3.y1(true) - site3.y0(true), 0.0);
+        robust_fpt<T> c3(robust_cross_product(site3.x0(true), site3.y0(true), site3.x1(true), site3.y1(true)), 2.0);
+        
+        robust_fpt<T> len1 = (a1 * a1 + b1 * b1).get_sqrt();
+        robust_fpt<T> len2 = (a2 * a2 + b2 * b2).get_sqrt();
+        robust_fpt<T> len3 = (a3 * a3 + b3 * b3).get_sqrt();
+        robust_fpt<T> cross_12(robust_cross_product(a1.fpv(), b1.fpv(), a2.fpv(), b2.fpv()), 2.0);
+        robust_fpt<T> cross_23(robust_cross_product(a2.fpv(), b2.fpv(), a3.fpv(), b3.fpv()), 2.0);
+        robust_fpt<T> cross_31(robust_cross_product(a3.fpv(), b3.fpv(), a1.fpv(), b1.fpv()), 2.0);
+        epsilon_robust_comparator< robust_fpt<T> > denom, c_x, c_y, r;
 
         // denom = cross_12 * len3 + cross_23 * len1 + cross_31 * len2.
         denom += cross_12 * len3;
@@ -1946,7 +1747,20 @@ namespace detail {
         c_y -= b3 * c2 * len1;
         c_y += b3 * c1 * len2;
         c_y -= b1 * c3 * len2;
-        c_event = circle_event<double>(c_x, c_y, c_x + r, denom);
+        epsilon_robust_comparator< robust_fpt<T> > lower_x(c_x + r);
+        bool recompute_c_x = c_x.dif().re() > 128;
+        bool recompute_c_y = c_y.dif().re() > 128;
+        bool recompute_lower_x = lower_x.dif() > 128;
+        bool recompute_denom = denom.dif().re() > 128;
+        c_event = circle_event<double>(c_x.dif().fpv() / denom.dif().fpv(),
+                                       c_y.dif().fpv() / denom.dif().fpv(),
+                                       lower_x.dif().fpv() / denom.dif().fpv());
+        if (recompute_c_x || recompute_c_y || recompute_lower_x || recompute_denom) {
+            return create_circle_event_sss_gmpxx(
+                site1, site2, site3, c_event,
+                recompute_c_x, recompute_c_y,
+                recompute_lower_x, recompute_denom);
+        }
         return true;
     }
 

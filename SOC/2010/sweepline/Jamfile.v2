@@ -3,10 +3,34 @@
 #    (See accompanying file LICENSE_1_0.txt or copy at
 #          http://www.boost.org/LICENSE_1_0.txt)
 
+path-constant GMP_PATH : "c:/Users/Slevin/SWE/Sweepline/gmp" ;
+#path-constant GMP_PATH : "/usr/local" ;
+
+lib gmp
+    : # sources
+    : # requirements
+      <name>gmp <search>$(GMP_PATH)/lib
+    : #default-build
+    : # usage-requirements
+    ;
+
+lib gmpxx
+    : # sources
+    : # requirements
+      <name>gmpxx <search>$(GMP_PATH)/lib
+    : # default-build
+    : # usage-requirements
+    ;
+
+alias gmp_libs : gmp gmpxx : <link>static ;
+
+
 project sweepline
     : requirements
         <include>.
         <include>$(BOOST_ROOT)
+	<include>$(GMP_PATH)/include
+	<library>gmp_libs
     :
         build-dir bin.v2
     ;
