@@ -63,7 +63,7 @@ The parameter tokens are inspected by preprocessor metaprogramming using both __
 
     #include <boost/detail/preprocessor/keyword/this.hpp>
     #include <boost/detail/preprocessor/keyword/const.hpp>
-    #include <boost/locla/aux_/preprocessor/keyword/bind.hpp>
+    #include <boost/local/aux_/preprocessor/keyword/bind.hpp>
 
     // Detect `this`.
     BOOST_DETAIL_PP_KEYWORD_IS_THIS_BACK(const bind this)   // Expand to 1.

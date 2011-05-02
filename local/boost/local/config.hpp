@@ -38,14 +38,20 @@
  * supported by the C99 standards but they are not supported by all modern
  * compilers (for example, they are not supported by MSVC).
  *
+ * Furthermore, if this macro is defined the library will not take advantage of
+ * compilers (like C++0x compilers) that allow to pass local types as template
+ * parameters in order to generate code that has more chances to be optimized
+ * by the compiler for faster run-times (i.e., inlining the local function
+ * calls, see the @RefSect2{Advanced_Topics, Advanced Topics} section).
+ *
  * @Note This library internally uses Boost.Typeof to automatically deduce
  *  the bound variable types. The macro symbol <a href='http://www.boost.org/doc/libs/1_46_1/doc/html/typeof/refe.html#typeof.compl'><c>BOOST_TYPEOF_COMPLIANT</c></a>
  *  needs to be defined separately from this configuration macro if programmers
  *  do not want to use non ISO C++ standard support for type deduction
  *  operations.
  * 
- * @See @RefSect{Tutorial} section, @RefSect2{Getting_Started, Getting Started}
- *  section.
+ * @See @RefSect{Tutorial} section, @RefSect2{Advanced_Topics, Advanced Topics}
+ *  section, @RefSect2{Getting_Started, Getting Started} section.
  */
 #ifndef BOOST_LOCAL_CONFIG_COMPLIANT
 #undef BOOST_LOCAL_CONFIG_COMPLIANT

@@ -24,15 +24,15 @@
  * The type is fully qualified in that it contains the extra constant and
  * reference qualifiers when they are specified for binding by constant and by
  * reference.
- * For example, if a variable named <c>x</c> of type <c>T</c> is:
- * @li Bound by value using <c>bind x</c> then
- *  <c>BOOST_LOCAL_TYPEOF(x)</c> is <c>T</c>.
- * @li Bound by constant value using <c>const bind x</c>
- *  then <c>BOOST_LOCAL_TYPEOF(x)</c> is <c>const T</c>.
- * @li Bound by reference using <c>bind& x</c>
- *  then <c>BOOST_LOCAL_TYPEOF(x)</c> is <c>T&</c>.
- * @li Bound by constant reference using <c>const bind& x</c>
- *  then <c>BOOST_LOCAL_TYPEOF(x)</c> is <c>const T&</c>.
+ * For example, if a variable named <c>t</c> of type <c>T</c> is:
+ * @li Bound by value using <c>bind t</c> then
+ *  <c>BOOST_LOCAL_TYPEOF(t)</c> is <c>T</c>.
+ * @li Bound by constant value using <c>const bind t</c>
+ *  then <c>BOOST_LOCAL_TYPEOF(t)</c> is <c>const T</c>.
+ * @li Bound by reference using <c>bind& t</c>
+ *  then <c>BOOST_LOCAL_TYPEOF(t)</c> is <c>T&</c>.
+ * @li Bound by constant reference using <c>const bind& t</c>
+ *  then <c>BOOST_LOCAL_TYPEOF(t)</c> is <c>const T&</c>.
  *
  * Within local functions, local blocks, and local exits, this macro can be
  * used to deduce the bound variable types to declare local variables, check
