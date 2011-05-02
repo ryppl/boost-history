@@ -28,41 +28,9 @@
 
 [section TODO]
 
-# Add Inline Local Function `..._NAME(inline <name>)` to Advanced Topics section.
-
-# Add `..._NAME(recursive <name>)` to recursion section in Advanced Topics.
-Indicate that recursive local function cannot be optimized even when declared inline.
-
-# Modify `..._NAME()` macro to parse also `recursive inline` and `inline recursive` as recursive (no reason to give an error, just ignore the inline request and document it).
-
-# Document recursive, inline, and that recursive is never inlined in `..._NAME()` Doxygen.
-
-# Document limitation that inline local functions cannot be assigned to `local::function` and therefore they cannot be passed as function parameters, etc.
+# Check if compilation times of Boost.Lambda and Boost.Phoenix change if only specific headers are included (instead of the entire library header).
 
 # Rework factorial_impl and Implementation section.
-
-# Read all N-papers about "passing local types as template parameters".
-
-# *Code.* Optimize macro expansion code for C++0x, C++03, etc.
-From John Bytheway:
-
-    > Yes, in C++0x local structs can be passed as template parameters.
-    > Obviously, in C++0x there are lambdas too, so you might think your
-    > library is useless, but I would expect most compilers to support passing
-    > local structs as template parameters before they support lambdas, so
-    > there is some advantage in having this intermediate implementation.
-    > Also, your macros would allow writing code that worked in C++0x and
-    > C++03, with the virtual function business in only those compilers/modes
-    > where it is necessary.
-
-* Shall `this_` be named `_this` instead? Ask Boosters if there is some guideline for consistency. Maybe Boost uses `..._` is for statements (like `if_`) and `_...` for variables (like `_1`)... if that is the case then I should use `_this`.
-
-* Rename `abstract_function` to `function_interface`.
-
-* Provide a special macro `BOOST_LOCAL_FUNCTION_NAME_OPTIMIZED` that runs faster (by using the local functor directly without using the global `boost::local::function` functor instead).
-Make both local blocks and exits use this optimized local function variant.
-Document that this optimized local function variant cannot be passed as template parameter unless it is first manually reassigned to the global `boost::local::function` functor or C++03 feature is supported by the compiler.
-On C++03, make `BOOST_LOCAL_FUNCTION_NAME` be the same as `BOOST_LOCAL_FUNCTION_NAME_OPTIMIZED`.
 
 [endsect]
 

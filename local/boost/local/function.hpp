@@ -158,20 +158,41 @@
  * This macro must follow the local function body code block <c>{ ... }</c> as
  * shown in the @RefMacro{BOOST_LOCAL_FUNCTION_PARAMS} documentation.
  *
+ * The local function name can be prefixed by the "keyword" <c>inline</c> as in
+ * <c>BOOST_LOCAL_FUNCTION_NAME(inline <em>name</em>)</c> to increase the
+ * chances that the compiler will be able to inline the local function calls
+ * (thus reducing their run-time).
+ * However, inlined local functions cannot be passed as template parameters
+ * (on ISO C++ compliant compilers, see
+ * @RefMacro{BOOST_LOCAL_CONFIG_COMPLIANT}, but they can be passed as template
+ * parameters on C++0x compilers).
+ * Furthermore, inlined local functions cannot be assigned to
+ * @RefClass{boost::local::function}.
+ * On C++0x compilers, there is no need to declare a local function lined
+ * because this library will automatically use C++0x specific features to
+ * inline the local function while always allowing to pass it as a template
+ * parameter.
+ *
+ * The local function name can also be prefixed by the "keyword"
+ * <c>recursive</c> as in
+ * <c>BOOST_LOCAL_FUNCTION_NAME(recursive <em>name</em>)</c> to allow the
+ * local function to recursively call itself from its body (as usual in C++).
+ * However, compilers have not been observed to be able to inline recursive
+ * local function calls (not even when the recursive local function is also
+ * declared inlined).
+ *
  * @Params
  * @Param{name,
  *  The name of the local function. 
- *  The local function name can be prefixed by the keyword <c>inline</c> as in
- *  <c>BOOST_LOCAL_FUNCTION_NAME(inline <em>name</em>)</c> to increases the
- *  likelihood that the compiler will inline the local function (thus reducing
- *  its run-time) but inlined local functions can be passed as template
- *  parameters only on C++03 compilers (and not on ISO C++ standard compilers)
- *  -- see the @RefSect2{Advanced_Topics\, Advanced Topics} section.
+ *  The local function name can be prefixed by the "keyword" <c>inline</c> to
+ *  declare the local function inlined or by the "keyword" <c>recursive</c> to
+ *  declare the local function recursive (see the @RefSect2{Advanced_Topics\,
+ *  Advanced Topics} section).
  *  The local function name cannot be the name of an operator
  *  <c>operator...</c> and it cannot be the same name of another local function
  *  declared within the same enclosing scope (i.e.\, it is not possible to 
- *  overload local function declarations) -- see the
- *  @RefSect2{Advanced_Topics\, Advanced Topics} section.
+ *  overload local function declarations\, see the @RefSect2{Advanced_Topics\,
+ *  Advanced Topics} section).
  * }
  * @EndParams
  *

@@ -37,6 +37,8 @@
       Specifications</a></span></dt>
 <dt><span class="section"><a href="Advanced_Topics.html#boost_local.Advanced_Topics.storage_classifiers___auto__and__register__">Storage
       Classifiers (<code class="computeroutput"><span class="keyword">auto</span></code> and <code class="computeroutput"><span class="keyword">register</span></code>)</a></span></dt>
+<dt><span class="section"><a href="Advanced_Topics.html#boost_local.Advanced_Topics.inlined_local_functions">Inlined
+      Local Functions</a></span></dt>
 <dt><span class="section"><a href="Advanced_Topics.html#boost_local.Advanced_Topics.recursive_local_functions">Recursive
       Local Functions</a></span></dt>
 <dt><span class="section"><a href="Advanced_Topics.html#boost_local.Advanced_Topics.nested_declarations">Nested
@@ -83,7 +85,7 @@
 <p>
         In addition, local function parameter types cannot start with non-alphanumeric
         symbols (alphanumeric symbols are <code class="computeroutput"><span class="identifier">A</span><span class="special">-</span><span class="identifier">Z</span></code>, <code class="computeroutput"><span class="identifier">a</span><span class="special">-</span><span class="identifier">z</span></code>,
-        and <code class="computeroutput"><span class="number">0</span><span class="special">-</span><span class="number">9</span></code>). <sup>[<a name="id881339" href="#ftn.id881339" class="footnote">14</a>]</sup> The library will generate (cryptic) preprocessor errors if a
+        and <code class="computeroutput"><span class="number">0</span><span class="special">-</span><span class="number">9</span></code>). <sup>[<a name="id881374" href="#ftn.id881374" class="footnote">14</a>]</sup> The library will generate (cryptic) preprocessor errors if a
         parameter type starts with a non-alphanumeric symbol.
       </p>
 <p>
@@ -206,7 +208,7 @@
 <li class="listitem">
             Parenthesis to wrap the type expression (and therefore any commas <code class="computeroutput"><span class="special">,</span></code> that it contains) passed as parameter
             to the <code class="computeroutput"><a class="link" href="../BOOST_IDENTITY_TYPE.html" title="Macro BOOST_IDENTITY_TYPE">BOOST_IDENTITY_TYPE</a></code>
-            macro. <sup>[<a name="id882699" href="#ftn.id882699" class="footnote">15</a>]</sup>
+            macro. <sup>[<a name="id882734" href="#ftn.id882734" class="footnote">15</a>]</sup>
           </li>
 </ol></div>
 <p>
@@ -407,7 +409,7 @@
         </p></td></tr>
 </table></div>
 <p>
-        Consider the following complete example: <sup>[<a name="id884004" href="#ftn.id884004" class="footnote">16</a>]</sup>
+        Consider the following complete example: <sup>[<a name="id884038" href="#ftn.id884038" class="footnote">16</a>]</sup>
       </p>
 <div class="informaltable"><table class="table">
 <colgroup>
@@ -1386,12 +1388,171 @@
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h3 class="title">
+<a name="boost_local.Advanced_Topics.inlined_local_functions"></a><a class="link" href="Advanced_Topics.html#boost_local.Advanced_Topics.inlined_local_functions" title="Inlined Local Functions">Inlined
+      Local Functions</a>
+</h3></div></div></div>
+<p>
+        A local function can be declared inlined to increase the chances that the
+        compiler will be able to reduce the local function call run-time by inlining
+        code. A local function is declared inlined by prefixing the local function
+        name specified to <code class="computeroutput"><a class="link" href="../BOOST_LOCAL_FUNCTION_NAME.html" title="Macro BOOST_LOCAL_FUNCTION_NAME">BOOST_LOCAL_FUNCTION_NAME</a></code>
+        with the "keyword" <code class="computeroutput"><span class="keyword">inline</span></code>:
+      </p>
+<pre class="programlisting"><span class="special">...</span> <code class="computeroutput"><a class="link" href="../BOOST_LOCAL_FUNCTION_PARAMS.html" title="Macro BOOST_LOCAL_FUNCTION_PARAMS">BOOST_LOCAL_FUNCTION_PARAMS</a></code><span class="special">(</span> <span class="special">...</span> <span class="special">)</span> <span class="special">{</span>
+    <span class="special">...</span>
+<span class="special">}</span> <code class="computeroutput"><a class="link" href="../BOOST_LOCAL_FUNCTION_NAME.html" title="Macro BOOST_LOCAL_FUNCTION_NAME">BOOST_LOCAL_FUNCTION_NAME</a></code><span class="special">(</span><span class="keyword">inline</span> <span class="special">...)</span>
+</pre>
+<div class="important"><table border="0" summary="Important">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Important]" src="../../../../../doc/src/images/important.png"></td>
+<th align="left">Important</th>
+</tr>
+<tr><td align="left" valign="top">
+<p>
+          On ISO C++ compliant compilers (see <code class="computeroutput"><a class="link" href="../BOOST_LOCAL_CONFIG_COMPLIANT.html" title="Macro BOOST_LOCAL_CONFIG_COMPLIANT">BOOST_LOCAL_CONFIG_COMPLIANT</a></code>),
+          inlined local functions always have a run-time comparable to their equivalent
+          implementations that use local functor classes (see the <a class="link" href="Alternatives.html" title="Appendix: Alternatives">Alternatives</a>
+          section). However, inlined local functions have the limitation that they
+          cannot be assigned to <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">local</span><span class="special">::</span><a class="link" href="../boost/local/function.html" title="Struct template function">function</a></code>
+          and they cannot be passed as template parameters <sup>[<a name="id904758" href="#ftn.id904758" class="footnote">17</a>]</sup>.
+        </p>
+<p>
+          On C++0x compilers, <code class="computeroutput"><span class="keyword">inline</span></code>
+          has no effect because this library will automatically generate code that
+          uses C++0x specific features to inline the local function calls whenever
+          possible even if the local function is not declared inlined.
+        </p>
+</td></tr>
+</table></div>
+<p>
+        It is recommended to not declare a local function inlined unless it is strictly
+        necessary for optimizing pure ISO C++ compliant code (because in all other
+        cases this library will automatically take advantage of C++0x features to
+        optimize the local function calls while always allowing to pass the local
+        function as a template parameter).
+      </p>
+<p>
+        For example, the following local function is declared inlined (thus a for-loop
+        needs to be used for portability instead of passing the local function as
+        a template parameter to the <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">for_each</span></code>
+        algorithm):
+      </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Variadic Macro Syntax (C99 and later compilers)
+                </p>
+              </th>
+<th>
+                <p>
+                  Sequencing Macro Syntax (all C++ compilers)
+                </p>
+              </th>
+</tr></thead>
+<tbody><tr>
+<td>
+                <p>
+                  
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">local</span><span class="special">/</span><span class="identifier">function</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">vector</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">algorithm</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
+    <span class="keyword">double</span> <span class="identifier">sum</span> <span class="special">=</span> <span class="number">0.0</span><span class="special">;</span>
+    <span class="keyword">int</span> <span class="identifier">factor</span> <span class="special">=</span> <span class="number">10</span><span class="special">;</span>
+
+    <span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span><span class="keyword">double</span> <span class="identifier">num</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">factor</span><span class="special">,</span>
+            <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">sum</span><span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">sum</span> <span class="special">+=</span> <span class="identifier">factor</span> <span class="special">*</span> <span class="identifier">num</span><span class="special">;</span>
+    <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="keyword">inline</span> <span class="identifier">add</span><span class="special">)</span> <span class="comment">// inlined local function</span>
+
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;</span> <span class="identifier">v</span><span class="special">(</span><span class="number">1000000</span><span class="special">);</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">fill</span><span class="special">(</span><span class="identifier">v</span><span class="special">.</span><span class="identifier">begin</span><span class="special">(),</span> <span class="identifier">v</span><span class="special">.</span><span class="identifier">end</span><span class="special">(),</span> <span class="number">1.0</span><span class="special">);</span>
+
+    <span class="comment">// On some ISO C++ compilers (e.g., GCC 4.3) inlined local functions are</span>
+    <span class="comment">// more likely to be optimized for faster run-times. However, inlined local</span>
+    <span class="comment">// functions cannot be passed at template parameters (i.e., `std::for_each`</span>
+    <span class="comment">// cannot be used here).</span>
+    <span class="comment">// On C++0x compilers (e.g., MSVC 8.0 or GCC 4.5) linining has no effect</span>
+    <span class="comment">// because the local function can always be optimized even if not</span>
+    <span class="comment">// explicitly specified inline and inlined local functions can be always be</span>
+    <span class="comment">// passed as template parameters.</span>
+    <span class="keyword">for</span> <span class="special">(</span><span class="identifier">size_t</span> <span class="identifier">i</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span> <span class="identifier">i</span> <span class="special">&lt;</span> <span class="identifier">v</span><span class="special">.</span><span class="identifier">size</span><span class="special">();</span> <span class="special">++</span><span class="identifier">i</span><span class="special">)</span> <span class="special">{</span> <span class="comment">// Can't use for_each (portably).</span>
+        <span class="identifier">add</span><span class="special">(</span><span class="identifier">v</span><span class="special">[</span><span class="identifier">i</span><span class="special">]);</span>
+    <span class="special">}</span>
+
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">sum</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+                </p>
+              </td>
+<td>
+                <p>
+                  
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">local</span><span class="special">/</span><span class="identifier">function</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">vector</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">algorithm</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
+    <span class="keyword">double</span> <span class="identifier">sum</span> <span class="special">=</span> <span class="number">0.0</span><span class="special">;</span>
+    <span class="keyword">int</span> <span class="identifier">factor</span> <span class="special">=</span> <span class="number">10</span><span class="special">;</span>
+
+    <span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span> <span class="special">(</span><span class="keyword">double</span> <span class="identifier">num</span><span class="special">)</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span> <span class="identifier">factor</span><span class="special">)</span>
+            <span class="special">(</span><span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">sum</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">sum</span> <span class="special">+=</span> <span class="identifier">factor</span> <span class="special">*</span> <span class="identifier">num</span><span class="special">;</span>
+    <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="keyword">inline</span> <span class="identifier">add</span><span class="special">)</span> <span class="comment">// inlined local function</span>
+
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;</span> <span class="identifier">v</span><span class="special">(</span><span class="number">1000000</span><span class="special">);</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">fill</span><span class="special">(</span><span class="identifier">v</span><span class="special">.</span><span class="identifier">begin</span><span class="special">(),</span> <span class="identifier">v</span><span class="special">.</span><span class="identifier">end</span><span class="special">(),</span> <span class="number">1.0</span><span class="special">);</span>
+
+    <span class="comment">// On some ISO C++ compilers (e.g., GCC 4.3) inlined local functions are</span>
+    <span class="comment">// more likely to be optimized for faster run-times. However, inlined local</span>
+    <span class="comment">// functions cannot be passed at template parameters (i.e., `std::for_each`</span>
+    <span class="comment">// cannot be used here).</span>
+    <span class="comment">// On C++0x compilers (e.g., MSVC 8.0 and GCC 4.5) linining has no effect</span>
+    <span class="comment">// because the local function can always be optimized even if not</span>
+    <span class="comment">// explicitly specified inline and inlined local functions can be always be</span>
+    <span class="comment">// passed as template parameters.</span>
+    <span class="keyword">for</span> <span class="special">(</span><span class="identifier">size_t</span> <span class="identifier">i</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span> <span class="identifier">i</span> <span class="special">&lt;</span> <span class="identifier">v</span><span class="special">.</span><span class="identifier">size</span><span class="special">();</span> <span class="special">++</span><span class="identifier">i</span><span class="special">)</span> <span class="special">{</span> <span class="comment">// Can't use for_each (portably).</span>
+        <span class="identifier">add</span><span class="special">(</span><span class="identifier">v</span><span class="special">[</span><span class="identifier">i</span><span class="special">]);</span>
+    <span class="special">}</span>
+
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">sum</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+                </p>
+              </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
 <a name="boost_local.Advanced_Topics.recursive_local_functions"></a><a class="link" href="Advanced_Topics.html#boost_local.Advanced_Topics.recursive_local_functions" title="Recursive Local Functions">Recursive
       Local Functions</a>
 </h3></div></div></div>
 <p>
-        A local function can recursively call itself as usual with C++ functions.
+        A local function can be declared recursive so it can recursively call itself
+        from its body (as usual with C++ functions). A local function is declared
+        recursive by prefixing the local function name specified to <code class="computeroutput"><a class="link" href="../BOOST_LOCAL_FUNCTION_NAME.html" title="Macro BOOST_LOCAL_FUNCTION_NAME">BOOST_LOCAL_FUNCTION_NAME</a></code>
+        with the "keyword" <code class="computeroutput"><span class="identifier">recursive</span></code>:
       </p>
+<pre class="programlisting"><span class="special">...</span> <code class="computeroutput"><a class="link" href="../BOOST_LOCAL_FUNCTION_PARAMS.html" title="Macro BOOST_LOCAL_FUNCTION_PARAMS">BOOST_LOCAL_FUNCTION_PARAMS</a></code><span class="special">(</span> <span class="special">...</span> <span class="special">)</span> <span class="special">{</span>
+    <span class="special">...</span>
+<span class="special">}</span> <code class="computeroutput"><a class="link" href="../BOOST_LOCAL_FUNCTION_NAME.html" title="Macro BOOST_LOCAL_FUNCTION_NAME">BOOST_LOCAL_FUNCTION_NAME</a></code><span class="special">(</span><span class="identifier">recursive</span> <span class="special">...)</span>
+</pre>
 <p>
         For example, the following local function is used to recursively calculate
         and print the factorial of the specified numbers:
@@ -1506,6 +1667,10 @@
               </td>
 </tr></tbody>
 </table></div>
+<p>
+        Compilers have not been observed to be able to inline recursive local function
+        calls (not even when the recursive local function is also declared inlined).
+      </p>
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h3 class="title">
@@ -1899,7 +2064,7 @@
         It is not possible to overload local functions. Declaring multiple local
         functions with the same name within the same enclosing scope generates a
         compile-time error (even if the different declarations specify different
-        parameters). <sup>[<a name="id909810" href="#ftn.id909810" class="footnote">17</a>]</sup>
+        parameters). <sup>[<a name="id911902" href="#ftn.id911902" class="footnote">18</a>]</sup>
       </p>
 <p>
         For example, the following code will <span class="bold"><strong>not</strong></span>
@@ -1923,7 +2088,7 @@
       </h6>
 <p>
         Local functions cannot be operators. Naming a local function <code class="computeroutput"><span class="keyword">operator</span><span class="special">...</span></code>
-        will generate a compile-time error. <sup>[<a name="id910158" href="#ftn.id910158" class="footnote">18</a>]</sup>
+        will generate a compile-time error. <sup>[<a name="id912250" href="#ftn.id912250" class="footnote">19</a>]</sup>
       </p>
 <p>
         For example, the following code will <span class="bold"><strong>not</strong></span>
@@ -1970,21 +2135,21 @@
 </div>
 <div class="footnotes">
 <br><hr width="100" align="left">
-<div class="footnote"><p><sup>[<a id="ftn.id881339" href="#id881339" class="para">14</a>] </sup>
+<div class="footnote"><p><sup>[<a id="ftn.id881374" href="#id881374" class="para">14</a>] </sup>
           <span class="bold"><strong>Rationale.</strong></span> This limitation derives from
           the fact that <code class="computeroutput"><a class="link" href="../BOOST_LOCAL_FUNCTION_PARAMS.html" title="Macro BOOST_LOCAL_FUNCTION_PARAMS">BOOST_LOCAL_FUNCTION_PARAMS</a></code>
           uses preprocessor token concatenation to inspect the parameter type token
           to see if the token is a parameter or a bound variable. The C++ preprocessor
           does not allow to concatenate non-alphanumeric tokens.
         </p></div>
-<div class="footnote"><p><sup>[<a id="ftn.id882699" href="#id882699" class="para">15</a>] </sup>
+<div class="footnote"><p><sup>[<a id="ftn.id882734" href="#id882734" class="para">15</a>] </sup>
               <span class="bold"><strong>Rationale.</strong></span> Using variadic macros,
               this extra set of parenthesis could be eliminated requiring only the
               parenthesis to invoke the <code class="computeroutput"><a class="link" href="../BOOST_IDENTITY_TYPE.html" title="Macro BOOST_IDENTITY_TYPE">BOOST_IDENTITY_TYPE</a></code>
               macro. However, this feature is currently not implemented and the double
               parenthesis are always needed when invoking this macro.
             </p></div>
-<div class="footnote"><p><sup>[<a id="ftn.id884004" href="#id884004" class="para">16</a>] </sup>
+<div class="footnote"><p><sup>[<a id="ftn.id884038" href="#id884038" class="para">16</a>] </sup>
           The authors recognize that the use of the <span class="emphasis"><em>identity macros</em></span>
           adds extra parenthesis to the already significant number of parenthesis
           required by the sequencing macro syntax. However, macro parameters usually
@@ -1992,14 +2157,28 @@
           (unless template metaprogramming is being used) so this is usually not
           a problem.
         </p></div>
-<div class="footnote"><p><sup>[<a id="ftn.id909810" href="#id909810" class="para">17</a>] </sup>
+<div class="footnote"><p><sup>[<a id="ftn.id904758" href="#id904758" class="para">17</a>] </sup>
+            <span class="bold"><strong>Rationale.</strong></span> This library uses an indirect
+            function call via a function pointer in order to pass the local function
+            as a template parameter (see the <a class="link" href="Implementation.html" title="Appendix: Implementation">Implementation</a>
+            section). No compiler has been observed to be able to inline function
+            calls when they use such indirect function pointer calls. Therefore,
+            inlined local functions do not use such indirect function pointer call
+            (so they can be optimized) but because of that they cannot be passes
+            as template parameters. The indirect function pointer call is needed
+            for ISO C++ but it is not needed for C++0x (see <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2657.htm" target="_top">[2657]</a>)
+            thus this library automatically generates local function calls that can
+            be inlined on C++0x compilers (even when the local function is not declared
+            inlined).
+          </p></div>
+<div class="footnote"><p><sup>[<a id="ftn.id911902" href="#id911902" class="para">18</a>] </sup>
           <span class="bold"><strong>Rationale.</strong></span> This is because a local function
           is a functor object declared as a local variable within the enclosing scope.
           Therefore, declaring two local functions with the same name within the
           same enclosing scope declares two local variables with the same name within
           the same scope and that is not allowed in C++.
         </p></div>
-<div class="footnote"><p><sup>[<a id="ftn.id910158" href="#id910158" class="para">18</a>] </sup>
+<div class="footnote"><p><sup>[<a id="ftn.id912250" href="#id912250" class="para">19</a>] </sup>
           <span class="bold"><strong>Rationale.</strong></span> This is the because a local
           function name must be a valid local variable name (the local variable to
           hold the local functor object) and operators cannot be used as local variable

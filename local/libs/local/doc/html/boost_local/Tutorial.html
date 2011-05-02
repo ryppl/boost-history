@@ -710,7 +710,7 @@
 <p>
           Unfortunately, mistakenly using <code class="computeroutput"><span class="keyword">this</span></code>
           within the local function body instead of <code class="computeroutput"><span class="identifier">this_</span></code>
-          will not necessarily generate a compile-time error. <sup>[<a name="id872134" href="#ftn.id872134" class="footnote">9</a>]</sup> Programmers are responsible to make sure that <code class="computeroutput"><span class="keyword">this</span></code> is never used within a local function
+          will not necessarily generate a compile-time error. <sup>[<a name="id872165" href="#ftn.id872165" class="footnote">9</a>]</sup> Programmers are responsible to make sure that <code class="computeroutput"><span class="keyword">this</span></code> is never used within a local function
           body which should only use the special symbol <code class="computeroutput"><span class="identifier">this_</span></code>.
         </p>
 </td></tr>
@@ -892,7 +892,7 @@
 <tr><td align="left" valign="top"><p>
           A <code class="computeroutput"><span class="keyword">return</span><span class="special">;</span></code>
           instruction from within a local block jumps to the end of the local block
-          body and it does not return the enclosing function. <sup>[<a name="id875450" href="#ftn.id875450" class="footnote">10</a>]</sup>
+          body and it does not return the enclosing function. <sup>[<a name="id875485" href="#ftn.id875485" class="footnote">10</a>]</sup>
         </p></td></tr>
 </table></div>
 <p>
@@ -1002,7 +1002,7 @@
 </tr>
 <tr><td align="left" valign="top"><p>
           The execution of the local exit body code is guaranteed only if the program
-          does not terminate because of an uncaught exception. <sup>[<a name="id876663" href="#ftn.id876663" class="footnote">11</a>]</sup>
+          does not terminate because of an uncaught exception. <sup>[<a name="id876698" href="#ftn.id876698" class="footnote">11</a>]</sup>
         </p></td></tr>
 </table></div>
 <p>
@@ -1107,7 +1107,7 @@
         Local exits are very similar to the <span class="emphasis"><em>scope exits</em></span> provided
         by <a href="http://www.boost.org/doc/libs/release/libs/scope_exit/doc/html/index.html" target="_top">Boost.ScopeExit</a>
         with the addition that they also support constant binding and binding of
-        the object <code class="computeroutput"><span class="keyword">this</span></code>. <sup>[<a name="id877918" href="#ftn.id877918" class="footnote">12</a>]</sup> Local exits can be used to emulate the <a href="http://d.digitalmars.com" target="_top">D
+        the object <code class="computeroutput"><span class="keyword">this</span></code>. <sup>[<a name="id877954" href="#ftn.id877954" class="footnote">12</a>]</sup> Local exits can be used to emulate the <a href="http://d.digitalmars.com" target="_top">D
         Programming Language</a> <span class="emphasis"><em>scope guards</em></span> (see the
         <a class="link" href="Examples.html#boost_local.Examples.Emulating_Ds_Scope_Guards" title="Emulating D's Scope Guards">Emulating
         D's Scope Guards</a> example).
@@ -1121,7 +1121,7 @@
         When local functions, local blocks, and local exits are programmed within
         templates, they need to be declared using the following special macros ending
         with the <code class="computeroutput"><span class="identifier">TPL</span></code> postfix (see
-        the <a href="../reference.html" target="_top">Reference</a> section): <sup>[<a name="id878200" href="#ftn.id878200" class="footnote">13</a>]</sup>
+        the <a href="../reference.html" target="_top">Reference</a> section): <sup>[<a name="id878237" href="#ftn.id878237" class="footnote">13</a>]</sup>
       </p>
 <pre class="programlisting"><code class="computeroutput"><a class="link" href="../BOOST_LOCAL_FUNCTION_PARAMS_TPL.html" title="Macro BOOST_LOCAL_FUNCTION_PARAMS_TPL">BOOST_LOCAL_FUNCTION_PARAMS_TPL</a></code><span class="special">(</span><span class="emphasis"><em>parameters</em></span><span class="special">)</span>
 <code class="computeroutput"><a class="link" href="../BOOST_LOCAL_BLOCK_TPL.html" title="Macro BOOST_LOCAL_BLOCK_TPL">BOOST_LOCAL_BLOCK_TPL</a></code><span class="special">(</span><span class="emphasis"><em>bindings</em></span><span class="special">)</span>
@@ -1326,9 +1326,14 @@
             that the bound object must have a deep copy constructor) or by relying
             on an <a href="http://groups.google.com/group/comp.lang.c++.moderated/browse_thread/thread/d3a86f27277f713b" target="_top">undefined
             behaviour of <code class="computeroutput"><span class="keyword">static_cast</span></code></a>
-            (which might not work on all platforms at the cost of portability).
+            (which might not work on all platforms at the cost of portability). Finally,
+            the special name <code class="computeroutput"><span class="identifier">this_</span></code>
+            was chose following <a href="http://boost.2283326.n4.nabble.com/local-this-or-this-td3423912.html" target="_top">Boost
+            practise</a> to postfix with an underscore identifier named after
+            keywords (the C++ keyword <code class="computeroutput"><span class="keyword">this</span></code>
+            in this case).
           </p></div>
-<div class="footnote"><p><sup>[<a id="ftn.id872134" href="#id872134" class="para">9</a>] </sup>
+<div class="footnote"><p><sup>[<a id="ftn.id872165" href="#id872165" class="para">9</a>] </sup>
             <span class="bold"><strong>Rationale.</strong></span> The local function body cannot
             be a static member function of the local functor object in order to support
             recursion (because the local function name is specified by the <code class="computeroutput"><a class="link" href="../BOOST_LOCAL_FUNCTION_NAME.html" title="Macro BOOST_LOCAL_FUNCTION_NAME">BOOST_LOCAL_FUNCTION_NAME</a></code>
@@ -1341,7 +1346,7 @@
             is visible but it refers to the local functor object and not to the bound
             object.
           </p></div>
-<div class="footnote"><p><sup>[<a id="ftn.id875450" href="#id875450" class="para">10</a>] </sup>
+<div class="footnote"><p><sup>[<a id="ftn.id875485" href="#id875485" class="para">10</a>] </sup>
             <span class="bold"><strong>Rationale.</strong></span> Programmers might expect
             <code class="computeroutput"><span class="keyword">return</span><span class="special">;</span></code>
             to exit the enclosing function instead of the local block (or local exit),
@@ -1359,7 +1364,7 @@
             <code class="computeroutput"><span class="identifier">BOOST_LOCAL_RETURN</span><span class="special">;</span></code>)
             to exit local blocks (and local exits).
           </p></div>
-<div class="footnote"><p><sup>[<a id="ftn.id876663" href="#id876663" class="para">11</a>] </sup>
+<div class="footnote"><p><sup>[<a id="ftn.id876698" href="#id876698" class="para">11</a>] </sup>
             <span class="bold"><strong>Rationale.</strong></span> This library (as well as
             <a href="http://www.boost.org/doc/libs/release/libs/scope_exit/doc/html/index.html" target="_top">Boost.ScopeExit</a>)
             uses the destructor of a local variable to automatically execute the
@@ -1370,7 +1375,7 @@
             scope exit code even if the main program terminates because of an uncaught
             exception.)
           </p></div>
-<div class="footnote"><p><sup>[<a id="ftn.id877918" href="#id877918" class="para">12</a>] </sup>
+<div class="footnote"><p><sup>[<a id="ftn.id877954" href="#id877954" class="para">12</a>] </sup>
           <span class="bold"><strong>Rationale.</strong></span> This library could be merged
           together with <a href="http://www.boost.org/doc/libs/release/libs/scope_exit/doc/html/index.html" target="_top">Boost.ScopeExit</a>
           into a new library named Boost.Scope (from the meaning of the word "<a href="http://en.wikipedia.org/wiki/Scope_(programming)" target="_top">scope</a>"
@@ -1397,7 +1402,7 @@
           of "<a href="http://gcc.gnu.org/onlinedocs/gcc/Nested-Functions.html" target="_top">nested
           functions</a>" (GCC compiler extension).
         </p></div>
-<div class="footnote"><p><sup>[<a id="ftn.id878200" href="#id878200" class="para">13</a>] </sup>
+<div class="footnote"><p><sup>[<a id="ftn.id878237" href="#id878237" class="para">13</a>] </sup>
           <span class="bold"><strong>Rationale.</strong></span> Within templates, this library
           needs to use <code class="computeroutput"><span class="keyword">typename</span></code> to explicitly
           indicate that some expressions evaluate to a type. Because C++ does not

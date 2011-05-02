@@ -227,6 +227,7 @@ When the object `this` is bound to a local function, the local function body mus
 *Rationale.*
 This limitation comes from the fact that `this` is a reserved C++ keyword so it cannot be used as the name of the internal parameter passing the bound object to the local function body.
 It would be possible to use `this` (instead of `this_`) within the local function body either at the expenses of copying the bound object (which would introduce run-time overhead and also the stringent requirement that the bound object must have a deep copy constructor) or by relying on an [@http://groups.google.com/group/comp.lang.c++.moderated/browse_thread/thread/d3a86f27277f713b undefined behaviour of `static_cast`] (which might not work on all platforms at the cost of portability).
+Finally, the special name `this_` was chosen following [@http://boost.2283326.n4.nabble.com/local-this-or-this-td3423912.html Boost practise] to postfix with an underscore identifiers that are named after keywords (the C++ keyword `this` in this case).
 ]
 
 Unfortunately, mistakenly using `this` within the local function body instead of `this_` will not necessarily generate a compile-time error.

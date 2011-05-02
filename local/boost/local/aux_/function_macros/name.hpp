@@ -16,6 +16,7 @@
 #include <boost/preprocessor/control/iif.hpp>
 #include <boost/preprocessor/control/expr_iif.hpp>
 #include <boost/preprocessor/logical/bitor.hpp>
+#include <boost/preprocessor/tuple/eat.hpp>
 
 // PRIVATE //
 
@@ -57,7 +58,7 @@
                 local_function_name = functor; \
             } \
         ) \
-    /* local functor can be passed as tparam only on C++03 (faster) */ \
+    /* local functor can be passed as tparam only on C++0x (faster) */ \
     } local_functor_name(BOOST_LOCAL_AUX_SYMBOL_ARGS_VARIABLE_NAME.value); \
     /* non-local functor can always be passed as tparam (but slower) */ \
     BOOST_TYPEOF(local_functor_name. \
@@ -87,19 +88,19 @@
     BOOST_LOCAL_AUX_FUNCTION_NAME_END_LOCAL_FUNCTOR_(__LINE__, \
             local_function_name, \
             /* local function is not recursive (because recursion and its */ \
-            /* initialization cannot be inlined even on C++03, */ \
-            /* so this allows optimization at least on C++03) */ \
+            /* initialization cannot be inlined even on C++0x, */ \
+            /* so this allows optimization at least on C++0x) */ \
             0 /* not recursive */ , \
             /* local functor */ \
             BOOST_LOCAL_AUX_FUNCTION_NAME_FUNCTOR_(local_function_name), \
             /* local function declared as non-local functor -- but it can */ \
-            /* be inlined only by C++03 and it cannot be recursive */ \
+            /* be inlined only by C++0x and it cannot be recursive */ \
             local_function_name)
 
 // This is faster on some compilers but not all (e.g., it is faster on GCC
 // because its optimization inlines it but not on MSVC). However, it cannot be
-// passed as a template parameter on non C++03 compilers.
-// Passed at tparam: Only on C++03. Inlineable: Yes. Recursive: No.
+// passed as a template parameter on non C++0x compilers.
+// Passed at tparam: Only on C++0x. Inlineable: Yes. Recursive: No.
 #define BOOST_LOCAL_AUX_FUNCTION_NAME_INLINE_(local_function_name) \
     BOOST_LOCAL_AUX_FUNCTION_NAME_END_LOCAL_FUNCTOR_(__LINE__, \
             local_function_name, \
@@ -107,13 +108,13 @@
             /* and its initialization cannot be inlined)*/ \
             0 /* not recursive */ , \
             /* inlined local function declared as local functor (maybe */ \
-            /* inlined even by non C++03 -- but it can be passed as */ \
-            /* template parameter only on C++03 */ \
+            /* inlined even by non C++0x -- but it can be passed as */ \
+            /* template parameter only on C++0x */ \
             local_function_name, \
             /* non-local functor */ \
             BOOST_LOCAL_AUX_FUNCTION_NAME_FUNCTOR_(local_function_name))
 
-// This is slower on all compilers (C++03 and non) because recursion and its
+// This is slower on all compilers (C++0x and non) because recursion and its
 // initialization can never be inlined.
 // Passed at tparam: Yes. Inlineable: No. Recursive: Yes.
 #define BOOST_LOCAL_AUX_FUNCTION_NAME_RECURSIVE_(local_function_name) \
@@ -124,37 +125,59 @@
             /* local functor */ \
             BOOST_LOCAL_AUX_FUNCTION_NAME_FUNCTOR_(local_function_name), \
             /* local function declared as non-local functor -- but it can */ \
-            /* be inlined only by C++03 */ \
+            /* be inlined only by C++0x */ \
             local_function_name)
 
 // Inlined local functions are specified by `..._NAME(inline name)`.
 // They have more chances to be inlined for faster run-times by some compilers
-// (for example by GCC but not by MSVC). C++03 compilers can always inline
+// (for example by GCC but not by MSVC). C++0x compilers can always inline
 // local functions even if they are not explicitly specified inline.
 #define BOOST_LOCAL_AUX_FUNCTION_NAME_PARSE_INLINE_(qualified_name) \
     BOOST_PP_IIF(BOOST_PP_BITOR( \
             BOOST_LOCAL_AUX_CONFIG_LOCAL_TYPES_AS_TPARAMS_01, \
             BOOST_DETAIL_PP_KEYWORD_IS_INLINE_FRONT(qualified_name)), \
-        /* on C++03 always use inlining because compilers might optimize */ \
+        /* on C++0x always use inlining because compilers might optimize */ \
         /* it to be faster and it can also be passed as tparam */ \
         BOOST_LOCAL_AUX_FUNCTION_NAME_INLINE_ \
     , \
-        /* on non C++03 don't use liniling unless explicitly specified by */ \
+        /* on non C++0x don't use liniling unless explicitly specified by */ \
         /* programmers `inline name` the inlined local function cannot be */ \
         /* passed as tparam */ \
         BOOST_LOCAL_AUX_FUNCTION_NAME_ \
     )(BOOST_DETAIL_PP_KEYWORD_INLINE_REMOVE_FRONT(qualified_name))
 
+// Expand to 1 iff `recursive name` or `recursive inline name` or
+// `inline recursive name`.
+#define BOOST_LOCAL_AUX_FUNCTION_NAME_IS_RECURSIVE_(qualified_name) \
+    BOOST_LOCAL_AUX_PP_KEYWORD_IS_RECURSIVE_FRONT( \
+            BOOST_DETAIL_PP_KEYWORD_INLINE_REMOVE_FRONT(qualified_name))
+
+// Revmoes `recursive`, `inline recursive`, and `recursive inline` from front.
+#define BOOST_LOCAL_AUX_FUNCTION_NAME_REMOVE_RECURSIVE_AND_INLINE_( \
+        qualified_name) \
+    BOOST_LOCAL_AUX_PP_KEYWORD_RECURSIVE_REMOVE_FRONT( \
+    BOOST_DETAIL_PP_KEYWORD_INLINE_REMOVE_FRONT( \
+    BOOST_LOCAL_AUX_PP_KEYWORD_RECURSIVE_REMOVE_FRONT( \
+        qualified_name \
+    )))
+
+#define BOOST_LOCAL_AUX_FUNCTION_NAME_RECURSIVE_REMOVE_(qualified_name) \
+    BOOST_PP_IIF(BOOST_LOCAL_AUX_FUNCTION_NAME_IS_RECURSIVE_(qualified_name), \
+        BOOST_LOCAL_AUX_FUNCTION_NAME_REMOVE_RECURSIVE_AND_INLINE_ \
+    , \
+        qualified_name /* might be `name` or `inline name` */ \
+        BOOST_PP_TUPLE_EAT(1) \
+    )(qualified_name)
+
 // Recursive local function are specified by `..._NAME(recursive name)`. 
-// They can never be inlined for faster run-time (not even by C++03 compilers).
+// They can never be inlined for faster run-time (not even by C++0x compilers).
 #define BOOST_LOCAL_AUX_FUNCTION_NAME_PARSE_RECURSIVE_(qualified_name) \
-    BOOST_PP_IIF(BOOST_LOCAL_AUX_PP_KEYWORD_IS_RECURSIVE_FRONT( \
-            qualified_name), \
-        /* recursion can never be inlined (not even on C++03) */ \
+    BOOST_PP_IIF(BOOST_LOCAL_AUX_FUNCTION_NAME_IS_RECURSIVE_(qualified_name), \
+        /* recursion can never be inlined (not even on C++0x) */ \
         BOOST_LOCAL_AUX_FUNCTION_NAME_RECURSIVE_ \
     , \
         BOOST_LOCAL_AUX_FUNCTION_NAME_PARSE_INLINE_ \
-    )(BOOST_LOCAL_AUX_PP_KEYWORD_RECURSIVE_REMOVE_FRONT(qualified_name))
+    )(BOOST_LOCAL_AUX_FUNCTION_NAME_RECURSIVE_REMOVE_(qualified_name))
 
 // PUBLIC //
 

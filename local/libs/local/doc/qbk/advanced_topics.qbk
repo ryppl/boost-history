@@ -293,9 +293,48 @@ For example:
 
 [endsect]
 
+[section Inlined Local Functions]
+
+A local function can be declared inlined to increase the chances that the compiler will be able to reduce the local function call run-time by inlining code.
+A local function is declared inlined by prefixing the local function name specified to `__BOOST_LOCAL_FUNCTION_NAME__` with the "keyword" `inline`:
+
+    ... __BOOST_LOCAL_FUNCTION_PARAMS__( ... ) {
+        ...
+    } __BOOST_LOCAL_FUNCTION_NAME__(inline ...)
+
+[important
+On ISO C++ compliant compilers (see __BOOST_LOCAL_CONFIG_COMPLIANT__), inlined local functions always have a run-time comparable to their equivalent implementations that use local functor classes (see the __Alternatives__ section).
+However, inlined local functions have the limitation that they cannot be assigned to `boost::local::__function__` and they cannot be passed as template parameters
+[footnote
+*Rationale.*
+This library uses an indirect function call via a function pointer in order to pass the local function as a template parameter (see the __Implementation__ section).
+No compiler has been observed to be able to inline function calls when they use such indirect function pointer calls.
+Therefore, inlined local functions do not use such indirect function pointer call (so they can be optimized) but because of that they cannot be passes as template parameters.
+The indirect function pointer call is needed for ISO C++ but it is not needed for C++0x (see __N2657__) thus this library automatically generates local function calls that can be inlined on C++0x compilers (even when the local function is not declared inlined).
+].
+
+On C++0x compilers, `inline` has no effect because this library will automatically generate code that uses C++0x specific features to inline the local function calls whenever possible even if the local function is not declared inlined.
+]
+
+It is recommended to not declare a local function inlined unless it is strictly necessary for optimizing pure ISO C++ compliant code (because in all other cases this library will automatically take advantage of C++0x features to optimize the local function calls while always allowing to pass the local function as a template parameter).
+
+For example, the following local function is declared inlined (thus a for-loop needs to be used for portability instead of passing the local function as a template parameter to the `std::for_each` algorithm):
+
+[table
+[ [__Variadic_Macro_Syntax__] [__Sequencing_Macro_Syntax__] ]
+[ [ [add_function_inline_va_cpp] ] [ [add_function_inline_cpp] ] ]
+]
+
+[endsect]
+
 [section Recursive Local Functions]
 
-A local function can recursively call itself as usual with C++ functions.
+A local function can be declared recursive so it can recursively call itself from its body (as usual with C++ functions).
+A local function is declared recursive by prefixing the local function name specified to `__BOOST_LOCAL_FUNCTION_NAME__` with the "keyword" `recursive`:
+
+    ... __BOOST_LOCAL_FUNCTION_PARAMS__( ... ) {
+        ...
+    } __BOOST_LOCAL_FUNCTION_NAME__(recursive ...)
 
 For example, the following local function is used to recursively calculate and print the factorial of the specified numbers:
 
@@ -303,6 +342,8 @@ For example, the following local function is used to recursively calculate and p
 [ [__Variadic_Macro_Syntax__] [__Sequencing_Macro_Syntax__] ]
 [ [ [factorial_va_cpp] ] [ [factorial_cpp] ] ]
 ]
+
+Compilers have not been observed to be able to inline recursive local function calls (not even when the recursive local function is also declared inlined).
 
 [endsect]
 
