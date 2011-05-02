@@ -27,7 +27,7 @@ The following table compares local function features.
     [ Yes. ]
     [ Yes. ]
     [ No.
-Therefore so this not really an alternative implementation of local functions but it is listed here just for comparison. ]
+Therefore this not really an alternative implementation of local functions but it is listed here just for comparison. ]
     [ Yes. ]
     [ Yes. ]
     [ Yes. ]
@@ -35,13 +35,13 @@ Therefore so this not really an alternative implementation of local functions bu
 [
     [ ['Can be defined using regular C++ statements] ]
     [ Yes.
-Moreover, eventual compiler errors follow the usual format of C++ statement errors.]
+Plus eventual compiler errors follow the usual format of C++ statement errors.]
     [ Yes.
-Moreover, eventual compiler errors follow the usual format of C++ statement errors.]
+Plus eventual compiler errors follow the usual format of C++ statement errors.]
     [ Yes.
-Moreover, eventual compiler errors follow the usual format of C++ statement errors.]
+Plus eventual compiler errors follow the usual format of C++ statement errors.]
     [ Yes.
-Moreover, eventual compiler errors follow the usual format of C++ statement errors.]
+Plus eventual compiler errors follow the usual format of C++ statement errors.]
     [ No. ]
     [ No. ]
 ]
@@ -58,7 +58,7 @@ Moreover, eventual compiler errors follow the usual format of C++ statement erro
     [ ['Can be passed as template parameter (e.g., to STL algorithms)] ]
     [ Yes.
 The ISO C++ standard does not allow to pass local types as template parameters (see __N2657__) but this library implements a "trick" to get around this limitation (see the __Implementation__ section). ]
-    [ No on ISO C++ compilers but yes on C++0x compilers and some compilers like MSVC (see __N2657__). ]
+    [ No on ISO C++ compilers (but yes on C++0x compilers and some compilers like MSVC 8.0, see __N2657__). ]
     [ Yes. ]
     [ Yes. ]
     [ Yes. ]
@@ -67,18 +67,17 @@ The ISO C++ standard does not allow to pass local types as template parameters (
 [
     [ ['Access variables in scope] ]
     [ Yes.
-The variables names are repeated in the function declaration so they can be bound by value, constant value, reference, and constant reference (also it can bind the object `this`). ]
+The variable names are repeated in the function declaration so they can be bound by value, constant value, reference, and constant reference (the object `this` can also be bound). ]
     [ No.
-Programmers must manually manage functor member variables with explicit types to access variables in scope. ]
+Programmers must manually manage functor member variables and their explicit types to access variables in scope. ]
     [ No.
-Programmers must manually manage functor member variables with explicit types to access variables in scope. ]
+Programmers must manually manage functor member variables and their explicit types to access variables in scope. ]
     [ Yes.
-The variables names are repeated in the function declaration so they can be bound by value, constant value, and reference (also it can bind the object `this`).
-However, variables cannot be bound by constant reference.
-In addition, there is "short-hand" syntax to bind all variables in scope at once (by value or by reference). ]
+The variable names are repeated in the function declaration (plus there is a short-hand syntax to bind all variables in scope at once) so they can be bound by constant value and by reference (the object `this` can also be bound).
+However, variables cannot be bound by constant references and non-constant value. ]
     [ Yes (variables in scope are accessible as usual within expressions). ]
     [ Yes (variables in scope are accessible as usual within expressions).
-In addition, `boost::phoenix::let` can be used to bind variables by constant reference. ]
+Plus `boost::phoenix::let` can be used to bind variables by constant reference. ]
 ]
 ]
 

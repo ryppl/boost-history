@@ -85,7 +85,7 @@
 <p>
         In addition, local function parameter types cannot start with non-alphanumeric
         symbols (alphanumeric symbols are <code class="computeroutput"><span class="identifier">A</span><span class="special">-</span><span class="identifier">Z</span></code>, <code class="computeroutput"><span class="identifier">a</span><span class="special">-</span><span class="identifier">z</span></code>,
-        and <code class="computeroutput"><span class="number">0</span><span class="special">-</span><span class="number">9</span></code>). <sup>[<a name="id881375" href="#ftn.id881375" class="footnote">14</a>]</sup> The library will generate (cryptic) preprocessor errors if a
+        and <code class="computeroutput"><span class="number">0</span><span class="special">-</span><span class="number">9</span></code>). <sup>[<a name="id881366" href="#ftn.id881366" class="footnote">14</a>]</sup> The library will generate (cryptic) preprocessor errors if a
         parameter type starts with a non-alphanumeric symbol.
       </p>
 <p>
@@ -208,7 +208,7 @@
 <li class="listitem">
             Parenthesis to wrap the type expression (and therefore any commas <code class="computeroutput"><span class="special">,</span></code> that it contains) passed as parameter
             to the <code class="computeroutput"><a class="link" href="../BOOST_IDENTITY_TYPE.html" title="Macro BOOST_IDENTITY_TYPE">BOOST_IDENTITY_TYPE</a></code>
-            macro. <sup>[<a name="id882735" href="#ftn.id882735" class="footnote">15</a>]</sup>
+            macro. <sup>[<a name="id882726" href="#ftn.id882726" class="footnote">15</a>]</sup>
           </li>
 </ol></div>
 <p>
@@ -409,7 +409,7 @@
         </p></td></tr>
 </table></div>
 <p>
-        Consider the following complete example: <sup>[<a name="id884039" href="#ftn.id884039" class="footnote">16</a>]</sup>
+        Consider the following complete example: <sup>[<a name="id884031" href="#ftn.id884031" class="footnote">16</a>]</sup>
       </p>
 <div class="informaltable"><table class="table">
 <colgroup>
@@ -1414,7 +1414,7 @@
           implementations that use local functor classes (see the <a class="link" href="Alternatives.html" title="Appendix: Alternatives">Alternatives</a>
           section). However, inlined local functions have the limitation that they
           cannot be assigned to <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">local</span><span class="special">::</span><a class="link" href="../boost/local/function.html" title="Struct template function">function</a></code>
-          and they cannot be passed as template parameters <sup>[<a name="id904758" href="#ftn.id904758" class="footnote">17</a>]</sup>.
+          and they cannot be passed as template parameters <sup>[<a name="id904750" href="#ftn.id904750" class="footnote">17</a>]</sup>.
         </p>
 <p>
           On C++0x compilers, <code class="computeroutput"><span class="keyword">inline</span></code>
@@ -2064,7 +2064,7 @@
         It is not possible to overload local functions. Declaring multiple local
         functions with the same name within the same enclosing scope generates a
         compile-time error (even if the different declarations specify different
-        parameters). <sup>[<a name="id911902" href="#ftn.id911902" class="footnote">18</a>]</sup>
+        parameters). <sup>[<a name="id911887" href="#ftn.id911887" class="footnote">18</a>]</sup>
       </p>
 <p>
         For example, the following code will <span class="bold"><strong>not</strong></span>
@@ -2088,7 +2088,7 @@
       </h6>
 <p>
         Local functions cannot be operators. Naming a local function <code class="computeroutput"><span class="keyword">operator</span><span class="special">...</span></code>
-        will generate a compile-time error. <sup>[<a name="id912250" href="#ftn.id912250" class="footnote">19</a>]</sup>
+        will generate a compile-time error. <sup>[<a name="id912235" href="#ftn.id912235" class="footnote">19</a>]</sup>
       </p>
 <p>
         For example, the following code will <span class="bold"><strong>not</strong></span>
@@ -2135,21 +2135,21 @@
 </div>
 <div class="footnotes">
 <br><hr width="100" align="left">
-<div class="footnote"><p><sup>[<a id="ftn.id881375" href="#id881375" class="para">14</a>] </sup>
+<div class="footnote"><p><sup>[<a id="ftn.id881366" href="#id881366" class="para">14</a>] </sup>
           <span class="bold"><strong>Rationale.</strong></span> This limitation derives from
           the fact that <code class="computeroutput"><a class="link" href="../BOOST_LOCAL_FUNCTION_PARAMS.html" title="Macro BOOST_LOCAL_FUNCTION_PARAMS">BOOST_LOCAL_FUNCTION_PARAMS</a></code>
           uses preprocessor token concatenation to inspect the parameter type token
           to see if the token is a parameter or a bound variable. The C++ preprocessor
           does not allow to concatenate non-alphanumeric tokens.
         </p></div>
-<div class="footnote"><p><sup>[<a id="ftn.id882735" href="#id882735" class="para">15</a>] </sup>
+<div class="footnote"><p><sup>[<a id="ftn.id882726" href="#id882726" class="para">15</a>] </sup>
               <span class="bold"><strong>Rationale.</strong></span> Using variadic macros,
               this extra set of parenthesis could be eliminated requiring only the
               parenthesis to invoke the <code class="computeroutput"><a class="link" href="../BOOST_IDENTITY_TYPE.html" title="Macro BOOST_IDENTITY_TYPE">BOOST_IDENTITY_TYPE</a></code>
               macro. However, this feature is currently not implemented and the double
               parenthesis are always needed when invoking this macro.
             </p></div>
-<div class="footnote"><p><sup>[<a id="ftn.id884039" href="#id884039" class="para">16</a>] </sup>
+<div class="footnote"><p><sup>[<a id="ftn.id884031" href="#id884031" class="para">16</a>] </sup>
           The authors recognize that the use of the <span class="emphasis"><em>identity macros</em></span>
           adds extra parenthesis to the already significant number of parenthesis
           required by the sequencing macro syntax. However, macro parameters usually
@@ -2157,7 +2157,7 @@
           (unless template metaprogramming is being used) so this is usually not
           a problem.
         </p></div>
-<div class="footnote"><p><sup>[<a id="ftn.id904758" href="#id904758" class="para">17</a>] </sup>
+<div class="footnote"><p><sup>[<a id="ftn.id904750" href="#id904750" class="para">17</a>] </sup>
             <span class="bold"><strong>Rationale.</strong></span> This library uses an indirect
             function call via a function pointer in order to pass the local function
             as a template parameter (see the <a class="link" href="Implementation.html" title="Appendix: Implementation">Implementation</a>
@@ -2171,14 +2171,14 @@
             be inlined on C++0x compilers (even when the local function is not declared
             inlined).
           </p></div>
-<div class="footnote"><p><sup>[<a id="ftn.id911902" href="#id911902" class="para">18</a>] </sup>
+<div class="footnote"><p><sup>[<a id="ftn.id911887" href="#id911887" class="para">18</a>] </sup>
           <span class="bold"><strong>Rationale.</strong></span> This is because a local function
           is a functor object declared as a local variable within the enclosing scope.
           Therefore, declaring two local functions with the same name within the
           same enclosing scope declares two local variables with the same name within
           the same scope and that is not allowed in C++.
         </p></div>
-<div class="footnote"><p><sup>[<a id="ftn.id912250" href="#id912250" class="para">19</a>] </sup>
+<div class="footnote"><p><sup>[<a id="ftn.id912235" href="#id912235" class="para">19</a>] </sup>
           <span class="bold"><strong>Rationale.</strong></span> This is the because a local
           function name must be a valid local variable name (the local variable to
           hold the local functor object) and operators cannot be used as local variable

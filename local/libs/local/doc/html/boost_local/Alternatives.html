@@ -109,8 +109,8 @@
               </td>
 <td>
                 <p>
-                  No. Therefore so this not really an alternative implementation
-                  of local functions but it is listed here just for comparison.
+                  No. Therefore this not really an alternative implementation of
+                  local functions but it is listed here just for comparison.
                 </p>
               </td>
 <td>
@@ -137,26 +137,26 @@
               </td>
 <td>
                 <p>
-                  Yes. Moreover, eventual compiler errors follow the usual format
-                  of C++ statement errors.
+                  Yes. Plus eventual compiler errors follow the usual format of C++
+                  statement errors.
                 </p>
               </td>
 <td>
                 <p>
-                  Yes. Moreover, eventual compiler errors follow the usual format
-                  of C++ statement errors.
+                  Yes. Plus eventual compiler errors follow the usual format of C++
+                  statement errors.
                 </p>
               </td>
 <td>
                 <p>
-                  Yes. Moreover, eventual compiler errors follow the usual format
-                  of C++ statement errors.
+                  Yes. Plus eventual compiler errors follow the usual format of C++
+                  statement errors.
                 </p>
               </td>
 <td>
                 <p>
-                  Yes. Moreover, eventual compiler errors follow the usual format
-                  of C++ statement errors.
+                  Yes. Plus eventual compiler errors follow the usual format of C++
+                  statement errors.
                 </p>
               </td>
 <td>
@@ -224,8 +224,8 @@
               </td>
 <td>
                 <p>
-                  No on ISO C++ compilers but yes on C++0x compilers and some compilers
-                  like MSVC (see <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2657.htm" target="_top">[2657]</a>).
+                  No on ISO C++ compilers (but yes on C++0x compilers and some compilers
+                  like MSVC 8.0, see <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2657.htm" target="_top">[2657]</a>).
                 </p>
               </td>
 <td>
@@ -257,31 +257,32 @@
               </td>
 <td>
                 <p>
-                  Yes. The variables names are repeated in the function declaration
+                  Yes. The variable names are repeated in the function declaration
                   so they can be bound by value, constant value, reference, and constant
-                  reference (also it can bind the object <code class="computeroutput"><span class="keyword">this</span></code>).
+                  reference (the object <code class="computeroutput"><span class="keyword">this</span></code>
+                  can also be bound).
                 </p>
               </td>
 <td>
                 <p>
-                  No. Programmers must manually manage functor member variables with
-                  explicit types to access variables in scope.
+                  No. Programmers must manually manage functor member variables and
+                  their explicit types to access variables in scope.
                 </p>
               </td>
 <td>
                 <p>
-                  No. Programmers must manually manage functor member variables with
-                  explicit types to access variables in scope.
+                  No. Programmers must manually manage functor member variables and
+                  their explicit types to access variables in scope.
                 </p>
               </td>
 <td>
                 <p>
-                  Yes. The variables names are repeated in the function declaration
-                  so they can be bound by value, constant value, and reference (also
-                  it can bind the object <code class="computeroutput"><span class="keyword">this</span></code>).
-                  However, variables cannot be bound by constant reference. In addition,
-                  there is "short-hand" syntax to bind all variables in
-                  scope at once (by value or by reference).
+                  Yes. The variable names are repeated in the function declaration
+                  (plus there is a short-hand syntax to bind all variables in scope
+                  at once) so they can be bound by constant value and by reference
+                  (the object <code class="computeroutput"><span class="keyword">this</span></code> can
+                  also be bound). However, variables cannot be bound by constant
+                  references and non-constant value.
                 </p>
               </td>
 <td>
@@ -292,8 +293,8 @@
 <td>
                 <p>
                   Yes (variables in scope are accessible as usual within expressions).
-                  In addition, <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">phoenix</span><span class="special">::</span><span class="identifier">let</span></code>
-                  can be used to bind by constant reference.
+                  Plus <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">phoenix</span><span class="special">::</span><span class="identifier">let</span></code> can be used to bind variables
+                  by constant reference.
                 </p>
               </td>
 </tr>
