@@ -101,9 +101,6 @@ struct block_header
 
         if (-- p->count_ == 0)
         {
-#ifndef BOOST_DISABLE_THREADS
-        	mutex::scoped_lock scoped_lock(mutex_);
-#endif
 			p->destroy_ = true;
             for (intrusive_list::iterator<block_base, & block_base::block_tag_> i; i = p->elements_.begin(), i != p->elements_.end(); )
                 delete &* i;
