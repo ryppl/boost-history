@@ -98,8 +98,8 @@
   c.push_back(make_block&#60;int&#62;(11));
   </pre>
 
-  <p>Secondly in the case where a cyclic set is being destroyed, in order to prevent <i>block_ptr</i>s member pointers from accessing an object that is already being 
-  destroyed a function is provided to explicitly prevent such a scenario:</p>
+  <p>Secondly in the case where a cyclic set is being destroyed, in order to prevent <i>block_ptr</i>s member pointers from accessing an object that has already been 
+  destroyed the function <i>cyclic()</i> is provided to explicitly check the state of the pointee object:</p>
 
   <pre>  
   struct A
