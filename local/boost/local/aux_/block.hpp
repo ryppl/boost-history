@@ -18,7 +18,8 @@
 #define BOOST_LOCAL_AUX_BLOCK_END(id) \
     /* user block code `{ ... }` here */ \
     /* ends the local function declaration */ \
-    BOOST_LOCAL_FUNCTION_NAME(BOOST_LOCAL_AUX_SYMBOL_BLOCK_FUNCTION_NAME(id)) \
+    BOOST_LOCAL_FUNCTION_NAME(inline /* for optimization (never as tparam) */ \
+            BOOST_LOCAL_AUX_SYMBOL_BLOCK_FUNCTION_NAME(id)) \
     /* call local funciton and execute block's code imediately */ \
     BOOST_LOCAL_AUX_SYMBOL_BLOCK_FUNCTION_NAME(id)(); \
 

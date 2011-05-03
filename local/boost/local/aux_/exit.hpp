@@ -8,7 +8,7 @@
 #define BOOST_LOCAL_AUX_EXIT_HPP_
 
 #include "symbol.hpp"
-#include "../function.hpp"
+#include <boost/function.hpp>
 #include <boost/preprocessor/cat.hpp>
 
 // PRIVATE //
@@ -39,7 +39,7 @@ namespace boost { namespace local { namespace aux {
 // Resource destructor exec exit code when obj goes out of local scope.
 struct exit_guard {
     // Exit local functions are always void with no params (and no defaults).
-    typedef ::boost::local::function<void ()> functor_type;
+    typedef ::boost::function<void ()> functor_type;
     explicit exit_guard(functor_type f): f_(f) {}
     ~exit_guard() { f_(); } // Invokes function when obj goes out of scope.
 private:

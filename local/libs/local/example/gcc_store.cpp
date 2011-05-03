@@ -6,9 +6,9 @@
 
 //[gcc_store_cpp
 #include <boost/local/function.hpp>
+#include <boost/function.hpp>
 
-void intermediate(boost::local::function<void (int, int)> store_func,
-        int size) {
+void intermediate(boost::function< void (int, int) > store_func, int size) {
     store_func(size - 1, -1);
 }
 

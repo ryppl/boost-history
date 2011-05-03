@@ -13,6 +13,7 @@
 #include "../../preprocessor/sign/params_const_bind.hpp"
 #include "../../preprocessor/sign/params_bind.hpp"
 #include "../../scope_exit/scope_exit.hpp" // Use this lib's ScopeExit impl.
+#include "../../type_traits/add_pointed_const.hpp"
 #include "../../../config.hpp"
 #include "../../../function.hpp"
 #include <boost/detail/preprocessor/keyword/auto.hpp>
@@ -106,6 +107,7 @@
 
 #define BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_MAYBECONST_MEMBER_BIND_( \
         r, offset, i, var) \
+    BOOST_PP_COMMA_IF(i) \
     BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_MAYBECONST_BIND_MEMBER_VAR_( \
             BOOST_PP_ADD(offset, i))
 
@@ -228,7 +230,7 @@
         BOOST_PP_LIST_FOR_EACH_I( \
                 BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_UNBIND_ARG_DECL_, \
                 typename_keyword, unbinds) \
-    ) { \
+    ) const { \
         /* just forward call to member function with local func name */ \
         return BOOST_LOCAL_AUX_SYMBOL_BODY_FUNCTION_NAME( \
             BOOST_PP_LIST_FOR_EACH_I( \
@@ -417,7 +419,8 @@
         /* functor type -- this type cannot have ID postfix because it is */ \
         /* used the `NAME` macro (this symbol is within functor class so */ \
         /* it does not have to have ID postfix) */ \
-        typedef ::boost::local::function<BOOST_LOCAL_AUX_SYMBOL_FUNCTION_TYPE, \
+        typedef ::boost::local::aux::function< \
+                BOOST_LOCAL_AUX_SYMBOL_FUNCTION_TYPE, \
                 default_count> BOOST_LOCAL_AUX_SYMBOL_FUNCTOR_TYPE; \
         /* typeof types -- these types are qualified with extra eventual */ \
         /* const and/or & if their variables are bound by const and/or & */ \
@@ -513,15 +516,9 @@
                         /* const-bindparams (could be 0)*/ \
                         BOOST_PP_LIST_SIZE(const_binds)),\
                 binds) \
-        BOOST_PP_EXPR_IIF(has_const_bind_this, /* const bind `this` mem ref */ \
-            typename_keyword ::boost::local::aux::add_pointed_const< \
-                BOOST_LOCAL_AUX_FUNCTION_CODE_BIND_THIS_TYPE(id) \
-            >::type \
-            & /* all bind member vars are refs to ScopeExit struct members */ \
-            BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_BIND_MEMBER_THIS_ \
-            ; /* end member variable declaration */ \
-        ) \
-        BOOST_PP_EXPR_IIF(has_bind_this, /* bind `this` member reference */ \
+        /* bind this const or not (pointed-const is not added here because */ \
+        /* this is a reference, it is added to the this_ body param instead */ \
+        BOOST_PP_EXPR_IIF(BOOST_PP_BITOR(has_bind_this, has_const_bind_this), \
             BOOST_LOCAL_AUX_FUNCTION_CODE_BIND_THIS_TYPE(id) \
             & /* all bind member vars are refs to ScopeExit struct members */ \
             BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_BIND_MEMBER_THIS_ \

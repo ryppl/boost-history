@@ -14,12 +14,6 @@
 #       Enable GCC C++0x features like lambdas and local types as template
 #       parameters.
 
-import feature ;
-import os ;
-
-exe add : add.cpp ;
-exe add_va : add_va.cpp ;
-
 exe add_block : add_block.cpp ;
 exe add_block_va : add_block_va.cpp ;
 exe add_block_impl : add_block_impl.cpp ;
@@ -34,6 +28,13 @@ exe add_exit_impl : add_exit_impl.cpp ;
 exe add_function : add_function.cpp ;
 exe add_function_va : add_function_va.cpp ;
 
+
+exe add_function_block_exit : add_function_block_exit.cpp ;
+exe add_function_block_exit_va : add_function_block_exit_va.cpp ;
+
+exe add_function_inline : add_function_inline.cpp ;
+exe add_function_inline_va : add_function_inline_va.cpp ;
+
 exe add_optimizers : add_optimizers.cpp ;
 exe add_optimizers_va : add_optimizers_va.cpp ;
 
@@ -42,6 +43,14 @@ exe add_template_va : add_template_va.cpp ;
 
 exe add_this : add_this.cpp ;
 exe add_this_va : add_this_va.cpp ;
+
+exe add_using_boost_local : add_using_boost_local.cpp ;
+exe add_using_boost_local_va : add_using_boost_local_va.cpp ;
+exe add_using_local_functor : add_using_local_functor.cpp ;
+exe add_using_global_functor : add_using_global_functor.cpp ;
+exe add_using_0x_lambda : add_using_0x_lambda.cpp ;
+exe add_using_boost_lambda : add_using_boost_lambda.cpp ;
+exe add_using_boost_phoenix : add_using_boost_phoenix.cpp ;
 
 exe add_x_y : add_x_y.cpp ;
 exe add_x_y_va : add_x_y_va.cpp ;
@@ -55,7 +64,7 @@ exe doit_va : doit_va.cpp ;
 
 exe factorial : factorial.cpp ;
 exe factorial_va : factorial_va.cpp ;
-exe factorial_impl : factorial_impl.cpp ;
+#exe factorial_impl : factorial_impl.cpp ;
 
 exe find_if : find_if.cpp ;
 exe find_if_va : find_if_va.cpp ;
@@ -78,41 +87,6 @@ exe params_all_va : params_all_va.cpp ;
 exe print_map : print_map.cpp ;
 exe print_map_va : print_map_va.cpp ;
 
-exe scope_guards_errno : scope_guards_errno.cpp ;
-exe scope_guards_errno_va : scope_guards_errno_va.cpp ;
-
-exe scope_guards_execpt : scope_guards_except.cpp ;
-exe scope_guards_execpt_va : scope_guards_except_va.cpp ;
-
-exe ten : ten.cpp ;
-exe ten_va : ten_va.cpp ;
-exe ten_ep : ten_ep.cpp ;
-
-exe this : this.cpp ;
-exe this_va : this_va.cpp ;
-
-exe transform : transform.cpp ;
-exe transform_va : transform_va.cpp ;
-
-exe typeof : typeof.cpp ;
-exe typeof_va : typeof_va.cpp ;
-
-exe typeof_tpl : typeof_tpl.cpp ;
-exe typeof_tpl_va : typeof_tpl_va.cpp ;
-
-exe world_exit : world_exit.cpp ;
-exe world_exit_va : world_exit_va.cpp ;
-
-exe tparam_trick : tparam_trick.cpp ;
-
-exe add_using_boost_local : add_using_boost_local.cpp ;
-exe add_using_boost_local_va : add_usign_boost_local_va.cpp ;
-exe add_using_local_functor : add_using_local_functor.cpp ;
-exe add_using_global_functor : add_using_global_functor.cpp ;
-exe add_using_0x_lambda : add_using_0x_lambda.cpp ;
-exe add_using_boost_lambda : add_using_boost_lambda.cpp ;
-exe add_using_boost_phoenix : add_using_boost_phoenix.cpp ;
-
 exe profile_boost_local : profile_boost_local.cpp
         ../../..//libboost_chrono ../../..//libboost_system ;
 exe profile_boost_local_inline : profile_boost_local_inline.cpp 
@@ -129,4 +103,31 @@ exe profile_boost_lambda : profile_boost_lambda.cpp
         ../../..//libboost_chrono ../../..//libboost_system ;
 exe profile_boost_phoenix : profile_boost_phoenix.cpp 
         ../../..//libboost_chrono ../../..//libboost_system ;
+
+exe scope_guards_errno : scope_guards_errno.cpp ;
+exe scope_guards_errno_va : scope_guards_errno_va.cpp ;
+
+exe scope_guards_execpt : scope_guards_except.cpp ;
+exe scope_guards_execpt_va : scope_guards_except_va.cpp ;
+
+exe ten : ten.cpp ;
+exe ten_va : ten_va.cpp ;
+exe ten_ep : ten_ep.cpp ;
+
+exe this : this.cpp ;
+exe this_va : this_va.cpp ;
+
+exe tparam_trick : tparam_trick.cpp ;
+
+exe transform : transform.cpp ;
+exe transform_va : transform_va.cpp ;
+
+exe typeof : typeof.cpp ;
+exe typeof_va : typeof_va.cpp ;
+
+exe typeof_tpl : typeof_tpl.cpp ;
+exe typeof_tpl_va : typeof_tpl_va.cpp ;
+
+exe world_exit : world_exit.cpp ;
+exe world_exit_va : world_exit_va.cpp ;
 

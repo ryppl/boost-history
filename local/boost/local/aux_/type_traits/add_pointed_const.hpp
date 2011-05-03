@@ -4,8 +4,8 @@
 // License, Version 1.0 (see accompanying file LICENSE_1_0.txt or a
 // copy at http://www.boost.org/LICENSE_1_0.txt).
 
-#ifndef BOOST_LOCAL_AUX_TYPE_TRAITS_POINTED_CONST_HPP_
-#define BOOST_LOCAL_AUX_TYPE_TRAITS_POINTED_CONST_HPP_
+#ifndef BOOST_LOCAL_AUX_TYPE_TRAITS_ADD_POINTED_CONST_HPP_
+#define BOOST_LOCAL_AUX_TYPE_TRAITS_ADD_POINTED_CONST_HPP_
 
 namespace boost { namespace local { namespace aux {
 
