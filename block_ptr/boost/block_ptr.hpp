@@ -382,10 +382,15 @@ template <typename T>
         {
             release(false);
         }
+        
+        bool cyclic() const
+        {
+        	return ps_->redir()->destroy_;
+        }
 
         ~block_ptr()
         {
-			if (ps_->redir()->destroy_)
+			if (cyclic())
 				base::po_ = 0;
 			else
 				release(true);
