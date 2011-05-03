@@ -80,6 +80,15 @@
                         BOOST_LOCAL_AUX_arg_name, ~)); \
     }
 
+namespace boost { namespace local { namespace aux {
+
+template<typename F, size_t defaults = 0>
+class function {
+    // Empty template cannot be used directly (only via its specializations).
+};
+
+}}} // namespace boost::loca::aux
+
 // Iteration within the namespace.
 #       define BOOST_PP_ITERATION_PARAMS_1 \
                 (3, (0, BOOST_LOCAL_CONFIG_FUNCTION_ARITY_MAX, \
@@ -114,8 +123,7 @@
 #elif BOOST_PP_ITERATION_DEPTH() == 2
 #   define BOOST_LOCAL_AUX_defaults BOOST_PP_FRAME_ITERATION(2)
 
-// Specializations of boost::local::function so not in aux namespace.
-namespace boost { namespace local {
+namespace boost { namespace local { namespace aux {
 
 template<typename R
     BOOST_PP_COMMA_IF(BOOST_LOCAL_AUX_arity)
@@ -174,7 +182,7 @@ private:
     void* unused_;
 };
 
-}} // namespace boost::local
+}}} // namespace boost::local::aux
 
 #   undef BOOST_LOCAL_AUX_defaults
 

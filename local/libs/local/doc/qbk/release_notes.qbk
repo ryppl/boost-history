@@ -31,7 +31,11 @@
 # Remove all references (docs, doxy, examples, etc) to local::function.
 Make local::function local::aux::function and use boost::function instead.
 
+# Verify compilation and run-times on all compilers one last time.
+
 # Rework factorial_impl and Implementation section.
+
+# Finalize Acknowledge section.
 
 [endsect]
 

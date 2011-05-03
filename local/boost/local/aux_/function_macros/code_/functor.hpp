@@ -14,8 +14,8 @@
 #include "../../preprocessor/sign/params_bind.hpp"
 #include "../../scope_exit/scope_exit.hpp" // Use this lib's ScopeExit impl.
 #include "../../type_traits/add_pointed_const.hpp"
+#include "../../function.hpp"
 #include "../../../config.hpp"
-#include "../../../function.hpp"
 #include <boost/detail/preprocessor/keyword/auto.hpp>
 #include <boost/detail/preprocessor/keyword/register.hpp>
 #include <boost/type_traits.hpp>
@@ -44,10 +44,12 @@
     BOOST_PP_CAT(arg, i)
 
 // i: 1 for 1st param, 2 for 2nd, ... (start from 1 not 0).
-#define BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_UNBIND_ARG_TYPE_(i) \
+#define BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_UNBIND_ARG_TYPE_( \
+        typename_keyword, i) \
     /* the parameter type must be accessed using function traits from */ \
     /* function type because it is not available to the macro syntax */ \
     /* separately from the parameter name */ \
+    typename_keyword \
     BOOST_PP_CAT(BOOST_PP_CAT(::boost::function_traits< \
             BOOST_LOCAL_AUX_SYMBOL_FUNCTION_TYPE>::arg, i), _type) \
 
@@ -57,7 +59,7 @@
     typename_keyword \
     ::boost::call_traits< \
             BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_UNBIND_ARG_TYPE_( \
-            BOOST_PP_INC(i))>::param_type \
+                    typename_keyword, BOOST_PP_INC(i))>::param_type \
     BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_UNBIND_ARG_NAME_(BOOST_PP_INC(i))
 
 #define BOOST_LOCAL_AUX_FUNCTION_CODE_FUNCTOR_UNBIND_ARG_NAME_ENUM_( \
