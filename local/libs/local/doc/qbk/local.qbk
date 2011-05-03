@@ -9,7 +9,7 @@
     [version 0.2.0 ]
     [/ purpose Local functions, blocks, and exits for C++]
     [/ category Function Objects and Higher-Order Programming]
-    [authors [Caminiti (lorcaminiti@gmail.com), Lorenzo]]
+    [authors [Caminiti (lorcaminiti -at- gmail.com), Lorenzo]]
     [copyright 2009-2011 Lorenzo Caminiti]
     [license
         Use, modification, and distribution is subject to the
@@ -30,6 +30,7 @@
 [def __Boost_Parameter__ [@http://www.boost.org/doc/libs/release/libs/parameter/doc/index.html Boost.Paramater]]
 [def __Boost_Typeof__ [@http://www.boost.org/doc/libs/release/doc/html/typeof.html Boost.Typeof]]
 [def __Boost_Function__ [@http://www.boost.org/doc/libs/release/doc/html/function.html Boost.Function]]
+[def __boost__function__ [@http://www.boost.org/doc/libs/release/doc/html/function.html boost::function]]
 [def __Boost_TypeTraits__ [@http://www.boost.org/doc/libs/release/libs/type_traits/doc/html/index.html Boost.TypeTraits]]
 [def __Boost_Chrono__ [@http://www.boost.org/doc/libs/release/libs/chrono/doc/html/index.html Boost.Chrono]]
 [def __CPP0x_lambda__ [@http://en.wikipedia.org/wiki/C%2B%2B0x#Lambda_functions_and_expressions C++0x lambda]]
@@ -71,7 +72,6 @@
 [def __BOOST_LOCAL_CONFIG_COMPLIANT__ [macroref BOOST_LOCAL_CONFIG_COMPLIANT]]
 [def __BOOST_IDENTITY_TYPE__ [macroref BOOST_IDENTITY_TYPE]]
 [def __BOOST_IDENTITY_VALUE__ [macroref BOOST_IDENTITY_VALUE]]
-[def __function__ [classref boost::local::function function]]
 
 [def __Variadic_Macro_Syntax__ Variadic Macro Syntax (C99 and later compilers)]
 [def __Sequencing_Macro_Syntax__ Sequencing Macro Syntax (all C++ compilers)]

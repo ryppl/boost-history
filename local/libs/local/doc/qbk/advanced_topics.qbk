@@ -15,7 +15,7 @@ The C++ preprocessor does not allow commas `,` within macro parameters unless th
 Therefore, using commas within the local function parameters and bindings will generate (cryptic) preprocessor errors unless they are wrapped within extra round parenthesis `()` as explained here.
 
 [note
-*Macro parameters with commas* which are already wrapped by round parenthesis `()` are fine (function calls, etc).
+Macro parameters with commas which are already wrapped by round parenthesis `()` are fine (function calls, etc).
 However, macro parameters with commas that are not wrapped by round parenthesis need to be wrapped by an extra set of round parenthesis `()` as described here.
 Also macro parameters with commas wrapped by angular parenthesis `<>` (templates, etc) or square parenthesis `[]` (multidimensional array access, etc) need to be wrapped by the extra round parenthesis `()` as explained here (this is because the preprocessor only recognizes the round parenthesis and it does not recognize angular, square, or any other type of parenthesis).
 ]
@@ -170,6 +170,31 @@ However, macro parameters usually do not contain unwrapped commas `,` (unless te
 
 [endsect]
 
+[section Passing Local Functions]
+
+Local functions are functors so it is possible to assign them to other functors (like `__boost__function__`) in order to store the local function into a variable or to pass it as a parameter to another function.
+
+[important
+When assigning a local function to a functor, programmers need to make sure that the local function survives the scope of the functor otherwise the functor will be invalid and its use will generate a run-time error (as usual with C++ functors).
+]
+
+For example:
+
+[table
+[ [__Variadic_Macro_Syntax__] [__Sequencing_Macro_Syntax__] ]
+[ [ [doit_va_cpp] ] [ [doit_cpp] ] ]
+]
+
+In addition, a local function can bind and call another local function.
+For example, the following local function `inc_sum` binds the local function `inc` so `inc_sum` can call `inc`:
+
+[table
+[ [__Variadic_Macro_Syntax__] [__Sequencing_Macro_Syntax__] ]
+[ [ [transform_va_cpp] ] [ [transform_cpp] ] ]
+]
+
+[endsect]
+
 [section Deducing Bound Types (concepts, etc)]
 
 While the ISO C++ standard does not allow for member functions of local classes to have template parameters, this library allows to call template functions from within a local function, a local block, or a local exit passing bound variables without explicitly specifying their types.
@@ -206,53 +231,6 @@ Within templates, `__BOOST_LOCAL_TYPEOF__` does not require to be prefixed by th
 
 [endsect]
 
-[section Passing Local Functions]
-
-Local functions can be used as functors.
-For example, it is possible to assign a local function to a functor parameter (using `boost::function`, etc) in order to pass the local function to another function.
-However, it is in general recommended to use the `boost::local::__function__` functor because it supports default parameters.
-
-[important
-When assigning a local function to a functor, programmers need to make sure that the *local function survives the scope of the functor* otherwise the functor will be invalid and its use will generate a run-time error (as usual with C++ functors).
-]
-
-The `boost::local::__function__` template takes two parameters (see the __Reference__ section):
-
-    template<typename F, size_t defaults = 0> class __function__;
-
-[variablelist
-[ [F] [
-The template parameter `F` is a function type specifying the function signature using the same syntax as __Boost_Function__'s preferred syntax.
-For example:``
-    __function__<int()>                   // Returns `int` and takes no parameter.
-    __function__<int(double, char)>       // Returns `int`and takes two parameters: a `double` followed by a `char`.
-``] ]
-[ [defaults] [
-The template parameter `defaults` is a non-negative integer number specifying the number of defaults parameters (counting from the last parameter as usual): `0` if no parameter is optional, `1` if the last parameter is optional, `2` if the last two parameters are optional, etc.
-The `defaults` template parameter must be between `0` and the total number of parameters as specified by `F`, it is optional and it is `0` by default.
-For example:``  
-    __function__<int(double, char)>       // No default: All parameters must be specified.
-    __function__<int(double, char), 1>    // 1 default: The last `char` parameter is optional.
-    __function__<int(double, char), 2>    // 2 defaults: All parameters are optional.
-``] ]
-]
-
-For example:
-
-[table
-[ [__Variadic_Macro_Syntax__] [__Sequencing_Macro_Syntax__] ]
-[ [ [doit_va_cpp] ] [ [doit_cpp] ] ]
-]
-
-In addition, a local function can bind and call another local function.
-For example, the following local function `inc_sum` binds the local function `inc` so `inc_sum` can call `inc`:
-
-[table
-[ [__Variadic_Macro_Syntax__] [__Sequencing_Macro_Syntax__] ]
-[ [ [transform_va_cpp] ] [ [transform_cpp] ] ]
-]
-
-[endsect]
 
 [section Exception Specifications]
 
@@ -273,26 +251,6 @@ For example:
 
 [endsect]
 
-[section Storage Classifiers (`auto` and `register`)]
-
-Local function parameters support the storage classifiers as usual in C++.
-The `auto` storage classifier is specified as:
-
-	auto ``/parameter-type parameter-name/``
-
-and the `register` storage classifier is specified as:
-
-	register ``/parameter-type parameter-name/``
-
-For example:
-
-[table
-[ [__Variadic_Macro_Syntax__] [__Sequencing_Macro_Syntax__] ]
-[ [ [add_optimizers_va_cpp] ] [ [add_optimizers_cpp] ] ]
-]
-
-[endsect]
-
 [section Inlined Local Functions]
 
 A local function can be declared inlined to increase the chances that the compiler will be able to reduce the local function call run-time by inlining code.
@@ -304,7 +262,7 @@ A local function is declared inlined by prefixing the local function name specif
 
 [important
 On ISO C++ compliant compilers (see __BOOST_LOCAL_CONFIG_COMPLIANT__), inlined local functions always have a run-time comparable to their equivalent implementations that use local functor classes (see the __Alternatives__ section).
-However, inlined local functions have the limitation that they cannot be assigned to `boost::local::__function__` and they cannot be passed as template parameters
+However, inlined local functions have the limitation that they cannot be assigned to other functors (like `__boost__function__`) and they cannot be passed as template parameters
 [footnote
 *Rationale.*
 This library uses an indirect function call via a function pointer in order to pass the local function as a template parameter (see the __Implementation__ section).
@@ -360,6 +318,26 @@ For example:
 
 [endsect]
 
+[section Storage Classifiers (`auto` and `register`)]
+
+Local function parameters support the storage classifiers as usual in C++.
+The `auto` storage classifier is specified as:
+
+	auto ``/parameter-type parameter-name/``
+
+and the `register` storage classifier is specified as:
+
+	register ``/parameter-type parameter-name/``
+
+For example:
+
+[table
+[ [__Variadic_Macro_Syntax__] [__Sequencing_Macro_Syntax__] ]
+[ [ [add_optimizers_va_cpp] ] [ [add_optimizers_cpp] ] ]
+]
+
+[endsect]
+
 [section Limitations (overloading, operators, etc)]
 
 The following table summarizes all the usual C++ function features that are not supported for local functions.
@@ -378,7 +356,7 @@ The following table summarizes all the usual C++ function features that are not 
 [
     [ `template<`/template-parameter-list/`>` ]
     [ No ]
-    [ This is not supported because local functions are implemented using local classes and C++ local classes cannot be templates. ]
+    [ This is not supported because local functions are implemented using local classes and ISO C++ local classes cannot be templates (see __N2657__). ]
 ]
 [
     [ `explicit` ]
@@ -387,8 +365,8 @@ The following table summarizes all the usual C++ function features that are not 
 ]
 [
     [ `inline` ]
-    [ No ]
-    [ Local functions are always defined together with their declarations so they are always inlined and there is no need to specify them `inline`. ]
+    [ Yes ]
+    [ Local functions can be specified `inline` to improve the chances that ISO C++ standard compilers can optimize their run-time (but `inline` local functions cannot be passes as template parameters on ISO C++ standard compilers). ]
 ]
 [
     [ `extern` ]
@@ -404,10 +382,12 @@ The following table summarizes all the usual C++ function features that are not 
     [ `virtual` ]
     [ No ]
     [ This is not supported because local functions are not member functions.
-
+[footnote
+*Rationale.*
 In theory, it would be possible for a local functor class to inherit from another local functor class.
 The parenthesized syntax could be extended to specify the eventual base local functor class within the parenthesized signature (e.g., using `... (extends)(`/base/`)`).
 However, this "inheritance" feature is not implemented because it seems of [@http://lists.boost.org/Archives/boost/2010/09/170895.php no use] given that local functions can be bound to one another thus they can simply call each other directly without recurring to dynamic binding or base function call.
+]
     ]
 ]
 [
@@ -418,7 +398,7 @@ However, this "inheritance" feature is not implemented because it seems of [@htt
 [
     [ [^/function-name/] ]
     [ Yes ]
-    [ This is supported but it cannot be overloaded and it cannot be an operator (see the __Tutorial__ and __Advanced_Topics__ sections). ]
+    [ Local functions are named and they can call themselves recursively but they cannot be overloaded and they cannot be operators (see the __Tutorial__ and __Advanced_Topics__ sections). ]
 ]
 [
     [ [^/parameter-list/] ]
