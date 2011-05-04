@@ -12,9 +12,11 @@
 
 #include <iostream>
 
-#include <boost/geometry/geometry.hpp>
+#include <boost/geometry.hpp>
 #include <boost/geometry/geometries/geometries.hpp>
-#include <boost/geometry/geometries/adapted/tuple_cartesian.hpp>
+#include <boost/geometry/geometries/adapted/boost_tuple.hpp>
+
+BOOST_GEOMETRY_REGISTER_BOOST_TUPLE_CS(cs::cartesian)
 
 #include <boost/assign.hpp>
 
@@ -34,7 +36,7 @@ int main()
         << std::endl;
     
     boost::geometry::model::box<point> box;
-    boost::geometry::assign(box, 0, 0, 5, 5);
+    boost::geometry::assign_values(box, 0, 0, 5, 5);
     
     std::cout 
         << "polygon and box are spatially " 

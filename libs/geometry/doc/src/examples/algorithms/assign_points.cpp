@@ -7,17 +7,19 @@
 // Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-//[assign_with_range
+//[assign_points
 //` Shows usage of Boost.Geometry's assign, Boost.Assign, and Boost.Range to assign ranges of a linestring
 
 #include <iostream>
 
-#include <boost/geometry/geometry.hpp>
+#include <boost/geometry.hpp>
 #include <boost/geometry/geometries/geometries.hpp>
-#include <boost/geometry/geometries/adapted/tuple_cartesian.hpp>
+#include <boost/geometry/geometries/adapted/boost_tuple.hpp>
 
 #include <boost/assign.hpp>
 #include <boost/geometry/geometries/adapted/boost_range/filtered.hpp>
+
+BOOST_GEOMETRY_REGISTER_BOOST_TUPLE_CS(cs::cartesian)
 
 template <typename T>
 struct x_between
@@ -59,7 +61,7 @@ int main()
 //]
 
 
-//[assign_with_range_output
+//[assign_points_output
 /*`
 Output:
 [pre
