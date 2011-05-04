@@ -72,28 +72,163 @@
   <p>Memory management can be subdivided in two categories: garbage collection and reference counting.</p>
   
   <h2><a name="gc" id="gc"></a>Garbage Collection</h2>
-  <p>Garbage collection is a technique where memory blocks are collected and later deallocated when they are found to be unreferenced by any other object.  Garbage 
-  collection is used by many popular languages because of its very fast allocation and deallocation timing.  Unfortunately this technique simply postpones the 
-  deallocation of the unreferenced objects to later freeze the entire application, on a single CPU system, and to collect them using various tracing algorithms.  
-  This may be unacceptable for real-time applications or device drivers, for example.</p>
+  <p>Garbage collection is a technique where memory blocks are collected and later deallocated when 
+  they are found to be unreferenced by any other object.  Garbage collection is used by many popular 
+  languages because of its very fast allocation and deallocation timing.  An example of its usage is 
+  demonstrated here with the C/C++ implementation of the popular Hans Boehm garbage collector:</p>
+
+  <pre>  
+  #include &#60;gc.h&#62;
+
+  int main()
+  {
+      int * p = (int *) GC_MALLOC(sizeof(int) * 100); // array of 100 integers
+
+      return 0;
+  } // non-deterministic deallocation of the array
+  </pre>
+
+  <p>Unfortunately this technique simply postpones the deallocation of the unreferenced objects to later 
+  freeze the entire application, on a single CPU system, and to collect them using various tracing algorithms.  
+  This may be unacceptable for real-time applications or device driver implementation, for example.</p>
 
   <h2><a name="rc" id="rc"></a>Reference Counting</h2>
 
-  <p>Reference counting is a different approach where objects pointed to are aware of the number of times they are referenced.  This means a counter within the object
-  is incremented or decremented according to the number of smart pointers that are referencing or dereferencing it.  There is a lost in performance as compared to 
-  garbage collection because of the extra time required to manage the counter every time the pointer is reassigned or dereferenced.  Reference counting can also leave
-  a group of blocks of memory referencing each other called "cyclic" (see <a href="BlockPointer.ppt">presentation</a>) unnoticed and therefore never freed by the 
-  application.  On the other hand the destruction of the object is done instantaneously and thus the behavior or the application can be predicted.</p>
+  <p>Reference counting is a different approach where objects pointed to are aware of the number of times 
+  they are referenced.  This means a counter within the object is incremented or decremented according to 
+  the number of smart pointers that are referencing or dereferencing it.  For example:</p>
+
+  <pre>  
+  #include &#60;iostream&#62;
+  #include &#60;boost/shared_ptr.hpp&#62;
+  
+  using namespace std;
+  using namespace boost;
+
+  int main()
+  {
+      shared_ptr&#60;int&#62; p = make_shared&#60;int&#62;(11);
+      shared_ptr&#60;int&#62; q = p;
+      
+      p.reset();
+      
+      cout << * q << endl;
+      
+      return 0;
+  }
+  </pre>
+
+  <p>Ouputs:</p>
+  <pre> 
+  11 
+  </pre>
+
+  <p>The main drawback is a lost in performance as compared to garbage collection because of the extra time 
+  required to manage the counter every time the pointer is reassigned or dereferenced.  Reference counting 
+  can also leave a group of blocks of memory referencing each other called "cyclic" unnoticed and therefore never 
+  freed by the application.  A cyclic set is shown here:</p>
+
+  <pre>  
+  #include &#60;iostream&#62;
+  #include &#60;boost/shared_ptr.hpp&#62;
+  
+  using namespace std;
+  using namespace boost;
+
+  struct A
+  {
+      shared_ptr&#60;A&#62; q;
+      
+      ~A()
+      {
+          cout << "~A()" << endl; // never gets called
+      }
+  };
+  
+  int main()
+  {
+      shared_ptr&#60;A&#62; p = make_shared&#60;A&#62;();
+      p->q = p; // cycle
+      
+      p.reset(); // detach from the cycle
+      
+      return 0;
+  }
+  </pre>
+  
+  <p>The above example will never execute the call of the destructor of <i>struct A</i> because the cycle will never 
+  get deallocated.  This is because the number of references will never reach 0.  A way to solve this problem is
+  to isolate the location of the cycle, which is this case is already known, and use a <i>weak_ptr</i> to break the 
+  cycle:</p>
+  
+  <pre>  
+  #include &#60;iostream&#62;
+  #include &#60;boost/shared_ptr.hpp&#62;
+  
+  using namespace std;
+  using namespace boost;
+
+  struct A
+  {
+      weak_ptr&#60;A&#62; q;
+      
+      ~A()
+      {
+          cout << "~A()" << endl; // will get called
+      }
+  };
+  
+  int main()
+  {
+      shared_ptr&#60;A&#62; p = make_shared&#60;A&#62;();
+      p->q = p;
+      
+      p.reset(); // deterministic destruction
+      
+      return 0;
+  }
+  </pre>
+
+  <p>The main drawback of this approach is the need to explicitly find the cycle to later alter the code with 
+  respective <i>weak_ptr</i>s.</p>
 
   <h2><a name="sp" id="sp"></a>Block Pointer</h2>
 
-  <p>Block Pointer is a memory manager on top of reference counting and is also able to detect outright unreferenced cyclic blocks of memory.  It is a fast as
-  the popular smart pointer <i>boost::shared_ptr&#60;T&#62;</i> but is not requiring a bigger memory usage per pointer (2 times <i>sizeof(void *)</i>), given its 
-  ability to detect cyclic blocks of memory with no coding overhead.  In terms of programing requirements, <i>block_ptr&#60;T&#62;</i> simply requires to point 
-  to instantiations of the <i>block&#60;T&#62;</i> type.  For example:</p>
+  <p>Block Pointer is a memory manager on top of reference counting and is also able to detect outright 
+  unreferenced cyclic blocks of memory.  It is a fast as the popular smart pointer <i>boost::shared_ptr&#60;T&#62;</i> 
+  but is not requiring a bigger memory usage per pointer (2 times <i>sizeof(void *)</i>), given its 
+  ability to detect cyclic blocks of memory with no coding overhead.  For example:</p>
+  
   <pre>  
-  block_ptr&#60;int&#62; v = make_block&#60;int&#62;(11);
+  #include &#60;iostream&#62;
+  #include &#60;boost/shared_ptr.hpp&#62;
+  
+  using namespace std;
+  using namespace boost;
+
+  struct A
+  {
+      block_ptr&#60;A&#62; q;
+      
+      ~A()
+      {
+          cout << "~A()" << endl; // will get called
+      }
+  };
+  
+  int main()
+  {
+      block_ptr&#60;A&#62; p = make_block&#60;A&#62;();
+      p->q = p;
+      
+      p.reset(); // deterministic destruction
+      
+      return 0;
+  }
   </pre>
+  
+  <p>We can see in the above example that the pointer types remain the same and thus there is no need to explicitly 
+  find the location of the cycle.</p>
 
   <hr>
 
