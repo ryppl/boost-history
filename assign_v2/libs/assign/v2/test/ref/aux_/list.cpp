@@ -47,7 +47,7 @@ namespace xxx_list{
             t0_ a = 100;
             t2_ c = "c";
 
-            typedef as2::ref::nth_result_of::list<tag_> result_;
+            typedef as2::ref::cumul_result_of::list<tag_> result_;
             typedef mpl::apply1<result_,
                 mpl::vector<r0_, r1_, r2_>
             >::type ar_;
@@ -55,10 +55,10 @@ namespace xxx_list{
 // Reminder : temporaries destroyed at the semi-colon
 // Implication : don't try to save the result.
 #define BOOST_ASSIGN_V2_macro as2::ref::list<tag_>( as2::_nil )( a )( -1 )( c )
-            BOOST_ASSIGN_V2_CHECK( &as2::ref::at<0>( BOOST_ASSIGN_V2_macro ) == &a );
-            BOOST_ASSIGN_V2_CHECK( as2::ref::at<1>( BOOST_ASSIGN_V2_macro ) == -1 ); 
-            BOOST_ASSIGN_V2_CHECK( str_( as2::ref::at<2>( BOOST_ASSIGN_V2_macro ) ) == c );
-#undef BOOST_ASSIGN_V2_macro
+        BOOST_ASSIGN_V2_CHECK( &as2::ref::at<0>( BOOST_ASSIGN_V2_macro ) == &a );
+        BOOST_ASSIGN_V2_CHECK( as2::ref::at<1>( BOOST_ASSIGN_V2_macro ) == -1 ); 
+        BOOST_ASSIGN_V2_CHECK( str_( as2::ref::at<2>( BOOST_ASSIGN_V2_macro ) ) == c );
+#undef BOOST_ASSIGN_V2_macro    
         }
         {
             typedef int t_; typedef add_reference<t_>::type r_;
@@ -67,7 +67,7 @@ namespace xxx_list{
             t_ c = 2;
             typedef as2::ref::copy_wrapper<t_>::type w_;
             typedef array<w_,3> arw_;
-            typedef as2::ref::nth_result_of::list<tag_> result_;
+            typedef as2::ref::cumul_result_of::list<tag_> result_;
             typedef mpl::apply1<result_,
                 mpl::vector<r_, r_, r_>
             >::type ar_;
@@ -96,7 +96,7 @@ namespace xxx_list{
                 >::type po_; // just see that it compiles
             }
             {
-                typedef as2::ref::nth_result_of::list<tag_> result_;
+                typedef as2::ref::cumul_result_of::list<tag_> result_;
                 typedef empty_ l_;
                 {
                     typedef int u1_;
@@ -120,7 +120,7 @@ namespace xxx_list{
             t_ b = 1;
             t_ c = 2;
             typedef as2::ref::alloc_tag::lazy_alloc tag_;
-            typedef as2::ref::nth_result_of::list<tag_> result_;
+            typedef as2::ref::cumul_result_of::list<tag_> result_;
             typedef mpl::apply1<result_,
                 mpl::vector<r_, r_, r_>
             >::type ar_;

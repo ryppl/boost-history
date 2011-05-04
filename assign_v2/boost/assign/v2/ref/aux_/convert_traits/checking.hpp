@@ -7,8 +7,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_REF_CONVERT_TRAITS_CHECKING_ER_2010_HPP
-#define BOOST_ASSIGN_V2_REF_CONVERT_TRAITS_CHECKING_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_REF_CONVERT_TRAITS_CHECKING_ER_2011_HPP
+#define BOOST_ASSIGN_V2_REF_CONVERT_TRAITS_CHECKING_ER_2011_HPP
 #include <boost/assign/v2/ref/aux_/convert_traits/reference.hpp>
 #include <boost/mpl/assert.hpp>
 #include <boost/type_traits/is_same.hpp>
@@ -70,4 +70,4 @@ namespace same_value_type{
 }// assign
 }// boost
 
-#endif // BOOST_ASSIGN_V2_REF_CONVERT_TRAITS_CHECKING_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_REF_CONVERT_TRAITS_CHECKING_ER_2011_HPP

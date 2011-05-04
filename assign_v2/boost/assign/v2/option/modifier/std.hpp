@@ -7,8 +7,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_OPTION_MODIFIER_STD_ER_2010_HPP
-#define BOOST_ASSIGN_V2_OPTION_MODIFIER_STD_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_OPTION_MODIFIER_STD_ER_2011_HPP
+#define BOOST_ASSIGN_V2_OPTION_MODIFIER_STD_ER_2011_HPP
 #include <boost/assign/v2/support/keyword.hpp>
 #include <boost/assign/v2/support/traits/container.hpp>
 #include <boost/assign/v2/option/modifier/framework.hpp>
@@ -83,7 +83,10 @@ namespace interpreter_aux{\
 }\
 namespace{\
 \
-    interpreter_aux::option_modifier<interpreter_aux::keyword_std_modifier, modifier_tag::FUN> const\
+    interpreter_aux::option_modifier<\
+        interpreter_aux::keyword_std_modifier,\
+        modifier_tag::FUN\
+    > const\
         BOOST_PP_CAT(_,FUN) = ( \
         _std_modifier = modifier_tag::FUN() \
     );\
@@ -111,4 +114,4 @@ BOOST_ASSIGN_V2_OPTION_STD_MODIFIER(push_back)
 BOOST_ASSIGN_V2_OPTION_STD_MODIFIER_TAG(push_front)
 BOOST_ASSIGN_V2_OPTION_STD_MODIFIER(push_front)
 
-#endif // BOOST_ASSIGN_V2_OPTION_MODIFIER_STD_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_OPTION_MODIFIER_STD_ER_2011_HPP

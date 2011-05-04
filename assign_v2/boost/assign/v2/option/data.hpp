@@ -7,8 +7,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_OPTION_DATA_ER_2010_HPP
-#define BOOST_ASSIGN_V2_OPTION_DATA_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_OPTION_DATA_ER_2011_HPP
+#define BOOST_ASSIGN_V2_OPTION_DATA_ER_2011_HPP
 #include <boost/assign/v2/support/functor/value.hpp>
 #include <boost/assign/v2/support/keyword.hpp>
 #include <boost/assign/v2/support/pp/ignore.hpp>
@@ -19,7 +19,6 @@
 #include <boost/mpl/apply.hpp>
 
 namespace boost{
-    struct use_default;
 namespace assign{
 namespace v2{
 //[syntax_option_data
@@ -165,20 +164,14 @@ BOOST_ASSIGN_V2_MACRO(value_)
 
 }// interpreter_aux
 namespace{
-    const interpreter_aux::keyword_data _data/*<-*/ 
-        = interpreter_aux::keyword_data()/*->*/;
+    const interpreter_aux::keyword_data _data/*<-*/ = {}/*->*/;
 }
 namespace result_of{
 
-    template<typename D, typename C, typename F>
-    struct option_data/*<-*/
-        : interpreter_aux::result_of::option_data<D, C, F>
-    {}/*->*/;
+    using interpreter_aux::result_of::option_data;
 
 }// result_of
 //]
-
-
 }// v2
 }// assign
 }// boost
@@ -225,4 +218,4 @@ namespace{\
 #include <boost/lambda/lambda.hpp>
 BOOST_ASSIGN_V2_OPTION_DATA_KEYWORD(identity, ::boost::lambda::_1)
 
-#endif // BOOST_ASSIGN_V2_OPTION_DATA_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_OPTION_DATA_ER_2011_HPP

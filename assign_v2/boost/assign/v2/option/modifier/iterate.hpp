@@ -7,8 +7,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_OPTION_MODIFIER_ITERATE_ER_2010_HPP
-#define BOOST_ASSIGN_V2_OPTION_MODIFIER_ITERATE_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_OPTION_MODIFIER_ITERATE_ER_2011_HPP
+#define BOOST_ASSIGN_V2_OPTION_MODIFIER_ITERATE_ER_2011_HPP
 #include <cstddef>
 #include <boost/assign/v2/support/config/enable_cpp0x.hpp>
 #include <boost/assign/v2/support/keyword.hpp>
@@ -96,4 +96,4 @@ BOOST_ASSIGN_V2_OPTION_MODIFIER_META_MODIFIER_TAG(iterate, modifier_tag::iterate
 }// boost
 
 
-#endif // BOOST_ASSIGN_V2_OPTION_MODIFIER_ITERATE_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_OPTION_MODIFIER_ITERATE_ER_2011_HPP

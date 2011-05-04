@@ -7,8 +7,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_REF_WRAPPER_COPY_ER_2010_HPP
-#define BOOST_ASSIGN_V2_REF_WRAPPER_COPY_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_REF_WRAPPER_COPY_ER_2011_HPP
+#define BOOST_ASSIGN_V2_REF_WRAPPER_COPY_ER_2011_HPP
 #include <boost/assign/v2/support/pp/ignore.hpp>
 #include <boost/assign/v2/ref/wrapper/crtp.hpp>
 #include <boost/assign/v2/ref/wrapper/framework.hpp>
@@ -86,4 +86,4 @@ namespace assign_copy{ typedef assign_tag::copy assign_tag_; }
 }// assign
 }// boost
 
-#endif // BOOST_ASSIGN_V2_REF_WRAPPER_COPY_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_REF_WRAPPER_COPY_ER_2011_HPP

@@ -9,8 +9,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_CHAIN_CHAIN_ER_2010_HPP
-#define BOOST_ASSIGN_V2_CHAIN_CHAIN_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_CHAIN_CHAIN_ER_2011_HPP
+#define BOOST_ASSIGN_V2_CHAIN_CHAIN_ER_2011_HPP
 #include <boost/assign/v2/support/pp/ignore.hpp>
 #include <boost/assign/v2/chain/meta.hpp>
 #include <boost/mpl/void.hpp>
@@ -89,13 +89,9 @@ namespace{
 
 //<-
 }
-//->
 namespace result_of{
 
-    template<typename R1, typename R2>
-    struct chain/*<-*/
-        : chain_aux::result_of::chain<R1, R2>
-    {}/*->*/;
+    using chain_aux::result_of::chain;
 
 }// result_of
 //]
@@ -103,4 +99,4 @@ namespace result_of{
 }// assign
 }// boost
 
-#endif // BOOST_ASSIGN_V2_CHAIN_PIPE_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_CHAIN_PIPE_ER_2011_HPP

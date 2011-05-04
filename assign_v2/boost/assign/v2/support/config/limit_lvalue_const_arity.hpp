@@ -7,8 +7,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_LIMIT_LVALUE_CONST_ARITY_ER_2010_HPP
-#define BOOST_ASSIGN_V2_LIMIT_LVALUE_CONST_ARITY_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_LIMIT_LVALUE_CONST_ARITY_ER_2011_HPP
+#define BOOST_ASSIGN_V2_LIMIT_LVALUE_CONST_ARITY_ER_2011_HPP
 #include <boost/assign/v2/support/config/limit_arity.hpp>
 #include <boost/preprocessor/comparison/greater.hpp>
 //[limit_lvalue_const_arity
@@ -26,4 +26,4 @@
 #error
 #endif
 //]
-#endif // BOOST_ASSIGN_V2_LIMIT_LVALUE_CONST_ARITY_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_LIMIT_LVALUE_CONST_ARITY_ER_2011_HPP

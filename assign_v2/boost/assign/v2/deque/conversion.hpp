@@ -7,8 +7,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_DEQUE_CONVERSION_ER_2010_HPP
-#define BOOST_ASSIGN_V2_DEQUE_CONVERSION_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_DEQUE_CONVERSION_ER_2011_HPP
+#define BOOST_ASSIGN_V2_DEQUE_CONVERSION_ER_2011_HPP
 #include <boost/assign/v2/deque/fwd.hpp>
 #include <boost/assign/v2/conversion/converter.hpp>
 
@@ -28,4 +28,4 @@ BOOST_ASSIGN_V2_CONVERSION_CONVERTER_NAME_LOOKUP((T)(F)(Tag), BOOST_ASSIGN_V2_R)
 }// assign
 }// boost
 
-#endif // BOOST_ASSIGN_V2_DEQUE_CONVERSION_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_DEQUE_CONVERSION_ER_2011_HPP

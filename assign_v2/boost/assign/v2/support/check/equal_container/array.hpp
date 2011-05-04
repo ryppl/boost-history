@@ -7,8 +7,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_SUPPORT_CHECK_EQUAL_CONTAINER_ARRAY_ER_2010_HPP
-#define BOOST_ASSIGN_V2_SUPPORT_CHECK_EQUAL_CONTAINER_ARRAY_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_SUPPORT_CHECK_EQUAL_CONTAINER_ARRAY_ER_2011_HPP
+#define BOOST_ASSIGN_V2_SUPPORT_CHECK_EQUAL_CONTAINER_ARRAY_ER_2011_HPP
 #include <boost/assign/v2/support/config/check.hpp>
 #include <boost/assign/v2/support/check/equal_container/pp.hpp>
 
@@ -36,4 +36,4 @@ namespace check_aux{
 }// assign
 }// boost
 
-#endif // BOOST_ASSIGN_V2_SUPPORT_CHECK_EQUAL_CONTAINER_ARRAY_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_SUPPORT_CHECK_EQUAL_CONTAINER_ARRAY_ER_2011_HPP

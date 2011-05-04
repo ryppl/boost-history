@@ -19,8 +19,8 @@
 #include <libs/assign/v2/tutorial.h>
 
 // Speed -- CPP0x required
-#include <fstream>
-#include <libs/assign/v2/speed/test.h>
+//#include <fstream>
+//#include <libs/assign/v2/speed/test.h>
 
 int main (int argc, char * const argv[])
 {
@@ -28,7 +28,10 @@ int main (int argc, char * const argv[])
     // Do not put libs/assign/v2/test/unit_testing in this project
     {
         boost::format f( "boost version %1%.%2% %3% " );
-        f  % (BOOST_VERSION / 100000 ) % ( (BOOST_VERSION / 100) % 1000) % (BOOST_VERSION % 100 );
+        f  
+            % ( BOOST_VERSION / 100000 ) 
+                % ( (BOOST_VERSION / 100) % 1000) 
+                    % ( BOOST_VERSION % 100 );
         std::cout << f.str() << std::endl;
     }
     {
@@ -72,11 +75,11 @@ int main (int argc, char * const argv[])
     {
         tutorial_assign_v2::run();
     }
-    {
+    {/*
         using namespace speed_assign_v2;
         std::ofstream ofs("assign_v2_speed_test");
         speed_assign_v2::test(ofs);
-    }
+    */}
 
     return 0;
 

@@ -7,9 +7,9 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_SUPPORT_KEYWORD_ER_2010_HPP
-#define BOOST_ASSIGN_V2_SUPPORT_KEYWORD_ER_2010_HPP
-#include <boost/preprocessor/cat.hpp>
+#ifndef BOOST_ASSIGN_V2_SUPPORT_KEYWORD_ER_2011_HPP
+#define BOOST_ASSIGN_V2_SUPPORT_KEYWORD_ER_2011_HPP
+#include <boost/assign/v2/support/config/enable_cpp0x.hpp>
 
 namespace boost{
 namespace assign{
@@ -38,16 +38,17 @@ namespace keyword_aux{
     typedef keyword_aux::value          value_;    
 /*<-*/namespace{/*->*/
     const ignore_ _ignore/*<-*/ = ignore_()/*->*/;
-    const element_ _element/*<-*/ = element_()/*->*/;
-    const key_ _key/*<-*/ = key_()/*->*/;
-    const map_ _map/*<-*/ = map_()/*->*/;
-    const nil_ _nil/*<-*/ = nil_()/*->*/;
-    const use_default_ _use_default/*<-*/ = use_default_()/*->*/;
-    const value_ _value/*<-*/ = value_()/*->*/;
+    const element_ _element/*<-*/ = {}/*->*/;
+    const key_ _key/*<-*/ = {}/*->*/;
+    const map_ _map/*<-*/ = {}/*->*/;
+    const nil_ _nil/*<-*/ = {}/*->*/;
+    const use_default_ _use_default/*<-*/ = {}/*->*/;
+    const value_ _value/*<-*/ = {}/*->*/;
+
 /*<-*/}/*->*/
 //]
 }// v2
 }// assign
 }// boost
 
-#endif // BOOST_ASSIGN_V2_SUPPORT_KEYWORD_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_SUPPORT_KEYWORD_ER_2011_HPP

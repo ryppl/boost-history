@@ -7,9 +7,12 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_SUPPORT_TRAITS_AUX_FWD_CONTAINER_ER_2010_HPP
-#define BOOST_ASSIGN_V2_SUPPORT_TRAITS_AUX_FWD_CONTAINER_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_SUPPORT_TRAITS_AUX_FWD_CONTAINER_ER_2011_HPP
+#define BOOST_ASSIGN_V2_SUPPORT_TRAITS_AUX_FWD_CONTAINER_ER_2011_HPP
 #include <cstddef>
+
+// Consider this as partial replacement (not complete)
+// #include <boost/detail/container_fwd.hpp>
 
 namespace std{
 
@@ -35,13 +38,19 @@ namespace std{
     template<typename T, typename A> class vector;
 
 }// std
+
+#include <boost/circular_buffer_fwd.hpp>
+#include <boost/unordered/unordered_map_fwd.hpp>
+#include <boost/unordered/unordered_set_fwd.hpp>
+// Include fwd headers as they become available
+
 namespace boost{
 
     // http://www.boost.org/doc/libs/release/doc/html/array.html
     template<typename T, std::size_t size> class array;
 
     // http://www.boost.org/doc/libs/release/libs/circular_buffer/index.html
-    template<typename T, typename Alloc> class circular_buffer;
+    //template<typename T, typename Alloc> class circular_buffer;
 
 namespace detail{
 namespace multi_array{
@@ -51,6 +60,7 @@ namespace multi_array{
 }// multi_array
 }// detail
 
+/*
    template <
         class Key,
         class Hash, 
@@ -84,6 +94,7 @@ namespace multi_array{
         class Alloc
     > 
     class unordered_multiset;
+*/
 
     // POINTER-CONTAINERS
     
@@ -170,4 +181,4 @@ namespace multi_array{
     
 }// boost
 
-#endif // BOOST_ASSIGN_V2_SUPPORT_TRAITS_AUX_FWD_CONTAINER_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_SUPPORT_TRAITS_AUX_FWD_CONTAINER_ER_2011_HPP

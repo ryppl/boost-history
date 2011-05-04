@@ -7,14 +7,16 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_REF_AUX_LIST_AT_ER_2010_HPP
-#define BOOST_ASSIGN_V2_REF_AUX_LIST_AT_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_REF_AUX_LIST_AT_ER_2011_HPP
+#define BOOST_ASSIGN_V2_REF_AUX_LIST_AT_ER_2011_HPP
 #include <boost/assign/v2/ref/aux_/list/fwd.hpp>
 #include <boost/assign/v2/ref/aux_/list/holder.hpp>
 #include <boost/call_traits.hpp>
 #include <boost/mpl/bool.hpp>
+#include <boost/mpl/equal_to.hpp>
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/identity.hpp>
+#include <boost/mpl/size_t.hpp>
 #include <boost/utility/enable_if.hpp>
 
 namespace boost{
@@ -25,7 +27,11 @@ namespace list_aux{
 
     template<size_type I, typename T>
     struct is_head :
-        ::boost::mpl::bool_<I + 1 == T::static_size::value>{};
+        ::boost::mpl::equal_to<
+            ::boost::mpl::size_t<I + 1>,
+            typename T::static_size
+        >
+    {};
 
     template<size_type I, typename T>
     struct at_list : ::boost::mpl::eval_if<
@@ -65,11 +71,13 @@ namespace list_aux{
 using list_aux::at;
 
     template<list_aux::size_type I, typename T>
-    struct list_at : list_aux::at_list<I, T>{};
+    struct list_at 
+        : list_aux::at_list<I, T>
+    {};
 
 }// ref
 }// v2
 }// assign
 }// boost
 
-#endif // BOOST_ASSIGN_V2_REF_AUX_LIST_AT_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_REF_AUX_LIST_AT_ER_2011_HPP

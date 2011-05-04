@@ -7,8 +7,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_PUT_CSV_PUT_ER_2010_HPP
-#define BOOST_ASSIGN_V2_PUT_CSV_PUT_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_PUT_CSV_PUT_ER_2011_HPP
+#define BOOST_ASSIGN_V2_PUT_CSV_PUT_ER_2011_HPP
 #include <boost/assign/v2/support/config/enable_cpp0x.hpp>
 #include <boost/assign/v2/support/pp/ignore.hpp>
 #include <boost/assign/v2/interpreter/as_arg_list.hpp>
@@ -221,10 +221,7 @@ namespace result_of{
 
 namespace result_of{
 
-    template<typename R, typename O = empty_list_option_>
-    struct delay_csv_put/*<-*/
-        : interpreter_aux::result_of::delay_csv_put<R, O>
-    {}/*->*/;
+    using interpreter_aux::result_of::delay_csv_put;
 
 }// result_of
 //]
@@ -237,4 +234,4 @@ namespace result_of{
 #include <boost/assign/v2/put/cpp03/csv_put.hpp>
 #endif // BOOST_ASSIGN_V2_ENABLE_CPP0X
 
-#endif // BOOST_ASSIGN_V2_PUT_CSV_PUT_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_PUT_CSV_PUT_ER_2011_HPP

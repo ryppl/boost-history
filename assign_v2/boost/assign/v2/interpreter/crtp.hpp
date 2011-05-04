@@ -7,8 +7,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_INTERPRETER_CRTP_ER_2010_HPP
-#define BOOST_ASSIGN_V2_INTERPRETER_CRTP_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_INTERPRETER_CRTP_ER_2011_HPP
+#define BOOST_ASSIGN_V2_INTERPRETER_CRTP_ER_2011_HPP
 #include <boost/assign/v2/support/config/enable_cpp0x.hpp>
 #include <boost/assign/v2/support/pp/forward.hpp>
 #include <boost/assign/v2/support/pp/ignore.hpp>
@@ -101,7 +101,6 @@ namespace interpreter_aux{
 }// interpreter_aux
 //[syntax_interpreter_crtp
 namespace interpreter_aux{
-
 /*<-*/
     template<typename C, typename D>
     struct ConceptDerivedInterpreter1{
@@ -165,7 +164,7 @@ namespace interpreter_aux{
         typedef modifier_holder<MTag> modifier_holder_;
 //->
 
-        /*<-*/public:/*->*/
+        public:
 
         typedef /*<-*/ typename modifier_holder_::modifier_type 
             BOOST_ASSIGN_V2_IGNORE(/*->*/ interpreter_modifier<Tag> /*<-*/)/*->*/
@@ -239,7 +238,7 @@ BOOST_PP_REPEAT_FROM_TO(
         protected:
 
         template<typename T>
-        void check_modifier( BOOST_ASSIGN_V2_FORWARD_PARAM(T, t) )const
+        static void check_modifier()
         {
             typedef ConceptModifier<MTag, DTag, C,
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
@@ -256,7 +255,7 @@ BOOST_PP_REPEAT_FROM_TO(
         template<typename T>
         result_type modify(T&& t)const
         {
-            check_modifier( t );
+            check_modifier<T>();
             
             this->modifier.impl(
                 this->derived().container(),
@@ -269,7 +268,7 @@ BOOST_PP_REPEAT_FROM_TO(
         template<typename T>
         result_type modify(T& t)const
         {
-            check_modifier( t );
+            check_modifier<T>();
             this->modifier.impl( this->derived().container(), t, DTag() );
             return this->derived();
         }
@@ -277,7 +276,7 @@ BOOST_PP_REPEAT_FROM_TO(
         template<typename T>
         result_type modify(T const& t)const
         {
-            check_modifier( t );
+            check_modifier<T const>();
             this->modifier.impl( this->derived().container(), t, DTag() );
             return this->derived();
         }
@@ -293,4 +292,4 @@ BOOST_PP_REPEAT_FROM_TO(
 }// assign
 }// boost
 
-#endif // BOOST_ASSIGN_V2_INTERPRETER_CRTP_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_INTERPRETER_CRTP_ER_2011_HPP

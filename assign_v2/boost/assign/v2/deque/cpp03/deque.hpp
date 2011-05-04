@@ -7,8 +7,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_DEQUE_CPP03_DEQUE_ER_2010_HPP
-#define BOOST_ASSIGN_V2_DEQUE_CPP03_DEQUE_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_DEQUE_CPP03_DEQUE_ER_2011_HPP
+#define BOOST_ASSIGN_V2_DEQUE_CPP03_DEQUE_ER_2011_HPP
 #include <boost/assign/v2/support/config/limit_arity.hpp>
 #include <boost/assign/v2/support/config/limit_lvalue_const_arity.hpp>
 #include <boost/assign/v2/support/keyword.hpp>
@@ -18,6 +18,9 @@
 #include <boost/preprocessor/repetition.hpp>
 #include <boost/preprocessor/seq.hpp>
 #include <boost/type_traits/remove_cv.hpp>
+// This is to ensure that cpp03/deque.hpp can be included first (but we reco-
+// mmend including the file below instead)
+#include <boost/assign/v2/deque/deque.hpp> 
 
 namespace boost{
 namespace assign{
@@ -45,7 +48,7 @@ namespace interpreter_aux{
 #define BOOST_ASSIGN_V2_MACRO2(z, n, data) BOOST_PP_SEQ_FOR_EACH_PRODUCT(\
     BOOST_ASSIGN_V2_MACRO1,\
     BOOST_PP_SEQ_FIRST_N(BOOST_PP_INC(n), BOOST_ASSIGN_V2_SEQ_TPL_BINARY_ARG_LIST)\
-) \
+)\
 /**/
 BOOST_PP_REPEAT(
     BOOST_ASSIGN_V2_LIMIT_LVALUE_CONST_ARITY,
@@ -57,19 +60,19 @@ BOOST_PP_REPEAT(
 
 // Overloads for all const and all non-const arguments
 
-#define BOOST_ASSIGN_V2_MACRO(z, N, data) \
+#define BOOST_ASSIGN_V2_MACRO(z, N, data)\
 \
-    template<typename T BOOST_PP_ENUM_TRAILING_PARAMS(N, typename U)> \
+    template<typename T BOOST_PP_ENUM_TRAILING_PARAMS(N, typename U)>\
     typename result_of::deque<T>::type\
-    deque( BOOST_PP_ENUM_BINARY_PARAMS(N, U, &_) ){ \
-        return deque<T>( v2::_nil )( BOOST_PP_ENUM_PARAMS(N, _) ); \
-    } \
+    deque( BOOST_PP_ENUM_BINARY_PARAMS(N, U, &_) ){\
+        return deque<T>( v2::_nil )( BOOST_PP_ENUM_PARAMS(N, _) );\
+    }\
 \
-    template<typename T BOOST_PP_ENUM_TRAILING_PARAMS(N, typename U)> \
+    template<typename T BOOST_PP_ENUM_TRAILING_PARAMS(N, typename U)>\
     typename result_of::deque<T>::type\
-    deque( BOOST_PP_ENUM_BINARY_PARAMS(N, const U, &_) ){ \
-        return deque<T>( v2::_nil )( BOOST_PP_ENUM_PARAMS(N, _) ); \
-    } \
+    deque( BOOST_PP_ENUM_BINARY_PARAMS(N, const U, &_) ){\
+        return deque<T>( v2::_nil )( BOOST_PP_ENUM_PARAMS(N, _) );\
+    }\
 \
 /**/
 BOOST_PP_REPEAT_FROM_TO(
@@ -88,4 +91,4 @@ using interpreter_aux::deque;
 }// assign
 }// boost
 
-#endif // BOOST_ASSIGN_V2_DEQUE_CPP03_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_DEQUE_CPP03_ER_2011_HPP

@@ -7,8 +7,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_DEQUE_CSV_DEQUE_ER_2010_HPP
-#define BOOST_ASSIGN_V2_DEQUE_CSV_DEQUE_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_DEQUE_CSV_DEQUE_ER_2011_HPP
+#define BOOST_ASSIGN_V2_DEQUE_CSV_DEQUE_ER_2011_HPP
 #include <boost/assign/v2/support/config/enable_cpp0x.hpp>
 #include <boost/assign/v2/support/pp/ignore.hpp>
 #include <boost/assign/v2/deque/deque.hpp>
@@ -106,15 +106,8 @@ namespace result_of{
 
 namespace result_of{
 
-    template<typename T>
-    struct csv_deque/*<-*/
-        : interpreter_aux::result_of::csv_deque<T>
-    {}/*->*/;
-
-    template<typename O, typename T>
-    struct csv_deque_option/*<-*/
-        : interpreter_aux::result_of::csv_deque_option<O, T>
-    {}/*->*/;
+    using interpreter_aux::result_of::csv_deque;
+    using interpreter_aux::result_of::csv_deque_option;
 
 }// result_of
 
@@ -127,4 +120,4 @@ namespace result_of{
 #include <boost/assign/v2/deque/cpp03/csv_deque.hpp>
 #endif
 
-#endif // BOOST_ASSIGN_V2_DEQUE_CSV_DEQUE_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_DEQUE_CSV_DEQUE_ER_2011_HPP

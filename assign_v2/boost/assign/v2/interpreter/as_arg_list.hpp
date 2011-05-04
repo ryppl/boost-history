@@ -7,8 +7,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_INTERPRETER_AS_ARG_LIST_ER_2010_HPP
-#define BOOST_ASSIGN_V2_INTERPRETER_AS_ARG_LIST_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_INTERPRETER_AS_ARG_LIST_ER_2011_HPP
+#define BOOST_ASSIGN_V2_INTERPRETER_AS_ARG_LIST_ER_2011_HPP
 #include <boost/assign/v2/support/pp/ignore.hpp>
 #include <boost/range/iterator.hpp>
 #include <boost/range/iterator_range.hpp>
@@ -70,18 +70,16 @@ namespace result_of{
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
 }// interpreter_aux
+
     using interpreter_aux::as_arg_list;
-namespace result_of{
 
-    template<typename R>
-    struct as_arg_list/*<-*/
-        : interpreter_aux::result_of::as_arg_list<R>
-    {}/*->*/;
-
+namespace result_of{    
+    using interpreter_aux::result_of::as_arg_list;
 }// result_of
+
 //]
 }// v2
 }// assign
 }// boost
 
-#endif // BOOST_ASSIGN_V2_INTERPRETER_AS_ARG_LIST_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_INTERPRETER_AS_ARG_LIST_ER_2011_HPP

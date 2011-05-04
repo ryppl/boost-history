@@ -7,12 +7,15 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_DEQUE_CPP03_CSV_DEQUE_ER_2010_HPP
-#define BOOST_ASSIGN_V2_DEQUE_CPP03_CSV_DEQUE_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_DEQUE_CPP03_CSV_DEQUE_ER_2011_HPP
+#define BOOST_ASSIGN_V2_DEQUE_CPP03_CSV_DEQUE_ER_2011_HPP
 #include <boost/assign/v2/support/config/limit_csv_arity.hpp>
 #include <boost/preprocessor/arithmetic/inc.hpp>
 #include <boost/preprocessor/control/expr_if.hpp>
 #include <boost/preprocessor/repetition.hpp>
+// This is to ensure that cpp03/csv-deque.hpp can be included first (but we 
+// recommend including the file below instead)
+#include <boost/assign/v2/deque/csv_deque.hpp> 
 
 namespace boost{
 namespace assign{
@@ -123,4 +126,4 @@ using interpreter_aux::csv_deque;
 }// assign
 }// boost
 
-#endif // BOOST_ASSIGN_V2_DEQUE_CPP03_CSV_DEQUE_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_DEQUE_CPP03_CSV_DEQUE_ER_2011_HPP

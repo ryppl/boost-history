@@ -7,8 +7,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_INTERPRETER_DATA_ER_2010_HPP
-#define BOOST_ASSIGN_V2_INTERPRETER_DATA_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_INTERPRETER_DATA_ER_2011_HPP
+#define BOOST_ASSIGN_V2_INTERPRETER_DATA_ER_2011_HPP
 #include <boost/assign/v2/support/traits/container.hpp>
 #include <boost/assign/v2/support/switch.hpp>
 #include <boost/assign/v2/support/functor/pair.hpp>
@@ -53,4 +53,4 @@ namespace interpreter_aux{
 }// assign
 }// boost
 
-#endif // BOOST_ASSIGN_V2_INTERPRETER_DATA_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_INTERPRETER_DATA_ER_2011_HPP

@@ -7,8 +7,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_REF_ARRAY_ARRAY_ER_2010_HPP
-#define BOOST_ASSIGN_V2_REF_ARRAY_ARRAY_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_REF_ARRAY_ARRAY_ER_2011_HPP
+#define BOOST_ASSIGN_V2_REF_ARRAY_ARRAY_ER_2011_HPP
 #include <boost/assign/v2/support/pp/ignore.hpp>
 #include <boost/assign/v2/ref/array/alloc/lazy.hpp>
 #include <boost/assign/v2/ref/array/size_type.hpp>
@@ -24,7 +24,9 @@ namespace ref{
 namespace array_aux{
 
     template<typename T>
-    struct empty_array : empty_list<list_aux::array_tag>{};
+    struct empty_array 
+    	: empty_list<list_aux::array_tag>
+    {};
 
     template<size_type N, typename T>
     struct recursive_result
@@ -34,18 +36,17 @@ namespace array_aux{
     };
 
     template<typename T>
-    struct recursive_result<0, T> : empty_array<T>{};
+    struct recursive_result<0, T> 
+    	: empty_array<T>
+    {};
 
 }// array_aux
 //->
 namespace nth_result_of{
 
-    template<
-        array_size_type N
-        , typename U // U must not be a reference
-    >
+    template<array_size_type N, typename T>
     struct array/*<-*/
-        : array_aux::recursive_result<N, U>
+        : array_aux::recursive_result<N, T>
     {}/*->*/;
 
 }// nth_result_of
@@ -53,11 +54,13 @@ namespace result_of{
 
     template<typename U, typename T = U>
     struct array/*<-*/
-        : nth_result_of::array<1, U>{}/*->*/;
+        : nth_result_of::array<1, T>
+    {}/*->*/;
 
     template<typename U>
     struct array<U, nil_>/*<-*/
-        : nth_result_of::array<0, U>{}/*->*/;
+        : nth_result_of::array<0, U>
+    {}/*->*/;
 
 }// result_of
 
@@ -70,7 +73,7 @@ namespace result_of{
         return ref::list<list_aux::array_tag>( v2::_nil );
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
-    // Generates a size one array
+    // Generates a size-one array
     template<typename T>
     typename result_of::array<T>::type
     array(T& t)/*<-*/
@@ -78,7 +81,7 @@ namespace result_of{
         return array<T>( v2::_nil )( t );
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
-    // Generates a size one array
+    // Generates a size-one array
     template<typename T>
     typename result_of::array<T const>::type
     array(T const & t)/*<-*/
@@ -92,4 +95,4 @@ namespace result_of{
 }// assign
 }// boost
 
-#endif // BOOST_ASSIGN_V2_REF_ARRAY_ARRAY_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_REF_ARRAY_ARRAY_ER_2011_HPP

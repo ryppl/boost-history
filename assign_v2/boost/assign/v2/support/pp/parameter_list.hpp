@@ -7,8 +7,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file           //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)      //
 ////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_PAREMETER_LIST_ER_2010_HPP
-#define BOOST_ASSIGN_V2_PAREMETER_LIST_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_PAREMETER_LIST_ER_2011_HPP
+#define BOOST_ASSIGN_V2_PAREMETER_LIST_ER_2011_HPP
 #include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/comma_if.hpp>
 #include <boost/preprocessor/repetition.hpp>
@@ -32,4 +32,4 @@
 #define BOOST_ASSIGN_V2_PARAMETER_LIST_SIZE 10
 //]
 #define BOOST_ASSIGN_V2_SEQ_TPL_BINARY_ARG_LIST BOOST_PP_TUPLE_TO_SEQ(BOOST_ASSIGN_V2_PARAMETER_LIST_SIZE,((T0 const)(T0),(T1 const)(T1),(T2 const)(T2),(T3 const)(T3),(T4 const)(T4),(T5 const)(T5),(T6 const)(T6),(T7 const)(T7),(T8 const)(T8),(T9 const)(T9)))
-#endif // BOOST_ASSIGN_V2_PAREMETER_LIST_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_PAREMETER_LIST_ER_2011_HPP

@@ -131,7 +131,7 @@ namespace tutorial_assign_v2{
             const char y[4] = { 'b', 'a', 'r', '\0' };
             word_ z = "***baz";
             std::map<int, word_> map;
-            put( map )/*<<Calls `map.insert( 1, word_( x, 3 ) )`>>*/( 1, x, 3 )( 2, y )( 3, z, 3, 3 )( 4, "qux");
+            put( map )/*<<Calls `map.insert( 1, word_( x, 3 ) )`>>*/( 1, x, 3 )( 2, y )( 3, z, 3, 3 )( 4, "qux" );
 
             assert( map[1] == "foo" ); assert( map[2] == "bar" );
             assert( map[3] == "baz" ); assert( map[4] == "qux" );

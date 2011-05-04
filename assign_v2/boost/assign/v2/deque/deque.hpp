@@ -7,8 +7,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_DEQUE_DEQUE_ER_2010_HPP
-#define BOOST_ASSIGN_V2_DEQUE_DEQUE_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_DEQUE_DEQUE_ER_2011_HPP
+#define BOOST_ASSIGN_V2_DEQUE_DEQUE_ER_2011_HPP
 #include <deque>
 #include <boost/assign/v2/interpreter/crtp.hpp>
 #include <boost/assign/v2/interpreter/data.hpp>
@@ -80,6 +80,22 @@ namespace interpreter_aux{
         )/*<-*/
             : put_crtp_( f, m ), impl( cont )
         {}BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
+
+
+		#if BOOST_ASSIGN_V2_ENABLE_CPP0X
+    	// Suggested by JB
+        // Move constructor
+        deque_interpreter(deque_interpreter&& d)
+            : put_crtp_( std::move<put_crtp_&>(d) ), 
+            impl( std::move(d.impl) )
+        {}
+        // Move assignment
+        deque_interpreter& operator=(deque_interpreter&& d)
+        {
+          put_crtp_::operator=( std::move<put_crtp_&>(d) );
+          impl = std::move(d.impl);
+        }
+        #endif
 
         // Deque interface
         iterator begin()/*<-*/{
@@ -191,7 +207,10 @@ namespace result_of{
     typename result_of::deque<T>::type
     deque(Args&&...args)/*<-*/
     {
-        return deque<T>( v2::_nil )( std::forward<Args>(args)... );
+    	// Suggested by JB
+        return std::move(const_cast<typename result_of::deque<T>::type&>(
+            deque<T>( v2::_nil )( std::forward<Args>(args)... )
+        ));
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
 //<-
@@ -204,10 +223,7 @@ using interpreter_aux::deque;
 
 namespace result_of{
 
-    template<typename T>
-    struct deque/*<-*/ 
-        : interpreter_aux::result_of::deque<T>
-    {}/*->*/;
+    using interpreter_aux::result_of::deque;
 
 }// result_of
 //]
@@ -220,4 +236,4 @@ namespace result_of{
 #include <boost/assign/v2/deque/cpp03/deque.hpp>
 #endif
 
-#endif // BOOST_ASSIGN_V2_DEQUE_DEQUE_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_DEQUE_DEQUE_ER_2011_HPP

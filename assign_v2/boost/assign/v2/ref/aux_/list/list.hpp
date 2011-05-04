@@ -7,8 +7,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_V2_REF_AUX_LIST_LIST_ER_2010_HPP
-#define BOOST_ASSIGN_V2_REF_AUX_LIST_LIST_ER_2010_HPP
+#ifndef BOOST_ASSIGN_V2_REF_AUX_LIST_LIST_ER_2011_HPP
+#define BOOST_ASSIGN_V2_REF_AUX_LIST_LIST_ER_2011_HPP
 #include <boost/assign/v2/support/keyword.hpp>
 #include <boost/assign/v2/ref/aux_/list/container.hpp>
 #include <boost/assign/v2/ref/aux_/list/fwd.hpp>
@@ -26,7 +26,7 @@ namespace list_aux{
     template<typename Tag>
     struct empty_list{ typedef list_aux::container<Tag> type; };
 
-namespace nth_result_of{
+namespace cumul_result_of{
 
     template<typename Tag>
     struct list
@@ -35,7 +35,9 @@ namespace nth_result_of{
         typedef typename empty_list<Tag>::type empty_list_;
 
         template<typename State, typename T>
-        struct result : State::template result<T>{};
+        struct result 
+            : State::template result<T>
+        {};
 
         template<typename ArgList>
         struct apply : ::boost::mpl::fold<
@@ -50,13 +52,13 @@ namespace nth_result_of{
 
     template<typename Tag>
     typename ::boost::mpl::apply1<
-        nth_result_of::list<Tag>, 
+        cumul_result_of::list<Tag>, 
         ::boost::mpl::vector0<>
     >::type
     list( nil_ )
     {
         return typename ::boost::mpl::apply1<
-            nth_result_of::list<Tag>, 
+            cumul_result_of::list<Tag>, 
             ::boost::mpl::vector0<>
         >::type();
     }
@@ -65,14 +67,14 @@ namespace nth_result_of{
 
 using list_aux::list;
 
-template<typename Tag> struct empty_list : list_aux::empty_list<Tag>{};
+template<typename Tag> 
+struct empty_list 
+    : list_aux::empty_list<Tag>
+{};
 
-namespace nth_result_of{
+namespace cumul_result_of{
 
-    template<typename Tag>
-    struct list 
-        : list_aux::nth_result_of::list<Tag>
-    {};
+    using list_aux::cumul_result_of::list;
 
 }// nth_result_of
 }// ref
@@ -80,4 +82,4 @@ namespace nth_result_of{
 }// assign
 }// boost
 
-#endif // BOOST_ASSIGN_V2_REF_AUX_LIST_LIST_ER_2010_HPP
+#endif // BOOST_ASSIGN_V2_REF_AUX_LIST_LIST_ER_2011_HPP
