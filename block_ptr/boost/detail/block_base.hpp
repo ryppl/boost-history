@@ -95,6 +95,9 @@ struct pool : boost::pool<>
 	
     block_base * top(void * p)
     {
+    	if (plii_.get() == 0)
+        	plii_.reset(new pool_lii());
+
         pool_lii::reverse_iterator i;
         
         for (i = plii_->rbegin(); i != plii_->rend(); i ++)
@@ -116,6 +119,9 @@ struct pool : boost::pool<>
 	
     void * allocate(std::size_t s)
     {
+    	if (plii_.get() == 0)
+        	plii_.reset(new pool_lii());
+
         void * p = ordered_malloc(s);
         
         plii_->push_back(numeric::interval<long>((long) p, long((char *)(p) + s)));
@@ -133,6 +139,9 @@ struct pool : boost::pool<>
 	
     void deallocate(void * p, std::size_t s)
     {
+    	if (plii_.get() == 0)
+        	plii_.reset(new pool_lii());
+
         pool_lii::reverse_iterator i;
         
         for (i = plii_->rbegin(); i != plii_->rend(); i ++)
