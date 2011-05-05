@@ -18,11 +18,11 @@ int main() {
 #include <iostream>
 
 int main() {
-    int BOOST_LOCAL_FUNCTION_PARAMS(int x, int y) {
+    int BOOST_LOCAL_FUNCTION_PARAMS(int x, int y) { // Local function.
         return x + y;
     } BOOST_LOCAL_FUNCTION_NAME(add)
 
-    std::cout << add(1, 2) << std::endl;
+    std::cout << add(1, 2) << std::endl; // Call local function.
     return 0;
 }
 //]

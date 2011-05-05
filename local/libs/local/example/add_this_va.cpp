@@ -28,7 +28,7 @@ public:
 
     double sum(const std::vector<double>& nums, const int& factor = 10) {
         void BOOST_LOCAL_FUNCTION_PARAMS(double num, const bind factor,
-                bind this) {
+                bind this) { // Bind `this`.
             this_->sum_ += factor * num; // Use `this_` instead of `this`.
             std::cout << "Summed: " << this_->sum_ << std::endl;
         } BOOST_LOCAL_FUNCTION_NAME(add)

@@ -22,7 +22,7 @@ int main() {
     size_t size = 2;
     double* nums = new double[size];
     
-    BOOST_LOCAL_EXIT(const bind& size, bind nums) {
+    BOOST_LOCAL_EXIT(const bind& size, bind nums) { // Local exit.
         if (size && nums) delete[] nums;
         std::cout << "Freed array: " << nums << std::endl;
 
@@ -31,7 +31,7 @@ int main() {
     } BOOST_LOCAL_EXIT_END
 
     return 0;
-}
+} // Local exit executed here.
 //]
 
 #endif

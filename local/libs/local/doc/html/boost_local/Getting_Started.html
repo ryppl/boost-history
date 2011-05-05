@@ -50,12 +50,12 @@
         sections. The <a class="link" href="Advanced_Topics.html" title="Advanced Topics">Advanced Topics</a>
         and <a href="../reference.html" target="_top">Reference</a> sections can be consulted
         at a later point to gain a more advanced knowledge of the library. All the
-        other sections of this documentation are for reference only.
+        other sections of this documentation are optional.
       </p>
 <p>
-        Some footnotes are marked by the word "<span class="bold"><strong>Rationale</strong></span>"
-        because they explain reasons behind decisions made during the design and
-        implementation of this library.
+        Some footnotes are marked by the word "<span class="bold"><strong>Rationale</strong></span>".
+        They explain reasons behind decisions made during the design and implementation
+        of this library.
       </p>
 </div>
 <div class="section">
@@ -67,21 +67,22 @@
         The implementation of this library uses preprocessor and template metaprogramming
         (as supported by <a href="http://www.boost.org/doc/libs/release/libs/preprocessor/doc/index.html" target="_top">Boost.Preprocessor</a>
         and <a href="http://www.boost.org/doc/libs/release/libs/mpl/doc/index.html" target="_top">Boost.MPL</a>),
-        templates with partial specializations and function pointers (to support
-        an interface similar to the one of <a href="http://www.boost.org/doc/libs/release/doc/html/function.html" target="_top">Boost.Function</a>).
+        templates with partial specializations and function pointers (similarly to
+        <a href="http://www.boost.org/doc/libs/release/doc/html/function.html" target="_top">Boost.Function</a>).
         As a consequence, this library is fairly demanding on compilers' compliance
         with the ISO C++ standard. At present, this library has been successfully
         compiled and tested on the following compilers and platforms:
       </p>
 <div class="orderedlist"><ol class="orderedlist" type="1">
 <li class="listitem">
-            GCC 4.2.4 on Ubuntu Linux.
+            GNU Compiler Collection (GCC) 4.5.1 (with and without C++0x features
+            enabled) on Ubuntu Linux 10.
           </li>
 <li class="listitem">
-            GCC 3.4.4 on Cygwin.
+            GCC 4.3.4 on Cygwin.
           </li>
 <li class="listitem">
-            Miscrosoft Visual Studio 8.0 on Windows XP.
+            Miscrosoft Visual Studio Compiler (MSVC) 8.0 on Windows XP.
           </li>
 </ol></div>
 <p>
@@ -117,11 +118,11 @@
 <code class="computeroutput"><a class="link" href="../reference.html#header.boost.local.block_hpp" title="Header &lt;boost/local/block.hpp&gt;">boost/local/block.hpp</a></code>           <span class="emphasis"><em>local blocks</em></span>
 <code class="computeroutput"><a class="link" href="../reference.html#header.boost.local.exit_hpp" title="Header &lt;boost/local/exit.hpp&gt;">boost/local/exit.hpp</a></code>            <span class="emphasis"><em>local exits</em></span>
 <code class="computeroutput"><a class="link" href="../reference.html#header.boost.local.typeof_hpp" title="Header &lt;boost/local/typeof.hpp&gt;">boost/local/typeof.hpp</a></code>          <span class="emphasis"><em>bound variable type deduction</em></span>
-<code class="computeroutput"><a class="link" href="../reference.html#header.boost.local.config_hpp" title="Header &lt;boost/local/config.hpp&gt;">boost/local/config.hpp</a></code>          <span class="emphasis"><em>configuration macros</em></span>
+<code class="computeroutput"><a class="link" href="../reference.html#header.boost.local.config_hpp" title="Header &lt;boost/local/config.hpp&gt;">boost/local/config.hpp</a></code>          <span class="emphasis"><em>library configuration macros</em></span>
 </pre>
 <p>
-        The following symbols are part of the library private API, they are not documented,
-        and they should not be directly used by programmers: <sup>[<a name="id866097" href="#ftn.id866097" class="footnote">1</a>]</sup>
+        The followings are part of the library private API, they are not documented,
+        and they should not be directly used by programmers: <sup>[<a name="id866165" href="#ftn.id866165" class="footnote">2</a>]</sup>
       </p>
 <div class="itemizedlist"><ul class="itemizedlist" type="disc">
 <li class="listitem">
@@ -152,24 +153,24 @@
         it.
       </p>
 <p>
-        All configuration macros have names prefixed by <code class="computeroutput"><span class="identifier">BOOST_LOCAL_CONFIG_</span><span class="special">...</span></code> (see <a href="../reference.html" target="_top">Reference</a>
+        All configuration macros have names prefixed by <code class="computeroutput"><span class="identifier">BOOST_LOCAL_CONFIG_</span><span class="special">...</span></code> (see the <a href="../reference.html" target="_top">Reference</a>
         section). It is strongly recommended not to change the library configuration
         macro definitions unless strictly necessary.
       </p>
 </div>
 <div class="footnotes">
 <br><hr width="100" align="left">
-<div class="footnote"><p><sup>[<a id="ftn.id866097" href="#id866097" class="para">1</a>] </sup>
+<div class="footnote"><p><sup>[<a id="ftn.id866165" href="#id866165" class="para">2</a>] </sup>
           <span class="bold"><strong>Rationale.</strong></span> This library concatenates symbols
           specified by the programmers (e.g., the local function name) with other
           symbols (e.g., special prefixes or preprocessor line numbers) to make internal
           symbols with unique names to avoid name clashes. These symbols are separated
           by the letter "<code class="computeroutput"><span class="identifier">X</span></code>"
-          when they are concatenated so they can be read more easily while debugging
-          the library. The underscore character "<code class="computeroutput"><span class="identifier">_</span></code>"
+          when they are concatenated so they read more easily during debugging. The
+          underscore character "<code class="computeroutput"><span class="identifier">_</span></code>"
           could not be used instead of the letter "<code class="computeroutput"><span class="identifier">X</span></code>"
           because if the original symbols already contained a leading or trailing
-          underscore, the concatenation would result in a symbol with double underscores
+          underscore, the concatenation could result in a symbol with double underscores
           "<code class="computeroutput"><span class="identifier">__</span></code>" which is
           reserved by the C++ standard.
         </p></div>

@@ -38,7 +38,7 @@ The local function parameters are passed to the `__BOOST_LOCAL_FUNCTION_PARAMS__
 ]
 
 The local function body is specified in a code block `{ ... }` using the usual C++ syntax.
-The body is specified outside any of the macros so eventual compiler error messages and related line numbers retain their usual meaning.
+The body is specified outside any of the macros so eventual compiler error messages and related line numbers retain their usual meaning and format.
 [footnote
 *Rationale.*
 If the local function body were instead passed as a macro parameter, it would be expanded on a single line of code (because macros always expand as a single line of code).
@@ -48,7 +48,7 @@ Therefore, eventual compiler error line numbers would all report the same value 
 The macro `__BOOST_LOCAL_FUNCTION_NAME__` is used to end the local function definition and to specify the local function name.
 [footnote
 *Rationale.*
-The local function name must be passed to the macro `__BOOST_LOCAL_FUNCTION_NAME__` ending the function definition so this macro can declare a local variable with the local function name to hold the local functor object.
+The local function name must be passed to the macro `__BOOST_LOCAL_FUNCTION_NAME__` ending the function definition so this macro can declare a local variable with the local function name to hold the local function object.
 ]
 
 For example, let's program a local function named `add` that adds together two integer numbers `x` and `y` -- for simplicity, we will not bind any of the variables in scope just yet (binding is explained later in this section):
@@ -109,7 +109,8 @@ However, the usual C++ syntax for default parameters that uses the assignment sy
 [footnote
 [*Rationale.] The assignment symbol `=` cannot be used to specify default parameter values because default values are not part of the parameter type so they cannot be handled using template metaprogamming.
 Default parameter values need to be separated from the rest of the parameter declaration using the preprocessor.
-Specifically, this library needs to use preprocessor mataprogramming to remove default values when constructing the local function type and it counts the number of default values to provide the correct set of call operators for the local functor object.
+Specifically, this library needs to use preprocessor mataprogramming to remove default values when constructing the local function type and then to count the number of default values to provide the correct set of call operators for the local functor.
+Therefore, the symbol `=` cannot be used because it cannot be handled by preprocessor metaprogramming (specifically, such a non-alphanumeric symbol cannot be detected by preprocessor metaprogramming because it cannot be concatenated by the preprocessor).
 ]
 The keyword `default` is used instead:
 
@@ -122,14 +123,14 @@ The keyword `default` is used instead:
 ] ]
 ]
 
-For example, let's assume that the we want to program a local function `add(x, y)` similar to the one programmed before but where the second parameter `y` is optional and has a default value of `2`:
+For example, let's program a local function `add(x, y)` similar to the one programmed before but where the second parameter `y` is optional and has a default value of `2`:
 
 [table
 [ [__Variadic_Macro_Syntax__] [__Sequencing_Macro_Syntax__] ]
 [ [ [add_x_y_default_va_cpp] ] [ [add_x_y_default_cpp] ] ]
 ]
 
-If this variadic macro syntax seems strange, programmers could define a `WITH_DEFAULT` macro similar to the following if they think it improves readability:
+If this variadic macro syntax seems strange, programmers can define a `WITH_DEFAULT` macro similar to the following (if they think that improves readability):
 
 [table
 [ [__Variadic_Macro_Syntax__] ]
@@ -146,8 +147,8 @@ The types of bound variables are automatically deduced by this library using __B
 *Rationale.*
 By binding a variable in scope, the local function declaration is specifying that such a variable should be accessible within the local function body regardless of its type.
 Semantically, this binding should be seen as an "extension" of the scope of the bound variable from the enclosing scope to the scope of the local function body.
-Contrary to the semantics of a function parameter passing, in-scope variable binding does not depend on the variable type but just on the variable name: "The variable in scope named /x/ should be accessible within the local function named /l/".
-This is especially useful for maintenance so if a bound variable type is changed, the local function declaration does not have to change.
+Therefore, contrary to the semantic of passing a function parameter, the semantic of binding a variable not depend on the variable type but just on the variable name: "The variable in scope named /x/ should be accessible within the local function named /l/".
+For example, this is useful for maintenance because if a bound variable type is changed, the local function declaration does not have to change.
 ]
 
 [important
@@ -156,8 +157,8 @@ User defined types need to be manually registered as usual when using __Boost_Ty
 
 This library introduces the new "keyword" `bind`
 [footnote
-The token `bind` is not a real keyword of the C++ language.
-This library parses `bind` during macro expansion using preprocessor metaprogramming.
+Obviously, the token `bind` is not a keyword of the C++ language.
+This library parses the token `bind` during macro expansion using preprocessor metaprogramming (see the __Implementation__ section).
 Therefore, `bind` can be considered a new "keyword" only at the preprocessor metaprogramming level within the syntax defined by the macros of this library -- thus it is referred to as a "keyword" only within quotes.
 ]
 which is used in place of the parameter type to specify the name of a variable in scope to bind.
@@ -165,27 +166,27 @@ The variable can be bound by value:
     
     bind ``/variable-name/`` // Bind by value.
     
-Or by reference if the variable name is prefixed by `&`:
+Or by reference prefixing the variable name with `&`:
 
     bind& ``/variable-name/`` // Bind by reference.
     
 Furthermore, the "keyword" `bind` can be prefixed by `const` to bind the variable by constant value:
     
-    const bind ``/variable-name/`` // Bind by constant value.
+    const bind ``/variable-name/`` // Bind by value.
 
 Or by constant reference:
     
     const bind& ``/variable-name/`` // Bind by constant value.
 
-Note that when `const` is used, it must always precede `bind`.
+(Note that when `const` is used, it must always precede `bind`.)
     
 If a variable is bound by value, then a copy of the variable value is taken at the point of the local function declaration.
 If a variable is bound by reference instead, the variable will refer to the value it has at the point of the local function call.
-Furthermore, it is the programmers' responsibility to ensure that variables bound by reference survive the scope of declaration of the local function otherwise the bound references will be invalid causing run-time errors (in other words, the usual care in using C++ references must be taken for variables bound by reference).
+Furthermore, it is the programmers' responsibility to ensure that variables bound by reference survive the declaration scope of the local function otherwise the bound references will be invalid causing run-time errors (in other words, the usual care in using C++ references must be taken for variables bound by reference).
 
 The type of bound variables is automatically deduced and it is the exact same type used to declare such variables in the enclosing scope.
-Therefore, if a bound variable is declared constant using the `const` qualifier in the enclosing scope then it will be always bound by constant value or reference even if `const` is not repeated by the local function binding.
-On the other hand, if a bound variable was not declared constant by enclosing scope then it will not be bound as constant unless constant binding is forced using `const bind ...` (note that binding by constant reference is not supported by __CPP0x_lambda__ functions).
+Therefore, if a bound variable is declared constant, using the `const` qualifier in the enclosing scope, then it will be always bound by constant value or constant reference even if `const` is not repeated by the local function binding.
+On the other hand, if a bound variable was not declared constant in the enclosing scope then it will not be bound as constant unless constant binding is forced using `const bind ...` (note that binding by constant reference is not supported by __CPP0x_lambda__ functions but it is supported by this library).
 [footnote
 An historical note: Constant binding of variables in scope was the main use case that originally motivated the authors in developing this library.
 The authors needed to locally create a chuck of code to assert some correctness conditions while these assertions were not supposed to modify any of the variables they were using (see the __Contractpp__ library).
@@ -205,7 +206,12 @@ We bind the local variable `factor` by constant value, the local variable `sum` 
 [h5 Binding the Object `this`]
 
 It is also possible to bind the object `this` when it is in scope (e.g., from an enclosing member function).
-This is done by using `this` as the name of the variable to bind and by using the special symbol `this_` (instead of `this`) to access the object within the local function body.
+This is done by using `this` as the name of the variable to bind in the local function declaration and by using the special symbol `this_`
+[footnote
+*Rationale.*
+The special name `this_` was chosen following [@http://boost.2283326.n4.nabble.com/local-this-or-this-td3423912.html Boost practises] which postfix with an underscore identifiers that are named after keywords (the C++ keyword `this` in this case).
+]
+(instead of `this`) to access the object within the local function body.
 
 The object `this` can be bound by value:
 
@@ -225,21 +231,20 @@ Note that `this` is a pointer so the pointed object is never copied even if `thi
 When the object `this` is bound to a local function, the local function body must use the special symbol `this_` (instead of `this`) to access the bound object.
 [footnote
 *Rationale.*
-This limitation comes from the fact that `this` is a reserved C++ keyword so it cannot be used as the name of the internal parameter passing the bound object to the local function body.
-It would be possible to use `this` (instead of `this_`) within the local function body either at the expenses of copying the bound object (which would introduce run-time overhead and also the stringent requirement that the bound object must have a deep copy constructor) or by relying on an [@http://groups.google.com/group/comp.lang.c++.moderated/browse_thread/thread/d3a86f27277f713b undefined behaviour of `static_cast`] (which might not work on all platforms at the cost of portability).
-Finally, the special name `this_` was chosen following [@http://boost.2283326.n4.nabble.com/local-this-or-this-td3423912.html Boost practise] to postfix with an underscore identifiers that are named after keywords (the C++ keyword `this` in this case).
+This limitation comes from the fact that `this` is a reserved C++ keyword so it cannot be used as the name of the internal parameter that passes the bound object to the local function body.
+It would have been possible to use `this` (instead of `this_`) within the local function body either at the expenses of copying the bound object (which would introduce run-time overhead and also the stringent requirement that the bound object must have a deep copy constructor) or by relying on an [@http://groups.google.com/group/comp.lang.c++.moderated/browse_thread/thread/d3a86f27277f713b undefined behaviour of `static_cast`] (which might not work on all platforms at the cost of portability).
 ]
 
 Unfortunately, mistakenly using `this` within the local function body instead of `this_` will not necessarily generate a compile-time error.
 [footnote
 *Rationale.*
-The local function body cannot be a static member function of the local functor object in order to support recursion (because the local function name is specified by the `__BOOST_LOCAL_FUNCTION_NAME__` macro only after the body so it must be made available via a functor member variable named after the local function and local classes cannot have static member variables in C++) and nesting (because the argument binding variable must be declared as a member variable so it is visible in a local function nested within the body member function).
-Therefore, from within the local function body the variable `this` is visible but it refers to the local functor object and not to the bound object.
+The local function body cannot be a static member function of the local functor object in order to support recursion (because the local function name is specified by the `__BOOST_LOCAL_FUNCTION_NAME__` macro only after the body so it must be made available via a functor member variable named after the local function and local classes cannot have static member variables in C++) and nesting (because the argument binding variable must be declared as a member variable so it is visible in a local function nested within the body member function) -- see the __Implementation__ section.
+Therefore, from within the local function body the variable `this` is visible but it refers to the local functor and not to the bound object.
 ]
 Programmers are responsible to make sure that `this` is never used within a local function body which should only use the special symbol `this_`.
 ]
 
-For example, let's rewrite a local function `add` similar to the one in the example from the __Introduction__ section but using a member function to illustrate how to bind the object `this`:
+For example, let's program a local function `add` similar to the one in the example from the __Introduction__ section but using a member function to illustrate how to bind the object `this`:
 
 [table
 [ [__Variadic_Macro_Syntax__] [__Sequencing_Macro_Syntax__] ]
@@ -266,7 +271,7 @@ Local blocks are defined using the following macros within a declarative context
 These macros expand to code that executes the body instructions "in place" where the block is defined.
 
 Only bound variables specified by [^/bindings/] are accessible from within the local block body.
-Following the same syntax used for local functions, [^['bindings]] can either be empty (using `(void)`, `void`, or an empty macro parameter depending on your compiler extensions, see __Tutorial_Empty_Parameters__), or they can list the variables to bind using the "keyword" `bind` in place of the parameter type, using `const bind` for constant binding, prefixing the bound variable name with `&` to bind by reference, and using `this` to bind the object in scope (see __Tutorial_Binding__).
+Following the same syntax used for local functions, [^['bindings]] can either be empty (using `(void)`, `void`, or an empty macro parameter depending on your compiler, see __Tutorial_Empty_Parameters__), or they can list the variables to bind using the "keyword" `bind` in place of the parameter type, using `const bind` for constant binding, prefixing the bound variable name with `&` to bind by reference, and using `this` to bind the object in scope (see __Tutorial_Binding__).
 
 [important
 A `return;` instruction from within a local block jumps to the end of the local block body and it does not return the enclosing function.
@@ -316,7 +321,7 @@ However, in C++ it is no possible to (portably) ensure the execution of the dest
 ]
 
 Only bound variables specified by [^['bindings]] are accessible from within the local exit body.
-Following the same syntax used for local functions, [^['bindings]] can either be empty (using `(void)`, `void`, or an empty macro parameter depending on your compiler extensions, see __Tutorial_Empty_Parameters__), or they can list the variables to bind using the "keyword" `bind` in place of the parameter type, using `const bind` for constant binding, prefixing the bound variable name with `&` to bind by reference, and using `this` to bind the object in scope (see __Tutorial_Binding__).
+Following the same syntax used for local functions, [^['bindings]] can either be empty (using `(void)`, `void`, or an empty macro parameter depending on your compiler, see __Tutorial_Empty_Parameters__), or they can list the variables to bind using the "keyword" `bind` in place of the parameter type, using `const bind` for constant binding, prefixing the bound variable name with `&` to bind by reference, and using `this` to bind the object in scope (see __Tutorial_Binding__).
 
 [important
 A `return;` instruction from within a local exit jumps to the end of the local exit body and it does not return the enclosing function.
@@ -335,10 +340,10 @@ Local exits are very similar to the /scope exits/ provided by __Boost_ScopeExit_
 This library could be merged together with __Boost_ScopeExit__ into a new library named Boost.Scope (from the meaning of the word "[@http://en.wikipedia.org/wiki/Scope_(programming) scope]" in computer programming).
 This would be justified by the fact that `__BOOST_LOCAL_EXIT__` simply extends the functionality already provided by `BOOST_SCOPE_EXIT`.
 The headers will be `"boost/scope/function.hpp"`, `"boost/scope/block.hpp"`, and `"boost/scope/exit.hpp"` (for backward compatibility with __Boost_ScopeExit__, the header `"boost/scope_exit.hpp"` could also be kept and it would be equivalent to including `"boost/scope/exit.hpp"`).
-However, the new `BOOST_SCOPE_EXIT` macro will not be backward compatible with the current __Boost_ScopeExit__ macro because it will require to prefix the bound variable with `bind` or `const bind` (in order to differentiate from constant and non-constant binding).
+However, the new `BOOST_SCOPE_EXIT` macro will not be backward compatible with the current __Boost_ScopeExit__ macro because it will require to prefix the bound variable with `bind` or `const bind` (in order to differentiate from constant and non-constant binding and to prevent the bound tokens from ever starting with a non-alphanumeric symbol like `&`).
 Local blocks would be named "scope blocks" and they would be provided by the `BOOST_SCOPE_BLOCK...` macros (the "scope block" name seems reasonably expressive).
 However, local functions would have to be named "scope functions" and they would be provided by the `BOOST_SCOPE_FUNCTION...` macros.
-This name might not expressive enough because local functions are not known under the name of "scope functions" -- they are indeed known by either the name of "local functions" or by the name of "[@http://gcc.gnu.org/onlinedocs/gcc/Nested-Functions.html nested functions]" (GCC compiler extension).
+This name might not be expressive enough because local functions are not known under the name of "scope functions" -- they are indeed known by either the name of "local functions" or by the name of "[@http://gcc.gnu.org/onlinedocs/gcc/Nested-Functions.html nested functions]" (GCC compiler extension).
 ]
 Local exits can be used to emulate the __D_Programming_Language__ /scope guards/ (see the __Examples_Emulating_Ds_Scope_Guards__ example).
 

@@ -17,6 +17,7 @@ T total(const T& x, const T& y, const T& z) {
     int factor = 10;
 
     // Use `..._TPL()` macros within templates.
+
     T BOOST_LOCAL_FUNCTION_PARAMS_TPL( (T num) (const bind factor)
             (bind& sum) ) {
         return sum += factor * num;

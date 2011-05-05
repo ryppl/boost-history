@@ -9,7 +9,7 @@
 #include <iostream>
 
 int main() {
-    int BOOST_LOCAL_FUNCTION_PARAMS( (void) ) {
+    int BOOST_LOCAL_FUNCTION_PARAMS( (void) ) { // No parameter.
         return 10;
     } BOOST_LOCAL_FUNCTION_NAME(ten)
 

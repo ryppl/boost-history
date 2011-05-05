@@ -27,7 +27,7 @@
 </h3></div></div></div>
 <div><p class="copyright">Copyright &#169; 2009-2011 Lorenzo Caminiti</p></div>
 <div><div class="legalnotice">
-<a name="id808764"></a><p>
+<a name="id808762"></a><p>
         Use, modification, and distribution is subject to the Boost Software License,
         Version 1.0 (see accompanying file LICENSE_1_0.txt or a copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>).
       </p>
@@ -78,13 +78,15 @@
           defined within a member function can bind the enclosing object <code class="computeroutput"><span class="keyword">this</span></code>.
         </li>
 <li class="listitem">
-          The local function body is programmed using the usual C++ syntax (as a
-          consequence, compiler error messages and related line numbers retain their
-          usual meaning).
+          The local function body is programmed using the usual C++ statement syntax
+          (as a consequence, compiler error messages retain their usual meaning and
+          format).
         </li>
 <li class="listitem">
-          Local functions can be passed as template parameters (so they can be conveniently
-          passed to STL algorithms, etc).
+          Local functions can be passed as template parameters (e.g., they can be
+          conveniently passed to STL algorithms, this is in contrast to functors
+          implemented using local classes see <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2657.htm" target="_top">[2657]</a>
+          and the <a class="link" href="boost_local/Alternatives.html" title="Appendix: Alternatives">Alternatives</a> section).
         </li>
 <li class="listitem">
           However, local functions must be defined within a declarative context (e.g.,
@@ -98,14 +100,14 @@
 <div class="itemizedlist"><ul class="itemizedlist" type="disc">
 <li class="listitem">
           <span class="emphasis"><em>Local blocks</em></span> which define blocks of code that bind
-          variables from the enclosing scope. Local blocks allow programmers to bind
-          variables as constants (<span class="emphasis"><em>constant binding</em></span>) so to prevent
-          local chunks of code from modifying selected variables.
+          variables from the enclosing scope (including the object <code class="computeroutput"><span class="keyword">this</span></code>). Local blocks allow programmers to
+          bind variables as constants (<span class="emphasis"><em>constant binding</em></span>) to
+          prevent local chunks of code from modifying selected variables.
         </li>
 <li class="listitem">
           <span class="emphasis"><em>Local exits</em></span> which define blocks of code that are executed
-          when the enclosing scope is exited (again with support for constant binding
-          and binding of the object <code class="computeroutput"><span class="keyword">this</span></code>).
+          when the enclosing scope is exited (again with support for binding variables
+          in scope including the object <code class="computeroutput"><span class="keyword">this</span></code>).
         </li>
 </ul></div>
 <a name="boost_local.Introduction.two_syntaxes"></a><h6>
@@ -126,10 +128,11 @@
 <li class="listitem">
           The <span class="emphasis"><em>variadic macro synstax</em></span> is available only on C++
           compilers that support <a href="http://en.wikipedia.org/wiki/Variadic_macro" target="_top">variadic
-          macros</a> (variadic macros are now supported by essentially all modern
-          C++ compilers including GCC and MSVC). This syntax allows to use commas
-          <code class="computeroutput"><span class="special">,</span></code> to separate macro parameters
-          therefore resembling the usual C++ syntax for function parameter declaration.
+          macros</a> (variadic macros were first introduced by the C99 standard
+          and they are now supported by essentially all modern C++ compilers including
+          GCC and MSVC). This syntax allows to use commas <code class="computeroutput"><span class="special">,</span></code>
+          to separate macro parameters therefore resembling the usual C++ syntax
+          for function parameter declaration.
         </li>
 </ul></div>
 <p>
@@ -137,9 +140,9 @@
       macros and only the sequencing macro syntax on compilers that do not support
       variadic macros. The use of the variadic macro syntax might lead to more readable
       code however it should only be used when programmers know that their code will
-      be compiled with variadic macros support to avoid portability issues. Most
-      of the examples presented in this documentation provide a side-by-side comparison
-      of both syntaxes.
+      always be compiled with variadic macros support to avoid portability issues.
+      Most of the examples presented in this documentation provide a side-by-side
+      comparison of the two syntaxes.
     </p>
 <a name="boost_local.Introduction.an_example"></a><h6>
 <a name="boost_local.Introduction.an_example-heading"></a>
@@ -152,8 +155,8 @@
       local exit is used to automatically release the array's memory when the enclosing
       function exits. A local block is used to assert the correct final value of
       the summation in a constant-correct context (therefore preventing the assertion
-      from mistakenly changing any of the variables in scope). See the <a class="link" href="boost_local/Tutorial.html" title="Tutorial">Tutorial</a>
-      section for more details.
+      instruction from mistakenly changing any of the variables in scope). See the
+      <a class="link" href="boost_local/Tutorial.html" title="Tutorial">Tutorial</a> section for more details.
     </p>
 <div class="informaltable"><table class="table">
 <colgroup>
@@ -330,33 +333,33 @@
           see the <a class="link" href="boost_local/Tutorial.html" title="Tutorial">Tutorial</a> section).
           On C99 and later preprocessors which support variadic macros, the same
           parameter macro also allows to specify the parameters separated by commas
-          instead that wrapped within parenthesis <code class="literal"><span class="emphasis"><em>parameter-type
-          parameter-name</em></span>,<span class="emphasis"><em>...</em></span></code> so to support
+          instead than wrapped within parenthesis <code class="literal"><span class="emphasis"><em>parameter-type
+          parameter-name</em></span>,<span class="emphasis"><em>...</em></span></code> thus supporting
           a syntax similar to the usual C++ syntax for function parameter lists.
           The local function result type is specified just before the parameter macro.
         </li>
 <li class="listitem">
-          This library macros introduce the special "keyword" <code class="computeroutput"><span class="identifier">bind</span></code> which can be used instead of the
+          The library macros introduce the special "keyword" <code class="computeroutput"><span class="identifier">bind</span></code> which can be used instead of the
           parameter type to bind variables in scope. Variables can be bound by value,
           by reference, by constant value, and by constant reference. In addition,
           the object <code class="computeroutput"><span class="keyword">this</span></code> can be bound
-          (eventually by constant value but never by reference or constant reference)
-          from within a non-static member function (see the <a class="link" href="boost_local/Tutorial.html" title="Tutorial">Tutorial</a>
+          (eventually by constant value but never by reference or constant reference
+          <sup>[<a name="id865420" href="#ftn.id865420" class="footnote">1</a>]</sup> ) from within a non-static member function (see the <a class="link" href="boost_local/Tutorial.html" title="Tutorial">Tutorial</a>
           section). For example, the variable <code class="computeroutput"><span class="identifier">factor</span></code>
           is bound by constant value so it cannot be mistakenly modified by the local
           function body. The variable <code class="computeroutput"><span class="identifier">sum</span></code>
           is instead bound by non-constant reference because the local function needs
-          to change its value to report the summation result to the enclosing scope.
+          to change its value to report the summation value to the enclosing scope.
         </li>
 <li class="listitem">
           The local function body is programmed outside the macros with the usual
           C++ syntax. Eventual compiler error messages and related line numbers retain
-          their usual meaning. Exceptions specifications can be programmed outside
-          the macro and just before the body code block <code class="computeroutput"><span class="special">{...}</span></code>
-          as usual. Finally, within the local function body the type of a bound variable
-          can be accessed using <code class="literal"><code class="computeroutput"><a class="link" href="BOOST_LOCAL_TYPEOF.html" title="Macro BOOST_LOCAL_TYPEOF">BOOST_LOCAL_TYPEOF</a></code>(<span class="emphasis"><em>bound-variable-name</em></span>)</code>
-          (see the <a class="link" href="boost_local/Advanced_Topics.html" title="Advanced Topics">Advanced Topics</a>
-          section).
+          their usual meaning and format. Exceptions specifications can be programmed
+          outside the macro and just before the body code block <code class="computeroutput"><span class="special">{...}</span></code>.
+          Finally, within the local function body the type of a bound variable can
+          be accessed using <code class="literal"><code class="computeroutput"><a class="link" href="BOOST_LOCAL_TYPEOF.html" title="Macro BOOST_LOCAL_TYPEOF">BOOST_LOCAL_TYPEOF</a></code>(<span class="emphasis"><em>bound-variable-name</em></span>)</code>.
+          (See the <a class="link" href="boost_local/Advanced_Topics.html" title="Advanced Topics">Advanced Topics</a>
+          section.)
         </li>
 <li class="listitem">
           The macro ending the local function definition specifies the local function
@@ -364,19 +367,20 @@
           after the ending macro.
         </li>
 <li class="listitem">
-          The local function macros declare a functor object local to the enclosing
-          scope named <code class="computeroutput"><span class="identifier">add</span></code>. The functor
-          <code class="computeroutput"><span class="identifier">add</span></code> has <code class="computeroutput"><span class="keyword">void</span></code>
-          result type, it can be called by specifying one parameter of type <code class="computeroutput"><span class="keyword">double</span></code>, and it has access to the variables
-          in scope <code class="computeroutput"><span class="identifier">factor</span></code> (by constant
-          value) and <code class="computeroutput"><span class="identifier">sum</span></code> (by reference).
+          The local function macros declare a function object (a.k.a., functor) local
+          to the enclosing scope named <code class="computeroutput"><span class="identifier">add</span></code>.
+          The functor <code class="computeroutput"><span class="identifier">add</span></code> has <code class="computeroutput"><span class="keyword">void</span></code> result type, it can be called by specifying
+          one parameter <code class="computeroutput"><span class="identifier">num</span></code> of type
+          <code class="computeroutput"><span class="keyword">double</span></code>, and it has access
+          to the variables in scope <code class="computeroutput"><span class="identifier">factor</span></code>
+          (by constant value) and <code class="computeroutput"><span class="identifier">sum</span></code>
+          (by reference).
         </li>
 <li class="listitem">
           The <span class="bold"><strong>local exit</strong></span> declaration macro only
           specifies the variables in scope to bind (by reference or value and eventually
           as constants). Exceptions specifications can be programmed outside the
-          macro and just before the body code block <code class="computeroutput"><span class="special">{...}</span></code>
-          as usual.
+          macro and just before the body code block <code class="computeroutput"><span class="special">{...}</span></code>.
         </li>
 <li class="listitem">
           The local exit code will be automatically executed when the enclosing scope
@@ -389,14 +393,14 @@
         </li>
 <li class="listitem">
           The local function <code class="computeroutput"><span class="identifier">add</span></code>
-          can also be passed as a template parameter (for example, to the STL <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">for_each</span></code> algorithm).
+          can be passed as a template parameter (e.g., to the STL <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">for_each</span></code>
+          algorithm).
         </li>
 <li class="listitem">
           The <span class="bold"><strong>local block</strong></span> declaration macro only
           specifies the variables in scope to bind (by reference or value and eventually
           as constants). Exceptions specifications can be programmed outside the
-          macro and just before the body code block <code class="computeroutput"><span class="special">{...}</span></code>
-          as usual.
+          macro and just before the body code block <code class="computeroutput"><span class="special">{...}</span></code>.
         </li>
 <li class="listitem">
           The local block code is executed "in place" where it is programmed
@@ -414,9 +418,15 @@
         </li>
 </ol></div>
 </div>
+<div class="footnotes">
+<br><hr width="100" align="left">
+<div class="footnote"><p><sup>[<a id="ftn.id865420" href="#id865420" class="para">1</a>] </sup>
+            C++ does not allow to obtain a reference to the pointer <code class="computeroutput"><span class="keyword">this</span></code>.
+          </p></div>
+</div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
-<td align="left"><p><small>Last revised: May 03, 2011 at 23:52:20 GMT</small></p></td>
+<td align="left"><p><small>Last revised: May 05, 2011 at 03:09:14 GMT</small></p></td>
 <td align="right"><div class="copyright-footer"></div></td>
 </tr></table>
 <hr>

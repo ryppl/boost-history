@@ -9,7 +9,7 @@
 #include <iostream>
 
 int main() {
-    int BOOST_LOCAL_FUNCTION_PARAMS( (int x) (int y)(default 2) ) {
+    int BOOST_LOCAL_FUNCTION_PARAMS( (int x) (int y)(default 2) ) { // Default.
         return x + y;
     } BOOST_LOCAL_FUNCTION_NAME(add)
 

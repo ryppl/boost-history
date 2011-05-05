@@ -22,7 +22,7 @@ int main() {
     int factor = 10;
 
     void BOOST_LOCAL_FUNCTION_PARAMS(double num, const bind factor,
-            bind& sum) {
+            bind& sum) { // Bind `factor` and `sum`.
         sum += factor * num;
         std::cout << "Summed: " << sum << std::endl;
     } BOOST_LOCAL_FUNCTION_NAME(add)

@@ -18,7 +18,7 @@ int main() {
 #include <iostream>
 
 int main() {
-    int BOOST_LOCAL_FUNCTION_PARAMS() {
+    int BOOST_LOCAL_FUNCTION_PARAMS() { // No parameter.
         return 10;
     } BOOST_LOCAL_FUNCTION_NAME(ten)
 

@@ -12,21 +12,22 @@ This section explains how to setup your system to use this library.
 
 Programmers should have enough knowledge to use this library after reading the __Introduction__, __Getting_Started__, and __Tutorial__ sections.
 The __Advanced_Topics__ and __Reference__ sections can be consulted at a later point to gain a more advanced knowledge of the library.
-All the other sections of this documentation are for reference only.
+All the other sections of this documentation are optional.
 
-Some footnotes are marked by the word "*Rationale*" because they explain reasons behind decisions made during the design and implementation of this library.
+Some footnotes are marked by the word "*Rationale*".
+They explain reasons behind decisions made during the design and implementation of this library.
 
 [endsect]
 
 [section Compilers and Platforms]
 
-The implementation of this library uses preprocessor and template metaprogramming (as supported by __Boost_Preprocessor__ and __Boost_MPL__), templates with partial specializations and function pointers (to support an interface similar to the one of __Boost_Function__).
+The implementation of this library uses preprocessor and template metaprogramming (as supported by __Boost_Preprocessor__ and __Boost_MPL__), templates with partial specializations and function pointers (similarly to __Boost_Function__).
 As a consequence, this library is fairly demanding on compilers' compliance with the ISO C++ standard.
 At present, this library has been successfully compiled and tested on the following compilers and platforms:
 
-# GCC 4.2.4 on Ubuntu Linux.
-# GCC 3.4.4 on Cygwin.
-# Miscrosoft Visual Studio 8.0 on Windows XP.
+# GNU Compiler Collection (GCC) 4.5.1 (with and without C++0x features enabled) on Ubuntu Linux 10.
+# GCC 4.3.4 on Cygwin.
+# Miscrosoft Visual Studio Compiler (MSVC) 8.0 on Windows XP.
 
 This library has not yet been tested on any other compiler or platform.
 
@@ -47,14 +48,14 @@ The header files of this library are divided as follow:
     ``[headerref boost/local/block.hpp]           /local blocks/``
     ``[headerref boost/local/exit.hpp]            /local exits/``
     ``[headerref boost/local/typeof.hpp]          /bound variable type deduction/``
-    ``[headerref boost/local/config.hpp]          /configuration macros/``
+    ``[headerref boost/local/config.hpp]          /library configuration macros/``
 
-The following symbols are part of the library private API, they are not documented, and they should not be directly used by programmers:
+The followings are part of the library private API, they are not documented, and they should not be directly used by programmers:
 [footnote
 *Rationale.*
 This library concatenates symbols specified by the programmers (e.g., the local function name) with other symbols (e.g., special prefixes or preprocessor line numbers) to make internal symbols with unique names to avoid name clashes.
-These symbols are separated by the letter "`X`" when they are concatenated so they can be read more easily while debugging the library.
-The underscore character "`_`" could not be used instead of the letter "`X`" because if the original symbols already contained a leading or trailing underscore, the concatenation would result in a symbol with double underscores "`__`" which is reserved by the C++ standard.
+These symbols are separated by the letter "`X`" when they are concatenated so they read more easily during debugging.
+The underscore character "`_`" could not be used instead of the letter "`X`" because if the original symbols already contained a leading or trailing underscore, the concatenation could result in a symbol with double underscores "`__`" which is reserved by the C++ standard.
 ]
 
 * Any symbol defined by files within the `"boost/local/aux_/"` directory (these header files should not be directly included by programmers).
@@ -69,7 +70,7 @@ The underscore character "`_`" could not be used instead of the letter "`X`" bec
 Some of the library behaviour can be changed at compile-time by defining special /configuration macros/.
 If a configuration macro is left undefined, the library will use an appropriate default value for it.
 
-All configuration macros have names prefixed by `BOOST_LOCAL_CONFIG_...` (see __Reference__ section).
+All configuration macros have names prefixed by `BOOST_LOCAL_CONFIG_...` (see the __Reference__ section).
 It is strongly recommended not to change the library configuration macro definitions unless strictly necessary.
 
 [endsect]

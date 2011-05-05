@@ -21,13 +21,14 @@ int main() {
 int main() {
     double sum = 1975.0;
 
-    BOOST_LOCAL_BLOCK(const bind& sum) {
+    BOOST_LOCAL_BLOCK(const bind& sum) { // Local block.
         assert(sum == 1975.0); // OK: Complier error if `==` confused with `=`.
         std::cout << "Asserted summation: " << sum << std::endl;
 
         return; // Return this local block (and not the enclosing scope).
         assert(false); // OK: Never executed.
     } BOOST_LOCAL_BLOCK_END
+    // Local block executed here.
 
     return 0;
 }

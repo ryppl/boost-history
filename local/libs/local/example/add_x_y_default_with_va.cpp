@@ -20,7 +20,7 @@ int main() {
 #define WITH_DEFAULT , default
 
 int main() {
-    int BOOST_LOCAL_FUNCTION_PARAMS(int x, int y WITH_DEFAULT 2) {
+    int BOOST_LOCAL_FUNCTION_PARAMS(int x, int y WITH_DEFAULT 2) { // Default.
         return x + y;
     } BOOST_LOCAL_FUNCTION_NAME(add)
 
