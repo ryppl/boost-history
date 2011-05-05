@@ -104,7 +104,7 @@ template <neuron_base::sense_t>
 
             // ponderate
             double accuracy = what.size() > 1 ? 0 : 1;
-            for (int i = 1; i < what.size(); i ++)
+            for (unsigned i = 1; i < what.size(); i ++)
             {
                 if (what[i].matched)
                 {
@@ -119,7 +119,7 @@ template <neuron_base::sense_t>
 */
 
             // learn if sounds equitable, God tells you to or "energy" spent is still low
-            for (int i = 1; i < what.size(); i ++)
+            for (unsigned i = 1; i < what.size(); i ++)
                 if (what[i].matched)
                 {
                     if (sub_[i - 1].first == 0)

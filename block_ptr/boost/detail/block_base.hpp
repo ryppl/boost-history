@@ -212,8 +212,6 @@ template <typename T>
 		*/
 		
         data_type * element() 				{ return & elem_; }
-        operator data_type & ()             { return * element(); }
-        operator data_type const & () const { return * element(); }
 
         virtual ~block()					
         { 
@@ -291,7 +289,7 @@ template <>
         virtual ~block()					{}
         virtual void dispose() 				{}
 
-        virtual void * get_deleter( std::type_info const & ti ) {}
+        virtual void * get_deleter( std::type_info const & ti ) { return 0; }
 
     public:
 		/**
