@@ -1,0 +1,383 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Tutorial</title>
+<link rel="stylesheet" href="../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="../index.html" title="Chapter&#160;1.&#160;Boost.Assign 2.0">
+<link rel="up" href="../index.html" title="Chapter&#160;1.&#160;Boost.Assign 2.0">
+<link rel="prev" href="org.html" title="Organization">
+<link rel="next" href="reference.html" title="Reference">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../boost.png"></td>
+<td align="center"><a href="../../../index.html">Home</a></td>
+<td align="center"><a href="../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="org.html"><img src="../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="reference.html"><img src="../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="boost_assign_v2.tut"></a><a class="link" href="tut.html" title="Tutorial">Tutorial</a>
+</h2></div></div></div>
+<a name="boost_assign.tut.requisites"></a><h4>
+<a name="id36332159"></a>
+      <a class="link" href="tut.html#boost_assign.tut.requisites">Requisites</a>
+    </h4>
+<p>
+      We assume in this tutorial that all the header files are included, as shown
+      in section <a class="link" href="org.html#full_include">Organization</a> and 
+</p>
+<pre class="programlisting"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">assign</span><span class="special">::</span><span class="identifier">v2</span><span class="special">;</span>
+</pre>
+<p>
+    </p>
+<p>
+      Headers from other libraries will not be shown in the code snippets of this
+      tutorial, but they can be found in the tutorial's actual <a href="../../../tutorial.cpp" target="_top">source
+      file</a>.
+    </p>
+<a name="boost_assign.tut.automatic_behavior"></a><h4>
+<a name="id36332231"></a>
+      <a class="link" href="tut.html#boost_assign.tut.automatic_behavior">Automatic behavior</a>
+    </h4>
+<p>
+      We refer, here, to the <a class="link" href="../index.html#boost_assign_v2.intro" title="Introduction">introduction</a>'s
+      example and recall that the <span class="emphasis"><em>interpreter</em></span> returned by <a class="link" href="reference/put.html#put"><code class="computeroutput">put</code></a> is variadic and
+    </p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+          that its arguments are forwarded to a data-generator. See <a class="link" href="reference/interpreter.html#data_gen_rules">here</a>
+          for further detail.
+        </li>
+<li class="listitem">
+          determines an appropriate <span class="emphasis"><em>modifier</em></span>, <code class="computeroutput"><span class="identifier">insert</span></code> in case of a map, based on a set
+          of <a class="link" href="reference/interpreter.html#modifier_rules">rules</a>, such that the interface
+          is uniform across different container categories.
+        </li>
+</ul></div>
+<a name="boost_assign.tut.csv_syntax"></a><h4>
+<a name="id36332304"></a>
+      <a class="link" href="tut.html#boost_assign.tut.csv_syntax">Csv syntax</a>
+    </h4>
+<p>
+      Consider this example:
+    </p>
+<p>
+      
+</p>
+<pre class="programlisting"><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">numeric</span><span class="special">(</span> <span class="number">10</span> <span class="special">);</span> <span class="identifier">iota</span><span class="special">(</span> <span class="identifier">numeric</span><span class="special">,</span> <span class="number">0</span> <span class="special">);</span> 
+<span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">str_</span><span class="special">;</span> <span class="keyword">typedef</span> <span class="identifier">variant</span><span class="special">&lt;</span> <span class="keyword">int</span><span class="special">,</span> <span class="identifier">str_</span> <span class="special">&gt;</span> <span class="identifier">data_</span><span class="special">;</span> 
+<span class="identifier">array</span><span class="special">&lt;</span><span class="identifier">data_</span><span class="special">,</span> <span class="number">16</span><span class="special">&gt;</span> <span class="identifier">keypad</span><span class="special">;</span>
+
+<a class="co" name="boost_assign1co" href="tut.html#boost_assign1"><img src="../../../doc/src/images/callouts/1.png" alt="1" border="0"></a><span class="identifier">csv_put</span><span class="special">(</span> <span class="identifier">keypad</span><span class="special">,</span> <span class="string">"+"</span><span class="special">,</span> <span class="string">"-"</span><span class="special">,</span> <span class="string">"*"</span><span class="special">,</span> <span class="string">"/"</span><span class="special">,</span> <span class="string">"="</span><span class="special">,</span> <span class="string">"."</span> <span class="special">,</span> <span class="identifier">as_arg_list</span><span class="special">(</span> <span class="identifier">numeric</span> <span class="special">)</span> <span class="special">);</span>
+
+<span class="identifier">assert</span><span class="special">(</span> <span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">str_</span><span class="special">&gt;(</span> <span class="identifier">keypad</span><span class="special">.</span><span class="identifier">front</span><span class="special">()</span> <span class="special">)</span> <span class="special">==</span> <span class="string">"+"</span> <span class="special">);</span>
+<span class="identifier">assert</span><span class="special">(</span> <span class="identifier">get</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;(</span> <span class="identifier">keypad</span><span class="special">.</span><span class="identifier">back</span><span class="special">()</span>  <span class="special">)</span> <span class="special">==</span> <span class="number">9</span> <span class="special">);</span>
+</pre>
+<p>
+    </p>
+<div class="calloutlist"><table border="0" summary="Callout list"><tr>
+<td width="5%" valign="top" align="left"><p><a name="boost_assign1"></a><a href="#boost_assign1co"><img src="../../../doc/src/images/callouts/1.png" alt="1" border="0"></a> </p></td>
+<td valign="top" align="left"><p>
+          Equivalent to <code class="computeroutput"><span class="identifier">put</span><span class="special">(</span>
+          <span class="identifier">keypad</span> <span class="special">)(</span>
+          <span class="string">"+"</span> <span class="special">)(</span>
+          <span class="string">"-"</span> <span class="special">)...(</span>
+          <span class="string">"."</span> <span class="special">)(</span>
+          <span class="number">0</span> <span class="special">)...(</span>
+          <span class="number">9</span> <span class="special">)</span></code>
+        </p></td>
+</tr></table></div>
+<p>
+      Prefix <code class="computeroutput"><span class="identifier">csv</span></code><sup>[<a name="id36332826" href="#ftn.id36332826" class="footnote">4</a>]</sup> indicates an <a class="link" href="reference/put.html#csv_put">alternative syntax</a>
+      that is dual to a functor, as can be garnered from the <a href="http://www.boost.org/doc/libs/1_46_1/doc/html/quickbook/syntax.html#quickbook.syntax.block.import.callouts" target="_top">callout</a>.
+      Other names starting with <span class="emphasis"><em>csv</em></span> are treated similarly.
+    </p>
+<p>
+      Another thing to notice is that the last argument (in this example) is a <a href="http://svn.boost.org/svn/boost/trunk/libs/range/doc/html/range/concepts/overview.html" target="_top">range</a>,
+      <code class="computeroutput"><span class="identifier">numeric</span></code>, with a special wrapper
+      around it, <code class="computeroutput">as_arg_list</code>. The latter instructs the interpreter to
+      scan the range's elements, and process each as if passed as an individual argument.
+    </p>
+<a name="boost_assign.tut.pipe_syntax"></a><h4>
+<a name="id36332880"></a>
+      <a class="link" href="tut.html#boost_assign.tut.pipe_syntax">Pipe syntax</a>
+    </h4>
+<p>
+      Suppose we wish to put a set of integers in a container and, in the same statement,
+      pass it through a mutating <a href="http://svn.boost.org/svn/boost/trunk/libs/range/doc/html/range/reference/algorithms.html" target="_top">algorithm</a>:
+    </p>
+<p>
+      
+</p>
+<pre class="programlisting"><span class="identifier">std</span><span class="special">::</span><span class="identifier">deque</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">source</span><span class="special">(</span> <span class="number">6</span> <span class="special">),</span> <span class="identifier">target</span><span class="special">;</span> <span class="identifier">iota</span><span class="special">(</span> <span class="identifier">source</span><span class="special">,</span> <span class="number">0</span> <span class="special">);</span>
+
+<span class="identifier">range</span><span class="special">::</span><span class="identifier">stable_partition</span><span class="special">(</span> 
+    <span class="identifier">target</span> <span class="special">|</span> <span class="identifier">delay_csv_put</span><span class="special">(</span> <span class="identifier">source</span> <span class="special">),</span> 
+    <span class="identifier">lambda</span><span class="special">::</span><span class="identifier">_1</span> <span class="special">%</span> <span class="number">2</span> 
+<span class="special">);</span>
+</pre>
+<p>
+    </p>
+<p>
+      The vertical bar, <code class="computeroutput"><span class="special">|</span></code>, expresses
+      the on-the-fly modification we were looking for, and call it <span class="emphasis"><em>piping</em></span>
+      after the related <a href="http://en.wikipedia.org/wiki/Vertical_bar#Pipe" target="_top">idiom</a>
+      by the same name. A related feature is Boost.Range's <a href="http://svn.boost.org/svn/boost/trunk/libs/range/doc/html/range/reference/adaptors.html" target="_top">range
+      adaptors</a>.
+    </p>
+<a name="boost_assign.tut.container_generation"></a><h4>
+<a name="id36333230"></a>
+      <a class="link" href="tut.html#boost_assign.tut.container_generation">Container generation</a>
+    </h4>
+<a name="tut_cont_gen"></a><p>
+      After having assigned <code class="computeroutput"><span class="identifier">target</span></code>
+      and, in the same statement, passed it through a <a href="http://www.boost.org/doc/libs/1_46_0/libs/range/doc/html/range/reference/algorithms/mutating/stable_partition.html" target="_top">stable
+      partition</a> algorithm, let's verify the state of the container against
+      that of an in place generated container:
+    </p>
+<p>
+      
+</p>
+<pre class="programlisting"><span class="identifier">assert</span><span class="special">(</span>    
+    <span class="identifier">range</span><span class="special">::</span><span class="identifier">equal</span><span class="special">(</span> <span class="identifier">target</span><span class="special">,</span> <span class="identifier">csv_deque</span><span class="special">(</span><span class="number">1</span><span class="special">,</span> <span class="number">3</span><span class="special">,</span> <span class="number">5</span><span class="special">,</span> <span class="number">0</span><span class="special">,</span> <span class="number">2</span><span class="special">,</span> <span class="number">4</span><span class="special">)</span> <span class="special">)</span> 
+<span class="special">);</span>
+</pre>
+<p>
+    </p>
+<a name="tut_empty"></a><p>
+      In keeping with our previously established <span class="emphasis"><em>csv</em></span> convention,
+      container generating function <a class="link" href="reference/deque.html#csv_deque"><code class="computeroutput">csv_deque</code></a>
+      is paired with a functor form, <a class="link" href="reference/deque.html#deque"><code class="computeroutput">deque</code></a>.
+      Another convention, that we now introduce by way of example, is that which
+      governs the generation of an empty container:
+    </p>
+<p>
+      
+</p>
+<pre class="programlisting"><span class="identifier">assert</span><span class="special">(</span> <span class="identifier">deque</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;(</span> <span class="identifier">_nil</span> <span class="special">).</span><span class="identifier">size</span><span class="special">()</span> <span class="special">==</span> <span class="number">0</span> <span class="special">);</span>    <span class="comment">// Functor form
+</span><span class="identifier">assert</span><span class="special">(</span> <span class="identifier">csv_deque</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;().</span><span class="identifier">size</span><span class="special">()</span> <span class="special">==</span> <span class="number">0</span> <span class="special">);</span>      <span class="comment">// Csv form
+</span></pre>
+<p>
+    </p>
+<a name="boost_assign.tut.pointer_containers"></a><h4>
+<a name="id36333534"></a>
+      <a class="link" href="tut.html#boost_assign.tut.pointer_containers">Pointer-containers</a>
+    </h4>
+<p>
+      To insert elements in a <a href="http://www.boost.org/doc/libs/release/libs/ptr_container/doc/ptr_container.html" target="_top">pointer
+      container</a>, pretend it is a value-container:
+    </p>
+<p>
+      
+</p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">word_</span><span class="special">;</span> <span class="identifier">ptr_set</span><span class="special">&lt;</span><span class="identifier">word_</span><span class="special">&gt;</span> <span class="identifier">words</span><span class="special">;</span>
+<a class="co" name="boost_assign2co" href="tut.html#boost_assign2"><img src="../../../doc/src/images/callouts/1.png" alt="1" border="0"></a><span class="identifier">csv_put</span><span class="special">(</span> <span class="identifier">words</span><span class="special">,</span> <span class="string">"isomer"</span><span class="special">,</span> <span class="string">"ephemeral"</span><span class="special">,</span> <span class="string">"prosaic"</span> <span class="special">);</span>
+
+<span class="identifier">assert</span><span class="special">(</span> <span class="identifier">words</span><span class="special">.</span><span class="identifier">count</span><span class="special">(</span> <span class="string">"isomer"</span> <span class="special">)</span> <span class="special">==</span> <span class="number">1</span> <span class="special">);</span>
+<span class="identifier">assert</span><span class="special">(</span> <span class="identifier">words</span><span class="special">.</span><span class="identifier">count</span><span class="special">(</span> <span class="string">"prosaic"</span> <span class="special">)</span> <span class="special">==</span> <span class="number">1</span> <span class="special">);</span>
+</pre>
+<p>
+    </p>
+<div class="calloutlist"><table border="0" summary="Callout list"><tr>
+<td width="5%" valign="top" align="left"><p><a name="boost_assign2"></a><a href="#boost_assign2co"><img src="../../../doc/src/images/callouts/1.png" alt="1" border="0"></a> </p></td>
+<td valign="top" align="left"><p>
+          Calls <code class="computeroutput"><span class="identifier">assoc</span><span class="special">.</span><span class="identifier">insert</span><span class="special">(</span> <span class="keyword">new</span> <span class="identifier">word_</span><span class="special">(</span> <span class="identifier">s</span> <span class="special">)</span> <span class="special">)</span></code> for
+          <code class="literal">s = "isomer", "ephemeral", "prosaic"</code>
+        </p></td>
+</tr></table></div>
+<a name="boost_assign.tut.options"></a><h4>
+<a name="id36333840"></a>
+      <a class="link" href="tut.html#boost_assign.tut.options">Options</a>
+    </h4>
+<p>
+      The automatically deduced data-generator can be overriden, such as follows:
+    </p>
+<p>
+      
+</p>
+<pre class="programlisting"><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;</span> <span class="identifier">exponent</span><span class="special">;</span>
+
+<span class="keyword">typedef</span> <span class="identifier">function</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">(</span><span class="keyword">double</span><span class="special">)&gt;</span> <span class="identifier">f_</span><span class="special">;</span>
+<a class="co" name="boost_assign3co" href="tut.html#boost_assign3"><img src="../../../doc/src/images/callouts/1.png" alt="1" border="0"></a><span class="identifier">csv_put</span><span class="special">(</span>
+    <span class="identifier">exponent</span>
+    <span class="special">,</span> <span class="identifier">_option</span> <span class="special">%</span> <span class="special">(</span> <span class="identifier">_data</span> <span class="special">=</span> <span class="identifier">f_</span><span class="special">(</span>  <span class="identifier">log10</span>  <span class="special">)</span> <span class="special">)</span>
+    <span class="special">,</span> <span class="number">1.0</span><span class="special">,</span> <span class="number">10.0</span><span class="special">,</span> <span class="number">100.0</span><span class="special">,</span> <span class="number">1000.0</span><span class="special">,</span> <span class="number">10000.0</span>
+<span class="special">);</span>
+
+<span class="keyword">double</span> <span class="identifier">eps</span> <span class="special">=</span> <span class="identifier">numeric</span><span class="special">::</span><span class="identifier">bounds</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;::</span><span class="identifier">smallest</span><span class="special">();</span>
+<span class="identifier">assert</span><span class="special">(</span> <span class="identifier">fabs</span><span class="special">(</span> <span class="identifier">exponent</span><span class="special">.</span><span class="identifier">front</span><span class="special">()</span> <span class="special">-</span> <span class="number">0.0</span> <span class="special">)</span> <span class="special">&lt;</span> <span class="identifier">eps</span> <span class="special">);</span>
+<span class="identifier">assert</span><span class="special">(</span> <span class="identifier">fabs</span><span class="special">(</span> <span class="identifier">exponent</span><span class="special">.</span><span class="identifier">back</span><span class="special">()</span> <span class="special">-</span> <span class="number">4.0</span> <span class="special">)</span> <span class="special">&lt;</span> <span class="identifier">eps</span> <span class="special">);</span>
+</pre>
+<p>
+    </p>
+<div class="calloutlist"><table border="0" summary="Callout list"><tr>
+<td width="5%" valign="top" align="left"><p><a name="boost_assign3"></a><a href="#boost_assign3co"><img src="../../../doc/src/images/callouts/1.png" alt="1" border="0"></a> </p></td>
+<td valign="top" align="left"><p>
+          Equivalent to <code class="computeroutput"><span class="special">(</span> <span class="identifier">put</span><span class="special">(</span> <span class="identifier">exponent</span>
+          <span class="special">)</span> <span class="special">%</span> <span class="special">(</span> <span class="identifier">_data</span> <span class="special">=</span> <span class="identifier">f_</span><span class="special">(</span> <span class="identifier">log10</span> <span class="special">)</span> <span class="special">)</span> <span class="special">)(</span>
+          <span class="number">1.0</span> <span class="special">)</span> <span class="special">...(</span> <span class="number">10000.0</span> <span class="special">)</span></code>
+        </p></td>
+</tr></table></div>
+<p>
+      Similarly, the modifier can be explicitly specified, such as follows:
+    </p>
+<p>
+      
+</p>
+<pre class="programlisting"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">circular_buffer</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">cb</span><span class="special">(</span> <span class="number">3</span> <span class="special">);</span> 
+
+<span class="identifier">assert</span><span class="special">(</span>
+    <span class="identifier">range</span><span class="special">::</span><span class="identifier">equal</span><span class="special">(</span>
+        <span class="identifier">cb</span> <span class="special">|</span> <span class="identifier">delay_csv_put</span><span class="special">(</span> <span class="identifier">_push_front</span><span class="special">,</span> <span class="identifier">csv_deque</span><span class="special">(</span> <span class="number">3</span><span class="special">,</span> <span class="number">2</span><span class="special">,</span> <span class="number">1</span> <span class="special">)</span> <span class="special">),</span> 
+        <span class="identifier">csv_deque</span><span class="special">(</span> <span class="number">1</span><span class="special">,</span> <span class="number">2</span><span class="special">,</span> <span class="number">3</span> <span class="special">)</span> 
+    <span class="special">)</span>
+<span class="special">);</span>
+</pre>
+<p>
+    </p>
+<p>
+      These are basic examples, each involving one option. Notice that only the form
+      <code class="computeroutput">csv_put</code> requires the use of keyword <code class="computeroutput">_option</code>. See
+      section <a class="link" href="reference/option.html" title="Option">Option</a> for
+      more advanced options. Composing <code class="literal">m</code> options is achieved as
+      follows : <code class="computeroutput">option1 % ... % optionm</code>. Finally, extending the library
+      with a new modifier-option is fairly easy, thanks to <a class="link" href="reference/option.html#modifier_macro">macros</a>
+      that manage the overhead.
+    </p>
+<a name="boost_assign.tut.reference_arrays"></a><h4>
+<a name="id36334593"></a>
+      <a class="link" href="tut.html#boost_assign.tut.reference_arrays">Reference arrays</a>
+    </h4>
+<p>
+      In the examples that precede, <a class="link" href="reference/ref.html#ref_csv_array"><code class="computeroutput">ref::csv_array</code></a>,
+      which returns a reference-array, could be substituted for <code class="computeroutput">csv_deque</code>.
+      The reciprocal is not true, in general. A reference-array is preferable if
+      the values are expensive to copy, and it is necessary for working specifically
+      with references, such as as follows:
+    </p>
+<p>
+      
+</p>
+<pre class="programlisting"><span class="keyword">int</span> <span class="identifier">x</span> <span class="special">=</span> <span class="number">4</span><span class="special">,</span> <span class="identifier">y</span> <span class="special">=</span> <span class="number">6</span><span class="special">,</span> <span class="identifier">z</span> <span class="special">=</span> <span class="special">-</span><span class="number">1</span><span class="special">;</span>
+<span class="keyword">int</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">max</span> <span class="special">=</span> <span class="special">*</span><span class="identifier">max_element</span><span class="special">(</span> <span class="identifier">ref</span><span class="special">::</span><span class="identifier">csv_array</span><span class="special">(</span> <span class="identifier">x</span><span class="special">,</span> <span class="identifier">y</span><span class="special">,</span> <span class="identifier">z</span> <span class="special">)</span> <span class="special">);</span>
+
+<span class="identifier">assert</span><span class="special">(</span> <span class="special">&amp;</span><span class="identifier">max</span> <span class="special">==</span> <span class="special">&amp;</span><span class="identifier">y</span> <span class="special">);</span>
+</pre>
+<p>
+    </p>
+<p>
+      In keeping with our <span class="emphasis"><em>csv</em></span> convention, <code class="computeroutput">ref::csv_array</code>
+      has a functor dual, <a class="link" href="reference/ref.html#ref_array"><code class="computeroutput">ref::array</code></a>.
+      Unlike <code class="computeroutput">put</code> or <code class="computeroutput">deque</code>, it is unary (not variadic).
+    </p>
+<a name="boost_assign.tut.chaining"></a><h4>
+<a name="id36334855"></a>
+      <a class="link" href="tut.html#boost_assign.tut.chaining">Chaining</a>
+    </h4>
+<p>
+      Chaining ranges is already provided by <a href="http://svn.boost.org/svn/boost/trunk/boost/range/join.hpp" target="_top"><code class="computeroutput"><span class="identifier">join</span></code></a> in <a href="http://www.boost.org/doc/libs/release/libs/range/index.html" target="_top">Boost.Range</a>.
+      Here's a <a class="link" href="reference.html#chain">variant</a> that caters to reference arrays:
+    </p>
+<p>
+      
+</p>
+<pre class="programlisting"><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">source</span><span class="special">(</span> <span class="number">8</span> <span class="special">);</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">iota</span><span class="special">(</span> <span class="identifier">source</span><span class="special">,</span> <span class="number">1</span> <span class="special">);</span>
+
+<span class="identifier">array</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="number">4</span><span class="special">&gt;</span> <span class="identifier">head</span><span class="special">;</span> <span class="keyword">int</span> <span class="identifier">t</span><span class="special">,</span> <span class="identifier">a</span><span class="special">,</span> <span class="identifier">i</span><span class="special">,</span> <span class="identifier">l</span><span class="special">;</span>
+<span class="identifier">boost</span><span class="special">::</span><span class="identifier">copy</span><span class="special">(</span>
+    <span class="identifier">source</span><span class="special">,</span>
+    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">begin</span><span class="special">(</span>
+        <span class="identifier">head</span> <span class="special">|</span> <span class="identifier">_chain</span><span class="special">(</span> 
+            <span class="identifier">ref</span><span class="special">::</span><span class="identifier">csv_array</span><span class="special">(</span> <span class="identifier">t</span><span class="special">,</span> <span class="identifier">a</span><span class="special">,</span> <span class="identifier">i</span><span class="special">,</span> <span class="identifier">l</span> <span class="special">)</span> <span class="special">|</span> <span class="identifier">ref</span><span class="special">::</span><span class="identifier">_get</span> 
+        <span class="special">)</span>
+    <span class="special">)</span>
+<span class="special">);</span>
+
+<span class="identifier">assert</span><span class="special">(</span> <span class="identifier">range</span><span class="special">::</span><span class="identifier">equal</span><span class="special">(</span> <span class="identifier">head</span><span class="special">,</span> <span class="identifier">csv_deque</span><span class="special">(</span> <span class="number">1</span><span class="special">,</span> <span class="number">2</span><span class="special">,</span> <span class="number">3</span><span class="special">,</span> <span class="number">4</span> <span class="special">)</span> <span class="special">)</span> <span class="special">);</span>
+<span class="identifier">assert</span><span class="special">(</span> <span class="identifier">t</span> <span class="special">==</span> <span class="number">5</span> <span class="special">);</span> 
+<span class="identifier">assert</span><span class="special">(</span> <span class="identifier">a</span> <span class="special">==</span> <span class="number">6</span> <span class="special">);</span> 
+<span class="identifier">assert</span><span class="special">(</span> <span class="identifier">i</span> <span class="special">==</span> <span class="number">7</span> <span class="special">);</span> 
+<span class="identifier">assert</span><span class="special">(</span> <span class="identifier">l</span> <span class="special">==</span> <span class="number">8</span> <span class="special">);</span>
+</pre>
+<p>
+    </p>
+<p>
+      It is noteworthy that this algorithm modifies <code class="computeroutput"><span class="identifier">x</span></code>,
+      <code class="computeroutput"><span class="identifier">y</span></code> and <code class="computeroutput"><span class="identifier">z</span></code>
+      even though the array returned by <code class="computeroutput"><span class="identifier">ref</span><span class="special">::</span><span class="identifier">csv_array</span></code>
+      is an rvalue. The part of the expression involving <a class="link" href="reference/ref.html#ref_get"><code class="computeroutput"><span class="identifier">ref</span><span class="special">::</span><span class="identifier">_get</span></code></a>
+      tells the implementation that we wish to use the reference-array in write mode
+      i.e. modify the values of its held references <sup>[<a name="id36335477" href="#ftn.id36335477" class="footnote">5</a>]</sup>.
+    </p>
+<a name="boost_assign.tut.conversion"></a><h4>
+<a name="id36335490"></a>
+      <a class="link" href="tut.html#boost_assign.tut.conversion">Conversion</a>
+    </h4>
+<p>
+      This section deals with conversion from a <a href="http://svn.boost.org/svn/boost/trunk/libs/range/doc/html/range/concepts/overview.html" target="_top">Range</a>
+      to collections of elements that need not support iterators. For example,
+    </p>
+<p>
+      
+</p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">queue</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">C</span><span class="special">;</span>
+
+<span class="identifier">C</span> <span class="identifier">fifo</span> <span class="special">=</span> <span class="identifier">converter</span><span class="special">(</span> <span class="identifier">csv_deque</span><span class="special">(</span> <span class="number">1</span><span class="special">,</span> <span class="number">2</span><span class="special">,</span> <span class="number">3</span> <span class="special">)</span> <span class="special">);</span>
+
+<span class="identifier">assert</span><span class="special">(</span> <span class="identifier">fifo</span><span class="special">.</span><span class="identifier">front</span><span class="special">()</span> <span class="special">==</span> <span class="number">1</span> <span class="special">);</span> 
+<span class="identifier">assert</span><span class="special">(</span> <span class="identifier">fifo</span><span class="special">.</span><span class="identifier">back</span><span class="special">()</span> <span class="special">==</span> <span class="number">3</span> <span class="special">);</span>
+</pre>
+<p>
+    </p>
+<p>
+      Notice, indeed, that the left hand side of <code class="computeroutput"><span class="special">=</span></code>
+      is an <a href="http://msdn.microsoft.com/en-us/library/1fe2x6kt(v=vs.80).aspx" target="_top">adapter</a>
+      so, unlike the container in the right hand side, it is not a <a href="http://svn.boost.org/svn/boost/trunk/libs/range/doc/html/range/concepts/overview.html" target="_top">Range</a>.
+      The conversion, above, is implicit, and is made possible by a conversion operator
+      fitted to the object returned by <code class="computeroutput">converter</code>. Sometimes, <a class="link" href="reference/conversion.html#convert">explicit
+      conversion</a> is unavoidable and, continuing the above snippet, is illustrated
+      as follows:
+    </p>
+<p>
+      
+</p>
+<pre class="programlisting"><span class="identifier">assert</span><span class="special">(</span>
+    <span class="special">(</span> <span class="identifier">csv_deque</span><span class="special">(</span> <span class="number">1</span><span class="special">,</span> <span class="number">1</span><span class="special">,</span> <span class="number">3</span> <span class="special">)</span> <span class="special">|</span> <span class="identifier">convert</span><span class="special">&lt;</span><span class="identifier">C</span><span class="special">&gt;()</span> <span class="special">)</span> <span class="special">&lt;</span> <span class="identifier">fifo</span>
+<span class="special">);</span>
+</pre>
+<p>
+    </p>
+<div class="footnotes">
+<br><hr width="100" align="left">
+<div class="footnote"><p><sup>[<a name="ftn.id36332826" href="#id36332826" class="para">4</a>] </sup>
+        <span class="emphasis"><em>csv</em></span> stands for comma separated values
+      </p></div>
+<div class="footnote"><p><sup>[<a name="ftn.id36335477" href="#id36335477" class="para">5</a>] </sup>
+        In read mode, the context usually suffices, to ensure conversion from each
+        of the reference-array's element (a reference wrapper) to the reference it
+        holds
+      </p></div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2003 -2004 Thorsten Ottosen, 2011 Erwann Rogard<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="org.html"><img src="../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="reference.html"><img src="../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>
