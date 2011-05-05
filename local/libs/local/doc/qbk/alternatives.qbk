@@ -79,6 +79,15 @@ However, variables cannot be bound by constant references and non-constant value
     [ Yes (variables in scope are accessible as usual within expressions).
 Plus `boost::phoenix::let` can be used to bind variables by constant reference. ]
 ]
+[
+    [ ['[@http://en.wikipedia.org/wiki/Type_polymorphism#Parametric_polymorphism Polymorphic] in the unbound parameter types] ]
+    [ No (local functions cannot be function templates). ]
+    [ No (local classes cannot have member function templates). ]
+    [ Yes. ]
+    [ No (C++0x lambdas cannot be function templates). ]
+    [ Yes. ]
+    [ Yes. ]
+]
 ]
 
 [h5 Examples]
