@@ -31,4 +31,5 @@ test-suite "block_ptr_tests" :
     [ run block_ptr_test1.cpp boost_thread boost_unit_test_framework ]
     [ run block_ptr_test3.cpp boost_thread boost_unit_test_framework ]
     [ run t100_test1.cpp boost_thread boost_regex ]
+    [ run thread_test.cpp boost_thread ]
     ;
