@@ -17,13 +17,13 @@
 namespace boost{
 namespace assign{
 namespace v2{
-//[syntax_conversion_convert
 namespace convert_tag{
 
     struct put{};
     struct copy{};
 
 }// convert_tag
+//[syntax_conversion_convert
 namespace conversion_aux{
 //<-
 

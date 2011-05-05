@@ -42,7 +42,7 @@ namespace tutorial_assign_v2{
             typedef std::string str_; typedef variant< int, str_ > data_; 
             array<data_, 16> keypad;
             
-            /*<<Equivalent to `put( keypad )( "+" )( "-" )...`>>*/csv_put( keypad, "+", "-", "*", "/", "=", "." , as_arg_list( numeric ) );
+            /*<<Equivalent to `put( keypad )( "+" )( "-" )...( "." )( 0 )...( 9 )`>>*/csv_put( keypad, "+", "-", "*", "/", "=", "." , as_arg_list( numeric ) );
 
             assert( get<str_>( keypad.front() ) == "+" );
             assert( get<int>( keypad.back()  ) == 9 );
@@ -66,7 +66,7 @@ namespace tutorial_assign_v2{
         {
             //[tutorial_empty_deque
             assert( deque<int>( _nil ).size() == 0 );    // Functor form
-            assert( csv_deque<int>().size() == 0 );       // Csv form
+            assert( csv_deque<int>().size() == 0 );      // Csv form
             //]
         }
         {
