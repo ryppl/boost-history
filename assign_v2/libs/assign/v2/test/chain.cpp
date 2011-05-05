@@ -43,13 +43,13 @@ namespace xxx_chain{
             typedef std::string T;
             std::vector<T> word; 
 
-            copy( 
+            boost::copy( 
                 as2::csv_deque( "O", "R" ) | as2::_chain( as2::csv_deque( "B", "I", "T" ) ), 
                 std::back_inserter( word ) 
             );
 
             BOOST_ASSIGN_V2_CHECK(
-                boost::range::equal( word, as2::csv_deque<T>("O", "R", "B", "I", "T") )
+                boost::range::equal( word, as2::csv_deque<T>( "O", "R", "B", "I", "T" ) )
             );
             //]
         }
