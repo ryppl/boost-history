@@ -2,7 +2,7 @@
 //  Boost.Assign v2                                                         //
 //                                                                          //
 //  Copyright (C) 2003-2004 Thorsten Ottosen                                //
-//  Copyright (C) 2010 Erwann Rogard                                        //
+//  Copyright (C) 2011 Erwann Rogard                                        //
 //  Use, modification and distribution are subject to the                   //
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
@@ -14,6 +14,9 @@
 #include <boost/preprocessor/arithmetic/inc.hpp>
 #include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/repetition.hpp>
+// This is to ensure that cpp03/csv_array.hpp compiles as standalone (but it's
+// better to simply include the header below, instead)
+#include <boost/assign/v2/ref/array/csv_array.hpp>
 
 namespace boost{
 namespace assign{

@@ -2,7 +2,7 @@
 //  Boost.Assign v2                                                         //
 //                                                                          //
 //  Copyright (C) 2003-2004 Thorsten Ottosen                                //
-//  Copyright (C) 2010 Erwann Rogard                                        //
+//  Copyright (C) 2011 Erwann Rogard                                        //
 //  Use, modification and distribution are subject to the                   //
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
@@ -82,8 +82,8 @@ namespace interpreter_aux{
         {}BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
 
-		#if BOOST_ASSIGN_V2_ENABLE_CPP0X
-    	// Suggested by JB
+        #if BOOST_ASSIGN_V2_ENABLE_CPP0X
+        // Suggested by JB
         // Move constructor
         deque_interpreter(deque_interpreter&& d)
             : put_crtp_( std::move<put_crtp_&>(d) ), 
@@ -207,7 +207,7 @@ namespace result_of{
     typename result_of::deque<T>::type
     deque(Args&&...args)/*<-*/
     {
-    	// Suggested by JB
+        // Suggested by JB
         return std::move(const_cast<typename result_of::deque<T>::type&>(
             deque<T>( v2::_nil )( std::forward<Args>(args)... )
         ));

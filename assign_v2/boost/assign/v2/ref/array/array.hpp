@@ -2,7 +2,7 @@
 //  Boost.Assign v2                                                         //
 //                                                                          //
 //  Copyright (C) 2003-2004 Thorsten Ottosen                                //
-//  Copyright (C) 2010 Erwann Rogard                                        //
+//  Copyright (C) 2011 Erwann Rogard                                        //
 //  Use, modification and distribution are subject to the                   //
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
@@ -25,7 +25,7 @@ namespace array_aux{
 
     template<typename T>
     struct empty_array 
-    	: empty_list<list_aux::array_tag>
+        : empty_list<list_aux::array_tag>
     {};
 
     template<size_type N, typename T>
@@ -37,7 +37,7 @@ namespace array_aux{
 
     template<typename T>
     struct recursive_result<0, T> 
-    	: empty_array<T>
+        : empty_array<T>
     {};
 
 }// array_aux

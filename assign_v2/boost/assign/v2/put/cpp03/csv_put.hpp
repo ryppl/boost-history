@@ -2,7 +2,7 @@
 //  Boost.Assign v2                                                         //
 //                                                                          //
 //  Copyright (C) 2003-2004 Thorsten Ottosen                                //
-//  Copyright (C) 2010 Erwann Rogard                                        //
+//  Copyright (C) 2011 Erwann Rogard                                        //
 //  Use, modification and distribution are subject to the                   //
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
@@ -12,6 +12,9 @@
 #include <boost/assign/v2/support/config/limit_csv_arity.hpp>
 #include <boost/preprocessor/control.hpp>
 #include <boost/preprocessor/repetition.hpp>
+// This is to ensure that cpp03/csv_put.hpp compiles as standalone (but it's
+// better to simply include the header below, instead)
+#include <boost/assign/v2/put/csv_put.hpp>
 
 namespace boost{
 namespace assign{
