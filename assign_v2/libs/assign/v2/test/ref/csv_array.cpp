@@ -11,6 +11,7 @@
 #include <vector>
 #include <boost/range/begin.hpp>
 #include <boost/range/algorithm/copy.hpp>
+#include <boost/range/algorithm/equal.hpp>
 #include <boost/typeof/typeof.hpp>
 #include <boost/assign/v2/support/config/check.hpp>
 #include <boost/assign/v2/ref/array/conversion.hpp>

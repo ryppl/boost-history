@@ -9,6 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_OPTION_DATA_ER_2011_HPP
 #define BOOST_ASSIGN_V2_OPTION_DATA_ER_2011_HPP
+#include <boost/assign/v2/support/functor/pair.hpp>
 #include <boost/assign/v2/support/functor/value.hpp>
 #include <boost/assign/v2/support/keyword.hpp>
 #include <boost/assign/v2/support/pp/ignore.hpp>

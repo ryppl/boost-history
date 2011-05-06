@@ -41,6 +41,8 @@ namespace interpreter_aux{
         #endif
     };
 
+    struct ignore_option{};
+
     template<typename Head>
     struct list_option_exit 
         : boost::is_same<Head, nil_>

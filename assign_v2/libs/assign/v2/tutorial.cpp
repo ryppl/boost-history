@@ -159,7 +159,7 @@ namespace tutorial_assign_v2{
             
             assert(
                 range::equal(
-                    cb | delay_csv_put( _push_front, csv_deque( 3, 2, 1 ) ), 
+                    cb | delay_csv_put( _option % _push_front, csv_deque( 3, 2, 1 ) ), 
                     csv_deque( 1, 2, 3 ) 
                 )
             );

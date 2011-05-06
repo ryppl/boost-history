@@ -15,6 +15,7 @@
 #include <boost/assign/v2/option/modifier/row_major.hpp>
 #include <boost/lambda/lambda.hpp>
 #include <boost/multi_array.hpp>
+#include <boost/range/algorithm/equal.hpp>
 #include <boost/range/iterator_range.hpp>
 #include <boost/typeof/typeof.hpp>
 #include <libs/assign/v2/test/option/row_major.h>

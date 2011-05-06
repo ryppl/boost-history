@@ -25,11 +25,13 @@
 #define BOOST_ASSIGN_V2_LIMIT_CSV_ARITY 24
 
 #include <boost/assign/v2/include/csv_deque.hpp>
-#include <boost/assign/v2/include/put.hpp>
 #include <boost/assign/v2/include/csv_put.hpp>
+#include <boost/assign/v2/include/delay_csv_put.hpp>
+#include <boost/assign/v2/include/put.hpp>
 #include <boost/circular_buffer.hpp>
 #include <boost/multi_array.hpp>
 #include <boost/numeric/conversion/bounds.hpp>
+#include <boost/range/algorithm/equal.hpp>
 #include <boost/range/algorithm_ext/iota.hpp>
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>

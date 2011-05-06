@@ -14,6 +14,7 @@
 
 #include <boost/assign/v2/support/config/check.hpp>
 #include <boost/range/algorithm/copy.hpp>
+#include <boost/range/algorithm/equal.hpp>
 #include <boost/assign/v2/include/ref/array.hpp>
 #include <libs/assign/v2/test/ref/array.h>
 

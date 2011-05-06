@@ -27,7 +27,7 @@ namespace list_aux{
     {
         typedef T tail_type;
         typedef ::boost::mpl::plus<
-        	typename T::tail_static_size,
+            typename T::tail_static_size,
             ::boost::mpl::int_<1>
         > tail_static_size;
         typedef T const& result_of_tail_type;
@@ -54,7 +54,6 @@ namespace list_aux{
 
     template<typename T>
     struct tail_of{ typedef typename T::tail_type type; };
-
 
 }// list_aux
 }// ref

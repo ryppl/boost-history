@@ -11,13 +11,9 @@
 #define BOOST_ASSIGN_V2_PUT_CSV_PUT_ER_2011_HPP
 #include <boost/assign/v2/support/config/enable_cpp0x.hpp>
 #include <boost/assign/v2/support/pp/ignore.hpp>
-#include <boost/assign/v2/interpreter/as_arg_list.hpp>
 #include <boost/assign/v2/interpreter/csv.hpp>
-#include <boost/assign/v2/put/put.hpp>
 #include <boost/assign/v2/option/data.hpp>
-#include <boost/assign/v2/option/list.hpp>
-#include <boost/config.hpp>
-#include <boost/mpl/bool.hpp>
+#include <boost/assign/v2/put/put.hpp>
 #include <boost/utility/enable_if.hpp>
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 #include <utility>
@@ -145,69 +141,6 @@ namespace result_of{
 //<-
 #endif // BOOST_ASSIGN_V2_ENABLE_CPP0X
 //->
-    template<typename R, typename O = empty_list_option>
-    struct delayed_csv_put/*<-*/
-        : O, as_arg_list_adapter<R>
-    {
-
-        typedef O super1_t;
-        typedef as_arg_list_adapter<R> super2_t;
-
-        explicit delayed_csv_put(R& r)
-            : super2_t( r )
-        {}
-
-        delayed_csv_put(O options, R& r)
-            : super1_t( options ), super2_t( r )
-        {}
-
-        template<typename C>
-        C& apply(C& cont)const
-        {
-            make_csv_ready(
-                put( cont ) % static_cast<super1_t const&>( *this )
-            )(
-                static_cast<super2_t const&>( *this )
-            );
-
-            return cont;
-        }
-
-
-    }/*->*/;
-
-    template<typename C, typename R, typename O>
-    C& operator|(C& cont, delayed_csv_put<R, O> const& rhs)/*<-*/
-    {
-        return rhs.apply( cont );
-
-    }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
-
-namespace result_of{
-
-    template<typename R, typename O = empty_list_option>
-    struct delay_csv_put/*<-*/
-    {
-        typedef delayed_csv_put<R, O> type;
-    }/*->*/;
-
-}// result_of
-
-    template<typename R>
-    typename result_of::delay_csv_put<R const>::type
-    delay_csv_put(R const& range)/*<-*/
-    {
-        return delayed_csv_put<R const>( range );
-    }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
-
-    template<typename O, typename R>
-    typename result_of::delay_csv_put<R const, O>::type
-    delay_csv_put(option_crtp<O> const& options, R const& range)/*<-*/
-    {
-        return delayed_csv_put<R const, O>(
-            static_cast<O const&>( options ), range
-        );
-    }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
 }// interpreter_aux
 //<-
@@ -217,13 +150,6 @@ namespace result_of{
 //<-
 #endif // BOOST_ASSIGN_V2_ENABLE_CPP0X
 //->
-    using interpreter_aux::delay_csv_put;
-
-namespace result_of{
-
-    using interpreter_aux::result_of::delay_csv_put;
-
-}// result_of
 //]
 
 }// v2

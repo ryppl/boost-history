@@ -13,13 +13,14 @@
 #include <set>
 #include <string>
 #include <boost/assign/v2/support/config/check.hpp>
+#include <boost/assign/v2/include/delay_csv_put.hpp>
 #include <boost/assign/v2/include/csv_put.hpp>
 #include <boost/assign/v2/deque.hpp>
 #include <boost/assign/v2/option/modifier/std.hpp>
 #include <boost/circular_buffer.hpp>
+#include <boost/range/algorithm/equal.hpp>
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
-#include <boost/range/algorithm/equal.hpp>
 #include <boost/lambda/lambda.hpp>
 #include <boost/mpl/apply.hpp>
 #include <boost/mpl/assert.hpp>
@@ -49,13 +50,12 @@ namespace xxx_standard{
             //]
         }
         {
-            // fully qual boost::begin/end demanded by MSVC - error C2668
             //[test_option_push_front
             boost::circular_buffer<int> cb( 3 ); 
             
             BOOST_ASSIGN_V2_CHECK(
                 boost::range::equal(
-                    cb | as2::delay_csv_put( as2::_push_front, as2::csv_deque( 3, 2, 1 ) ), 
+                    cb | as2::delay_csv_put( as2::_option % as2::_push_front, as2::csv_deque( 3, 2, 1 ) ), 
                     as2::csv_deque( 1, 2, 3 ) 
                 )
             );
