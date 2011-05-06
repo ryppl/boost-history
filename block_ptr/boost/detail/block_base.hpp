@@ -75,8 +75,13 @@ struct pool
 
 	typedef std::list< numeric::interval<long>, fast_pool_allocator< numeric::interval<long> > > pool_lii;	/**< Syntax helper. */
 
-    static pool_lii plii_;					/**< List of memory boundaries. */
+    //static pool_lii plii_;					/**< List of memory boundaries. */
 
+#ifndef BOOST_DISABLE_THREADS
+    static thread_specific_ptr<pool_lii> plii_;    /**< Thread specific list of memory boundaries. */
+#else
+    static std::auto_ptr<pool_lii> plii_;          /**< List of memory boundaries. */
+#endif
 
 	/**
 		Tells whether a pointer is part of the pool or not.
@@ -88,6 +93,12 @@ struct pool
 	static bool is_from(void * p)
 	{
 		return pool_t::is_from(p);
+	}
+	
+	static void init()
+	{
+	    if (plii_.get() == 0)
+        	plii_.reset(new pool_lii());
 	}
 	
 	/**
@@ -103,15 +114,17 @@ struct pool
         mutex::scoped_lock scoped_lock(pool_mutex_);
 #endif
 
+    	init();
+    	
         pool_lii::reverse_iterator i;
         
-        for (i = plii_.rbegin(); i != plii_.rend(); i ++)
+        for (i = plii_->rbegin(); i != plii_->rend(); i ++)
             if (in((long)(p), * i))
                 break;
 
-        plii_.erase(i.base(), plii_.end());
+        plii_->erase(i.base(), plii_->end());
         
-        return (block_base *)(plii_.rbegin()->lower());
+        return (block_base *)(plii_->rbegin()->lower());
     }
     
 	
@@ -128,9 +141,11 @@ struct pool
         mutex::scoped_lock scoped_lock(pool_mutex_);
 #endif
 
+    	init();
+    	
         void * p = pool_t::ordered_malloc(s);
         
-        plii_.push_back(numeric::interval<long>((long) p, long((char *)(p) + s)));
+        plii_->push_back(numeric::interval<long>((long) p, long((char *)(p) + s)));
         
         return p;
     }
@@ -149,18 +164,26 @@ struct pool
         mutex::scoped_lock scoped_lock(pool_mutex_);
 #endif
 
+    	init();
+    	
         pool_lii::reverse_iterator i;
         
-        for (i = plii_.rbegin(); i != plii_.rend(); i ++)
+        for (i = plii_->rbegin(); i != plii_->rend(); i ++)
             if (in((long)(p), * i))
                 break;
 
-        plii_.erase(i.base(), plii_.end());
+        plii_->erase(i.base(), plii_->end());
         pool_t::ordered_free(p, s);
     }
 };
 
-pool::pool_lii pool::plii_;
+//pool::pool_lii pool::plii_;
+
+#ifndef BOOST_DISABLE_THREADS
+thread_specific_ptr<pool::pool_lii> pool::plii_;
+#else
+std::auto_ptr<pool::pool_lii> pool::plii_;
+#endif
 
 #ifndef BOOST_DISABLE_THREADS
 mutex pool::pool_mutex_;
