@@ -65,26 +65,22 @@ class block_base;
 	Pool where all pointee objects are allocated and tracks memory blocks for later enlisting & marking the @c block_header the pointee object belongs to.
 */
 
-struct pool : boost::pool<>
+struct pool
 {
-	typedef std::list< numeric::interval<long>, fast_pool_allocator< numeric::interval<long> > > pool_lii;	/**< Syntax helper. */
-
 #ifndef BOOST_DISABLE_THREADS
-    thread_specific_ptr<pool_lii> plii_;			/**< Thread specific list of memory boundaries. */
-#else
-    std::auto_ptr<pool_lii> plii_;					/**< List of memory boundaries. */
+	static mutex pool_mutex_;
 #endif
 
+	typedef std::list< numeric::interval<long>, fast_pool_allocator< numeric::interval<long> > > pool_lii;	/**< Syntax helper. */
 
-	/**
-		Initialization of a pool instance.
-	*/
-	
-    pool() : boost::pool<>(1)
-    {
-        plii_.reset(new pool_lii());
-    }
-	
+    static pool_lii plii_;					/**< List of memory boundaries. */
+
+	typedef boost::singleton_pool<pool, sizeof(char)> pool_t;
+
+	static bool is_from(void * p)
+	{
+		return pool_t::is_from(p);
+	}
 	
 	/**
 		Tracks the memory boundaries where a pointer belongs to.  Also gets rid of the boundaries that were allocated before the pointer was allocated.
@@ -93,20 +89,21 @@ struct pool : boost::pool<>
 		@return		Pointer to the pointee object where @c p belongs to.
 	*/
 	
-    block_base * top(void * p)
+    static block_base * top(void * p)
     {
-    	if (plii_.get() == 0)
-        	plii_.reset(new pool_lii());
+#ifndef BOOST_DISABLE_THREADS
+        mutex::scoped_lock scoped_lock(pool_mutex_);
+#endif
 
         pool_lii::reverse_iterator i;
         
-        for (i = plii_->rbegin(); i != plii_->rend(); i ++)
+        for (i = plii_.rbegin(); i != plii_.rend(); i ++)
             if (in((long)(p), * i))
                 break;
 
-        plii_->erase(i.base(), plii_->end());
+        plii_.erase(i.base(), plii_.end());
         
-        return (block_base *)(plii_->rbegin()->lower());
+        return (block_base *)(plii_.rbegin()->lower());
     }
     
 	
@@ -117,14 +114,15 @@ struct pool : boost::pool<>
 		@return		Address of the newly allocated block.
 	*/
 	
-    void * allocate(std::size_t s)
+    static void * allocate(std::size_t s)
     {
-    	if (plii_.get() == 0)
-        	plii_.reset(new pool_lii());
+#ifndef BOOST_DISABLE_THREADS
+        mutex::scoped_lock scoped_lock(pool_mutex_);
+#endif
 
-        void * p = ordered_malloc(s);
+        void * p = pool_t::ordered_malloc(s);
         
-        plii_->push_back(numeric::interval<long>((long) p, long((char *)(p) + s)));
+        plii_.push_back(numeric::interval<long>((long) p, long((char *)(p) + s)));
         
         return p;
     }
@@ -137,21 +135,28 @@ struct pool : boost::pool<>
 		@param	s	Size of the memory block.
 	*/
 	
-    void deallocate(void * p, std::size_t s)
+    static void deallocate(void * p, std::size_t s)
     {
-    	if (plii_.get() == 0)
-        	plii_.reset(new pool_lii());
+#ifndef BOOST_DISABLE_THREADS
+        mutex::scoped_lock scoped_lock(pool_mutex_);
+#endif
 
         pool_lii::reverse_iterator i;
         
-        for (i = plii_->rbegin(); i != plii_->rend(); i ++)
+        for (i = plii_.rbegin(); i != plii_.rend(); i ++)
             if (in((long)(p), * i))
                 break;
 
-        plii_->erase(i.base(), plii_->end());
-        ordered_free(p, s);
+        plii_.erase(i.base(), plii_.end());
+        pool_t::ordered_free(p, s);
     }
 };
+
+pool::pool_lii pool::plii_;
+
+#ifndef BOOST_DISABLE_THREADS
+mutex pool::pool_mutex_;
+#endif
 
 
 /**
@@ -175,15 +180,10 @@ public:
         inits_.push_back(& init_tag_); 
     }
 
-    static pool pool_;								/**< Pool where all pointee objects are allocated from. */
-
 protected:
     virtual void dispose() 				                    {} 				/**< dublocky */
     virtual void * get_deleter( std::type_info const & ti ) { return 0; } 	/**< dublocky */
 };
-
-
-pool block_base::pool_;
 
 
 #define TEMPLATE_DECL(z, n, text) BOOST_PP_COMMA_IF(n) typename T ## n
@@ -263,7 +263,7 @@ template <typename T>
 		
         void * operator new (size_t s)
         {
-            return pool_.allocate(s);
+            return pool::allocate(s);
         }
         
 
@@ -275,7 +275,7 @@ template <typename T>
 		
         void operator delete (void * p)
         {
-            pool_.deallocate(p, sizeof(block));
+            pool::deallocate(p, sizeof(block));
         }
     };
 

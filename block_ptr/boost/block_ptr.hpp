@@ -77,6 +77,10 @@ struct block_header
     intrusive_list includes_;						/**< List of all sets of an union. */
     intrusive_list elements_;						/**< List of all pointee objects belonging to a @c block_header . */
 
+#ifndef BOOST_DISABLE_THREADS
+	static mutex pool_mutex_;
+#endif
+
     static fast_pool_allocator<block_header> pool_;/**< Pool where all sets are allocated. */
 
 	/**
@@ -172,6 +176,9 @@ struct block_header
 	
     void * operator new (size_t s)
     {
+#ifndef BOOST_DISABLE_THREADS
+       	mutex::scoped_lock scoped_lock(pool_mutex_);
+#endif
         return pool_.allocate(s);
     }
     
@@ -198,11 +205,16 @@ struct block_header
 	
     void operator delete (void * p)
     {
+#ifndef BOOST_DISABLE_THREADS
+       	mutex::scoped_lock scoped_lock(pool_mutex_);
+#endif
         pool_.deallocate(static_cast<block_header *>(p), sizeof(block_header));
     }
 };
 
-
+#ifndef BOOST_DISABLE_THREADS
+mutex block_header::pool_mutex_;
+#endif
 fast_pool_allocator<block_header> block_header::pool_;
 
 
@@ -253,7 +265,7 @@ template <typename T>
         template <typename V>
             block_ptr(block<V> * p) : base(p)
             {
-                if (! block_base::pool_.is_from(this))
+                if (! pool::is_from(this))
                 {
                     ps_ = new block_header();
 
@@ -261,8 +273,8 @@ template <typename T>
                 }
                 else
                 {
-                    block_base::pool_.top(this)->ptrs_.push(& pn_);
-                    block_base::pool_.top(this)->inits_.merge(p->inits_);
+                    pool::top(this)->ptrs_.push(& pn_);
+                    pool::top(this)->inits_.merge(p->inits_);
                 }
             }
 
@@ -301,10 +313,10 @@ template <typename T>
 		
         block_ptr() : ps_(0)
         {
-            if (! block_base::pool_.is_from(this))
+            if (! pool::is_from(this))
                 ps_ = new block_header();
             else
-                block_base::pool_.top(this)->ptrs_.push(& pn_);
+                pool::top(this)->ptrs_.push(& pn_);
         }
 
 		
@@ -317,10 +329,10 @@ template <typename T>
         template <typename V>
             block_ptr(block_ptr<V> const & p) : base(p)
             {
-                if (! block_base::pool_.is_from(this))
+                if (! pool::is_from(this))
                     ps_ = new block_header();
                 else
-                    block_base::pool_.top(this)->ptrs_.push(& pn_);
+                    pool::top(this)->ptrs_.push(& pn_);
 
                 ps_->redir(p.ps_);
             }
@@ -334,10 +346,10 @@ template <typename T>
 
 			block_ptr(block_ptr<T> const & p) : base(p)
             {
-                if (! block_base::pool_.is_from(this))
+                if (! pool::is_from(this))
                     ps_ = new block_header();
                 else
-                    block_base::pool_.top(this)->ptrs_.push(& pn_);
+                    pool::top(this)->ptrs_.push(& pn_);
 				
                 ps_->redir(p.ps_);
             }
@@ -432,7 +444,7 @@ template <typename T>
         {
             base::reset();
             
-            if (! block_base::pool_.is_from(this))
+            if (! pool::is_from(this))
                 if (ps_->release())
                     if (! d)
                         new (ps_) block_header();
