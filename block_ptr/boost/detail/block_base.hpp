@@ -71,12 +71,20 @@ struct pool
 	static mutex pool_mutex_;
 #endif
 
+	typedef boost::singleton_pool<pool, sizeof(char)> pool_t;
+
 	typedef std::list< numeric::interval<long>, fast_pool_allocator< numeric::interval<long> > > pool_lii;	/**< Syntax helper. */
 
     static pool_lii plii_;					/**< List of memory boundaries. */
 
-	typedef boost::singleton_pool<pool, sizeof(char)> pool_t;
 
+	/**
+		Tells whether a pointer is part of the pool or not.
+		
+		@param	p	Pointer to object.
+		@return		Belongs to the pool.
+	*/
+	
 	static bool is_from(void * p)
 	{
 		return pool_t::is_from(p);
