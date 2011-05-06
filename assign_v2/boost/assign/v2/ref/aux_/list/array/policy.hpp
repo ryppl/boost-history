@@ -97,7 +97,7 @@ namespace list_aux{
             typedef typename boost::remove_reference<H>::type u1_;
             typedef typename list_aux::policy_helper3<u1_, T>::type value_;
             typedef array_aux::lazy_alloc<
-                tail_holder<T>::static_size::value
+                tail_holder<T>::tail_static_size::value
                 ,value_
                 ,derived_
             > type;

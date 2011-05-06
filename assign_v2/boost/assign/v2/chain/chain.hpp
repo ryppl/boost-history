@@ -24,9 +24,9 @@ namespace boost{
 namespace assign{
 namespace v2{
 //[syntax_chain_chain
-namespace chain_aux{
+namespace chain_aux{/*<-*/
 
-    /*<-*/typedef ::boost::mpl::void_ void_;/*->*/
+    typedef ::boost::mpl::void_ void_;/*->*/
 
     template<typename U>
     struct adaptor1/*<-*/
@@ -89,6 +89,7 @@ namespace{
 
 //<-
 }
+//->
 namespace result_of{
 
     using chain_aux::result_of::chain;

@@ -13,6 +13,7 @@
 #include <boost/assign/v2/ref/aux_/list/fwd.hpp>
 #include <boost/config.hpp>
 #include <boost/mpl/int.hpp>
+#include <boost/mpl/plus.hpp>
 #include <boost/call_traits.hpp>
 
 namespace boost{
@@ -25,9 +26,10 @@ namespace list_aux{
     struct tail_holder
     {
         typedef T tail_type;
-        typedef ::boost::mpl::int_<
-            T::static_size::value + 1
-        > static_size;
+        typedef ::boost::mpl::plus<
+        	typename T::tail_static_size,
+            ::boost::mpl::int_<1>
+        > tail_static_size;
         typedef T const& result_of_tail_type;
 
         tail_holder(typename boost::call_traits<T>::param_type t) 
@@ -44,7 +46,7 @@ namespace list_aux{
     struct tail_holder<nil_>
     {
         typedef nil_ tail_type;
-        typedef ::boost::mpl::int_<0> static_size;
+        typedef ::boost::mpl::int_<0> tail_static_size;
         tail_holder(){}
 
         typedef tail_type result_of_tail_type;

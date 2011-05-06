@@ -16,7 +16,6 @@
 #include <boost/mpl/int.hpp>
 
 namespace boost{
-    struct use_default;
 namespace assign{
 namespace v2{
 namespace ref{
@@ -62,7 +61,7 @@ namespace list_aux{
     )
     {
         typedef list_aux::container<Tag, H, T> list_;
-        BOOST_STATIC_ASSERT( A::static_size <= list_::static_size::value );
+        BOOST_STATIC_ASSERT( A::static_size <= list_::tail_static_size::value );
         typedef ::boost::mpl::int_<0> zero_;
         typedef ::boost::mpl::int_<A::static_size> size_;
         typedef typename ::boost::mpl::equal_to<size_, zero_>::type exit_;

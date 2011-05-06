@@ -29,7 +29,7 @@ namespace list_aux{
     struct is_head :
         ::boost::mpl::equal_to<
             ::boost::mpl::size_t<I + 1>,
-            typename T::static_size
+            typename T::tail_static_size
         >
     {};
 
