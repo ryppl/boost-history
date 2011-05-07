@@ -1,0 +1,209 @@
+[#perf]
+
+[*Machine]
+Mac OS
+
+[*Compiler]
+GNU C++ version 4.4.1
+
+[*Notation]
+
+[variablelist
+	[
+		[`T`]
+		[`std::vector<int>`]
+	]
+	[
+		[[^n]]
+		[Number of inner loops]
+	]
+	[
+		[[^k]]
+		[Number of outer loops]
+	]
+	[
+		[`args...`]
+		[List of arguments, each of type T and max size 1000]
+	]
+	[	
+		[[^var]]
+		[Time to eval some method over `args...`, [^n] times]
+	]
+	[
+		[[^var_scaled]]
+		[[^1000 * var]]
+	]
+	[
+		[[^m]]
+		[Size of `args...`]
+	]
+	[
+		[[^min]]
+		[Min value of [^var_scaled], over [^k] repetitions]
+	]
+	[
+		[[^average]]
+		[Average value of [^var_scaled], over [^k] repetitions]
+	]
+	[
+		[[^max]]
+		[Max value of [^var_scaled], over [^k] repetitions]
+	]
+	[
+		[[^cumulated]]
+		[Cumulative value of [^var_scaled], over [^k] repetitions]
+	]
+]
+
+[*Methods]
+
+[table Put
+	[[Method][Description]]
+	[
+		[stl_push_back]
+		[`cont.push_back( arg1 ); ...; cont.push_back( argm )`]
+	]
+	[
+		[v1_push_back]
+		[`push_back( cont )( arg1 )...( argm )`]
+	]
+	[
+		[v2_put]
+		[`v2::put( cont )( arg1 )...( argm )`]
+	]
+	[/
+		[v2_pipe_put]
+		[`cont | v2::delay_put( arg1 )...( argm )`]
+	]
+	[
+		[v2_csv_put]
+		[`v2::csv_put( cont, args... )`]
+	]
+	[
+		[v2_delay_csv_put]
+		[`cont | v2::delay_csv_put( ref::csv_array( args... ) )`]
+	]
+]
+
+[table Deque
+	[[Method][Description]]
+	[
+		[v1_list_of]
+		[`list_of( arg1 )...( argm )`]
+	]
+	[
+		[v2_deque]
+		[`v2::deque<T>( arg1 )...( argm )`]
+	]
+	[
+		[v2_csv_deque]
+		[`v2::csv_deque( args... )`]
+	]
+]
+
+[table Ref
+	[[Method][Description]]
+	[
+		[v1_cref_list_of]
+		[`cref_list_of<m>( arg1 )...( argm )`]
+	]
+	[
+		[v2_ref_array]
+		[`v2::ref::array( arg1 )...( argm )`]
+	]
+	[
+		[v2_ref_csv_array]
+		[`v2::ref::csv_array( args...)`]
+	]
+]
+
+[*Results]
+``
+{k, n, m}
+{method,                      min,      average,  max,      cumulative}
+
+{12800, 100, 1},
+{stl_push_back,                0.013,    0.014,    0.028,    183.0},
+{v1_push_back,                 0.030,    0.033,    0.048,    419.9},
+{v2_put,                       0.014,    0.015,    0.026,    194.1},
+{v2_csv_put,                   0.014,    0.015,    0.030,    192.5},
+{v2_delay_csv_put,             0.013,    0.014,    0.024,    184.4},
+{v1_list_of,                   0.120,    0.124,    0.170,   1588.0},
+{v2_deque,                     0.100,    0.104,    0.143,   1332.9},
+{v2_csv_deque,                 0.042,    0.045,    0.067,    579.1},
+{v1_cref_list_of,              0.000,    0.001,    0.007,     17.9},
+{v2_ref_array,                 0.002,    0.004,    0.009,     47.9},
+{v2_ref_csv_array,             0.000,    0.001,    0.004,     18.0}
+}
+{
+{6400, 100, 2},
+{stl_push_back,                0.033,    0.035,    0.056,    225.2},
+{v1_push_back,                 0.080,    0.083,    0.110,    529.6},
+{v2_put,                       0.035,    0.036,    0.060,    233.5},
+{v2_csv_put,                   0.035,    0.036,    0.056,    231.5},
+{v2_delay_csv_put,             0.034,    0.036,    0.049,    230.8},
+{v1_list_of,                   0.178,    0.185,    0.236,   1182.1},
+{v2_deque,                     0.139,    0.141,    0.205,    905.1},
+{v2_csv_deque,                 0.072,    0.075,    0.100,    481.6},
+{v1_cref_list_of,              0.000,    0.001,    0.002,      9.0},
+{v2_ref_array,                 0.005,    0.006,    0.010,     38.3},
+{v2_ref_csv_array,             0.001,    0.002,    0.005,     12.3}
+}
+{
+{3200, 100, 4},
+{stl_push_back,                0.092,    0.095,    0.104,    304.9},
+{v1_push_back,                 0.244,    0.253,    0.331,    808.2},
+{v2_put,                       0.095,    0.100,    0.148,    320.8},
+{v2_csv_put,                   0.096,    0.100,    0.116,    321.2},
+{v2_delay_csv_put,             0.093,    0.096,    0.118,    307.6},
+{v1_list_of,                   0.327,    0.339,    0.747,   1085.2},
+{v2_deque,                     0.211,    0.215,    0.257,    687.6},
+{v2_csv_deque,                 0.145,    0.149,    0.221,    475.6},
+{v1_cref_list_of,              0.000,    0.001,    0.014,      4.6},
+{v2_ref_array,                 0.012,    0.013,    0.026,     42.0},
+{v2_ref_csv_array,             0.001,    0.002,    0.012,      7.4}
+}
+{
+{1600, 100, 8},
+{stl_push_back,                0.282,    0.289,    0.315,    462.0},
+{v1_push_back,                 0.519,    0.528,    0.588,    845.4},
+{v2_put,                       0.270,    0.276,    0.317,    440.9},
+{v2_csv_put,                   0.273,    0.282,    0.338,    451.3},
+{v2_delay_csv_put,             0.267,    0.273,    0.304,    437.4},
+{v1_list_of,                   0.624,    0.635,    0.687,   1015.7},
+{v2_deque,                     0.389,    0.396,    0.436,    632.9},
+{v2_csv_deque,                 0.316,    0.323,    0.364,    517.4},
+{v1_cref_list_of,              0.000,    0.001,    0.004,      2.3},
+{v2_ref_array,                 0.038,    0.039,    0.055,     63.0},
+{v2_ref_csv_array,             0.002,    0.003,    0.006,      5.3}
+}
+{
+{800, 100, 16},
+{stl_push_back,                0.650,    0.658,    0.706,    526.1},
+{v1_push_back,                 1.156,    1.172,    1.258,    937.2},
+{v2_put,                       0.670,    0.677,    0.741,    541.4},
+{v2_csv_put,                   0.670,    0.677,    0.729,    541.3},
+{v2_delay_csv_put,             0.661,    0.669,    0.741,    535.4},
+{v1_list_of,                   1.263,    1.274,    1.379,   1018.9},
+{v2_deque,                     0.796,    0.813,    0.913,    650.6},
+{v2_csv_deque,                 0.719,    0.731,    0.788,    584.4},
+{v1_cref_list_of,              0.000,    0.001,    0.004,      1.1},
+{v2_ref_array,                 0.122,    0.125,    0.148,     99.8},
+{v2_ref_csv_array,             0.004,    0.005,    0.008,      4.2}
+}
+{
+{400, 100, 32},
+{stl_push_back,                1.252,    1.266,    1.343,    506.5},
+{v1_push_back,                 2.316,    2.332,    2.439,    932.9},
+{v2_put,                       1.292,    1.302,    1.400,    520.8},
+{v2_csv_put,                   1.282,    1.294,    1.364,    517.6},
+{v2_delay_csv_put,             1.262,    1.273,    1.335,    509.3},
+{v1_list_of,                   2.395,    2.411,    2.612,    964.4},
+{v2_deque,                     1.398,    1.409,    1.489,    563.7},
+{v2_csv_deque,                 1.322,    1.339,    1.406,    535.4},
+{v1_cref_list_of,              0.004,    0.005,    0.007,      2.1},
+{v2_ref_array,                 0.521,    0.538,    0.599,    215.0},
+{v2_ref_csv_array,             0.026,    0.027,    0.039,     11.0}
+}
+``
+[c++]

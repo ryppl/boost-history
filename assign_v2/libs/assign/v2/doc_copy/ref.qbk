@@ -1,0 +1,154 @@
+[section:array Array]
+
+[import ../test/ref/csv_array.cpp]
+
+[tpl_module										
+	[@../../../../../boost/assign/v2/ref/array.hpp `boost/assign/v2/ref/array.hpp`]
+	..Reference array generation
+]
+
+[template tpl_ref_array [HEADER DESCRIPTION GENERATION EXAMPLE]
+
+[heading Header]
+HEADER
+
+[heading Description]
+[DESCRIPTION]
+
+[heading Array]
+Inherits [link array_interface `array_aux::interface<>`].
+
+[heading Generation]
+[GENERATION]
+
+[heading Example]
+[EXAMPLE]
+
+]
+
+[section:array Array]
+[#ref_array]
+
+[import ../../../../boost/assign/v2/ref/array/array.hpp]
+[import ../test/ref/array.cpp]
+
+[heading Header]
+[@../../../../../boost/assign/v2/ref/array/array.hpp [^boost/assign/v2/ref/array/array.hpp]]
+
+[heading Description]
+__functor_form__
+
+[heading Synopsis]
+[syntax_ref_array_array]
+[tip The [link ref_csv_array csv-form] is faster. See the [link perf performance] table.]
+
+[heading Example]
+[*Example 1]
+[test_ref_array_read]
+
+[endsect][/array]
+[section:conversion Conversion]
+
+[heading Header]
+[@../../../../../boost/assign/v2/ref/array/conversion.hpp `boost/assign/v2/ref/array/conversion.hpp`]
+
+[heading Description]
+ADL version of [link converter __fun_converter__]
+
+[heading Example]
+[*Example 1]
+[test_ref_csv_array_converter]
+
+[endsect][/conversion]
+[section:csv_array Csv_array]
+[#ref_csv_array]
+
+[import ../../../../boost/assign/v2/ref/array/csv_array.hpp]
+
+[heading Header]
+[@../../../../../boost/assign/v2/ref/array/csv_array.hpp `boost/assign/v2/ref/array/csv_array.hpp`]
+
+[heading Description]
+__csv_form__
+
+[heading Synopsis]
+[syntax_ref_array_array]
+
+[heading Example]
+[*Example 1]
+[test_ref_csv_array_read]
+[*Example 2]
+[test_ref_csv_array_write]
+[*Example 3]
+[test_ref_csv_array_assign]
+
+[endsect][/csv_array]
+[section:get Get]
+[#ref_get]
+
+[import ../../../../boost/assign/v2/ref/array/get.hpp]
+[import ../test/ref/get.cpp]
+
+[heading Header]
+[@../../../../../boost/assign/v2/ref/array/get.hpp `boost/assign/v2/ref/array/get.hpp`]
+
+[heading Description]
+A [tpl_range_adaptor range adaptor] that converts each element of a reference-array (a [link ref_wrapper reference wrapper]) to the
+reference it holds (by invoking member function `get()`). 
+
+[heading Synopsis]
+[syntax_ref_array_get]
+
+[heading Example]
+[test_ref_get]
+
+[endsect][/get]
+[section:interface Interface]
+[#array_interface]
+
+[import ../../../../boost/assign/v2/ref/array/interface.hpp]
+
+[tpl_feature
+	[@../../../../../boost/assign/v2/ref/array/interface.hpp `boost/assign/v2/ref/array/interface.hpp`]
+	..Interface for a reference array
+	..[syntax_ref_array_interface]
+	..None
+]
+
+[endsect][/interface]
+[endsect][/array]
+[section:wrapper Wrapper]
+
+[#ref_wrapper]
+
+[tpl_module
+	[@../../../../../boost/assign/v2/ref/wrapper.hpp `boost/assign/v2/ref/wrapper.hpp`]
+	..Default constructible reference wrapper module
+]
+
+[section:copy Copy]
+
+[import ../test/ref/wrapper.cpp]
+[import ../../../../boost/assign/v2/ref/wrapper/copy.hpp]
+
+[tpl_feature
+	[@../../../../../boost/assign/v2/ref/wrapper/copy.hpp `boost/assign/v2/ref/wrapper/copy.hpp`]
+	..Reference wrapper with copy semantics
+	..[syntax_ref_wrapper_copy]
+	..[test_ref_wrapper]
+]
+
+[endsect][/copy]
+[section:crtp Crtp]
+
+[import ../../../../boost/assign/v2/ref/wrapper/crtp.hpp]
+
+[tpl_feature
+	[@../../../../../boost/assign/v2/ref/wrapper/crtp.hpp `boost/assign/v2/ref/wrapper/crtp.hpp`]
+	..CRTP reference wrapper.
+	..[syntax_ref_wrapper_crtp]
+	..None
+]
+
+[endsect][/crtp]
+[endsect][/wrapper]
