@@ -13,6 +13,9 @@
 #include <boost/assign/v2/interpreter/as_arg_list.hpp>
 #include <boost/assign/v2/support/config/enable_cpp0x.hpp>
 #include <boost/assign/v2/support/pp/ignore.hpp>
+#include <boost/utility/enable_if.hpp>
+#include <boost/type_traits/remove_cv.hpp>
+#include <boost/type_traits/remove_reference.hpp>
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 #include <utility>
 
@@ -30,38 +33,46 @@ namespace interpreter_aux{
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
     template<
-        typename D, typename C, typename F, typename MTag, typename DTag, 
+        typename D, typename C, typename F, typename MTag, typename DTag,
         typename R
     >
     void invoke(
         interpreter_crtp<D, C, F, MTag, DTag> const& interpreter,
-        as_arg_list_adapter<R>&& adapter
+        const as_arg_list_adapter<R>& adapter
     )/*<-*/
     {
-        interpreter.as_arg_list( std::forward<T>( adapter ) );
+        interpreter.as_arg_list( adapter );
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
     template<
-        typename D, typename C, typename F, typename MTag, typename DTag, 
+        typename D, typename C, typename F, typename MTag, typename DTag,
         typename T
     >
-    void invoke(
+    typename boost::disable_if<
+        is_as_arg_list_adapter<
+            typename boost::remove_cv<
+                typename boost::remove_reference<T>::type
+            >::type
+        >
+    >::type
+    invoke(
         interpreter_crtp<D, C, F, MTag, DTag> const& interpreter,
         T&& t
     )/*<-*/
     {
         interpreter( std::forward<T>( t ) );
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
-        
-    template<typename D, typename C, typename F, typename MTag, typename DTag,  
+
+    template<typename D, typename C, typename F, typename MTag, typename DTag,
         typename T, typename... Args>
     void csv(
         interpreter_crtp<D, C, F, MTag, DTag> const& interpreter,
         T&& t, Args&&... args
     )/*<-*/
     {
-        return csv(
-            invoke( interpreter, t ),
+        invoke( interpreter, t );
+        csv(
+            interpreter,
             std::forward<Args>( args )...
         );
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/

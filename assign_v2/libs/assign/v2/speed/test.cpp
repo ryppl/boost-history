@@ -313,7 +313,7 @@ void test( std::ostream& os )
         methods.push_back( "v2_ref_array" );
         methods.push_back( "v2_ref_csv_array" );
 
-        for(int i = 0; i!= methods.size(); i++ )
+        for(std::size_t i = 0; i!= methods.size(); i++ )
         {
             str_ method = methods[i];
             os << ( f % method % cols[ method ] ).str();

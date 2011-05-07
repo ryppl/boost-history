@@ -113,7 +113,7 @@ namespace result_of{
             make_csv_ready(
                 put( cont ) % option
             ),
-              std::forward<Args>( args )...
+            std::forward<Args>( args )...
         );
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 

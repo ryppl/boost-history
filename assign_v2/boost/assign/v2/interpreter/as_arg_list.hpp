@@ -12,26 +12,27 @@
 #include <boost/assign/v2/support/pp/ignore.hpp>
 #include <boost/range/iterator.hpp>
 #include <boost/range/iterator_range.hpp>
+#include <boost/mpl/bool.hpp>
 
 namespace boost{
 namespace assign{
 namespace v2{
 //[syntax_interpreter_as_arg_list
-namespace interpreter_aux{    
+namespace interpreter_aux{
 
     template<
         typename R    // Range
     >
-    struct as_arg_list_adapter 
+    struct as_arg_list_adapter
         : boost::iterator_range<
             typename boost::range_iterator<R>::type
         >/*<-*/
     {
-        
+
         typedef boost::iterator_range<
             typename boost::range_iterator<R>::type
         > super_t;
-        
+
         public:
 
         as_arg_list_adapter(R& range)
@@ -43,6 +44,18 @@ namespace interpreter_aux{
         private:
         as_arg_list_adapter();
     }/*->*/;
+
+    template<typename T>
+    struct is_as_arg_list_adapter
+        : ::boost::mpl::false_
+    {};
+
+    template<typename R>
+    struct is_as_arg_list_adapter<
+        as_arg_list_adapter<R>
+    >
+        : ::boost::mpl::true_
+    {};
 
 namespace result_of{
 
@@ -72,7 +85,7 @@ namespace result_of{
 
     using interpreter_aux::as_arg_list;
 
-namespace result_of{    
+namespace result_of{
     using interpreter_aux::result_of::as_arg_list;
 }// result_of
 

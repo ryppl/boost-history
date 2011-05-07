@@ -64,7 +64,7 @@ namespace xxx_array{
             //]
             {
                 T& a = ( *boost::begin( ar4 ) );
-                T& b = *boost::next(boost::begin( ar4 ), ar4.size() - 1 );
+                T& b = *boost::next( boost::begin( ar4 ), ar4.size() - 1 );
 
                 BOOST_ASSIGN_V2_CHECK( &a == &w );
                 BOOST_ASSIGN_V2_CHECK( &b == &z );

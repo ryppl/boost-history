@@ -27,24 +27,34 @@ namespace interpreter_aux{
 
     template<typename R, typename O = empty_list_option>
     struct delayed_csv_put/*<-*/
-        : O, as_arg_list_adapter<R>
     {
 
-        typedef O super1_t;
-        typedef as_arg_list_adapter<R> super2_t;
-
-        super1_t const& options()const{ return (*this); }
-        super2_t const& arg_list()const{ return (*this); }
+        O const& options()const{ return this->options_; }
+        as_arg_list_adapter<R> const& arg_list()const
+        {
+            return this->arg_list_;
+        }
 
         explicit delayed_csv_put(R& r)
-            : super2_t( r )
+            : arg_list_( r )
         {}
 
         delayed_csv_put(O options, R& r)
-            : super1_t( options ), super2_t( r )
+            : options_( options ), arg_list_( r )
         {}
 
+        private:
+        O options_;
+        as_arg_list_adapter<R> arg_list_;
+
     }/*->*/;
+
+    template<typename C, typename R>
+    C& operator|(C& cont, delayed_csv_put<R> const& rhs)/*<-*/
+    {
+        csv_put( cont, rhs.arg_list() );
+        return cont;
+    }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
     template<typename C, typename R, typename O>
     C& operator|(C& cont, delayed_csv_put<R, O> const& rhs)/*<-*/
@@ -53,7 +63,7 @@ namespace interpreter_aux{
         return cont;
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
-namespace result_of{    
+namespace result_of{
 
     template<typename R, typename O = empty_list_option>
     struct delay_csv_put/*<-*/
