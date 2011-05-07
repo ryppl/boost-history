@@ -150,7 +150,7 @@ namespace xxx_put{
         }
         //SET
         {
-            //[test_csv_put_unordered_set
+            //[test_delay_csv_put_unordered_set
             typedef std::string word_;
             typedef boost::unordered_set<word_> C;
 
@@ -260,7 +260,7 @@ namespace xxx_put{
         }
         // OTHER
         {
-            //[test_csv_put_cb
+            //[test_delay_csv_put_cb
             boost::circular_buffer<int> cb(3);
             as2::csv_put( cb, 1, 2, 3 );
 
