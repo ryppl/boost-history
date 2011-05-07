@@ -13,7 +13,7 @@
 #include <boost/assign/v2/ref/aux_/list/at.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/equal_to.hpp>
-#include <boost/mpl/int.hpp>
+#include <boost/mpl/size_t.hpp>
 
 namespace boost{
 namespace assign{
@@ -48,7 +48,7 @@ namespace list_aux{
         // GCC4.4 wants fully qual at
         a[ K - 1 ].rebind( ref::at<K-1>( l ) ) ;
         typedef index_ next_size_;
-        typedef ::boost::mpl::int_<0> zero_;
+        typedef ::boost::mpl::size_t<0> zero_;
         typedef typename ::boost::mpl::equal_to<next_size_,zero_>::type exit_;
         assign_array<K-1>( exit_(), a, l );
     }
