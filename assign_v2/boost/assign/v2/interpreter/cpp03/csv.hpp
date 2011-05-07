@@ -27,9 +27,9 @@ namespace interpreter_aux{
     )/*<-*/
     {
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
-    
+
     template<
-        typename D, typename C, typename F, typename MTag, typename DTag, 
+        typename D, typename C, typename F, typename MTag, typename DTag,
         typename R
     >
     void invoke(
@@ -41,10 +41,15 @@ namespace interpreter_aux{
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
     template<
-        typename D, typename C, typename F, typename MTag, typename DTag, 
+        typename D, typename C, typename F, typename MTag, typename DTag,
         typename T
     >
-    void invoke(
+    typename boost::disable_if<
+        is_as_arg_list_adapter<
+            typename boost::remove_cv<T>::type
+        >
+    >::type
+    invoke(
         interpreter_crtp<D, C, F, MTag, DTag> const& interpreter,
         T& t
     )/*<-*/
@@ -74,7 +79,7 @@ namespace interpreter_aux{
 /**/
 
 BOOST_PP_REPEAT_FROM_TO(
-    1, 
+    1,
     BOOST_PP_INC(BOOST_ASSIGN_V2_LIMIT_CSV_ARITY),
     BOOST_ASSIGN_V2_MACRO,
     0
