@@ -45,8 +45,6 @@ namespace test_assign_v2{
 namespace xxx_put{
 namespace xxx_put{
 
-    // MSVC REMINDER : fully qualify boost::begin boost::end - error C2668
-
     void test(){
 
         namespace as2 = boost::assign::v2;

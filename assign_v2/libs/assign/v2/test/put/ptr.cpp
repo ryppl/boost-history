@@ -11,9 +11,13 @@
 #include <utility>
 #include <boost/assign/v2/support/config/check.hpp>
 #include <boost/assign/v2/support/pp/ignore.hpp>
+
+//#include <boost/assign/v2/include/csv_deque.hpp>
 #include <boost/assign/v2/include/csv_put.hpp>
+//#include <boost/assign/v2/include/delay_csv_put.hpp>
 #include <boost/assign/v2/include/put.hpp>
-#include <boost/scoped_ptr.hpp>
+
+
 #include <boost/ptr_container/ptr_array.hpp>
 #include <boost/ptr_container/ptr_deque.hpp>
 #include <boost/ptr_container/ptr_list.hpp>

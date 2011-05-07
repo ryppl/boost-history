@@ -67,7 +67,7 @@ namespace xxx_mapped{
             BOOST_ASSIGN_V2_CHECK(
                 boost::range::equal(
                     (
-                        as2::deque<int>( as2::as_arg_list( source ) )
+                        as2::deque<int>( as2::_nil ).as_arg_list( source )
                         % option
                     )( 1 )( 3 )( 5 )( 7 )( 9 ),
                     as2::csv_deque( +1, -2, +3, -4, +5, -6, +7, -8, +9, -10 )

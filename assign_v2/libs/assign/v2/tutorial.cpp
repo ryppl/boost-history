@@ -15,12 +15,12 @@
 #include <map>
 #include <queue>
 #include <vector>
-#include <boost/assign/v2.hpp>
 #include <boost/array.hpp>
+#include <boost/assign/v2.hpp>
 #include <boost/circular_buffer.hpp>
-#include <boost/numeric/conversion/bounds.hpp>
 #include <boost/function.hpp>
 #include <boost/lambda/lambda.hpp>
+#include <boost/numeric/conversion/bounds.hpp>
 #include <boost/ptr_container/ptr_set.hpp>
 #include <boost/range/algorithm_ext/iota.hpp>
 #include <boost/range/algorithm/copy.hpp>
@@ -42,7 +42,7 @@ namespace tutorial_assign_v2{
             typedef std::string str_; typedef variant< int, str_ > data_; 
             array<data_, 16> keypad;
             
-            /*<<Equivalent to `put( keypad )( "+" )( "-" )...( "." )( 0 )...( 9 )`>>*/csv_put( keypad, "+", "-", "*", "/", "=", "." , as_arg_list( numeric ) );
+            /*<<Equivalent to `put( keypad )( "+" )( "-" )...( "." )( 0 )...( 9 )`>>*/csv_put( keypad, "+", "-", "*", "/", "=", ".", as_arg_list( numeric ) );
 
             assert( get<str_>( keypad.front() ) == "+" );
             assert( get<int>( keypad.back()  ) == 9 );
