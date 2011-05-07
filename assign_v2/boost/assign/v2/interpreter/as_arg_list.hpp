@@ -22,27 +22,26 @@ namespace interpreter_aux{
     template<
         typename R    // Range
     >
-    class as_arg_list_adapter/*<-*/
+    struct as_arg_list_adapter 
+        : boost::iterator_range<
+            typename boost::range_iterator<R>::type
+        >/*<-*/
     {
-
-        typedef typename boost::range_iterator<R>::type ri_;
-        typedef boost::iterator_range<ri_> ir_;
+        
+        typedef boost::iterator_range<
+            typename boost::range_iterator<R>::type
+        > super_t;
+        
         public:
 
         as_arg_list_adapter(R& range)
-            :ir(
+            :super_t(
                 boost::make_iterator_range( range )
             )
         {}
 
-        typedef ir_ result_type;
-
-        result_type operator()()const{ return this->ir; }
-
         private:
         as_arg_list_adapter();
-        ir_ ir;
-
     }/*->*/;
 
 namespace result_of{

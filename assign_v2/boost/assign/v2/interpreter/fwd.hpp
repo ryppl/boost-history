@@ -53,6 +53,9 @@ namespace interpreter_aux{
     template<typename Derived> struct replace_modifier_tag;
     template<typename Derived> struct replace_data_tag;
 
+    template<typename R>
+    class as_arg_list_adapter;
+
 }// interpreter_aux
 }// v2
 }// assign

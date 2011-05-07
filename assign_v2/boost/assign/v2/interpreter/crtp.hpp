@@ -17,11 +17,14 @@
 #include <boost/assign/v2/interpreter/fwd.hpp>
 #include <boost/assign/v2/interpreter/modifier.hpp>
 #include <boost/concept_check.hpp>
+#include <boost/function.hpp>
 #include <boost/mpl/always.hpp>
 #include <boost/mpl/apply.hpp>
 #include <boost/range/algorithm/for_each.hpp>
+#include <boost/range/reference.hpp>
 #include <boost/ref.hpp>
 #include <boost/utility/enable_if.hpp>
+#include <boost/type_traits/remove_reference.hpp>
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 #include <utility>
 #else
@@ -63,41 +66,6 @@ namespace interpreter_aux{
 
     };
 
-    template<typename D>
-    struct wrapper
-    {
-
-        wrapper(D const& d):d_( d ){}
-
-        operator D const&()const{ return this->d_; }
-
-        typedef wrapper const& result_type;
-
-#if BOOST_ASSIGN_V2_ENABLE_CPP0X
-        template<typename T>
-        result_type operator()( T&& t )const
-        {
-            this->d_( std::forward<T>(t) ); return (*this);
-        }
-#else
-
-        template<typename T>
-        result_type operator()(T& t)const
-        {
-            this->d_( t ); return (*this);
-        }
-
-        template<typename T>
-        result_type operator()(T const & t)const
-        {
-            this->d_( t ); return (*this);
-        }
-#endif
-
-        private:
-        D const& d_;
-
-    };
 }// interpreter_aux
 //[syntax_interpreter_crtp
 namespace interpreter_aux{
@@ -180,13 +148,6 @@ namespace interpreter_aux{
 
         typedef D const& result_type;
 
-        template<typename R>
-        result_type
-        operator()( as_arg_list_adapter<R> range )const/*<-*/
-        {
-             return ::boost::for_each( range(), wrapper<D>( this->derived() ) );
-        }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
-
 //<-
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 //->
@@ -199,6 +160,12 @@ namespace interpreter_aux{
             );
         }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
+        template<typename R>
+        result_type as_arg_list( R&& range )const/*<-*/
+        {
+            return this->as_arg_list_impl( std::forward<R>( range ) );
+        }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
+    
 //<-
 #else
         protected:
@@ -215,6 +182,20 @@ namespace interpreter_aux{
             return this->modify( this->fun() );
         }
 
+        template<typename R>
+        result_type
+        as_arg_list( R& range )const/*<-*/
+        {
+            return this->as_arg_list_impl( range );
+        }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
+
+        template<typename R>
+        result_type
+        as_arg_list( R const& range )const/*<-*/
+        {
+            return this->as_arg_list_impl( range );
+        }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
+
 #define BOOST_ASSIGN_V2_MACRO(z, N, data) \
     template<BOOST_PP_ENUM_PARAMS(N, typename T)> \
     result_type \
@@ -230,6 +211,7 @@ BOOST_PP_REPEAT_FROM_TO(
     ~
 )
 #undef BOOST_ASSIGN_V2_MACRO
+
 #endif // BOOST_ASSIGN_V2_ENABLE_CPP0X
 
         // must be mutable
@@ -282,6 +264,18 @@ BOOST_PP_REPEAT_FROM_TO(
         }
 
 #endif // BOOST_ASSIGN_V2_ENABLE_CPP0X
+
+        template<typename R>
+        result_type
+        as_arg_list_impl( BOOST_ASSIGN_V2_FORWARD_PARAM(R, range) )const/*<-*/
+        {
+            typedef typename boost::range_reference<
+                typename boost::remove_reference<R>::type
+            >::type t_;
+            boost::function<result_type ( t_ )> f = boost::cref( *this );
+            boost::for_each( BOOST_ASSIGN_V2_FORWARD_ARG(R, range), f );
+            return this->derived();
+        }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
 //->
     };
