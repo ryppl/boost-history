@@ -1,0 +1,419 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Utility</title>
+<link rel="stylesheet" href="../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="../index.html" title="Chapter&#160;1.&#160;Boost.Assign 2.0">
+<link rel="up" href="../index.html" title="Chapter&#160;1.&#160;Boost.Assign 2.0">
+<link rel="prev" href="ref/array.html" title="Array">
+<link rel="next" href="utility/conversion.html" title="Conversion">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../boost.png"></td>
+<td align="center"><a href="../../../index.html">Home</a></td>
+<td align="center"><a href="../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="ref/array.html"><img src="../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="utility/conversion.html"><img src="../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="boost_assign_v2.utility"></a><a class="link" href="utility.html" title="Utility">Utility</a>
+</h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="utility.html#boost_assign_v2.utility.chain">Chain</a></span></dt>
+<dt><span class="section"><a href="utility/conversion.html">Conversion</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="utility/conversion.html#boost_assign_v2.utility.conversion.convert">Convert</a></span></dt>
+<dt><span class="section"><a href="utility/conversion.html#boost_assign_v2.utility.conversion.converter">Converter</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="utility/csv.html">Csv</a></span></dt>
+</dl></div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_assign_v2.utility.chain"></a><a class="link" href="utility.html#boost_assign_v2.utility.chain" title="Chain">Chain</a>
+</h3></div></div></div>
+<a name="boost_assign_v2.utility.chain.header"></a><h5>
+<a name="id36371922"></a>
+        <a class="link" href="utility.html#boost_assign_v2.utility.chain.header">Header</a>
+      </h5>
+<p>
+        
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><a href="../../../../../../boost/assign/v2/utility/chain.hpp" target="_top">boost/assign/v2/utility/chain.hpp</a><span class="special">&gt;</span>
+</pre>
+<p>
+      </p>
+<a name="boost_assign_v2.utility.chain.description"></a><h5>
+<a name="id36371968"></a>
+        <a class="link" href="utility.html#boost_assign_v2.utility.chain.description">Description</a>
+      </h5>
+<p>
+        A variant of <a href="http://svn.boost.org/svn/boost/trunk/boost/range/join.hpp" target="_top">join()</a>
+        that caters to <a class="link" href="ref/array.html" title="Array">reference arrays</a>
+      </p>
+<a name="boost_assign_v2.utility.chain.syntax"></a><h5>
+<a name="id36372003"></a>
+        <a class="link" href="utility.html#boost_assign_v2.utility.chain.syntax">Syntax</a>
+      </h5>
+<p>
+        
+</p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">chain_aux</span><span class="special">{</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">R1</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">R2</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Tag</span> <span class="special">=</span> <span class="identifier">use_default</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">use_const</span><span class="special">;</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Tag1</span> <span class="special">=</span> <span class="identifier">use_default</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Tag2</span> <span class="special">=</span> <span class="identifier">void_</span><span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">adaptor2</span>
+    <span class="special">{</span>
+
+        <span class="identifier">adaptor2</span><span class="special">();</span>
+
+        <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">U</span><span class="special">&gt;</span>
+        <span class="keyword">struct</span> <span class="identifier">result</span><span class="special">{</span>
+           <span class="keyword">typedef</span> <em class="replaceable"><code>unspecified</code></em> <span class="identifier">type</span><span class="special">;</span>
+        <span class="special">};</span>
+
+        <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">R</span><span class="special">&gt;</span> <span class="keyword">typename</span> <span class="identifier">result</span><span class="special">&lt;</span><span class="identifier">R</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="keyword">operator</span><span class="special">()(</span><span class="identifier">R</span><span class="special">&amp;</span> <span class="identifier">r</span><span class="special">)</span><span class="keyword">const</span><span class="special">;</span>
+
+        <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">R</span><span class="special">&gt;</span> <span class="keyword">typename</span> <span class="identifier">result</span><span class="special">&lt;</span><span class="identifier">R</span> <span class="keyword">const</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="keyword">operator</span><span class="special">()(</span><span class="identifier">R</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">r</span><span class="special">)</span><span class="keyword">const</span><span class="special">;</span>
+
+    <span class="special">};</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">R1</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">U2</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Tag</span><span class="special">&gt;</span>
+    <span class="keyword">typename</span> <span class="identifier">chain_aux</span><span class="special">::</span><span class="identifier">result</span><span class="special">&lt;</span><span class="identifier">R1</span><span class="special">,</span> <span class="identifier">U2</span><span class="special">,</span> <span class="identifier">Tag</span><span class="special">&gt;::</span><span class="identifier">type</span>
+    <span class="keyword">operator</span><span class="special">|(</span><span class="identifier">R1</span> <span class="special">&amp;</span> <span class="identifier">r1</span><span class="special">,</span> <span class="identifier">chain_aux</span><span class="special">::</span><span class="identifier">adaptor1</span><span class="special">&lt;</span><span class="identifier">U2</span><span class="special">,</span> <span class="identifier">Tag</span><span class="special">&gt;</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">h</span><span class="special">);</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">R1</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">U2</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Tag</span><span class="special">&gt;</span>
+    <span class="keyword">typename</span> <span class="identifier">chain_aux</span><span class="special">::</span><span class="identifier">result</span><span class="special">&lt;</span><span class="identifier">R1</span> <span class="keyword">const</span><span class="special">,</span> <span class="identifier">U2</span><span class="special">,</span> <span class="identifier">Tag</span><span class="special">&gt;::</span><span class="identifier">type</span>
+    <span class="keyword">operator</span><span class="special">|(</span><span class="identifier">R1</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">r1</span><span class="special">,</span> <span class="identifier">chain_aux</span><span class="special">::</span><span class="identifier">adaptor1</span><span class="special">&lt;</span><span class="identifier">U2</span><span class="special">,</span> <span class="identifier">Tag</span><span class="special">&gt;</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">h</span><span class="special">);</span>
+
+<span class="special">}//</span> <span class="identifier">chain_aux</span>
+<span class="keyword">namespace</span> <span class="identifier">result_of</span><span class="special">{</span>
+
+	<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">R1</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">R2</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">chain</span><span class="special">{</span>
+
+		<span class="keyword">typedef</span> <em class="replaceable"><code>unspecified</code></em> <span class="identifier">type</span><span class="special">;</span>
+
+	<span class="special">};</span>
+
+<span class="special">}</span>
+    <span class="keyword">const</span> <span class="identifier">chain_aux</span><span class="special">::</span><span class="identifier">adaptor2</span><span class="special">&lt;&gt;</span> <span class="identifier">_chain</span><span class="special">;</span>
+
+</pre>
+<p>
+      </p>
+<a name="boost_assign_v2.utility.chain.meta"></a><h5>
+<a name="id36372992"></a>
+        <a class="link" href="utility.html#boost_assign_v2.utility.chain.meta">Meta</a>
+      </h5>
+<p>
+        <span class="bold"><strong>Requirements</strong></span>
+      </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Parameter
+                </p>
+              </th>
+<th>
+                <p>
+                  Description
+                </p>
+              </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">R1</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  Models <a href="http://svn.boost.org/svn/boost/trunk/libs/range/doc/html/range/concepts/overview.html" target="_top">range</a>
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">R2</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  Models <a href="http://svn.boost.org/svn/boost/trunk/libs/range/doc/html/range/concepts/overview.html" target="_top">range</a>
+                </p>
+              </td>
+</tr>
+</tbody>
+</table></div>
+<p>
+        <span class="bold"><strong>Notation</strong></span>
+      </p>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term"><code class="computeroutput"><span class="identifier">U1</span></code></span></dt>
+<dd><p>
+              <code class="computeroutput"><span class="identifier">range_reference</span><span class="special">&lt;</span><span class="identifier">R1</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
+            </p></dd>
+<dt><span class="term"><code class="computeroutput"><span class="identifier">T</span></code></span></dt>
+<dd><p>
+              <code class="computeroutput"><span class="identifier">remove_reference</span><span class="special">&lt;</span><span class="identifier">U1</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
+            </p></dd>
+<dt><span class="term"><code class="computeroutput"><span class="identifier">U2</span></code></span></dt>
+<dd><p>
+              <code class="computeroutput"><span class="identifier">range_reference</span><span class="special">&lt;</span><span class="identifier">R2</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
+            </p></dd>
+</dl>
+</div>
+<p>
+        <span class="bold"><strong>Expressions</strong></span>
+      </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Expression
+                </p>
+              </th>
+<th>
+                <p>
+                  Value
+                </p>
+              </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">chain_aux</span><span class="special">::</span><span class="identifier">use_const</span><span class="special">&lt;</span><span class="identifier">R1</span><span class="special">,</span>
+                  <span class="identifier">R2</span><span class="special">&gt;::</span><span class="identifier">value</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="literal">not</code> <code class="computeroutput"><span class="identifier">is_reference</span><span class="special">&lt;</span><span class="identifier">U1</span><span class="special">&gt;::</span><span class="identifier">value</span></code>
+                  &amp;&amp; <code class="computeroutput"><span class="special">!</span><span class="identifier">is_const</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">value</span></code>
+                  &amp;&amp; <code class="computeroutput"><span class="special">(</span><span class="identifier">U2</span>
+                  <span class="special">==</span> <span class="identifier">U1</span><span class="special">)</span></code>
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">is_const</span><span class="special">&lt;</span>
+                  <span class="identifier">range_value</span><span class="special">&lt;</span>
+                  <span class="identifier">result_of</span><span class="special">::</span><span class="identifier">chain</span><span class="special">&lt;</span><span class="identifier">R1</span><span class="special">,</span>
+                  <span class="identifier">R2</span><span class="special">&gt;::</span><span class="identifier">type</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="special">&gt;</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">chain_aux</span><span class="special">::</span><span class="identifier">use_const</span><span class="special">&lt;</span><span class="identifier">R1</span><span class="special">,</span>
+                  <span class="identifier">R2</span><span class="special">&gt;::</span><span class="identifier">value</span></code>
+                </p>
+              </td>
+</tr>
+</tbody>
+</table></div>
+<p>
+        <span class="bold"><strong>Comment</strong></span>
+      </p>
+<p>
+        This meta-function becomes relevant if either of <code class="computeroutput"><span class="identifier">r1</span></code>
+        or <code class="computeroutput"><span class="identifier">r2</span></code> is a <a class="link" href="ref/array.html" title="Array">reference
+        array</a>: altghouh these are usually constructed in place (rvalues),
+        they may bind to lvalues. Use-const knows not to throw away lvalue-ness,
+        in that case, i.e. returns false.
+      </p>
+<a name="boost_assign_v2.utility.chain.range"></a><h5>
+<a name="id36373634"></a>
+        <a class="link" href="utility.html#boost_assign_v2.utility.chain.range">Range</a>
+      </h5>
+<p>
+        <span class="bold"><strong>Notation</strong></span>
+      </p>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term"><code class="computeroutput"><span class="identifier">chained</span></code></span></dt>
+<dd><p>
+              result of <code class="computeroutput"><span class="identifier">r1</span> <span class="special">|</span>
+              _chain<span class="special">(</span> <span class="identifier">r2</span>
+              <span class="special">)</span></code>
+            </p></dd>
+</dl>
+</div>
+<p>
+        <span class="bold"><strong>Expressions</strong></span>
+      </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Expression
+                </p>
+              </th>
+<th>
+                <p>
+                  Value
+                </p>
+              </th>
+</tr></thead>
+<tbody><tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="special">*(</span> <span class="identifier">i</span>
+                  <span class="special">+</span> <span class="identifier">begin</span><span class="special">(</span> <span class="identifier">chained</span>
+                  <span class="special">)</span> <span class="special">)</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="special">*(</span> <span class="identifier">i</span>
+                  <span class="special">&lt;</span> <span class="identifier">size</span><span class="special">(</span> <span class="identifier">r1</span>
+                  <span class="special">)</span> <span class="special">?</span>
+                  <span class="identifier">i</span> <span class="special">+</span>
+                  <span class="identifier">begin</span><span class="special">(</span>
+                  <span class="identifier">r1</span> <span class="special">)</span>
+                  <span class="special">:</span> <span class="identifier">i</span>
+                  <span class="special">-</span> <span class="identifier">size</span><span class="special">(</span> <span class="identifier">r1</span>
+                  <span class="special">)</span> <span class="special">+</span>
+                  <span class="identifier">begin</span><span class="special">(</span>
+                  <span class="identifier">r2</span> <span class="special">)</span>
+                  <span class="special">)</span></code>
+                </p>
+              </td>
+</tr></tbody>
+</table></div>
+<a name="boost_assign_v2.utility.chain.alternative_invocation"></a><h5>
+<a name="id36373961"></a>
+        <a class="link" href="utility.html#boost_assign_v2.utility.chain.alternative_invocation">Alternative
+        invocation</a>
+      </h5>
+<p>
+        <span class="bold"><strong>Header</strong></span> 
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><a href="../../../../../../boost/assign/v2/utility/chain/operator_and.hpp" target="_top">boost/assign/v2/utility/chain/operator_and.hpp</a><span class="special">&gt;</span>
+</pre>
+<p>
+      </p>
+<p>
+        This header is optional (because it overloads <code class="computeroutput"><span class="identifier">opearator</span><span class="special">&amp;&amp;</span></code>, which some may prefer not to)
+        i.e. is it not included in <a href="../../../../../../boost/assign/v2/utility/chain.hpp" target="_top">boost/assign/v2/utility/chain.hpp</a>.
+      </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Expression
+                </p>
+              </th>
+<th>
+                <p>
+                  Description
+                </p>
+              </th>
+</tr></thead>
+<tbody><tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">r1</span> <span class="special">&amp;&amp;</span>
+                  <span class="identifier">r2</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  Equivalent to <code class="computeroutput"><span class="identifier">r1</span> <span class="special">|</span> <span class="identifier">_chain</span><span class="special">(</span> <span class="identifier">r2</span>
+                  <span class="special">)</span></code>
+                </p>
+              </td>
+</tr></tbody>
+</table></div>
+<a name="boost_assign_v2.utility.chain.example"></a><h5>
+<a name="id36374140"></a>
+        <a class="link" href="utility.html#boost_assign_v2.utility.chain.example">Example</a>
+      </h5>
+<a name="ex_utility_chain"></a><p>
+        <span class="bold"><strong>Example 1</strong></span>
+      </p>
+<p>
+        
+</p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">T</span><span class="special">;</span>
+<span class="identifier">array</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">,</span> <span class="number">2</span><span class="special">&gt;</span> <span class="identifier">head</span><span class="special">;</span>  <span class="identifier">head</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="string">"A"</span><span class="special">;</span> <span class="identifier">head</span><span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">=</span> <span class="string">"B"</span><span class="special">;</span>
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">list</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">tail</span><span class="special">;</span> <span class="identifier">tail</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span> <span class="string">"C"</span> <span class="special">);</span> <span class="identifier">tail</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span> <span class="string">"D"</span> <span class="special">);</span>
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">joined</span><span class="special">;</span> <span class="identifier">copy</span><span class="special">(</span> <span class="identifier">head</span> <span class="special">|</span> <span class="identifier">as2</span><span class="special">::</span><span class="identifier">_chain</span><span class="special">(</span> <span class="identifier">tail</span> <span class="special">),</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">back_inserter</span><span class="special">(</span> <span class="identifier">joined</span> <span class="special">)</span> <span class="special">);</span>
+
+
+<span class="identifier">BOOST_ASSIGN_V2_CHECK</span><span class="special">(</span>
+    <span class="identifier">range</span><span class="special">::</span><span class="identifier">equal</span><span class="special">(</span> <span class="identifier">joined</span><span class="special">,</span> <span class="identifier">as2</span><span class="special">::</span><span class="identifier">csv_deque</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;(</span><span class="string">"A"</span><span class="special">,</span> <span class="string">"B"</span><span class="special">,</span> <span class="string">"C"</span><span class="special">,</span> <span class="string">"D"</span><span class="special">)</span> <span class="special">)</span>
+<span class="special">);</span>
+</pre>
+<p>
+      </p>
+<p>
+        <span class="bold"><strong>Example 2</strong></span>
+      </p>
+<p>
+        
+</p>
+<pre class="programlisting">            <span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">word</span><span class="special">;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="identifier">word</span><span class="special">&gt;</span> <span class="identifier">words</span><span class="special">(</span> <span class="number">6</span> <span class="special">);</span>
+            <span class="identifier">words</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="string">"foo"</span><span class="special">;</span> <span class="identifier">words</span><span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">=</span> <span class="string">"bar"</span><span class="special">;</span> <span class="identifier">words</span><span class="special">[</span><span class="number">2</span><span class="special">]</span> <span class="special">=</span> <span class="string">"baz"</span><span class="special">;</span>
+            <span class="identifier">words</span><span class="special">[</span><span class="number">3</span><span class="special">]</span> <span class="special">=</span> <span class="string">"qux"</span><span class="special">;</span> <span class="identifier">words</span><span class="special">[</span><span class="number">4</span><span class="special">]</span> <span class="special">=</span> <span class="string">"quux"</span><span class="special">;</span> <span class="identifier">words</span><span class="special">[</span><span class="number">5</span><span class="special">]</span> <span class="special">=</span> <span class="string">"grault"</span><span class="special">;</span>
+            <span class="identifier">array</span><span class="special">&lt;</span><span class="identifier">word</span><span class="special">,</span> <span class="number">3</span><span class="special">&gt;</span> <span class="identifier">head</span><span class="special">;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">list</span><span class="special">&lt;</span><span class="identifier">word</span><span class="special">&gt;</span> <span class="identifier">tail</span><span class="special">(</span> <span class="number">3</span> <span class="special">);</span>
+            <span class="identifier">copy</span><span class="special">(</span> <span class="identifier">words</span><span class="special">,</span> <span class="identifier">begin</span><span class="special">(</span> <span class="identifier">head</span> <span class="special">|</span> <span class="identifier">as2</span><span class="special">::</span><span class="identifier">_chain</span><span class="special">(</span> <span class="identifier">tail</span> <span class="special">)</span> <span class="special">)</span> <span class="special">);</span>
+
+            <span class="identifier">BOOST_ASSIGN_V2_CHECK</span><span class="special">(</span> <span class="identifier">head</span><span class="special">.</span><span class="identifier">front</span><span class="special">()</span> <span class="special">==</span> <span class="string">"foo"</span> <span class="special">);</span>
+            <span class="identifier">BOOST_ASSIGN_V2_CHECK</span><span class="special">(</span> <span class="identifier">head</span><span class="special">.</span><span class="identifier">back</span><span class="special">()</span> <span class="special">==</span> <span class="string">"baz"</span> <span class="special">);</span>
+<span class="comment">//            BOOST_ASSIGN_V2_CHECK( tail.front() == "qux" );
+</span><span class="comment">//            BOOST_ASSIGN_V2_CHECK( tail.back() == "grault" );
+</span>            </pre>
+<p>
+      </p>
+<p>
+        <span class="bold"><strong>Example 3</strong></span> [test_utility_chain_write_refs]
+      </p>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2003 -2004 Thorsten Ottosen, 2010 Erwann Rogard<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="ref/array.html"><img src="../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="utility/conversion.html"><img src="../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>
