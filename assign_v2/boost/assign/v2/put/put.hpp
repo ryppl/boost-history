@@ -48,8 +48,9 @@ namespace interpreter_aux{
         typedef interpreter_aux::interpreter_modifier<MTag> modifier_;
         typedef ref::assign_tag::copy assign_tag_;
         typedef ref::wrapper<assign_tag_,C> super1_t;
-//->
+
         public:
+//->
 
         put_interpreter()/*<-*/
             {}BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/

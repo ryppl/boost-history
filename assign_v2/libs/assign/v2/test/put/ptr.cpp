@@ -25,7 +25,7 @@
 
 namespace test_assign_v2{
 namespace xxx_put{
-namespace xxx_ptr{
+namespace xxx_ptr{    
 
     void test(){
 
