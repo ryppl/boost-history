@@ -54,7 +54,7 @@ namespace interpreter_aux{
     template<typename Derived> struct replace_data_tag;
 
     template<typename R>
-    class as_arg_list_adapter;
+    struct as_arg_list_adapter;
 
 }// interpreter_aux
 }// v2
