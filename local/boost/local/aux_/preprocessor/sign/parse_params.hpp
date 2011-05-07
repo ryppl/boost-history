@@ -12,12 +12,12 @@
 #include "parsed_params_/nil.hpp"
 #include <boost/preprocessor/control/iif.hpp>
 
-// Private API.
+// PRIVATE //
 
 #define BOOST_LOCAL_AUX_PP_SIGN_PARSE_PARAMS_NONE_(unused) \
     BOOST_LOCAL_AUX_PP_SIGN_PARSED_PARAMS_NIL
 
-// Public API.
+// PUBLIC //
 
 // parenthesized_params: Empty ``, or `void`, or `(void)` for no params
 //  Or, `{([auto | register] param_type param_name)[(default default_value)] 

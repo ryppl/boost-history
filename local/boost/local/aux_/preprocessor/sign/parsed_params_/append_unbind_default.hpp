@@ -16,7 +16,7 @@
 #include <boost/preprocessor/list/append.hpp>
 #include <boost/preprocessor/list/first_n.hpp>
 
-// Private API.
+// PRIVATE //
 
 #define BOOST_LOCAL_AUX_PP_SIGN_PARSED_PARAMS_APPEND_UNBIND_DEFAULT_( \
         unbinds, default_value) \
@@ -38,7 +38,7 @@
         ) \
     )
 
-// Public API.
+// PUBLIC //
 
 // default_value: a valid parameter default value (`-1`, etc)
 // Precondition: already added unbinds are not nil-list.

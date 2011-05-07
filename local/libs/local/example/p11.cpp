@@ -1,8 +1,15 @@
 
-#include <boost/local/fuction.hpp>
+//#include <boost/local/fuction.hpp>
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <boost/preprocessor.hpp>
+
+#define BOOST_LOCAL_FUNCTION_PARAMS(params) \
+    BOOST_LOCAL_FUNCTION_PARAMS_(params) BOOST_PP_LPAREN
+
+#define BOOST_LOCAL_FUNCTION_NAME(name) \
+    BOOST_PP_RPAREN BOOST_LOCAL_FUNCTION_NAME_(name)
 
 int main() {
     void BOOST_LOCAL_FUNCTION_PARAMS(

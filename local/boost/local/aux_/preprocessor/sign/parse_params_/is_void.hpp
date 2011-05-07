@@ -15,7 +15,7 @@
 #include <boost/preprocessor/facilities/empty.hpp>
 #include <boost/preprocessor/seq.hpp> // For `SEQ_HEAD`.
 
-// Private API.
+// PRIVATE //
 
 #if defined(BOOST_LOCAL_CONFIG_COMPLIANT)
 #   define BOOST_LOCAL_AUX_PP_SIGN_PARASE_PARAMS_IS_VOID_TOKEN_ALLOW_EMPTY_ 0
@@ -36,7 +36,7 @@
     BOOST_LOCAL_AUX_PP_SIGN_PARSE_PARAMS_IS_VOID_TOKEN_( \
             BOOST_PP_SEQ_HEAD(params_seq))
 
-// Public API.
+// PUBLIC //
 
 // Check is specified parenthesized params are empty (or void) list.
 // Expand to 1 iff params_seq is empty (C99 only), or `void` (supported also

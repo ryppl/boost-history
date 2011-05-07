@@ -15,7 +15,7 @@
 #include <boost/preprocessor/control/iif.hpp>
 #include <boost/preprocessor/facilities/is_empty.hpp>
 
-// Private API.
+// PRIVATE //
 
 #define BOOST_LOCAL_AUX_PP_SIGN_PARSE_PARAMS_SEQ_YES_(params_seq, unused) \
     BOOST_LOCAL_AUX_PP_SIGN_PARSED_PARAMS_VALIDATE( \
@@ -33,7 +33,7 @@
         BOOST_LOCAL_AUX_PP_SIGN_PARSE_PARAMS_SEQ_NO_ \
     )(params_seq, defaults_error)
 
-// Public API.
+// PUBLIC //
 
 #define BOOST_LOCAL_AUX_PP_SIGN_PARSE_PARAMS_SEQ(params_seq) \
     BOOST_LOCAL_AUX_PP_SIGN_PARSE_PARAMS_SEQ_(params_seq, \

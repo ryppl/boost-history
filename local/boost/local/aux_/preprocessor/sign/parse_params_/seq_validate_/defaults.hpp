@@ -28,7 +28,7 @@
 #include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/facilities/expand.hpp>
 
-// Private API.
+// PRIVATE //
 
 #define BOOST_LOCAL_AUX_PP_SIGN_PARSE_PARAMS_SEQ_VALIDATE_DEFAULTS_IS_UNBIND_( \
         elem) \
@@ -65,7 +65,7 @@
         BOOST_PP_TUPLE_EAT(3) \
     )(params_seq, index, error)
 
-// Private: While's operation.
+// While's operation.
 
 #define BOOST_LOCAL_AUX_PP_SIGN_PARSE_PARAMS_SEQ_VALIDATE_DEFAULTS_OP_DATA_( \
         params_seq, index, error) \
@@ -89,7 +89,7 @@
             BOOST_PP_TUPLE_ELEM(3, 1, params_index_error), \
             BOOST_PP_TUPLE_ELEM(3, 2, params_index_error))
 
-// Private: While's predicate.
+// While's predicate.
 
 #define BOOST_LOCAL_AUX_PP_SIGN_PARSE_PARAMS_SEQ_VALIDATE_DEFAULTS_PRED_DATA_( \
         params_seq, index, error) \
@@ -105,7 +105,7 @@
             BOOST_PP_TUPLE_ELEM(3, 1, params_index_error), \
             BOOST_PP_TUPLE_ELEM(3, 2, params_index_error))
 
-// Public API.
+// PUBLIC //
 
 // Validate parameter sequence's default values: `default ...` cannot be 1st
 // element and it must follow an unbind param.

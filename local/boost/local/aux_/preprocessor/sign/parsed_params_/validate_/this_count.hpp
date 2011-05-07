@@ -17,7 +17,7 @@
 #include <boost/preprocessor/comparison/greater.hpp>
 #include <boost/preprocessor/arithmetic/add.hpp>
 
-// Private API.
+// PRIVATE //
 
 #define BOOST_LOCAL_AUX_PP_SIGN_PARSED_PARAMS_VALIDATE_THIS_COUNT_(params) \
     BOOST_PP_IIF(BOOST_PP_GREATER(BOOST_PP_ADD( \
@@ -29,7 +29,7 @@
     )(params, /* trailing `EMPTY` because error might not be present */ \
             ERROR_object_this_cannot_be_bound_multiple_times BOOST_PP_EMPTY)
 
-// Public API.
+// PUBLIC //
 
 #define BOOST_LOCAL_AUX_PP_SIGN_PARSED_PARAMS_VALIDATE_THIS_COUNT(params) \
     BOOST_PP_IIF(BOOST_LOCAL_AUX_PP_SIGN_PARAMS_HAVE_ERROR(params), \
