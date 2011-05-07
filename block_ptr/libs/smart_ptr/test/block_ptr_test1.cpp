@@ -3,7 +3,14 @@
 	block_ptr_test2.cpp
 
 	@note
-	Memory manager handling heap deallocations in constant time.
+	Copyright (c) 2008 Phil Bouchard <phil@fornux.com>.
+
+	Distributed under the Boost Software License, Version 1.0.
+
+	See accompanying file LICENSE_1_0.txt or copy at
+	http://www.boost.org/LICENSE_1_0.txt
+
+	See http://www.boost.org/libs/smart_ptr/doc/index.html for documentation.
 */
 
 #include <list>
