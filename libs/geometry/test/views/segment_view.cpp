@@ -15,7 +15,8 @@
 #include <geometry_test_common.hpp>
 
 #include <boost/geometry/geometries/geometries.hpp>
-#include <boost/geometry/ranges/segment_range.hpp>
+#include <boost/geometry/geometries/point_xy.hpp>
+#include <boost/geometry/views/segment_view.hpp>
 #include <boost/geometry/domains/gis/io/wkt/read_wkt.hpp>
 
 
@@ -27,7 +28,7 @@ void test_geometry(std::string const& wkt, std::string const& expected)
     Segment segment;
     bg::read_wkt(wkt, segment);
 
-    typedef bg::segment_range<Segment> range_type;
+    typedef bg::segment_view<Segment> range_type;
     range_type range(segment);
 
     {
@@ -60,7 +61,7 @@ void test_geometry(std::string const& wkt, std::string const& expected)
     }
 
     // Check Boost.Range concept
-    BOOST_CONCEPT_ASSERT( (boost::ForwardRangeConcept<range_type>) );
+    BOOST_CONCEPT_ASSERT( (boost::RandomAccessRangeConcept<range_type>) );
 
 }
 
@@ -75,6 +76,11 @@ void test_all()
 
 int test_main(int, char* [])
 {
+    std::vector<int> a; 
+    a.push_back(1);
+    boost::range_iterator<std::vector<int> const>::type it = a.end();
+    --it;
+    std::cout << *it << std::endl;
     test_all<bg::model::d2::point_xy<double> >();
     return 0;
 }
