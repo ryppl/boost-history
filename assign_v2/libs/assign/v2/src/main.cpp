@@ -16,7 +16,7 @@
 #include <libs/assign/v2/test/ref.h>
 
 // Tutorial
-//#include <libs/assign/v2/tutorial.h>
+#include <libs/assign/v2/tutorial.h>
 
 // Speed -- CPP0x required
 //#include <fstream>
@@ -73,7 +73,7 @@ int main (int argc, char * const argv[])
         xxx_ref::test();
     }    
     {
-        // tutorial_assign_v2::run();
+        tutorial_assign_v2::run();
     }
     {/*
         using namespace speed_assign_v2;

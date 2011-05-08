@@ -29,6 +29,7 @@ namespace keyword_aux{
     struct value/*<-*/{}/*->*/;
 
 }//keyword_aux
+
     typedef keyword_aux::ignore         ignore_;
     typedef keyword_aux::element        element_;
     typedef keyword_aux::key            key_;

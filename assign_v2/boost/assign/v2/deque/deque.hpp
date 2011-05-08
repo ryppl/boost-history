@@ -82,8 +82,10 @@ namespace interpreter_aux{
         {}BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
 
+//<-
         #if BOOST_ASSIGN_V2_ENABLE_CPP0X
         // Suggested by JB
+//->
         // Move constructor
         deque_interpreter(deque_interpreter&& d)
             : put_crtp_( std::move<put_crtp_&>(d) ), 
@@ -95,7 +97,9 @@ namespace interpreter_aux{
           put_crtp_::operator=( std::move<put_crtp_&>(d) );
           impl = std::move(d.impl);
         }
+//<-
         #endif
+//->
 
         // Deque interface
         iterator begin()/*<-*/{
