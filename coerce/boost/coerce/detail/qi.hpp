@@ -4,30 +4,28 @@
 //  (See accompanying file ../../LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_COERCE_QI_HPP
-#define BOOST_COERCE_QI_HPP
+#ifndef BOOST_COERCE_DETAIL_QI_HPP
+#define BOOST_COERCE_DETAIL_QI_HPP
 
 #ifdef _MSC_VER
 #pragma once
 #endif
 
 #include <boost/coerce/detail/reserve.hpp>
-#include <boost/coerce/domain.hpp>
 
 #include <boost/range/begin.hpp>
 #include <boost/range/const_iterator.hpp>
 #include <boost/range/end.hpp>
-#include <boost/range/has_range_iterator.hpp>
 #include <boost/range/size.hpp>
 #include <boost/spirit/home/qi/auto.hpp>
 #include <boost/spirit/home/qi/char.hpp>
 #include <boost/spirit/home/qi/numeric.hpp>
 #include <boost/spirit/home/qi/operator/optional.hpp>
 
-namespace boost { namespace coerce { namespace traits {
+namespace boost { namespace coerce { namespace detail {
 
-    template <typename Target, typename Source>
-    struct as<spirit::qi::domain, Target, Source> {
+    struct qi {
+        template <typename Target, typename Source>
         static inline bool
         call(Target & target, Source const & source) {
             typename range_difference<Source>::type size =
@@ -49,6 +47,6 @@ namespace boost { namespace coerce { namespace traits {
         }
     };
 
-} } }  // namespace boost::coerce::traits
+} } }  // namespace boost::coerce::detail
 
-#endif  // BOOST_COERCE_QI_HPP
+#endif  // BOOST_COERCE_DETAIL_QI_HPP
