@@ -1,0 +1,112 @@
+[heading Requisites]
+
+We assume in this tutorial that all the header files are included, as shown in section [link full_include Organization]
+and
+``
+	using namespace boost::assign::v2;
+``
+
+Headers from other libraries will not be shown in the code snippets of this tutorial, but they can be found in the tutorial's 
+actual [@../../tutorial.cpp source file].
+
+[heading Put]
+
+A recap of the [link boost_assign_v2.intro introduction]'s example is in order : the ['interpreter] returned by [link put `__fun_put__`] is 
+variadic and 
+
+* its arguments are forwarded to a ['data-generator]. See [link data_gen_rules here] for further detail. 
+* it relies on an appropriate ['modifier], `insert` in case of a map, based on a set of [link modifier_rules rules],
+such that the interface is uniform across different container categories.
+
+[heading Csv syntax]
+
+Consider this example:
+[tutorial_csv_put]
+
+Prefix `csv`[footnote ['csv] stands for comma separated values] indicates an [link csv_put alternative syntax] that is dual to a functor, as can be
+seen from the equivalent code marked by a small icon ([@http://www.boost.org/doc/libs/1_46_1/doc/html/quickbook/syntax.html#quickbook.syntax.block.import.callouts callout]). 
+Other names starting with ['csv] are treated similarly. 
+
+Another thing to notice is that the last argument (in this example) is a [tpl_concept_range range], `numeric`, with a special wrapper around it, 
+`__fun_as_arg_list__`. The latter instructs the interpreter to scan the range's elements, and process each as if passed as an individual argument.  
+
+[heading Pipe syntax]
+
+Suppose we wish to put a set of integers in a container and, in the same statement, pass it through a mutating [tpl_range_algo algorithm]:
+[tutorial_delay_csv_put]
+The vertical bar, `|`, expresses the on-the-fly modification we were looking for, and call it ['piping]
+after the related [tpl_pipe idiom] by the same name. A related feature is Boost.Range's [tpl_range_adaptor range adaptors].
+
+[heading Container generation]
+[#tut_cont_gen]
+
+After having assigned `target` and, in the same statement, passed it through a 
+[@http://www.boost.org/doc/libs/1_46_0/libs/range/doc/html/range/reference/algorithms/mutating/stable_partition.html stable partition] algorithm, 
+let's verify the state of the container against that of an in place generated container:
+[tutorial_csv_deque]
+
+In keeping with our previously established ['csv] convention, container generating function [link csv_deque `__fun_csv_deque__`] is paired with a 
+functor form, [link deque `__fun_deque__`]. [#tut_empty]Another convention, that we now introduce by way of example, is that which governs the generation of an
+empty container:
+
+[tutorial_empty_deque]
+
+In comparison, each of `__fun_deque__<int>()` and `__fun_csv_deque__( int() )` generates a container whose only element is default constructed.
+
+[heading Pointer-containers]
+
+To insert elements in a [tpl_ptr_container pointer container], pretend it is a value-container:
+[tutorial_ptr_container]
+
+[heading Options]
+
+An option overrides the default semantics that are described under heading [*Put], above.
+
+The automatically deduced data-generator can be overriden, such as follows:
+[tutorial_data]
+
+In place of a functor, `__kwd_data__` can be set to a keyword : `__kwd_key__`, `__kwd_element__`, `__kwd_mapped__`, and `__kwd_value__`.
+With `__kwd_data__ = __kwd_value__` the resulting data-generator creates an object of type the value-type of the container [footnote To understand how this
+applies to a pointer-container, pretend it is the counterpart that stores its element by value. ], and likewise for the other keywords.
+
+The modifier can be explicitly specified, such as follows:
+[tutorial_push_front]
+
+Only the form `__fun_csv_put__`  (and its delayed variant) requires the use of keyword `__kwd_option__`. 
+Composing [^m] options is achieved as follows : `__compose_options__`. Extending the library with a new modifier-option is facilitated by [link modifier_macro macros] that manage the 
+overhead.
+
+See section [link boost_assign_v2.reference.option Option] for a comprehensive description.
+
+[heading Reference arrays]
+
+In the examples that precede, [link ref_csv_array  `__fun_ref_csv_array__`], which returns a reference-array, could be substituted for 
+`__fun_csv_deque__`.  The reciprocal is not true, in general. A reference-array is preferable if the values are expensive to copy, and it 
+is necessary for working specifically with references, such as as follows:
+[tutorial_ref_array]
+
+In this example, an implicit conversion takes place, from each of the reference-array's element (a reference wrapper) to the reference it holds.
+In read mode, as above, the context usually suffices to cause this conversion. In write-mode i.e. if the values of the held references are to be modified, 
+explicit conversion is usually required. The latter is achieved by a [tpl_range_adaptor range adaptor] identified by keyword `__kwd_ref_get__`, as illustrated in 
+the next item of this tutorial.
+
+In keeping with our ['csv] convention, `__fun_ref_csv_array__` has a functor dual, [link ref_array  `__fun_ref_array__`]. Unlike 
+`__fun_put__` or `__fun_deque__`, it is unary (not variadic).
+
+[heading Chaining]
+
+Chaining ranges is already provided by [tpl_range_join `join`] in [tpl_range Boost.Range]. Here's a [link chain variant] that caters to reference 
+arrays: [tutorial_chain]
+
+It is noteworthy that this algorithm modifies `x`, `y` and `z` even though the array returned by `ref::csv_array` is 
+an rvalue. 
+
+[heading Conversion]
+
+This section deals with conversion from a [tpl_concept_range Range] to collections of elements that need not support iterators. For example,
+[tutorial_converter]
+
+Notice, indeed, that the left hand side of `=` is an [tpl_stl_adapter adapter] so, unlike the container in the right hand side, it is not a [tpl_concept_range Range]. 
+The conversion above is implicit, and is made possible by a conversion operator fitted to the object returned by `__fun_converter__`. Sometimes,
+[link convert explicit conversion] is unavoidable and, continuing the above snippet, is illustrated as follows:
+[tutorial_convert]
