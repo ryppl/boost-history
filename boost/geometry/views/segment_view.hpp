@@ -11,13 +11,15 @@
 // Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_GEOMETRY_RANGES_SEGMENT_RANGE_HPP
-#define BOOST_GEOMETRY_RANGES_SEGMENT_RANGE_HPP
+#ifndef BOOST_GEOMETRY_VIEWS_SEGMENT_VIEW_HPP
+#define BOOST_GEOMETRY_VIEWS_SEGMENT_VIEW_HPP
 
 
 #include <boost/range.hpp>
 
-#include <boost/geometry/iterators/segment_range_iterator.hpp>
+#include <boost/geometry/core/point_type.hpp>
+#include <boost/geometry/views/detail/points_view.hpp>
+#include <boost/geometry/algorithms/assign.hpp>
 
 
 namespace boost { namespace geometry
@@ -25,32 +27,53 @@ namespace boost { namespace geometry
 
 
 /*!
-\brief Range, walking over the two points of a segment
-\tparam Segment segment type
-\ingroup ranges
+\brief Makes a segment behave like a linestring or a range
+\details Adapts a segment to the Boost.Range concept, enabling the user to 
+    iterate the two segment points. The segment_view is registered as a LineString Concept
+\tparam Segment \tparam_geometry{Segment}
+\ingroup views
+
+\qbk{before.synopsis,
+[heading Model of]
+[link geometry.reference.concepts.concept_linestring LineString Concept]
+}
+
+\qbk{[include reference/views/segment_view.qbk]}
+
 */
 template <typename Segment>
-class segment_range
+struct segment_view
+    : public detail::points_view
+        <
+            typename geometry::point_type<Segment>::type, 
+            2
+        >
 {
-public :
-    typedef segment_range_iterator<Segment const> const_iterator;
-    typedef segment_range_iterator<Segment const> iterator; // must be defined
-
-    explicit segment_range(Segment const& segment)
-        : m_begin(const_iterator(segment))
-        , m_end(const_iterator(segment, true))
+    typedef typename geometry::point_type<Segment>::type point_type;
+    
+    /// Constructor accepting the segment to adapt
+    explicit segment_view(Segment const& segment)
+        : detail::points_view<point_type, 2>(copy_policy(segment))
+    {}
+    
+private :    
+    
+    class copy_policy
     {
-    }
+    public :
+        inline copy_policy(Segment const& segment)
+            : m_segment(segment)
+        {}
+        
+        inline void apply(point_type* points) const
+        {
+            geometry::detail::assign_point_from_index<0>(m_segment, points[0]);
+            geometry::detail::assign_point_from_index<1>(m_segment, points[1]);
+        }
+    private :
+        Segment m_segment;
+    };
 
-    const_iterator begin() const { return m_begin; }
-    const_iterator end() const { return m_end; }
-
-    // It may not be used non-const, so comment this:
-    //iterator begin() { return m_begin; }
-    //iterator end() { return m_end; }
-
-private :
-    const_iterator m_begin, m_end;
 };
 
 
@@ -60,7 +83,7 @@ private :
 namespace traits
 {
     template<typename Segment>
-    struct tag<segment_range<Segment> >
+    struct tag<segment_view<Segment> >
     {
         typedef linestring_tag type;
     };
@@ -69,8 +92,7 @@ namespace traits
 #endif // DOXYGEN_NO_TRAITS_SPECIALIZATIONS
 
 
-
 }} // namespace boost::geometry
 
 
-#endif // BOOST_GEOMETRY_RANGES_SEGMENT_RANGE_HPP
+#endif // BOOST_GEOMETRY_VIEWS_SEGMENT_VIEW_HPP
