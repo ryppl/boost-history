@@ -75,10 +75,34 @@
  *
  * @Warning Increasing this number will increase compilation time.
  *
- * @See @RefSect2{Getting_Started, Getting Started} section.
+ * @See @RefSect{Tutorial} section, @RefSect2{Getting_Started, Getting Started}
+ *  section.
  */
 #ifndef BOOST_LOCAL_CONFIG_FUNCTION_ARITY_MAX
 #define BOOST_LOCAL_CONFIG_FUNCTION_ARITY_MAX 5
+#endif
+
+/**
+ * @brief The number of times a function can be overloaded.
+ *
+ * If programmers leave this configuration macro undefined, its default
+ * value is <c>6</c>.
+ *
+ * This number must be greater or equal than 2 (because a single function
+ * cannot be overloaded by itself) otherwise the library will generate a
+ * compile-time error.
+ *
+ * @Warning Increasing this number will increase compilation time when the
+ *  header file <c>"boost/local/function/overload.hpp"</c> is included.
+ *
+ * @See @RefSect2{Advanced_Topics, Advanced Topics} section,
+ *  @RefSect2{Getting_Started, Getting Started} section.
+ */
+#ifndef BOOST_LOCAL_CONFIG_OVERLOADS
+#define BOOST_LOCAL_CONFIG_OVERLOADS 6
+#endif
+#if BOOST_LOCAL_CONFIG_OVERLOADS < 2
+#error "BOOST_LOCAL_CONFIG_OVERLOADS must be a number grater or equal than 2"
 #endif
 
 /**
@@ -93,7 +117,8 @@
  *  changed). Changing the symbol <c>this_</c> effectively changes the public
  *  API of this library.
  *
- * @See @RefSect2{Getting_Started, Getting Started} section.
+ * @See @RefSect{Tutorial} section, @RefSect2{Getting_Started, Getting Started}
+ *  section.
  */
 #ifndef BOOST_LOCAL_CONFIG_THIS_PARAM_NAME
 #define BOOST_LOCAL_CONFIG_THIS_PARAM_NAME this_

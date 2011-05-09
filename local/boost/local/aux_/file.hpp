@@ -7,8 +7,11 @@
 #ifndef BOOST_LOCAL_AUX_FILE_HPP_
 #define BOOST_LOCAL_AUX_FILE_HPP_
 
-#define BOOST_LOCAL_AUX_FILE_ABSTRACT_FUNCTION_HPP \
-    "boost/local/aux_/abstract_function.hpp"
+#define BOOST_LOCAL_AUX_FILE_FUNCTION_OVERLOAD_HPP \
+    "boost/local/function/overload.hpp"
+
+#define BOOST_LOCAL_AUX_FILE_OVERLOAD_BASE_HPP \
+    "boost/local/aux_/overload_base.hpp"
 
 #define BOOST_LOCAL_AUX_FILE_FUNCTION_HPP \
     "boost/local/aux_/function.hpp"

@@ -87,6 +87,9 @@ exe params_all_va : params_all_va.cpp ;
 exe print_map : print_map.cpp ;
 exe print_map_va : print_map_va.cpp ;
 
+exe overload : overload.cpp ;
+exe overload_va : overload_va.cpp ;
+
 exe profile_boost_local : profile_boost_local.cpp
         ../../..//libboost_chrono ../../..//libboost_system ;
 exe profile_boost_local_inline : profile_boost_local_inline.cpp 

@@ -87,13 +87,13 @@ class function {
     // Empty template cannot be used directly (only via its specializations).
 };
 
-}}} // namespace boost::loca::aux
-
-// Iteration within the namespace.
+// Iterate within namespace.
 #       define BOOST_PP_ITERATION_PARAMS_1 \
                 (3, (0, BOOST_LOCAL_CONFIG_FUNCTION_ARITY_MAX, \
                 BOOST_LOCAL_AUX_FILE_FUNCTION_HPP))
-#       include BOOST_PP_ITERATE() // Iterate over arity.
+#       include BOOST_PP_ITERATE() // Iterate over function arity.
+
+}}} // namespace boost::loca::aux
 
 #undef BOOST_LOCAL_AUX_arg_type
 #undef BOOST_LOCAL_AUX_arg_param_type
@@ -113,7 +113,6 @@ class function {
 
 #elif BOOST_PP_ITERATION_DEPTH() == 1
 #   define BOOST_LOCAL_AUX_arity BOOST_PP_FRAME_ITERATION(1)
-
 #   define BOOST_PP_ITERATION_PARAMS_2 \
             (3, (0, BOOST_LOCAL_AUX_arity, \
             BOOST_LOCAL_AUX_FILE_FUNCTION_HPP))
@@ -123,8 +122,7 @@ class function {
 #elif BOOST_PP_ITERATION_DEPTH() == 2
 #   define BOOST_LOCAL_AUX_defaults BOOST_PP_FRAME_ITERATION(2)
 
-namespace boost { namespace local { namespace aux {
-
+// Iterating within namespce boost::local::aux.
 template<typename R
     BOOST_PP_COMMA_IF(BOOST_LOCAL_AUX_arity)
     BOOST_PP_ENUM(BOOST_LOCAL_AUX_arity, BOOST_LOCAL_AUX_arg_tparam, ~)
@@ -182,9 +180,6 @@ private:
     void* unused_;
 };
 
-}}} // namespace boost::local::aux
-
 #   undef BOOST_LOCAL_AUX_defaults
-
 #endif // iteration
 
