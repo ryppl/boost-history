@@ -27,12 +27,6 @@ const double sigma = 10.0;
 const double R = 28.0;
 const double b = 8.0 / 3.0;
 
-void lorenz( const state_type &x , state_type &dxdt , double t )
-{
-    dxdt[0] = sigma * ( x[1] - x[0] );
-    dxdt[1] = R * x[0] - x[1] - x[0] * x[2];
-    dxdt[2] = x[0]*x[1] - b * x[2];
-}
 
 
 
@@ -51,33 +45,39 @@ int main( int argc , char **argv )
 {
 	cout.precision( 14 );
 
-	taylor_type t;
+	taylor_type stepper;
 
-	state_type in = {{ 10.0 , 10.0 , 10.0 }} , dxdt = {{ 0.0 , 0.0 , 0.0 }} , xerr = {{ 0.0 , 0.0 , 0.0 }} , out = {{ 0.0 ,0.0 , 0.0 }};
+	state_type x = {{ 10.0 , 10.0 , 10.0 }} ;
 
-	lorenz( in , dxdt , 0.0 );
+	double t = 0.0;
+	double dt = 0.001;
+	for( size_t i=0 ; i<10000 ; ++i )
+	{
+		stepper.try_step(
+				fusion::make_vector
+				(
+						sigma * ( arg2 - arg1 ) ,
+						R * arg1 - arg2 - arg1 * arg3 ,
+						arg1 * arg2 - b * arg3
+				) ,
+				x , t , dt );
+		cout << i << "\t" << t << "\t" << x << "\n";
+	}
 
-	cout << in << endl;
-	cout << dxdt << endl << endl;
 
-	t.do_step(
-			fusion::make_vector
-			(
-					sigma * ( arg2 - arg1 ) ,
-					R * arg1 - arg2 - arg1 * arg3 ,
-					arg1 * arg2 - b * arg3
-			) ,
-			in , 0.0 , out , 0.1 , xerr );
-
-
-
-	cout << endl;
-	cout << in << endl;
-	cout << xerr << endl;
-	cout << out << endl << endl;
-	const derivs_type &derivs = t.get_last_derivs();
-	for( size_t i=0 ; i<derivs.size() ; ++i )
-		cout << derivs[i] << endl;
+//	while( t < 10.0 )
+//	{
+//		stepper.try_step(
+//				fusion::make_vector
+//				(
+//						sigma * ( arg2 - arg1 ) ,
+//						R * arg1 - arg2 - arg1 * arg3 ,
+//						arg1 * arg2 - b * arg3
+//				) ,
+//				x , t , dt );
+//
+//		cout << t << "\t" << x << endl;
+//	}
 
 	return 0;
 }
