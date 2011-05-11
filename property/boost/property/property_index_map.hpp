@@ -1,7 +1,7 @@
 #if !defined(PROPERTY_INDEX_MAP_HPP)
 #define PROPERTY_INDEX_MAP_HPP
 
-#include "detail/PropertyIndexMapDetail.h"
+#include "detail/property_index_map_detail.hpp"
 
 namespace properties
 {

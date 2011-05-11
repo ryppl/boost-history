@@ -3,7 +3,7 @@
 
 #include <boost/signal.hpp>
 #include <boost/optional.hpp>
-#include "PropertyInterface.h"
+#include "property_interface.hpp"
 
 namespace properties
 {

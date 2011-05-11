@@ -1,9 +1,9 @@
 #if !defined(PROPERTY_FUNCTOR_VALUE_HPP)
 #define PROPERTY_FUNCTOR_VALUE_HPP
 
-#include "PropertyInterface.h"
-#include "PropertyTag.h"
-#include "PropertyOperators.h"
+#include "property_interface.hpp"
+#include "property_tag.hpp"
+#include "property_operators.hpp"
 #include <boost/type_traits/is_const.hpp>
 #include <boost/mpl/if.hpp>
 

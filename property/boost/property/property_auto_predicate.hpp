@@ -1,9 +1,9 @@
 #if !defined(PROPERTY_AUTO_PREDICATE_HPP)
 #define PROPERTY_AUTO_PREDICATE_HPP
 
-#include "PropertyTag.h"
-#include "PropertyAutoValue.h"
-#include "PropertyOperators.h"
+#include "property_tag.hpp"
+#include "property_auto_value.hpp"
+#include "property_operators.hpp"
 #include <boost/function.hpp>
 #include <boost/mpl/assert.hpp>
 #include <boost/type_traits/is_const.hpp>

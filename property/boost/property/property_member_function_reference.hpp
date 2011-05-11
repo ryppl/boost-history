@@ -1,8 +1,8 @@
 #if !defined(PROPERTY_MEMBER_FUNCTION_REFERENCE_HPP)
 #define PROPERTY_MEMBER_FUNCTION_REFERENCE_HPP
 
-#include "PropertyReferenceInterface.h"
-#include "PropertyException.h"
+#include "property_reference_interface.hpp"
+#include "property_exception.hpp"
 
 namespace properties
 {

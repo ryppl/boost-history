@@ -1,8 +1,8 @@
 #if !defined(PROPERTY_OPERATORS_ENABLING_HPP)
 #define PROPERTY_OPERATORS_ENABLING_HPP
 
-#include "PropertyInterface.h"
-#include "PropertyOperatorsDetail.h"
+#include "property_interface.hpp"
+#include "property_operators_detail.hpp"
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits.hpp>
 #include <boost/mpl/or.hpp>

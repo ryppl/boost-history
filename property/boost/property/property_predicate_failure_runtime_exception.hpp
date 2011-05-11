@@ -3,7 +3,7 @@
 
 #include <boost/optional.hpp>
 #include <boost/function.hpp>
-#include "PropertyInterface.h"
+#include "property_interface.hpp"
 #include <stdexcept>
 #include <sstream>
 

@@ -1,9 +1,9 @@
 #if !defined(PROPERTY_MEMBER_DATA_PREDICATE_HPP)
 #define PROPERTY_MEMBER_DATA_PREDICATE_HPP
 
-#include "PropertyTag.h"
-#include "PropertyMemberDataValue.h"
-#include "PropertyOperators.h"
+#include "property_tag.hpp"
+#include "property_member_data_value.hpp"
+#include "property_operators.hpp"
 #include <boost/function.hpp>
 
 #if defined(BOOST_MSVC)
@@ -33,7 +33,7 @@ namespace properties
     
     prop_member_data_predicate(const prop_member_data_predicate & arg) : 
       prop_member_data<T,C,d,NotificationPolicy,write_tag>(static_cast<const prop_member_data<T,C,d,NotificationPolicy,write_tag> &>(arg)),
-      fs(f)
+      fs(arg.fs)
       { 
       }
       
@@ -104,7 +104,7 @@ namespace properties
     
     prop_member_data_predicate(const prop_member_data_predicate & arg) : 
       prop_member_data<T,C,d,NotificationPolicy,write_tag>(static_cast<const prop_member_data<T,C,d,NotificationPolicy,write_tag> &>(arg)),
-      fs(f)
+      fs(arg.fs)
       { 
       }
       
@@ -172,7 +172,7 @@ namespace properties
     
     prop_member_data_predicate(const prop_member_data_predicate & arg) : 
       prop_member_data<T,C,d,NotificationPolicy,read_write_tag>(static_cast<const prop_member_data<T,C,d,NotificationPolicy,read_write_tag> &>(arg)),
-      fs(f)
+      fs(arg.fs)
       { 
       }
       
@@ -250,7 +250,7 @@ namespace properties
     
     prop_member_data_predicate(const prop_member_data_predicate & arg) : 
       prop_member_data<T,C,d,NotificationPolicy,read_write_tag>(static_cast<const prop_member_data<T,C,d,NotificationPolicy,read_write_tag> &>(arg)),
-      fs(f)
+      fs(arg.fs)
       { 
       }
       

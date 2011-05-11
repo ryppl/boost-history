@@ -1,7 +1,7 @@
 #if !defined(PROPERTY_FUNCTOR_REFERENCE_HPP)
 #define PROPERTY_FUNCTOR_REFERENCE_HPP
 
-#include "PropertyReferenceInterface.h"
+#include "property_reference_interface.hpp"
 
 namespace properties
 {
@@ -33,9 +33,9 @@ namespace properties
       return(cf()); 
       }
       
-    T & get() const 
+    T & get()
       { 
-      return(cf()); 
+      return(cf());
       }
     
     private:

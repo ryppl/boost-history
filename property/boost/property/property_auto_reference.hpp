@@ -1,7 +1,7 @@
 #if !defined(PROPERTY_AUTO_REFERENCE_HPP)
 #define PROPERTY_AUTO_REFERENCE_HPP
 
-#include "PropertyReferenceInterface.h"
+#include "property_reference_interface.hpp"
 #include <boost/utility/value_init.hpp>
 
 namespace properties

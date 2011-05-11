@@ -1,9 +1,9 @@
 #if !defined(PROPERTY_AUTO_VALUE_HPP)
 #define PROPERTY_AUTO_VALUE_HPP
 
-#include "PropertyInterface.h"
-#include "PropertyTag.h"
-#include "PropertyOperators.h"
+#include "property_interface.hpp"
+#include "property_tag.hpp"
+#include "property_operators.hpp"
 #include <boost/utility/value_init.hpp>
 #include <boost/type_traits/is_const.hpp>
 #include <boost/mpl/if.hpp>
@@ -118,7 +118,7 @@ namespace properties
       
     void set(T arg) 
       { 
-      boost::get(data) = arg; 
+      boost::get((static_cast<prop_auto<T,default_policy_tag,read_tag> &>(*this)).data) = arg;
       }
     
   };
@@ -173,7 +173,7 @@ namespace properties
       
       T t(*this);
       
-      boost::get(data) = arg;
+      boost::get((static_cast<prop_auto<T,default_policy_tag,read_tag> &>(*this)).data) = arg;
       property_changed(*this,boost::optional<T>(t),arg);
       }
     

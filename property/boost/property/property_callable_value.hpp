@@ -1,10 +1,10 @@
 #if !defined(PROPERTY_CALLABLE_VALUE_HPP)
 #define PROPERTY_CALLABLE_VALUE_HPP
 
-#include "PropertyInterface.h"
-#include "PropertyTag.h"
-#include "PropertyException.h"
-#include "PropertyOperators.h"
+#include "property_interface.hpp"
+#include "property_tag.hpp"
+#include "property_exception.hpp"
+#include "property_operators.hpp"
 #include <boost/function.hpp>
 #include <boost/type_traits/is_const.hpp>
 #include <boost/mpl/if.hpp>

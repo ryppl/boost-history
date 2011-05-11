@@ -1,10 +1,10 @@
 #if !defined(PROPERTY_DATA_VALUE_HPP)
 #define PROPERTY_DATA_VALUE_HPP
 
-#include "PropertyInterface.h"
-#include "PropertyTag.h"
-#include "PropertyException.h"
-#include "PropertyOperators.h"
+#include "property_interface.hpp"
+#include "property_tag.hpp"
+#include "property_exception.hpp"
+#include "property_operators.hpp"
 #include <boost/type_traits/is_const.hpp>
 #include <boost/type_traits/add_const.hpp>
 #include <boost/mpl/if.hpp>
@@ -230,7 +230,7 @@ namespace properties
       
     prop_data & operator = (T arg) 
       { 
-      oldT = *this;
+      (static_cast<prop_data<T,d,NotificationPolicy,write_tag> & >(*this)).oldT = *this;
       (static_cast<prop_data<T,d,NotificationPolicy,write_tag> & >(*this)) = arg; 
       return(*this); 
       }
@@ -238,7 +238,7 @@ namespace properties
     template<class U>
     prop_data & operator = (U arg) 
       { 
-      oldT = *this;
+      (static_cast<prop_data<T,d,NotificationPolicy,write_tag> & >(*this)).oldT = *this;
       (static_cast<prop_data<T,d,NotificationPolicy,write_tag> & >(*this)) = arg; 
       return(*this); 
       }

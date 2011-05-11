@@ -1,9 +1,9 @@
 #if !defined(PROPERTY_OPERATORS_HPP)
 #define PROPERTY_OPERATORS_HPP
 
-#include "PropertyInterface.h"
-#include "PropertyOperatorsEnabling.h"
-#include "PropertyOperatorsDetail.h"
+#include "property_interface.hpp"
+#include "property_operators_enabling.hpp"
+#include "property_operators_detail.hpp"
 #include <boost/utility/enable_if.hpp>
 
 namespace properties

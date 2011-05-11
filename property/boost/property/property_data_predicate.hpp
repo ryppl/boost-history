@@ -1,9 +1,9 @@
 #if !defined(PROPERTY_DATA_PREDICATE_HPP)
 #define PROPERTY_DATA_PREDICATE_HPP
 
-#include "PropertyTag.h"
-#include "PropertyDataValue.h"
-#include "PropertyOperators.h"
+#include "property_tag.hpp"
+#include "property_data_value.hpp"
+#include "property_operators.hpp"
 #include <boost/function.hpp>
 
 #if defined(BOOST_MSVC)

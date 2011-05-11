@@ -1,10 +1,10 @@
 #if !defined(PROPERTY_FUNCTION_VALUE_HPP)
 #define PROPERTY_FUNCTION_VALUE_HPP
 
-#include "PropertyInterface.h"
-#include "PropertyTag.h"
-#include "PropertyException.h"
-#include "PropertyOperators.h"
+#include "property_interface.hpp"
+#include "property_tag.hpp"
+#include "property_exception.hpp"
+#include "property_operators.hpp"
 
 #if defined(BOOST_MSVC)
 

@@ -1,8 +1,8 @@
 #if !defined(PROPERTY_CALLABLE_REFERENCE_HPP)
 #define PROPERTY_CALLABLE_REFERENCE_HPP
 
-#include "PropertyReferenceInterface.h"
-#include "PropertyException.h"
+#include "property_reference_interface.hpp"
+#include "property_exception.hpp"
 #include <boost/function.hpp>
 
 namespace properties

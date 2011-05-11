@@ -1,8 +1,8 @@
 #if !defined(PROPERTY_DATA_HPP)
 #define PROPERTY_DATA_HPP
 
-#include "PropertyDataValue.h"
-#include "PropertyDataPredicate.h"
-#include "PropertyDataReference.h"
+#include "property_data_value.hpp"
+#include "property_data_predicate.hpp"
+#include "property_data_reference.hpp"
 
 #endif

@@ -1,7 +1,7 @@
 #if !defined(PROPERTY_DATA_REFERENCE_HPP)
 #define PROPERTY_DATA_REFERENCE_HPP
 
-#include "PropertyReferenceInterface.h"
+#include "property_reference_interface.hpp"
 
 namespace properties
 {
