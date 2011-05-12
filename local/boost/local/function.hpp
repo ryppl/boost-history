@@ -71,7 +71,7 @@
  *      default_value:
  *              default default_vale_expression
  *      bound_parameter:
- *              [const] bind[&] variable_name
+ *              [const] bind [(variable_type)] [&] variable_name
  *  @endcode
  *  Where the following lexical conventions have been used:
  *  <c>token1 | token2</c> means either <c>token1</c> or <c>token2</c>;
@@ -111,6 +111,18 @@
  * }
  * @EndParams
  *
+ * When the object <c>this</c> is specified as the name of the variable to
+ * bind, the body must use the special name <c>this_</c> to access the bound
+ * object.
+ * The special name <c>this_</c> is defined by the configuration macro
+ * @RefMacro{BOOST_LOCAL_CONFIG_THIS_PARAM_NAME}.
+ *
+ * The number of local function parameters (excluding bound variables) is
+ * specified by the configuration macro
+ * @RefMacro{BOOST_LOCAL_CONFIG_FUNCTION_ARITY_MAX}.
+ * Both the variadic and empty macro syntaxes are always disabled when the
+ * configuration macro @RefMacro{BOOST_LOCAL_CONFIG_COMPLIANT} is defined.
+ *
  * @Note Local functions are functors so they can be assigned to other functors
  *  like <c>boost::function</c> (see Boost.Function).
  *
@@ -120,7 +132,10 @@
  *
  * @See @RefSect{Tutorial} section, @RefSect2{Advanced_Topics, Advanced Topics}
  *  section, @RefMacro{BOOST_LOCAL_FUNCTION_PARAMS_TPL},
- *  @RefMacro{BOOST_LOCAL_FUNCTION_NAME}, Boost.Function.
+ *  @RefMacro{BOOST_LOCAL_FUNCTION_NAME},
+ *  @RefMacro{BOOST_LOCAL_CONFIG_THIS_PARAM_NAME},
+ *  @RefMacro{BOOST_LOCAL_CONFIG_FUNCTION_ARITY_MAX},
+ *  @RefMacro{BOOST_LOCAL_CONFIG_COMPLIANT}, Boost.Function.
  */
 #define BOOST_LOCAL_FUNCTION_PARAMS(parameters) \
     BOOST_LOCAL_AUX_FUNCTION_PARAMS(parameters, \
@@ -202,7 +217,8 @@
  * @EndParams
  *
  * @See @RefMacro{BOOST_LOCAL_FUNCTION_PARAMS}, @RefSect{Tutorial} section,
- *  @RefSect2{Advanced_Topics, Advanced Topics} section.
+ *  @RefSect2{Advanced_Topics, Advanced Topics} section,
+ *  @RefMacro{BOOST_LOCAL_CONFIG_COMPLIANT}.
  */
 #define BOOST_LOCAL_FUNCTION_NAME(name) \
     BOOST_LOCAL_AUX_FUNCTION_NAME(name)

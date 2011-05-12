@@ -76,19 +76,6 @@
 </h3></div></div></div>
 <div class="orderedlist"><ol class="orderedlist" type="1">
 <li class="listitem">
-            Verify compilation and run-times on all compilers one last time.
-          </li>
-<li class="listitem">
-            Consider adding <code class="computeroutput"><span class="identifier">types</span><span class="special">(...)</span></code> for "overloading as polymorphism".
-            Still, a unbound parameter with multiple types will keep one single default
-            value (because it's not worth the added complexity to support multiple
-            default values for each different type as with <code class="computeroutput"><span class="identifier">defaults</span><span class="special">(...)</span></code>) -- document this.
-          </li>
-<li class="listitem">
-            Consider adding <code class="computeroutput"><span class="identifier">bind_type</span> <span class="identifier">type</span></code> to specify the bound parameter
-            type directly so not to use Boost.Typeof to deduce such a type.
-          </li>
-<li class="listitem">
             Rework factorial_impl and Implementation section.
           </li>
 <li class="listitem">

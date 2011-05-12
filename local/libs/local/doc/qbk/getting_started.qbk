@@ -44,11 +44,12 @@ These __Boost__ libraries must be properly installed on your system in order for
 
 The header files of this library are divided as follow:
 
-    ``[headerref boost/local/function.hpp]        /local functions/``
-    ``[headerref boost/local/block.hpp]           /local blocks/``
-    ``[headerref boost/local/exit.hpp]            /local exits/``
-    ``[headerref boost/local/typeof.hpp]          /bound variable type deduction/``
-    ``[headerref boost/local/config.hpp]          /library configuration macros/``
+    ``[headerref boost/local/function.hpp]              /local functions/``
+    ``[headerref boost/local/function/overload.hpp]     /local function overloading/``
+    ``[headerref boost/local/block.hpp]                 /local blocks/``
+    ``[headerref boost/local/exit.hpp]                  /local exits/``
+    ``[headerref boost/local/typeof.hpp]                /bound variable type deduction/``
+    ``[headerref boost/local/config.hpp]                /library configuration macros/``
 
 The followings are part of the library private API, they are not documented, and they should not be directly used by programmers:
 [footnote

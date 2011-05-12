@@ -60,7 +60,7 @@
  *      bound_list:
  *              (bound_parameter1) (bound_parameter2) ...
  *      bound_parameter:
- *              [const] bind[&] variable_name
+ *              [const] bind [(variable_type)] [&] variable_name
  *  @endcode
  *  Where the following lexical conventions have been used:
  *  <c>token1 | token2</c> means either <c>token1</c> or <c>token2</c>;
@@ -99,12 +99,23 @@
  * }
  * @EndParams
  *
+ * When the object <c>this</c> is specified as the name of the variable to
+ * bind, the body must use the special name <c>this_</c> to access the bound
+ * object.
+ * The special name <c>this_</c> is defined by the configuration macro
+ * @RefMacro{BOOST_LOCAL_CONFIG_THIS_PARAM_NAME}.
+ *
+ * Both the variadic and empty macro syntaxes are always disabled when the
+ * configuration macro @RefMacro{BOOST_LOCAL_CONFIG_COMPLIANT} is defined.
+ *
  * @Note This macro cannot be used multiple times on the same line because it
  *  internally uses the line number <c>__LINE__</c> to generate unique
  *  identifiers.
  *
  * @See @RefSect{Tutorial} section, @RefSect2{Advanced_Topics, Advanced Topics}
- *  section, @RefMacro{BOOST_LOCAL_EXIT_TPL}, @RefMacro{BOOST_LOCAL_EXIT_END}.
+ *  section, @RefMacro{BOOST_LOCAL_EXIT_TPL}, @RefMacro{BOOST_LOCAL_EXIT_END},
+ *  @RefMacro{BOOST_LOCAL_CONFIG_THIS_PARAM_NAME},
+ *  @RefMacro{BOOST_LOCAL_CONFIG_COMPLIANT}.
  */
 #define BOOST_LOCAL_EXIT(binding_list) \
     BOOST_LOCAL_AUX_EXIT(BOOST_LOCAL_FUNCTION_PARAMS, binding_list)

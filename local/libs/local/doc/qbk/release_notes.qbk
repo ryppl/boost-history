@@ -28,13 +28,6 @@
 
 [section TODO]
 
-# Verify compilation and run-times on all compilers one last time.
-
-# Consider adding `types(...)` for "overloading as polymorphism".
-Still, a unbound parameter with multiple types will keep one single default value (because it's not worth the added complexity to support multiple default values for each different type as with `defaults(...)`) -- document this.
-
-# Consider adding `bind_type type` to specify the bound parameter type directly so not to use Boost.Typeof to deduce such a type.
-
 # Rework factorial_impl and Implementation section.
 
 # Finalize Acknowledge section.

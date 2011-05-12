@@ -216,7 +216,7 @@
 <td>
                 <p>
                   Yes. The ISO C++ standard does not allow to pass local types as
-                  template parameters (see <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2657.htm" target="_top">[2657]</a>)
+                  template parameters (see <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2657.html" target="_top">[N2657]</a>)
                   but this library implements a "trick" to get around this
                   limitation (see the <a class="link" href="Implementation.html" title="Appendix: Implementation">Implementation</a>
                   section).
@@ -225,7 +225,7 @@
 <td>
                 <p>
                   No on ISO C++ compilers (but yes on C++0x compilers and some compilers
-                  like MSVC 8.0, see <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2657.htm" target="_top">[2657]</a>).
+                  like MSVC 8.0, see <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2657.html" target="_top">[N2657]</a>).
                 </p>
               </td>
 <td>
@@ -644,7 +644,7 @@
         compiler optimization is enabled (using <code class="computeroutput"><span class="identifier">bjam</span>
         <span class="identifier">release</span> <span class="special">...</span></code>).
         However, on compilers that allow to pass local types as template parameters
-        (e.g., MSVC 8.0 or GCC 4.5.1 with C++0x features enabled, see also <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2657.htm" target="_top">[2657]</a>)
+        (e.g., MSVC 8.0 or GCC 4.5.1 with C++0x features enabled, see also <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2657.html" target="_top">[N2657]</a>)
         this library generates optimized code that runs as fast as the fastest of
         the other approaches (see "<a href="http://www.boost.org/doc/libs/release/libs/local/doc/html/index.html" target="_top">Boost.Local</a>"
         below). When this library local function is specified <code class="computeroutput"><span class="keyword">inline</span></code>
@@ -652,7 +652,7 @@
         Inline For-Loop" below) its run-times are always comparable to both
         the "Local Functor" and "Global Functor" approaches (for
         all these approaches, the local function cannot be portably passed as template
-        parameter, see <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2657.htm" target="_top">[2657]</a>,
+        parameter, see <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2657.html" target="_top">[N2657]</a>,
         so <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">for_each</span></code> is replaced by a for-loop). Finally,
         this library run-times are always among the fastest when no compiler optimization
         is enabled (using <code class="computeroutput"><span class="identifier">bjam</span> <span class="identifier">debug</span>
@@ -668,7 +668,7 @@
           The run-time performance of this library local function is explained because
           on ISO C++ compliant compilers (e.g., GCC 4.3.4) this library needs to
           use a function pointer in order to pass the local functor class as a template
-          parameter (see <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2657.htm" target="_top">[2657]</a>
+          parameter (see <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2657.html" target="_top">[N2657]</a>
           and the <a class="link" href="Implementation.html" title="Appendix: Implementation">Implementation</a>
           section). For all tested compilers, this function pointer prevents the
           compiler optimization algorithms from inlining all the function calls.

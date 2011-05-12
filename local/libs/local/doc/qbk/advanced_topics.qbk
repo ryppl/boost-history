@@ -333,7 +333,7 @@ Compilers have not been observed to be able to inline recursive local function c
 [section Overloading Local Functions]
 
 It is possible to overload local functions by creating a `__boost__local__function__overload__` functor that aggregates together calls to different local functions with different signatures.
-Note that the header file `"boost/local/function/overload.hpp"` needs to be included when using the `__boost__local__function__overload__` functor.
+Note that the header file [headerref boost/local/function/overload.hpp] needs to be included when using the `__boost__local__function__overload__` functor.
 
 In the following example, the overloaded functor `print` can be called with signatures from either the local function `print_string`, or the local function `print_double`, or the local function `print_double` with the extra default parameter `name`, or the function pointer `print_add`:
 

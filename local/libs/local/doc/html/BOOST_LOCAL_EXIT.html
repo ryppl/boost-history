@@ -33,7 +33,7 @@
 
 </span>BOOST_LOCAL_EXIT(binding_list)</pre></div>
 <div class="refsect1">
-<a name="id921351"></a><h2>Description</h2>
+<a name="id921431"></a><h2>Description</h2>
 <p>This macro must be used within a declarative context, it must be followed by the local exit body code and then by the  <code class="computeroutput"><a class="link" href="BOOST_LOCAL_EXIT_END.html" title="Macro BOOST_LOCAL_EXIT_END">BOOST_LOCAL_EXIT_END</a></code> macro (see the  <a class="link" href="boost_local/Tutorial.html" title="Tutorial">Tutorial</a> section): </p>
 <pre class="programlisting">  <span class="special">{</span> <span class="comment">// Some declarative context.</span>
       <span class="special">...</span>
@@ -61,7 +61,7 @@
       <span class="identifier">bound_list</span><span class="special">:</span>
               <span class="special">(</span><span class="identifier">bound_parameter1</span><span class="special">)</span> <span class="special">(</span><span class="identifier">bound_parameter2</span><span class="special">)</span> <span class="special">...</span>
       <span class="identifier">bound_parameter</span><span class="special">:</span>
-              <span class="special">[</span><span class="keyword">const</span><span class="special">]</span> <span class="identifier">bind</span><span class="special">[</span><span class="special">&amp;</span><span class="special">]</span> <span class="identifier">variable_name</span>
+              <span class="special">[</span><span class="keyword">const</span><span class="special">]</span> <span class="identifier">bind</span> <span class="special">[</span><span class="special">(</span><span class="identifier">variable_type</span><span class="special">)</span><span class="special">]</span> <span class="special">[</span><span class="special">&amp;</span><span class="special">]</span> <span class="identifier">variable_name</span>
 </pre> Where the following lexical conventions have been used: <code class="computeroutput">token1 | token2</code> means either <code class="computeroutput">token1</code> or <code class="computeroutput">token2</code>; <code class="computeroutput">[token]</code> means either <code class="computeroutput">token</code> or nothing (i.e., <code class="computeroutput">token</code> is optional).On C99 and later compilers which support variadic macros, the above grammar can be modified as follow to define the <span class="emphasis"><em>variadic macro syntax</em></span> that can also be used to specify the variables in scope to bind: <pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting">      <span class="identifier">void_list</span><span class="special">:</span>
               <span class="keyword">void</span>
       <span class="identifier">bound_list</span><span class="special">:</span>
@@ -73,8 +73,10 @@
 </table></div>
 <p>
 </p>
+<p>When the object <code class="computeroutput">this</code> is specified as the name of the variable to bind, the body must use the special name <code class="computeroutput">this_</code> to access the bound object. The special name <code class="computeroutput">this_</code> is defined by the configuration macro  <code class="computeroutput"><a class="link" href="BOOST_LOCAL_CONFIG_THIS_PARAM_NAME.html" title="Macro BOOST_LOCAL_CONFIG_THIS_PARAM_NAME">BOOST_LOCAL_CONFIG_THIS_PARAM_NAME</a></code>.</p>
+<p>Both the variadic and empty macro syntaxes are always disabled when the configuration macro  <code class="computeroutput"><a class="link" href="BOOST_LOCAL_CONFIG_COMPLIANT.html" title="Macro BOOST_LOCAL_CONFIG_COMPLIANT">BOOST_LOCAL_CONFIG_COMPLIANT</a></code> is defined.</p>
 <p><span class="bold"><strong>Note:</strong></span> This macro cannot be used multiple times on the same line because it internally uses the line number <code class="computeroutput">__LINE__</code> to generate unique identifiers.</p>
-<p><span class="bold"><strong>See:</strong></span>  <a class="link" href="boost_local/Tutorial.html" title="Tutorial">Tutorial</a> section,  <a class="link" href="boost_local/Advanced_Topics.html" title="Advanced Topics"> Advanced Topics</a> section,  <code class="computeroutput"><a class="link" href="BOOST_LOCAL_EXIT_TPL.html" title="Macro BOOST_LOCAL_EXIT_TPL">BOOST_LOCAL_EXIT_TPL</a></code>,  <code class="computeroutput"><a class="link" href="BOOST_LOCAL_EXIT_END.html" title="Macro BOOST_LOCAL_EXIT_END">BOOST_LOCAL_EXIT_END</a></code>. </p>
+<p><span class="bold"><strong>See:</strong></span>  <a class="link" href="boost_local/Tutorial.html" title="Tutorial">Tutorial</a> section,  <a class="link" href="boost_local/Advanced_Topics.html" title="Advanced Topics"> Advanced Topics</a> section,  <code class="computeroutput"><a class="link" href="BOOST_LOCAL_EXIT_TPL.html" title="Macro BOOST_LOCAL_EXIT_TPL">BOOST_LOCAL_EXIT_TPL</a></code>,  <code class="computeroutput"><a class="link" href="BOOST_LOCAL_EXIT_END.html" title="Macro BOOST_LOCAL_EXIT_END">BOOST_LOCAL_EXIT_END</a></code>,  <code class="computeroutput"><a class="link" href="BOOST_LOCAL_CONFIG_THIS_PARAM_NAME.html" title="Macro BOOST_LOCAL_CONFIG_THIS_PARAM_NAME">BOOST_LOCAL_CONFIG_THIS_PARAM_NAME</a></code>,  <code class="computeroutput"><a class="link" href="BOOST_LOCAL_CONFIG_COMPLIANT.html" title="Macro BOOST_LOCAL_CONFIG_COMPLIANT">BOOST_LOCAL_CONFIG_COMPLIANT</a></code>. </p>
 </div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>

@@ -86,7 +86,7 @@
 <p>
         In addition, local function parameter types cannot start with non-alphanumeric
         symbols (alphanumeric symbols are <code class="computeroutput"><span class="identifier">A</span><span class="special">-</span><span class="identifier">Z</span></code>, <code class="computeroutput"><span class="identifier">a</span><span class="special">-</span><span class="identifier">z</span></code>,
-        and <code class="computeroutput"><span class="number">0</span><span class="special">-</span><span class="number">9</span></code>). <sup>[<a name="id881800" href="#ftn.id881800" class="footnote">16</a>]</sup> The library will generate (cryptic) preprocessor errors if a
+        and <code class="computeroutput"><span class="number">0</span><span class="special">-</span><span class="number">9</span></code>). <sup>[<a name="id881778" href="#ftn.id881778" class="footnote">16</a>]</sup> The library will generate (cryptic) preprocessor errors if a
         parameter type starts with a non-alphanumeric symbol.
       </p>
 <p>
@@ -225,7 +225,7 @@
 <li class="listitem">
             Parenthesis to wrap the type expression (and therefore any commas <code class="computeroutput"><span class="special">,</span></code> that it contains) passed as parameter
             to the <code class="computeroutput"><a class="link" href="../BOOST_IDENTITY_TYPE.html" title="Macro BOOST_IDENTITY_TYPE">BOOST_IDENTITY_TYPE</a></code>
-            macro. <sup>[<a name="id883236" href="#ftn.id883236" class="footnote">17</a>]</sup>
+            macro. <sup>[<a name="id883215" href="#ftn.id883215" class="footnote">17</a>]</sup>
           </li>
 </ol></div>
 <div class="note"><table border="0" summary="Note">
@@ -1358,7 +1358,7 @@
         the <a class="link" href="Alternatives.html" title="Appendix: Alternatives">Alternatives</a> section).
         However, inlined local functions have the limitation that they cannot be
         assigned to other functors (like <code class="computeroutput"><a href="http://www.boost.org/doc/libs/release/doc/html/function.html" target="_top">boost::function</a></code>)
-        and they cannot be passed as template parameters. <sup>[<a name="id903847" href="#ftn.id903847" class="footnote">18</a>]</sup> On C++0x compilers, <code class="computeroutput"><span class="keyword">inline</span></code>
+        and they cannot be passed as template parameters. <sup>[<a name="id903826" href="#ftn.id903826" class="footnote">18</a>]</sup> On C++0x compilers, <code class="computeroutput"><span class="keyword">inline</span></code>
         has no effect because this library will automatically generate code that
         uses C++0x specific features to inline the local function calls whenever
         possible even if the local function is not declared inlined (unless the
@@ -1629,7 +1629,7 @@
 <p>
         It is possible to overload local functions by creating a <code class="computeroutput"><a class="link" href="../boost/local/function/overload.html" title="Class template overload">boost::local::function::overload</a></code>
         functor that aggregates together calls to different local functions with
-        different signatures. Note that the header file <code class="computeroutput"><span class="string">"boost/local/function/overload.hpp"</span></code>
+        different signatures. Note that the header file <code class="computeroutput"><a class="link" href="../reference.html#header.boost.local.function.overload_hpp" title="Header &lt;boost/local/function/overload.hpp&gt;">boost/local/function/overload.hpp</a></code>
         needs to be included when using the <code class="computeroutput"><a class="link" href="../boost/local/function/overload.html" title="Class template overload">boost::local::function::overload</a></code>
         functor.
       </p>
@@ -1800,7 +1800,7 @@
         functor can be constructed from any function type that can be converted to
         a <code class="computeroutput"><a href="http://www.boost.org/doc/libs/release/doc/html/function.html" target="_top">boost::function</a></code>
         type (i.e., local functions but also function pointers and other function
-        objects). <sup>[<a name="id912742" href="#ftn.id912742" class="footnote">19</a>]</sup> The <code class="computeroutput"><a class="link" href="../boost/local/function/overload.html" title="Class template overload">boost::local::function::overload</a></code>
+        objects). <sup>[<a name="id912714" href="#ftn.id912714" class="footnote">19</a>]</sup> The <code class="computeroutput"><a class="link" href="../boost/local/function/overload.html" title="Class template overload">boost::local::function::overload</a></code>
         functor provides overloaded call operators <code class="computeroutput"><span class="keyword">operator</span><span class="special">()</span></code> that match the signatures of all the specified
         function types.
       </p>
@@ -2080,7 +2080,7 @@
 <p>
         Local function parameters support the storage classifiers as usual in ISO
         C++. The <code class="computeroutput"><span class="keyword">auto</span></code> storage classifier
-        is specified as: <sup>[<a name="id917355" href="#ftn.id917355" class="footnote">20</a>]</sup>
+        is specified as: <sup>[<a name="id917328" href="#ftn.id917328" class="footnote">20</a>]</sup>
       </p>
 <pre class="programlisting"><span class="keyword">auto</span> <span class="emphasis"><em>parameter-type parameter-name</em></span>
 </pre>
@@ -2310,7 +2310,7 @@
 <td>
                 <p>
                   This is not supported because local functions are not member functions.
-                  <sup>[<a name="id918607" href="#ftn.id918607" class="footnote">a</a>]</sup>
+                  <sup>[<a name="id918580" href="#ftn.id918580" class="footnote">a</a>]</sup>
                 </p>
               </td>
 </tr>
@@ -2409,7 +2409,7 @@
               </td>
 </tr>
 </tbody>
-<tbody class="footnotes"><tr><td colspan="3"><div class="footnote"><p><sup>[<a id="ftn.id918607" href="#id918607" class="para">a</a>] </sup>
+<tbody class="footnotes"><tr><td colspan="3"><div class="footnote"><p><sup>[<a id="ftn.id918580" href="#id918580" class="para">a</a>] </sup>
                     <span class="bold"><strong>Rationale.</strong></span> In theory, it would
                     be possible for a local functor class to inherit from another
                     local functor class. However, this "inheritance" feature
@@ -2425,7 +2425,7 @@
       </h6>
 <p>
         Local functions cannot be operators. Naming a local function <code class="computeroutput"><span class="keyword">operator</span><span class="special">...</span></code>
-        will generate a compile-time error. <sup>[<a name="id918953" href="#ftn.id918953" class="footnote">21</a>]</sup>
+        will generate a compile-time error. <sup>[<a name="id918926" href="#ftn.id918926" class="footnote">21</a>]</sup>
       </p>
 <p>
         For example, the following code will <span class="bold"><strong>not</strong></span>
@@ -2477,21 +2477,21 @@
 </div>
 <div class="footnotes">
 <br><hr width="100" align="left">
-<div class="footnote"><p><sup>[<a id="ftn.id881800" href="#id881800" class="para">16</a>] </sup>
+<div class="footnote"><p><sup>[<a id="ftn.id881778" href="#id881778" class="para">16</a>] </sup>
           <span class="bold"><strong>Rationale.</strong></span> This limitation derives from
           the fact that <code class="computeroutput"><a class="link" href="../BOOST_LOCAL_FUNCTION_PARAMS.html" title="Macro BOOST_LOCAL_FUNCTION_PARAMS">BOOST_LOCAL_FUNCTION_PARAMS</a></code>
           uses preprocessor token concatenation to inspect the parameter type token
           to see if the token is a parameter or a bound variable. The C++ preprocessor
           does not allow to concatenate non-alphanumeric tokens.
         </p></div>
-<div class="footnote"><p><sup>[<a id="ftn.id883236" href="#id883236" class="para">17</a>] </sup>
+<div class="footnote"><p><sup>[<a id="ftn.id883215" href="#id883215" class="para">17</a>] </sup>
               <span class="bold"><strong>Rationale.</strong></span> Using variadic macros,
               this extra set of parenthesis could be eliminated requiring only the
               parenthesis to invoke the <code class="computeroutput"><a class="link" href="../BOOST_IDENTITY_TYPE.html" title="Macro BOOST_IDENTITY_TYPE">BOOST_IDENTITY_TYPE</a></code>
               macro. However, this feature is currently not implemented and the double
               parenthesis are always needed when invoking this macro.
             </p></div>
-<div class="footnote"><p><sup>[<a id="ftn.id903847" href="#id903847" class="para">18</a>] </sup>
+<div class="footnote"><p><sup>[<a id="ftn.id903826" href="#id903826" class="para">18</a>] </sup>
           <span class="bold"><strong>Rationale.</strong></span> This library uses an indirect
           function call via a function pointer in order to pass the local function
           as a template parameter (see the <a class="link" href="Implementation.html" title="Appendix: Implementation">Implementation</a>
@@ -2500,12 +2500,12 @@
           local functions do not use such indirect function pointer call (so they
           are more likely to be optimized) but because of that they cannot be passed
           as template parameters. The indirect function pointer call is needed on
-          ISO C++ but it is not needed on C++0x (see <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2657.htm" target="_top">[2657]</a>)
+          ISO C++ but it is not needed on C++0x (see <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2657.html" target="_top">[N2657]</a>)
           thus this library automatically generates local function calls that can
           be inlined on C++0x compilers (even when the local function is not declared
           inlined).
         </p></div>
-<div class="footnote"><p><sup>[<a id="ftn.id912742" href="#id912742" class="para">19</a>] </sup>
+<div class="footnote"><p><sup>[<a id="ftn.id912714" href="#id912714" class="para">19</a>] </sup>
           The <code class="computeroutput"><a class="link" href="../boost/local/function/overload.html" title="Class template overload">boost::local::function::overload</a></code>
           functor can aggregate any functor and it is not at all specific to local
           functions. Therefore, it might be preferable to move <code class="computeroutput"><a class="link" href="../boost/local/function/overload.html" title="Class template overload">boost::local::function::overload</a></code>
@@ -2513,7 +2513,7 @@
           to <a href="http://www.boost.org/doc/libs/release/doc/html/function.html" target="_top">Boost.Function</a>
           and to rename it as <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">function</span><span class="special">::</span><span class="identifier">overload</span></code>.
         </p></div>
-<div class="footnote"><p><sup>[<a id="ftn.id917355" href="#id917355" class="para">20</a>] </sup>
+<div class="footnote"><p><sup>[<a id="ftn.id917328" href="#id917328" class="para">20</a>] </sup>
           The <code class="computeroutput"><span class="keyword">auto</span></code> storage classifier
           is part of the ISO C++ standard and therefore supported by this library.
           However, the meaning and usage of the <code class="computeroutput"><span class="keyword">auto</span></code>
@@ -2521,7 +2521,7 @@
           storage classifier with the usual care in order to avoid writing ISO C++
           code that might not work on C++0x.
         </p></div>
-<div class="footnote"><p><sup>[<a id="ftn.id918953" href="#id918953" class="para">21</a>] </sup>
+<div class="footnote"><p><sup>[<a id="ftn.id918926" href="#id918926" class="para">21</a>] </sup>
           <span class="bold"><strong>Rationale.</strong></span> This is the because a local
           function name must be a valid local variable name (the local variable to
           hold the local functor) and operators cannot be used as local variable
