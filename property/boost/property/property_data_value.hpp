@@ -199,7 +199,7 @@ namespace properties
 
   template <class T, T *d,template <class> class NotificationPolicy>
   struct prop_data<T,d,NotificationPolicy,read_write_tag> : 
-    prop_data<T,d,NotificationPolicy,read_tag> , 
+    prop_data<T,d,default_policy_tag,read_tag> , 
     prop_data<T,d,NotificationPolicy,write_tag>,
     i_property_read_write<T>
   {

@@ -6,7 +6,7 @@
 namespace properties
 {
 
-  class property_read_exception : std::runtime_error
+  class property_read_exception : public std::runtime_error
   { 
   
     public:
@@ -14,7 +14,7 @@ namespace properties
     property_read_exception() : std::runtime_error("") { }
   };
 
-  class property_write_exception : std::runtime_error
+  class property_write_exception : public std::runtime_error
   { 
   
     public:
@@ -22,7 +22,7 @@ namespace properties
     property_write_exception() : std::runtime_error("") { }
   };
 
-  class property_index_exception : std::runtime_error
+  class property_index_exception : public std::runtime_error
   { 
   
     public:
