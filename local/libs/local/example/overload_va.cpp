@@ -22,16 +22,16 @@ int print_add(int x, int y) {
 }
 
 int main() {
-    char sep = '\n';
+    char end = '\n';
 
     void BOOST_LOCAL_FUNCTION_PARAMS(const std::string& item,
-            const bind& sep) {
-        std::cout << item << " (string)" << sep;
+            const bind& end) {
+        std::cout << item << " (string)" << end;
     } BOOST_LOCAL_FUNCTION_NAME(print_string)
 
     void BOOST_LOCAL_FUNCTION_PARAMS(const double& item,
-            const char* name, default " (double)", const bind& sep) {
-        std::cout << item << name << sep;
+            const char* name, default " (double)", const bind& end) {
+        std::cout << item << name << end;
     } BOOST_LOCAL_FUNCTION_NAME(print_double)
     
     boost::local::function::overload<

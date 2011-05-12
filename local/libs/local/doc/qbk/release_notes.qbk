@@ -6,7 +6,7 @@
 
 [section:Release_Notes Release Notes]
 
-[section Version 0.1.1]
+[section Version 0.1.1 (2011-01-10)]
 
 # Uploaded library source into Boost SVN sandbox.
 # Fixed prev/next arrows and other minor layouts in documentation.
@@ -14,13 +14,13 @@
 
 [endsect]
 
-[section Version 0.1.0]
+[section Version 0.1.0 (2011-01-03)]
 
 # Shared with Boost for first round of comments.
 
 [endsect]
 
-[section Version 0.0.1]
+[section Version 0.0.1 (2010-12-15)]
 
 # Completed development, examples, and documentation.
 

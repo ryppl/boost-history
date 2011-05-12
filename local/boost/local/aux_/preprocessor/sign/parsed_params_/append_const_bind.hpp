@@ -12,20 +12,21 @@
 #include "../params_const_bind.hpp"
 #include <boost/preprocessor/list/append.hpp>
 
-// const_bind_qualified_name: [&] name (with name != `this`)
-#define BOOST_LOCAL_AUX_PP_SIGN_PARSED_PARAMS_APPEND_CONST_BIND( \
-        params, const_bind_qualified_name) \
+// name_without_type: [&] name (name != `this`)
+// name_with_type: BOOST_PP_EMPTY | type [&] name (name != `this`)
+#define BOOST_LOCAL_AUX_PP_SIGN_PARSED_PARAMS_APPEND_CONST_BIND(params, \
+        name_without_type, name_with_type) \
     ( /* unbind params and defaults */ \
         BOOST_LOCAL_AUX_PP_SIGN_PARAMS_UNBIND(params) \
     , /* const-bind names */ \
         BOOST_PP_LIST_APPEND(BOOST_LOCAL_AUX_PP_SIGN_PARAMS_CONST_BIND(params),\
-                (const_bind_qualified_name, BOOST_PP_NIL))\
-    , /* const-bind `this` count */ \
-        BOOST_LOCAL_AUX_PP_SIGN_PARAMS_CONST_BIND_THIS_COUNT(params) \
+                ( (name_without_type, name_with_type), BOOST_PP_NIL))\
+    , /* const-bind `this` types */ \
+        BOOST_LOCAL_AUX_PP_SIGN_PARAMS_CONST_BIND_THIS_TYPE(params) \
     , /* bind names */ \
         BOOST_LOCAL_AUX_PP_SIGN_PARAMS_BIND(params) \
-    , /* bind `this` count */ \
-        BOOST_LOCAL_AUX_PP_SIGN_PARAMS_BIND_THIS_COUNT(params) \
+    , /* bind `this` types */ \
+        BOOST_LOCAL_AUX_PP_SIGN_PARAMS_BIND_THIS_TYPE(params) \
     , /* error message (if any) */ \
         BOOST_LOCAL_AUX_PP_SIGN_PARAMS_ERROR(params) \
     ) 

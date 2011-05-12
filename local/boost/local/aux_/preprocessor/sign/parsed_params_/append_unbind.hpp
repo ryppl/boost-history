@@ -23,12 +23,12 @@
                 BOOST_PP_NIL)) \
     , /* const-bind names */ \
         BOOST_LOCAL_AUX_PP_SIGN_PARAMS_CONST_BIND(params) \
-    , /* const-bind `this` count */ \
-        BOOST_LOCAL_AUX_PP_SIGN_PARAMS_CONST_BIND_THIS_COUNT(params) \
+    , /* const-bind `this` types */ \
+        BOOST_LOCAL_AUX_PP_SIGN_PARAMS_CONST_BIND_THIS_TYPE(params) \
     , /* bind names */ \
         BOOST_LOCAL_AUX_PP_SIGN_PARAMS_BIND(params) \
-    , /* bind `this` count */ \
-        BOOST_LOCAL_AUX_PP_SIGN_PARAMS_BIND_THIS_COUNT(params) \
+    , /* bind `this` types */ \
+        BOOST_LOCAL_AUX_PP_SIGN_PARAMS_BIND_THIS_TYPE(params) \
     , /* error message (if any) */ \
         BOOST_LOCAL_AUX_PP_SIGN_PARAMS_ERROR(params) \
     )

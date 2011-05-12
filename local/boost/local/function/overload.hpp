@@ -1,4 +1,6 @@
 
+#ifndef DOXY // Doxygen documentation only.
+
 #if !BOOST_PP_IS_ITERATING
 #   ifndef BOOST_LOCAL_FUNCTION_OVERLOAD_HPP_
 #       define BOOST_LOCAL_FUNCTION_OVERLOAD_HPP_
@@ -69,21 +71,34 @@ namespace boost { namespace local { namespace function {
 // Iterate within namespace.
 #       define BOOST_PP_ITERATION_PARAMS_1 \
                 /* need at least 2 functors to overload so iter 2, 3, ... */ \
-                (3, (0, BOOST_PP_SUB(BOOST_LOCAL_CONFIG_OVERLOADS, 2), \
+                (3, (0, BOOST_PP_SUB(BOOST_LOCAL_CONFIG_OVERLOAD_MAX, 2), \
                 BOOST_LOCAL_AUX_FILE_FUNCTION_OVERLOAD_HPP))
 #       include BOOST_PP_ITERATE() // Iterate over function arity.
 
 }}} // namespace boost::local::function
+
+#undef BOOST_LOCAL_f_type
+#undef BOOST_LOCAL_f_tparam
+#undef BOOST_LOCAL_f_tparam_dflt
+#undef BOOST_LOCAL_g_arg_type
+#undef BOOST_LOCAL_g_arg_name
+#undef BOOST_LOCAL_g_arg_tparam
+#undef BOOST_LOCAL_g_arg
+#undef BOOST_LOCAL_overload_base
+#undef BOOST_LOCAL_overload_inherit
+#undef BOOST_LOCAL_overload_base_init
+#undef BOOST_LOCAL_using_operator_call
 
 #   endif // #include guard
 
 #elif BOOST_PP_ITERATION_DEPTH() == 1
 #   define BOOST_LOCAL_overloads \
         /* iterate as OVERLOADS, OVERLOADS-1, OVERLOADS-2, ... */ \
-        BOOST_PP_SUB(BOOST_LOCAL_CONFIG_OVERLOADS, BOOST_PP_FRAME_ITERATION(1))
+        BOOST_PP_SUB(BOOST_LOCAL_CONFIG_OVERLOAD_MAX, \
+                BOOST_PP_FRAME_ITERATION(1))
 #   define BOOST_LOCAL_is_tspec \
         /* if template specialization */ \
-        BOOST_PP_LESS(BOOST_LOCAL_overloads, BOOST_LOCAL_CONFIG_OVERLOADS)
+        BOOST_PP_LESS(BOOST_LOCAL_overloads, BOOST_LOCAL_CONFIG_OVERLOAD_MAX)
 
 // Iterating within namespace boost::local::function.
 template<BOOST_PP_ENUM(BOOST_LOCAL_overloads, BOOST_LOCAL_f_tparam_dflt,
@@ -113,7 +128,62 @@ public:
     BOOST_PP_REPEAT(BOOST_LOCAL_overloads, BOOST_LOCAL_using_operator_call, ~)
 };
 
-#   undef BOOST_LOCAL_is_tspec
 #   undef BOOST_LOCAL_AUX_overloads
+#   undef BOOST_LOCAL_is_tspec
 #endif // iteration
+
+#else // DOXY: Doxygen documentation only.
+
+namespace boost { namespace local { namespace function {
+
+/**
+ * @brief Functor to overload local functions and other functors.
+ *
+ * This functor aggregates together calls to functions of all the specified
+ * types.
+ *
+ * The maximum number of overloaded function types is specified by the
+ * @RefMacro{BOOST_LOCAL_CONFIG_OVERLOAD_MAX} configuration macro.
+ * The maximum number of function parameters for each of the specified function
+ * type is specified by the @RefMacro{BOOST_LOCAL_CONFIG_OVERLOAD_MAX}
+ * configuration macro.
+ *
+ * @See @RefSect2{Advanced_Topics, Advanced Topics} section,
+ *  @RefMacro{BOOST_LOCAL_CONFIG_OVERLOAD_MAX},
+ *  @RefMacro{BOOST_LOCAL_CONFIG_OVERLOAD_MAX}.
+ */
+template<typename F0, typename F1, ...>
+class overload {
+public:
+    /**
+     * @brief Construct the overloading functor.
+     *
+     * Any functor that can be converted to a <c>boost::function</c> funcotr
+     * can be specified (local functions, function pointers, other functors,
+     * etc).
+     */
+    overload(const boost::function<F0>&, const boost::function<F1>&, ...);
+
+    /**
+     * @brief Call operator matching the signature of the first specified
+     *  functor.
+     *
+     * This will in turn invoke the call operator of the first functor that was
+     * passed to the constructor.
+     */
+    result_type<F0> operator()(arg0_type<F0>, arg1_type<F0>, ...) const;
+
+    /**
+     * @brief Call operator matching the signature of the second specified
+     *  functor.
+     *
+     * This will in turn invoke the call operator of the second functor that
+     * was passed to the constructor.
+     */
+    result_type<F1> operator()(arg0_type<F1>, arg1_type<F1>, ...) const;
+};
+
+}}} // namespace boost::local::function
+
+#endif // DOXY
 

@@ -32,6 +32,7 @@ public:
             this_->sum_ += factor * num; // Use `this_` instead of `this`.
             std::cout << "Summed: " << this_->sum_ << std::endl;
         } BOOST_LOCAL_FUNCTION_NAME(add)
+        std::for_each(nums.begin(), nums.end(), add);
 
         BOOST_LOCAL_EXIT(const bind this) {
             std::cout << "Exiting: " << this_->sum_ << std::endl;
@@ -42,7 +43,6 @@ public:
             assert(this_->sum_ > 0.0);
         } BOOST_LOCAL_BLOCK_END
 
-        std::for_each(nums.begin(), nums.end(), add);
         return sum_;
     }
 

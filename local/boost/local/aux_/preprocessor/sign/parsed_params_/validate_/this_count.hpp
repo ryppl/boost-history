@@ -12,22 +12,21 @@
 #include "../../params_const_bind.hpp"
 #include "../../params_bind.hpp"
 #include <boost/preprocessor/control/iif.hpp>
-#include <boost/preprocessor/facilities/is_empty.hpp>
+#include <boost/preprocessor/facilities/empty.hpp>
 #include <boost/preprocessor/tuple/eat.hpp>
-#include <boost/preprocessor/comparison/greater.hpp>
-#include <boost/preprocessor/arithmetic/add.hpp>
+#include <boost/preprocessor/logical/bitand.hpp>
 
 // PRIVATE //
 
 #define BOOST_LOCAL_AUX_PP_SIGN_PARSED_PARAMS_VALIDATE_THIS_COUNT_(params) \
-    BOOST_PP_IIF(BOOST_PP_GREATER(BOOST_PP_ADD( \
-            BOOST_LOCAL_AUX_PP_SIGN_PARAMS_CONST_BIND_THIS_COUNT(params), \
-            BOOST_LOCAL_AUX_PP_SIGN_PARAMS_BIND_THIS_COUNT(params)), 1), \
+    BOOST_PP_IIF(BOOST_PP_BITAND( \
+            BOOST_LOCAL_AUX_PP_SIGN_PARAMS_HAVE_CONST_BIND_THIS(params), \
+            BOOST_LOCAL_AUX_PP_SIGN_PARAMS_HAVE_BIND_THIS(params)), \
         BOOST_LOCAL_AUX_PP_SIGN_PARSED_PARAMS_SET_ERROR \
     , \
         params BOOST_PP_TUPLE_EAT(2) \
     )(params, /* trailing `EMPTY` because error might not be present */ \
-            ERROR_object_this_cannot_be_bound_multiple_times BOOST_PP_EMPTY)
+            ERROR_cannot_bind_object_this_multiple_times BOOST_PP_EMPTY)
 
 // PUBLIC //
 

@@ -70,8 +70,12 @@
 [def __BOOST_LOCAL_EXIT_END__ [macroref BOOST_LOCAL_EXIT_END]]
 [def __BOOST_LOCAL_TYPEOF__ [macroref BOOST_LOCAL_TYPEOF]]
 [def __BOOST_LOCAL_CONFIG_COMPLIANT__ [macroref BOOST_LOCAL_CONFIG_COMPLIANT]]
+[def __BOOST_LOCAL_CONFIG_FUNCTION_ARITY_MAX__ [macroref BOOST_LOCAL_CONFIG_FUNCTION_ARITY_MAX]]
+[def __BOOST_LOCAL_CONFIG_OVERLOAD_MAX__ [macroref BOOST_LOCAL_CONFIG_OVERLOAD_MAX]]
+[def __BOOST_LOCAL_CONFIG_THIS_PARAM_NAME__ [macroref BOOST_LOCAL_CONFIG_THIS_PARAM_NAME]]
 [def __BOOST_IDENTITY_TYPE__ [macroref BOOST_IDENTITY_TYPE]]
 [def __BOOST_IDENTITY_VALUE__ [macroref BOOST_IDENTITY_VALUE]]
+[def __boost__local__function__overload__ [classref boost::local::function::overload]]
 
 [def __Variadic_Macro_Syntax__ Variadic Macro Syntax (C99 and later compilers)]
 [def __Sequencing_Macro_Syntax__ Sequencing Macro Syntax (all C++ compilers)]
@@ -147,6 +151,10 @@
 [import ../../example/add_using_0x_lambda.cpp]
 [import ../../example/add_using_boost_lambda.cpp]
 [import ../../example/add_using_boost_phoenix.cpp]
+[import ../../example/add_this_typed.cpp]
+[import ../../example/add_this_typed_va.cpp]
+[import ../../example/overload.cpp]
+[import ../../example/overload_va.cpp]
 
 The Boost Local library implements local functions, local blocks, and local exits for the C++ programming language.
 

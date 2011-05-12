@@ -191,7 +191,7 @@ Consider the following complete example:
 
 [endsect]
 
-[section Passing Local Functions]
+[section Assigning Local Functions]
 
 Local functions are functors so it is possible to assign them to other functors (like `__boost__function__`) in order to store the local function into a variable or to pass it as a parameter to another function.
 
@@ -250,7 +250,33 @@ Within templates, `__BOOST_LOCAL_TYPEOF__` does not require to be prefixed by th
 
 [endsect]
 
-[section Inlined Local Functions]
+[section Specifying Bound Types]
+
+While not required, it is possible to explicitly specify the type of the bound variables.
+When the bound variable type is explicitly specified by the programmers, the library will not use __Boost_Typeof__ to automatically deduce such a type.
+However, the library implementation will still internally use __Boost_Typeof__ to deduce the local function result and functor types (see the __Implementation__ section) even when __Boost_Typeof__ is not used to deduce any of the bound variable types.
+
+When specified, the bound variable type must follow the `bind` "keyword" and it must be wrapped within round parenthesis `()`:
+
+    bind(``/variable-type/``) ``/variable-name/``           // Bind by value with explicit type.
+    bind(``/variable-type/``)& ``/variable-name/``          // Bind by reference with explicit type.
+    const bind(``/variable-type/``) ``/variable-name/``     // Bind by constant value with explicit type.
+    const bind(``/variable-type/``)& ``/variable-name/``    // Bind by constant value with explicit type.
+    bind(``/class-type/``*) this                      // Bind object `this` with type.
+    const bind(``/class-type/``*) this                // Bind object `this` by constant with type.
+
+The following example explicitly specifies the type of all bound variables (it is also possible to explicitly specify the type only for some of the bound variables in which case the library will automatically deduce the type of the rest of the bound variables using __Boost_Typeof__ as usual):
+
+[table
+[ [__Variadic_Macro_Syntax__] [__Sequencing_Macro_Syntax__] ]
+[ [ [add_this_typed_va_cpp] ] [ [add_this_typed_cpp] ] ]
+]
+
+Within the local function, local block, and local exit body it is possible to abstract the access to the type of a bound variable as usual using `__BOOST_LOCAL_TYPEOF__` (even if the bound variable type is specified explicitly).
+
+[endsect]
+
+[section Inlining Local Functions]
 
 Local functions can be declared inlined to increase the chances that the compiler will be able to reduce the local function call run-time by inlining the generated assembly code.
 A local function is declared inlined by prefixing the local function name passed to the `__BOOST_LOCAL_FUNCTION_NAME__` macro with the "keyword" `inline`:
@@ -259,7 +285,7 @@ A local function is declared inlined by prefixing the local function name passed
         ...
     } __BOOST_LOCAL_FUNCTION_NAME__(inline ``/name/``)
 
-On ISO C++ compliant compilers (see __BOOST_LOCAL_CONFIG_COMPLIANT__), inlined local functions always have a run-time comparable to their equivalent implementation that uses local functors (see the __Alternatives__ section).
+On ISO C++ compliant compilers, inlined local functions always have a run-time comparable to their equivalent implementation that uses local functors (see the __Alternatives__ section).
 However, inlined local functions have the limitation that they cannot be assigned to other functors (like `__boost__function__`) and they cannot be passed as template parameters.
 [footnote
 *Rationale.*
@@ -268,7 +294,7 @@ No compiler has yet been observed to be able to inline function calls when they 
 Therefore, inlined local functions do not use such indirect function pointer call (so they are more likely to be optimized) but because of that they cannot be passed as template parameters.
 The indirect function pointer call is needed on ISO C++ but it is not needed on C++0x (see __N2657__) thus this library automatically generates local function calls that can be inlined on C++0x compilers (even when the local function is not declared inlined).
 ]
-On C++0x compilers, `inline` has no effect because this library will automatically generate code that uses C++0x specific features to inline the local function calls whenever possible even if the local function is not declared inlined.
+On C++0x compilers, `inline` has no effect because this library will automatically generate code that uses C++0x specific features to inline the local function calls whenever possible even if the local function is not declared inlined (unless the `__BOOST_LOCAL_CONFIG_COMPLIANT__` configuration macro is defined).
 Furthermore, non C++0x local functions can always be passes as template parameters even when they are declared inlined.
 
 [important
@@ -304,7 +330,57 @@ Compilers have not been observed to be able to inline recursive local function c
 
 [endsect]
 
-[section Nested Declarations]
+[section Overloading Local Functions]
+
+It is possible to overload local functions by creating a `__boost__local__function__overload__` functor that aggregates together calls to different local functions with different signatures.
+Note that the header file `"boost/local/function/overload.hpp"` needs to be included when using the `__boost__local__function__overload__` functor.
+
+In the following example, the overloaded functor `print` can be called with signatures from either the local function `print_string`, or the local function `print_double`, or the local function `print_double` with the extra default parameter `name`, or the function pointer `print_add`:
+
+[table
+[ [__Variadic_Macro_Syntax__] [__Sequencing_Macro_Syntax__] ]
+[ [ [overload_va_cpp] ] [ [overload_cpp] ] ]
+]
+
+The implementation of the `__boost__local__function__overload__` functor is equivalent to the following:
+
+    namespace boost { namespace local { namespace function {
+
+    template<typename F0, typename F1, ...>
+    class overload {
+    public:
+        overload(const boost::function<F0>& f0, const boost::function<F1>& f1, ...):
+                f0_(f0), f1_(f1), ... {}
+
+        result_type<F0> operator()(arg0_type<F0> a0, arg1_type<F0> a1, ...) const {
+            return f0_(a0, a1, ...);
+        }
+        result_type<F1> operator()(arg0_type<F1> a0, arg1_type<F1> a1, ...) const {
+            return f1_(a0, a1, ...);
+        }
+        ...
+
+    private:
+        const boost::function<F0> f0_;
+        const boost::function<F1> f1_;
+        ...
+    };
+
+    }}} // namespace boost::local::function
+
+A `__boost__local__function__overload__` functor can be constructed from any function type that can be converted to a `__boost__function__` type (i.e., local functions but also function pointers and other function objects).
+[footnote
+The `__boost__local__function__overload__` functor can aggregate any functor and it is not at all specific to local functions.
+Therefore, it might be preferable to move `__boost__local__function__overload__` from __Boost_Local__ to __Boost_Function__ and to rename it as `boost::function::overload`.
+]
+The `__boost__local__function__overload__` functor provides overloaded call operators `operator()` that match the signatures of all the specified function types.
+
+The maximum number of function types that can be specified for overloading is controlled at compile-time by the configuration macro `__BOOST_LOCAL_CONFIG_OVERLOAD_MAX__`.
+The maximum number of parameters that can be passed to each of the overloaded function type is controlled at compile-time by the configuration macro `__BOOST_LOCAL_CONFIG_FUNCTION_ARITY_MAX__`.
+
+[endsect]
+
+[section Nesting Local Constructs]
 
 It is possible to nest local function, local block, and local exit declarations into one another.
 
@@ -361,7 +437,7 @@ For example:
 
 [endsect]
 
-[section Limitations (overloading, operators, etc)]
+[section Limitations (operators, etc)]
 
 The following table summarizes all C++ function features indicating those features that are not supported by this library for local functions.
 
@@ -439,30 +515,6 @@ However, this "inheritance" feature is not implemented because it seems of [@htt
 ]
 ]
 
-[h5 Overloading]
-
-It is not possible to overload local functions.
-Declaring multiple local functions with the same name within the same enclosing scope generates a compile-time error (even if the different declarations specify different parameters).
-[footnote
-*Rationale.*
-This is because a local function is a functor declared as a local variable within the enclosing scope.
-Therefore, declaring two local functions with the same name within the same enclosing scope declares two local variables with the same name within the same scope and that is not allowed in C++.
-]
-
-For example, the following code will *not* compile:
-
-    void f() {
-    	void __BOOST_LOCAL_FUNCTION_PARAMS__( (const int& i) ) {
-            ...
-        } __BOOST_LOCAL_FUNCTION_NAME__(l)
-
-        void __BOOST_LOCAL_FUNCTION_PARAMS__( (const double& d) ) {
-            ...
-        } __BOOST_LOCAL_FUNCTION_NAME__(l) // Error: Cannot overload.
-
-        ...
-    }
-
 [h5 Operators]
 
 Local functions cannot be operators.
@@ -483,7 +535,7 @@ For example, the following code will *not* compile:
         bool __BOOST_LOCAL_FUNCTION_PARAMS__(
                 (const point& p) (const point& q) ) {
             return p.x == q.x && p.y == q.y;
-        ) __BOOST_LOCAL_FUNCTION_NAME__(operator==) // Error: Cannot be `operator==`.
+        ) __BOOST_LOCAL_FUNCTION_NAME__(operator==) // Error: Cannot use `operator==`.
 
         ...
     }
@@ -496,13 +548,18 @@ For example, the following will *not* compile:
 
     int f() {
         void __BOOST_LOCAL_FUNCTION_PARAMS__( (boost error) ) {
-            if (error) goto failure; // Error: Cannot jump to enclosing label `failure`.
+            if (error) goto failure;    // Error: Cannot jump to enclosing label `failure`.
+            else goto success;          // Ok: Can jump within enclosing scope.
+
+        success:
+            std::cout << "done" << std::endl;
         } __BOOST_LOCAL_FUNCTION_NAME__(l)
 
         l(true);
 
         return 0;
     failure:
+        std::cout << "error" << std::endl;
         return -1;
     }
 

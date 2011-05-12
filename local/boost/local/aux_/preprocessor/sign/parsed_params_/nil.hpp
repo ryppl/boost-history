@@ -15,15 +15,18 @@
         /* unbound params: list of 2-tuples (classified_name, default) */ \
         BOOST_PP_NIL /* nil list */ \
     , \
-        /* const-binds: nil-seq of 1-tuple `ref_name` */ \
+        /* const-binds: list of 2-tuple `(name_untyped, name_typed)` */ \
         BOOST_PP_NIL /* nil list */ \
     , \
-        0 /* number of const-bind `this` */ \
+        /* const-bind this: list of 1-tuple `(type)` */ \
+        BOOST_PP_NIL \
+      /* number of const-bind `this` */ \
     , \
-        /* binds: nil-seq of 1-tuple `ref_name` */ \
+        /* binds: list of 2-tuple `(name_untyped, name_typed)` */ \
         BOOST_PP_NIL /* nil list */ \
     , \
-        0 /* number of bind `this` */ \
+        /* bind this: list of 1-type `(type)` */ \
+        BOOST_PP_NIL \
     , \
         BOOST_PP_EMPTY /* no error */ \
     )

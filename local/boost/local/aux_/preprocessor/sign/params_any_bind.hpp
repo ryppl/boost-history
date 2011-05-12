@@ -41,14 +41,13 @@
         0 \
     ))))
 
-// Expand to nil-seq `(NIL) ([&]var) ...` with all binds (const or not) but
-// excluding `this`.
+// Expand to list with all binds (const or not) but excluding `this`.
 #define BOOST_LOCAL_AUX_PP_SIGN_PARAMS_ALL_BIND_WITHOUT_THIS(params) \
     BOOST_PP_LIST_APPEND(BOOST_LOCAL_AUX_PP_SIGN_PARAMS_CONST_BIND(params), \
             BOOST_LOCAL_AUX_PP_SIGN_PARAMS_BIND(params))
 
-// Expand to nil-seq `(NIL) ([&]var) ...` with all binds (const or not) and
-// including `this` if bound (const or not).
+// Expand to list with all binds (const or not) and including `this` if bound
+// (const or not).
 #define BOOST_LOCAL_AUX_PP_SIGN_PARAMS_ALL_BIND(params) \
     BOOST_PP_LIST_APPEND(BOOST_LOCAL_AUX_PP_SIGN_PARAMS_ALL_BIND(params), \
         BOOST_PP_IIF(BOOST_LOCAL_AUX_PP_SIGN_PARAMS_HAVE_ANY_BIND_THIS( \
@@ -58,6 +57,13 @@
             BOOST_PP_NIL \
         ) \
     )
+
+// Expand to list of all `this` types (const or not). There is at most 1 bind
+// `this` type if no parsing error.
+#define BOOST_LOCAL_AUX_PP_SIGN_PARAMS_ALL_BIND_THIS_TYPE(params) \
+    BOOST_PP_LIST_APPEND( \
+            BOOST_LOCAL_AUX_PP_SIGN_PARAMS_BIND_THIS_TYPE(params), \
+            BOOST_LOCAL_AUX_PP_SIGN_PARAMS_CONST_BIND_THIS_TYPE(params))
 
 #endif // #include guard
 

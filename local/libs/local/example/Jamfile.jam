@@ -44,6 +44,9 @@ exe add_template_va : add_template_va.cpp ;
 exe add_this : add_this.cpp ;
 exe add_this_va : add_this_va.cpp ;
 
+exe add_this_typed : add_this_typed.cpp ;
+exe add_this_typed_va : add_this_typed_va.cpp ;
+
 exe add_using_boost_local : add_using_boost_local.cpp ;
 exe add_using_boost_local_va : add_using_boost_local_va.cpp ;
 exe add_using_local_functor : add_using_local_functor.cpp ;
@@ -81,14 +84,14 @@ exe gcc_store_va : gcc_store_va.cpp ;
 exe nesting : nesting.cpp ;
 exe nesting_va : nesting_va.cpp ;
 
+exe overload : overload.cpp ;
+exe overload_va : overload_va.cpp ;
+
 exe params_all : params_all.cpp ;
 exe params_all_va : params_all_va.cpp ;
 
 exe print_map : print_map.cpp ;
 exe print_map_va : print_map_va.cpp ;
-
-exe overload : overload.cpp ;
-exe overload_va : overload_va.cpp ;
 
 exe profile_boost_local : profile_boost_local.cpp
         ../../..//libboost_chrono ../../..//libboost_system ;

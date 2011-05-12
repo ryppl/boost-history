@@ -161,7 +161,7 @@
  * The local function name can be prefixed by the "keyword" <c>inline</c>:
  * @code
  *  ... BOOST_LOCAL_FUNCTION_NAME(inline name)
- * @endcode</c>
+ * @endcode
  * This increases the chances that the compiler will be able to inline the
  * local function calls (thus reducing their run-time).
  * However, inlined local functions cannot be passed as template parameters

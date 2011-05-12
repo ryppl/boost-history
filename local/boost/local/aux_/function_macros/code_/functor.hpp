@@ -569,11 +569,14 @@
                 BOOST_PP_EXPR_IIF(has_const_bind_this, \
                     typename_keyword ::boost::local::aux::add_pointed_const< \
                         BOOST_LOCAL_AUX_FUNCTION_CODE_BIND_THIS_TYPE(id) \
-                    >::type BOOST_LOCAL_CONFIG_THIS_PARAM_NAME \
+                    >::type \
+                    /* const pointer to const object */ \
+                    const BOOST_LOCAL_CONFIG_THIS_PARAM_NAME \
                 ) \
                 BOOST_PP_EXPR_IIF(has_bind_this, \
                     BOOST_LOCAL_AUX_FUNCTION_CODE_BIND_THIS_TYPE(id) \
-                    BOOST_LOCAL_CONFIG_THIS_PARAM_NAME \
+                    /* const pointer to non-const object */ \
+                    const BOOST_LOCAL_CONFIG_THIS_PARAM_NAME \
                 ) \
                 /* unbind params (last because they can have defaults) */ \
                 BOOST_PP_COMMA_IF( \
@@ -608,11 +611,12 @@
             BOOST_LOCAL_AUX_PP_SIGN_PARAMS_UNBIND(sign_params), \
             BOOST_LOCAL_AUX_PP_SIGN_PARAMS_UNBIND_COUNT_DEFAULTS(sign_params), \
             /* const bind vars (without `this`) */ \
-            BOOST_LOCAL_AUX_PP_SIGN_PARAMS_CONST_BIND(sign_params), \
+            BOOST_LOCAL_AUX_PP_SIGN_PARAMS_CONST_BIND_WITHOUT_TYPE( \
+                    sign_params), \
             /* eventual const bind `this` */ \
             BOOST_LOCAL_AUX_PP_SIGN_PARAMS_HAVE_CONST_BIND_THIS(sign_params), \
             /* bind (not const) vars (without `this`) */ \
-            BOOST_LOCAL_AUX_PP_SIGN_PARAMS_BIND(sign_params), \
+            BOOST_LOCAL_AUX_PP_SIGN_PARAMS_BIND_WITHOUT_TYPE(sign_params), \
             /* eventual bind (not const) `this` */ \
             BOOST_LOCAL_AUX_PP_SIGN_PARAMS_HAVE_BIND_THIS(sign_params), \
             /* etc */ \

@@ -58,6 +58,9 @@ For example, let's program a local function named `add` that adds together two i
 [ [ [add_x_y_va_cpp] ] [ [add_x_y_cpp] ] ]
 ]
 
+The maximum number of parameters that can be passed to a local function (excluding eventual bound variables) is controlled at compile-time by the configuration macro `__BOOST_LOCAL_CONFIG_FUNCTION_ARITY_MAX__`.
+The variadic macro syntax is always disabled when the configuration macro `__BOOST_LOCAL_CONFIG_COMPLIANT__` is defined.
+
 [endsect]
 
 [section:Empty_Parameters Empty Parameters]
@@ -99,6 +102,7 @@ For example, let's program the function `ten` as a local function:
 ]
 
 Note that not all compilers that support variadic macros also support empty macro parameters.
+Both the empty macro syntax and variadic macro syntax are always disabled when the configuration macro `__BOOST_LOCAL_CONFIG_COMPLIANT__` is defined.
 
 [endsect]
 
@@ -172,7 +176,7 @@ Or by reference prefixing the variable name with `&`:
     
 Furthermore, the "keyword" `bind` can be prefixed by `const` to bind the variable by constant value:
     
-    const bind ``/variable-name/`` // Bind by value.
+    const bind ``/variable-name/`` // Bind by constant value.
 
 Or by constant reference:
     
@@ -250,6 +254,8 @@ For example, let's program a local function `add` similar to the one in the exam
 [ [__Variadic_Macro_Syntax__] [__Sequencing_Macro_Syntax__] ]
 [ [ [add_this_va_cpp] ] [ [add_this_cpp] ] ]
 ]
+
+The special name `this_` used to replace the bound object name `this` is controlled at compile-time by the configuration macro `__BOOST_LOCAL_CONFIG_THIS_PARAM_NAME__`.
 
 [endsect]
 

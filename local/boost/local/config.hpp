@@ -98,11 +98,11 @@
  * @See @RefSect2{Advanced_Topics, Advanced Topics} section,
  *  @RefSect2{Getting_Started, Getting Started} section.
  */
-#ifndef BOOST_LOCAL_CONFIG_OVERLOADS
-#define BOOST_LOCAL_CONFIG_OVERLOADS 6
+#ifndef BOOST_LOCAL_CONFIG_OVERLOAD_MAX
+#define BOOST_LOCAL_CONFIG_OVERLOAD_MAX 6
 #endif
-#if BOOST_LOCAL_CONFIG_OVERLOADS < 2
-#error "BOOST_LOCAL_CONFIG_OVERLOADS must be a number grater or equal than 2"
+#if BOOST_LOCAL_CONFIG_OVERLOAD_MAX < 2
+#error "BOOST_LOCAL_CONFIG_OVERLOAD_MAX must be grater or equal than 2"
 #endif
 
 /**
