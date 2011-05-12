@@ -91,7 +91,7 @@ struct block_header
     {
         includes_.push_back(& tag_);
     }
-	
+
 	
 	/**
 		Release of a @c block_header with possible destruction of all its elements and other sets unified to it.
@@ -447,7 +447,10 @@ template <typename T>
             if (! pool::is_from(this))
                 if (ps_->release())
                     if (! d)
+                    {
+                    	ps_->~block_header();
                         new (ps_) block_header();
+                    }
                     else
                         delete ps_;
                 else 
