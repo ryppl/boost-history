@@ -1,0 +1,56 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Macro BOOST_LOCAL_CONFIG_OVERLOAD_MAX</title>
+<link rel="stylesheet" href="../../../../doc/src/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<link rel="home" href="index.html" title="Boost.Local 0.2.0">
+<link rel="up" href="reference.html#header.boost.local.config_hpp" title="Header &lt;boost/local/config.hpp&gt;">
+<link rel="prev" href="BOOST_LOCAL_CONFIG_FUNCTION_ARITY_MAX.html" title="Macro BOOST_LOCAL_CONFIG_FUNCTION_ARITY_MAX">
+<link rel="next" href="BOOST_LOCAL_CONFIG_THIS_PARAM_NAME.html" title="Macro BOOST_LOCAL_CONFIG_THIS_PARAM_NAME">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../boost.png"></td>
+<td align="center"><a href="../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="BOOST_LOCAL_CONFIG_FUNCTION_ARITY_MAX.html"><img src="../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="reference.html#header.boost.local.config_hpp"><img src="../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="index.html"><img src="../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="BOOST_LOCAL_CONFIG_THIS_PARAM_NAME.html"><img src="../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+<div class="refentry">
+<a name="BOOST_LOCAL_CONFIG_OVERLOAD_MAX"></a><div class="titlepage"></div>
+<div class="refnamediv">
+<h2><span class="refentrytitle">Macro BOOST_LOCAL_CONFIG_OVERLOAD_MAX</span></h2>
+<p>BOOST_LOCAL_CONFIG_OVERLOAD_MAX &#8212; The number of times a function can be overloaded. </p>
+</div>
+<h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
+<div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="comment">// In header: &lt;<a class="link" href="reference.html#header.boost.local.config_hpp" title="Header &lt;boost/local/config.hpp&gt;">boost/local/config.hpp</a>&gt;
+
+</span>BOOST_LOCAL_CONFIG_OVERLOAD_MAX</pre></div>
+<div class="refsect1">
+<a name="id921091"></a><h2>Description</h2>
+<p>If programmers leave this configuration macro undefined, its default value is <code class="computeroutput">6</code>.</p>
+<p>This number must be greater or equal than 2 (because a single function cannot be overloaded by itself) otherwise the library will generate a compile-time error.</p>
+<p><span class="bold"><strong>Warning:</strong></span> Increasing this number will increase compilation time when the header file <code class="computeroutput">"boost/local/function/overload.hpp"</code> is included.</p>
+<p><span class="bold"><strong>See:</strong></span>  <a class="link" href="boost_local/Advanced_Topics.html" title="Advanced Topics"> Advanced Topics</a> section,  <a class="link" href="boost_local/Getting_Started.html" title="Getting Started"> Getting Started</a> section. </p>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2009-2011 Lorenzo Caminiti<p>
+        Use, modification, and distribution is subject to the Boost Software License,
+        Version 1.0 (see accompanying file LICENSE_1_0.txt or a copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>).
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="BOOST_LOCAL_CONFIG_FUNCTION_ARITY_MAX.html"><img src="../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="reference.html#header.boost.local.config_hpp"><img src="../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="index.html"><img src="../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="BOOST_LOCAL_CONFIG_THIS_PARAM_NAME.html"><img src="../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>
