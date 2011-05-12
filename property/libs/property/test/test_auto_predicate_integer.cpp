@@ -1,5 +1,5 @@
 #include <boost/detail/lightweight_test.hpp>
-#include <boost/property/property_auto_predicate.hpp>
+#include "test_auto_predicate.hpp"
 
 int main()
   {

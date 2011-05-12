@@ -35,6 +35,10 @@ namespace properties
     public virtual i_property_read<T>
   {
   
+    protected:
+
+    boost::initialized<T> data;
+    
     public:
 
     prop_auto() 
@@ -61,10 +65,6 @@ namespace properties
       { 
       return(boost::get(data)); 
       }
-    
-    protected:
-
-    boost::initialized<T> data;
     
     private:
     
@@ -118,7 +118,7 @@ namespace properties
       
     void set(T arg) 
       { 
-      boost::get((static_cast<prop_auto<T,default_policy_tag,read_tag> &>(*this)).data) = arg;
+      boost::get(prop_auto<T,default_policy_tag,read_tag>::data) = arg;
       }
     
   };
@@ -173,7 +173,7 @@ namespace properties
       
       T t(*this);
       
-      boost::get((static_cast<prop_auto<T,default_policy_tag,read_tag> &>(*this)).data) = arg;
+      boost::get(prop_auto<T,default_policy_tag,read_tag>::data) = arg;
       property_changed(*this,boost::optional<T>(t),arg);
       }
     

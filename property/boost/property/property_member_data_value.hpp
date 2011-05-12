@@ -115,6 +115,12 @@ namespace properties
     public virtual i_property_write<T>, 
     public NotificationPolicy<T>
   {
+    protected:
+    
+    boost::optional<T> oldT;
+  
+    prop_member_data & operator = (const prop_member_data &);
+  
     public:
     
     explicit prop_member_data(C & c) : 
@@ -158,12 +164,6 @@ namespace properties
     
     C & cf;
     
-    protected:
-    
-    boost::optional<T> oldT;
-  
-    prop_member_data & operator = (const prop_member_data &);
-  
   };
 
   template <class T, class C, T C::*d>
@@ -259,7 +259,7 @@ namespace properties
       
     prop_member_data & operator = (T arg) 
       { 
-      (static_cast<prop_member_data<T,C,d,NotificationPolicy,write_tag> &>(*this)).oldT = *this;
+      prop_member_data<T,C,d,NotificationPolicy,write_tag>::oldT = *this;
       (static_cast<prop_member_data<T,C,d,NotificationPolicy,write_tag> &>(*this)) = arg; 
       return(*this); 
       }
@@ -267,7 +267,7 @@ namespace properties
     template<class U>
     prop_member_data & operator = (U arg) 
       { 
-      (static_cast<prop_member_data<T,C,d,NotificationPolicy,write_tag> &>(*this)).oldT = *this;
+      prop_member_data<T,C,d,NotificationPolicy,write_tag>::oldT = *this;
       (static_cast<prop_member_data<T,C,d,NotificationPolicy,write_tag> &>(*this)) = arg; 
       return(*this); 
       }

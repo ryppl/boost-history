@@ -103,6 +103,12 @@ namespace properties
     NotificationPolicy<T>
   {
   
+    protected:
+    
+    boost::optional<T> oldT;
+    
+    public:
+  
     prop_data() 
       { 
       }
@@ -137,10 +143,6 @@ namespace properties
       property_changed(*this,oldT,arg);
       }
       
-    protected:
-    
-    boost::optional<T> oldT;
-    
     private:  
     
     prop_data & operator = (const prop_data &);
@@ -230,7 +232,7 @@ namespace properties
       
     prop_data & operator = (T arg) 
       { 
-      (static_cast<prop_data<T,d,NotificationPolicy,write_tag> & >(*this)).oldT = *this;
+      prop_data<T,d,NotificationPolicy,write_tag>::oldT = *this;
       (static_cast<prop_data<T,d,NotificationPolicy,write_tag> & >(*this)) = arg; 
       return(*this); 
       }
@@ -238,7 +240,7 @@ namespace properties
     template<class U>
     prop_data & operator = (U arg) 
       { 
-      (static_cast<prop_data<T,d,NotificationPolicy,write_tag> & >(*this)).oldT = *this;
+      prop_data<T,d,NotificationPolicy,write_tag>::oldT = *this;
       (static_cast<prop_data<T,d,NotificationPolicy,write_tag> & >(*this)) = arg; 
       return(*this); 
       }

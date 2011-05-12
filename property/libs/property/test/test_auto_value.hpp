@@ -5,7 +5,7 @@
 #include "test_pod.hpp"
 #include "test_global_data.hpp"
 #include <boost/property/property_auto_value.hpp>
-#include <boost/property/property_notification_boost_signal.hpp>
+#include <boost/property/property_notification_boost_function.hpp>
 
 using namespace properties;
 
@@ -25,20 +25,20 @@ extern prop_auto<int * const> p_gl_pointer_const;
 extern prop_auto<test_enum,default_policy_tag,read_tag> p_gl_enum_const;
 extern prop_auto<test_pod const> p_gl_class_const;
 
-extern prop_auto<char,notification_boost_signal> p_gl_char_ntf;
-extern prop_auto<int,notification_boost_signal> p_gl_int_ntf;
-extern prop_auto<double,notification_boost_signal> p_gl_double_ntf;
-extern prop_auto<bool,notification_boost_signal> p_gl_bool_ntf;
-extern prop_auto<int *,notification_boost_signal> p_gl_pointer_ntf;
-extern prop_auto<test_enum,notification_boost_signal> p_gl_enum_ntf;
-extern prop_auto<test_pod,notification_boost_signal> p_gl_class_ntf;
+extern prop_auto<char,notification_boost_function> p_gl_char_ntf;
+extern prop_auto<int,notification_boost_function> p_gl_int_ntf;
+extern prop_auto<double,notification_boost_function> p_gl_double_ntf;
+extern prop_auto<bool,notification_boost_function> p_gl_bool_ntf;
+extern prop_auto<int *,notification_boost_function> p_gl_pointer_ntf;
+extern prop_auto<test_enum,notification_boost_function> p_gl_enum_ntf;
+extern prop_auto<test_pod,notification_boost_function> p_gl_class_ntf;
 
-class PAuto_class
+class p_auto_class
   {
   
   public:
   
-  PAuto_class();
+  p_auto_class();
   
   prop_auto<char> p_char;
   prop_auto<int> p_int;
@@ -56,13 +56,13 @@ class PAuto_class
   prop_auto<test_enum,default_policy_tag,read_tag> p_enum_const;
   prop_auto<test_pod const> p_class_const;
 
-  prop_auto<char,notification_boost_signal> p_char_ntf;
-  prop_auto<int,notification_boost_signal> p_int_ntf;
-  prop_auto<double,notification_boost_signal> p_double_ntf;
-  prop_auto<bool,notification_boost_signal> p_bool_ntf;
-  prop_auto<int *,notification_boost_signal> p_pointer_ntf;
-  prop_auto<test_enum,notification_boost_signal> p_enum_ntf;
-  prop_auto<test_pod,notification_boost_signal> p_class_ntf;
+  prop_auto<char,notification_boost_function> p_char_ntf;
+  prop_auto<int,notification_boost_function> p_int_ntf;
+  prop_auto<double,notification_boost_function> p_double_ntf;
+  prop_auto<bool,notification_boost_function> p_bool_ntf;
+  prop_auto<int *,notification_boost_function> p_pointer_ntf;
+  prop_auto<test_enum,notification_boost_function> p_enum_ntf;
+  prop_auto<test_pod,notification_boost_function> p_class_ntf;
   
   static prop_auto<char> p_st_char;
   static prop_auto<int> p_st_int;
@@ -80,13 +80,13 @@ class PAuto_class
   static prop_auto<test_enum,default_policy_tag,read_tag> p_st_enum_const;
   static prop_auto<test_pod const> p_st_class_const;
 
-  static prop_auto<char,notification_boost_signal> p_st_char_ntf;
-  static prop_auto<int,notification_boost_signal> p_st_int_ntf;
-  static prop_auto<double,notification_boost_signal> p_st_double_ntf;
-  static prop_auto<bool,notification_boost_signal> p_st_bool_ntf;
-  static prop_auto<int *,notification_boost_signal> p_st_pointer_ntf;
-  static prop_auto<test_enum,notification_boost_signal> p_st_enum_ntf;
-  static prop_auto<test_pod,notification_boost_signal> p_st_class_ntf;
+  static prop_auto<char,notification_boost_function> p_st_char_ntf;
+  static prop_auto<int,notification_boost_function> p_st_int_ntf;
+  static prop_auto<double,notification_boost_function> p_st_double_ntf;
+  static prop_auto<bool,notification_boost_function> p_st_bool_ntf;
+  static prop_auto<int *,notification_boost_function> p_st_pointer_ntf;
+  static prop_auto<test_enum,notification_boost_function> p_st_enum_ntf;
+  static prop_auto<test_pod,notification_boost_function> p_st_class_ntf;
   
   private:
   

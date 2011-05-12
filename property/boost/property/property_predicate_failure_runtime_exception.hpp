@@ -15,7 +15,7 @@ namespace properties
     
     protected:
       
-    void PredicateFailure(const i_property_write<T> & prop,const boost::function<bool (T)> & f,boost::optional<T> oldValue,T newValue)
+    void PredicateFailure(const i_property_write<T> & ,const boost::function<bool (T)> & ,boost::optional<T> ,T newValue)
       {
       
       std::ostringstream oss;
