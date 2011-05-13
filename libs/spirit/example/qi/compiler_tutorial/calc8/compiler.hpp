@@ -11,13 +11,12 @@
 #include "error_handler.hpp"
 #include <vector>
 #include <map>
-#include <set>
 #include <boost/function.hpp>
 #include <boost/spirit/include/phoenix_core.hpp>
 #include <boost/spirit/include/phoenix_function.hpp>
 #include <boost/spirit/include/phoenix_operator.hpp>
 
-namespace client
+namespace client { namespace code_gen
 {
     ///////////////////////////////////////////////////////////////////////////
     //  The Program
@@ -30,7 +29,7 @@ namespace client
 
         int& operator[](std::size_t i) { return code[i]; }
         int const& operator[](std::size_t i) const { return code[i]; }
-        void clear() { code.clear(); variables.clear(); jumps.clear(); }
+        void clear() { code.clear(); variables.clear(); }
         std::size_t size() const { return code.size(); }
         std::vector<int> const& operator()() const { return code; }
 
@@ -41,12 +40,9 @@ namespace client
         void print_variables(std::vector<int> const& stack) const;
         void print_assembler() const;
 
-        void add_jump(std::size_t jump) { jumps.insert(jump); }
-
     private:
 
         std::map<std::string, int> variables;
-        std::set<std::size_t> jumps;
         std::vector<int> code;
     };
 
@@ -58,15 +54,15 @@ namespace client
         typedef bool result_type;
 
         template <typename ErrorHandler>
-        compiler(client::program& program, ErrorHandler& error_handler_)
+        compiler(client::code_gen::program& program, ErrorHandler& error_handler_)
           : program(program)
         {
             using namespace boost::phoenix::arg_names;
-            using boost::phoenix::cref;
+            namespace phx = boost::phoenix;
             using boost::phoenix::function;
 
             error_handler = function<ErrorHandler>(error_handler_)(
-                "Error! ", _2, cref(error_handler_.iters)[_1]);
+                "Error! ", _2, phx::cref(error_handler_.iters)[_1]);
         }
 
         bool operator()(ast::nil) const { BOOST_ASSERT(0); return false; }
@@ -85,12 +81,12 @@ namespace client
 
         bool start(ast::statement_list const& x) const;
 
-        client::program& program;
+        client::code_gen::program& program;
 
         boost::function<
             void(int tag, std::string const& what)>
         error_handler;
     };
-}
+}}
 
 #endif

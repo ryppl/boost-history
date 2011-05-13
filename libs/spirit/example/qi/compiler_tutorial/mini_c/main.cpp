@@ -6,13 +6,16 @@
 =============================================================================*/
 ///////////////////////////////////////////////////////////////////////////////
 //
-//  Now we'll introduce boolean expressions and control structures.
-//  Is it obvious now what we are up to? ;-)
+//  Not a calculator anymore, right? :-)
 //
-//  [ JDG April 9, 2007 ]       spirit2
+//  [ JDG April 10, 2007 ]      spirit2
 //  [ JDG February 18, 2011 ]   Pure attributes. No semantic actions.
 //
 ///////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////////
+// Define this to enable debugging
+//#define BOOST_SPIRIT_QI_DEBUG
 
 #include "function.hpp"
 #include "skipper.hpp"

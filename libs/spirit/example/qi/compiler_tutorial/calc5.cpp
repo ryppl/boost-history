@@ -9,8 +9,8 @@
 //  Same as Calc4, this time, we'll incorporate debugging support,
 //  plus error handling and reporting.
 //
-//  [ JDG April 28, 2008 : For BoostCon 2008 ]
-//  [ JDG February 18, 2011 : Pure attributes. No semantic actions. ]
+//  [ JDG April 28, 2008 ]      For BoostCon 2008
+//  [ JDG February 18, 2011 ]   Pure attributes. No semantic actions.
 //
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -24,9 +24,17 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////
+// Define this to enable debugging
+#define BOOST_SPIRIT_QI_DEBUG
+
+///////////////////////////////////////////////////////////////////////////////
 // Uncomment this if you want to enable debugging
 //#define BOOST_SPIRIT_QI_DEBUG
 ///////////////////////////////////////////////////////////////////////////////
+
+#if defined(_MSC_VER)
+# pragma warning(disable: 4345)
+#endif
 
 #include <boost/config/warning_disable.hpp>
 #include <boost/spirit/include/qi.hpp>
@@ -41,6 +49,9 @@
 
 namespace client { namespace ast
 {
+    ///////////////////////////////////////////////////////////////////////////
+    //  The AST
+    ///////////////////////////////////////////////////////////////////////////
     struct nil {};
     struct signed_;
     struct program;
@@ -70,6 +81,9 @@ namespace client { namespace ast
         operand first;
         std::list<operation> rest;
     };
+
+    // print function for debugging
+    inline std::ostream& operator<<(std::ostream& out, nil) { out << "nil"; return out; }
 }}
 
 BOOST_FUSION_ADAPT_STRUCT(
@@ -92,6 +106,9 @@ BOOST_FUSION_ADAPT_STRUCT(
 
 namespace client { namespace ast
 {
+    ///////////////////////////////////////////////////////////////////////////
+    //  The AST Printer
+    ///////////////////////////////////////////////////////////////////////////
     struct printer
     {
         typedef void result_type;
@@ -132,6 +149,9 @@ namespace client { namespace ast
         }
     };
 
+    ///////////////////////////////////////////////////////////////////////////
+    //  The AST evaluator
+    ///////////////////////////////////////////////////////////////////////////
     struct eval
     {
         typedef int result_type;
@@ -287,7 +307,7 @@ main()
 
         calculator calc;        // Our grammar
         ast_program program;    // Our program (AST)
-        ast_print printer;      // Prints the program
+        ast_print print;        // Prints the program
         ast_eval eval;          // Evaluates the program
 
         std::string::const_iterator iter = str.begin();
@@ -299,7 +319,7 @@ main()
         {
             std::cout << "-------------------------\n";
             std::cout << "Parsing succeeded\n";
-            printer(program);
+            print(program);
             std::cout << "\nResult: " << eval(program) << std::endl;
             std::cout << "-------------------------\n";
         }

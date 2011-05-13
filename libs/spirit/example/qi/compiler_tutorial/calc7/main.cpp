@@ -14,11 +14,15 @@
 //  see how expressions and statements are built as modular grammars.
 //
 //  [ JDG April 9, 2007 ]       spirit2
-//  [ JDG February 18, 2011 : Pure attributes. No semantic actions. ]
+//  [ JDG February 18, 2011 ]   Pure attributes. No semantic actions.
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#include "expression.hpp"
+///////////////////////////////////////////////////////////////////////////////
+// Define this to enable debugging
+//#define BOOST_SPIRIT_QI_DEBUG
+
+#include "statement.hpp"
 #include "vm.hpp"
 #include "compiler.hpp"
 
@@ -29,51 +33,72 @@ int
 main()
 {
     std::cout << "/////////////////////////////////////////////////////////\n\n";
-    std::cout << "Expression parser...\n\n";
+    std::cout << "Statement parser...\n\n";
     std::cout << "/////////////////////////////////////////////////////////\n\n";
-    std::cout << "Type an expression...or [q or Q] to quit\n\n";
-
-    typedef std::string::const_iterator iterator_type;
-    typedef client::expression<iterator_type> expression;
-    typedef client::ast::program ast_program;
-    typedef client::compiler compiler;
+    std::cout << "Type some statements... ";
+    std::cout << "An empty line ends input, compiles, runs and prints results\n\n";
+    std::cout << "Example:\n\n";
+    std::cout << "    var a = 123;\n";
+    std::cout << "    var b = 456;\n";
+    std::cout << "    var c = a + b * 2;\n\n";
+    std::cout << "-------------------------\n";
 
     std::string str;
+    std::string source;
     while (std::getline(std::cin, str))
     {
-        if (str.empty() || str[0] == 'q' || str[0] == 'Q')
+        if (str.empty())
             break;
+        source += str + '\n';
+    }
 
-        client::vmachine mach;  // Our virtual machine
-        std::vector<int> code;  // Our VM code
-        expression calc;        // Our grammar
-        ast_program program;    // Our program (AST)
-        compiler compile(code); // Compiles the program
+    typedef std::string::const_iterator iterator_type;
+    iterator_type iter = source.begin();
+    iterator_type end = source.end();
 
-        std::string::const_iterator iter = str.begin();
-        std::string::const_iterator end = str.end();
-        boost::spirit::ascii::space_type space;
-        bool r = phrase_parse(iter, end, calc, space, program);
+    client::vmachine vm;                                    // Our virtual machine
+    client::code_gen::program program;                      // Our VM program
+    client::ast::statement_list ast;                        // Our AST
 
-        if (r && iter == end)
+    client::error_handler<iterator_type>
+        error_handler(iter, end);                           // Our error handler
+    client::parser::statement<iterator_type>
+        parser(error_handler);                              // Our parser
+    client::code_gen::compiler
+        compile(program, error_handler);                    // Our compiler
+
+    boost::spirit::ascii::space_type space;
+    bool success = phrase_parse(iter, end, parser, space, ast);
+
+    std::cout << "-------------------------\n";
+
+    if (success && iter == end)
+    {
+        if (compile(ast))
         {
+            std::cout << "Success\n";
             std::cout << "-------------------------\n";
-            std::cout << "Parsing succeeded\n";
-            compile(program);
-            mach.execute(code);
-            std::cout << "\nResult: " << mach.top() << std::endl;
+            vm.execute(program());
+
             std::cout << "-------------------------\n";
+            std::cout << "Assembler----------------\n\n";
+            program.print_assembler();
+
+            std::cout << "-------------------------\n";
+            std::cout << "Results------------------\n\n";
+            program.print_variables(vm.get_stack());
         }
         else
         {
-            std::string rest(iter, end);
-            std::cout << "-------------------------\n";
-            std::cout << "Parsing failed\n";
-            std::cout << "-------------------------\n";
+            std::cout << "Compile failure\n";
         }
     }
+    else
+    {
+        std::cout << "Parse failure\n";
+    }
 
-    std::cout << "Bye... :-) \n\n";
+    std::cout << "-------------------------\n\n";
     return 0;
 }
 
