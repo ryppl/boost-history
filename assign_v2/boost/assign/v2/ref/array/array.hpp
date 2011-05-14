@@ -67,8 +67,7 @@ namespace result_of{
     // Generates an empty array
     template<typename T>
     typename result_of::array<T, nil_>::type
-    array( nil_ ) 
-    /*<-*/
+    array( nil_ )/*<-*/
     {
         return ref::list<list_aux::array_tag>( v2::_nil );
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/

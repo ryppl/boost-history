@@ -42,7 +42,7 @@ namespace tutorial_assign_v2{
             typedef std::string str_; typedef variant< int, str_ > data_; 
             array<data_, 16> keypad;
             
-            /*<<Equivalent to `put( keypad )( "+" )( "-" )...( "." )( 0 )...( 9 )`>>*/csv_put( keypad, "+", "-", "*", "/", "=", ".", as_arg_list( numeric ) );
+            /*<<Equivalent to `put( keypad )( "+" )( "-" )...( "." ).as_arg_list( numeric )`>>*/csv_put( keypad, "+", "-", "*", "/", "=", ".", as_arg_list( numeric ) );
 
             assert( get<str_>( keypad.front() ) == "+" );
             assert( get<int>( keypad.back()  ) == 9 );
@@ -102,10 +102,8 @@ namespace tutorial_assign_v2{
             );
 
             assert( range::equal( head, csv_deque( 1, 2, 3, 4 ) ) );
-            assert( t == 5 ); 
-            assert( a == 6 ); 
-            assert( i == 7 ); 
-            assert( l == 8 );
+            assert( t == 5 ); assert( a == 6 ); 
+            assert( i == 7 ); assert( l == 8 );
             //]
         }
         {
@@ -144,7 +142,7 @@ namespace tutorial_assign_v2{
             typedef function<double(double)> f_;
             /*<<Equivalent to `( put( exponent ) % ( _data = f_( log10 ) ) )( 1.0 ) ...( 10000.0 )`>>*/csv_put(
                 exponent
-                , _option % ( _data = f_( /*<-*/fp(/*->*/ log10 /*<-*/)/*->*/ ) )
+                , _option % ( _data = f_( /*<-*/fp(/*->*/log10/*<-*/)/*->*/ ) )
                 , 1.0, 10.0, 100.0, 1000.0, 10000.0
             );
 

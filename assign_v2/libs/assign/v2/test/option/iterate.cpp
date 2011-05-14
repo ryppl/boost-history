@@ -44,21 +44,20 @@ namespace xxx_iterate{
         }
         {
             //[test_option_iterate_shifted
-            typedef int T; boost::array<T, 10> alternating;
-            alternating[0] = -1; alternating[1] = +1;
-            alternating[2] = -2;
+            typedef int T; boost::array<T, 10> seq;
+            seq[0] = 1; seq[1] = 2; seq[2] = 3;
 
             int index = 3;
             as2::csv_put(
-                alternating
+                seq
                 , as2::_option % ( as2::_iterate = boost::lambda::var( index )++ )
-                , +2, -3, +3, -4, +4, -5, +5
+                , 4, 5, 6, 7, 8, 9, 10
             );
 
             BOOST_ASSIGN_V2_CHECK(
                 boost::range::equal(
-                    alternating,
-                    as2::csv_deque( -1, +1, -2, +2, -3, +3, -4, +4, -5, +5 )
+                    seq,
+                    as2::csv_deque( 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 )
                 )
             );
             //]
@@ -78,20 +77,20 @@ namespace xxx_iterate{
         {
             //[test_option_iterate_shifted_deque
             as2::result_of::csv_deque<int>::type tmp = as2::csv_deque<int>
-                ( -1, +1, -2, as2::as_arg_list( std::list<int>( 7 ) ) );
+                ( 1, 2, 3, as2::as_arg_list( std::list<int>( 7 ) ) );
 
             int index = 3;
             BOOST_AUTO(
-                alternating ,
+                seq,
                 (
                     tmp  % ( as2::_iterate = boost::lambda::var( index )++ )
-                )( +2 )( -3 )( +3 )( -4 )( +4 )( -5 )( +5 )
+                )( 4 )( 5 )( 6 )( 7 )( 8 )( 9 )( 10 )
             );
 
             BOOST_ASSIGN_V2_CHECK(
                 boost::range::equal(
                     alternating,
-                    as2::csv_deque( -1, +1, -2, +2, -3, +3, -4, +4, -5, +5 )
+                    as2::csv_deque( 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 )
                 )
             );
             //]
