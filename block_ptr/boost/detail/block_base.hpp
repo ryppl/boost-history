@@ -68,7 +68,7 @@ class block_base;
 struct pool
 {
 #ifndef BOOST_DISABLE_THREADS
-	static mutex pool_mutex_;
+	static mutex mutex_;
 #endif
 
 	typedef boost::singleton_pool<pool, sizeof(char)> pool_t;
@@ -119,7 +119,7 @@ struct pool
     static block_base * top(void * p)
     {
 #ifndef BOOST_DISABLE_THREADS
-        mutex::scoped_lock scoped_lock(pool_mutex_);
+        mutex::scoped_lock scoped_lock(mutex_);
 #endif
 
     	init();
@@ -146,7 +146,7 @@ struct pool
     static void * allocate(std::size_t s)
     {
 #ifndef BOOST_DISABLE_THREADS
-        mutex::scoped_lock scoped_lock(pool_mutex_);
+        mutex::scoped_lock scoped_lock(mutex_);
 #endif
 
     	init();
@@ -169,7 +169,7 @@ struct pool
     static void deallocate(void * p, std::size_t s)
     {
 #ifndef BOOST_DISABLE_THREADS
-        mutex::scoped_lock scoped_lock(pool_mutex_);
+        mutex::scoped_lock scoped_lock(mutex_);
 #endif
 
     	init();
@@ -186,7 +186,7 @@ struct pool
 };
 
 #ifndef BOOST_DISABLE_THREADS
-mutex pool::pool_mutex_;
+mutex pool::mutex_;
 #endif
 
 

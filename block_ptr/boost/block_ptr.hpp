@@ -65,7 +65,7 @@ struct block_header
     typedef detail::atomic_count count_type;
 
 #ifndef BOOST_DISABLE_THREADS
-	mutex mutex_;
+	mutable mutex mutex_;
 #endif
 
     count_type count_;								/**< Count of the number of pointers from the stack referencing the same @c block_header .*/
@@ -135,6 +135,10 @@ struct block_header
 	
     block_header * redir() const
     {
+#ifndef BOOST_DISABLE_THREADS
+        mutex::scoped_lock scoped_lock(mutex_);
+#endif
+
     	block_header * p = redir_;
     	
         while (p != p->redir_)
@@ -159,6 +163,7 @@ struct block_header
 #ifndef BOOST_DISABLE_THREADS
         	mutex::scoped_lock scoped_lock(mutex_);
 #endif
+
             redir_ = q;
             redir_->includes_.merge(includes_);
             redir_->elements_.merge(elements_);
