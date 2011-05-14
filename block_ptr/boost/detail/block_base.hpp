@@ -83,7 +83,7 @@ struct pool
     	return plii_;
     }
 #else
-    static std::auto_ptr<pool_lii> & plii_()          /**< List of memory boundaries. */
+    static std::auto_ptr<pool_lii> & plii()          /**< List of memory boundaries. */
     {
     	static std::auto_ptr<pool_lii> plii_;
     	
