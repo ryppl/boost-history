@@ -9,6 +9,7 @@
 
 #include <boost/preprocessor/control/iif.hpp>
 #include <boost/preprocessor/tuple/eat.hpp>
+#include <boost/preprocessor/facilities/expand.hpp>
 #include <boost/preprocessor/cat.hpp>
 
 // `is_front_macro(tokens)` is 1 iff `tokens` start with keyword to remove.

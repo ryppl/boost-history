@@ -292,11 +292,12 @@
 <p>
         Similarly to <a href="http://www.boost.org/doc/libs/release/libs/scope_exit/doc/html/index.html" target="_top">Boost.ScopeExit</a>,
         local exits essentially emulate the <a href="http://www.digitalmars.com/d/2.0/statement.html" target="_top">scope
-        exits</a> provided by the <a href="http://d.digitalmars.com" target="_top">D Programming
-        Language</a>. Local exits can also be used to emulate D's <a href="http://www.digitalmars.com/d/2.0/statement.html" target="_top">scope
-        success</a> and <a href="http://www.digitalmars.com/d/2.0/statement.html" target="_top">scope
-        failure</a> statements using a local variable that is set when an error
-        occurs. For example, using error codes:
+        exit</a> statement provided by the <a href="http://d.digitalmars.com" target="_top">D
+        Programming Language</a>. Local exits can also be used to emulate D's
+        <a href="http://www.digitalmars.com/d/2.0/statement.html" target="_top">scope success</a>
+        and <a href="http://www.digitalmars.com/d/2.0/statement.html" target="_top">scope failure</a>
+        statements using a local variable that is set when an error occurs. For example,
+        using error codes:
       </p>
 <div class="informaltable"><table class="table">
 <colgroup>
@@ -742,12 +743,12 @@
         The GCC compiler supports local functions under the name of <a href="http://gcc.gnu.org/onlinedocs/gcc/Nested-Functions.html" target="_top">nested
         functions</a>. Nested functions are exclusively a C extension of the
         GCC compiler, they are not supported for C++ not even by the GCC compiler,
-        and they are not part of any C++ standard (ISO C++, C99, C++0x, etc) nor
-        they are supported by other compilers like MSVC.
+        and they are not part of any C or C++ standard (ISO C++, C99, C++0x, etc)
+        nor they are supported by other compilers like MSVC.
       </p>
 <p>
-        The following examples rework the GCC nested function examples using this
-        library local functions.
+        The following examples implement the examples from the GCC nested function
+        documentation using this library local functions.
       </p>
 <div class="informaltable"><table class="table">
 <colgroup>

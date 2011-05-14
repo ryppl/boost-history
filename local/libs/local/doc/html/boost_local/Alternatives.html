@@ -76,7 +76,7 @@
 <th>
                 <p>
                   <a href="http://en.wikipedia.org/wiki/C%2B%2B0x#Lambda_functions_and_expressions" target="_top">C++0x
-                  lambda</a> (not ISO C++)
+                  Lambda</a> (not ISO C++)
                 </p>
               </th>
 <th>
@@ -132,7 +132,7 @@
 <tr>
 <td>
                 <p>
-                  <span class="emphasis"><em>Can be defined using regular C++ statements</em></span>
+                  <span class="emphasis"><em>Can be defined using C++ statement syntax</em></span>
                 </p>
               </td>
 <td>
@@ -161,12 +161,14 @@
               </td>
 <td>
                 <p>
-                  No.
+                  No (it uses C++ <a href="http://en.wikibooks.org/wiki/More_C%2B%2B_Idioms/Expression-template" target="_top">expression
+                  template</a> syntax).
                 </p>
               </td>
 <td>
                 <p>
-                  No.
+                  No (it uses C++ <a href="http://en.wikibooks.org/wiki/More_C%2B%2B_Idioms/Expression-template" target="_top">expression
+                  template</a> syntax).
                 </p>
               </td>
 </tr>
@@ -258,21 +260,21 @@
 <td>
                 <p>
                   Yes. The variable names are repeated in the function declaration
-                  so they can be bound by value, constant value, reference, and constant
-                  reference (the object <code class="computeroutput"><span class="keyword">this</span></code>
+                  so they can be bound by value, by constant value, by reference,
+                  and by constant reference (the object <code class="computeroutput"><span class="keyword">this</span></code>
                   can also be bound).
                 </p>
               </td>
 <td>
                 <p>
                   No. Programmers must manually manage functor member variables and
-                  their explicit types to access variables in scope.
+                  explicitly specify their types to access variables in scope.
                 </p>
               </td>
 <td>
                 <p>
                   No. Programmers must manually manage functor member variables and
-                  their explicit types to access variables in scope.
+                  explicitly specify their types to access variables in scope.
                 </p>
               </td>
 <td>
@@ -282,7 +284,7 @@
                   at once) so they can be bound by constant value and by reference
                   (the object <code class="computeroutput"><span class="keyword">this</span></code> can
                   also be bound). However, variables cannot be bound by constant
-                  references and non-constant value.
+                  references and non-constant value (see below).
                 </p>
               </td>
 <td>
@@ -292,8 +294,8 @@
               </td>
 <td>
                 <p>
-                  Yes (variables in scope are accessible as usual within expressions).
-                  Plus <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">phoenix</span><span class="special">::</span><span class="identifier">let</span></code> can be used to bind variables
+                  Yes (variables in scope are accessible as usual within expressions)
+                  plus <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">phoenix</span><span class="special">::</span><span class="identifier">let</span></code> can be used to bind variables
                   by constant reference.
                 </p>
               </td>
@@ -338,6 +340,71 @@
 </tr>
 </tbody>
 </table></div>
+<a name="boost_local.Alternatives.local_functions.comparison_with__ulink_url__http___en_wikipedia_org_wiki_c_2b_2b0x_lambda_functions_and_expressions__c__0x_lambda__ulink__functions"></a><h6>
+<a name="boost_local.Alternatives.local_functions.comparison_with__ulink_url__http___en_wikipedia_org_wiki_c_2b_2b0x_lambda_functions_and_expressions__c__0x_lambda__ulink__functions-heading"></a>
+        <a class="link" href="Alternatives.html#boost_local.Alternatives.local_functions.comparison_with__ulink_url__http___en_wikipedia_org_wiki_c_2b_2b0x_lambda_functions_and_expressions__c__0x_lambda__ulink__functions">Comparison
+        with <a href="http://en.wikipedia.org/wiki/C%2B%2B0x#Lambda_functions_and_expressions" target="_top">C++0x
+        Lambda</a> Functions</a>
+      </h6>
+<p>
+        <a href="http://en.wikipedia.org/wiki/C%2B%2B0x#Lambda_functions_and_expressions" target="_top">C++0x
+        lambda</a> functions have most of the features that <a href="http://www.boost.org/doc/libs/release/libs/local/doc/html/index.html" target="_top">Boost.Local</a>
+        local functions have, key pro and cons of the two approaches are:
+      </p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+            <a href="http://en.wikipedia.org/wiki/C%2B%2B0x#Lambda_functions_and_expressions" target="_top">C++0x
+            lambda</a> functions can be defined within expressions while <a href="http://www.boost.org/doc/libs/release/libs/local/doc/html/index.html" target="_top">Boost.Local</a>
+            local functions can only be defined within declarations.
+          </li>
+<li class="listitem">
+            <a href="http://en.wikipedia.org/wiki/C%2B%2B0x#Lambda_functions_and_expressions" target="_top">C++0x
+            lambda</a> functions are only supported by the C++0x standard so
+            they are not supported by all C++ compilers. <a href="http://www.boost.org/doc/libs/release/libs/local/doc/html/index.html" target="_top">Boost.Local</a>
+            local functions use only ISO C++ compliant features so they are supported
+            on all C++ compliant compilers.
+          </li>
+<li class="listitem">
+            <a href="http://en.wikipedia.org/wiki/C%2B%2B0x#Lambda_functions_and_expressions" target="_top">C++0x
+            lambda</a> do not allow to bind variables in scope by constant reference
+            or by non-constant value. Because a variable cannot be bound by constant
+            reference, <a href="http://en.wikipedia.org/wiki/C%2B%2B0x#Lambda_functions_and_expressions" target="_top">C++0x
+            lambda</a> functions can bind a variable by constant only if the
+            variable is copyable and the binding will require a potentially expensive
+            copy operation. For example:
+          </li>
+</ul></div>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">x</span><span class="special">:</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">noncopyable</span> <span class="special">{};</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
+    <span class="comment">// Cannot bind `x` by value because non copyable</span>
+    <span class="comment">// but if bind by reference `&amp;x` then `x` is no</span>
+    <span class="comment">// longer constant within the lambda function.</span>
+    <span class="special">[</span><span class="identifier">x</span><span class="special">]()</span> <span class="special">{</span>
+    <span class="special">}();</span>
+
+    <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+        Or:
+      </p>
+<pre class="programlisting"><span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;</span> <span class="identifier">v</span><span class="special">(</span><span class="number">1000000</span><span class="special">);</span>
+
+    <span class="comment">// Need to bind `v` by value to make it constant</span>
+    <span class="comment">// within the lambda function but that requires</span>
+    <span class="comment">// the expensive copy of a vector of 1000000 elements.</span>
+    <span class="special">[</span><span class="identifier">v</span><span class="special">]()</span> <span class="special">{</span>
+    <span class="special">}();</span>
+
+    <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+        Both constant reference and non-constant value binding are instead supported
+        by <a href="http://www.boost.org/doc/libs/release/libs/local/doc/html/index.html" target="_top">Boost.Local</a>.
+      </p>
 <a name="boost_local.Alternatives.local_functions.examples"></a><h6>
 <a name="boost_local.Alternatives.local_functions.examples-heading"></a>
         <a class="link" href="Alternatives.html#boost_local.Alternatives.local_functions.examples">Examples</a>
@@ -478,7 +545,7 @@
       </p>
 <p>
         Or using C++ global functors (but these do not allow to define the function
-        locally so they are not an alternative implementation of local functions):
+        locally so they are not a real alternative implementation of local functions):
       </p>
 <p>
         
@@ -522,7 +589,7 @@
       </p>
 <p>
         Or using <a href="http://en.wikipedia.org/wiki/C%2B%2B0x#Lambda_functions_and_expressions" target="_top">C++0x
-        lambda</a> functions (but not part of ISO C++ standard):
+        lambda</a> functions (but not part of the ISO C++ standard):
       </p>
 <p>
         
@@ -634,7 +701,7 @@
       </h6>
 <p>
         The following tables compare run-time, binary size, and compile-time for
-        the different alternatives to local functions.
+        the different alternatives presented for local functions.
       </p>
 <p>
         Overall, this library has compile-times and generates binary sizes similar
@@ -645,14 +712,15 @@
         <span class="identifier">release</span> <span class="special">...</span></code>).
         However, on compilers that allow to pass local types as template parameters
         (e.g., MSVC 8.0 or GCC 4.5.1 with C++0x features enabled, see also <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2657.html" target="_top">[N2657]</a>)
-        this library generates optimized code that runs as fast as the fastest of
-        the other approaches (see "<a href="http://www.boost.org/doc/libs/release/libs/local/doc/html/index.html" target="_top">Boost.Local</a>"
+        this library automatically generates optimized code that runs as fast as
+        the fastest of the other approaches (see "<a href="http://www.boost.org/doc/libs/release/libs/local/doc/html/index.html" target="_top">Boost.Local</a>"
         below). When this library local function is specified <code class="computeroutput"><span class="keyword">inline</span></code>
         (see "<a href="http://www.boost.org/doc/libs/release/libs/local/doc/html/index.html" target="_top">Boost.Local</a>
-        Inline For-Loop" below) its run-times are always comparable to both
-        the "Local Functor" and "Global Functor" approaches (for
-        all these approaches, the local function cannot be portably passed as template
-        parameter, see <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2657.html" target="_top">[N2657]</a>,
+        Inline For-Loop" below and the <a class="link" href="Advanced_Topics.html" title="Advanced Topics">Advanced
+        Topics</a> section) its run-times are always comparable to both the "Local
+        Functor" and "Global Functor" approaches (but in this case
+        the local function cannot be portably passed as template parameter, see
+        <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2657.html" target="_top">[N2657]</a>,
         so <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">for_each</span></code> is replaced by a for-loop). Finally,
         this library run-times are always among the fastest when no compiler optimization
         is enabled (using <code class="computeroutput"><span class="identifier">bjam</span> <span class="identifier">debug</span>
@@ -663,38 +731,35 @@
 <td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../../doc/src/images/note.png"></td>
 <th align="left">Note</th>
 </tr>
-<tr><td align="left" valign="top">
-<p>
-          The run-time performance of this library local function is explained because
-          on ISO C++ compliant compilers (e.g., GCC 4.3.4) this library needs to
-          use a function pointer in order to pass the local functor class as a template
-          parameter (see <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2657.html" target="_top">[N2657]</a>
+<tr><td align="left" valign="top"><p>
+          The run-time performances of this library local functions are explained
+          because on ISO C++ compliant compilers (e.g., GCC 4.3.4) this library needs
+          to use a function pointer in order to pass the local function class as
+          a template parameter (see <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2657.html" target="_top">[N2657]</a>
           and the <a class="link" href="Implementation.html" title="Appendix: Implementation">Implementation</a>
           section). For all tested compilers, this function pointer prevents the
-          compiler optimization algorithms from inlining all the function calls.
-          Instead, the functor objects used by other approaches like "<a href="http://www.boost.org/doc/libs/release/doc/html/lambda.html" target="_top">Boost.Lambda</a>"
+          compiler optimization algorithms from inlining the local function calls.
+          Instead, the functors used by other approaches like "<a href="http://www.boost.org/doc/libs/release/doc/html/lambda.html" target="_top">Boost.Lambda</a>"
           and "<a href="http://www.boost.org/doc/libs/release/libs/spirit/phoenix/index.html" target="_top">Boost.Phoenix</a>"
           have been observed to allow all tested compilers to inline all the function
           calls for optimization. This run-time performance cost is not present on
           compilers that allow to pass local types as template parameters (e.g.,
-          MSVC 8.0 or GCC 4.51 with C++0x features enabled) because this library
+          MSVC 8.0 or GCC 4.5.1 with C++0x features enabled) because this library
           does not have to use the extra function pointer to implement the local
-          function call.
-        </p>
-<p>
-          This run-time performance cost on ISO C++ compliant compilers might or
-          might not be an issue depending on the performance requirements of specific
-          applications. For example, an application might already be using a number
-          of indirect function calls (function pointers, virtual functions, etc)
-          for which the overhead added by using the one extra function pointer required
-          by the local function call might not be noticeable within the overall program
-          run-time.
-        </p>
-</td></tr>
+          function call (it directly passes the local class type as template parameter).
+        </p></td></tr>
 </table></div>
 <p>
+        This run-time performance cost on ISO C++ compliant compilers might or might
+        not be an issue depending on the performance requirements of specific applications.
+        For example, an application might already be using a number of indirect function
+        calls (function pointers, virtual functions, etc) for which the overhead
+        added by using the one extra function pointer required by the local function
+        call might not be noticeable within the overall program run-time.
+      </p>
+<p>
         Finally, note that only a very simple local function body with just a single
-        instruction was used for the anaylsis presented here (see the profile program
+        instruction was used for the anaylsis presented here (see the <code class="computeroutput"><span class="identifier">profile_</span><span class="special">...</span></code>
         source files linked below). The authors have not studied how this library
         and the other approaches will perform with respect to each other when a more
         complex set of instructions is programmed for the local function body (e.g.,
@@ -724,7 +789,7 @@
                   together all the elements of a vector and the run-time was measured
                   using <a href="http://www.boost.org/doc/libs/release/libs/chrono/doc/html/index.html" target="_top">Boost.Chrono</a>
                   averaging over <code class="literal">10</code> executions of the vector summation
-                  (see source files at <a href="../../../example/profile_boost_local.cpp" target="_top"><code class="literal">profile_boost_local.cpp</code></a>,
+                  (see source files <a href="../../../example/profile_boost_local.cpp" target="_top"><code class="literal">profile_boost_local.cpp</code></a>,
                   <a href="../../../example/profile_boost_local_inline.cpp" target="_top"><code class="literal">profile_boost_local_inline.cpp</code></a>,
                   <a href="../../../example/profile_local_functor.cpp" target="_top"><code class="literal">profile_local_functor.cpp</code></a>,
                   <a href="../../../example/profile_global_functor.cpp" target="_top"><code class="literal">profile_global_functor.cpp</code></a>,
@@ -778,8 +843,8 @@
 <colgroup><col></colgroup>
 <thead><tr><th>
                 <p>
-                  MSVC 8.0 With "Local Types as Template Parameters" on
-                  Windows XP
+                  MSVC 8.0 With "Local Types as Template Parameters" (Without
+                  C++0x Lambdas) on Windows XP
                 </p>
               </th></tr></thead>
 <tbody>
@@ -802,7 +867,8 @@
 <colgroup><col></colgroup>
 <thead><tr><th>
                 <p>
-                  GCC 4.3.4 With No C++0x Features on Cygwin
+                  GCC 4.3.4 With ISO C++ Only (Without C++0x Lambdas and Without
+                  "Local Types as Template Parameters) on Cygwin
                 </p>
               </th></tr></thead>
 <tbody>
@@ -829,7 +895,8 @@
 </h3></div></div></div>
 <p>
         The authors know of no other library or C++ language feature that supports
-        local blocks (i.e., with the ability to bind by constant value or reference).
+        local blocks (i.e., with the ability to bind by constant value or constant
+        reference).
       </p>
 </div>
 <div class="section">
@@ -837,8 +904,8 @@
 <a name="boost_local.Alternatives.local_exits"></a><a class="link" href="Alternatives.html#boost_local.Alternatives.local_exits" title="Local Exits">Local Exits</a>
 </h3></div></div></div>
 <p>
-        This library local exits provide a functionality very similar to the one
-        provided by <a href="http://www.boost.org/doc/libs/release/libs/scope_exit/doc/html/index.html" target="_top">Boost.ScopeExit</a>
+        This library local exits provide functionalities very similar to the ones
+        already provided by <a href="http://www.boost.org/doc/libs/release/libs/scope_exit/doc/html/index.html" target="_top">Boost.ScopeExit</a>
         but with the following additional features:
       </p>
 <div class="itemizedlist"><ul class="itemizedlist" type="disc">

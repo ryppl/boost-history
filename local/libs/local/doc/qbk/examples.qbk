@@ -22,7 +22,7 @@ This example illustrates how to use __Boost_Typeof__ to register user defined ty
 
 [section:Emulating_Ds_Scope_Guards Emulating D's Scope Guards]
 
-Similarly to __Boost_ScopeExit__, local exits essentially emulate the [@http://www.digitalmars.com/d/2.0/statement.html scope exits] provided by the __D_Programming_Language__.
+Similarly to __Boost_ScopeExit__, local exits essentially emulate the [@http://www.digitalmars.com/d/2.0/statement.html scope exit] statement provided by the __D_Programming_Language__.
 Local exits can also be used to emulate D's [@http://www.digitalmars.com/d/2.0/statement.html scope success] and [@http://www.digitalmars.com/d/2.0/statement.html scope failure] statements using a local variable that is set when an error occurs.
 For example, using error codes:
 
@@ -67,9 +67,9 @@ This example binds the object in scope `this` to a local function.
 [section GCC Nested Functions]
 
 The GCC compiler supports local functions under the name of [@http://gcc.gnu.org/onlinedocs/gcc/Nested-Functions.html nested functions].
-Nested functions are exclusively a C extension of the GCC compiler, they are not supported for C++ not even by the GCC compiler, and they are not part of any C++ standard (ISO C++, C99, C++0x, etc) nor they are supported by other compilers like MSVC.
+Nested functions are exclusively a C extension of the GCC compiler, they are not supported for C++ not even by the GCC compiler, and they are not part of any C or C++ standard (ISO C++, C99, C++0x, etc) nor they are supported by other compilers like MSVC.
 
-The following examples rework the GCC nested function examples using this library local functions.
+The following examples implement the examples from the GCC nested function documentation using this library local functions.
 
 [table
 [ [__Variadic_Macro_Syntax__] [__Sequencing_Macro_Syntax__] ]

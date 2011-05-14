@@ -9,7 +9,8 @@
 
 #include "../../symbol.hpp"
 #include "../../scope_exit/scope_exit.hpp" // Use this lib's ScopeExit impl.
-#include <boost/type_traits.hpp>
+#include <boost/type_traits/remove_pointer.hpp>
+#include <boost/type_traits/function_traits.hpp>
 #include <boost/preprocessor/control/iif.hpp>
 #include <boost/preprocessor/facilities/is_empty.hpp>
 

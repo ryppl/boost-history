@@ -27,6 +27,8 @@
 <a name="boost_local.Release_Notes"></a><a class="link" href="Release_Notes.html" title="Release Notes">Release Notes</a>
 </h2></div></div></div>
 <div class="toc"><dl>
+<dt><span class="section"><a href="Release_Notes.html#boost_local.Release_Notes.version_0_2_0__2011_05_14_">Version
+      0.2.0 (2011-05-14)</a></span></dt>
 <dt><span class="section"><a href="Release_Notes.html#boost_local.Release_Notes.version_0_1_1__2011_01_10_">Version
       0.1.1 (2011-01-10)</a></span></dt>
 <dt><span class="section"><a href="Release_Notes.html#boost_local.Release_Notes.version_0_1_0__2011_01_03_">Version
@@ -35,6 +37,52 @@
       0.0.1 (2010-12-15)</a></span></dt>
 <dt><span class="section"><a href="Release_Notes.html#boost_local.Release_Notes.todo">TODO</a></span></dt>
 </dl></div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_local.Release_Notes.version_0_2_0__2011_05_14_"></a><a class="link" href="Release_Notes.html#boost_local.Release_Notes.version_0_2_0__2011_05_14_" title="Version 0.2.0 (2011-05-14)">Version
+      0.2.0 (2011-05-14)</a>
+</h3></div></div></div>
+<div class="orderedlist"><ol class="orderedlist" type="1">
+<li class="listitem">
+            Replaced parenthesized syntax with variadic and sequencing macro syntaxes.
+          </li>
+<li class="listitem">
+            Profiled library performances against other approaches.
+          </li>
+<li class="listitem">
+            Replaced virtual functor trick with casting functor trick (for smaller
+            run-time).
+          </li>
+<li class="listitem">
+            Optimized library run-time (rearranging code and not using casting functor
+            trick on compilers that accept local classes as template parameters).
+          </li>
+<li class="listitem">
+            Added <code class="computeroutput"><a class="link" href="../BOOST_LOCAL_FUNCTION_NAME.html" title="Macro BOOST_LOCAL_FUNCTION_NAME">BOOST_LOCAL_FUNCTION_NAME</a><span class="special">(</span><span class="keyword">inline</span> <span class="special">...)</span></code> and <code class="computeroutput"><a class="link" href="../BOOST_LOCAL_FUNCTION_NAME.html" title="Macro BOOST_LOCAL_FUNCTION_NAME">BOOST_LOCAL_FUNCTION_NAME</a><span class="special">(</span><span class="identifier">recursive</span>
+            <span class="special">...)</span></code>.
+          </li>
+<li class="listitem">
+            Added <code class="computeroutput"><a class="link" href="../BOOST_LOCAL_TYPEOF.html" title="Macro BOOST_LOCAL_TYPEOF">BOOST_LOCAL_TYPEOF</a></code>.
+          </li>
+<li class="listitem">
+            Added <code class="computeroutput"><span class="identifier">bind</span><span class="special">(</span><span class="identifier">type</span><span class="special">)</span></code>
+            to specify bind type explicitly (skipping <a href="http://www.boost.org/doc/libs/release/doc/html/typeof.html" target="_top">Boost.Typeof</a>
+            type deduction).
+          </li>
+<li class="listitem">
+            Removed <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">local</span><span class="special">::</span><span class="identifier">function</span></code> (use <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">function</span></code>
+            instead).
+          </li>
+<li class="listitem">
+            Added <code class="computeroutput"><a class="link" href="../boost/local/function/overload.html" title="Class template overload">boost::local::function::overload</a></code>
+            to overload local functions (and functors in general).
+          </li>
+<li class="listitem">
+            Implemented support for nesting local functions, blocks, and exits into
+            one another.
+          </li>
+</ol></div>
+</div>
 <div class="section">
 <div class="titlepage"><div><div><h3 class="title">
 <a name="boost_local.Release_Notes.version_0_1_1__2011_01_10_"></a><a class="link" href="Release_Notes.html#boost_local.Release_Notes.version_0_1_1__2011_01_10_" title="Version 0.1.1 (2011-01-10)">Version
@@ -70,22 +118,9 @@
             Completed development, examples, and documentation.
           </li></ol></div>
 </div>
-<div class="section">
-<div class="titlepage"><div><div><h3 class="title">
+<div class="section"><div class="titlepage"><div><div><h3 class="title">
 <a name="boost_local.Release_Notes.todo"></a><a class="link" href="Release_Notes.html#boost_local.Release_Notes.todo" title="TODO">TODO</a>
-</h3></div></div></div>
-<div class="orderedlist"><ol class="orderedlist" type="1">
-<li class="listitem">
-            Rework factorial_impl and Implementation section.
-          </li>
-<li class="listitem">
-            Finalize Acknowledge section.
-          </li>
-<li class="listitem">
-            Apply copyright to all files.
-          </li>
-</ol></div>
-</div>
+</h3></div></div></div></div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>

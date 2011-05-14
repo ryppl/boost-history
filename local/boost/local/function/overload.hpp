@@ -134,13 +134,23 @@ public:
 
 #else // DOXY: Doxygen documentation only.
 
+/** @file
+ * @brief Defines a functor that can be used to overload the call operator of
+ *  a set of specified functors.
+ */
+
 namespace boost { namespace local { namespace function {
 
 /**
  * @brief Functor to overload local functions and other functors.
  *
  * This functor aggregates together calls to functions of all the specified
- * types.
+ * function types <c>F0</c>, <c>F1</c>, etc.
+ * Each function type must be specified following the Boost.Function preferred
+ * syntax:
+ * @code
+ *  ResultType (ArgumentType0, ArgumgnetType1, ...)
+ * @endcode
  *
  * The maximum number of overloaded function types is specified by the
  * @RefMacro{BOOST_LOCAL_CONFIG_OVERLOAD_MAX} configuration macro.
@@ -150,7 +160,7 @@ namespace boost { namespace local { namespace function {
  *
  * @See @RefSect2{Advanced_Topics, Advanced Topics} section,
  *  @RefMacro{BOOST_LOCAL_CONFIG_OVERLOAD_MAX},
- *  @RefMacro{BOOST_LOCAL_CONFIG_OVERLOAD_MAX}.
+ *  @RefMacro{BOOST_LOCAL_CONFIG_OVERLOAD_MAX}, Boost.Function.
  */
 template<typename F0, typename F1, ...>
 class overload {
@@ -165,8 +175,8 @@ public:
     overload(const boost::function<F0>&, const boost::function<F1>&, ...);
 
     /**
-     * @brief Call operator matching the signature of the first specified
-     *  functor.
+     * @brief Call operator matching the signature of the function type
+     *  specified as first.
      *
      * This will in turn invoke the call operator of the first functor that was
      * passed to the constructor.
@@ -174,8 +184,8 @@ public:
     result_type<F0> operator()(arg0_type<F0>, arg1_type<F0>, ...) const;
 
     /**
-     * @brief Call operator matching the signature of the second specified
-     *  functor.
+     * @brief Call operator matching the signature of the function type
+     *  specified as second.
      *
      * This will in turn invoke the call operator of the second functor that
      * was passed to the constructor.

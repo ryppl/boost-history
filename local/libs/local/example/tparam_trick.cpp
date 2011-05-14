@@ -7,7 +7,7 @@
 #include <algorithm>
 #include <cassert>
 
-// Casting Functor Trick
+// Casting functor trick.
 struct casting_func {
     explicit casting_func(void* obj, void (*call)(void*, const double&)):
             obj_(obj), call_(call) {}
@@ -18,7 +18,7 @@ private:
     void (*call_)(void*, const double&);
 };
 
-// Virtual Functor Trick
+// Virtual functor trick.
 struct virtual_func {
     struct interface {
         // Unfortunately, virtual function call is not inlined.
@@ -30,6 +30,7 @@ private:
     interface* func_;
 };
 
+// Local class for local function.
 int main() {
     double sum = 0.0;
     int factor = 10;

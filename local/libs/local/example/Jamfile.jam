@@ -67,7 +67,7 @@ exe doit_va : doit_va.cpp ;
 
 exe factorial : factorial.cpp ;
 exe factorial_va : factorial_va.cpp ;
-#exe factorial_impl : factorial_impl.cpp ;
+exe factorial_impl : factorial_impl.cpp ;
 
 exe find_if : find_if.cpp ;
 exe find_if_va : find_if_va.cpp ;
@@ -89,6 +89,8 @@ exe overload_va : overload_va.cpp ;
 
 exe params_all : params_all.cpp ;
 exe params_all_va : params_all_va.cpp ;
+
+exe parsing_macros_impl : parsing_macros_impl.cpp ;
 
 exe print_map : print_map.cpp ;
 exe print_map_va : print_map_va.cpp ;

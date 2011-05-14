@@ -26,15 +26,15 @@
 <a name="BOOST_LOCAL_CONFIG_THIS_PARAM_NAME"></a><div class="titlepage"></div>
 <div class="refnamediv">
 <h2><span class="refentrytitle">Macro BOOST_LOCAL_CONFIG_THIS_PARAM_NAME</span></h2>
-<p>BOOST_LOCAL_CONFIG_THIS_PARAM_NAME &#8212; The name of the special symbol used to access the bound object <code class="computeroutput">this</code>. </p>
+<p>BOOST_LOCAL_CONFIG_THIS_PARAM_NAME &#8212; The name of the special symbol used to access the bound object <code class="computeroutput">this</code> within the body of the local constructs. </p>
 </div>
 <h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
 <div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="comment">// In header: &lt;<a class="link" href="reference.html#header.boost.local.config_hpp" title="Header &lt;boost/local/config.hpp&gt;">boost/local/config.hpp</a>&gt;
 
 </span>BOOST_LOCAL_CONFIG_THIS_PARAM_NAME</pre></div>
 <div class="refsect1">
-<a name="id921282"></a><h2>Description</h2>
-<p>If programmers leave this configuration macro undefined, the default symbol used is <code class="computeroutput">this_</code>.</p>
+<a name="id921571"></a><h2>Description</h2>
+<p>If programmers leave this configuration macro undefined, the default symbol used is <code class="computeroutput">this_</code> (this default symbol follows Boost's conventions to postfix with an underscore symbols that refer to C++ keywords -- the <code class="computeroutput">this</code> keyword in this case).</p>
 <p><span class="bold"><strong>Warning:</strong></span> Programmers should not define this macro unless it is absolutely necessary (e.g., to avoid name clashes with another library which cannot be changed). Changing the symbol <code class="computeroutput">this_</code> effectively changes the public API of this library.</p>
 <p><span class="bold"><strong>See:</strong></span>  <a class="link" href="boost_local/Tutorial.html" title="Tutorial">Tutorial</a> section,  <a class="link" href="boost_local/Getting_Started.html" title="Getting Started"> Getting Started</a> section. </p>
 </div>

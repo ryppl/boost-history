@@ -12,7 +12,7 @@
 #include "../../scope_exit/scope_exit.hpp" // Use this lib's ScopeExit impl.
 #include "../../preprocessor/sign/params_any_bind.hpp"
 #include "../../preprocessor/sign/param_any_bind.hpp"
-#include <boost/type_traits.hpp>
+#include <boost/type_traits/remove_reference.hpp>
 #include <boost/preprocessor/control/iif.hpp>
 #include <boost/preprocessor/control/expr_iif.hpp>
 #include <boost/preprocessor/list/adt.hpp> // For `IS_CONS`.

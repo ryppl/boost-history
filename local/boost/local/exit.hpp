@@ -67,7 +67,7 @@
  *  <c>[token]</c> means either <c>token</c> or nothing (i.e.\, <c>token</c> is
  *  optional). 
  *
- *  On C99 and later compilers which support variadic macros\, the above
+ *  On C99 and later compilers that support variadic macros\, the above
  *  grammar can be modified as follow to define the <em>variadic macro
  *  syntax</em> that can also be used to specify the variables in scope to
  *  bind:
@@ -84,7 +84,7 @@
  *  on C++ compilers that support variadic macros so it should be used with
  *  care in order to avoid portability issues. 
  *
- *  Finally\, on C++ compilers which support empty macro parameters\, the above
+ *  Finally\, on C++ compilers that support empty macro parameters\, the above
  *  grammars can be modified as follow to define the <em>empty macro
  *  syntax</em> that can can also be used to specify an empty list of variables
  *  to bind:

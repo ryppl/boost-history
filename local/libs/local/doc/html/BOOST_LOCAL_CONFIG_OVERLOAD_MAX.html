@@ -26,16 +26,16 @@
 <a name="BOOST_LOCAL_CONFIG_OVERLOAD_MAX"></a><div class="titlepage"></div>
 <div class="refnamediv">
 <h2><span class="refentrytitle">Macro BOOST_LOCAL_CONFIG_OVERLOAD_MAX</span></h2>
-<p>BOOST_LOCAL_CONFIG_OVERLOAD_MAX &#8212; The number of times a function can be overloaded. </p>
+<p>BOOST_LOCAL_CONFIG_OVERLOAD_MAX &#8212; The number of function types that can be overloaded by the  <code class="computeroutput"><a class="link" href="boost/local/function/overload.html" title="Class template overload">boost::local::function::overload</a></code> functor. </p>
 </div>
 <h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
 <div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="comment">// In header: &lt;<a class="link" href="reference.html#header.boost.local.config_hpp" title="Header &lt;boost/local/config.hpp&gt;">boost/local/config.hpp</a>&gt;
 
 </span>BOOST_LOCAL_CONFIG_OVERLOAD_MAX</pre></div>
 <div class="refsect1">
-<a name="id921171"></a><h2>Description</h2>
+<a name="id921459"></a><h2>Description</h2>
 <p>If programmers leave this configuration macro undefined, its default value is <code class="computeroutput">6</code>.</p>
-<p>This number must be greater or equal than 2 (because a single function cannot be overloaded by itself) otherwise the library will generate a compile-time error.</p>
+<p>This number must be greater or equal than 2 (because at least two function types are needed to define an overloaded call operator) otherwise the library will generate a compile-time error.</p>
 <p><span class="bold"><strong>Warning:</strong></span> Increasing this number will increase compilation time when the header file <code class="computeroutput">"boost/local/function/overload.hpp"</code> is included.</p>
 <p><span class="bold"><strong>See:</strong></span>  <a class="link" href="boost_local/Advanced_Topics.html" title="Advanced Topics"> Advanced Topics</a> section,  <a class="link" href="boost_local/Getting_Started.html" title="Getting Started"> Getting Started</a> section. </p>
 </div>

@@ -8,35 +8,36 @@
 
 This section lists source code that should provide a general idea on how this library is implemented.
 
-The code listed here should only be used as a reference in trying to understand the library implementation and source code.
-There is no guarantee that the library implementation will use exactly the code listed here.
-Refer to the code comments in the library source files for the reasons behind the specific instructions listed here.
-
-[section Local Functions]
-
-The expansion of the local function macros of the `factorial` example presented in the __Advanced_Topics__ section generates code equivalent to the following:
-
-[factorial_impl_cpp]
-
-[endsect]
+The code listed here can be used by curious readers and library maintainers as a reference in trying to understand this library source files at `"boost/local/..."`.
+There is absolutely no guarantee that the library implementation uses the exact the code listed here.
 
 [section Local Classes as Template Parameters]
 
-This library uses a local class to implement the local functor object.
-However, in ISO standard C++ a local classes, and therefore the local functor object, cannot be passed as template parameter (for example to the `std::for_each` algorithm), this is instead possible on C++03 and later standards.
-To work around this limitation, this library investigated the following two tricks (both tricks can be extended to support eventual function default parameters):
+This library uses a local class to implement the local function object.
+However, in ISO C++ a local class (and therefore the local function object that it implements) cannot be passed as template parameter (e.g., to the `std::for_each` algorithm), this is instead possible on C++0x, MSVC, and some other compilers (see __N2657__).
+To work around this limitation, this library investigated the following two "tricks" (both tricks can be extended to support eventual function default parameters):
 
-# The /casting functor trick/ uses a non-local functor class that calls a static member function of the local class via a function pointer.
-The static member function then calls the correct local function body after type casting the object.
+# The /casting functor trick/ uses a non-local functor that calls a static member function of the local class via a function pointer.
+The static member function then calls the correct local function body after type casting the object from a `void*` pointer (local classes can be used for type casting).
 
-# The /virtual functor trick/ uses a non-local virtual base class for the local functor class.
-The correct implementation of the `operator()` is called via polymorphism.
+# The /virtual functor trick/ uses a non-local base class for the local functor class.
+The correct overridden implementation of the virtual `operator()` is called via polymorphism.
 
 [tparam_trick_cpp]
 
-The casting functor trick had slightly better run-time performances than the virtual functor trick so the current implementation of this library uses the casting functor trick.
-However, both tricks do not allow for compiler optimizations that inline the local function calls because they rely on one indirect function call (via either a function pointer or a virtual function respectively) that can only be resolved at run-time.
-Therefore, on C++03 compilers this library generates code that passes the local class functor as template parameter directly without using neither one of these two tricks in order to take full advantage of compiler optimizations that inline the local function calls.
+The casting functor trick measured slightly better run-time performances than the virtual functor trick so the current implementation of this library uses the casting functor trick (probably because in addition to the indirect function call, the virtual functor trick also requires accessing the [@http://en.wikipedia.org/wiki/Virtual_method_table virtual function table]).
+However, both tricks do not allow for compiler optimizations that inline the local function calls because they rely on one indirect function call (via either a function pointer or a virtual function respectively) that has been observed to be resolved only at run-time by all analyzed compilers.
+Therefore, on compilers that accept local types as template parameters (MSVC, C++0x, etc, see __N2657__), this library generates code that passes the local class type directly as template parameter without using neither one of these two tricks in order to take full advantage of compiler optimizations that inline the local function calls.
+
+[endsect]
+
+[section Parsing Macros]
+
+This library macros can parse the list of specified parameters and detect if any of the bound parameter name matches the token `this` (to generate special code to bind the object in scope), or if the parameter is bound by `const` (to generate special code to bind by constant), etc.
+The parameter tokens are inspected using preprocessor metaprogramming and specifically using __Boost_Preprocessor__ and the `BOOST_DETAIL_PP_KEYWORD_...` macros.
+For example:
+
+[parsing_macros_impl_cpp]
 
 [endsect]
 
@@ -56,32 +57,11 @@ The expansion of the local exit macros for the main local exit example presented
 
 [endsect]
 
-[section Parsing Macros]
+[section Local Functions]
 
-This library macros can parse the list of specified parameters and detect if any of the bound parameter name matches the token `this` (to generate special code to bind the object in scope), or if the parameter is bound by `const` (to generate special code to bind by constant), etc.
-The parameter tokens are inspected by preprocessor metaprogramming using both __Boost_Preprocessor__ and the `BOOST_DETAIL_PP_KEYWORD_...` macros that in brief work as follow:
+The expansion of the local function macros of the `factorial` example presented in the __Advanced_Topics__ section generates code equivalent to the following:
 
-    #include <boost/detail/preprocessor/keyword/this.hpp>
-    #include <boost/detail/preprocessor/keyword/const.hpp>
-    #include <boost/local/aux_/preprocessor/keyword/bind.hpp>
-
-    // Detect `this`.
-    BOOST_DETAIL_PP_KEYWORD_IS_THIS_BACK(const bind this)   // Expand to 1.
-    BOOST_DETAIL_PP_KEYWORD_IS_THIS_BACK(const bind& x)     // Expand to 0.
-
-    // Detect constant.
-    BOOST_DETAIL_PP_KEYWORD_IS_CONST_FRONT(const bind this) // Expand to 1.
-    BOOST_DETAIL_PP_KEYWORD_IS_CONST_FRONT(bind this)       // Expand to 0.
-
-    // Detect binding (constant and not).
-    BOOST_LOCAL_AUX_PP_KEYWORD_IS_BIND_FRONT(               // Expand to 1.
-            BOOST_DETAIL_PP_KEYWORD_CONST_REMOVE_FRONT(const bind this))
-    BOOST_LOCAL_AUX_PP_KEYWORD_IS_BIND_FRONT(               // Also expand to 1.
-            BOOST_DETAIL_PP_KEYWORD_CONST_REMOVE_FRONT(bind this))
-    BOOST_LOCAL_AUX_PP_KEYWORD_IS_BIND_FRONT(               // Expand to 0.
-            BOOST_DETAIL_PP_KEYWORD_CONST_REMOVE_FRONT(const int x))
-    BOOST_LOCAL_AUX_PP_KEYWORD_IS_BIND_FRONT(               // Also expand to 0.
-            BOOST_DETAIL_PP_KEYWORD_CONST_REMOVE_FRONT(int x))
+[factorial_impl_cpp]
 
 [endsect]
 

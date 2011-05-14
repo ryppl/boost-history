@@ -37,7 +37,7 @@
 <div class="section">
 <div class="titlepage"><div><div><h3 class="title">
 <a name="header.boost.local.block_hpp"></a>Header &lt;<a href="../../../../boost/local/block.hpp" target="_top">boost/local/block.hpp</a>&gt;</h3></div></div></div>
-<p>Local blocks allow to program code that is executed accessing some of the variables in scope as constants. </p>
+<p>Local blocks allow to program code that is executed "in place" while accessing some of the variables in scope as constants. </p>
 <pre class="synopsis">
 
 <a class="link" href="BOOST_LOCAL_BLOCK.html" title="Macro BOOST_LOCAL_BLOCK">BOOST_LOCAL_BLOCK</a>(bindings)
@@ -68,7 +68,7 @@
 <div class="section">
 <div class="titlepage"><div><div><h3 class="title">
 <a name="header.boost.local.function_hpp"></a>Header &lt;<a href="../../../../boost/local/function.hpp" target="_top">boost/local/function.hpp</a>&gt;</h3></div></div></div>
-<p>Local functions allows to program functions locally within the scope where they are needed (within enclosing functions, etc). </p>
+<p>Local functions allows to program functions locally within the scope where they are needed. </p>
 <pre class="synopsis">
 
 <a class="link" href="BOOST_LOCAL_FUNCTION_PARAMS.html" title="Macro BOOST_LOCAL_FUNCTION_PARAMS">BOOST_LOCAL_FUNCTION_PARAMS</a>(parameters)
@@ -78,6 +78,7 @@
 <div class="section">
 <div class="titlepage"><div><div><h3 class="title">
 <a name="header.boost.local.function.overload_hpp"></a>Header &lt;<a href="../../../../boost/local/function/overload.hpp" target="_top">boost/local/function/overload.hpp</a>&gt;</h3></div></div></div>
+<p>Defines a functor that can be used to overload the call operator of a set of specified functors. </p>
 <pre class="synopsis"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
   <span class="keyword">namespace</span> <span class="identifier">local</span> <span class="special">{</span>
     <span class="keyword">namespace</span> <span class="identifier">function</span> <span class="special">{</span>
@@ -98,7 +99,7 @@
 <div class="titlepage"><div><div><h3 class="title">
 <a name="header.boost.utility.identity_hpp"></a>Header &lt;<a href="../../../../boost/utility/identity.hpp" target="_top">boost/utility/identity.hpp</a>&gt;</h3></div></div></div>
 <p>Identity macros are used to pass expressions with commas (not already wrapped within round parenthesis) as macros parameters. </p>
-<p><span class="bold"><strong>Note:</strong></span> The only way (at least as far as the authors know) to pass an arbitrary number of commas within macro parameters without explicitly indicating the number of commas is to wrap the parameter within round parenthesis that are not replaced by macro expansion and then to remove the extra parenthesis at compile-time (for type expressions) or at run-time (for value expressions). This is what these macros do. </p>
+<p><span class="bold"><strong>Note:</strong></span> The only way (at least as far as the authors know) to pass an arbitrary number of commas within macro parameters without explicitly indicating the number of commas (and without using variadic macros which are not part of the ISO C++ standard) is to wrap the expression within round parenthesis that are not replaced by macro expansion and then to remove the extra parenthesis at compile-time (for type expressions) or at run-time (for value expressions). This is what these macros do. </p>
 <pre class="synopsis">
 
 <a class="link" href="BOOST_IDENTITY_TYPE.html" title="Macro BOOST_IDENTITY_TYPE">BOOST_IDENTITY_TYPE</a>(parenthesized_type)

@@ -26,16 +26,16 @@
 <a name="BOOST_IDENTITY_TYPE"></a><div class="titlepage"></div>
 <div class="refnamediv">
 <h2><span class="refentrytitle">Macro BOOST_IDENTITY_TYPE</span></h2>
-<p>BOOST_IDENTITY_TYPE &#8212; This macro wraps the specified type expression within extra parenthesis so the type can be passed as a single macro parameter even if it contains commas. </p>
+<p>BOOST_IDENTITY_TYPE &#8212; This macro wraps the specified type expression within extra parenthesis so the type can be passed as a single macro parameter even if it contains commas (not already wrapped within round parenthesis). </p>
 </div>
 <h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
 <div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="comment">// In header: &lt;<a class="link" href="reference.html#header.boost.utility.identity_hpp" title="Header &lt;boost/utility/identity.hpp&gt;">boost/utility/identity.hpp</a>&gt;
 
 </span>BOOST_IDENTITY_TYPE(parenthesized_type)</pre></div>
 <div class="refsect1">
-<a name="id925518"></a><h2>Description</h2>
+<a name="id925908"></a><h2>Description</h2>
 <p>This macro expands to an expression that can be passed as a single macro parameter even if it contains commas and that evaluates to the specified type at compile-time (see the  <a class="link" href="boost_local/Advanced_Topics.html" title="Advanced Topics"> Advanced Topics</a> section).</p>
-<p>For example <code class="computeroutput">BOOST_IDENTITY_TYPE((std::map&lt;int, double&gt;))</code> can be passed as a single macro parameter when instead <code class="computeroutput">std::map&lt;int, double&gt;</code> cannot (because it contains a comma not wrapped by round parenthesis so it will be interpreted as two separate macro parameters by the preprocessor).</p>
+<p>For example <code class="computeroutput">BOOST_IDENTITY_TYPE((std::map&lt;int, double&gt;))</code> can be passed as a single macro parameter when instead <code class="computeroutput">std::map&lt;int, double&gt;</code> cannot (because <code class="computeroutput">std::map&lt;int, double&gt;</code> contains a comma not wrapped by round parenthesis so it will be interpreted as two separate macro parameters by the preprocessor).</p>
 <p><span class="bold"><strong>Parameters:</strong></span> </p>
 <div class="informaltable"><table class="table">
 <colgroup>
@@ -49,6 +49,7 @@
 </table></div>
 <p>
 </p>
+<p><span class="bold"><strong>Note:</strong></span> This macro works on ISO C++ compilers (it does not require variadic macros). It expands to code equivalent to <code class="computeroutput">boost::function_traits&lt;void parenthesized_type&gt;::arg1_type</code>.</p>
 <p><span class="bold"><strong>See:</strong></span>  <a class="link" href="boost_local/Advanced_Topics.html" title="Advanced Topics"> Advanced Topics</a> section. </p>
 </div>
 </div>

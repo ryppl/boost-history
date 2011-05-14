@@ -261,7 +261,7 @@ When specified, the bound variable type must follow the `bind` "keyword" and it 
     bind(``/variable-type/``) ``/variable-name/``           // Bind by value with explicit type.
     bind(``/variable-type/``)& ``/variable-name/``          // Bind by reference with explicit type.
     const bind(``/variable-type/``) ``/variable-name/``     // Bind by constant value with explicit type.
-    const bind(``/variable-type/``)& ``/variable-name/``    // Bind by constant value with explicit type.
+    const bind(``/variable-type/``)& ``/variable-name/``    // Bind by constant reference with explicit type.
     bind(``/class-type/``*) this                      // Bind object `this` with type.
     const bind(``/class-type/``*) this                // Bind object `this` by constant with type.
 
@@ -483,8 +483,8 @@ The following table summarizes all C++ function features indicating those featur
     [ This is not supported because local functions are not member functions.
 [footnote
 *Rationale.*
-In theory, it would be possible for a local functor class to inherit from another local functor class.
-However, this "inheritance" feature is not implemented because it seems of [@http://lists.boost.org/Archives/boost/2010/09/170895.php no use] given that local functions can be bound to one another thus they can simply call each other directly without recurring to dynamic binding or base function call.
+It would be possible to make a local function class inherit from another local function class.
+However, this "inheritance" feature is not implemented because it seemed of [@http://lists.boost.org/Archives/boost/2010/09/170895.php no use] given that local functions can be bound to one another thus they can simply call each other directly without recurring to dynamic binding or base function call.
 ]
     ]
 ]

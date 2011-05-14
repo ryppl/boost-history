@@ -27,219 +27,50 @@
 <a name="boost_local.Implementation"></a><a class="link" href="Implementation.html" title="Appendix: Implementation">Appendix: Implementation</a>
 </h2></div></div></div>
 <div class="toc"><dl>
-<dt><span class="section"><a href="Implementation.html#boost_local.Implementation.local_functions">Local Functions</a></span></dt>
 <dt><span class="section"><a href="Implementation.html#boost_local.Implementation.local_classes_as_template_parameters">Local
       Classes as Template Parameters</a></span></dt>
+<dt><span class="section"><a href="Implementation.html#boost_local.Implementation.parsing_macros">Parsing Macros</a></span></dt>
 <dt><span class="section"><a href="Implementation.html#boost_local.Implementation.local_blocks">Local Blocks</a></span></dt>
 <dt><span class="section"><a href="Implementation.html#boost_local.Implementation.local_exits">Local Exits</a></span></dt>
-<dt><span class="section"><a href="Implementation.html#boost_local.Implementation.parsing_macros">Parsing Macros</a></span></dt>
+<dt><span class="section"><a href="Implementation.html#boost_local.Implementation.local_functions">Local Functions</a></span></dt>
 </dl></div>
 <p>
       This section lists source code that should provide a general idea on how this
       library is implemented.
     </p>
 <p>
-      The code listed here should only be used as a reference in trying to understand
-      the library implementation and source code. There is no guarantee that the
-      library implementation will use exactly the code listed here. Refer to the
-      code comments in the library source files for the reasons behind the specific
-      instructions listed here.
+      The code listed here can be used by curious readers and library maintainers
+      as a reference in trying to understand this library source files at <code class="computeroutput"><span class="string">"boost/local/..."</span></code>. There is absolutely
+      no guarantee that the library implementation uses the exact the code listed
+      here.
     </p>
-<div class="section">
-<div class="titlepage"><div><div><h3 class="title">
-<a name="boost_local.Implementation.local_functions"></a><a class="link" href="Implementation.html#boost_local.Implementation.local_functions" title="Local Functions">Local Functions</a>
-</h3></div></div></div>
-<p>
-        The expansion of the local function macros of the <code class="computeroutput"><span class="identifier">factorial</span></code>
-        example presented in the <a class="link" href="Advanced_Topics.html" title="Advanced Topics">Advanced
-        Topics</a> section generates code equivalent to the following:
-      </p>
-<p>
-        
-</p>
-<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">local</span><span class="special">/</span><span class="identifier">function</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
-<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
-<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">sstream</span><span class="special">&gt;</span>
-<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">algorithm</span><span class="special">&gt;</span>
-<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">vector</span><span class="special">&gt;</span>
-<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">string</span><span class="special">&gt;</span>
-
-<span class="keyword">struct</span> <span class="identifier">calculator</span> <span class="special">{</span>
-    <span class="identifier">std</span><span class="special">::</span><span class="identifier">ostringstream</span> <span class="identifier">output</span><span class="special">;</span>
-
-    <span class="keyword">void</span> <span class="identifier">factorials</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;&amp;</span> <span class="identifier">nums</span><span class="special">,</span>
-            <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;</span> <span class="identifier">separator</span> <span class="special">=</span> <span class="string">" "</span><span class="special">)</span> <span class="special">{</span>
-
-        <span class="keyword">int</span> <span class="comment">// The local function result type (just before the `BOOST_LOCAL_FUNCTION_PARAMS` macro).</span>
-
-        <span class="comment">// *BEGIN* The macro</span>
-        <span class="comment">//  BOOST_LOCAL_FUNCTION_PARAMS( (int n) (bool recursion)(default false)</span>
-        <span class="comment">//          (const bind&amp; separator) (bind this) )</span>
-        <span class="comment">// expands (at line 21) to:</span>
-
-        <span class="comment">// DEDUCE RESULT TYPE</span>
-        <span class="comment">// Long name `ERROR_...` gives meaningful compiler-error message if programmers forget result type before the macro.</span>
-        <span class="special">(*</span><span class="identifier">ERROR_missing_result_type_before_the_local_function_parameter_macro_id21</span><span class="special">)();</span>
-        <span class="comment">// Use Boost.ScopeExit type deduction technique (tagging, wrapping, struct, etc) so to work on all compilers (specifically, some GCC version give internal errors otherwise).</span>
-        <span class="keyword">typedef</span> <span class="keyword">void</span> <span class="special">(*</span><span class="identifier">boost_local_auxXdeduce_result_tag21</span><span class="special">)(</span><span class="keyword">int</span> <span class="identifier">ERROR_missing_result_type_before_the_local_function_parameter_macro_id21</span><span class="special">);</span> 
-        <span class="keyword">typedef</span> <span class="identifier">BOOST_TYPEOF</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">scope_exit</span><span class="special">::</span><span class="identifier">aux</span><span class="special">::</span><span class="identifier">wrap</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">scope_exit</span><span class="special">::</span><span class="identifier">aux</span><span class="special">::</span><span class="identifier">deref</span><span class="special">(</span><span class="identifier">ERROR_missing_result_type_before_the_local_function_parameter_macro_id21</span><span class="special">,</span> <span class="special">(</span><span class="identifier">boost_local_auxXdeduce_result_tag21</span><span class="special">)</span><span class="number">0</span><span class="special">)))</span> <span class="identifier">boost_local_auxXdeduce_result_wrap21</span><span class="special">;</span>
-        <span class="keyword">typedef</span> <span class="identifier">boost_local_auxXdeduce_result_wrap21</span><span class="special">::</span><span class="identifier">type</span> <span class="identifier">boost_local_auxXdeduce_result_capture21</span><span class="special">;</span> 
-        <span class="keyword">struct</span> <span class="identifier">boost_local_auxXdeduce_result_params21</span> <span class="special">{</span> 
-            <span class="keyword">typedef</span> <span class="identifier">boost_local_auxXdeduce_result_capture21</span> <span class="identifier">function_ptr_type</span><span class="special">;</span>
-        <span class="special">};</span> 
-        <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">remove_pointer</span><span class="special">&lt;</span> <span class="identifier">boost_local_auxXdeduce_result_params21</span><span class="special">::</span><span class="identifier">function_ptr_type</span> <span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">boost_local_auxXdeduce_result_function_type21</span><span class="special">;</span> 
-        <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">function_traits</span><span class="special">&lt;</span> <span class="identifier">boost_local_auxXdeduce_result_function_type21</span><span class="special">&gt;::</span><span class="identifier">result_type</span> <span class="identifier">boost_local_auxXresult_type21</span><span class="special">;</span>
-        
-        <span class="comment">// HANDLE BOUND PARAMETERS</span>
-        <span class="comment">// Deduce object `this` type (using technique from Boost.ScopeExit patch to support `this`).</span>
-<span class="preprocessor">#if</span> <span class="identifier">BOOST_WORKAROUND</span><span class="special">(</span><span class="identifier">BOOST_MSVC</span><span class="special">,&gt;=</span><span class="number">1300</span><span class="special">)</span>
-        <span class="keyword">enum</span> <span class="special">{</span> <span class="identifier">boost_se_thistype_index_21</span> <span class="special">=</span> <span class="keyword">sizeof</span><span class="special">(*</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">scope_exit</span><span class="special">::</span><span class="identifier">msvc_typeof_this</span><span class="special">::</span><span class="identifier">encode_start</span><span class="special">(</span><span class="keyword">this</span><span class="special">))</span> <span class="special">};</span> 
-        <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">scope_exit</span><span class="special">::</span><span class="identifier">msvc_typeof_this</span><span class="special">::</span><span class="identifier">msvc_typeid_wrapper</span><span class="special">&lt;</span><span class="identifier">boost_se_thistype_index_21</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">se_this_type21</span><span class="special">;</span>
-<span class="preprocessor">#else</span>
-        <span class="keyword">typedef</span> <span class="identifier">BOOST_TYPEOF</span><span class="special">(</span><span class="keyword">this</span><span class="special">)</span> <span class="identifier">se_this_type21</span><span class="special">;</span>
-<span class="preprocessor">#endif</span>
-        <span class="comment">// Deduce other `&amp; separator` type (using Boost.ScopeExit technique).</span>
-        <span class="keyword">typedef</span> <span class="keyword">void</span> <span class="special">(*</span><span class="identifier">boost_se_tag_0_21</span><span class="special">)(</span><span class="keyword">int</span> <span class="special">&amp;</span> <span class="identifier">separator</span><span class="special">);</span> 
-        <span class="keyword">typedef</span> <span class="identifier">BOOST_TYPEOF</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">scope_exit</span><span class="special">::</span><span class="identifier">aux</span><span class="special">::</span><span class="identifier">wrap</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">scope_exit</span><span class="special">::</span><span class="identifier">aux</span><span class="special">::</span><span class="identifier">deref</span><span class="special">(&amp;</span> <span class="identifier">separator</span><span class="special">,</span> <span class="special">(</span><span class="identifier">boost_se_tag_0_21</span><span class="special">)</span><span class="number">0</span><span class="special">)))</span> <span class="identifier">boost_se_wrapped_t_0_21</span><span class="special">;</span> 
-        <span class="keyword">typedef</span> <span class="identifier">boost_se_wrapped_t_0_21</span><span class="special">::</span><span class="identifier">type</span> <span class="identifier">boost_se_capture_t_0_21</span><span class="special">;</span>
-        <span class="comment">// Store bound parameter values and references.</span>
-        <span class="keyword">struct</span> <span class="identifier">boost_se_params_t_21</span> <span class="special">{</span>
-            <span class="identifier">se_this_type21</span> <span class="identifier">se_this</span><span class="special">;</span>
-            <span class="keyword">typedef</span> <span class="identifier">boost_se_capture_t_0_21</span> <span class="identifier">boost_se_param_t_0_21</span><span class="special">;</span> 
-            <span class="identifier">boost</span><span class="special">::</span><span class="identifier">scope_exit</span><span class="special">::</span><span class="identifier">aux</span><span class="special">::</span><span class="identifier">member</span><span class="special">&lt;</span><span class="identifier">boost_se_param_t_0_21</span><span class="special">,</span> <span class="identifier">boost_se_tag_0_21</span><span class="special">&gt;</span> <span class="identifier">boost_se_param_0_21</span><span class="special">;</span>
-        <span class="special">}</span> <span class="identifier">boost_local_auxXparams21</span> <span class="special">=</span> <span class="special">{</span> 
-            <span class="keyword">this</span><span class="special">,</span> 
-<span class="preprocessor">#ifdef</span> <span class="identifier">BOOST_SCOPE_EXIT_AUX_TPL_WORKAROUND</span>
-            <span class="special">{</span>
-<span class="preprocessor">#endif</span>
-                <span class="identifier">boost</span><span class="special">::</span><span class="identifier">scope_exit</span><span class="special">::</span><span class="identifier">aux</span><span class="special">::</span><span class="identifier">deref</span><span class="special">(&amp;</span> <span class="identifier">separator</span><span class="special">,</span> <span class="special">(</span><span class="identifier">boost_se_tag_0_21</span><span class="special">)</span><span class="number">0</span><span class="special">)</span> 
-<span class="preprocessor">#ifdef</span> <span class="identifier">BOOST_SCOPE_EXIT_AUX_TPL_WORKAROUND</span>
-            <span class="special">}</span> 
-<span class="preprocessor">#endif</span>
-        <span class="special">};</span>
-        <span class="comment">// Use variable name `...args` without line number to hold bound parameter values (so the same variable name can be used by the `NAME` macro even if it expands on a different line number).</span>
-        <span class="comment">// The `declared&lt;&gt;` template makes sure that the variable `...args` is not declared multiple times in the same context (if the variable is already declared, this template expand to a no-operation).</span>
-        <span class="identifier">boost</span><span class="special">::</span><span class="identifier">scope_exit</span><span class="special">::</span><span class="identifier">aux</span><span class="special">::</span><span class="identifier">declared</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">scope_exit</span><span class="special">::</span><span class="identifier">aux</span><span class="special">::</span><span class="identifier">resolve</span><span class="special">&lt;</span><span class="keyword">sizeof</span><span class="special">(</span><span class="identifier">boost_local_auxXargs</span><span class="special">)&gt;::</span><span class="identifier">cmp1</span><span class="special">&lt;</span><span class="number">0</span><span class="special">&gt;::</span><span class="identifier">cmp2</span><span class="special">&gt;</span> <span class="identifier">boost_local_auxXargs</span><span class="special">;</span> 
-        <span class="identifier">boost_local_auxXargs</span><span class="special">.</span><span class="identifier">value</span> <span class="special">=</span> <span class="special">&amp;</span><span class="identifier">boost_local_auxXparams21</span><span class="special">;</span>
-        
-        <span class="comment">// LOCAL FUNCTOR</span>
-        <span class="keyword">class</span> <span class="identifier">boost_local_auxXfunctor21</span><span class="special">:</span>
-                <span class="comment">// Base abstract class is used to later assign this local functor to `boost::local::function` so the local function can be passed as a template parameter (polymorphism ensures that the correct `operator()` as implemented by this class is called when this object is used as an `abstract_function` by `boost::local::function`).</span>
-                <span class="keyword">public</span> <span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">local</span><span class="special">::</span><span class="identifier">aux</span><span class="special">::</span><span class="identifier">abstract_function</span><span class="special">&lt;</span><span class="identifier">boost_local_auxXresult_type21</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">n</span><span class="special">,</span> <span class="keyword">bool</span> <span class="identifier">recursion</span><span class="special">),</span> <span class="number">1</span><span class="special">&gt;</span> <span class="special">{</span>
-            <span class="keyword">typedef</span> <span class="identifier">boost_local_auxXresult_type21</span> <span class="special">(</span><span class="identifier">boost_local_auxXfunction_type</span><span class="special">)(</span><span class="keyword">int</span> <span class="identifier">n</span> <span class="special">,</span> <span class="keyword">bool</span> <span class="identifier">recursion</span><span class="special">);</span>
-        <span class="keyword">public</span><span class="special">:</span>
-            <span class="comment">// Take a generic pointer so it can be invoked by the `NAME` macro even if it expands on a different line number.</span>
-            <span class="keyword">explicit</span> <span class="identifier">boost_local_auxXfunctor21</span><span class="special">(</span><span class="keyword">void</span><span class="special">*</span> <span class="identifier">binding_data</span><span class="special">):</span>
-                    <span class="identifier">boost_local_auxXbinds</span><span class="special">(</span><span class="keyword">static_cast</span><span class="special">&lt;</span><span class="identifier">boost_se_params_t_21</span><span class="special">*&gt;(</span><span class="identifier">binding_data</span><span class="special">))</span> <span class="special">{</span>
-                <span class="identifier">boost_local_auxXinit_recursion</span><span class="special">();</span>
-            <span class="special">}</span>
-        
-            <span class="comment">// Implement `operator()` for all parameters and any combination of default parameter.</span>
-            <span class="identifier">boost_local_auxXresult_type21</span> <span class="keyword">operator</span><span class="special">()(</span>
-                    <span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">function_traits</span><span class="special">&lt;</span><span class="identifier">boost_local_auxXfunction_type</span><span class="special">&gt;::</span><span class="identifier">arg1_type</span> <span class="identifier">arg1</span><span class="special">,</span> 
-                    <span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">function_traits</span><span class="special">&lt;</span><span class="identifier">boost_local_auxXfunction_type</span><span class="special">&gt;::</span><span class="identifier">arg2_type</span> <span class="identifier">arg2</span><span class="special">)</span> <span class="special">{</span>
-                <span class="comment">// Actual parameter names are not known to the macro syntax separately from their types so generic names `arg...` must be used (and therefore the parameter types are extracted from the function type).</span>
-                <span class="keyword">return</span> <span class="identifier">boost_local_auxXbody</span><span class="special">(</span><span class="identifier">boost_local_auxXbinds</span><span class="special">-&gt;</span><span class="identifier">boost_se_param_0_21</span><span class="special">.</span><span class="identifier">value</span><span class="special">,</span> <span class="identifier">boost_local_auxXbinds</span><span class="special">-&gt;</span><span class="identifier">se_this</span><span class="special">,</span> <span class="identifier">arg1</span><span class="special">,</span> <span class="identifier">arg2</span><span class="special">);</span>
-            <span class="special">}</span>
-            <span class="identifier">boost_local_auxXresult_type21</span> <span class="keyword">operator</span><span class="special">()(</span>
-                    <span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">function_traits</span><span class="special">&lt;</span><span class="identifier">boost_local_auxXfunction_type</span><span class="special">&gt;::</span><span class="identifier">arg1_type</span> <span class="identifier">arg1</span><span class="special">)</span> <span class="special">{</span>
-                <span class="keyword">return</span> <span class="identifier">boost_local_auxXbody</span><span class="special">(</span><span class="identifier">boost_local_auxXbinds</span><span class="special">-&gt;</span><span class="identifier">boost_se_param_0_21</span><span class="special">.</span><span class="identifier">value</span><span class="special">,</span> <span class="identifier">boost_local_auxXbinds</span><span class="special">-&gt;</span><span class="identifier">se_this</span><span class="special">,</span> <span class="identifier">arg1</span><span class="special">);</span>
-            <span class="special">}</span> 
-        
-        <span class="keyword">private</span><span class="special">:</span>
-            <span class="comment">// Local function functor type (for a later declaration).</span>
-            <span class="keyword">typedef</span> <span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">local</span><span class="special">::</span><span class="identifier">function</span><span class="special">&lt;</span><span class="identifier">boost_local_auxXfunction_type</span><span class="special">,</span> <span class="number">1</span><span class="special">&gt;</span> <span class="identifier">boost_local_auxXfunctor_type</span><span class="special">;</span>
-            <span class="comment">// Define the deduced types for using `BOOST_LOCAL_TYPEOF` from within the local function body (the `&amp;` is kept because the bound parameter name is not known to the macro syntax separately from the reference qualifier).</span>
-            <span class="keyword">typedef</span> <span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">add_const</span><span class="special">&lt;</span> <span class="identifier">boost_se_params_t_21</span><span class="special">::</span> <span class="identifier">boost_se_param_t_0_21</span> <span class="special">&gt;::</span><span class="identifier">type</span> <span class="special">&amp;</span> <span class="identifier">separatorXboost_local_auxXtypeof_type</span><span class="special">;</span>
-            <span class="keyword">typedef</span> <span class="identifier">se_this_type21</span> <span class="identifier">thisXboost_local_auxXtypeof_type</span><span class="special">;</span> 
-            <span class="comment">// Hold bound parameters values and references.</span>
-            <span class="identifier">boost_se_params_t_21</span><span class="special">*</span> <span class="identifier">boost_local_auxXbinds</span><span class="special">;</span>
-            <span class="comment">// This same declaration is first made at global scope in one of the library header files. This declaration needs to be repeated here so it is also visible from within the local function body to allow for nesting local function into one another.</span>
-            <span class="identifier">boost</span><span class="special">::</span><span class="identifier">scope_exit</span><span class="special">::</span><span class="identifier">aux</span><span class="special">::</span><span class="identifier">undeclared</span> <span class="identifier">boost_local_auxXargs</span><span class="special">;</span>
-            
-            <span class="comment">// The local function body. The body function cannot be static because is needs to access the member variable with the local function name to support recursion and the member variable named `...args` to support nesting (local classes cannot have static member variable). Unfortunately, this implies that `this` can be misused within the body instead of `this_` without necessarily generating a compile-time error.</span>
-            <span class="identifier">boost_local_auxXresult_type21</span> <span class="identifier">boost_local_auxXbody</span><span class="special">(</span>
-                    <span class="comment">// Use special name `this_` instead of `this` here.</span>
-                    <span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">add_const</span><span class="special">&lt;</span><span class="identifier">boost_se_params_t_21</span><span class="special">::</span><span class="identifier">boost_se_param_t_0_21</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="special">&amp;</span> <span class="identifier">separator</span><span class="special">,</span> <span class="identifier">se_this_type21</span> <span class="identifier">this_</span><span class="special">,</span>
-                    <span class="comment">// Specify default parameter values here.</span>
-                    <span class="keyword">int</span> <span class="identifier">n</span><span class="special">,</span> <span class="keyword">bool</span> <span class="identifier">recursion</span> <span class="special">=</span> <span class="keyword">false</span><span class="special">)</span> <span class="keyword">const</span> 
-        
-        <span class="comment">// *END* The expansion of `BOOST_LOCAL_FUNCTION_PARAMS` ends here.</span>
-
-        <span class="comment">// *BEGIN* The local function body code `{ ... }` as specified by the programmers:</span>
- 
-        <span class="special">{</span>
-            <span class="keyword">int</span> <span class="identifier">result</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
-
-            <span class="keyword">if</span> <span class="special">(</span><span class="identifier">n</span> <span class="special">&lt;</span> <span class="number">2</span> <span class="special">)</span> <span class="identifier">result</span> <span class="special">=</span> <span class="number">1</span><span class="special">;</span>
-            <span class="keyword">else</span> <span class="identifier">result</span> <span class="special">=</span> <span class="identifier">n</span> <span class="special">*</span> <span class="identifier">factorial</span><span class="special">(</span><span class="identifier">n</span> <span class="special">-</span> <span class="number">1</span><span class="special">,</span> <span class="keyword">true</span><span class="special">);</span> <span class="comment">// Recursive call.</span>
-
-            <span class="keyword">if</span> <span class="special">(!</span><span class="identifier">recursion</span><span class="special">)</span> <span class="identifier">this_</span><span class="special">-&gt;</span><span class="identifier">output</span> <span class="special">&lt;&lt;</span> <span class="identifier">result</span> <span class="special">&lt;&lt;</span> <span class="identifier">separator</span><span class="special">;</span>
-            <span class="keyword">return</span> <span class="identifier">result</span><span class="special">;</span>
-        <span class="special">}</span> 
-        
-        <span class="comment">// *END* The local function body `{ ... }` ends here.</span>
-    
-        <span class="comment">// *BEGIN* The macro `BOOST_LOCAL_FUNCTION_NAME(factorial)` expands to:</span>
-
-        <span class="keyword">public</span><span class="special">:</span>
-            <span class="comment">// Member variable named after the local function so the body can recursively call the local function (this must be defined here because the local function name was not known before). This must be public because it is also used to deduce the local function functor type later when when declaring the actual local function object.</span>
-            <span class="identifier">boost_local_auxXfunctor_type</span> <span class="identifier">factorial</span><span class="special">;</span>
-        <span class="keyword">private</span><span class="special">:</span>
-            <span class="comment">// Initializes the local functor member variable (this cannot be done directly within the constructor because the local function name is not known when the constructor code is expanded by the `PARAMS` macro).</span>
-            <span class="keyword">void</span> <span class="identifier">boost_local_auxXinit_recursion</span><span class="special">()</span> <span class="special">{</span>
-                <span class="identifier">factorial</span> <span class="special">=</span> <span class="special">*</span><span class="keyword">this</span><span class="special">;</span>
-            <span class="special">}</span>
-        <span class="comment">// Declare the local class object -- which cannot be passed as template parameter (because it is a local class). It uses the variable with the generic `...args` name to pass the bound parameter values and references (so this variable name must not contain the line number because it is used by different macros expanding on different lines).</span>
-        <span class="special">}</span> <span class="identifier">boost_local_auxXfunctorXfactorial</span><span class="special">(</span><span class="identifier">boost_local_auxXargs</span><span class="special">.</span><span class="identifier">value</span><span class="special">);</span>
-        <span class="comment">// Declare the actual local function object with the local function name -- which can be passed as template parameter (because it is a `boost::local::function` functor and not a local class).</span>
-        <span class="identifier">BOOST_TYPEOF</span><span class="special">(</span><span class="identifier">boost_local_auxXfunctorXfactorial</span><span class="special">.</span><span class="identifier">factorial</span><span class="special">)</span> <span class="keyword">const</span> <span class="identifier">factorial</span><span class="special">(</span><span class="identifier">boost_local_auxXfunctorXfactorial</span><span class="special">);</span>
-
-        <span class="comment">// *END* The expansion of `BOOST_LOCAL_FUNCTION_NAME` ends here.</span>
- 
-        <span class="identifier">std</span><span class="special">::</span><span class="identifier">for_each</span><span class="special">(</span><span class="identifier">nums</span><span class="special">.</span><span class="identifier">begin</span><span class="special">(),</span> <span class="identifier">nums</span><span class="special">.</span><span class="identifier">end</span><span class="special">(),</span> <span class="identifier">factorial</span><span class="special">);</span>
-    <span class="special">}</span>
-<span class="special">};</span>
-
-<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
-    <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">v</span><span class="special">(</span><span class="number">3</span><span class="special">);</span>
-    <span class="identifier">v</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="number">1</span><span class="special">;</span> <span class="identifier">v</span><span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">=</span> <span class="number">4</span><span class="special">;</span> <span class="identifier">v</span><span class="special">[</span><span class="number">2</span><span class="special">]</span> <span class="special">=</span> <span class="number">7</span><span class="special">;</span>
-
-    <span class="identifier">calculator</span> <span class="identifier">calc</span><span class="special">;</span>
-    <span class="identifier">calc</span><span class="special">.</span><span class="identifier">factorials</span><span class="special">(</span><span class="identifier">v</span><span class="special">);</span>
-    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">calc</span><span class="special">.</span><span class="identifier">output</span><span class="special">.</span><span class="identifier">str</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
-
-    <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
-<span class="special">}</span>
-</pre>
-<p>
-      </p>
-</div>
 <div class="section">
 <div class="titlepage"><div><div><h3 class="title">
 <a name="boost_local.Implementation.local_classes_as_template_parameters"></a><a class="link" href="Implementation.html#boost_local.Implementation.local_classes_as_template_parameters" title="Local Classes as Template Parameters">Local
       Classes as Template Parameters</a>
 </h3></div></div></div>
 <p>
-        This library uses a local class to implement the local functor object. However,
-        in ISO standard C++ a local classes, and therefore the local functor object,
-        cannot be passed as template parameter (for example to the <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">for_each</span></code>
-        algorithm), this is instead possible on C++03 and later standards. To work
-        around this limitation, this library investigated the following two tricks
-        (both tricks can be extended to support eventual function default parameters):
+        This library uses a local class to implement the local function object. However,
+        in ISO C++ a local class (and therefore the local function object that it
+        implements) cannot be passed as template parameter (e.g., to the <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">for_each</span></code>
+        algorithm), this is instead possible on C++0x, MSVC, and some other compilers
+        (see <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2657.html" target="_top">[N2657]</a>).
+        To work around this limitation, this library investigated the following two
+        "tricks" (both tricks can be extended to support eventual function
+        default parameters):
       </p>
 <div class="orderedlist"><ol class="orderedlist" type="1">
 <li class="listitem">
             The <span class="emphasis"><em>casting functor trick</em></span> uses a non-local functor
-            class that calls a static member function of the local class via a function
+            that calls a static member function of the local class via a function
             pointer. The static member function then calls the correct local function
-            body after type casting the object.
+            body after type casting the object from a <code class="computeroutput"><span class="keyword">void</span><span class="special">*</span></code> pointer (local classes can be used for
+            type casting).
           </li>
 <li class="listitem">
-            The <span class="emphasis"><em>virtual functor trick</em></span> uses a non-local virtual
-            base class for the local functor class. The correct implementation of
-            the <code class="computeroutput"><span class="keyword">operator</span><span class="special">()</span></code>
-            is called via polymorphism.
+            The <span class="emphasis"><em>virtual functor trick</em></span> uses a non-local base
+            class for the local functor class. The correct overridden implementation
+            of the virtual <code class="computeroutput"><span class="keyword">operator</span><span class="special">()</span></code> is called via polymorphism.
           </li>
 </ol></div>
 <p>
@@ -250,7 +81,7 @@
 <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">algorithm</span><span class="special">&gt;</span>
 <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">cassert</span><span class="special">&gt;</span>
 
-<span class="comment">// Casting Functor Trick</span>
+<span class="comment">// Casting functor trick.</span>
 <span class="keyword">struct</span> <span class="identifier">casting_func</span> <span class="special">{</span>
     <span class="keyword">explicit</span> <span class="identifier">casting_func</span><span class="special">(</span><span class="keyword">void</span><span class="special">*</span> <span class="identifier">obj</span><span class="special">,</span> <span class="keyword">void</span> <span class="special">(*</span><span class="identifier">call</span><span class="special">)(</span><span class="keyword">void</span><span class="special">*,</span> <span class="keyword">const</span> <span class="keyword">double</span><span class="special">&amp;)):</span>
             <span class="identifier">obj_</span><span class="special">(</span><span class="identifier">obj</span><span class="special">),</span> <span class="identifier">call_</span><span class="special">(</span><span class="identifier">call</span><span class="special">)</span> <span class="special">{}</span>
@@ -261,7 +92,7 @@
     <span class="keyword">void</span> <span class="special">(*</span><span class="identifier">call_</span><span class="special">)(</span><span class="keyword">void</span><span class="special">*,</span> <span class="keyword">const</span> <span class="keyword">double</span><span class="special">&amp;);</span>
 <span class="special">};</span>
 
-<span class="comment">// Virtual Functor Trick</span>
+<span class="comment">// Virtual functor trick.</span>
 <span class="keyword">struct</span> <span class="identifier">virtual_func</span> <span class="special">{</span>
     <span class="keyword">struct</span> <span class="identifier">interface</span> <span class="special">{</span>
         <span class="comment">// Unfortunately, virtual function call is not inlined.</span>
@@ -273,6 +104,7 @@
     <span class="identifier">interface</span><span class="special">*</span> <span class="identifier">func_</span><span class="special">;</span>
 <span class="special">};</span>
 
+<span class="comment">// Local class for local function.</span>
 <span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
     <span class="keyword">double</span> <span class="identifier">sum</span> <span class="special">=</span> <span class="number">0.0</span><span class="special">;</span>
     <span class="keyword">int</span> <span class="identifier">factor</span> <span class="special">=</span> <span class="number">10</span><span class="special">;</span>
@@ -312,16 +144,60 @@
 <p>
       </p>
 <p>
-        The casting functor trick had slightly better run-time performances than
-        the virtual functor trick so the current implementation of this library uses
-        the casting functor trick. However, both tricks do not allow for compiler
-        optimizations that inline the local function calls because they rely on one
-        indirect function call (via either a function pointer or a virtual function
-        respectively) that can only be resolved at run-time. Therefore, on C++03
-        compilers this library generates code that passes the local class functor
-        as template parameter directly without using neither one of these two tricks
-        in order to take full advantage of compiler optimizations that inline the
-        local function calls.
+        The casting functor trick measured slightly better run-time performances
+        than the virtual functor trick so the current implementation of this library
+        uses the casting functor trick (probably because in addition to the indirect
+        function call, the virtual functor trick also requires accessing the <a href="http://en.wikipedia.org/wiki/Virtual_method_table" target="_top">virtual function
+        table</a>). However, both tricks do not allow for compiler optimizations
+        that inline the local function calls because they rely on one indirect function
+        call (via either a function pointer or a virtual function respectively) that
+        has been observed to be resolved only at run-time by all analyzed compilers.
+        Therefore, on compilers that accept local types as template parameters (MSVC,
+        C++0x, etc, see <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2657.html" target="_top">[N2657]</a>),
+        this library generates code that passes the local class type directly as
+        template parameter without using neither one of these two tricks in order
+        to take full advantage of compiler optimizations that inline the local function
+        calls.
+      </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_local.Implementation.parsing_macros"></a><a class="link" href="Implementation.html#boost_local.Implementation.parsing_macros" title="Parsing Macros">Parsing Macros</a>
+</h3></div></div></div>
+<p>
+        This library macros can parse the list of specified parameters and detect
+        if any of the bound parameter name matches the token <code class="computeroutput"><span class="keyword">this</span></code>
+        (to generate special code to bind the object in scope), or if the parameter
+        is bound by <code class="computeroutput"><span class="keyword">const</span></code> (to generate
+        special code to bind by constant), etc. The parameter tokens are inspected
+        using preprocessor metaprogramming and specifically using <a href="http://www.boost.org/doc/libs/release/libs/preprocessor/doc/index.html" target="_top">Boost.Preprocessor</a>
+        and the <code class="computeroutput"><span class="identifier">BOOST_DETAIL_PP_KEYWORD_</span><span class="special">...</span></code> macros. For example:
+      </p>
+<p>
+        
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">detail</span><span class="special">/</span><span class="identifier">preprocessor</span><span class="special">/</span><span class="identifier">keyword</span><span class="special">/</span><span class="keyword">this</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">detail</span><span class="special">/</span><span class="identifier">preprocessor</span><span class="special">/</span><span class="identifier">keyword</span><span class="special">/</span><span class="keyword">const</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">local</span><span class="special">/</span><span class="identifier">aux_</span><span class="special">/</span><span class="identifier">preprocessor</span><span class="special">/</span><span class="identifier">keyword</span><span class="special">/</span><span class="identifier">bind</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">cassert</span><span class="special">&gt;</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
+    <span class="comment">// Detect `this`.</span>
+    <span class="identifier">assert</span><span class="special">(</span> <span class="identifier">BOOST_DETAIL_PP_KEYWORD_IS_THIS_BACK</span><span class="special">(</span>
+            <span class="identifier">BOOST_LOCAL_AUX_PP_KEYWORD_BIND_REMOVE_FRONT</span><span class="special">(</span>
+            <span class="identifier">BOOST_DETAIL_PP_KEYWORD_CONST_REMOVE_FRONT</span><span class="special">(</span>
+                <span class="keyword">const</span> <span class="identifier">bind</span> <span class="keyword">this</span>
+            <span class="special">)))</span> <span class="special">==</span> <span class="number">1</span> <span class="special">);</span>
+    <span class="identifier">assert</span><span class="special">(</span> <span class="identifier">BOOST_DETAIL_PP_KEYWORD_IS_THIS_BACK</span><span class="special">(</span>
+            <span class="identifier">BOOST_LOCAL_AUX_PP_KEYWORD_BIND_REMOVE_FRONT</span><span class="special">(</span>
+            <span class="identifier">BOOST_DETAIL_PP_KEYWORD_CONST_REMOVE_FRONT</span><span class="special">(</span>
+                <span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">x</span>
+            <span class="special">)))</span> <span class="special">==</span> <span class="number">0</span> <span class="special">);</span>
+
+    <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
       </p>
 </div>
 <div class="section">
@@ -413,39 +289,194 @@
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="boost_local.Implementation.parsing_macros"></a><a class="link" href="Implementation.html#boost_local.Implementation.parsing_macros" title="Parsing Macros">Parsing Macros</a>
+<a name="boost_local.Implementation.local_functions"></a><a class="link" href="Implementation.html#boost_local.Implementation.local_functions" title="Local Functions">Local Functions</a>
 </h3></div></div></div>
 <p>
-        This library macros can parse the list of specified parameters and detect
-        if any of the bound parameter name matches the token <code class="computeroutput"><span class="keyword">this</span></code>
-        (to generate special code to bind the object in scope), or if the parameter
-        is bound by <code class="computeroutput"><span class="keyword">const</span></code> (to generate
-        special code to bind by constant), etc. The parameter tokens are inspected
-        by preprocessor metaprogramming using both <a href="http://www.boost.org/doc/libs/release/libs/preprocessor/doc/index.html" target="_top">Boost.Preprocessor</a>
-        and the <code class="computeroutput"><span class="identifier">BOOST_DETAIL_PP_KEYWORD_</span><span class="special">...</span></code> macros that in brief work as follow:
+        The expansion of the local function macros of the <code class="computeroutput"><span class="identifier">factorial</span></code>
+        example presented in the <a class="link" href="Advanced_Topics.html" title="Advanced Topics">Advanced
+        Topics</a> section generates code equivalent to the following:
       </p>
-<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">detail</span><span class="special">/</span><span class="identifier">preprocessor</span><span class="special">/</span><span class="identifier">keyword</span><span class="special">/</span><span class="keyword">this</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
-<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">detail</span><span class="special">/</span><span class="identifier">preprocessor</span><span class="special">/</span><span class="identifier">keyword</span><span class="special">/</span><span class="keyword">const</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
-<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">local</span><span class="special">/</span><span class="identifier">aux_</span><span class="special">/</span><span class="identifier">preprocessor</span><span class="special">/</span><span class="identifier">keyword</span><span class="special">/</span><span class="identifier">bind</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<p>
+        
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">local</span><span class="special">/</span><span class="identifier">function</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">sstream</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">algorithm</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">vector</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">string</span><span class="special">&gt;</span>
 
-<span class="comment">// Detect `this`.</span>
-<span class="identifier">BOOST_DETAIL_PP_KEYWORD_IS_THIS_BACK</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span> <span class="keyword">this</span><span class="special">)</span>   <span class="comment">// Expand to 1.</span>
-<span class="identifier">BOOST_DETAIL_PP_KEYWORD_IS_THIS_BACK</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">x</span><span class="special">)</span>     <span class="comment">// Expand to 0.</span>
+<span class="keyword">struct</span> <span class="identifier">calculator</span> <span class="special">{</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">ostringstream</span> <span class="identifier">output</span><span class="special">;</span>
 
-<span class="comment">// Detect constant.</span>
-<span class="identifier">BOOST_DETAIL_PP_KEYWORD_IS_CONST_FRONT</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span> <span class="keyword">this</span><span class="special">)</span> <span class="comment">// Expand to 1.</span>
-<span class="identifier">BOOST_DETAIL_PP_KEYWORD_IS_CONST_FRONT</span><span class="special">(</span><span class="identifier">bind</span> <span class="keyword">this</span><span class="special">)</span>       <span class="comment">// Expand to 0.</span>
+    <span class="keyword">void</span> <span class="identifier">factorials</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;&amp;</span> <span class="identifier">nums</span><span class="special">,</span>
+            <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;</span> <span class="identifier">separator</span> <span class="special">=</span> <span class="string">" "</span><span class="special">)</span> <span class="special">{</span>
 
-<span class="comment">// Detect binding (constant and not).</span>
-<span class="identifier">BOOST_LOCAL_AUX_PP_KEYWORD_IS_BIND_FRONT</span><span class="special">(</span>               <span class="comment">// Expand to 1.</span>
-        <span class="identifier">BOOST_DETAIL_PP_KEYWORD_CONST_REMOVE_FRONT</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span> <span class="keyword">this</span><span class="special">))</span>
-<span class="identifier">BOOST_LOCAL_AUX_PP_KEYWORD_IS_BIND_FRONT</span><span class="special">(</span>               <span class="comment">// Also expand to 1.</span>
-        <span class="identifier">BOOST_DETAIL_PP_KEYWORD_CONST_REMOVE_FRONT</span><span class="special">(</span><span class="identifier">bind</span> <span class="keyword">this</span><span class="special">))</span>
-<span class="identifier">BOOST_LOCAL_AUX_PP_KEYWORD_IS_BIND_FRONT</span><span class="special">(</span>               <span class="comment">// Expand to 0.</span>
-        <span class="identifier">BOOST_DETAIL_PP_KEYWORD_CONST_REMOVE_FRONT</span><span class="special">(</span><span class="keyword">const</span> <span class="keyword">int</span> <span class="identifier">x</span><span class="special">))</span>
-<span class="identifier">BOOST_LOCAL_AUX_PP_KEYWORD_IS_BIND_FRONT</span><span class="special">(</span>               <span class="comment">// Also expand to 0.</span>
-        <span class="identifier">BOOST_DETAIL_PP_KEYWORD_CONST_REMOVE_FRONT</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">x</span><span class="special">))</span>
+        <span class="keyword">int</span> <span class="comment">// The local function result type (just before the `BOOST_LOCAL_FUNCTION_PARAMS` macro).</span>
+
+        <span class="comment">// *BEGIN* The macro</span>
+        <span class="comment">//  BOOST_LOCAL_FUNCTION_PARAMS( (int n) (bool recursion)(default false)</span>
+        <span class="comment">//          (const bind&amp; separator) (bind this) )</span>
+        <span class="comment">// expands (at line 21) to:</span>
+
+        <span class="comment">// DEDUCE RESULT TYPE</span>
+        <span class="comment">// Long name `ERROR_...` gives meaningful compiler-error message if programmers forget result type before the macro.    </span>
+        <span class="special">(*</span><span class="identifier">ERROR_missing_result_type_before_the_local_function_parameter_macro_id21</span><span class="special">)();</span> 
+        <span class="comment">// Use Boost.ScopeExit type deduction technique (tagging, wrapping, struct, etc) so to work on all compilers (specifically, some GCC version give internal errors otherwise).</span>
+        <span class="keyword">typedef</span> <span class="keyword">void</span> <span class="special">(*</span><span class="identifier">boost_local_auxXdeduce_result_tag21</span><span class="special">)(</span> <span class="keyword">int</span> <span class="identifier">ERROR_missing_result_type_before_the_local_function_parameter_macro_id21</span><span class="special">);</span>
+        <span class="keyword">typedef</span> <span class="identifier">BOOST_TYPEOF</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">scope_exit</span><span class="special">::</span><span class="identifier">aux</span><span class="special">::</span><span class="identifier">wrap</span><span class="special">(</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">scope_exit</span><span class="special">::</span><span class="identifier">aux</span><span class="special">::</span><span class="identifier">deref</span><span class="special">(</span> <span class="identifier">ERROR_missing_result_type_before_the_local_function_parameter_macro_id21</span><span class="special">,</span> <span class="special">(</span><span class="identifier">boost_local_auxXdeduce_result_tag21</span><span class="special">)</span><span class="number">0</span><span class="special">)))</span> <span class="identifier">boost_local_auxXdeduce_result_wrap21</span><span class="special">;</span>
+        <span class="keyword">typedef</span> <span class="identifier">boost_local_auxXdeduce_result_wrap21</span><span class="special">::</span><span class="identifier">type</span> <span class="identifier">boost_local_auxXdeduce_result_capture21</span><span class="special">;</span>
+        <span class="keyword">struct</span> <span class="identifier">boost_local_auxXdeduce_result_params21</span> <span class="special">{</span>
+            <span class="keyword">typedef</span> <span class="identifier">boost_local_auxXdeduce_result_capture21</span> <span class="identifier">function_ptr_type</span><span class="special">;</span>
+        <span class="special">};</span>
+        <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">remove_pointer</span><span class="special">&lt;</span> <span class="identifier">boost_local_auxXdeduce_result_params21</span><span class="special">::</span><span class="identifier">function_ptr_type</span> <span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">boost_local_auxXdeduce_result_function_type21</span><span class="special">;</span>
+        <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">function_traits</span><span class="special">&lt;</span> <span class="identifier">boost_local_auxXdeduce_result_function_type21</span><span class="special">&gt;::</span><span class="identifier">result_type</span> <span class="identifier">boost_local_auxXresult_type21</span><span class="special">;</span> 
+        
+        <span class="comment">// HANDLE BOUND PARAMETERS</span>
+        <span class="comment">// Deduce object `this` type (using technique from Boost.ScopeExit patch to support `this`).</span>
+<span class="preprocessor">#if</span> <span class="identifier">BOOST_WORKAROUND</span><span class="special">(</span><span class="identifier">BOOST_MSVC</span><span class="special">,&gt;=</span><span class="number">1300</span><span class="special">)</span>
+        <span class="keyword">enum</span> <span class="special">{</span> <span class="identifier">boost_se_thistype_index_21</span> <span class="special">=</span> <span class="keyword">sizeof</span><span class="special">(*</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">scope_exit</span><span class="special">::</span><span class="identifier">msvc_typeof_this</span><span class="special">::</span><span class="identifier">encode_start</span><span class="special">(</span><span class="keyword">this</span><span class="special">))</span> <span class="special">};</span> 
+        <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">scope_exit</span><span class="special">::</span><span class="identifier">msvc_typeof_this</span><span class="special">::</span><span class="identifier">msvc_typeid_wrapper</span><span class="special">&lt;</span><span class="identifier">boost_se_thistype_index_21</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">se_this_type21</span><span class="special">;</span>
+<span class="preprocessor">#else</span>
+        <span class="keyword">typedef</span> <span class="identifier">BOOST_TYPEOF</span><span class="special">(</span><span class="keyword">this</span><span class="special">)</span> <span class="identifier">se_this_type21</span><span class="special">;</span>
+<span class="preprocessor">#endif</span>
+        <span class="comment">// Deduce other `&amp; separator` type (using Boost.ScopeExit techniques).</span>
+        <span class="keyword">typedef</span> <span class="keyword">void</span> <span class="special">(*</span><span class="identifier">boost_se_tag_0_21</span><span class="special">)(</span><span class="keyword">int</span> <span class="special">&amp;</span> <span class="identifier">separator</span><span class="special">);</span>
+        <span class="keyword">typedef</span> <span class="identifier">BOOST_TYPEOF</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">scope_exit</span><span class="special">::</span><span class="identifier">aux</span><span class="special">::</span><span class="identifier">wrap</span><span class="special">(</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">scope_exit</span><span class="special">::</span><span class="identifier">aux</span><span class="special">::</span><span class="identifier">deref</span><span class="special">(&amp;</span> <span class="identifier">separator</span><span class="special">,</span> <span class="special">(</span><span class="identifier">boost_se_tag_0_21</span><span class="special">)</span><span class="number">0</span><span class="special">)))</span> <span class="identifier">boost_se_wrapped_t_0_21</span><span class="special">;</span>
+        <span class="keyword">typedef</span> <span class="identifier">boost_se_wrapped_t_0_21</span><span class="special">::</span><span class="identifier">type</span> <span class="identifier">boost_se_capture_t_0_21</span><span class="special">;</span>
+        <span class="comment">// Store bound parameter values and references.</span>
+        <span class="keyword">struct</span> <span class="identifier">boost_se_params_t_21</span> <span class="special">{</span>
+            <span class="identifier">se_this_type21</span> <span class="identifier">se_this</span><span class="special">;</span>
+            <span class="keyword">typedef</span> <span class="identifier">boost_se_capture_t_0_21</span> <span class="identifier">boost_se_param_t_0_21</span><span class="special">;</span>
+            <span class="identifier">boost</span><span class="special">::</span><span class="identifier">scope_exit</span><span class="special">::</span><span class="identifier">aux</span><span class="special">::</span><span class="identifier">member</span><span class="special">&lt;</span> <span class="identifier">boost_se_param_t_0_21</span><span class="special">,</span> <span class="identifier">boost_se_tag_0_21</span> <span class="special">&gt;</span> <span class="identifier">boost_se_param_0_21</span><span class="special">;</span>
+        <span class="special">}</span> <span class="identifier">boost_local_auxXparams21</span> <span class="special">=</span> <span class="special">{</span> 
+            <span class="keyword">this</span> <span class="special">,</span> 
+<span class="preprocessor">#ifdef</span> <span class="identifier">BOOST_SCOPE_EXIT_AUX_TPL_WORKAROUND</span>
+            <span class="special">{</span>
+<span class="preprocessor">#endif</span>
+                <span class="identifier">boost</span><span class="special">::</span><span class="identifier">scope_exit</span><span class="special">::</span><span class="identifier">aux</span><span class="special">::</span><span class="identifier">deref</span><span class="special">(&amp;</span> <span class="identifier">separator</span><span class="special">,</span> <span class="special">(</span><span class="identifier">boost_se_tag_0_21</span><span class="special">)</span><span class="number">0</span><span class="special">)</span>
+<span class="preprocessor">#ifdef</span> <span class="identifier">BOOST_SCOPE_EXIT_AUX_TPL_WORKAROUND</span>
+            <span class="special">}</span> 
+<span class="preprocessor">#endif</span>
+        <span class="special">};</span> 
+        <span class="comment">// Use variable name `...args` without line number to hold bound parameter values (so the same variable name can be used by the `NAME` macro even if it expands on a different line number).</span>
+        <span class="comment">// The `declared&lt;&gt;` template makes sure that the variable `...args` is not declared multiple times in the same context (if the variable is already declared, this template expand to a no-operation).</span>
+        <span class="identifier">boost</span><span class="special">::</span><span class="identifier">scope_exit</span><span class="special">::</span><span class="identifier">aux</span><span class="special">::</span><span class="identifier">declared</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">scope_exit</span><span class="special">::</span><span class="identifier">aux</span><span class="special">::</span><span class="identifier">resolve</span><span class="special">&lt;</span> <span class="keyword">sizeof</span><span class="special">(</span><span class="identifier">boost_local_auxXargs</span><span class="special">)</span> <span class="special">&gt;::</span><span class="identifier">cmp1</span><span class="special">&lt;</span><span class="number">0</span><span class="special">&gt;::</span><span class="identifier">cmp2</span> <span class="special">&gt;</span> <span class="identifier">boost_local_auxXargs</span><span class="special">;</span>
+        <span class="identifier">boost_local_auxXargs</span><span class="special">.</span><span class="identifier">value</span> <span class="special">=</span> <span class="special">&amp;</span><span class="identifier">boost_local_auxXparams21</span><span class="special">;</span>
+        
+        <span class="comment">// LOCAL FUNCTOR</span>
+        <span class="keyword">class</span> <span class="identifier">boost_local_auxXfunctor21</span> <span class="special">{</span>
+            <span class="keyword">typedef</span> <span class="identifier">boost_local_auxXresult_type21</span> <span class="special">(</span><span class="identifier">boost_local_auxXfunction_type</span><span class="special">)</span> <span class="special">(</span> <span class="keyword">int</span> <span class="identifier">n</span> <span class="special">,</span> <span class="keyword">bool</span> <span class="identifier">recursion</span> <span class="special">);</span> 
+            <span class="keyword">typedef</span> <span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">local</span><span class="special">::</span><span class="identifier">aux</span><span class="special">::</span><span class="identifier">function</span><span class="special">&lt;</span> <span class="identifier">boost_local_auxXfunction_type</span><span class="special">,</span> <span class="number">1</span> <span class="special">&gt;</span> <span class="identifier">boost_local_auxXfunctor_type</span><span class="special">;</span> 
+            <span class="keyword">typedef</span> <span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">add_const</span><span class="special">&lt;</span> <span class="identifier">boost_se_params_t_21</span><span class="special">::</span> <span class="identifier">boost_se_param_t_0_21</span> <span class="special">&gt;::</span><span class="identifier">type</span> <span class="special">&amp;</span> <span class="identifier">separatorXboost_local_auxXtypeof_type</span> <span class="special">;</span> 
+            <span class="keyword">typedef</span> <span class="identifier">se_this_type21</span> <span class="identifier">thisXboost_local_auxXtypeof_type</span> <span class="special">;</span> 
+        <span class="keyword">public</span><span class="special">:</span> 
+            <span class="comment">// Take a generic pointer so it can be invoked by the `NAME` macro even if it expands on a different line number.            </span>
+            <span class="keyword">inline</span> <span class="keyword">explicit</span> <span class="identifier">boost_local_auxXfunctor21</span><span class="special">(</span> <span class="keyword">void</span><span class="special">*</span> <span class="identifier">bindings</span><span class="special">)</span> <span class="special">:</span>
+                      <span class="identifier">boost_local_auxXbind_this</span><span class="special">(</span> <span class="keyword">static_cast</span><span class="special">&lt;</span> <span class="identifier">boost_se_params_t_21</span><span class="special">*</span> <span class="special">&gt;(</span> <span class="identifier">bindings</span><span class="special">)-&gt;</span> <span class="identifier">se_this</span> <span class="special">)</span> 
+                    <span class="special">,</span> <span class="identifier">boost_local_auxXbind0</span> <span class="special">(</span> <span class="keyword">static_cast</span><span class="special">&lt;</span> <span class="identifier">boost_se_params_t_21</span><span class="special">*</span> <span class="special">&gt;(</span> <span class="identifier">bindings</span><span class="special">)-&gt;</span> <span class="identifier">boost_se_param_0_21</span><span class="special">.</span><span class="identifier">value</span> <span class="special">)</span> 
+            <span class="special">{</span> <span class="special">}</span> 
+
+            <span class="comment">// Implement `operator()` for all parameters and any combination of default parameter.</span>
+            <span class="keyword">inline</span> <span class="identifier">boost_local_auxXresult_type21</span> <span class="keyword">operator</span><span class="special">()(</span>
+                      <span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">call_traits</span><span class="special">&lt;</span> <span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">function_traits</span><span class="special">&lt;</span> <span class="identifier">boost_local_auxXfunction_type</span><span class="special">&gt;::</span><span class="identifier">arg1_type</span><span class="special">&gt;::</span><span class="identifier">param_type</span> <span class="identifier">arg1</span> 
+                    <span class="special">,</span> <span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">call_traits</span><span class="special">&lt;</span> <span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">function_traits</span><span class="special">&lt;</span> <span class="identifier">boost_local_auxXfunction_type</span><span class="special">&gt;::</span><span class="identifier">arg2_type</span><span class="special">&gt;::</span><span class="identifier">param_type</span> <span class="identifier">arg2</span> 
+            <span class="special">)</span> <span class="keyword">const</span> <span class="special">{</span>
+                <span class="keyword">return</span> <span class="identifier">boost_local_auxXbody</span><span class="special">(</span> <span class="identifier">boost_local_auxXbind0</span> <span class="special">,</span> <span class="identifier">boost_local_auxXbind_this</span> <span class="special">,</span> <span class="identifier">arg1</span> <span class="special">,</span> <span class="identifier">arg2</span> <span class="special">);</span> 
+            <span class="special">}</span> 
+            <span class="keyword">inline</span> <span class="identifier">boost_local_auxXresult_type21</span> <span class="keyword">operator</span><span class="special">()(</span> 
+                    <span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">call_traits</span><span class="special">&lt;</span> <span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">function_traits</span><span class="special">&lt;</span> <span class="identifier">boost_local_auxXfunction_type</span><span class="special">&gt;::</span><span class="identifier">arg1_type</span><span class="special">&gt;::</span><span class="identifier">param_type</span> <span class="identifier">arg1</span> 
+            <span class="special">)</span> <span class="keyword">const</span> <span class="special">{</span> 
+                <span class="keyword">return</span> <span class="identifier">boost_local_auxXbody</span><span class="special">(</span> <span class="identifier">boost_local_auxXbind0</span> <span class="special">,</span> <span class="identifier">boost_local_auxXbind_this</span> <span class="special">,</span> <span class="identifier">arg1</span> <span class="special">);</span> 
+            <span class="special">}</span> 
+        
+            <span class="comment">// "Casting functor trick" to pass this local class as template parameter.</span>
+            <span class="keyword">inline</span> <span class="keyword">static</span> <span class="identifier">boost_local_auxXresult_type21</span> <span class="identifier">boost_local_auxXcall0</span><span class="special">(</span> 
+                      <span class="keyword">void</span><span class="special">*</span> <span class="identifier">object</span> 
+                    <span class="special">,</span> <span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">call_traits</span><span class="special">&lt;</span> <span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">function_traits</span><span class="special">&lt;</span> <span class="identifier">boost_local_auxXfunction_type</span><span class="special">&gt;::</span><span class="identifier">arg1_type</span><span class="special">&gt;::</span><span class="identifier">param_type</span> <span class="identifier">arg1</span> 
+                    <span class="special">,</span> <span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">call_traits</span><span class="special">&lt;</span> <span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">function_traits</span><span class="special">&lt;</span> <span class="identifier">boost_local_auxXfunction_type</span><span class="special">&gt;::</span><span class="identifier">arg2_type</span><span class="special">&gt;::</span><span class="identifier">param_type</span> <span class="identifier">arg2</span> 
+            <span class="special">)</span> <span class="special">{</span> 
+                <span class="keyword">return</span> <span class="keyword">static_cast</span><span class="special">&lt;</span> <span class="identifier">boost_local_auxXfunctor21</span><span class="special">*</span> <span class="special">&gt;(</span> <span class="identifier">object</span><span class="special">)-&gt;</span><span class="keyword">operator</span><span class="special">()(</span> <span class="identifier">arg1</span> <span class="special">,</span> <span class="identifier">arg2</span> <span class="special">);</span> 
+            <span class="special">}</span> 
+            <span class="keyword">inline</span> <span class="keyword">static</span> <span class="identifier">boost_local_auxXresult_type21</span> <span class="identifier">boost_local_auxXcall1</span><span class="special">(</span> 
+                      <span class="keyword">void</span><span class="special">*</span> <span class="identifier">object</span> 
+                    <span class="special">,</span> <span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">call_traits</span><span class="special">&lt;</span> <span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">function_traits</span><span class="special">&lt;</span> <span class="identifier">boost_local_auxXfunction_type</span><span class="special">&gt;::</span><span class="identifier">arg1_type</span><span class="special">&gt;::</span><span class="identifier">param_type</span> <span class="identifier">arg1</span> 
+            <span class="special">)</span> <span class="special">{</span> 
+                <span class="keyword">return</span> <span class="keyword">static_cast</span><span class="special">&lt;</span> <span class="identifier">boost_local_auxXfunctor21</span><span class="special">*</span> <span class="special">&gt;(</span> <span class="identifier">object</span><span class="special">)-&gt;</span><span class="keyword">operator</span><span class="special">()(</span> <span class="identifier">arg1</span> <span class="special">);</span> 
+            <span class="special">}</span> 
+            <span class="keyword">inline</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">boost_local_auxXinit_call</span><span class="special">(</span> <span class="keyword">void</span><span class="special">*</span> <span class="identifier">object</span><span class="special">,</span> <span class="identifier">boost_local_auxXfunctor_type</span><span class="special">&amp;</span> <span class="identifier">functor</span><span class="special">)</span> <span class="special">{</span> 
+                <span class="identifier">functor</span><span class="special">.</span><span class="identifier">boost_local_auxXinit_call</span><span class="special">(</span><span class="identifier">object</span><span class="special">,</span> <span class="special">&amp;</span><span class="identifier">boost_local_auxXcall0</span> <span class="special">,</span> <span class="special">&amp;</span><span class="identifier">boost_local_auxXcall1</span> <span class="special">);</span> 
+            <span class="special">}</span> 
+        
+        <span class="keyword">private</span><span class="special">:</span> 
+            <span class="comment">// Hold bound variables (by value and reference).</span>
+            <span class="identifier">se_this_type21</span> <span class="special">&amp;</span> <span class="identifier">boost_local_auxXbind_this</span> <span class="special">;</span> 
+            <span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">add_const</span><span class="special">&lt;</span> <span class="identifier">boost_se_params_t_21</span><span class="special">::</span> <span class="identifier">boost_se_param_t_0_21</span> <span class="special">&gt;::</span><span class="identifier">type</span> <span class="special">&amp;</span> <span class="identifier">boost_local_auxXbind0</span> <span class="special">;</span> 
+            <span class="comment">// This same declaration is first made at global scope in one of the library header files. This declaration needs to be repeated here so it is also visible from within the local function body to allow for nesting local function into one another.</span>
+            <span class="identifier">boost</span><span class="special">::</span><span class="identifier">scope_exit</span><span class="special">::</span><span class="identifier">aux</span><span class="special">::</span><span class="identifier">undeclared</span> <span class="identifier">boost_local_auxXargs</span><span class="special">;</span> 
+            
+            <span class="comment">// The local function body.</span>
+            <span class="keyword">inline</span> <span class="identifier">boost_local_auxXresult_type21</span> <span class="identifier">boost_local_auxXbody</span><span class="special">(</span> 
+                      <span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">add_const</span><span class="special">&lt;</span> <span class="identifier">boost_se_params_t_21</span><span class="special">::</span> <span class="identifier">boost_se_param_t_0_21</span> <span class="special">&gt;::</span><span class="identifier">type</span> <span class="special">&amp;</span> <span class="identifier">separator</span> 
+                    <span class="special">,</span> <span class="identifier">se_this_type21</span> <span class="keyword">const</span> <span class="identifier">this_</span>  <span class="comment">// Use special name `this_` instead of `this` here.</span>
+                    <span class="comment">// Specify default parameter values here.</span>
+                    <span class="special">,</span> <span class="keyword">int</span> <span class="identifier">n</span> <span class="special">,</span> <span class="keyword">bool</span> <span class="identifier">recursion</span> <span class="special">=</span> <span class="keyword">false</span> 
+            <span class="special">)</span> <span class="keyword">const</span>
+
+        <span class="comment">// *END* The expansion of `BOOST_LOCAL_FUNCTION_PARAMS` ends here.</span>
+
+        <span class="comment">// *BEGIN* The local function body code `{ ... }` as specified by the programmers:</span>
+ 
+        <span class="special">{</span>
+
+            <span class="keyword">int</span> <span class="identifier">result</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+
+            <span class="keyword">if</span> <span class="special">(</span><span class="identifier">n</span> <span class="special">&lt;</span> <span class="number">2</span> <span class="special">)</span> <span class="identifier">result</span> <span class="special">=</span> <span class="number">1</span><span class="special">;</span>
+            <span class="keyword">else</span> <span class="identifier">result</span> <span class="special">=</span> <span class="identifier">n</span> <span class="special">*</span> <span class="identifier">factorial</span><span class="special">(</span><span class="identifier">n</span> <span class="special">-</span> <span class="number">1</span><span class="special">,</span> <span class="keyword">true</span><span class="special">);</span> <span class="comment">// Recursive call.</span>
+            
+            <span class="keyword">if</span> <span class="special">(!</span><span class="identifier">recursion</span><span class="special">)</span> <span class="identifier">this_</span><span class="special">-&gt;</span><span class="identifier">output</span> <span class="special">&lt;&lt;</span> <span class="identifier">result</span> <span class="special">&lt;&lt;</span> <span class="identifier">separator</span><span class="special">;</span>
+            <span class="keyword">return</span> <span class="identifier">result</span><span class="special">;</span>
+        <span class="special">}</span> 
+        
+        <span class="comment">// *END* The local function body `{ ... }` ends here.</span>
+    
+        <span class="comment">// *BEGIN* The macro `BOOST_LOCAL_FUNCTION_NAME(recursive factorial)` expands to:</span>
+
+        <span class="keyword">public</span><span class="special">:</span> 
+            <span class="comment">// Member variable named after the local function so the body can recursively call the local function (this must be defined here because the local function name was not known before). This must be public because it is also used to deduce the local function functor type later when when declaring the actual local function object.</span>
+            <span class="identifier">boost_local_auxXfunctor_type</span> <span class="identifier">factorial</span><span class="special">;</span> 
+            <span class="comment">// Initializes the local functor member variable (this cannot be done directly within the constructor because the local function name is not known when the constructor code is expanded by the `PARAMS` macro).</span>
+            <span class="keyword">inline</span> <span class="keyword">void</span> <span class="identifier">boost_local_auxXinit_recursion</span><span class="special">(</span> <span class="identifier">boost_local_auxXfunctor_type</span><span class="special">&amp;</span> <span class="identifier">functor</span><span class="special">)</span> <span class="special">{</span> 
+                <span class="identifier">factorial</span> <span class="special">=</span> <span class="identifier">functor</span><span class="special">;</span> 
+            <span class="special">}</span> 
+        <span class="comment">// Declare the local class object -- which cannot be passed as template parameter (because it is a local class). It uses the variable with the generic `...args` name to pass the bound parameter values and references (so this variable name must not contain the line number because it is used by different macros expanding on different lines).</span>
+        <span class="special">}</span> <span class="identifier">boost_local_auxXfactorial</span><span class="special">(</span><span class="identifier">boost_local_auxXargs</span><span class="special">.</span><span class="identifier">value</span><span class="special">);</span> 
+        <span class="comment">// Declare the actual local function object with the local function name -- which can be passed as template parameter (because it is a `boost::local::function` functor and not a local class).</span>
+        <span class="identifier">BOOST_TYPEOF</span><span class="special">(</span><span class="identifier">boost_local_auxXfactorial</span><span class="special">.</span> <span class="identifier">factorial</span><span class="special">)</span> <span class="identifier">factorial</span><span class="special">;</span> 
+        <span class="comment">// Initializes casting functor to pass local function as template parameter.</span>
+        <span class="identifier">boost_local_auxXfactorial</span><span class="special">.</span><span class="identifier">boost_local_auxXinit_call</span><span class="special">(</span> <span class="special">&amp;</span><span class="identifier">boost_local_auxXfactorial</span><span class="special">,</span> <span class="identifier">factorial</span><span class="special">);</span> 
+        <span class="comment">// Initializes functor for recursion.</span>
+        <span class="identifier">boost_local_auxXfactorial</span><span class="special">.</span><span class="identifier">boost_local_auxXinit_recursion</span><span class="special">(</span> <span class="identifier">factorial</span><span class="special">);</span>
+
+        <span class="comment">// *END* The expansion of `BOOST_LOCAL_FUNCTION_NAME` ends here.</span>
+
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">for_each</span><span class="special">(</span><span class="identifier">nums</span><span class="special">.</span><span class="identifier">begin</span><span class="special">(),</span> <span class="identifier">nums</span><span class="special">.</span><span class="identifier">end</span><span class="special">(),</span> <span class="identifier">factorial</span><span class="special">);</span>
+    <span class="special">}</span>
+<span class="special">};</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">v</span><span class="special">(</span><span class="number">3</span><span class="special">);</span>
+    <span class="identifier">v</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="number">1</span><span class="special">;</span> <span class="identifier">v</span><span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">=</span> <span class="number">4</span><span class="special">;</span> <span class="identifier">v</span><span class="special">[</span><span class="number">2</span><span class="special">]</span> <span class="special">=</span> <span class="number">7</span><span class="special">;</span>
+
+    <span class="identifier">calculator</span> <span class="identifier">calc</span><span class="special">;</span>
+    <span class="identifier">calc</span><span class="special">.</span><span class="identifier">factorials</span><span class="special">(</span><span class="identifier">v</span><span class="special">);</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">calc</span><span class="special">.</span><span class="identifier">output</span><span class="special">.</span><span class="identifier">str</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+
+    <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
 </pre>
+<p>
+      </p>
 </div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>

@@ -26,16 +26,16 @@
 <a name="BOOST_IDENTITY_VALUE"></a><div class="titlepage"></div>
 <div class="refnamediv">
 <h2><span class="refentrytitle">Macro BOOST_IDENTITY_VALUE</span></h2>
-<p>BOOST_IDENTITY_VALUE &#8212; This macro wraps the specified value expression within extra parenthesis so the value can be passed as a single macro parameter even if it contains commas. </p>
+<p>BOOST_IDENTITY_VALUE &#8212; This macro wraps the specified value expression within extra parenthesis so the value can be passed as a single macro parameter even if it contains commas (not already wrapped within round parenthesis). </p>
 </div>
 <h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
 <div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="comment">// In header: &lt;<a class="link" href="reference.html#header.boost.utility.identity_hpp" title="Header &lt;boost/utility/identity.hpp&gt;">boost/utility/identity.hpp</a>&gt;
 
 </span>BOOST_IDENTITY_VALUE(parenthesized_value)</pre></div>
 <div class="refsect1">
-<a name="id925659"></a><h2>Description</h2>
+<a name="id926075"></a><h2>Description</h2>
 <p>This macro expands to an expression that can be passed as a single macro parameter even if it contains commas and that evaluates to the specified value at run-time (see the  <a class="link" href="boost_local/Advanced_Topics.html" title="Advanced Topics"> Advanced Topics</a> section).</p>
-<p>For example <code class="computeroutput">BOOST_IDENTITY_VALUE((key_sizeof&lt;int, double&gt;::value))</code> can be passed as a single macro parameter when instead <code class="computeroutput">key_sizeof&lt;int, double&gt;::value</code> cannot (because it contains a comma not wrapped by round parenthesis so it will be interpreted as two separate macro parameters by the preprocessor).</p>
+<p>For example <code class="computeroutput">BOOST_IDENTITY_VALUE((key_sizeof&lt;int, double&gt;::value))</code> can be passed as a single macro parameter when instead <code class="computeroutput">key_sizeof&lt;int, double&gt;::value</code> cannot (because <code class="computeroutput">key_sizeof&lt;int, double&gt;::value</code> contains a comma not wrapped by round parenthesis so it will be interpreted as two separate macro parameters by the preprocessor).</p>
 <p><span class="bold"><strong>Parameters:</strong></span> </p>
 <div class="informaltable"><table class="table">
 <colgroup>
@@ -49,6 +49,17 @@
 </table></div>
 <p>
 </p>
+<p><span class="bold"><strong>Note:</strong></span> This macro works on ISO C++ compilers (it does not require variadic macros). This macro expands to code equivalent to <code class="computeroutput">boost::aux::identity_value parenthesized_value</code> where: </p>
+<pre class="programlisting">  <span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">aux</span> <span class="special">{</span>
+
+  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+  <span class="keyword">inline</span> <span class="keyword">typename</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">add_reference</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span><span class="special">::</span><span class="identifier">type</span> <span class="identifier">identity_value</span><span class="special">(</span>
+          <span class="keyword">typename</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">add_reference</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span><span class="special">::</span><span class="identifier">type</span> <span class="identifier">value</span><span class="special">)</span> <span class="special">{</span>
+      <span class="keyword">return</span> <span class="identifier">value</span><span class="special">;</span>
+  <span class="special">}</span>
+
+  <span class="special">}</span><span class="special">}</span> <span class="comment">// namespace boost::aux</span>
+</pre>
 <p><span class="bold"><strong>See:</strong></span>  <a class="link" href="boost_local/Advanced_Topics.html" title="Advanced Topics"> Advanced Topics</a> section. </p>
 </div>
 </div>

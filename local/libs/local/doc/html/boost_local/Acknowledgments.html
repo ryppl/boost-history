@@ -31,13 +31,22 @@
       and development of this library.
     </p>
 <p>
-      Thanks to Steven Watanabe and Vicente Botet for suggesting to use <a href="http://www.boost.org/doc/libs/release/libs/scope_exit/doc/html/index.html" target="_top">Boost.ScopeExit</a>
-      binding to emulate local functions (in the context of constant-correct checking
-      of block invariants).
+      Many thanks to Steven Watanabe and Vicente Botet for suggesting to me to use
+      <a href="http://www.boost.org/doc/libs/release/libs/scope_exit/doc/html/index.html" target="_top">Boost.ScopeExit</a>
+      binding to <a href="http://boost.2283326.n4.nabble.com/contract-diff-n1962-tt2671482.html#none" target="_top">emulate
+      local functions</a>. Many thanks to Alexander Nasonov for clarifying how
+      <a href="http://www.boost.org/doc/libs/release/libs/scope_exit/doc/html/index.html" target="_top">Boost.ScopeExit</a>
+      binding could be used to implement local functions and for some <a href="http://thread.gmane.org/gmane.comp.lib.boost.devel/168612" target="_top">early
+      work</a> in this direction.
     </p>
 <p>
-      Thanks to Alexander Nasonov for clarifying how <a href="http://www.boost.org/doc/libs/release/libs/scope_exit/doc/html/index.html" target="_top">Boost.ScopeExit</a>
-      binding could be used to implement local functions.
+      Many thanks to Gregory Crosswhite for using <a href="http://www.boost.org/doc/libs/release/libs/local/doc/html/index.html" target="_top">Boost.Local</a>
+      in <a href="https://github.com/gcross/CodeSearch" target="_top">one of his projects</a>.
+    </p>
+<p>
+      Thanks to David Abrahams, Vicente Botet, et al. for suggesting to provide the
+      <a href="http://lists.boost.org/Archives/boost/2011/02/176712.php" target="_top">variadic
+      macro syntax</a> on compilers that support variadic macros.
     </p>
 <p>
       Thanks to Pierre Morcello for suggesting to use <code class="computeroutput"><span class="keyword">return</span><span class="special">;</span></code> to exit local blocks (in the context of a
@@ -47,12 +56,25 @@
       binding (even if this library was not developed using such a code).
     </p>
 <p>
-      Thanks to John Bytheway for refining the authors' technique that allows this
-      library to pass local functions as template parameters.
+      Thanks to John Bytheway for checking the authors' virtual functor technique
+      that originally allowed this library to pass local functions as template parameters.
     </p>
 <p>
       Thanks to Jeffrey Lee Hellrung for suggesting the use of the "keyword"
-      <code class="computeroutput"><span class="identifier">bind</span></code> to bind variables in scope.
+      <code class="computeroutput"><span class="identifier">bind</span></code> to bind variables in scope
+      and for suggesting to use <code class="computeroutput"><span class="identifier">bind</span><span class="special">(</span><span class="identifier">type</span><span class="special">)</span></code>
+      to optionally specify the bound variable type (instead of using <a href="http://www.boost.org/doc/libs/release/doc/html/typeof.html" target="_top">Boost.Typeof</a>).
+      Thanks to Vicente Botet for suggesting to provide <code class="computeroutput"><a class="link" href="../BOOST_LOCAL_TYPEOF.html" title="Macro BOOST_LOCAL_TYPEOF">BOOST_LOCAL_TYPEOF</a></code>
+      to access the bound variable type.
+    </p>
+<p>
+      Thanks to Mathias Gaunard for suggesting to implement <code class="computeroutput"><a class="link" href="../boost/local/function/overload.html" title="Class template overload">boost::local::function::overload</a></code>
+      and for providing an early version of it.
+    </p>
+<p>
+      Thanks to Steven Watanabe, Vicente Botet, Michael Caisse, Yechezkel Mett, Joel
+      de Guzman, Thomas Heller, et al. for helping with the <a class="link" href="Alternatives.html" title="Appendix: Alternatives">Alternatives</a>
+      section and with the profiling of the different alternatives.
     </p>
 <p>
       Finally, many thanks to the entire <a href="http://www.boost.org/" target="_top">Boost</a>

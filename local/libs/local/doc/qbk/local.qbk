@@ -34,9 +34,11 @@
 [def __Boost_TypeTraits__ [@http://www.boost.org/doc/libs/release/libs/type_traits/doc/html/index.html Boost.TypeTraits]]
 [def __Boost_Chrono__ [@http://www.boost.org/doc/libs/release/libs/chrono/doc/html/index.html Boost.Chrono]]
 [def __CPP0x_lambda__ [@http://en.wikipedia.org/wiki/C%2B%2B0x#Lambda_functions_and_expressions C++0x lambda]]
+[def __CPP0x_Lambda__ [@http://en.wikipedia.org/wiki/C%2B%2B0x#Lambda_functions_and_expressions C++0x Lambda]]
 [def __LISP__ [@http://en.wikipedia.org/wiki/Lisp_(programming_language) LISP]]
 [def __Contractpp__ [@http://sourceforge.net/projects/contractpp Contract++]]
 [def __D_Programming_Language__ [@http://d.digitalmars.com D Programming Language]]
+[def __expression_template__ [@http://en.wikibooks.org/wiki/More_C%2B%2B_Idioms/Expression-template expression template]]
 
 [def __N2511__ [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2511.html \[N2511\]]]
 [def __N2529__ [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2529.pdf \[N2529\]]]
@@ -155,6 +157,7 @@
 [import ../../example/add_this_typed_va.cpp]
 [import ../../example/overload.cpp]
 [import ../../example/overload_va.cpp]
+[import ../../example/parsing_macros_impl.cpp]
 
 The Boost Local library implements local functions, local blocks, and local exits for the C++ programming language.
 

@@ -6,7 +6,7 @@
 
 /** @file
  * @brief Local functions allows to program functions locally within the scope
- *  where they are needed (within enclosing functions, etc).
+ *  where they are needed.
  */
 
 #ifndef BOOST_LOCAL_FUNCTION_HPP_
@@ -78,7 +78,7 @@
  *  <c>[token]</c> means either <c>token</c> or nothing (i.e.\, <c>token</c> is
  *  optional). 
  *
- *  On C99 and later compilers which support variadic macros\, the above
+ *  On C99 and later compilers that support variadic macros\, the above
  *  grammar can be modified as follow to define the <em>variadic macro
  *  syntax</em> that can also be used to specify the local functions
  *  parameters:
@@ -97,7 +97,7 @@
  *  on C++ compilers that support variadic macros so it should be used with
  *  care in order to avoid portability issues. 
  *
- *  Finally\, on C++ compilers which support empty macro parameters\, the above
+ *  Finally\, on C++ compilers that support empty macro parameters\, the above
  *  grammars can be modified as follow to define the <em>empty macro
  *  syntax</em> that can can also be used to specify an empty parameter list:
  *  @code
@@ -173,25 +173,26 @@
  * This macro must follow the local function body code block <c>{ ... }</c> as
  * shown in the @RefMacro{BOOST_LOCAL_FUNCTION_PARAMS} documentation.
  *
- * The local function name can be prefixed by the "keyword" <c>inline</c>:
+ * The local function name can be prefixed by the "keyword" <c>inline</c>
+ * (see the @RefSect2{Advanced_Topics, Advanced Topics} section):
  * @code
  *  ... BOOST_LOCAL_FUNCTION_NAME(inline name)
  * @endcode
  * This increases the chances that the compiler will be able to inline the
  * local function calls (thus reducing their run-time).
- * However, inlined local functions cannot be passed as template parameters
- * (on ISO C++ compliant compilers, see
- * @RefMacro{BOOST_LOCAL_CONFIG_COMPLIANT}, but they can be passed as template
- * parameters on C++0x compilers).
- * Furthermore, inlined local functions cannot be assigned to other functors
- * like <c>boost::function</c>.
+ * However, inlined local functions cannot be passed as template parameters or
+ * assigned to other functors like <c>boost::function</c> (that is true on ISO
+ * C++ compilers, see @RefMacro{BOOST_LOCAL_CONFIG_COMPLIANT}, but inlined
+ * local functions can instead be passed as template parameters on C++0x
+ * compilers).
  * On C++0x compilers, there is no need to declare a local function lined
  * because this library will automatically use C++0x specific features to
  * inline the local function while always allowing to pass it as a template
  * parameter.
  *
  * The local function name can also be prefixed by the "keyword"
- * <c>recursive</c>:
+ * <c>recursive</c> (see the @RefSect2{Advanced_Topics, Advanced Topics}
+ * section):
  * @code
  *  ... BOOST_LOCAL_FUNCTION_NAME(recursive name)
  * @endcode
@@ -210,9 +211,9 @@
  *  Advanced Topics} section).
  *  The local function name cannot be the name of an operator
  *  <c>operator...</c> and it cannot be the same name of another local function
- *  declared within the same enclosing scope (i.e.\, it is not possible to 
- *  overload local function declarations\, see the @RefSect2{Advanced_Topics\,
- *  Advanced Topics} section).
+ *  declared within the same enclosing scope (use the
+ *  @RefClass{boost::local::function::overload} functor to overload local
+ *  functions\, see the @RefSect2{Advanced_Topics\, Advanced Topics} section).
  * }
  * @EndParams
  *

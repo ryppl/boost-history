@@ -18,7 +18,7 @@
 #include "../../../config.hpp"
 #include <boost/detail/preprocessor/keyword/auto.hpp>
 #include <boost/detail/preprocessor/keyword/register.hpp>
-#include <boost/type_traits.hpp>
+#include <boost/type_traits/add_const.hpp>
 #include <boost/preprocessor/punctuation/comma_if.hpp>
 #include <boost/preprocessor/logical/bitand.hpp>
 #include <boost/preprocessor/logical/bitand.hpp>

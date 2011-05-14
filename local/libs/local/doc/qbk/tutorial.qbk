@@ -182,21 +182,34 @@ Or by constant reference:
     
     const bind& ``/variable-name/`` // Bind by constant value.
 
-(Note that when `const` is used, it must always precede `bind`.)
+Note that when `const` is used, it must always precede `bind`.
+[footnote
+*Rationale.*
+The library macros could have been implemented to accept both syntaxes `const bind ...` and `bind const ...` equivalently.
+However, handling both syntaxes would have complicated the macro implementation without adding any feature so only one syntax (`const bind ...`) is supported.
+]
     
 If a variable is bound by value, then a copy of the variable value is taken at the point of the local function declaration.
 If a variable is bound by reference instead, the variable will refer to the value it has at the point of the local function call.
 Furthermore, it is the programmers' responsibility to ensure that variables bound by reference survive the declaration scope of the local function otherwise the bound references will be invalid causing run-time errors (in other words, the usual care in using C++ references must be taken for variables bound by reference).
 
-The type of bound variables is automatically deduced and it is the exact same type used to declare such variables in the enclosing scope.
-Therefore, if a bound variable is declared constant, using the `const` qualifier in the enclosing scope, then it will be always bound by constant value or constant reference even if `const` is not repeated by the local function binding.
-On the other hand, if a bound variable was not declared constant in the enclosing scope then it will not be bound as constant unless constant binding is forced using `const bind ...` (note that binding by constant reference is not supported by __CPP0x_lambda__ functions but it is supported by this library).
+The type of a bound variable is automatically deduced and it is the exact same type used to declare such a variable in the enclosing scope.
+
+* If a bound variable was declared constant in the enclosing scope, it will be always bound by constant value or constant reference even if `bind ...` is used instead of `const bind ...` .
+However, if a bound variable was not declared constant in the enclosing scope then it will not be bound as constant unless constant binding is forced using `const bind ...`. (Note that binding by constant reference is not supported by __CPP0x_lambda__ functions but it is supported by this library.)
 [footnote
 An historical note: Constant binding of variables in scope was the main use case that originally motivated the authors in developing this library.
 The authors needed to locally create a chuck of code to assert some correctness conditions while these assertions were not supposed to modify any of the variables they were using (see the __Contractpp__ library).
 This was achieved by binding by constant reference the variables needed by the assertions and then by programming the local function body to check the assertions (or more conveniently by using `__BOOST_LOCAL_BLOCK__`).
 This way if any of the assertions mistakenly changes a bound variable (for example confusing the operator `==` with `=`), the compiler correctly generates an error because the bound variable is of `const` type within the local function body.
 ]
+* If a bound variable was declared as a reference in the enclosing scope, it will still be bound by value unless it is explicitly bound by reference using `bind& ...` or `const bind& ...`.
+[footnote
+*Rationale.*
+Variables originally declared as references are bound by value unless `[const] bind&` is used so that references can be bound by both value `[const] bind` and reference `[const] bind&` (this is the same binding semantic adopted by __Boost_ScopeExit__).
+On the other hand, variables originally declared as constants should never loose their `const` qualifier (to prevent their modification not just in the enclosing scope but also in the local scope) thus they are always bound by constant even if `bind[&]` is used instead of `const bind[&]`.
+]
+
 As with passing parameters to usual C++ functions, programmers might want to bind variables of complex types by (constant) reference instead than by value to avoid expensive copy operations when these variables are bound to a local function.
 
 For example, let's program a local function `add` similar to the one in the example from the __Introduction__ section.

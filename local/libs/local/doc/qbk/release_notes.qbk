@@ -6,6 +6,21 @@
 
 [section:Release_Notes Release Notes]
 
+[section Version 0.2.0 (2011-05-14)]
+
+# Replaced parenthesized syntax with variadic and sequencing macro syntaxes.
+# Profiled library performances against other approaches.
+# Replaced virtual functor trick with casting functor trick (for smaller run-time).
+# Optimized library run-time (rearranging code and not using casting functor trick on compilers that accept local classes as template parameters).
+# Added `__BOOST_LOCAL_FUNCTION_NAME__(inline ...)` and `__BOOST_LOCAL_FUNCTION_NAME__(recursive ...)`.
+# Added `__BOOST_LOCAL_TYPEOF__`.
+# Added `bind(type)` to specify bind type explicitly (skipping __Boost_Typeof__ type deduction).
+# Removed `boost::local::function` (use `boost::function` instead).
+# Added `__boost__local__function__overload__` to overload local functions (and functors in general).
+# Implemented support for nesting local functions, blocks, and exits into one another.
+
+[endsect]
+
 [section Version 0.1.1 (2011-01-10)]
 
 # Uploaded library source into Boost SVN sandbox.
@@ -27,12 +42,6 @@
 [endsect]
 
 [section TODO]
-
-# Rework factorial_impl and Implementation section.
-
-# Finalize Acknowledge section.
-
-# Apply copyright to all files.
 
 [endsect]
 
