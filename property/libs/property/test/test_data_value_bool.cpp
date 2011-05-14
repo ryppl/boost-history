@@ -7,5 +7,3 @@ int main()
   return boost::report_errors();
   
   }
-
-#include "test_data.cpp"

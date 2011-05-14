@@ -3,7 +3,6 @@
 
 #include "test_enum.hpp"
 #include "test_pod.hpp"
-#include "test_global_data.hpp"
 #include <boost/property/property_auto_value.hpp>
 #include <boost/property/property_notification_boost_function.hpp>
 
@@ -17,12 +16,12 @@ extern prop_auto<int * const> p_gl_pointer_const;
 extern prop_auto<test_enum> p_gl_enum;
 extern prop_auto<test_pod,notification_boost_function> p_gl_class_ntf;
 
-class p_auto_class
+class p_auto_value_class
   {
   
   public:
   
-  p_auto_class();
+  p_auto_value_class();
   
   prop_auto<char,notification_boost_function> p_char_ntf;
   prop_auto<int> p_int;
@@ -39,11 +38,6 @@ class p_auto_class
   static prop_auto<int *> p_st_pointer;
   static prop_auto<test_enum,notification_boost_function> p_st_enum_ntf;
   static prop_auto<test_pod const> p_st_class_const;
-  
-  private:
-  
-  int some_int;
-  static int st_some_int;
   
   };
   

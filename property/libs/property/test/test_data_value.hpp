@@ -3,8 +3,7 @@
 
 #include "test_enum.hpp"
 #include "test_pod.hpp"
-#include "test_global_data.hpp"
-#include "test_data.hpp"
+#include "test_data_impl.hpp"
 #include <boost/property/property_data_value.hpp>
 #include <boost/property/property_notification_boost_function.hpp>
 
@@ -40,11 +39,6 @@ class p_data_value_class
   static prop_data<int *,&p_data_class::p_pointer_2> p_st_pointer;
   static prop_data<test_enum,&p_data_enum> p_st_enum;
   static prop_data<test_pod const,&p_data_class::p_class_2> p_st_class_const;
-  
-  private:
-  
-  static int st_some_int;
-  static int st_some_int_2;
   
   };
   

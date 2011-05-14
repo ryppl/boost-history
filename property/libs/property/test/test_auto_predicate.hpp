@@ -13,12 +13,12 @@ extern prop_auto_predicate<int,notification_boost_function> p_gl_int_pred_ntf;
 extern prop_auto_predicate<double,default_policy_tag,predicate_failure_runtime_exception> p_gl_double_pred_err;
 extern prop_auto_predicate<test_enum> p_gl_enum_pred;
 
-class p_auto_class
+class p_auto_predicate_class
   {
   
   public:
   
-  p_auto_class();
+  p_auto_predicate_class();
   
   prop_auto_predicate<char,notification_boost_function,predicate_failure_runtime_exception> p_char_pred_ntf_err;
   prop_auto_predicate<int> p_int_pred;

@@ -1,5 +1,5 @@
 #include <boost/detail/lightweight_test.hpp>
-#include <boost/property/property_function_value.hpp>
+#include "test_function_value.hpp"
 
 int main()
   {

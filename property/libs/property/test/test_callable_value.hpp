@@ -3,7 +3,6 @@
 
 #include "test_enum.hpp"
 #include "test_pod.hpp"
-#include "test_global_data.hpp"
 #include <boost/property/property_callable_value.hpp>
 
 using namespace properties;
@@ -16,12 +15,12 @@ extern prop_callable<int *> p_gl_pointer;
 extern prop_callable<test_enum,read_tag> p_gl_enum_const;
 extern prop_callable<test_pod const> p_gl_class_const;
 
-class p_callable_class
+class p_callable_value_class
   {
   
   public:
   
-  p_callable_class();
+  p_callable_value_class();
   
   prop_callable<char> p_char;
   prop_callable<int,read_tag> p_int_const;
@@ -38,11 +37,6 @@ class p_callable_class
   static prop_callable<int * const> p_st_pointer_const;
   static prop_callable<test_enum> p_st_enum;
   static prop_callable<test_pod const> p_st_class_const;
-  
-  private:
-  
-  int some_int_const;
-  static int st_some_int_const;
   
   };
   
