@@ -408,34 +408,6 @@ template <typename T>
 				release(true);
         }
 
-#if defined(BOOST_HAS_RVALUE_REFS)
-    	block_ptr(block_ptr<T> && p): base(std::move(p.po_)), ps_(std::move(p.ps_))
-    	{
-    	}
-
-    	template<class Y>
-    		block_ptr(block_ptr<Y> && p): base(std::move(p.po_)), ps_(std::move(p.ps_))
-    		{
-    		}
-
-    	block_ptr<T> & operator = (block_ptr<T> && p)
-    	{
-        	po_ = std::move(p.po_);
-        	ps_ = std::move(p.ps_);
-       		
-        	return *this;
-    	}
-
-    	template<class Y>
-    		block_ptr & operator = (block_ptr<Y> && p)
-    		{
-	        	po_ = std::move(p.po_);
-	        	ps_ = std::move(p.ps_);
-        		
-        		return *this;
-    		}
-#endif
-
     private:
 		/**
 			Release of the pointee object with or without destroying the entire @c block_header it belongs to.
@@ -491,6 +463,35 @@ template <typename T>
 				}
             }
         }
+
+	public:
+#if defined(BOOST_HAS_RVALUE_REFS)
+    	block_ptr(block_ptr<T> && p): base(std::move(p.po_)), ps_(std::move(p.ps_))
+    	{
+    	}
+
+    	template<class Y>
+    		block_ptr(block_ptr<Y> && p): base(std::move(p.po_)), ps_(std::move(p.ps_))
+    		{
+    		}
+
+    	block_ptr<T> & operator = (block_ptr<T> && p)
+    	{
+        	po_ = std::move(p.po_);
+        	ps_ = std::move(p.ps_);
+       		
+        	return *this;
+    	}
+
+    	template<class Y>
+    		block_ptr & operator = (block_ptr<Y> && p)
+    		{
+	        	po_ = std::move(p.po_);
+	        	ps_ = std::move(p.ps_);
+        		
+        		return *this;
+    		}
+#endif
     };
 
 template <typename V>

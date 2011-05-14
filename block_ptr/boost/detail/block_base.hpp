@@ -205,7 +205,6 @@ public:
     intrusive_list::node block_tag_;					/**< Tag used to enlist to @c block_header::elements_ . */
     intrusive_list::node init_tag_;					/**< Tag used to enlist to @c block_base::inits_ . */
 
-
     block_base() : init_(false)
     {
         inits_.push_back(& init_tag_); 
