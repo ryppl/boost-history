@@ -65,7 +65,7 @@ struct block_header
     typedef detail::atomic_count count_type;
 
 #ifndef BOOST_DISABLE_THREADS
-	mutable mutex mutex_;
+	mutex mutex_;
 #endif
 
     count_type count_;								/**< Count of the number of pointers from the stack referencing the same @c block_header .*/
@@ -101,24 +101,26 @@ struct block_header
 	
     bool release()
     {
-        block_header * p = redir();
-
-        if (-- p->count_ == 0)
+        if (-- count_ == 0)
         {
-			p->destroy_ = true;
-            for (intrusive_list::iterator<block_base, & block_base::block_tag_> i; i = p->elements_.begin(), i != p->elements_.end(); )
+#ifndef BOOST_DISABLE_THREADS
+        	mutex::scoped_lock scoped_lock(mutex_);
+#endif
+
+			destroy_ = true;
+			
+            for (intrusive_list::iterator<block_base, & block_base::block_tag_> i; i = elements_.begin(), i != elements_.end(); )
                 delete &* i;
-			p->destroy_ = false;
+                
+			destroy_ = false;
             
-            for (intrusive_list::iterator<block_header, & block_header::tag_> i = p->includes_.begin(), j; j = i, i != p->includes_.end(); i = j)
+            for (intrusive_list::iterator<block_header, & block_header::tag_> i = includes_.begin(), j; j = i, i != includes_.end(); i = j)
 			{ 
 				++ j;
-                if (&* i != this && &* i != p)
+				
+                if (&* i != this)
                     delete &* i;
 			}
-                    
-            if (p != this)
-                delete p;
 
             return true;
         }
@@ -135,10 +137,6 @@ struct block_header
 	
     block_header * redir() const
     {
-#ifndef BOOST_DISABLE_THREADS
-        mutex::scoped_lock scoped_lock(mutex_);
-#endif
-
     	block_header * p = redir_;
     	
         while (p != p->redir_)
@@ -450,17 +448,21 @@ template <typename T>
             base::reset();
             
             if (! pool::is_from(this))
-                if (ps_->release())
+            {
+    			block_header * p = ps_->redir();
+    	
+                if (p->release())
                     if (! d)
                     {
-                    	ps_->~block_header();
-                        new (ps_) block_header();
+                    	p->~block_header();
+                        ps_ = new (p) block_header();
                     }
                     else
-                        delete ps_;
+                        delete p;
                 else 
 					if (! d)
                     	ps_ = new block_header();
+            }
         }
 
 		
