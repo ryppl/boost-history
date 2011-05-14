@@ -34,6 +34,7 @@
 #include <boost/type_traits/add_pointer.hpp>
 #include <boost/smart_ptr/detail/atomic_count.hpp>
 #include <boost/thread/thread.hpp>
+#include <boost/thread/mutex.hpp>
 
 #include <boost/detail/intrusive_list.hpp>
 #include <boost/detail/intrusive_stack.hpp>
@@ -65,7 +66,7 @@ struct block_header
     typedef detail::atomic_count count_type;
 
 #ifndef BOOST_DISABLE_THREADS
-	mutex mutex_;
+	mutable mutex mutex_;
 #endif
 
     count_type count_;								/**< Count of the number of pointers from the stack referencing the same @c block_header .*/
@@ -449,11 +450,17 @@ template <typename T>
             if (p->init_)
                 return;
 
+    		block_header * q = ps_->redir();
+    	
+#ifndef BOOST_DISABLE_THREADS
+        	mutex::scoped_lock scoped_lock(q->mutex_);
+#endif
+
 			// iterate memory blocks
             for (intrusive_list::iterator<block_base, & block_base::init_tag_> i = p->inits_.begin(); i != p->inits_.end(); ++ i)
             {
                 i->init_ = true;
-                ps_->redir()->elements_.push_back(& i->block_tag_);
+                q->elements_.push_back(& i->block_tag_);
 
 				// iterate block_ptr elements
                 for (intrusive_stack::iterator<block_ptr, & block_ptr::pn_> j = i->ptrs_.begin(), k; k = j, j != i->ptrs_.end(); j = k)
