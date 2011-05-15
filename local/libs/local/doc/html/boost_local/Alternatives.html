@@ -3,7 +3,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title>Appendix: Alternatives</title>
 <link rel="stylesheet" href="../../../../../doc/src/boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
 <link rel="home" href="../index.html" title="Boost.Local 0.2.0">
 <link rel="up" href="../index.html" title="Boost.Local 0.2.0">
 <link rel="prev" href="Examples.html" title="Appendix: Examples">
@@ -370,41 +370,246 @@
             or by non-constant value. Because a variable cannot be bound by constant
             reference, <a href="http://en.wikipedia.org/wiki/C%2B%2B0x#Lambda_functions_and_expressions" target="_top">C++0x
             lambda</a> functions can bind a variable by constant only if the
-            variable is copyable and the binding will require a potentially expensive
-            copy operation. For example:
+            variable is copyable and the binding requires a (potentially expensive)
+            extra copy operation. Both constant reference and non-constant value
+            binding are instead supported by <a href="http://www.boost.org/doc/libs/release/libs/local/doc/html/index.html" target="_top">Boost.Local</a>.
           </li>
 </ul></div>
-<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">x</span><span class="special">:</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">noncopyable</span> <span class="special">{};</span>
+<p>
+        For example, for non-copyable objects:
+      </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  <a href="http://en.wikipedia.org/wiki/C%2B%2B0x#Lambda_functions_and_expressions" target="_top">C++0x
+                  Lambda</a>
+                </p>
+              </th>
+<th>
+                <p>
+                  <a href="http://www.boost.org/doc/libs/release/libs/local/doc/html/index.html" target="_top">Boost.Local</a>
+                  Variadic Macro Syntax (C99 and later compilers)
+                </p>
+              </th>
+<th>
+                <p>
+                  <a href="http://www.boost.org/doc/libs/release/libs/local/doc/html/index.html" target="_top">Boost.Local</a>
+                  Sequencing Macro Syntax (all C++ compilers)
+                </p>
+              </th>
+</tr></thead>
+<tbody><tr>
+<td>
+                <p>
+                  
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">noncopyable</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+
+<span class="keyword">struct</span> <span class="identifier">x_t</span><span class="special">:</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">noncopyable</span> <span class="special">{</span>
+    <span class="keyword">int</span> <span class="identifier">i</span><span class="special">;</span>
+    <span class="identifier">x_t</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">_i</span><span class="special">):</span> <span class="identifier">i</span><span class="special">(</span><span class="identifier">_i</span><span class="special">)</span> <span class="special">{}</span>
+<span class="special">};</span>
 
 <span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
-    <span class="comment">// Cannot bind `x` by value because non copyable</span>
-    <span class="comment">// but if bind by reference `&amp;x` then `x` is no</span>
-    <span class="comment">// longer constant within the lambda function.</span>
-    <span class="special">[</span><span class="identifier">x</span><span class="special">]()</span> <span class="special">{</span>
-    <span class="special">}();</span>
+    <span class="identifier">x_t</span> <span class="identifier">x</span><span class="special">(-</span><span class="number">1</span><span class="special">);</span>
+
+    <span class="keyword">auto</span> <span class="identifier">l</span> <span class="special">=</span> <span class="special">[</span><span class="identifier">x</span><span class="special">]()</span> <span class="special">{</span> <span class="comment">// Error: x is non copyable...</span>
+        <span class="comment">// ... but if bind `&amp;x` then `x` is not constant.</span>
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">x</span><span class="special">.</span><span class="identifier">i</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    <span class="special">};</span>
+    <span class="identifier">l</span><span class="special">();</span>
 
     <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
 <span class="special">}</span>
 </pre>
 <p>
-        Or:
-      </p>
-<pre class="programlisting"><span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
-    <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;</span> <span class="identifier">v</span><span class="special">(</span><span class="number">1000000</span><span class="special">);</span>
+                </p>
+              </td>
+<td>
+                <p>
+                  
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">local</span><span class="special">/</span><span class="identifier">function</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">noncopyable</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
 
-    <span class="comment">// Need to bind `v` by value to make it constant</span>
-    <span class="comment">// within the lambda function but that requires</span>
-    <span class="comment">// the expensive copy of a vector of 1000000 elements.</span>
-    <span class="special">[</span><span class="identifier">v</span><span class="special">]()</span> <span class="special">{</span>
-    <span class="special">}();</span>
+<span class="keyword">struct</span> <span class="identifier">x_t</span><span class="special">:</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">noncopyable</span> <span class="special">{</span>
+    <span class="keyword">int</span> <span class="identifier">i</span><span class="special">;</span>
+    <span class="identifier">x_t</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">_i</span><span class="special">):</span> <span class="identifier">i</span><span class="special">(</span><span class="identifier">_i</span><span class="special">)</span> <span class="special">{}</span>
+<span class="special">};</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
+    <span class="identifier">x_t</span> <span class="identifier">x</span><span class="special">(-</span><span class="number">1</span><span class="special">);</span>
+
+    <span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">x</span><span class="special">)</span> <span class="special">{</span> <span class="comment">// OK...</span>
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">x</span><span class="special">.</span><span class="identifier">i</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span> <span class="comment">// ... and constant.</span>
+    <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">l</span><span class="special">)</span>
+    <span class="identifier">l</span><span class="special">();</span>
 
     <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
 <span class="special">}</span>
 </pre>
 <p>
-        Both constant reference and non-constant value binding are instead supported
-        by <a href="http://www.boost.org/doc/libs/release/libs/local/doc/html/index.html" target="_top">Boost.Local</a>.
+                </p>
+              </td>
+<td>
+                <p>
+                  
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">local</span><span class="special">/</span><span class="identifier">function</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">noncopyable</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+
+<span class="keyword">struct</span> <span class="identifier">x_t</span><span class="special">:</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">noncopyable</span> <span class="special">{</span>
+    <span class="keyword">int</span> <span class="identifier">i</span><span class="special">;</span>
+    <span class="identifier">x_t</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">_i</span><span class="special">):</span> <span class="identifier">i</span><span class="special">(</span><span class="identifier">_i</span><span class="special">)</span> <span class="special">{}</span>
+<span class="special">};</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
+    <span class="identifier">x_t</span> <span class="identifier">x</span><span class="special">(-</span><span class="number">1</span><span class="special">);</span>
+
+    <span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">x</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span> <span class="comment">// OK...</span>
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">x</span><span class="special">.</span><span class="identifier">i</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span> <span class="comment">// ... and constant.</span>
+    <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">l</span><span class="special">)</span>
+    <span class="identifier">l</span><span class="special">();</span>
+
+    <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+                </p>
+              </td>
+</tr></tbody>
+</table></div>
+<p>
+        Or, for objects with expensive copy operations:
       </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  <a href="http://en.wikipedia.org/wiki/C%2B%2B0x#Lambda_functions_and_expressions" target="_top">C++0x
+                  Lambda</a>
+                </p>
+              </th>
+<th>
+                <p>
+                  <a href="http://www.boost.org/doc/libs/release/libs/local/doc/html/index.html" target="_top">Boost.Local</a>
+                  Variadic Macro Syntax (C99 and later compilers)
+                </p>
+              </th>
+<th>
+                <p>
+                  <a href="http://www.boost.org/doc/libs/release/libs/local/doc/html/index.html" target="_top">Boost.Local</a>
+                  Sequencing Macro Syntax (all C++ compilers)
+                </p>
+              </th>
+</tr></thead>
+<tbody><tr>
+<td>
+                <p>
+                  
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">noncopyable</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+
+<span class="keyword">struct</span> <span class="identifier">x_t</span> <span class="special">{</span>
+    <span class="keyword">int</span> <span class="identifier">i</span><span class="special">;</span>
+    <span class="identifier">x_t</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">_i</span><span class="special">):</span> <span class="identifier">i</span><span class="special">(</span><span class="identifier">_i</span><span class="special">)</span> <span class="special">{}</span>
+    <span class="identifier">x_t</span><span class="special">(</span><span class="identifier">x_t</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">o</span><span class="special">):</span> <span class="identifier">i</span><span class="special">(</span><span class="identifier">o</span><span class="special">.</span><span class="identifier">i</span><span class="special">)</span> <span class="special">{</span> <span class="comment">// Some time consuming copy.</span>
+        <span class="keyword">for</span> <span class="special">(</span><span class="keyword">unsigned</span> <span class="keyword">long</span> <span class="identifier">i</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span> <span class="identifier">i</span> <span class="special">&lt;</span> <span class="number">10000000000</span><span class="special">;</span> <span class="special">++</span><span class="identifier">i</span><span class="special">);</span> 
+    <span class="special">}</span>
+<span class="special">};</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
+    <span class="identifier">x_t</span> <span class="identifier">x</span><span class="special">(-</span><span class="number">1</span><span class="special">);</span>
+
+    <span class="keyword">auto</span> <span class="identifier">l</span> <span class="special">=</span> <span class="special">[</span><span class="identifier">x</span><span class="special">]()</span> <span class="special">{</span> <span class="comment">// Expensive copy...</span>
+        <span class="comment">// ... but if bind `&amp;x` then `x` is not constant.</span>
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">x</span><span class="special">.</span><span class="identifier">i</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    <span class="special">};</span>
+    <span class="identifier">l</span><span class="special">();</span>
+
+    <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+                </p>
+              </td>
+<td>
+                <p>
+                  
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">local</span><span class="special">/</span><span class="identifier">function</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">noncopyable</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+
+<span class="keyword">struct</span> <span class="identifier">x_t</span> <span class="special">{</span>
+    <span class="keyword">int</span> <span class="identifier">i</span><span class="special">;</span>
+    <span class="identifier">x_t</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">_i</span><span class="special">):</span> <span class="identifier">i</span><span class="special">(</span><span class="identifier">_i</span><span class="special">)</span> <span class="special">{}</span>
+    <span class="identifier">x_t</span><span class="special">(</span><span class="identifier">x_t</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">o</span><span class="special">):</span> <span class="identifier">i</span><span class="special">(</span><span class="identifier">o</span><span class="special">.</span><span class="identifier">i</span><span class="special">)</span> <span class="special">{</span> <span class="comment">// Some time consuming copy.</span>
+        <span class="keyword">for</span> <span class="special">(</span><span class="keyword">unsigned</span> <span class="keyword">long</span> <span class="identifier">i</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span> <span class="identifier">i</span> <span class="special">&lt;</span> <span class="number">10000000000</span><span class="special">;</span> <span class="special">++</span><span class="identifier">i</span><span class="special">);</span> 
+    <span class="special">}</span>
+<span class="special">};</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
+    <span class="identifier">x_t</span> <span class="identifier">x</span><span class="special">(-</span><span class="number">1</span><span class="special">);</span>
+
+    <span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">x</span><span class="special">)</span> <span class="special">{</span> <span class="comment">// No copy...</span>
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">x</span><span class="special">.</span><span class="identifier">i</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span> <span class="comment">// ... and constant.</span>
+    <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">l</span><span class="special">)</span>
+    <span class="identifier">l</span><span class="special">();</span>
+
+    <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+                </p>
+              </td>
+<td>
+                <p>
+                  
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">local</span><span class="special">/</span><span class="identifier">function</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">noncopyable</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+
+<span class="keyword">struct</span> <span class="identifier">x_t</span> <span class="special">{</span>
+    <span class="keyword">int</span> <span class="identifier">i</span><span class="special">;</span>
+    <span class="identifier">x_t</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">_i</span><span class="special">):</span> <span class="identifier">i</span><span class="special">(</span><span class="identifier">_i</span><span class="special">)</span> <span class="special">{}</span>
+    <span class="identifier">x_t</span><span class="special">(</span><span class="identifier">x_t</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">o</span><span class="special">):</span> <span class="identifier">i</span><span class="special">(</span><span class="identifier">o</span><span class="special">.</span><span class="identifier">i</span><span class="special">)</span> <span class="special">{</span> <span class="comment">// Some time consuming copy.</span>
+        <span class="keyword">for</span> <span class="special">(</span><span class="keyword">unsigned</span> <span class="keyword">long</span> <span class="identifier">i</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span> <span class="identifier">i</span> <span class="special">&lt;</span> <span class="number">10000000000</span><span class="special">;</span> <span class="special">++</span><span class="identifier">i</span><span class="special">);</span> 
+    <span class="special">}</span>
+<span class="special">};</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
+    <span class="identifier">x_t</span> <span class="identifier">x</span><span class="special">(-</span><span class="number">1</span><span class="special">);</span>
+
+    <span class="keyword">void</span> <span class="identifier">BOOST_LOCAL_FUNCTION_PARAMS</span><span class="special">(</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">bind</span><span class="special">&amp;</span> <span class="identifier">x</span><span class="special">)</span> <span class="special">)</span> <span class="special">{</span> <span class="comment">// No copy...</span>
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">x</span><span class="special">.</span><span class="identifier">i</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span> <span class="comment">// ... and constant.</span>
+    <span class="special">}</span> <span class="identifier">BOOST_LOCAL_FUNCTION_NAME</span><span class="special">(</span><span class="identifier">l</span><span class="special">)</span>
+    <span class="identifier">l</span><span class="special">();</span>
+
+    <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+                </p>
+              </td>
+</tr></tbody>
+</table></div>
 <a name="boost_local.Alternatives.local_functions.examples"></a><h6>
 <a name="boost_local.Alternatives.local_functions.examples-heading"></a>
         <a class="link" href="Alternatives.html#boost_local.Alternatives.local_functions.examples">Examples</a>

@@ -97,36 +97,22 @@ __CPP0x_lambda__ functions have most of the features that __Boost_Local__ local 
 * __CPP0x_lambda__ functions are only supported by the C++0x standard so they are not supported by all C++ compilers.
 __Boost_Local__ local functions use only ISO C++ compliant features so they are supported on all C++ compliant compilers.
 * __CPP0x_lambda__ do not allow to bind variables in scope by constant reference or by non-constant value.
-Because a variable cannot be bound by constant reference, __CPP0x_lambda__ functions can bind a variable by constant only if the variable is copyable and the binding will require a potentially expensive copy operation.
-For example:
-
-    struct x: boost::noncopyable {};
-
-    int main() {
-        // Cannot bind `x` by value because non copyable
-        // but if bind by reference `&x` then `x` is no
-        // longer constant within the lambda function.
-        [x]() {
-        }();
-
-        return 0;
-    }
-
-Or:
-
-    int main() {
-        std::vector<double> v(1000000);
-
-        // Need to bind `v` by value to make it constant
-        // within the lambda function but that requires
-        // the expensive copy of a vector of 1000000 elements.
-        [v]() {
-        }();
-
-        return 0;
-    }
-
+Because a variable cannot be bound by constant reference, __CPP0x_lambda__ functions can bind a variable by constant only if the variable is copyable and the binding requires a (potentially expensive) extra copy operation.
 Both constant reference and non-constant value binding are instead supported by __Boost_Local__.
+
+For example, for non-copyable objects:
+
+[table
+[ [__CPP0x_Lambda__] [__Boost_Local__ __Variadic_Macro_Syntax__] [__Boost_Local__ __Sequencing_Macro_Syntax__] ]
+[ [ [noncopyable_0x_lambda_cpp] ] [ [noncopyable_boost_local_va_cpp] ] [ [noncopyable_boost_local_cpp] ] ]
+]
+
+Or, for objects with expensive copy operations:
+
+[table
+[ [__CPP0x_Lambda__] [__Boost_Local__ __Variadic_Macro_Syntax__] [__Boost_Local__ __Sequencing_Macro_Syntax__] ]
+[ [ [expensive_copy_0x_lambda_cpp] ] [ [expensive_copy_boost_local_va_cpp] ] [ [expensive_copy_boost_local_cpp] ] ]
+]
 
 [h5 Examples]
 
