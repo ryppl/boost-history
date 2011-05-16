@@ -66,7 +66,7 @@ struct block_header
     typedef detail::atomic_count count_type;
 
 #ifndef BOOST_DISABLE_THREADS
-	mutable mutex mutex_;
+	static mutex mutex_;
 #endif
 
     count_type count_;								/**< Count of the number of pointers from the stack referencing the same @c block_header .*/
@@ -104,10 +104,6 @@ struct block_header
     {
         if (-- count_ == 0)
         {
-#ifndef BOOST_DISABLE_THREADS
-        	mutex::scoped_lock scoped_lock(mutex_);
-#endif
-
 			destroy_ = true;
 			
             for (intrusive_list::iterator<block_base, & block_base::block_tag_> i; i = elements_.begin(), i != elements_.end(); )
@@ -159,10 +155,6 @@ struct block_header
     	
         if (redir_ != q)
         {
-#ifndef BOOST_DISABLE_THREADS
-        	mutex::scoped_lock scoped_lock(mutex_);
-#endif
-
             redir_ = q;
             redir_->includes_.merge(includes_);
             redir_->elements_.merge(elements_);
@@ -217,6 +209,7 @@ struct block_header
 };
 
 #ifndef BOOST_DISABLE_THREADS
+mutex block_header::mutex_;
 mutex block_header::pool_mutex_;
 #endif
 fast_pool_allocator<block_header> block_header::pool_;
@@ -368,6 +361,10 @@ template <typename T>
         template <typename V>
             block_ptr & operator = (block_ptr<V> const & p)
             {
+#ifndef BOOST_DISABLE_THREADS
+       			mutex::scoped_lock scoped_lock(block_header::mutex_);
+#endif
+
                 if (ps_->redir() != p.ps_->redir())
                 {
                     release(false);
@@ -393,6 +390,10 @@ template <typename T>
 
         void reset()
         {
+#ifndef BOOST_DISABLE_THREADS
+       		mutex::scoped_lock scoped_lock(block_header::mutex_);
+#endif
+
             release(false);
         }
         
@@ -403,6 +404,10 @@ template <typename T>
 
         ~block_ptr()
         {
+#ifndef BOOST_DISABLE_THREADS
+       		mutex::scoped_lock scoped_lock(block_header::mutex_);
+#endif
+
 			if (cyclic())
 				base::po_ = 0;
 			else
@@ -452,10 +457,6 @@ template <typename T>
 
     		block_header * q = ps_->redir();
     	
-#ifndef BOOST_DISABLE_THREADS
-        	mutex::scoped_lock scoped_lock(q->mutex_);
-#endif
-
 			// iterate memory blocks
             for (intrusive_list::iterator<block_base, & block_base::init_tag_> i = p->inits_.begin(); i != p->inits_.end(); ++ i)
             {
