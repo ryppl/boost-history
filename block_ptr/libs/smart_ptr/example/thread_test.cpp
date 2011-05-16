@@ -1,11 +1,13 @@
 #include <iostream>
 #include <boost/thread.hpp>
 #include <boost/block_ptr.hpp>
+//#include <boost/thread/mutex.hpp>
 
 using namespace std;
 using namespace boost;
 
 
+//mutex mutex_;
 block_ptr< pair<int, int> > p;
 
 
@@ -14,7 +16,12 @@ void worker(int id)
     std::cout << "Worker: running" << std::endl;  
        
     for (int i = 0; i < 100000; ++ i)
+    {
+       	//mutex::scoped_lock scoped_lock(mutex_);
+       	cout << id << "-" << i << ", " << flush;
     	p = make_block< pair<int, int> >(make_pair(id, i));
+    }
+    cout << endl;
        
     std::cout << "Worker: finished" << std::endl;  
 }  
