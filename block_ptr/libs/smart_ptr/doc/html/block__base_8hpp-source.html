@@ -59,7 +59,7 @@
 <a name="l00051"></a>00051 <span class="keyword">namespace </span>detail
 <a name="l00052"></a>00052 {
 <a name="l00053"></a>00053 
-<a name="l00054"></a>00054 <span class="keyword">namespace </span>sh
+<a name="l00054"></a>00054 <span class="keyword">namespace </span>bp
 <a name="l00055"></a>00055 {
 <a name="l00056"></a>00056 
 <a name="l00057"></a>00057 
@@ -67,184 +67,220 @@
 <a name="l00059"></a>00059 <span class="keyword">class </span>block_base;
 <a name="l00060"></a>00060 
 <a name="l00061"></a>00061 
-<a name="l00068"></a><a class="code" href="structboost_1_1detail_1_1sh_1_1pool.html">00068</a> <span class="keyword">struct </span><a class="code" href="structboost_1_1detail_1_1sh_1_1pool.html">pool</a> : boost::<a class="code" href="structboost_1_1detail_1_1sh_1_1pool.html">pool</a>&lt;&gt;
+<a name="l00068"></a><a class="code" href="structboost_1_1detail_1_1bp_1_1pool.html">00068</a> <span class="keyword">struct </span><a class="code" href="structboost_1_1detail_1_1bp_1_1pool.html">pool</a>
 <a name="l00069"></a>00069 {
-<a name="l00070"></a><a class="code" href="structboost_1_1detail_1_1sh_1_1pool.html#5ffccf91110ed853efbe08318a937106">00070</a>         <span class="keyword">typedef</span> std::list&lt; numeric::interval&lt;long&gt;, fast_pool_allocator&lt; numeric::interval&lt;long&gt; &gt; &gt; <a class="code" href="structboost_1_1detail_1_1sh_1_1pool.html#5ffccf91110ed853efbe08318a937106">pool_lii</a>;  
-<a name="l00072"></a>00072 <span class="preprocessor">#ifndef BOOST_DISABLE_THREADS</span>
-<a name="l00073"></a><a class="code" href="structboost_1_1detail_1_1sh_1_1pool.html#3641af5c127036d4a181ff390b0839f5">00073</a> <span class="preprocessor"></span>    thread_specific_ptr&lt;pool_lii&gt; <a class="code" href="structboost_1_1detail_1_1sh_1_1pool.html#3641af5c127036d4a181ff390b0839f5">plii_</a>;                        
-<a name="l00074"></a>00074 <span class="preprocessor">#else</span>
-<a name="l00075"></a>00075 <span class="preprocessor"></span>    std::auto_ptr&lt;pool_lii&gt; <a class="code" href="structboost_1_1detail_1_1sh_1_1pool.html#3641af5c127036d4a181ff390b0839f5">plii_</a>;                                      
-<a name="l00076"></a>00076 <span class="preprocessor">#endif</span>
-<a name="l00077"></a>00077 <span class="preprocessor"></span>
-<a name="l00078"></a>00078 
-<a name="l00083"></a><a class="code" href="structboost_1_1detail_1_1sh_1_1pool.html#ed586f51a974635eeeee7211587c4c7a">00083</a>     <a class="code" href="structboost_1_1detail_1_1sh_1_1pool.html#ed586f51a974635eeeee7211587c4c7a">pool</a>() : boost::<a class="code" href="structboost_1_1detail_1_1sh_1_1pool.html">pool</a>&lt;&gt;(1)
-<a name="l00084"></a>00084     {
-<a name="l00085"></a>00085         <a class="code" href="structboost_1_1detail_1_1sh_1_1pool.html#3641af5c127036d4a181ff390b0839f5">plii_</a>.reset(<span class="keyword">new</span> <a class="code" href="structboost_1_1detail_1_1sh_1_1pool.html#5ffccf91110ed853efbe08318a937106">pool_lii</a>());
-<a name="l00086"></a>00086     }
-<a name="l00087"></a>00087         
-<a name="l00088"></a>00088         
-<a name="l00096"></a><a class="code" href="structboost_1_1detail_1_1sh_1_1pool.html#6453967b788154650d6dd072a37443f3">00096</a>     <a class="code" href="classboost_1_1detail_1_1sh_1_1block__base.html">block_base</a> * <a class="code" href="structboost_1_1detail_1_1sh_1_1pool.html#6453967b788154650d6dd072a37443f3">top</a>(<span class="keywordtype">void</span> * p)
-<a name="l00097"></a>00097     {
-<a name="l00098"></a>00098         pool_lii::reverse_iterator i;
-<a name="l00099"></a>00099         
-<a name="l00100"></a>00100         <span class="keywordflow">for</span> (i = <a class="code" href="structboost_1_1detail_1_1sh_1_1pool.html#3641af5c127036d4a181ff390b0839f5">plii_</a>-&gt;rbegin(); i != <a class="code" href="structboost_1_1detail_1_1sh_1_1pool.html#3641af5c127036d4a181ff390b0839f5">plii_</a>-&gt;rend(); i ++)
-<a name="l00101"></a>00101             <span class="keywordflow">if</span> (in((<span class="keywordtype">long</span>)(p), * i))
-<a name="l00102"></a>00102                 <span class="keywordflow">break</span>;
-<a name="l00103"></a>00103 
-<a name="l00104"></a>00104         <a class="code" href="structboost_1_1detail_1_1sh_1_1pool.html#3641af5c127036d4a181ff390b0839f5">plii_</a>-&gt;erase(i.base(), <a class="code" href="structboost_1_1detail_1_1sh_1_1pool.html#3641af5c127036d4a181ff390b0839f5">plii_</a>-&gt;end());
+<a name="l00070"></a>00070 <span class="preprocessor">#ifndef BOOST_DISABLE_THREADS</span>
+<a name="l00071"></a>00071 <span class="preprocessor"></span>        <span class="keyword">static</span> mutex mutex_;
+<a name="l00072"></a>00072 <span class="preprocessor">#endif</span>
+<a name="l00073"></a>00073 <span class="preprocessor"></span>
+<a name="l00074"></a>00074         <span class="keyword">typedef</span> boost::singleton_pool&lt;pool, sizeof(char)&gt; pool_t;
+<a name="l00075"></a>00075 
+<a name="l00076"></a><a class="code" href="structboost_1_1detail_1_1bp_1_1pool.html#5a435f8472ce0f5bdb3c5c70bdcc6748">00076</a>         <span class="keyword">typedef</span> std::list&lt; numeric::interval&lt;long&gt;, fast_pool_allocator&lt; numeric::interval&lt;long&gt; &gt; &gt; <a class="code" href="structboost_1_1detail_1_1bp_1_1pool.html#5a435f8472ce0f5bdb3c5c70bdcc6748">pool_lii</a>;  
+<a name="l00078"></a>00078 <span class="preprocessor">#ifndef BOOST_DISABLE_THREADS</span>
+<a name="l00079"></a>00079 <span class="preprocessor"></span>    <span class="keyword">static</span> thread_specific_ptr&lt;pool_lii&gt; &amp; plii()    
+<a name="l00080"></a>00080     {
+<a name="l00081"></a>00081         <span class="keyword">static</span> thread_specific_ptr&lt;pool_lii&gt; plii_;
+<a name="l00082"></a>00082         
+<a name="l00083"></a>00083         <span class="keywordflow">return</span> plii_;
+<a name="l00084"></a>00084     }
+<a name="l00085"></a>00085 <span class="preprocessor">#else</span>
+<a name="l00086"></a>00086 <span class="preprocessor"></span>    <span class="keyword">static</span> std::auto_ptr&lt;pool_lii&gt; &amp; plii()          
+<a name="l00087"></a>00087     {
+<a name="l00088"></a>00088         <span class="keyword">static</span> std::auto_ptr&lt;pool_lii&gt; plii_;
+<a name="l00089"></a>00089         
+<a name="l00090"></a>00090         <span class="keywordflow">return</span> plii_;
+<a name="l00091"></a>00091     }
+<a name="l00092"></a>00092 <span class="preprocessor">#endif</span>
+<a name="l00093"></a>00093 <span class="preprocessor"></span>
+<a name="l00101"></a><a class="code" href="structboost_1_1detail_1_1bp_1_1pool.html#58a859a8886e9f02c80e080ff5cce310">00101</a>         <span class="keyword">static</span> <span class="keywordtype">bool</span> <a class="code" href="structboost_1_1detail_1_1bp_1_1pool.html#58a859a8886e9f02c80e080ff5cce310">is_from</a>(<span class="keywordtype">void</span> * p)
+<a name="l00102"></a>00102         {
+<a name="l00103"></a>00103                 <span class="keywordflow">return</span> pool_t::is_from(p);
+<a name="l00104"></a>00104         }
 <a name="l00105"></a>00105         
-<a name="l00106"></a>00106         <span class="keywordflow">return</span> (<a class="code" href="classboost_1_1detail_1_1sh_1_1block__base.html">block_base</a> *)(<a class="code" href="structboost_1_1detail_1_1sh_1_1pool.html#3641af5c127036d4a181ff390b0839f5">plii_</a>-&gt;rbegin()-&gt;lower());
-<a name="l00107"></a>00107     }
-<a name="l00108"></a>00108     
-<a name="l00109"></a>00109         
-<a name="l00117"></a><a class="code" href="structboost_1_1detail_1_1sh_1_1pool.html#f6b1a674a851581e9096b8bca6c20af5">00117</a>     <span class="keywordtype">void</span> * <a class="code" href="structboost_1_1detail_1_1sh_1_1pool.html#f6b1a674a851581e9096b8bca6c20af5">allocate</a>(std::size_t s)
-<a name="l00118"></a>00118     {
-<a name="l00119"></a>00119         <span class="keywordtype">void</span> * p = ordered_malloc(s);
-<a name="l00120"></a>00120         
-<a name="l00121"></a>00121         <a class="code" href="structboost_1_1detail_1_1sh_1_1pool.html#3641af5c127036d4a181ff390b0839f5">plii_</a>-&gt;push_back(numeric::interval&lt;long&gt;((<span class="keywordtype">long</span>) p, <span class="keywordtype">long</span>((<span class="keywordtype">char</span> *)(p) + s)));
-<a name="l00122"></a>00122         
-<a name="l00123"></a>00123         <span class="keywordflow">return</span> p;
-<a name="l00124"></a>00124     }
-<a name="l00125"></a>00125 
+<a name="l00106"></a>00106         <span class="keyword">static</span> <span class="keywordtype">void</span> init()
+<a name="l00107"></a>00107         {
+<a name="l00108"></a>00108             <span class="keywordflow">if</span> (plii().get() == 0)
+<a name="l00109"></a>00109                 plii().reset(<span class="keyword">new</span> <a class="code" href="structboost_1_1detail_1_1bp_1_1pool.html#5a435f8472ce0f5bdb3c5c70bdcc6748">pool_lii</a>());
+<a name="l00110"></a>00110         }
+<a name="l00111"></a>00111         
+<a name="l00119"></a><a class="code" href="structboost_1_1detail_1_1bp_1_1pool.html#d7e60e8f69cc04b851a009b7a0936681">00119</a>     <span class="keyword">static</span> <a class="code" href="classboost_1_1detail_1_1bp_1_1block__base.html">block_base</a> * <a class="code" href="structboost_1_1detail_1_1bp_1_1pool.html#d7e60e8f69cc04b851a009b7a0936681">top</a>(<span class="keywordtype">void</span> * p)
+<a name="l00120"></a>00120     {
+<a name="l00121"></a>00121 <span class="preprocessor">#ifndef BOOST_DISABLE_THREADS</span>
+<a name="l00122"></a>00122 <span class="preprocessor"></span>        mutex::scoped_lock scoped_lock(mutex_);
+<a name="l00123"></a>00123 <span class="preprocessor">#endif</span>
+<a name="l00124"></a>00124 <span class="preprocessor"></span>
+<a name="l00125"></a>00125         init();
 <a name="l00126"></a>00126         
-<a name="l00134"></a><a class="code" href="structboost_1_1detail_1_1sh_1_1pool.html#34afd7e522b8fb8cb6560b057164e0ac">00134</a>     <span class="keywordtype">void</span> <a class="code" href="structboost_1_1detail_1_1sh_1_1pool.html#34afd7e522b8fb8cb6560b057164e0ac">deallocate</a>(<span class="keywordtype">void</span> * p, std::size_t s)
-<a name="l00135"></a>00135     {
-<a name="l00136"></a>00136         pool_lii::reverse_iterator i;
-<a name="l00137"></a>00137         
-<a name="l00138"></a>00138         <span class="keywordflow">for</span> (i = <a class="code" href="structboost_1_1detail_1_1sh_1_1pool.html#3641af5c127036d4a181ff390b0839f5">plii_</a>-&gt;rbegin(); i != <a class="code" href="structboost_1_1detail_1_1sh_1_1pool.html#3641af5c127036d4a181ff390b0839f5">plii_</a>-&gt;rend(); i ++)
-<a name="l00139"></a>00139             <span class="keywordflow">if</span> (in((<span class="keywordtype">long</span>)(p), * i))
-<a name="l00140"></a>00140                 <span class="keywordflow">break</span>;
-<a name="l00141"></a>00141 
-<a name="l00142"></a>00142         <a class="code" href="structboost_1_1detail_1_1sh_1_1pool.html#3641af5c127036d4a181ff390b0839f5">plii_</a>-&gt;erase(i.base(), <a class="code" href="structboost_1_1detail_1_1sh_1_1pool.html#3641af5c127036d4a181ff390b0839f5">plii_</a>-&gt;end());
-<a name="l00143"></a>00143         ordered_free(p, s);
-<a name="l00144"></a>00144     }
-<a name="l00145"></a>00145 };
-<a name="l00146"></a>00146 
-<a name="l00147"></a>00147 
-<a name="l00152"></a><a class="code" href="classboost_1_1detail_1_1sh_1_1block__base.html">00152</a> <span class="keyword">class </span><a class="code" href="classboost_1_1detail_1_1sh_1_1block__base.html">block_base</a> : <span class="keyword">public</span> sp_counted_base
-<a name="l00153"></a>00153 {
-<a name="l00154"></a>00154 <span class="keyword">public</span>:
-<a name="l00155"></a><a class="code" href="classboost_1_1detail_1_1sh_1_1block__base.html#5bc38e04cba27eeeaec8ee228654539b">00155</a>     <span class="keywordtype">bool</span> <a class="code" href="classboost_1_1detail_1_1sh_1_1block__base.html#5bc38e04cba27eeeaec8ee228654539b">init_</a>;                                                                         
-<a name="l00157"></a><a class="code" href="classboost_1_1detail_1_1sh_1_1block__base.html#2abb1a2ac78d58617485d30b1ad8e6c6">00157</a>         <a class="code" href="classboost_1_1detail_1_1sh_1_1intrusive__stack.html">intrusive_stack</a> <a class="code" href="classboost_1_1detail_1_1sh_1_1block__base.html#2abb1a2ac78d58617485d30b1ad8e6c6">ptrs_</a>;                                                  
-<a name="l00158"></a><a class="code" href="classboost_1_1detail_1_1sh_1_1block__base.html#45681b0af0efe9b44ebf248f28cefdae">00158</a>         <a class="code" href="classboost_1_1detail_1_1sh_1_1intrusive__list.html">intrusive_list</a> <a class="code" href="classboost_1_1detail_1_1sh_1_1block__base.html#45681b0af0efe9b44ebf248f28cefdae">inits_</a>;                                                  
-<a name="l00160"></a><a class="code" href="classboost_1_1detail_1_1sh_1_1block__base.html#9e2df1d61eca0a51425e321cf217bb77">00160</a>     intrusive_list::node <a class="code" href="classboost_1_1detail_1_1sh_1_1block__base.html#9e2df1d61eca0a51425e321cf217bb77">block_tag_</a>;                                    
-<a name="l00161"></a><a class="code" href="classboost_1_1detail_1_1sh_1_1block__base.html#2b9b01affdd8985b34369a2cfe2b9be4">00161</a>     intrusive_list::node <a class="code" href="classboost_1_1detail_1_1sh_1_1block__base.html#2b9b01affdd8985b34369a2cfe2b9be4">init_tag_</a>;                                     
-<a name="l00164"></a>00164     <a class="code" href="classboost_1_1detail_1_1sh_1_1block__base.html">block_base</a>() : <a class="code" href="classboost_1_1detail_1_1sh_1_1block__base.html#5bc38e04cba27eeeaec8ee228654539b">init_</a>(false)
-<a name="l00165"></a>00165     {
-<a name="l00166"></a>00166         <a class="code" href="classboost_1_1detail_1_1sh_1_1block__base.html#45681b0af0efe9b44ebf248f28cefdae">inits_</a>.<a class="code" href="classboost_1_1detail_1_1sh_1_1intrusive__list.html#fe3e32ed497bb8563bae53008ebe7a31">push_back</a>(&amp; <a class="code" href="classboost_1_1detail_1_1sh_1_1block__base.html#2b9b01affdd8985b34369a2cfe2b9be4">init_tag_</a>); 
-<a name="l00167"></a>00167     }
-<a name="l00168"></a>00168 
-<a name="l00169"></a><a class="code" href="classboost_1_1detail_1_1sh_1_1block__base.html#19c6ea4d9e6d094dea0a0c1ce1f38bae">00169</a>     <span class="keyword">static</span> <a class="code" href="structboost_1_1detail_1_1sh_1_1pool.html">pool</a> <a class="code" href="classboost_1_1detail_1_1sh_1_1block__base.html#19c6ea4d9e6d094dea0a0c1ce1f38bae">pool_</a>;                                                          
-<a name="l00171"></a>00171 <span class="keyword">protected</span>:
-<a name="l00172"></a><a class="code" href="classboost_1_1detail_1_1sh_1_1block__base.html#c6568a20ae8e7d55801ec7c73537cfbf">00172</a>     <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classboost_1_1detail_1_1sh_1_1block__base.html#c6568a20ae8e7d55801ec7c73537cfbf">dispose</a>()                                                  {}                          
-<a name="l00173"></a><a class="code" href="classboost_1_1detail_1_1sh_1_1block__base.html#3a45c93b9f9fdcf72afd3ab1f419d5c2">00173</a>     <span class="keyword">virtual</span> <span class="keywordtype">void</span> * <a class="code" href="classboost_1_1detail_1_1sh_1_1block__base.html#3a45c93b9f9fdcf72afd3ab1f419d5c2">get_deleter</a>( std::type_info <span class="keyword">const</span> &amp; ti ) { <span class="keywordflow">return</span> 0; }       
-<a name="l00174"></a>00174 };
-<a name="l00175"></a>00175 
-<a name="l00176"></a>00176 
-<a name="l00177"></a>00177 pool <a class="code" href="classboost_1_1detail_1_1sh_1_1block__base.html#19c6ea4d9e6d094dea0a0c1ce1f38bae">block_base::pool_</a>;
-<a name="l00178"></a>00178 
-<a name="l00179"></a>00179 
-<a name="l00180"></a>00180 <span class="preprocessor">#define TEMPLATE_DECL(z, n, text) BOOST_PP_COMMA_IF(n) typename T ## n</span>
-<a name="l00181"></a>00181 <span class="preprocessor"></span><span class="preprocessor">#define ARGUMENT_DECL(z, n, text) BOOST_PP_COMMA_IF(n) T ## n const &amp; t ## n</span>
-<a name="l00182"></a>00182 <span class="preprocessor"></span><span class="preprocessor">#define PARAMETER_DECL(z, n, text) BOOST_PP_COMMA_IF(n) t ## n</span>
-<a name="l00183"></a>00183 <span class="preprocessor"></span>
-<a name="l00184"></a>00184 <span class="preprocessor">#define CONSTRUCT_BLOCK(z, n, text)                                                                                                                                                         \</span>
-<a name="l00185"></a>00185 <span class="preprocessor">        template &lt;BOOST_PP_REPEAT(n, TEMPLATE_DECL, 0)&gt;                                                                                                 \</span>
-<a name="l00186"></a>00186 <span class="preprocessor">                text(BOOST_PP_REPEAT(n, ARGUMENT_DECL, 0)) : elem_(BOOST_PP_REPEAT(n, PARAMETER_DECL, 0)) {}                                                                                                                                                                                                            </span>
-<a name="l00187"></a>00187 <span class="preprocessor"></span>
-<a name="l00192"></a>00192 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
-<a name="l00193"></a><a class="code" href="classboost_1_1detail_1_1sh_1_1block.html">00193</a>     <span class="keyword">class </span><a class="code" href="classboost_1_1detail_1_1sh_1_1block.html">block</a> : <span class="keyword">public</span> <a class="code" href="classboost_1_1detail_1_1sh_1_1block__base.html">block_base</a>
-<a name="l00194"></a>00194     {
-<a name="l00195"></a>00195         <span class="keyword">typedef</span> T data_type;
-<a name="l00196"></a>00196 
-<a name="l00197"></a><a class="code" href="classboost_1_1detail_1_1sh_1_1block.html#f2b9c8217dd21be619cd1def17989579">00197</a>         T <a class="code" href="classboost_1_1detail_1_1sh_1_1block.html#f2b9c8217dd21be619cd1def17989579">elem_</a>;                                                                        
-<a name="l00199"></a>00199     <span class="keyword">public</span>:
-<a name="l00200"></a>00200         <span class="keyword">class </span><a class="code" href="classboost_1_1detail_1_1sh_1_1block_1_1roofof.html">roofof</a>;
-<a name="l00201"></a>00201         <span class="keyword">friend</span> <span class="keyword">class </span><a class="code" href="classboost_1_1detail_1_1sh_1_1block_1_1roofof.html">roofof</a>;
-<a name="l00202"></a>00202 
-<a name="l00203"></a>00203                 <a class="code" href="classboost_1_1detail_1_1sh_1_1block.html">block</a>() : <a class="code" href="classboost_1_1detail_1_1sh_1_1block.html#f2b9c8217dd21be619cd1def17989579">elem_</a>() 
-<a name="l00204"></a>00204         {
-<a name="l00205"></a>00205         }
-<a name="l00206"></a>00206 
-<a name="l00207"></a>00207         BOOST_PP_REPEAT_FROM_TO(1, 10, CONSTRUCT_BLOCK, <a class="code" href="classboost_1_1detail_1_1sh_1_1block.html">block</a>)
-<a name="l00208"></a>00208 
-<a name="l00209"></a>00209 
-<a name="l00210"></a>00210                 
-<a name="l00214"></a><a class="code" href="classboost_1_1detail_1_1sh_1_1block.html#2785bf7528fd6846e77b675bd8b2f764">00214</a>         data_type * <a class="code" href="classboost_1_1detail_1_1sh_1_1block.html#2785bf7528fd6846e77b675bd8b2f764">element</a>()                           { <span class="keywordflow">return</span> &amp; <a class="code" href="classboost_1_1detail_1_1sh_1_1block.html#f2b9c8217dd21be619cd1def17989579">elem_</a>; }
-<a name="l00215"></a>00215         operator data_type &amp; ()             { <span class="keywordflow">return</span> * <a class="code" href="classboost_1_1detail_1_1sh_1_1block.html#2785bf7528fd6846e77b675bd8b2f764">element</a>(); }
-<a name="l00216"></a>00216         operator data_type const &amp; ()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> * <a class="code" href="classboost_1_1detail_1_1sh_1_1block.html#2785bf7528fd6846e77b675bd8b2f764">element</a>(); }
+<a name="l00127"></a>00127         pool_lii::reverse_iterator i;
+<a name="l00128"></a>00128         
+<a name="l00129"></a>00129         <span class="keywordflow">for</span> (i = plii()-&gt;rbegin(); i != plii()-&gt;rend(); i ++)
+<a name="l00130"></a>00130             <span class="keywordflow">if</span> (in((<span class="keywordtype">long</span>)(p), * i))
+<a name="l00131"></a>00131                 <span class="keywordflow">break</span>;
+<a name="l00132"></a>00132 
+<a name="l00133"></a>00133         plii()-&gt;erase(i.base(), plii()-&gt;end());
+<a name="l00134"></a>00134         
+<a name="l00135"></a>00135         <span class="keywordflow">return</span> (<a class="code" href="classboost_1_1detail_1_1bp_1_1block__base.html">block_base</a> *)(plii()-&gt;rbegin()-&gt;lower());
+<a name="l00136"></a>00136     }
+<a name="l00137"></a>00137     
+<a name="l00138"></a>00138         
+<a name="l00146"></a><a class="code" href="structboost_1_1detail_1_1bp_1_1pool.html#65d0a9daf3b05c6d276d0d803d5f5b0b">00146</a>     <span class="keyword">static</span> <span class="keywordtype">void</span> * <a class="code" href="structboost_1_1detail_1_1bp_1_1pool.html#65d0a9daf3b05c6d276d0d803d5f5b0b">allocate</a>(std::size_t s)
+<a name="l00147"></a>00147     {
+<a name="l00148"></a>00148 <span class="preprocessor">#ifndef BOOST_DISABLE_THREADS</span>
+<a name="l00149"></a>00149 <span class="preprocessor"></span>        mutex::scoped_lock scoped_lock(mutex_);
+<a name="l00150"></a>00150 <span class="preprocessor">#endif</span>
+<a name="l00151"></a>00151 <span class="preprocessor"></span>
+<a name="l00152"></a>00152         init();
+<a name="l00153"></a>00153         
+<a name="l00154"></a>00154         <span class="keywordtype">void</span> * p = pool_t::ordered_malloc(s);
+<a name="l00155"></a>00155         
+<a name="l00156"></a>00156         plii()-&gt;push_back(numeric::interval&lt;long&gt;((<span class="keywordtype">long</span>) p, <span class="keywordtype">long</span>((<span class="keywordtype">char</span> *)(p) + s)));
+<a name="l00157"></a>00157         
+<a name="l00158"></a>00158         <span class="keywordflow">return</span> p;
+<a name="l00159"></a>00159     }
+<a name="l00160"></a>00160 
+<a name="l00161"></a>00161         
+<a name="l00169"></a><a class="code" href="structboost_1_1detail_1_1bp_1_1pool.html#0de732e8cb4bb92ca6a5755e8dfd04f5">00169</a>     <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="structboost_1_1detail_1_1bp_1_1pool.html#0de732e8cb4bb92ca6a5755e8dfd04f5">deallocate</a>(<span class="keywordtype">void</span> * p, std::size_t s)
+<a name="l00170"></a>00170     {
+<a name="l00171"></a>00171 <span class="preprocessor">#ifndef BOOST_DISABLE_THREADS</span>
+<a name="l00172"></a>00172 <span class="preprocessor"></span>        mutex::scoped_lock scoped_lock(mutex_);
+<a name="l00173"></a>00173 <span class="preprocessor">#endif</span>
+<a name="l00174"></a>00174 <span class="preprocessor"></span>
+<a name="l00175"></a>00175         init();
+<a name="l00176"></a>00176         
+<a name="l00177"></a>00177         pool_lii::reverse_iterator i;
+<a name="l00178"></a>00178         
+<a name="l00179"></a>00179         <span class="keywordflow">for</span> (i = plii()-&gt;rbegin(); i != plii()-&gt;rend(); i ++)
+<a name="l00180"></a>00180             <span class="keywordflow">if</span> (in((<span class="keywordtype">long</span>)(p), * i))
+<a name="l00181"></a>00181                 <span class="keywordflow">break</span>;
+<a name="l00182"></a>00182 
+<a name="l00183"></a>00183         plii()-&gt;erase(i.base(), plii()-&gt;end());
+<a name="l00184"></a>00184         pool_t::ordered_free(p, s);
+<a name="l00185"></a>00185     }
+<a name="l00186"></a>00186 };
+<a name="l00187"></a>00187 
+<a name="l00188"></a>00188 <span class="preprocessor">#ifndef BOOST_DISABLE_THREADS</span>
+<a name="l00189"></a>00189 <span class="preprocessor"></span>mutex pool::mutex_;
+<a name="l00190"></a>00190 <span class="preprocessor">#endif</span>
+<a name="l00191"></a>00191 <span class="preprocessor"></span>
+<a name="l00192"></a>00192 
+<a name="l00197"></a><a class="code" href="classboost_1_1detail_1_1bp_1_1block__base.html">00197</a> <span class="keyword">class </span><a class="code" href="classboost_1_1detail_1_1bp_1_1block__base.html">block_base</a> : <span class="keyword">public</span> sp_counted_base
+<a name="l00198"></a>00198 {
+<a name="l00199"></a>00199 <span class="keyword">public</span>:
+<a name="l00200"></a><a class="code" href="classboost_1_1detail_1_1bp_1_1block__base.html#03d3debbfb9045cf2fb64c58367006d8">00200</a>     <span class="keywordtype">bool</span> <a class="code" href="classboost_1_1detail_1_1bp_1_1block__base.html#03d3debbfb9045cf2fb64c58367006d8">init_</a>;                                                                         
+<a name="l00202"></a><a class="code" href="classboost_1_1detail_1_1bp_1_1block__base.html#cc684cbea60db61196e09f19bb54ae58">00202</a>         <a class="code" href="classboost_1_1detail_1_1bp_1_1intrusive__stack.html">intrusive_stack</a> <a class="code" href="classboost_1_1detail_1_1bp_1_1block__base.html#cc684cbea60db61196e09f19bb54ae58">ptrs_</a>;                                                  
+<a name="l00203"></a><a class="code" href="classboost_1_1detail_1_1bp_1_1block__base.html#44b72cabced6ed87d7108f2711c36d10">00203</a>         <a class="code" href="classboost_1_1detail_1_1bp_1_1intrusive__list.html">intrusive_list</a> <a class="code" href="classboost_1_1detail_1_1bp_1_1block__base.html#44b72cabced6ed87d7108f2711c36d10">inits_</a>;                                                  
+<a name="l00205"></a><a class="code" href="classboost_1_1detail_1_1bp_1_1block__base.html#ed36086047f5796af0e04a5b4d448dfc">00205</a>     intrusive_list::node <a class="code" href="classboost_1_1detail_1_1bp_1_1block__base.html#ed36086047f5796af0e04a5b4d448dfc">block_tag_</a>;                                    
+<a name="l00206"></a><a class="code" href="classboost_1_1detail_1_1bp_1_1block__base.html#1152e8e600fcc2fb10d81029553d4bb9">00206</a>     intrusive_list::node <a class="code" href="classboost_1_1detail_1_1bp_1_1block__base.html#1152e8e600fcc2fb10d81029553d4bb9">init_tag_</a>;                                     
+<a name="l00208"></a>00208     <a class="code" href="classboost_1_1detail_1_1bp_1_1block__base.html">block_base</a>() : <a class="code" href="classboost_1_1detail_1_1bp_1_1block__base.html#03d3debbfb9045cf2fb64c58367006d8">init_</a>(false)
+<a name="l00209"></a>00209     {
+<a name="l00210"></a>00210         <a class="code" href="classboost_1_1detail_1_1bp_1_1block__base.html#44b72cabced6ed87d7108f2711c36d10">inits_</a>.<a class="code" href="classboost_1_1detail_1_1bp_1_1intrusive__list.html#03887e23e0a7a94c8a98e9ec536a6364">push_back</a>(&amp; <a class="code" href="classboost_1_1detail_1_1bp_1_1block__base.html#1152e8e600fcc2fb10d81029553d4bb9">init_tag_</a>); 
+<a name="l00211"></a>00211     }
+<a name="l00212"></a>00212 
+<a name="l00213"></a>00213 <span class="keyword">protected</span>:
+<a name="l00214"></a><a class="code" href="classboost_1_1detail_1_1bp_1_1block__base.html#d884f9fba8ded63f10ea0199d36d3d97">00214</a>     <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classboost_1_1detail_1_1bp_1_1block__base.html#d884f9fba8ded63f10ea0199d36d3d97">dispose</a>()                                                  {}                          
+<a name="l00215"></a><a class="code" href="classboost_1_1detail_1_1bp_1_1block__base.html#14c000317cdec5e0c8b10b2c82cac804">00215</a>     <span class="keyword">virtual</span> <span class="keywordtype">void</span> * <a class="code" href="classboost_1_1detail_1_1bp_1_1block__base.html#14c000317cdec5e0c8b10b2c82cac804">get_deleter</a>( std::type_info <span class="keyword">const</span> &amp; ti ) { <span class="keywordflow">return</span> 0; }       
+<a name="l00216"></a>00216 };
 <a name="l00217"></a>00217 
-<a name="l00218"></a>00218         <span class="keyword">virtual</span> ~<a class="code" href="classboost_1_1detail_1_1sh_1_1block.html">block</a>()                                        
-<a name="l00219"></a>00219         { 
-<a name="l00220"></a>00220             <a class="code" href="classboost_1_1detail_1_1sh_1_1block__base.html#c6568a20ae8e7d55801ec7c73537cfbf">dispose</a>(); 
-<a name="l00221"></a>00221         }
-<a name="l00222"></a>00222 
-<a name="l00223"></a>00223     <span class="keyword">public</span>:
-<a name="l00228"></a><a class="code" href="classboost_1_1detail_1_1sh_1_1block_1_1roofof.html">00228</a>         <span class="keyword">class </span><a class="code" href="classboost_1_1detail_1_1sh_1_1block_1_1roofof.html">roofof</a>
-<a name="l00229"></a>00229         {
-<a name="l00230"></a><a class="code" href="classboost_1_1detail_1_1sh_1_1block_1_1roofof.html#a9474048a5da6999ab878f42751b2c58">00230</a>             <a class="code" href="classboost_1_1detail_1_1sh_1_1block.html">block</a> * <a class="code" href="classboost_1_1detail_1_1sh_1_1block_1_1roofof.html#a9474048a5da6999ab878f42751b2c58">p_</a>;                                                 
-<a name="l00232"></a>00232         <span class="keyword">public</span>:
-<a name="l00239"></a><a class="code" href="classboost_1_1detail_1_1sh_1_1block_1_1roofof.html#e65a14a681147f13c1b5ceffc9ddd6b2">00239</a>             <a class="code" href="classboost_1_1detail_1_1sh_1_1block_1_1roofof.html#e65a14a681147f13c1b5ceffc9ddd6b2">roofof</a>(data_type * p) : <a class="code" href="classboost_1_1detail_1_1sh_1_1block_1_1roofof.html#a9474048a5da6999ab878f42751b2c58">p_</a>(sh::<a class="code" href="classboost_1_1detail_1_1sh_1_1block_1_1roofof.html">roofof</a>((data_type <a class="code" href="classboost_1_1detail_1_1sh_1_1block.html">block</a>::*)(&amp; <a class="code" href="classboost_1_1detail_1_1sh_1_1block.html">block</a>::<a class="code" href="classboost_1_1detail_1_1sh_1_1block.html#f2b9c8217dd21be619cd1def17989579">elem_</a>), p)) {}
-<a name="l00240"></a>00240             
-<a name="l00241"></a>00241                         
-<a name="l00246"></a><a class="code" href="classboost_1_1detail_1_1sh_1_1block_1_1roofof.html#9f3c4152a1d3c047ad627935c1e329f2">00246</a>             <a class="code" href="classboost_1_1detail_1_1sh_1_1block_1_1roofof.html#9f3c4152a1d3c047ad627935c1e329f2">operator block * </a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <a class="code" href="classboost_1_1detail_1_1sh_1_1block_1_1roofof.html#a9474048a5da6999ab878f42751b2c58">p_</a>; }
-<a name="l00247"></a>00247         };
+<a name="l00218"></a>00218 
+<a name="l00219"></a>00219 <span class="preprocessor">#define TEMPLATE_DECL(z, n, text) BOOST_PP_COMMA_IF(n) typename T ## n</span>
+<a name="l00220"></a>00220 <span class="preprocessor"></span><span class="preprocessor">#define ARGUMENT_DECL(z, n, text) BOOST_PP_COMMA_IF(n) T ## n const &amp; t ## n</span>
+<a name="l00221"></a>00221 <span class="preprocessor"></span><span class="preprocessor">#define PARAMETER_DECL(z, n, text) BOOST_PP_COMMA_IF(n) t ## n</span>
+<a name="l00222"></a>00222 <span class="preprocessor"></span>
+<a name="l00223"></a>00223 <span class="preprocessor">#define CONSTRUCT_BLOCK(z, n, text)                                                                                                                                                         \</span>
+<a name="l00224"></a>00224 <span class="preprocessor">        template &lt;BOOST_PP_REPEAT(n, TEMPLATE_DECL, 0)&gt;                                                                                                 \</span>
+<a name="l00225"></a>00225 <span class="preprocessor">                text(BOOST_PP_REPEAT(n, ARGUMENT_DECL, 0)) : elem_(BOOST_PP_REPEAT(n, PARAMETER_DECL, 0)) {}                                                                                                                                                                                                            </span>
+<a name="l00226"></a>00226 <span class="preprocessor"></span>
+<a name="l00231"></a>00231 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
+<a name="l00232"></a><a class="code" href="classboost_1_1detail_1_1bp_1_1block.html">00232</a>     <span class="keyword">class </span><a class="code" href="classboost_1_1detail_1_1bp_1_1block.html">block</a> : <span class="keyword">public</span> <a class="code" href="classboost_1_1detail_1_1bp_1_1block__base.html">block_base</a>
+<a name="l00233"></a>00233     {
+<a name="l00234"></a>00234         <span class="keyword">typedef</span> T data_type;
+<a name="l00235"></a>00235 
+<a name="l00236"></a><a class="code" href="classboost_1_1detail_1_1bp_1_1block.html#41d013377e84383f42453f34f348f7ce">00236</a>         T <a class="code" href="classboost_1_1detail_1_1bp_1_1block.html#41d013377e84383f42453f34f348f7ce">elem_</a>;                                                                        
+<a name="l00238"></a>00238     <span class="keyword">public</span>:
+<a name="l00239"></a>00239         <span class="keyword">class </span><a class="code" href="classboost_1_1detail_1_1bp_1_1block_1_1roofof.html">roofof</a>;
+<a name="l00240"></a>00240         <span class="keyword">friend</span> <span class="keyword">class </span><a class="code" href="classboost_1_1detail_1_1bp_1_1block_1_1roofof.html">roofof</a>;
+<a name="l00241"></a>00241 
+<a name="l00242"></a>00242                 <a class="code" href="classboost_1_1detail_1_1bp_1_1block.html">block</a>() : <a class="code" href="classboost_1_1detail_1_1bp_1_1block.html#41d013377e84383f42453f34f348f7ce">elem_</a>() 
+<a name="l00243"></a>00243         {
+<a name="l00244"></a>00244         }
+<a name="l00245"></a>00245 
+<a name="l00246"></a>00246         BOOST_PP_REPEAT_FROM_TO(1, 10, CONSTRUCT_BLOCK, <a class="code" href="classboost_1_1detail_1_1bp_1_1block.html">block</a>)
+<a name="l00247"></a>00247 
 <a name="l00248"></a>00248 
-<a name="l00249"></a>00249         
-<a name="l00257"></a><a class="code" href="classboost_1_1detail_1_1sh_1_1block.html#daaa5383ee29e8fd833dbf3ad4d73b26">00257</a>         <span class="keywordtype">void</span> * <a class="code" href="classboost_1_1detail_1_1sh_1_1block.html#daaa5383ee29e8fd833dbf3ad4d73b26">operator new </a>(size_t s)
-<a name="l00258"></a>00258         {
-<a name="l00259"></a>00259             <span class="keywordflow">return</span> <a class="code" href="classboost_1_1detail_1_1sh_1_1block__base.html#19c6ea4d9e6d094dea0a0c1ce1f38bae">pool_</a>.<a class="code" href="structboost_1_1detail_1_1sh_1_1pool.html#f6b1a674a851581e9096b8bca6c20af5">allocate</a>(s);
-<a name="l00260"></a>00260         }
-<a name="l00261"></a>00261         
-<a name="l00262"></a>00262 
-<a name="l00269"></a><a class="code" href="classboost_1_1detail_1_1sh_1_1block.html#78e3f77bbfc4b2302d44bb2714a1a4e3">00269</a>         <span class="keywordtype">void</span> <a class="code" href="classboost_1_1detail_1_1sh_1_1block.html#78e3f77bbfc4b2302d44bb2714a1a4e3">operator delete </a>(<span class="keywordtype">void</span> * p)
-<a name="l00270"></a>00270         {
-<a name="l00271"></a>00271             <a class="code" href="classboost_1_1detail_1_1sh_1_1block__base.html#19c6ea4d9e6d094dea0a0c1ce1f38bae">pool_</a>.<a class="code" href="structboost_1_1detail_1_1sh_1_1pool.html#34afd7e522b8fb8cb6560b057164e0ac">deallocate</a>(p, <span class="keyword">sizeof</span>(<a class="code" href="classboost_1_1detail_1_1sh_1_1block.html">block</a>));
-<a name="l00272"></a>00272         }
-<a name="l00273"></a>00273     };
-<a name="l00274"></a>00274 
-<a name="l00275"></a>00275 
-<a name="l00276"></a>00276 <span class="keyword">template</span> &lt;&gt;
-<a name="l00277"></a>00277     <span class="keyword">class </span><a class="code" href="classboost_1_1detail_1_1sh_1_1block.html">block</a>&lt;void&gt; : <span class="keyword">public</span> block_base
-<a name="l00278"></a>00278     {
-<a name="l00279"></a>00279         <span class="keyword">typedef</span> <span class="keywordtype">void</span> data_type;
-<a name="l00280"></a>00280 
-<a name="l00281"></a>00281         <span class="keywordtype">long</span> <a class="code" href="classboost_1_1detail_1_1sh_1_1block.html#f2b9c8217dd21be619cd1def17989579">elem_</a>;                                                                     
-<a name="l00283"></a>00283         <a class="code" href="classboost_1_1detail_1_1sh_1_1block.html">block</a>();
-<a name="l00284"></a>00284 
-<a name="l00285"></a>00285     <span class="keyword">public</span>:
-<a name="l00286"></a>00286         <span class="keyword">class </span>roofof;
-<a name="l00287"></a>00287         <span class="keyword">friend</span> <span class="keyword">class </span>roofof;
-<a name="l00288"></a>00288 
-<a name="l00289"></a>00289         data_type * <a class="code" href="classboost_1_1detail_1_1sh_1_1block.html#2785bf7528fd6846e77b675bd8b2f764">element</a>()                           { <span class="keywordflow">return</span> &amp; <a class="code" href="classboost_1_1detail_1_1sh_1_1block.html#f2b9c8217dd21be619cd1def17989579">elem_</a>; }
-<a name="l00290"></a>00290 
-<a name="l00291"></a>00291         <span class="keyword">virtual</span> ~<a class="code" href="classboost_1_1detail_1_1sh_1_1block.html">block</a>()                                        {}
-<a name="l00292"></a>00292         <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classboost_1_1detail_1_1sh_1_1block__base.html#c6568a20ae8e7d55801ec7c73537cfbf">dispose</a>()                          {}
-<a name="l00293"></a>00293 
-<a name="l00294"></a>00294         <span class="keyword">virtual</span> <span class="keywordtype">void</span> * <a class="code" href="classboost_1_1detail_1_1sh_1_1block__base.html#3a45c93b9f9fdcf72afd3ab1f419d5c2">get_deleter</a>( std::type_info <span class="keyword">const</span> &amp; ti ) {}
-<a name="l00295"></a>00295 
-<a name="l00296"></a>00296     <span class="keyword">public</span>:
-<a name="l00301"></a><a class="code" href="classboost_1_1detail_1_1sh_1_1block_3_01void_01_4_1_1roofof.html">00301</a>         <span class="keyword">class </span>roofof
-<a name="l00302"></a>00302         {
-<a name="l00303"></a><a class="code" href="classboost_1_1detail_1_1sh_1_1block_3_01void_01_4_1_1roofof.html#212e2c16c218c2404979101a99ddccd1">00303</a>             <a class="code" href="classboost_1_1detail_1_1sh_1_1block.html">block</a> * <a class="code" href="classboost_1_1detail_1_1sh_1_1block_1_1roofof.html#a9474048a5da6999ab878f42751b2c58">p_</a>;                                                 
-<a name="l00305"></a>00305         <span class="keyword">public</span>:
-<a name="l00312"></a><a class="code" href="classboost_1_1detail_1_1sh_1_1block_3_01void_01_4_1_1roofof.html#7628f27fb834fdd730b219f8c2f69e03">00312</a>             <a class="code" href="classboost_1_1detail_1_1sh_1_1block_1_1roofof.html#e65a14a681147f13c1b5ceffc9ddd6b2">roofof</a>(data_type * p) : <a class="code" href="classboost_1_1detail_1_1sh_1_1block_1_1roofof.html#a9474048a5da6999ab878f42751b2c58">p_</a>(sh::<a class="code" href="classboost_1_1detail_1_1sh_1_1block_1_1roofof.html#e65a14a681147f13c1b5ceffc9ddd6b2">roofof</a>((long <a class="code" href="classboost_1_1detail_1_1sh_1_1block.html">block</a>::*)(&amp; <a class="code" href="classboost_1_1detail_1_1sh_1_1block.html">block</a>::<a class="code" href="classboost_1_1detail_1_1sh_1_1block.html#f2b9c8217dd21be619cd1def17989579">elem_</a>), static_cast&lt;long *&gt;(p))) {}
-<a name="l00313"></a>00313             
-<a name="l00314"></a>00314                         
-<a name="l00319"></a><a class="code" href="classboost_1_1detail_1_1sh_1_1block_3_01void_01_4_1_1roofof.html#6f7697ed41dc0f79f069b40dcb81e40d">00319</a>             <a class="code" href="classboost_1_1detail_1_1sh_1_1block_1_1roofof.html#9f3c4152a1d3c047ad627935c1e329f2">operator block * </a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <a class="code" href="classboost_1_1detail_1_1sh_1_1block_1_1roofof.html#a9474048a5da6999ab878f42751b2c58">p_</a>; }
-<a name="l00320"></a>00320         };
-<a name="l00321"></a>00321     };
-<a name="l00322"></a>00322 
-<a name="l00323"></a>00323 
-<a name="l00324"></a>00324 } <span class="comment">// namespace sh</span>
+<a name="l00249"></a>00249                 
+<a name="l00253"></a><a class="code" href="classboost_1_1detail_1_1bp_1_1block.html#ad6a00945111c1c9e417c04c55575b0c">00253</a>         data_type * <a class="code" href="classboost_1_1detail_1_1bp_1_1block.html#ad6a00945111c1c9e417c04c55575b0c">element</a>()                           { <span class="keywordflow">return</span> &amp; <a class="code" href="classboost_1_1detail_1_1bp_1_1block.html#41d013377e84383f42453f34f348f7ce">elem_</a>; }
+<a name="l00254"></a>00254 
+<a name="l00255"></a>00255         <span class="keyword">virtual</span> ~<a class="code" href="classboost_1_1detail_1_1bp_1_1block.html">block</a>()                                        
+<a name="l00256"></a>00256         { 
+<a name="l00257"></a>00257             <a class="code" href="classboost_1_1detail_1_1bp_1_1block__base.html#d884f9fba8ded63f10ea0199d36d3d97">dispose</a>(); 
+<a name="l00258"></a>00258         }
+<a name="l00259"></a>00259 
+<a name="l00260"></a>00260     <span class="keyword">public</span>:
+<a name="l00265"></a><a class="code" href="classboost_1_1detail_1_1bp_1_1block_1_1roofof.html">00265</a>         <span class="keyword">class </span><a class="code" href="classboost_1_1detail_1_1bp_1_1block_1_1roofof.html">roofof</a>
+<a name="l00266"></a>00266         {
+<a name="l00267"></a><a class="code" href="classboost_1_1detail_1_1bp_1_1block_1_1roofof.html#84b4016513d714e456444d9b96dae646">00267</a>             <a class="code" href="classboost_1_1detail_1_1bp_1_1block.html">block</a> * <a class="code" href="classboost_1_1detail_1_1bp_1_1block_1_1roofof.html#84b4016513d714e456444d9b96dae646">p_</a>;                                                 
+<a name="l00269"></a>00269         <span class="keyword">public</span>:
+<a name="l00276"></a><a class="code" href="classboost_1_1detail_1_1bp_1_1block_1_1roofof.html#d2188c09cf9e676a1e487576bf1ed99b">00276</a>             <a class="code" href="classboost_1_1detail_1_1bp_1_1block_1_1roofof.html#d2188c09cf9e676a1e487576bf1ed99b">roofof</a>(data_type * p) : <a class="code" href="classboost_1_1detail_1_1bp_1_1block_1_1roofof.html#84b4016513d714e456444d9b96dae646">p_</a>(bp::<a class="code" href="classboost_1_1detail_1_1bp_1_1block_1_1roofof.html">roofof</a>((data_type <a class="code" href="classboost_1_1detail_1_1bp_1_1block.html">block</a>::*)(&amp; <a class="code" href="classboost_1_1detail_1_1bp_1_1block.html">block</a>::<a class="code" href="classboost_1_1detail_1_1bp_1_1block.html#41d013377e84383f42453f34f348f7ce">elem_</a>), p)) {}
+<a name="l00277"></a>00277             
+<a name="l00278"></a>00278                         
+<a name="l00283"></a><a class="code" href="classboost_1_1detail_1_1bp_1_1block_1_1roofof.html#a410a73235235737a55b76244e374912">00283</a>             <a class="code" href="classboost_1_1detail_1_1bp_1_1block_1_1roofof.html#a410a73235235737a55b76244e374912">operator block * </a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <a class="code" href="classboost_1_1detail_1_1bp_1_1block_1_1roofof.html#84b4016513d714e456444d9b96dae646">p_</a>; }
+<a name="l00284"></a>00284         };
+<a name="l00285"></a>00285 
+<a name="l00286"></a>00286         
+<a name="l00294"></a><a class="code" href="classboost_1_1detail_1_1bp_1_1block.html#ea4ee02c293cf3e3822f5e76ddd9822e">00294</a>         <span class="keywordtype">void</span> * <a class="code" href="classboost_1_1detail_1_1bp_1_1block.html#ea4ee02c293cf3e3822f5e76ddd9822e">operator new </a>(size_t s)
+<a name="l00295"></a>00295         {
+<a name="l00296"></a>00296             <span class="keywordflow">return</span> <a class="code" href="structboost_1_1detail_1_1bp_1_1pool.html#65d0a9daf3b05c6d276d0d803d5f5b0b">pool::allocate</a>(s);
+<a name="l00297"></a>00297         }
+<a name="l00298"></a>00298         
+<a name="l00299"></a>00299 
+<a name="l00306"></a><a class="code" href="classboost_1_1detail_1_1bp_1_1block.html#7c9635c9f1d79d7d49b22833d542e66b">00306</a>         <span class="keywordtype">void</span> <a class="code" href="classboost_1_1detail_1_1bp_1_1block.html#7c9635c9f1d79d7d49b22833d542e66b">operator delete </a>(<span class="keywordtype">void</span> * p)
+<a name="l00307"></a>00307         {
+<a name="l00308"></a>00308             <a class="code" href="structboost_1_1detail_1_1bp_1_1pool.html#0de732e8cb4bb92ca6a5755e8dfd04f5">pool::deallocate</a>(p, <span class="keyword">sizeof</span>(<a class="code" href="classboost_1_1detail_1_1bp_1_1block.html">block</a>));
+<a name="l00309"></a>00309         }
+<a name="l00310"></a>00310     };
+<a name="l00311"></a>00311 
+<a name="l00312"></a>00312 
+<a name="l00313"></a>00313 <span class="keyword">template</span> &lt;&gt;
+<a name="l00314"></a>00314     <span class="keyword">class </span><a class="code" href="classboost_1_1detail_1_1bp_1_1block.html">block</a>&lt;void&gt; : <span class="keyword">public</span> block_base
+<a name="l00315"></a>00315     {
+<a name="l00316"></a>00316         <span class="keyword">typedef</span> <span class="keywordtype">void</span> data_type;
+<a name="l00317"></a>00317 
+<a name="l00318"></a>00318         <span class="keywordtype">long</span> <a class="code" href="classboost_1_1detail_1_1bp_1_1block.html#41d013377e84383f42453f34f348f7ce">elem_</a>;                                                                     
+<a name="l00320"></a>00320         <a class="code" href="classboost_1_1detail_1_1bp_1_1block.html">block</a>();
+<a name="l00321"></a>00321 
+<a name="l00322"></a>00322     <span class="keyword">public</span>:
+<a name="l00323"></a>00323         <span class="keyword">class </span>roofof;
+<a name="l00324"></a>00324         <span class="keyword">friend</span> <span class="keyword">class </span>roofof;
 <a name="l00325"></a>00325 
-<a name="l00326"></a>00326 } <span class="comment">// namespace detail</span>
+<a name="l00326"></a>00326         data_type * <a class="code" href="classboost_1_1detail_1_1bp_1_1block.html#ad6a00945111c1c9e417c04c55575b0c">element</a>()                           { <span class="keywordflow">return</span> &amp; <a class="code" href="classboost_1_1detail_1_1bp_1_1block.html#41d013377e84383f42453f34f348f7ce">elem_</a>; }
 <a name="l00327"></a>00327 
-<a name="l00328"></a>00328 } <span class="comment">// namespace boost</span>
-<a name="l00329"></a>00329 
+<a name="l00328"></a>00328         <span class="keyword">virtual</span> ~<a class="code" href="classboost_1_1detail_1_1bp_1_1block.html">block</a>()                                        {}
+<a name="l00329"></a>00329         <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classboost_1_1detail_1_1bp_1_1block__base.html#d884f9fba8ded63f10ea0199d36d3d97">dispose</a>()                          {}
 <a name="l00330"></a>00330 
-<a name="l00331"></a>00331 <span class="preprocessor">#endif  // #ifndef BOOST_DETAIL_SH_OWNED_BASE_NT_HPP_INCLUDED</span>
-</pre></div><hr size="1"><address style="align: right;"><small>Generated on Tue May 3 14:01:32 2011 for BlockPointer by&nbsp;
+<a name="l00331"></a>00331         <span class="keyword">virtual</span> <span class="keywordtype">void</span> * <a class="code" href="classboost_1_1detail_1_1bp_1_1block__base.html#14c000317cdec5e0c8b10b2c82cac804">get_deleter</a>( std::type_info <span class="keyword">const</span> &amp; ti ) { <span class="keywordflow">return</span> 0; }
+<a name="l00332"></a>00332 
+<a name="l00333"></a>00333     <span class="keyword">public</span>:
+<a name="l00338"></a><a class="code" href="classboost_1_1detail_1_1bp_1_1block_3_01void_01_4_1_1roofof.html">00338</a>         <span class="keyword">class </span>roofof
+<a name="l00339"></a>00339         {
+<a name="l00340"></a><a class="code" href="classboost_1_1detail_1_1bp_1_1block_3_01void_01_4_1_1roofof.html#cc1cafe63b4e8061fb771015eefd9bee">00340</a>             <a class="code" href="classboost_1_1detail_1_1bp_1_1block.html">block</a> * <a class="code" href="classboost_1_1detail_1_1bp_1_1block_1_1roofof.html#84b4016513d714e456444d9b96dae646">p_</a>;                                                 
+<a name="l00342"></a>00342         <span class="keyword">public</span>:
+<a name="l00349"></a><a class="code" href="classboost_1_1detail_1_1bp_1_1block_3_01void_01_4_1_1roofof.html#17aca5088f288d088915f0c59bb271c2">00349</a>             <a class="code" href="classboost_1_1detail_1_1bp_1_1block_1_1roofof.html#d2188c09cf9e676a1e487576bf1ed99b">roofof</a>(data_type * p) : <a class="code" href="classboost_1_1detail_1_1bp_1_1block_1_1roofof.html#84b4016513d714e456444d9b96dae646">p_</a>(bp::<a class="code" href="classboost_1_1detail_1_1bp_1_1block_1_1roofof.html#d2188c09cf9e676a1e487576bf1ed99b">roofof</a>((long <a class="code" href="classboost_1_1detail_1_1bp_1_1block.html">block</a>::*)(&amp; <a class="code" href="classboost_1_1detail_1_1bp_1_1block.html">block</a>::<a class="code" href="classboost_1_1detail_1_1bp_1_1block.html#41d013377e84383f42453f34f348f7ce">elem_</a>), static_cast&lt;long *&gt;(p))) {}
+<a name="l00350"></a>00350             
+<a name="l00351"></a>00351                         
+<a name="l00356"></a><a class="code" href="classboost_1_1detail_1_1bp_1_1block_3_01void_01_4_1_1roofof.html#7df924e884463ea428a46c6c63ce9098">00356</a>             <a class="code" href="classboost_1_1detail_1_1bp_1_1block_1_1roofof.html#a410a73235235737a55b76244e374912">operator block * </a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <a class="code" href="classboost_1_1detail_1_1bp_1_1block_1_1roofof.html#84b4016513d714e456444d9b96dae646">p_</a>; }
+<a name="l00357"></a>00357         };
+<a name="l00358"></a>00358     };
+<a name="l00359"></a>00359 
+<a name="l00360"></a>00360 
+<a name="l00361"></a>00361 } <span class="comment">// namespace bp</span>
+<a name="l00362"></a>00362 
+<a name="l00363"></a>00363 } <span class="comment">// namespace detail</span>
+<a name="l00364"></a>00364 
+<a name="l00365"></a>00365 } <span class="comment">// namespace boost</span>
+<a name="l00366"></a>00366 
+<a name="l00367"></a>00367 
+<a name="l00368"></a>00368 <span class="preprocessor">#endif  // #ifndef BOOST_DETAIL_BLOCK_BASE_HPP_INCLUDED</span>
+</pre></div><hr size="1"><address style="align: right;"><small>Generated on Sun May 15 23:26:08 2011 for BlockPointer by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>
