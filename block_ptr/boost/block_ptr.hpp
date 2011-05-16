@@ -400,10 +400,6 @@ template <typename T>
 
         ~block_ptr()
         {
-#ifndef BOOST_DISABLE_THREADS
-       		mutex::scoped_lock scoped_lock(block_header::mutex_);
-#endif
-
 			if (cyclic())
 				base::po_ = 0;
 			else
