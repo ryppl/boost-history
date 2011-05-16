@@ -30,15 +30,15 @@ int main(int argc, char* argv[])
     
    	boost::thread t0(worker, 0);  
    	boost::thread t1(worker, 1);  
-   	//boost::thread t2(worker, 2);  
-   	//boost::thread t3(worker, 3);  
+   	boost::thread t2(worker, 2);  
+   	boost::thread t3(worker, 3);  
        
     std::cout << "main: waiting for thread" << std::endl;  
        
     t0.join();  
     t1.join();  
-    //t2.join();  
-    //t3.join();  
+    t2.join();  
+    t3.join();  
        
     std::cout << "main: done" << std::endl;  
        
