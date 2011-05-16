@@ -7,7 +7,6 @@ using namespace std;
 using namespace boost;
 
 
-//mutex mutex_;
 block_ptr< pair<int, int> > p;
 
 
@@ -17,7 +16,6 @@ void worker(int id)
        
     for (int i = 0; i < 100000; ++ i)
     {
-       	//mutex::scoped_lock scoped_lock(mutex_);
        	cout << id << "-" << i << ", " << flush;
     	p = make_block< pair<int, int> >(make_pair(id, i));
     }
