@@ -4,16 +4,6 @@
 # License, Version 1.0 (see accompanying file LICENSE_1_0.txt or a
 # copy at http://www.boost.org/LICENSE_1_0.txt).
 
-# Usages:
-# bjam define=BOOST_LOCAL_CONFIG_COMPLIANT ...
-#       Disable Boost.Local variadic macro  syntax and  local types as template
-#       parameters optimization.
-# bjam define=BOOST_TYPEOF_COMPLIANT ...
-#       Disable Boost.Typeof compiler specific type-of support.
-# bjam cxxflags=-std=c++0x ...
-#       Enable GCC C++0x features like lambdas and local types as template
-#       parameters.
-
 exe add_block : add_block.cpp ;
 exe add_block_va : add_block_va.cpp ;
 exe add_block_impl : add_block_impl.cpp ;

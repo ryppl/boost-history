@@ -4,8 +4,6 @@
 // License, Version 1.0 (see accompanying file LICENSE_1_0.txt or a
 // copy at http://www.boost.org/LICENSE_1_0.txt).
 
-// Local functions, blocks, and exits can be arbitrarily nested into each other.
-
 //[nesting_cpp
 #include <boost/local/function.hpp>
 #include <boost/local/block.hpp>
