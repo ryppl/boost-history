@@ -18,8 +18,8 @@
 */
 
 
-#ifndef BOOST_DETAIL_BLOCK_PTR_INCLUDED
-#define BOOST_DETAIL_BLOCK_PTR_INCLUDED
+#ifndef BOOST_BLOCK_PTR_INCLUDED
+#define BOOST_BLOCK_PTR_INCLUDED
 
 
 #if defined(_MSC_VER)
@@ -529,4 +529,4 @@ using detail::bp::make_block;
 #endif
 
 
-#endif // #ifndef BOOST_DETAIL_SH_RTCMM_H_INCLUDED
+#endif // #ifndef BOOST_BLOCK_PTR_INCLUDED
