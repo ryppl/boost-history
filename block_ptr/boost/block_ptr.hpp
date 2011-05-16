@@ -379,10 +379,10 @@ template <typename T>
 			@param	p	New pointer to manage.
 		*/
 
-            block_ptr & operator = (block_ptr<T> const & p)
-            {
-                return operator = <T>(p);
-            }
+        block_ptr & operator = (block_ptr<T> const & p)
+        {
+            return operator = <T>(p);
+        }
 
         void reset()
         {
@@ -392,6 +392,18 @@ template <typename T>
 
             release(false);
         }
+        
+        template <typename V>
+	        void reset(block_ptr<V> const & p)
+	        {
+	            operator = <T>(p);
+	        }
+
+        template <typename V>
+	        void reset(block<V> * p)
+	        {
+	            operator = <T>(p);
+	        }
         
         bool cyclic() const
         {
