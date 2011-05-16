@@ -60,6 +60,7 @@ exe add_x_y_va : add_x_y_va.cpp ;
 
 exe add_x_y_default : add_x_y_default.cpp ;
 exe add_x_y_default_va : add_x_y_default_va.cpp ;
+exe add_x_y_default_with : add_x_y_default_with.cpp ;
 exe add_x_y_default_with_va : add_x_y_default_with_va.cpp ;
 
 exe doit : doit.cpp ;

@@ -17,10 +17,10 @@ int main() {
 #include <boost/local/function.hpp>
 #include <iostream>
 
-#define WITH_DEFAULT , default
+#define WITH_DEFAULT , default // For default parameters.
 
 int main() {
-    int BOOST_LOCAL_FUNCTION_PARAMS(int x, int y WITH_DEFAULT 2) { // Default.
+    int BOOST_LOCAL_FUNCTION_PARAMS(int x, int y WITH_DEFAULT 2) {
         return x + y;
     } BOOST_LOCAL_FUNCTION_NAME(add)
 

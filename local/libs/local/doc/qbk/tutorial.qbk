@@ -134,11 +134,14 @@ For example, let's program a local function `add(x, y)` similar to the one progr
 [ [ [add_x_y_default_va_cpp] ] [ [add_x_y_default_cpp] ] ]
 ]
 
-If this variadic macro syntax seems strange, programmers can define a `WITH_DEFAULT` macro similar to the following (if they think that improves readability):
+Programmers can define a `WITH_DEFAULT` macro similar to the following if they think it improves readability over the syntax above:
+[footnote
+The authors do not personally find the use of the `WITH_DEFAULT` macro more readable and they prefer to use the `default` "keyword" directly.
+]
 
 [table
-[ [__Variadic_Macro_Syntax__] ]
-[ [ [add_x_y_default_with_va_cpp] ] ]
+[ [__Variadic_Macro_Syntax__] [__Sequencing_Macro_Syntax__] ]
+[ [ [add_x_y_default_with_va_cpp] ] [ [add_x_y_default_with_cpp] ] ]
 ]
 
 [endsect]

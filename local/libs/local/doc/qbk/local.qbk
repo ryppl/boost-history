@@ -93,6 +93,7 @@
 [import ../../example/ten_ep.cpp]
 [import ../../example/add_x_y_default.cpp]
 [import ../../example/add_x_y_default_va.cpp]
+[import ../../example/add_x_y_default_with.cpp]
 [import ../../example/add_x_y_default_with_va.cpp]
 [import ../../example/add_function.cpp]
 [import ../../example/add_function_va.cpp]
