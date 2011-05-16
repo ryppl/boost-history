@@ -32,7 +32,7 @@ namespace boost
 namespace detail
 {
 
-namespace sh
+namespace bp
 {
 
 
@@ -114,13 +114,13 @@ template <typename T>
     }
 
 
-} // namespace sh
+} // namespace bp
 
 } // namespace detail
 
-using detail::sh::block_allocator;
-using detail::sh::operator ==;
-using detail::sh::operator !=;
+using detail::bp::block_allocator;
+using detail::bp::operator ==;
+using detail::bp::operator !=;
 
 } // namespace boost
 

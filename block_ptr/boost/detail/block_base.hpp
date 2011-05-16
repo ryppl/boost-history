@@ -51,7 +51,7 @@ namespace boost
 namespace detail
 {
 
-namespace sh
+namespace bp
 {
 
 
@@ -273,7 +273,7 @@ template <typename T>
 				@param	p	Address of a @c data_type member object to cast from.
 			*/
 			
-            roofof(data_type * p) : p_(sh::roofof((data_type block::*)(& block::elem_), p)) {}
+            roofof(data_type * p) : p_(bp::roofof((data_type block::*)(& block::elem_), p)) {}
             
 			
 			/**
@@ -346,7 +346,7 @@ template <>
 				@param	p	Address of a @c data_type member object to cast from.
 			*/
 			
-            roofof(data_type * p) : p_(sh::roofof((long block::*)(& block::elem_), static_cast<long *>(p))) {}
+            roofof(data_type * p) : p_(bp::roofof((long block::*)(& block::elem_), static_cast<long *>(p))) {}
             
 			
 			/**
@@ -358,11 +358,11 @@ template <>
     };
 
 
-} // namespace sh
+} // namespace bp
 
 } // namespace detail
 
 } // namespace boost
 
 
-#endif  // #ifndef BOOST_DETAIL_SH_OWNED_BASE_NT_HPP_INCLUDED
+#endif  // #ifndef BOOST_DETAIL_BLOCK_BASE_HPP_INCLUDED

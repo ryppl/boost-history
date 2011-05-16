@@ -27,7 +27,7 @@ namespace boost
 namespace detail
 {
 
-namespace sh
+namespace bp
 {
 
 
@@ -162,7 +162,7 @@ template <typename T, intrusive_list_node T::* P>
 	};
 
 
-} // namespace sh
+} // namespace bp
 
 } // namespace detail
 

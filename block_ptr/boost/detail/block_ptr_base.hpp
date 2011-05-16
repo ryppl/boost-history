@@ -29,7 +29,7 @@ namespace boost
 namespace detail
 {
 
-namespace sh
+namespace bp
 {
 
 
@@ -67,7 +67,7 @@ template <typename T>
 		}
 
 		template <typename V>
-			block_ptr_common(detail::sh::block<V> * p) : po_(p->element())
+			block_ptr_common(detail::bp::block<V> * p) : po_(p->element())
 			{
 			}
 
@@ -81,7 +81,7 @@ template <typename T>
 			}
 
 		template <typename V>
-			block_ptr_common & operator = (detail::sh::block<V> * p)
+			block_ptr_common & operator = (detail::bp::block<V> * p)
 			{
 				reset(p->element());
 
@@ -175,9 +175,9 @@ template <typename T>
         }
 
 	protected:
-		detail::sh::block_base * header() const
+		detail::bp::block_base * header() const
 		{
-			detail::sh::block_base * p = (block<value_type> *) (typename block<value_type>::roofof) static_cast<value_type *>(rootof<is_polymorphic<value_type>::value>::get(po_));
+			detail::bp::block_base * p = (block<value_type> *) (typename block<value_type>::roofof) static_cast<value_type *>(rootof<is_polymorphic<value_type>::value>::get(po_));
 			return p;
 		}
 	};
@@ -198,7 +198,7 @@ template <typename T>
 		}
 
 		template <typename V>
-			block_ptr_base(detail::sh::block<V> * p) : base(p)
+			block_ptr_base(detail::bp::block<V> * p) : base(p)
 			{
 			}
 
@@ -212,7 +212,7 @@ template <typename T>
 			}
 
 		template <typename V>
-			block_ptr_base & operator = (detail::sh::block<V> * p)
+			block_ptr_base & operator = (detail::bp::block<V> * p)
 			{
 				return static_cast<block_ptr_base &>(base::operator = (p));
 			}
@@ -256,7 +256,7 @@ template <typename T, size_t N>
 		}
 
 		template <typename V>
-			block_ptr_base(detail::sh::block<V> * p) : base(p)
+			block_ptr_base(detail::bp::block<V> * p) : base(p)
 			{
 			}
 
@@ -270,7 +270,7 @@ template <typename T, size_t N>
 			}
 
 		template <typename V>
-			block_ptr_base & operator = (detail::sh::block<V> * p)
+			block_ptr_base & operator = (detail::bp::block<V> * p)
 			{
 				return static_cast<block_ptr_base &>(base::operator = (p));
 			}
@@ -314,7 +314,7 @@ template <>
 		}
 
 		template <typename V>
-			block_ptr_base(detail::sh::block<V> * p) : base(p)
+			block_ptr_base(detail::bp::block<V> * p) : base(p)
 			{
 			}
 
@@ -328,7 +328,7 @@ template <>
 			}
 
 		template <typename V>
-			block_ptr_base & operator = (detail::sh::block<V> * p)
+			block_ptr_base & operator = (detail::bp::block<V> * p)
 			{
 				return static_cast<block_ptr_base &>(base::operator = (p));
 			}
@@ -346,7 +346,7 @@ template <>
 	};
 
 
-} // namespace sh
+} // namespace bp
 
 } // namespace detail
 

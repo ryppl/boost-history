@@ -48,7 +48,7 @@ namespace boost
 namespace detail
 {
 
-namespace sh
+namespace bp
 {
 
 
@@ -513,13 +513,13 @@ template <typename V>
 
 BOOST_PP_REPEAT_FROM_TO(1, 10, CONSTRUCT_MAKE_BLOCK, make_block)
 
-} // namespace sh
+} // namespace bp
 
 } // namespace detail
 
-using detail::sh::block_ptr;
-using detail::sh::block;
-using detail::sh::make_block;
+using detail::bp::block_ptr;
+using detail::bp::block;
+using detail::bp::make_block;
 
 } // namespace boost
 

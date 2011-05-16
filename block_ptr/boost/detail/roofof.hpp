@@ -30,7 +30,7 @@ namespace boost
 namespace detail
 {
 
-namespace sh
+namespace bp
 {
 
 
@@ -90,11 +90,11 @@ template <typename T, typename U>
 	}
 
 
-} // namespace sh
+} // namespace bp
 
 } // namespace detail
 
 } // namespace boost
 
 
-#endif // #ifndef BOOST_DETAIL_SH_UTILITY_H_INCLUDED
+#endif // #ifndef BOOST_DETAIL_ROOFOF_HPP_INCLUDED
