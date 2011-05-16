@@ -253,6 +253,9 @@ template <typename T>
             intrusive_stack::node pn_;				/**< Tag used for enlisting a pointer on the heap to later share the @c block_header it belongs to. */
         };
 
+#ifdef BOOST_BP_RAW_POINTER
+	public:
+#endif
 		/**
 			Initialization of a pointer living on the stack or proper enlistment if living on the heap.
 			
