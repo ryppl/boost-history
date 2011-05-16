@@ -78,10 +78,6 @@ struct block_header
     intrusive_list includes_;						/**< List of all sets of an union. */
     intrusive_list elements_;						/**< List of all pointee objects belonging to a @c block_header . */
 
-#ifndef BOOST_DISABLE_THREADS
-	static mutex pool_mutex_;
-#endif
-
     static fast_pool_allocator<block_header> pool_;/**< Pool where all sets are allocated. */
 
 	/**
@@ -172,9 +168,6 @@ struct block_header
 	
     void * operator new (size_t s)
     {
-#ifndef BOOST_DISABLE_THREADS
-       	mutex::scoped_lock scoped_lock(pool_mutex_);
-#endif
         return pool_.allocate(s);
     }
     
@@ -201,16 +194,12 @@ struct block_header
 	
     void operator delete (void * p)
     {
-#ifndef BOOST_DISABLE_THREADS
-       	mutex::scoped_lock scoped_lock(pool_mutex_);
-#endif
         pool_.deallocate(static_cast<block_header *>(p), sizeof(block_header));
     }
 };
 
 #ifndef BOOST_DISABLE_THREADS
 mutex block_header::mutex_;
-mutex block_header::pool_mutex_;
 #endif
 fast_pool_allocator<block_header> block_header::pool_;
 
