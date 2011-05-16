@@ -1,5 +1,6 @@
 #include <iostream>
 #include <boost/thread.hpp>
+#define BOOST_BP_RAW_POINTER
 #include <boost/block_ptr.hpp>
 //#include <boost/thread/mutex.hpp>
 
@@ -17,7 +18,7 @@ void worker(int id)
     for (int i = 0; i < 100000; ++ i)
     {
        	cout << id << "-" << i << ", " << flush;
-    	p = make_block< pair<int, int> >(make_pair(id, i));
+    	p = new block< pair<int, int> >(make_pair(id, i));
     }
     cout << endl;
        

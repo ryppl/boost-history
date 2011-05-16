@@ -277,6 +277,10 @@ template <typename T>
         template <typename V>
             block_ptr & operator = (block<V> * p)
             {
+#ifndef BOOST_DISABLE_THREADS
+       			mutex::scoped_lock scoped_lock(block_header::mutex_);
+#endif
+
                 release(false);
 
                 init(p);
