@@ -4,13 +4,14 @@
 // (See accompanying file ../../../LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_COERCE_PUSH_BACK_HPP
-#define BOOST_COERCE_PUSH_BACK_HPP
+#ifndef BOOST_COERCE_DETAIL_PUSH_BACK_HPP
+#define BOOST_COERCE_DETAIL_PUSH_BACK_HPP
 
 #ifdef _MSC_VER
 #pragma once
 #endif
 
+#include <boost/config.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/type_traits/detail/yes_no_type.hpp>
 
@@ -35,4 +36,4 @@ namespace boost { namespace coerce { namespace detail {
 
 } } }  // namespace boost::coerce::detail
 
-#endif  // BOOST_COERCE_PUSH_BACK_HPP
+#endif  // BOOST_COERCE_DETAIL_PUSH_BACK_HPP
