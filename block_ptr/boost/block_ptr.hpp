@@ -289,6 +289,12 @@ template <typename T>
 
                 return * this;
             }
+
+        template <typename V>
+	        void reset(block<V> * p)
+	        {
+	            operator = <T>(p);
+	        }
             
 		template <typename V>
 			friend block_ptr<V> make_block();
@@ -395,12 +401,6 @@ template <typename T>
         
         template <typename V>
 	        void reset(block_ptr<V> const & p)
-	        {
-	            operator = <T>(p);
-	        }
-
-        template <typename V>
-	        void reset(block<V> * p)
 	        {
 	            operator = <T>(p);
 	        }
