@@ -3,6 +3,7 @@
 #include <memory>
 #include <iostream>
 #include <boost/shared_ptr.hpp>
+#define BOOST_BP_RAW_POINTER
 #include <boost/block_ptr.hpp>
 
 using namespace std;
