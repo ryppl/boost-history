@@ -130,14 +130,10 @@ struct block_header
 	
     block_header * redir() const
     {
-    	block_header * p = redir_;
-    	
-        while (p != p->redir_)
-        	p = p->redir_;
-        	
-        redir_ = p;
+        while (redir_ != redir_->redir_)
+        	redir_ = redir_->redir_;
         
-        return p;
+        return redir_;
     }
 	
 	
