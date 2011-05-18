@@ -68,7 +68,7 @@
 <a name="l00070"></a>00070 <span class="preprocessor">#endif</span>
 <a name="l00071"></a>00071 <span class="preprocessor"></span>
 <a name="l00072"></a><a class="code" href="structboost_1_1detail_1_1bp_1_1block__header.html#92d86f7b0e54376a82478b567293530e">00072</a>     count_type <a class="code" href="structboost_1_1detail_1_1bp_1_1block__header.html#92d86f7b0e54376a82478b567293530e">count_</a>;                                                          
-<a name="l00073"></a><a class="code" href="structboost_1_1detail_1_1bp_1_1block__header.html#a5928f470f31e1fd88a3e3f37feed0c9">00073</a>     <a class="code" href="structboost_1_1detail_1_1bp_1_1block__header.html">block_header</a> * <a class="code" href="structboost_1_1detail_1_1bp_1_1block__header.html#a5928f470f31e1fd88a3e3f37feed0c9">redir_</a>;                                                      
+<a name="l00073"></a><a class="code" href="structboost_1_1detail_1_1bp_1_1block__header.html#a5928f470f31e1fd88a3e3f37feed0c9">00073</a>     <span class="keyword">mutable</span> <a class="code" href="structboost_1_1detail_1_1bp_1_1block__header.html">block_header</a> * <a class="code" href="structboost_1_1detail_1_1bp_1_1block__header.html#a5928f470f31e1fd88a3e3f37feed0c9">redir_</a>;                                      
 <a name="l00075"></a><a class="code" href="structboost_1_1detail_1_1bp_1_1block__header.html#c8452a554431405a79be488e95161176">00075</a>         <span class="keywordtype">bool</span> <a class="code" href="structboost_1_1detail_1_1bp_1_1block__header.html#c8452a554431405a79be488e95161176">destroy_</a>;                                                                  
 <a name="l00076"></a><a class="code" href="structboost_1_1detail_1_1bp_1_1block__header.html#6f9c35d18aab985a76d34976e4a48908">00076</a>     intrusive_list::node <a class="code" href="structboost_1_1detail_1_1bp_1_1block__header.html#6f9c35d18aab985a76d34976e4a48908">tag_</a>;                                          
 <a name="l00078"></a><a class="code" href="structboost_1_1detail_1_1bp_1_1block__header.html#d2ab77700a259bc644d8cdb3da786e1d">00078</a>     <a class="code" href="classboost_1_1detail_1_1bp_1_1intrusive__list.html">intrusive_list</a> <a class="code" href="structboost_1_1detail_1_1bp_1_1block__header.html#d2ab77700a259bc644d8cdb3da786e1d">includes_</a>;                                           
@@ -112,18 +112,18 @@
 <a name="l00134"></a>00134         
 <a name="l00135"></a>00135         <span class="keywordflow">while</span> (p != p-&gt;<a class="code" href="structboost_1_1detail_1_1bp_1_1block__header.html#a5928f470f31e1fd88a3e3f37feed0c9">redir_</a>)
 <a name="l00136"></a>00136                 p = p-&gt;<a class="code" href="structboost_1_1detail_1_1bp_1_1block__header.html#a5928f470f31e1fd88a3e3f37feed0c9">redir_</a>;
-<a name="l00137"></a>00137         
-<a name="l00138"></a>00138         <span class="keywordflow">return</span> p;
-<a name="l00139"></a>00139     }
-<a name="l00140"></a>00140         
-<a name="l00141"></a>00141         
-<a name="l00148"></a><a class="code" href="structboost_1_1detail_1_1bp_1_1block__header.html#fb4c4d995c9434e246e23b1cf6baf9d7">00148</a>     <span class="keywordtype">void</span> <a class="code" href="structboost_1_1detail_1_1bp_1_1block__header.html#a371e3e9a7683def37e5ce9a95776a6a">redir</a>(<a class="code" href="structboost_1_1detail_1_1bp_1_1block__header.html">block_header</a> * p)
-<a name="l00149"></a>00149     {
-<a name="l00150"></a>00150         <a class="code" href="structboost_1_1detail_1_1bp_1_1block__header.html">block_header</a> * q = p-&gt;<a class="code" href="structboost_1_1detail_1_1bp_1_1block__header.html#a371e3e9a7683def37e5ce9a95776a6a">redir</a>();
-<a name="l00151"></a>00151         
-<a name="l00152"></a>00152         <span class="keywordflow">if</span> (<a class="code" href="structboost_1_1detail_1_1bp_1_1block__header.html#a5928f470f31e1fd88a3e3f37feed0c9">redir_</a> != q)
+<a name="l00137"></a>00137                 
+<a name="l00138"></a>00138         <a class="code" href="structboost_1_1detail_1_1bp_1_1block__header.html#a5928f470f31e1fd88a3e3f37feed0c9">redir_</a> = p;
+<a name="l00139"></a>00139         
+<a name="l00140"></a>00140         <span class="keywordflow">return</span> p;
+<a name="l00141"></a>00141     }
+<a name="l00142"></a>00142         
+<a name="l00143"></a>00143         
+<a name="l00150"></a><a class="code" href="structboost_1_1detail_1_1bp_1_1block__header.html#fb4c4d995c9434e246e23b1cf6baf9d7">00150</a>     <span class="keywordtype">void</span> <a class="code" href="structboost_1_1detail_1_1bp_1_1block__header.html#a371e3e9a7683def37e5ce9a95776a6a">redir</a>(<a class="code" href="structboost_1_1detail_1_1bp_1_1block__header.html">block_header</a> * p)
+<a name="l00151"></a>00151     {
+<a name="l00152"></a>00152         <span class="keywordflow">if</span> (<a class="code" href="structboost_1_1detail_1_1bp_1_1block__header.html#a5928f470f31e1fd88a3e3f37feed0c9">redir_</a> != p)
 <a name="l00153"></a>00153         {
-<a name="l00154"></a>00154             <a class="code" href="structboost_1_1detail_1_1bp_1_1block__header.html#a5928f470f31e1fd88a3e3f37feed0c9">redir_</a> = q;
+<a name="l00154"></a>00154             <a class="code" href="structboost_1_1detail_1_1bp_1_1block__header.html#a5928f470f31e1fd88a3e3f37feed0c9">redir_</a> = p;
 <a name="l00155"></a>00155             <a class="code" href="structboost_1_1detail_1_1bp_1_1block__header.html#a5928f470f31e1fd88a3e3f37feed0c9">redir_</a>-&gt;<a class="code" href="structboost_1_1detail_1_1bp_1_1block__header.html#d2ab77700a259bc644d8cdb3da786e1d">includes_</a>.<a class="code" href="classboost_1_1detail_1_1bp_1_1intrusive__list.html#370ce095c0a71bbfca582f8586096b95">merge</a>(<a class="code" href="structboost_1_1detail_1_1bp_1_1block__header.html#d2ab77700a259bc644d8cdb3da786e1d">includes_</a>);
 <a name="l00156"></a>00156             <a class="code" href="structboost_1_1detail_1_1bp_1_1block__header.html#a5928f470f31e1fd88a3e3f37feed0c9">redir_</a>-&gt;<a class="code" href="structboost_1_1detail_1_1bp_1_1block__header.html#01758c9339845ef28cce2d43fec0145b">elements_</a>.<a class="code" href="classboost_1_1detail_1_1bp_1_1intrusive__list.html#370ce095c0a71bbfca582f8586096b95">merge</a>(<a class="code" href="structboost_1_1detail_1_1bp_1_1block__header.html#01758c9339845ef28cce2d43fec0145b">elements_</a>);
 <a name="l00157"></a>00157             <span class="keyword">new</span> (&amp; <a class="code" href="structboost_1_1detail_1_1bp_1_1block__header.html#a5928f470f31e1fd88a3e3f37feed0c9">redir_</a>-&gt;<a class="code" href="structboost_1_1detail_1_1bp_1_1block__header.html#92d86f7b0e54376a82478b567293530e">count_</a>) count_type(<a class="code" href="structboost_1_1detail_1_1bp_1_1block__header.html#a5928f470f31e1fd88a3e3f37feed0c9">redir_</a>-&gt;<a class="code" href="structboost_1_1detail_1_1bp_1_1block__header.html#92d86f7b0e54376a82478b567293530e">count_</a> + <a class="code" href="structboost_1_1detail_1_1bp_1_1block__header.html#92d86f7b0e54376a82478b567293530e">count_</a>); 
@@ -257,7 +257,7 @@
 <a name="l00333"></a>00333                 <span class="keywordflow">else</span>
 <a name="l00334"></a>00334                     <a class="code" href="structboost_1_1detail_1_1bp_1_1pool.html#d7e60e8f69cc04b851a009b7a0936681">pool::top</a>(<span class="keyword">this</span>)-&gt;<a class="code" href="classboost_1_1detail_1_1bp_1_1block__base.html#cc684cbea60db61196e09f19bb54ae58">ptrs_</a>.<a class="code" href="classboost_1_1detail_1_1bp_1_1intrusive__stack.html#1aaf9c58db396fa3024878c3289e0040">push</a>(&amp; <a class="code" href="classboost_1_1detail_1_1bp_1_1block__ptr.html#c4e80caada32e2189d3351e3824a753f">pn_</a>);
 <a name="l00335"></a>00335 
-<a name="l00336"></a>00336                 <a class="code" href="classboost_1_1detail_1_1bp_1_1block__ptr.html#8221df1dd9f20040695c8c09923dbcc2">ps_</a>-&gt;<a class="code" href="structboost_1_1detail_1_1bp_1_1block__header.html#a371e3e9a7683def37e5ce9a95776a6a">redir</a>(p.<a class="code" href="classboost_1_1detail_1_1bp_1_1block__ptr.html#8221df1dd9f20040695c8c09923dbcc2">ps_</a>);
+<a name="l00336"></a>00336                 <a class="code" href="classboost_1_1detail_1_1bp_1_1block__ptr.html#8221df1dd9f20040695c8c09923dbcc2">ps_</a>-&gt;<a class="code" href="structboost_1_1detail_1_1bp_1_1block__header.html#a371e3e9a7683def37e5ce9a95776a6a">redir</a>()-&gt;<a class="code" href="structboost_1_1detail_1_1bp_1_1block__header.html#a371e3e9a7683def37e5ce9a95776a6a">redir</a>(p.<a class="code" href="classboost_1_1detail_1_1bp_1_1block__ptr.html#8221df1dd9f20040695c8c09923dbcc2">ps_</a>-&gt;<a class="code" href="structboost_1_1detail_1_1bp_1_1block__header.html#a371e3e9a7683def37e5ce9a95776a6a">redir</a>());
 <a name="l00337"></a>00337             }
 <a name="l00338"></a>00338 
 <a name="l00339"></a>00339                 
@@ -268,7 +268,7 @@
 <a name="l00350"></a>00350                 <span class="keywordflow">else</span>
 <a name="l00351"></a>00351                     <a class="code" href="structboost_1_1detail_1_1bp_1_1pool.html#d7e60e8f69cc04b851a009b7a0936681">pool::top</a>(<span class="keyword">this</span>)-&gt;<a class="code" href="classboost_1_1detail_1_1bp_1_1block__base.html#cc684cbea60db61196e09f19bb54ae58">ptrs_</a>.<a class="code" href="classboost_1_1detail_1_1bp_1_1intrusive__stack.html#1aaf9c58db396fa3024878c3289e0040">push</a>(&amp; <a class="code" href="classboost_1_1detail_1_1bp_1_1block__ptr.html#c4e80caada32e2189d3351e3824a753f">pn_</a>);
 <a name="l00352"></a>00352                                 
-<a name="l00353"></a>00353                 <a class="code" href="classboost_1_1detail_1_1bp_1_1block__ptr.html#8221df1dd9f20040695c8c09923dbcc2">ps_</a>-&gt;<a class="code" href="structboost_1_1detail_1_1bp_1_1block__header.html#a371e3e9a7683def37e5ce9a95776a6a">redir</a>(p.<a class="code" href="classboost_1_1detail_1_1bp_1_1block__ptr.html#8221df1dd9f20040695c8c09923dbcc2">ps_</a>);
+<a name="l00353"></a>00353                 <a class="code" href="classboost_1_1detail_1_1bp_1_1block__ptr.html#8221df1dd9f20040695c8c09923dbcc2">ps_</a>-&gt;<a class="code" href="structboost_1_1detail_1_1bp_1_1block__header.html#a371e3e9a7683def37e5ce9a95776a6a">redir</a>()-&gt;<a class="code" href="structboost_1_1detail_1_1bp_1_1block__header.html#a371e3e9a7683def37e5ce9a95776a6a">redir</a>(p.<a class="code" href="classboost_1_1detail_1_1bp_1_1block__ptr.html#8221df1dd9f20040695c8c09923dbcc2">ps_</a>-&gt;<a class="code" href="structboost_1_1detail_1_1bp_1_1block__header.html#a371e3e9a7683def37e5ce9a95776a6a">redir</a>());
 <a name="l00354"></a>00354             }
 <a name="l00355"></a>00355 
 <a name="l00356"></a>00356 
@@ -283,7 +283,7 @@
 <a name="l00371"></a>00371                 {
 <a name="l00372"></a>00372                     <a class="code" href="classboost_1_1detail_1_1bp_1_1block__ptr.html#0fdbbbefc953faac0eaa8b2ce1075f77">release</a>(<span class="keyword">false</span>);
 <a name="l00373"></a>00373                                         
-<a name="l00374"></a>00374                     <a class="code" href="classboost_1_1detail_1_1bp_1_1block__ptr.html#8221df1dd9f20040695c8c09923dbcc2">ps_</a>-&gt;<a class="code" href="structboost_1_1detail_1_1bp_1_1block__header.html#a371e3e9a7683def37e5ce9a95776a6a">redir</a>(p.<a class="code" href="classboost_1_1detail_1_1bp_1_1block__ptr.html#8221df1dd9f20040695c8c09923dbcc2">ps_</a>);
+<a name="l00374"></a>00374                         <a class="code" href="classboost_1_1detail_1_1bp_1_1block__ptr.html#8221df1dd9f20040695c8c09923dbcc2">ps_</a>-&gt;<a class="code" href="structboost_1_1detail_1_1bp_1_1block__header.html#a371e3e9a7683def37e5ce9a95776a6a">redir</a>()-&gt;<a class="code" href="structboost_1_1detail_1_1bp_1_1block__header.html#a371e3e9a7683def37e5ce9a95776a6a">redir</a>(p.<a class="code" href="classboost_1_1detail_1_1bp_1_1block__ptr.html#8221df1dd9f20040695c8c09923dbcc2">ps_</a>-&gt;<a class="code" href="structboost_1_1detail_1_1bp_1_1block__header.html#a371e3e9a7683def37e5ce9a95776a6a">redir</a>());
 <a name="l00375"></a>00375                 }
 <a name="l00376"></a>00376                 base::operator = (p);
 <a name="l00377"></a>00377 
@@ -425,7 +425,7 @@
 <a name="l00531"></a>00531 <span class="preprocessor"></span>
 <a name="l00532"></a>00532 
 <a name="l00533"></a>00533 <span class="preprocessor">#endif // #ifndef BOOST_BLOCK_PTR_INCLUDED</span>
-</pre></div><hr size="1"><address style="align: right;"><small>Generated on Mon May 16 22:47:02 2011 for BlockPointer by&nbsp;
+</pre></div><hr size="1"><address style="align: right;"><small>Generated on Tue May 17 23:42:50 2011 for BlockPointer by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>
