@@ -70,7 +70,7 @@ struct block_header
 #endif
 
     count_type count_;								/**< Count of the number of pointers from the stack referencing the same @c block_header .*/
-    block_header * redir_;							/**< Redirection in the case of an union multiple sets.*/
+    mutable block_header * redir_;					/**< Redirection in the case of an union multiple sets.*/
 
 	bool destroy_;									/**< Destruction sequence initiated. */
     intrusive_list::node tag_;						/**< Tag used to enlist to @c block_header::includes_ . */
@@ -134,6 +134,8 @@ struct block_header
     	
         while (p != p->redir_)
         	p = p->redir_;
+        	
+        redir_ = p;
         
         return p;
     }
@@ -147,11 +149,9 @@ struct block_header
 
     void redir(block_header * p)
     {
-    	block_header * q = p->redir();
-    	
-        if (redir_ != q)
+        if (redir_ != p)
         {
-            redir_ = q;
+            redir_ = p;
             redir_->includes_.merge(includes_);
             redir_->elements_.merge(elements_);
             new (& redir_->count_) count_type(redir_->count_ + count_); /**< Hack */
@@ -333,7 +333,7 @@ template <typename T>
                 else
                     pool::top(this)->ptrs_.push(& pn_);
 
-                ps_->redir(p.ps_);
+                ps_->redir()->redir(p.ps_->redir());
             }
 
 		
@@ -350,7 +350,7 @@ template <typename T>
                 else
                     pool::top(this)->ptrs_.push(& pn_);
 				
-                ps_->redir(p.ps_);
+                ps_->redir()->redir(p.ps_->redir());
             }
 
 
@@ -371,7 +371,7 @@ template <typename T>
                 {
                     release(false);
 					
-                    ps_->redir(p.ps_);
+                	ps_->redir()->redir(p.ps_->redir());
                 }
                 base::operator = (p);
 
