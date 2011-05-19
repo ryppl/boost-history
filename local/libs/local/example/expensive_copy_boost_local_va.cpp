@@ -15,7 +15,6 @@ int main() {
 
 //[expensive_copy_boost_local_va_cpp
 #include <boost/local/function.hpp>
-#include <boost/noncopyable.hpp>
 #include <iostream>
 
 struct x_t {

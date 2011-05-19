@@ -14,7 +14,6 @@ int main() {
 #else
 
 //[expensive_copy_0x_lambda_cpp
-#include <boost/noncopyable.hpp>
 #include <iostream>
 
 struct x_t {
