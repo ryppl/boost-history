@@ -420,7 +420,7 @@
 <span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
     <span class="identifier">x_t</span> <span class="identifier">x</span><span class="special">(-</span><span class="number">1</span><span class="special">);</span>
 
-    <span class="keyword">auto</span> <span class="identifier">l</span> <span class="special">=</span> <span class="special">[</span><span class="identifier">x</span><span class="special">]()</span> <span class="special">{</span> <span class="comment">// Error: x is non copyable...</span>
+    <span class="keyword">auto</span> <span class="identifier">l</span> <span class="special">=</span> <span class="special">[</span><span class="identifier">x</span><span class="special">]()</span> <span class="special">{</span> <span class="comment">// Error: x is non-copyable...</span>
         <span class="comment">// ... but if bind `&amp;x` then `x` is not constant.</span>
         <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">x</span><span class="special">.</span><span class="identifier">i</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
     <span class="special">};</span>

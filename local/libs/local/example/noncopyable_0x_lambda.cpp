@@ -18,7 +18,7 @@ struct x_t: boost::noncopyable {
 int main() {
     x_t x(-1);
 
-    auto l = [x]() { // Error: x is non copyable...
+    auto l = [x]() { // Error: x is non-copyable...
         // ... but if bind `&x` then `x` is not constant.
         std::cout << x.i << std::endl;
     };
