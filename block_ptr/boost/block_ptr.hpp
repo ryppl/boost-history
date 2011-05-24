@@ -74,19 +74,14 @@ struct block_header
     intrusive_list includes_;						/**< List of all sets of an union. */
     intrusive_list elements_;						/**< List of all pointee objects belonging to a @c block_header . */
 
-	static mutex & static_mutex()
+	static mutex & static_mutex()					/**< Main global mutex used for thread safety */
 	{
 		static mutex mutex_;
 		
 		return mutex_;
 	}
 
-
-	/**
-		Pool where all sets are allocated. 
-	*/
-	
-	static fast_pool_allocator<block_header> & static_pool()
+	static fast_pool_allocator<block_header> & static_pool() /**< Pool where all sets are allocated. */
 	{
     	static fast_pool_allocator<block_header> pool_;
     	
