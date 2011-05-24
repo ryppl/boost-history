@@ -72,14 +72,14 @@ struct pool
 	typedef std::list< numeric::interval<long>, fast_pool_allocator< numeric::interval<long> > > pool_lii;	/**< Syntax helper. */
 
 #ifndef BOOST_DISABLE_THREADS
-    static thread_specific_ptr<pool_lii> & get_plii()    /**< Thread specific list of memory boundaries. */
+    static thread_specific_ptr<pool_lii> & static_plii()    /**< Thread specific list of memory boundaries. */
     {
     	static thread_specific_ptr<pool_lii> plii_;
     	
     	return plii_;
     }
 #else
-    static std::auto_ptr<pool_lii> & get_plii()          /**< List of memory boundaries. */
+    static std::auto_ptr<pool_lii> & static_plii()          /**< List of memory boundaries. */
     {
     	static std::auto_ptr<pool_lii> plii_;
     	
@@ -101,8 +101,8 @@ struct pool
 	
 	static void init()
 	{
-	    if (get_plii().get() == 0)
-        	get_plii().reset(new pool_lii());
+	    if (static_plii().get() == 0)
+        	static_plii().reset(new pool_lii());
 	}
 	
 	/**
@@ -118,13 +118,13 @@ struct pool
     	
         pool_lii::reverse_iterator i;
         
-        for (i = get_plii()->rbegin(); i != get_plii()->rend(); i ++)
+        for (i = static_plii()->rbegin(); i != static_plii()->rend(); i ++)
             if (in((long)(p), * i))
                 break;
 
-        get_plii()->erase(i.base(), get_plii()->end());
+        static_plii()->erase(i.base(), static_plii()->end());
         
-        return (block_base *)(get_plii()->rbegin()->lower());
+        return (block_base *)(static_plii()->rbegin()->lower());
     }
     
 	
@@ -141,7 +141,7 @@ struct pool
     	
         void * p = pool_t::ordered_malloc(s);
         
-        get_plii()->push_back(numeric::interval<long>((long) p, long((char *)(p) + s)));
+        static_plii()->push_back(numeric::interval<long>((long) p, long((char *)(p) + s)));
         
         return p;
     }
@@ -160,11 +160,11 @@ struct pool
     	
         pool_lii::reverse_iterator i;
         
-        for (i = get_plii()->rbegin(); i != get_plii()->rend(); i ++)
+        for (i = static_plii()->rbegin(); i != static_plii()->rend(); i ++)
             if (in((long)(p), * i))
                 break;
 
-        get_plii()->erase(i.base(), get_plii()->end());
+        static_plii()->erase(i.base(), static_plii()->end());
         pool_t::ordered_free(p, s);
     }
 };
@@ -308,7 +308,7 @@ template <>
         virtual ~block()					{}
         virtual void dispose() 				{}
 
-        virtual void * get_deleter( std::type_info const & ti ) { return 0; }
+        virtual void * static_deleter( std::type_info const & ti ) { return 0; }
 
     public:
 		/**

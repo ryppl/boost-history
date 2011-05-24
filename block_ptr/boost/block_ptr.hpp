@@ -74,7 +74,7 @@ struct block_header
     intrusive_list includes_;						/**< List of all sets of an union. */
     intrusive_list elements_;						/**< List of all pointee objects belonging to a @c block_header . */
 
-	static mutex & get_mutex()
+	static mutex & static_mutex()
 	{
 		static mutex mutex_;
 		
@@ -86,7 +86,7 @@ struct block_header
 		Pool where all sets are allocated. 
 	*/
 	
-	static fast_pool_allocator<block_header> & get_pool()
+	static fast_pool_allocator<block_header> & static_pool()
 	{
     	static fast_pool_allocator<block_header> pool_;
     	
@@ -177,7 +177,7 @@ struct block_header
 	
     void * operator new (size_t s)
     {
-        return get_pool().allocate(s);
+        return static_pool().allocate(s);
     }
     
 	
@@ -203,7 +203,7 @@ struct block_header
 	
     void operator delete (void * p)
     {
-        get_pool().deallocate(static_cast<block_header *>(p), sizeof(block_header));
+        static_pool().deallocate(static_cast<block_header *>(p), sizeof(block_header));
     }
 };
 
@@ -282,7 +282,7 @@ template <typename T>
             block_ptr & operator = (block<V> * p)
             {
 #ifndef BOOST_DISABLE_THREADS
-       			mutex::scoped_lock scoped_lock(block_header::get_mutex());
+       			mutex::scoped_lock scoped_lock(block_header::static_mutex());
 #endif
 
                 release(false);
@@ -368,7 +368,7 @@ template <typename T>
             block_ptr & operator = (block_ptr<V> const & p)
             {
 #ifndef BOOST_DISABLE_THREADS
-       			mutex::scoped_lock scoped_lock(block_header::get_mutex());
+       			mutex::scoped_lock scoped_lock(block_header::static_mutex());
 #endif
 
                 if (ps_->redir() != p.ps_->redir())
@@ -397,7 +397,7 @@ template <typename T>
         void reset()
         {
 #ifndef BOOST_DISABLE_THREADS
-       		mutex::scoped_lock scoped_lock(block_header::get_mutex());
+       		mutex::scoped_lock scoped_lock(block_header::static_mutex());
 #endif
 
             release(false);
