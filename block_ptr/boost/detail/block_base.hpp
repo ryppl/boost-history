@@ -72,14 +72,14 @@ struct pool
 	typedef std::list< numeric::interval<long>, fast_pool_allocator< numeric::interval<long> > > pool_lii;	/**< Syntax helper. */
 
 #ifndef BOOST_DISABLE_THREADS
-    static thread_specific_ptr<pool_lii> & plii()    /**< Thread specific list of memory boundaries. */
+    static thread_specific_ptr<pool_lii> & get_plii()    /**< Thread specific list of memory boundaries. */
     {
     	static thread_specific_ptr<pool_lii> plii_;
     	
     	return plii_;
     }
 #else
-    static std::auto_ptr<pool_lii> & plii()          /**< List of memory boundaries. */
+    static std::auto_ptr<pool_lii> & get_plii()          /**< List of memory boundaries. */
     {
     	static std::auto_ptr<pool_lii> plii_;
     	
@@ -101,8 +101,8 @@ struct pool
 	
 	static void init()
 	{
-	    if (plii().get() == 0)
-        	plii().reset(new pool_lii());
+	    if (get_plii().get() == 0)
+        	get_plii().reset(new pool_lii());
 	}
 	
 	/**
@@ -118,13 +118,13 @@ struct pool
     	
         pool_lii::reverse_iterator i;
         
-        for (i = plii()->rbegin(); i != plii()->rend(); i ++)
+        for (i = get_plii()->rbegin(); i != get_plii()->rend(); i ++)
             if (in((long)(p), * i))
                 break;
 
-        plii()->erase(i.base(), plii()->end());
+        get_plii()->erase(i.base(), get_plii()->end());
         
-        return (block_base *)(plii()->rbegin()->lower());
+        return (block_base *)(get_plii()->rbegin()->lower());
     }
     
 	
@@ -141,7 +141,7 @@ struct pool
     	
         void * p = pool_t::ordered_malloc(s);
         
-        plii()->push_back(numeric::interval<long>((long) p, long((char *)(p) + s)));
+        get_plii()->push_back(numeric::interval<long>((long) p, long((char *)(p) + s)));
         
         return p;
     }
@@ -160,11 +160,11 @@ struct pool
     	
         pool_lii::reverse_iterator i;
         
-        for (i = plii()->rbegin(); i != plii()->rend(); i ++)
+        for (i = get_plii()->rbegin(); i != get_plii()->rend(); i ++)
             if (in((long)(p), * i))
                 break;
 
-        plii()->erase(i.base(), plii()->end());
+        get_plii()->erase(i.base(), get_plii()->end());
         pool_t::ordered_free(p, s);
     }
 };

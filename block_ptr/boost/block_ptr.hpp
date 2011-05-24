@@ -65,10 +65,6 @@ struct block_header
 {
     typedef detail::atomic_count count_type;
 
-#ifndef BOOST_DISABLE_THREADS
-	static mutex mutex_;
-#endif
-
     count_type count_;								/**< Count of the number of pointers from the stack referencing the same @c block_header .*/
     mutable block_header * redir_;					/**< Redirection in the case of an union multiple sets.*/
 
@@ -78,7 +74,24 @@ struct block_header
     intrusive_list includes_;						/**< List of all sets of an union. */
     intrusive_list elements_;						/**< List of all pointee objects belonging to a @c block_header . */
 
-    static fast_pool_allocator<block_header> pool_;/**< Pool where all sets are allocated. */
+	static mutex & get_mutex()
+	{
+		static mutex mutex_;
+		
+		return mutex_;
+	}
+
+
+	/**
+		Pool where all sets are allocated. 
+	*/
+	
+	static fast_pool_allocator<block_header> & get_pool()
+	{
+    	static fast_pool_allocator<block_header> pool_;
+    	
+    	return pool_;
+    }
 
 	/**
 		Initialization of a single @c block_header .
@@ -164,7 +177,7 @@ struct block_header
 	
     void * operator new (size_t s)
     {
-        return pool_.allocate(s);
+        return get_pool().allocate(s);
     }
     
 	
@@ -190,14 +203,9 @@ struct block_header
 	
     void operator delete (void * p)
     {
-        pool_.deallocate(static_cast<block_header *>(p), sizeof(block_header));
+        get_pool().deallocate(static_cast<block_header *>(p), sizeof(block_header));
     }
 };
-
-#ifndef BOOST_DISABLE_THREADS
-mutex block_header::mutex_;
-#endif
-fast_pool_allocator<block_header> block_header::pool_;
 
 
 #define TEMPLATE_DECL(z, n, text) BOOST_PP_COMMA_IF(n) typename T ## n
@@ -274,7 +282,7 @@ template <typename T>
             block_ptr & operator = (block<V> * p)
             {
 #ifndef BOOST_DISABLE_THREADS
-       			mutex::scoped_lock scoped_lock(block_header::mutex_);
+       			mutex::scoped_lock scoped_lock(block_header::get_mutex());
 #endif
 
                 release(false);
@@ -360,7 +368,7 @@ template <typename T>
             block_ptr & operator = (block_ptr<V> const & p)
             {
 #ifndef BOOST_DISABLE_THREADS
-       			mutex::scoped_lock scoped_lock(block_header::mutex_);
+       			mutex::scoped_lock scoped_lock(block_header::get_mutex());
 #endif
 
                 if (ps_->redir() != p.ps_->redir())
@@ -389,7 +397,7 @@ template <typename T>
         void reset()
         {
 #ifndef BOOST_DISABLE_THREADS
-       		mutex::scoped_lock scoped_lock(block_header::mutex_);
+       		mutex::scoped_lock scoped_lock(block_header::get_mutex());
 #endif
 
             release(false);
