@@ -3,14 +3,30 @@
 #include <memory>
 #include <iostream>
 #include <boost/shared_ptr.hpp>
+#include <boost/make_shared.hpp>
 #define BOOST_BP_USE_RAW_POINTER
 #include <boost/block_ptr.hpp>
 
 using namespace std;
 using namespace boost;
 
+template <typename T>
+	auto_ptr<T> make_auto()
+	{
+		return auto_ptr<T>(new T);
+	}
+
+template <typename T, T (*P)()>
+	void worker_make()  
+	{         
+		T p;
+
+	    for (int i = 0; i < 100000; ++ i)
+	    	p = P();
+	}  
+   
 template <typename T, typename U>
-	void worker()  
+	void worker_new()  
 	{         
 		T p;
 
@@ -24,21 +40,40 @@ int main(int argc, char* argv[])
 {  
 	timespec ts[2];
 	
+	cout << "make:" << endl;
 	clock_gettime(CLOCK_PROCESS_CPUTIME_ID, & ts[0]); 
-	worker< auto_ptr<int>, int >();
+	worker_make< auto_ptr<int>, make_auto<int> >();
 	clock_gettime(CLOCK_PROCESS_CPUTIME_ID, & ts[1]);
 	cout << "auto_ptr:\t" << setw(numeric_limits<long>::digits10 + 2) << diff(ts[0], ts[1]).tv_nsec << " ns" << endl;
 
 	clock_gettime(CLOCK_PROCESS_CPUTIME_ID, & ts[0]); 
-	worker< shared_ptr<int>, int >();
+	worker_make< shared_ptr<int>, make_shared<int> >();
 	clock_gettime(CLOCK_PROCESS_CPUTIME_ID, & ts[1]);
 	cout << "shared_ptr:\t" << setw(numeric_limits<long>::digits10 + 2) << diff(ts[0], ts[1]).tv_nsec << " ns" << endl;
 
 	clock_gettime(CLOCK_PROCESS_CPUTIME_ID, & ts[0]); 
-	worker< block_ptr<int>, block<int> >();
+	worker_make< block_ptr<int>, make_block<int> >();
 	clock_gettime(CLOCK_PROCESS_CPUTIME_ID, & ts[1]);
 	cout << "block_ptr:\t" << setw(numeric_limits<long>::digits10 + 2) << diff(ts[0], ts[1]).tv_nsec << " ns" << endl;
+	cout << endl;
+	
+	cout << "new:" << endl;
+	clock_gettime(CLOCK_PROCESS_CPUTIME_ID, & ts[0]); 
+	worker_new< auto_ptr<int>, int >();
+	clock_gettime(CLOCK_PROCESS_CPUTIME_ID, & ts[1]);
+	cout << "auto_ptr\t" << setw(numeric_limits<long>::digits10 + 2) << diff(ts[0], ts[1]).tv_nsec << " ns" << endl;
 
+	clock_gettime(CLOCK_PROCESS_CPUTIME_ID, & ts[0]); 
+	worker_new< shared_ptr<int>, int >();
+	clock_gettime(CLOCK_PROCESS_CPUTIME_ID, & ts[1]);
+	cout << "shared_ptr:\t" << setw(numeric_limits<long>::digits10 + 2) << diff(ts[0], ts[1]).tv_nsec << " ns" << endl;
+
+	clock_gettime(CLOCK_PROCESS_CPUTIME_ID, & ts[0]); 
+	worker_new< block_ptr<int>, block<int> >();
+	clock_gettime(CLOCK_PROCESS_CPUTIME_ID, & ts[1]);
+	cout << "block_ptr:\t" << setw(numeric_limits<long>::digits10 + 2) << diff(ts[0], ts[1]).tv_nsec << " ns" << endl;
+	cout << endl;
+	
     return 0;  
 }  
 
