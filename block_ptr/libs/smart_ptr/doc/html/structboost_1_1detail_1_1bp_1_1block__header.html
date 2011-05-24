@@ -52,6 +52,13 @@ typedef detail::atomic_count&nbsp;</td><td class="memItemRight" valign="bottom">
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structboost_1_1detail_1_1bp_1_1block__header.html#346e9f26fcb43e2475bf47d842d166c3">operator delete</a> (void *p)</td></tr>
 
+<tr><td colspan="2"><br><h2>Static Public Member Functions</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="9331f9054c7296ddd39c1087506b1984"></a><!-- doxytag: member="boost::detail::bp::block_header::static_mutex" ref="9331f9054c7296ddd39c1087506b1984" args="()" -->
+static mutex &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><b>static_mutex</b> ()</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static fast_pool_allocator&lt;<br>
+ <a class="el" href="structboost_1_1detail_1_1bp_1_1block__header.html">block_header</a> &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structboost_1_1detail_1_1bp_1_1block__header.html#cee610242a48f4992a82fe6e526dd0f3">static_pool</a> ()</td></tr>
+
 <tr><td colspan="2"><br><h2>Public Attributes</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">count_type&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structboost_1_1detail_1_1bp_1_1block__header.html#92d86f7b0e54376a82478b567293530e">count_</a></td></tr>
 
@@ -64,13 +71,6 @@ typedef detail::atomic_count&nbsp;</td><td class="memItemRight" valign="bottom">
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classboost_1_1detail_1_1bp_1_1intrusive__list.html">intrusive_list</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structboost_1_1detail_1_1bp_1_1block__header.html#d2ab77700a259bc644d8cdb3da786e1d">includes_</a></td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classboost_1_1detail_1_1bp_1_1intrusive__list.html">intrusive_list</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structboost_1_1detail_1_1bp_1_1block__header.html#01758c9339845ef28cce2d43fec0145b">elements_</a></td></tr>
-
-<tr><td colspan="2"><br><h2>Static Public Attributes</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="19f92faa73e3f061a2361115f9d94846"></a><!-- doxytag: member="boost::detail::bp::block_header::mutex_" ref="19f92faa73e3f061a2361115f9d94846" args="" -->
-static mutex&nbsp;</td><td class="memItemRight" valign="bottom"><b>mutex_</b></td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static fast_pool_allocator&lt;<br>
- <a class="el" href="structboost_1_1detail_1_1bp_1_1block__header.html">block_header</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structboost_1_1detail_1_1bp_1_1block__header.html#92d649f3b75260f1b23566a4ece627e8">pool_</a></td></tr>
 
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
@@ -258,6 +258,25 @@ Release of a <code><a class="el" href="structboost_1_1detail_1_1bp_1_1block__hea
 
 </div>
 </div><p>
+<a class="anchor" name="cee610242a48f4992a82fe6e526dd0f3"></a><!-- doxytag: member="boost::detail::bp::block_header::static_pool" ref="cee610242a48f4992a82fe6e526dd0f3" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">static fast_pool_allocator&lt;<a class="el" href="structboost_1_1detail_1_1bp_1_1block__header.html">block_header</a>&gt;&amp; boost::detail::bp::block_header::static_pool           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"><code> [inline, static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Pool where all sets are allocated. 
+</div>
+</div><p>
 <hr><h2>Member Data Documentation</h2>
 <a class="anchor" name="92d86f7b0e54376a82478b567293530e"></a><!-- doxytag: member="boost::detail::bp::block_header::count_" ref="92d86f7b0e54376a82478b567293530e" args="" -->
 <div class="memitem">
@@ -319,21 +338,6 @@ List of all pointee objects belonging to a <code><a class="el" href="structboost
 List of all sets of an union. 
 </div>
 </div><p>
-<a class="anchor" name="92d649f3b75260f1b23566a4ece627e8"></a><!-- doxytag: member="boost::detail::bp::block_header::pool_" ref="92d649f3b75260f1b23566a4ece627e8" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">fast_pool_allocator&lt; <a class="el" href="structboost_1_1detail_1_1bp_1_1block__header.html">block_header</a> &gt; <a class="el" href="structboost_1_1detail_1_1bp_1_1block__header.html#92d649f3b75260f1b23566a4ece627e8">boost::detail::bp::block_header::pool_</a><code> [static]</code>          </td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Pool where all sets are allocated. 
-</div>
-</div><p>
 <a class="anchor" name="a5928f470f31e1fd88a3e3f37feed0c9"></a><!-- doxytag: member="boost::detail::bp::block_header::redir_" ref="a5928f470f31e1fd88a3e3f37feed0c9" args="" -->
 <div class="memitem">
 <div class="memproto">
@@ -366,7 +370,7 @@ Tag used to enlist to <code><a class="el" href="structboost_1_1detail_1_1bp_1_1b
 </div><p>
 <hr>The documentation for this struct was generated from the following file:<ul>
 <li>/home/vnmr1/phil/sandbox/block_ptr/boost/<a class="el" href="block__ptr_8hpp-source.html">block_ptr.hpp</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Wed May 18 15:32:43 2011 for BlockPointer by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Tue May 24 14:43:12 2011 for BlockPointer by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>
