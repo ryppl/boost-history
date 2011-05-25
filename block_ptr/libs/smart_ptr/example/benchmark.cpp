@@ -4,7 +4,6 @@
 #include <iostream>
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
-#define BOOST_BP_USE_RAW_POINTER
 #include <boost/block_ptr.hpp>
 
 using namespace std;

@@ -1,6 +1,5 @@
 #include <iostream>
 #include <boost/thread.hpp>
-#define BOOST_BP_USE_RAW_POINTER
 #include <boost/block_ptr.hpp>
 //#include <boost/thread/mutex.hpp>
 
