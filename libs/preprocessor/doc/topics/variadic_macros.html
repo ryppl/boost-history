@@ -194,8 +194,8 @@ non-variadic macro.<br>
 <pre>#define MACRO_ARG_2(x,y) BOOST_PP_ADD(x,y)<br>#define VAR_MACRO(...) __VA_ARGS__<br><br>/* The following will work correctly */<br><br>int xx = MACRO_ARG_2<br> (<br> BOOST_PP_VARIADIC_ELEM(0,VAR_MACRO(2,3)),<br> BOOST_PP_VARIADIC_ELEM(1,VAR_MACRO(2,3))<br> );</pre>
 </div>
 <div>The second way is to use a macro in the library called
-BOOST_PP_OVERLOAD or its more powerful cousin BOOST_PP_CALL_OVERLOAD.
-These macros allow one to "overload" a variadic macro to non-variadic
+BOOST_PP_OVERLOAD.
+This macro allows one to "overload" a variadic macro to non-variadic
 macros of different numbers of parameters, using a common prefix.
 </div>
 <h4>Example<u> - Passing variadic data as a whole to
