@@ -61,7 +61,7 @@ int main(int argc, char* argv[])
 	clock_gettime(CLOCK_PROCESS_CPUTIME_ID, & ts[0]); 
 	worker_new< auto_ptr<int>, int >();
 	clock_gettime(CLOCK_PROCESS_CPUTIME_ID, & ts[1]);
-	cout << "auto_ptr\t" << setw(numeric_limits<long>::digits10 + 2) << diff(ts[0], ts[1]).tv_nsec << " ns" << endl;
+	cout << "auto_ptr:\t" << setw(numeric_limits<long>::digits10 + 2) << diff(ts[0], ts[1]).tv_nsec << " ns" << endl;
 
 	clock_gettime(CLOCK_PROCESS_CPUTIME_ID, & ts[0]); 
 	worker_new< shared_ptr<int>, int >();
