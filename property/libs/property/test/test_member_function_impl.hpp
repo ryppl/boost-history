@@ -23,8 +23,8 @@ class p_member_function_impl_class
   void p_function_pointer_write(int *);
   test_enum p_function_enum_read();
   void p_function_enum_write(test_enum);
-  test_pod p_function_class_read();
-  void p_function_class_write(test_pod);
+  test_pod p_function_pod_read();
+  void p_function_pod_write(test_pod);
 
   char p_char_read();
   void p_char_write(char);
@@ -38,8 +38,8 @@ class p_member_function_impl_class
   void p_pointer_write(int *);
   test_enum p_enum_read();
   void p_enum_write(test_enum);
-  test_pod p_class_read();
-  void p_class_write(test_pod);
+  test_pod p_pod_read();
+  void p_pod_write(test_pod);
   
   char p_char_read_2();
   void p_char_write_2(char);
@@ -53,8 +53,8 @@ class p_member_function_impl_class
   void p_pointer_write_2(int *);
   test_enum p_enum_read_2();
   void p_enum_write_2(test_enum);
-  test_pod p_class_read_2();
-  void p_class_write_2(test_pod);
+  test_pod p_pod_read_2();
+  void p_pod_write_2(test_pod);
   
   char st_char;
   int st_int;

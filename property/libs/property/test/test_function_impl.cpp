@@ -61,12 +61,12 @@ void p_function_enum_write(test_enum data)
   gld_enum = data;
   }
   
-test_pod p_function_class_read() 
+test_pod p_function_pod_read() 
   {
   return gld_pod;
   }
   
-void p_function_class_write(test_pod data) 
+void p_function_pod_write(test_pod data) 
   {
   gld_pod = data;
   }
@@ -131,12 +131,12 @@ void p_function_class::p_enum_write(test_enum data)
   st_enum = data;
   }
   
-test_pod p_function_class::p_class_read() 
+test_pod p_function_class::p_pod_read() 
   {
   return st_pod;
   }
   
-void p_function_class::p_class_write(test_pod data) 
+void p_function_class::p_pod_write(test_pod data) 
   {
   st_pod = data;
   }
@@ -201,12 +201,12 @@ void p_function_class::p_enum_write_2(test_enum data)
   st_enum_2 = data;
   }
   
-test_pod p_function_class::p_class_read_2() 
+test_pod p_function_class::p_pod_read_2() 
   {
   return st_pod_2;
   }
   
-void p_function_class::p_class_write_2(test_pod data) 
+void p_function_class::p_pod_write_2(test_pod data) 
   {
   st_pod_2 = data;
   }
@@ -226,5 +226,3 @@ bool p_function_class::st_bool_2(false);
 int * p_function_class::st_pointer_2(0);
 test_enum p_function_class::st_enum_2(e_test_first);
 test_pod p_function_class::st_pod_2;
-
-#include "test_global_data.cpp"

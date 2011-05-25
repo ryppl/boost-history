@@ -13,7 +13,7 @@ extern prop_callable<double const> p_gl_double_const;
 extern prop_callable<bool> p_gl_bool;
 extern prop_callable<int *> p_gl_pointer;
 extern prop_callable<test_enum,read_tag> p_gl_enum_const;
-extern prop_callable<test_pod const> p_gl_class_const;
+extern prop_callable<test_pod const> p_gl_pod_const;
 
 class p_callable_value_class
   {
@@ -28,7 +28,7 @@ class p_callable_value_class
   prop_callable<bool,read_tag> p_bool_const;
   prop_callable<int * const> p_pointer_const;
   prop_callable<test_enum,read_tag> p_enum_const;
-  prop_callable<test_pod> p_class;
+  prop_callable<test_pod> p_pod;
   
   static prop_callable<char> p_st_char;
   static prop_callable<int> p_st_int;
@@ -36,7 +36,7 @@ class p_callable_value_class
   static prop_callable<bool> p_st_bool;
   static prop_callable<int * const> p_st_pointer_const;
   static prop_callable<test_enum> p_st_enum;
-  static prop_callable<test_pod const> p_st_class_const;
+  static prop_callable<test_pod const> p_st_pod_const;
   
   };
   

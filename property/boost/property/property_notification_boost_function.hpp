@@ -19,7 +19,10 @@ namespace properties
       
     void property_changed(const i_property_write<T> & signaller,boost::optional<T> oldValue,T newValue)
       {
-      fun(signaller,oldValue,newValue);
+      if (fun)
+        {
+        fun(signaller,oldValue,newValue);
+        }
       }
     
     };

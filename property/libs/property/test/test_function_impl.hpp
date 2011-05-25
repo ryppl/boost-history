@@ -16,8 +16,8 @@ extern int * p_function_pointer_read();
 extern void p_function_pointer_write(int *);
 extern test_enum p_function_enum_read();
 extern void p_function_enum_write(test_enum);
-extern test_pod p_function_class_read();
-extern void p_function_class_write(test_pod);
+extern test_pod p_function_pod_read();
+extern void p_function_pod_write(test_pod);
 
 class p_function_class
   {
@@ -36,8 +36,8 @@ class p_function_class
   static void p_pointer_write(int *);
   static test_enum p_enum_read();
   static void p_enum_write(test_enum);
-  static test_pod p_class_read();
-  static void p_class_write(test_pod);
+  static test_pod p_pod_read();
+  static void p_pod_write(test_pod);
   
   static char p_char_read_2();
   static void p_char_write_2(char);
@@ -51,8 +51,8 @@ class p_function_class
   static void p_pointer_write_2(int *);
   static test_enum p_enum_read_2();
   static void p_enum_write_2(test_enum);
-  static test_pod p_class_read_2();
-  static void p_class_write_2(test_pod);
+  static test_pod p_pod_read_2();
+  static void p_pod_write_2(test_pod);
   
   static char st_char;
   static int st_int;

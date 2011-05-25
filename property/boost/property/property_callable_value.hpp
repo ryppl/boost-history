@@ -36,7 +36,7 @@ namespace properties
 
     public:
   
-    explicit prop_callable(boost::function<T ()> g) : 
+    explicit prop_callable(const boost::function<T ()> & g) : 
       fg(g) 
       { 
       }
@@ -70,12 +70,12 @@ namespace properties
 
     public:
   
-    explicit prop_callable(boost::function<void (T)> s) : 
+    explicit prop_callable(const boost::function<void (T)> & s) : 
       fs(s) 
       { 
       }
       
-    prop_callable(boost::function<void (T)> s,T arg) : 
+    prop_callable(const boost::function<void (T)> & s,T arg) : 
       fs(s) 
       { 
       if (fs == 0) 
@@ -86,7 +86,7 @@ namespace properties
       }
       
     template<class U>
-    prop_callable(boost::function<void (T)> s,U arg) : 
+    prop_callable(const boost::function<void (T)> & s,U arg) : 
       fs(s)
       { 
       if (fs == 0) 
@@ -139,20 +139,20 @@ namespace properties
       {
       }
     
-    prop_callable(boost::function<T ()> g,boost::function<void (T)> s) : 
+    prop_callable(const boost::function<T ()> & g,const boost::function<void (T)> & s) : 
       prop_callable<T,read_tag>(g),
       prop_callable<T,write_tag>(s) 
       { 
       }
       
-    prop_callable(boost::function<T ()> g,boost::function<void (T)> s,T arg) : 
+    prop_callable(const boost::function<T ()> & g,const boost::function<void (T)> & s,T arg) : 
       prop_callable<T,read_tag>(g),
       prop_callable<T,write_tag>(s,arg) 
       { 
       }
       
     template<class U>
-    prop_callable(boost::function<T ()> g,boost::function<void (T)> s,U arg) : 
+    prop_callable(const boost::function<T ()> & g,const boost::function<void (T)> & s,U arg) : 
       prop_callable<T,read_tag>(g),
       prop_callable<T,write_tag>(s,arg) 
       { 
