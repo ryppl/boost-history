@@ -127,10 +127,10 @@
   </tr>
   </table>
 
-  <p>Thirdly creating pointee objects in a faster way is possible by calling <i>operator new</i> directly:</p>
+  <p>Thirdly creating pointee objects in a faster way is possible by calling <i>operator new</i> directly with an object of type <i>block</i>:</p>
   
   <pre>
-  block_ptr&#60;int&#62; p = new int(10);
+  block_ptr&#60;int&#62; p = new block&#60;int&#62;(10);
   </pre>
 
   <table>
