@@ -1,11 +1,12 @@
-<html><head>
-<title>variadic_macros.html</title>
-<link rel="stylesheet" type="text/css" href="../styles.css">
-<style>
-u { font-weight: normal; text-decoration: none; }
-</style>
-</head>
-<body>
+<html>
+  <head>
+    <title>variadic_macros.html</title>
+    <link rel="stylesheet" type="text/css" href="../styles.css">
+    <style>
+    u { font-weight: normal; text-decoration: none; }
+    </style>
+  </head>
+  <body>
 <h4>Variadic Macros</h4>
 <div> Variadic macros are supported by a number of compilers.
 They are
@@ -203,15 +204,7 @@ and on to a non-variadic macro.<br>
 </u></h4>
 <div class="code">
 <pre>#define MACRO_ARG_2(x,y) BOOST_PP_ADD(x,y)<br>#define VAR_MACRO(...) __VA_ARGS__<br><br>/* The following will work correctly */<br><br>int xx = BOOST_PP_OVERLOAD(MACRO_ARG_,VAR_MACRO(2,3))(VAR_MACRO(2,3));<br><br>/* For Visual C++ it is necessary to do this */<br><br>int xx = <br>BOOST_PP_CAT(BOOST_PP_OVERLOAD(MACRO_ARG_,VAR_MACRO(2,3))(VAR_MACRO(2,3)),BOOST_PP_EMPTY());</pre>
-</div>
-<h4>Example<u> - Passing variadic data as a whole to
-BOOST_PP_CALL_OVERLOAD
-and on to a non-variadic macro.<br>
-</u></h4>
-<div class="code">
-<pre>#define MACRO_ARG_2(x,y) BOOST_PP_ADD(x,y)<br>#define VAR_MACRO(...) __VA_ARGS__<br><br>/* The following will work correctly */<br><br>int xx = BOOST_PP_CALL_OVERLOAD(MACRO_ARG_,VAR_MACRO(2,3));</pre>
-</div>
-<br>
+</div><br>
 <div>Although these techniques will work when passing variadic
 data to
 non-variadic macros, it is much better and less problematical to
@@ -234,7 +227,6 @@ Macros<br>
 <li><a href="../ref/seq_enum.html">BOOST_PP_SEQ_ENUM</a></li>
 <li><a href="../ref/tuple_enum.html">BOOST_PP_TUPLE_ENUM</a></li>
 <li><a href="../ref/overload.html">BOOST_PP_OVERLOAD</a></li>
-<li><a href="../ref/call_overload.html">BOOST_PP_CALL_OVERLOAD</a></li>
 </ul>
 <hr size="1">
 <div style="margin-left: 0px;"> <i>© Copyright
@@ -246,4 +238,5 @@ Version 1.0.
 (See accompanying file <a href="../../../../LICENSE_1_0.txt">LICENSE_1_0.txt</a>
 or copy at <a href="http://www.boost.org/LICENSE_1_0.txt">www.boost.org/LICENSE_1_0.txt</a>)</small></p>
 </div>
-</body></html>
+  </body>
+</html>
