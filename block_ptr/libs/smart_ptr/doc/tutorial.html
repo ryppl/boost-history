@@ -127,6 +127,19 @@
   </tr>
   </table>
 
+  <p>Thirdly creating pointee objects in a faster way is possible by calling <i>operator new</i> directly:</p>
+  
+  <pre>
+  block_ptr&#60;int&#62; p = new int(10);
+  </pre>
+
+  <table>
+  <tr>
+  <td width="20"></td>
+  <td><i>Note: The assignment of a raw pointer needs to be immediate.</i></td>
+  </tr>
+  </table>
+
   <h2><a name="caveat" id="caveat"></a>Caveat</h2>
   
   <p>Hierarchies with multiple inheritance without virtual tables will cause undefined behavior if a pointer to a derived class is assigned to a pointer of one 
