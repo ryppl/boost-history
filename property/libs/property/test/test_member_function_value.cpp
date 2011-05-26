@@ -29,8 +29,46 @@ prop_member_function<int *,p_member_function_impl_class,&p_member_function_impl_
 prop_read_member_function<test_enum,p_member_function_impl_class,&p_member_function_impl_class::p_function_enum_read> p_member_function_value_class::p_st_enum_const(pmf_st_enum);
 prop_write_member_function<test_pod,p_member_function_impl_class,&p_member_function_impl_class::p_pod_write> p_member_function_value_class::p_st_pod_write(pmf_st_pod);
 
+void TestCharacter(p_member_function_value_class & tcl) 
+  {
+  }
+  
+void TestInt(p_member_function_value_class & tcl) 
+  {
+  }
+  
+void TestDouble(p_member_function_value_class & tcl) 
+  {
+  }
+  
+void TestBool(p_member_function_value_class & tcl) 
+  {
+  }
+  
+void TestPointer(p_member_function_value_class & tcl) 
+  {
+  }
+  
+void TestEnum(p_member_function_value_class & tcl) 
+  {
+  }
+  
+void TestPod(p_member_function_value_class & tcl) 
+  {
+  }
+  
 int main()
   {
+  
+  p_member_function_value_class tcl;
+  
+  TestCharacter(tcl);
+  TestInt(tcl);
+  TestDouble(tcl);
+  TestBool(tcl);
+  TestPointer(tcl);
+  TestEnum(tcl);
+  TestPod(tcl);
   
   return boost::report_errors();
   

@@ -71,8 +71,46 @@ prop_callable<test_pod const> p_callable_value_class::p_st_pod_const
   (boost::bind(&p_member_function_impl_class::p_function_pod_read,&p_member_function_impl_object))
   );
   
+void TestCharacter(p_callable_value_class & tcl) 
+  {
+  }
+  
+void TestInt(p_callable_value_class & tcl) 
+  {
+  }
+  
+void TestDouble(p_callable_value_class & tcl) 
+  {
+  }
+  
+void TestBool(p_callable_value_class & tcl) 
+  {
+  }
+  
+void TestPointer(p_callable_value_class & tcl) 
+  {
+  }
+  
+void TestEnum(p_callable_value_class & tcl) 
+  {
+  }
+  
+void TestPod(p_callable_value_class & tcl) 
+  {
+  }
+  
 int main()
   {
+  
+  p_callable_value_class tcl;
+  
+  TestCharacter(tcl);
+  TestInt(tcl);
+  TestDouble(tcl);
+  TestBool(tcl);
+  TestPointer(tcl);
+  TestEnum(tcl);
+  TestPod(tcl);
   
   return boost::report_errors();
   

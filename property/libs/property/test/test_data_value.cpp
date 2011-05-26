@@ -22,8 +22,46 @@ prop_data<int *,&p_data_class::p_pointer_2> p_data_value_class::p_st_pointer;
 prop_data<test_enum,&gld_enum> p_data_value_class::p_st_enum;
 prop_data<test_pod const,&p_data_class::p_pod_2> p_data_value_class::p_st_pod_const;
 
+void TestCharacter(p_data_value_class & tcl) 
+  {
+  }
+  
+void TestInt(p_data_value_class & tcl) 
+  {
+  }
+  
+void TestDouble(p_data_value_class & tcl) 
+  {
+  }
+  
+void TestBool(p_data_value_class & tcl) 
+  {
+  }
+  
+void TestPointer(p_data_value_class & tcl) 
+  {
+  }
+  
+void TestEnum(p_data_value_class & tcl) 
+  {
+  }
+  
+void TestPod(p_data_value_class & tcl) 
+  {
+  }
+  
 int main()
   {
+  
+  p_data_value_class tcl;
+  
+  TestCharacter(tcl);
+  TestInt(tcl);
+  TestDouble(tcl);
+  TestBool(tcl);
+  TestPointer(tcl);
+  TestEnum(tcl);
+  TestPod(tcl);
   
   return boost::report_errors();
   

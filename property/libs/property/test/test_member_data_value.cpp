@@ -28,8 +28,46 @@ prop_member_data<int *,p_member_data_class,&p_member_data_class::p_pointer_2> p_
 prop_member_data<test_enum,p_member_data_class,&p_member_data_class::p_enum,default_policy_tag,read_tag> p_member_data_value_class::p_st_enum_const(pmd_st_enum);
 prop_member_data<test_pod,p_member_data_class,&p_member_data_class::p_pod> p_member_data_value_class::p_st_pod(pmd_st_pod);
 
+void TestCharacter(p_member_data_value_class & tcl) 
+  {
+  }
+  
+void TestInt(p_member_data_value_class & tcl) 
+  {
+  }
+  
+void TestDouble(p_member_data_value_class & tcl) 
+  {
+  }
+  
+void TestBool(p_member_data_value_class & tcl) 
+  {
+  }
+  
+void TestPointer(p_member_data_value_class & tcl) 
+  {
+  }
+  
+void TestEnum(p_member_data_value_class & tcl) 
+  {
+  }
+  
+void TestPod(p_member_data_value_class & tcl) 
+  {
+  }
+  
 int main()
   {
+  
+  p_member_data_value_class tcl;
+  
+  TestCharacter(tcl);
+  TestInt(tcl);
+  TestDouble(tcl);
+  TestBool(tcl);
+  TestPointer(tcl);
+  TestEnum(tcl);
+  TestPod(tcl);
   
   return boost::report_errors();
   

@@ -34,9 +34,46 @@ prop_functor<test_enum,p_functor_class_enum,read_tag> p_functor_value_class::p_s
 prop_functor<test_pod,p_functor_class_pod,write_tag> p_functor_value_class::p_st_pod_write(pf_st_pod);
 int p_functor_value_class::pvalue(801);
 
+void TestCharacter(p_functor_value_class & tcl) 
+  {
+  }
+  
+void TestInt(p_functor_value_class & tcl) 
+  {
+  }
+  
+void TestDouble(p_functor_value_class & tcl) 
+  {
+  }
+  
+void TestBool(p_functor_value_class & tcl) 
+  {
+  }
+  
+void TestPointer(p_functor_value_class & tcl) 
+  {
+  }
+  
+void TestEnum(p_functor_value_class & tcl) 
+  {
+  }
+  
+void TestPod(p_functor_value_class & tcl) 
+  {
+  }
 
 int main()
   {
+  
+  p_functor_value_class tcl;
+  
+  TestCharacter(tcl);
+  TestInt(tcl);
+  TestDouble(tcl);
+  TestBool(tcl);
+  TestPointer(tcl);
+  TestEnum(tcl);
+  TestPod(tcl);
   
   return boost::report_errors();
   

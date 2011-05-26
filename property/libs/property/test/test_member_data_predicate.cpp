@@ -22,8 +22,31 @@ prop_member_data_predicate<int,p_member_data_class,&p_member_data_class::p_data_
 prop_member_data_predicate<double,p_member_data_class,&p_member_data_class::p_double_2,default_policy_tag,predicate_failure_runtime_exception> p_member_data_predicate_class::p_st_double_pred_err(_1 <= 5.0,pmd_st_double);
 prop_member_data_predicate<test_enum,p_member_data_class,&p_member_data_class::p_enum_2,notification_boost_function> p_member_data_predicate_class::p_st_enum_pred_ntf(_1 != e_test_second,pmd_st_enum);
 
+void TestCharacter(p_member_data_predicate_class & tcl) 
+  {
+  }
+  
+void TestInt(p_member_data_predicate_class & tcl) 
+  {
+  }
+  
+void TestDouble(p_member_data_predicate_class & tcl) 
+  {
+  }
+  
+void TestEnum(p_member_data_predicate_class & tcl) 
+  {
+  }
+
 int main()
   {
+  
+  p_member_data_predicate_class tcl;
+  
+  TestCharacter(tcl);
+  TestInt(tcl);
+  TestDouble(tcl);
+  TestEnum(tcl);
   
   return boost::report_errors();
   

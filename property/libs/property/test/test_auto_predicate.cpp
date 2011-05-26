@@ -22,8 +22,31 @@ prop_auto_predicate<int,notification_boost_function,predicate_failure_runtime_ex
 prop_auto_predicate<double,default_policy_tag,predicate_failure_runtime_exception> p_auto_predicate_class::p_st_double_pred_err(_1 >= 1000.0);
 prop_auto_predicate<test_enum,notification_boost_function> p_auto_predicate_class::p_st_enum_pred_ntf(_1 != e_test_first);
 
+void TestCharacter(p_auto_predicate_class & tcl) 
+  {
+  }
+  
+void TestInt(p_auto_predicate_class & tcl) 
+  {
+  }
+  
+void TestDouble(p_auto_predicate_class & tcl) 
+  {
+  }
+  
+void TestEnum(p_auto_predicate_class & tcl) 
+  {
+  }
+
 int main()
   {
+  
+  p_auto_predicate_class tcl;
+  
+  TestCharacter(tcl);
+  TestInt(tcl);
+  TestDouble(tcl);
+  TestEnum(tcl);
   
   return boost::report_errors();
   

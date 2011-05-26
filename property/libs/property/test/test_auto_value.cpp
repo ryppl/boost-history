@@ -25,8 +25,46 @@ prop_auto<int *> p_auto_value_class::p_st_pointer;
 prop_auto<test_enum,notification_boost_function> p_auto_value_class::p_st_enum_ntf;
 prop_auto<test_pod const> p_auto_value_class::p_st_pod_const(test_pod('y',45,32.6,true));
 
+void TestCharacter(p_auto_value_class & tcl) 
+  {
+  }
+  
+void TestInt(p_auto_value_class & tcl) 
+  {
+  }
+  
+void TestDouble(p_auto_value_class & tcl) 
+  {
+  }
+  
+void TestBool(p_auto_value_class & tcl) 
+  {
+  }
+  
+void TestPointer(p_auto_value_class & tcl) 
+  {
+  }
+  
+void TestEnum(p_auto_value_class & tcl) 
+  {
+  }
+  
+void TestPod(p_auto_value_class & tcl) 
+  {
+  }
+  
 int main()
   {
+  
+  p_auto_value_class tcl;
+  
+  TestCharacter(tcl);
+  TestInt(tcl);
+  TestDouble(tcl);
+  TestBool(tcl);
+  TestPointer(tcl);
+  TestEnum(tcl);
+  TestPod(tcl);
   
   return boost::report_errors();
   
