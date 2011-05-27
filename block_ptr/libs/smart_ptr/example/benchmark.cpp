@@ -14,6 +14,7 @@
 */
 
 #include <sys/time.h>
+#include <sched.h>
 
 #include <memory>
 #include <iostream>
@@ -50,42 +51,71 @@ template <typename T, typename U>
    
 timespec diff(timespec start, timespec end);
 
+int cpu_bind(const unsigned short cpu)
+{
+	cpu_set_t mask;
+	int ret;
+
+	CPU_ZERO(&mask);
+	CPU_SET((int)cpu, &mask);
+	ret = sched_setaffinity(0, sizeof mask, &mask);
+
+	return ret;
+} 
+
 int main(int argc, char* argv[])  
 {  
+    cpu_bind(0);
+
 	timespec ts[2];
+	long median[5][3];
+	
+	for (int i = 0; i < 5; ++ i)
+	{
+		clock_gettime(CLOCK_PROCESS_CPUTIME_ID, & ts[0]); 
+		worker_make< auto_ptr<int>, make_auto<int> >();
+		clock_gettime(CLOCK_PROCESS_CPUTIME_ID, & ts[1]);
+		median[i][0] = diff(ts[0], ts[1]).tv_nsec;
+
+		clock_gettime(CLOCK_PROCESS_CPUTIME_ID, & ts[0]); 
+		worker_make< shared_ptr<int>, make_shared<int> >();
+		clock_gettime(CLOCK_PROCESS_CPUTIME_ID, & ts[1]);
+		median[i][1] = diff(ts[0], ts[1]).tv_nsec;
+
+		clock_gettime(CLOCK_PROCESS_CPUTIME_ID, & ts[0]); 
+		worker_make< block_ptr<int>, make_block<int> >();
+		clock_gettime(CLOCK_PROCESS_CPUTIME_ID, & ts[1]);
+		median[i][2] = diff(ts[0], ts[1]).tv_nsec;
+	}
 	
 	cout << "make:" << endl;
-	clock_gettime(CLOCK_PROCESS_CPUTIME_ID, & ts[0]); 
-	worker_make< auto_ptr<int>, make_auto<int> >();
-	clock_gettime(CLOCK_PROCESS_CPUTIME_ID, & ts[1]);
-	cout << "auto_ptr:\t" << setw(numeric_limits<long>::digits10 + 2) << diff(ts[0], ts[1]).tv_nsec << " ns" << endl;
-
-	clock_gettime(CLOCK_PROCESS_CPUTIME_ID, & ts[0]); 
-	worker_make< shared_ptr<int>, make_shared<int> >();
-	clock_gettime(CLOCK_PROCESS_CPUTIME_ID, & ts[1]);
-	cout << "shared_ptr:\t" << setw(numeric_limits<long>::digits10 + 2) << diff(ts[0], ts[1]).tv_nsec << " ns" << endl;
-
-	clock_gettime(CLOCK_PROCESS_CPUTIME_ID, & ts[0]); 
-	worker_make< block_ptr<int>, make_block<int> >();
-	clock_gettime(CLOCK_PROCESS_CPUTIME_ID, & ts[1]);
-	cout << "block_ptr:\t" << setw(numeric_limits<long>::digits10 + 2) << diff(ts[0], ts[1]).tv_nsec << " ns" << endl;
+	cout << "auto_ptr:\t" << setw(numeric_limits<long>::digits10 + 2) << median[3][0] << " ns" << endl;
+	cout << "shared_ptr:\t" << setw(numeric_limits<long>::digits10 + 2) << median[3][1] << " ns" << endl;
+	cout << "block_ptr:\t" << setw(numeric_limits<long>::digits10 + 2) << median[3][2] << " ns" << endl;
 	cout << endl;
 	
+	for (int i = 0; i < 5; ++ i)
+	{
+		clock_gettime(CLOCK_PROCESS_CPUTIME_ID, & ts[0]); 
+		worker_new< auto_ptr<int>, int >();
+		clock_gettime(CLOCK_PROCESS_CPUTIME_ID, & ts[1]);
+		median[i][0] = diff(ts[0], ts[1]).tv_nsec;
+
+		clock_gettime(CLOCK_PROCESS_CPUTIME_ID, & ts[0]); 
+		worker_new< shared_ptr<int>, int >();
+		clock_gettime(CLOCK_PROCESS_CPUTIME_ID, & ts[1]);
+		median[i][1] = diff(ts[0], ts[1]).tv_nsec;
+
+		clock_gettime(CLOCK_PROCESS_CPUTIME_ID, & ts[0]); 
+		worker_new< block_ptr<int>, block<int> >();
+		clock_gettime(CLOCK_PROCESS_CPUTIME_ID, & ts[1]);
+		median[i][2] = diff(ts[0], ts[1]).tv_nsec;
+	}
+
 	cout << "new:" << endl;
-	clock_gettime(CLOCK_PROCESS_CPUTIME_ID, & ts[0]); 
-	worker_new< auto_ptr<int>, int >();
-	clock_gettime(CLOCK_PROCESS_CPUTIME_ID, & ts[1]);
-	cout << "auto_ptr:\t" << setw(numeric_limits<long>::digits10 + 2) << diff(ts[0], ts[1]).tv_nsec << " ns" << endl;
-
-	clock_gettime(CLOCK_PROCESS_CPUTIME_ID, & ts[0]); 
-	worker_new< shared_ptr<int>, int >();
-	clock_gettime(CLOCK_PROCESS_CPUTIME_ID, & ts[1]);
-	cout << "shared_ptr:\t" << setw(numeric_limits<long>::digits10 + 2) << diff(ts[0], ts[1]).tv_nsec << " ns" << endl;
-
-	clock_gettime(CLOCK_PROCESS_CPUTIME_ID, & ts[0]); 
-	worker_new< block_ptr<int>, block<int> >();
-	clock_gettime(CLOCK_PROCESS_CPUTIME_ID, & ts[1]);
-	cout << "block_ptr:\t" << setw(numeric_limits<long>::digits10 + 2) << diff(ts[0], ts[1]).tv_nsec << " ns" << endl;
+	cout << "auto_ptr:\t" << setw(numeric_limits<long>::digits10 + 2) << median[3][0] << " ns" << endl;
+	cout << "shared_ptr:\t" << setw(numeric_limits<long>::digits10 + 2) << median[3][1] << " ns" << endl;
+	cout << "block_ptr:\t" << setw(numeric_limits<long>::digits10 + 2) << median[3][2] << " ns" << endl;
 	cout << endl;
 	
     return 0;  
