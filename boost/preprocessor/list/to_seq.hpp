@@ -12,13 +12,14 @@
 # ifndef BOOST_PREPROCESSOR_LIST_TO_SEQ_HPP
 # define BOOST_PREPROCESSOR_LIST_TO_SEQ_HPP
 #
-#include <boost/preprocessor/tuple/to_seq.hpp>
-#include <boost/preprocessor/list/to_tuple.hpp>
-#include <boost/preprocessor/list/size.hpp>
+#include <boost/preprocessor/list/for_each.hpp>
 #
 # /* BOOST_PP_LIST_TO_SEQ */
 #
 #define BOOST_PP_LIST_TO_SEQ(list) \
-  BOOST_PP_TUPLE_TO_SEQ(BOOST_PP_LIST_SIZE(list),BOOST_PP_LIST_TO_TUPLE(list)) \
+  BOOST_PP_LIST_FOR_EACH(BOOST_PP_LIST_TO_SEQ_MACRO, ~, list) \
+/**/
+#define BOOST_PP_LIST_TO_SEQ_MACRO(r,data,elem) \
+  (elem) \
 /**/
 # endif /* BOOST_PREPROCESSOR_LIST_TO_SEQ_HPP */
