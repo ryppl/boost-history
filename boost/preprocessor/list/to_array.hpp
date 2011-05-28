@@ -18,7 +18,14 @@
 #
 # /* BOOST_PP_LIST_TO_ARRAY */
 #
-#define BOOST_PP_LIST_TO_ARRAY(list) \
+# if BOOST_PP_VARIADICS
+# define BOOST_PP_LIST_TO_ARRAY(list) \
+  BOOST_PP_TUPLE_TO_ARRAY(BOOST_PP_LIST_TO_TUPLE(list)) \
+/**/
+# else
+# define BOOST_PP_LIST_TO_ARRAY(list) \
   BOOST_PP_TUPLE_TO_ARRAY(BOOST_PP_LIST_SIZE(list),BOOST_PP_LIST_TO_TUPLE(list)) \
 /**/
+# endif
+#
 # endif /* BOOST_PREPROCESSOR_LIST_TO_ARRAY_HPP */
