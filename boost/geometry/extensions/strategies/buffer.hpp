@@ -11,8 +11,8 @@
 // Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_GEOMETRY_STRATEGIES_BUFFER_HPP
-#define BOOST_GEOMETRY_STRATEGIES_BUFFER_HPP
+#ifndef BOOST_GEOMETRY_EXTENSIONS_STRATEGIES_BUFFER_HPP
+#define BOOST_GEOMETRY_EXTENSIONS_STRATEGIES_BUFFER_HPP
 
 
 // Buffer strategies
@@ -22,7 +22,7 @@
 #include <boost/geometry/strategies/side.hpp>
 #include <boost/geometry/util/math.hpp>
 
-#include <boost/geometry/strategies/buffer_side.hpp>
+#include <boost/geometry/extensions/strategies/buffer_side.hpp>
 
 
 #define BOOST_GEOMETRY_BUFFER_NO_HELPER_POINTS
@@ -116,7 +116,7 @@ struct join_miter
 {
 
 #endif
-    typedef typename strategy_side<typename cs_tag<PointIn>::type>::type side;
+    typedef typename strategy::side::services::default_strategy<typename cs_tag<PointIn>::type>::type side;
     typedef typename coordinate_type<PointIn>::type coordinate_type;
 
 
@@ -252,7 +252,7 @@ struct join_round
     {}
 #endif
 
-    typedef typename strategy_side<typename cs_tag<PointIn>::type>::type side;
+    typedef typename strategy::side::services::default_strategy<typename cs_tag<PointIn>::type>::type side;
     typedef typename coordinate_type<PointOut>::type coordinate_type;
     int m_max_level;
 
@@ -393,4 +393,4 @@ private :
 
 }} // namespace boost::geometry
 
-#endif // BOOST_GEOMETRY_STRATEGIES_BUFFER_HPP
+#endif // BOOST_GEOMETRY_EXTENSIONS_STRATEGIES_BUFFER_HPP
