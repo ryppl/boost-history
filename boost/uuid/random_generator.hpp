@@ -87,9 +87,11 @@ public:
         for (uuid::iterator it=u.begin(); it!=u.end(); ++it, ++i) {
             if (i==sizeof(unsigned long)) {
                 random_value = generator();
+                i = 0;
             }
 
-            *it = ((random_value >> (i*8)) & 0xFF);
+			// static_cast gets rid of warnings of converting unsigned long to boost::uint8_t
+            *it = static_cast<uuid::value_type>((random_value >> (i*8)) & 0xFF);
         }
 
         // set variant
