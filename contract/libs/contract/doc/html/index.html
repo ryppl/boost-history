@@ -1,0 +1,491 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Contract++ 0.3.490</title>
+<link rel="stylesheet" href="doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<link rel="home" href="index.html" title="Contract++ 0.3.490">
+<link rel="next" href="contract__/getting_started.html" title="Getting Started">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr><td valign="top"></td></tr></table>
+<hr>
+<div class="spirit-nav"><a accesskey="n" href="contract__/getting_started.html"><img src="images/next.png" alt="Next"></a></div>
+<div class="preface">
+<div class="titlepage"><div>
+<div><h2 class="title">
+<a name="contractpp"></a>Contract++ 0.3.490</h2></div>
+<div><div class="authorgroup"><div class="author"><h3 class="author">
+<span class="firstname">Lorenzo</span> <span class="surname">Caminiti</span>
+</h3></div></div></div>
+<div><p class="copyright">Copyright &#169; 2009, 2010 Lorenzo Caminiti</p></div>
+<div><div class="legalnotice">
+<a name="id863692"></a><p>
+        Distributed under the Contract++ Software License, Version 1.0 (see accompanying
+        file LICENSE_1_0.txt)
+      </p>
+</div></div>
+</div></div>
+<div class="toc">
+<p><b>Table of Contents</b></p>
+<dl>
+<dt><span class="section"><a href="index.html#contract__.introduction">Introduction</a></span></dt>
+<dt><span class="section"><a href="contract__/getting_started.html">Getting Started</a></span></dt>
+<dt><span class="section"><a href="contract__/tutorial.html">Tutorial</a></span></dt>
+<dt><span class="section"><a href="contract__/without_the_macros.html">Without the Macros</a></span></dt>
+<dt><span class="section"><a href="contract__/examples.html">Examples</a></span></dt>
+<dt><span class="section"><a href="contract__/throw_on_failure.html">Annex: Throw on Failure</a></span></dt>
+<dt><span class="section"><a href="contract__/contract_programming.html">Annex: Contract Programming</a></span></dt>
+<dt><span class="section"><a href="contract__/Grammar.html">Appendix: Grammar</a></span></dt>
+<dt><span class="section"><a href="reference.html">Reference</a></span></dt>
+<dt><span class="section"><a href="contract__/Rationale.html">Annex: Rationale</a></span></dt>
+<dt><span class="section"><a href="contract__/bibliography.html">Bibliography</a></span></dt>
+<dt><span class="section"><a href="contract__/license.html">License</a></span></dt>
+<dt><span class="section"><a href="contract__/release_history.html">Release History</a></span></dt>
+</dl>
+</div>
+<p>
+    The Contract++ library implements Contract Programming for the C++ programming
+    language.
+  </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+            <p>
+              What
+            </p>
+          </th>
+<th>
+            <p>
+              Where
+            </p>
+          </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+            <p>
+              Download
+            </p>
+          </td>
+<td>
+            <p>
+              <a href="http://sourceforge.net/projects/dbcpp/" target="_top">http://sourceforge.net/projects/dbcpp/</a>
+            </p>
+          </td>
+</tr>
+<tr>
+<td>
+            <p>
+              Help
+            </p>
+          </td>
+<td>
+            <p>
+              <a href="http://sourceforge.net/projects/dbcpp/forums/forum/920163" target="_top">http://sourceforge.net/projects/dbcpp/forums/forum/920163</a>
+            </p>
+          </td>
+</tr>
+<tr>
+<td>
+            <p>
+              Comments
+            </p>
+          </td>
+<td>
+            <p>
+              <a href="http://sourceforge.net/projects/dbcpp/forums/forum/920162" target="_top">http://sourceforge.net/projects/dbcpp/forums/forum/920162</a>
+            </p>
+          </td>
+</tr>
+<tr>
+<td>
+            <p>
+              TO-DO
+            </p>
+          </td>
+<td>
+            <p>
+              <a href="http://sourceforge.net/tracker/?group_id=253844&amp;atid=1330818" target="_top">http://sourceforge.net/tracker/?group_id=253844&amp;atid=1330818</a>
+            </p>
+          </td>
+</tr>
+<tr>
+<td>
+            <p>
+              Contact the author
+            </p>
+          </td>
+<td>
+            <p>
+              Email <a href="mailto:lorcaminiti@gmail.com" target="_top">lorcaminiti@gmail.com</a>
+              (with [contract] in the subject)
+            </p>
+          </td>
+</tr>
+</tbody>
+</table></div>
+<div class="section">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="contract__.introduction"></a><a class="link" href="index.html#contract__.introduction" title="Introduction">Introduction</a>
+</h2></div></div></div>
+<p>
+      Contract Programming (CP) is also known as <a href="http://en.wikipedia.org/wiki/Design_by_contract" target="_top">Design
+      by Contract</a> <sup>[<a name="id808260" href="#ftn.id808260" class="footnote">1</a>]</sup> (DbC) and it was first introduced by the Eiffel programming language
+      (see <a class="link" href="contract__/bibliography.html" title="Bibliography">[Meyer1997]</a>). All Contract
+      Programming features of the Eiffel programming language are supported by this
+      library, among others (see <a class="link" href="contract__/contract_programming.html#contract__.contract_programming.features" title="Features">Features</a>):
+    </p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+          Optional compilation and checking of invariants, preconditions, and postconditions.
+        </li>
+<li class="listitem">
+          Customizable actions on contract failure (terminate by default but it can
+          throw, exit, etc).
+        </li>
+<li class="listitem">
+          Subcontracting for derived classes (with support for pure virtual functions
+          and multiple inheritance).
+        </li>
+<li class="listitem">
+          Access to "old" variable values (before body execution) and return
+          value "result" in postconditions.
+        </li>
+<li class="listitem">
+          Support block invariants and loop variants.
+        </li>
+</ul></div>
+<p>
+      In brief, Contract Programming allows to specify invariants, preconditions,
+      and postconditions that are automatically checked when functions are called
+      at run-time. These conditions are used to assert the function specifications
+      within the source code itself allowing to find bugs more quickly during testing
+      and improving software quality.
+    </p>
+<a name="contract__.introduction.an_example"></a><h6>
+<a name="contract__.introduction.an_example-heading"></a>
+      <a class="link" href="index.html#contract__.introduction.an_example">An Example</a>
+    </h6>
+<p>
+      This example shows how to write a contract for the C++ STL vector <code class="computeroutput"><span class="identifier">push_back</span><span class="special">()</span></code>
+      function using this library. It also shows how to subcontract assuming that
+      the vector class inherits from some <code class="computeroutput"><span class="identifier">pushable</span></code>
+      base class.
+    </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+              <p>
+                Notes
+              </p>
+            </th>
+<th>
+              <p>
+                This Library Syntax (ISO C++ standard)
+              </p>
+            </th>
+<th>
+              <p>
+                <span class="underline">_N1962_</span> Proposed Syntax (not
+                part of any C++ standard)
+              </p>
+            </th>
+</tr></thead>
+<tbody><tr>
+<td>
+              <p>
+                
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="number">1.</span>
+
+
+
+
+<span class="number">2.</span>
+
+<span class="number">3.</span>
+
+<span class="number">4.</span>
+<span class="number">5.</span>
+
+<span class="number">6.</span>
+
+<span class="number">7.</span>
+
+<span class="number">8.</span>
+
+
+
+
+<span class="number">9.</span>
+
+
+
+<span class="number">10.</span>
+
+
+
+
+
+
+    
+    
+    
+    
+    
+
+
+</pre>
+<p>
+              </p>
+            </td>
+<td>
+              <p>
+                
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">contract</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">vector</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="string">"myvector/pushable.hpp"</span>
+
+<span class="comment">// Wrapper class that adds contracts to std::vector.</span>
+<span class="identifier">CONTRACT_CLASS</span><span class="special">(</span>
+<span class="keyword">template</span><span class="special">(</span> <span class="keyword">typename</span> <span class="identifier">T</span> <span class="special">)</span>
+<span class="keyword">class</span> <span class="special">(</span><span class="identifier">myvector</span><span class="special">)</span> <span class="identifier">extends</span><span class="special">(</span> <span class="keyword">public</span> <span class="identifier">pushable</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">)</span> <span class="comment">// Subcontracting.</span>
+<span class="special">)</span> <span class="special">{</span>
+    <span class="identifier">CONTRACT_CLASS_INVARIANT</span><span class="special">(</span>
+        <span class="identifier">empty</span><span class="special">()</span> <span class="special">==</span> <span class="special">(</span><span class="identifier">size</span><span class="special">()</span> <span class="special">==</span> <span class="number">0</span><span class="special">)</span>
+        <span class="comment">// More invariants here...</span>
+    <span class="special">)</span>
+
+    <span class="identifier">CONTRACT_FUNCTION</span><span class="special">(</span>
+    <span class="keyword">public</span> <span class="keyword">void</span> <span class="special">(</span><span class="identifier">push_back</span><span class="special">)(</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;)</span> <span class="identifier">element</span> <span class="special">)</span>
+        <span class="identifier">precondition</span><span class="special">(</span>
+            <span class="identifier">size</span><span class="special">()</span> <span class="special">&lt;</span> <span class="identifier">max_size</span><span class="special">()</span>
+            <span class="comment">// More preconditions here...</span>
+        <span class="special">)</span>
+        <span class="identifier">postcondition</span><span class="special">(</span>
+            <span class="keyword">auto</span> <span class="identifier">old_size</span> <span class="special">=</span> <span class="identifier">CONTRACT_OLDOF</span><span class="special">(</span><span class="identifier">size</span><span class="special">()),</span> <span class="comment">// Old value.</span>
+            <span class="identifier">size</span><span class="special">()</span> <span class="special">==</span> <span class="identifier">old_size</span> <span class="special">+</span> <span class="number">1</span>
+            <span class="comment">// More postconditions here...</span>
+        <span class="special">)</span>
+    <span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">vector_</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span><span class="identifier">element</span><span class="special">);</span> <span class="comment">// Implementation.</span>
+    <span class="special">}</span>
+    
+    <span class="comment">// Rest of the class here (with more contracts if needed)...</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">size_type</span> <span class="identifier">size_type</span><span class="special">;</span>
+    <span class="identifier">size_type</span> <span class="identifier">size</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="keyword">const</span> <span class="special">{</span> <span class="keyword">return</span> <span class="identifier">vector_</span><span class="special">.</span><span class="identifier">size</span><span class="special">();</span> <span class="special">}</span>
+    <span class="identifier">size_type</span> <span class="identifier">max_size</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="keyword">const</span> <span class="special">{</span> <span class="keyword">return</span> <span class="identifier">vector_</span><span class="special">.</span><span class="identifier">max_size</span><span class="special">();</span> <span class="special">}</span>
+    <span class="keyword">bool</span> <span class="identifier">empty</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="keyword">const</span> <span class="special">{</span> <span class="keyword">return</span> <span class="identifier">vector_</span><span class="special">.</span><span class="identifier">empty</span><span class="special">();</span> <span class="special">}</span>
+    <span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">back</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="keyword">const</span> <span class="special">{</span> <span class="keyword">return</span> <span class="identifier">vector_</span><span class="special">.</span><span class="identifier">back</span><span class="special">();</span> <span class="special">}</span>
+<span class="keyword">private</span><span class="special">:</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">vector_</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+<p>
+              </p>
+            </td>
+<td>
+              <p>
+                
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="comment">// Extra spaces, newlines, public, etc to better align code with library syntax.</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">vector</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="string">"myvector/pushable.hpp"</span> <span class="comment">// Base class (subcontracting).</span>
+
+<span class="comment">// Wrapper class that adds contracts to std::vector.</span>
+
+<span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">T</span> <span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">myvector</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">pushable</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span>
+<span class="special">{</span>
+    <span class="identifier">invariant</span> <span class="special">{</span>
+        <span class="identifier">empty</span><span class="special">()</span> <span class="special">==</span> <span class="special">(</span><span class="identifier">size</span><span class="special">()</span> <span class="special">==</span> <span class="number">0</span><span class="special">);</span>
+        <span class="comment">// More invariants here...</span>
+    <span class="special">}</span>
+
+
+    <span class="keyword">public</span><span class="special">:</span> <span class="keyword">void</span> <span class="identifier">push_back</span><span class="special">(</span> <span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">element</span> <span class="special">)</span>
+        <span class="identifier">precondition</span> <span class="special">{</span>
+            <span class="identifier">size</span><span class="special">()</span> <span class="special">&lt;</span> <span class="identifier">max_size</span><span class="special">();</span>
+            <span class="comment">// More preconditions here...</span>
+        <span class="special">}</span>
+        <span class="identifier">postcondition</span> <span class="special">{</span>
+
+            <span class="identifier">size</span><span class="special">()</span> <span class="special">==</span> <span class="identifier">oldof</span> <span class="identifier">size</span><span class="special">()</span> <span class="special">+</span> <span class="number">1</span><span class="special">;</span>
+            <span class="comment">// More postconditions here...</span>
+        <span class="special">}</span>
+    <span class="special">{</span>
+        <span class="identifier">vector_</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span><span class="identifier">element</span><span class="special">);</span> <span class="comment">// Implementation.</span>
+    <span class="special">}</span>
+
+    <span class="comment">// Rest of the class here (with more contracts if needed)...</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">size_type</span> <span class="identifier">size_type</span><span class="special">;</span>
+    <span class="identifier">size_type</span> <span class="identifier">size</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="keyword">const</span> <span class="special">{</span> <span class="keyword">return</span> <span class="identifier">vector_</span><span class="special">.</span><span class="identifier">size</span><span class="special">();</span> <span class="special">}</span>
+    <span class="identifier">size_type</span> <span class="identifier">max_size</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="keyword">const</span> <span class="special">{</span> <span class="keyword">return</span> <span class="identifier">vector_</span><span class="special">.</span><span class="identifier">max_size</span><span class="special">();</span> <span class="special">}</span>
+    <span class="keyword">bool</span> <span class="identifier">empty</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="keyword">const</span> <span class="special">{</span> <span class="keyword">return</span> <span class="identifier">vector_</span><span class="special">.</span><span class="identifier">empty</span><span class="special">();</span> <span class="special">}</span>
+    <span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">back</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="keyword">const</span> <span class="special">{</span> <span class="keyword">return</span> <span class="identifier">vector_</span><span class="special">.</span><span class="identifier">back</span><span class="special">();</span> <span class="special">}</span>
+<span class="keyword">private</span><span class="special">:</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">vector_</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+<p>
+              </p>
+            </td>
+</tr></tbody>
+</table></div>
+<p>
+      Notes:
+    </p>
+<div class="orderedlist"><ol class="orderedlist" type="1">
+<li class="listitem">
+          Include this library header file.
+        </li>
+<li class="listitem">
+          The class signature tokens are passed to the <code class="computeroutput"><span class="identifier">__CONTRACT_CLASS__</span><span class="special">()</span></code> macro in the exact same order as they
+          appear in the class declaration. The parenthesis <code class="computeroutput"><span class="special">()</span></code>
+          around the tokens are mandatory (the create a <a href="http://www.boost.org/libs/preprocessor/doc/index.html" target="_top">Boost.Preprocessor</a>
+          <span class="emphasis"><em>sequence</em></span>.
+        </li>
+<li class="listitem">
+          Subcontract from base contracts in <code class="computeroutput"><span class="identifier">pushable</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code> (for <code class="computeroutput"><span class="identifier">push_back</span><span class="special">()</span></code> in this example). Multiple bases classes
+          can be specified to support subcontracting for multiple-inheritance.
+        </li>
+<li class="listitem">
+          Static class invariants are also supported.
+        </li>
+<li class="listitem">
+          By default, a contract assertion failure terminates the program. However,
+          programmers can customize the action to take on contract assertion failure
+          to throw exceptions, exit the program, etc.
+        </li>
+<li class="listitem">
+          No need for "<code class="computeroutput"><span class="special">;</span></code>"
+          after the macro closing parenthesis "<code class="computeroutput"><span class="special">)</span></code>".
+        </li>
+<li class="listitem">
+          The function signature tokens are passed to the <code class="computeroutput"><a href="CONTRACT_FUNCTION.html" target="_top">CONTRACT_FUNCTION</a><span class="special">()</span></code> macro in the exact same order as they
+          appear in the function declaration. The parenthesis <code class="computeroutput"><span class="special">()</span></code>
+          around the tokens are mandatory (they create a <a href="http://www.boost.org/libs/preprocessor/doc/index.html" target="_top">Boost.Preprocessor</a>
+          sequence).
+        </li>
+<li class="listitem">
+          The precondition section <code class="computeroutput"><span class="special">(</span><span class="identifier">precondition</span><span class="special">)</span>
+          <span class="special">({...})</span></code> and the postcondition section
+          <code class="computeroutput"><span class="special">(</span><span class="identifier">postcondition</span><span class="special">)</span> <span class="special">({...})</span></code>
+          can both be omitted, the body section <code class="computeroutput"><span class="special">(</span><span class="identifier">body</span><span class="special">)</span> <span class="special">({...})</span></code> is mandatory instead.
+        </li>
+<li class="listitem">
+          Using <code class="computeroutput"><a href="CONTRACT_OLDOF.html" target="_top">CONTRACT_OLDOF</a></code>,
+          postconditions can access expressions' old values (i.e., the value the
+          epxressions had before the execution of the body). These old values are
+          stored in the specified variables that can be used to assert the postconditions.
+          (The specified expressions must evaluate to a type with an accessible copy
+          constructor so the library can copy the expression value before the function
+          body is executed.)
+        </li>
+<li class="listitem">
+          The body specifies the original function definition. Instead of <code class="computeroutput"><span class="special">{</span> <span class="identifier">vector_</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span><span class="identifier">element</span><span class="special">);</span> <span class="special">}</span></code>, <code class="computeroutput"><span class="string">" ;"</span></code> can be used to separate the
+          function definition from its declaration, or <code class="computeroutput"><span class="string">"
+          = 0;"</span></code> can be used to write contracts for pure virtual
+          functions.
+        </li>
+</ol></div>
+<p>
+      When the <code class="computeroutput"><span class="identifier">push_back</span><span class="special">()</span></code>
+      function is called:
+    </p>
+<div class="orderedlist"><ol class="orderedlist" type="1">
+<li class="listitem">
+          First, the class invariants and the function preconditions are checked.
+        </li>
+<li class="listitem">
+          Then, the function body is executed.
+        </li>
+<li class="listitem">
+          Lastly, the class invariants and function postconditions are checked.
+        </li>
+</ol></div>
+<p>
+      For example, if there is a bug in the function caller for which <code class="computeroutput"><span class="identifier">push_back</span><span class="special">()</span></code>
+      is called when <code class="computeroutput"><span class="identifier">myvector</span></code> size
+      is equal to <code class="computeroutput"><span class="identifier">max_size</span><span class="special">()</span></code>
+      then the execution will be interrupted reporting a failure of the first assertion
+      in the preconditions and it will be evident that the bug is in the caller:
+    </p>
+<pre class="programlisting">precondition: terminate called after throwing an instance of 'contract::failure'
+  what():  precondition "size() &lt; max_size()" failed at myvector.cpp:20
+Aborted
+</pre>
+<p>
+      Instead, if there is a bug in the <code class="computeroutput"><span class="identifier">push_back</span><span class="special">()</span></code> implementation for which <code class="computeroutput"><span class="identifier">myvector</span></code>
+      size is not increased by 1 after <code class="computeroutput"><span class="identifier">element</span></code>
+      has been added to the vector by the function body then the execution will be
+      interrupted reporting a failure of the first assertion in the postconditions
+      and it will be evident that the bug is in the <code class="computeroutput"><span class="identifier">push_back</span><span class="special">()</span></code> function implementation:
+    </p>
+<pre class="programlisting">postcondition: terminate called after throwing an instance of 'contract::failure'
+  what():  postcondition "size() == old_size + 1" failed at myvector.cpp:20
+Aborted
+</pre>
+<p>
+      Note how the library error messages contain enough information to uniquely
+      identify the failure point: contract type (precondition, postcondition, etc),
+      assertion text, file name, and line number.
+    </p>
+<a name="contract__.introduction.compilers_and_platforms"></a><h6>
+<a name="contract__.introduction.compilers_and_platforms-heading"></a>
+      <a class="link" href="index.html#contract__.introduction.compilers_and_platforms">Compilers and
+      Platforms</a>
+    </h6>
+<p>
+      This library is implemented using both preprocessor (<a href="http://www.boost.org/libs/preprocessor/doc/index.html" target="_top">Boost.Preprocessor</a>)
+      and template (<a href="http://www.boost.org/libs/mpl/doc/index.html" target="_top">Boost.MPL</a>)
+      metaprogramming. The library also uses templates with partial specializations
+      and function pointer types (to implement an interface similar to the one of
+      <a href="http://www.boost.org/doc/libs/1_42_0/doc/html/function.html" target="_top">Boost.Function</a>).
+      As a consequence, this library is fairly demanding on compilers compliance
+      with the ISO C++ standard. At present, this library has been successfully compiled
+      and tested on the following compilers and platforms:
+    </p>
+<div class="orderedlist"><ol class="orderedlist" type="1">
+<li class="listitem">
+          GCC 4.2.4 on Ubuntu Linux.
+        </li>
+<li class="listitem">
+          Microsoft Visual C++ 8.0 (MSVC 14) on Windows XP.
+        </li>
+<li class="listitem">
+          GCC 3.4.4 on Cygwin.
+        </li>
+</ol></div>
+<p>
+      (No other compiler was tried thus far.)
+    </p>
+</div>
+<div class="footnotes">
+<br><hr width="100" align="left">
+<div class="footnote"><p><sup>[<a id="ftn.id808260" href="#id808260" class="para">1</a>] </sup>
+        <span class="emphasis"><em>Design by Contract</em></span> is a registered trademark of <a href="http://en.wikipedia.org/wiki/Eiffel_Software" target="_top">Eiffel Software</a>.
+      </p></div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"><p><small>Last revised: May 31, 2011 at 15:17:03 GMT</small></p></td>
+<td align="right"><div class="copyright-footer"></div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav"><a accesskey="n" href="contract__/getting_started.html"><img src="images/next.png" alt="Next"></a></div>
+</body>
+</html>

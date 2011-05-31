@@ -1,0 +1,149 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Annex: Rationale</title>
+<link rel="stylesheet" href="../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<link rel="home" href="../index.html" title="Contract++ 0.3.490">
+<link rel="up" href="../index.html" title="Contract++ 0.3.490">
+<link rel="prev" href="../CONTRACT_WRAP_TYPE.html" title="Macro CONTRACT_WRAP_TYPE">
+<link rel="next" href="bibliography.html" title="Bibliography">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr><td valign="top"></td></tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../CONTRACT_WRAP_TYPE.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="bibliography.html"><img src="../images/next.png" alt="Next"></a>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="contract__.Rationale"></a><a class="link" href="Rationale.html" title="Annex: Rationale">Annex: Rationale</a>
+</h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="Rationale.html#contract__.Rationale.why_is_the_body_not_passed_as_a_macro_parameter_">Why
+      is the body not passed as a macro parameter?</a></span></dt>
+<dt><span class="section"><a href="Rationale.html#contract__.Rationale.why_the_contract_macros_need_all_class_and_function_signature_elements_">Why
+      the contract macros need all class and function signature elements?</a></span></dt>
+<dt><span class="section"><a href="Rationale.html#contract__.Rationale.why_exception_specifications_are_passed_as_a_macro_parameter___throw________">Why
+      exception specifications are passed as a macro parameter <code class="computeroutput"><span class="special">(</span><span class="keyword">throw</span><span class="special">)(...)</span></code>?</a></span></dt>
+</dl></div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.Rationale.why_is_the_body_not_passed_as_a_macro_parameter_"></a><a class="link" href="Rationale.html#contract__.Rationale.why_is_the_body_not_passed_as_a_macro_parameter_" title="Why is the body not passed as a macro parameter?">Why
+      is the body not passed as a macro parameter?</a>
+</h3></div></div></div>
+<p>
+        The function, constructor, and destructor definition body is not passed as
+        a macro parameter because macros always expand on a single line. Therefore,
+        if the body was passed as a macro parameter and part of the macro expansion,
+        it would expand on a single line and eventual compiler error referring to
+        code within the body will all have the same line number making it very difficult
+        to pinpoint the error.
+      </p>
+<p>
+        The downside of keeping the body outside the macro expansion is that the
+        additional body function defined to wrap the body will have the same access
+        level as the function being contracted. Therefore, if the function being
+        contracted is not private, the body function will also be not private. However,
+        this is an acceptable limitation because the body function, even if public
+        or protected, will have a special named prefix <code class="computeroutput"><span class="identifier">contract_body_</span><span class="special">...</span></code> indicating that it is part of this library
+        private API and should never be used directly by programmers.
+      </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.Rationale.why_the_contract_macros_need_all_class_and_function_signature_elements_"></a><a class="link" href="Rationale.html#contract__.Rationale.why_the_contract_macros_need_all_class_and_function_signature_elements_" title="Why the contract macros need all class and function signature elements?">Why
+      the contract macros need all class and function signature elements?</a>
+</h3></div></div></div>
+<p>
+        Even if we do not consider implementation details of this library, a large
+        set of attributes of the declaration signature of classes and function is
+        needed to program contracts. For example: * The class is needed to access
+        the object <code class="computeroutput"><span class="keyword">this</span></code>. * Base classes
+        are needed to automatically support subcontracting. Furthermore, the base
+        class access level is needed because subcontracting could in principle be
+        relaxed for private and protected base classes (this was suggested by A++
+        but the current implementation of the library decided to follow N1962 and
+        not to relax subcontracting for non-public functions). Also to automatically
+        support subcontracting, the function contract macros needed to know if a
+        function if virtual or not (this allows to defined special types for virtual
+        function in the base classes so they can be automatically detected by derived
+        classes via introspection metaprogramming techniques using SFINAE). * The
+        member function access level is needed because class invariants are only
+        checked for public functions. * The static classifier of member functions
+        is needed because static member functions do not check non-static class invariants.
+        * Function parameter types and names are needed because they are need to
+        be passed to the functions checking the preconditions and postconditions.
+        Furthermore, the parameter type needs to be specified separately from the
+        parameter name because the <code class="computeroutput"><span class="keyword">const</span></code>
+        qualifier needs to be added to the type so preconditions and postconditions
+        access parameters only in a constant-correct context. Finally, the parameter
+        names are used to emulate function overloading (i.e., functions with same
+        name can have separate contracts as long as they have different parameter
+        names). * The function result type is needed so the result value can be accessed
+        by postconditions for non-void functions. * Template parameters are needed
+        to check contracts.
+      </p>
+<p>
+        Given the large number of signature attributes that are needed to specify
+        contracts, the parenthesized signature was used so the library has access
+        to all the attributes of the signature. Furthermore, to avoid duplicating
+        the signature attributes (which would require programmers to duplicate code
+        making both development and manteinace more tedius), all the attributes are
+        specified within the macros so the macros can also generated the class and
+        function signature automatically.
+      </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.Rationale.why_exception_specifications_are_passed_as_a_macro_parameter___throw________"></a><a class="link" href="Rationale.html#contract__.Rationale.why_exception_specifications_are_passed_as_a_macro_parameter___throw________" title="Why exception specifications are passed as a macro parameter (throw)(...)?">Why
+      exception specifications are passed as a macro parameter <code class="computeroutput"><span class="special">(</span><span class="keyword">throw</span><span class="special">)(...)</span></code>?</a>
+</h3></div></div></div>
+<p>
+        Exception specifications cannot simply be programmed outside the contract
+        macros before the body is specified as:
+      </p>
+<pre class="programlisting"><span class="identifier">CONTRACT_FUNCTION</span><span class="special">(</span> <span class="special">(</span><span class="keyword">void</span><span class="special">)(</span><span class="identifier">f</span><span class="special">)(</span> <span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">)</span> <span class="special">)</span> <span class="keyword">throw</span><span class="special">()</span> <span class="special">{</span>
+    <span class="special">...</span>
+<span class="special">}</span>
+</pre>
+<p>
+        Because this way the exception specification only apply to the body function
+        and the macro expansion cannot apply them to the actual function:
+      </p>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">f</span><span class="special">()</span> <span class="special">{</span>
+    <span class="special">...</span>         <span class="comment">// Check preconditions.</span>
+    <span class="identifier">f_body</span><span class="special">();</span>   <span class="comment">// Execute body.</span>
+    <span class="special">...</span>         <span class="comment">// Check postconditions.</span>
+<span class="special">}</span>
+<span class="special">...</span>
+<span class="keyword">void</span> <span class="identifier">f_body</span><span class="special">()</span> <span class="keyword">throw</span><span class="special">()</span> <span class="special">{</span>
+    <span class="special">...</span>
+<span class="special">}</span>
+</pre>
+<p>
+        So if for some reason the precondition or postcondition (or invariant, or
+        any other code of this library) throws an exception, the function <code class="computeroutput"><span class="identifier">f</span><span class="special">()</span></code> will
+        still throw that exception not complying with the exception specification.
+      </p>
+<p>
+        Therefore, the exception specification are passed as a macro parameter (complicating
+        the parenthesized syntax a bit) so they can applied by the macro expansion
+        to the outer most function <code class="computeroutput"><span class="identifier">f</span><span class="special">()</span></code> and not just to its body function.
+      </p>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2009, 2010 Lorenzo Caminiti<p>
+        Distributed under the Contract++ Software License, Version 1.0 (see accompanying
+        file LICENSE_1_0.txt)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../CONTRACT_WRAP_TYPE.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="bibliography.html"><img src="../images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

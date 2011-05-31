@@ -1,0 +1,234 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Reference</title>
+<link rel="stylesheet" href="doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<link rel="home" href="index.html" title="Contract++ 0.3.490">
+<link rel="up" href="index.html" title="Contract++ 0.3.490">
+<link rel="prev" href="contract__/Grammar.html" title="Appendix: Grammar">
+<link rel="next" href="contract/failure.html" title="Class failure">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr><td valign="top"></td></tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="contract__/Grammar.html"><img src="images/prev.png" alt="Prev"></a><a accesskey="u" href="index.html"><img src="images/up.png" alt="Up"></a><a accesskey="h" href="index.html"><img src="images/home.png" alt="Home"></a><a accesskey="n" href="contract/failure.html"><img src="images/next.png" alt="Next"></a>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="reference"></a>Reference</h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="reference.html#header.E:.sandbox.contractpp.trunk.doc.qbk.src.contract.assert_hpp">Header &lt;E:/sandbox/contractpp/trunk/doc/qbk/src/contract/assert.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.E:.sandbox.contractpp.trunk.doc.qbk.src.contract.block_hpp">Header &lt;E:/sandbox/contractpp/trunk/doc/qbk/src/contract/block.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.E:.sandbox.contractpp.trunk.doc.qbk.src.contract.body_hpp">Header &lt;E:/sandbox/contractpp/trunk/doc/qbk/src/contract/body.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.E:.sandbox.contractpp.trunk.doc.qbk.src.contract.config_hpp">Header &lt;E:/sandbox/contractpp/trunk/doc/qbk/src/contract/config.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.E:.sandbox.contractpp.trunk.doc.qbk.src.contract.constructor_hpp">Header &lt;E:/sandbox/contractpp/trunk/doc/qbk/src/contract/constructor.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.E:.sandbox.contractpp.trunk.doc.qbk.src.contract_hpp">Header &lt;E:/sandbox/contractpp/trunk/doc/qbk/src/contract.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.E:.sandbox.contractpp.trunk.doc.qbk.src.contract.destructor_hpp">Header &lt;E:/sandbox/contractpp/trunk/doc/qbk/src/contract/destructor.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.E:.sandbox.contractpp.trunk.doc.qbk.src.contract.from_hpp">Header &lt;E:/sandbox/contractpp/trunk/doc/qbk/src/contract/from.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.E:.sandbox.contractpp.trunk.doc.qbk.src.contract.macros_hpp">Header &lt;E:/sandbox/contractpp/trunk/doc/qbk/src/contract/macros.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.E:.sandbox.contractpp.trunk.doc.qbk.src.contract.nonmember_function_hpp">Header &lt;E:/sandbox/contractpp/trunk/doc/qbk/src/contract/nonmember_function.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.E:.sandbox.contractpp.trunk.doc.qbk.src.contract.nonstatic_member_function_hpp">Header &lt;E:/sandbox/contractpp/trunk/doc/qbk/src/contract/nonstatic_member_function.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.E:.sandbox.contractpp.trunk.doc.qbk.src.contract.old_hpp">Header &lt;E:/sandbox/contractpp/trunk/doc/qbk/src/contract/old.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.E:.sandbox.contractpp.trunk.doc.qbk.src.contract.state_hpp">Header &lt;E:/sandbox/contractpp/trunk/doc/qbk/src/contract/state.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.E:.sandbox.contractpp.trunk.doc.qbk.src.contract.static_member_function_hpp">Header &lt;E:/sandbox/contractpp/trunk/doc/qbk/src/contract/static_member_function.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.E:.sandbox.contractpp.trunk.doc.qbk.src.contract.wrap_hpp">Header &lt;E:/sandbox/contractpp/trunk/doc/qbk/src/contract/wrap.hpp&gt;</a></span></dt>
+</dl></div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="header.E:.sandbox.contractpp.trunk.doc.qbk.src.contract.assert_hpp"></a>Header &lt;<a href="./E:/sandbox/contractpp/trunk/doc/qbk/src/contract/assert.hpp" target="_top">E:/sandbox/contractpp/trunk/doc/qbk/src/contract/assert.hpp</a>&gt;</h3></div></div></div>
+<p>Facilities to assert contract conditions and specify actions to take in case of contract failure. </p>
+<pre class="synopsis">
+
+<a class="link" href="CONTRACT_ASSERT.html" title="Macro CONTRACT_ASSERT">CONTRACT_ASSERT</a>(boolean_condition)
+<a class="link" href="CONTRACT_ASSERT_MSG.html" title="Macro CONTRACT_ASSERT_MSG">CONTRACT_ASSERT_MSG</a>(boolean_condition, string_description)</pre>
+<pre class="synopsis"><span class="keyword">namespace</span> <span class="identifier">contract</span> <span class="special">{</span>
+  <span class="keyword">class</span> <a class="link" href="contract/failure.html" title="Class failure">failure</a><span class="special">;</span>
+  <span class="keyword">typedef</span> <span class="identifier">__ContractFailedHandler__</span> <a class="link" href="contract/contract_failed_handler.html" title="Type definition contract_failed_handler"><span class="identifier">contract_failed_handler</span></a><span class="special">;</span>
+  <span class="identifier">contract_failed_handler</span> <a class="link" href="contract/set_block_invariant_failed.html" title="Function set_block_invariant_failed"><span class="identifier">set_block_invariant_failed</span></a><span class="special">(</span><span class="identifier">contract_failed_handler</span><span class="special">)</span><span class="special">;</span>
+  <span class="keyword">void</span> <a class="link" href="contract/block_invariant_failed.html" title="Function block_invariant_failed"><span class="identifier">block_invariant_failed</span></a><span class="special">(</span><span class="keyword">const</span> <span class="identifier">from</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
+  <span class="identifier">contract_failed_handler</span> <a class="link" href="contract/set_class_invariant_failed.html" title="Function set_class_invariant_failed"><span class="identifier">set_class_invariant_failed</span></a><span class="special">(</span><span class="identifier">contract_failed_handler</span><span class="special">)</span><span class="special">;</span>
+  <span class="keyword">void</span> <a class="link" href="contract/class_invariant_failed.html" title="Function class_invariant_failed"><span class="identifier">class_invariant_failed</span></a><span class="special">(</span><span class="keyword">const</span> <span class="identifier">from</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
+  <span class="identifier">contract_failed_handler</span> <a class="link" href="contract/set_precondition_failed.html" title="Function set_precondition_failed"><span class="identifier">set_precondition_failed</span></a><span class="special">(</span><span class="identifier">contract_failed_handler</span><span class="special">)</span><span class="special">;</span>
+  <span class="keyword">void</span> <a class="link" href="contract/precondition_failed.html" title="Function precondition_failed"><span class="identifier">precondition_failed</span></a><span class="special">(</span><span class="keyword">const</span> <span class="identifier">from</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
+  <span class="identifier">contract_failed_handler</span> <a class="link" href="contract/set_postcondition_failed.html" title="Function set_postcondition_failed"><span class="identifier">set_postcondition_failed</span></a><span class="special">(</span><span class="identifier">contract_failed_handler</span><span class="special">)</span><span class="special">;</span>
+  <span class="keyword">void</span> <a class="link" href="contract/postcondition_failed.html" title="Function postcondition_failed"><span class="identifier">postcondition_failed</span></a><span class="special">(</span><span class="keyword">const</span> <span class="identifier">from</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
+<span class="special">}</span></pre>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="header.E:.sandbox.contractpp.trunk.doc.qbk.src.contract.block_hpp"></a>Header &lt;<a href="./E:/sandbox/contractpp/trunk/doc/qbk/src/contract/block.hpp" target="_top">E:/sandbox/contractpp/trunk/doc/qbk/src/contract/block.hpp</a>&gt;</h3></div></div></div>
+<p>Assert block (and loop) invariants and loop variants. </p>
+<pre class="synopsis">
+
+<a class="link" href="CONTRACT_ASSERT_BLOCK_INVARIANT.html" title="Macro CONTRACT_ASSERT_BLOCK_INVARIANT">CONTRACT_ASSERT_BLOCK_INVARIANT</a>(boolen_condition)
+<a class="link" href="CONTRACT_ASSERT_BLOCK_INVARIANT_MSG.html" title="Macro CONTRACT_ASSERT_BLOCK_INVARIANT_MSG">CONTRACT_ASSERT_BLOCK_INVARIANT_MSG</a>(boolean_condition, string_description)
+<a class="link" href="CONTRACT_ASSERT_LOOP_VARIANT.html" title="Macro CONTRACT_ASSERT_LOOP_VARIANT">CONTRACT_ASSERT_LOOP_VARIANT</a>(integer_expression)
+<a class="link" href="CONTRACT_ASSERT_LOOP_VARIANT_MSG.html" title="Macro CONTRACT_ASSERT_LOOP_VARIANT_MSG">CONTRACT_ASSERT_LOOP_VARIANT_MSG</a>(integer_expression, string_description)
+<a class="link" href="CONTRACT_INIT_LOOP_VARIANT.html" title="Macro CONTRACT_INIT_LOOP_VARIANT">CONTRACT_INIT_LOOP_VARIANT</a></pre>
+<pre class="synopsis"><span class="keyword">namespace</span> <span class="identifier">contract</span> <span class="special">{</span>
+  <span class="keyword">typedef</span> <span class="identifier">__Integer__</span> <a class="link" href="contract/loop_variant_type.html" title="Type definition loop_variant_type"><span class="identifier">loop_variant_type</span></a><span class="special">;</span>
+<span class="special">}</span></pre>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="header.E:.sandbox.contractpp.trunk.doc.qbk.src.contract.body_hpp"></a>Header &lt;<a href="./E:/sandbox/contractpp/trunk/doc/qbk/src/contract/body.hpp" target="_top">E:/sandbox/contractpp/trunk/doc/qbk/src/contract/body.hpp</a>&gt;</h3></div></div></div>
+<p>Macros used to name the body function when separating its definition from the contract declaration.</p>
+<p>For example, these macros are used when function body definitions are implemented in a source file ".cpp" while the function and contract declarations are given in separate header file ".hpp".</p>
+<p><span class="bold"><strong>See:</strong></span> Examples and more information in the Tutorial section. </p>
+<pre class="synopsis">
+
+<a class="link" href="CONTRACT_CONSTRUCTOR_BODY.html" title="Macro CONTRACT_CONSTRUCTOR_BODY">CONTRACT_CONSTRUCTOR_BODY</a>(class_type, class_name)
+<a class="link" href="CONTRACT_DESTRUCTOR_BODY.html" title="Macro CONTRACT_DESTRUCTOR_BODY">CONTRACT_DESTRUCTOR_BODY</a>(class_type, class_name)
+<a class="link" href="CONTRACT_BODY.html" title="Macro CONTRACT_BODY">CONTRACT_BODY</a>(function_name)</pre>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="header.E:.sandbox.contractpp.trunk.doc.qbk.src.contract.config_hpp"></a>Header &lt;<a href="./E:/sandbox/contractpp/trunk/doc/qbk/src/contract/config.hpp" target="_top">E:/sandbox/contractpp/trunk/doc/qbk/src/contract/config.hpp</a>&gt;</h3></div></div></div>
+<p>Macros to change some of the library compile-time configuration.</p>
+<p>Configuration macros can be #defined by the user to change some of the library behaviour. If the user does not #define these macros, the library uses proper default values:</p>
+<pre class="programlisting">    <span class="preprocessor">#ifndef</span> <span class="identifier">CONTRACT_CONFIG_SOMETHING</span>
+    <span class="preprocessor">#   define</span> <span class="identifier">CONTRACT_CONFIG_SOMETHING</span> <span class="identifier">some</span><span class="special">-</span><span class="keyword">default</span><span class="special">-</span><span class="identifier">value</span>
+    <span class="preprocessor">#endif</span>
+</pre>
+<p><span class="bold"><strong>Note:</strong></span> It is strongly recommended not to changed the configuration macro default values unless strictly necessary. </p>
+<pre class="synopsis">
+
+<a class="link" href="CONTRACT_CONFIG_MAX_FUNCTION_ARITY.html" title="Macro CONTRACT_CONFIG_MAX_FUNCTION_ARITY">CONTRACT_CONFIG_MAX_FUNCTION_ARITY</a>
+<a class="link" href="CONTRACT_CONFIG_MAX_MULTIPLE_INHERITANCE.html" title="Macro CONTRACT_CONFIG_MAX_MULTIPLE_INHERITANCE">CONTRACT_CONFIG_MAX_MULTIPLE_INHERITANCE</a></pre>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="header.E:.sandbox.contractpp.trunk.doc.qbk.src.contract.constructor_hpp"></a>Header &lt;<a href="./E:/sandbox/contractpp/trunk/doc/qbk/src/contract/constructor.hpp" target="_top">E:/sandbox/contractpp/trunk/doc/qbk/src/contract/constructor.hpp</a>&gt;</h3></div></div></div>
+<p>Class template used to write contracts for constructors. </p>
+<pre class="synopsis"><span class="keyword">namespace</span> <span class="identifier">contract</span> <span class="special">{</span>
+  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> F<span class="special">&gt;</span> <span class="keyword">class</span> <a class="link" href="contract/constructor.html" title="Class template constructor">constructor</a><span class="special">;</span>
+<span class="special">}</span></pre>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="header.E:.sandbox.contractpp.trunk.doc.qbk.src.contract_hpp"></a>Header &lt;<a href="./E:/sandbox/contractpp/trunk/doc/qbk/src/contract.hpp" target="_top">E:/sandbox/contractpp/trunk/doc/qbk/src/contract.hpp</a>&gt;</h3></div></div></div>
+<p>Include the entire library.</p>
+<pre class="programlisting">    <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">contract</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+</pre>
+<p>It is recommended to include the library this way instead of including the single header files from the <code class="computeroutput">"contract/"</code> directory.</p>
+<p><span class="bold"><strong>Metaprogramming Symbols</strong></span></p>
+<p>This documentation source code indicates some metaprogramming constructs using special mixed-case symbols prefixed and postfixed by double underscores "__". These symbols are then expanded to actual code in the documentation text. For example: </p>
+<pre class="programlisting">    <span class="comment">// Metaprogramming conventions for this documentation.</span>
+    <span class="identifier">__AMetaprogrammingConstruct__</span>
+    <span class="identifier">__AMetaprogrammingConstructWithParameters__</span><span class="special">&lt;</span> <span class="identifier">X</span><span class="special">,</span> <span class="identifier">Y</span><span class="special">,</span> <span class="identifier">Z</span> <span class="special">&gt;</span>
+</pre>
+<p> In this convention, these metaporgramming constructs are <span class="bold"><strong>not</strong></span> templates. They are internally implemented by the library using both preprocessor and template metaprogramming (in a way that is intentionally <span class="emphasis"><em>not</em></span> documented here because it is library implementation specific).</p>
+<p><span class="bold"><strong>See:</strong></span> Getting Started section. </p>
+<pre class="synopsis">
+
+<a class="link" href="CONTRACT_CHECK_BLOCK_INVARIANT.html" title="Macro CONTRACT_CHECK_BLOCK_INVARIANT">CONTRACT_CHECK_BLOCK_INVARIANT</a>
+<a class="link" href="CONTRACT_CHECK_CLASS_INVARIANT.html" title="Macro CONTRACT_CHECK_CLASS_INVARIANT">CONTRACT_CHECK_CLASS_INVARIANT</a>
+<a class="link" href="CONTRACT_CHECK_PRECONDITION.html" title="Macro CONTRACT_CHECK_PRECONDITION">CONTRACT_CHECK_PRECONDITION</a>
+<a class="link" href="CONTRACT_CHECK_POSTCONDITION.html" title="Macro CONTRACT_CHECK_POSTCONDITION">CONTRACT_CHECK_POSTCONDITION</a></pre>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="header.E:.sandbox.contractpp.trunk.doc.qbk.src.contract.destructor_hpp"></a>Header &lt;<a href="./E:/sandbox/contractpp/trunk/doc/qbk/src/contract/destructor.hpp" target="_top">E:/sandbox/contractpp/trunk/doc/qbk/src/contract/destructor.hpp</a>&gt;</h3></div></div></div>
+<p>Class template used to write contracts for destructors. </p>
+<pre class="synopsis"><span class="keyword">namespace</span> <span class="identifier">contract</span> <span class="special">{</span>
+  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> F<span class="special">&gt;</span> <span class="keyword">class</span> <a class="link" href="contract/destructor.html" title="Class template destructor">destructor</a><span class="special">;</span>
+<span class="special">}</span></pre>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="header.E:.sandbox.contractpp.trunk.doc.qbk.src.contract.from_hpp"></a>Header &lt;<a href="./E:/sandbox/contractpp/trunk/doc/qbk/src/contract/from.hpp" target="_top">E:/sandbox/contractpp/trunk/doc/qbk/src/contract/from.hpp</a>&gt;</h3></div></div></div>
+<p>Context from which the contract failure was generated. </p>
+<pre class="synopsis"><span class="keyword">namespace</span> <span class="identifier">contract</span> <span class="special">{</span>
+  <span class="keyword">enum</span> <a class="link" href="contract/from.html" title="Type from">from</a><span class="special">;</span>
+<span class="special">}</span></pre>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="header.E:.sandbox.contractpp.trunk.doc.qbk.src.contract.macros_hpp"></a>Header &lt;<a href="./E:/sandbox/contractpp/trunk/doc/qbk/src/contract/macros.hpp" target="_top">E:/sandbox/contractpp/trunk/doc/qbk/src/contract/macros.hpp</a>&gt;</h3></div></div></div>
+<p>Contract macros.</p>
+<p>These macros are the primary tools to write contracts.</p>
+<p><span class="bold"><strong>See:</strong></span> See the Tutorial section for examples. </p>
+<pre class="synopsis">
+
+<a class="link" href="CONTRACT_INVARIANT.html" title="Macro CONTRACT_INVARIANT">CONTRACT_INVARIANT</a>(sequence)
+<a class="link" href="CONTRACT_CONSTRUCTOR.html" title="Macro CONTRACT_CONSTRUCTOR">CONTRACT_CONSTRUCTOR</a>(sequence)
+<a class="link" href="CONTRACT_DESTRUCTOR.html" title="Macro CONTRACT_DESTRUCTOR">CONTRACT_DESTRUCTOR</a>(sequence)
+<a class="link" href="CONTRACT_FUNCTION.html" title="Macro CONTRACT_FUNCTION">CONTRACT_FUNCTION</a>(sequence)</pre>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="header.E:.sandbox.contractpp.trunk.doc.qbk.src.contract.nonmember_function_hpp"></a>Header &lt;<a href="./E:/sandbox/contractpp/trunk/doc/qbk/src/contract/nonmember_function.hpp" target="_top">E:/sandbox/contractpp/trunk/doc/qbk/src/contract/nonmember_function.hpp</a>&gt;</h3></div></div></div>
+<p>Class template used to write contracts non-member functions. </p>
+<pre class="synopsis"><span class="keyword">namespace</span> <span class="identifier">contract</span> <span class="special">{</span>
+  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> F<span class="special">&gt;</span> <span class="keyword">class</span> <a class="link" href="contract/nonmember_function.html" title="Class template nonmember_function">nonmember_function</a><span class="special">;</span>
+<span class="special">}</span></pre>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="header.E:.sandbox.contractpp.trunk.doc.qbk.src.contract.nonstatic_member_function_hpp"></a>Header &lt;<a href="./E:/sandbox/contractpp/trunk/doc/qbk/src/contract/nonstatic_member_function.hpp" target="_top">E:/sandbox/contractpp/trunk/doc/qbk/src/contract/nonstatic_member_function.hpp</a>&gt;</h3></div></div></div>
+<p>Class template used to write contracts for non-static member functions. </p>
+<pre class="synopsis"><span class="keyword">namespace</span> <span class="identifier">contract</span> <span class="special">{</span>
+  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> F<span class="special">,</span> <span class="keyword">typename</span> BaseContractClass1 <span class="special">=</span> <span class="keyword">void</span><span class="special">,</span> <span class="special">...</span> <span class="special">,</span> 
+           <span class="keyword">typename</span> BaseContractClassM <span class="special">=</span> <span class="keyword">void</span><span class="special">&gt;</span> 
+    <span class="keyword">class</span> <a class="link" href="contract/nonstatic_member_function.html" title="Class template nonstatic_member_function">nonstatic_member_function</a><span class="special">;</span>
+<span class="special">}</span></pre>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="header.E:.sandbox.contractpp.trunk.doc.qbk.src.contract.old_hpp"></a>Header &lt;<a href="./E:/sandbox/contractpp/trunk/doc/qbk/src/contract/old.hpp" target="_top">E:/sandbox/contractpp/trunk/doc/qbk/src/contract/old.hpp</a>&gt;</h3></div></div></div>
+<p>Facilities to support old values in postconditions.</p>
+<p>Postconditions can access old variable values (before body executions) for types tagged <code class="computeroutput"><a class="link" href="contract/copyable.html" title="Class template copyable">contract::copyable</a></code>. </p>
+<pre class="synopsis">
+
+<a class="link" href="CONTRACT_OLDOF.html" title="Macro CONTRACT_OLDOF">CONTRACT_OLDOF</a>(variable_name)</pre>
+<pre class="synopsis"><span class="keyword">namespace</span> <span class="identifier">contract</span> <span class="special">{</span>
+  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> T<span class="special">&gt;</span> <span class="keyword">class</span> <a class="link" href="contract/copyable.html" title="Class template copyable">copyable</a><span class="special">;</span>
+  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> T<span class="special">&gt;</span> <span class="keyword">class</span> <a class="link" href="contract/copy.html" title="Class template copy">copy</a><span class="special">;</span>
+<span class="special">}</span></pre>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="header.E:.sandbox.contractpp.trunk.doc.qbk.src.contract.state_hpp"></a>Header &lt;<a href="./E:/sandbox/contractpp/trunk/doc/qbk/src/contract/state.hpp" target="_top">E:/sandbox/contractpp/trunk/doc/qbk/src/contract/state.hpp</a>&gt;</h3></div></div></div>
+<p>Augmented object state internally used by the library. </p>
+<pre class="synopsis"><span class="keyword">namespace</span> <span class="identifier">contract</span> <span class="special">{</span>
+  <span class="keyword">class</span> <a class="link" href="contract/state.html" title="Class state">state</a><span class="special">;</span>
+<span class="special">}</span></pre>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="header.E:.sandbox.contractpp.trunk.doc.qbk.src.contract.static_member_function_hpp"></a>Header &lt;<a href="./E:/sandbox/contractpp/trunk/doc/qbk/src/contract/static_member_function.hpp" target="_top">E:/sandbox/contractpp/trunk/doc/qbk/src/contract/static_member_function.hpp</a>&gt;</h3></div></div></div>
+<p>Class template used to write contracts for static member functions. </p>
+<pre class="synopsis"><span class="keyword">namespace</span> <span class="identifier">contract</span> <span class="special">{</span>
+  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> F<span class="special">&gt;</span> <span class="keyword">class</span> <a class="link" href="contract/static_member_function.html" title="Class template static_member_function">static_member_function</a><span class="special">;</span>
+<span class="special">}</span></pre>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="header.E:.sandbox.contractpp.trunk.doc.qbk.src.contract.wrap_hpp"></a>Header &lt;<a href="./E:/sandbox/contractpp/trunk/doc/qbk/src/contract/wrap.hpp" target="_top">E:/sandbox/contractpp/trunk/doc/qbk/src/contract/wrap.hpp</a>&gt;</h3></div></div></div>
+<p>Utilities to pass commas within macro parameters. </p>
+<pre class="synopsis">
+
+<a class="link" href="CONTRACT_WRAP_TYPE.html" title="Macro CONTRACT_WRAP_TYPE">CONTRACT_WRAP_TYPE</a>(parenthesized_type)</pre>
+<pre class="synopsis"><span class="keyword">namespace</span> <span class="identifier">contract</span> <span class="special">{</span>
+  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> T<span class="special">&gt;</span> <span class="keyword">struct</span> <a class="link" href="contract/wrap.html" title="Struct template wrap">wrap</a><span class="special">;</span>
+
+  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> T<span class="special">&gt;</span> <span class="keyword">struct</span> <a class="link" href="contract/wrap_void_T__id437104.html" title="Struct template wrap&lt;void(T)&gt;">wrap</a><span class="special">&lt;</span><span class="keyword">void</span><span class="special">(</span><span class="identifier">T</span><span class="special">)</span><span class="special">&gt;</span><span class="special">;</span>
+<span class="special">}</span></pre>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2009, 2010 Lorenzo Caminiti<p>
+        Distributed under the Contract++ Software License, Version 1.0 (see accompanying
+        file LICENSE_1_0.txt)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="contract__/Grammar.html"><img src="images/prev.png" alt="Prev"></a><a accesskey="u" href="index.html"><img src="images/up.png" alt="Up"></a><a accesskey="h" href="index.html"><img src="images/home.png" alt="Home"></a><a accesskey="n" href="contract/failure.html"><img src="images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>
