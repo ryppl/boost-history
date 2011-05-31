@@ -32,7 +32,6 @@
 #include <iostream>
 #include <boost/pool/pool_alloc.hpp>
 #include <boost/type_traits/add_pointer.hpp>
-#include <boost/smart_ptr/detail/atomic_count.hpp>
 #include <boost/thread/thread.hpp>
 #include <boost/thread/mutex.hpp>
 
@@ -63,9 +62,7 @@ class block_base;
 
 struct block_header
 {
-    typedef detail::atomic_count count_type;
-
-    count_type count_;								/**< Count of the number of pointers from the stack referencing the same @c block_header .*/
+    long count_;								/**< Count of the number of pointers from the stack referencing the same @c block_header .*/
     mutable block_header * redir_;					/**< Redirection in the case of an union multiple sets.*/
 
 	bool destroy_;									/**< Destruction sequence initiated. */
@@ -158,7 +155,7 @@ struct block_header
             redir_ = p;
             redir_->includes_.merge(includes_);
             redir_->elements_.merge(elements_);
-            new (& redir_->count_) count_type(redir_->count_ + count_); /**< Hack */
+            redir_->count_ += count_;
         }
     }
 
