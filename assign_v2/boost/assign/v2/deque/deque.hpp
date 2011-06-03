@@ -88,16 +88,17 @@ namespace interpreter_aux{
         // Suggested by JB
 //->
         // Move constructor
-        deque_interpreter(deque_interpreter&& d)
+        deque_interpreter(deque_interpreter&& d)/*<-*/
             : put_crtp_( std::move<put_crtp_&>(d) ),
             impl( std::move(d.impl) )
-        {}
+        {}BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
+
         // Move assignment
-        deque_interpreter& operator=(deque_interpreter&& d)
+        deque_interpreter& operator=(deque_interpreter&& d)/*<-*/
         {
           put_crtp_::operator=( std::move<put_crtp_&>(d) );
           impl = std::move(d.impl);
-        }
+        }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 //<-
         #endif
 //->
