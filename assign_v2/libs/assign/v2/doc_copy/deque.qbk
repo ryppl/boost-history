@@ -1,0 +1,77 @@
+[import ../test/deque/csv_deque.cpp]
+[import ../test/deque/deque.cpp]
+
+[tpl_module
+	[@../../../../../boost/assign/v2/deque.hpp `boost/assign/v2/deque.hpp`]
+	..Interpreter that generates a deque container.
+]
+
+[section:conversion Conversion]
+
+[heading Header]
+[@../../../../../boost/assign/v2/deque/conversion.hpp `boost/assign/v2/deque/conversion.hpp`]
+
+[heading Description]
+ADL version of [link converter __fun_converter__]
+
+[heading Example]
+[*Example 1]
+[test_csv_deque_converter]
+
+[endsect][/conversion]
+[section:csv_deque Csv_deque]
+[#csv_deque]
+
+[import ../../../../boost/assign/v2/deque/csv_deque.hpp]
+
+[heading Header]
+[@../../../../../boost/assign/v2/deque/csv_deque.hpp `boost/assign/v2/deque/csv_deque.hpp`]
+
+[heading Description]
+__csv_form__
+
+[heading Synopsis]
+[syntax_deque_csv_deque]
+
+[heading Example]
+[*Example 1]
+[test_csv_deque1]
+
+[*Example 2]
+[test_csv_deque2]
+
+[*Example 3]
+[test_csv_deque3]
+
+[*Example 4]
+[test_csv_deque4]
+
+[/note The internal value-type is `boost::decay<__value_type__>::type` to allow for a string literal]
+
+[endsect][/csv_deque]
+[section:deque Deque]
+[#deque]
+
+[import ../../../../boost/assign/v2/deque/deque.hpp]
+
+[heading Header]
+[@../../../../../boost/assign/v2/deque/deque.hpp `boost/assign/v2/deque/deque.hpp`]
+
+[heading Description]
+__functor_form__
+
+[heading Synopsis]
+[syntax_deque_deque]
+	
+[heading Semantics]
+The methods have the same semantics as  `std::deque`. Methods `push_back` and `push_front` are ommitted as their side effect can be
+obtained by invoking `operator()`, by default, and after passing option [link std_modifier __kwd_push_front__], respectively.
+
+[heading Example]	
+[*Example 1]
+[test_deque1]
+
+[*Example 2]
+[test_deque1]
+
+[endsect][/deque]
