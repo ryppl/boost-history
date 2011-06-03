@@ -26,9 +26,9 @@ namespace boost{
 namespace assign{
 namespace v2{
 //[syntax_option_iterate
-namespace modifier_tag{ 
+namespace modifier_tag{
 
-    template<typename Arg = functor_aux::iterate> struct iterate{}; 
+    template<typename Arg = functor_aux::iterate> struct iterate{};
 
 }// modifier_tag
 namespace interpreter_aux{
@@ -44,30 +44,30 @@ namespace interpreter_aux{
 #define BOOST_ASSIGN_V2_forward t
 #endif
 //->
-                
+
     template<typename Arg>
     class interpreter_modifier< modifier_tag::iterate<Arg> >/*<-*/
     {
 
         typedef Arg arg_;
         // storing a copy of lambda::something has caused pbs, hence ptr
-        typedef boost::shared_ptr<arg_> ptr_; 
+        typedef boost::shared_ptr<arg_> ptr_;
 
         public:
-                    
+
         interpreter_modifier()
             : ptr( new arg_() )
         {}
-        interpreter_modifier( 
-            ignore_,  
-            typename boost::call_traits<arg_>::param_type arg 
+        interpreter_modifier(
+            kwd_ignore_,
+            typename boost::call_traits<arg_>::param_type arg
         ) : ptr( new arg_( arg ) )
         {}
 
         template<typename C, typename T>
         void impl(C& cont, BOOST_ASSIGN_V2_arg, data_tag::value )const
         {
-            cont.at( (*this->ptr)() ) = BOOST_ASSIGN_V2_forward; 
+            cont.at( (*this->ptr)() ) = BOOST_ASSIGN_V2_forward;
         }
 
         template<typename C, typename T>
@@ -76,7 +76,7 @@ namespace interpreter_aux{
             typedef typename container_aux::value<C>::type value_;
             cont.replace( (*this->ptr)(), new value_( BOOST_ASSIGN_V2_forward ) );
         }
-                            
+
         protected:
         ptr_ ptr;
 
@@ -90,6 +90,7 @@ namespace interpreter_aux{
 }// interpreter_aux
 BOOST_ASSIGN_V2_OPTION_MODIFIER_KEYWORD(iterate)
 BOOST_ASSIGN_V2_OPTION_MODIFIER_META_MODIFIER_TAG(iterate, modifier_tag::iterate<Arg>)
+BOOST_ASSIGN_V2_OPTION_MODIFIER_ALIAS(iterate)
 //]
 }// v2
 }// assign

@@ -15,6 +15,7 @@
 #include <boost/assign/v2/interpreter/modifier.hpp>
 #include <boost/assign/v2/interpreter/replace.hpp>
 #include <boost/assign/v2/deque/fwd.hpp>
+#include <boost/assign/v2/option/list.hpp>
 #include <boost/assign/v2/support/config/enable_cpp0x.hpp>
 #include <boost/assign/v2/support/keyword.hpp>
 #include <boost/assign/v2/support/pp/ignore.hpp>
@@ -35,12 +36,12 @@ namespace v2{
 namespace interpreter_aux{
 
     template<typename T>
-    struct deque_impl{ 
-        typedef std::deque<T> type; 
+    struct deque_impl{
+        typedef std::deque<T> type;
     };
 
     template<typename T, typename F, typename MTag>
-    class deque_interpreter 
+    class deque_interpreter
         : public interpreter_crtp<
             deque_interpreter<T, F, MTag>,
             typename deque_impl<T>::type, F, MTag, data_tag::value
@@ -59,11 +60,11 @@ namespace interpreter_aux{
         public:
 
         typedef T value_type;
-        typedef /*<-*/typename boost::range_size<impl_>::type 
+        typedef /*<-*/typename boost::range_size<impl_>::type
         BOOST_ASSIGN_V2_IGNORE(/*->*/unspecified /*<-*/)/*->*/size_type;
-        typedef /*<-*/typename boost::range_iterator<impl_>::type 
+        typedef /*<-*/typename boost::range_iterator<impl_>::type
         BOOST_ASSIGN_V2_IGNORE(/*->*/unspecified /*<-*/)/*->*/iterator;
-        typedef /*<-*/typename boost::range_iterator<cimpl_>::type 
+        typedef /*<-*/typename boost::range_iterator<cimpl_>::type
         BOOST_ASSIGN_V2_IGNORE(/*->*/unspecified /*<-*/)/*->*/const_iterator;
         typedef /*<-*/typename impl_::reference
         BOOST_ASSIGN_V2_IGNORE(/*->*/unspecified /*<-*/)/*->*/reference;
@@ -75,8 +76,8 @@ namespace interpreter_aux{
         // Constructor
         deque_interpreter()/*<-*/
             {}BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
-        deque_interpreter( 
-            impl_ const& cont, F const& f, modifier_ const& m 
+        deque_interpreter(
+            impl_ const& cont, F const& f, modifier_ const& m
         )/*<-*/
             : put_crtp_( f, m ), impl( cont )
         {}BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
@@ -88,7 +89,7 @@ namespace interpreter_aux{
 //->
         // Move constructor
         deque_interpreter(deque_interpreter&& d)
-            : put_crtp_( std::move<put_crtp_&>(d) ), 
+            : put_crtp_( std::move<put_crtp_&>(d) ),
             impl( std::move(d.impl) )
         {}
         // Move assignment
@@ -100,7 +101,6 @@ namespace interpreter_aux{
 //<-
         #endif
 //->
-
         // Deque interface
         iterator begin()/*<-*/{
             return boost::begin( this->impl );
@@ -152,8 +152,8 @@ namespace interpreter_aux{
             this->container().swap( that.container() );
         }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
-        impl_& container()const/*<-*/{ 
-            return this->impl; 
+        impl_& container()const/*<-*/{
+            return this->impl;
         }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 //<-
         protected:
@@ -165,9 +165,9 @@ namespace interpreter_aux{
     struct replace_data_generator< deque_interpreter<T, F, MTag> >
     {
         template<typename F1>
-        struct apply{    
+        struct apply{
             typedef /*<-*/BOOST_ASSIGN_V2_IGNORE(/*->*/unspecified/*<-*/)
-            deque_interpreter<T, F1, MTag>/*->*/ type; 
+            deque_interpreter<T, F1, MTag>/*->*/ type;
         };
     };
 
@@ -175,9 +175,9 @@ namespace interpreter_aux{
     struct replace_modifier_tag< deque_interpreter<T, F, MTag> >
     {
         template<typename MTag1>
-        struct apply{ 
-            /*<-*/BOOST_ASSIGN_V2_IGNORE(/*->*/unspecified/*<-*/)typedef 
-            deque_interpreter<T, F, MTag1>/*->*/ type; 
+        struct apply{
+            /*<-*/BOOST_ASSIGN_V2_IGNORE(/*->*/unspecified/*<-*/)typedef
+            deque_interpreter<T, F, MTag1>/*->*/ type;
         };
     };
 
@@ -193,16 +193,32 @@ namespace result_of{
         typedef deque_interpreter<t_, f_, modifier_tag_> type;
     };
 
+    template<typename T, typename O>
+    struct deque_option
+    /*<-*/
+    {
+        typedef typename result_of::deque<T>::type deque_;
+        typedef typename modulo_result<deque_, O>::type type;
+    }/*->*/;
+
 }// result_of
 
     // Empty
     template<typename T>
     typename result_of::deque<T>::type
-    deque( nil_ )/*<-*/
+    deque( kwd_nil_ )/*<-*/
     {
         return typename result_of::deque<T>::type();
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
-    
+
+    template<typename T, typename Options>
+    typename result_of::deque_option<T, Options>::type
+    deque( kwd_nil_ )/*<-*/
+    {
+        return deque<T>( _nil ) % Options();
+    }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
+
+
 //<-
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 //->
@@ -215,6 +231,18 @@ namespace result_of{
         return std::move(const_cast<typename result_of::deque<T>::type&>(
             deque<T>( v2::_nil )( std::forward<Args>(args)... )
         ));
+    }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
+
+    // Default constructible options
+
+    template<typename T, typename Options, typename...Args>
+    typename result_of::deque<T>::type
+    deque(Args&&...args)/*<-*/
+    {
+        // TODO move?
+        return deque<T, Options>( v2::_nil )(
+            std::forward<Args>(args)...
+        );
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
 //<-

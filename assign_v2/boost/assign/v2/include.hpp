@@ -12,6 +12,7 @@
 #include <boost/assign/v2/include/chain.hpp>
 #include <boost/assign/v2/include/convert.hpp>
 #include <boost/assign/v2/include/converter.hpp>
+#include <boost/assign/v2/include/csv.hpp>
 #include <boost/assign/v2/include/csv_deque.hpp>
 #include <boost/assign/v2/include/csv_put.hpp>
 #include <boost/assign/v2/include/deque.hpp>

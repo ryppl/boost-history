@@ -28,9 +28,9 @@ int main (int argc, char * const argv[])
     // Do not put libs/assign/v2/test/unit_testing in this project
     {
         boost::format f( "boost version %1%.%2% %3% " );
-        f  
-            % ( BOOST_VERSION / 100000 ) 
-                % ( (BOOST_VERSION / 100) % 1000) 
+        f
+            % ( BOOST_VERSION / 100000 )
+                % ( (BOOST_VERSION / 100) % 1000)
                     % ( BOOST_VERSION % 100 );
         std::cout << f.str() << std::endl;
     }
@@ -71,9 +71,9 @@ int main (int argc, char * const argv[])
         xxx_option::test();
         xxx_put::test();
         xxx_ref::test();
-    }    
+    }
     {
-        tutorial_assign_v2::run();
+        //tutorial_assign_v2::run();
     }
     {/*
         using namespace speed_assign_v2;

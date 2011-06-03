@@ -29,24 +29,24 @@ namespace xxx_array{
     {
         namespace as2 = boost::assign::v2;
         {
-            
-            //[test_ref_array_temporaries
-            boost::array<int, 3> ar; 
+
+            //[test_ref_array1
+            boost::array<int, 3> ar;
             ar[0] = 1; ar[1] = 10; ar[2] = 100;
-            
+
             BOOST_ASSIGN_V2_CHECK(
                 boost::range::equal(
                     as2::ref::array( 1 )( 10 )( 100 ),
-                    ar        
+                    ar
                 )
             )/*<<Temporaries destroyed past semicolon>>*/;
             //]
         }
         {
-            //[test_ref_array_read
+            //[test_ref_array2
             typedef int const T;
             T w = 1, x = 10, y = 100, z = 1000;
-            as2::ref::nth_result_of::array<3, T>::type ar3 
+            as2::ref::nth_result_of::array<3, T>::type ar3
                 = as2::ref::array( w )( x )( y );
             {
                 T& a = ar3.front(); T& b = ar3.back();
@@ -71,14 +71,14 @@ namespace xxx_array{
             }
         }
         {
-            //[test_ref_array_write
-            typedef int T; T x, y, z; std::vector<T> r( 3 ); 
+            //[test_ref_array3
+            typedef int T; T x, y, z; std::vector<T> r( 3 );
             r[0] = 1; r[1] = 10; r[2] = 100;
-            boost::copy( 
+            boost::copy(
                 r,
-                boost::begin( 
-                    as2::ref::array( x )( y )( z ) | as2::ref::_get 
-                ) 
+                boost::begin(
+                    as2::ref::array( x )( y )( z ) | as2::ref::_get
+                )
             );
 
             BOOST_ASSIGN_V2_CHECK( x == r[0] );
@@ -86,8 +86,8 @@ namespace xxx_array{
             //]
         }
         {
-            //[test_ref_array_assign
-            typedef int T; T x, y, z; 
+            //[test_ref_array4
+            typedef int T; T x, y, z;
             as2::ref::array( x )( y )( z ).assign( -1 );
 
             BOOST_ASSIGN_V2_CHECK( x == -1 );

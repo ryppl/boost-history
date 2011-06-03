@@ -10,10 +10,7 @@
 #ifndef BOOST_ASSIGN_V2_PUT_CPP03_CSV_PUT_ER_2011_HPP
 #define BOOST_ASSIGN_V2_PUT_CPP03_CSV_PUT_ER_2011_HPP
 #include <boost/assign/v2/support/config/limit_csv_arity.hpp>
-#include <boost/preprocessor/control.hpp>
-#include <boost/preprocessor/repetition.hpp>
-// This is to ensure that cpp03/csv_put.hpp compiles as standalone (but it's
-// better to simply include the header below, instead)
+#include <boost/assign/v2/support/pp/parameter_list.hpp>
 #include <boost/assign/v2/put/csv_put.hpp>
 
 namespace boost{
@@ -21,41 +18,128 @@ namespace assign{
 namespace v2{
 namespace interpreter_aux{
 
-#define BOOST_ASSIGN_V2_MACRO(z, N, is_const)\
-    template<typename C, typename O, BOOST_PP_ENUM_PARAMS(N, typename T)>\
-    typename boost::enable_if<\
-        is_list_option<O>\
-    >::type csv_put(\
-        C& cont, O const& options,\
-        BOOST_PP_ENUM_BINARY_PARAMS(N, T, BOOST_PP_EXPR_IF(is_const, const)& _)\
+#define BOOST_ASSIGN_V2_CSV_PUT_NESTED_ITER(z, N, SeqU)\
+    template<\
+        int I, BOOST_ASSIGN_V2_TPL_PARAMETER_LIST(SeqU)\
+        , typename C\
+    >\
+    typename boost::enable_if_c<I == BOOST_PP_SEQ_SIZE(SeqU)>::type\
+	csv_put\
+    (\
+        C& cont,\
+		BOOST_ASSIGN_V2_CSV_PARAMETER_LIST(SeqU, N)\
+    )\
+    {\
+		csv<I, BOOST_PP_SEQ_ENUM(SeqU)>(\
+        	put( cont )\
+            BOOST_PP_ENUM_TRAILING_PARAMS(\
+                BOOST_PP_MUL( N, BOOST_PP_SEQ_SIZE(SeqU) ),\
+                _\
+            )\
+        );\
+    }\
+    template<\
+        typename Options,\
+        int I, BOOST_ASSIGN_V2_TPL_PARAMETER_LIST(SeqU)\
+        , typename C\
+    >\
+    typename boost::enable_if_c<I == BOOST_PP_SEQ_SIZE(SeqU)>::type\
+	csv_put\
+    (\
+        C& cont,\
+		BOOST_ASSIGN_V2_CSV_PARAMETER_LIST(SeqU, N)\
+    )\
+    {\
+		csv<I, BOOST_PP_SEQ_ENUM(SeqU)>(\
+        	put( cont ) % Options()\
+            BOOST_PP_ENUM_TRAILING_PARAMS(\
+                BOOST_PP_MUL( N, BOOST_PP_SEQ_SIZE(SeqU) ),\
+                _\
+            )\
+        );\
+    }\
+/**/
+
+#define BOOST_ASSIGN_V2_CSV_PUT_ITER(r, SeqU)\
+	BOOST_PP_REPEAT_FROM_TO(\
+    	1,\
+    	BOOST_PP_INC(BOOST_ASSIGN_V2_LIMIT_CSV_ARITY),\
+    	BOOST_ASSIGN_V2_CSV_PUT_NESTED_ITER,\
+    	SeqU\
+	)\
+/**/
+
+#define BOOST_ASSIGN_V2_CSV_PUT_CONST_NON_CONST_OVERLOAD(z, I, data)\
+	BOOST_PP_SEQ_FOR_EACH_PRODUCT(\
+    	BOOST_ASSIGN_V2_CSV_PUT_ITER,\
+    	BOOST_ASSIGN_V2_CSV_SEQ1(I)\
+	)\
+/**/
+
+#define BOOST_ASSIGN_V2_CSV_PUT_OVERLOAD(z, I, pos)\
+	BOOST_ASSIGN_V2_CSV_PUT_ITER(\
+    	~,\
+    	BOOST_ASSIGN_V2_CSV_SEQ2(pos, I)\
+	)\
+/**/
+
+BOOST_PP_REPEAT_FROM_TO(
+	1,
+    BOOST_PP_INC(BOOST_ASSIGN_V2_LIMIT_FUNCTOR_CONST_NON_CONST_ARITY),
+    BOOST_ASSIGN_V2_CSV_PUT_CONST_NON_CONST_OVERLOAD,
+    ~
+)
+
+BOOST_PP_REPEAT_FROM_TO(
+	BOOST_PP_INC(BOOST_ASSIGN_V2_LIMIT_FUNCTOR_CONST_NON_CONST_ARITY),
+    BOOST_PP_INC(BOOST_ASSIGN_V2_LIMIT_FUNCTOR_ARITY),
+    BOOST_ASSIGN_V2_CSV_PUT_OVERLOAD,
+    0
+)
+
+BOOST_PP_REPEAT_FROM_TO(
+	BOOST_PP_INC(BOOST_ASSIGN_V2_LIMIT_FUNCTOR_CONST_NON_CONST_ARITY),
+    BOOST_PP_INC(BOOST_ASSIGN_V2_LIMIT_FUNCTOR_ARITY),
+    BOOST_ASSIGN_V2_CSV_PUT_OVERLOAD,
+    1
+)
+
+#undef BOOST_ASSIGN_V2_CSV_PUT_NESTED_ITER
+#undef BOOST_ASSIGN_V2_CSV_PUT_ITER
+#undef BOOST_ASSIGN_V2_CSV_PUT_CONST_NON_CONST_OVERLOAD
+#undef BOOST_ASSIGN_V2_CSV_PUT_OVERLOAD
+
+#define BOOST_ASSIGN_V2_CSV_PUT_OVERLOAD_VARIADIC(z, N, is_const)\
+    template<typename Options, typename C BOOST_PP_ENUM_TRAILING_PARAMS(N, typename T)>\
+    void csv_put(\
+        C& cont\
+        BOOST_PP_ENUM_TRAILING_BINARY_PARAMS(N, T, BOOST_PP_EXPR_IF(is_const, const)& _)\
     )\
     {\
         csv(\
-            make_csv_ready( put( cont ) % options ) \
-            , BOOST_PP_ENUM_PARAMS(N, _)\
+            put<Options, C>( cont )\
+            BOOST_PP_ENUM_TRAILING_PARAMS(N, _)\
         );\
     }\
-    template<typename C, BOOST_PP_ENUM_PARAMS(N, typename T)>\
-    typename boost::disable_if<\
-        is_list_option<T0>\
-    >::type csv_put(\
-        C& cont,\
-        BOOST_PP_ENUM_BINARY_PARAMS(N, T, BOOST_PP_EXPR_IF(is_const, const)& _)\
+    template<typename C BOOST_PP_ENUM_TRAILING_PARAMS(N, typename T)>\
+    void csv_put(\
+        C& cont\
+        BOOST_PP_ENUM_TRAILING_BINARY_PARAMS(N, T, BOOST_PP_EXPR_IF(is_const, const)& _)\
     )\
     {\
-        csv( make_csv_ready( put( cont ) ), BOOST_PP_ENUM_PARAMS(N, _) );\
+        csv( put( cont ) BOOST_PP_ENUM_TRAILING_PARAMS(N, _) );\
     }\
 /**/
 BOOST_PP_REPEAT_FROM_TO(
     1,
     BOOST_PP_INC(BOOST_ASSIGN_V2_LIMIT_CSV_ARITY),
-    BOOST_ASSIGN_V2_MACRO,
+    BOOST_ASSIGN_V2_CSV_PUT_OVERLOAD_VARIADIC,
     0
 )
 BOOST_PP_REPEAT_FROM_TO(
     1,
     BOOST_PP_INC(BOOST_ASSIGN_V2_LIMIT_CSV_ARITY),
-    BOOST_ASSIGN_V2_MACRO,
+    BOOST_ASSIGN_V2_CSV_PUT_OVERLOAD_VARIADIC,
     1
 )
 #undef BOOST_ASSIGN_V2_MACRO

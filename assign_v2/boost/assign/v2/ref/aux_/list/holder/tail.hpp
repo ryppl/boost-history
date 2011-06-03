@@ -32,20 +32,20 @@ namespace list_aux{
         > tail_static_size;
         typedef T const& result_of_tail_type;
 
-        tail_holder(typename boost::call_traits<T>::param_type t) 
+        tail_holder(typename boost::call_traits<T>::param_type t)
             : tail_( t )
         {}
-        
+
         result_of_tail_type tail()const{ return this->tail_; }
 
         private:
-        typename boost::call_traits<T>::value_type tail_; 
+        typename boost::call_traits<T>::value_type tail_;
     };
 
     template<>
-    struct tail_holder<nil_>
+    struct tail_holder<kwd_nil_>
     {
-        typedef nil_ tail_type;
+        typedef kwd_nil_ tail_type;
         typedef ::boost::mpl::size_t<0> tail_static_size;
         tail_holder(){}
 

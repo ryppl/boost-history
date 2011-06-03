@@ -15,7 +15,7 @@
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 #include <utility>
 #else
-#include <boost/assign/v2/support/config/limit_arity.hpp>
+#include <boost/assign/v2/support/config/limit_functor_arity.hpp>
 #include <boost/assign/v2/support/functor/crtp_unary_and_up.hpp>
 #include <boost/mpl/always.hpp>
 #include <boost/preprocessor/arithmetic.hpp>
@@ -28,7 +28,7 @@ namespace v2{
 //syntax_detail_functor_value
 namespace functor_aux{
 
-    template<typename T = nil_>
+    template<typename T = kwd_nil_>
     class value/*<-*/
 #if !BOOST_ASSIGN_V2_ENABLE_CPP0X
     : public functor_aux::crtp_unary_and_up<
@@ -57,10 +57,11 @@ namespace functor_aux{
 //<-
 
 #else
-
         protected:
-            typedef ::boost::mpl::always<T> meta_result_;
-            typedef functor_aux::crtp_unary_and_up<this_, meta_result_> super_;
+        typedef ::boost::mpl::always<T> meta_result_;
+        typedef functor_aux::crtp_unary_and_up<
+            this_, meta_result_
+        > super_;
 
         public:
 
@@ -75,7 +76,7 @@ namespace functor_aux{
 /**/
 BOOST_PP_REPEAT_FROM_TO(
     1,
-    BOOST_PP_INC(BOOST_ASSIGN_V2_LIMIT_ARITY),
+    BOOST_PP_INC(BOOST_ASSIGN_V2_LIMIT_FUNCTOR_ARITY),
     BOOST_ASSIGN_V2_MACRO,
     ~
 )

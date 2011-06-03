@@ -9,6 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_INCLUDE_REF_CSV_ARRAY_ER_2011_HPP
 #define BOOST_ASSIGN_V2_INCLUDE_REF_CSV_ARRAY_ER_2011_HPP
+#include <boost/assign/v2/ref/array/conversion.hpp>
 #include <boost/assign/v2/ref/array/csv_array.hpp>
 
 #endif // BOOST_ASSIGN_V2_INCLUDE_REF_CSV_ARRAY_ER_2011_HPP

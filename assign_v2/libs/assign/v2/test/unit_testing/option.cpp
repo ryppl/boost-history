@@ -20,7 +20,7 @@
 #include <libs/assign/v2/test/option/repeat.cpp>
 #include <libs/assign/v2/test/option/row_major.cpp>
 #include <libs/assign/v2/test/option/std_modifier.cpp>
-    
+
 #include <boost/test/unit_test.hpp>
 using boost::unit_test::test_suite;
 test_suite* init_unit_test_suite( int argc, char* argv[] )
@@ -35,7 +35,7 @@ test_suite* init_unit_test_suite( int argc, char* argv[] )
         test->add( BOOST_TEST_CASE( &ns::xxx_mapped::test ) );
         test->add( BOOST_TEST_CASE( &ns::xxx_repeat::test ) );
         test->add( BOOST_TEST_CASE( &ns::xxx_row_major::test ) );
-        test->add( BOOST_TEST_CASE( &ns::xxx_standard::test ) );
+        test->add( BOOST_TEST_CASE( &ns::xxx_std_modifier::test ) );
     }
     return test;
 }

@@ -20,28 +20,32 @@ namespace boost{
 namespace assign{
 namespace v2{
 //[syntax_option_mapped
-namespace modifier_tag{ 
+namespace modifier_tag{
 
-    template<typename Arg> struct mapped{}; 
+    template<typename Arg> struct mapped{};
 
 }// modifier_tag
 namespace interpreter_aux{
-                
+
     template<typename Arg>
     class interpreter_modifier<modifier_tag::mapped<Arg> >/*<-*/
     {
 
         typedef Arg arg_;
         // storing a copy of lambda::something has caused pbs, hence ptr
-        typedef boost::shared_ptr<arg_> ptr_; 
-        
+        typedef boost::shared_ptr<arg_> ptr_;
+
         public:
 
-        interpreter_modifier() : ptr( new arg_() ){}
+        interpreter_modifier()
+            : ptr( new arg_() )
+        {}
+
         interpreter_modifier(
-            ignore_,
+            kwd_ignore_,
             typename boost::call_traits<arg_>::param_type arg
-        ) : ptr( new arg_( arg ) )
+        )
+            : ptr( new arg_( arg ) )
         {}
 
 //<-

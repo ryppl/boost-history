@@ -9,10 +9,8 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_PUT_PUT_ER_2011_HPP
 #define BOOST_ASSIGN_V2_PUT_PUT_ER_2011_HPP
-#include <boost/assign/v2/interpreter/crtp.hpp>
-#include <boost/assign/v2/interpreter/data.hpp>
-#include <boost/assign/v2/interpreter/modifier.hpp>
-#include <boost/assign/v2/interpreter/replace.hpp>
+#include <boost/assign/v2/interpreter.hpp>
+#include <boost/assign/v2/option/list.hpp>
 #include <boost/assign/v2/support/pp/ignore.hpp>
 #include <boost/assign/v2/ref/wrapper/copy.hpp>
 
@@ -27,20 +25,20 @@ namespace interpreter_aux{
 //<-
         protected ref::copy_wrapper< C >::type,
 //->
-        public interpreter_aux::interpreter_crtp< 
-            put_interpreter<C, F, MTag, DTag> 
+        public interpreter_aux::interpreter_crtp<
+            put_interpreter<C, F, MTag, DTag>
             , C, F, MTag, DTag
         >
     {
 //<-
-        typedef interpreter_aux::interpreter_crtp< 
+        typedef interpreter_aux::interpreter_crtp<
             put_interpreter
-            , C, F, MTag, DTag 
+            , C, F, MTag, DTag
         > super2_t;
 //->
         public:
 
-        typedef /*<-*/ typename super2_t::result_type 
+        typedef /*<-*/ typename super2_t::result_type
             BOOST_ASSIGN_V2_IGNORE(/*->*/ unspecified /*<-*/)/*->*/result_type;
 //<-
         protected:
@@ -68,58 +66,67 @@ namespace interpreter_aux{
     };
 
     template<typename C, typename F, typename MTag, typename DTag>
-    struct replace_data_generator< 
-        interpreter_aux::put_interpreter<C, F, MTag, DTag> 
+    struct replace_data_generator<
+        interpreter_aux::put_interpreter<C, F, MTag, DTag>
     >{
         template<typename F1>
-        struct apply/*<-*/{ 
+        struct apply/*<-*/{
             typedef interpreter_aux::put_interpreter<
                 C, F1, MTag, DTag
-            > type; 
+            > type;
         }/*->*/;
     };
 
     template<typename C, typename F, typename MTag, typename DTag>
-    struct replace_modifier_tag< 
-        interpreter_aux::put_interpreter<C, F, MTag, DTag> 
+    struct replace_modifier_tag<
+        interpreter_aux::put_interpreter<C, F, MTag, DTag>
     >{
         template<typename MTag1>
-        struct apply/*<-*/{ 
+        struct apply/*<-*/{
             typedef interpreter_aux::put_interpreter<
                 C, F, MTag1, DTag
-            > type; 
+            > type;
         }/*->*/;
     };
 
     template<typename C, typename F, typename MTag, typename DTag>
-    struct replace_data_tag< 
-        interpreter_aux::put_interpreter<C, F, MTag, DTag> 
+    struct replace_data_tag<
+        interpreter_aux::put_interpreter<C, F, MTag, DTag>
     >{
         template<typename DTag1>
-        struct apply/*<-*/{ 
+        struct apply/*<-*/{
             typedef interpreter_aux::put_interpreter<
                 C, F, MTag, DTag1
-            > type; 
+            > type;
         }/*->*/;
     };
 
-}// interpreter_aux
 namespace result_of{
 
     template<
         typename C/*<-*/
-        , typename DGen 
-            = typename interpreter_aux::deduce_data_generator<C>::type 
+        , typename DGen
+            = typename interpreter_aux::deduce_data_generator<C>::type
+        /*->*/
     >
-    struct put/*<-*/{
-        typedef 
+    struct put/*<-*/
+    {
+        typedef
             interpreter_aux::put_interpreter<
                 C
                 , DGen
                 , typename interpreter_aux::deduce_modifier_tag<C>::type
                 , typename interpreter_aux::deduce_data_tag<C>::type
-            > 
+            >
         type;
+    }/*->*/;
+
+    template<typename O, typename C>
+    struct put_option
+    /*<-*/
+    {
+        typedef typename result_of::put<C>::type put_;
+        typedef typename modulo_result<put_, O>::type type;
     }/*->*/;
 
 }// result_of
@@ -131,6 +138,26 @@ namespace result_of{
         typedef typename result_of::put<C>::type result_;
         return result_( cont );
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
+
+    // Default constructible options
+
+    template<typename Options, typename C>
+    typename result_of::put_option<Options, C>::type
+    put( C& cont )/*<-*/
+    {
+        Options options;
+        return put( cont ) % options;
+    }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
+
+}// interpreter_aux
+namespace result_of
+{
+    using interpreter_aux::result_of::put;
+    using interpreter_aux::result_of::put_option;
+
+}// result_of
+
+    using interpreter_aux::put;
 
 //]
 

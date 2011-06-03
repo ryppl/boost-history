@@ -42,18 +42,26 @@ namespace container_aux{
 // ACCESS
 
     template<typename C>
-    struct key : through_value_container<value_key, C>{};
+    struct key
+        : through_value_container<value_key, C>
+    {};
 
     template<typename C>
-    struct mapped : through_value_container<value_mapped, C>{};
+    struct mapped
+        : through_value_container<value_mapped, C>
+    {};
 
     template<typename C>
-    struct value : through_value_container<value_value, C>{};
+    struct value
+        : through_value_container<value_value, C>
+    {};
 
     template<
         typename C    // Multi-array
     >
-    struct element : through_value_container<value_element, C>{};
+    struct element
+        : through_value_container<value_element, C>
+    {};
 
 // PREDICATE
 
@@ -67,25 +75,25 @@ namespace container_aux{
     {};
 
     template<typename C>
-    struct is_associative 
+    struct is_associative
         : through_value_container<value_is_associative, C>
     {};
 
     template<typename C>
-    struct is_fifo 
+    struct is_fifo
         : through_value_container<value_is_fifo, C>
     {};
-    
+
     template<typename C>
-    struct is_lifo 
+    struct is_lifo
         : through_value_container<value_is_lifo, C>
     {};
-            
-    template<typename C> struct is_map 
+
+    template<typename C> struct is_map
         : through_value_container<value_is_map, C>
     {};
-    
-    template<typename C> struct is_multi_array 
+
+    template<typename C> struct is_multi_array
         : through_value_container<value_is_multi_array, C>
     {};
 
@@ -95,7 +103,7 @@ namespace container_aux{
     >{};
 
     template<typename C>
-    struct is_sorted 
+    struct is_sorted
         : through_value_container<value_is_sorted, C>
     {};
 

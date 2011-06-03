@@ -10,5 +10,6 @@
 #ifndef BOOST_ASSIGN_V2_SUPPORT_TRAITS_ER_2011_HPP
 #define BOOST_ASSIGN_V2_SUPPORT_TRAITS_ER_2011_HPP
 #include <boost/assign/v2/support/traits/container.hpp>
+#include <boost/assign/v2/support/traits/type.hpp>
 
 #endif // BOOST_ASSIGN_V2_SUPPORT_TRAITS_ER_2011_HPP

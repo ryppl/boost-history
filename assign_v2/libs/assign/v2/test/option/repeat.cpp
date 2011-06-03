@@ -10,7 +10,9 @@
 #include <vector>
 #include <boost/typeof/typeof.hpp>
 #include <boost/assign/v2/support/config/check.hpp>
-#include <boost/assign/v2/include/csv_put.hpp>
+#include <boost/assign/v2/include/csv.hpp>
+#include <boost/assign/v2/include/put.hpp>
+#include <boost/assign/v2/include/delay_put.hpp>
 #include <boost/assign/v2/option/modifier/std.hpp>
 #include <boost/assign/v2/option/modifier/repeat.hpp>
 #include <boost/assign/v2/deque.hpp>
@@ -25,28 +27,33 @@ namespace xxx_repeat{
     {
         namespace as2 = boost::assign::v2;
         {
-            //[test_option_repeat_simple
+            //[test_repeat1
             std::vector<int> cont;
-            as2::csv_put( cont, as2::_option % ( as2::_repeat = 2 ) , 1, 10, 100 );
 
-            BOOST_ASSIGN_V2_CHECK( 
-                boost::range::equal( 
-                    cont, 
-                    as2::csv_deque( 1, 1, 10, 10, 100, 100 ) 
-                ) 
+            BOOST_AUTO( _modifier, ( as2::_repeat = 2 ) );
+
+            BOOST_ASSIGN_V2_CHECK(
+                boost::range::equal(
+                    cont | (
+                        as2::_delay_put % _modifier
+                    ).for_each( as2::csv_deque(1, 10, 100) ),
+                    as2::csv_deque( 1, 1, 10, 10, 100, 100 )
+                )
             );
             //]
         }
         {
-            //[test_option_repeat_compose
-            BOOST_AUTO(
-                cont, (
-                    as2::deque<int>( as2::_nil ) % as2::_push_front % ( as2::_repeat = 2 )
-                )( 1 )( 10 )( 100 )
-            );
-            
-            BOOST_ASSIGN_V2_CHECK( 
-                boost::range::equal( cont, as2::csv_deque( 100, 100, 10, 10, 1, 1 ) ) 
+            //[test_repeat2
+            BOOST_AUTO( _modifier, ( as2::_repeat = 2 ) );
+
+            BOOST_ASSIGN_V2_CHECK(
+                boost::range::equal(
+                    csv(
+                        as2::deque<int, as2::push_front_>( as2::_nil) % _modifier
+                        , 1, 10, 100, 1000
+                    ),
+                    as2::csv_deque( 1000, 1000, 100, 100, 10, 10, 1, 1 )
+                )
             );
             //]
         }

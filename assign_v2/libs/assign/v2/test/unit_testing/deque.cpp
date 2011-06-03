@@ -12,7 +12,8 @@
 #include <boost/test/test_tools.hpp>
 #define BOOST_ASSIGN_V2_CHECK( p ) BOOST_CHECK( p )
 
-#include <libs/assign/v2/test/deque.cpp>
+#include <libs/assign/v2/test/deque/csv_deque.cpp>
+#include <libs/assign/v2/test/deque/deque.cpp>
 
 #include <boost/test/unit_test.hpp>
 using boost::unit_test::test_suite;
@@ -21,8 +22,9 @@ test_suite* init_unit_test_suite( int argc, char* argv[] )
     test_suite* test = BOOST_TEST_SUITE( "BOOST_ASSIGN_V2" );
     using namespace test_assign_v2;
     {
-
-        test->add( BOOST_TEST_CASE( &xxx_deque::test ) );
+        namespace ns = xxx_deque;
+        test->add( BOOST_TEST_CASE( &ns::xxx_csv_deque::test ) );
+        test->add( BOOST_TEST_CASE( &ns::xxx_deque::test ) );
     }
     return test;
 }

@@ -24,7 +24,7 @@ namespace xxx_ref{
 namespace xxx_aux_{
 namespace xxx_list{
 
-    // ------------------------ //        
+    // ------------------------ //
     // Checks internal details. //
     // -------------------------//
 
@@ -56,9 +56,9 @@ namespace xxx_list{
 // Implication : don't try to save the result.
 #define BOOST_ASSIGN_V2_macro as2::ref::list<tag_>( as2::_nil )( a )( -1 )( c )
         BOOST_ASSIGN_V2_CHECK( &as2::ref::at<0>( BOOST_ASSIGN_V2_macro ) == &a );
-        BOOST_ASSIGN_V2_CHECK( as2::ref::at<1>( BOOST_ASSIGN_V2_macro ) == -1 ); 
+        BOOST_ASSIGN_V2_CHECK( as2::ref::at<1>( BOOST_ASSIGN_V2_macro ) == -1 );
         BOOST_ASSIGN_V2_CHECK( str_( as2::ref::at<2>( BOOST_ASSIGN_V2_macro ) ) == c );
-#undef BOOST_ASSIGN_V2_macro    
+#undef BOOST_ASSIGN_V2_macro
         }
         {
             typedef int t_; typedef add_reference<t_>::type r_;
@@ -81,7 +81,7 @@ namespace xxx_list{
         {
             typedef as2::ref::alloc_tag::lazy_alloc tag_;
             typedef as2::ref::list_aux::void_ void_;
-            typedef as2::nil_ nil_;
+            typedef as2::kwd_nil_ nil_;
             typedef as2::ref::empty_list<tag_>::type empty_;
             {
                 typedef void_ u1_; typedef nil_ l_;

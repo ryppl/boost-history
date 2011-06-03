@@ -48,8 +48,10 @@ namespace list_aux{
         // GCC4.4 wants fully qual at
         a[ K - 1 ].rebind( ref::at<K-1>( l ) ) ;
         typedef index_ next_size_;
-        typedef ::boost::mpl::size_t<0> zero_;
-        typedef typename ::boost::mpl::equal_to<next_size_,zero_>::type exit_;
+        typedef ::boost::mpl::int_<0> zero_;
+        typedef typename ::boost::mpl::equal_to<
+                next_size_, zero_
+        >::type exit_;
         assign_array<K-1>( exit_(), a, l );
     }
 

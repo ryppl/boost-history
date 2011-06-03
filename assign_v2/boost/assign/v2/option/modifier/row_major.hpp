@@ -25,11 +25,12 @@ namespace boost{
 namespace assign{
 namespace v2{
 //[syntax_option_row_major
-namespace modifier_tag{ 
+namespace modifier_tag{
 
-    template<typename Arg = functor_aux::iterate> struct row_major{}; 
+    template<typename Arg = functor_aux::iterate> struct row_major{};
 
 }// modifier_tag
+    typedef modifier_tag::row_major<> row_major_;
 namespace interpreter_aux{
 
 //<-
@@ -48,7 +49,7 @@ namespace interpreter_aux{
     {
         typedef std::size_t size_type;
         typedef row_major<Dim + 1, NumDims> nested_;
-        
+
         template<typename Array, typename T>
         static void assign(Array& array, size_type remainder, BOOST_ASSIGN_V2_arg )
         {
@@ -63,7 +64,7 @@ namespace interpreter_aux{
     struct row_major<Dim, NumDims, true>
     {
         typedef std::size_t size_type;
-        
+
         template<typename E, typename T>
         static void assign(E& elem, size_type index, BOOST_ASSIGN_V2_arg)
         {
@@ -85,16 +86,16 @@ namespace interpreter_aux{
     {
 
         typedef Arg arg_;
-        typedef boost::shared_ptr<arg_> ptr_; 
+        typedef boost::shared_ptr<arg_> ptr_;
 
         public:
         interpreter_modifier()
             : ptr( new arg_() )
         {}
         interpreter_modifier(
-            ignore_,  
-            typename boost::call_traits<arg_>::param_type arg 
-        ) 
+            kwd_ignore_,
+            typename boost::call_traits<arg_>::param_type arg
+        )
             : ptr( new arg_( arg ) )
         {}
 
@@ -112,7 +113,7 @@ namespace interpreter_aux{
 #undef BOOST_ASSIGN_V2_arg
 #undef BOOST_ASSIGN_V2_forward
 //->
-    
+
 }// interpreter_aux
 //]
 BOOST_ASSIGN_V2_OPTION_MODIFIER_KEYWORD(row_major)

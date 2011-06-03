@@ -13,11 +13,11 @@
 #include <map>
 #include <vector>
 #include <boost/array.hpp>
-#include <boost/assign/v2/support/config/check.hpp>
 #include <boost/assign/v2/deque.hpp>
 #include <boost/assign/v2/option/data.hpp>
-#include <boost/assign/v2/include/csv_put.hpp>
 #include <boost/assign/v2/include/put.hpp>
+#include <boost/assign/v2/support/config/check.hpp>
+
 #include <boost/function.hpp>
 #include <boost/lambda/bind.hpp>
 #include <boost/lambda/lambda.hpp>
@@ -35,13 +35,18 @@ namespace xxx_data{
         namespace as2 = boost::assign::v2;
         {
             // (*fp) resolves error C2440 using MSVC
-            //[test_option_data_math
+            //[test_data1
             std::vector<double> exponent;
             /*<-*/typedef double(*fp)(double);/*->*/
             typedef boost::function<double(double)> f_;
-            as2::csv_put(
-                exponent
-                , as2::_option % ( as2::_data = f_( /*<-*/fp(/*->*/ log10 /*<-*/)/*->*/ ) )
+
+            BOOST_AUTO(
+                _data,
+                ( as2::_data = f_( /*<-*/fp(/*->*/ log10 /*<-*/)/*->*/ ) )
+            );
+
+            csv(
+                as2::put( exponent ) % _data
                 , 1.0, 10.0, 100.0, 1000.0, 10000.0
             );
 
@@ -51,13 +56,22 @@ namespace xxx_data{
             //]
         }
         {
-            //[test_option_data_recursive
+            //[test_data2
             int k = 1;
+
+            BOOST_AUTO(
+                _data,
+                (
+                    as2::_data = (
+                        boost::lambda::var( k ) *= boost::lambda::_1
+                    )
+                )
+            );
 
             BOOST_ASSIGN_V2_CHECK(
                 boost::range::equal(
-                    as2::csv_deque(
-                        as2::_option % ( as2::_data = ( boost::lambda::var( k ) *= boost::lambda::_1 ) ),
+                    as2::csv(
+                        as2::deque<int>( as2::_nil ) % _data,
                         1, 2, 3, 4, 5
                     ),
                     as2::csv_deque( 1, 2, 6, 24, 120 )
@@ -66,24 +80,24 @@ namespace xxx_data{
             //]
         }
         {
-            //[test_option_data_value
-            typedef std::string word_;
-            const char x[] = "foo";
-            const char y[4] = { 'b', 'a', 'r', '\0' };
-            word_ z = "***baz";
-            typedef std::map<int, word_> C;
-            typedef C::value_type T;
-            typedef C::mapped_type D;
-            C map;
-            (
-                as2::put( map )  % ( as2::_data = as2::_value )
-            )( 1, D( x, 3 ) )( 2, y )( 3, D( z, 3, 3 ) )( 4, "qux");
+            //[test_data3
+            typedef std::string month_; typedef int days_;
+            typedef std::map<month_, days_> map_;
+            typedef map_::value_type pair_;
 
-            BOOST_ASSIGN_V2_CHECK( map[1] == "foo" ); BOOST_ASSIGN_V2_CHECK( map[2] == "bar" );
-            BOOST_ASSIGN_V2_CHECK( map[3] == "baz" ); BOOST_ASSIGN_V2_CHECK( map[4] == "qux" );
+            map_ map;
+            as2::csv_put<as2::value_>(
+                map,
+                pair_( "jan", 31 ),
+                pair_( "feb", 28 ),
+                pair_( "mar", 31 )
+            );
+
+            BOOST_ASSIGN_V2_CHECK( map["jan"] == 31 );
+            BOOST_ASSIGN_V2_CHECK( map["feb"] == 28 );
+            BOOST_ASSIGN_V2_CHECK( map["mar"] == 31 );
             //]
         }
-
     }
 
 }// xxx_data

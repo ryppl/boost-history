@@ -22,13 +22,13 @@ namespace xxx_functor{
         namespace as2 = boost::assign::v2;
 #if !BOOST_ASSIGN_V2_ENABLE_CPP0X
 // Requirement specific to this test file
-#if BOOST_ASSIGN_V2_LIMIT_LVALUE_CONST_ARITY != 2
+#if BOOST_ASSIGN_V2_LIMIT_FUNCTOR_CONST_NON_CONST_ARITY != 2
 #error
 #endif
 #endif
 
         // Primarily tests whether a functor is overloaded on any combination of
-        // non-const/cont within BOOST_ASSIGN_V2_LIMIT_LVALUE_CONST_ARITY
+        // non-const/cont within BOOST_ASSIGN_V2_LIMIT_FUNCTOR_CONST_NON_CONST_ARITY
         // (relevant only for CPP03) and on all-non-const and all-const above
         // this limit.
 

@@ -27,7 +27,7 @@ namespace interpreter_aux{
 
     template<
         typename C      // Value- or pointer-container
-        , typename F    // Functor or keyword    
+        , typename F    // Functor or keyword
     >
     struct data_generator/*<-*/
     {
@@ -37,21 +37,21 @@ namespace interpreter_aux{
     template<
         typename C // Multi-array
     >
-    struct data_generator<C, element_>/*<-*/
+    struct data_generator<C, kwd_element_>/*<-*/
     {
         typedef typename container_aux::element<C>::type element_;
         typedef functor_aux::value<element_> type;
     }/*->*/;
 
     template<typename C>
-    struct data_generator<C, key_>/*<-*/
+    struct data_generator<C, kwd_key_>/*<-*/
     {
         typedef typename container_aux::key<C>::type key_;
         typedef functor_aux::value<key_> type;
     }/*->*/;
 
     template<typename C>
-    struct data_generator<C, map_>/*<-*/
+    struct data_generator<C, kwd_map_>/*<-*/
     {
         typedef typename container_aux::key<C>::type key_;
         typedef typename container_aux::mapped<C>::type mapped_;
@@ -60,12 +60,12 @@ namespace interpreter_aux{
     }/*->*/;
 
     template<typename C>
-    struct data_generator<C, use_default_>/*<-*/
+    struct data_generator<C, kwd_use_default_>/*<-*/
         : deduce_data_generator<C>
     {}/*->*/;
 
     template<typename C>
-    struct data_generator<C, value_>/*<-*/
+    struct data_generator<C, kwd_value_>/*<-*/
     {
         typedef functor_aux::value<
             typename container_aux::value<C>::type
@@ -74,22 +74,22 @@ namespace interpreter_aux{
 
 namespace result_of{
 
-    template<typename D, typename C, typename F = use_default_>
+    template<typename D, typename C, typename F = kwd_use_default_>
     struct option_data/*<-*/
         : ::boost::mpl::apply1<
-            interpreter_aux::replace_data_generator<D>, 
+            interpreter_aux::replace_data_generator<D>,
             typename data_generator<C, F>::type
         >
     {}/*->*/;
-        
+
 }// result_of
 
-    // F is either a functor or one of the keywords : 
+    // F is either a functor or one of the keywords :
     //  element_, key_, map_, use_default_, value_
-    template<typename F = ignore_>
+    template<typename F = kwd_ignore_>
     struct option_data/*<-*/
         : option_crtp<
-            option_data<F> 
+            option_data<F>
         >
     {
         option_data(){}
@@ -97,7 +97,7 @@ namespace result_of{
 
         template<typename C>
         F const& get()const{ return this->f_; }
-        
+
         private:
         F f_;
     }/*->*/;
@@ -106,32 +106,36 @@ namespace result_of{
     template<typename Kwd>
     struct option_data_helper
         : option_crtp<
-            option_data<Kwd> 
+            option_data<Kwd>
         >
     {
         template<typename C>
-        typename data_generator<C, Kwd>::type 
+        typename data_generator<C, Kwd>::type
         get()const
-        { 
-            return typename data_generator<C, Kwd>::type(); 
+        {
+            return typename data_generator<C, Kwd>::type();
         }
     };
-
-#define BOOST_ASSIGN_V2_MACRO(Kwd)\
+}// interpreter_aux
+#define BOOST_ASSIGN_V2_MACRO(Kwd, Alias)\
+namespace interpreter_aux{\
     template<>\
     struct option_data<Kwd>\
         : option_data_helper<Kwd>\
     {\
         option_data(){}\
-        option_data(ignore_){}\
+        option_data(kwd_ignore_){}\
     };\
-/**/    
-BOOST_ASSIGN_V2_MACRO(element_)
-BOOST_ASSIGN_V2_MACRO(key_)
-BOOST_ASSIGN_V2_MACRO(map_)
-BOOST_ASSIGN_V2_MACRO(use_default_)
-BOOST_ASSIGN_V2_MACRO(value_)
+}\
+typedef interpreter_aux::option_data<Kwd> Alias;\
+/**/
+BOOST_ASSIGN_V2_MACRO(kwd_element_, element_)
+BOOST_ASSIGN_V2_MACRO(kwd_key_, key_)
+BOOST_ASSIGN_V2_MACRO(kwd_map_, map_)
+BOOST_ASSIGN_V2_MACRO(kwd_use_default_, use_default_)
+BOOST_ASSIGN_V2_MACRO(kwd_value_, value_)
 #undef BOOST_ASSIGN_V2_MACRO
+namespace interpreter_aux{
 //->
 
     // Overrides data generator
@@ -146,10 +150,10 @@ BOOST_ASSIGN_V2_MACRO(value_)
         typedef typename result_of::option_data<
             D, C, F1
         >::type result_;
-        return result_( 
-            lhs.container(), 
-            rhs.template get<C>(), 
-            lhs.modifier 
+        return result_(
+            lhs.container(),
+            rhs.template get<C>(),
+            lhs.modifier
         );
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 

@@ -23,7 +23,7 @@ namespace list_aux{
 
     struct void_;
 
-    template<typename Tag, typename H = void_, typename T = nil_>
+    template<typename Tag, typename H = void_, typename T = kwd_nil_>
     class container;
 
 }// list_aux

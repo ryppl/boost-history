@@ -29,27 +29,27 @@ namespace xxx_csv_array{
     {
         namespace as2 = boost::assign::v2;
         {
-            //[test_ref_csv_array_temporaries
-            boost::array<int, 3> ar; 
+            //[test_ref_csv_array1
+            boost::array<int, 3> ar;
             ar[0] = 1; ar[1] = 10; ar[2] = 100;
-            
+
             BOOST_ASSIGN_V2_CHECK(
                 boost::range::equal(
                     as2::ref::csv_array( 1, 10, 100 ),
-                    ar        
+                    ar
                 )
             );
             //]
         }
         {
-            //[test_ref_csv_array_read
+            //[test_ref_csv_array2
             typedef int const T;
             T x = 1, y = 10, z = 100;
-            as2::ref::nth_result_of::csv_array<3, T>::type ar 
+            as2::ref::nth_result_of::csv_array<3, T>::type ar
                 = as2::ref::csv_array( x, y, z );
             /*<-*/{/*->*/
             T& front = ar.front(); T& back = ar.back();
-            
+
             BOOST_ASSIGN_V2_CHECK( &front == &x );
             BOOST_ASSIGN_V2_CHECK( &back == &z );
             /*<-*/}/*->*/
@@ -69,14 +69,14 @@ namespace xxx_csv_array{
             }
         }
         {
-            //[test_ref_csv_array_write
+            //[test_ref_csv_array3
             typedef int T; T x, y, z;
             std::vector<T> r( 3 ); r[0] = 1; r[1] = 10; r[2] = 100;
-            boost::copy( 
+            boost::copy(
                 r,
-                boost::begin( 
-                    as2::ref::csv_array( x, y, z ) | as2::ref::_get 
-                ) 
+                boost::begin(
+                    as2::ref::csv_array( x, y, z ) | as2::ref::_get
+                )
             );
 
             BOOST_ASSIGN_V2_CHECK( x == r[0] );
@@ -84,8 +84,8 @@ namespace xxx_csv_array{
             //]
         }
         {
-            //[test_ref_csv_array_assign
-            int x, y, z; 
+            //[test_ref_csv_array4
+            int x, y, z;
             as2::ref::csv_array( x, y, z ).assign( -1 );
 
             BOOST_ASSIGN_V2_CHECK( x == -1 );
@@ -95,7 +95,7 @@ namespace xxx_csv_array{
         {
             //[test_ref_csv_array_converter
             std::queue<int> fifo = /*<<Notice unqualified>>*/converter( as2::ref::csv_array( 1, 2, 3, 4, 5 ) );
-            
+
             BOOST_ASSIGN_V2_CHECK( fifo.front() == 1  );
             //]
         }

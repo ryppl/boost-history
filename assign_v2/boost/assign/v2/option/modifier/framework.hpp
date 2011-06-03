@@ -25,23 +25,23 @@ namespace interpreter_aux{
 
     template<
         typename Keyword // A class of modifiers
-        , typename Arg /*<-*/= ignore_/*->*/ // Specifies an aspect of the implementation
+        , typename Arg /*<-*/= kwd_ignore_/*->*/ // Specifies an aspect of the implementation
     >
     struct option_modifier/*<-*/
         : option_crtp<
-             option_modifier<Keyword, Arg> 
+             option_modifier<Keyword, Arg>
         >
     /*->*/
     {
-        
+
         option_modifier(){}
         option_modifier(Arg arg)/*<-*/
             :arg_( arg )
         {}BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
-        
+
         Arg const& arg()const/*<-*/
-        { 
-            return this->arg_; 
+        {
+            return this->arg_;
         }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
         template<typename Arg1>
@@ -49,7 +49,7 @@ namespace interpreter_aux{
         operator=(const Arg1& arg1)const/*<-*/{
             return option_modifier<Keyword, Arg1>( arg1 );
         }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
-        
+
 //<-
         protected:
         Arg arg_;
@@ -67,20 +67,20 @@ namespace interpreter_aux{
     };
 
 namespace result_of{
-        
+
     template<typename D,typename Keyword, typename Arg>
     struct option_modifier /*<-*/ : ::boost::mpl::apply1<
-        replace_modifier_tag<D>, 
+        replace_modifier_tag<D>,
         typename ::boost::mpl::apply1<
-            interpreter_aux::meta_modifier_tag<Keyword, Arg>, 
+            interpreter_aux::meta_modifier_tag<Keyword, Arg>,
             D
         >::type
     >
     {}/*->*/;
-            
+
 }// result_of
 
-    template<typename D, typename C, typename F, typename MTag, typename DTag,  
+    template<typename D, typename C, typename F, typename MTag, typename DTag,
         typename Keyword, typename Arg>
     typename result_of::option_modifier<D, Keyword, Arg>::type
     operator%(
@@ -94,7 +94,7 @@ namespace result_of{
         typedef typename result_of::option_modifier<
             D, Keyword, Arg
         >::type result_;
-    
+
         return result_(
             lhs.container(),
             lhs.fun,
@@ -111,7 +111,7 @@ namespace result_of{
 namespace result_of{
 
     template<typename D, typename Keyword, typename Arg>
-    struct option_modifier 
+    struct option_modifier
         : interpreter_aux::result_of::option_modifier<D, Keyword, Arg>
     {};
 
@@ -145,17 +145,16 @@ namespace result_of{\
 /**/
 #endif
 
-#ifdef BOOST_ASSIGN_V2_OPTION_MODIFIER_KWD_TYPE
-#error
-#else
 #define BOOST_ASSIGN_V2_OPTION_MODIFIER_KWD_TYPE(NAME)\
     interpreter_aux::option_modifier<interpreter_aux::BOOST_PP_CAT(keyword_,NAME)>\
 /**/
-#endif
 
-#ifdef BOOST_ASSIGN_V2_OPTION_MODIFIER_KEYWORD
-#error
-#else
+#define BOOST_ASSIGN_V2_OPTION_MODIFIER_ALIAS(NAME)\
+    typedef\
+        BOOST_ASSIGN_V2_OPTION_MODIFIER_KWD_TYPE(NAME)\
+    BOOST_PP_CAT(NAME,_);\
+/**/
+
 #define BOOST_ASSIGN_V2_OPTION_MODIFIER_KEYWORD(NAME)\
 namespace interpreter_aux{\
     struct BOOST_PP_CAT(keyword_,NAME){\
@@ -169,7 +168,6 @@ namespace {\
         = BOOST_ASSIGN_V2_OPTION_MODIFIER_KWD_TYPE(NAME)();\
 }\
 /**/
-#endif
 
 }// v2
 }// assign

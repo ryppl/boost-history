@@ -9,8 +9,8 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_DEQUE_CPP03_DEQUE_ER_2011_HPP
 #define BOOST_ASSIGN_V2_DEQUE_CPP03_DEQUE_ER_2011_HPP
-#include <boost/assign/v2/support/config/limit_arity.hpp>
-#include <boost/assign/v2/support/config/limit_lvalue_const_arity.hpp>
+#include <boost/assign/v2/support/config/limit_functor_arity.hpp>
+#include <boost/assign/v2/support/config/limit_functor_const_non_const_arity.hpp>
 #include <boost/assign/v2/support/keyword.hpp>
 #include <boost/assign/v2/support/pp/parameter_list.hpp>
 #include <boost/assign/v2/deque/fwd.hpp>
@@ -18,9 +18,7 @@
 #include <boost/preprocessor/repetition.hpp>
 #include <boost/preprocessor/seq.hpp>
 #include <boost/type_traits/remove_cv.hpp>
-// This is to ensure that cpp03/deque.hpp compiles as standalone (but it's
-// better to simply include the header below, instead)
-#include <boost/assign/v2/deque/deque.hpp> 
+#include <boost/assign/v2/deque/deque.hpp>
 
 namespace boost{
 namespace assign{
@@ -34,14 +32,21 @@ namespace interpreter_aux{
         return deque<T>( v2::_nil )();
     }
 
+    template<typename T, typename Options>
+    typename result_of::deque_option<T, Options>::type
+    deque()
+    {
+        return deque<T, Options>( v2::_nil )();
+    }
+
 // Overloads for any mixture of const/non-const arguments
 
 #define BOOST_ASSIGN_V2_MACRO1(r, SeqU)\
     template<typename T, BOOST_ASSIGN_V2_TPL_PARAMETER_LIST(SeqU)>\
     typename result_of::deque<T>::type\
-    deque( BOOST_ASSIGN_V2_PARAMETER_LIST(SeqU, _) ){\
+    deque( BOOST_ASSIGN_V2_PARAMETER_LIST(SeqU, 0) ){\
         return deque<T>( v2::_nil )(\
-            BOOST_ASSIGN_V2_ARG_LIST(SeqU, _)\
+            BOOST_ASSIGN_V2_ARG_LIST(SeqU, 0)\
         );\
     }\
 /**/
@@ -51,7 +56,7 @@ namespace interpreter_aux{
 )\
 /**/
 BOOST_PP_REPEAT(
-    BOOST_ASSIGN_V2_LIMIT_LVALUE_CONST_ARITY,
+    BOOST_ASSIGN_V2_LIMIT_FUNCTOR_CONST_NON_CONST_ARITY,
     BOOST_ASSIGN_V2_MACRO2,
     ~
 )
@@ -76,8 +81,8 @@ BOOST_PP_REPEAT(
 \
 /**/
 BOOST_PP_REPEAT_FROM_TO(
-    BOOST_PP_INC(BOOST_ASSIGN_V2_LIMIT_LVALUE_CONST_ARITY),
-    BOOST_PP_INC(BOOST_ASSIGN_V2_LIMIT_ARITY),
+    BOOST_PP_INC(BOOST_ASSIGN_V2_LIMIT_FUNCTOR_CONST_NON_CONST_ARITY),
+    BOOST_PP_INC(BOOST_ASSIGN_V2_LIMIT_FUNCTOR_ARITY),
     BOOST_ASSIGN_V2_MACRO,
     ~
 )

@@ -9,10 +9,9 @@
 //////////////////////////////////////////////////////////////////////////////
 #include <list>
 #include <boost/array.hpp>
-#include <boost/assign/v2/support/config/check.hpp>
 #include <boost/assign/v2/deque.hpp>
-#include <boost/assign/v2/option/modifier/iterate.hpp>
 #include <boost/assign/v2/include/csv_put.hpp>
+#include <boost/assign/v2/support/config/check.hpp>
 #include <boost/lambda/lambda.hpp>
 #include <boost/mpl/assert.hpp>
 #include <boost/mpl/apply.hpp>
@@ -20,8 +19,6 @@
 #include <boost/type_traits/is_same.hpp>
 #include <boost/typeof/typeof.hpp>
 #include <libs/assign/v2/test/option/iterate.h>
-
-#include <iostream>
 
 namespace test_assign_v2{
 namespace xxx_option{
@@ -31,7 +28,6 @@ namespace xxx_iterate{
     {
         namespace as2 = boost::assign::v2;
         {
-            //[test_option_iterate_meta
             typedef as2::functor_aux::iterate arg_;
             typedef boost::array<int, 4> cont_;
             typedef as2::result_of::put<cont_>::type put_;
@@ -40,30 +36,30 @@ namespace xxx_iterate{
             typedef as2::interpreter_aux::replace_modifier_tag<put_> meta2_;
             typedef ::boost::mpl::apply1<meta2_, tag1_>::type result2_;
             BOOST_MPL_ASSERT(( boost::is_same<result1_, result2_> ));
-            //]
         }
         {
-            //[test_option_iterate_shifted
-            typedef int T; boost::array<T, 10> seq;
-            seq[0] = 1; seq[1] = 2; seq[2] = 3;
+            //[test_iterate1
+            typedef int T; boost::array<T, 10> cont;
+            cont[0] = 1; cont[1] = 2; cont[2] = 3;
 
             int index = 3;
-            as2::csv_put(
-                seq
-                , as2::_option % ( as2::_iterate = boost::lambda::var( index )++ )
-                , 4, 5, 6, 7, 8, 9, 10
+            BOOST_AUTO(
+                _modifier,
+                ( as2::_iterate = boost::lambda::var( index )++ )
             );
 
             BOOST_ASSIGN_V2_CHECK(
                 boost::range::equal(
-                    seq,
+                    csv(
+                        as2::put( cont ) % _modifier
+                        , 4, 5, 6, 7, 8, 9, 10
+                    ).container(),
                     as2::csv_deque( 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 )
                 )
             );
             //]
         }
         {
-            //[test_option_iterate_meta_deque
             typedef as2:: interpreter_aux::keyword_iterate keyword_;
             typedef as2::functor_aux::iterate arg_;
             typedef as2::result_of::deque<int>::type put_;
@@ -72,24 +68,24 @@ namespace xxx_iterate{
             typedef as2:: interpreter_aux::replace_modifier_tag<put_> meta2_;
             typedef ::boost::mpl::apply1<meta2_, tag1_>::type result2_;
             BOOST_MPL_ASSERT(( boost::is_same<result1_, result2_> ));
-            //]
         }
         {
-            //[test_option_iterate_shifted_deque
-            as2::result_of::csv_deque<int>::type tmp = as2::csv_deque<int>
-                ( 1, 2, 3, as2::as_arg_list( std::list<int>( 7 ) ) );
+            //[test_iterate2
+            typedef as2::result_of::csv_deque<int>::type interpreter_;
+            interpreter_ interpreter = as2::csv_deque<int>
+                ( 1, 2, 3 ).for_each( std::list<int>( 7 ) );
 
             int index = 3;
             BOOST_AUTO(
-                seq,
-                (
-                    tmp  % ( as2::_iterate = boost::lambda::var( index )++ )
-                )( 4 )( 5 )( 6 )( 7 )( 8 )( 9 )( 10 )
+                _modifier,
+                ( as2::_iterate = boost::lambda::var( index )++ )
             );
-
             BOOST_ASSIGN_V2_CHECK(
                 boost::range::equal(
-                    alternating,
+                    csv(
+                        interpreter % _modifier,
+                        4, 5, 6, 7, 8, 9, 10
+                    ).container(),
                     as2::csv_deque( 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 )
                 )
             );

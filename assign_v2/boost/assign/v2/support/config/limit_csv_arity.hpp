@@ -17,6 +17,6 @@
    ...
    csv_fun(t[0], ...., t[n-1])        |    n
 */
-#define BOOST_ASSIGN_V2_LIMIT_CSV_ARITY 20
+#define BOOST_ASSIGN_V2_LIMIT_CSV_ARITY 12
 //]
 #endif // BOOST_ASSIGN_V2_LIMIT_CSV_ARITY

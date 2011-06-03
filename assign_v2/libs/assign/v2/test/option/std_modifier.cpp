@@ -14,7 +14,9 @@
 #include <string>
 #include <boost/assign/v2/support/config/check.hpp>
 #include <boost/assign/v2/include/delay_csv_put.hpp>
+#include <boost/assign/v2/include/csv.hpp>
 #include <boost/assign/v2/include/csv_put.hpp>
+#include <boost/assign/v2/include/put.hpp>
 #include <boost/assign/v2/deque.hpp>
 #include <boost/assign/v2/option/modifier/std.hpp>
 #include <boost/circular_buffer.hpp>
@@ -30,7 +32,7 @@
 
 namespace test_assign_v2{
 namespace xxx_option{
-namespace xxx_standard{
+namespace xxx_std_modifier{
 
     void test()
     {
@@ -38,7 +40,6 @@ namespace xxx_standard{
 
         // PUT
         {
-            //[test_option_standard_meta
             typedef as2::result_of::put<std::vector<int> >::type put_;
             typedef as2::modifier_tag::push_front tag_;
             typedef as2::result_of::option_std_modifier<
@@ -50,58 +51,57 @@ namespace xxx_standard{
             //]
         }
         {
-            //[test_option_push_front
-            boost::circular_buffer<int> cb( 3 ); 
-            
-            BOOST_ASSIGN_V2_CHECK(
-                boost::range::equal(
-                    cb | as2::delay_csv_put( as2::_option % as2::_push_front, as2::csv_deque( 3, 2, 1 ) ), 
-                    as2::csv_deque( 1, 2, 3 ) 
-                )
-            );
+            //[test_push_front1
+            boost::circular_buffer<int> cb( 3 );
+
+            as2::csv_put<as2::push_front_>( cb, 3, 2, 1 );
 
             BOOST_ASSIGN_V2_CHECK(
-                boost::range::equal(
-                    cb | as2::delay_csv_put( as2::csv_deque( 4, 5 ) ), 
-                    as2::csv_deque( 3, 4, 5 ) 
-                )
-            );    
+                boost::range::equal( cb, as2::csv_deque( 1, 2, 3 ) )
+            );
+
+            as2::csv_put( cb, 4, 5 );
+
+            BOOST_ASSIGN_V2_CHECK(
+                boost::range::equal( cb, as2::csv_deque( 3, 4, 5 ) )
+            );
 
             //]
         }
         {
-            //[test_option_push
-            // NB: This option is dedundant with the default
-            std::queue<int> fifo; as2::csv_put( fifo, as2::_option % as2::_push, 1, 10, 100 );
+            //[test_push1
+            std::queue<int> fifo;
+
+            // Same as default
+            as2::csv_put<as2::push_>( fifo, 1, 10, 100 );
 
             BOOST_ASSIGN_V2_CHECK( fifo.front() == 1 );
             BOOST_ASSIGN_V2_CHECK( fifo.back() == 100 );
             //]
         }
         {
-            //[test_option_insert
-            // NB: This option is dedundant with the default
-            std::set<std::string> letters; 
-            as2::csv_put( letters, as2::_option % as2::_insert, "d", "a", "c", "b" );
+            //[test_insert1
+            // Same as default
+            std::set<std::string> letters;
+            as2::csv_put<as2::insert_>( letters, "d", "a", "c", "b" );
 
             BOOST_ASSIGN_V2_CHECK( letters.lower_bound( "a" ) == boost::begin( letters ) );
             BOOST_ASSIGN_V2_CHECK( letters.upper_bound( "d" ) == boost::end( letters ) );
             //]
         }
         {
-            //[test_option_push_back
-            // NB: This option is dedundant with the default
+            //[test_push_back1
+            // Same as default
             std::list<int> list;
-            as2::csv_put( list, as2::_option % as2::_push_back, 1, 10, 100 );
+            as2::csv_put<as2::push_back_>( list, 1, 10, 100 );
 
-            BOOST_ASSIGN_V2_CHECK( 
-                boost::range::equal( list, as2::csv_deque( 1, 10, 100 ) ) 
+            BOOST_ASSIGN_V2_CHECK(
+                boost::range::equal( list, as2::csv_deque( 1, 10, 100 ) )
             );
             //]
         }
         // DEQUE
         {
-            //[test_option_meta_deque
             typedef as2::result_of::deque<int>::type put_;
             typedef as2::modifier_tag::push_front tag_;
             typedef as2::result_of::option_push_front<put_>::type result1_;
@@ -109,22 +109,19 @@ namespace xxx_standard{
             typedef ::boost::mpl::apply1<meta2_, tag_>::type result2_;
 
             BOOST_MPL_ASSERT(( boost::is_same<result1_, result2_> ));
-            //]
         }
         {
-            //[test_option_push_front_deque
-            BOOST_AUTO(
-                two_power_n,
-                as2::csv_deque( as2::_option % as2::_push_front, 16, 8, 4, 2, 1 )
-            );
-
-            BOOST_ASSIGN_V2_CHECK( 
-                boost::range::equal( two_power_n, as2::csv_deque( 1, 2, 4, 8, 16 ) ) 
+            //[test_push_front2
+            BOOST_ASSIGN_V2_CHECK(
+                boost::range::equal(
+                    as2::csv_deque<int, as2::push_front_>( 16, 8, 4, 2, 1 ),
+                    as2::csv_deque( 1, 2, 4, 8, 16 )
+                )
             );
             //]
         }
     }
 
-}// xxx_standard
+}// xxx_std_modifier
 }// xxx_option
 }// test_assign_v2

@@ -17,8 +17,8 @@ namespace v2{
 //[syntax_detail_keyword
 namespace keyword_aux{
 
-    struct ignore{    
-        ignore(){} 
+    struct ignore{
+        ignore(){}
         template<typename Anything> ignore(Anything){}
     };
     struct element/*<-*/{}/*->*/;
@@ -30,21 +30,21 @@ namespace keyword_aux{
 
 }//keyword_aux
 
-    typedef keyword_aux::ignore         ignore_;
-    typedef keyword_aux::element        element_;
-    typedef keyword_aux::key            key_;
-    typedef keyword_aux::map            map_;
-    typedef keyword_aux::nil            nil_;
-    typedef keyword_aux::use_default    use_default_;
-    typedef keyword_aux::value          value_;    
+    typedef keyword_aux::ignore         kwd_ignore_;
+    typedef keyword_aux::element        kwd_element_;
+    typedef keyword_aux::key            kwd_key_;
+    typedef keyword_aux::map            kwd_map_;
+    typedef keyword_aux::nil            kwd_nil_;
+    typedef keyword_aux::use_default    kwd_use_default_;
+    typedef keyword_aux::value          kwd_value_;
 /*<-*/namespace{/*->*/
-    const ignore_ _ignore/*<-*/ = ignore_()/*->*/;
-    const element_ _element/*<-*/ = {}/*->*/;
-    const key_ _key/*<-*/ = {}/*->*/;
-    const map_ _map/*<-*/ = {}/*->*/;
-    const nil_ _nil/*<-*/ = {}/*->*/;
-    const use_default_ _use_default/*<-*/ = {}/*->*/;
-    const value_ _value/*<-*/ = {}/*->*/;
+    const kwd_ignore_ _ignore/*<-*/ = kwd_ignore_()/*->*/;
+    const kwd_element_ _element/*<-*/ = {}/*->*/;
+    const kwd_key_ _key/*<-*/ = {}/*->*/;
+    const kwd_map_ _map/*<-*/ = {}/*->*/;
+    const kwd_nil_ _nil/*<-*/ = {}/*->*/;
+    const kwd_use_default_ _use_default/*<-*/ = {}/*->*/;
+    const kwd_value_ _value/*<-*/ = {}/*->*/;
 
 /*<-*/}/*->*/
 //]

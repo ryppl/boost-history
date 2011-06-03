@@ -12,11 +12,11 @@
 
 namespace test_assign_v2{
 namespace xxx_option{
-namespace xxx_standard{
+namespace xxx_std_modifier{
 
     void test();
 
-}// xxx_standard
+}// xxx_std_modifier
 }// xxx_option
 }// xxx_test_assign
 

@@ -24,7 +24,7 @@ namespace ref{
 namespace array_aux{
 
     template<typename T>
-    struct empty_array 
+    struct empty_array
         : empty_list<list_aux::array_tag>
     {};
 
@@ -36,7 +36,7 @@ namespace array_aux{
     };
 
     template<typename T>
-    struct recursive_result<0, T> 
+    struct recursive_result<0, T>
         : empty_array<T>
     {};
 
@@ -58,7 +58,7 @@ namespace result_of{
     {}/*->*/;
 
     template<typename U>
-    struct array<U, nil_>/*<-*/
+    struct array<U, kwd_nil_>/*<-*/
         : nth_result_of::array<0, U>
     {}/*->*/;
 
@@ -66,8 +66,8 @@ namespace result_of{
 
     // Generates an empty array
     template<typename T>
-    typename result_of::array<T, nil_>::type
-    array( nil_ )/*<-*/
+    typename result_of::array<T, kwd_nil_>::type
+    array( kwd_nil_ )/*<-*/
     {
         return ref::list<list_aux::array_tag>( v2::_nil );
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/

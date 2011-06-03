@@ -26,7 +26,7 @@ namespace xxx_option{
         xxx_list::test();
         xxx_repeat::test();
         xxx_row_major::test();
-        xxx_standard::test();
+        xxx_std_modifier::test();
     }
 
 }// xxx_option

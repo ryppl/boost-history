@@ -24,7 +24,7 @@ namespace v2{
 //[syntax_conversion_converter
 namespace conversion_aux{
 
-    template<typename R, typename Arg = nil_>
+    template<typename R, typename Arg = kwd_nil_>
     class converter
     {
 //<-
@@ -45,7 +45,7 @@ namespace conversion_aux{
             typename call_traits<R>::param_type source,
             Arg const& arg
         )/*<-*/
-             : arg_( arg ), 
+             : arg_( arg ),
              source_( boost::make_iterator_range( source ) )
         {}BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
@@ -73,7 +73,7 @@ namespace conversion_aux{
 }// conversion_aux
 namespace result_of{
 
-    template<typename R, typename Arg = nil_>
+    template<typename R, typename Arg = kwd_nil_>
     struct converter/*<-*/
     {
         typedef conversion_aux::converter<R, Arg> type;

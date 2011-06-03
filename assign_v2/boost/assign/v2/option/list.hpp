@@ -36,7 +36,7 @@ namespace interpreter_aux{
         #ifdef BOOST_MSVC
         BOOST_TYPEOF_NESTED_TYPEDEF_TPL(nested, lhs % option )
         typedef typename nested::type type;
-        #else        
+        #else
         typedef BOOST_TYPEOF_TPL( lhs % option ) type;
         #endif
     };
@@ -44,16 +44,16 @@ namespace interpreter_aux{
     struct ignore_option{};
 
     template<typename Head>
-    struct list_option_exit 
-        : boost::is_same<Head, nil_>
+    struct list_option_exit
+        : boost::is_same<Head, kwd_nil_>
     {};
 
 namespace result_of{
 
     template<
-        typename Head, 
-        typename Tail, 
-        typename Lhs, 
+        typename Head,
+        typename Tail,
+        typename Lhs,
         bool exit = list_option_exit<Head>::value
     >
     struct apply_list_option
@@ -61,41 +61,41 @@ namespace result_of{
         typedef typename apply_list_option<
             typename Tail::head_type, typename Tail::tail_type, Lhs
         >::type lhs_;
-        
+
         typedef typename modulo_result<lhs_, Head>::type type;
     };
 
     template<
-        typename Head, 
-        typename Tail, 
+        typename Head,
+        typename Tail,
         typename Lhs
     >
     struct apply_list_option<Head, Tail, Lhs, true>
     {
-        typedef Lhs const& type;    
+        typedef Lhs const& type;
     };
-    
+
 }// result_of
-                    
+
     template<
-        typename Head = nil_, 
-        typename Tail = nil_, 
+        typename Head = kwd_nil_,
+        typename Tail = kwd_nil_,
         bool exit = list_option_exit<Head>::value
     >
     struct list_option;
 
     template<typename Head, typename Tail, bool exit>
-    struct list_option_inherit 
+    struct list_option_inherit
         : Tail
     {
         list_option_inherit(){}
-        list_option_inherit( Tail tail ) 
+        list_option_inherit( Tail tail )
             : Tail( tail )
         {}
     };
 
     template<typename Head, typename Tail, bool exit>
-    struct list_option 
+    struct list_option
         : list_option_inherit<Head, Tail, exit>
     {
 
@@ -107,13 +107,13 @@ namespace result_of{
         list_option(Tail tail, Head h)
             : super_t( tail ), head_( h )
         {}
-    
+
         template<typename O>
         struct result
         {
             typedef list_option<O, list_option> type;
         };
-    
+
         template<typename O>
         typename result<O>::type
         operator%(O option)const
@@ -121,10 +121,11 @@ namespace result_of{
             typedef typename result<O>::type result_;
             return result_( *this, option );
         }
-                        
+
         template<typename Lhs>
         typename boost::lazy_disable_if_c<
-            exit, result_of::apply_list_option<Head, Tail, Lhs> 
+            exit,
+            result_of::apply_list_option<Head, Tail, Lhs>
         >::type
         apply(Lhs const& lhs)const
         {
@@ -135,19 +136,20 @@ namespace result_of{
 
         template<typename Lhs>
         typename boost::lazy_enable_if_c<
-            exit, result_of::apply_list_option<Head, Tail, Lhs> 
+            exit,
+            result_of::apply_list_option<Head, Tail, Lhs>
         >::type
         apply(Lhs const& lhs)const{ return lhs; }
-        
+
         private:
         Head head_;
-    
+
     };
 
     typedef list_option<> empty_list_option;
 
     template<typename O>
-    struct is_list_option 
+    struct is_list_option
         : boost::is_base_of< empty_list_option, O>
     {};
 
@@ -161,7 +163,7 @@ namespace result_of{
     >{};
 
     template<
-        typename D, typename C, typename F, typename MTag, typename DTag, 
+        typename D, typename C, typename F, typename MTag, typename DTag,
         typename H, typename T
     >
     typename result_of::apply_list_option<H, T, D>::type
@@ -195,19 +197,24 @@ namespace interpreter_aux{
 namespace result_of{
 
     template<typename O1, typename O2>
-    struct option_modulo 
+    struct option_modulo
         : result_of::list_option_modulo<
             typename result_of::list_option_modulo<
                 empty_list_option,
                 O1
-            >::type, 
+            >::type,
             O2
         >
     {};
 
 }// result_of
-    
+
     template<typename O> struct option_crtp{};
+
+    template<typename O>
+    struct is_option_crtp/*<-*/
+        : boost::is_base_of< option_crtp<O>, O>
+    {}/*->*/;
 
     template<typename O1, typename O2>
     typename result_of::option_modulo<O1, O2>::type
@@ -216,6 +223,14 @@ namespace result_of{
         O1 const& ref = static_cast<O1 const&>( option1 );
         return _option % ref % option2;
     }
+
+    template<typename O>
+    struct is_option/*<-*/
+        : ::boost::mpl::or_<
+            is_list_option<O>,
+            is_option_crtp<O>
+        >
+    {};
 
 }// interpreter_aux
 }// v2

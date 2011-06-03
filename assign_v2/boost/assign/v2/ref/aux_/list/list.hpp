@@ -35,7 +35,7 @@ namespace cumul_result_of{
         typedef typename empty_list<Tag>::type empty_list_;
 
         template<typename State, typename T>
-        struct result 
+        struct result
             : State::template result<T>
         {};
 
@@ -52,13 +52,13 @@ namespace cumul_result_of{
 
     template<typename Tag>
     typename ::boost::mpl::apply1<
-        cumul_result_of::list<Tag>, 
+        cumul_result_of::list<Tag>,
         ::boost::mpl::vector0<>
     >::type
-    list( nil_ )
+    list( kwd_nil_ )
     {
         return typename ::boost::mpl::apply1<
-            cumul_result_of::list<Tag>, 
+            cumul_result_of::list<Tag>,
             ::boost::mpl::vector0<>
         >::type();
     }
@@ -67,8 +67,8 @@ namespace cumul_result_of{
 
 using list_aux::list;
 
-template<typename Tag> 
-struct empty_list 
+template<typename Tag>
+struct empty_list
     : list_aux::empty_list<Tag>
 {};
 

@@ -25,20 +25,20 @@ namespace boost{
 namespace assign{
 namespace v2{
 //[syntax_option_insert
-namespace modifier_tag{ 
+namespace modifier_tag{
 
-    struct insert{}; 
+    struct insert{};
 
 }// modifier_tag
 namespace interpreter_aux{
-                
-    template<>                
+
+    template<>
     class interpreter_modifier< modifier_tag::insert >/*<-*/
     {
 
         public:
         interpreter_modifier(){}
-        interpreter_modifier( ignore_, ignore_ ){}
+        interpreter_modifier( kwd_ignore_, kwd_ignore_ ){}
 //<-
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 //->
@@ -55,7 +55,7 @@ namespace interpreter_aux{
         {
             cont.insert( BOOST_ASSIGN_V2_forward );
         }
-        
+
         template<typename C, typename T>
         void impl(C& cont, BOOST_ASSIGN_V2_arg, data_tag::value_map )const
         {
@@ -74,7 +74,7 @@ namespace interpreter_aux{
         {
             typedef typename container_aux::key<C>::type key_;
             // non-const key necessary. See ptr_map.
-            key_ k = BOOST_ASSIGN_V2_forward.first; 
+            key_ k = BOOST_ASSIGN_V2_forward.first;
             typedef typename container_aux::mapped<C>::type m_;
             cont.insert( k , new m_( BOOST_ASSIGN_V2_forward.second ) );
         }
@@ -89,6 +89,7 @@ namespace interpreter_aux{
 }// interpreter_aux
 BOOST_ASSIGN_V2_OPTION_MODIFIER_KEYWORD(insert)
 BOOST_ASSIGN_V2_OPTION_MODIFIER_META_MODIFIER_TAG(insert, modifier_tag::insert)
+BOOST_ASSIGN_V2_OPTION_MODIFIER_ALIAS(insert)
 //]
 }// v2
 }// assign

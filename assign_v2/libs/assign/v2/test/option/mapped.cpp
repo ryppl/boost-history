@@ -12,6 +12,7 @@
 #include <cmath>
 #include <list>
 #include <boost/assign/v2/support/config/check.hpp>
+#include <boost/assign/v2/include/csv.hpp>
 #include <boost/assign/v2/include/put.hpp>
 #include <boost/assign/v2/deque.hpp>
 #include <boost/assign/v2/option/data.hpp>
@@ -34,21 +35,32 @@ namespace xxx_mapped{
     {
         namespace as2 = boost::assign::v2;
         {
-            //[test_option_mapped_map
+            //[test_mapped1
             typedef std::string month_; typedef int days_;
             typedef std::map<month_, days_> C; C year;
-            (
-                as2::put( year )
-                    ( "feb", 28 )( "apr", 30 )( "jun", 30 )( "sep", 30 )( "nov", 30 )
-                    % ( as2::_data = as2::_key ) % ( as2::_mapped = boost::lambda::constant( 31 ) )
-            )/*<<Calls `year[ month_( "jan" ) ] = 31`>>*/( "jan" )( "mar" )( "may" )( "jul" )( "aug" )( "oct" )( "dec" );
+
+            as2::csv_put<2>( year, "feb", 28 );
+
+            BOOST_AUTO( _put, ( as2::put<as2::key_, C>( year ) ) );
+
+            csv(
+                _put % ( as2::_mapped = boost::lambda::constant( 30 ) )
+                , "apr", "jun", "sep", "nov"
+            );
+
+            BOOST_ASSIGN_V2_CHECK( year["apr"] == 30 );
+            BOOST_ASSIGN_V2_CHECK( year["nov"] == 30 );
+
+            csv(
+                _put % ( as2::_mapped = boost::lambda::constant( 31 ) )
+                , "jan", "mar", "may", "jul", "aug", "oct", "dec"
+            );
 
             BOOST_ASSIGN_V2_CHECK( year["jan"] == 31 );
             BOOST_ASSIGN_V2_CHECK( year["dec"] == 31 );
             //]
         }
         {
-            //[test_option_mapped_meta_deque
             typedef BOOST_TYPEOF(boost::lambda::_1) arg_;
             typedef as2:: interpreter_aux::keyword_mapped keyword_;
             typedef as2::result_of::deque<int>::type put_;
@@ -57,19 +69,22 @@ namespace xxx_mapped{
             typedef as2:: interpreter_aux::replace_modifier_tag<put_> meta2_;
             typedef ::boost::mpl::apply1<meta2_, tag1_>::type result2_;
             BOOST_MPL_ASSERT((boost::is_same<result1_, result2_>));
-            //]
         }
         {
-            //[test_option_mapped_deque
+            //[test_mapped2
             std::list<int> source(10, 1); boost::iota( source, 1 );
-            BOOST_AUTO( option, ( as2::_mapped = ( boost::lambda::_1 *= -1 ) ) );
+            BOOST_AUTO(
+                _modifier,
+                ( as2::_mapped = ( boost::lambda::_1 *= -1 ) )
+            );
 
             BOOST_ASSIGN_V2_CHECK(
                 boost::range::equal(
-                    (
-                        as2::deque<int>( as2::_nil ).as_arg_list( source )
-                        % option
-                    )( 1 )( 3 )( 5 )( 7 )( 9 ),
+                    csv(
+                        as2::deque<int>( as2::_nil ).for_each( source )
+                        % _modifier
+                        , 1, 3, 5, 7, 9
+                    ),
                     as2::csv_deque( +1, -2, +3, -4, +5, -6, +7, -8, +9, -10 )
                 )
             );

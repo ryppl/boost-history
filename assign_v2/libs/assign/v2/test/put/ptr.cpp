@@ -25,26 +25,26 @@
 
 namespace test_assign_v2{
 namespace xxx_put{
-namespace xxx_ptr{    
+namespace xxx_ptr{
 
     void test(){
 
         namespace as2 = boost::assign::v2;
 
         // ARRAY
-        {    
-            //[test_put_ptr_array
+        {
+            //[test_csv_put_ptr1
             typedef int T;
             T x = 1, y = 2, z = 3; boost::ptr_array<T, 3> cont;
             /*<<Calls `assoc[i++] = new T( t )` for `i = 0` and `t`[^ = ] `x`, `y`, and `z`>>*/as2::csv_put( cont, x, y, z );
-            
+
             BOOST_ASSIGN_V2_CHECK( cont.front() == x );
             BOOST_ASSIGN_V2_CHECK( cont.back() == z );
             //]
         }
         // SEQUENCE
         {
-            //[test_put_ptr_deque
+            //[test_csv_put_ptr2
             typedef int T; T x = 1, y = 2, z = 0; boost::ptr_deque<T> cont;
             /*<<Calls `assoc.push_back( new T( t ) )` for `t` [^=] `x`, `y`, and `z`>>*/as2::csv_put( cont, x, y, z );
 
@@ -54,23 +54,13 @@ namespace xxx_ptr{
         }
         // MAP
         {
-            //[test_put_ptr_map
-            typedef std::string key_;
-            boost::ptr_map<key_, int> assoc;
-            as2::put( assoc )( "jan", 31 )( "feb", 28 )( "mar", 31 );
-
-            
-            BOOST_ASSIGN_V2_CHECK( assoc["jan"] == 31 );
-            BOOST_ASSIGN_V2_CHECK( assoc["mar"] == 31 );
-            //]
-        }
-        {    
-            //[test_put_ptr_unordered_map
-            typedef std::string word_; 
+            //[test_put_ptr1
+            typedef std::string word_;
             const char x[] = "foo";
             const char y[4] = { 'b', 'a', 'r', '\0' };
             word_ z = "***baz";
             boost::ptr_unordered_map<int, word_> map;
+
             as2::put( map )( 1, x, 3 )( 2, y )( 3, z, 3, 3 )( 4, "qux" );
 
             assert( map[1] == "foo" ); assert( map[2] == "bar" );
@@ -78,21 +68,20 @@ namespace xxx_ptr{
             //]
         }
         {
-            //[test_csv_put_ptr_map
-            typedef std::string key_; typedef int days_;
-            typedef boost::ptr_map<key_, days_> C; 
-            typedef as2::value_container_value<C>::type /*<<Same as `std::map<key_, days_>::value_type`>>*/T;
-            C map; as2::csv_put( map, T("jan", 31 ), T( "feb", 28 ), T( "mar", 31 ) );
+            //[test_csv_put_ptr3
+            typedef std::string month_; typedef int days_;
+            boost::ptr_map<month_, days_> q1;
 
-            
-            BOOST_ASSIGN_V2_CHECK( map["jan"] == 31 );
-            BOOST_ASSIGN_V2_CHECK( map["mar"] == 31 );
+            as2::csv_put<2>( q1, "jan", 31, "feb", 28, "mar", 31 );
+
+            BOOST_ASSIGN_V2_CHECK( q1["jan"] == 31 );
+            BOOST_ASSIGN_V2_CHECK( q1["feb"] == 28 );
+            BOOST_ASSIGN_V2_CHECK( q1["mar"] == 31 );
             //]
         }
         // SET
         {
-            // Shows that x, y, z can be variadic
-            //[test_csv_put_ptr_set
+            //[test_csv_put_ptr4
             typedef std::string T; boost::ptr_set<T> assoc;
             T x = "isomer", y = "ephemeral", z = "prosaic";
             as2::csv_put( assoc, x, z, y );
@@ -101,9 +90,9 @@ namespace xxx_ptr{
             BOOST_ASSIGN_V2_CHECK( assoc.count( z ) == 1 );
             //]
         }
-        {    
-            //[test_csv_put_ptr_unordered_set
-            boost::ptr_unordered_set<std::string> set; 
+        {
+            //[test_csv_put_ptr5
+            boost::ptr_unordered_set<std::string> set;
             as2::csv_put( set, "foo", "bar", "baz" );
 
             BOOST_ASSIGN_V2_CHECK( set.count( "foo" ) == 1 );

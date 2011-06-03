@@ -9,27 +9,119 @@
 ////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_PAREMETER_LIST_ER_2011_HPP
 #define BOOST_ASSIGN_V2_PAREMETER_LIST_ER_2011_HPP
+#include <boost/preprocessor/arithmetic.hpp>
 #include <boost/preprocessor/cat.hpp>
-#include <boost/preprocessor/comma_if.hpp>
+#include <boost/preprocessor/control.hpp>
+#include <boost/preprocessor/punctuation.hpp>
 #include <boost/preprocessor/repetition.hpp>
 #include <boost/preprocessor/seq.hpp>
-#include <boost/preprocessor/tuple/to_seq.hpp>
-#define BOOST_ASSIGN_V2_BOOST_ASSIGN_V2_PARAMETER_LIST_iter(r, data, i, U) \
-    BOOST_PP_COMMA_IF(i) \
-    U & \
-    BOOST_PP_CAT(data, i) \
+
+#define BOOST_ASSIGN_V2_ARG_LIST_ITER( z, n, shift )\
+	BOOST_PP_CAT(\
+    	_,\
+    	BOOST_PP_ADD(\
+        	shift,\
+            n\
+        )\
+    )\
 /**/
-#define BOOST_ASSIGN_V2_PARAMETER_LIST(SeqU, data) \
-    BOOST_PP_SEQ_FOR_EACH_I(BOOST_ASSIGN_V2_BOOST_ASSIGN_V2_PARAMETER_LIST_iter, data, SeqU) \
+
+#define BOOST_ASSIGN_V2_PARAMETER_LIST_ITER( r, shift, i, U )\
+    BOOST_PP_COMMA_IF(i)\
+    U &\
+    BOOST_ASSIGN_V2_ARG_LIST_ITER(~, i, shift)\
 /**/
-#define BOOST_ASSIGN_V2_ARG_LIST(SeqU, data) \
-    BOOST_PP_ENUM_PARAMS(BOOST_PP_SEQ_SIZE(SeqU), data)
+
+#define BOOST_ASSIGN_V2_PARAMETER_LIST(SeqU, shift)\
+    BOOST_PP_SEQ_FOR_EACH_I(BOOST_ASSIGN_V2_PARAMETER_LIST_ITER, shift, SeqU)\
 /**/
-#define BOOST_ASSIGN_V2_TPL_PARAMETER_LIST(SeqU) BOOST_PP_ENUM_PARAMS(BOOST_PP_SEQ_SIZE(SeqU), typename T)
+
+#define BOOST_ASSIGN_V2_ARG_LIST(SeqU, shift)\
+    BOOST_PP_ENUM(\
+    	BOOST_PP_SEQ_SIZE(SeqU),\
+        BOOST_ASSIGN_V2_ARG_LIST_ITER,\
+        shift\
+    )\
+/**/
+
+#define BOOST_ASSIGN_V2_TPL_PARAMETER_LIST(SeqU)\
+	BOOST_PP_ENUM_PARAMS(\
+    	BOOST_PP_SEQ_SIZE(SeqU),\
+        typename T\
+    )\
+/**/
+
 #define BOOST_ASSIGN_V2_TPL_ARG_LIST(SeqU) BOOST_PP_SEQ_ENUM(SeqU)
 //[parameter_list_size
-/*Non-override-able constant supporting the definition of functor overloads*/
-#define BOOST_ASSIGN_V2_PARAMETER_LIST_SIZE 10
+// Non-override-able constant supporting the definition of functor overloads
+// under C++03
+#define BOOST_ASSIGN_V2_PARAMETER_LIST_SIZE 100
 //]
-#define BOOST_ASSIGN_V2_SEQ_TPL_BINARY_ARG_LIST BOOST_PP_TUPLE_TO_SEQ(BOOST_ASSIGN_V2_PARAMETER_LIST_SIZE,((T0 const)(T0),(T1 const)(T1),(T2 const)(T2),(T3 const)(T3),(T4 const)(T4),(T5 const)(T5),(T6 const)(T6),(T7 const)(T7),(T8 const)(T8),(T9 const)(T9)))
+
+#define BOOST_ASSIGN_V2_SEQ_TPL_BINARY_ARG_LIST_ITER(z, n, data)\
+	(\
+		( BOOST_PP_CAT(T, n) const)( BOOST_PP_CAT(T, n) )\
+	)\
+/**/
+
+#define BOOST_ASSIGN_V2_SEQ_TPL_BINARY_ARG_LIST\
+	BOOST_PP_REPEAT(\
+    	BOOST_ASSIGN_V2_PARAMETER_LIST_SIZE,\
+        BOOST_ASSIGN_V2_SEQ_TPL_BINARY_ARG_LIST_ITER,\
+        ~\
+    )\
+/**/
+
+// CSV
+
+// PARAMETER_LIST
+
+#define BOOST_ASSIGN_V2_CSV_PARAMETER_LIST_ITER(z, n, SeqU)\
+	BOOST_ASSIGN_V2_PARAMETER_LIST(\
+		SeqU,\
+		BOOST_PP_MUL(\
+			n,\
+			BOOST_PP_SEQ_SIZE(SeqU)\
+		)\
+	)\
+/**/
+
+#define BOOST_ASSIGN_V2_CSV_PARAMETER_LIST(SeqU, N)\
+	BOOST_PP_ENUM(\
+		N,\
+		BOOST_ASSIGN_V2_CSV_PARAMETER_LIST_ITER,\
+		SeqU\
+	)\
+/**/
+
+// ARG_LIST
+
+#define BOOST_ASSIGN_V2_CSV_ARG_LIST_ITER(z, i, N)\
+	BOOST_PP_CAT(\
+    	_,\
+        BOOST_PP_ADD( N, i)\
+    )\
+/**/
+
+// MISC
+
+#define BOOST_ASSIGN_V2_CSV_SEQ1(I)\
+    BOOST_PP_SEQ_FIRST_N(\
+        I,\
+        BOOST_ASSIGN_V2_SEQ_TPL_BINARY_ARG_LIST\
+    )\
+/**/
+
+#define BOOST_ASSIGN_V2_CSV_SEQ_ELEM(r, data, elem)\
+	(BOOST_PP_SEQ_ELEM(data, elem))\
+/**/
+
+#define BOOST_ASSIGN_V2_CSV_SEQ2(pos, I)\
+    BOOST_PP_SEQ_FOR_EACH(\
+        BOOST_ASSIGN_V2_CSV_SEQ_ELEM,\
+        pos,\
+        BOOST_ASSIGN_V2_CSV_SEQ1(I)\
+    )\
+/**/
+
 #endif // BOOST_ASSIGN_V2_PAREMETER_LIST_ER_2011_HPP

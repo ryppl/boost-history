@@ -76,19 +76,22 @@ namespace interpreter_aux{\
     {\
         public:\
         interpreter_modifier(){}\
-        interpreter_modifier( ignore_, ignore_ ){}\
+        interpreter_modifier( kwd_ignore_, kwd_ignore_ ){}\
         BOOST_ASSIGN_V2_OPTION_STD_MODIFIER_IMPL(FUN)\
     };\
 \
 }\
-namespace{\
 \
-    interpreter_aux::option_modifier<\
+    typedef interpreter_aux::option_modifier<\
         interpreter_aux::keyword_std_modifier,\
         modifier_tag::FUN\
-    > const\
+    > BOOST_PP_CAT(FUN,_);\
+\
+namespace{\
+\
+    BOOST_PP_CAT(FUN,_) const\
         BOOST_PP_CAT(_,FUN) = ( \
-        _std_modifier = modifier_tag::FUN() \
+        _std_modifier = modifier_tag::FUN()\
     );\
 \
 }\

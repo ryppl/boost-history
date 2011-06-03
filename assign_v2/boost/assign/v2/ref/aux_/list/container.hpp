@@ -39,7 +39,7 @@ namespace list_aux{
 
         public:
 
-        typedef boost::is_same<T, nil_> is_empty;
+        typedef boost::is_same<T, kwd_nil_> is_empty;
 
         container(){}
 
@@ -50,22 +50,22 @@ namespace list_aux{
         };
 
         container(typename call_traits<T>::param_type t, H h)
-            : tail_holder_( t ), 
+            : tail_holder_( t ),
             head_holder_( h )
         {}
 
         template<typename H1>
         typename result<H1&>::type
-        operator()(H1& h)const{ 
-            return this->impl( h ); 
+        operator()(H1& h)const{
+            return this->impl( h );
         }
 
         template<typename H1>
         typename result<H1 const&>::type
-        operator()(H1 const& h)const{ 
-            return this->impl( h ); 
+        operator()(H1 const& h)const{
+            return this->impl( h );
         }
-        
+
         protected:
 
         template<typename H1>

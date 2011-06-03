@@ -21,8 +21,8 @@
 // arguments, while allowing within a certain limit, any mixture of
 // lvalue and rvalues. Specifically,
 // let
-//     m = BOOST_ASSIGN_V2_LIMIT_LVALUE_CONST_ARITY
-//     n = BOOST_ASSIGN_V2_LIMIT_ARITY
+//     m = BOOST_ASSIGN_V2_LIMIT_FUNCTOR_CONST_NON_CONST_ARITY
+//     n = BOOST_ASSIGN_V2_LIMIT_FUNCTOR_ARITY
 //
 // Given a metafunction class, F, and a derived class, D, that defines
 //  template<typename T0, ..., typename Tk>
@@ -33,7 +33,7 @@
 // const arguments for k = 0, ..., m-1, and either only lvalues or only const
 // for k = m, ..., n-1.
 
-#include <boost/preprocessor/arithmetic/inc.hpp>
+#include <boost/preprocessor/arithmetic.hpp>
 #include <boost/preprocessor/repetition.hpp>
 #include <boost/preprocessor/seq.hpp>
 
@@ -50,8 +50,8 @@
 #include <boost/type_traits/is_const.hpp>
 #include <boost/utility/enable_if.hpp>
 
-#include <boost/assign/v2/support/config/limit_arity.hpp>
-#include <boost/assign/v2/support/config/limit_lvalue_const_arity.hpp>
+#include <boost/assign/v2/support/config/limit_functor_arity.hpp>
+#include <boost/assign/v2/support/config/limit_functor_const_non_const_arity.hpp>
 #include <boost/assign/v2/support/pp/parameter_list.hpp>
 
 namespace boost{
@@ -72,26 +72,29 @@ namespace functor_aux{
 // Non-const/const overloads :
 
 #define BOOST_ASSIGN_V2_MACRO1(r, SeqU) \
-    template<BOOST_ASSIGN_V2_TPL_PARAMETER_LIST(SeqU)> \
-    typename ::boost::mpl::apply1< \
-        F, \
-        ::boost::mpl::vector<BOOST_ASSIGN_V2_TPL_ARG_LIST(SeqU)> \
-    >::type \
-    operator()( BOOST_ASSIGN_V2_PARAMETER_LIST(SeqU, _) )const{ \
-        return this->derived().impl( \
-            BOOST_ASSIGN_V2_ARG_LIST(SeqU, _) \
-        ); \
-    } \
+    template<BOOST_ASSIGN_V2_TPL_PARAMETER_LIST(SeqU)>\
+    typename ::boost::mpl::apply1<\
+        F,\
+        ::boost::mpl::vector<BOOST_ASSIGN_V2_TPL_ARG_LIST(SeqU)>\
+    >::type\
+    operator()( BOOST_ASSIGN_V2_PARAMETER_LIST(SeqU, 0) )const{\
+        return this->derived().impl(\
+            BOOST_ASSIGN_V2_ARG_LIST(SeqU, 0)\
+        );\
+    }\
 /**/
 
 #define BOOST_ASSIGN_V2_MACRO2(z, n, data) BOOST_PP_SEQ_FOR_EACH_PRODUCT(\
     BOOST_ASSIGN_V2_MACRO1, \
-    BOOST_PP_SEQ_FIRST_N(BOOST_PP_INC(n), BOOST_ASSIGN_V2_SEQ_TPL_BINARY_ARG_LIST)\
+    BOOST_PP_SEQ_FIRST_N(\
+    	BOOST_PP_INC(n),\
+        BOOST_ASSIGN_V2_SEQ_TPL_BINARY_ARG_LIST\
+    )\
 ) \
 /**/
 
 BOOST_PP_REPEAT(
-    BOOST_ASSIGN_V2_LIMIT_LVALUE_CONST_ARITY,
+    BOOST_ASSIGN_V2_LIMIT_FUNCTOR_CONST_NON_CONST_ARITY,
     BOOST_ASSIGN_V2_MACRO2,
     ~
 )
@@ -126,8 +129,8 @@ BOOST_PP_REPEAT(
 /**/
 
 BOOST_PP_REPEAT_FROM_TO(
-    BOOST_PP_INC(BOOST_ASSIGN_V2_LIMIT_LVALUE_CONST_ARITY),
-    BOOST_PP_INC(BOOST_ASSIGN_V2_LIMIT_ARITY),
+    BOOST_PP_INC(BOOST_ASSIGN_V2_LIMIT_FUNCTOR_CONST_NON_CONST_ARITY),
+    BOOST_PP_INC(BOOST_ASSIGN_V2_LIMIT_FUNCTOR_ARITY),
     BOOST_ASSIGN_V2_MACRO,
     ~
 )

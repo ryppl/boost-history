@@ -66,7 +66,7 @@ namespace result_of{
 
 //<-
     template<size_type I, typename R>
-    void csv_assign( R& result ){}
+    void csv_assign( R& /*unused*/){}
 
     template<size_type I, typename R, typename U, typename... Args>
     void csv_assign( R& result, U& u, Args&...args )

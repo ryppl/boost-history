@@ -13,8 +13,11 @@
 #include <boost/test/test_tools.hpp>
 #define BOOST_ASSIGN_V2_CHECK( p ) BOOST_CHECK( p )
 
-#include <libs/assign/v2/test/put/put.cpp> // has to come first as overrides LIMIT_CSV_ARITY
+#include <libs/assign/v2/test/put/csv_put.cpp>
 #include <libs/assign/v2/test/put/ptr.cpp>
+#include <libs/assign/v2/test/put/put.cpp>
+#include <libs/assign/v2/test/put/delay_csv_put.cpp>
+#include <libs/assign/v2/test/put/delay_put.cpp>
 
 #include <boost/test/unit_test.hpp>
 using boost::unit_test::test_suite;
@@ -24,8 +27,11 @@ test_suite* init_unit_test_suite( int argc, char* argv[] )
     using namespace test_assign_v2;
     {
         namespace ns = xxx_put;
-        test->add( BOOST_TEST_CASE( &ns::xxx_ptr::test ) );
         test->add( BOOST_TEST_CASE( &ns::xxx_put::test ) );
+        test->add( BOOST_TEST_CASE( &ns::xxx_ptr::test ) );
+        test->add( BOOST_TEST_CASE( &ns::xxx_csv_put::test ) );
+        test->add( BOOST_TEST_CASE( &ns::xxx_delay_put::test ) );
+        test->add( BOOST_TEST_CASE( &ns::xxx_delay_csv_put::test ) );
     }
     return test;
 }
