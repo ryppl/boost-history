@@ -87,7 +87,7 @@ namespace functor_aux{
 #define BOOST_ASSIGN_V2_MACRO2(z, n, data) BOOST_PP_SEQ_FOR_EACH_PRODUCT(\
     BOOST_ASSIGN_V2_MACRO1, \
     BOOST_PP_SEQ_FIRST_N(\
-    	BOOST_PP_INC(n),\
+        BOOST_PP_INC(n),\
         BOOST_ASSIGN_V2_SEQ_TPL_BINARY_ARG_LIST\
     )\
 ) \

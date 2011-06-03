@@ -17,10 +17,10 @@
 #include <boost/preprocessor/seq.hpp>
 
 #define BOOST_ASSIGN_V2_ARG_LIST_ITER( z, n, shift )\
-	BOOST_PP_CAT(\
-    	_,\
-    	BOOST_PP_ADD(\
-        	shift,\
+    BOOST_PP_CAT(\
+        _,\
+        BOOST_PP_ADD(\
+            shift,\
             n\
         )\
     )\
@@ -38,15 +38,15 @@
 
 #define BOOST_ASSIGN_V2_ARG_LIST(SeqU, shift)\
     BOOST_PP_ENUM(\
-    	BOOST_PP_SEQ_SIZE(SeqU),\
+        BOOST_PP_SEQ_SIZE(SeqU),\
         BOOST_ASSIGN_V2_ARG_LIST_ITER,\
         shift\
     )\
 /**/
 
 #define BOOST_ASSIGN_V2_TPL_PARAMETER_LIST(SeqU)\
-	BOOST_PP_ENUM_PARAMS(\
-    	BOOST_PP_SEQ_SIZE(SeqU),\
+    BOOST_PP_ENUM_PARAMS(\
+        BOOST_PP_SEQ_SIZE(SeqU),\
         typename T\
     )\
 /**/
@@ -59,14 +59,14 @@
 //]
 
 #define BOOST_ASSIGN_V2_SEQ_TPL_BINARY_ARG_LIST_ITER(z, n, data)\
-	(\
-		( BOOST_PP_CAT(T, n) const)( BOOST_PP_CAT(T, n) )\
-	)\
+    (\
+        ( BOOST_PP_CAT(T, n) const)( BOOST_PP_CAT(T, n) )\
+    )\
 /**/
 
 #define BOOST_ASSIGN_V2_SEQ_TPL_BINARY_ARG_LIST\
-	BOOST_PP_REPEAT(\
-    	BOOST_ASSIGN_V2_PARAMETER_LIST_SIZE,\
+    BOOST_PP_REPEAT(\
+        BOOST_ASSIGN_V2_PARAMETER_LIST_SIZE,\
         BOOST_ASSIGN_V2_SEQ_TPL_BINARY_ARG_LIST_ITER,\
         ~\
     )\
@@ -77,28 +77,28 @@
 // PARAMETER_LIST
 
 #define BOOST_ASSIGN_V2_CSV_PARAMETER_LIST_ITER(z, n, SeqU)\
-	BOOST_ASSIGN_V2_PARAMETER_LIST(\
-		SeqU,\
-		BOOST_PP_MUL(\
-			n,\
-			BOOST_PP_SEQ_SIZE(SeqU)\
-		)\
-	)\
+    BOOST_ASSIGN_V2_PARAMETER_LIST(\
+        SeqU,\
+        BOOST_PP_MUL(\
+            n,\
+            BOOST_PP_SEQ_SIZE(SeqU)\
+        )\
+    )\
 /**/
 
 #define BOOST_ASSIGN_V2_CSV_PARAMETER_LIST(SeqU, N)\
-	BOOST_PP_ENUM(\
-		N,\
-		BOOST_ASSIGN_V2_CSV_PARAMETER_LIST_ITER,\
-		SeqU\
-	)\
+    BOOST_PP_ENUM(\
+        N,\
+        BOOST_ASSIGN_V2_CSV_PARAMETER_LIST_ITER,\
+        SeqU\
+    )\
 /**/
 
 // ARG_LIST
 
 #define BOOST_ASSIGN_V2_CSV_ARG_LIST_ITER(z, i, N)\
-	BOOST_PP_CAT(\
-    	_,\
+    BOOST_PP_CAT(\
+        _,\
         BOOST_PP_ADD( N, i)\
     )\
 /**/
@@ -113,7 +113,7 @@
 /**/
 
 #define BOOST_ASSIGN_V2_CSV_SEQ_ELEM(r, data, elem)\
-	(BOOST_PP_SEQ_ELEM(data, elem))\
+    (BOOST_PP_SEQ_ELEM(data, elem))\
 /**/
 
 #define BOOST_ASSIGN_V2_CSV_SEQ2(pos, I)\

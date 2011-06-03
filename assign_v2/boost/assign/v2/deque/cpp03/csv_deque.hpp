@@ -26,13 +26,13 @@ namespace interpreter_aux{
         I == BOOST_PP_SEQ_SIZE(SeqU),\
         result_of::csv_deque<T>\
     >::type\
-	csv_deque\
+    csv_deque\
     (\
-		BOOST_ASSIGN_V2_CSV_PARAMETER_LIST(SeqU, N)\
+        BOOST_ASSIGN_V2_CSV_PARAMETER_LIST(SeqU, N)\
     )\
     {\
-		return csv<I, BOOST_PP_SEQ_ENUM(SeqU)>(\
-        	deque<T>( _nil )\
+        return csv<I, BOOST_PP_SEQ_ENUM(SeqU)>(\
+            deque<T>( _nil )\
             BOOST_PP_ENUM_TRAILING_PARAMS(\
                 BOOST_PP_MUL( N, BOOST_PP_SEQ_SIZE(SeqU) ),\
                 _\
@@ -48,11 +48,11 @@ namespace interpreter_aux{
         result_of::csv_deque_option<T, Options>\
     >::type csv_deque\
     (\
-		BOOST_ASSIGN_V2_CSV_PARAMETER_LIST(SeqU, N)\
+        BOOST_ASSIGN_V2_CSV_PARAMETER_LIST(SeqU, N)\
     )\
     {\
-		return csv<I, BOOST_PP_SEQ_ENUM(SeqU)>(\
-        	deque<T>( _nil ) % Options()\
+        return csv<I, BOOST_PP_SEQ_ENUM(SeqU)>(\
+            deque<T>( _nil ) % Options()\
             BOOST_PP_ENUM_TRAILING_PARAMS(\
                 BOOST_PP_MUL( N, BOOST_PP_SEQ_SIZE(SeqU) ),\
                 _\
@@ -62,44 +62,44 @@ namespace interpreter_aux{
 /**/
 
 #define BOOST_ASSIGN_V2_CSV_DEQUE_ITER(r, SeqU)\
-	BOOST_PP_REPEAT_FROM_TO(\
-    	1,\
-    	BOOST_PP_INC(BOOST_ASSIGN_V2_LIMIT_CSV_ARITY),\
-    	BOOST_ASSIGN_V2_CSV_DEQUE_NESTED_ITER,\
-    	SeqU\
-	)\
+    BOOST_PP_REPEAT_FROM_TO(\
+        1,\
+        BOOST_PP_INC(BOOST_ASSIGN_V2_LIMIT_CSV_ARITY),\
+        BOOST_ASSIGN_V2_CSV_DEQUE_NESTED_ITER,\
+        SeqU\
+    )\
 /**/
 
 #define BOOST_ASSIGN_V2_CSV_DEQUE_CONST_NON_CONST_OVERLOAD(z, I, data)\
-	BOOST_PP_SEQ_FOR_EACH_PRODUCT(\
-    	BOOST_ASSIGN_V2_CSV_DEQUE_ITER,\
-    	BOOST_ASSIGN_V2_CSV_SEQ1(I)\
-	)\
+    BOOST_PP_SEQ_FOR_EACH_PRODUCT(\
+        BOOST_ASSIGN_V2_CSV_DEQUE_ITER,\
+        BOOST_ASSIGN_V2_CSV_SEQ1(I)\
+    )\
 /**/
 
 #define BOOST_ASSIGN_V2_CSV_DEQUE_OVERLOAD(z, I, pos)\
-	BOOST_ASSIGN_V2_CSV_DEQUE_ITER(\
-    	~,\
-    	BOOST_ASSIGN_V2_CSV_SEQ2(pos, I)\
-	)\
+    BOOST_ASSIGN_V2_CSV_DEQUE_ITER(\
+        ~,\
+        BOOST_ASSIGN_V2_CSV_SEQ2(pos, I)\
+    )\
 /**/
 
 BOOST_PP_REPEAT_FROM_TO(
-	1, // TODO zero for empty case
+    1, // TODO zero for empty case
     BOOST_PP_INC(BOOST_ASSIGN_V2_LIMIT_FUNCTOR_CONST_NON_CONST_ARITY),
     BOOST_ASSIGN_V2_CSV_DEQUE_CONST_NON_CONST_OVERLOAD,
     ~
 )
 
 BOOST_PP_REPEAT_FROM_TO(
-	BOOST_PP_INC(BOOST_ASSIGN_V2_LIMIT_FUNCTOR_CONST_NON_CONST_ARITY),
+    BOOST_PP_INC(BOOST_ASSIGN_V2_LIMIT_FUNCTOR_CONST_NON_CONST_ARITY),
     BOOST_PP_INC(BOOST_ASSIGN_V2_LIMIT_FUNCTOR_ARITY),
     BOOST_ASSIGN_V2_CSV_DEQUE_OVERLOAD,
     0
 )
 
 BOOST_PP_REPEAT_FROM_TO(
-	BOOST_PP_INC(BOOST_ASSIGN_V2_LIMIT_FUNCTOR_CONST_NON_CONST_ARITY),
+    BOOST_PP_INC(BOOST_ASSIGN_V2_LIMIT_FUNCTOR_CONST_NON_CONST_ARITY),
     BOOST_PP_INC(BOOST_ASSIGN_V2_LIMIT_FUNCTOR_ARITY),
     BOOST_ASSIGN_V2_CSV_DEQUE_OVERLOAD,
     1
