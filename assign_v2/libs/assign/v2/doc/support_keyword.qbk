@@ -1,9 +1,0 @@
-[import ../../../../boost/assign/v2/support/keyword.hpp]
-
-[tpl_feature 
-	[@../../../../../boost/assign/v2/support/keyword.hpp [^boost/assign/v2/detail/support/keyword.hpp]]
-	..A keyword is a `const` object whose identifier has a leading underscore, that refers to an action or data-structure that has or is
-	likely to have some use in other parts of the library, as part of a class specialization, function dispatch etc.
-	..[syntax_detail_keyword]
-	..None
-]
