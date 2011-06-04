@@ -469,22 +469,24 @@ template <typename T>
 				}
             }
         }
-/*
-	public:
+
 #if defined(BOOST_HAS_RVALUE_REFS)
-    	block_ptr(block_ptr<T> && p): base(std::move(p.po_)), ps_(std::move(p.ps_))
+	public:
+    	block_ptr(block_ptr<T> && p): base(p.po_), ps_(p.ps_)
     	{
+    		p.po_ = 0;
     	}
 
     	template<class Y>
-    		block_ptr(block_ptr<Y> && p): base(std::move(p.po_)), ps_(std::move(p.ps_))
+    		block_ptr(block_ptr<Y> && p): base(p.po_), ps_(p.ps_)
     		{
+    			p.po_ = 0;
     		}
 
     	block_ptr<T> & operator = (block_ptr<T> && p)
     	{
-        	po_ = std::move(p.po_);
-        	ps_ = std::move(p.ps_);
+			std::swap(po_, p.po_);
+			std::swap(ps_, p.ps_);
        		
         	return *this;
     	}
@@ -492,13 +494,12 @@ template <typename T>
     	template<class Y>
     		block_ptr & operator = (block_ptr<Y> && p)
     		{
-	        	po_ = std::move(p.po_);
-	        	ps_ = std::move(p.ps_);
+				std::swap(po_, p.po_);
+				std::swap(ps_, p.ps_);
         		
         		return *this;
     		}
 #endif
-*/
     };
 
 template <typename V>
