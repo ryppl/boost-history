@@ -1,4 +1,4 @@
-#include <boost/detail/lightweight_test.hpp>
+#include <boost/test/unit_test.hpp>
 #include "test_function_value.hpp"
 #include "test_global_data.hpp"
 
@@ -50,7 +50,7 @@ void TestPod(p_function_value_class & tcl)
   {
   }
   
-int main()
+void test_function_value_function()
   {
   
   p_function_value_class tcl;
@@ -63,9 +63,16 @@ int main()
   TestEnum(tcl);
   TestPod(tcl);
   
-  return boost::report_errors();
-  
   }
+
+boost::unit_test::test_suite* init_unit_test_suite( int argc, char* argv[] )
+{
+    boost::unit_test::test_suite* test = BOOST_TEST_SUITE( "Property Test Function Value Suite" );
+
+    test->add( BOOST_TEST_CASE( &test_function_value_function ) );
+
+    return test;
+}
 
 #include "test_global_data.cpp"
 #include "test_function_impl.cpp"

@@ -31,6 +31,8 @@ class p_auto_value_class
   prop_auto<test_enum,default_policy_tag,read_tag> p_enum_const;
   prop_auto<test_pod> p_pod;
   
+  int p_iarray[15];
+  
   static prop_auto<char> p_st_char;
   static prop_auto<int,default_policy_tag,read_tag> p_st_int_const;
   static prop_auto<double> p_st_double;
@@ -38,6 +40,8 @@ class p_auto_value_class
   static prop_auto<int *> p_st_pointer;
   static prop_auto<test_enum,notification_boost_function> p_st_enum_ntf;
   static prop_auto<test_pod const> p_st_pod_const;
+  
+  static int p_st_iarray[9];
   
   };
   

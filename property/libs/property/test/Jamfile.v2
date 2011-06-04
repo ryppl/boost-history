@@ -6,6 +6,7 @@
 
 import testing ;
 
+use-project /boost : $(BOOST_ROOT) ;
 project property_tests : requirements <warnings>on
                                       <toolset>gcc:<warnings>all
                                       <toolset>gcc-4.5.0:<linkflags>"-Wl,--enable-auto-import"
@@ -16,23 +17,30 @@ project property_tests : requirements <warnings>on
                                       <toolset>msvc-10.0:<define>"_SCL_SECURE_NO_WARNINGS"
                                       ;
 
+rule property-test ( name )
+{
+    return [
+        run $(name).cpp /boost/test//boost_unit_test_framework/<link>static ]
+        ;
+}
+
 test-suite property
     : 
-        [ run test_auto_predicate.cpp ]
-        [ run test_auto_reference.cpp ]
-        [ run test_auto_value.cpp ]
-        [ run test_callable_reference.cpp ]
-        [ run test_callable_value.cpp ]
-        [ run test_data_predicate.cpp ]
-        [ run test_data_reference.cpp ]
-        [ run test_data_value.cpp ]
-        [ run test_function_reference.cpp ]
-        [ run test_function_value.cpp ]
-        [ run test_functor_reference.cpp ]
-        [ run test_functor_value.cpp ]
-        [ run test_member_data_predicate.cpp ]
-        [ run test_member_data_reference.cpp ]
-        [ run test_member_data_value.cpp ]
-        [ run test_member_function_reference.cpp ]
-        [ run test_member_function_value.cpp ]
+        [ property-test test_auto_predicate ]
+        [ property-test test_auto_reference ]
+        [ property-test test_auto_value ]
+        [ property-test test_callable_reference ]
+        [ property-test test_callable_value ]
+        [ property-test test_data_predicate ]
+        [ property-test test_data_reference ]
+        [ property-test test_data_value ]
+        [ property-test test_function_reference ]
+        [ property-test test_function_value ]
+        [ property-test test_functor_reference ]
+        [ property-test test_functor_value ]
+        [ property-test test_member_data_predicate ]
+        [ property-test test_member_data_reference ]
+        [ property-test test_member_data_value ]
+        [ property-test test_member_function_reference ]
+        [ property-test test_member_function_value ]
     ;

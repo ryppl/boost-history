@@ -1,4 +1,4 @@
-#include <boost/detail/lightweight_test.hpp>
+#include <boost/test/unit_test.hpp>
 #include <boost/lambda/lambda.hpp>
 #include "test_data_predicate.hpp"
 
@@ -38,7 +38,7 @@ void TestEnum(p_data_predicate_class & tcl)
   {
   }
   
-int main()
+void test_data_predicate_function()
   {
   
   p_data_predicate_class tcl;
@@ -48,9 +48,16 @@ int main()
   TestDouble(tcl);
   TestEnum(tcl);
   
-  return boost::report_errors();
-  
   }
+
+boost::unit_test::test_suite* init_unit_test_suite( int argc, char* argv[] )
+{
+    boost::unit_test::test_suite* test = BOOST_TEST_SUITE( "Property Test Data Predicate Suite" );
+
+    test->add( BOOST_TEST_CASE( &test_data_predicate_function ) );
+
+    return test;
+}
 
 #include "test_global_data.cpp"
 #include "test_data_impl.cpp"

@@ -1,9 +1,16 @@
-#include <boost/detail/lightweight_test.hpp>
+#include <boost/test/unit_test.hpp>
 #include <boost/property/property_function_reference.hpp>
 
-int main()
+void test_function_reference_function()
   {
   
-  return boost::report_errors();
-  
   }
+
+boost::unit_test::test_suite* init_unit_test_suite( int argc, char* argv[] )
+{
+    boost::unit_test::test_suite* test = BOOST_TEST_SUITE( "Property Test Function Reference Suite" );
+
+    test->add( BOOST_TEST_CASE( &test_function_reference_function ) );
+
+    return test;
+}

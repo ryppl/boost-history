@@ -1,4 +1,4 @@
-#include <boost/detail/lightweight_test.hpp>
+#include <boost/test/unit_test.hpp>
 #include "test_member_data_value.hpp"
 
 prop_member_data<char const,p_member_data_class,&p_member_data_class::p_data_char> p_gl_char_const(pmd_gl_char);
@@ -56,7 +56,7 @@ void TestPod(p_member_data_value_class & tcl)
   {
   }
   
-int main()
+void test_member_data_value_function()
   {
   
   p_member_data_value_class tcl;
@@ -69,9 +69,16 @@ int main()
   TestEnum(tcl);
   TestPod(tcl);
   
-  return boost::report_errors();
-  
   }
+
+boost::unit_test::test_suite* init_unit_test_suite( int argc, char* argv[] )
+{
+    boost::unit_test::test_suite* test = BOOST_TEST_SUITE( "Property Test Member Data Value Suite" );
+
+    test->add( BOOST_TEST_CASE( &test_member_data_value_function ) );
+
+    return test;
+}
 
 p_member_data_class pmd_gl_char;
 p_member_data_class pmd_gl_int;
