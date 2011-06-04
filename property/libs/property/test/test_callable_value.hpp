@@ -30,6 +30,8 @@ class p_callable_value_class
   prop_callable<test_enum,read_tag> p_enum_const;
   prop_callable<test_pod> p_pod;
   
+  int p_iarray[15];
+  
   static prop_callable<char> p_st_char;
   static prop_callable<int> p_st_int;
   static prop_callable<double> p_st_double;
@@ -37,6 +39,8 @@ class p_callable_value_class
   static prop_callable<int * const> p_st_pointer_const;
   static prop_callable<test_enum> p_st_enum;
   static prop_callable<test_pod const> p_st_pod_const;
+  
+  static int p_st_iarray[9];
   
   };
   
