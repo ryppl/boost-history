@@ -23,6 +23,44 @@ exe calc7 :
     calc7/vm.cpp
     calc7/compiler.cpp
     calc7/expression.cpp
+    calc7/statement.cpp
     calc7/main.cpp
     ;
+
+exe calc8 :
+    calc8/vm.cpp
+    calc8/compiler.cpp
+    calc8/expression.cpp
+    calc8/statement.cpp
+    calc8/main.cpp
+    ;
+
+exe mini_c :
+    mini_c/vm.cpp
+    mini_c/compiler.cpp
+    mini_c/expression.cpp
+    mini_c/statement.cpp
+    mini_c/function.cpp
+    mini_c/main.cpp
+    ;
+
+exe conjure :
+    conjure/vm.cpp
+    conjure/compiler.cpp
+    conjure/expression.cpp
+    conjure/statement.cpp
+    conjure/function.cpp
+    conjure/main.cpp
+    ;
+
+exe conjure_lexer :
+    conjure_lexer/compiler.cpp
+    conjure_lexer/expression.cpp
+    conjure_lexer/function.cpp
+    conjure_lexer/lexer.cpp
+    conjure_lexer/main.cpp
+    conjure_lexer/statement.cpp
+    conjure_lexer/vm.cpp
+    ;
+
 
