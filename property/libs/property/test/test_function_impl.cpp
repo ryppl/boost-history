@@ -98,7 +98,7 @@ double p_function_class::p_double_read()
   
 void p_function_class::p_double_write(double data) 
   {
-  data = st_double;
+  st_double = data;
   }
   
 bool p_function_class::p_bool_read() 

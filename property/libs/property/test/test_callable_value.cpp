@@ -5,6 +5,7 @@
 #include "test_function_impl.hpp"
 #include "test_functor_impl.hpp"
 #include "test_member_function_impl.hpp"
+#include "test_global_data.hpp"
 
 p_member_function_impl_class p_member_function_impl_object;
 p_functor_class_double p_functor_class_double_object;
@@ -29,7 +30,7 @@ prop_callable<test_pod const> p_gl_pod_const(&p_function_pod_read);
 
 p_callable_value_class::p_callable_value_class() :
   p_char(&p_function_char_read,&p_function_char_write),
-  p_int_const(p_functor_class_int()),
+  p_int_const(p_functor_class_int(8457)),
   p_double(boost::ref(p_functor_class_double_object),boost::ref(p_functor_class_double_object),15),
   p_bool_const(p_functor_class_bool()),
   p_pointer_const
@@ -149,10 +150,90 @@ void TestCharacter(p_callable_value_class & tcl)
   
 void TestInt(p_callable_value_class & tcl) 
   {
+  
+  /*
+  
+  Integers can be tested with the full range of integer operations.
+  
+  */
+  
+  prop_callable<int> p_loc_int(&p_function_class::p_int_read_2,&p_function_class::p_int_write_2,563);
+  
+  BOOST_CHECK_EQUAL(p_gl_int,34662);
+  BOOST_CHECK_EQUAL(p_callable_value_class::p_st_int,34);
+  BOOST_CHECK_EQUAL(tcl.p_int_const,8457);
+  p_gl_int = 44;
+  p_gl_int += 12;
+  BOOST_CHECK_EQUAL(p_gl_int,56);
+  p_gl_int -= 16;
+  BOOST_CHECK_EQUAL(p_gl_int,40);
+  ++p_gl_int;
+  BOOST_CHECK_EQUAL(p_gl_int,41);
+  ++p_gl_int;
+  ++p_gl_int;
+  --p_gl_int;
+  BOOST_CHECK_EQUAL(p_gl_int,42);
+  p_gl_int /= 3;
+  BOOST_CHECK_EQUAL(p_gl_int,14);
+  p_gl_int *= 5;
+  BOOST_CHECK_EQUAL(p_gl_int,70);
+  
+  int il1(p_loc_int++);
+  BOOST_CHECK_EQUAL(il1,563);
+  BOOST_CHECK_EQUAL(p_loc_int,564);
+  p_loc_int >>= 2;
+  BOOST_CHECK_EQUAL(p_loc_int,141);
+  p_loc_int -= 81;
+  p_loc_int <<= 3;
+  BOOST_CHECK_EQUAL(p_loc_int,480);
+  il1 = --p_loc_int;
+  BOOST_CHECK_EQUAL(il1,479);
+  p_loc_int -= 6;
+  BOOST_CHECK_EQUAL(p_loc_int,473);
+  p_loc_int |= 0x0da;
+  BOOST_CHECK_EQUAL(p_loc_int,475);
+  p_loc_int &= 0x076;
+  BOOST_CHECK_EQUAL(p_loc_int,82);
+  
+  p_callable_value_class::p_st_int ^= 57;
+  
   }
   
 void TestDouble(p_callable_value_class & tcl) 
   {
+  
+  /*
+  
+  We can do the full range of arithmetic functionality with a double value
+  
+  */
+  
+  gld_double = 2352.346;
+  
+  prop_callable<double> p_loc_double(&p_function_class::p_double_read,&p_function_class::p_double_write,45.37);
+  ++p_loc_double;
+  BOOST_CHECK_CLOSE(p_loc_double.get(),46.37,.1);
+  BOOST_CHECK_CLOSE(tcl.p_double.get(),15.0,.1);
+  tcl.p_double = 2352.346;
+  p_callable_value_class::p_st_double = 452.98;
+  BOOST_CHECK_CLOSE(p_gl_double_const.get(),2352.346,.01);
+  BOOST_CHECK_CLOSE(p_callable_value_class::p_st_double.get(),452.98,.1);
+  --p_callable_value_class::p_st_double;
+  BOOST_CHECK_CLOSE(p_callable_value_class::p_st_double.get(),451.98,.1);
+  double d1(tcl.p_double--);
+  BOOST_CHECK_CLOSE(d1,2352.346,.01);
+  BOOST_CHECK_CLOSE(tcl.p_double.get(),2351.346,.01);
+  tcl.p_double = 15.0;
+  d1 = tcl.p_double++;
+  BOOST_CHECK_CLOSE(d1,15.0,.1);
+  BOOST_CHECK_CLOSE(tcl.p_double.get(),16.0,.1);
+//  p_gl_double /= 36.7;
+//  BOOST_CHECK_CLOSE(p_gl_double.get(),64.069373,.1);
+  p_loc_double *= 756.839;
+  BOOST_CHECK_CLOSE(p_loc_double.get(),35094.624,.001);
+  p_callable_value_class::p_st_double -= 2497.481;
+  BOOST_CHECK_CLOSE(p_callable_value_class::p_st_double.get(),-2045.501,.01);
+  
   }
   
 void TestBool(p_callable_value_class & tcl) 
