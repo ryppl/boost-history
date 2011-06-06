@@ -10,6 +10,8 @@
 
 using namespace properties;
 
+extern int p_gl_iarray[11];
+
 extern prop_data<char const,&p_data_class::p_char_2> p_gl_char_const;
 extern prop_data<int,&gld_int> p_gl_int;
 extern prop_data<double const,&gld_double> p_gl_double_const;
@@ -33,6 +35,8 @@ class p_data_value_class
   prop_data<test_enum,&p_data_class::p_enum,default_policy_tag,read_tag> p_enum_const;
   prop_data<test_pod,&p_data_class::p_pod> p_pod;
   
+  int p_iarray[15];
+  
   static prop_data<char,&p_data_class::p_char> p_st_char;
   static prop_data<int,&p_data_class::p_int> p_st_int;
   static prop_data<double const,&p_data_class::p_double_2> p_st_double_const;
@@ -40,6 +44,8 @@ class p_data_value_class
   static prop_data<int *,&p_data_class::p_pointer_2> p_st_pointer;
   static prop_data<test_enum,&gld_enum> p_st_enum;
   static prop_data<test_pod const,&p_data_class::p_pod_2> p_st_pod_const;
+  
+  static int p_st_iarray[9];
   
   };
   

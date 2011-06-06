@@ -380,7 +380,7 @@ void TestPod(p_auto_value_class & tcl)
   BOOST_CHECK_EQUAL(p1.a_char,'y');
   BOOST_CHECK(p1.a_bool);
   BOOST_CHECK_EQUAL(p_auto_value_class::p_st_pod_const.get().an_int,45);
-  BOOST_CHECK_EQUAL(p_auto_value_class::p_st_pod_const.get().a_double,32.6);
+  BOOST_CHECK_CLOSE(p_auto_value_class::p_st_pod_const.get().a_double,32.6,.1);
   
   p1 = p_loc_pod;
   p1.an_int = 991;

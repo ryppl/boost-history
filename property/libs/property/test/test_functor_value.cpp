@@ -93,7 +93,7 @@ p_functor_class_pointer p_functor_value_class::pf_st_pointer;
 p_functor_class_enum p_functor_value_class::pf_st_enum(e_test_third);
 p_functor_class_pod p_functor_value_class::pf_st_pod;
   
-boost::unit_test::test_suite* init_unit_test_suite( int argc, char* argv[] )
+boost::unit_test::test_suite* init_unit_test_suite( int, char* [] )
 {
     boost::unit_test::test_suite* test = BOOST_TEST_SUITE( "Property Test Functor Value Suite" );
 

@@ -25,6 +25,15 @@ class p_data_class
   static test_enum p_enum_2;
   static test_pod p_pod_2;
   
+  static char p_char_3;
+  static int p_int_3;
+  static double p_double_3;
+  static bool p_bool_3;
+  static int * p_pointer_3;
+  static test_enum p_enum_3;
+  static test_pod p_pod_3;
+  
+  static int * p_pointer_4;
   };
   
 #endif

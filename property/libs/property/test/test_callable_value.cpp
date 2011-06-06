@@ -12,6 +12,9 @@ p_functor_class_double p_functor_class_double_object;
 p_functor_class_pod p_functor_class_pod_object;
 p_functor_class_char p_functor_class_char_object;
 
+int p_gl_iarray[] = {7,98,347,289,14,5763,230,7783,22675,59,12};
+int p_callable_value_class::p_st_iarray[9] = {757,9,5347,369,1174,53,3456,443,6};
+
 prop_callable<char> p_gl_char
   (
   (boost::bind(&p_member_function_impl_class::p_function_char_read,&p_member_function_impl_object)),
@@ -22,17 +25,18 @@ prop_callable<double const> p_gl_double_const(&p_function_double_read);
 prop_callable<bool> p_gl_bool
   (
   (boost::bind(&p_member_function_impl_class::p_function_bool_read,&p_member_function_impl_object)),
-  (boost::bind(&p_member_function_impl_class::p_function_bool_write,&p_member_function_impl_object,_1))
+  (boost::bind(&p_member_function_impl_class::p_function_bool_write,&p_member_function_impl_object,_1)),
+  false
   );
 prop_callable<int *> p_gl_pointer(&p_function_pointer_read,&p_function_pointer_write);
-prop_callable<test_enum,read_tag> p_gl_enum_const((p_functor_class_enum()));
+prop_callable<test_enum,read_tag> p_gl_enum_const((p_functor_class_enum(e_test_first)));
 prop_callable<test_pod const> p_gl_pod_const(&p_function_pod_read);
 
 p_callable_value_class::p_callable_value_class() :
   p_char(&p_function_char_read,&p_function_char_write),
   p_int_const(p_functor_class_int(8457)),
   p_double(boost::ref(p_functor_class_double_object),boost::ref(p_functor_class_double_object),15),
-  p_bool_const(p_functor_class_bool()),
+  p_bool_const(p_functor_class_bool(true)),
   p_pointer_const
     (
     boost::bind(&p_member_function_impl_class::p_function_pointer_read,&p_member_function_impl_object)
@@ -40,21 +44,7 @@ p_callable_value_class::p_callable_value_class() :
   p_enum_const(&p_function_enum_read),
   p_pod(boost::ref(p_functor_class_pod_object),boost::ref(p_functor_class_pod_object),test_pod('#',997,23.6744,false))
   {
-  p_iarray[0] = 56;
-  p_iarray[1] = 13562;
-  p_iarray[2] = 679;
-  p_iarray[3] = 34;
-  p_iarray[4] = 2491;
-  p_iarray[5] = 856;
-  p_iarray[6] = 37;
-  p_iarray[7] = 932;
-  p_iarray[8] = 8468;
-  p_iarray[9] = 834;
-  p_iarray[10] = 789;
-  p_iarray[11] = 3452;
-  p_iarray[12] = 741;
-  p_iarray[13] = 3492;
-  p_iarray[14] = 48;
+  p_member_function_impl_object.st_pointer = &gld_int;
   }
   
 prop_callable<char> p_callable_value_class::p_st_char
@@ -81,7 +71,7 @@ prop_callable<bool> p_callable_value_class::p_st_bool
   );
 prop_callable<int * const> p_callable_value_class::p_st_pointer_const
   (
-  (p_functor_class_pointer())
+  (p_functor_class_pointer(&p_callable_value_class::p_st_iarray[3]))
   );
 prop_callable<test_enum> p_callable_value_class::p_st_enum
   (
@@ -94,9 +84,6 @@ prop_callable<test_pod const> p_callable_value_class::p_st_pod_const
   (boost::bind(&p_member_function_impl_class::p_function_pod_read,&p_member_function_impl_object))
   );
   
-int p_callable_value_class::p_st_iarray[9] = {757,9,5347,369,1174,53,3456,443,6};
-int p_gl_iarray[] = {7,98,347,289,14,5763,230,7783,22675,59,12};
-
 #include <string>
 
 void TestCharacter(p_callable_value_class & tcl) 
@@ -227,8 +214,9 @@ void TestDouble(p_callable_value_class & tcl)
   d1 = tcl.p_double++;
   BOOST_CHECK_CLOSE(d1,15.0,.1);
   BOOST_CHECK_CLOSE(tcl.p_double.get(),16.0,.1);
-//  p_gl_double /= 36.7;
-//  BOOST_CHECK_CLOSE(p_gl_double.get(),64.069373,.1);
+  tcl.p_double = 2351.346;
+  tcl.p_double /= 36.7;
+  BOOST_CHECK_CLOSE(tcl.p_double.get(),64.069373,.1);
   p_loc_double *= 756.839;
   BOOST_CHECK_CLOSE(p_loc_double.get(),35094.624,.001);
   p_callable_value_class::p_st_double -= 2497.481;
@@ -238,18 +226,156 @@ void TestDouble(p_callable_value_class & tcl)
   
 void TestBool(p_callable_value_class & tcl) 
   {
+  /*
+  
+  Bools are integral values, 
+  either 0 (false) or 1 (true) in integer arithmetic,
+  but are only tested here for true or false
+  
+  */
+  
+  prop_callable<bool> p_loc_bool(&p_function_class::p_bool_read_2,&p_function_class::p_bool_write_2,true);
+  
+  bool b1(tcl.p_bool_const);
+  
+  BOOST_CHECK(b1);
+  
+  bool b2(p_loc_bool);
+  
+  BOOST_CHECK(b2);
+  
+  b1 = p_gl_bool;
+  
+  BOOST_CHECK_EQUAL(b1,false);
+  
+  p_callable_value_class::p_st_bool = b2;
+  
+  BOOST_CHECK(p_callable_value_class::p_st_bool);
+  
+  bool b3(p_callable_value_class::p_st_bool);
+  
+  BOOST_CHECK(b3);
+  
   }
   
 void TestPointer(p_callable_value_class & tcl) 
   {
+  
+  /*
+  
+  Pointers can be assigned, incremented, decremented,
+  and take part in simple arithmetic.
+  
+  */
+  
+  prop_callable<int *> p_loc_pointer(&p_function_class::p_pointer_read,&p_function_class::p_pointer_write,&p_gl_iarray[7]);
+  prop_callable<int *> p_loc_pointer2(&p_function_class::p_pointer_read_2,&p_function_class::p_pointer_write_2,&p_gl_iarray[4]);
+  
+  BOOST_CHECK_EQUAL(*p_loc_pointer,7783);
+  
+  p_loc_pointer = &p_gl_iarray[6];
+  
+  BOOST_CHECK_EQUAL(*p_loc_pointer,230);
+  BOOST_CHECK_EQUAL(p_loc_pointer - p_loc_pointer2,2);
+  
+  p_loc_pointer += 4;
+  BOOST_CHECK_EQUAL(*p_loc_pointer,12);
+  p_loc_pointer -= 2;
+  BOOST_CHECK_EQUAL(*p_loc_pointer,22675);
+  
+  gld_int = 489;
+  BOOST_CHECK_EQUAL(*tcl.p_pointer_const,489);
+  
+  BOOST_CHECK_EQUAL(*p_callable_value_class::p_st_pointer_const,369);
+  
+  p_gl_pointer = &p_callable_value_class::p_st_iarray[5];
+  
+  BOOST_CHECK_EQUAL(*p_gl_pointer,53);
+  p_gl_pointer -= 2;
+  BOOST_CHECK_EQUAL(*p_gl_pointer,369);
+  --p_gl_pointer;
+  BOOST_CHECK_EQUAL(*p_gl_pointer,5347);
+  p_gl_pointer += 5;
+  BOOST_CHECK_EQUAL(*(p_gl_pointer--),443);
+  BOOST_CHECK_EQUAL(*p_gl_pointer,3456);
+  
   }
   
 void TestEnum(p_callable_value_class & tcl) 
   {
+  
+  /*
+  
+  Enums are individual values. They can participate in 
+  arithmetic expressions but here I will just test basic 
+  usage.
+  
+  */
+  
+  prop_callable<test_enum> p_loc_enum(&p_function_class::p_enum_read_2,&p_function_class::p_enum_write_2,e_test_second);
+  
+  gld_enum = e_test_default;
+  
+  BOOST_CHECK_EQUAL(tcl.p_enum_const,e_test_default);
+  BOOST_CHECK_EQUAL(p_gl_enum_const,e_test_first);
+  BOOST_CHECK_EQUAL(p_loc_enum,e_test_second);
+  p_loc_enum = e_test_third;
+  BOOST_CHECK_EQUAL(p_loc_enum,e_test_third);
+  BOOST_CHECK_EQUAL(p_callable_value_class::p_st_enum,e_test_third);
+  p_callable_value_class::p_st_enum = e_test_first;
+  BOOST_CHECK_EQUAL(p_callable_value_class::p_st_enum,e_test_first);
+  test_enum te1(p_loc_enum);
+  BOOST_CHECK_EQUAL(te1,e_test_third);
+  
+  te1 = p_callable_value_class::p_st_enum;
+  BOOST_CHECK_EQUAL(te1,e_test_first);
+  p_callable_value_class::p_st_enum = e_test_third;
+  BOOST_CHECK_EQUAL(p_callable_value_class::p_st_enum,e_test_third);
+  
   }
   
 void TestPod(p_callable_value_class & tcl) 
   {
+  
+  /*
+  
+  Our POD class will be tested by changing fields 
+  and passing to and from the properties.
+  
+  */
+  
+  prop_callable<test_pod> p_loc_pod(&p_function_class::p_pod_read_2,&p_function_class::p_pod_write_2,test_pod('^',981,4.3,false));
+  
+  gld_pod = test_pod('R',874,2239.457,false);
+  
+  BOOST_CHECK_EQUAL(p_gl_pod_const.get().an_int,874);
+  BOOST_CHECK_CLOSE(p_gl_pod_const.get().a_double,2239.457,.001);
+  
+  p_member_function_impl_object.st_pod = test_pod('*',3209,12.356,true);
+  
+  BOOST_CHECK_EQUAL(p_callable_value_class::p_st_pod_const.get().an_int,3209);
+  BOOST_CHECK(p_callable_value_class::p_st_pod_const.get().a_bool);
+  
+  BOOST_CHECK_EQUAL(p_loc_pod.get().an_int,981);
+  BOOST_CHECK_EQUAL(p_loc_pod.get().a_char,'^');
+  
+  test_pod p1(p_callable_value_class::p_st_pod_const);
+  
+  BOOST_CHECK_EQUAL(p1.a_char,'*');
+  BOOST_CHECK(p1.a_bool);
+  
+  p1 = p_loc_pod;
+  p1.an_int = 991;
+  p_loc_pod = p1;
+  BOOST_CHECK_EQUAL(p_loc_pod.get().an_int,991);
+  
+  BOOST_CHECK_EQUAL(tcl.p_pod.get().an_int,997);
+  BOOST_CHECK_EQUAL(tcl.p_pod.get().a_char,'#');
+  
+  tcl.p_pod = test_pod();
+  
+  BOOST_CHECK_EQUAL(tcl.p_pod.get().a_double,0);
+  
   }
   
 void test_callable_value_function()
