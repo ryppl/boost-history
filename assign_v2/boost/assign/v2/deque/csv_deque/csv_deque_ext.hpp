@@ -16,16 +16,12 @@
 #include <boost/assign/v2/support/pp/ignore.hpp>
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 #include <utility>
-#endif
 
 namespace boost{
 namespace assign{
 namespace v2{
 //[syntax_csv_deque_ext
 namespace interpreter_aux{
-//<-
-#if BOOST_ASSIGN_V2_ENABLE_CPP0X
-//->
 
     template<typename T, int I, typename...Types, typename... Args>
     typename result_of::csv_deque<T>::type
@@ -44,25 +40,16 @@ namespace interpreter_aux{
         return csv<I, Types...>( result, std::forward<Args>( args )... );
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
-//<-
-#endif // BOOST_ASSIGN_V2_ENABLE_CPP0X
-//->
-
 }// interpreter_aux
-//<-
-#if BOOST_ASSIGN_V2_ENABLE_CPP0X
-//->
+
     using interpreter_aux::csv_deque;
-//<-
-#endif // BOOST_ASSIGN_V2_ENABLE_CPP0X
-//->
 //]
 }// v2
 }// assign
 }// boost
 
-#if !BOOST_ASSIGN_V2_ENABLE_CPP0X
+#else
 #include <boost/assign/v2/deque/cpp03/csv_deque_ext.hpp>
-#endif
+#endif // BOOST_ASSIGN_V2_ENABLE_CPP0X
 
-#endif // BOOST_ASSIGN_V2_DEQUE_CSV_DEQUE_ER_2011_HPP
+#endif // BOOST_ASSIGN_V2_DEQUE_CSV_DEQUE_EXT_ER_2011_HPP

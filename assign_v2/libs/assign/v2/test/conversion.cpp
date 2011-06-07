@@ -12,7 +12,7 @@
 #include <boost/assign/v2/conversion/check.hpp>
 #include <boost/assign/v2/include/convert.hpp>
 #include <boost/assign/v2/include/converter.hpp>
-#include <boost/assign/v2/include/csv_deque.hpp>
+#include <boost/assign/v2/include/csv_deque_basic.hpp>
 #include <boost/assign/v2/ref/array.hpp>
 #include <boost/assign/v2/support/check/equal_container.hpp>
 #include <boost/assign/v2/support/config/check.hpp>

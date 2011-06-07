@@ -13,9 +13,7 @@
 #include <set>
 #include <string>
 #include <boost/assign/v2/support/config/check.hpp>
-#include <boost/assign/v2/include/delay_csv_put.hpp>
-#include <boost/assign/v2/include/csv.hpp>
-#include <boost/assign/v2/include/csv_put.hpp>
+#include <boost/assign/v2/include/csv_put_basic.hpp>
 #include <boost/assign/v2/include/put.hpp>
 #include <boost/assign/v2/deque.hpp>
 #include <boost/assign/v2/option/modifier/std.hpp>

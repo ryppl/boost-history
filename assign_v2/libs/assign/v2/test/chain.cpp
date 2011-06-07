@@ -12,7 +12,7 @@
 #include <list>
 #include <string>
 #include <boost/assign/v2/include/ref/csv_array.hpp>
-#include <boost/assign/v2/include/csv_deque.hpp>
+#include <boost/assign/v2/include/csv_deque_basic.hpp>
 #include <boost/assign/v2/include/chain.hpp>
 #include <boost/assign/v2/chain/check.hpp>
 #include <boost/assign/v2/chain/logical_and.hpp>

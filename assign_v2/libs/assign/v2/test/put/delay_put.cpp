@@ -11,7 +11,8 @@
 #include <map>
 #include <string>
 
-#include <boost/assign/v2/include/csv_deque.hpp>
+#include <boost/assign/v2/include/csv_deque_basic.hpp>
+#include <boost/assign/v2/include/csv_deque_ext.hpp>
 #include <boost/assign/v2/include/delay_put.hpp>
 #include <boost/assign/v2/support/config/check.hpp>
 #include <boost/assign/v2/support/config/enable_cpp0x.hpp>

@@ -10,7 +10,7 @@
 #include <vector>
 #include <boost/typeof/typeof.hpp>
 #include <boost/assign/v2/support/config/check.hpp>
-#include <boost/assign/v2/include/csv.hpp>
+#include <boost/assign/v2/include/csv_basic.hpp>
 #include <boost/assign/v2/include/put.hpp>
 #include <boost/assign/v2/include/delay_put.hpp>
 #include <boost/assign/v2/option/modifier/std.hpp>

@@ -11,7 +11,6 @@
 #include <map>
 #include <vector>
 
-#include <boost/assign/v2/include/csv.hpp>
 #include <boost/assign/v2/include/put.hpp>
 #include <boost/assign/v2/support/config/check.hpp>
 #include <boost/assign/v2/support/config/enable_cpp0x.hpp>

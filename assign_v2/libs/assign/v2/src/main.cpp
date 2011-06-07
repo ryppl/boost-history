@@ -75,11 +75,11 @@ int main (int argc, char * const argv[])
     {
         //tutorial_assign_v2::run();
     }
-    {
+    {/*
         using namespace speed_assign_v2;
-        std::ofstream ofs("assign_v2_speed_test");
+        std::ofstream ofs( "assign_v2_speed_test" );
         speed_assign_v2::test(ofs);
-    }
+    */}
 
     return 0;
 

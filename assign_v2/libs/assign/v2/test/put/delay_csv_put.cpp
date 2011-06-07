@@ -8,7 +8,6 @@
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
 #include <map>
-#include <boost/assign/v2/include/csv_deque.hpp>
 #include <boost/assign/v2/include/delay_csv_put.hpp>
 #include <boost/assign/v2/support/config/check.hpp>
 #include <libs/assign/v2/test/put/delay_csv_put.h>

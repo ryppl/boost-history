@@ -16,8 +16,8 @@
 #include <boost/assign/v2/deque.hpp>
 #include <boost/assign/v2/option/data.hpp>
 #include <boost/assign/v2/interpreter/csv/csv_basic.hpp>
-#include <boost/assign/v2/include/csv_deque.hpp>
-#include <boost/assign/v2/include/csv_put.hpp>
+#include <boost/assign/v2/include/csv_deque_basic.hpp>
+#include <boost/assign/v2/include/csv_put_basic.hpp>
 #include <boost/assign/v2/include/put.hpp>
 #include <boost/assign/v2/include/deque.hpp>
 #include <boost/assign/v2/support/config/check.hpp>

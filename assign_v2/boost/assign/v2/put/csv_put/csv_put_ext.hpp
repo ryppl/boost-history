@@ -9,20 +9,17 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_PUT_CSV_PUT_EXT_ER_2011_HPP
 #define BOOST_ASSIGN_V2_PUT_CSV_PUT_EXT_ER_2011_HPP
+#include <boost/assign/v2/put/put.hpp>
 #include <boost/assign/v2/interpreter/csv/csv_ext.hpp>
 #include <boost/assign/v2/support/config/enable_cpp0x.hpp>
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 #include <utility>
-#endif
 
 namespace boost{
 namespace assign{
 namespace v2{
 //[syntax_csv_put_ext
 namespace interpreter_aux{
-//<-
-#if BOOST_ASSIGN_V2_ENABLE_CPP0X
-//->
 
     template<int I,  typename ...Cast, typename C, typename... Args>
     void csv_put(C& cont, Args&&... args)/*<-*/
@@ -45,20 +42,15 @@ namespace interpreter_aux{
         );
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
-//<-
-#endif // BOOST_ASSIGN_V2_ENABLE_CPP0X
-//->
-
 }// interpreter_aux
 
 using interpreter_aux::csv_put;
 //]
-
 }// v2
 }// assign
 }// boost
 
-#if! BOOST_ASSIGN_V2_ENABLE_CPP0X
+#else
 #include <boost/assign/v2/put/cpp03/csv_put_ext.hpp>
 #endif // BOOST_ASSIGN_V2_ENABLE_CPP0X
 

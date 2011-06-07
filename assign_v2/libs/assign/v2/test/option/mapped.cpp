@@ -12,7 +12,7 @@
 #include <cmath>
 #include <list>
 #include <boost/assign/v2/include/csv_basic.hpp>
-#include <boost/assign/v2/include/csv_deque.hpp>
+#include <boost/assign/v2/include/csv_deque_basic.hpp>
 #include <boost/assign/v2/include/csv_put_ext.hpp>
 #include <boost/assign/v2/include/deque.hpp>
 #include <boost/assign/v2/include/put.hpp>

@@ -10,7 +10,8 @@
 #include <list>
 #include <boost/array.hpp>
 #include <boost/assign/v2/deque.hpp>
-#include <boost/assign/v2/include/csv_put.hpp>
+#include <boost/assign/v2/include/csv_basic.hpp>
+#include <boost/assign/v2/include/put.hpp>
 #include <boost/assign/v2/support/config/check.hpp>
 #include <boost/lambda/lambda.hpp>
 #include <boost/mpl/assert.hpp>
