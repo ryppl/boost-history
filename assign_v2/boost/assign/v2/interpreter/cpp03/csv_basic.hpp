@@ -11,6 +11,11 @@
 #define BOOST_ASSIGN_V2_INTERPRETER_CPP03_CSV_BASIC_ER_2011_HPP
 #include <boost/assign/v2/interpreter/crtp.hpp>
 #include <boost/assign/v2/support/config/limit_csv_arity.hpp>
+#include <boost/preprocessor/arithmetic.hpp>
+#include <boost/preprocessor/cat.hpp>
+#include <boost/preprocessor/control.hpp>
+#include <boost/preprocessor/punctuation.hpp>
+#include <boost/preprocessor/repetition.hpp>
 
 #define BOOST_ASSIGN_V2_INTERPRETER_CSV_OVERLOAD_BASIC(z, N, is_const)\
     template<\

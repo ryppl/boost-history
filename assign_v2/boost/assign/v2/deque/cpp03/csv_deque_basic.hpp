@@ -52,26 +52,11 @@ BOOST_PP_REPEAT_FROM_TO(
 )
 #undef BOOST_ASSIGN_V2_CSV_DEQUE_OVERLOAD_BASIC
 
-#define BOOST_ASSIGN_V2_MACRO(z, i, data)\
-    T const& BOOST_PP_CAT(_,i)\
-/**/
-
-#define BOOST_ASSIGN_V2_REST_PARAMS(N)\
-    BOOST_PP_COMMA_IF(BOOST_PP_DEC(N))\
-        BOOST_PP_ENUM_SHIFTED(\
-            N,\
-            BOOST_ASSIGN_V2_MACRO,\
-            ~\
-        )\
-/**/
-
+#define BOOST_ASSIGN_V2_MACRO(z, i, data) const T& BOOST_PP_CAT(_,i)
 #define BOOST_ASSIGN_V2_CSV_DEQUE_OVERLOAD_BASIC_IMPLICIT(z, N, is_const)\
     template<typename T, typename Options>\
     typename result_of::csv_deque_option<T, Options>::type\
-    csv_deque(\
-        T const& _0\
-        BOOST_ASSIGN_V2_REST_PARAMS(N)\
-    )\
+    csv_deque( BOOST_PP_ENUM(N, BOOST_ASSIGN_V2_MACRO, ~) )\
     {\
         typedef typename csv_deque_deduce_value<T>::type t_;\
         return csv(\
@@ -81,10 +66,7 @@ BOOST_PP_REPEAT_FROM_TO(
     }\
     template<typename T>\
     typename result_of::csv_deque<T>::type\
-    csv_deque(\
-        T const& _0\
-        BOOST_ASSIGN_V2_REST_PARAMS(N)\
-    )\
+    csv_deque( BOOST_PP_ENUM(N, BOOST_ASSIGN_V2_MACRO, ~) )\
     {\
         typedef typename csv_deque_deduce_value<T>::type t_;\
         return csv( deque<t_>( _nil ), BOOST_PP_ENUM_PARAMS(N, _) );\
@@ -99,7 +81,6 @@ BOOST_PP_REPEAT_FROM_TO(
 )
 
 #undef BOOST_ASSIGN_V2_MACRO
-#undef BOOST_ASSIGN_V2_REST_PARAMS
 #undef BOOST_ASSIGN_V2_CSV_DEQUE_OVERLOAD_BASIC_IMPLICIT
 
 }// interpreter_aux

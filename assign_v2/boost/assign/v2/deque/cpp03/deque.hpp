@@ -12,7 +12,6 @@
 #include <boost/assign/v2/support/config/limit_functor_arity.hpp>
 #include <boost/assign/v2/support/config/limit_functor_const_non_const_arity.hpp>
 #include <boost/assign/v2/support/keyword.hpp>
-#include <boost/assign/v2/support/pp/parameter_list.hpp>
 #include <boost/assign/v2/deque/fwd.hpp>
 #include <boost/preprocessor/arithmetic.hpp>
 #include <boost/preprocessor/repetition.hpp>

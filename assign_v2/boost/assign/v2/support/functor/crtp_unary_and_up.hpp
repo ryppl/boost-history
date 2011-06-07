@@ -49,10 +49,8 @@
 #include <boost/type_traits/add_const.hpp>
 #include <boost/type_traits/is_const.hpp>
 #include <boost/utility/enable_if.hpp>
-
 #include <boost/assign/v2/support/config/limit_functor_arity.hpp>
 #include <boost/assign/v2/support/config/limit_functor_const_non_const_arity.hpp>
-#include <boost/assign/v2/support/pp/parameter_list.hpp>
 
 namespace boost{
 namespace assign{
