@@ -11,5 +11,4 @@
 #define BOOST_ASSIGN_V2_INCLUDE_DEQUE_ER_2011_HPP
 #include <boost/assign/v2/deque/conversion.hpp>
 #include <boost/assign/v2/deque/deque.hpp>
-
 #endif // BOOST_ASSIGN_V2_INCLUDE_DEQUE_ER_2011_HPP

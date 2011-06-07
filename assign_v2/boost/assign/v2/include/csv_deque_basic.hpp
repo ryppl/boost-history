@@ -9,6 +9,6 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_INCLUDE_CSV_DEQUE_BASIC_ER_2011_HPP
 #define BOOST_ASSIGN_V2_INCLUDE_CSV_DEQUE_BASIC_ER_2011_HPP
+#include <boost/assign/v2/deque/conversion.hpp>
 #include <boost/assign/v2/deque/csv_deque/csv_deque_basic.hpp>
-
 #endif // BOOST_ASSIGN_V2_INCLUDE_CSV_DEQUE_BASIC_ER_2011_HPP

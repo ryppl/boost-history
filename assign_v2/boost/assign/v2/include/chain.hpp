@@ -10,5 +10,4 @@
 #ifndef BOOST_ASSIGN_V2_INCLUDE_CHAIN_ER_2011_HPP
 #define BOOST_ASSIGN_V2_INCLUDE_CHAIN_ER_2011_HPP
 #include <boost/assign/v2/chain/chain.hpp>
-
 #endif // BOOST_ASSIGN_V2_INCLUDE_CHAIN_ER_2011_HPP
