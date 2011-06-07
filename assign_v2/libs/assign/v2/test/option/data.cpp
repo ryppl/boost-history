@@ -15,7 +15,11 @@
 #include <boost/array.hpp>
 #include <boost/assign/v2/deque.hpp>
 #include <boost/assign/v2/option/data.hpp>
+#include <boost/assign/v2/interpreter/csv/csv_basic.hpp>
+#include <boost/assign/v2/include/csv_deque.hpp>
+#include <boost/assign/v2/include/csv_put.hpp>
 #include <boost/assign/v2/include/put.hpp>
+#include <boost/assign/v2/include/deque.hpp>
 #include <boost/assign/v2/support/config/check.hpp>
 
 #include <boost/function.hpp>
@@ -70,7 +74,7 @@ namespace xxx_data{
 
             BOOST_ASSIGN_V2_CHECK(
                 boost::range::equal(
-                    as2::csv(
+                    csv(
                         as2::deque<int>( as2::_nil ) % _data,
                         1, 2, 3, 4, 5
                     ),

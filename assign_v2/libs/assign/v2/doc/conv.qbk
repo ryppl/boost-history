@@ -16,7 +16,9 @@ In code snippets under header [*Example], `boost::assign::v2::name` is displayed
 	]
 	[
 		[Csv form]
-		[ A syntax, dual to that of an associated functor, that takes the form of one function invocation]
+		[ 
+			__csv_form__
+		]
 	]
 	[
 		[Data generator]

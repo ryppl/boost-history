@@ -15,28 +15,19 @@ namespace boost{
 namespace assign{
 namespace v2{
 //[syntax_detail_keyword
-namespace keyword_aux{
 
-    struct ignore{
-        ignore(){}
-        template<typename Anything> ignore(Anything){}
+    struct kwd_ignore_
+    {
+        kwd_ignore_(){}
+        template<typename Anything> kwd_ignore_(Anything){}
     };
-    struct element/*<-*/{}/*->*/;
-    struct key/*<-*/{}/*->*/;
-    struct map/*<-*/{}/*->*/;
-    struct nil/*<-*/{}/*->*/;
-    struct use_default/*<-*/{}/*->*/;
-    struct value/*<-*/{}/*->*/;
+    struct kwd_element_/*<-*/{}/*->*/;
+    struct kwd_key_/*<-*/{}/*->*/;
+    struct kwd_map_/*<-*/{}/*->*/;
+    struct kwd_nil_/*<-*/{}/*->*/;
+    struct kwd_use_default_/*<-*/{}/*->*/;
+    struct kwd_value_/*<-*/{}/*->*/;
 
-}//keyword_aux
-
-    typedef keyword_aux::ignore         kwd_ignore_;
-    typedef keyword_aux::element        kwd_element_;
-    typedef keyword_aux::key            kwd_key_;
-    typedef keyword_aux::map            kwd_map_;
-    typedef keyword_aux::nil            kwd_nil_;
-    typedef keyword_aux::use_default    kwd_use_default_;
-    typedef keyword_aux::value          kwd_value_;
 /*<-*/namespace{/*->*/
     const kwd_ignore_ _ignore/*<-*/ = kwd_ignore_()/*->*/;
     const kwd_element_ _element/*<-*/ = {}/*->*/;

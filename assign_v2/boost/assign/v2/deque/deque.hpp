@@ -195,8 +195,7 @@ namespace result_of{
     };
 
     template<typename T, typename O>
-    struct deque_option
-    /*<-*/
+    struct deque_option/*<-*/
     {
         typedef typename result_of::deque<T>::type deque_;
         typedef typename modulo_result<deque_, O>::type type;
@@ -218,11 +217,11 @@ namespace result_of{
     {
         return deque<T>( _nil ) % Options();
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
-
-
 //<-
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 //->
+
+    // Not empty
 
     template<typename T, typename...Args>
     typename result_of::deque<T>::type
@@ -233,8 +232,6 @@ namespace result_of{
             deque<T>( v2::_nil )( std::forward<Args>(args)... )
         ));
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
-
-    // Default constructible options
 
     template<typename T, typename Options, typename...Args>
     typename result_of::deque<T>::type

@@ -123,33 +123,20 @@ void v2_put(std::size_t n, E& elapsed, C& cont, Args&&... args)
 }
 
 // V2-PIPE_PUT
-/*
-template<typename C, typename F>
-void v2_delay_put_impl(C& cont, F const& f){ cont | f; }
-
-template<typename C, typename F, typename T, typename...Args>
-void v2_delay_put_impl(C & cont, F const& f, T&& t, Args&&...args)
-{
-    v2_delay_put_impl( cont, f( std::forward<T>( t ) ), std::forward<Args>( args )... );
-}
-
 template<typename Timer, typename E, typename C, typename... Args>
-void v2_delay_put(std::size_t n, E& elapsed, C& cont, Args&&... args)
+void v2_delay_put_for_each(std::size_t n, E& elapsed, C& cont, Args&&... args)
 {
     Timer timer;
     for(std::size_t i = 0; i < n; i++)
     {
         cont.clear();
-        v2_delay_put_impl(
-            cont,
-            v2::_put,
-            std::forward<Args>( args )...
+        cont | v2::_delay_put.for_each(
+            v2::csv_deque( std::forward<Args>( args )... )
         );
     }
     elapsed = timer.elapsed();
-    assert( cont.size() == sizeof...(Args) );
+    assert( cont.size() == sizeof...( Args ) );
 }
-*/
 
 // V2-CSV_PUT
 
@@ -174,9 +161,7 @@ void v2_delay_csv_put(std::size_t n, E& elapsed, C& cont, Args&&... args)
     for(std::size_t i = 0; i < n; i++)
     {
         cont.clear();
-        cont | v2::delay_csv_put(
-            v2::ref::csv_array( std::forward<Args>( args )... )
-        );
+        cont | v2::delay_csv_put<1>( std::forward<Args>( args )... );
     }
     elapsed = timer.elapsed();
     assert( cont.size() == sizeof...( Args ) );

@@ -11,12 +11,14 @@
 #include <string>
 #include <cmath>
 #include <list>
-#include <boost/assign/v2/support/config/check.hpp>
-#include <boost/assign/v2/include/csv.hpp>
+#include <boost/assign/v2/include/csv_basic.hpp>
+#include <boost/assign/v2/include/csv_deque.hpp>
+#include <boost/assign/v2/include/csv_put_ext.hpp>
+#include <boost/assign/v2/include/deque.hpp>
 #include <boost/assign/v2/include/put.hpp>
-#include <boost/assign/v2/deque.hpp>
 #include <boost/assign/v2/option/data.hpp>
 #include <boost/assign/v2/option/modifier/mapped.hpp>
+#include <boost/assign/v2/support/config/check.hpp>
 #include <boost/lambda/lambda.hpp>
 #include <boost/mpl/assert.hpp>
 #include <boost/mpl/apply.hpp>

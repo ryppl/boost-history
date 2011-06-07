@@ -103,12 +103,10 @@ namespace interpreter_aux{
 
 namespace result_of{
 
-    template<
-        typename C/*<-*/
+    template<typename C/*<-*/
         , typename DGen
             = typename interpreter_aux::deduce_data_generator<C>::type
-        /*->*/
-    >
+    /*->*/>
     struct put/*<-*/
     {
         typedef

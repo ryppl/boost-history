@@ -168,7 +168,10 @@ namespace interpreter_aux{
             return this->for_each_impl( std::forward<R>( range ) );
         }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
-        template<int I, typename R>
+        template<
+            int I,
+            typename R  // Range of tuples, each of size I
+        >
         result_type for_each( R&& range )const/*<-*/
         {
             return this->for_each_impl<I>( std::forward<R>( range ) );

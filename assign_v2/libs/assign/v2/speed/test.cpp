@@ -183,10 +183,10 @@ void fill_vec_stat(std::size_t scale_factor,
         n, elapsed, cont, std::forward<Args>( args )... ),
        "v2_csv_put"
     )
-    //MACRO( as2::speed_aux::v2_delay_put<timer_>(
-    //    n, elapsed, cont, std::forward<Args>( args )... ),
-    //   "v2_delay_put"
-    //)
+    MACRO( as2::speed_aux::v2_delay_put_for_each<timer_>(
+        n, elapsed, cont, std::forward<Args>( args )... ),
+       "v2_delay_put_for_each"
+    )
     MACRO( as2::speed_aux::v2_delay_csv_put<timer_>(
         n, elapsed, cont, std::forward<Args>( args )... ),
        "v2_delay_csv_put"
@@ -243,18 +243,18 @@ void test( std::ostream& os )
     BOOST_STATIC_ASSERT( total_sz/(128 * n) > 0); // Invariant : k * n * m = total_sz;
 
     std::map<str_, str_> cols;
-    cols["stl_push_back"]         =     "cont.push_back( arg1 ); ...; cont.push_back( argm )";
-    cols["v1_push_back"]         =   "push_back( cont )( arg1 )...( argm )";
-    cols["v2_put"]             =   "v2::put( cont )( arg1 )...( argm )";
-    //cols["v2_delay_put"]         =   "cont | v2::_put( arg1 )...( argm )";
-    cols["v2_csv_put"]         =     "cont | v2::csv_put( cont, args )";
-    cols["v2_delay_csv_put"]     =     "cont | v2::delay_csv_put( v2::ref::csv_array( args... ) )";
-    cols["v1_list_of"]         =   "list_of( arg1 )...( argm )";
-    cols["v2_deque"]             =   "v2::deque<T>( arg1 )...( argm )";
-    cols["v2_csv_deque"]         =   "v2::csv_deque( args... )";
-    cols["v1_cref_list_of"]     =     "cref_list_of<m>( arg1 )...( argm )";
-    cols["v2_ref_array"]         =   "v2::ref::array( arg1 )...( argm )";
-    cols["v2_ref_csv_array"]    =     "v2::ref::csv_array( args...)";
+    cols["stl_push_back"] = "cont.push_back( arg1 ); ...; cont.push_back( argm )";
+    cols["v1_push_back"] = "push_back( cont )( arg1 )...( argm )";
+    cols["v2_put"] = "v2::put( cont )( arg1 )...( argm )";
+    cols["v2_delay_put_for_each"] = "cont | v2::_delay_put.for_each( v2::csv_deque( args... ) )";
+    cols["v2_csv_put"] = "cont | v2::csv_put( cont, args )";
+    cols["v2_delay_csv_put"] = "cont | v2::delay_csv_put( args...  )";
+    cols["v1_list_of"] = "list_of( arg1 )...( argm )";
+    cols["v2_deque"] =  "v2::deque<T>( arg1 )...( argm )";
+    cols["v2_csv_deque"] = "v2::csv_deque( args... )";
+    cols["v1_cref_list_of"] = "cref_list_of<m>( arg1 )...( argm )";
+    cols["v2_ref_array"] =  "v2::ref::array( arg1 )...( argm )";
+    cols["v2_ref_csv_array"] = "v2::ref::csv_array( args...)";
 
     boost::format fn("%1% : %|30t|%2%\n");
     boost::format title("[%|=90|]\n");
@@ -265,18 +265,18 @@ void test( std::ostream& os )
 
     std::map<str_, str_> defs;
     boost::format fstat("%1% value of %1% * var_scaled, over k repetitions");
-    defs["T"]             = "std::vector<int>";
-    defs["n"]             = "Control a number of loops";
-    defs["k"]             = "Control a number of loops";
-    defs["args..."]     = "list of arguments, each of type T and max size ";
-    defs["args..."]     += ( boost::format("%1%") % T_size ).str();
-    defs["var"]         = "time to eval method(args...) n times";
-    defs["var_scaled"]     = ( boost::format("%1% * var") % scale_factor ).str();
-    defs["m"]             = "size(args...)";
-    defs["min"]         = ( fstat % "min" ).str();
-    defs["average"]     = ( fstat % "average" ).str();
-    defs["min"]         = ( fstat % "max" ).str();
-    defs["cumulated"]     = ( fstat % "cumulate" ).str();
+    defs["T"] = "std::vector<int>";
+    defs["n"] = "Control a number of loops";
+    defs["k"] = "Control a number of loops";
+    defs["args..."] = "list of arguments, each of type T and max size ";
+    defs["args..."] += ( boost::format("%1%") % T_size ).str();
+    defs["var"] = "time to eval method(args...) n times";
+    defs["var_scaled"] = ( boost::format("%1% * var") % scale_factor ).str();
+    defs["m"] = "size(args...)";
+    defs["min"] = ( fstat % "min" ).str();
+    defs["average"] = ( fstat % "average" ).str();
+    defs["min"] = ( fstat % "max" ).str();
+    defs["cumulated"] = ( fstat % "cumulate" ).str();
 
     str_ notation = ( title % "Notation").str()
         + (fn % "T" % defs["T"]).str()
@@ -303,6 +303,7 @@ void test( std::ostream& os )
         methods.push_back( "v1_push_back" );
         methods.push_back( "v2_put" );
         methods.push_back( "v2_csv_put" );
+        methods.push_back( "v2_delay_put_for_each" );
         methods.push_back( "v2_delay_csv_put" );
 
         methods.push_back( "v1_list_of" );
