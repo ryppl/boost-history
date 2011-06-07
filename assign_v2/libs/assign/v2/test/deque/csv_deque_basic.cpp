@@ -27,7 +27,7 @@ namespace xxx_csv_deque_basic{
     {
         namespace as2 = boost::assign::v2;
         {
-            //[test_csv_deque_unary1
+            //[test_csv_deque_basic1
             typedef as2::result_of::csv_deque<const char[2]>::type C1;
             typedef as2::result_of::deque<char*>::type result1_;
             typedef as2::result_of::csv_deque<std::string>::type C2;
@@ -49,7 +49,7 @@ namespace xxx_csv_deque_basic{
             //]
         }
         {
-            //[test_csv_deque_unary2
+            //[test_csv_deque_basic2
             typedef std::string T;
             typedef as2::result_of::csv_deque<T>::type C;
 
@@ -68,7 +68,7 @@ namespace xxx_csv_deque_basic{
             //]
         }
         {
-            //[test_csv_deque_unary3
+            //[test_csv_deque_basic3
             typedef as2::result_of::csv_deque<int>::type C;
 
             BOOST_MPL_ASSERT((

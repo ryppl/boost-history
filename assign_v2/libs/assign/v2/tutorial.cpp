@@ -187,7 +187,7 @@ namespace tutorial_assign_v2{
         {
             //[tutorial_data
             std::vector<double> exponent;
-            /*<-*/typedef double(*fp)(double);/*->*/
+            /*<-*/typedef double(*fp)(double);//MSVC  /*->*/
             typedef function<double(double)> f_;
             /*<<Equivalent to `exponent.push_back( double( log10( x ) ) )` for [^x = 1.0, ..., 10000.0]>>*/csv(
                 put( exponent ) % ( _data = f_( /*<-*/fp(/*->*/log10/*<-*/)/*->*/ ) )
