@@ -83,7 +83,7 @@ namespace interpreter_aux{
 /**/
 
 BOOST_PP_REPEAT_FROM_TO(
-    1, // TODO zero for empty case
+    1,
     BOOST_PP_INC(BOOST_ASSIGN_V2_LIMIT_FUNCTOR_CONST_NON_CONST_ARITY),
     BOOST_ASSIGN_V2_CSV_DEQUE_CONST_NON_CONST_OVERLOAD,
     ~

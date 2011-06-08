@@ -23,7 +23,7 @@
 namespace boost{
 namespace assign{
 namespace v2{
-//[syntax_chain_chain
+//[syntax_chain_adaptor
 namespace chain_aux{/*<-*/
 
     typedef ::boost::mpl::void_ void_;/*->*/

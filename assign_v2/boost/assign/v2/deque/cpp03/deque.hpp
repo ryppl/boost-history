@@ -30,13 +30,14 @@ namespace interpreter_aux{
     {
         return deque<T>( v2::_nil )();
     }
-
+/*
     template<typename T, typename Options>
     typename result_of::deque_option<T, Options>::type
     deque()
     {
         return deque<T, Options>( v2::_nil )();
     }
+*/
 
 // Overloads for any mixture of const/non-const arguments
 

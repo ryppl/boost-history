@@ -41,6 +41,7 @@ namespace xxx_csv_deque_ext{
             typedef boost::tuple<state_&,  code_> data_;
 #endif
 //->
+
             as2::result_of::deque<
                 data_
             >::type region = as2::csv_deque<data_, 2>(
