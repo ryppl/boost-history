@@ -11,7 +11,8 @@
 #define BOOST_ASSIGN_V2_CHAIN_ER_2011_HPP
 
 #include <boost/assign/v2/chain/chain.hpp>
-// keep commented out as it is optional:
-// #include <boost/assign/v2/chain/logical_and.hpp> 
+// This header :
+// #include <boost/assign/v2/chain/operator.hpp> 
+// is commented out because operator&& overloading is controversial
 
 #endif // BOOST_ASSIGN_V2_CHAIN_ER_2011_HPP

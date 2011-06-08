@@ -15,7 +15,7 @@
 #include <boost/assign/v2/include/csv_deque_basic.hpp>
 #include <boost/assign/v2/include/chain.hpp>
 #include <boost/assign/v2/chain/check.hpp>
-#include <boost/assign/v2/chain/logical_and.hpp>
+#include <boost/assign/v2/chain/operator.hpp>
 #include <boost/next_prior.hpp>
 #include <boost/range/algorithm/copy.hpp>
 #include <boost/range/algorithm/equal.hpp>

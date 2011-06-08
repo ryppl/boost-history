@@ -12,12 +12,6 @@
 #include <boost/assign/v2/support/config/check.hpp>
 #include <libs/assign/v2/test/put/delay_csv_put.h>
 
-#if BOOST_ASSIGN_V2_ENABLE_CPP0X
-// TODO remove
-#include <iostream>
-#include <tuple>
-#endif
-
 namespace test_assign_v2{
 namespace xxx_put{
 namespace xxx_delay_csv_put{
