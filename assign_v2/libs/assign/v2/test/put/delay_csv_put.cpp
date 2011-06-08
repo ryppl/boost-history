@@ -37,7 +37,6 @@ namespace xxx_delay_csv_put{
             benchmark[ "feb" ] = 28;
             benchmark[ "mar" ] = 31;
 
-
             BOOST_ASSIGN_V2_CHECK(
                 boost::range::equal(
                     benchmark,
