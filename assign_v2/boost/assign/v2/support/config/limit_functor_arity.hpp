@@ -30,7 +30,7 @@
    functor(x[0], ..., x[n-1])         |    n
 */
 
-#define BOOST_ASSIGN_V2_LIMIT_FUNCTOR_ARITY 4
+#define BOOST_ASSIGN_V2_LIMIT_FUNCTOR_ARITY BOOST_MPL_LIMIT_METAFUNCTION_ARITY
 
 //]
 

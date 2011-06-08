@@ -14,7 +14,7 @@
 #include <boost/assign/v2/support/config/check.hpp>
 #include <boost/assign/v2/ref/array/get.hpp>
 #include <boost/assign/v2/ref/wrapper/copy.hpp>
-#include <boost/assign/v2/chain/chain.hpp>
+#include <boost/assign/v2/chain/adaptor.hpp>
 #include <boost/assign/v2/chain/meta.hpp>
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/identity.hpp>

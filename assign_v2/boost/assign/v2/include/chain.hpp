@@ -9,5 +9,5 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_V2_INCLUDE_CHAIN_ER_2011_HPP
 #define BOOST_ASSIGN_V2_INCLUDE_CHAIN_ER_2011_HPP
-#include <boost/assign/v2/chain/chain.hpp>
+#include <boost/assign/v2/chain/adaptor.hpp>
 #endif // BOOST_ASSIGN_V2_INCLUDE_CHAIN_ER_2011_HPP

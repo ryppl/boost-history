@@ -7,7 +7,7 @@
 This is a header only template library that depends on __url_boost__. Accordingly, the latter has to be in the compiler's search path, 
 and using a given feature of __url_boost_assign_v2__ only requires including the corresponding header file. Under __url_cpp03__ 
 compilation time may be long so it is advised to include headers selectively 
-[footnote As an indication, compiling all of [@../../test/ [^libs/assign/v2/test]] takes about 6 mn using __url_cpp03__, 
+[footnote As an indication, compiling all of [@../../test/ [^libs/assign/v2/test]] takes about 7 mn using __url_cpp03__, 
 and 1 mn using __url_cpp0x__, under the machine specifaction given [link perf here].].
 
 Headers can be looked for by module or by identifier:
