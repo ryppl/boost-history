@@ -12,7 +12,7 @@
 [def __osx_boost_rev__			[^v1.45]]
 [def __ms_boost_rev__			[^v1.46]]
 [def __ubu_boost_rev__			[^v1.45]]
-[def __osx_as2_rev__			[^r72460]]
+[def __osx_as2_rev__			[^r72460]] [/72520]
 [def __ms_as2_rev__				[^r71798]]
 [def __ubu_as2_rev__			[^r71798]]
 

@@ -204,8 +204,8 @@
 [def __fun_csv_deque__									csv_deque]
 [def __fun_csv_put__									csv_put]
 [def __fun_deque__										deque]
-[def __fun_delay_csv_put__								delay_csv_put]
-[def __fun_delay_put__									delay_put]
+[def __fun_do_csv_put__									do_csv_put]
+[def __fun_do_put__										do_put]
 [def __fun_new__										new_ptr]
 [def __fun_ref_array__									ref::array]
 [def __fun_ref_csv_array__								ref::csv_array]
@@ -269,7 +269,7 @@
 This library is an upgrade of __url_boost_assign_v1__ that redefines its functionality, with optional C++0x support 
 and new features. It is a compact interface for executing the repetitive tasks of assigning or inserting elements, 
 such as follows:
-[test_delay_csv_put_map]
+[test_do_csv_put_map]
 
 This example captures the basic features of this library:
 

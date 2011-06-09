@@ -141,7 +141,7 @@ namespace tutorial_assign_v2{
             //[tutorial_converter
             typedef std::queue<int> C;
 
-            C fifo = converter( csv_deque( 1, 2, 3 ) );
+            C fifo = /*<<Returns a container constructed like this : `C cont; put( cont ).for_each( csv_deque( 1, 2, 3 ) );`>>*/converter( csv_deque( 1, 2, 3 ) );
 
             assert( fifo.front() == 1 );
             assert( fifo.back() == 3 );
