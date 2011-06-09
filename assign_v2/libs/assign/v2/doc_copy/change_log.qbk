@@ -1,0 +1,56 @@
+[section:v2 \[Proposal for\] Upgrading from __boost__ v1.4x : __boost_assign_v2__]
+
+Library __url_boost_assign_v2__ 
+
+* is defined in namespace `boost::assign::v2` and therefore does not affect the prior version, __url_boost_assign_v1__. See section [link org Organization].
+* is a follow up to a __url_boost_assign_v2_mini_review__ in which only a subset of the present upgrade was considered. 
+
+[heading Ref & Chain]
+
+The following changes can be traced to the mini-review:
+
+* The pair of functions in __url_boost_assign_v1__, `ref_list_of` and `cref_list_of`, are replaced by a single function, 
+[link ref_array `__fun_ref_array__`], that resolves lvalue/const-ness and the number of arguments
+automatically (thus eliminating the size template parameter). 
+* A dual function, [link ref_csv_array `__fun_ref_csv_array__`], such that `__fun_ref_csv_array__(x, y, z)` is equivalent to `__fun_ref_array__( x )( y )( z )`
+* A [tpl_range_adaptor range adaptor] for chaining ranges, with special consideration for reference-arrays. See the relevant 
+[link chain section].
+
+[heading Shared design]
+
+This library addresses some demands that surfaced during the mini-review:
+
+* Generalizes the above functor/csv duality throughout the library. 
+* Supports __url_cpp0x__ features. Functions are typically variadic, declaring arguments as `Args&&...` and, where applicable, forward to an 
+implementation using `std::forward<Args>`.  Under __url_cpp03__, these aspects are emulated using overlads (Solution #3 of
+the [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2002/n1385.htm argument forwarding problem].) within some limits that can be 
+[link config configured]. 
+* Removes the ambiguity, as to whether the creation of an empty array or a default constructed element is triggered by a nullary call to a container 
+generator. See [link tut_empty here].
+
+[heading Interpreter]
+
+Library __url_boost_assign_v1__'s `list_of` and list-inserters are replaced by [link deque `__fun_deque__`] and [link put `__fun_put__`], 
+respectively. In this new framework, the two functions share most of their functionality through a crtp class, 
+[link interpreter_crtp `interpreter_crtp`][footnote The word ['interpreter] designates the same thing as ['proxy object] in 
+__url_boost_assign_v1__.]. This new design conforms to the interface described under [*Shared design] and is
+characterized by these features:
+
+* A syntax that is uniform across container categories 
+* [link option Options] for overriding semantics. Options are customizable.
+* Operator`|` for on the fly modification (piping)
+
+Some pointers:
+
+* The [link introduction introduction]'s example illustrates the first and last feature, above, and some aspects of the shared design.
+* Section [link perf Performance] contains a speed comparison of expressions under  __url_boost_assign_v1__ and their nearest analogue under __url_boost_assign_v2__
+
+[heading By-product]
+
+A by-product of the interpreter framework is a tool for [link conversion conversion]. Whereas in __url_boost_assign_v1__ it is embedded in an 
+object, such as that returned by `list_of`, in (2.0) it is a free functions. This sacrifice in convenience must be balanced against safety and code decoupling. 
+Some features were left out altogether, such as comparison operators, so as to avoid redundancy with 
+[@http://svn.boost.org/svn/boost/trunk/libs/range/doc/html/range/reference/utilities.html range utilities].
+
+[endsect][/ v2 ]
+

@@ -1,0 +1,64 @@
+[#org]
+
+[heading Headers]
+
+[#org_headers]
+
+This is a header only template library:
+
+* The directory containing __url_boost__ has to be in the compiler's search path
+* Using a given feature of __url_boost_assign_v2__ only requires including the corresponding header file.
+
+It is advised to include headers selectively, in general, but particularly using __url_cpp03__ which compiles more slowly 
+[footnote Due to heavy overloads. As an indication, compiling all of [@../../test/ [^libs/assign/v2/test]] takes about 6 mn using __url_cpp03__, 
+and 1 mn using __url_cpp0x__, under the machine specifaction given [link perf here]. ]. Headers can be looked for 
+
+* by module, in directory [@../../../../../boost/assign/v2 `boost/assign/v2`]
+* by identifier, in directory [@../../../../../boost/assign/v2/include `boost/assign/v2/include`],
+[footnote Excepted [@../../../../../boost/assign/v2/include/option.hpp `boost/assign/v2/include/option.hpp`], 
+which includes ['all] the options. See section [link option Option] for individual headers.]
+
+Accordingly, this statement
+[#full_include]:
+``
+	#include <boost/assign/v2.hpp>
+``
+
+includes all the modules [footnote A few headers are not included in that of their enclosing module. Where applicable, 
+this will be mentioned], and is equivalent to defining all identifiers, as follows:
+``
+	#include <boost/assign/v2/include.hpp>
+``
+
+The functionality of __url_boost_assign_v1__[footnote The presence of parentheses is to mark the fact that this version 
+number is retrospective : Boost.Assign and Boost.Assign (1.0) designate the same library] does not clash with that 
+versioned 2.0, although it is recommended, for coherence, to use one, but not both, in a given project. The following
+statement:
+``
+	#include <boost/assign.hpp>
+``
+
+retrieves the content of version 1.0, not 2.0. 
+
+[heading Namespaces]
+
+The `namespace` organization is summed up below:
+``
+namespace boost{
+namespace assign{
+
+    // Boost.Assign (1.0) identifiers
+
+namespace v2{
+
+    // Boost.Assign 2.0 identifiers
+
+namespace ref{
+
+    // Features pertaining to references
+	
+}// ref
+}// assign
+}// v2
+}// boost
+``
