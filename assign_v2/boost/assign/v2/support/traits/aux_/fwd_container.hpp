@@ -11,8 +11,9 @@
 #define BOOST_ASSIGN_V2_SUPPORT_TRAITS_AUX_FWD_CONTAINER_ER_2011_HPP
 #include <cstddef>
 
-// Consider this as partial replacement (not complete)
-// #include <boost/detail/container_fwd.hpp>
+// TODO include fwd headers as they become available
+// This does not seem comprehensive, yet:
+// http://svn.boost.org/svn/boost/trunk/boost/detail/container_fwd.hpp
 
 namespace std{
 
@@ -39,62 +40,27 @@ namespace std{
 
 }// std
 
+// http://www.boost.org/doc/libs/1_46_1/boost/circular_buffer_fwd.hpp
 #include <boost/circular_buffer_fwd.hpp>
+
+// http://svn.boost.org/svn/boost/trunk/boost/unordered/unordered_map_fwd.hpp
 #include <boost/unordered/unordered_map_fwd.hpp>
+
+// http://svn.boost.org/svn/boost/trunk/boost/unordered/unordered_set_fwd.hpp
 #include <boost/unordered/unordered_set_fwd.hpp>
-// Include fwd headers as they become available
 
 namespace boost{
 
     // http://www.boost.org/doc/libs/release/doc/html/array.html
     template<typename T, std::size_t size> class array;
 
-    // http://www.boost.org/doc/libs/release/libs/circular_buffer/index.html
-    //template<typename T, typename Alloc> class circular_buffer;
-
 namespace detail{
 namespace multi_array{
 
-    struct multi_array_base;
+    class multi_array_base;
 
 }// multi_array
 }// detail
-
-/*
-   template <
-        class Key,
-        class Hash, 
-        class Pred, 
-        class Alloc
-    >
-    class unordered_set;
-
-    template <
-        class Key, 
-        class Mapped,
-        class Hash,
-        class Pred,
-        class Alloc
-    >
-    class unordered_map;
-
-    template<
-        class Key, 
-        class Mapped,
-        class Hash,
-        class Pred,
-        class Alloc
-    >
-    class unordered_multimap;
-
-    template<
-        class Key,
-        class Hash, 
-        class Pred, 
-        class Alloc
-    > 
-    class unordered_multiset;
-*/
 
     // POINTER-CONTAINERS
     
