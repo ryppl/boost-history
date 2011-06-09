@@ -61,8 +61,11 @@ namespace xxx_csv_put_ext{
             //]
         }
         {
+            // Not Assignable (Container requirement) but GCC takes it:
+            //typedef const char state_ [3];
             //[test_csv_put_ext2
-            typedef const char state_ [3]; typedef int code_;
+            typedef int code_;
+            typedef std::string state_;
             state_ ct = "CT", nj = "NJ", ny = "NY";
 
 //<-

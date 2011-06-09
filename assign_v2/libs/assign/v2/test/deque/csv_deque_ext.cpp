@@ -36,8 +36,11 @@ namespace xxx_csv_deque_ext{
 //->
 
         {
+            // Not Assignable (Container requirement) but GCC takes it:
+            // typedef const char state_ [3];
             //[test_csv_deque_ext1
-            typedef const char state_ [3]; typedef int code_;
+            typedef std::string state_;
+            typedef int code_;
             state_ ct = "CT", nj = "NJ", ny = "NY";
 
             typedef tuple<state_/*<<Notice the reference>>*/&,  code_> data_;
