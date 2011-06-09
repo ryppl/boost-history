@@ -12,7 +12,7 @@
 #include <boost/assign/v2/support/config/check.hpp>
 #include <boost/assign/v2/include/csv_basic.hpp>
 #include <boost/assign/v2/include/put.hpp>
-#include <boost/assign/v2/include/delay_put.hpp>
+#include <boost/assign/v2/include/do_put.hpp>
 #include <boost/assign/v2/option/modifier/std.hpp>
 #include <boost/assign/v2/option/modifier/repeat.hpp>
 #include <boost/assign/v2/deque.hpp>
@@ -35,7 +35,7 @@ namespace xxx_repeat{
             BOOST_ASSIGN_V2_CHECK(
                 boost::range::equal(
                     cont | (
-                        as2::_delay_put % _modifier
+                        as2::_do_put % _modifier
                     ).for_each( as2::csv_deque(1, 10, 100) ),
                     as2::csv_deque( 1, 1, 10, 10, 100, 100 )
                 )

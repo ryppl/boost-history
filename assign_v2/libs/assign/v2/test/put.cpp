@@ -9,8 +9,8 @@
 //////////////////////////////////////////////////////////////////////////////
 #include <libs/assign/v2/test/put/csv_put_basic.h>
 #include <libs/assign/v2/test/put/csv_put_ext.h>
-#include <libs/assign/v2/test/put/delay_csv_put.h>
-#include <libs/assign/v2/test/put/delay_put.h>
+#include <libs/assign/v2/test/put/do_csv_put.h>
+#include <libs/assign/v2/test/put/do_put.h>
 #include <libs/assign/v2/test/put/put.h>
 #include <libs/assign/v2/test/put.h>
 
@@ -21,8 +21,8 @@ namespace xxx_put{
 
         xxx_csv_put_basic::test();
         xxx_csv_put_ext::test();
-        xxx_delay_csv_put::test();
-        xxx_delay_put::test();
+        xxx_do_csv_put::test();
+        xxx_do_put::test();
         xxx_put::test();
 
     }

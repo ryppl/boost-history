@@ -10,8 +10,8 @@
 #ifndef BOOST_ASSIGN_V2_PUT_ER_2011_HPP
 #define BOOST_ASSIGN_V2_PUT_ER_2011_HPP
 #include <boost/assign/v2/put/csv_put.hpp>
-#include <boost/assign/v2/put/delay_csv_put.hpp>
-#include <boost/assign/v2/put/delay_put.hpp>
+#include <boost/assign/v2/put/do_csv_put.hpp>
+#include <boost/assign/v2/put/do_put.hpp>
 #include <boost/assign/v2/put/put.hpp>
 
 #endif // BOOST_ASSIGN_V2_PUT_ER_2011_HPP

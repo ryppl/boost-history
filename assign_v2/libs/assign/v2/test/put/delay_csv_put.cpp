@@ -8,13 +8,13 @@
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
 #include <map>
-#include <boost/assign/v2/include/delay_csv_put.hpp>
+#include <boost/assign/v2/include/do_csv_put.hpp>
 #include <boost/assign/v2/support/config/check.hpp>
-#include <libs/assign/v2/test/put/delay_csv_put.h>
+#include <libs/assign/v2/test/put/do_csv_put.h>
 
 namespace test_assign_v2{
 namespace xxx_put{
-namespace xxx_delay_csv_put{
+namespace xxx_do_csv_put{
 
     void test(){
         namespace as2 = boost::assign::v2;
@@ -22,7 +22,7 @@ namespace xxx_delay_csv_put{
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
         // MAP
         {
-            //[test_delay_csv_put1
+            //[test_do_csv_put1
             typedef std::string month_;
             typedef int days_;
             std::map<month_, days_> q1, benchmark;
@@ -34,7 +34,7 @@ namespace xxx_delay_csv_put{
             BOOST_ASSIGN_V2_CHECK(
                 boost::range::equal(
                     benchmark,
-                    q1 | as2::delay_csv_put<2>( "jan", 31, "feb", 28, "mar", 31 )
+                    q1 | as2::do_csv_put<2>( "jan", 31, "feb", 28, "mar", 31 )
                 )
             );
             //]
@@ -42,6 +42,6 @@ namespace xxx_delay_csv_put{
 #endif
     }// test()
 
-}// xxx_delay_put
+}// xxx_do_put
 }// xxx_put
 }// xxx_test_assign

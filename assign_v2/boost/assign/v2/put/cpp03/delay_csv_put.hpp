@@ -12,7 +12,7 @@
 #include <boost/assign/v2/support/config/limit_csv_arity.hpp>
 #include <boost/assign/v2/support/config/limit_tuple_arity.hpp>
 #include <boost/assign/v2/support/pp/parameter_list.hpp>
-#include <boost/assign/v2/put/delay_csv_put.hpp>
+#include <boost/assign/v2/put/do_csv_put.hpp>
 #include <boost/tuple/tuple.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/add_reference.hpp>
@@ -24,12 +24,12 @@ namespace interpreter_aux{
 namespace result_of{
 
     template<typename T>
-    struct delay_csv_put_elem
+    struct do_csv_put_elem
         : boost::add_reference<T>
     {};
 
     template<>
-    struct delay_csv_put_elem<boost::tuples::null_type>
+    struct do_csv_put_elem<boost::tuples::null_type>
     {
         typedef boost::tuples::null_type type;
     };
@@ -43,10 +43,10 @@ namespace result_of{
             boost::tuples::null_type
         )
     >
-    struct delay_csv_put
+    struct do_csv_put
     {
 #define BOOST_ASSIGN_V2_MACRO(z, i, data)\
-    typename delay_csv_put_elem<BOOST_PP_CAT(T,i)>::type\
+    typename do_csv_put_elem<BOOST_PP_CAT(T,i)>::type\
 /**/
         typedef boost::tuple<
             BOOST_PP_ENUM(
@@ -74,18 +74,18 @@ namespace result_of{
     >\
     typename boost::lazy_enable_if_c<\
         I == BOOST_PP_SEQ_SIZE(SeqU),\
-        result_of::delay_csv_put<\
+        result_of::do_csv_put<\
             Options,\
             I,\
             BOOST_PP_SEQ_ENUM(SeqU)\
         >\
     >::type\
-    delay_csv_put\
+    do_csv_put\
     (\
         BOOST_ASSIGN_V2_CSV_PARAMETER_LIST(SeqU, N)\
     )\
     {\
-        typedef result_of::delay_csv_put<\
+        typedef result_of::do_csv_put<\
             Options,\
             I,\
             BOOST_PP_SEQ_ENUM(SeqU)\
@@ -109,18 +109,18 @@ namespace result_of{
     template<int I, BOOST_ASSIGN_V2_TPL_PARAMETER_LIST(SeqU)>\
     typename boost::lazy_enable_if_c<\
         I == BOOST_PP_SEQ_SIZE(SeqU),\
-        result_of::delay_csv_put<\
+        result_of::do_csv_put<\
             empty_list_option_,\
             I,\
             BOOST_PP_SEQ_ENUM(SeqU)\
         >\
     >::type\
-    delay_csv_put\
+    do_csv_put\
     (\
         BOOST_ASSIGN_V2_CSV_PARAMETER_LIST(SeqU, N)\
     )\
     {\
-        return delay_csv_put<\
+        return do_csv_put<\
             empty_list_option_,\
             I,\
             BOOST_PP_SEQ_ENUM(SeqU)\
@@ -183,7 +183,7 @@ BOOST_PP_REPEAT_FROM_TO(
 #undef BOOST_ASSIGN_V2_DELAY_CSV_PUT_OVERLOAD
 
 }// interpreter_aux
-using interpreter_aux::delay_csv_put;
+using interpreter_aux::do_csv_put;
 }// v2
 }// assign
 }// boost

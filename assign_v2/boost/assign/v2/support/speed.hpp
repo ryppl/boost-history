@@ -124,13 +124,13 @@ void v2_put(std::size_t n, E& elapsed, C& cont, Args&&... args)
 
 // V2-PIPE_PUT
 template<typename Timer, typename E, typename C, typename... Args>
-void v2_delay_put_for_each(std::size_t n, E& elapsed, C& cont, Args&&... args)
+void v2_do_put_for_each(std::size_t n, E& elapsed, C& cont, Args&&... args)
 {
     Timer timer;
     for(std::size_t i = 0; i < n; i++)
     {
         cont.clear();
-        cont | v2::_delay_put.for_each(
+        cont | v2::_do_put.for_each(
             v2::csv_deque( std::forward<Args>( args )... )
         );
     }
@@ -155,13 +155,13 @@ void v2_csv_put(std::size_t n, E& elapsed, C& cont, Args&&... args)
 // V2-PIPE-CSV_PUT
 
 template<typename Timer, typename E, typename C, typename... Args>
-void v2_delay_csv_put(std::size_t n, E& elapsed, C& cont, Args&&... args)
+void v2_do_csv_put(std::size_t n, E& elapsed, C& cont, Args&&... args)
 {
     Timer timer;
     for(std::size_t i = 0; i < n; i++)
     {
         cont.clear();
-        cont | v2::delay_csv_put<1>( std::forward<Args>( args )... );
+        cont | v2::do_csv_put<1>( std::forward<Args>( args )... );
     }
     elapsed = timer.elapsed();
     assert( cont.size() == sizeof...( Args ) );

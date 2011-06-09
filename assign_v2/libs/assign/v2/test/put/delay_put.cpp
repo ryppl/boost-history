@@ -13,7 +13,7 @@
 
 #include <boost/assign/v2/include/csv_deque_basic.hpp>
 #include <boost/assign/v2/include/csv_deque_ext.hpp>
-#include <boost/assign/v2/include/delay_put.hpp>
+#include <boost/assign/v2/include/do_put.hpp>
 #include <boost/assign/v2/support/config/check.hpp>
 #include <boost/assign/v2/support/config/enable_cpp0x.hpp>
 #include <boost/circular_buffer.hpp>
@@ -25,36 +25,36 @@
 #include <boost/tuple/tuple.hpp>
 #endif
 
-#include <libs/assign/v2/test/put/delay_put.h>
+#include <libs/assign/v2/test/put/do_put.h>
 
 namespace test_assign_v2{
 namespace xxx_put{
-namespace xxx_delay_put{
+namespace xxx_do_put{
 
     void test(){
 
         namespace as2 = boost::assign::v2;
         {
-            //[test_delay_put1
+            //[test_do_put1
             boost::circular_buffer<int> cb(3);
 
             BOOST_ASSIGN_V2_CHECK(
                 boost::range::equal(
-                    cb | as2::_delay_put.for_each( as2::csv_deque(1 ,2, 3) )
+                    cb | as2::_do_put.for_each( as2::csv_deque(1 ,2, 3) )
                     , as2::csv_deque(1, 2, 3)
                 )
             );
 
             BOOST_ASSIGN_V2_CHECK(
                 boost::range::equal(
-                    cb | as2::_delay_put.for_each( as2::csv_deque( 4, 5 ) ),
+                    cb | as2::_do_put.for_each( as2::csv_deque( 4, 5 ) ),
                     as2::csv_deque( 3, 4, 5 )
                 )
             );
             //]
         }
         {
-            //[test_delay_put2
+            //[test_do_put2
             typedef std::string month_; typedef int days_;
             typedef std::pair<month_, days_> p_;
 //<-
@@ -70,7 +70,7 @@ namespace xxx_delay_put{
 
             BOOST_ASSIGN_V2_CHECK(
                 boost::range::equal(
-                    q1 | as2::_delay_put.for_each<2>(
+                    q1 | as2::_do_put.for_each<2>(
                         as2::csv_deque<t_, 2>(
                             "jan", 31, "feb", 28, "mar", 31
                         )
@@ -83,7 +83,7 @@ namespace xxx_delay_put{
             //]
         }
         {
-            //[test_delay_put3
+            //[test_do_put3
             typedef std::string month_;
             typedef int days_;
             std::map<month_, days_> q1, benchmark;
@@ -102,7 +102,7 @@ namespace xxx_delay_put{
 //->
             BOOST_ASSIGN_V2_CHECK(
                 boost::range::equal(
-                    q1 | as2::_delay_put.for_each<2>(
+                    q1 | as2::_do_put.for_each<2>(
                         as2::csv_deque<t_, 2>(
                             "jan", 31, "feb", 28, "mar", 31
                         )
@@ -114,6 +114,6 @@ namespace xxx_delay_put{
         }
     }// test()
 
-}// xxx_delay_put
+}// xxx_do_put
 }// xxx_put
 }// xxx_test_assign

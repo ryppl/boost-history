@@ -12,11 +12,11 @@
 
 namespace test_assign_v2{
 namespace xxx_put{
-namespace xxx_delay_csv_put{
+namespace xxx_do_csv_put{
 
     void test();
 
-}// xxx_delay_csv_put
+}// xxx_do_csv_put
 }// xxx_put
 }// xxx_test_assign
 

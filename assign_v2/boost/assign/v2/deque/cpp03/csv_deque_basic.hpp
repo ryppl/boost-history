@@ -18,7 +18,10 @@ namespace interpreter_aux{
 
 #define BOOST_ASSIGN_V2_CSV_DEQUE_OVERLOAD_BASIC(z, N, is_const)\
     template<typename T, typename Options BOOST_PP_ENUM_TRAILING_PARAMS(N, typename T)>\
-    typename result_of::csv_deque_option<T, Options>::type\
+    typename boost::lazy_enable_if<\
+    	is_option<Options>,\
+    	result_of::csv_deque_option<T, Options>\
+    >::type\
     csv_deque(\
         BOOST_PP_ENUM_BINARY_PARAMS(N, T, BOOST_PP_EXPR_IF(is_const, const)& _)\
     )\
@@ -55,7 +58,10 @@ BOOST_PP_REPEAT_FROM_TO(
 #define BOOST_ASSIGN_V2_MACRO(z, i, data) const T& BOOST_PP_CAT(_,i)
 #define BOOST_ASSIGN_V2_CSV_DEQUE_OVERLOAD_BASIC_IMPLICIT(z, N, is_const)\
     template<typename T, typename Options>\
-    typename result_of::csv_deque_option<T, Options>::type\
+    typename boost::lazy_enable_if<\
+    	is_option<Options>,\
+    	result_of::csv_deque_option<T, Options>\
+    >::type\
     csv_deque( BOOST_PP_ENUM(N, BOOST_ASSIGN_V2_MACRO, ~) )\
     {\
         typedef typename csv_deque_deduce_value<T>::type t_;\

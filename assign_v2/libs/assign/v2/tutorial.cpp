@@ -56,12 +56,12 @@ namespace tutorial_assign_v2{
             //]
         }
         {
-            //[test_delay_csv_put_map
+            //[test_do_csv_put_map
             typedef std::map<std::string, int> map_; map_ cal;
             typedef map_::value_type p_;
 
             boost::for_each(
-                /*<<Calls `cal.insert( p_( k, x ) );` for each [^( k, x )] pair in the argurment list, and returns `cal`>>*/cal | delay_csv_put<2>( "jan", 31, "feb", 28, "mar", 31 ),
+                /*<<Calls `cal.insert( p_( k, x ) );` for each [^( k, x )] pair in the argurment list, and returns `cal`>>*/cal | do_csv_put<2>( "jan", 31, "feb", 28, "mar", 31 ),
                 std::cout
                     << lambda::bind( &p_::first, lambda::_1 ) << ':'
                     << lambda::bind( &p_::second, lambda:: _1 ) << ' '
@@ -69,11 +69,11 @@ namespace tutorial_assign_v2{
             //]
         }
         {
-            //[tutorial_delay_put
+            //[tutorial_do_put
             std::deque<int> source( 6 ), target; iota( source, 0 );
 
             range::stable_partition(
-                target | _delay_put.for_each( source ),
+                target | _do_put.for_each( source ),
                 lambda::_1 % 2
             );
             //]
@@ -205,7 +205,7 @@ namespace tutorial_assign_v2{
 
             assert(
                 range::equal(
-                    cb | delay_csv_put<push_front_, 1>( 3, 2, 1 ),
+                    cb | do_csv_put<push_front_, 1>( 3, 2, 1 ),
                     csv_deque( 1, 2, 3 )
                 )
             );

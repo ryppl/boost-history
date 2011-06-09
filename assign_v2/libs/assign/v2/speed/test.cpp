@@ -183,13 +183,13 @@ void fill_vec_stat(std::size_t scale_factor,
         n, elapsed, cont, std::forward<Args>( args )... ),
        "v2_csv_put"
     )
-    MACRO( as2::speed_aux::v2_delay_put_for_each<timer_>(
+    MACRO( as2::speed_aux::v2_do_put_for_each<timer_>(
         n, elapsed, cont, std::forward<Args>( args )... ),
-       "v2_delay_put_for_each"
+       "v2_do_put_for_each"
     )
-    MACRO( as2::speed_aux::v2_delay_csv_put<timer_>(
+    MACRO( as2::speed_aux::v2_do_csv_put<timer_>(
         n, elapsed, cont, std::forward<Args>( args )... ),
-       "v2_delay_csv_put"
+       "v2_do_csv_put"
     )
 
 // Generate containers
@@ -246,9 +246,9 @@ void test( std::ostream& os )
     cols["stl_push_back"] = "cont.push_back( arg1 ); ...; cont.push_back( argm )";
     cols["v1_push_back"] = "push_back( cont )( arg1 )...( argm )";
     cols["v2_put"] = "v2::put( cont )( arg1 )...( argm )";
-    cols["v2_delay_put_for_each"] = "cont | v2::_delay_put.for_each( v2::csv_deque( args... ) )";
+    cols["v2_do_put_for_each"] = "cont | v2::_do_put.for_each( v2::csv_deque( args... ) )";
     cols["v2_csv_put"] = "cont | v2::csv_put( cont, args )";
-    cols["v2_delay_csv_put"] = "cont | v2::delay_csv_put( args...  )";
+    cols["v2_do_csv_put"] = "cont | v2::do_csv_put( args...  )";
     cols["v1_list_of"] = "list_of( arg1 )...( argm )";
     cols["v2_deque"] =  "v2::deque<T>( arg1 )...( argm )";
     cols["v2_csv_deque"] = "v2::csv_deque( args... )";
@@ -303,8 +303,8 @@ void test( std::ostream& os )
         methods.push_back( "v1_push_back" );
         methods.push_back( "v2_put" );
         methods.push_back( "v2_csv_put" );
-        methods.push_back( "v2_delay_put_for_each" );
-        methods.push_back( "v2_delay_csv_put" );
+        methods.push_back( "v2_do_put_for_each" );
+        methods.push_back( "v2_do_csv_put" );
 
         methods.push_back( "v1_list_of" );
         methods.push_back( "v2_deque" );

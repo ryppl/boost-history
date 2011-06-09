@@ -14,6 +14,7 @@
 #include <boost/assign/v2/option/list.hpp>
 #include <boost/assign/v2/support/config/enable_cpp0x.hpp>
 #include <boost/assign/v2/support/pp/ignore.hpp>
+#include <boost/utility/enable_if.hpp>
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 #include <utility>
 
@@ -36,7 +37,10 @@ namespace interpreter_aux{
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
     template<typename T, typename Options, typename... Args>
-    typename result_of::csv_deque_option<T, Options>::type
+    typename boost::lazy_enable_if<
+    	is_option<Options>,
+    	result_of::csv_deque_option<T, Options>
+    >::type
     csv_deque(Args&& ...  args)/*<-*/
     {
         typename result_of::csv_deque_option<T, Options>::type result;

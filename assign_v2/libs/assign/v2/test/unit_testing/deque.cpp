@@ -24,9 +24,9 @@ test_suite* init_unit_test_suite( int argc, char* argv[] )
     using namespace test_assign_v2;
     {
         namespace ns = xxx_deque;
+        test->add( BOOST_TEST_CASE( &ns::xxx_deque::test ) );
         test->add( BOOST_TEST_CASE( &ns::xxx_csv_deque_basic::test ) );
         test->add( BOOST_TEST_CASE( &ns::xxx_csv_deque_ext::test ) );
-        test->add( BOOST_TEST_CASE( &ns::xxx_deque::test ) );
     }
     return test;
 }

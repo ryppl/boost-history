@@ -42,7 +42,7 @@ namespace interpreter_aux{
         int I, BOOST_ASSIGN_V2_TPL_PARAMETER_LIST(SeqU)\
     >\
     typename boost::lazy_enable_if_c<\
-        I == BOOST_PP_SEQ_SIZE(SeqU),\
+        ( I == BOOST_PP_SEQ_SIZE(SeqU) ) && ( is_option<Options>::value ),\
         result_of::csv_deque_option<T, Options>\
     >::type csv_deque\
     (\

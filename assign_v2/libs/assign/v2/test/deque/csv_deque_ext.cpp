@@ -27,20 +27,20 @@ namespace xxx_csv_deque_ext{
     void test()
     {
         namespace as2 = boost::assign::v2;
+//<-
+#if BOOST_ASSIGN_V2_ENABLE_CPP0X
+		using std;
+#else
+		using boost;
+#endif 
+//->
+        
         {
             //[test_csv_deque_ext1
             typedef const char state_ [3]; typedef int code_;
             state_ ct = "CT", nj = "NJ", ny = "NY";
 
-//<-
-#if BOOST_ASSIGN_V2_ENABLE_CPP0X
-//->
-            typedef std::tuple<state_/*<<Notice the reference>>*/&,  code_> data_;
-//<-
-#else
-            typedef boost::tuple<state_&,  code_> data_;
-#endif
-//->
+            typedef tuple<state_/*<<Notice the reference>>*/&,  code_> data_;
 
             as2::result_of::deque<
                 data_
@@ -50,23 +50,11 @@ namespace xxx_csv_deque_ext{
                 ct, 203
             );
 
-//<-
-#if BOOST_ASSIGN_V2_ENABLE_CPP0X
-//->
-            BOOST_ASSIGN_V2_CHECK( std::get<0>( region.front() ) == ny );
-            BOOST_ASSIGN_V2_CHECK( std::get<1>( region.back() ) == 203 );
-            BOOST_ASSIGN_V2_CHECK( std::get<1>( region.front() ) == 212 );
-            BOOST_ASSIGN_V2_CHECK( std::get<0>( region.back() ) == ct );
-//<-
-#endif
-//->
+            BOOST_ASSIGN_V2_CHECK( get<0>( region.front() ) == ny );
+            BOOST_ASSIGN_V2_CHECK( get<1>( region.back() ) == 203 );
+            BOOST_ASSIGN_V2_CHECK( get<1>( region.front() ) == 212 );
+            BOOST_ASSIGN_V2_CHECK( get<0>( region.back() ) == ct );
             //]
-#if! BOOST_ASSIGN_V2_ENABLE_CPP0X
-            BOOST_ASSIGN_V2_CHECK( boost::get<0>( region.front() ) == ny );
-            BOOST_ASSIGN_V2_CHECK( boost::get<1>( region.back() ) == 203 );
-            BOOST_ASSIGN_V2_CHECK( boost::get<1>( region.front() ) == 212 );
-            BOOST_ASSIGN_V2_CHECK( boost::get<0>( region.back() ) == ct );
-#endif
         }
 
     }
