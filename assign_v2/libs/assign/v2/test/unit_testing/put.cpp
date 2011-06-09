@@ -13,10 +13,7 @@
 #include <boost/test/test_tools.hpp>
 #define BOOST_ASSIGN_V2_CHECK( p ) BOOST_CHECK( p )
 
-#include <libs/assign/v2/test/put/csv_put_basic.cpp>
-#include <libs/assign/v2/test/put/csv_put_ext.cpp>
 #include <libs/assign/v2/test/put/put.cpp>
-#include <libs/assign/v2/test/put/do_csv_put.cpp>
 #include <libs/assign/v2/test/put/do_put.cpp>
 
 #include <boost/test/unit_test.hpp>
@@ -29,9 +26,6 @@ test_suite* init_unit_test_suite( int argc, char* argv[] )
         namespace ns = xxx_put;
         test->add( BOOST_TEST_CASE( &ns::xxx_put::test ) );
         test->add( BOOST_TEST_CASE( &ns::xxx_do_put::test ) );
-        test->add( BOOST_TEST_CASE( &ns::xxx_csv_put_basic::test ) );
-        test->add( BOOST_TEST_CASE( &ns::xxx_csv_put_ext::test ) );
-        test->add( BOOST_TEST_CASE( &ns::xxx_do_csv_put::test ) );
     }
     return test;
 }

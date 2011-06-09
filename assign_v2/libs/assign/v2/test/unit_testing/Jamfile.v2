@@ -19,9 +19,12 @@ test-suite assign :
     [ assign-test chain ]
     [ assign-test conversion ]
     [ assign-test deque ]
+    [ assign-test csv_deque ]
     [ assign-test interpreter ]
-    [ assign-test option ]
+    [ assign-test option_data ]
+    [ assign-test option_modifier ]
     [ assign-test put ]
+    [ assign-test csv_put ]
     [ assign-test ref ]
     [ assign-test support ]
 ;

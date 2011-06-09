@@ -17,10 +17,10 @@ template<typename ...Args> struct pack_holder{};
 template<typename I, typename PackHolder> struct pack_holder_size{};
 template<typename I, typename ...Args>
 struct pack_holder_size<
-	I, pack_holder<Args...>
+    I, pack_holder<Args...>
 >
 {
-	BOOST_STATIC_CONSTANT(I, value = sizeof...(Args) );
+    BOOST_STATIC_CONSTANT(I, value = sizeof...(Args) );
 };
 
 namespace mpl_aux{
@@ -61,8 +61,8 @@ struct collect_indices<
     I, K, N
 >
 {
-	typedef typename collect_indices<
-    	indices<I, Head..., K>,
+    typedef typename collect_indices<
+        indices<I, Head..., K>,
         I, K + 1, N
     >::type type;
 };
@@ -70,7 +70,7 @@ struct collect_indices<
 template<typename I, I N, I...Head>
 struct collect_indices<indices<I, Head...>, I, N, N>
 {
-	typedef indices<I, Head...> type;
+    typedef indices<I, Head...> type;
 };
 
 }// aux
@@ -85,22 +85,22 @@ struct args_to_indices
 
 template<typename I, I N>
 struct head_indices
-	: mpl_aux::collect_indices<
-    	indices<I>, I, 0, N
+    : mpl_aux::collect_indices<
+        indices<I>, I, 0, N
     >
 {};
 
 template<typename I, I K, I N>
 struct tail_indices
-	: mpl_aux::collect_indices<
-    	indices<I, K>, I, K + 1, N
+    : mpl_aux::collect_indices<
+        indices<I, K>, I, K + 1, N
     >
 {};
 
 template<typename I, I N>
 struct tail_indices<I, N, N>
-	: mpl_aux::collect_indices<
-    	indices<I>, I, N, N
+    : mpl_aux::collect_indices<
+        indices<I>, I, N, N
     >
 {};
 

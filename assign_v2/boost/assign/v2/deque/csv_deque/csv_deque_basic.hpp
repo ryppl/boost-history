@@ -38,8 +38,8 @@ namespace interpreter_aux{
 
     template<typename T, typename Options, typename... Args>
     typename boost::lazy_enable_if<
-    	is_option<Options>,
-    	result_of::csv_deque_option<T, Options>
+        is_option<Options>,
+        result_of::csv_deque_option<T, Options>
     >::type
     csv_deque(Args&& ...  args)/*<-*/
     {

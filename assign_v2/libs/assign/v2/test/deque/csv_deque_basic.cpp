@@ -28,18 +28,19 @@ namespace xxx_csv_deque_basic{
         namespace as2 = boost::assign::v2;
         {
             //[test_csv_deque_basic1
+            typedef std::string T;
             typedef as2::result_of::csv_deque<const char[2]>::type C1;
             typedef as2::result_of::deque<char*>::type result1_;
-            typedef as2::result_of::csv_deque<std::string>::type C2;
-            typedef as2::result_of::deque<std::string>::type result2_;
+            typedef as2::result_of::csv_deque<T>::type C2;
+            typedef as2::result_of::deque<T>::type result2_;
 
             BOOST_MPL_ASSERT(( boost::is_same<C1, result1_> ));
             BOOST_MPL_ASSERT(( boost::is_same<C2, result2_> ));
 
-            C1 deque1 = as2::csv_deque( "x", "y", "z" );
-            C2 deque2 = as2::csv_deque<std::string>( "x", "y", "z" );
+            C1 deque1 = as2::csv_deque( "x", "y", "z" ); // Implicit
+            C2 deque2 = as2::csv_deque<T>( "x", "y", "z" ); // Explicit
 
-            std::deque<std::string> benchmark;
+            std::deque<T> benchmark;
             benchmark.push_back( "x" );
             benchmark.push_back( "y" );
             benchmark.push_back( "z" );

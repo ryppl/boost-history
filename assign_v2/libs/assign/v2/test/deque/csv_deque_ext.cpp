@@ -29,12 +29,12 @@ namespace xxx_csv_deque_ext{
         namespace as2 = boost::assign::v2;
 //<-
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
-		using std;
+        using namespace std;
 #else
-		using boost;
-#endif 
+        using namespace boost;
+#endif
 //->
-        
+
         {
             //[test_csv_deque_ext1
             typedef const char state_ [3]; typedef int code_;
