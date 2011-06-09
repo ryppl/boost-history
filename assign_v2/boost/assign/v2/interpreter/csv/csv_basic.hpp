@@ -34,6 +34,9 @@ namespace interpreter_aux{
     }BOOST_ASSIGN_V2_IGNORE(/*->*/;/*<-*/)/*->*/
 
 }// interpreter_aux
+
+using interpreter_aux::csv;
+
 //]
 }// v2
 }// assign

@@ -154,6 +154,8 @@ BOOST_PP_REPEAT_FROM_TO(
 
 }// interpreter_aux
 
+using interpreter_aux::csv;
+
 }// v2
 }// assign
 }// boost
