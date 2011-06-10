@@ -1,0 +1,82 @@
+[def __pass__ Yes]
+[def __fail__ No]
+
+[#containers]
+
+Known support for invoking `__fun_put__( __cont__ )( __args1__ )...( __argsn__ )` is summarized below [footnote Known lack of support means that the
+library is unable to provide a default implementation. The user may able to get around it by supplying an option :  
+`( __fun_put__( __cont__ )  % __option__ )( __args1__ )...( __argsn__ )`].
+
+
+[table
+	[
+		[Container]
+		[/Supported]
+	]
+	[	
+		[`boost::array`]
+		[/__pass__]
+	]
+	[	
+		[`boost::circular_buffer`]
+		[/__pass__]
+	]
+	[	
+		[`boost::multi_array`]
+		[/__pass__]
+	]
+	[	[`boost::ptr_array`]
+		[/__pass__]
+	]
+	[	[`boost::ptr_circular_buffer`]
+		[/__pass__]
+	]
+	[	[`boost::ptr_deque`]
+		[/__pass__]
+	]
+	[	[`boost::ptr_list`]
+		[/__pass__]
+	]
+	[		
+		[`boost::ptr_map`]
+		[/__pass__]
+	]
+	[		
+		[`boost::ptr_set`]
+		[/__pass__]
+	]
+	[	
+		[`boost::ptr_unordered_map`]
+		[/__pass__]
+	]
+	[	
+		[`boost::ptr_unordered_set`]
+		[/__pass__]
+	]
+	[	
+		[`boost::ptr_vector`]
+		[/__pass__]
+	]
+	[	[`std::deque`]
+		[/__pass__]
+	]
+	[	[`std::list`]
+		[/__pass__]
+	]
+	[	[`std::map`]
+		[/__pass__]
+	]
+	[	[`std::queue`]
+		[/__pass__]
+	]
+	[	[`std::set`]
+		[/__pass__]
+	]
+	[	[`std::stack`]
+		[/__pass__]
+	]
+	[	
+		[`std::vector`]
+		[/__pass__]
+	]
+]
