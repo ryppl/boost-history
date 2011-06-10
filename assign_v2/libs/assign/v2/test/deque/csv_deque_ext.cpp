@@ -12,6 +12,7 @@
 #include <boost/assign/v2/support/config/check.hpp>
 
 #include <boost/assign/v2/support/config/enable_cpp0x.hpp>
+#include <boost/config.hpp>
 #if BOOST_ASSIGN_V2_ENABLE_CPP0X
 #include <tuple>
 #else
@@ -42,8 +43,16 @@ namespace xxx_csv_deque_ext{
             typedef std::string state_;
             typedef int code_;
             state_ ct = "CT", nj = "NJ", ny = "NY";
-
+//<-
+// TODO elucidate the runtime failed assertation
+#if BOOST_MSVC
+            typedef tuple<state_,  code_> data_;
+#else
+//->
             typedef tuple<state_/*<<Notice the reference>>*/&,  code_> data_;
+//<-
+#endif
+//->
 
             as2::result_of::deque<
                 data_
@@ -54,9 +63,9 @@ namespace xxx_csv_deque_ext{
             );
 
             BOOST_ASSIGN_V2_CHECK( get<0>( region.front() ) == ny );
-            BOOST_ASSIGN_V2_CHECK( get<1>( region.back() ) == 203 );
-            BOOST_ASSIGN_V2_CHECK( get<1>( region.front() ) == 212 );
             BOOST_ASSIGN_V2_CHECK( get<0>( region.back() ) == ct );
+            BOOST_ASSIGN_V2_CHECK( get<1>( region.front() ) == 212 );
+            BOOST_ASSIGN_V2_CHECK( get<1>( region.back() ) == 203 );
             //]
         }
 

@@ -63,20 +63,16 @@ namespace xxx_csv_put_ext{
         {
             // Not Assignable (Container requirement) but GCC takes it:
             //typedef const char state_ [3];
+#if BOOST_ASSIGN_V2_ENABLE_CPP0X
+            using namespace std;
+#else
+            using namespace boost;
+#endif
             //[test_csv_put_ext2
             typedef int code_;
             typedef std::string state_;
             state_ ct = "CT", nj = "NJ", ny = "NY";
-
-//<-
-#if BOOST_ASSIGN_V2_ENABLE_CPP0X
-//->
-            typedef std::tuple<state_/*<<Notice the reference>>*/&,  code_> data_;
-//<-
-#else
-            typedef boost::tuple<state_&,  code_> data_;
-#endif
-//->
+            typedef tuple<state_/*<<Notice the reference>>*/&,  code_> data_;
             std::deque< data_ > region;
 
             as2::csv_put<2>(
@@ -86,23 +82,11 @@ namespace xxx_csv_put_ext{
                 ct, 203
             );
 
-//<-
-#if BOOST_ASSIGN_V2_ENABLE_CPP0X
-//->
-            BOOST_ASSIGN_V2_CHECK( std::get<0>( region.front() ) == ny );
-            BOOST_ASSIGN_V2_CHECK( std::get<1>( region.back() ) == 203 );
-            BOOST_ASSIGN_V2_CHECK( std::get<1>( region.front() ) == 212 );
-            BOOST_ASSIGN_V2_CHECK( std::get<0>( region.back() ) == ct );
-//<-
-#endif
-//->
+            BOOST_ASSIGN_V2_CHECK( get<0>( region.front() ) == ny );
+            BOOST_ASSIGN_V2_CHECK( get<1>( region.back() ) == 203 );
+            BOOST_ASSIGN_V2_CHECK( get<1>( region.front() ) == 212 );
+            BOOST_ASSIGN_V2_CHECK( get<0>( region.back() ) == ct );
             //]
-#if! BOOST_ASSIGN_V2_ENABLE_CPP0X
-            BOOST_ASSIGN_V2_CHECK( boost::get<0>( region.front() ) == ny );
-            BOOST_ASSIGN_V2_CHECK( boost::get<1>( region.back() ) == 203 );
-            BOOST_ASSIGN_V2_CHECK( boost::get<1>( region.front() ) == 212 );
-            BOOST_ASSIGN_V2_CHECK( boost::get<0>( region.back() ) == ct );
-#endif
         }
         // MAP
         {

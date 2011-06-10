@@ -54,18 +54,15 @@ namespace xxx_do_put{
             //]
         }
         {
+#if BOOST_ASSIGN_V2_ENALBE_CPP0X
+			using namespace std;
+#else
+			using namespace boost;
+#endif
             //[test_do_put2
             typedef std::string month_; typedef int days_;
             typedef std::pair<month_, days_> p_;
-//<-
-#if BOOST_ASSIGN_V2_ENALBE_CPP0X
-//->
-            typedef std::tuple<month_, days_> t_;
-//<-
-#else
-            typedef boost::tuple<month_, days_> t_;
-#endif
-//->
+            typedef tuple<month_, days_> t_;
             std::deque<p_> q1;
 
             BOOST_ASSIGN_V2_CHECK(
@@ -83,6 +80,11 @@ namespace xxx_do_put{
             //]
         }
         {
+#if BOOST_ASSIGN_V2_ENALBE_CPP0X
+			using namespace std;
+#else
+			using namespace boost;
+#endif
             //[test_do_put3
             typedef std::string month_;
             typedef int days_;
@@ -91,15 +93,8 @@ namespace xxx_do_put{
             benchmark[ "jan" ] = 31;
             benchmark[ "feb" ] = 28;
             benchmark[ "mar" ] = 31;
-//<-
-#if BOOST_ASSIGN_V2_ENABLE_CPP0X
-//->
-            typedef std::tuple<const char (&)[4], int> t_;
-//<-
-#else
-            typedef boost::tuple<const char (&)[4], int> t_;
-#endif
-//->
+            typedef tuple<std::string, int> t_;
+
             BOOST_ASSIGN_V2_CHECK(
                 boost::range::equal(
                     q1 | as2::_do_put.for_each<2>(
