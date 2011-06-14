@@ -45,21 +45,13 @@ namespace client { namespace code_gen
 
     void function::add_var(std::string const& name)
     {
-        variables[name] = variables.size();
+        std::size_t n = variables.size();
+        variables[name] = n;
     }
 
     void function::link_to(std::string const& name, std::size_t address)
     {
         function_calls[address] = name;
-    }
-
-    void function::print_variables(std::vector<int> const& stack) const
-    {
-        typedef std::pair<std::string, int> pair;
-        BOOST_FOREACH(pair const& p, variables)
-        {
-            std::cout << "    " << p.first << ": " << stack[p.second] << std::endl;
-        }
     }
 
     void function::print_assembler() const
@@ -361,20 +353,28 @@ namespace client { namespace code_gen
     bool compiler::operator()(ast::variable_declaration const& x)
     {
         BOOST_ASSERT(current != 0);
-        int const* p = current->find_var(x.assign.lhs.name);
+        int const* p = current->find_var(x.lhs.name);
         if (p != 0)
         {
-            std::cout << x.assign.lhs.id << std::endl;
-            error_handler(x.assign.lhs.id, "Duplicate variable: " + x.assign.lhs.name);
+            std::cout << x.lhs.id << std::endl;
+            error_handler(x.lhs.id, "Duplicate variable: " + x.lhs.name);
             return false;
         }
-        bool r = (*this)(x.assign.rhs);
-        if (r) // don't add the variable if the RHS fails
+        if (x.rhs) // if there's an RHS initializer
         {
-            current->add_var(x.assign.lhs.name);
-            current->op(op_store, *current->find_var(x.assign.lhs.name));
+            bool r = (*this)(*x.rhs);
+            if (r) // don't add the variable if the RHS fails
+            {
+                current->add_var(x.lhs.name);
+                current->op(op_store, *current->find_var(x.lhs.name));
+            }
+            return r;
         }
-        return r;
+        else
+        {
+            current->add_var(x.lhs.name);
+        }
+        return true;
     }
 
     bool compiler::operator()(ast::statement const& x)

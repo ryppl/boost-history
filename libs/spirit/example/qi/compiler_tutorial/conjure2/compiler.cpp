@@ -4,6 +4,7 @@
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 =============================================================================*/
+#include "config.hpp"
 #include "compiler.hpp"
 #include "vm.hpp"
 #include <boost/foreach.hpp>
@@ -45,7 +46,8 @@ namespace client { namespace code_gen
 
     void function::add_var(std::string const& name)
     {
-        variables[name] = variables.size();
+        std::size_t n = variables.size();
+        variables[name] = n;
     }
 
     void function::link_to(std::string const& name, std::size_t address)
@@ -261,8 +263,8 @@ namespace client { namespace code_gen
             case ast::op_greater: current->op(op_gt); break;
             case ast::op_greater_equal: current->op(op_gte); break;
 
-            case ast::op_and: current->op(op_and); break;
-            case ast::op_or: current->op(op_or); break;
+            case ast::op_logical_or: current->op(op_or); break;
+            case ast::op_logical_and: current->op(op_and); break;
             default: BOOST_ASSERT(0); return false;
         }
         return true;
@@ -275,9 +277,9 @@ namespace client { namespace code_gen
             return false;
         switch (x.operator_)
         {
-            case ast::op_negative: current->op(op_neg); break;
+            case ast::op_minus: current->op(op_neg); break;
             case ast::op_not: current->op(op_not); break;
-            case ast::op_positive: break;
+            case ast::op_plus: break;
             default: BOOST_ASSERT(0); return false;
         }
         return true;
@@ -321,22 +323,77 @@ namespace client { namespace code_gen
     namespace
     {
         int precedence[] = {
-            1, // op_equal
-            1, // op_not_equal
-            2, // op_less
-            2, // op_less_equal
-            2, // op_greater
-            2, // op_greater_equal
-            3, // op_and
-            3, // op_or
-            4, // op_plus
-            4, // op_minus
-            5, // op_times
-            5, // op_divide
-            6, // op_positive
-            6, // op_negative
-            6  // op_not
+            // precedence 1
+            1, // op_comma
+
+            // precedence 2
+            2, // op_assign
+            2, // op_plus_assign
+            2, // op_minus_assign
+            2, // op_times_assign
+            2, // op_divide_assign
+            2, // op_mod_assign
+            2, // op_bit_and_assign
+            2, // op_bit_xor_assign
+            2, // op_bitor_assign
+            2, // op_shift_left_assign
+            2, // op_shift_right_assign
+
+            // precedence 3
+            3, // op_logical_or
+
+            // precedence 4
+            4, // op_logical_and
+
+            // precedence 5
+            5, // op_bit_or
+
+            // precedence 6
+            6, // op_bit_xor
+
+            // precedence 7
+            7, // op_bit_and
+
+            // precedence 8
+            8, // op_equal
+            8, // op_not_equal
+
+            // precedence 9
+            9, // op_less
+            9, // op_less_equal
+            9, // op_greater
+            9, // op_greater_equal
+
+            // precedence 10
+            10, // op_shift_left
+            10, // op_shift_right
+
+            // precedence 11
+            11, // op_plus
+            11, // op_minus
+
+            // precedence 12
+            12, // op_times
+            12, // op_divide
+            12, // op_mod
+
+            // precedence 13
+            13, // op_positive
+            13, // op_negative
+            13, // op_pre_incr
+            13, // op_pre_decr
+            13, // op_compl
+            13, // op_not
+
+            // precedence 14
+            14, // op_post_incr
+            14  // op_post_decr
         };
+    }
+
+    inline int get_precedence(ast::optoken op)
+    {
+        return precedence[op & ~ast::op_mask];
     }
 
     // The Shunting-yard algorithm
@@ -345,17 +402,17 @@ namespace client { namespace code_gen
         std::list<ast::operation>::const_iterator& rbegin,
         std::list<ast::operation>::const_iterator rend)
     {
-        while ((rbegin != rend) && (precedence[rbegin->operator_] >= min_precedence))
+        while ((rbegin != rend) && (get_precedence(rbegin->operator_) >= min_precedence))
         {
             ast::optoken op = rbegin->operator_;
             if (!boost::apply_visitor(*this, rbegin->operand_))
                 return false;
             ++rbegin;
 
-            while ((rbegin != rend) && (precedence[rbegin->operator_] > precedence[op]))
+            while ((rbegin != rend) && (get_precedence(rbegin->operator_) > get_precedence(op)))
             {
                 ast::optoken next_op = rbegin->operator_;
-                compile_expression(precedence[next_op], rbegin, rend);
+                compile_expression(get_precedence(next_op), rbegin, rend);
             }
             (*this)(op);
         }
