@@ -248,7 +248,7 @@ void test( std::ostream& os )
     cols["v2_put"] = "v2::put( cont )( arg1 )...( argm )";
     cols["v2_do_put_for_each"] = "cont | v2::_do_put.for_each( v2::csv_deque( args... ) )";
     cols["v2_csv_put"] = "cont | v2::csv_put( cont, args )";
-    cols["v2_do_csv_put"] = "cont | v2::do_csv_put( args...  )";
+    cols["v2_do_csv_put"] = "cont | v2::do_csv_put<1>( args...  )";
     cols["v1_list_of"] = "list_of( arg1 )...( argm )";
     cols["v2_deque"] =  "v2::deque<T>( arg1 )...( argm )";
     cols["v2_csv_deque"] = "v2::csv_deque( args... )";
