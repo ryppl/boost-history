@@ -1,0 +1,226 @@
+[import ../test/put/csv_put_basic.cpp]
+[import ../test/put/csv_put_ext.cpp]
+[import ../test/put/do_csv_put.cpp]
+[import ../test/put/do_put.cpp]
+[import ../test/put/put.cpp]
+
+[heading Header]
+[@../../../../../boost/assign/v2/put.hpp [^boost/assign/v2/put.hpp]]
+
+[heading Description]
+Assigning or inserting elments of a container
+
+[section:csv_put Csv_put]
+
+[#csv_put]
+
+[heading Header]
+[@../../../../../boost/assign/v2/put/csv_put.hpp [^boost/assign/v2/put/csv_put.hpp]]
+
+[heading Description]
+__csv_form__
+
+[section:csv_put_basic Csv_put_basic]
+[#csv_put_basic]
+
+[heading Header]
+[@../../../../../boost/assign/v2/put/csv_put/csv_put_basic.hpp [^boost/assign/v2/put/csv_put/csv_put_basic.hpp]]
+
+[heading Description]
+__csv_form_basic__
+
+[heading Synopsis]
+[import ../../../../boost/assign/v2/put/csv_put/csv_put_basic.hpp]
+[syntax_csv_put_basic]
+
+[heading Semantics]
+
+[table
+	[
+		[Expression]
+		[Description]
+	]
+	[
+		[`__fun_csv_put__( __cont__, __args__)`]
+		[`__fun_put__( __cont__ )( __arg__1 ) ...( __argn__ )`]
+	]
+]
+
+[heading Example]
+
+[#ex_csv_put_basic]
+
+[*Example1]
+[test_csv_put_basic1]
+
+[*Example2]
+[test_csv_put_basic2]
+
+[*Example3]
+[test_csv_put_basic3]
+
+[*Example4]
+[test_csv_put_basic4]
+
+[*Example5]
+[test_csv_put_basic5]
+
+[*Example6]
+[test_csv_put_basic6]
+
+[*Example7]
+[test_csv_put_basic7]
+
+[endsect][/csv_put_basic]
+[section:csv_put_ext Csv_put_ext]
+[#csv_put_ext]
+
+[heading Header]
+[@../../../../../boost/assign/v2/put/csv_put/csv_put_ext.hpp [^boost/assign/v2/put/csv_put/csv_put_ext.hpp]]
+
+[heading Description]
+__csv_form_ext__
+
+[heading Synopsis]
+[import ../../../../boost/assign/v2/put/csv_put/csv_put_ext.hpp]
+[syntax_csv_put_ext]
+
+[heading Semantics]
+
+[table
+	[
+		[Expression]
+		[Description]
+	]
+	[
+		[`__fun_csv_put__<I>( __cont__,  args0, ..., arg( I-1 ), ..., args(n-1)I, ..., arg( nI - 1 ) )`]
+		[`__fun_put__( __cont__ )(  args0, ..., arg( I-1 ) ) ... ( args(n-1)I, ..., arg( nI - 1 ) )`]
+	]
+]
+
+[heading Example]
+
+[#ex_csv_put_ext]
+
+[*Example1]
+[test_csv_put_ext1]
+
+[*Example2]
+[test_csv_put_ext2]
+
+[*Example3]
+[test_csv_put_ext3]
+
+[*Example4]
+[test_csv_put_ext4]
+
+[endsect][/ csv_put_ext]
+[endsect][/ csv_put]
+[section:do_csv_put Do_csv_put]
+[#do_csv_put]
+
+[heading Header]
+[@../../../../../boost/assign/v2/put/do_csv_put.hpp [^boost/assign/v2/put/do_csv_put.hpp]]
+
+[heading Description]
+Piping version of [link csv_put `__fun_csv_put__`]
+
+[heading Synopsis]
+[import ../../../../boost/assign/v2/put/do_csv_put.hpp]
+[syntax_do_csv_put]
+
+[heading Semantics]
+
+[table
+	[
+		[Expression]
+		[Description]
+	]
+	[	
+		[`__cont__ | do_csv_put<I>( args0, ..., arg( I-1 ), ..., args(n-1)I, ..., arg( nI - 1 ) )`]
+		[`__fun_csv_put__<I>( __cont__,  args0, ..., arg( I-1 ), ..., args(n-1)I, ..., arg( nI - 1 ) ); return __cont__;`]
+	]
+]
+
+
+[heading Example]
+
+[#ex_do_csv_put]
+
+[*Example1]
+[test_do_csv_put1]
+
+[endsect][/do_csv_put]
+[section:do_put Do_put]
+[#do_put]
+
+[heading Header]
+[@../../../../../boost/assign/v2/put/do_put.hpp [^boost/assign/v2/put/do_put.hpp]]
+
+[heading Description]
+Piping version of [link csv_put `__fun_put__`]. Only overloads of `for_each`, for now, are implemented.
+
+[heading Synopsis]
+[import ../../../../boost/assign/v2/put/do_put.hpp]
+[syntax_do_put]
+
+[heading Semantics]
+
+
+[table
+	[
+		[Expression]
+		[Description]
+	]
+	[	
+		[`__cont__ | _do_put.for_each<I>( __range__ )`]
+		[`__fun_put__.for_each<I>( __cont__, __range__ ); return __cont__`]
+	]
+	[	
+		[`__cont__ | _do_put.for_each( __range__ )`]
+		[`__fun_put__.for_each( __cont__, __range__ ); return __cont__`]
+	]
+]
+
+
+[heading Example]
+
+[#ex_do_put]
+
+[*Example1]
+[test_do_put1]
+
+[endsect][/do_put]
+[section:put Put]
+[#put]
+
+[heading Header]
+[@../../../../../boost/assign/v2/put/put.hpp [^boost/assign/v2/put/put.hpp]]
+
+[heading Description]
+__functor_form__
+
+[heading Synopsis]
+[import ../../../../boost/assign/v2/put/put.hpp]
+[syntax_put]
+
+[heading Semantics]
+
+See [link interpreter_crtp `interpreter_crtp<>`] from which it inherits.
+
+[heading Example]
+
+[#ex_put]
+[*Example1]
+[test_put1]
+
+[*Example2]
+[test_put2]
+
+[*Example3]
+[test_put3]
+
+[*Example4]
+[test_put4]
+
+[endsect][/put]

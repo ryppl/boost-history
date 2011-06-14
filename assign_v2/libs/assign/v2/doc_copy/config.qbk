@@ -1,0 +1,18 @@
+[#config]
+
+[import ../../../../boost/assign/v2/support/config/limit_functor_const_non_const_arity.hpp]
+[import ../../../../boost/assign/v2/support/config/limit_functor_arity.hpp]
+[import ../../../../boost/assign/v2/support/config/limit_csv_arity.hpp]
+
+[tpl_module
+	[@../../../../../boost/assign/v2/support/config/limit_arity.hpp `boost/assign/v2/support/config/limit_arity.hpp`][br]
+	[@../../../../../boost/assign/v2/support/config/limit_csv_arity.hpp `boost/assign/v2/support/config/limit_csv_arity.hpp`][br]
+	[@../../../../../boost/assign/v2/support/config/limit_lvalue_const_arity.hpp `boost/assign/v2/support/config/limit_lvalue_const_arity.hpp`]
+	..Constants that control arity of functors and csv functions, throughout this library, under __url_cpp03__ (not __url_cpp0x__)
+]
+
+[heading Synopsis]
+[limit_functor_const_non_const_arity]
+[limit_functor_arity]
+[limit_csv_arity]
+

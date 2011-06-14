@@ -1,0 +1,999 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Put</title>
+<link rel="stylesheet" href="../../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="../../index.html" title="Chapter&#160;1.&#160;Boost.Assign 2.0">
+<link rel="up" href="../reference.html" title="Reference">
+<link rel="prev" href="option.html" title="Option">
+<link rel="next" href="ref.html" title="Ref">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../boost.png"></td>
+<td align="center"><a href="../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="option.html"><img src="../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="ref.html"><img src="../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_assign_v2.reference.put"></a><a class="link" href="put.html" title="Put">Put</a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="put.html#boost_assign.reference.put.csv_put">Csv_put</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="put.html#boost_assign.reference.put.csv_put.csv_put_basic">Csv_put_basic</a></span></dt>
+<dt><span class="section"><a href="put.html#boost_assign.reference.put.csv_put.csv_put_ext">Csv_put_ext</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="put.html#boost_assign.reference.put.do_csv_put">Do_csv_put</a></span></dt>
+<dt><span class="section"><a href="put.html#boost_assign.reference.put.do_put">Do_put</a></span></dt>
+<dt><span class="section"><a href="put.html#boost_assign.reference.put.put">Put</a></span></dt>
+</dl></div>
+<a name="boost_assign.reference.put.header"></a><h5>
+<a name="id36368811"></a>
+        <a class="link" href="put.html#boost_assign.reference.put.header">Header</a>
+      </h5>
+<p>
+        <a href="../../../../../../../boost/assign/v2/put.hpp" target="_top"><code class="literal">boost/assign/v2/put.hpp</code></a>
+      </p>
+<a name="boost_assign.reference.put.description"></a><h5>
+<a name="id36368840"></a>
+        <a class="link" href="put.html#boost_assign.reference.put.description">Description</a>
+      </h5>
+<p>
+        Assigning or inserting elments of a container
+      </p>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_assign.reference.put.csv_put"></a><a class="link" href="put.html#boost_assign.reference.put.csv_put" title="Csv_put">Csv_put</a>
+</h4></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="put.html#boost_assign.reference.put.csv_put.csv_put_basic">Csv_put_basic</a></span></dt>
+<dt><span class="section"><a href="put.html#boost_assign.reference.put.csv_put.csv_put_ext">Csv_put_ext</a></span></dt>
+</dl></div>
+<a name="csv_put"></a><a name="boost_assign.reference.put.csv_put.header"></a><h6>
+<a name="id36368881"></a>
+          <a class="link" href="put.html#boost_assign.reference.put.csv_put.header">Header</a>
+        </h6>
+<p>
+          <a href="../../../../../../../boost/assign/v2/put/csv_put.hpp" target="_top"><code class="literal">boost/assign/v2/put/csv_put.hpp</code></a>
+        </p>
+<a name="boost_assign.reference.put.csv_put.description"></a><h6>
+<a name="id36368912"></a>
+          <a class="link" href="put.html#boost_assign.reference.put.csv_put.description">Description</a>
+        </h6>
+<p>
+          The csv-form designates a syntax that is dual to a functor, that is charaterized
+          by an arity parameter, <code class="literal">I</code>. One invocation of the csv-form
+          with an argument list of size <code class="literal">Ixn</code> is equivalent to
+          <code class="literal">n</code> invocations of the functor, each with I arguments.
+          This form has two variants : basic (size equals one) and extended (size
+          is specified by an integer template parameter).
+        </p>
+<div class="section">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_assign.reference.put.csv_put.csv_put_basic"></a><a class="link" href="put.html#boost_assign.reference.put.csv_put.csv_put_basic" title="Csv_put_basic">Csv_put_basic</a>
+</h5></div></div></div>
+<a name="csv_put_basic"></a><a name="boost_assign.reference.put.csv_put.csv_put_basic.header"></a><h6>
+<a name="id36368973"></a>
+            <a class="link" href="put.html#boost_assign.reference.put.csv_put.csv_put_basic.header">Header</a>
+          </h6>
+<p>
+            <a href="../../../../../../../boost/assign/v2/put/csv_put/csv_put_basic.hpp" target="_top"><code class="literal">boost/assign/v2/put/csv_put/csv_put_basic.hpp</code></a>
+          </p>
+<a name="boost_assign.reference.put.csv_put.csv_put_basic.description"></a><h6>
+<a name="id36369004"></a>
+            <a class="link" href="put.html#boost_assign.reference.put.csv_put.csv_put_basic.description">Description</a>
+          </h6>
+<p>
+            The basic version of the csv-form assumes an arity of one, I = 1
+          </p>
+<a name="boost_assign.reference.put.csv_put.csv_put_basic.synopsis"></a><h6>
+<a name="id36369026"></a>
+            <a class="link" href="put.html#boost_assign.reference.put.csv_put.csv_put_basic.synopsis">Synopsis</a>
+          </h6>
+<p>
+            
+</p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">interpreter_aux</span><span class="special">{</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">C</span><span class="special">,</span> <span class="keyword">typename</span><span class="special">...</span> <span class="identifier">Args</span><span class="special">&gt;</span>
+    <span class="keyword">void</span> <span class="identifier">csv_put</span><span class="special">(</span><span class="identifier">C</span><span class="special">&amp;</span> <span class="identifier">cont</span><span class="special">,</span> <span class="identifier">Args</span><span class="special">&amp;&amp;...</span> <span class="identifier">args</span><span class="special">);</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Options</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">C</span><span class="special">,</span> <span class="keyword">typename</span><span class="special">...</span> <span class="identifier">Args</span><span class="special">&gt;</span>
+    <span class="keyword">void</span> <span class="identifier">csv_put</span><span class="special">(</span><span class="identifier">C</span><span class="special">&amp;</span> <span class="identifier">cont</span><span class="special">,</span> <span class="identifier">Args</span><span class="special">&amp;&amp;...</span> <span class="identifier">args</span><span class="special">);</span>
+
+
+<span class="special">}//</span> <span class="identifier">interpreter_aux</span>
+    <span class="keyword">using</span> <span class="identifier">interpreter_aux</span><span class="special">::</span><span class="identifier">csv_put</span><span class="special">;</span>
+</pre>
+<p>
+          </p>
+<a name="boost_assign.reference.put.csv_put.csv_put_basic.semantics"></a><h6>
+<a name="id36369304"></a>
+            <a class="link" href="put.html#boost_assign.reference.put.csv_put.csv_put_basic.semantics">Semantics</a>
+          </h6>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                    <p>
+                      Expression
+                    </p>
+                  </th>
+<th>
+                    <p>
+                      Description
+                    </p>
+                  </th>
+</tr></thead>
+<tbody><tr>
+<td>
+                    <p>
+                      <code class="computeroutput">csv_put<span class="special">(</span> cont<span class="special">,</span> args...<span class="special">)</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      <code class="computeroutput">put<span class="special">(</span> cont <span class="special">)(</span>
+                      arg<span class="number">1</span> <span class="special">)</span>
+                      <span class="special">...(</span> argn <span class="special">)</span></code>
+                    </p>
+                  </td>
+</tr></tbody>
+</table></div>
+<a name="boost_assign.reference.put.csv_put.csv_put_basic.example"></a><h6>
+<a name="id36369431"></a>
+            <a class="link" href="put.html#boost_assign.reference.put.csv_put.csv_put_basic.example">Example</a>
+          </h6>
+<a name="ex_csv_put_basic"></a><p>
+            <span class="bold"><strong>Example1</strong></span>
+          </p>
+<p>
+            
+</p>
+<pre class="programlisting"><span class="identifier">std</span><span class="special">::</span><span class="identifier">list</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">seq</span><span class="special">;</span> <span class="identifier">as2</span><span class="special">::</span><span class="identifier">csv_put</span><span class="special">(</span> <span class="identifier">seq</span><span class="special">,</span> <span class="number">1</span><span class="special">,</span> <span class="number">2</span><span class="special">,</span> <span class="number">3</span><span class="special">,</span> <span class="number">4</span><span class="special">,</span> <span class="number">5</span> <span class="special">);</span>
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">queue</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">adapter</span><span class="special">;</span> <span class="identifier">as2</span><span class="special">::</span><span class="identifier">csv_put</span><span class="special">(</span> <span class="identifier">adapter</span><span class="special">,</span> <span class="number">1</span><span class="special">,</span> <span class="number">2</span><span class="special">,</span> <span class="number">3</span><span class="special">,</span> <span class="number">4</span><span class="special">,</span> <span class="number">5</span> <span class="special">);</span>
+<span class="identifier">boost</span><span class="special">::</span><span class="identifier">array</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="number">5</span><span class="special">&gt;</span> <span class="identifier">array</span><span class="special">;</span> <span class="identifier">as2</span><span class="special">::</span><span class="identifier">csv_put</span><span class="special">(</span> <span class="identifier">array</span><span class="special">,</span> <span class="number">1</span><span class="special">,</span> <span class="number">2</span><span class="special">,</span> <span class="number">3</span><span class="special">,</span> <span class="number">4</span><span class="special">,</span> <span class="number">5</span> <span class="special">);</span>
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">set</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">assoc</span><span class="special">;</span> <span class="identifier">as2</span><span class="special">::</span><span class="identifier">csv_put</span><span class="special">(</span> <span class="identifier">assoc</span><span class="special">,</span> <span class="number">1</span><span class="special">,</span> <span class="number">2</span><span class="special">,</span> <span class="number">3</span><span class="special">,</span> <span class="number">4</span><span class="special">,</span> <span class="number">5</span> <span class="special">);</span>
+</pre>
+<p>
+          </p>
+<p>
+            <span class="bold"><strong>Example2</strong></span>
+          </p>
+<p>
+            
+</p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">word_</span><span class="special">;</span>
+<span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">unordered_set</span><span class="special">&lt;</span><span class="identifier">word_</span><span class="special">&gt;</span> <span class="identifier">C</span><span class="special">;</span>
+<span class="identifier">C</span> <span class="identifier">set</span><span class="special">,</span> <span class="identifier">benchmark</span><span class="special">;</span>
+
+<span class="identifier">as2</span><span class="special">::</span><span class="identifier">csv_put</span><span class="special">(</span> <span class="identifier">set</span><span class="special">,</span> <span class="string">"foo"</span><span class="special">,</span> <span class="string">"bar"</span><span class="special">,</span> <span class="string">"baz"</span> <span class="special">);</span>
+
+<span class="identifier">benchmark</span><span class="special">.</span><span class="identifier">insert</span><span class="special">(</span> <span class="string">"foo"</span> <span class="special">);</span>
+<span class="identifier">benchmark</span><span class="special">.</span><span class="identifier">insert</span><span class="special">(</span> <span class="string">"bar"</span> <span class="special">);</span>
+<span class="identifier">benchmark</span><span class="special">.</span><span class="identifier">insert</span><span class="special">(</span> <span class="string">"baz"</span> <span class="special">);</span>
+<span class="identifier">BOOST_ASSIGN_V2_CHECK</span><span class="special">(</span>
+    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">range</span><span class="special">::</span><span class="identifier">equal</span><span class="special">(</span> <span class="identifier">set</span><span class="special">,</span> <span class="identifier">benchmark</span> <span class="special">)</span>
+<span class="special">);</span>
+</pre>
+<p>
+          </p>
+<p>
+            <span class="bold"><strong>Example3</strong></span>
+          </p>
+<p>
+            
+</p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">multi_array</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="number">3</span><span class="special">&gt;</span> <span class="identifier">array3_</span><span class="special">;</span>
+<span class="keyword">typedef</span> <span class="identifier">array3_</span><span class="special">::</span><span class="identifier">size_type</span> <span class="identifier">size_</span><span class="special">;</span>
+
+<span class="keyword">typedef</span> <span class="keyword">const</span> <span class="identifier">size_</span> <span class="identifier">dim_</span><span class="special">;</span>
+<span class="identifier">dim_</span> <span class="identifier">dim1</span> <span class="special">=</span> <span class="number">2</span><span class="special">,</span> <span class="identifier">dim2</span> <span class="special">=</span> <span class="number">3</span><span class="special">,</span> <span class="identifier">dim3</span> <span class="special">=</span> <span class="number">4</span><span class="special">;</span>
+
+<span class="identifier">array3_</span> <span class="identifier">array3</span><span class="special">(</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">extents</span><span class="special">[</span><span class="identifier">dim1</span><span class="special">][</span><span class="identifier">dim2</span><span class="special">][</span><span class="identifier">dim3</span><span class="special">]</span> <span class="special">);</span>
+
+<span class="identifier">as2</span><span class="special">::</span><span class="identifier">csv_put</span><span class="special">(</span>
+    <span class="identifier">array3</span><span class="special">,</span>
+     <span class="number">0</span><span class="special">,</span>  <span class="number">1</span><span class="special">,</span>  <span class="number">2</span><span class="special">,</span>  <span class="number">3</span><span class="special">,</span>
+     <span class="number">4</span><span class="special">,</span>  <span class="number">5</span><span class="special">,</span>  <span class="number">6</span><span class="special">,</span>  <span class="number">7</span><span class="special">,</span>
+     <span class="number">8</span><span class="special">,</span>  <span class="number">9</span><span class="special">,</span> <span class="number">10</span><span class="special">,</span> <span class="number">11</span><span class="special">,</span>
+
+    <span class="number">12</span><span class="special">,</span> <span class="number">13</span><span class="special">,</span> <span class="number">14</span><span class="special">,</span> <span class="number">15</span><span class="special">,</span>
+    <span class="number">16</span><span class="special">,</span> <span class="number">17</span><span class="special">,</span> <span class="number">18</span><span class="special">,</span> <span class="number">19</span><span class="special">,</span>
+    <span class="number">20</span><span class="special">,</span> <span class="number">21</span><span class="special">,</span> <span class="number">22</span><span class="special">,</span> <span class="number">23</span>
+<span class="special">);</span>
+
+<span class="keyword">int</span> <span class="identifier">i</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+<span class="keyword">for</span><span class="special">(</span> <span class="identifier">size_</span> <span class="identifier">i1</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span> <span class="identifier">i1</span> <span class="special">&lt;</span> <span class="identifier">dim1</span><span class="special">;</span> <span class="identifier">i1</span><span class="special">++</span> <span class="special">)</span>
+<span class="special">{</span>
+    <span class="keyword">for</span><span class="special">(</span> <span class="identifier">size_</span> <span class="identifier">i2</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span> <span class="identifier">i2</span> <span class="special">&lt;</span> <span class="identifier">dim2</span><span class="special">;</span> <span class="identifier">i2</span><span class="special">++</span> <span class="special">)</span>
+    <span class="special">{</span>
+        <span class="keyword">for</span><span class="special">(</span> <span class="identifier">size_</span> <span class="identifier">i3</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span> <span class="identifier">i3</span> <span class="special">&lt;</span> <span class="identifier">dim3</span><span class="special">;</span> <span class="identifier">i3</span><span class="special">++</span> <span class="special">)</span>
+        <span class="special">{</span>
+            <span class="identifier">BOOST_ASSIGN_V2_CHECK</span><span class="special">(</span> <span class="identifier">array3</span><span class="special">[</span> <span class="identifier">i1</span> <span class="special">][</span> <span class="identifier">i2</span> <span class="special">][</span> <span class="identifier">i3</span> <span class="special">]</span> <span class="special">==</span> <span class="identifier">i</span><span class="special">++</span> <span class="special">);</span>
+        <span class="special">}</span>
+    <span class="special">}</span>
+<span class="special">}</span>
+
+</pre>
+<p>
+          </p>
+<p>
+            <span class="bold"><strong>Example4</strong></span>
+          </p>
+<p>
+            
+</p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="keyword">int</span> <span class="identifier">T</span><span class="special">;</span>
+<span class="identifier">T</span> <span class="identifier">x</span> <span class="special">=</span> <span class="number">1</span><span class="special">,</span> <span class="identifier">y</span> <span class="special">=</span> <span class="number">2</span><span class="special">,</span> <span class="identifier">z</span> <span class="special">=</span> <span class="number">3</span><span class="special">;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">ptr_array</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">,</span> <span class="number">3</span><span class="special">&gt;</span> <span class="identifier">cont</span><span class="special">;</span>
+<a class="co" name="boost_assign10co" href="put.html#boost_assign10"><img src="../../../../doc/src/images/callouts/1.png" alt="1" border="0"></a><span class="identifier">as2</span><span class="special">::</span><span class="identifier">csv_put</span><span class="special">(</span> <span class="identifier">cont</span><span class="special">,</span> <span class="identifier">x</span><span class="special">,</span> <span class="identifier">y</span><span class="special">,</span> <span class="identifier">z</span> <span class="special">);</span>
+
+<span class="identifier">BOOST_ASSIGN_V2_CHECK</span><span class="special">(</span> <span class="identifier">cont</span><span class="special">.</span><span class="identifier">front</span><span class="special">()</span> <span class="special">==</span> <span class="identifier">x</span> <span class="special">);</span>
+<span class="identifier">BOOST_ASSIGN_V2_CHECK</span><span class="special">(</span> <span class="identifier">cont</span><span class="special">.</span><span class="identifier">back</span><span class="special">()</span> <span class="special">==</span> <span class="identifier">z</span> <span class="special">);</span>
+</pre>
+<p>
+          </p>
+<div class="calloutlist"><table border="0" summary="Callout list"><tr>
+<td width="5%" valign="top" align="left"><p><a name="boost_assign10"></a><a href="#boost_assign10co"><img src="../../../../doc/src/images/callouts/1.png" alt="1" border="0"></a> </p></td>
+<td valign="top" align="left"><p>
+                Calls <code class="computeroutput"><span class="identifier">assoc</span><span class="special">[</span><span class="identifier">i</span><span class="special">++]</span>
+                <span class="special">=</span> <span class="keyword">new</span>
+                <span class="identifier">T</span><span class="special">(</span>
+                <span class="identifier">t</span> <span class="special">)</span></code>
+                for <code class="computeroutput"><span class="identifier">i</span> <span class="special">=</span>
+                <span class="number">0</span></code> and <code class="computeroutput"><span class="identifier">t</span></code><code class="literal">=
+                </code> <code class="computeroutput"><span class="identifier">x</span></code>, <code class="computeroutput"><span class="identifier">y</span></code>, and <code class="computeroutput"><span class="identifier">z</span></code>
+              </p></td>
+</tr></table></div>
+<p>
+            <span class="bold"><strong>Example5</strong></span>
+          </p>
+<p>
+            
+</p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="keyword">int</span> <span class="identifier">T</span><span class="special">;</span> <span class="identifier">T</span> <span class="identifier">x</span> <span class="special">=</span> <span class="number">1</span><span class="special">,</span> <span class="identifier">y</span> <span class="special">=</span> <span class="number">2</span><span class="special">,</span> <span class="identifier">z</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">ptr_deque</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">cont</span><span class="special">;</span>
+<a class="co" name="boost_assign11co" href="put.html#boost_assign11"><img src="../../../../doc/src/images/callouts/1.png" alt="1" border="0"></a><span class="identifier">as2</span><span class="special">::</span><span class="identifier">csv_put</span><span class="special">(</span> <span class="identifier">cont</span><span class="special">,</span> <span class="identifier">x</span><span class="special">,</span> <span class="identifier">y</span><span class="special">,</span> <span class="identifier">z</span> <span class="special">);</span>
+
+<span class="identifier">BOOST_ASSIGN_V2_CHECK</span><span class="special">(</span> <span class="identifier">cont</span><span class="special">.</span><span class="identifier">front</span><span class="special">()</span> <span class="special">==</span> <span class="identifier">x</span> <span class="special">);</span>
+<span class="identifier">BOOST_ASSIGN_V2_CHECK</span><span class="special">(</span> <span class="identifier">cont</span><span class="special">.</span><span class="identifier">back</span><span class="special">()</span> <span class="special">==</span> <span class="identifier">z</span> <span class="special">);</span>
+</pre>
+<p>
+          </p>
+<div class="calloutlist"><table border="0" summary="Callout list"><tr>
+<td width="5%" valign="top" align="left"><p><a name="boost_assign11"></a><a href="#boost_assign11co"><img src="../../../../doc/src/images/callouts/1.png" alt="1" border="0"></a> </p></td>
+<td valign="top" align="left"><p>
+                Calls <code class="computeroutput"><span class="identifier">assoc</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span>
+                <span class="keyword">new</span> <span class="identifier">T</span><span class="special">(</span> <span class="identifier">t</span> <span class="special">)</span> <span class="special">)</span></code>
+                for <code class="computeroutput"><span class="identifier">t</span></code> <code class="literal">=</code>
+                <code class="computeroutput"><span class="identifier">x</span></code>, <code class="computeroutput"><span class="identifier">y</span></code>, and <code class="computeroutput"><span class="identifier">z</span></code>
+              </p></td>
+</tr></table></div>
+<p>
+            <span class="bold"><strong>Example6</strong></span>
+          </p>
+<p>
+            
+</p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">T</span><span class="special">;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">ptr_set</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">assoc</span><span class="special">;</span>
+<span class="identifier">T</span> <span class="identifier">x</span> <span class="special">=</span> <span class="string">"isomer"</span><span class="special">,</span> <span class="identifier">y</span> <span class="special">=</span> <span class="string">"ephemeral"</span><span class="special">,</span> <span class="identifier">z</span> <span class="special">=</span> <span class="string">"prosaic"</span><span class="special">;</span>
+<span class="identifier">as2</span><span class="special">::</span><span class="identifier">csv_put</span><span class="special">(</span> <span class="identifier">assoc</span><span class="special">,</span> <span class="identifier">x</span><span class="special">,</span> <span class="identifier">z</span><span class="special">,</span> <span class="identifier">y</span> <span class="special">);</span>
+
+<span class="identifier">BOOST_ASSIGN_V2_CHECK</span><span class="special">(</span> <span class="identifier">assoc</span><span class="special">.</span><span class="identifier">count</span><span class="special">(</span> <span class="identifier">x</span> <span class="special">)</span> <span class="special">==</span> <span class="number">1</span> <span class="special">);</span>
+<span class="identifier">BOOST_ASSIGN_V2_CHECK</span><span class="special">(</span> <span class="identifier">assoc</span><span class="special">.</span><span class="identifier">count</span><span class="special">(</span> <span class="identifier">z</span> <span class="special">)</span> <span class="special">==</span> <span class="number">1</span> <span class="special">);</span>
+</pre>
+<p>
+          </p>
+<p>
+            <span class="bold"><strong>Example7</strong></span>
+          </p>
+<p>
+            
+</p>
+<pre class="programlisting"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">ptr_unordered_set</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&gt;</span> <span class="identifier">set</span><span class="special">;</span>
+<span class="identifier">as2</span><span class="special">::</span><span class="identifier">csv_put</span><span class="special">(</span> <span class="identifier">set</span><span class="special">,</span> <span class="string">"foo"</span><span class="special">,</span> <span class="string">"bar"</span><span class="special">,</span> <span class="string">"baz"</span> <span class="special">);</span>
+
+<span class="identifier">BOOST_ASSIGN_V2_CHECK</span><span class="special">(</span> <span class="identifier">set</span><span class="special">.</span><span class="identifier">count</span><span class="special">(</span> <span class="string">"foo"</span> <span class="special">)</span> <span class="special">==</span> <span class="number">1</span> <span class="special">);</span>
+<span class="identifier">BOOST_ASSIGN_V2_CHECK</span><span class="special">(</span> <span class="identifier">set</span><span class="special">.</span><span class="identifier">count</span><span class="special">(</span> <span class="string">"baz"</span> <span class="special">)</span> <span class="special">==</span> <span class="number">1</span> <span class="special">);</span>
+</pre>
+<p>
+          </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_assign.reference.put.csv_put.csv_put_ext"></a><a class="link" href="put.html#boost_assign.reference.put.csv_put.csv_put_ext" title="Csv_put_ext">Csv_put_ext</a>
+</h5></div></div></div>
+<a name="csv_put_ext"></a><a name="boost_assign.reference.put.csv_put.csv_put_ext.header"></a><h6>
+<a name="id36372450"></a>
+            <a class="link" href="put.html#boost_assign.reference.put.csv_put.csv_put_ext.header">Header</a>
+          </h6>
+<p>
+            <a href="../../../../../../../boost/assign/v2/put/csv_put/csv_put_ext.hpp" target="_top"><code class="literal">boost/assign/v2/put/csv_put/csv_put_ext.hpp</code></a>
+          </p>
+<a name="boost_assign.reference.put.csv_put.csv_put_ext.description"></a><h6>
+<a name="id36372481"></a>
+            <a class="link" href="put.html#boost_assign.reference.put.csv_put.csv_put_ext.description">Description</a>
+          </h6>
+<p>
+            In the extended version of the csv-form, arity I is specified by an integer
+            template parameter
+          </p>
+<a name="boost_assign.reference.put.csv_put.csv_put_ext.synopsis"></a><h6>
+<a name="id36372504"></a>
+            <a class="link" href="put.html#boost_assign.reference.put.csv_put.csv_put_ext.synopsis">Synopsis</a>
+          </h6>
+<p>
+            
+</p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">interpreter_aux</span><span class="special">{</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">int</span> <span class="identifier">I</span><span class="special">,</span>  <span class="keyword">typename</span> <span class="special">...</span><span class="identifier">Cast</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">C</span><span class="special">,</span> <span class="keyword">typename</span><span class="special">...</span> <span class="identifier">Args</span><span class="special">&gt;</span>
+    <span class="keyword">void</span> <span class="identifier">csv_put</span><span class="special">(</span><span class="identifier">C</span><span class="special">&amp;</span> <span class="identifier">cont</span><span class="special">,</span> <span class="identifier">Args</span><span class="special">&amp;&amp;...</span> <span class="identifier">args</span><span class="special">);</span>
+
+    <span class="comment">// Default constructible options
+</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Options</span><span class="special">,</span>
+        <span class="keyword">int</span> <span class="identifier">I</span><span class="special">,</span>  <span class="keyword">typename</span> <span class="special">...</span><span class="identifier">Cast</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">C</span><span class="special">,</span> <span class="keyword">typename</span><span class="special">...</span> <span class="identifier">Args</span><span class="special">&gt;</span>
+    <span class="keyword">void</span> <span class="identifier">csv_put</span><span class="special">(</span><span class="identifier">C</span><span class="special">&amp;</span> <span class="identifier">cont</span><span class="special">,</span> <span class="identifier">Args</span><span class="special">&amp;&amp;...</span> <span class="identifier">args</span><span class="special">);</span>
+
+<span class="special">}//</span> <span class="identifier">interpreter_aux</span>
+
+<span class="keyword">using</span> <span class="identifier">interpreter_aux</span><span class="special">::</span><span class="identifier">csv_put</span><span class="special">;</span>
+</pre>
+<p>
+          </p>
+<a name="boost_assign.reference.put.csv_put.csv_put_ext.semantics"></a><h6>
+<a name="id36372855"></a>
+            <a class="link" href="put.html#boost_assign.reference.put.csv_put.csv_put_ext.semantics">Semantics</a>
+          </h6>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                    <p>
+                      Expression
+                    </p>
+                  </th>
+<th>
+                    <p>
+                      Description
+                    </p>
+                  </th>
+</tr></thead>
+<tbody><tr>
+<td>
+                    <p>
+                      <code class="computeroutput">csv_put<span class="special">&lt;</span><span class="identifier">I</span><span class="special">&gt;(</span> cont<span class="special">,</span>
+                      <span class="identifier">args0</span><span class="special">,</span>
+                      <span class="special">...,</span> <span class="identifier">arg</span><span class="special">(</span> <span class="identifier">I</span><span class="special">-</span><span class="number">1</span>
+                      <span class="special">),</span> <span class="special">...,</span>
+                      <span class="identifier">args</span><span class="special">(</span><span class="identifier">n</span><span class="special">-</span><span class="number">1</span><span class="special">)</span><span class="identifier">I</span><span class="special">,</span>
+                      <span class="special">...,</span> <span class="identifier">arg</span><span class="special">(</span> <span class="identifier">nI</span>
+                      <span class="special">-</span> <span class="number">1</span>
+                      <span class="special">)</span> <span class="special">)</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      <code class="computeroutput">put<span class="special">(</span> cont <span class="special">)(</span>
+                      <span class="identifier">args0</span><span class="special">,</span>
+                      <span class="special">...,</span> <span class="identifier">arg</span><span class="special">(</span> <span class="identifier">I</span><span class="special">-</span><span class="number">1</span>
+                      <span class="special">)</span> <span class="special">)</span>
+                      <span class="special">...</span> <span class="special">(</span>
+                      <span class="identifier">args</span><span class="special">(</span><span class="identifier">n</span><span class="special">-</span><span class="number">1</span><span class="special">)</span><span class="identifier">I</span><span class="special">,</span>
+                      <span class="special">...,</span> <span class="identifier">arg</span><span class="special">(</span> <span class="identifier">nI</span>
+                      <span class="special">-</span> <span class="number">1</span>
+                      <span class="special">)</span> <span class="special">)</span></code>
+                    </p>
+                  </td>
+</tr></tbody>
+</table></div>
+<a name="boost_assign.reference.put.csv_put.csv_put_ext.example"></a><h6>
+<a name="id36373220"></a>
+            <a class="link" href="put.html#boost_assign.reference.put.csv_put.csv_put_ext.example">Example</a>
+          </h6>
+<a name="ex_csv_put_ext"></a><p>
+            <span class="bold"><strong>Example1</strong></span>
+          </p>
+<p>
+            
+</p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">str_</span><span class="special">;</span>
+<span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">bitset</span><span class="special">&lt;</span><span class="number">3</span><span class="special">&gt;</span> <span class="identifier">number</span><span class="special">;</span>
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="identifier">number</span><span class="special">&gt;</span> <span class="identifier">range_3bit</span><span class="special">;</span>
+
+<span class="comment">// The significance of this example comes from:
+</span><span class="comment">// Expression                               Valid
+</span><span class="comment">// number( "011" )                          No
+</span><span class="comment">// number( str_( "011" ) )                  Yes
+</span><span class="comment">// range_3bit.push_back( str_( "011" ) )    No
+</span>
+<span class="identifier">as2</span><span class="special">::</span><span class="identifier">csv_put</span><span class="special">&lt;</span><span class="number">1</span><span class="special">,</span> <a class="co" name="boost_assign12co" href="put.html#boost_assign12"><img src="../../../../doc/src/images/callouts/1.png" alt="1" border="0"></a><span class="identifier">str_</span><span class="special">&gt;(</span>
+    <span class="identifier">range_3bit</span>
+    <span class="special">,</span> <span class="string">"000"</span><span class="special">,</span> <span class="string">"001"</span><span class="special">,</span> <span class="string">"010"</span><span class="special">,</span> <span class="string">"011"</span><span class="special">,</span> <span class="string">"100"</span><span class="special">,</span> <span class="string">"101"</span><span class="special">,</span> <span class="string">"110"</span><span class="special">,</span> <span class="string">"111"</span>
+<span class="special">);</span>
+
+<span class="keyword">for</span><span class="special">(</span><span class="keyword">unsigned</span> <span class="identifier">i</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span> <span class="identifier">i</span> <span class="special">&lt;</span> <span class="identifier">range_3bit</span><span class="special">.</span><span class="identifier">size</span><span class="special">();</span> <span class="identifier">i</span><span class="special">++)</span>
+<span class="special">{</span>
+    <span class="identifier">BOOST_ASSIGN_V2_CHECK</span><span class="special">(</span> <span class="identifier">range_3bit</span><span class="special">[</span><span class="identifier">i</span><span class="special">].</span><span class="identifier">to_ulong</span><span class="special">()</span> <span class="special">==</span> <span class="identifier">i</span> <span class="special">);</span>
+<span class="special">}</span>
+</pre>
+<p>
+          </p>
+<div class="calloutlist"><table border="0" summary="Callout list"><tr>
+<td width="5%" valign="top" align="left"><p><a name="boost_assign12"></a><a href="#boost_assign12co"><img src="../../../../doc/src/images/callouts/1.png" alt="1" border="0"></a> </p></td>
+<td valign="top" align="left"><p>
+                Required
+              </p></td>
+</tr></table></div>
+<p>
+            <span class="bold"><strong>Example2</strong></span>
+          </p>
+<p>
+            
+</p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="keyword">int</span> <span class="identifier">code_</span><span class="special">;</span>
+<span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">state_</span><span class="special">;</span>
+<span class="identifier">state_</span> <span class="identifier">ct</span> <span class="special">=</span> <span class="string">"CT"</span><span class="special">,</span> <span class="identifier">nj</span> <span class="special">=</span> <span class="string">"NJ"</span><span class="special">,</span> <span class="identifier">ny</span> <span class="special">=</span> <span class="string">"NY"</span><span class="special">;</span>
+<span class="keyword">typedef</span> <span class="identifier">tuple</span><span class="special">&lt;</span><span class="identifier">state_</span><a class="co" name="boost_assign13co" href="put.html#boost_assign13"><img src="../../../../doc/src/images/callouts/1.png" alt="1" border="0"></a><span class="special">&amp;,</span>  <span class="identifier">code_</span><span class="special">&gt;</span> <span class="identifier">data_</span><span class="special">;</span>
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">deque</span><span class="special">&lt;</span> <span class="identifier">data_</span> <span class="special">&gt;</span> <span class="identifier">region</span><span class="special">;</span>
+
+<span class="identifier">as2</span><span class="special">::</span><span class="identifier">csv_put</span><span class="special">&lt;</span><span class="number">2</span><span class="special">&gt;(</span>
+    <span class="identifier">region</span><span class="special">,</span>
+    <span class="identifier">ny</span><span class="special">,</span> <span class="number">212</span><span class="special">,</span> <span class="identifier">ny</span><span class="special">,</span> <span class="number">718</span><span class="special">,</span> <span class="identifier">ny</span><span class="special">,</span> <span class="number">516</span><span class="special">,</span> <span class="identifier">ny</span><span class="special">,</span> <span class="number">914</span><span class="special">,</span>
+    <span class="identifier">nj</span><span class="special">,</span> <span class="number">210</span><span class="special">,</span> <span class="identifier">nj</span><span class="special">,</span> <span class="number">908</span><span class="special">,</span> <span class="identifier">nj</span><span class="special">,</span> <span class="number">609</span><span class="special">,</span>
+    <span class="identifier">ct</span><span class="special">,</span> <span class="number">203</span>
+<span class="special">);</span>
+
+<span class="identifier">BOOST_ASSIGN_V2_CHECK</span><span class="special">(</span> <span class="identifier">get</span><span class="special">&lt;</span><span class="number">0</span><span class="special">&gt;(</span> <span class="identifier">region</span><span class="special">.</span><span class="identifier">front</span><span class="special">()</span> <span class="special">)</span> <span class="special">==</span> <span class="identifier">ny</span> <span class="special">);</span>
+<span class="identifier">BOOST_ASSIGN_V2_CHECK</span><span class="special">(</span> <span class="identifier">get</span><span class="special">&lt;</span><span class="number">1</span><span class="special">&gt;(</span> <span class="identifier">region</span><span class="special">.</span><span class="identifier">back</span><span class="special">()</span> <span class="special">)</span> <span class="special">==</span> <span class="number">203</span> <span class="special">);</span>
+<span class="identifier">BOOST_ASSIGN_V2_CHECK</span><span class="special">(</span> <span class="identifier">get</span><span class="special">&lt;</span><span class="number">1</span><span class="special">&gt;(</span> <span class="identifier">region</span><span class="special">.</span><span class="identifier">front</span><span class="special">()</span> <span class="special">)</span> <span class="special">==</span> <span class="number">212</span> <span class="special">);</span>
+<span class="identifier">BOOST_ASSIGN_V2_CHECK</span><span class="special">(</span> <span class="identifier">get</span><span class="special">&lt;</span><span class="number">0</span><span class="special">&gt;(</span> <span class="identifier">region</span><span class="special">.</span><span class="identifier">back</span><span class="special">()</span> <span class="special">)</span> <span class="special">==</span> <span class="identifier">ct</span> <span class="special">);</span>
+</pre>
+<p>
+          </p>
+<div class="calloutlist"><table border="0" summary="Callout list"><tr>
+<td width="5%" valign="top" align="left"><p><a name="boost_assign13"></a><a href="#boost_assign13co"><img src="../../../../doc/src/images/callouts/1.png" alt="1" border="0"></a> </p></td>
+<td valign="top" align="left"><p>
+                Notice the reference
+              </p></td>
+</tr></table></div>
+<p>
+            <span class="bold"><strong>Example3</strong></span>
+          </p>
+<p>
+            
+</p>
+<pre class="programlisting"><span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">,</span> <span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">q1</span><span class="special">;</span>
+<span class="identifier">as2</span><span class="special">::</span><span class="identifier">csv_put</span><span class="special">&lt;</span><span class="number">2</span><span class="special">&gt;(</span> <span class="identifier">q1</span><span class="special">,</span> <span class="string">"jan"</span><span class="special">,</span> <span class="number">31</span><span class="special">,</span> <span class="string">"feb"</span><span class="special">,</span> <span class="number">28</span><span class="special">,</span> <span class="string">"mar"</span><span class="special">,</span> <span class="number">31</span> <span class="special">);</span>
+
+<span class="identifier">BOOST_ASSIGN_V2_CHECK</span><span class="special">(</span> <span class="identifier">q1</span><span class="special">[</span><span class="string">"jan"</span><span class="special">]</span> <span class="special">==</span> <span class="number">31</span> <span class="special">);</span>
+<span class="identifier">BOOST_ASSIGN_V2_CHECK</span><span class="special">(</span> <span class="identifier">q1</span><span class="special">[</span><span class="string">"feb"</span><span class="special">]</span> <span class="special">==</span> <span class="number">28</span> <span class="special">);</span>
+<span class="identifier">BOOST_ASSIGN_V2_CHECK</span><span class="special">(</span> <span class="identifier">q1</span><span class="special">[</span><span class="string">"mar"</span><span class="special">]</span> <span class="special">==</span> <span class="number">31</span> <span class="special">);</span>
+</pre>
+<p>
+          </p>
+<p>
+            <span class="bold"><strong>Example4</strong></span>
+          </p>
+<p>
+            
+</p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">month_</span><span class="special">;</span> <span class="keyword">typedef</span> <span class="keyword">int</span> <span class="identifier">days_</span><span class="special">;</span>
+<span class="identifier">boost</span><span class="special">::</span><span class="identifier">ptr_map</span><span class="special">&lt;</span><span class="identifier">month_</span><span class="special">,</span> <span class="identifier">days_</span><span class="special">&gt;</span> <span class="identifier">q1</span><span class="special">;</span>
+
+<span class="identifier">as2</span><span class="special">::</span><span class="identifier">csv_put</span><span class="special">&lt;</span><span class="number">2</span><span class="special">&gt;(</span> <span class="identifier">q1</span><span class="special">,</span> <span class="string">"jan"</span><span class="special">,</span> <span class="number">31</span><span class="special">,</span> <span class="string">"feb"</span><span class="special">,</span> <span class="number">28</span><span class="special">,</span> <span class="string">"mar"</span><span class="special">,</span> <span class="number">31</span> <span class="special">);</span>
+
+<span class="identifier">BOOST_ASSIGN_V2_CHECK</span><span class="special">(</span> <span class="identifier">q1</span><span class="special">[</span><span class="string">"jan"</span><span class="special">]</span> <span class="special">==</span> <span class="number">31</span> <span class="special">);</span>
+<span class="identifier">BOOST_ASSIGN_V2_CHECK</span><span class="special">(</span> <span class="identifier">q1</span><span class="special">[</span><span class="string">"feb"</span><span class="special">]</span> <span class="special">==</span> <span class="number">28</span> <span class="special">);</span>
+<span class="identifier">BOOST_ASSIGN_V2_CHECK</span><span class="special">(</span> <span class="identifier">q1</span><span class="special">[</span><span class="string">"mar"</span><span class="special">]</span> <span class="special">==</span> <span class="number">31</span> <span class="special">);</span>
+</pre>
+<p>
+          </p>
+</div>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_assign.reference.put.do_csv_put"></a><a class="link" href="put.html#boost_assign.reference.put.do_csv_put" title="Do_csv_put">Do_csv_put</a>
+</h4></div></div></div>
+<a name="do_csv_put"></a><a name="boost_assign.reference.put.do_csv_put.header"></a><h6>
+<a name="id36375001"></a>
+          <a class="link" href="put.html#boost_assign.reference.put.do_csv_put.header">Header</a>
+        </h6>
+<p>
+          <a href="../../../../../../../boost/assign/v2/put/do_csv_put.hpp" target="_top"><code class="literal">boost/assign/v2/put/do_csv_put.hpp</code></a>
+        </p>
+<a name="boost_assign.reference.put.do_csv_put.description"></a><h6>
+<a name="id36375032"></a>
+          <a class="link" href="put.html#boost_assign.reference.put.do_csv_put.description">Description</a>
+        </h6>
+<p>
+          Piping version of <a class="link" href="put.html#csv_put"><code class="computeroutput">csv_put</code></a>
+        </p>
+<a name="boost_assign.reference.put.do_csv_put.synopsis"></a><h6>
+<a name="id36375064"></a>
+          <a class="link" href="put.html#boost_assign.reference.put.do_csv_put.synopsis">Synopsis</a>
+        </h6>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">interpreter_aux</span><span class="special">{</span>
+<span class="keyword">namespace</span> <span class="identifier">result_of</span><span class="special">{</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span>
+         <span class="keyword">typename</span> <span class="identifier">Options</span><span class="special">,</span>
+         <span class="keyword">typename</span> <span class="identifier">CastHolder</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">ArgsHolder</span><span class="special">,</span>
+         <span class="keyword">int</span> <span class="identifier">I</span>
+    <span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">do_csv_put</span><span class="special">;</span>
+
+<span class="special">}//</span> <span class="identifier">result_of</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Options</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">I</span><span class="special">,</span> <span class="keyword">typename</span> <span class="special">...</span><span class="identifier">Cast</span><span class="special">,</span> <span class="keyword">typename</span><span class="special">...</span><span class="identifier">Args</span><span class="special">&gt;</span>
+
+    <span class="identifier">unspecified</span>
+    <span class="identifier">do_csv_put</span><span class="special">(</span><span class="identifier">Args</span><span class="special">&amp;&amp;...</span> <span class="identifier">args</span><span class="special">);</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">int</span> <span class="identifier">I</span><span class="special">,</span> <span class="keyword">typename</span> <span class="special">...</span><span class="identifier">Cast</span><span class="special">,</span> <span class="keyword">typename</span><span class="special">...</span><span class="identifier">Args</span><span class="special">&gt;</span>
+
+    <span class="identifier">unspecified</span>
+    <span class="identifier">do_csv_put</span><span class="special">(</span><span class="identifier">Args</span><span class="special">&amp;&amp;...</span> <span class="identifier">args</span><span class="special">);</span>
+
+<span class="special">}//</span> <span class="identifier">interpreter_aux</span>
+
+<span class="keyword">using</span> <span class="identifier">interpreter_aux</span><span class="special">::</span><span class="identifier">do_csv_put</span><span class="special">;</span>
+
+</pre>
+<p>
+        </p>
+<a name="boost_assign.reference.put.do_csv_put.semantics"></a><h6>
+<a name="id36375450"></a>
+          <a class="link" href="put.html#boost_assign.reference.put.do_csv_put.semantics">Semantics</a>
+        </h6>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Expression
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Description
+                  </p>
+                </th>
+</tr></thead>
+<tbody><tr>
+<td>
+                  <p>
+                    <code class="computeroutput">cont <span class="special">|</span> <span class="identifier">do_csv_put</span><span class="special">&lt;</span><span class="identifier">I</span><span class="special">&gt;(</span> <span class="identifier">args0</span><span class="special">,</span> <span class="special">...,</span>
+                    <span class="identifier">arg</span><span class="special">(</span>
+                    <span class="identifier">I</span><span class="special">-</span><span class="number">1</span> <span class="special">),</span>
+                    <span class="special">...,</span> <span class="identifier">args</span><span class="special">(</span><span class="identifier">n</span><span class="special">-</span><span class="number">1</span><span class="special">)</span><span class="identifier">I</span><span class="special">,</span> <span class="special">...,</span>
+                    <span class="identifier">arg</span><span class="special">(</span>
+                    <span class="identifier">nI</span> <span class="special">-</span>
+                    <span class="number">1</span> <span class="special">)</span>
+                    <span class="special">)</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput">csv_put<span class="special">&lt;</span><span class="identifier">I</span><span class="special">&gt;(</span> cont<span class="special">,</span>
+                    <span class="identifier">args0</span><span class="special">,</span>
+                    <span class="special">...,</span> <span class="identifier">arg</span><span class="special">(</span> <span class="identifier">I</span><span class="special">-</span><span class="number">1</span> <span class="special">),</span> <span class="special">...,</span>
+                    <span class="identifier">args</span><span class="special">(</span><span class="identifier">n</span><span class="special">-</span><span class="number">1</span><span class="special">)</span><span class="identifier">I</span><span class="special">,</span>
+                    <span class="special">...,</span> <span class="identifier">arg</span><span class="special">(</span> <span class="identifier">nI</span>
+                    <span class="special">-</span> <span class="number">1</span>
+                    <span class="special">)</span> <span class="special">);</span>
+                    <span class="keyword">return</span> cont<span class="special">;</span></code>
+                  </p>
+                </td>
+</tr></tbody>
+</table></div>
+<a name="boost_assign.reference.put.do_csv_put.example"></a><h6>
+<a name="id36375826"></a>
+          <a class="link" href="put.html#boost_assign.reference.put.do_csv_put.example">Example</a>
+        </h6>
+<a name="ex_do_csv_put"></a><p>
+          <span class="bold"><strong>Example1</strong></span>
+        </p>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">month_</span><span class="special">;</span>
+<span class="keyword">typedef</span> <span class="keyword">int</span> <span class="identifier">days_</span><span class="special">;</span>
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;</span><span class="identifier">month_</span><span class="special">,</span> <span class="identifier">days_</span><span class="special">&gt;</span> <span class="identifier">q1</span><span class="special">,</span> <span class="identifier">benchmark</span><span class="special">;</span>
+
+<span class="identifier">benchmark</span><span class="special">[</span> <span class="string">"jan"</span> <span class="special">]</span> <span class="special">=</span> <span class="number">31</span><span class="special">;</span>
+<span class="identifier">benchmark</span><span class="special">[</span> <span class="string">"feb"</span> <span class="special">]</span> <span class="special">=</span> <span class="number">28</span><span class="special">;</span>
+<span class="identifier">benchmark</span><span class="special">[</span> <span class="string">"mar"</span> <span class="special">]</span> <span class="special">=</span> <span class="number">31</span><span class="special">;</span>
+
+<span class="identifier">BOOST_ASSIGN_V2_CHECK</span><span class="special">(</span>
+    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">range</span><span class="special">::</span><span class="identifier">equal</span><span class="special">(</span>
+        <span class="identifier">benchmark</span><span class="special">,</span>
+        <span class="identifier">q1</span> <span class="special">|</span> <span class="identifier">as2</span><span class="special">::</span><span class="identifier">do_csv_put</span><span class="special">&lt;</span><span class="number">2</span><span class="special">&gt;(</span> <span class="string">"jan"</span><span class="special">,</span> <span class="number">31</span><span class="special">,</span> <span class="string">"feb"</span><span class="special">,</span> <span class="number">28</span><span class="special">,</span> <span class="string">"mar"</span><span class="special">,</span> <span class="number">31</span> <span class="special">)</span>
+    <span class="special">)</span>
+<span class="special">);</span>
+</pre>
+<p>
+        </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_assign.reference.put.do_put"></a><a class="link" href="put.html#boost_assign.reference.put.do_put" title="Do_put">Do_put</a>
+</h4></div></div></div>
+<a name="do_put"></a><a name="boost_assign.reference.put.do_put.header"></a><h6>
+<a name="id36376243"></a>
+          <a class="link" href="put.html#boost_assign.reference.put.do_put.header">Header</a>
+        </h6>
+<p>
+          <a href="../../../../../../../boost/assign/v2/put/do_put.hpp" target="_top"><code class="literal">boost/assign/v2/put/do_put.hpp</code></a>
+        </p>
+<a name="boost_assign.reference.put.do_put.description"></a><h6>
+<a name="id36376273"></a>
+          <a class="link" href="put.html#boost_assign.reference.put.do_put.description">Description</a>
+        </h6>
+<p>
+          Piping version of <a class="link" href="put.html#csv_put"><code class="computeroutput">put</code></a>. Only
+          overloads of <code class="computeroutput"><span class="identifier">for_each</span></code>,
+          for now, are implemented.
+        </p>
+<a name="boost_assign.reference.put.do_put.synopsis"></a><h6>
+<a name="id36376315"></a>
+          <a class="link" href="put.html#boost_assign.reference.put.do_put.synopsis">Synopsis</a>
+        </h6>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">interpreter_aux</span><span class="special">{</span>
+
+
+    <span class="keyword">template</span><span class="special">&lt;</span>
+        <span class="keyword">typename</span> <span class="identifier">R</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">O</span> <span class="special">=</span> <span class="identifier">empty_list_option_</span>
+    <span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">put_for_each_adapter</span>
+    <span class="special">{</span>
+    <span class="special">};</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">O</span> <span class="special">=</span> <span class="identifier">empty_list_option_</span><span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">put_adapter</span>
+    <span class="special">{</span>
+
+        <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">R</span><span class="special">&gt;</span>
+        <span class="identifier">put_for_each_adapter</span><span class="special">&lt;</span><span class="identifier">R</span><span class="special">,</span> <span class="identifier">O</span><span class="special">&gt;</span>
+        <span class="identifier">for_each</span><span class="special">(</span> <span class="identifier">R</span><span class="special">&amp;&amp;</span> <span class="identifier">range</span> <span class="special">)</span><span class="keyword">const</span><span class="special">;</span>
+
+        <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">int</span> <span class="identifier">I</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">R</span><span class="special">&gt;</span>
+        <span class="identifier">put_for_each_adapter</span><span class="special">&lt;</span><span class="identifier">R</span><span class="special">,</span> <span class="identifier">O</span><span class="special">,</span> <span class="identifier">I</span><span class="special">&gt;</span>
+        <span class="identifier">for_each</span><span class="special">(</span> <span class="identifier">R</span><span class="special">&amp;&amp;</span> <span class="identifier">range</span> <span class="special">)</span><span class="keyword">const</span><span class="special">;</span>
+
+        <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Options</span><span class="special">&gt;</span>
+        <span class="identifier">put_adapter</span><span class="special">&lt;</span><span class="identifier">Options</span><span class="special">&gt;</span>
+        <span class="keyword">operator</span><span class="special">%(</span><span class="identifier">Options</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">options</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+    <span class="special">};</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">C</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">R</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">O</span><span class="special">&gt;</span>
+    <span class="identifier">C</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">|(</span><span class="identifier">C</span><span class="special">&amp;</span> <span class="identifier">cont</span><span class="special">,</span> <span class="identifier">put_for_each_adapter</span><span class="special">&lt;</span><span class="identifier">R</span><span class="special">,</span> <span class="identifier">O</span><span class="special">&gt;</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">a</span><span class="special">);</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">C</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">R</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">O</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">I</span><span class="special">&gt;</span>
+    <span class="identifier">C</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">|(</span><span class="identifier">C</span><span class="special">&amp;</span> <span class="identifier">cont</span><span class="special">,</span> <span class="identifier">put_for_each_adapter</span><span class="special">&lt;</span><span class="identifier">R</span><span class="special">,</span> <span class="identifier">O</span><span class="special">,</span> <span class="identifier">I</span><span class="special">&gt;</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">a</span><span class="special">);</span>
+
+<span class="special">}//</span> <span class="identifier">interpreter_aux</span>
+
+    <span class="keyword">const</span> <span class="identifier">interpreter_aux</span><span class="special">::</span><span class="identifier">put_adapter</span><span class="special">&lt;&gt;</span> <span class="identifier">_do_put</span><span class="special">;</span>
+</pre>
+<p>
+        </p>
+<a name="boost_assign.reference.put.do_put.semantics"></a><h6>
+<a name="id36377243"></a>
+          <a class="link" href="put.html#boost_assign.reference.put.do_put.semantics">Semantics</a>
+        </h6>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Expression
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Description
+                  </p>
+                </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput">cont <span class="special">|</span> <span class="identifier">_do_put</span><span class="special">.</span><span class="identifier">for_each</span><span class="special">&lt;</span><span class="identifier">I</span><span class="special">&gt;(</span> r <span class="special">)</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput">put<span class="special">.</span><span class="identifier">for_each</span><span class="special">&lt;</span><span class="identifier">I</span><span class="special">&gt;(</span> cont<span class="special">,</span>
+                    r <span class="special">);</span> <span class="keyword">return</span>
+                    cont</code>
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput">cont <span class="special">|</span> <span class="identifier">_do_put</span><span class="special">.</span><span class="identifier">for_each</span><span class="special">(</span> r <span class="special">)</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput">put<span class="special">.</span><span class="identifier">for_each</span><span class="special">(</span> cont<span class="special">,</span>
+                    r <span class="special">);</span> <span class="keyword">return</span>
+                    cont</code>
+                  </p>
+                </td>
+</tr>
+</tbody>
+</table></div>
+<a name="boost_assign.reference.put.do_put.example"></a><h6>
+<a name="id36377483"></a>
+          <a class="link" href="put.html#boost_assign.reference.put.do_put.example">Example</a>
+        </h6>
+<a name="ex_do_put"></a><p>
+          <span class="bold"><strong>Example1</strong></span>
+        </p>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">circular_buffer</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">cb</span><span class="special">(</span><span class="number">3</span><span class="special">);</span>
+
+<span class="identifier">BOOST_ASSIGN_V2_CHECK</span><span class="special">(</span>
+    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">range</span><span class="special">::</span><span class="identifier">equal</span><span class="special">(</span>
+        <span class="identifier">cb</span> <span class="special">|</span> <span class="identifier">as2</span><span class="special">::</span><span class="identifier">_do_put</span><span class="special">.</span><span class="identifier">for_each</span><span class="special">(</span> <span class="identifier">as2</span><span class="special">::</span><span class="identifier">csv_deque</span><span class="special">(</span><span class="number">1</span> <span class="special">,</span><span class="number">2</span><span class="special">,</span> <span class="number">3</span><span class="special">)</span> <span class="special">)</span>
+        <span class="special">,</span> <span class="identifier">as2</span><span class="special">::</span><span class="identifier">csv_deque</span><span class="special">(</span><span class="number">1</span><span class="special">,</span> <span class="number">2</span><span class="special">,</span> <span class="number">3</span><span class="special">)</span>
+    <span class="special">)</span>
+<span class="special">);</span>
+
+<span class="identifier">BOOST_ASSIGN_V2_CHECK</span><span class="special">(</span>
+    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">range</span><span class="special">::</span><span class="identifier">equal</span><span class="special">(</span>
+        <span class="identifier">cb</span> <span class="special">|</span> <span class="identifier">as2</span><span class="special">::</span><span class="identifier">_do_put</span><span class="special">.</span><span class="identifier">for_each</span><span class="special">(</span> <span class="identifier">as2</span><span class="special">::</span><span class="identifier">csv_deque</span><span class="special">(</span> <span class="number">4</span><span class="special">,</span> <span class="number">5</span> <span class="special">)</span> <span class="special">),</span>
+        <span class="identifier">as2</span><span class="special">::</span><span class="identifier">csv_deque</span><span class="special">(</span> <span class="number">3</span><span class="special">,</span> <span class="number">4</span><span class="special">,</span> <span class="number">5</span> <span class="special">)</span>
+    <span class="special">)</span>
+<span class="special">);</span>
+</pre>
+<p>
+        </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_assign.reference.put.put"></a><a class="link" href="put.html#boost_assign.reference.put.put" title="Put">Put</a>
+</h4></div></div></div>
+<a name="put"></a><a name="boost_assign.reference.put.put.header"></a><h6>
+<a name="id36377942"></a>
+          <a class="link" href="put.html#boost_assign.reference.put.put.header">Header</a>
+        </h6>
+<p>
+          <a href="../../../../../../../boost/assign/v2/put/put.hpp" target="_top"><code class="literal">boost/assign/v2/put/put.hpp</code></a>
+        </p>
+<a name="boost_assign.reference.put.put.description"></a><h6>
+<a name="id36377972"></a>
+          <a class="link" href="put.html#boost_assign.reference.put.put.description">Description</a>
+        </h6>
+<p>
+          Functor form
+        </p>
+<a name="boost_assign.reference.put.put.synopsis"></a><h6>
+<a name="id36377994"></a>
+          <a class="link" href="put.html#boost_assign.reference.put.put.synopsis">Synopsis</a>
+        </h6>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">interpreter_aux</span><span class="special">{</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">C</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">F</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">MTag</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">DTag</span><span class="special">&gt;</span>
+    <span class="keyword">class</span> <span class="identifier">put_interpreter</span> <span class="special">:</span>
+        <span class="keyword">public</span> <span class="identifier">interpreter_aux</span><span class="special">::</span><span class="identifier">interpreter_crtp</span><span class="special">&lt;</span>
+            <span class="identifier">put_interpreter</span><span class="special">&lt;</span><span class="identifier">C</span><span class="special">,</span> <span class="identifier">F</span><span class="special">,</span> <span class="identifier">MTag</span><span class="special">,</span> <span class="identifier">DTag</span><span class="special">&gt;</span>
+            <span class="special">,</span> <span class="identifier">C</span><span class="special">,</span> <span class="identifier">F</span><span class="special">,</span> <span class="identifier">MTag</span><span class="special">,</span> <span class="identifier">DTag</span>
+        <span class="special">&gt;</span>
+    <span class="special">{</span>
+        <span class="keyword">public</span><span class="special">:</span>
+
+        <span class="keyword">typedef</span>  <span class="identifier">unspecified</span> <span class="identifier">result_type</span><span class="special">;</span>
+
+        <span class="identifier">put_interpreter</span><span class="special">();</span>
+        <span class="keyword">explicit</span> <span class="identifier">put_interpreter</span><span class="special">(</span> <span class="identifier">C</span><span class="special">&amp;</span> <span class="identifier">cont</span> <span class="special">);</span>
+        <span class="identifier">put_interpreter</span><span class="special">(</span> <span class="identifier">C</span><span class="special">&amp;</span> <span class="identifier">cont</span><span class="special">,</span> <span class="identifier">F</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">f</span><span class="special">,</span> <span class="identifier">modifier_</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">m</span> <span class="special">);</span>
+
+        <span class="identifier">C</span><span class="special">&amp;</span> <span class="identifier">container</span><span class="special">()</span><span class="keyword">const</span><span class="special">;</span>
+
+    <span class="special">};</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">C</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">F</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">MTag</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">DTag</span><span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">replace_data_generator</span><span class="special">&lt;</span>
+        <span class="identifier">interpreter_aux</span><span class="special">::</span><span class="identifier">put_interpreter</span><span class="special">&lt;</span><span class="identifier">C</span><span class="special">,</span> <span class="identifier">F</span><span class="special">,</span> <span class="identifier">MTag</span><span class="special">,</span> <span class="identifier">DTag</span><span class="special">&gt;</span>
+    <span class="special">&gt;{</span>
+        <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">F1</span><span class="special">&gt;</span>
+        <span class="keyword">struct</span> <span class="identifier">apply</span><span class="special">;</span>
+    <span class="special">};</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">C</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">F</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">MTag</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">DTag</span><span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">replace_modifier_tag</span><span class="special">&lt;</span>
+        <span class="identifier">interpreter_aux</span><span class="special">::</span><span class="identifier">put_interpreter</span><span class="special">&lt;</span><span class="identifier">C</span><span class="special">,</span> <span class="identifier">F</span><span class="special">,</span> <span class="identifier">MTag</span><span class="special">,</span> <span class="identifier">DTag</span><span class="special">&gt;</span>
+    <span class="special">&gt;{</span>
+        <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">MTag1</span><span class="special">&gt;</span>
+        <span class="keyword">struct</span> <span class="identifier">apply</span><span class="special">;</span>
+    <span class="special">};</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">C</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">F</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">MTag</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">DTag</span><span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">replace_data_tag</span><span class="special">&lt;</span>
+        <span class="identifier">interpreter_aux</span><span class="special">::</span><span class="identifier">put_interpreter</span><span class="special">&lt;</span><span class="identifier">C</span><span class="special">,</span> <span class="identifier">F</span><span class="special">,</span> <span class="identifier">MTag</span><span class="special">,</span> <span class="identifier">DTag</span><span class="special">&gt;</span>
+    <span class="special">&gt;{</span>
+        <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">DTag1</span><span class="special">&gt;</span>
+        <span class="keyword">struct</span> <span class="identifier">apply</span><span class="special">;</span>
+    <span class="special">};</span>
+
+<span class="keyword">namespace</span> <span class="identifier">result_of</span><span class="special">{</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">C</span><span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">put</span><span class="special">;</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">O</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">C</span><span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">put_option</span>
+    <span class="special">;</span>
+
+<span class="special">}//</span> <span class="identifier">result_of</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">C</span><span class="special">&gt;</span>
+    <span class="keyword">typename</span> <span class="identifier">result_of</span><span class="special">::</span><span class="identifier">put</span><span class="special">&lt;</span><span class="identifier">C</span><span class="special">&gt;::</span><span class="identifier">type</span>
+    <span class="identifier">put</span><span class="special">(</span> <span class="identifier">C</span><span class="special">&amp;</span> <span class="identifier">cont</span> <span class="special">);</span>
+
+    <span class="comment">// Default constructible options
+</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Options</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">C</span><span class="special">&gt;</span>
+    <span class="keyword">typename</span> <span class="identifier">result_of</span><span class="special">::</span><span class="identifier">put_option</span><span class="special">&lt;</span><span class="identifier">Options</span><span class="special">,</span> <span class="identifier">C</span><span class="special">&gt;::</span><span class="identifier">type</span>
+    <span class="identifier">put</span><span class="special">(</span> <span class="identifier">C</span><span class="special">&amp;</span> <span class="identifier">cont</span> <span class="special">);</span>
+
+<span class="special">}//</span> <span class="identifier">interpreter_aux</span>
+<span class="keyword">namespace</span> <span class="identifier">result_of</span>
+<span class="special">{</span>
+    <span class="keyword">using</span> <span class="identifier">interpreter_aux</span><span class="special">::</span><span class="identifier">result_of</span><span class="special">::</span><span class="identifier">put</span><span class="special">;</span>
+    <span class="keyword">using</span> <span class="identifier">interpreter_aux</span><span class="special">::</span><span class="identifier">result_of</span><span class="special">::</span><span class="identifier">put_option</span><span class="special">;</span>
+
+<span class="special">}//</span> <span class="identifier">result_of</span>
+
+    <span class="keyword">using</span> <span class="identifier">interpreter_aux</span><span class="special">::</span><span class="identifier">put</span><span class="special">;</span>
+
+</pre>
+<p>
+        </p>
+<a name="boost_assign.reference.put.put.semantics"></a><h6>
+<a name="id36379428"></a>
+          <a class="link" href="put.html#boost_assign.reference.put.put.semantics">Semantics</a>
+        </h6>
+<p>
+          See <a class="link" href="interpreter.html#interpreter_crtp"><code class="computeroutput"><span class="identifier">interpreter_crtp</span><span class="special">&lt;&gt;</span></code></a> from which it inherits.
+        </p>
+<a name="boost_assign.reference.put.put.example"></a><h6>
+<a name="id36379467"></a>
+          <a class="link" href="put.html#boost_assign.reference.put.put.example">Example</a>
+        </h6>
+<a name="ex_put"></a><p>
+          <span class="bold"><strong>Example1</strong></span>
+        </p>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">word_</span><span class="special">;</span>
+<span class="keyword">const</span> <span class="keyword">char</span> <span class="identifier">x</span><span class="special">[]</span> <span class="special">=</span> <span class="string">"foo"</span><span class="special">;</span>
+<span class="keyword">const</span> <span class="keyword">char</span> <span class="identifier">y</span><span class="special">[</span><span class="number">4</span><span class="special">]</span> <span class="special">=</span> <span class="special">{</span> <span class="char">'b'</span><span class="special">,</span> <span class="char">'a'</span><span class="special">,</span> <span class="char">'r'</span><span class="special">,</span> <span class="char">'\0'</span> <span class="special">};</span>
+<span class="identifier">word_</span> <span class="identifier">z</span> <span class="special">=</span> <span class="string">"***baz"</span><span class="special">;</span>
+<span class="identifier">boost</span><span class="special">::</span><span class="identifier">unordered_map</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">word_</span><span class="special">&gt;</span> <span class="identifier">map</span><span class="special">;</span>
+
+<span class="identifier">as2</span><span class="special">::</span><span class="identifier">put</span><span class="special">(</span> <span class="identifier">map</span> <span class="special">)(</span> <span class="number">1</span><span class="special">,</span> <span class="identifier">x</span><span class="special">,</span> <span class="number">3</span> <span class="special">)(</span> <span class="number">2</span><span class="special">,</span> <span class="identifier">y</span> <span class="special">)(</span> <span class="number">3</span><span class="special">,</span> <span class="identifier">z</span><span class="special">,</span> <span class="number">3</span><span class="special">,</span> <span class="number">3</span> <span class="special">)(</span> <span class="number">4</span><span class="special">,</span> <span class="string">"qux"</span><span class="special">);</span>
+
+<span class="identifier">assert</span><span class="special">(</span> <span class="identifier">map</span><span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">==</span> <span class="string">"foo"</span> <span class="special">);</span> <span class="identifier">assert</span><span class="special">(</span> <span class="identifier">map</span><span class="special">[</span><span class="number">2</span><span class="special">]</span> <span class="special">==</span> <span class="string">"bar"</span> <span class="special">);</span>
+<span class="identifier">assert</span><span class="special">(</span> <span class="identifier">map</span><span class="special">[</span><span class="number">3</span><span class="special">]</span> <span class="special">==</span> <span class="string">"baz"</span> <span class="special">);</span> <span class="identifier">assert</span><span class="special">(</span> <span class="identifier">map</span><span class="special">[</span><span class="number">4</span><span class="special">]</span> <span class="special">==</span> <span class="string">"qux"</span> <span class="special">);</span>
+</pre>
+<p>
+        </p>
+<p>
+          <span class="bold"><strong>Example2</strong></span>
+        </p>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">month_</span><span class="special">;</span> <span class="keyword">typedef</span> <span class="keyword">int</span> <span class="identifier">days_</span><span class="special">;</span>
+<span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;</span><span class="identifier">month_</span><span class="special">,</span> <span class="identifier">days_</span><span class="special">&gt;</span> <span class="identifier">map_</span><span class="special">;</span>
+<span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">tuple</span><span class="special">&lt;</span><span class="identifier">month_</span> <span class="keyword">const</span><span class="special">,</span> <span class="identifier">days_</span><span class="special">&gt;</span> <span class="identifier">pair_</span><span class="special">;</span>
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">deque</span><span class="special">&lt;</span><span class="identifier">pair_</span><span class="special">&gt;</span> <span class="identifier">input</span><span class="special">;</span>
+
+<span class="identifier">input</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span> <span class="identifier">pair_</span><span class="special">(</span><span class="string">"jan"</span><span class="special">,</span> <span class="number">31</span><span class="special">)</span> <span class="special">);</span>
+<span class="identifier">input</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span> <span class="identifier">pair_</span><span class="special">(</span><span class="string">"feb"</span><span class="special">,</span> <span class="number">28</span><span class="special">)</span> <span class="special">);</span>
+<span class="identifier">input</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span> <span class="identifier">pair_</span><span class="special">(</span><span class="string">"mar"</span><span class="special">,</span> <span class="number">31</span><span class="special">)</span> <span class="special">);</span>
+
+<span class="identifier">map_</span> <span class="identifier">map</span><span class="special">;</span> <span class="identifier">as2</span><span class="special">::</span><span class="identifier">put</span><span class="special">(</span> <span class="identifier">map</span> <span class="special">).</span><span class="identifier">for_each</span><span class="special">&lt;</span><span class="number">2</span><span class="special">&gt;(</span> <span class="identifier">input</span> <span class="special">);</span>
+
+<span class="identifier">BOOST_ASSIGN_V2_CHECK</span><span class="special">(</span> <span class="identifier">map</span><span class="special">[</span><span class="string">"jan"</span><span class="special">]</span> <span class="special">==</span> <span class="number">31</span> <span class="special">);</span>
+<span class="identifier">BOOST_ASSIGN_V2_CHECK</span><span class="special">(</span> <span class="identifier">map</span><span class="special">[</span><span class="string">"feb"</span><span class="special">]</span> <span class="special">==</span> <span class="number">28</span> <span class="special">);</span>
+<span class="identifier">BOOST_ASSIGN_V2_CHECK</span><span class="special">(</span> <span class="identifier">map</span><span class="special">[</span><span class="string">"mar"</span><span class="special">]</span> <span class="special">==</span> <span class="number">31</span> <span class="special">);</span>
+</pre>
+<p>
+        </p>
+<p>
+          <span class="bold"><strong>Example3</strong></span>
+        </p>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="keyword">double</span> <span class="identifier">fp_</span><span class="special">;</span> <span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="identifier">fp_</span><span class="special">&gt;</span> <span class="identifier">data_</span><span class="special">;</span>
+<span class="identifier">data_</span> <span class="identifier">a</span><span class="special">(</span> <span class="number">3</span> <span class="special">);</span> <span class="identifier">a</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="number">0.71</span><span class="special">;</span> <span class="identifier">a</span><span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">=</span> <span class="number">0.63</span><span class="special">;</span> <span class="identifier">a</span><span class="special">[</span><span class="number">2</span><span class="special">]</span> <span class="special">=</span> <span class="number">0.85</span><span class="special">;</span>
+<span class="identifier">data_</span> <span class="identifier">b</span><span class="special">(</span> <span class="number">4</span> <span class="special">);</span> <span class="identifier">b</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="number">0.61</span><span class="special">;</span> <span class="identifier">b</span><span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">=</span> <span class="number">0.69</span><span class="special">;</span> <span class="identifier">b</span><span class="special">[</span><span class="number">2</span><span class="special">]</span> <span class="special">=</span> <span class="number">0.92</span><span class="special">;</span> <span class="identifier">b</span><span class="special">[</span><span class="number">3</span><span class="special">]</span> <span class="special">=</span> <span class="number">0.55</span><span class="special">;</span>
+<span class="identifier">boost</span><span class="special">::</span><span class="identifier">array</span><span class="special">&lt;</span><span class="identifier">data_</span><span class="special">,</span> <span class="number">4</span><span class="special">&gt;</span> <span class="identifier">ragged</span><span class="special">;</span>
+
+<span class="identifier">as2</span><span class="special">::</span><span class="identifier">put</span><span class="special">(</span> <span class="identifier">ragged</span> <span class="special">)</span>
+    <span class="special">(</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">begin</span><span class="special">(</span> <span class="identifier">a</span> <span class="special">),</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">end</span><span class="special">(</span> <span class="identifier">a</span> <span class="special">)</span> <span class="special">)</span>
+    <span class="special">(</span> <span class="identifier">b</span> <span class="special">)</span>
+    <span class="special">(</span> <span class="number">1</span><span class="special">,</span> <span class="special">-</span><span class="number">99.99</span> <span class="special">)</span>
+    <span class="special">(</span> <span class="special">);</span>
+
+<span class="identifier">BOOST_ASSIGN_V2_CHECK</span><span class="special">(</span> <span class="identifier">ragged</span><span class="special">[</span><span class="number">0</span><span class="special">].</span><span class="identifier">size</span><span class="special">()</span> <span class="special">==</span> <span class="identifier">a</span><span class="special">.</span><span class="identifier">size</span><span class="special">()</span> <span class="special">);</span>
+<span class="identifier">BOOST_ASSIGN_V2_CHECK</span><span class="special">(</span> <span class="identifier">ragged</span><span class="special">[</span><span class="number">3</span><span class="special">].</span><span class="identifier">size</span><span class="special">()</span> <span class="special">==</span> <span class="number">0</span> <span class="special">);</span>
+</pre>
+<p>
+        </p>
+<p>
+          <span class="bold"><strong>Example4</strong></span>
+        </p>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">word_</span><span class="special">;</span>
+<span class="keyword">const</span> <span class="keyword">char</span> <span class="identifier">x</span><span class="special">[]</span> <span class="special">=</span> <span class="string">"foo"</span><span class="special">;</span>
+<span class="keyword">const</span> <span class="keyword">char</span> <span class="identifier">y</span><span class="special">[</span><span class="number">4</span><span class="special">]</span> <span class="special">=</span> <span class="special">{</span> <span class="char">'b'</span><span class="special">,</span> <span class="char">'a'</span><span class="special">,</span> <span class="char">'r'</span><span class="special">,</span> <span class="char">'\0'</span> <span class="special">};</span>
+<span class="identifier">word_</span> <span class="identifier">z</span> <span class="special">=</span> <span class="string">"***baz"</span><span class="special">;</span>
+<span class="identifier">boost</span><span class="special">::</span><span class="identifier">ptr_unordered_map</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">word_</span><span class="special">&gt;</span> <span class="identifier">map</span><span class="special">;</span>
+
+<span class="identifier">as2</span><span class="special">::</span><span class="identifier">put</span><span class="special">(</span> <span class="identifier">map</span> <span class="special">)(</span> <span class="number">1</span><span class="special">,</span> <span class="identifier">x</span><span class="special">,</span> <span class="number">3</span> <span class="special">)(</span> <span class="number">2</span><span class="special">,</span> <span class="identifier">y</span> <span class="special">)(</span> <span class="number">3</span><span class="special">,</span> <span class="identifier">z</span><span class="special">,</span> <span class="number">3</span><span class="special">,</span> <span class="number">3</span> <span class="special">)(</span> <span class="number">4</span><span class="special">,</span> <span class="string">"qux"</span> <span class="special">);</span>
+
+<span class="identifier">assert</span><span class="special">(</span> <span class="identifier">map</span><span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">==</span> <span class="string">"foo"</span> <span class="special">);</span> <span class="identifier">assert</span><span class="special">(</span> <span class="identifier">map</span><span class="special">[</span><span class="number">2</span><span class="special">]</span> <span class="special">==</span> <span class="string">"bar"</span> <span class="special">);</span>
+<span class="identifier">assert</span><span class="special">(</span> <span class="identifier">map</span><span class="special">[</span><span class="number">3</span><span class="special">]</span> <span class="special">==</span> <span class="string">"baz"</span> <span class="special">);</span> <span class="identifier">assert</span><span class="special">(</span> <span class="identifier">map</span><span class="special">[</span><span class="number">4</span><span class="special">]</span> <span class="special">==</span> <span class="string">"qux"</span> <span class="special">);</span>
+</pre>
+<p>
+        </p>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2003 -2004 Thorsten Ottosen, 2011 Erwann Rogard<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="option.html"><img src="../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="ref.html"><img src="../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>
