@@ -1,0 +1,16 @@
+<body style="background-image: url("../../images/draft.png")" >
+</body>
+
+
+<body style="background-image: url("../../images/draft.png")" >
+</body>
+
+<body style="color:red" >  OK
+</body>
+
+<!-- Add draft background here if, for example, not yet accepted or otherwise not finalised! -->
+<body style="background-image: url(../../images/draft.png)">
+</body>
+
+
+OK!
