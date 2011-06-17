@@ -1,0 +1,17 @@
+
+...found 28 targets...
+...updating 11 targets...
+common.mkdir ..\..\..\bin.v2\libs\checks\example
+common.mkdir ..\..\..\bin.v2\libs\checks\example\isbn_example.test
+common.mkdir ..\..\..\bin.v2\libs\checks\example\isbn_example.test\msvc-10.0
+common.mkdir ..\..\..\bin.v2\libs\checks\example\isbn_example.test\msvc-10.0\debug
+common.mkdir ..\..\..\bin.v2\libs\checks\example\isbn_example.test\msvc-10.0\debug\asynch-exceptions-on
+common.mkdir ..\..\..\bin.v2\libs\checks\example\isbn_example.test\msvc-10.0\debug\asynch-exceptions-on\threading-multi
+compile-c-c++ ..\..\..\bin.v2\libs\checks\example\isbn_example.test\msvc-10.0\debug\asynch-exceptions-on\threading-multi\isbn_example.obj
+isbn_example.cpp
+msvc.link ..\..\..\bin.v2\libs\checks\example\isbn_example.test\msvc-10.0\debug\asynch-exceptions-on\threading-multi\isbn_example.exe
+msvc.manifest ..\..\..\bin.v2\libs\checks\example\isbn_example.test\msvc-10.0\debug\asynch-exceptions-on\threading-multi\isbn_example.exe
+testing.capture-output ..\..\..\bin.v2\libs\checks\example\isbn_example.test\msvc-10.0\debug\asynch-exceptions-on\threading-multi\isbn_example.run
+        1 file(s) copied.
+**passed** ..\..\..\bin.v2\libs\checks\example\isbn_example.test\msvc-10.0\debug\asynch-exceptions-on\threading-multi\isbn_example.test
+...updated 11 targets...
