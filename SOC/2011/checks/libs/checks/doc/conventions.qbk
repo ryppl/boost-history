@@ -1,0 +1,54 @@
+[section:conventions Document Conventions]
+
+* [*Tutorials] are listed in the ['Table of Contents] and include many examples that should help you get started quickly.
+* [*Source code] of the many ['Examples] will often be your quickest start.
+* [*Reference section] prepared using Doxygen will provide the function and class signatures,
+but there is also an ['index] of these. 
+* The main ['index] will also help,
+especially if you know a word describing what it does,
+without needing to know the exact name chosen for the function.
+
+This documentation makes use of the following naming and formatting conventions.
+
+* C++ Code is in `fixed width font` and is syntax-highlighted.
+* Other code is in [^teletype fixed-width font].
+* Replaceable text that you will need to supply is in [~italics].
+* If a name refers to a free function, it is specified like this:
+  `free_function()`; that is, it is in code font and its name is followed by `()`
+  to indicate that it is a free function.
+* If a name refers to a class template, it is specified like this:
+  `class_template<>`; that is, it is in code font and its name is followed by `<>`
+  to indicate that it is a class template.
+* If a name refers to a function-like macro, it is specified like this: `MACRO()`;
+  that is, it is uppercase in code font and its name is followed by `()` to
+  indicate that it is a function-like macro. Object-like macros appear without the
+  trailing `()`.
+* Names that refer to ['concepts] in the generic programming sense are
+  specified in CamelCase.
+
+* Many code snippets assume an implicit namespace, for example, `std::` or `boost::checks`.
+
+* If you have a feature request, or if it appears that the implementation
+is in error, please check the TODO section first, as well
+as the rationale section.
+
+If you do not find your idea/complaint, please reach the author either through the Boost
+development list, or email the author(s) direct .
+
+[heading Admonishments]
+
+[note In addition, notes such as this one specify non-essential information that
+provides additional background or rationale.]
+
+[tip These blocks contain information that you may find helpful while coding.]
+
+[important These contain information that is imperative to understanding a concept.
+Failure to follow suggestions in these blocks will probably result in undesired behavior.
+Read all of these you find.]
+
+[warning Failure to heed this will lead to incorrect,
+and very likely undesired, results.]
+
+[endsect] [/section:conventions Document Conventions]
+
+
