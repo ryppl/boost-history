@@ -1,0 +1,92 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Function template isbn10_check_digit</title>
+<link rel="stylesheet" href="./boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.74.0">
+<link rel="home" href="index.html" title="Boost.Checks">
+<link rel="up" href="header/boost/checks/checks_fwd_hpp.html" title="Header &lt;boost/checks/checks_fwd.hpp&gt;">
+<link rel="prev" href="Is_isbn10_id300095.html" title="Function template Is_isbn10">
+<link rel="next" href="header/boost/checks/crc_hpp.html" title="Header &lt;boost/checks/crc.hpp&gt;">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="" width="180" height="90" src="./images/proposed_for_boost.png"></td>
+<td align="center"><a href="../../../../../../../boost_trunk/index.html">Home</a></td>
+<td align="center"><a href="../../../../../../../boost_1_46_0/libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../../boost_trunk/more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="Is_isbn10_id300095.html"><img src="images/prev.png" alt="Prev"></a><a accesskey="u" href="header/boost/checks/checks_fwd_hpp.html"><img src="images/up.png" alt="Up"></a><a accesskey="h" href="index.html"><img src="images/home.png" alt="Home"></a><a accesskey="n" href="header/boost/checks/crc_hpp.html"><img src="images/next.png" alt="Next"></a>
+</div>
+<div class="refentry" lang="en">
+<a name="isbn10_check_digit_id300145"></a><div class="titlepage"></div>
+<div class="refnamediv">
+<h2><span class="refentrytitle">Function template isbn10_check_digit</span></h2>
+<p>isbn10_check_digit</p>
+</div>
+<h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
+<div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="comment">// In header: &lt;<a class="link" href="header/boost/checks/checks_fwd_hpp.html" title="Header &lt;boost/checks/checks_fwd.hpp&gt;">boost/checks/checks_fwd.hpp</a>&gt;
+
+</span>
+<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> In<span class="special">&gt;</span> <span class="keyword">char</span> <span class="identifier">isbn10_check_digit</span><span class="special">(</span><span class="identifier">In</span> isbn_begin<span class="special">,</span> <span class="identifier">In</span> isbn_end<span class="special">)</span><span class="special">;</span></pre></div>
+<div class="refsect1" lang="en">
+<a name="id869453"></a><h2>Description</h2>
+<p>Compute the check digit of the International Standard Book Number (ISBN) of size 10. 
+
+
+
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">Parameters:</span></p></td>
+<td><div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><code class="computeroutput">isbn_begin</code></span></p></td>
+<td><p>Represents the beginning of the ISBN sequence to check. </p></td>
+</tr>
+<tr>
+<td><p><span class="term"><code class="computeroutput">isbn_end</code></span></p></td>
+<td><p>Represents one off the end of the ISBN sequence to check. </p></td>
+</tr>
+</tbody>
+</table></div></td>
+</tr>
+<tr>
+<td><p><span class="term">Requires:</span></p></td>
+<td><p>isbn_begin and isbn_end are valid initialized iterators. The length of the sequence should be of size 9 and the sequence should contains only digits and dashes. </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Postconditions:</span></p></td>
+<td><p>isbn_begin and isbn_end are inchanged. </p></td>
+</tr>
+<tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>The check digit of the ISBN of size 9 provided, which can be between '0' and '9' or 'X'. Otherwise 0 is returned if the ISBN of size 9 provided is not correct. </p></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2011 Pierre Talbot<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="Is_isbn10_id300095.html"><img src="images/prev.png" alt="Prev"></a><a accesskey="u" href="header/boost/checks/checks_fwd_hpp.html"><img src="images/up.png" alt="Up"></a><a accesskey="h" href="index.html"><img src="images/home.png" alt="Home"></a><a accesskey="n" href="header/boost/checks/crc_hpp.html"><img src="images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>
