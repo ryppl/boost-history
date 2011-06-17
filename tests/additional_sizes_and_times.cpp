@@ -29,12 +29,12 @@ int main()
     typedef bg::model::point<float, 2, bg::cs::cartesian> P;
     typedef bg::model::box<P> B;
     //typedef bgi::rtree<std::pair<B, size_t>, bgi::linear_tag> RT;
-    //typedef bgi::rtree<std::pair<B, size_t>, bgi::quadratic_tag> RT;
+    typedef bgi::rtree<std::pair<B, size_t>, bgi::quadratic_tag> RT;
     //typedef bgi::rtree<std::pair<B, size_t>, bgi::rstar_tag> RT;
-	typedef bgi::rtree<
+	/*typedef bgi::rtree<
 		std::pair<B, size_t>,
 		bgi::options::rtree<bgi::insert_tag, bgi::choose_by_area_diff_tag, bgi::rstar_tag, bgi::default_tag>
-	> RT;
+	> RT;*/
 
     // load config file
     std::ifstream file_cfg("config.txt");
