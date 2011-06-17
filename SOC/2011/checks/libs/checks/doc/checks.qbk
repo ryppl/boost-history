@@ -1,42 +1,309 @@
 [article Boost.Checks
     [quickbook 1.5]
-    [copyright 2011 Murilo Adriano Vasconcelos]
-    [purpose Creation and validation of check digits]
+    [copyright 2011 Pierre Talbot]
     [license
         Distributed under the Boost Software License, Version 1.0.
         (See accompanying file LICENSE_1_0.txt or copy at
         [@http://www.boost.org/LICENSE_1_0.txt])
     ]
-    [authors [Vasconcelos, Murilo Adriano]]
+    [authors [Talbot, Pierre]]
     [/last-revision $Date: 2011-02-08 12:58:15 +0000 (Tue, 02 Feb 2011) $]
 ]
 
+[/ Some links to external sources.]
+[def __boost [@http://www.boost.org/ Boost]]
+[/Note the custom url schema for linking to files within the Boost distribution.]
+[/def __boostroot [@boost: Boost root] does NOT work withe PDF, so avoid.]
+[/Note too that it can't be used for images.]
+[def __boostlicense [@http://www.boost.org/LICENSE_1_0.txt Boost License]]
+
+[def __ISBN [@http://en.wikipedia.org/wiki/Isbn International Standard Book Number (ISBN)]]
+[def __ISSN [@http://en.wikipedia.org/wiki/International_Standard_Serial_Number International Standard Serial Number]]
+
+[def __overview [link checks.overview overview]] [/ example of a link to a section.]
+
 [template super[x]'''<superscript>'''[x]'''</superscript>''']
+
+[/include html4_symbols here if you want squiggles, math or greek?]
+
+[def __spaces '''&#x2000;&#x2000;'''] [/ two spaces - useful for an indent.]
+
+[/Pierre - you have to make a major decision whether to split the doc into several .qbk files,
+or to do it in one big file.  Opinions vary. I found lots of small files a nuisance to manage,
+but equally it may get too big to manage and will involve a lot of refactoring?
+I think I'd go for a max of 4.  Perhaps Overview and all the checks, another for tutorial examples,
+and final for refs, acks, history... 
+But you also might like to have each checks example follow its description?]
 
 [section:checks Boost.Checks]
 
-[section Overview]
-The intent of this library is to provide a collection of functions for validating and creating check digits.
-[endsect]
+[section:overview Overview]
+This library provides a collection of functions for validating and creating check digits.
 
-[endsect]
+Most are primarily for checking the accuracy of short strings of typed input
+(though it obviously also provides against a mis-scan by a device like a bar code or card reader).
+The well-known ISBN is a typical example.  All single altered digits, most double altered digits,
+and transpositions of two digits are caught, and the input rejected as an invalid ISBN. 
 
-[section ISBN checking]
-The functions defined at [@../../../../boost/checks/isbn.hpp <boost/checks/isbn.hpp>] are for validating and computing check digits of [http://en.wikipedia.org/wiki/International_Standard_Book_Number ISBN] strings.
+[important This is not (yet) an official Boost library. It was a
+[@http://code.google.com/soc/2011/boost/about.html Google Summer of Code project (2011)]
+whose mentor organization was Boost. It remains a library under construction,
+the code is quite functional, but interfaces, library structure, and names
+may still be changed without notice.  The current version is available at
 
-[section Synopsis]
-	/**
-	 * This function checks if a `isbn' is a valid ISBN 
-	 */
-	bool is_isbn(const std::string& isbn);
-	
-	/**
-	 * This function computes the check digit for a given ISBN in `isbn'
-	 */
-	char isbn_check_digit(const std::string& isbn); 
-	
-[endsect]
+[*https://svn.boost.org/svn/boost/sandbox/SOC/2011/checks/libs/checks/doc/pdf/checks.pdf PDF documentation]
 
-Both functions assume that `isbn` is a 10-digit ISBN
+[*https://svn.boost.org/svn/boost/sandbox/SOC/2011/checks/libs/checks/doc/html/index.html HTML documentation]
 
-[endsect]
+[*https://svn.boost.org/svn/boost/sandbox/SOC/2011/checks/boost/checks/boost/ Boost Sandbox checks source code]
+
+[note Comments and suggestions (even bugs!) to Pierre Talbot pierre.talbot.6114(at) herslibramont (dot).be]
+
+[include conventions.qbk]
+
+[endsect] [/section:overview Overview]
+
+[/This section might be in a separate file isbn.qbk and you then 'call' include isbn.qbk]
+
+[section:isbn ISBN checking]
+
+The functions defined at [@../../../../boost/checks/isbn.hpp <boost/checks/isbn.hpp>]
+are for validating and computing check digits of
+[/  Use defined __ISBN instead of @http://en.wikipedia.org/wiki/International_Standard_Book_Number ISBN] 
+__ISBN strings.
+
+[h4 Error detecting]
+
+You probably want a section on how good things are at detecting changes in the string.
+This has been well studied for the Verhoeff/Gumm system.
+
+Some of your tests might be devoted to confirming that this is really true?
+
+All alterations of a single digit will be detected.
+
+All alterations of two digits will be detected.  ??? Is this right???
+
+All two digit transpositions will be detected.
+
+
+[section:synposis Synopsis]
+  
+[/ Don't need synopsis as have reference section.
+You can reference its 'synopsis' but I can't recall how just now ;-)
+Exercise for the student, or wait till I get back!]
+
+[/funcref fully::qualified::function_name Link text]
+[funcref boost::checks::is_isbn10 is_isbn10 function]
+
+  // This function checks if an `isbn10` is a valid ISBN. 
+  bool is_isbn10(const std::string& isbn);
+  
+  // This function computes and returns the check digit for a given 9 digit ISBN in `isbn`.
+  char isbn_check_digit(const std::string& isbn); 
+  
+[endsect] [/section:synposis Synopsis]
+
+Both functions assume that `isbn` is a 10-digit ISBN containing only ANSI digits '0' to '9', or ANSI letters 'X',  'Y', 'x',  'y'.
+
+[/ PAB note: What about UTF here? I think they will 'just work' but I'm ignorant :-( ]
+
+[/But I think this is superceeded by the doxygen version.]
+
+[endsect] [/section:isbn ISBN checking]
+
+
+[section:upc Universal Product Code (UPC) checking]
+
+UPC is a sub-set of
+[@http://en.wikipedia.org/wiki/European_Article_Number International Article Number (EAN)]
+- see [@http://en.wikipedia.org/wiki/Universal_Product_Code Universal Product Code (UPC)].
+
+The original UPC is still in use and has 12 decimal digits, for example, a UPC for a box of tissues)
+
+"03600029145X" where X is the check digit, in this case having a value of 2.
+
+On products, it is usually printed as a barcode, but the decimal digits are visible too.
+
+[@http://en.wikipedia.org/wiki/File:UPC_EANUCC-12_barcode.svg UPC EANUCC 12 barcode]
+
+This is a local copy of the barcode:
+
+[$../images/UPC_EANUCC-12_barcode.png]
+[/$../images/UPC_EANUCC-12_barcode.svg [/width 50mm] [/height 20mm]]
+[/ The size control doesn't seem to be effective for the svg version, so use png.]
+[/ Need to acknowledge this source - see link above.]
+
+[endsect] [/section:upc UPC checking]
+
+[section:ean International Article Number (EAN) checking]
+
+EAN is a super-set of the original US 12-digit Universal Product Code (UPC) UPC13 digit (12 + check digit) barcoding standard.
+
+See ????
+
+[endsect] [/section:ean International Article Number (EAN) checking]
+
+[section:tutorial Tutorial Examples]
+
+Here some general tutorial stuff.
+
+followed by specific examples??
+
+[section:isbn_example ISBN example]
+
+Here is a really trivial example of making an ISBN check and also computing the check digit.
+
+[import ..\example\isbn_example.cpp]
+
+First we need to include the appropriate file including the check and compute functions.
+
+[checks_isbn_example_1]
+
+Then assuming that the ISBN is in a `std::string`, we can check a complete ISBN,
+and also compute the check digit from one lacking the check digit.
+
+[checks_isbn_example_2]
+
+This provides this output:
+
+[checks_isbn_output_1]
+
+[endsect] [/section:isbn_example ISBN example]
+
+[endsect] [/section:tutorial Tutorial Examples]
+
+
+[section:tips Hints and Tips]
+
+* This manual is also available as a single PDF file which may be easily emailed and printed.
+
+* This is another tip?
+
+[endsect] [/section:tips Hints and Tips]
+
+
+[section:acks Acknowledgements]
+
+* Thanks to Google for providing the Summer of Code Program 2011 that enabled Pierre Talbot to
+write this library.
+
+* [@http://en.wikipedia.org/wiki/File:UPC_EANUCC-12_barcode.svg UPC EANUCC 12 barcode]
+is copied from Wikipedia under the Creative Commons license.
+
+[endsect] [/section:acks Acknowledgements]
+
+[section:faqs FAQs]
+
+* Why are checks needed?
+* How many alterations to the strings are detected (or undetected)?
+
+[endsect] [/section:faqs FAQs]
+
+[section:refs References]
+
+# __ISBN
+# __ISSN 
+
+[endsect] [/section:refs References]
+
+[section:rationale Rationale]
+
+This section records the rationale and compromises for some design decisions.
+
+[h4 Function parameter]
+
+* Functions that take a single `std::string` are convenient for users with simple requirements.
+This may be simplest what a string is typed in.
+* Functions that use std:: iterators `begin` and `end`
+allow efficient use of a decimal digits string within other text, for example when a record
+is retrieve from a database.
+
+[h4 Scope of the project]
+
+*Scott McMurray has identifed four fairly distinct types of check:
+  # ISBN/ISSN/UPC/EAN/VISA/etc, for catching human-entry errors.
+  # hash functions as in hash tables, which only care about distribution.
+  # checksums like CRC32, for catching data transmission errors.
+  # and cryptographic hash functions, the only ones useful against malicious adversaries.
+
+This project is directed first at the first class.
+Others might be the subject of future additions or other libraries.
+
+* Performance is not a major objective, as most input is tiny,
+and the number of items often likely to be quite small.
+
+* Convenience and flexibility for the user is the highest priority.
+
+[endsect] [/section:rationale Rationale]
+
+[section:history History]
+
+# Project started by Pierre Talbot June 2011 as a Google Summer of Code Project.
+
+# First release in Boost Sandbox for public comment ????
+
+[endsect] [/section:history History]
+
+[section:todo TODO]
+
+This section lists items that are acknowledged as work still TODO.
+
+# Produce 1st version for comment.
+# Produce version for pre-review.
+
+[endsect] [/section:todo TODO]
+
+[section:version_id Version Info]
+
+Last edit to Quickbook file __FILENAME__ was at __TIME__ on __DATE__.
+
+[tip This version information should appear on the pdf version
+ (but is redundant on html where the last revised date is on the bottom line of the home page).]
+[warning Home page "Last revised" is GMT, not local time.  Last edit date is local time.]
+[/See also Adobe Reader pdf File Properties for creation date, and PDF producer, version and page count.]
+
+[caution It does not give the last edit date of other included .qbk files, so may mislead!]
+[/See also Adobe Reader pdf File Properties for creation date, and PDF producer, version and page count.]
+
+[endsect] [/section:version_id Version Info]
+
+[endsect] [/section:checks Boost.Checks]
+
+[xinclude autodoc.xml] [/ Using Doxygen reference documentation.]
+[/ The position of this command in the Quickbook determines the location of the Doxygen references section.]
+
+
+[/ PAB Note:doubt if you need all these - just <index/> is probably enough???)]
+
+[/This (if enabled) creates an Index section that include the class, function ... indexes, and also a full index with <index/>]
+[? enable_index
+'''
+  <index type="class_name">
+   <title>Class Index</title>
+  </index>
+  
+  <index type="typedef_name">
+  <title>Typedef Index</title>
+  </index>
+  
+  <index type="function_name">
+   <title>Function Index</title>
+  </index>
+
+    
+  <index type="macro_name">
+  <title>Macro Index</title>
+  </index>
+
+  <index/>
+
+'''
+] 
+[/if enable_index]
+
+[/ checks.qbk
+  Copyright 2011 Pierre Talbot.
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
