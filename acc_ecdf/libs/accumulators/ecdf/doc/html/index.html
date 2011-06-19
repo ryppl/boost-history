@@ -1,0 +1,622 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Chapter&#160;1.&#160;ecdf, a tentative extension for Boost.Accumulators</title>
+<link rel="stylesheet" href="../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="index.html" title="Chapter&#160;1.&#160;ecdf, a tentative extension for Boost.Accumulators">
+<link rel="next" href="boost_acc_ecdf/ex.html" title="Examples">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../boost.png"></td>
+<td align="center"><a href="../../index.html">Home</a></td>
+<td align="center"><a href="../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav"><a accesskey="n" href="boost_acc_ecdf/ex.html"><img src="../../doc/src/images/next.png" alt="Next"></a></div>
+<div class="chapter">
+<div class="titlepage"><div>
+<div><h2 class="title">
+<a name="boost_acc_ecdf"></a>Chapter&#160;1.&#160;ecdf, a tentative extension for Boost.Accumulators</h2></div>
+<div><div class="author"><h3 class="author">
+<span class="firstname">[Eric Niebler</span> <span class="surname">Erwann Rogard]</span>
+</h3></div></div>
+<div><p class="copyright">Copyright &#169; 2005 Eric Niebler, 2011 Erwann Rogard</p></div>
+<div><div class="legalnotice">
+<a name="id36330851"></a><p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at [@http://www.boost.org/LICENSE_1_0.txt])
+      </p>
+</div></div>
+</div></div>
+<div class="toc">
+<p><b>Table of Contents</b></p>
+<dl>
+<dt><span class="section"><a href="index.html#boost_acc_ecdf.ref">Reference</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="index.html#boost_acc_ecdf.aux_">aux_</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="index.html#boost_acc_ecdf.geometric_series_range"><code class="computeroutput"><span class="identifier">geometric_series_range</span></code></a></span></dt>
+<dt><span class="section"><a href="index.html#boost_acc_ecdf.incremental_simulator"><code class="computeroutput"><span class="identifier">incremental_simulator</span></code></a></span></dt>
+<dt><span class="section"><a href="index.html#boost_acc_ecdf.kolmogorov_smirnov_output"><code class="computeroutput"><span class="identifier">kolmogorov_smirnov_output</span></code></a></span></dt>
+<dt><span class="section"><a href="index.html#boost_acc_ecdf.kolmogorov_smirnov_simulator"><code class="computeroutput"><span class="identifier">kolmogorov_smirnov_simulator</span></code></a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="index.html#boost_acc_ecdf.cdf"><code class="computeroutput"><span class="identifier">cdf</span></code></a></span></dt>
+<dt><span class="section"><a href="index.html#boost_acc_ecdf.count"><code class="computeroutput"><span class="identifier">count</span></code></a></span></dt>
+<dt><span class="section"><a href="index.html#boost_acc_ecdf.cumulative_count"><code class="computeroutput"><span class="identifier">cumulative_count</span></code></a></span></dt>
+<dt><span class="section"><a href="index.html#boost_acc_ecdf.kolmogorov_smirnov_statistic"><code class="computeroutput"><span class="identifier">kolmogorov_smirnov_statistic</span></code></a></span></dt>
+<dt><span class="section"><a href="index.html#boost_acc_ecdf.pdf"><code class="computeroutput"><span class="identifier">pdf</span></code></a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="boost_acc_ecdf/ex.html">Examples</a></span></dt>
+<dt><span class="section"><a href="boost_acc_ecdf/port.html">Portability</a></span></dt>
+</dl>
+</div>
+<a name="boost_acc_ecdf.description"></a><h3>
+<a name="id36330866"></a>
+    <a class="link" href="index.html#boost_acc_ecdf.description">Description</a>
+  </h3>
+<p>
+    Empirical distribution assuming independent samples. Includes the Kolmogorov-Smirnov
+    statistic and tools to assess convergence of a random generator (Boost.Random)
+    to a given distribution (Boost.Math).
+  </p>
+<div class="section">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="boost_acc_ecdf.ref"></a>Reference</h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="index.html#boost_acc_ecdf.aux_">aux_</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="index.html#boost_acc_ecdf.geometric_series_range"><code class="computeroutput"><span class="identifier">geometric_series_range</span></code></a></span></dt>
+<dt><span class="section"><a href="index.html#boost_acc_ecdf.incremental_simulator"><code class="computeroutput"><span class="identifier">incremental_simulator</span></code></a></span></dt>
+<dt><span class="section"><a href="index.html#boost_acc_ecdf.kolmogorov_smirnov_output"><code class="computeroutput"><span class="identifier">kolmogorov_smirnov_output</span></code></a></span></dt>
+<dt><span class="section"><a href="index.html#boost_acc_ecdf.kolmogorov_smirnov_simulator"><code class="computeroutput"><span class="identifier">kolmogorov_smirnov_simulator</span></code></a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="index.html#boost_acc_ecdf.cdf"><code class="computeroutput"><span class="identifier">cdf</span></code></a></span></dt>
+<dt><span class="section"><a href="index.html#boost_acc_ecdf.count"><code class="computeroutput"><span class="identifier">count</span></code></a></span></dt>
+<dt><span class="section"><a href="index.html#boost_acc_ecdf.cumulative_count"><code class="computeroutput"><span class="identifier">cumulative_count</span></code></a></span></dt>
+<dt><span class="section"><a href="index.html#boost_acc_ecdf.kolmogorov_smirnov_statistic"><code class="computeroutput"><span class="identifier">kolmogorov_smirnov_statistic</span></code></a></span></dt>
+<dt><span class="section"><a href="index.html#boost_acc_ecdf.pdf"><code class="computeroutput"><span class="identifier">pdf</span></code></a></span></dt>
+</dl></div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_acc_ecdf.aux_"></a>aux_</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="index.html#boost_acc_ecdf.geometric_series_range"><code class="computeroutput"><span class="identifier">geometric_series_range</span></code></a></span></dt>
+<dt><span class="section"><a href="index.html#boost_acc_ecdf.incremental_simulator"><code class="computeroutput"><span class="identifier">incremental_simulator</span></code></a></span></dt>
+<dt><span class="section"><a href="index.html#boost_acc_ecdf.kolmogorov_smirnov_output"><code class="computeroutput"><span class="identifier">kolmogorov_smirnov_output</span></code></a></span></dt>
+<dt><span class="section"><a href="index.html#boost_acc_ecdf.kolmogorov_smirnov_simulator"><code class="computeroutput"><span class="identifier">kolmogorov_smirnov_simulator</span></code></a></span></dt>
+</dl></div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_acc_ecdf.geometric_series_range"></a><code class="computeroutput"><span class="identifier">geometric_series_range</span></code>
+</h4></div></div></div>
+<a name="boost_acc_ecdf.ref.aux_.geometric_series_range.header"></a><h6>
+<a name="id36330907"></a>
+          <a class="link" href="index.html#boost_acc_ecdf.ref.aux_.geometric_series_range.header">Header</a>
+        </h6>
+<p>
+          <a href="../../../../../boost/accumulators/statistics/ecdf/aux_/geometric_series_range.hpp" target="_top"><code class="literal">boost/accumulators/statistics/ecdf/aux_/geometric_series_range.hpp</code></a>
+        </p>
+<a name="boost_acc_ecdf.ref.aux_.geometric_series_range.description"></a><h6>
+<a name="id36330936"></a>
+          <a class="link" href="index.html#boost_acc_ecdf.ref.aux_.geometric_series_range.description">Description</a>
+        </h6>
+<p>
+          TODO
+        </p>
+<a name="boost_acc_ecdf.ref.aux_.geometric_series_range.synopsis"></a><h6>
+<a name="id36330956"></a>
+          <a class="link" href="index.html#boost_acc_ecdf.ref.aux_.geometric_series_range.synopsis">Synopsis</a>
+        </h6>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">accumulators</span><span class="special">{</span>
+<span class="keyword">namespace</span> <span class="identifier">ecdf</span><span class="special">{</span>
+<span class="keyword">namespace</span> <span class="identifier">aux_</span><span class="special">{</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">N</span> <span class="special">=</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span><span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">geometric_series</span>
+    <span class="special">{</span>
+        
+        <span class="identifier">geometric_series</span><span class="special">();</span>
+        
+        <span class="identifier">geometric_series</span><span class="special">(</span><span class="identifier">N</span> <span class="identifier">n</span><span class="special">,</span> <span class="identifier">N</span> <span class="identifier">factor</span><span class="special">);</span>
+
+        <span class="keyword">typedef</span> <span class="identifier">N</span> <span class="identifier">result_type</span><span class="special">;</span>
+
+        <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+        <span class="identifier">N</span> <span class="keyword">operator</span><span class="special">()(</span><span class="identifier">T</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">anything</span><span class="special">)</span><span class="keyword">const</span><span class="special">;</span>
+        
+        <span class="identifier">N</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">n</span><span class="special">()</span><span class="keyword">const</span><span class="special">;</span>
+        <span class="identifier">N</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">factor</span><span class="special">()</span><span class="keyword">const</span><span class="special">;</span>
+        
+    <span class="special">};</span>
+
+<span class="keyword">namespace</span> <span class="identifier">result_of</span>
+<span class="special">{</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">N</span><span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">geometric_series_iterator</span><span class="special">;</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">N</span><span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">geometric_series_range</span><span class="special">;</span>
+    
+<span class="special">}//</span> <span class="identifier">result_of</span>
+
+    <span class="comment">// n *= factor at each of size iterations
+</span>    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">N</span><span class="special">&gt;</span>
+    <span class="keyword">typename</span> <span class="identifier">result_of</span><span class="special">::</span><span class="identifier">geometric_series_range</span><span class="special">&lt;</span><span class="identifier">N</span><span class="special">&gt;::</span><span class="identifier">type</span>
+    <span class="identifier">geometric_series_range</span><span class="special">(</span><span class="identifier">N</span> <span class="identifier">n</span><span class="special">,</span> <span class="identifier">N</span> <span class="identifier">factor</span><span class="special">,</span> <span class="identifier">N</span> <span class="identifier">size</span><span class="special">);</span>
+
+<span class="special">}//</span> <span class="identifier">aux_</span>
+<span class="special">}//</span> <span class="identifier">ecdf</span>
+<span class="special">}//</span> <span class="identifier">accumulators</span>
+</pre>
+<p>
+        </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_acc_ecdf.incremental_simulator"></a><code class="computeroutput"><span class="identifier">incremental_simulator</span></code>
+</h4></div></div></div>
+<a name="boost_acc_ecdf.ref.aux_.incremental_simulator.header"></a><h6>
+<a name="id36331529"></a>
+          <a class="link" href="index.html#boost_acc_ecdf.ref.aux_.incremental_simulator.header">Header</a>
+        </h6>
+<p>
+          <a href="../../../../../boost/accumulators/statistics/ecdf/aux_/incremental_simulator.hpp" target="_top"><code class="literal">boost/accumulators/statistics/ecdf/aux_/incremental_simulator.hpp</code></a>
+        </p>
+<a name="boost_acc_ecdf.ref.aux_.incremental_simulator.description"></a><h6>
+<a name="id36331558"></a>
+          <a class="link" href="index.html#boost_acc_ecdf.ref.aux_.incremental_simulator.description">Description</a>
+        </h6>
+<p>
+          TODO
+        </p>
+<a name="boost_acc_ecdf.ref.aux_.incremental_simulator.synopsis"></a><h6>
+<a name="id36331578"></a>
+          <a class="link" href="index.html#boost_acc_ecdf.ref.aux_.incremental_simulator.synopsis">Synopsis</a>
+        </h6>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">accumulators</span><span class="special">{</span>
+<span class="keyword">namespace</span> <span class="identifier">ecdf</span><span class="special">{</span>    
+<span class="keyword">namespace</span> <span class="identifier">aux_</span><span class="special">{</span>
+    
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Gen</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">AccSet</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Fun</span><span class="special">&gt;</span>
+    <span class="keyword">class</span> <span class="identifier">incremental_simulator</span>
+    <span class="special">{</span>
+        <span class="keyword">public</span><span class="special">:</span>
+
+        <span class="identifier">incremental_simulator</span><span class="special">(</span><span class="identifier">Gen</span> <span class="identifier">gen</span><span class="special">,</span> <span class="identifier">AccSet</span> <span class="identifier">acc</span><span class="special">,</span> <span class="identifier">Fun</span> <span class="identifier">f</span><span class="special">);</span>
+
+        <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">Fun</span><span class="special">::</span><span class="identifier">result_type</span> <span class="identifier">result_type</span><span class="special">;</span>
+
+        <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">N</span><span class="special">&gt;</span> 
+        <span class="identifier">result_type</span> <span class="keyword">operator</span><span class="special">()(</span><span class="identifier">N</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">n</span><span class="special">)</span><span class="keyword">const</span><span class="special">;</span>
+
+        <span class="identifier">Gen</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">gen</span><span class="special">()</span><span class="keyword">const</span><span class="special">;</span>
+        <span class="identifier">AccSet</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">accumulator</span><span class="special">()</span><span class="keyword">const</span><span class="special">;</span>
+        <span class="identifier">Fun</span>    <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">fun</span><span class="special">()</span><span class="keyword">const</span><span class="special">;</span>
+
+    <span class="special">};</span>
+
+<span class="special">}//</span> <span class="identifier">aux_</span>
+<span class="special">}//</span> <span class="identifier">ecdf</span>
+<span class="special">}//</span> <span class="identifier">accumulators</span>
+</pre>
+<p>
+        </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_acc_ecdf.kolmogorov_smirnov_output"></a><code class="computeroutput"><span class="identifier">kolmogorov_smirnov_output</span></code>
+</h4></div></div></div>
+<a name="boost_acc_ecdf.ref.aux_.kolmogorov_smirnov_output.header"></a><h6>
+<a name="id36332011"></a>
+          <a class="link" href="index.html#boost_acc_ecdf.ref.aux_.kolmogorov_smirnov_output.header">Header</a>
+        </h6>
+<p>
+          <a href="../../../../../boost/accumulators/statistics/ecdf/aux_/kolmogorov_smirnov_output.hpp" target="_top"><code class="literal">boost/accumulators/statistics/ecdf/aux_/kolmogorov_smirnov_output.hpp</code></a>
+        </p>
+<a name="boost_acc_ecdf.ref.aux_.kolmogorov_smirnov_output.description"></a><h6>
+<a name="id36332040"></a>
+          <a class="link" href="index.html#boost_acc_ecdf.ref.aux_.kolmogorov_smirnov_output.description">Description</a>
+        </h6>
+<p>
+          TODO
+        </p>
+<a name="boost_acc_ecdf.ref.aux_.kolmogorov_smirnov_output.synopsis"></a><h6>
+<a name="id36332059"></a>
+          <a class="link" href="index.html#boost_acc_ecdf.ref.aux_.kolmogorov_smirnov_output.synopsis">Synopsis</a>
+        </h6>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">accumulators</span><span class="special">{</span>
+<span class="keyword">namespace</span> <span class="identifier">ecdf</span><span class="special">{</span>
+<span class="keyword">namespace</span> <span class="identifier">aux_</span><span class="special">{</span>
+
+    <span class="comment">// Template parameters:
+</span>    <span class="comment">// D distribution
+</span>    <span class="comment">// T value-type
+</span>    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">D</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">T</span> <span class="special">=</span> <span class="keyword">typename</span> <span class="identifier">D</span><span class="special">::</span><span class="identifier">value_type</span><span class="special">&gt;</span>
+    <span class="keyword">class</span> <span class="identifier">kolmogorov_smirnov_output</span>
+    <span class="special">{</span>
+        <span class="keyword">public</span><span class="special">:</span>
+
+        <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">format</span> <span class="identifier">result_type</span><span class="special">;</span>
+        <span class="keyword">typedef</span> <span class="identifier">T</span> <span class="identifier">value_type</span><span class="special">;</span>
+
+        <span class="identifier">kolmogorov_smirnov_output</span><span class="special">(</span>
+            <span class="identifier">D</span> <span class="identifier">dist</span>
+            <span class="special">,</span> <span class="identifier">result_type</span> <span class="identifier">custom_format</span> <span class="special">=</span> <span class="identifier">result_type</span><span class="special">(</span> <span class="string">"(%1%, %2%)"</span> <span class="special">)</span>
+            <span class="special">,</span> <span class="identifier">value_type</span> <span class="identifier">old_stat</span> <span class="special">=</span> <span class="identifier">bounds_</span><span class="special">::</span><span class="identifier">highest</span><span class="special">()</span>
+        <span class="special">);</span>
+
+        <span class="identifier">result_type</span> <span class="identifier">heading</span><span class="special">()</span><span class="keyword">const</span><span class="special">;</span>
+        
+        
+        <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">AccSet</span><span class="special">&gt;</span>
+        <span class="identifier">result_type</span> <span class="keyword">operator</span><span class="special">()(</span> <span class="keyword">const</span> <span class="identifier">AccSet</span><span class="special">&amp;</span> <span class="identifier">acc_set</span> <span class="special">)</span><span class="keyword">const</span><span class="special">;</span>
+
+        <span class="identifier">D</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">distribution</span><span class="special">()</span><span class="keyword">const</span><span class="special">;</span>
+
+        <span class="identifier">value_type</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">statistic</span><span class="special">()</span><span class="keyword">const</span><span class="special">;</span>
+
+    <span class="special">};</span>
+
+<span class="special">}//</span> <span class="identifier">aux_</span>
+<span class="special">}//</span> <span class="identifier">ecdf</span>
+<span class="special">}//</span> <span class="identifier">accumulators</span>
+</pre>
+<p>
+        </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_acc_ecdf.kolmogorov_smirnov_simulator"></a><code class="computeroutput"><span class="identifier">kolmogorov_smirnov_simulator</span></code>
+</h4></div></div></div>
+<a name="boost_acc_ecdf.ref.aux_.kolmogorov_smirnov_simulator.header"></a><h6>
+<a name="id36332574"></a>
+          <a class="link" href="index.html#boost_acc_ecdf.ref.aux_.kolmogorov_smirnov_simulator.header">Header</a>
+        </h6>
+<p>
+          <a href="../../../../../boost/accumulators/statistics/ecdf/aux_/kolmogorov_smirnov_simulator.hpp" target="_top"><code class="literal">boost/accumulators/statistics/ecdf/aux_/kolmogorov_smirnov_simulator.hpp</code></a>
+        </p>
+<a name="boost_acc_ecdf.ref.aux_.kolmogorov_smirnov_simulator.description"></a><h6>
+<a name="id36332604"></a>
+          <a class="link" href="index.html#boost_acc_ecdf.ref.aux_.kolmogorov_smirnov_simulator.description">Description</a>
+        </h6>
+<p>
+          TODO
+        </p>
+<a name="boost_acc_ecdf.ref.aux_.kolmogorov_smirnov_simulator.synopsis"></a><h6>
+<a name="id36332624"></a>
+          <a class="link" href="index.html#boost_acc_ecdf.ref.aux_.kolmogorov_smirnov_simulator.synopsis">Synopsis</a>
+        </h6>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">accumulators</span><span class="special">{</span>
+<span class="keyword">namespace</span> <span class="identifier">ecdf</span><span class="special">{</span>
+<span class="keyword">namespace</span> <span class="identifier">aux_</span><span class="special">{</span>
+<span class="keyword">namespace</span> <span class="identifier">result_of</span><span class="special">{</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Gen</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">D</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">T</span> <span class="special">=</span> <span class="keyword">typename</span> <span class="identifier">D</span><span class="special">::</span><span class="identifier">value_type</span><span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">kolmogorov_smirnov_simulator</span><span class="special">;</span>
+
+<span class="special">}//</span> <span class="identifier">result_of</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Gen</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">D</span><span class="special">&gt;</span>
+    <span class="keyword">typename</span> <span class="identifier">result_of</span><span class="special">::</span><span class="identifier">kolmogorov_smirnov_simulator</span><span class="special">&lt;</span><span class="identifier">Gen</span><span class="special">,</span> <span class="identifier">D</span><span class="special">&gt;::</span><span class="identifier">type</span>
+    <span class="identifier">kolmogorov_smirnov_simulator</span><span class="special">(</span><span class="identifier">Gen</span> <span class="identifier">gen</span><span class="special">,</span> <span class="identifier">D</span> <span class="identifier">dist</span><span class="special">);</span>
+
+<span class="special">}//</span> <span class="identifier">aux_</span>
+<span class="special">}//</span> <span class="identifier">ecdf</span>
+<span class="special">}//</span> <span class="identifier">accumulators</span>
+</pre>
+<p>
+        </p>
+</div>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_acc_ecdf.cdf"></a><code class="computeroutput"><span class="identifier">cdf</span></code>
+</h3></div></div></div>
+<a name="boost_acc_ecdf.ref.cdf.header"></a><h5>
+<a name="id36332961"></a>
+        <a class="link" href="index.html#boost_acc_ecdf.ref.cdf.header">Header</a>
+      </h5>
+<p>
+        <a href="../../../../../boost/accumulators/statistics/ecdf/cdf.hpp" target="_top"><code class="literal">boost/accumulators/statistics/ecdf/cdf.hpp</code></a>
+      </p>
+<a name="boost_acc_ecdf.ref.cdf.description"></a><h5>
+<a name="id36332986"></a>
+        <a class="link" href="index.html#boost_acc_ecdf.ref.cdf.description">Description</a>
+      </h5>
+<p>
+        TODO
+      </p>
+<a name="boost_acc_ecdf.ref.cdf.synopsis"></a><h5>
+<a name="id36333004"></a>
+        <a class="link" href="index.html#boost_acc_ecdf.ref.cdf.synopsis">Synopsis</a>
+      </h5>
+<p>
+        
+</p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">accumulators</span><span class="special">{</span>
+<span class="keyword">namespace</span> <span class="identifier">ecdf</span><span class="special">{</span>
+<span class="keyword">namespace</span> <span class="identifier">tag</span>
+<span class="special">{</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T1</span><span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">cdf</span>
+        <span class="special">:</span> <span class="identifier">depends_on</span><span class="special">&lt;</span>
+            <span class="identifier">ecdf</span><span class="special">::</span><span class="identifier">tag</span><span class="special">::</span><span class="identifier">cumulative_count</span><span class="special">,</span>
+            <span class="identifier">accumulators</span><span class="special">::</span><span class="identifier">tag</span><span class="special">::</span><span class="identifier">count</span>
+        <span class="special">&gt;</span>
+    <span class="special">{};</span>
+    
+<span class="special">}//</span> <span class="identifier">tag</span>
+<span class="keyword">namespace</span> <span class="identifier">result_of</span><span class="special">{</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T1</span><span class="special">,</span><span class="keyword">typename</span> <span class="identifier">AccSet</span><span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">cdf</span><span class="special">;</span>
+
+<span class="special">}//</span> <span class="identifier">result_of</span>
+<span class="keyword">namespace</span> <span class="identifier">extract</span>
+<span class="special">{</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T1</span><span class="special">,</span><span class="keyword">typename</span> <span class="identifier">AccSet</span><span class="special">,</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+    <span class="keyword">typename</span> <span class="identifier">ecdf</span><span class="special">::</span><span class="identifier">result_of</span><span class="special">::</span><span class="keyword">template</span> <span class="identifier">cdf</span><span class="special">&lt;</span><span class="identifier">T1</span><span class="special">,</span><span class="identifier">AccSet</span><span class="special">&gt;::</span><span class="identifier">type</span>
+    <span class="identifier">cdf</span><span class="special">(</span><span class="identifier">AccSet</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">set</span><span class="special">,</span><span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">x</span><span class="special">);</span>
+    
+<span class="special">}//</span> <span class="identifier">extract</span>
+<span class="special">}//</span> <span class="identifier">ecdf</span>
+<span class="special">}//</span> <span class="identifier">accumulators</span>
+</pre>
+<p>
+      </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_acc_ecdf.count"></a><code class="computeroutput"><span class="identifier">count</span></code>
+</h3></div></div></div>
+<a name="boost_acc_ecdf.ref.count.header"></a><h5>
+<a name="id36333608"></a>
+        <a class="link" href="index.html#boost_acc_ecdf.ref.count.header">Header</a>
+      </h5>
+<p>
+        <a href="../../../../../boost/accumulators/statistics/ecdf/count.hpp" target="_top"><code class="literal">boost/accumulators/statistics/ecdf/count.hpp</code></a>
+      </p>
+<a name="boost_acc_ecdf.ref.count.description"></a><h5>
+<a name="id36333633"></a>
+        <a class="link" href="index.html#boost_acc_ecdf.ref.count.description">Description</a>
+      </h5>
+<p>
+        TODO
+      </p>
+<a name="boost_acc_ecdf.ref.count.synopsis"></a><h5>
+<a name="id36333650"></a>
+        <a class="link" href="index.html#boost_acc_ecdf.ref.count.synopsis">Synopsis</a>
+      </h5>
+<p>
+        
+</p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">accumulators</span><span class="special">{</span>
+<span class="keyword">namespace</span> <span class="identifier">ecdf</span><span class="special">{</span>
+<span class="keyword">namespace</span> <span class="identifier">tag</span>
+<span class="special">{</span>
+
+    <span class="keyword">struct</span> <span class="identifier">count</span>
+        <span class="special">:</span> <span class="identifier">depends_on</span><span class="special">&lt;</span>
+            <span class="identifier">ecdf</span><span class="special">::</span><span class="identifier">tag</span><span class="special">::</span><span class="identifier">ordered_sample</span>
+        <span class="special">&gt;</span>
+    <span class="special">};</span>
+    
+<span class="special">}//</span> <span class="identifier">tag</span>
+<span class="keyword">namespace</span> <span class="identifier">result_of</span><span class="special">{</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">AccSet</span><span class="special">,</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">count</span><span class="special">;</span>
+
+<span class="special">}//</span> <span class="identifier">result_of</span>
+<span class="keyword">namespace</span> <span class="identifier">extract</span>
+<span class="special">{</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">AccSet</span><span class="special">,</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+    <span class="keyword">typename</span> <span class="identifier">ecdf</span><span class="special">::</span><span class="identifier">result_of</span><span class="special">::</span><span class="keyword">template</span> <span class="identifier">count</span><span class="special">&lt;</span><span class="identifier">AccSet</span><span class="special">,</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">type</span>
+    <span class="identifier">count</span><span class="special">(</span><span class="identifier">AccSet</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">acc</span><span class="special">,</span><span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">x</span><span class="special">);</span>
+
+<span class="special">}//</span> <span class="identifier">extract</span>
+<span class="special">}//</span> <span class="identifier">ecdf</span>
+<span class="special">}//</span> <span class="identifier">accumulators</span>
+</pre>
+<p>
+      </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_acc_ecdf.cumulative_count"></a><code class="computeroutput"><span class="identifier">cumulative_count</span></code>
+</h3></div></div></div>
+<a name="boost_acc_ecdf.ref.cumulative_count.header"></a><h5>
+<a name="id36334058"></a>
+        <a class="link" href="index.html#boost_acc_ecdf.ref.cumulative_count.header">Header</a>
+      </h5>
+<p>
+        <a href="../../../../../boost/accumulators/statistics/ecdf/cumulative_count.hpp" target="_top"><code class="literal">boost/accumulators/statistics/ecdf/cumulative_count.hpp</code></a>
+      </p>
+<a name="boost_acc_ecdf.ref.cumulative_count.description"></a><h5>
+<a name="id36334084"></a>
+        <a class="link" href="index.html#boost_acc_ecdf.ref.cumulative_count.description">Description</a>
+      </h5>
+<p>
+        TODO
+      </p>
+<a name="boost_acc_ecdf.ref.cumulative_count.synopsis"></a><h5>
+<a name="id36334102"></a>
+        <a class="link" href="index.html#boost_acc_ecdf.ref.cumulative_count.synopsis">Synopsis</a>
+      </h5>
+<p>
+        
+</p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">accumulators</span><span class="special">{</span>
+<span class="keyword">namespace</span> <span class="identifier">ecdf</span><span class="special">{</span>
+<span class="keyword">namespace</span> <span class="identifier">tag</span>
+<span class="special">{</span>
+    <span class="keyword">struct</span> <span class="identifier">cumulative_count</span><span class="special">:</span> <span class="identifier">depends_on</span><span class="special">&lt;</span>
+        <span class="identifier">ecdf</span><span class="special">::</span><span class="identifier">tag</span><span class="special">::</span><span class="identifier">ordered_sample</span>
+    <span class="special">&gt;</span>
+    <span class="special">{};</span>
+
+<span class="special">}//</span> <span class="identifier">tag</span>
+<span class="keyword">namespace</span> <span class="identifier">result_of</span><span class="special">{</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">AccSet</span><span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">cumulative_count</span><span class="special">;</span>
+
+<span class="special">}//</span> <span class="identifier">result_of</span>
+<span class="keyword">namespace</span> <span class="identifier">extract</span>
+<span class="special">{</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">AccSet</span><span class="special">,</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+    <span class="keyword">typename</span> <span class="identifier">ecdf</span><span class="special">::</span><span class="identifier">result_of</span><span class="special">::</span><span class="keyword">template</span> <span class="identifier">cumulative_count</span><span class="special">&lt;</span><span class="identifier">AccSet</span><span class="special">&gt;::</span><span class="identifier">type</span>
+    <span class="identifier">cumulative_count</span><span class="special">(</span><span class="identifier">AccSet</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">acc</span><span class="special">,</span><span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">x</span><span class="special">);</span>
+
+<span class="special">}//</span> <span class="identifier">extract</span>
+<span class="special">}//</span> <span class="identifier">ecdf</span>
+<span class="special">}//</span> <span class="identifier">accumulators</span>
+</pre>
+<p>
+      </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_acc_ecdf.kolmogorov_smirnov_statistic"></a><code class="computeroutput"><span class="identifier">kolmogorov_smirnov_statistic</span></code>
+</h3></div></div></div>
+<a name="boost_acc_ecdf.ref.kolmogorov_smirnov_statistic.header"></a><h5>
+<a name="id36334488"></a>
+        <a class="link" href="index.html#boost_acc_ecdf.ref.kolmogorov_smirnov_statistic.header">Header</a>
+      </h5>
+<p>
+        <a href="../../../../../boost/accumulators/statistics/ecdf/kolmogorov_smirnov_statistic.hpp" target="_top"><code class="literal">boost/accumulators/statistics/ecdf/kolmogorov_smirnov_statistic.hpp</code></a>
+      </p>
+<a name="boost_acc_ecdf.ref.kolmogorov_smirnov_statistic.description"></a><h5>
+<a name="id36334517"></a>
+        <a class="link" href="index.html#boost_acc_ecdf.ref.kolmogorov_smirnov_statistic.description">Description</a>
+      </h5>
+<p>
+        TODO
+      </p>
+<a name="boost_acc_ecdf.ref.kolmogorov_smirnov_statistic.synopsis"></a><h5>
+<a name="id36334537"></a>
+        <a class="link" href="index.html#boost_acc_ecdf.ref.kolmogorov_smirnov_statistic.synopsis">Synopsis</a>
+      </h5>
+<p>
+        
+</p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">accumulators</span><span class="special">{</span>
+<span class="keyword">namespace</span> <span class="identifier">ecdf</span><span class="special">{</span>
+<span class="keyword">namespace</span> <span class="identifier">tag</span>
+<span class="special">{</span>
+    <span class="keyword">struct</span> <span class="identifier">kolmogorov_smirnov</span>
+      <span class="special">:</span> <span class="identifier">depends_on</span><span class="special">&lt;</span>
+          <span class="identifier">ecdf</span><span class="special">::</span><span class="identifier">tag</span><span class="special">::</span><span class="identifier">ordered_sample</span><span class="special">,</span>
+          <span class="identifier">accumulators</span><span class="special">::</span><span class="identifier">tag</span><span class="special">::</span><span class="identifier">count</span>
+    <span class="special">&gt;</span>
+    <span class="special">{};</span>
+    
+<span class="special">}//</span> <span class="identifier">tag</span>
+<span class="keyword">namespace</span> <span class="identifier">result_of</span><span class="special">{</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T1</span><span class="special">,</span><span class="keyword">typename</span> <span class="identifier">AccSet</span><span class="special">,</span><span class="keyword">typename</span> <span class="identifier">D</span><span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">kolmogorov_smirnov_statistic</span><span class="special">;</span>
+
+<span class="special">}//</span> <span class="identifier">result_of</span>
+
+    <span class="comment">// Usage : statistic&lt;T1&gt;(acc,dist)
+</span>    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T1</span><span class="special">,</span><span class="keyword">typename</span> <span class="identifier">AccSet</span><span class="special">,</span><span class="keyword">typename</span> <span class="identifier">D</span><span class="special">&gt;</span>
+    <span class="keyword">typename</span> <span class="identifier">result_of</span><span class="special">::</span><span class="keyword">template</span> 
+    	<span class="identifier">kolmogorov_smirnov_statistic</span><span class="special">&lt;</span><span class="identifier">T1</span><span class="special">,</span> <span class="identifier">AccSet</span><span class="special">,</span> <span class="identifier">D</span><span class="special">&gt;::</span><span class="identifier">type</span>
+    <span class="identifier">kolmogorov_smirnov_statistic</span><span class="special">(</span><span class="identifier">AccSet</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">set</span><span class="special">,</span><span class="keyword">const</span> <span class="identifier">D</span><span class="special">&amp;</span> <span class="identifier">dist</span><span class="special">);</span>
+
+<span class="special">}//</span> <span class="identifier">ecdf</span>
+<span class="special">}//</span> <span class="identifier">accumulators</span>
+</pre>
+<p>
+      </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_acc_ecdf.pdf"></a><code class="computeroutput"><span class="identifier">pdf</span></code>
+</h3></div></div></div>
+<a name="boost_acc_ecdf.ref.pdf.header"></a><h5>
+<a name="id36334978"></a>
+        <a class="link" href="index.html#boost_acc_ecdf.ref.pdf.header">Header</a>
+      </h5>
+<p>
+        <a href="../../../../../boost/accumulators/statistics/ecdf/pdf.hpp" target="_top"><code class="literal">boost/accumulators/statistics/ecdf/pdf.hpp</code></a>
+      </p>
+<a name="boost_acc_ecdf.ref.pdf.description"></a><h5>
+<a name="id36335004"></a>
+        <a class="link" href="index.html#boost_acc_ecdf.ref.pdf.description">Description</a>
+      </h5>
+<p>
+        TODO
+      </p>
+<a name="boost_acc_ecdf.ref.pdf.synopsis"></a><h5>
+<a name="id36335021"></a>
+        <a class="link" href="index.html#boost_acc_ecdf.ref.pdf.synopsis">Synopsis</a>
+      </h5>
+<p>
+        
+</p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">accumulators</span><span class="special">{</span>
+<span class="keyword">namespace</span> <span class="identifier">ecdf</span><span class="special">{</span>
+<span class="keyword">namespace</span> <span class="identifier">tag</span>
+<span class="special">{</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T1</span><span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">pdf</span><span class="special">:</span> <span class="identifier">depends_on</span><span class="special">&lt;</span>
+        <span class="identifier">ecdf</span><span class="special">::</span><span class="identifier">tag</span><span class="special">::</span><span class="identifier">count</span><span class="special">,</span>
+        <span class="identifier">accumulators</span><span class="special">::</span><span class="identifier">tag</span><span class="special">::</span><span class="identifier">count</span>
+    <span class="special">&gt;</span>
+    <span class="special">{};</span>
+
+<span class="special">}//</span> <span class="identifier">tag</span>
+<span class="keyword">namespace</span> <span class="identifier">result_of</span><span class="special">{</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T1</span><span class="special">,</span><span class="keyword">typename</span> <span class="identifier">AccSet</span><span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">pdf</span><span class="special">;</span>
+
+<span class="special">}//</span> <span class="identifier">result_of</span>
+<span class="keyword">namespace</span> <span class="identifier">extract</span>
+<span class="special">{</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T1</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">AccSet</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+    <span class="keyword">typename</span> <span class="identifier">ecdf</span><span class="special">::</span><span class="identifier">result_of</span><span class="special">::</span><span class="keyword">template</span> <span class="identifier">pdf</span><span class="special">&lt;</span><span class="identifier">T1</span><span class="special">,</span> <span class="identifier">AccSet</span><span class="special">&gt;::</span><span class="identifier">type</span>
+    <span class="identifier">pdf</span><span class="special">(</span><span class="identifier">AccSet</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">set</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">x</span><span class="special">);</span>
+
+<span class="special">}//</span> <span class="identifier">extract</span>
+<span class="special">}//</span> <span class="identifier">ecdf</span>
+<span class="special">}//</span> <span class="identifier">accumulators</span>
+</pre>
+<p>
+      </p>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"><p><small>Last revised: June 19, 2011 at 20:58:46 GMT</small></p></td>
+<td align="right"><div class="copyright-footer"></div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav"><a accesskey="n" href="boost_acc_ecdf/ex.html"><img src="../../doc/src/images/next.png" alt="Next"></a></div>
+</body>
+</html>
