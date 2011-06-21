@@ -1,0 +1,8 @@
+import testing ;
+
+project quickbook-unit-tests
+    : requirements <include>../../src <warnings>all
+    ;
+
+run values_test.cpp ../../src/values.cpp ;
+run post_process_test.cpp ../../src/post_process.cpp ;
