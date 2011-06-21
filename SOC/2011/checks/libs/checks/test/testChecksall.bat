@@ -8,8 +8,8 @@ set tim=%t:~0,2%%t:~3,2%
 rem pick just hours and minutes.
 rem time may include leading space, like " 915", so remove space.
 set tim=%tim: =%
-i:
-cd \boost-sandbox\SOC\2011\checks\libs\checks\test
+D:
+cd boost-sandbox\SOC\2011\checks\libs\checks\test
 echo on
 bjam -a > testChecks_%date%_%tim%.log
 if not ERRORLEVEL 0 (echo Errorlevel is %ERRORLEVEL%) else (echo OK)
