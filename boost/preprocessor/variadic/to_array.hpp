@@ -15,11 +15,18 @@
 #
 # include <boost/preprocessor/config/config.hpp>
 # include <boost/preprocessor/tuple/to_array.hpp>
+# if BOOST_PP_VARIADICS_MSVC
+#    include <boost/preprocessor/variadic/size.hpp>
+# endif
 #
 # /* BOOST_PP_VARIADIC_TO_ARRAY */
 #
 # if BOOST_PP_VARIADICS
-#    define BOOST_PP_VARIADIC_TO_ARRAY(...) BOOST_PP_TUPLE_TO_ARRAY((__VA_ARGS__))
+#    if BOOST_PP_VARIADICS_MSVC
+#        define BOOST_PP_VARIADIC_TO_ARRAY(...) BOOST_PP_TUPLE_TO_ARRAY_2(BOOST_PP_VARIADIC_SIZE(__VA_ARGS__),(__VA_ARGS__))
+#    else
+#        define BOOST_PP_VARIADIC_TO_ARRAY(...) BOOST_PP_TUPLE_TO_ARRAY((__VA_ARGS__))
+#    endif
 # endif
 #
 # endif
