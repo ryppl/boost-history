@@ -21,6 +21,12 @@
 #include <boost/range.hpp>
 #include <boost/iterator/iterator_facade.hpp>
 
+#include <boost/numeric/odeint/util/construct.hpp>
+#include <boost/numeric/odeint/util/destruct.hpp>
+#include <boost/numeric/odeint/util/copy.hpp>
+#include <boost/numeric/odeint/util/resize.hpp>
+#include <boost/numeric/odeint/util/default_adjust_size.hpp>
+
 using namespace std;
 
 
@@ -168,11 +174,34 @@ struct is_resizeable< gsl_vector >
 	const static bool value = type::value;
 };
 
+template<>
+void construct( gsl_vector &x )
+{
+	x.owner = 0;
+	x.size = 0;
+	x.stride = 0;
+	x.block = 0;
+	x.data = 0;
+}
+
+template<>
+void destruct( gsl_vector &x )
+{
+	if( x.owner != 0 )
+	{
+		gsl_block_free( x.block );
+	}
+	x.owner = 0;
+	x.size = 0;
+	x.stride = 0;
+	x.block = 0;
+	x.data = 0;
+}
+
 
 template<>
 void resize( const gsl_vector &x , gsl_vector &dxdt )
 {
-	// ToDo : the vector could be uninitialized
 	if( dxdt.owner != 0 )
 	{
 		gsl_block_free( dxdt.block );
@@ -197,10 +226,20 @@ bool same_size( const gsl_vector &x1 , const gsl_vector &x2 )
 	return x1.size == x2.size;
 }
 
+struct default_adjust_size {
+
+    template<>
+    void adjust_size( const gsl_vector &x1 , gsl_vector &x2 )
+    {
+        if( !same_size( x1 , x2 ) ) resize( x1 , x2 );
+    }
+};
+
 template<>
-void adjust_size( const gsl_vector &x1 , gsl_vector &x2 )
+void copy( const gsl_vector &from , gsl_vector &to )
 {
-	if( !same_size( x1 , x2 ) ) resize( x1 , x2 );
+	adjust_size( from , to );
+	gsl_vector_memcpy( &to , &from );
 }
 
 
