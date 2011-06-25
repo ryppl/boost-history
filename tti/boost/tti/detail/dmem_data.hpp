@@ -1,11 +1,17 @@
-#if !defined(TTI_DETAIL_MEMBER_DATA_HPP)
-#define TTI_DETAIL_MEMBER_DATA_HPP
+
+//  (C) Copyright Edward Diener 2011
+//  Use, modification and distribution are subject to the Boost Software License,
+//  Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+//  http://www.boost.org/LICENSE_1_0.txt).
+
+#if !defined(TTI_DETAIL_MEM_DATA_HPP)
+#define TTI_DETAIL_MEM_DATA_HPP
 
 #include <boost/config.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/type_traits/detail/yes_no_type.hpp>
 #if !defined(BOOST_MSVC)
-#include "dmember_function.hpp"
+#include "dmem_fun.hpp"
 #endif
 
 #if defined(BOOST_MSVC)
@@ -91,4 +97,4 @@ namespace boost
     }
   }
   
-#endif // TTI_DETAIL_MEMBER_DATA_HPP
+#endif // TTI_DETAIL_MEM_DATA_HPP
