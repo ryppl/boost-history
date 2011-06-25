@@ -10,6 +10,11 @@ inner elements which can be introspected are type,
 class template, member data, member function, static
 member data, and static member function.
 
+The library comes with full documentation with an index, 
+in both HTML and PDF format. The HTML documentation is at 
+tti\libs\tti\doc\html\index.html and the PDF documentation 
+is at tti\libs\tti\doc\TypeTraitsIntrospection.pdf.
+
 If you want to contact me directly, my name is 
 Edward Diener and you can reach me at 
 eld@tropicsoft.com. I am an independent computer
