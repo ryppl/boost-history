@@ -33,7 +33,7 @@
 #    define BOOST_PP_TUPLE_ELEM_O_3(size, n, tuple) BOOST_PP_TUPLE_ELEM_O_2(n, tuple)
 # else
 #    if BOOST_PP_CONFIG_FLAGS() & BOOST_PP_CONFIG_MSVC()
-#        define BOOST_PP_TUPLE_ELEM(size, n, tuple) BOOST_PP_TUPLE_ELEM_I(BOOST_PP_CAT(BOOST_PP_TUPLE_ELEM_, n), BOOST_PP_CAT(BOOST_PP_TUPLE_ELEM_E_, size) tuple)
+#        define BOOST_PP_TUPLE_ELEM(size, n, tuple) BOOST_PP_TUPLE_ELEM_I(BOOST_PP_CAT(BOOST_PP_TUPLE_ELEM_, n), BOOST_PP_CAT(BOOST_PP_CAT(BOOST_PP_TUPLE_ELEM_E_, size), tuple))
 #        define BOOST_PP_TUPLE_ELEM_I(m, args) BOOST_PP_TUPLE_ELEM_II(m, args)
 #        define BOOST_PP_TUPLE_ELEM_II(m, args) BOOST_PP_CAT(m ## args,)
 #    elif BOOST_PP_CONFIG_FLAGS() & BOOST_PP_CONFIG_MWCC()
