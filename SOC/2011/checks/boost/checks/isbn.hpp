@@ -50,26 +50,19 @@ inline bool Is_isbn10(In isbn_begin, In isbn_end)
   }
   return (i > 0 || iter != isbn_end) ? false : check % 11 == 0;
 }
-/*
-template <class In>
-inline bool Is_isbn10(In isbn_begin, In isbn_end)
-{
-  if( isbn_begin == isbn_end ) return false;
-  In iter = isbn_end;
-  return(*(--iter) == isbn10_check_digit(isbn_begin, iter));
-}*/
+
 /** Compute the check digit of the International Standard Book Number (ISBN) of size 10.
  * \tparam In Iterator which represent the bound of a sequence of character.
  * \param [in] isbn_begin Represents the beginning of the ISBN sequence to check.
  * \param [in] isbn_end Represents one off the end of the ISBN sequence to check.
  * \pre isbn_begin and isbn_end are valid initialized iterators. The length of the sequence should be of size 9 and the sequence should contains only digits and dashes.
  * \post isbn_begin and isbn_end are inchanged.
- * \return The check digit of the ISBN of size 9 provided, which can be between '0' and '9' or 'X'. Otherwise 0 is returned if the ISBN of size 9 provided is not correct.
+ * \return The check digit of the ISBN of size 9 provided, which can be between '0' and '9' or 'X'. Otherwise -1 is returned if the ISBN of size 9 provided is not correct.
  */
 template <class In>
 inline char isbn10_check_digit(In isbn_begin, In isbn_end)
 {
-  if( isbn_begin == isbn_end ) return false;
+  if( isbn_begin == isbn_end ) return -1;
   In iter = isbn_begin;
   int check = 0, i;
   for(i=10; i>1 && iter != isbn_end;)
@@ -81,7 +74,7 @@ inline char isbn10_check_digit(In isbn_begin, In isbn_end)
     }
     ++iter;
   }
-  if(i > 1 || iter != isbn_end) return false;
+  if(i > 1 || iter != isbn_end) return -1;
   check = 11 - check % 11;
   return (check == 10) ? 'X' : static_cast<char>(check + 48);
 }
