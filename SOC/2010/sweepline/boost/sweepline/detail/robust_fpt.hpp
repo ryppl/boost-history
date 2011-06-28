@@ -171,13 +171,13 @@ namespace detail {
 		    return !(*this < that);
 	    }
 
-	    bool operator-() const {
+	    robust_fpt operator-() const {
 		    return robust_fpt(-fpv_, re_);
 	    }
 
 	    robust_fpt& operator=(const robust_fpt &that) {
 		    this->fpv_ = that.fpv_;
-		    this->relative_error_ = that.re_;
+		    this->re_ = that.re_;
 		    return *this;
 	    }
 
@@ -188,7 +188,7 @@ namespace detail {
                 this->re_ = (std::max)(this->re_, that.re_) + ROUNDING_ERROR;
             else {            
                 floating_point_type temp = (this->fpv_ * this->re_ - that.fpv_ * that.re_) / fpv;
-                this->re_ = fabs(get_d(temp)) + ROUNDING_ERROR;
+                this->re_ = std::fabs(get_d(temp)) + ROUNDING_ERROR;
             }
             this->fpv_ = fpv;
 		    return *this;
@@ -201,7 +201,7 @@ namespace detail {
                 this->re_ = (std::max)(this->re_, that.re_) + ROUNDING_ERROR;
             else {
                 floating_point_type temp = (this->fpv_ * this->re_ + that.fpv_ * that.re_) / fpv;
-                this->re_ = fabs(get_d(temp)) + ROUNDING_ERROR;
+                this->re_ = std::fabs(get_d(temp)) + ROUNDING_ERROR;
             }
             this->fpv_ = fpv;
 		    return *this;
@@ -227,7 +227,7 @@ namespace detail {
                 re = (std::max)(this->re_, that.re_) + ROUNDING_ERROR;
             else {
                 floating_point_type temp = (this->fpv_ * this->re_ - that.fpv_ * that.re_) / fpv;
-                re = fabs(get_d(temp)) + ROUNDING_ERROR;
+                re = std::fabs(get_d(temp)) + ROUNDING_ERROR;
             }
             return robust_fpt(fpv, re);
         }
@@ -240,7 +240,7 @@ namespace detail {
                 re = (std::max)(this->re_, that.re_) + ROUNDING_ERROR;
             else {
                 floating_point_type temp = (this->fpv_ * this->re_ + that.fpv_ * that.re_) / fpv;
-                re = fabs(get_d(temp)) + ROUNDING_ERROR;
+                re = std::fabs(get_d(temp)) + ROUNDING_ERROR;
             }
             return robust_fpt(fpv, re);
         }
@@ -259,6 +259,10 @@ namespace detail {
 
         robust_fpt get_sqrt() const {
             return robust_fpt(std::sqrt(fpv_), re_ * 0.5 + ROUNDING_ERROR);
+        }
+
+        robust_fpt fabs() const {
+            return (fpv_ >= 0) ? *this : -(*this);
         }
 
     private:
@@ -359,18 +363,24 @@ namespace detail {
         }
 
         epsilon_robust_comparator<T> &operator*=(const T &val) {
-            positive_sum_ *= fabs(val);
-            negative_sum_ *= fabs(val);
-            if (val < 0) {
+            if (val >= 0) {
+                positive_sum_ *= val;
+                negative_sum_ *= val;
+            } else {
+                positive_sum_ *= -val;
+                negative_sum_ *= -val;
                 swap();
             }
             return *this;
         }
 
         epsilon_robust_comparator<T> &operator/=(const T &val) {
-            positive_sum_ /= fabs(val);
-            negative_sum_ /= fabs(val);
-            if (val < 0) {
+            if (val >= 0) {
+                positive_sum_ /= val;
+                negative_sum_ /= val;
+            } else {
+                positive_sum_ /= -val;
+                negative_sum_ /= -val;
                 swap();
             }
             return *this;

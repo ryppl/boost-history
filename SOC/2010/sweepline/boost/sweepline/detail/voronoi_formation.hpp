@@ -1068,7 +1068,7 @@ namespace detail {
                                               bool recompute_c_y = true,
                                               bool recompute_lower_x = true) {
         typedef mpt_wrapper<mpz_class, 8> mpt_type;
-        static mpt_type mpz_dif_x[3], mpz_dif_y[3], mpz_sum_x[3], mpz_sum_y[3],
+        static mpt_type mpz_dif_x[3], mpz_dif_y[3], mpz_sum_x[2], mpz_sum_y[2],
                         mpz_numerator[3], mpz_c_x, mpz_c_y, mpz_sqr_r, denom,
                         cA[2], cB[2];
         mpz_dif_x[0] = site1.x() - site2.x();
@@ -1077,15 +1077,7 @@ namespace detail {
         mpz_dif_y[0] = site1.y() - site2.y();
         mpz_dif_y[1] = site2.y() - site3.y();
         mpz_dif_y[2] = site1.y() - site3.y();
-    
-        // Evaluate orientation.
         denom = (mpz_dif_x[0] * mpz_dif_y[1] - mpz_dif_x[1] * mpz_dif_y[0]) * 2.0;
-
-        // Evaluate inverse orientation to avoid division in calculations.
-        // r(inv_orientation) = 2 * EPS.
-        if (denom.get_d() >= 0)
-            return false;
-    
         mpz_sum_x[0] = site1.x() + site2.x();
         mpz_sum_x[1] = site2.x() + site3.x();
         mpz_sum_y[0] = site1.y() + site2.y();
@@ -1103,21 +1095,17 @@ namespace detail {
                 mpz_sqr_r = 1.0;
                 for (int i = 0; i < 3; ++i)
                     mpz_sqr_r *= mpz_dif_x[i] * mpz_dif_x[i] + mpz_dif_y[i] * mpz_dif_y[i];
-
-                // r(r) = 1.5 * EPS < 2 * EPS.
                 double r = std::sqrt(mpz_sqr_r.get_d());
 
                 // If c_x >= 0 then lower_x = c_x + r,
                 // else lower_x = (c_x * c_x - r * r) / (c_x - r).
                 // To guarantee epsilon relative error.
                 if (c_event.x() >= 0) {
-                    // r(lower_x) = 5 * EPS.
                     c_event.lower_x(c_event.x() + r / fabs(denom.get_d()));
                 } else {
                     mpz_numerator[0] = mpz_c_x * mpz_c_x - mpz_sqr_r;
-                    // r(lower_x) = 8 * EPS.
-                    double lower_x = mpz_numerator[0].get_d() / fabs(denom.get_d());
-                    lower_x /= (mpz_c_x >= 0) ? (-mpz_c_x.get_d() - r) : (mpz_c_x.get_d() - r);
+                    double lower_x = mpz_numerator[0].get_d() /
+                                     (denom.get_d() * (mpz_c_x.get_d() + r));
                     c_event.lower_x(lower_x);
                 }
             }
@@ -1137,30 +1125,12 @@ namespace detail {
                                               const site_event<T> &site2,
                                               const site_event<T> &site3,
                                               int segment_index,
-                                              circle_event<T> &c_event) {
+                                              circle_event<T> &c_event,
+                                              bool recompute_c_x = true,
+                                              bool recompute_c_y = true,
+                                              bool recompute_lower_x = true) {
         typedef mpt_wrapper<mpz_class, 8> mpt_type;
         typedef mpt_wrapper<mpf_class, 2> mpf_type;
-        // TODO(asydorchuk): Checks are not required if we recompute event parameters.
-        if (segment_index != 2) {
-            kOrientation orient1 = orientation_test(site1.point0(),
-                site2.point0(), site3.point0(true));
-            kOrientation orient2 = orientation_test(site1.point0(),
-                site2.point0(), site3.point1(true));
-            if (segment_index == 1 && site1.x0() >= site2.x0()) {
-                if (orient1 != RIGHT_ORIENTATION)
-                    return false;
-            } else if (segment_index == 3 && site2.x0() >= site1.x0()) {
-                if (orient2 != RIGHT_ORIENTATION)
-                    return false;
-            } else if (orient1 != RIGHT_ORIENTATION && orient2 != RIGHT_ORIENTATION) {
-                return false;
-            }
-        } else {
-            if (site3.point0(true) == site1.point0() &&
-                site3.point1(true) == site2.point0())
-                return false;
-        }
-
         static mpt_type line_a, line_b, segm_len, vec_x, vec_y, sum_x, sum_y, teta,
                         denom, A, B, sum_AB, dif[2], numer, cA[4], cB[4], det;
 
@@ -1190,39 +1160,55 @@ namespace detail {
             cA[1] = denom * sum_AB * 2 + numer * teta;
             cB[1] = 1;
             cA[2] = denom * sum_y * 2 + numer * vec_y;
-            double c_x = 0.25 * cA[0].get_d() / denom.get_d();
-            double c_y = 0.25 * cA[2].get_d() / denom.get_d();
-            double lower_x = 0.25 * sqr_expr_evaluator<2>::eval<mpt_type, mpf_type>(cA, cB).get_d() /
-                (denom.get_d() * std::sqrt(segm_len.get_d()));
-            c_event = circle_event<double>(c_x, c_y, lower_x);
+            if (recompute_c_x) {
+                c_event.x(0.25 * cA[0].get_d() / denom.get_d());
+            }
+            if (recompute_c_y) {
+                c_event.y(0.25 * cA[2].get_d() / denom.get_d());
+            }
+            if (recompute_lower_x) {
+                c_event.lower_x(0.25 * sqr_expr_evaluator<2>::eval<mpt_type, mpf_type>(cA, cB).get_d() /
+                                (denom.get_d() * std::sqrt(segm_len.get_d())));
+            }
             return true;
         }
 
         det = (teta * teta + denom * denom) * A * B * 4;
-        cA[0] = sum_x * denom * denom + teta * sum_AB * vec_x;
-        cB[0] = 1;
-        cA[1] = (segment_index == 2) ? -vec_x : vec_x;
-        cB[1] = det;
-        double c_x = 0.5 * sqr_expr_evaluator<2>::eval<mpt_type, mpf_type>(cA, cB).get_d() /
-            (denom.get_d() * denom.get_d());
+        double denom_sqr = denom.get_d() * denom.get_d();
+
+        if (recompute_c_x || recompute_lower_x) {
+            cA[0] = sum_x * denom * denom + teta * sum_AB * vec_x;
+            cB[0] = 1;
+            cA[1] = (segment_index == 2) ? -vec_x : vec_x;
+            cB[1] = det;
+            if (recompute_c_x) {
+                c_event.x(0.5 * sqr_expr_evaluator<2>::eval<mpt_type, mpf_type>(cA, cB).get_d() /
+                          denom_sqr);
+            }
+        }
         
-        cA[2] = sum_y * denom * denom + teta * sum_AB * vec_y;
-        cB[2] = 1;
-        cA[3] = (segment_index == 2) ? -vec_y : vec_y;
-        cB[3] = det;
-        double c_y = 0.5 * sqr_expr_evaluator<2>::eval<mpt_type, mpf_type>(&cA[2], &cB[2]).get_d() /
-            (denom.get_d() * denom.get_d());
+        if (recompute_c_y || recompute_lower_x) {
+            cA[2] = sum_y * denom * denom + teta * sum_AB * vec_y;
+            cB[2] = 1;
+            cA[3] = (segment_index == 2) ? -vec_y : vec_y;
+            cB[3] = det;
+            if (recompute_c_y) {
+                c_event.y(0.5 * sqr_expr_evaluator<2>::eval<mpt_type, mpf_type>(&cA[2], &cB[2]).get_d() /
+                          denom_sqr);
+            }
+        }
         
-        cB[0] *= segm_len;
-        cB[1] *= segm_len;
-        cA[2] = sum_AB * (denom * denom + teta * teta);
-        cB[2] = 1;
-        cA[3] = (segment_index == 2) ? -teta : teta;
-        cB[3] = det;
-        double lower_x = 0.5 * sqr_expr_evaluator<4>::eval<mpt_type, mpf_type>(cA, cB).get_d() /
-            (denom.get_d() * denom.get_d() * std::sqrt(segm_len.get_d()));
+        if (recompute_lower_x) {
+            cB[0] *= segm_len;
+            cB[1] *= segm_len;
+            cA[2] = sum_AB * (denom * denom + teta * teta);
+            cB[2] = 1;
+            cA[3] = (segment_index == 2) ? -teta : teta;
+            cB[3] = det;
+            c_event.lower_x(0.5 * sqr_expr_evaluator<4>::eval<mpt_type, mpf_type>(cA, cB).get_d() /
+                            (denom_sqr * std::sqrt(segm_len.get_d())));
+        }
         
-        c_event = circle_event<double>(c_x, c_y, lower_x);
         return true;
     }
 
@@ -1286,27 +1272,19 @@ namespace detail {
                                               const site_event<T> &site2,
                                               const site_event<T> &site3,
                                               int point_index,
-                                              circle_event<T> &c_event) {
+                                              circle_event<T> &c_event,
+                                              bool recompute_c_x = true,
+                                              bool recompute_c_y = true,
+                                              bool recompute_lower_x = true) {
         typedef mpt_wrapper<mpz_class, 8> mpt_type;
         typedef mpt_wrapper<mpf_class, 2> mpf_type;
-        if (site2.index() == site3.index()) {
-            return false;
-        }
+        static mpt_type a[2], b[2], c[2], cA[4], cB[4], orientation, dx, dy, ix, iy;
 
         const point_2d<T> &segm_start1 = site2.point1(true);
         const point_2d<T> &segm_end1 = site2.point0(true);
         const point_2d<T> &segm_start2 = site3.point0(true);
         const point_2d<T> &segm_end2 = site3.point1(true);
 
-        if (point_index == 2) {
-            if (!site2.is_inverse() && site3.is_inverse())
-                return false;
-            if (site2.is_inverse() == site3.is_inverse() &&
-                orientation_test(segm_end1, site1.point0(), segm_end2) != RIGHT_ORIENTATION)
-                return false;
-        }
-
-        static mpt_type a[2], b[2], c[2], cA[4], cB[4], orientation, dx, dy, ix, iy;
         a[0] = segm_end1.x() - segm_start1.x();
         b[0] = segm_end1.y() - segm_start1.y();
         a[1] = segm_end2.x() - segm_start2.x();
@@ -1314,31 +1292,42 @@ namespace detail {
         orientation = a[1] * b[0] - a[0] * b[1];
         if (orientation == 0) {
             double denom = (a[0] * a[0] + b[0] * b[0]).get_d() * 2.0;
-
             c[0] = b[0] * (segm_start2.x() - segm_start1.x()) -
                    a[0] * (segm_start2.y() - segm_start1.y());
             dx = a[0] * (site1.y() - segm_start1.y()) -
                  b[0] * (site1.x() - segm_start1.x());
             dy = b[0] * (site1.x() - segm_start2.x()) -
                  a[0] * (site1.y() - segm_start2.y());
-            cA[0] = b[0] * ((point_index == 2) ? 2 : -2);
             cB[0] = dx * dy;
-            cA[1] = a[0] * a[0] * (segm_start1.y() + segm_start2.y()) -
-                    a[0] * b[0] * (segm_start1.x() + segm_start2.x() - 2.0 * site1.x()) +
-                    b[0] * b[0] * (2.0 * site1.y());
             cB[1] = 1;
-            double c_y = sqr_expr_evaluator<2>::eval<mpt_type, mpf_type>(cA, cB).get_d();
 
-            cA[0] = a[0] * ((point_index == 2) ? 2 : -2);
-            cA[1] = b[0] * b[0] * (segm_start1.x() + segm_start2.x()) -
-                    a[0] * b[0] * (segm_start1.y() + segm_start2.y() - 2.0 * site1.y()) +
-                    a[0] * a[0] * (2.0 * site1.x());
-            double c_x = sqr_expr_evaluator<2>::eval<mpt_type, mpf_type>(cA, cB).get_d();
+            if (recompute_c_y) {
+                cA[0] = b[0] * ((point_index == 2) ? 2 : -2);
+                cA[1] = a[0] * a[0] * (segm_start1.y() + segm_start2.y()) -
+                        a[0] * b[0] * (segm_start1.x() + segm_start2.x() - 2.0 * site1.x()) +
+                        b[0] * b[0] * (2.0 * site1.y());
+                double c_y = sqr_expr_evaluator<2>::eval<mpt_type, mpf_type>(cA, cB).get_d();
+                c_event.y(c_y / denom);
+            }
 
-            cA[2] = (c[0] < 0) ? -c[0] : c[0];
-            cB[2] = a[0] * a[0] + b[0] * b[0];
-            double lower_x = sqr_expr_evaluator<3>::eval<mpt_type, mpf_type>(cA, cB).get_d();
-            c_event = circle_event<T>(c_x / denom, c_y / denom, lower_x / denom);
+            if (recompute_c_x || recompute_lower_x) {
+                cA[0] = a[0] * ((point_index == 2) ? 2 : -2);
+                cA[1] = b[0] * b[0] * (segm_start1.x() + segm_start2.x()) -
+                        a[0] * b[0] * (segm_start1.y() + segm_start2.y() - 2.0 * site1.y()) +
+                        a[0] * a[0] * (2.0 * site1.x());
+
+                if (recompute_c_x) {
+                    double c_x = sqr_expr_evaluator<2>::eval<mpt_type, mpf_type>(cA, cB).get_d();
+                    c_event.x(c_x / denom);
+                }
+
+                if (recompute_lower_x) {
+                    cA[2] = (c[0] < 0) ? -c[0] : c[0];
+                    cB[2] = a[0] * a[0] + b[0] * b[0];
+                    double lower_x = sqr_expr_evaluator<3>::eval<mpt_type, mpf_type>(cA, cB).get_d();
+                    c_event.lower_x(lower_x / denom);
+                }
+            }
             return true;
         }
         c[0] = b[0] * segm_end1.x() - a[0] * segm_end1.y();
@@ -1364,22 +1353,34 @@ namespace detail {
         cB[1] = a[1] * a[1] + b[1] * b[1];
         cB[2] = a[0] * a[1] + b[0] * b[1];
         cB[3] = (a[0] * dy - b[0] * dx) * (a[1] * dy - b[1] * dx) * -2;
-        double denom = sqr_expr_evaluator_pss<mpt_type, mpf_type>(cA, cB).get_d();
+        double temp = sqr_expr_evaluator_pss<mpt_type, mpf_type>(cA, cB).get_d();
+        double denom = temp * orientation.get_d();
 
-        cA[0] = b[1] * (dx * dx + dy * dy) - iy * (dx * a[1] + dy * b[1]);
-        cA[1] = b[0] * (dx * dx + dy * dy) - iy * (dx * a[0] + dy * b[0]);
-        cA[2] = iy * sign;
-        double cy = sqr_expr_evaluator_pss<mpt_type, mpf_type>(cA, cB).get_d();
+        if (recompute_c_y) {
+            cA[0] = b[1] * (dx * dx + dy * dy) - iy * (dx * a[1] + dy * b[1]);
+            cA[1] = b[0] * (dx * dx + dy * dy) - iy * (dx * a[0] + dy * b[0]);
+            cA[2] = iy * sign;
+            double cy = sqr_expr_evaluator_pss<mpt_type, mpf_type>(cA, cB).get_d();
+            c_event.y(cy / denom);
+        }
 
-        cA[0] = a[1] * (dx * dx + dy * dy) - ix * (dx * a[1] + dy * b[1]);
-        cA[1] = a[0] * (dx * dx + dy * dy) - ix * (dx * a[0] + dy * b[0]);
-        cA[2] = ix * sign;
-        double cx = sqr_expr_evaluator_pss<mpt_type, mpf_type>(cA, cB).get_d();
+        if (recompute_c_x || recompute_lower_x) {
+            cA[0] = a[1] * (dx * dx + dy * dy) - ix * (dx * a[1] + dy * b[1]);
+            cA[1] = a[0] * (dx * dx + dy * dy) - ix * (dx * a[0] + dy * b[0]);
+            cA[2] = ix * sign;
 
-        cA[3] = orientation * (dx * dx + dy * dy) * (denom < 0 ? -1 : 1);
-        double lower_x = sqr_expr_evaluator_pss<mpt_type, mpf_type>(cA, cB).get_d();
-        denom *= orientation.get_d();
-        c_event = circle_event<T>(cx / denom, cy / denom, lower_x / denom);
+            if (recompute_c_x) {
+                double cx = sqr_expr_evaluator_pss<mpt_type, mpf_type>(cA, cB).get_d();
+                c_event.x(cx / denom);
+            }
+
+            if (recompute_lower_x) {
+                cA[3] = orientation * (dx * dx + dy * dy) * (temp < 0 ? -1 : 1);
+                double lower_x = sqr_expr_evaluator_pss<mpt_type, mpf_type>(cA, cB).get_d();
+                c_event.lower_x(lower_x / denom);
+            }
+        }
+
         return true;
     }
 
@@ -1402,14 +1403,11 @@ namespace detail {
                                               circle_event<T> &c_event,
                                               bool recompute_c_x = true,
                                               bool recompute_c_y = true,
-                                              bool recompute_lower_x = true,
-                                              bool recompute_denom = true) {
+                                              bool recompute_lower_x = true) {
         typedef mpt_wrapper<mpz_class, 8> mpt_type;
         typedef mpt_wrapper<mpf_class, 2> mpf_type;
-        if (site1.index() == site2.index() ||
-            site2.index() == site3.index())
-            return false;
         static mpt_type a[3], b[3], c[3], sqr_len[4], cross[4];
+
         a[0] = site1.x1(true) - site1.x0(true);
         a[1] = site2.x1(true) - site2.x0(true);
         a[2] = site3.x1(true) - site3.x0(true);
@@ -1483,6 +1481,8 @@ namespace detail {
         double orientation = robust_cross_product(dif_x1, dif_y1, dif_x2, dif_y2);
         if (orientation_test(orientation) != RIGHT_ORIENTATION)
             return false;
+        //return create_circle_event_ppp_gmpxx(site1, site2, site3, c_event, 1, 1, 1);
+        
         robust_fpt<T> inv_orientation(0.5 / orientation, 3.0);
         double sum_x1 = site1.x() + site2.x();
         double sum_x2 = site2.x() + site3.x();
@@ -1524,7 +1524,6 @@ namespace detail {
                                         const site_event<T> &site3,
                                         int segment_index,
                                         circle_event<T> &c_event) {
-        return create_circle_event_pps_gmpxx(site1, site2, site3, segment_index, c_event);
         if (segment_index != 2) {
             kOrientation orient1 = orientation_test(site1.point0(),
                 site2.point0(), site3.point0(true));
@@ -1544,46 +1543,55 @@ namespace detail {
                 site3.point1(true) == site2.point0())
                 return false;
         }
+        //return create_circle_event_pps_gmpxx(site1, site2, site3, segment_index, c_event, 1, 1, 1);
 
         double line_a = site3.point1(true).y() - site3.point0(true).y();
         double line_b = site3.point0(true).x() - site3.point1(true).x();
         double vec_x = site2.y() - site1.y();
         double vec_y = site1.x() - site2.x();
-        double teta = robust_cross_product(line_a, line_b, -vec_y, vec_x);
-        double A = robust_cross_product(line_a, line_b,
-            site3.point1().y() - site1.y(),
-            site1.x() - site3.point1().x());
-        double B = robust_cross_product(line_a, line_b,
-            site3.point1().y() - site2.y(),
-            site2.x() - site3.point1().x());
-        double denom = robust_cross_product(vec_x, vec_y, line_a, line_b);
-        double inv_segm_len = 1.0 / std::sqrt(sqr_distance(line_a, line_b));
-        epsilon_robust_comparator<double> t;
+        robust_fpt<T> teta(robust_cross_product(line_a, line_b, -vec_y, vec_x), 2.0);
+        robust_fpt<T> A(robust_cross_product(line_a, line_b,
+                                             site3.point1().y() - site1.y(),
+                                             site1.x() - site3.point1().x()), 2.0);
+        robust_fpt<T> B(robust_cross_product(line_a, line_b,
+                                             site3.point1().y() - site2.y(),
+                                             site2.x() - site3.point1().x()), 2.0);
+        robust_fpt<T> denom(robust_cross_product(vec_x, vec_y, line_a, line_b), 2.0);
+        robust_fpt<T> inv_segm_len(1.0 / std::sqrt(sqr_distance(line_a, line_b)), 3.0);
+        epsilon_robust_comparator< robust_fpt<T> > t;
         if (orientation_test(denom) == COLLINEAR) {
-            t += teta / (4.0 * (A + B));
-            t -= A * B / (teta * (A + B));
+            t += teta / (robust_fpt<T>(8.0) * A);
+            t -= A / (robust_fpt<T>(2.0) * teta);
         } else {
-            double det = std::sqrt((teta * teta + denom * denom) * A * B);
+            robust_fpt<T> det = ((teta * teta + denom * denom) * A * B).get_sqrt();
             if (segment_index == 2) {
                 t -= det / (denom * denom);
             } else {
                 t += det / (denom * denom);
             }
-            t += teta * (A + B) / (2.0 * denom * denom);
+            t += teta * (A + B) / (robust_fpt<T>(2.0) * denom * denom);
         }
-        epsilon_robust_comparator<double> c_x, c_y;
-        c_x += 0.5 * (site1.x() + site2.x());
-        c_x += t * vec_x;
-        c_y += 0.5 * (site1.y() + site2.y());
-        c_y += t * vec_y;
-        epsilon_robust_comparator<double> r, lower_x(c_x);
-        r -= line_a * site3.x0();
-        r -= line_b * site3.y0();
-        r += line_a * c_x;
-        r += line_b * c_y;
+        epsilon_robust_comparator< robust_fpt<T> > c_x, c_y;
+        c_x += robust_fpt<T>(0.5 * (site1.x() + site2.x()));
+        c_x += robust_fpt<T>(vec_x) * t;
+        c_y += robust_fpt<T>(0.5 * (site1.y() + site2.y()));
+        c_y += robust_fpt<T>(vec_y) * t;
+        epsilon_robust_comparator< robust_fpt<T> > r, lower_x(c_x);
+        r -= robust_fpt<T>(line_a) * robust_fpt<T>(site3.x0());
+        r -= robust_fpt<T>(line_b) * robust_fpt<T>(site3.y0());
+        r += robust_fpt<T>(line_a) * c_x;
+        r += robust_fpt<T>(line_b) * c_y;
         r.abs();
         lower_x += r * inv_segm_len;
-        c_event = circle_event<double>(c_x, c_y, lower_x);
+        c_event = circle_event<double>(c_x.dif().fpv(), c_y.dif().fpv(), lower_x.dif().fpv());
+        bool recompute_c_x = c_x.dif().ulp() >= 128;
+        bool recompute_c_y = c_y.dif().ulp() >= 128;
+        bool recompute_lower_x = lower_x.dif().ulp() >= 128;
+        if (recompute_c_x || recompute_c_y || recompute_lower_x) {
+            return create_circle_event_pps_gmpxx(
+                site1, site2, site3, segment_index, c_event,
+                recompute_c_x, recompute_c_y, recompute_lower_x);
+        }
         return true;
     }
 
@@ -1595,7 +1603,6 @@ namespace detail {
                                         const site_event<T> &site3,
                                         int point_index,
                                         circle_event<T> &c_event) {
-        return create_circle_event_pss_gmpxx(site1, site2, site3, point_index, c_event);
         if (site2.index() == site3.index()) {
             return false;
         }
@@ -1612,84 +1619,95 @@ namespace detail {
                 orientation_test(segm_end1, site1.point0(), segm_end2) != RIGHT_ORIENTATION)
                 return false;
         }
+        //create_circle_event_pss_gmpxx(site1, site2, site3, point_index, c_event, true, true, true);
 
         double a1 = segm_end1.x() - segm_start1.x();
         double b1 = segm_end1.y() - segm_start1.y();
         double a2 = segm_end2.x() - segm_start2.x();
         double b2 = segm_end2.y() - segm_start2.y();
-        double orientation = robust_cross_product(b1, a1, b2, a2);
+        bool recompute_c_x, recompute_c_y, recompute_lower_x;
+        robust_fpt<T> orientation(robust_cross_product(b1, a1, b2, a2), 2.0);
         if (orientation_test(orientation) == COLLINEAR) {
-            double a = a1 * a1 + b1 * b1;
-            double c = robust_cross_product(b1, a1, segm_start2.y() - segm_start1.y(),
-                                            segm_start2.x() - segm_start1.x());
-            double det = robust_cross_product(a1, b1, site1.x() - segm_start1.x(),
-                                              site1.y() - segm_start1.y()) *
-                         robust_cross_product(b1, a1, site1.y() - segm_start2.y(),
-                                              site1.x() - segm_start2.x());
-            epsilon_robust_comparator<double> t;
-            t -= a1 * ((segm_start1.x() + segm_start2.x()) * 0.5 - site1.x());
-            t -= b1 * ((segm_start1.y() + segm_start2.y()) * 0.5 - site1.y());
+            robust_fpt<T> a(a1 * a1 + b1 * b1, 2.0);
+            robust_fpt<T> c(robust_cross_product(b1, a1, segm_start2.y() - segm_start1.y(),
+                                                 segm_start2.x() - segm_start1.x()), 2.0);
+            robust_fpt<T> det(robust_cross_product(a1, b1, site1.x() - segm_start1.x(),
+                                                   site1.y() - segm_start1.y()) *
+                              robust_cross_product(b1, a1, site1.y() - segm_start2.y(),
+                                                   site1.x() - segm_start2.x()), 5.0);
+            epsilon_robust_comparator< robust_fpt<T> > t;
+            t -= robust_fpt<T>(a1) * robust_fpt<T>((segm_start1.x() + segm_start2.x()) * 0.5 - site1.x());
+            t -= robust_fpt<T>(b1) * robust_fpt<T>((segm_start1.y() + segm_start2.y()) * 0.5 - site1.y());
             if (point_index == 2) {
-                t += std::sqrt(det);
+                t += det.get_sqrt();
             } else {
-                t -= std::sqrt(det);
+                t -= det.get_sqrt();
             }
             t /= a;
-            epsilon_robust_comparator<double> c_x, c_y;
-            c_x += 0.5 * (segm_start1.x() + segm_start2.x());
-            c_x += a1 * t;
-            c_y += 0.5 * (segm_start1.y() + segm_start2.y());
-            c_y += b1 * t;
-            epsilon_robust_comparator<double> lower_x(c_x);
-            lower_x += 0.5 * fabs(c) / std::sqrt(a);
-            c_event = circle_event<double>(c_x, c_y, lower_x);
-            return true;
+            epsilon_robust_comparator< robust_fpt<T> > c_x, c_y;
+            c_x += robust_fpt<T>(0.5 * (segm_start1.x() + segm_start2.x()));
+            c_x += robust_fpt<T>(a1) * t;
+            c_y += robust_fpt<T>(0.5 * (segm_start1.y() + segm_start2.y()));
+            c_y += robust_fpt<T>(b1) * t;
+            epsilon_robust_comparator< robust_fpt<T> > lower_x(c_x);
+            lower_x += robust_fpt<T>(0.5) * c.fabs() / a.get_sqrt();
+            recompute_c_x = c_x.dif().ulp() > 128;
+            recompute_c_y = c_y.dif().ulp() > 128;
+            recompute_lower_x = lower_x.dif().ulp() > 128;
+            c_event = circle_event<double>(c_x.dif().fpv(), c_y.dif().fpv(), lower_x.dif().fpv());
         } else {
-            double sqr_sum1 = std::sqrt(a1 * a1 + b1 * b1);
-            double sqr_sum2 = std::sqrt(a2 * a2 + b2 * b2);
-            double a = robust_cross_product(a1, b1, -b2, a2);
+            robust_fpt<T> sqr_sum1(std::sqrt(a1 * a1 + b1 * b1), 2.0);
+            robust_fpt<T> sqr_sum2(std::sqrt(a2 * a2 + b2 * b2), 2.0);
+            robust_fpt<T> a(robust_cross_product(a1, b1, -b2, a2), 2.0);
             if (a >= 0) {
                 a += sqr_sum1 * sqr_sum2;
             } else {
                 a = (orientation * orientation) / (sqr_sum1 * sqr_sum2 - a);
             }
-            double or1 = robust_cross_product(b1, a1, segm_end1.y() - site1.y(),
-                                              segm_end1.x() - site1.x());
-            double or2 = robust_cross_product(a2, b2, segm_end2.x() - site1.x(),
-                                              segm_end2.y() - site1.y());
-            double det = 2.0 * a * or1 * or2;
-            double c1 = robust_cross_product(b1, a1, segm_end1.y(), segm_end1.x());
-            double c2 = robust_cross_product(a2, b2, segm_end2.x(), segm_end2.y());
-            double inv_orientation = 1.0 / orientation;
-            epsilon_robust_comparator<double> t, b, ix, iy;
-            ix += c1 * a2 * inv_orientation;
-            ix += a1 * c2 * inv_orientation;
-            iy += b1 * c2 * inv_orientation;
-            iy += b2 * c1 * inv_orientation;
+            robust_fpt<T> or1(robust_cross_product(b1, a1, segm_end1.y() - site1.y(),
+                                                   segm_end1.x() - site1.x()), 2.0);
+            robust_fpt<T> or2(robust_cross_product(a2, b2, segm_end2.x() - site1.x(),
+                                                   segm_end2.y() - site1.y()), 2.0);
+            robust_fpt<T> det = robust_fpt<T>(2.0) * a * or1 * or2;
+            robust_fpt<T> c1(robust_cross_product(b1, a1, segm_end1.y(), segm_end1.x()), 2.0);
+            robust_fpt<T> c2(robust_cross_product(a2, b2, segm_end2.x(), segm_end2.y()), 2.0);
+            robust_fpt<T> inv_orientation = robust_fpt<T>(1.0) / orientation;
+            epsilon_robust_comparator< robust_fpt<T> > t, b, ix, iy;
+            ix += robust_fpt<T>(a2) * c1 * inv_orientation;
+            ix += robust_fpt<T>(a1) * c2 * inv_orientation;
+            iy += robust_fpt<T>(b1) * c2 * inv_orientation;
+            iy += robust_fpt<T>(b2) * c1 * inv_orientation;
 
-            b += ix * (a1 * sqr_sum2);
-            b += ix * (a2 * sqr_sum1);
-            b += iy * (b1 * sqr_sum2);
-            b += iy * (b2 * sqr_sum1);
-            b -= sqr_sum1 * robust_cross_product(a2, b2, -site1.y(), site1.x());
-            b -= sqr_sum2 * robust_cross_product(a1, b1, -site1.y(), site1.x());
+            b += ix * (robust_fpt<T>(a1) * sqr_sum2);
+            b += ix * (robust_fpt<T>(a2) * sqr_sum1);
+            b += iy * (robust_fpt<T>(b1) * sqr_sum2);
+            b += iy * (robust_fpt<T>(b2) * sqr_sum1);
+            b -= sqr_sum1 * robust_fpt<T>(robust_cross_product(a2, b2, -site1.y(), site1.x()), 2.0);
+            b -= sqr_sum2 * robust_fpt<T>(robust_cross_product(a1, b1, -site1.y(), site1.x()), 2.0);
             t -= b;
             if (point_index == 2) {
-                t += std::sqrt(det);
+                t += det.get_sqrt();
             } else {
-                t -= std::sqrt(det);
+                t -= det.get_sqrt();
             }
             t /= (a * a);
-            epsilon_robust_comparator<double> c_x(ix), c_y(iy);
-            c_x += t * (a1 * sqr_sum2);
-            c_x += t * (a2 * sqr_sum1);
-            c_y += t * (b1 * sqr_sum2);
-            c_y += t * (b2 * sqr_sum1);
+            epsilon_robust_comparator< robust_fpt<T> > c_x(ix), c_y(iy);
+            c_x += t * (robust_fpt<T>(a1) * sqr_sum2);
+            c_x += t * (robust_fpt<T>(a2) * sqr_sum1);
+            c_y += t * (robust_fpt<T>(b1) * sqr_sum2);
+            c_y += t * (robust_fpt<T>(b2) * sqr_sum1);
             t.abs();
-            epsilon_robust_comparator<double> lower_x(c_x);
-            lower_x += t * fabs(orientation);
-            
-            c_event = circle_event<double>(c_x, c_y, lower_x);
+            epsilon_robust_comparator< robust_fpt<T> > lower_x(c_x);
+            lower_x += t * orientation.fabs();
+            recompute_c_x = c_x.dif().ulp() > 128;
+            recompute_c_y = c_y.dif().ulp() > 128;
+            recompute_lower_x = lower_x.dif().ulp() > 128;
+            c_event = circle_event<double>(c_x.dif().fpv(), c_y.dif().fpv(), lower_x.dif().fpv());
+        }
+        if (recompute_c_x || recompute_c_y || recompute_lower_x) {
+            return create_circle_event_pss_gmpxx(
+                site1, site2, site3, point_index, c_event,
+                recompute_c_x, recompute_c_y, recompute_lower_x);
         }
         return true;
     }
@@ -1701,10 +1719,11 @@ namespace detail {
                                         const site_event<T> &site2,
                                         const site_event<T> &site3,
                                         circle_event<T> &c_event) {
-        return create_circle_event_sss_gmpxx(site1, site2, site3, c_event);
         if (site1.index() == site2.index() ||
             site2.index() == site3.index())
             return false;
+        //return create_circle_event_sss_gmpxx(site1, site2, site3, c_event, 1, 1, 1);
+        
         robust_fpt<T> a1(site1.x1(true) - site1.x0(true), 0.0);
         robust_fpt<T> b1(site1.y1(true) - site1.y0(true), 0.0);
         robust_fpt<T> c1(robust_cross_product(site1.x0(true), site1.y0(true), site1.x1(true), site1.y1(true)), 2.0);
@@ -1748,18 +1767,17 @@ namespace detail {
         c_y += b3 * c1 * len2;
         c_y -= b1 * c3 * len2;
         epsilon_robust_comparator< robust_fpt<T> > lower_x(c_x + r);
-        bool recompute_c_x = c_x.dif().re() > 128;
-        bool recompute_c_y = c_y.dif().re() > 128;
-        bool recompute_lower_x = lower_x.dif() > 128;
-        bool recompute_denom = denom.dif().re() > 128;
+        bool recompute_c_x = c_x.dif().ulp() > 128;
+        bool recompute_c_y = c_y.dif().ulp() > 128;
+        bool recompute_lower_x = lower_x.dif().ulp() > 128;
+        bool recompute_denom = denom.dif().ulp() > 128;
         c_event = circle_event<double>(c_x.dif().fpv() / denom.dif().fpv(),
                                        c_y.dif().fpv() / denom.dif().fpv(),
                                        lower_x.dif().fpv() / denom.dif().fpv());
         if (recompute_c_x || recompute_c_y || recompute_lower_x || recompute_denom) {
             return create_circle_event_sss_gmpxx(
                 site1, site2, site3, c_event,
-                recompute_c_x, recompute_c_y,
-                recompute_lower_x, recompute_denom);
+                recompute_c_x, recompute_c_y, recompute_lower_x);
         }
         return true;
     }
