@@ -77,17 +77,22 @@ QuickBook Auto Doxygen Indexed Manual
 
 */
 
-
+namespace boost{
+  namespace checks{
 
 // Provides forward declaration of all Boost.Checks functions:
 
-bool ISBNcheck(string s);
-char ISBNcompute(string s);
+    template <class In>
+    bool Is_isbn10(In isbn_begin, In isbn_end);
 
-template <class In>
-bool Is_isbn10(In isbn_begin, In isbn_end);
+    template <class In>
+    char isbn10_check_digit(In isbn_begin, In isbn_end);
 
-template <class In>
-char isbn10_check_digit(In isbn_begin, In isbn_end);
+    template <class In>
+    inline bool check_luhn(const In &begin, const In &end, unsigned int nbr_digits=0);
+	
+    template <class In>
+    inline In check_mod11(In begin, In end, unsigned int nbr_digits=0);
 
-
+  }
+}
