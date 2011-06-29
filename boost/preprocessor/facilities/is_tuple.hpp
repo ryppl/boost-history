@@ -45,10 +45,6 @@
       ) \
 /**/
 #
-# define BOOST_PP_IS_TUPLE_DETAIL_AFTER_PARENS(x) \
-    BOOST_PP_IS_TUPLE_DETAIL_EXPAND_AFTER x \
-/**/
-#
 # define BOOST_PP_IS_TUPLE_DETAIL_EXPAND(...) \
     1,1 \
 /**/
