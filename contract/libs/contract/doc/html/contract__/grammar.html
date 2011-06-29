@@ -1,0 +1,739 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Appendix: Grammar</title>
+<link rel="stylesheet" href="../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<link rel="home" href="../index.html" title="Contract++ 0.3.490">
+<link rel="up" href="../index.html" title="Contract++ 0.3.490">
+<link rel="prev" href="contract_programming.html" title="Annex: Contract Programming">
+<link rel="next" href="../reference.html" title="Reference">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr><td valign="top"></td></tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="contract_programming.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="../reference.html"><img src="../images/next.png" alt="Next"></a>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="contract__.Grammar"></a><a class="link" href="Grammar.html" title="Appendix: Grammar">Appendix: Grammar</a>
+</h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="Grammar.html#contract__.Grammar.contract_macros">Contract Macros</a></span></dt>
+<dt><span class="section"><a href="Grammar.html#contract__.Grammar.terminals">Terminals</a></span></dt>
+<dt><span class="section"><a href="Grammar.html#contract__.Grammar.lexical_conventions">Lexical Conventions</a></span></dt>
+<dt><span class="section"><a href="Grammar.html#contract__.Grammar.class_signature">Class Signature</a></span></dt>
+<dt><span class="section"><a href="Grammar.html#contract__.Grammar.constructor_signature">Constructor
+      Signature</a></span></dt>
+<dt><span class="section"><a href="Grammar.html#contract__.Grammar.destructor_signature">Destructor Signature</a></span></dt>
+<dt><span class="section"><a href="Grammar.html#contract__.Grammar.function_signature">Function Signature</a></span></dt>
+<dt><span class="section"><a href="Grammar.html#contract__.Grammar.postcondition_s_result_and_old_of">Postcondition's
+      Result and Old-Of</a></span></dt>
+<dt><span class="section"><a href="Grammar.html#contract__.Grammar.positional_function_parameters">Positional
+      Function Parameters</a></span></dt>
+<dt><span class="section"><a href="Grammar.html#contract__.Grammar.named_function_parameters">Named Function
+      Parameters</a></span></dt>
+<dt><span class="section"><a href="Grammar.html#contract__.Grammar.template_parameters">Template Parameters</a></span></dt>
+<dt><span class="section"><a href="Grammar.html#contract__.Grammar.assertions">Assertions</a></span></dt>
+<dt><span class="section"><a href="Grammar.html#contract__.Grammar.loop_variant">Loop Variant</a></span></dt>
+<dt><span class="section"><a href="Grammar.html#contract__.Grammar.new_keywords">New Keywords</a></span></dt>
+</dl></div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.Grammar.contract_macros"></a><a class="link" href="Grammar.html#contract__.Grammar.contract_macros" title="Contract Macros">Contract Macros</a>
+</h3></div></div></div>
+<pre class="programlisting"><span class="identifier">CONTRACT_CLASS</span><span class="special">(</span> <span class="emphasis"><em>parenthesized-class-signature</em></span> <span class="special">)</span>
+
+<span class="identifier">CONTRACT_CONSTRUCTOR</span><span class="special">(</span> <span class="emphasis"><em>parenthesized-constructor-signature</em></span> <span class="special">)</span>
+<span class="identifier">CONTRACT_DESTRUCTOR</span><span class="special">(</span> <span class="emphasis"><em>parenthesized-destructor-signature</em></span> <span class="special">)</span>
+<span class="identifier">CONTRACT_FUNCTION</span><span class="special">(</span> <span class="emphasis"><em>parenthesized-function-signature</em></span> <span class="special">)</span>         <span class="comment">// Used for both member and non-member functions.</span>
+
+<span class="identifier">CONTRACT_CLASS_INVARIANT</span><span class="special">(</span> <span class="emphasis"><em>parenthesized-assertions</em></span> <span class="special">)</span>
+<span class="identifier">CONTRACT_STATIC_CLASS_INVARIANT</span><span class="special">(</span> <span class="emphasis"><em>parenthesized-assertions</em></span> <span class="special">)</span>
+<span class="identifier">CONTRACT_BLOCK_INVARIANT</span><span class="special">(</span> <span class="emphasis"><em>parenthesized-assertions</em></span> <span class="special">)</span>
+
+<span class="identifier">CONTRACT_LOOP</span><span class="special">(</span> <span class="bold"><strong>loop-signature</strong></span> <span class="special">)</span>
+<span class="identifier">CONTRACT_LOOP_END</span>
+<span class="identifier">CONTRACT_LOOP_VARIANT</span><span class="special">(</span> <span class="emphasis"><em>parenthesized-variant</em></span> <span class="special">)</span>
+
+<span class="identifier">CONTRACT_CONSTRUCTOR_BODY</span><span class="special">(</span><span class="bold"><strong>class-type</strong></span><span class="special">,</span> <span class="bold"><strong>class-name</strong></span><span class="special">)</span>
+<span class="identifier">CONTRACT_DESTRUCTOR_BODY</span><span class="special">(</span><span class="bold"><strong>class-type</strong></span><span class="special">,</span> <span class="bold"><strong>class-name</strong></span><span class="special">)</span>
+<span class="identifier">CONTRACT_MEMBER_BODY</span><span class="special">(</span><span class="emphasis"><em>function-name</em></span><span class="special">)</span>
+<span class="identifier">CONTRACT_NONMEMBER_BODY</span><span class="special">(</span><span class="emphasis"><em>function-name</em></span><span class="special">)</span>
+</pre>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.Grammar.terminals"></a><a class="link" href="Grammar.html#contract__.Grammar.terminals" title="Terminals">Terminals</a>
+</h3></div></div></div>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Terminal
+                </p>
+              </th>
+<th>
+                <p>
+                  Description
+                </p>
+              </th>
+</tr></thead>
+<tbody><tr>
+<td>
+                <p>
+                  <code class="literal"><span class="bold"><strong>class-name</strong></span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  The name of a class. It is never prefixed by <code class="computeroutput"><span class="special">~</span></code>
+                  not even when specified within destructor contract macros. It does
+                  not specify the class namespace or eventual template parameters
+                  for a class template, just the class name.
+                </p>
+              </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="section"><div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.Grammar.lexical_conventions"></a><a class="link" href="Grammar.html#contract__.Grammar.lexical_conventions" title="Lexical Conventions">Lexical Conventions</a>
+</h3></div></div></div></div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.Grammar.class_signature"></a><a class="link" href="Grammar.html#contract__.Grammar.class_signature" title="Class Signature">Class Signature</a>
+</h3></div></div></div>
+<pre class="programlisting"><span class="emphasis"><em>parenthesized-class-signature:</em></span>
+        /[/<span class="special">(</span><span class="keyword">template</span><span class="special">)(</span> <span class="emphasis"><em>template-parameter+</em></span> <span class="special">)</span>
+            /[/<span class="special">(</span><span class="identifier">requires</span><span class="special">)(</span> <span class="special">(</span><span class="bold"><strong>concept</strong></span><span class="special">)</span><span class="emphasis"><em>+</em></span> <span class="special">)</span>/]]/
+        <span class="emphasis"><em>class-specifier</em></span> <span class="special">(</span><span class="bold"><strong>class-name</strong></span><span class="special">)</span>
+        /[/<span class="special">(</span><span class="identifier">extends</span><span class="special">)(</span> <span class="emphasis"><em>base-class+</em></span> <span class="special">)</span>/]/
+
+<span class="emphasis"><em>class-specifier:</em></span>
+        <span class="special">(</span><span class="keyword">class</span><span class="special">)</span> <span class="emphasis"><em>|</em></span> <span class="special">(</span><span class="keyword">struct</span><span class="special">)</span>
+
+<span class="emphasis"><em>base-class:</em></span>
+        /[/<span class="special">(</span><span class="keyword">virtual</span><span class="special">)</span>/]/
+        /[access-level]/
+        <span class="special">(</span><span class="bold"><strong>base-class-type</strong></span><span class="special">)</span>
+
+<span class="emphasis"><em>access-level:</em></span>
+        <span class="special">(</span><span class="keyword">public</span><span class="special">)</span> <span class="emphasis"><em>|</em></span> <span class="special">(</span><span class="keyword">protected</span><span class="special">)</span> <span class="emphasis"><em>|</em></span> <span class="special">(</span><span class="keyword">private</span><span class="special">)</span>        
+</pre>
+<p>
+        As usual in C++, classes (or structures) are specified by using the <code class="computeroutput"><span class="special">(</span><span class="keyword">class</span><span class="special">)</span></code>
+        (or <code class="computeroutput"><span class="special">(</span><span class="keyword">struct</span><span class="special">)</span></code>) keyword, base classes without an explicit
+        access level are inherited privately (or publicly), and members access levels
+        start as private (or public) within the class (or structure) declaration
+        body until otherwise specified. Contracts are not supported for <code class="computeroutput"><span class="keyword">union</span></code>s (this limitation might be relaxed in
+        future revisions of this library).
+      </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.Grammar.constructor_signature"></a><a class="link" href="Grammar.html#contract__.Grammar.constructor_signature" title="Constructor Signature">Constructor
+      Signature</a>
+</h3></div></div></div>
+<pre class="programlisting"><span class="emphasis"><em>parenthesized-constructor-signature:</em></span>
+        <span class="emphasis"><em>access-level</em></span>
+        /[/<span class="special">(</span><span class="keyword">template</span><span class="special">)(</span> <span class="emphasis"><em>template-parameters</em></span> <span class="special">)</span>
+            /[/<span class="special">(</span><span class="identifier">requires</span><span class="special">)(</span> <span class="special">(</span><span class="bold"><strong>concept</strong></span><span class="special">)</span><span class="emphasis"><em>+</em></span> <span class="special">)</span>/]]/
+        /[/<span class="special">(</span><span class="keyword">explicit</span><span class="special">)</span>/]/
+        /[/<span class="special">(</span><span class="keyword">inline</span><span class="special">)</span>/]/
+        <span class="special">(</span><span class="bold"><strong>class-name</strong></span><span class="special">)(</span> <span class="emphasis"><em>parameters</em></span> <span class="special">)</span>
+        /[/<span class="special">(</span><span class="keyword">throw</span><span class="special">)(</span> <span class="emphasis"><em>exceptions</em></span> <span class="special">)</span>/]/
+        /[/<span class="special">(</span><span class="identifier">initialize</span><span class="special">)(</span> <span class="special">(</span><span class="bold"><strong>member-initializer</strong></span><span class="special">)</span><span class="emphasis"><em>+</em></span> <span class="special">)</span>/]/
+        /[/<span class="special">(</span><span class="identifier">precondition</span><span class="special">)(</span> <span class="emphasis"><em>parenthesized-assertions</em></span> <span class="special">)</span>/]/
+        /[/<span class="special">(</span><span class="identifier">postcondition</span> <span class="emphasis"><em>oldof-assignments</em></span><span class="special">)(</span> <span class="emphasis"><em>parenthesized-assertions</em></span> <span class="special">)</span>/]/
+
+<span class="emphasis"><em>parameters:</em></span>
+          <span class="special">(</span><span class="keyword">void</span><span class="special">)</span>    <span class="comment">// Mandatory for no parameters.</span>
+        <span class="emphasis"><em>| positional-parameters</em></span>
+        <span class="emphasis"><em>| named-parameters</em></span>
+
+<span class="emphasis"><em>exceptions:</em></span>
+          <span class="special">(</span><span class="keyword">void</span><span class="special">)</span>            <span class="comment">// Specify the function throws no exception.</span>
+        <span class="emphasis"><em>|</em></span> <span class="special">(</span><span class="bold"><strong>exception-type</strong></span><span class="special">)</span><span class="emphasis"><em>+</em></span>
+</pre>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+            Constructor preconditions cannot access the object <code class="computeroutput"><span class="keyword">this</span></code>
+            (because there is no object before constructor body execution).
+          </li>
+<li class="listitem">
+            Constructor postcondition <code class="literal"><span class="emphasis"><em>oldof-assignments</em></span></code>
+            cannot access the object <code class="computeroutput"><span class="keyword">this</span></code>
+            (because there was no object before constructor body execution).
+          </li>
+</ul></div>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.Grammar.destructor_signature"></a><a class="link" href="Grammar.html#contract__.Grammar.destructor_signature" title="Destructor Signature">Destructor Signature</a>
+</h3></div></div></div>
+<pre class="programlisting"><span class="emphasis"><em>parenthesized-destructor-signature:</em></span>
+        <span class="emphasis"><em>access-level</em></span>
+        /[/<span class="special">(</span><span class="keyword">inline</span><span class="special">)</span>/]/
+        /[/<span class="special">(</span><span class="keyword">virtual</span><span class="special">)</span>/]/
+        <span class="special">(</span><span class="bold"><strong>class-name</strong></span><span class="special">)(</span> <span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">)</span>
+        /[/<span class="special">(</span><span class="keyword">throw</span><span class="special">)(</span> <span class="emphasis"><em>exceptions</em></span> <span class="special">)</span>/]/
+</pre>
+<p>
+        Destructors have no preconditions and no postconditions (but they have a
+        contract because they check the class invariants).
+      </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.Grammar.function_signature"></a><a class="link" href="Grammar.html#contract__.Grammar.function_signature" title="Function Signature">Function Signature</a>
+</h3></div></div></div>
+<pre class="programlisting"><span class="emphasis"><em>parenthesized-function-signature:</em></span>
+          <span class="emphasis"><em>member-function-signature</em></span>
+        <span class="emphasis"><em>| non-member-function-signature</em></span>
+
+<span class="emphasis"><em>member-function-signature:</em></span>
+        <span class="emphasis"><em>access-level</em></span>
+        /[/<span class="special">(</span><span class="keyword">template</span><span class="special">)(</span> <span class="emphasis"><em>required-template-parameter+</em></span> <span class="special">)</span>
+            /[/<span class="special">(</span><span class="identifier">requires</span><span class="special">)(</span> <span class="special">(</span><span class="bold"><strong>concept</strong></span><span class="special">)</span><span class="emphasis"><em>+</em></span> <span class="special">)</span>/]]/
+        /[/<span class="special">(</span><span class="keyword">inline</span><span class="special">)</span>/]/
+        /[/<span class="special">(</span><span class="keyword">static</span><span class="special">)</span>/]/
+        /[/<span class="special">(</span><span class="keyword">virtual</span><span class="special">)</span>/]/
+        <span class="special">(</span><span class="bold"><strong>result-type</strong></span><span class="special">)</span> <span class="special">(</span><span class="emphasis"><em>function-name</em></span><span class="special">)(</span> <span class="emphasis"><em>parameters</em></span> <span class="special">)</span>
+        /[/<span class="special">(</span><span class="keyword">const</span><span class="special">)</span>/]/
+        /[/<span class="special">(</span><span class="keyword">volatile</span><span class="special">)</span>/]/
+        /[/<span class="special">(</span><span class="keyword">throw</span><span class="special">)(</span> <span class="emphasis"><em>exceptions</em></span> <span class="special">)</span>/]/
+        /[/<span class="special">(</span><span class="identifier">precondition</span><span class="special">)(</span> <span class="emphasis"><em>parenthesized-assertions</em></span> <span class="special">)</span>/]/
+        /[/<span class="special">(</span><span class="identifier">postcondition</span> <span class="emphasis"><em>result-assignment oldof-assignments</em></span><span class="special">)(</span> <span class="emphasis"><em>parenthesized-assertions</em></span> <span class="special">)</span>/]/
+
+<span class="emphasis"><em>non-member-function-signature:</em></span>
+        /[/<span class="special">(</span><span class="keyword">export</span><span class="special">)</span>/]/
+        /[/<span class="special">(</span><span class="keyword">template</span><span class="special">)(</span> <span class="emphasis"><em>required-template-parameter+</em></span> <span class="special">)</span>
+            /[/<span class="special">(</span><span class="identifier">requires</span><span class="special">)(</span> <span class="special">(</span><span class="bold"><strong>concept</strong></span><span class="special">)</span><span class="emphasis"><em>+</em></span> <span class="special">)</span>/]]/
+        /[/<span class="special">(</span><span class="keyword">inline</span><span class="special">)</span>/]/
+        /[/<span class="special">(</span><span class="keyword">extern</span><span class="special">)</span> <span class="emphasis"><em>|</em></span> <span class="special">(</span><span class="keyword">static</span><span class="special">)</span>/]/
+        <span class="special">(</span><span class="bold"><strong>result-type</strong></span><span class="special">)</span> <span class="special">(</span><span class="emphasis"><em>function-name</em></span><span class="special">)(</span> <span class="emphasis"><em>parameters</em></span> <span class="special">)</span>
+        /[/<span class="special">(</span><span class="keyword">throw</span><span class="special">)(</span> <span class="emphasis"><em>exceptions</em></span> <span class="special">)</span>/]/
+        /[/<span class="special">(</span><span class="identifier">precondition</span><span class="special">)(</span> <span class="emphasis"><em>parenthesized-assertions</em></span> <span class="special">)</span>/]/
+        /[/<span class="special">(</span><span class="identifier">postcondition</span> <span class="emphasis"><em>result-assignment oldof-assignments</em></span><span class="special">)(</span> <span class="emphasis"><em>parenthesized-assertions</em></span> <span class="special">)</span>/]/
+
+<span class="emphasis"><em>function-name:</em></span>
+          <span class="bold"><strong>non-operator-name</strong></span>
+        <span class="emphasis"><em>|</em></span> <span class="keyword">operator</span> <span class="special">(</span><span class="bold"><strong>operator-symbol</strong></span><span class="special">,</span> <span class="bold"><strong>alphanumeric-operator-name</strong></span><span class="special">)</span>
+</pre>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.Grammar.postcondition_s_result_and_old_of"></a><a class="link" href="Grammar.html#contract__.Grammar.postcondition_s_result_and_old_of" title="Postcondition's Result and Old-Of">Postcondition's
+      Result and Old-Of</a>
+</h3></div></div></div>
+<pre class="programlisting"><span class="emphasis"><em>result-assignment:</em></span>
+        /[/<span class="special">(</span><span class="bold"><strong>result-variable-name</strong></span> <span class="special">=</span> <span class="keyword">return</span><span class="special">)</span>/]/
+</pre>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+            The result assignment allows the postcondition assertions to access the
+            return value of the function using the specified result variable name.
+          </li>
+<li class="listitem">
+            The result assignment is optional and it can be specified only for non-void
+            functions.
+          </li>
+<li class="listitem">
+            This assignment requires the return type to have a copy constructor and
+            it introduces an extra copy operation to store the return value (with
+            related performance impact) -- @tdodo Can I get rid of this extra copy
+            operation passing around references to the return value?
+          </li>
+</ul></div>
+<pre class="programlisting"><span class="emphasis"><em>oldof-assignments:</em></span>
+        <span class="special">(</span><span class="bold"><strong>oldof-variable-name</strong></span> <span class="special">=</span> <a href="../CONTRACT_OLDOF.html" target="_top">CONTRACT_OLDOF</a><span class="special">(</span><span class="bold"><strong>oldof-expression</strong></span><span class="special">))</span><span class="emphasis"><em>*</em></span>
+</pre>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+            No type but old-of expression evaluated twice (instead of just one time
+            to make the copy).
+          </li>
+<li class="listitem">
+            The type of old-of expression must have an accessible copy constructor
+            (otherwise compile-time error).
+          </li>
+<li class="listitem">
+            <code class="computeroutput"><a href="../CONTRACT_OLDOF.html" target="_top">CONTRACT_OLDOF</a></code>
+            macro can only be used within the old-of assignments (and not within
+            the postcondition assertions, otherwise compile-time error).
+          </li>
+<li class="listitem">
+            The old-of variable can be accessed only within the postcondition assertion
+            and only in a constant-correct context (otherwise, compile-time error).
+          </li>
+</ul></div>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.Grammar.positional_function_parameters"></a><a class="link" href="Grammar.html#contract__.Grammar.positional_function_parameters" title="Positional Function Parameters">Positional
+      Function Parameters</a>
+</h3></div></div></div>
+<pre class="programlisting"><span class="emphasis"><em>positional-parameters:</em></span>
+          <span class="emphasis"><em>positional-required-parameter+</em></span>
+        <span class="emphasis"><em>| positional-optional-parameter+</em></span>
+        <span class="emphasis"><em>| positional-required-parameter+ positional-optional-parameter+</em></span>
+
+<span class="emphasis"><em>positional-required-parameter:</em></span>
+        /[/<span class="special">(</span><span class="keyword">auto</span><span class="special">)</span> <span class="emphasis"><em>|</em></span> <span class="special">(</span><span class="keyword">register</span><span class="special">)</span>/]/
+        <span class="special">(</span><span class="bold"><strong>parameter-type</strong></span><span class="special">)</span> <span class="special">(</span><span class="bold"><strong>parameter-name</strong></span><span class="special">)</span>
+
+<span class="emphasis"><em>positional-optional-parameter:</em></span>
+        <span class="emphasis"><em>required-parameter</em></span>
+        <span class="special">(</span><span class="keyword">default</span><span class="special">)(</span><span class="bold"><strong>parameter-default</strong></span><span class="special">)</span>
+</pre>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.Grammar.named_function_parameters"></a><a class="link" href="Grammar.html#contract__.Grammar.named_function_parameters" title="Named Function Parameters">Named Function
+      Parameters</a>
+</h3></div></div></div>
+<pre class="programlisting"><span class="emphasis"><em>named-parameters:</em></span>
+        /[/<span class="special">(</span><span class="keyword">namespace</span><span class="special">)(</span><span class="bold"><strong>tag-namespace</strong></span><span class="special">)</span>/]/
+          <span class="emphasis"><em>induced-named-parameters</em></span>
+        <span class="emphasis"><em>| deduced-named-parameters</em></span>
+        <span class="emphasis"><em>| induced-named-parameters deduced-named-parameters</em></span>
+
+<span class="emphasis"><em>induced-named-parameters:</em></span>
+          <span class="emphasis"><em>required-named-parameter+</em></span>
+        <span class="emphasis"><em>| optional-named-parameter+</em></span>
+        <span class="emphasis"><em>| required-named-parameter+ optional-named-parameter+</em></span>
+
+<span class="emphasis"><em>deduced-named-parameters:</em></span>
+        <span class="special">(</span><span class="identifier">deduce</span><span class="special">)(</span> <span class="emphasis"><em>induced-named-parameters</em></span> <span class="special">)</span>
+
+<span class="emphasis"><em>required-named-parameter:</em></span>
+        <span class="emphasis"><em>inout-classifier</em></span>
+        <span class="emphasis"><em>named-parameter-type</em></span> <span class="special">(</span><span class="bold"><strong>parameter-name</strong></span><span class="special">)</span>
+
+<span class="emphasis"><em>optional-named-parameter:</em></span>
+        <span class="emphasis"><em>required-named-parameter</em></span>
+        <span class="special">(</span><span class="keyword">default</span><span class="special">)(</span><span class="bold"><strong>parameter-default</strong></span><span class="special">)</span>
+
+<span class="emphasis"><em>inout-classifier:</em></span>
+        <span class="special">(</span><span class="identifier">in</span><span class="special">)</span> <span class="emphasis"><em>|</em></span> <span class="special">(</span><span class="identifier">out</span><span class="special">)</span> <span class="emphasis"><em>|</em></span> <span class="special">(</span><span class="identifier">inout</span><span class="special">)</span>
+
+<span class="emphasis"><em>named-parameter-type:</em></span>
+          <span class="special">(</span><span class="keyword">auto</span><span class="special">)</span>                                <span class="comment">// Any type.</span>
+        <span class="emphasis"><em>|</em></span> <span class="special">(</span><span class="bold"><strong>parameter-type</strong></span><span class="special">)</span>                    <span class="comment">// Only the exact type specification.</span>
+        <span class="emphasis"><em>|</em></span> <span class="special">(</span><span class="identifier">requires</span> <span class="special">(</span><span class="bold"><strong>parameter-type-predicate</strong></span><span class="special">))</span>    <span class="comment">// Any type matching the specified predicate.</span>
+</pre>
+<p>
+        If the tag-namespace is not specified, <code class="literal"><span class="emphasis"><em>current-namespace</em></span>::tag</code>
+        is used by default.
+      </p>
+<p>
+        Named parameters cannot be specified for function templates. Note that this
+        is not a limitation because named parameters specified to match any type
+        using <code class="computeroutput"><span class="special">(</span><span class="keyword">auto</span><span class="special">)</span></code> are equivalent to template parameters. Furthermore,
+        named parameters specified to match a parameter type predicate using <code class="computeroutput"><span class="special">(</span><span class="identifier">requires</span> <span class="special">(</span> <span class="special">...</span> <span class="special">))</span></code>
+        are equivalent to template parameters with concept requirements.
+      </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.Grammar.template_parameters"></a><a class="link" href="Grammar.html#contract__.Grammar.template_parameters" title="Template Parameters">Template Parameters</a>
+</h3></div></div></div>
+<pre class="programlisting"><span class="emphasis"><em>template-parameters:</em></span>
+          <span class="emphasis"><em>required-template-parameter+</em></span>
+        <span class="emphasis"><em>| optional-template-parameter+</em></span>
+        <span class="emphasis"><em>| required-template-parameter+ optional-template-parameter+</em></span>
+
+<span class="emphasis"><em>required-template-parameter:</em></span>
+        <span class="emphasis"><em>template-parameter-kind</em></span> <span class="special">(</span><span class="bold"><strong>template-parameter-name</strong></span><span class="special">)</span>
+
+<span class="emphasis"><em>template-parameter-kind:</em></span>
+          <span class="special">(</span><span class="keyword">typename</span><span class="special">)</span> <span class="emphasis"><em>|</em></span> <span class="special">(</span><span class="keyword">class</span><span class="special">)</span>      <span class="comment">// For type template parameters.</span>
+        <span class="emphasis"><em>|</em></span> <span class="special">(</span><span class="bold"><strong>template-parameter-type</strong></span><span class="special">)</span>   <span class="comment">// For value template parameters.</span>
+
+<span class="emphasis"><em>optional-template-parameter:</em></span>
+        <span class="emphasis"><em>required-template-parameter</em></span>
+        <span class="special">(</span><span class="keyword">default</span><span class="special">)(</span><span class="bold"><strong>template-parameter-default</strong></span><span class="special">)</span>
+</pre>
+<p>
+        As usual in C++, template parameters with defaults must appear at the end
+        of the template parameter list and they cannot be specified for function
+        templates.
+      </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.Grammar.assertions"></a><a class="link" href="Grammar.html#contract__.Grammar.assertions" title="Assertions">Assertions</a>
+</h3></div></div></div>
+<pre class="programlisting"><span class="emphasis"><em>parenthesized-assertions:</em></span>
+        <span class="emphasis"><em>parenthesized-assertion+</em></span>
+
+<span class="emphasis"><em>parenthesized-assertion:</em></span>
+          <span class="emphasis"><em>runtime-assertion</em></span>
+        <span class="emphasis"><em>| static-assertion</em></span>
+
+<span class="emphasis"><em>runtime-assertion:</em></span>
+          <span class="emphasis"><em>assertion</em></span>
+        <span class="emphasis"><em>| constant-assertion</em></span>
+        <span class="emphasis"><em>| conditional-assertion</em></span>
+
+<span class="emphasis"><em>assertion:</em></span>
+        <span class="special">(</span><span class="bold"><strong>boolean-expression</strong></span><span class="special">)</span>
+        /[/<span class="special">(</span><span class="identifier">importance</span> <span class="special">(</span><span class="bold"><strong>natural-number</strong></span><span class="special">))</span>/]/
+
+<span class="comment">// Only the specified variable names can be used to assert the condition and they must be used in as constants.</span>
+<span class="emphasis"><em>constant-assertion:</em></span>
+        <span class="special">(</span><span class="keyword">const</span> <span class="special">(</span><span class="bold"><strong>in-scope-variable-name</strong></span><span class="special">)</span><span class="emphasis"><em>+</em></span> <span class="special">(</span><span class="bold"><strong>constant-boolean-expression</strong></span><span class="special">))</span>
+        /[/<span class="special">(</span><span class="identifier">importance</span> <span class="special">(</span><span class="bold"><strong>natural-number</strong></span><span class="special">))</span>/]/
+
+<span class="emphasis"><em>conditional-assertion:</em></span>
+        <span class="special">(</span><span class="keyword">if</span> <span class="special">(</span><span class="bold"><strong>boolean-expression</strong></span><span class="special">)</span> <span class="special">(</span>
+            <span class="emphasis"><em>runtime-assertion+</em></span>
+        <span class="special">))</span>
+        /[/<span class="special">(</span><span class="keyword">else</span> <span class="special">(</span> <span class="comment">// This parenthesized else statement is optional.</span>
+            <span class="emphasis"><em>runtime-assertion+</em></span>
+        <span class="special">))</span>/]/
+
+<span class="emphasis"><em>static-assertion:</em></span>
+        <span class="special">(</span><span class="keyword">static</span> <span class="special">(</span><span class="bold"><strong>static-boolean-expression</strong></span><span class="special">))</span>
+        /[/<span class="special">(</span><span class="identifier">importance</span> <span class="special">(</span><span class="bold"><strong>natural-number</strong></span><span class="special">))</span>/]/
+</pre>
+<p>
+        Note that the boolean condition of the if-statement of a conditional-assertion
+        is not evaluated in constant-correct context for loop invariants. This limitation
+        could have been removed by allowing conditional-assertions to be specified
+        within a constant-assertion however that would complicate the syntax significantly
+        making conditional-assertions within constant-assertions very hard to read
+        and creating confusion when importance is specified in both the inner assertions
+        within the conditional-assertion and the outer constant-assertion. Therefore,
+        constant-assertions only allow to specify a single boolean expression. However,
+        the <code class="computeroutput"><span class="special">?:</span></code> operator can be used
+        within a constant-assertion to check the if-condition in a constant correct
+        context:
+      </p>
+<pre class="programlisting"><span class="special">(</span><span class="keyword">const</span> <span class="special">(</span><span class="identifier">x</span><span class="special">)(</span><span class="identifier">y</span><span class="special">)</span> <span class="special">(</span><span class="identifier">x</span> <span class="special">==</span> <span class="identifier">y</span> <span class="special">?</span> <span class="identifier">x</span> <span class="special">&gt;</span> <span class="number">0</span> <span class="special">:</span> <span class="identifier">x</span> <span class="special">&lt;</span> <span class="number">0</span><span class="special">))</span>
+</pre>
+<p>
+        The downside of this approach is that the if-condition will have to be repeated
+        multiple times (with some lost in performance) for different constant-assertions
+        when they need to be wrapped by the same if-condition:
+      </p>
+<pre class="programlisting"><span class="special">(</span><span class="keyword">const</span> <span class="special">(</span><span class="identifier">x</span><span class="special">)(</span><span class="identifier">y</span><span class="special">)</span> <span class="special">(</span><span class="identifier">x</span> <span class="special">==</span> <span class="identifier">y</span> <span class="special">?</span> <span class="identifier">x</span> <span class="special">&gt;</span> <span class="number">0</span> <span class="special">:</span> <span class="identifier">x</span> <span class="special">&lt;</span> <span class="number">0</span><span class="special">))</span>
+<span class="special">(</span><span class="keyword">const</span> <span class="special">(</span><span class="identifier">x</span><span class="special">)(</span><span class="identifier">y</span><span class="special">)</span> <span class="special">(</span><span class="identifier">x</span> <span class="special">==</span> <span class="identifier">y</span> <span class="special">?</span> <span class="identifier">y</span> <span class="special">&gt;</span> <span class="number">0</span> <span class="special">:</span> <span class="identifier">y</span> <span class="special">&lt;</span> <span class="number">0</span><span class="special">))</span> <span class="comment">// Checking `x == y` a second time...</span>
+</pre>
+<p>
+        Alternatively, the multiple assertion conditions can be joined in <code class="computeroutput"><span class="special">&amp;&amp;</span></code> so to be checked within the same
+        <code class="computeroutput"><span class="special">?:</span></code> operator:
+      </p>
+<pre class="programlisting"><span class="special">(</span><span class="keyword">const</span> <span class="special">(</span><span class="identifier">x</span><span class="special">)(</span><span class="identifier">y</span><span class="special">)</span> <span class="special">(</span><span class="identifier">x</span> <span class="special">==</span> <span class="identifier">y</span> <span class="special">?</span> <span class="special">(</span><span class="identifier">x</span> <span class="special">&gt;</span> <span class="number">0</span> <span class="special">&amp;&amp;</span> <span class="identifier">y</span> <span class="special">&gt;</span> <span class="number">0</span><span class="special">)</span> <span class="special">:</span> <span class="special">(</span><span class="identifier">x</span> <span class="special">&lt;</span> <span class="number">0</span> <span class="special">&amp;&amp;</span> <span class="identifier">y</span> <span class="special">&lt;</span> <span class="number">0</span><span class="special">)))</span> <span class="comment">// Cannot see which of the two conditions in and is failing...</span>
+</pre>
+<p>
+        The downside in this case is that if the asserted condition fails it is not
+        clear which one of the two anded condition actually failed.
+      </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.Grammar.loop_variant"></a><a class="link" href="Grammar.html#contract__.Grammar.loop_variant" title="Loop Variant">Loop Variant</a>
+</h3></div></div></div>
+<pre class="programlisting"><span class="emphasis"><em>parenthesized-variant:</em></span>
+          <span class="emphasis"><em>variant</em></span>
+        <span class="emphasis"><em>| constant-variant</em></span>
+
+<span class="emphasis"><em>variant:</em></span>
+        <span class="special">(</span><span class="bold"><strong>decreasing-natural-expression</strong></span><span class="special">)</span>
+        /[/<span class="special">(</span><span class="identifier">importance</span> <span class="special">(</span><span class="bold"><strong>natural-number</strong></span><span class="special">))</span>/]/
+
+<span class="emphasis"><em>constant-variant:</em></span>
+        <span class="special">(</span><span class="keyword">const</span> <span class="special">(</span><span class="bold"><strong>in-scope-variable-name</strong></span><span class="special">)</span><span class="emphasis"><em>+</em></span> <span class="special">(</span><span class="bold"><strong>constant-decreasing-natural-expression</strong></span><span class="special">))</span>
+        /[/<span class="special">(</span><span class="identifier">importance</span> <span class="special">(</span><span class="bold"><strong>natural-number</strong></span><span class="special">))</span>/]/
+</pre>
+<p>
+        By definition, a variant expression can never be static because it must monotonically
+        decrease at run-time (that is why there is no static-variant).
+      </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="contract__.Grammar.new_keywords"></a><a class="link" href="Grammar.html#contract__.Grammar.new_keywords" title="New Keywords">New Keywords</a>
+</h3></div></div></div>
+<div class="table">
+<a name="id957233"></a><p class="title"><b>Table&#160;2.&#160;Keywords replacing C++ non alphanumeric symbols.</b></p>
+<div class="table-contents"><table class="table" summary="Keywords replacing C++ non alphanumeric symbols.">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Parenthesized Keyword
+                </p>
+              </th>
+<th>
+                <p>
+                  Description
+                </p>
+              </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="special">(</span><span class="identifier">extends</span><span class="special">)</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  This parenthesized keyword is used to specify base classes instead
+                  of the usual C++ symbol <code class="computeroutput"><span class="special">:</span></code>.
+                  The "extends" word was chosen because it is alphanumeric
+                  and already used by Java.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="special">(</span><span class="identifier">initialize</span><span class="special">)</span></code>
+                </p>
+              </td>
+<td>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="special">(</span><span class="keyword">default</span><span class="special">)</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  This parenthesized keyword is used to specify defaults for function
+                  and template parameters instead of the usual C++ symbol <code class="computeroutput"><span class="special">=</span></code>. The "default" word
+                  was chose because it is alphanumeric and it is already a C++ keyword
+                  (used to specify default action within a <code class="computeroutput"><span class="keyword">switch</span></code>
+                  statement).
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="special">(</span><span class="keyword">void</span><span class="special">)</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  In addition to the usual C++ contexts where <code class="computeroutput"><span class="keyword">void</span></code>
+                  is used, this parenthesized keyword is used to specify a function
+                  that takes no parameter (instead of <code class="literal"><span class="bold"><strong>function-name</strong></span>()</code>),
+                  a function that does not throw (instead of the exeception specification
+                  <code class="computeroutput"><span class="keyword">throw</span><span class="special">()</span></code>),
+                  no result within postconditions for a function with a type expression
+                  not using the <code class="computeroutput"><span class="keyword">void</span></code>
+                  token but evaluating to the <code class="computeroutput"><span class="keyword">void</span></code>
+                  type.
+                </p>
+              </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break"><div class="table">
+<a name="id957545"></a><p class="title"><b>Table&#160;3.&#160;Keywords for new features.</b></p>
+<div class="table-contents"><table class="table" summary="Keywords for new features.">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Parenthesized Keyword
+                </p>
+              </th>
+<th>
+                <p>
+                  Description
+                </p>
+              </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="special">(</span><span class="identifier">importance</span>
+                  <span class="special">...)</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  This parenthesized keyword is used to specify assertion importance.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="special">(</span><span class="identifier">precondition</span><span class="special">)</span></code>
+                </p>
+              </td>
+<td>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="special">(</span><span class="identifier">postcondition</span>
+                  <span class="special">...)</span></code>
+                </p>
+              </td>
+<td>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="special">(</span><span class="keyword">static</span>
+                  <span class="special">...)</span></code>
+                </p>
+              </td>
+<td>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="special">(</span><span class="keyword">const</span>
+                  <span class="special">...)</span></code>
+                </p>
+              </td>
+<td>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="special">(</span><span class="keyword">if</span>
+                  <span class="special">...)</span></code>
+                </p>
+              </td>
+<td>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="special">(</span><span class="keyword">else</span>
+                  <span class="special">...)</span></code>
+                </p>
+              </td>
+<td>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="special">(</span><span class="keyword">namespace</span><span class="special">)</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  This parenthesized keyword is used to specify the tag namespace
+                  where named parameter classes are defined.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="special">(</span><span class="identifier">deduce</span><span class="special">)</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  This parenthesized keyword is used to specify a list of deduced
+                  named parameters.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="special">(</span><span class="identifier">in</span><span class="special">)</span></code>
+                </p>
+              </td>
+<td>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="special">(</span><span class="identifier">out</span><span class="special">)</span></code>
+                </p>
+              </td>
+<td>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="special">(</span><span class="identifier">inout</span><span class="special">)</span></code>
+                </p>
+              </td>
+<td>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="special">(</span><span class="keyword">auto</span><span class="special">)</span></code>
+                </p>
+              </td>
+<td>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="special">(</span><span class="identifier">requires</span>
+                  <span class="special">...)</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  This parenthesized keyword is used to specify template parameter
+                  concepts using the syntax <code class="computeroutput"><span class="special">(</span><span class="identifier">requires</span><span class="special">)(</span>
+                  <span class="special">(</span></code><code class="literal"><span class="bold"><strong>concept</strong></span></code><code class="computeroutput"><span class="special">)</span></code><code class="literal"><span class="emphasis"><em>+</em></span></code><code class="computeroutput">
+                  <span class="special">)</span></code>. It is also similarly
+                  used to specify type constraints for named parameters using the
+                  syntax <code class="computeroutput"><span class="special">(</span><span class="identifier">requires</span>
+                  <span class="special">(</span></code><code class="literal"><span class="bold"><strong>parameter-type-predicate</strong></span></code><code class="computeroutput"><span class="special">))</span></code>.
+                </p>
+              </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break">
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2009, 2010 Lorenzo Caminiti<p>
+        Distributed under the Contract++ Software License, Version 1.0 (see accompanying
+        file LICENSE_1_0.txt)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="contract_programming.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="../reference.html"><img src="../images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

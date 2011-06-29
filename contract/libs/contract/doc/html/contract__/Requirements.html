@@ -1,0 +1,657 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Annex: Requirements</title>
+<link rel="stylesheet" href="../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<link rel="home" href="../index.html" title="Contract++ 0.3.490">
+<link rel="up" href="../index.html" title="Contract++ 0.3.490">
+<link rel="prev" href="../CONTRACT_WRAP_TYPE.html" title="Macro CONTRACT_WRAP_TYPE">
+<link rel="next" href="Rationale.html" title="Annex: Rationale">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr><td valign="top"></td></tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../CONTRACT_WRAP_TYPE.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="Rationale.html"><img src="../images/next.png" alt="Next"></a>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="contract__.Requirements"></a><a class="link" href="Requirements.html" title="Annex: Requirements">Annex: Requirements</a>
+</h2></div></div></div>
+<div class="table">
+<a name="id982831"></a><p class="title"><b>Table&#160;4.&#160;Steps executed by a call to a function with a contract.</b></p>
+<div class="table-contents"><table class="table" summary="Steps executed by a call to a function with a contract.">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+              <p>
+                Step
+              </p>
+            </th>
+<th>
+              <p>
+                Task
+              </p>
+            </th>
+<th>
+              <p>
+                Constructor
+              </p>
+            </th>
+<th>
+              <p>
+                Destructor
+              </p>
+            </th>
+<th>
+              <p>
+                Non-Static Member Function
+              </p>
+            </th>
+<th>
+              <p>
+                Static Member Function
+              </p>
+            </th>
+<th>
+              <p>
+                Free Function
+              </p>
+            </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+              <p>
+                1.
+              </p>
+            </td>
+<td>
+              <p>
+                <span class="emphasis"><em>Check static class invariants AND...</em></span>
+              </p>
+            </td>
+<td>
+              <p>
+                Yes.
+              </p>
+            </td>
+<td>
+              <p>
+                Yes.
+              </p>
+            </td>
+<td>
+              <p>
+                Yes.
+              </p>
+            </td>
+<td>
+              <p>
+                Yes.
+              </p>
+            </td>
+<td>
+              <p>
+                No (because there is no class for free functions).
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                2.
+              </p>
+            </td>
+<td>
+              <p>
+                <span class="emphasis"><em>... AND check static class invariants for all base classes</em></span>
+              </p>
+            </td>
+<td>
+              <p>
+                Yes.
+              </p>
+            </td>
+<td>
+              <p>
+                Yes.
+              </p>
+            </td>
+<td>
+              <p>
+                Yes.
+              </p>
+            </td>
+<td>
+              <p>
+                Yes.
+              </p>
+            </td>
+<td>
+              <p>
+                No (because there is no inheritance for free functions).
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                3.
+              </p>
+            </td>
+<td>
+              <p>
+                <span class="emphasis"><em>Check class invariants AND...</em></span>
+              </p>
+            </td>
+<td>
+              <p>
+                No (because there is no object before constructor body execution).
+              </p>
+            </td>
+<td>
+              <p>
+                Yes.
+              </p>
+            </td>
+<td>
+              <p>
+                Yes.
+              </p>
+            </td>
+<td>
+              <p>
+                No (because there is no object for static member functions).
+              </p>
+            </td>
+<td>
+              <p>
+                No (because there is no object for free functions).
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                4.
+              </p>
+            </td>
+<td>
+              <p>
+                <span class="emphasis"><em>... AND check class invariants for all base classes</em></span>
+              </p>
+            </td>
+<td>
+              <p>
+                No (because there is no object before constructor body execution).
+              </p>
+            </td>
+<td>
+              <p>
+                Yes.
+              </p>
+            </td>
+<td>
+              <p>
+                Yes.
+              </p>
+            </td>
+<td>
+              <p>
+                No (because there is no inheritance for static member functions).
+              </p>
+            </td>
+<td>
+              <p>
+                No (because there is no inheritance for free functions).
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                5.
+              </p>
+            </td>
+<td>
+              <p>
+                <span class="emphasis"><em>Check function preconditions OR...</em></span>
+              </p>
+            </td>
+<td>
+              <p>
+                Yes but without accessing the object (because there is no object
+                before constructor body execution) plus before constructing any base
+                class and before initializing any member variable (because object
+                construction should not start at all, not even the construction of
+                the base objects or of the members, if the constructor preconditions
+                are not satisfied).
+              </p>
+            </td>
+<td>
+              <p>
+                No (because destructors have no function parameter).
+              </p>
+            </td>
+<td>
+              <p>
+                Yes.
+              </p>
+            </td>
+<td>
+              <p>
+                Yes but without accessing the object (because there is no object
+                for static member functions).
+              </p>
+            </td>
+<td>
+              <p>
+                Yes.
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                6.
+              </p>
+            </td>
+<td>
+              <p>
+                <span class="emphasis"><em>... OR check preconditions of overridden functions from
+                all base classes</em></span>
+              </p>
+            </td>
+<td>
+              <p>
+                Yes (same as above).
+              </p>
+            </td>
+<td>
+              <p>
+                No (same as above).
+              </p>
+            </td>
+<td>
+              <p>
+                Yes.
+              </p>
+            </td>
+<td>
+              <p>
+                No (because there is no inheritance for static member functions).
+              </p>
+            </td>
+<td>
+              <p>
+                No (because there is no inheritance for free functions).
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                7.
+              </p>
+            </td>
+<td>
+              <p>
+                <span class="emphasis"><em>Copy old-of values AND...</em></span>
+              </p>
+            </td>
+<td>
+              <p>
+                Yes but old-of expressions cannot access the object (because there
+                is no object before constructor body execution).
+              </p>
+            </td>
+<td>
+              <p>
+                No (because destructors have no postconditions and therefore no old-of).
+              </p>
+            </td>
+<td>
+              <p>
+                Yes.
+              </p>
+            </td>
+<td>
+              <p>
+                Yes but old-of expressions cannot access the object (because there
+                is no object in static member functions).
+              </p>
+            </td>
+<td>
+              <p>
+                Yes.
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                8.
+              </p>
+            </td>
+<td>
+              <p>
+                <span class="emphasis"><em>... AND copy old-of values of overridden functions from
+                all base classes</em></span>
+              </p>
+            </td>
+<td>
+              <p>
+                Yes (same as above).
+              </p>
+            </td>
+<td>
+              <p>
+                No (same as above).
+              </p>
+            </td>
+<td>
+              <p>
+                Yes.
+              </p>
+            </td>
+<td>
+              <p>
+                No (because there is no inheritance for static member functions).
+              </p>
+            </td>
+<td>
+              <p>
+                No (because there is no inheritance for free functions).
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                9.
+              </p>
+            </td>
+<td>
+              <p>
+                <span class="emphasis"><em>Execute body</em></span>
+              </p>
+            </td>
+<td>
+              <p>
+                Yes.
+              </p>
+            </td>
+<td>
+              <p>
+                Yes.
+              </p>
+            </td>
+<td>
+              <p>
+                Yes.
+              </p>
+            </td>
+<td>
+              <p>
+                Yes.
+              </p>
+            </td>
+<td>
+              <p>
+                Yes.
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                10.
+              </p>
+            </td>
+<td>
+              <p>
+                <span class="emphasis"><em>Check static class invariants AND...</em></span>
+              </p>
+            </td>
+<td>
+              <p>
+                Yes.
+              </p>
+            </td>
+<td>
+              <p>
+                Yes.
+              </p>
+            </td>
+<td>
+              <p>
+                Yes.
+              </p>
+            </td>
+<td>
+              <p>
+                Yes.
+              </p>
+            </td>
+<td>
+              <p>
+                No (because there is no class for free functions).
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                11.
+              </p>
+            </td>
+<td>
+              <p>
+                <span class="emphasis"><em>... AND check static class invariants for all base classes</em></span>
+              </p>
+            </td>
+<td>
+              <p>
+                Yes.
+              </p>
+            </td>
+<td>
+              <p>
+                Yes.
+              </p>
+            </td>
+<td>
+              <p>
+                Yes.
+              </p>
+            </td>
+<td>
+              <p>
+                Yes.
+              </p>
+            </td>
+<td>
+              <p>
+                No (because there is no inheritance for free functions).
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                12.
+              </p>
+            </td>
+<td>
+              <p>
+                <span class="emphasis"><em>Check class invariants AND...</em></span>
+              </p>
+            </td>
+<td>
+              <p>
+                Yes (because the object has been constructed).
+              </p>
+            </td>
+<td>
+              <p>
+                No (because there is no object after destructor body execution).
+              </p>
+            </td>
+<td>
+              <p>
+                Yes.
+              </p>
+            </td>
+<td>
+              <p>
+                No (because there is no object for static member functions).
+              </p>
+            </td>
+<td>
+              <p>
+                No (because there is no object for free functions).
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                13.
+              </p>
+            </td>
+<td>
+              <p>
+                <span class="emphasis"><em>... AND check class invariants for all base classes</em></span>
+              </p>
+            </td>
+<td>
+              <p>
+                Yes (because the object has been constructed).
+              </p>
+            </td>
+<td>
+              <p>
+                No (because there is no object after destructor body execution).
+              </p>
+            </td>
+<td>
+              <p>
+                Yes.
+              </p>
+            </td>
+<td>
+              <p>
+                No (because there is no inheritance for static member functions).
+              </p>
+            </td>
+<td>
+              <p>
+                No (because there is no inheritance for free functions).
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                14.
+              </p>
+            </td>
+<td>
+              <p>
+                <span class="emphasis"><em>Check function postconditions AND...</em></span>
+              </p>
+            </td>
+<td>
+              <p>
+                Yes.
+              </p>
+            </td>
+<td>
+              <p>
+                No (because destructors have no function parameter and there is no
+                object after destructor body execution).
+              </p>
+            </td>
+<td>
+              <p>
+                Yes.
+              </p>
+            </td>
+<td>
+              <p>
+                Yes.
+              </p>
+            </td>
+<td>
+              <p>
+                Yes.
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                15.
+              </p>
+            </td>
+<td>
+              <p>
+                <span class="emphasis"><em>... AND check postconditions of overridden functions from
+                all base classes</em></span>
+              </p>
+            </td>
+<td>
+              <p>
+                Yes.
+              </p>
+            </td>
+<td>
+              <p>
+                No (because there is no object after destructor body execution).
+              </p>
+            </td>
+<td>
+              <p>
+                Yes.
+              </p>
+            </td>
+<td>
+              <p>
+                No (because there is no inheritance for static member functions).
+              </p>
+            </td>
+<td>
+              <p>
+                No (because there is no inheritance for free functions).
+              </p>
+            </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break">
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2009, 2010 Lorenzo Caminiti<p>
+        Distributed under the Contract++ Software License, Version 1.0 (see accompanying
+        file LICENSE_1_0.txt)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../CONTRACT_WRAP_TYPE.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="Rationale.html"><img src="../images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>
