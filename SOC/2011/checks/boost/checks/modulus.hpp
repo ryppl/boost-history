@@ -24,7 +24,7 @@ namespace boost {
 template <typename In>
 inline bool check_luhn(In &begin, const In &end, unsigned int nbr_digits)
 {
-  // If the number of digits isn't given (equal to 0), we compute it.
+  // If the number of digits isn't given (equal to 0), we count these.
   if(!nbr_digits)
   {
 	In iter = begin;
@@ -34,7 +34,7 @@ inline bool check_luhn(In &begin, const In &end, unsigned int nbr_digits)
         ++nbr_digits;
 	  ++iter;
 	}
-	// Return false if there is no digits in the expression given.
+	// Return false if there is no digit in the expression given.
 	if(!nbr_digits)
 	{
 	  begin = end;
@@ -42,6 +42,10 @@ inline bool check_luhn(In &begin, const In &end, unsigned int nbr_digits)
 	}
   }
   int sum = 0,v;
+  /* We start with the leftmost digit and we multiply by two 
+   * if the total number of digit is even. We alternate the multiplication
+   * for all the digits. We subtract 9 from the digit greater than 9 
+   * after the multiplication. */
   while(nbr_digits > 0 && begin != end)
   {
     if(*begin >= '0' && *begin <= '9')
@@ -49,9 +53,86 @@ inline bool check_luhn(In &begin, const In &end, unsigned int nbr_digits)
 	++begin;
   }
   // Return true if the number of digit is equal to the number specified and the sum is valid.
-  return !nbr_digits && sum % 10 ;
+  return !nbr_digits && !(sum % 10) ;
 }
 
+/** Calculate the check digit of the number provided with the Luhn algorithm.
+ * \tparam Iterator which represents the beginning or the ending of a sequence of character.
+ * \tparam unsigned int which represents a size.
+ * \param [in] begin Represents the beginning of the sequence to check.
+ * \param [in] end Represents one off the limit of the sequence to check.
+ * \param [unsigned int] nbr_digits Represents the number of digits on which the Luhn algorithm will operate. If the size is < 1, the luhn algorithm will calculate the check digit with all the digit encountered.
+ * \pre begin and end are valid initialized iterators. They represent a sequence of character encoded in big-endian mode in a format compatible with the 7 bits ASCII.
+ * \post begin is equal to the position of the check digit plus one if the expression provided is correct, otherwise is equal to end.
+ * \result 0 is returned if the expression given have not nbr_digits (or 0 digit if nbr_digits is equal to 0). Otherwise the ASCII character of check digit is returned.
+ */
+template <typename Out, typename In>
+inline Out compute_luhn(In &begin, const In &end, unsigned int nbr_digits)
+{
+  // If the number of digits isn't given (equal to 0), we count these.
+  if(!nbr_digits)
+  {
+	In iter = begin;
+	while(iter != end)
+	{
+      if(*iter >= '0' && *iter <= '9')
+        ++nbr_digits;
+	  ++iter;
+	}
+	// Return 0 if there is no digit in the expression given.
+	if(!nbr_digits)
+	{
+	  begin = end;
+	  return 0;
+	}
+  }
+  int sum = 0,v;
+  /* We start with the leftmost digit and we multiply by two 
+   * if the total number of digit is even. We alternate the multiplication
+   * for all the digits. We subtract 9 from the digit greater than 9 
+   * after the multiplication. */
+  while(nbr_digits > 0 && begin != end)
+  {
+    if(*begin >= '0' && *begin <= '9')
+		sum += (v= (*begin & 15) << (nbr_digits--&1)) - 9 * (v>9);
+	++begin;
+  }
+  return (10 - sum % 10) % 10 + '0';
+}
+
+template <typename In>
+inline char compute_luhn(In &begin, const In &end, unsigned int nbr_digits)
+{
+  // If the number of digits isn't given (equal to 0), we count these.
+  if(!nbr_digits)
+  {
+	In iter = begin;
+	while(iter != end)
+	{
+      if(*iter >= '0' && *iter <= '9')
+        ++nbr_digits;
+	  ++iter;
+	}
+	// Return 0 if there is no digit in the expression given.
+	if(!nbr_digits)
+	{
+	  begin = end;
+	  return 0;
+	}
+  }
+  int sum = 0,v;
+  /* We start with the leftmost digit and we multiply by two 
+   * if the total number of digit is odd. We alternate the multiplication
+   * for all the digits. We subtract 9 from the digit greater than 9 
+   * after the multiplication. */
+  while(nbr_digits > 0 && begin != end)
+  {
+    if(*begin >= '0' && *begin <= '9')
+		sum += (v= (*begin & 15) << (nbr_digits--&1)) - 9 * (v>9);
+	++begin;
+  }
+  return (10 - sum % 10) % 10 + '0';
+}
 /** Validate the check digit of the number provided with the modulus 11 algorithm.
  * \tparam Iterator which represents the beginning or the ending of a sequence of character.
  * \tparam unsigned int which represents a size.
@@ -65,7 +146,7 @@ inline bool check_luhn(In &begin, const In &end, unsigned int nbr_digits)
 template <typename In>
 inline bool check_mod11(In &begin, const In end, unsigned int nbr_digits)
 {
-  // If the number of digits isn't given (equal to 0), we compute it.
+  // If the number of digits isn't given (equal to 0), we count these.
   if(!nbr_digits)
   {
 	In iter = begin;
@@ -75,7 +156,7 @@ inline bool check_mod11(In &begin, const In end, unsigned int nbr_digits)
         ++nbr_digits;
 	  ++iter;
 	}
-	// Return false if there is no digits in the expression given.
+	// Return false if there is no digit in the expression given.
 	if(!nbr_digits)
 	{
 	  begin = end;
@@ -83,14 +164,15 @@ inline bool check_mod11(In &begin, const In end, unsigned int nbr_digits)
 	}
   }
   int sum = 0;
-  // Sum the n-1 first digit with a weigth of n
+  // Sum the n-1 first digit with a weigth of n. (The weigth is the contribution
+  // of a digit to the final sum).
   while(nbr_digits > 1 && iter != end)
   {
     if(*begin >= '0' && *begin <= '9')
 	  sum += *begin & 15 * nbr_digits--;
 	++begin;
   }
-  // Add the check digit to the sum (add 10 if the check digit equals 'x' or 'X')
+  // Add the check digit to the sum (add 10 if the check digit equals 'x' or 'X').
   while(begin != end)
   {
     if(*begin >= '0' && *begin <= '9')
@@ -109,7 +191,7 @@ inline bool check_mod11(In &begin, const In end, unsigned int nbr_digits)
 	  ++iter;
   }
   // Return true if the number of digit is equal to the number specified and the sum is valid.
-  return !nbr_digits && sum % 11;
+  return !nbr_digits && !(sum % 11);
 }
 
 template <class In>
