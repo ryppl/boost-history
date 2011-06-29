@@ -26,13 +26,14 @@
 
 # if BOOST_PP_CONFIG_FLAGS() & BOOST_PP_CONFIG_MSVC()
 #    define BOOST_PP_LIST_TO_ARRAY_I(w, list) \
-        BOOST_PP_LIST_TO_ARRAY_II((BOOST_PP_TUPLE_REM_CTOR( \
+        BOOST_PP_LIST_TO_ARRAY_II(((BOOST_PP_TUPLE_REM_CTOR( \
             3, \
 	        w(BOOST_PP_LIST_TO_ARRAY_P, BOOST_PP_LIST_TO_ARRAY_O, (list, 1, (~))) \
-        ))) \
+        )))) \
         /**/
 #    define BOOST_PP_LIST_TO_ARRAY_II(p) BOOST_PP_LIST_TO_ARRAY_II_B(p)
-#    define BOOST_PP_LIST_TO_ARRAY_II_B(p) BOOST_PP_LIST_TO_ARRAY_III ## p
+#    define BOOST_PP_LIST_TO_ARRAY_II_B(p) BOOST_PP_LIST_TO_ARRAY_II_C ## p
+#    define BOOST_PP_LIST_TO_ARRAY_II_C(p) BOOST_PP_LIST_TO_ARRAY_III p
 # else
 #    define BOOST_PP_LIST_TO_ARRAY_I(w, list) \
         BOOST_PP_LIST_TO_ARRAY_II(BOOST_PP_TUPLE_REM_CTOR( \
