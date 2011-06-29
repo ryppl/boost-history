@@ -5,16 +5,14 @@
 import testing ;
 
 project preprocessor_tests : requirements <warnings>on
-                                          <toolset>gcc-4.3.0:<warnings>all
+                                          <toolset>msvc:<warnings>all
+                                          <toolset>gcc:<warnings>all
                                           <toolset>gcc-4.3.0:<cxxflags>-Wno-variadic-macros
-                                          <toolset>gcc-4.4.0:<warnings>all
                                           <toolset>gcc-4.4.0:<cxxflags>-Wno-variadic-macros 
-                                          <toolset>gcc-4.5.0:<warnings>all
                                           <toolset>gcc-4.5.0:<cxxflags>-Wno-variadic-macros
                                           <toolset>gcc-4.5.0:<linkflags>"-Wl,--enable-auto-import"
-                                          <toolset>gcc-4.5.2:<warnings>all
                                           <toolset>gcc-4.5.2:<cxxflags>-Wno-variadic-macros
-                                          <toolset>msvc:<warnings>all
+                                          <toolset>gcc-4.6.0:<cxxflags>-Wno-variadic-macros
                                           ;
 
 test-suite preprocessor
@@ -35,6 +33,74 @@ test-suite preprocessor
         [ compile tuple.cpp ]
         [ compile variadic.cpp ]
   ;
+
+test-suite preprocessor_gcc 
+   :   
+        [ compile arithmetic.cpp 
+          : <cflags>-std=c++0x
+          : arithmetic_gcc 
+        ] 
+        [ compile array.cpp 
+          : <cflags>-std=c++0x 
+          : array_gcc 
+        ] 
+        [ compile comparison.cpp 
+          : <cflags>-std=c++0x 
+          : comparison_gcc 
+        ] 
+        [ compile control.cpp 
+          : <cflags>-std=c++0x 
+          : control_gcc 
+        ] 
+        [ compile debug.cpp 
+          : <cflags>-std=c++0x 
+          : debug_gcc 
+        ] 
+        [ compile facilities.cpp 
+          : <cflags>-std=c++0x 
+          : facilities_gcc 
+        ] 
+        [ compile iteration.cpp 
+          : <cflags>-std=c++0x 
+          : iteration_gcc 
+        ] 
+        [ compile list.cpp 
+          : <cflags>-std=c++0x 
+          : list_gcc 
+        ] 
+        [ compile logical.cpp 
+          : <cflags>-std=c++0x 
+          : logical_gcc 
+        ] 
+        [ compile repetition.cpp 
+          : <cflags>-std=c++0x 
+          : repetition_gcc 
+        ] 
+        [ compile selection.cpp 
+          : <cflags>-std=c++0x 
+          : selection_gcc 
+        ] 
+        [ compile seq.cpp 
+          : <cflags>-std=c++0x 
+          : seq_gcc 
+        ] 
+        [ compile slot.cpp 
+          : <cflags>-std=c++0x 
+          : slot_gcc 
+        ] 
+        [ compile tuple.cpp 
+          : <cflags>-std=c++0x 
+          : tuple_gcc 
+        ] 
+        [ compile variadic.cpp 
+          : <cflags>-std=c++0x 
+          : variadic_gcc 
+        ] 
+  :     
+  <toolset>gcc 
+  ;
+
+test-suite preprocessor_gcc ;
 
 test-suite preprocessor_nvm
    :   
