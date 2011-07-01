@@ -13,40 +13,21 @@
 # define BOOST_PREPROCESSOR_FACILITIES_IS_TUPLE_HPP
 #
 # include <boost/preprocessor/config/config.hpp>
-# include <boost/preprocessor/arithmetic/dec.hpp>
 # include <boost/preprocessor/control/iif.hpp>
 # include <boost/preprocessor/facilities/is_empty.hpp>
-# include <boost/preprocessor/variadic/size.hpp>
+# include <boost/preprocessor/facilities/is_tuple_begin.hpp>
 #
 # /* BOOST_PP_IS_TUPLE */
 #
 # if BOOST_PP_VARIADICS
 # define BOOST_PP_IS_TUPLE(x) \
-    BOOST_PP_IS_TUPLE_DETAIL_HAS_ONLY_PARENS(x) \
-/**/
-#
-# define BOOST_PP_IS_TUPLE_DETAIL_HAS_ONLY_PARENS(x) \
     BOOST_PP_IIF \
       ( \
-      BOOST_PP_IS_TUPLE_DETAIL_HAS_PARENS_BEGIN(x), \
+      BOOST_PP_IS_TUPLE_BEGIN(x), \
       BOOST_PP_IS_TUPLE_DETAIL_IS_NOT_AFTER, \
       BOOST_PP_IS_TUPLE_DETAIL_GEN_ZERO \
       ) \
     (x) \
-/**/
-#
-# define BOOST_PP_IS_TUPLE_DETAIL_HAS_PARENS_BEGIN(x) \
-    BOOST_PP_DEC \
-      ( \
-      BOOST_PP_VARIADIC_SIZE \
-        ( \
-        BOOST_PP_IS_TUPLE_DETAIL_EXPAND x \
-        ) \
-      ) \
-/**/
-#
-# define BOOST_PP_IS_TUPLE_DETAIL_EXPAND(...) \
-    1,1 \
 /**/
 #
 # define BOOST_PP_IS_TUPLE_DETAIL_IS_NOT_AFTER(x) \

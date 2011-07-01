@@ -97,7 +97,11 @@ test-suite preprocessor_gcc
           : variadic_gcc 
         ] 
   :     
-  <toolset>gcc 
+  <toolset>gcc-4.3.0
+  <toolset>gcc-4.4.0
+  <toolset>gcc-4.5.0
+  <toolset>gcc-4.5.2
+  <toolset>gcc-4.6.0
   ;
 
 test-suite preprocessor_gcc ;
