@@ -10,19 +10,20 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef BOOST_BLOOM_FILTER_DYNAMIC_BLOOM_HPP
-#define BOOST_BLOOM_FILTER_DYNAMIC_BLOOM_HPP 1
+#ifndef BOOST_BLOOM_FILTER_COUNTING_BLOOM_HPP
+#define BOOST_BLOOM_FILTER_COUNTING_BLOOM_HPP 1
 /**
  * \author Alejandro Cabrera
- * \brief A generic Bloom filter providing compile-time unrolling
- *        of hash function application. 
+ * \brief A generic counting Bloom filter providing compile-time unrolling
+ *        of hash function application.
  */
 #include <cmath>
+#include <boost/array.hpp>
 
 #include <boost/config.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/size.hpp>
-#include <boost/dynamic_bitset.hpp>
+#include <boost/static_assert.hpp>
 
 #include <boost/bloom_filter/detail/apply_hash.hpp>
 #include <boost/bloom_filter/hash/default.hpp>
@@ -34,33 +35,41 @@
 namespace boost {
   namespace bloom_filter {
     template <typename T,
+	      size_t NumBins,
+	      size_t BitsPerBin = 4,
 	      class HashFunctions = mpl::vector<boost_hash<T, 3> >,
-	      class Block = size_t,
-	      class Allocator = std::allocator<Block> >
-    class dynamic_bloom_filter {
+	      typename Block = size_t>
+    class counting_bloom_filter {
+
+      // it doesn't make sense to ever support using a BitsPerBin value larger
+      // than the number of bits per Block. In that case, the user shouldn't
+      // be using a Bloom filter to represent their data.
+      BOOST_STATIC_ASSERT( (BitsPerBin <= (sizeof(Block) * 4) ) );
+
+      // a slot is one element position in the array
+      // a bin is a segment of a slot 
+      static const size_t slot_bits = sizeof(Block) * 4;
+      static const size_t array_size = (slot_bits / BitsPerBin) * NumBins + 1;
+      typedef boost::array<Block, array_size> bucket_type;
+      
     public:
       typedef T value_type;
       typedef T key_type;
       typedef HashFunctions hash_function_type;
       typedef Block block_type;
-      typedef Allocator allocator_type;
 
     public:
-      
-      // constructors
-      dynamic_bloom_filter() {}
-      
-      explicit dynamic_bloom_filter(const size_t bit_capacity);
+      counting_bloom_filter() {}
 
       template <typename InputIterator>
-      dynamic_bloom_filter(const InputIterator start, 
-			   const InputIterator end) {
+      counting_bloom_filter(const InputIterator start, 
+			    const InputIterator end) {
 	for (InputIterator i = start; i != end; ++i)
 	  this->insert(*i);
       }
 
 #ifndef BOOST_NO_0X_HDR_INITIALIZER_LIST
-      dynamic_bloom_filter(const std::initializer_list<T>& ilist) {
+      counting_bloom_filter(const std::initializer_list<T>& ilist) {
 	typedef typename std::initializer_list<T>::const_iterator citer;
 	for (citer i = ilist.begin(), end = ilist.end(); i != end; ++i) {
 	  this->insert(*i);
@@ -68,33 +77,34 @@ namespace boost {
       }
 #endif
 
-      // query functions
+      static BOOST_CONSTEXPR size_t bit_capacity() {
+        return NumBlocks * sizeof(Block);
+      }
+
       static BOOST_CONSTEXPR size_t num_hash_functions() {
         return mpl::size<HashFunctions>::value;
       };
 
       double false_positive_rate() const {
-        const double n = static_cast<double>(this->bits.count());
+        const double n = static_cast<double>(this->count());
         static const double k = static_cast<double>(num_hash_functions());
-        static const double m = static_cast<double>(Size);
+        static const double m = static_cast<double>(NumBins);
         static const double e =
 	  2.718281828459045235360287471352662497757247093699959574966;
         return std::pow(1 - std::pow(e, -k * n / m), k);
       };
-
+			   
       size_t count() const {
-        return this->bits.count();
+        return error;
       };
 
       bool empty() const {
-	return this->count() == 0;
+	return error;
       }
 
-      // core operations
-      void insert(const T& t) {
-        static const unsigned N = mpl::size<HashFunctions>::value - 1;
-        //detail::apply_hash<N, T, Size, HashFunctions>::insert(t, bits);
-      }
+      void insert(const T& t);
+      //static const unsigned N = mpl::size<HashFunctions>::value - 1;
+      //detail::counting_apply_hash<N, T, Size, HashFunctions>::insert(t, bits);
 
       template <typename InputIterator>
       void insert(const InputIterator start, const InputIterator end) {
@@ -102,82 +112,117 @@ namespace boost {
 	  this->insert(*i);
 	}
       }
-
-      bool probably_contains(const T& t) const {
-        static const unsigned N = mpl::size<HashFunctions>::value - 1;
-        //return detail::apply_hash<N, T, Size, HashFunctions>::contains(t, bits);
-	return false;
+			   
+      void remove(const T& t);
+      
+      template <typename InputIterator>
+      void remove(const InputIterator start, const InputIterator end) {
+	for (InputIterator i = start; i != end; ++i) {
+	  this->remove(*i);
+	}
       }
 
-      // auxilliary operations
+      bool probably_contains(const T& t) const;
+      //static const unsigned N = mpl::size<HashFunctions>::value - 1;
+      //return detail::apply_hash<N, T, Size, HashFunctions>::contains(t, bits);
+      //return false;
+
       void clear() {
-        this->bits.reset();
+	for (bucket_type::const_iterator i = blocks.begin(), end = blocks.end();
+	     i != end; ++i) {
+	  *i = 0;
+	}
       }
 
-      void swap(bloom_filter& other) {
-	bloom_filter tmp = other;
+      void swap(counting_bloom_filter& other) {
+	counting_bloom_filter tmp = other;
 	other = *this;
 	*this = tmp;
       }
 
-      void resize(const size_t bit_capacity);
+      counting_bloom_filter& operator|=(const counting_bloom_filter& rhs);
+      counting_bloom_filter& operator&=(const counting_bloom_filter& rhs);
 
-      bloom_filter& operator|=(const bloom_filter& rhs) {
-        this->bits |= rhs.bits;
-        return *this;
-      }
-
-      bloom_filter& operator&=(const bloom_filter& rhs) {
-        this->bits &= rhs.bits;
-        return *this;
-      }
+      // equality comparison operators
+      template <typename _T, size_t _Bins, size_t _BitsPerBin, 
+		typename _HashFns, typename Block>
+      friend bool 
+      operator==(const counting_bloom_filter<_T, _Bins, _BitsPerBin,
+					     _HashFns, _Block>& lhs,
+		 const counting_bloom_filter<_T, _Bins, _BitsPerBin,
+					     _HashFns, _Block>& rhs);
+			     
+      template <typename _T, size_t _Bins, size_t _BitsPerBin, 
+		typename _HashFns, typename Block>
+      friend bool 
+      operator!=(const counting_bloom_filter<_T, _Bins, _BitsPerBin,
+					     _HashFns, _Block>& lhs,
+		 const counting_bloom_filter<_T, _Bins, _BitsPerBin,
+					     _HashFns, _Block>& rhs);
+			     
 
     private:
-      dynamic_bitset<block_type, allocator_type> bits;
+      bucket_type blocks;
     };
 
-    template<class T, class HashFunctions,
-	     class Block, class Allocator>
-    dynamic_bloom_filter<T, HashFunctions, Block, Allocator>
-    operator|(const dynamic_bloom_filter<T, 
-					 HashFunctions, 
-					 Block, Allocator>& lhs,
-	      const dynamic_bloom_filter<T, 
-					 HashFunctions, 
-					 Block, Allocator>& rhs)
+    // union
+    template<class T, size_t NumBins, size_t BitsPerBin, class HashFunctions,
+	     typename Block>
+    counting_bloom_filter<T, NumBins, BitsPerBin, HashFunctions, Block>
+    operator|(const counting_bloom_filter<T, NumBins, BitsPerBin, 
+					  HashFunctions, Block>& lhs,
+	      const counting_bloom_filter<T, NumBins, BitsPerBin,
+					  HashFunctions, Block>& rhs)
     {
-      bloom_filter<_T, _Size, _HashFunctions> ret(lhs);
+      counting_bloom_filter<T, NumBins, BitsPerBin, 
+			    HashFunctions, Block> ret(lhs);
       ret |= rhs;
       return ret;
     }
 
-    template<class T, class HashFunctions,
-	     class Block, class Allocator>
-    dynamic_bloom_filter<T, HashFunctions, Block, Allocator>
-    operator&(const dynamic_bloom_filter<T, 
-					 HashFunctions, 
-					 Block, Allocator>& lhs,
-	      const dynamic_bloom_filter<T, 
-					 HashFunctions, 
-					 Block, Allocator>& rhs)
+    // intersection
+    template<class T, size_t NumBins, size_t BitsPerBin, class HashFunctions,
+	     typename Block>
+    counting_bloom_filter<T, NumBins, BitsPerBin, HashFunctions, Block>
+    operator&(const counting_bloom_filter<T, NumBins, BitsPerBin, 
+					  HashFunctions, Block>& lhs,
+	      const counting_bloom_filter<T, NumBins, BitsPerBin,
+					  HashFunctions, Block>& rhs)
     {
-      bloom_filter<_T, _Size, _HashFunctions> ret(lhs);
+      counting_bloom_filter<T, NumBins, BitsPerBin, 
+			    HashFunctions, Block> ret(lhs);
       ret &= rhs;
       return ret;
     }
 
-    template<class T, class HashFunctions,
-	     class Block, class Allocator>
+    template<class T, size_t NumBins, size_t BitsPerBin, class HashFunctions,
+	     typename Block>
     void
-    swap(dynamic_bloom_filter<T, 
-			      HashFunctions, 
-			      Block, Allocator>& lhs,
-	 dynamic_bloom_filter<T, 
-			      HashFunctions, 
-			      Block, Allocator>& rhs)
+    swap(counting_bloom_filter<T, NumBins, BitsPerBin, 
+			       HashFunctions, Block>& lhs,
+	 counting_bloom_filter<T, NumBins, BitsPerBin,
+			       HashFunctions, Block>& rhs)
+	 
     {
       lhs.swap(rhs);
     }
+
+    template<class T, size_t NumBins, size_t BitsPerBin, class HashFunctions,
+	     typename Block>
+    bool
+    operator==(const counting_bloom_filter<T, NumBins, BitsPerBin, 
+					  HashFunctions, Block>& lhs,
+	      const counting_bloom_filter<T, NumBins, BitsPerBin,
+					  HashFunctions, Block>& rhs);
+
+    template<class T, size_t NumBins, size_t BitsPerBin, class HashFunctions,
+	     typename Block>
+    bool
+    operator!=(const counting_bloom_filter<T, NumBins, BitsPerBin, 
+					  HashFunctions, Block>& lhs,
+	      const counting_bloom_filter<T, NumBins, BitsPerBin,
+					  HashFunctions, Block>& rhs);
+
   } // namespace bloom_filter
 } // namespace boost
 #endif
