@@ -7,6 +7,8 @@
 #  *                                                                          *
 #  ************************************************************************** */
 #
+# /* Revised by Edward Diener (2011) */
+#
 # /* See http://www.boost.org for most recent version. */
 #
 # include <boost/preprocessor/cat.hpp>
