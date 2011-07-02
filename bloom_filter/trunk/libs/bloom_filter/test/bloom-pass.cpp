@@ -10,7 +10,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#define BOOST_TEST_DYN_LINK
+#define BOOST_TEST_DYN_LINK 1
 #define BOOST_TEST_MODULE "Boost Bloom Filter" 1
 #include <iostream>
 
@@ -195,9 +195,9 @@ BOOST_AUTO_TEST_CASE(memberSwap) {
 }
 
 BOOST_AUTO_TEST_CASE(testUnion) {
-  bloom_filter<size_t, 32> bloom_1;
-  bloom_filter<size_t, 32> bloom_2;
-  bloom_filter<size_t, 32> bloom_union;
+  bloom_filter<size_t, 300> bloom_1;
+  bloom_filter<size_t, 300> bloom_2;
+  bloom_filter<size_t, 300> bloom_union;
 
   for (size_t i = 0; i < 100; ++i)
     bloom_1.insert(i);
@@ -214,8 +214,8 @@ BOOST_AUTO_TEST_CASE(testUnion) {
 }
 
 BOOST_AUTO_TEST_CASE(testUnionAssign) {
-  bloom_filter<size_t, 32> bloom_1;
-  bloom_filter<size_t, 32> bloom_union;
+  bloom_filter<size_t, 300> bloom_1;
+  bloom_filter<size_t, 300> bloom_union;
 
   for (size_t i = 0; i < 100; ++i) 
     bloom_1.insert(i);
@@ -228,9 +228,9 @@ BOOST_AUTO_TEST_CASE(testUnionAssign) {
 }
 
 BOOST_AUTO_TEST_CASE(testIntersect) {
-  bloom_filter<size_t, 32> bloom_1;
-  bloom_filter<size_t, 32> bloom_2;
-  bloom_filter<size_t, 32> bloom_intersect;
+  bloom_filter<size_t, 300> bloom_1;
+  bloom_filter<size_t, 300> bloom_2;
+  bloom_filter<size_t, 300> bloom_intersect;
 
   // overlap at 100
   for (size_t i = 0; i < 101; ++i) 
@@ -247,8 +247,8 @@ BOOST_AUTO_TEST_CASE(testIntersect) {
 }
 
 BOOST_AUTO_TEST_CASE(testIntersectAssign) {
-  bloom_filter<size_t, 32> bloom_1;
-  bloom_filter<size_t, 32> bloom_intersect;
+  bloom_filter<size_t, 300> bloom_1;
+  bloom_filter<size_t, 300> bloom_intersect;
 
   for (size_t i = 0; i < 100; ++i) 
     bloom_1.insert(i);
@@ -270,31 +270,24 @@ BOOST_AUTO_TEST_CASE(globalSwap) {
   BOOST_CHECK_EQUAL(bloom2.count(), 2ul);
 }
 
-/*
-BOOST_AUTO_TEST_CASE(collisionBenchmark) {
-  typedef boost::mpl::vector<
-    OHash <size_t, 2>,
-    OHash<size_t, 3>,
-    OHash<size_t, 5>,
-    OHash<size_t, 7>,
-    OHash<size_t, 11>,
-    OHash<size_t, 13>,
-    OHash<size_t, 17>,
-    OHash<size_t, 19>> EightHashFunctions_O;
+BOOST_AUTO_TEST_CASE(equalityOperator) {
+  bloom_filter<int, 8> bloom1;
+  bloom_filter<int, 8> bloom2;
 
-  static const size_t INSERT_VAL = 100;
-  static const size_t SEARCH_SPACE = 10000000;
-  static const size_t FILTER_SIZE = 64; 
-  size_t collisions = 0;
-  bloom_filter<size_t, FILTER_SIZE, EightHashFunctions_O> bloom;
-
-  std::cout << "bloom size " << bloom.size() << std::endl;
-  bloom.insert(INSERT_VAL);
-  for (size_t i = 0; i < SEARCH_SPACE; ++i) {
-    if (bloom.probably_contains(i) && i != INSERT_VAL) ++collisions;
-  }
-
-  std::cout << collisions << " collisions" << std::endl;
-  bloom.clear();
+  BOOST_CHECK_EQUAL(bloom1 == bloom2, true);
+  bloom1.insert(1);
+  BOOST_CHECK_EQUAL(bloom1 == bloom2, false);
+  bloom2.insert(1);
+  BOOST_CHECK_EQUAL(bloom1 == bloom2, true);
 }
-*/
+
+BOOST_AUTO_TEST_CASE(inequalityOperator) {
+  bloom_filter<int, 8> bloom1;
+  bloom_filter<int, 8> bloom2;
+
+  BOOST_CHECK_EQUAL(bloom1 != bloom2, false);
+  bloom1.insert(1);
+  BOOST_CHECK_EQUAL(bloom1 != bloom2, true);
+  bloom2.insert(1);
+  BOOST_CHECK_EQUAL(bloom1 != bloom2, false);
+}
