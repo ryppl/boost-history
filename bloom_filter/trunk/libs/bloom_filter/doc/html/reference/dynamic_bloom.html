@@ -34,21 +34,20 @@
       <a accesskey="h" href="../index.html">
 	<img src="../../../../../doc/src/images/home.png" alt="Home"/>
       </a>
-      <a accesskey="n" href="dynamic_bloom.html">
+      <a accesskey="n" href="hash/default.html">
 	<img src="../../../../../doc/src/images/next.png" alt="Next"/>
       </a>
     </div>
 
     <h1>Basic Bloom Filter</h1>
     <div class="listing">
-      <code class="c_keyword">template</code> &lt;<code class="c_keyword">typename</code> <code class="c_type">T</code>,
-                <code class="c_type">size_t</code> <code class="c_type">Size</code>,
-                <code class="c_keyword">class</code> <code class="c_type">HashFunctions</code> = <code class="c_namespace">mpl::</code><code class="c_type">vector</code>&lt;<code class="c_type">boost_hash</code>&lt;<code class="c_type">T</code>, 3&gt; &gt; &gt;
+      <code class="c_keyword">template</code> &lt;<code class="c_keyword">typename</code> <code class="c_id">T</code>,
+                <code class="c_type">size_t</code> <code class="c_id">Size</code>,
+                <code class="c_keyword">class</code> <code class="c_id">HashFunctions</code> = <code class="c_namespace">mpl::vector</code>&lt;<code class="c_type">boost_hash</code>&lt;<code class="c_id">T, 3</code>&gt; &gt; &gt;
       <code class="c_keyword">class</code> <code class="c_id">bloom_filter</code> {
         <code class="c_comment">// exported typedefs</code>
-        <code class="c_keyword">typedef</code> <code class="c_type">T value_type</code>;
-        <code class="c_keyword">typedef</code> <code class="c_type">T key_type</code>;
-        <code class="c_keyword">typedef</code> <code class="c_type">HashFunctions hash_function_type</code>;
+        <code class="c_keyword">typedef</code> <code class="c_id">T value_type</code>;
+        <code class="c_keyword">typedef</code> <code class="c_id">T key_type</code>;
 
         <code class="c_comment">// constructors</code>
         <code class="c_func">bloom_filter</code>();
@@ -82,36 +81,23 @@
       };
 
       <code class="c_comment">// union</code>
-      <code class="c_keyword">template</code> &lt;<code class="c_keyword">typename</code> <code class="c_type">T</code>, <code class="c_type">size_t</code> <code class="c_type">Size</code>,
-		<code class="c_keyword">class</code> <code class="c_type">HashFunctions</code>&gt;
-      <code class="c_type">bloom_filter</code>&lt;<code class="c_type">T, Size, HashFunctions</code>&gt;
-      <code class="c_func">operator|</code>(<code class="c_keyword">const</code> <code class="c_type">bloom_filter</code>&lt;<code class="c_type">T, Size, HashFunctions</code>&gt;&amp; <code class="c_id">lhs</code>,
-	        <code class="c_keyword">const</code> <code class="c_type">bloom_filter</code>&lt;<code class="c_type">T, Size, HashFunctions</code>&gt;&amp; <code class="c_id">rhs</code>);
+      <code class="c_keyword">template</code> &lt;<code class="c_keyword">typename</code> <code class="c_id">T</code>, <code class="c_type">size_t</code> <code class="c_id">Size</code>,
+		<code class="c_keyword">class</code> <code class="c_id">HashFunctions</code>&gt;
+      <code class="c_type">bloom_filter</code>&lt;<code class="c_id">T, Size, HashFunctions</code>&gt;
+      <code class="c_func">operator|</code>(<code class="c_keyword">const</code> <code class="c_type">bloom_filter</code>&lt;<code class="c_id">T, Size, HashFunctions</code>&gt;&amp; <code class="c_id">lhs</code>,
+	        <code class="c_keyword">const</code> <code class="c_type">bloom_filter</code>&lt;<code class="c_id">T, Size, HashFunctions</code>&gt;&amp; <code class="c_id">rhs</code>);
 
       <code class="c_comment">// intersect</code>
-      <code class="c_keyword">template</code> &lt;<code class="c_keyword">typename</code> <code class="c_type">T</code>, <code class="c_type">size_t</code> <code class="c_type">Size</code>,
-		<code class="c_keyword">class</code> <code class="c_type">HashFunctions</code>&gt;
-      <code class="c_type">bloom_filter</code>&lt;<code class="c_type">T, Size, HashFunctions</code>&gt;
-      <code class="c_func">operator&amp;</code>(<code class="c_keyword">const</code> <code class="c_type">bloom_filter</code>&lt;<code class="c_type">T, Size, HashFunctions</code>&gt;&amp; <code class="c_id">lhs</code>,
-	        <code class="c_keyword">const</code> <code class="c_type">bloom_filter</code>&lt;<code class="c_type">T, Size, HashFunctions</code>&gt;&amp; <code class="c_id">rhs</code>);
+      <code class="c_keyword">template</code> &lt;<code class="c_keyword">typename</code> <code class="c_id">T</code>, <code class="c_type">size_t</code> <code class="c_id">Size</code>,
+		<code class="c_keyword">class</code> <code class="c_id">HashFunctions</code>&gt;
+      <code class="c_type">bloom_filter</code>&lt;<code class="c_id">T, Size, HashFunctions</code>&gt;
+      <code class="c_func">operator&amp;</code>(<code class="c_keyword">const</code> <code class="c_type">bloom_filter</code>&lt;<code class="c_id">T, Size, HashFunctions</code>&gt;&amp; <code class="c_id">lhs</code>,
+	        <code class="c_keyword">const</code> <code class="c_type">bloom_filter</code>&lt;<code class="c_id">T, Size, HashFunctions</code>&gt;&amp; <code class="c_id">rhs</code>);
 
-      <code class="c_keyword">template</code> &lt;<code class="c_keyword">typename</code> <code class="c_type">T</code>, <code class="c_type">size_t</code> <code class="c_type">Size</code>,
-		<code class="c_keyword">class</code> <code class="c_type">HashFunctions</code>&gt;
-      <code class="c_type">void</code> <code class="c_func">swap</code>(<code class="c_type">bloom_filter</code>&lt;<code class="c_type">T, Size, HashFunctions</code>&gt;&amp; <code class="c_id">lhs</code>,
-	        <code class="c_type">bloom_filter</code>&lt;<code class="c_type">T, Size, HashFunctions</code>&gt;&amp; <code class="c_id">rhs</code>);
-
-      <code class="c_comment">// equality</code>
-      <code class="c_keyword">template</code> &lt;<code class="c_keyword">typename</code> <code class="c_type">T</code>, <code class="c_type">size_t</code> <code class="c_type">Size</code>,
-		<code class="c_keyword">class</code> <code class="c_type">HashFunctions</code>&gt;
-      <code class="c_type">bool</code>
-      <code class="c_func">operator==</code>(<code class="c_keyword">const</code> <code class="c_type">bloom_filter</code>&lt;<code class="c_type">T, Size, HashFunctions</code>&gt;&amp; <code class="c_id">lhs</code>,
-	         <code class="c_keyword">const</code> <code class="c_type">bloom_filter</code>&lt;<code class="c_type">T, Size, HashFunctions</code>&gt;&amp; <code class="c_id">rhs</code>);
-
-      <code class="c_keyword">template</code> &lt;<code class="c_keyword">typename</code> <code class="c_type">T</code>, <code class="c_type">size_t</code> <code class="c_type">Size</code>,
-		<code class="c_keyword">class</code> <code class="c_type">HashFunctions</code>&gt;
-      <code class="c_type">bool</code>
-      <code class="c_func">operator!=</code>(<code class="c_keyword">const</code> <code class="c_type">bloom_filter</code>&lt;<code class="c_type">T, Size, HashFunctions</code>&gt;&amp; <code class="c_id">lhs</code>,
-	         <code class="c_keyword">const</code> <code class="c_type">bloom_filter</code>&lt;<code class="c_type">T, Size, HashFunctions</code>&gt;&amp; <code class="c_id">rhs</code>);
+      <code class="c_keyword">template</code> &lt;<code class="c_keyword">typename</code> <code class="c_id">T</code>, <code class="c_type">size_t</code> <code class="c_id">Size</code>,
+		<code class="c_keyword">class</code> <code class="c_id">HashFunctions</code>&gt;
+      <code class="c_type">void</code> <code class="c_func">swap</code>(<code class="c_type">bloom_filter</code>&lt;<code class="c_id">T, Size, HashFunctions</code>&gt;&amp; <code class="c_id">lhs</code>,
+	        <code class="c_type">bloom_filter</code>&lt;<code class="c_id">T, Size, HashFunctions</code>&gt;&amp; <code class="c_id">rhs</code>);
     </div>
     <p>
       The basic Bloom filter data structure. Supports insertion and query. Allows setting of bit capacity, type, and hash functions at compile-time. This structure is best used when: 
@@ -122,7 +108,7 @@
       <li>storage requirements are strict</li>      
     </ul>
 
-    <h2>Template Parameters Reference</h2>
+    <h2> Template Parameters Reference</h2>
     <dl>
       <dt>T</dt>
       <dd>The type used for all Bloom filter operations.</dd>
@@ -153,8 +139,6 @@
 	<li><a href="#union">operator|(bloom, bloom)</a></li>
 	<li><a href="#intersect">operator&amp;(bloom, bloom)</a></li>
 	<li><a href="#global_swap">swap(bloom, bloom)</a></li>
-	<li><a href="#operator_equality">operator==(bloom, bloom)</a></li>
-	<li><a href="#operator_inequality">operator!=(bloom, bloom)</a></li>
       </ul>
     </div>
 
@@ -361,27 +345,6 @@
       </dl>
     </div>
 
-    <div class="func_ref">
-      <a name="operator_equality"></a>
-      <div class="ref_listing"><code class="c_type">bool</code> <code class="c_func">operator==</code>(<code class="c_keyword">const</code> <code class="c_type">bloom_filter&amp;</code> <code class="c_id">lhs</code>, <code class="c_keyword">const</code> <code class="c_type">bloom_filter&amp;</code> <code class="c_id">rhs</code>);</div>
-      <dl>
-	<dt>Description</dt>
-	<dd>Compares the bits of the argument Bloom filters for equality.</dd>
-	<dt>Returns</dt>
-	<dd>True if the bits match, false otherwise.</dd>
-      </dl>
-    </div>
-
-    <div class="func_ref">
-      <a name="operator_inequality"></a>
-      <div class="ref_listing"><code class="c_type">bool</code> <code class="c_func">operator!=</code>(<code class="c_keyword">const</code> <code class="c_type">bloom_filter&amp;</code> <code class="c_id">lhs</code>, <code class="c_keyword">const</code> <code class="c_type">bloom_filter&amp;</code> <code class="c_id">rhs</code>);</div>
-      <dl>
-	<dt>Description</dt>
-	<dd>Compares the bits of the argument Bloom filters for equality.</dd>
-	<dt>Returns</dt>
-	<dd>True if the bits don't match, false otherwise.</dd>
-      </dl>
-    </div>
     <hr/>
 
     <div class="spirit-nav">
@@ -394,7 +357,7 @@
       <a accesskey="h" href="../index.html">
 	<img src="../../../../../doc/src/images/home.png" alt="Home"/>
       </a>
-      <a accesskey="n" href="dynamic_bloom.html">
+      <a accesskey="n" href="hash/default.html">
 	<img src="../../../../../doc/src/images/next.png" alt="Next"/>
       </a>
     </div>
