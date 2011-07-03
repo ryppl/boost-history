@@ -1,0 +1,18 @@
+[section:introduction Introduction]
+
+The checks are required in a numerous kind of domains such as the distribution chain (bar codes), the card number (bank, fidelity card, ...) and many others.
+These codes and numbers are often copied or scanned by humans or machines, and both make error. 
+We need a way to control it and from this reason has raised the necessity to create a check digit.
+A check digit is aimed to control the validity of a number and catch mismatched input (we'll detail further the different errors). 
+Another functionnality of this library is to calculate the check digit of a number. There are other functionnalities more specific to a number, for example, we can ['transform] an ISBN-10 to an ISBN-13.
+
+There are a lot of codes and numbers that use a check digit, for instance : the ISBN for the books or the IBAN for the internationnal account numbers. 
+But many of those are specialisation of well-known algorithms such as Luhn or modulus 11 algorithm. For example :
+ISBN-13 is a specialisation of the EAN-13 which is a specialisation of the modulus 10 algorithm.
+
+This library is divided into two parts : a low level part (Luhn, modulus 11, modulus 10, ...) and a higher level library (ISBN-10, EAN-13, IBAN, VISA number, ...).
+The higher level library will use the low level with filter on the length, first X characters, ... 
+Theorically, the user should only use the high level library which is more specific. 
+In some cases, the user would like to use the lower level library because some kind of exotic numbers (social number of india,...) are not provided by the library.
+
+[endsect][/section:introduction Introduction]
