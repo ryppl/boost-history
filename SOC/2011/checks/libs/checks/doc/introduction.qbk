@@ -1,8 +1,8 @@
 [section:introduction Introduction]
 
-The checks are required in a numerous kind of domains such as the distribution chain (bar codes), the card number (bank, fidelity card, ...) and many others.
-These codes and numbers are often copied or scanned by humans or machines, and both make error. 
-We need a way to control it and from this reason has raised the necessity to create a check digit.
+The checks are required in a numerous kind of domains such as the distribution chain (bar codes), the cards number (bank, fidelity cards, ...) and many others.
+These codes and numbers are often copied or scanned by humans or machines, and both make errors. 
+We need a way to control it and this is why some people created a check digit.
 A check digit is aimed to control the validity of a number and catch mismatched input (we'll detail further the different errors). 
 Another functionnality of this library is to calculate the check digit of a number. There are other functionnalities more specific to a number, for example, we can ['transform] an ISBN-10 to an ISBN-13.
 
