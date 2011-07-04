@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-//  acc_ecdf                                                                 //
+//  accumulator_ecdf                                                         //
 //                                                                           //
 //  Copyright (C) 2005 Eric Niebler                                          //
 //  Copyright (C) 2011 Erwann Rogard                                         //
@@ -32,8 +32,8 @@ namespace ecdf{
 //<-
 namespace impl{
 
-    // T can be an integer or a float
-    template<typename T>
+    // Sample can be an integer or a float
+    template<typename Sample>
     class count
         : public accumulator_base
     {
@@ -43,7 +43,7 @@ namespace impl{
         public:
 
         typedef size_ result_type;
-        typedef T sample_type;
+        typedef Sample sample_type;
 
         count(dont_care_){}
 
@@ -71,11 +71,11 @@ namespace tag
         : depends_on<
             ecdf::tag::ordered_sample
         >
-    /*<-*/{
+    {/*<-*/
         struct impl{
-            template<typename T,typename W>
+            template<typename Sample, typename Weight>
             struct apply{
-                typedef ecdf::impl::count<T> type;
+                typedef ecdf::impl::count<Sample> type;
             };
         };
     /*->*/};
@@ -83,27 +83,30 @@ namespace tag
 }// tag
 namespace result_of{
 
-    template<typename AccSet,typename T>
+    template<typename AccumulatorSet, typename Sample>
     struct count/*<-*/
     {
         typedef ecdf::tag::count tag_;
         typedef typename detail::template 
-            extractor_result<AccSet,tag_>::type type; 
+            extractor_result<AccumulatorSet,tag_>::type type; 
     }/*->*/;
 
 }// result_of
 namespace extract
 {
 
-    template<typename AccSet,typename T>
-    typename ecdf::result_of::template count<AccSet,T>::type
-    count(AccSet const& acc,const T& x)/*<-*/
+    template<typename AccumulatorSet, typename Sample>
+    typename ecdf::result_of::template count<AccumulatorSet,Sample>::type
+    count(AccumulatorSet const& acc, const Sample& x)/*<-*/
     {
         typedef ecdf::tag::count tag_;
         return extract_result<tag_>( acc, (sample = x) );
     }BOOST_ACCUMULATORS_ECDF_IGNORE(/*->*/;/*<-*/)/*->*/
 
 }// extract
+
+    using extract::count;
+
 }// ecdf
 }// accumulators
 //]

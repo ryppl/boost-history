@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-//  acc_ecdf                                                                 //
+//  accumulator_ecdf                                                         //
 //                                                                           //
 //  Copyright (C) 2005 Eric Niebler                                          //
 //  Copyright (C) 2011 Erwann Rogard                                         //
@@ -27,7 +27,7 @@ namespace ecdf{
 namespace impl{
 
     // T can be an integer or a float
-    template<typename T,typename T1>
+    template<typename Sample, typename Result>
     class pdf 
         : public accumulator_base
     {
@@ -35,8 +35,8 @@ namespace impl{
 
         public:
 
-        typedef T1 result_type;
-        typedef T sample_type;
+        typedef Result result_type;
+        typedef Sample sample_type;
 
         pdf(dont_care_){}
 
@@ -45,13 +45,12 @@ namespace impl{
         template<typename Args>
         result_type result(const Args& args)const{
             typedef std::size_t size_;
-            namespace acc = boost::accumulators;
             size_ i =  ecdf::extract::count( 
-                args[ acc::accumulator ], 
+                args[ accumulator ], 
                 args[ sample ] 
             );
-            size_ n = acc::extract::count( args[ acc::accumulator ] );
-            typedef numeric::converter<T1,size_> converter_;
+            size_ n = accumulators::extract::count( args[ accumulator ] );
+            typedef numeric::converter<Result,size_> converter_;
             return converter_::convert( i ) / converter_::convert( n );
         }
 
@@ -62,16 +61,16 @@ namespace impl{
 namespace tag
 {
 
-    template<typename T1>
+    template<typename Result>
     struct pdf: depends_on<
         ecdf::tag::count,
         accumulators::tag::count
     >
     {/*<-*/
         struct impl{
-            template<typename T,typename W>
+            template<typename Sample, typename Weight>
             struct apply{
-                typedef ecdf::impl::pdf<T,T1> type;
+                typedef ecdf::impl::pdf<Sample, Result> type;
             };
         };
     /*->*/};
@@ -79,29 +78,31 @@ namespace tag
 }// tag
 namespace result_of{
 
-    template<typename T1,typename AccSet>
+    template<typename Result, typename AccumulatorSet>
     struct pdf/*<-*/
     {
-        typedef ecdf::tag::pdf<T1> tag_;
+        typedef ecdf::tag::pdf<Result> tag_;
         typedef typename
             detail::template 
-                extractor_result<AccSet,tag_>::type type; 
+                extractor_result<AccumulatorSet,tag_>::type type; 
     }/*->*/;
 
 }// result_of
 namespace extract
 {
 
-    template<typename T1, typename AccSet, typename T>
-    typename ecdf::result_of::template pdf<T1, AccSet>::type
-    pdf(AccSet const& set, const T& x)/*<-*/
+    template<typename Result, typename AccumulatorSet, typename T>
+    typename ecdf::result_of::template pdf<Result, AccumulatorSet>::type
+    pdf(AccumulatorSet const& set, const T& x)/*<-*/
     { 
-        namespace acc = boost::accumulators;
-        typedef ecdf::tag::pdf<T1> tag_;
-        return extract_result<tag_>( set, ( acc::sample = x ) );
+        typedef ecdf::tag::pdf<Result> tag_;
+        return extract_result<tag_>( set, ( sample = x ) );
     }BOOST_ACCUMULATORS_ECDF_IGNORE(/*->*/;/*<-*/)/*->*/
 
 }// extract
+
+    using extract::pdf;
+
 }// ecdf
 }// accumulators
 //]

@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-//  acc_ecdf                                                                 //
+//  accumulator_ecdf                                                         //
 //                                                                           //
 //  Copyright (C) 2005 Eric Niebler                                          //
 //  Copyright (C) 2011 Erwann Rogard                                         //
@@ -8,6 +8,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ACCUMULATORS_STATISTICS_KOLMOGOROV_SMIRNOV_STATISTIC_HPP_ER_2011
 #define BOOST_ACCUMULATORS_STATISTICS_KOLMOGOROV_SMIRNOV_STATISTIC_HPP_ER_2011
+#include <cstddef>
+#include <cmath>
 #include <boost/accumulators/framework/extractor.hpp>
 #include <boost/accumulators/framework/accumulator_base.hpp>
 #include <boost/accumulators/framework/parameters/sample.hpp>
@@ -17,6 +19,7 @@
 #include <boost/accumulators/statistics/ecdf/aux_/ignore.hpp>
 #include <boost/accumulators/statistics/ecdf/count.hpp>
 #include <boost/accumulators/statistics/stats.hpp>
+#include <boost/numeric/conversion/converter.hpp>
 #include <boost/mpl/placeholders.hpp>
 #include <boost/mpl/apply.hpp>
 #include <boost/mpl/if.hpp>
@@ -32,7 +35,7 @@ namespace ecdf{
 //<-
 namespace impl{
 
-    template<typename T>
+    template<typename Sample>
     class kolmogorov_smirnov 
         : public accumulator_base
     {
@@ -45,31 +48,31 @@ namespace impl{
         kolmogorov_smirnov(dont_care_){};
 
         typedef size_ size_type;
-        typedef T sample_type;
+        typedef Sample sample_type;
         typedef void result_type;
 
         void operator()(dont_care_)const{}
 
         template<typename Args>
         result_type result(dont_care_) const
-        {
-        }
+        {}
+
     };
     
 }// impl
 //->
 namespace tag
 {
-    struct kolmogorov_smirnov
+    struct kolmogorov_smirnov_statistic
       : depends_on<
           ecdf::tag::ordered_sample,
           accumulators::tag::count
     >
     {/*<-*/
         struct impl{
-            template<typename T, typename W>
+            template<typename Sample, typename Weight>
             struct apply{
-                typedef ecdf::impl::kolmogorov_smirnov<T> type;        
+                typedef ecdf::impl::kolmogorov_smirnov<Sample> type;        
             };
         };
     /*->*/};
@@ -77,53 +80,67 @@ namespace tag
 }// tag
 namespace result_of{
 
-    template<typename T1,typename AccSet,typename D>
+    template<
+        typename AccumulatorSet, typename Distribution
+        , typename T = typename Distribution::value_type
+    >
     struct kolmogorov_smirnov_statistic/*<-*/
     {
-        typedef T1 type;
+        typedef T type;
     }/*->*/;
 
 }// result_of
+namespace extract{
 
-    // Usage : statistic<T1>(acc,dist)
-    template<typename T1,typename AccSet,typename D>
+    template<typename Result, typename AccumulatorSet, typename Distribution>
     typename result_of::template 
-    	kolmogorov_smirnov_statistic<T1, AccSet, D>::type
-    kolmogorov_smirnov_statistic(AccSet const& set,const D& dist)/*<-*/
+        kolmogorov_smirnov_statistic<AccumulatorSet, Distribution, Result>::type
+    kolmogorov_smirnov_statistic(
+        AccumulatorSet const& acc, 
+        const Distribution& dist
+    )/*<-*/
     {
-            namespace acc = boost::accumulators;
-    
-            typedef T1 val_;
+            typedef Result result_;
             typedef std::size_t size_;
-            typedef tag::count tag_n_;
-            typedef ecdf::tag::ordered_sample tag_os_;
 
             typedef typename ecdf::result_of::ordered_sample<
-                AccSet>::type ref_os_; 
-            typedef typename boost::remove_const< //in case ref changed to cref
+                AccumulatorSet
+            >::type result_ordered_sample_;
+
+            typedef typename boost::remove_const< 
                 typename boost::remove_reference<
-                    ref_os_
+                    result_ordered_sample_
                 >::type
-            >::type os_;
-            typedef typename boost::range_reference<os_>::type ref_elem_;
+            >::type ordered_sample_;
 
-            ref_os_ ref_os = extract_result<tag_os_>( set );
+            typedef typename boost::range_reference<
+                ordered_sample_
+            >::type pair_;
 
-            val_ m1 = static_cast<val_>(0);
+            typedef numeric::converter<size_, result_> converter_;
+            result_ 
+                result = converter_::convert( 0 ),
+                a, x, y,
+                n = converter_::convert( accumulators::count( acc ) );
             size_ i = 0;
-            size_ n = acc::extract::count( set );
             
-            BOOST_FOREACH(ref_elem_ e,ref_os){
-                i += e.second; 
-                val_ ecdf_val = static_cast<val_>(i) / static_cast<val_>(n);
-                val_ true_cdf = cdf( dist, e.first );
-                val_ m2 = (true_cdf > ecdf_val )
-                    ?(true_cdf - ecdf_val) : (ecdf_val - true_cdf);
-                if( m2 > m1 ){ m1 = m2; } 
+            BOOST_FOREACH( pair_ p, ecdf::ordered_sample( acc ) )
+            {
+                i += p.second; 
+                x = converter_::convert( i ) / n;
+                typedef typename Distribution::value_type val_;
+                y = numeric::converter<val_, result_>::convert( 
+                    cdf( dist, p.first ) 
+                );
+                a = fabs( x - y );
+                result = ( a > result ) ? a : result;
             }
-            
-            return m1;
+            return result;
     }BOOST_ACCUMULATORS_ECDF_IGNORE(/*->*/;/*<-*/)/*->*/
+    
+}// extract 
+
+    using extract::kolmogorov_smirnov_statistic;
 
 }// ecdf
 }// accumulators

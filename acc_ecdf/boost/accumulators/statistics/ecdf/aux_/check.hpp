@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-//  acc_ecdf                                                                //
+//  accumulator_ecdf                                                                //
 //                                                                          //
 //  Copyright (C) 2005 Eric Niebler                                         //
 //  Copyright (C) 2011 Erwann Rogard                                        //

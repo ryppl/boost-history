@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-//  acc_ecdf                                                                 //
+//  accumulator_ecdf                                                         //
 //                                                                           //
 //  Copyright (C) 2005 Eric Niebler                                          //
 //  Copyright (C) 2011 Erwann Rogard                                         //
@@ -27,19 +27,19 @@ namespace ecdf{
 //<-
 namespace impl{
 
-    template<typename T>
+    template<typename Sample>
     class ordered_sample 
         : public accumulator_base
     {
-        typedef std::less<T> comp_;
+        typedef std::less<Sample> comp_;
         typedef std::size_t size_;
         typedef dont_care dont_care_;
-        typedef std::map<T,size_,comp_> map_;
+        typedef std::map<Sample,size_,comp_> map_;
 
         public:
         
         // See accumulator_set for convention naming sample_type
-        typedef T         sample_type; 
+        typedef Sample         sample_type; 
         typedef size_     size_type;     
 
         // non-const because map::operator[](key) returns a non-const
@@ -51,7 +51,7 @@ namespace impl{
         void operator()(const Args& args){
             ++(
                 this->freq[
-                    static_cast<T>(
+                    static_cast<Sample>(
                         args[sample]
                     )
                 ]
@@ -82,10 +82,10 @@ namespace tag
 }// tag
 namespace result_of{
 
-    template<typename AccSet>
+    template<typename AccumulatorSet>
     struct ordered_sample/*<-*/
         : detail::extractor_result<
-            AccSet,
+            AccumulatorSet,
             ecdf::tag::ordered_sample
         >
     {}/*->*/;
@@ -94,9 +94,9 @@ namespace result_of{
 namespace extract
 {
 
-    template<typename AccSet>
-    typename ecdf::result_of::template ordered_sample<AccSet>::type
-    ordered_sample(AccSet const& acc)/*<-*/
+    template<typename AccumulatorSet>
+    typename ecdf::result_of::template ordered_sample<AccumulatorSet>::type
+    ordered_sample(AccumulatorSet const& acc)/*<-*/
     {
         typedef ecdf::tag::ordered_sample the_tag;
         return extract_result<the_tag>(acc);

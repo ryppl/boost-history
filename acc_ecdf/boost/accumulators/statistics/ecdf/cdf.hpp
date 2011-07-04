@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-//  acc_ecdf                                                                 //
+//  accumulator_ecdf                                                         //
 //                                                                           //
 //  Copyright (C) 2005 Eric Niebler                                          //
 //  Copyright (C) 2011 Erwann Rogard                                         //
@@ -25,8 +25,11 @@ namespace ecdf{
 //<-
 namespace impl{
 
-    // T can be an integer or a float
-    template<typename T,typename T1,typename Comp = std::less<T> >
+    // Sample can be an integer or a float
+    template<
+        typename Sample, typename Result, 
+        typename Comp = std::less<Sample> 
+    >
     class cdf
         : public accumulator_base
     {
@@ -35,8 +38,8 @@ namespace impl{
 
         public:
 
-        typedef T1 result_type;
-        typedef T sample_type;
+        typedef Result result_type;
+        typedef Sample sample_type;
 
         cdf(dont_care_){}
 
@@ -44,13 +47,12 @@ namespace impl{
         
         template<typename Args>
         result_type result(const Args& args)const{
-            namespace acc = boost::accumulators;
             typedef std::size_t size_;
             size_ i =  extract::cumulative_count( 
                 args[ accumulator ], args[ sample ] 
             );
-            size_ n = acc::extract::count( args[ accumulator ] );
-            typedef numeric::converter<T1,size_> converter_;
+            size_ n = accumulators::extract::count( args[ accumulator ] );
+            typedef numeric::converter<Result,size_> converter_;
             return converter_::convert( i )/converter_::convert( n );
         }
 
@@ -60,7 +62,7 @@ namespace impl{
 //->
 namespace tag
 {
-    template<typename T1>
+    template<typename Result>
     struct cdf
         : depends_on<
             ecdf::tag::cumulative_count,
@@ -68,9 +70,9 @@ namespace tag
         >
     {/*<-*/
         struct impl{
-            template<typename T,typename W>
+            template<typename Sample, typename Weight>
             struct apply{
-                typedef ecdf::impl::cdf<T,T1> type;
+                typedef ecdf::impl::cdf<Sample,Result> type;
             };
         };
     /*->*/};
@@ -78,29 +80,31 @@ namespace tag
 }// tag
 namespace result_of{
 
-    template<typename T1,typename AccSet>
+    template<typename Result, typename AccumulatorSet>
     struct cdf/*<-*/
     {
-        typedef ecdf::tag::cdf<T1> tag_;
+        typedef ecdf::tag::cdf<Result> tag_;
         typedef typename
             detail::template 
-                extractor_result<AccSet,tag_>::type type; 
+                extractor_result<AccumulatorSet,tag_>::type type; 
     }/*->*/;
 
 }// result_of
 namespace extract
 {
 
-    template<typename T1,typename AccSet,typename T>
-    typename ecdf::result_of::template cdf<T1,AccSet>::type
-    cdf(AccSet const& set,const T& x)/*<-*/
+    template<typename Result, typename AccumulatorSet, typename Sample>
+    typename ecdf::result_of::template cdf<Result, AccumulatorSet>::type
+    cdf(AccumulatorSet const& set, const Sample& x)/*<-*/
     { 
-        namespace acc = boost::accumulators;
-        typedef ecdf::tag::cdf<T1> tag_;
-        return extract_result<tag_>( set, ( acc::sample = x ) );
+        typedef ecdf::tag::cdf<Result> tag_;
+        return extract_result<tag_>( set, ( accumulators::sample = x ) );
     }BOOST_ACCUMULATORS_ECDF_IGNORE(/*->*/;/*<-*/)/*->*/
     
 }// extract
+
+    using extract::cdf;
+
 }// ecdf
 }// accumulators
 //]
