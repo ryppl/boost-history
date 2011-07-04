@@ -18,7 +18,7 @@
 [def __boostlicense [@http://www.boost.org/LICENSE_1_0.txt Boost License]]
 
 [def __ISBN [@http://en.wikipedia.org/wiki/Isbn International Standard Book Number (ISBN)]]
-[def __ISSN [@http://en.wikipedia.org/wiki/International_Standard_Serial_Number International Standard Serial Number]]
+[def __ISSN [@http://en.wikipedia.org/wiki/International_Standard_Serial_Number International Standard Serial Number (ISSN)]]
 
 [def __overview [link checks.overview overview]] [/ example of a link to a section.]
 
@@ -27,13 +27,6 @@
 [/include html4_symbols here if you want squiggles, math or greek?]
 
 [def __spaces '''&#x2000;&#x2000;'''] [/ two spaces - useful for an indent.]
-
-[/Pierre - you have to make a major decision whether to split the doc into several .qbk files,
-or to do it in one big file.  Opinions vary. I found lots of small files a nuisance to manage,
-but equally it may get too big to manage and will involve a lot of refactoring?
-I think I'd go for a max of 4.  Perhaps Overview and all the checks, another for tutorial examples,
-and final for refs, acks, history... 
-But you also might like to have each checks example follow its description?]
 
 [section:checks Boost.Checks]
 
@@ -63,7 +56,9 @@ may still be changed without notice.  The current version is available at
 
 [endsect] [/section:overview Overview]
 
-[/This section might be in a separate file isbn.qbk and you then 'call' include isbn.qbk]
+[include introduction.qbk]
+[include errors.qbk]
+[include modulus.qbk]
 
 [section:isbn ISBN checking]
 
@@ -81,7 +76,7 @@ Some of your tests might be devoted to confirming that this is really true?
 
 All alterations of a single digit will be detected.
 
-All alterations of two digits will be detected.  ??? Is this right???
+Most alterations of two digits will be detected. 
 
 All two digit transpositions will be detected.
 
