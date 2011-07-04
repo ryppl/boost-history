@@ -1,0 +1,135 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>aux_</title>
+<link rel="stylesheet" href="../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="../index.html" title="Chapter&#160;1.&#160;Empirical Cumulative Distribution Function">
+<link rel="up" href="../index.html" title="Chapter&#160;1.&#160;Empirical Cumulative Distribution Function">
+<link rel="prev" href="pdf.html" title="pdf">
+<link rel="next" href="aux_/ks_gen.html" title="kolmogorov_smirnov_generator">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../boost.png"></td>
+<td align="center"><a href="../../../index.html">Home</a></td>
+<td align="center"><a href="../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="pdf.html"><img src="../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="aux_/ks_gen.html"><img src="../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="boost_acc_ecdf.aux_"></a><a class="link" href="aux_.html" title="aux_">aux_</a>
+</h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="aux_.html#boost_acc_ecdf.aux_.simulator">simulator</a></span></dt>
+<dt><span class="section"><a href="aux_/ks_gen.html">kolmogorov_smirnov_generator</a></span></dt>
+</dl></div>
+<p>
+      Miscellanea tools
+    </p>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_acc_ecdf.aux_.simulator"></a><a class="link" href="aux_.html#boost_acc_ecdf.aux_.simulator" title="simulator">simulator</a>
+</h3></div></div></div>
+<p>
+        A functor that binds an accumulator to a random generator. Typically, it
+        is to be used in a loop : at each iteration the simulator generates a random
+        sample of a given size, <code class="literal">n</code>, and updates the accumulator.
+        Size n can be specified manually or generated automatically. By default,
+        the sequence of <code class="literal">n</code>'s are powers of 2.
+      </p>
+<a name="boost_acc_ecdf.aux_.simulator.header"></a><h5>
+<a name="id36338062"></a>
+        <a class="link" href="aux_.html#boost_acc_ecdf.aux_.simulator.header">Header</a>
+      </h5>
+<p>
+        <a href="../../../../../../boost/accumulators/statistics/ecdf/aux_/simulator.hpp" target="_top"><code class="literal">boost/accumulators/statistics/ecdf/aux_/simulator.hpp</code></a>
+      </p>
+<a name="boost_acc_ecdf.aux_.simulator.synopsis"></a><h5>
+<a name="id36338089"></a>
+        <a class="link" href="aux_.html#boost_acc_ecdf.aux_.simulator.synopsis">Synopsis</a>
+      </h5>
+<p>
+        
+</p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">accumulators</span><span class="special">{</span>
+<span class="keyword">namespace</span> <span class="identifier">ecdf</span><span class="special">{</span>    
+<span class="keyword">namespace</span> <span class="identifier">aux_</span><span class="special">{</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">N</span> <span class="special">=</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span><span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">delta_geometric_sequence</span>
+    <span class="special">{</span>
+        
+        <span class="identifier">delta_geometric_sequence</span><span class="special">();</span>
+        
+        <span class="identifier">delta_geometric_sequence</span><span class="special">(</span><span class="identifier">N</span> <span class="identifier">n</span><span class="special">,</span> <span class="identifier">N</span> <span class="identifier">factor</span><span class="special">);</span>
+
+        <span class="keyword">typedef</span> <span class="identifier">N</span> <span class="identifier">result_type</span><span class="special">;</span>
+
+        <span class="identifier">N</span> <span class="keyword">operator</span><span class="special">()()</span><span class="keyword">const</span><span class="special">;</span>
+        
+        <span class="identifier">N</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">n</span><span class="special">()</span><span class="keyword">const</span><span class="special">;</span>
+        <span class="identifier">N</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">factor</span><span class="special">()</span><span class="keyword">const</span><span class="special">;</span>
+        
+    <span class="special">};</span>
+    
+    <span class="keyword">template</span><span class="special">&lt;</span>    
+        <span class="keyword">typename</span> <span class="identifier">Generator</span><span class="special">,</span> 
+        <span class="keyword">typename</span> <span class="identifier">AccumulatorSet</span><span class="special">,</span> 
+        <span class="keyword">typename</span> <span class="identifier">SizeGenerator</span> <span class="special">=</span> <span class="identifier">delta_geometric_sequence</span><span class="special">&lt;&gt;</span> 
+    <span class="special">&gt;</span>
+    <span class="keyword">class</span> <span class="identifier">simulator</span>
+    <span class="special">{</span>
+        <span class="keyword">public</span><span class="special">:</span>
+
+        <span class="identifier">simulator</span><span class="special">(</span>
+            <span class="identifier">Generator</span> <span class="identifier">gen</span><span class="special">,</span> 
+            <span class="identifier">AccumulatorSet</span> <span class="identifier">acc</span><span class="special">,</span> 
+            <span class="identifier">SizeGenerator</span> <span class="identifier">size_gen</span>
+        <span class="special">);</span>
+
+        <span class="identifier">simulator</span><span class="special">(</span><span class="identifier">Generator</span> <span class="identifier">gen</span><span class="special">,</span> <span class="identifier">AccumulatorSet</span> <span class="identifier">acc</span><span class="special">);</span>
+
+        <span class="keyword">typedef</span> <span class="identifier">AccumulatorSet</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">result_type</span><span class="special">;</span>
+
+        <span class="comment">// User specified sample size
+</span>        <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">N</span><span class="special">&gt;</span>
+        <span class="identifier">result_type</span> <span class="keyword">operator</span><span class="special">()(</span><span class="identifier">N</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">n</span><span class="special">)</span><span class="keyword">const</span><span class="special">;</span>
+
+        <span class="comment">// Internally generated sample size
+</span>        <span class="identifier">result_type</span> <span class="keyword">operator</span><span class="special">()()</span><span class="keyword">const</span><span class="special">;</span>
+
+        <span class="identifier">Generator</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">generator</span><span class="special">()</span><span class="keyword">const</span><span class="special">;</span>
+        <span class="identifier">AccumulatorSet</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">accumulator</span><span class="special">()</span><span class="keyword">const</span><span class="special">;</span>
+        <span class="identifier">SizeGenerator</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">size_generator</span><span class="special">()</span><span class="keyword">const</span><span class="special">;</span>
+
+    <span class="special">};</span>
+
+<span class="special">}//</span> <span class="identifier">aux_</span>
+<span class="special">}//</span> <span class="identifier">ecdf</span>
+<span class="special">}//</span> <span class="identifier">accumulators</span>
+</pre>
+<p>
+      </p>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2005 Eric Niebler, 2011 Erwann Rogard<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="pdf.html"><img src="../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="aux_/ks_gen.html"><img src="../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>
