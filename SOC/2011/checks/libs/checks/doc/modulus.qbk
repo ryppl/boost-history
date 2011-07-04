@@ -1,0 +1,19 @@
+[section:modulus Modular sum algorithms]
+
+A ['modular sum algorithm] makes the sum of a serie of digits modulo a number. 
+The number obtained is called the ['check digit], in many codes it is added as the last digit.
+This rubbish algorithm detect all ['alteration] of one digit but doesn't detect a simple ['transposition] if the check digit is not altered.
+This is why even the most basic algorithms introduced the notion of ['weight]. The weight is the contribution of a number to the final sum.
+The following algorithms presented are the base of many, many codes and numbers in the world.
+We could describe a code and his check digit calculation with three characteristics : length, weigth and the modulus. 
+So we could design a generic function for every modulus but we won't. It wouldn't be efficient and unnecessarily more complicated.
+The next parts will present the three different algorithms that we have designed.
+
+[h4 Luhn algorithm]
+
+The Luhn algorithm is well-known
+
+[h4 Modulus 10 algorithm]
+[h4 Modulus 11 algorithm]
+
+[endsect][/section:modulus Modular sum algorithms]
