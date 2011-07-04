@@ -1,10 +1,15 @@
 [section:errors Type of errors]
+The following sections will describe some of the errors that an user or a device can make. 
+Those are the most frequent and we are not exhaustive, however we will find out how well our algorithms work.
+We will calculate (in a mathematical way) the probability of failures and the factors which affect it.
 
 [h4 Alteration]
 [h5 Single error]
-
 [h5 Multiple error]
+
 [h4 Transposition]
+
+[h4 Length]
 [h4 Phonetic error]
 
 [endsect][/section:errors Type of errors]
