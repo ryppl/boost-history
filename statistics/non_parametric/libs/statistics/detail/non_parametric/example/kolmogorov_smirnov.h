@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// non_parametric::kolmogorov_smirnov.h     						     	 //
+// kolmogorov_smirnov_statistic.h     						     	         //
 //                                                                           //
 //  Copyright 2010 Erwann Rogard. Distributed under the Boost                //
 //  Software License, Version 1.0. (See accompanying file                    //
@@ -12,9 +12,10 @@
 void example_kolmogorov_smirnov(
 	std::ostream& os,
     double poisson_mean = 1.0,
-    std::size_t n_loops = 1,
-    std::size_t n_init = 10,
-    std::size_t n_factor = 10 // n_init *= n_factor at each loop
+    long offset = 1,
+    long base = 10,
+    long first_p = 0,
+    long last_p = 5
 );
 
 #endif

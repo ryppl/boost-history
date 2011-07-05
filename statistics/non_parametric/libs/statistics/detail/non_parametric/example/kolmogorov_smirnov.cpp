@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// non_parametric::kolmogorov_smirnov.cpp     						     	 //
+// kolmogorov_smirnov_statistic.cpp     						     	     //
 //                                                                           //
 //  Copyright 2010 Erwann Rogard. Distributed under the Boost                //
 //  Software License, Version 1.0. (See accompanying file                    //
@@ -30,15 +30,18 @@
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/random/variate_generator.hpp>
 
-#include <boost/statistics/detail/non_parametric/kolmogorov_smirnov/check_convergence.hpp>
+#include <boost/statistics/detail/non_parametric/empirical_distribution/kolmogorov_smirnov_statistic/value.hpp>
+#include <boost/statistics/detail/non_parametric/empirical_distribution/kolmogorov_smirnov_statistic/series.hpp>
+
 #include <libs/statistics/detail/non_parametric/example/frequency_int.h>
 
 void example_kolmogorov_smirnov(
 	std::ostream& os,
-    double mean = 1.0,
-    std::size_t n_loops = 1,
-    std::size_t n_init = 10,
-    std::size_t n_factor = 10 // n_init *= n_factor at each loop
+    double mean,
+    long offset,
+    long base,
+    long first_p,
+    long last_p
 )
 {
 
@@ -47,43 +50,48 @@ void example_kolmogorov_smirnov(
 	// This example illustrates kolmogorov smirnov for both a discrete
     // and a continuous distribution
 
-	namespace ks = boost::statistics::detail::kolmogorov_smirnov;
-
-	typedef double val_;
-
-
+    namespace ac = boost::accumulators;
+    namespace ed = boost::statistics::detail::empirical_distribution;
+	namespace ks = ed::kolmogorov_smirnov_statistic;
     typedef boost::mt19937 urng_;
-	typedef std::vector<val_> vals_;
-	typedef ks::check_convergence<val_> check_;
 
     urng_ urng;
-	check_ check;
 
-    os 	<< "(sample size,statistic) :" << std::endl;
 	{
 		typedef boost::math::poisson_distribution<> dist_;
+        typedef dist_::value_type val_;
     	typedef boost::poisson_distribution<> random_;
     	typedef boost::variate_generator<urng_&,random_> vg_;
-        dist_ dist(mean);
-		vg_ vg(urng,random_(mean));
+        dist_ dist( mean );
+		vg_ vg( urng, random_(mean) );
 
     	os << "poisson(" << mean << ')' << std::endl;
-    	check(n_loops,n_init,n_factor,dist,vg,os);
+        
+        typedef ks::series_data<val_> data_;
+        
+        ks::series( 
+            dist, vg, 
+            offset, base, first_p, last_p,
+            std::ostream_iterator<data_>(os,"\n")
+        );        
+
     }
 	{
 		typedef boost::math::normal_distribution<> dist_;
-		typedef boost::normal_distribution<> random_;
+        typedef dist_::value_type val_;
+    	typedef boost::poisson_distribution<> random_;
     	typedef boost::variate_generator<urng_&,random_> vg_;
-		const val_ sd = 1.0;
-		dist_ dist(mean,sd);
-		vg_ vg(urng,random_(mean,sd));
-    	os 	<< "normal(" << mean 
-            << ','
-            << sd
-            << ')'
-            << std::endl;
-    	check(n_loops,n_init,n_factor,dist,vg,os);
-	}
+        const val_ sd = 1.0;
+        dist_ dist( mean, sd );
+		vg_ vg( urng, random_(mean) );
+    	os << "normal(" << mean << ',' << sd << ')' << std::endl;
+        typedef ks::series_data<val_> data_;
+        ks::series( 
+            dist, vg, 
+            offset, base, first_p, last_p,
+            std::ostream_iterator<data_>(os,"\n")
+        );        
 
+    }
 	os << "<-" << std::endl;
 }
