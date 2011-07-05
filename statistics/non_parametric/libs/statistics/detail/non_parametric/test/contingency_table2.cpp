@@ -8,8 +8,13 @@
 #include <cmath>
 #include <string>
 
+#include <boost/test/unit_test.hpp>
+
 #include <boost/mpl/int.hpp>
 #include <boost/mpl/vector/vector10.hpp>
+#include <boost/mpl/detail/wrapper.hpp>
+
+#include <boost/typeof/typeof.hpp>
 
 #include <boost/assign/list_of.hpp>
 
@@ -23,8 +28,10 @@
 
 #include <boost/statistics/detail/non_parametric/contingency_table/include/factor.hpp>
 #include <boost/statistics/detail/non_parametric/contingency_table/include/pearson_chisq/independence.hpp>
+#include <boost/statistics/detail/non_parametric/contingency_table/include/pearson_chisq/common.hpp>
 
-#include <libs/statistics/detail/non_parametric/test/contingency_table2.h>
+// Analysis of a dataset, and check that the results agree with the R software.
+// Source : http://www.math.wustl.edu/~victor/classes/ma322/r-eg-20.txt
 
 /*
 # Read the count data for this problem
@@ -62,8 +69,7 @@ void test_contingency_table2()
 {
 
 	namespace ct = boost::statistics::detail::contingency_table;
-    namespace pearson_chisq = ct::pearson_chisq;
-    using namespace boost::accumulators;
+    namespace ps = ct::pearson_chi_square_statistic;
 
     typedef double val_;
     typedef boost::mpl::int_<0> r_; typedef std::string data_r_;
@@ -79,10 +85,10 @@ void test_contingency_table2()
     typedef boost::mpl::vector2<r_,t_> sum_over_cols_;
     typedef boost::mpl::vector2<c_,t_> sum_over_rows_;
 
-    typedef ct::pearson_chisq::tag::independence<all_three_factors_> indep_r_c_t_;
-    typedef ct::pearson_chisq::tag::independence<sum_over_tiers_> indep_r_c_;
-    typedef ct::pearson_chisq::tag::independence<sum_over_cols_> indep_r_t_;
-    typedef ct::pearson_chisq::tag::independence<sum_over_rows_> indep_c_t_;
+    typedef ps::tag::independence_between<all_three_factors_> indep_r_c_t_;
+    typedef ps::tag::independence_between<sum_over_tiers_> indep_r_c_;
+    typedef ps::tag::independence_between<sum_over_cols_> indep_r_t_;
+    typedef ps::tag::independence_between<sum_over_rows_> indep_c_t_;
 
     typedef boost::accumulators::stats<
         indep_r_c_t_,
@@ -93,8 +99,11 @@ void test_contingency_table2()
     typedef boost::accumulators::accumulator_set< sample_, stats_, long int > acc_;
         
     using namespace boost::assign;
-    acc_ acc(( ct::factor::_map_of_levels = boost::fusion::make_map<r_,c_,t_>(
-        list_of("r1")("r2")("r3")("r4"), list_of("c1")("c2")("c3"), list_of("t1")("t2") ) ));
+    acc_ acc(( ct::_map_of_levels = boost::fusion::make_map<r_,c_,t_>(
+        list_of("r1")("r2")("r3")("r4"), 
+        list_of("c1")("c2")("c3"), 
+        list_of("t1")("t2") ) 
+    ));
 
     typedef boost::fusion::result_of::make_map<
         r_,c_,t_,data_r_,data_c_,data_t_>::type result_of_make_map_;
@@ -102,35 +111,38 @@ void test_contingency_table2()
     
     fp_ make_sample = boost::fusion::make_map<r_,c_,t_>;
 
-    acc( make_sample( "r1", "c1", "t1" ), weight = 12 );
-    acc( make_sample( "r1", "c1", "t2" ), weight =  4 );
-    acc( make_sample( "r1", "c2", "t1" ), weight = 34 );
-    acc( make_sample( "r1", "c2", "t2" ), weight = 47 );
-    acc( make_sample( "r1", "c3", "t1" ), weight = 23 );
-    acc( make_sample( "r1", "c3", "t2" ), weight = 11 );
-    acc( make_sample( "r2", "c1", "t1" ), weight = 35 );
-    acc( make_sample( "r2", "c1", "t2" ), weight = 34 );
-    acc( make_sample( "r2", "c2", "t1" ), weight = 31 );
-    acc( make_sample( "r2", "c2", "t2" ), weight = 10 );
-    acc( make_sample( "r2", "c3", "t1" ), weight = 11 );
-    acc( make_sample( "r2", "c3", "t2" ), weight = 18 );
-    acc( make_sample( "r3", "c1", "t1" ), weight = 12 );
-    acc( make_sample( "r3", "c1", "t2" ), weight = 18 );
-    acc( make_sample( "r3", "c2", "t1" ), weight = 32 );
-    acc( make_sample( "r3", "c2", "t2" ), weight = 13 );
-    acc( make_sample( "r3", "c3", "t1" ), weight =  9 );
-    acc( make_sample( "r3", "c3", "t2" ), weight = 19 );
-    acc( make_sample( "r4", "c1", "t1" ), weight = 12 );
-    acc( make_sample( "r4", "c1", "t2" ), weight =  9 );
-    acc( make_sample( "r4", "c2", "t1" ), weight = 12 );
-    acc( make_sample( "r4", "c2", "t2" ), weight = 33 );
-    acc( make_sample( "r4", "c3", "t1" ), weight = 14 );
-    acc( make_sample( "r4", "c3", "t2" ), weight = 25 );
+    { 
+        using namespace boost::accumulators;
+
+        acc( make_sample( "r1", "c1", "t1" ), weight = 12 );
+        acc( make_sample( "r1", "c1", "t2" ), weight =  4 );
+        acc( make_sample( "r1", "c2", "t1" ), weight = 34 );
+        acc( make_sample( "r1", "c2", "t2" ), weight = 47 );
+        acc( make_sample( "r1", "c3", "t1" ), weight = 23 );
+        acc( make_sample( "r1", "c3", "t2" ), weight = 11 );
+        acc( make_sample( "r2", "c1", "t1" ), weight = 35 );
+        acc( make_sample( "r2", "c1", "t2" ), weight = 34 );
+        acc( make_sample( "r2", "c2", "t1" ), weight = 31 );
+        acc( make_sample( "r2", "c2", "t2" ), weight = 10 );
+        acc( make_sample( "r2", "c3", "t1" ), weight = 11 );
+        acc( make_sample( "r2", "c3", "t2" ), weight = 18 );
+        acc( make_sample( "r3", "c1", "t1" ), weight = 12 );
+        acc( make_sample( "r3", "c1", "t2" ), weight = 18 );
+        acc( make_sample( "r3", "c2", "t1" ), weight = 32 );
+        acc( make_sample( "r3", "c2", "t2" ), weight = 13 );
+        acc( make_sample( "r3", "c3", "t1" ), weight =  9 );
+        acc( make_sample( "r3", "c3", "t2" ), weight = 19 );
+        acc( make_sample( "r4", "c1", "t1" ), weight = 12 );
+        acc( make_sample( "r4", "c1", "t2" ), weight =  9 );
+        acc( make_sample( "r4", "c2", "t1" ), weight = 12 );
+        acc( make_sample( "r4", "c2", "t2" ), weight = 33 );
+        acc( make_sample( "r4", "c3", "t1" ), weight = 14 );
+        acc( make_sample( "r4", "c3", "t2" ), weight = 25 );
+    }
 
     using namespace std;
-
-    val_ stat;
-    long df;
+    val_ stat, p_value;
+    long df;    
 
 /*
 #### Output and interpretation (at significance level alpha=0.05):
@@ -147,13 +159,18 @@ void test_contingency_table2()
 #
 */
 
-    // #include <boost/test/unit_test.hpp>
-    // #include <boost/test/floating_point_comparison.hpp>
-
-    df = pearson_chisq::df(acc,indep_r_c_t_());
-    stat = pearson_chisq::statistic<val_>( acc, indep_r_c_t_() );
-    BOOST_ASSERT( df == 17 );
-    BOOST_ASSERT( fabs(stat - 102.17) < 0.01 );
+   {
+        typedef boost::mpl::detail::wrapper<indep_r_c_t_> h0_;
+        df = ps::degrees_of_freedom( h0_(), acc);
+        stat = ps::value( h0_(), acc ); 
+        p_value = cdf( complement( 
+            ps::asy_distribution( h0_(), acc ), 
+            stat
+        ) );
+        BOOST_CHECK( df == 17 );
+        BOOST_CHECK( fabs( stat - 102.17 ) < 0.01 );
+        BOOST_CHECK( fabs( p_value - 3.514e-14 ) < 0.001e-14 );
+    }
 
 /*
    > # 2-way Chi squared test of partial independence: R versus CT
@@ -168,11 +185,18 @@ void test_contingency_table2()
 #
 */
 
-    df = pearson_chisq::df(acc,indep_c_t_());
-    stat = pearson_chisq::statistic<val_>( acc, indep_c_t_() );
-    BOOST_ASSERT( df == 2 );
-    BOOST_ASSERT( fabs( stat == 2.3704 )< 0.001 );
-
+   {
+        typedef boost::mpl::detail::wrapper<indep_c_t_> h0_;
+        df = ps::degrees_of_freedom( h0_(), acc);
+        stat = ps::value( h0_(), acc ); 
+        p_value = cdf( complement( 
+            ps::asy_distribution( h0_(), acc ), 
+            stat
+        ) );
+        BOOST_CHECK( df == 2 );
+        BOOST_CHECK( fabs( stat == 2.3704 )< 0.001 );
+        BOOST_CHECK( fabs( p_value - 0.3057 ) < 0.0001 );
+    }
 /*
    >
    > # 2-way Chi squared test of partial independence: C versus RT
@@ -187,12 +211,18 @@ void test_contingency_table2()
 #            HA: r,t are NOT mutually independent
 
 */
-
-    df = pearson_chisq::df(acc,indep_r_t_());
-    stat = pearson_chisq::statistic<val_>( acc, indep_r_t_() );
-    BOOST_ASSERT( df == 3 );
-    BOOST_ASSERT( fabs( stat - 10.057 ) < 0.001 );
-
+    {
+        typedef boost::mpl::detail::wrapper<indep_r_t_> h0_;
+        df = ps::degrees_of_freedom( h0_(), acc);
+        stat = ps::value( h0_(), acc ); 
+        p_value = cdf( complement( 
+            ps::asy_distribution( h0_(), acc ), 
+            stat
+        ) );
+        BOOST_CHECK( df == 3 );
+        BOOST_CHECK( fabs( stat - 10.057 ) < 0.001 );
+        BOOST_CHECK( fabs( p_value - 0.01809 ) < 0.00001 );
+    }
 /*
    > # 2-way Chi squared test of partial independence: T versus RC
    > summary(xtabs(count~r+c))
@@ -208,10 +238,18 @@ void test_contingency_table2()
 #
 */
 
-    df = pearson_chisq::df(acc,indep_r_c_());
-    stat = pearson_chisq::statistic<val_>( acc, indep_r_c_() );
-    BOOST_ASSERT( df == 6 );
-    BOOST_ASSERT( fabs( stat - 58.67 ) < 0.01 );
+   {
+        typedef boost::mpl::detail::wrapper<indep_r_c_> h0_;
+        df = ps::degrees_of_freedom( h0_(), acc);
+        stat = ps::value( h0_(), acc ); 
+        p_value = cdf( complement( 
+            ps::asy_distribution( h0_(), acc ), 
+            stat
+        ) );
+        BOOST_CHECK( df == 6 );
+        BOOST_CHECK( fabs( stat - 58.67 ) < 0.01 );
+        BOOST_CHECK( fabs( p_value - 8.363e-11 ) < 0.001e-11 );
+    }
 
 }
 
