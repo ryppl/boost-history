@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////////////////////////
 // assign::detail::range::chain_common.hpp                                  //
 //                                                                          //
-//  (C) Copyright 2010 Erwann Rogard                                        //
+//  Copyright (C) 2010 Erwann Rogard                                        //
 //  Use, modification and distribution are subject to the                   //
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
@@ -75,6 +75,7 @@ namespace chain_impl{
         typedef typename basic_chain_impl::first_expr<conv_r1_,add_const>::type type;
     };
 
+    // This might need to go to /traits.
     template<typename Rng1,bool add_const>
     struct deduce_value{
         typedef typename boost::range_reference<Rng1>::type from_;

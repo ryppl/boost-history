@@ -1,13 +1,14 @@
 //////////////////////////////////////////////////////////////////////////////
 // assign::detail::assign_reference_copy.hpp                                //
 //                                                                          //
-//  (C) Copyright 2010 Manuel Peinado Gallego                               //
+//  Copyright (C) 2010 Manuel Peinado Gallego                               //
 //  Use, modification and distribution are subject to the                   //
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_DETAIL_ASSIGN_REFERENCE_COPY_MPG_2010_HPP
 #define BOOST_ASSIGN_DETAIL_ASSIGN_REFERENCE_COPY_MPG_2010_HPP
+#include <algorithm>
 
 namespace boost{
 namespace assign{

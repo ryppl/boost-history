@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////////////////////////
 // repeat.hpp                                                               //
 //                                                                          //
-//  (C) Copyright 2010 Erwann Rogard                                        //
+//  Copyright (C) 2010 Erwann Rogard                                        //
 //  Use, modification and distribution are subject to the                   //
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
@@ -11,6 +11,9 @@
 #include <boost/mpl/int.hpp>
 #include <boost/mpl/divides.hpp>
 #include <boost/mpl/modulus.hpp>
+#include <boost/preprocessor/cat.hpp>
+#include <boost/preprocessor/enum_params.hpp>
+#include <boost/preprocessor/repeat.hpp>
 #include <boost/assign/auto_size/detail/csv.hpp>
 
 namespace boost{
@@ -19,58 +22,39 @@ namespace detail{
 namespace auto_size{
 namespace repeat_aux{
 
-    template<int N,typename T>
+    template<int N,typename T,
+        template<typename> class R = boost::assign::detail::auto_size::ref_copy>
     struct result{
         typedef auto_size::tag::array pol_;
         typedef typename auto_size::csv_policy<pol_>::template  
-            apply<
-                T,
-                N,
-                boost::assign::detail::auto_size::ref_copy
-            >::type type;
+            apply<T,N,R>::type type;
     }; 
 
-    template<int N,typename T>
+    template<int N,typename T, template<typename> class R> 
     struct caller{};
 
-    template<typename T>
-    struct caller<1,T>
-    {
-        typedef typename auto_size::repeat_aux::result<1,T> result_;
-        typedef typename result_::type type;
+#ifndef BOOST_ASSIGN_AS_REPEAT_MAX
+ #define BOOST_ASSIGN_AS_REPEAT_MAX 20
+#endif
 
-        static type call(T& t){
-            return boost::assign::detail::auto_size::make_first_expr_no_policy<
-                boost::assign::detail::auto_size::ref_copy,T>(t); 
-        }
-        
-    };
+#define BOOST_ASSING_AS_REPEAT_tmp(z,n,data) ( t ) 
+#define BOOST_ASSIGN_AS_REPEAT_caller(z,n,data)                                          \
+    template<typename T,template<typename> class R>                                      \
+    struct caller<n,T,R>                                                                 \
+    {                                                                                    \
+        typedef typename auto_size::repeat_aux::result<n,T,R> result_;                   \
+        typedef typename result_::type type;                                             \
+        static type call(T& t){                                                          \
+            return boost::assign::detail::auto_size::make_first_expr_no_policy<          \
+                R,T> BOOST_PP_REPEAT(BOOST_PP_ADD(n,1), BOOST_ASSING_AS_REPEAT_tmp, ~ ); \
+        }                                                                                \
+    };                                                                                   \
+/**/
 
-    template<typename T>
-    struct caller<2,T>
-    {
-        typedef typename auto_size::repeat_aux::result<2,T> result_;
-        typedef typename result_::type type;
+BOOST_PP_REPEAT(BOOST_PP_SUB(BOOST_ASSIGN_AS_REPEAT_MAX,1),BOOST_ASSIGN_AS_REPEAT_caller,~)
 
-        static type call(T& t){
-            return boost::assign::detail::auto_size::make_first_expr_no_policy<
-                boost::assign::detail::auto_size::ref_copy,T>(t)(t); 
-        }
-        
-    };
-
-    template<typename T>
-    struct caller<3,T>
-    {
-        typedef typename auto_size::repeat_aux::result<3,T> result_;
-        typedef typename result_::type type;
-
-        static type call(T& t){
-            return boost::assign::detail::auto_size::make_first_expr_no_policy<
-                boost::assign::detail::auto_size::ref_copy,T>(t)(t)(t); 
-        }
-        
-    };
+#undef BOOST_ASSING_CSV_LIST_tmp
+#undef BOOST_ASSING_CSV_LIST_iter
 
 }// repeat_aux
 }// auto_size
@@ -80,17 +64,20 @@ namespace repeat_aux{
     typename detail::auto_size::repeat_aux::result<K,T>::type
     repeat(T& t){
         namespace ns = detail::auto_size;
-        typedef ns::repeat_aux::caller<K,T> caller_;
+        typedef ns::repeat_aux::caller<K,T,
+            boost::assign::detail::auto_size::ref_copy> caller_;
         return caller_::call(t);
     }
 
     template<unsigned K,typename T>
     typename detail::auto_size::repeat_aux::result<K,const T>::type
-    c_repeat(const T& t){
+    crepeat(const T& t){
         namespace ns = detail::auto_size;
-        typedef ns::repeat_aux::caller<K,const T> caller_;
+        typedef ns::repeat_aux::caller<K,const T,
+            boost::assign::detail::auto_size::ref_copy> caller_;
         return caller_::call( t );
     }
+
 
 }// assign
 }// boost

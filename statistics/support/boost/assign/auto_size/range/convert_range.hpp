@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////////////////////////
 // assign::detail::range::convert.hpp                                       //
 //                                                                          //
-//  (C) Copyright 2010 Erwann Rogard                                        //
+//  Copyright (C) 2010 Erwann Rogard                                        //
 //  Use, modification and distribution are subject to the                   //
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
@@ -44,8 +44,8 @@ namespace result_of{
 
         static type call(Rng& r){
             return type(
-                convert_iterator<V,R>(boost::begin(r)),
-                convert_iterator<V,R>(boost::end(r))
+                convert_iterator<V,R>( boost::begin(r) ),
+                convert_iterator<V,R>( boost::end(r) )
             );
         }
     };

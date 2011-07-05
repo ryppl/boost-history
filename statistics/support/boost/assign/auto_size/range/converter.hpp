@@ -1,8 +1,8 @@
 //////////////////////////////////////////////////////////////////////////////
 // converter.hpp                                                            //
 //                                                                          //
-//  Copyright Thorsten Ottosen 2003-2004.                                   //
-//  (C) Copyright 2010 Erwann Rogard                                        //
+//  Copyright (C) 2003-2004 Thorsten Ottosen.                                   //
+//  Copyright (C) 2010 Erwann Rogard                                        //
 //  Use, modification and distribution are subject to the                   //
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
@@ -13,6 +13,8 @@
 #include <boost/typeof/typeof.hpp>
 #include <boost/range.hpp>
 #include <boost/assign/auto_size/range/convert_range.hpp>
+
+
 
 // This brings the code within assign_detail::converter<> into a macro to be 
 // expanded in what would otherwise be a derived class. This is to solve 

@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////////////////////////
 // assign::detail::range::chain_l.hpp                                       //
 //                                                                          //
-//  (C) Copyright 2010 Erwann Rogard                                        //
+//  Copyright (C) 2010 Erwann Rogard                                        //
 //  Use, modification and distribution are subject to the                   //
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
@@ -86,13 +86,6 @@ namespace chain_impl{
         operator&&(Rng2& r2){
             return (*this)(r2);
         }
-
-//        template<typename Rng2>
-//        typename assign::result_of::chain_operator_r<this_,Rng2>::type 
-//        operator&&(const Rng2& r2){
-//            return chain_r(*this)(r2);
-//        }
-
 
         BOOST_ASSIGN_AS_CONVERTER(this_)
         
