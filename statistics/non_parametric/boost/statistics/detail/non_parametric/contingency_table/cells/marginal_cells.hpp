@@ -18,7 +18,6 @@ namespace boost {
 namespace statistics{
 namespace detail{
 namespace contingency_table{
-namespace cells{
 
     template<typename Keys>
     struct marginal_cells : boost::mpl::fold<
@@ -26,13 +25,12 @@ namespace cells{
         boost::mpl::vector0<>,
         boost::mpl::push_back<
             boost::mpl::_1,
-            contingency_table::cells::tag::cells<
+            contingency_table::tag::cells<
                 boost::mpl::vector1<boost::mpl::_2>
             >
         >
     >{};
 
-}// cells
 }// contingency_table
 }// detail
 }// statistics

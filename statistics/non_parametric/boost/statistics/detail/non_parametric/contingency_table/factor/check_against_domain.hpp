@@ -14,7 +14,6 @@ namespace boost {
 namespace statistics{
 namespace detail{
 namespace contingency_table{
-namespace factor{
 
     template<typename A,typename E>
     struct check_against_domain{
@@ -29,7 +28,7 @@ namespace factor{
         {
             typedef typename T::first_type key_;
             typedef typename T::second_type data_;
-            namespace ns = contingency_table::factor;
+            namespace ns = contingency_table;
             
             // See domain_error_logger for justification of fully qualified.
             this->impl<key_,data_>(
@@ -51,13 +50,12 @@ namespace factor{
     };
 
 template<typename A,typename E>
-contingency_table::factor::check_against_domain<A,E>
+contingency_table::check_against_domain<A,E>
 make_check_against_domain(const A& acc,const E& error_logger){
-    typedef contingency_table::factor::check_against_domain<A,E> checker_;
+    typedef contingency_table::check_against_domain<A,E> checker_;
     return checker_(acc,error_logger);
 }
 
-}// factor
 }// contingency_table
 }// detail
 }// statistics

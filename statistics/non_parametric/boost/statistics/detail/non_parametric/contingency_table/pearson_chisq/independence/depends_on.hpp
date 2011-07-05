@@ -16,14 +16,13 @@ namespace boost {
 namespace statistics{
 namespace detail{
 namespace contingency_table{
-namespace pearson_chisq{
-namespace independence_aux{
+namespace independence_between_aux{
 
     template<typename Keys>
     struct depends_on{
-        typedef typename cells::marginal_cells<Keys>::type marginal_;
-        typedef contingency_table::cells::tag::cells<Keys> joint_;
-//        typedef boost::accumulators::tag::count count_;
+        typedef typename 
+            contingency_table::marginal_cells<Keys>::type marginal_;
+        typedef contingency_table::tag::cells<Keys> joint_;
         typedef boost::accumulators::tag::weighted_count weighted_count_;
         typedef typename boost::mpl::push_back<
             typename boost::mpl::push_back<
@@ -38,8 +37,7 @@ namespace independence_aux{
         >::type type;
     };
 
-}// independence_aux
-}// pearson_chisq
+}// independence_between_aux
 }// contingency_table
 }// detail
 }// statistics

@@ -15,7 +15,6 @@ namespace boost {
 namespace statistics{
 namespace detail{
 namespace contingency_table{
-namespace factor{
 
     template<typename Keys>
     struct filter{
@@ -27,10 +26,9 @@ namespace factor{
         struct apply : boost::mpl::bool_<false>{};
         
         template<typename Key>
-        struct apply< factor::tag::levels<Key> > : contains<Key>{};
+        struct apply< contingency_table::tag::levels<Key> > : contains<Key>{};
     };
 
-}// factor
 }// contingency_table
 }// detail
 }// statistics

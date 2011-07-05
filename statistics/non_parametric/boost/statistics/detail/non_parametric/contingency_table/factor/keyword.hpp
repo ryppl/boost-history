@@ -20,17 +20,19 @@ namespace boost {
 namespace statistics{
 namespace detail{
 namespace contingency_table{
-namespace factor{
 
+   // For now use map_of_levels instead. 
+   
     template<typename Key>
-    struct kwd{
-        typedef kwd<Key> tag_;
+    struct kwd_levels{
+        typedef kwd_levels<Key> tag_;
         static ::boost::parameter::keyword<tag_> & instance;
     };
 
     template<typename Key>
-		::boost::parameter::keyword< kwd<Key> > &
-    kwd<Key>::instance = ::boost::parameter::keyword< kwd<Key> >::get();
+		::boost::parameter::keyword< kwd_levels<Key> > &
+    kwd_levels<Key>::instance 
+        = ::boost::parameter::keyword< kwd_levels<Key> >::get();
 
     template<typename Keys>
     struct par_spec{
@@ -41,7 +43,7 @@ namespace factor{
             boost::mpl::push_back<
                 boost::mpl::_1,
                 boost::parameter::required<
-                    factor::kwd<boost::mpl::_2>
+                    contingency_table::kwd_levels<boost::mpl::_2>
                 >
             >
         >::type vec_required;
@@ -52,7 +54,6 @@ namespace factor{
         
     };
 
-}// factor
 }// contingency_table
 }// detail
 }// statistics

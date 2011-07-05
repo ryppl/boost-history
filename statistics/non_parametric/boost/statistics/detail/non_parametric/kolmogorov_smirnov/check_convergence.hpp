@@ -12,7 +12,7 @@
 #include <boost/mpl/copy.hpp>
 #include <boost/mpl/back_inserter.hpp>
 #include <boost/mpl/placeholders.hpp>
-
+#include <boost/numeric/conversion/bounds.hpp>
 #include <boost/accumulators/framework/extractor.hpp>
 #include <boost/accumulators/framework/accumulator_base.hpp>
 #include <boost/accumulators/framework/parameters/sample.hpp>
@@ -27,7 +27,7 @@
 namespace boost{
 namespace statistics{
 namespace detail{
-namespace kolmogorov_smirnov{
+namespace empirical_distribution{
 
     // Usage:
     //     check_convergence<> check;
@@ -39,15 +39,16 @@ namespace kolmogorov_smirnov{
     	typename T1 = double,
     	typename MoreFeatures = boost::accumulators::stats<>
     >
-    struct check_convergence{
+    struct check_convergence
+    {
     
     	typedef T1 value_type;
         typedef kolmogorov_smirnov::tag::kolmogorov_smirnov tag_;
-    	typedef boost::accumulators::stats<tag_> state_;
+    	typedef boost::accumulators::stats<tag_> stats_;
     	typedef boost::mpl::push_back<boost::mpl::_,boost::mpl::_> op_;
     
        	typedef typename boost::mpl::copy<
-        	MoreFeatures,boost::mpl::back_inserter< state_ >
+        	MoreFeatures,boost::mpl::back_inserter< stats_ >
     	>::type mpl_features;
     
     	public:
@@ -66,12 +67,12 @@ namespace kolmogorov_smirnov{
             > acc_;
         };
     
-        template<typename N1,typename N2,typename N3,typename D,typename G>
+        template<typename D,typename G>
         typename traits<D,G>::acc_
         operator()(
-            N1 n_loops,
-            N2 n, 			// n *= n_factor at each loop
-            N3 n_factor, 
+            long n_loops,
+            long n, 			// n *= n_factor at each loop
+            long n_factor, 
             const D& dist,	
             G& gen,
             std::ostream& os
@@ -90,9 +91,6 @@ namespace kolmogorov_smirnov{
 
         template<
             typename Args,
-            typename N1,
-            typename N2,
-            typename N3,
             typename D,
             typename G,
             typename F,
@@ -101,9 +99,9 @@ namespace kolmogorov_smirnov{
         typename traits<D,G>::acc_
         operator()(
             const Args& args,
-            N1 n_loops,
-            N2 n, // n *= n_factor at each loop
-            N3 n_factor, 
+            long n_loops,
+            long n, // n *= n_factor at each loop
+            long n_factor, 
             const D& dist,
             G& gen,
             const F& fun,
@@ -117,8 +115,8 @@ namespace kolmogorov_smirnov{
             
             acc_ acc(args);
         
-            for(int i1 = 0; i1<n_loops; i1++){
-                for(int i2 = 0; i2< n; i2++){
+            for(long i1 = 0; i1<n_loops; i1++){
+                for(long i2 = 0; i2< n; i2++){
                     sample_type x = gen();
                     acc(x);
                 } // grows sample by n
@@ -132,25 +130,35 @@ namespace kolmogorov_smirnov{
 
         template<typename D>
     	struct default_fun{
-            default_fun(){}
+
+            typedef boost::numeric::bounds<value_type> bounds_;
+
+            default_fun() : ks0( bounds_::highest() ){}
 		
             template<typename AccSet>
             void operator()(const AccSet& acc,const D& d,std::ostream& os)const{
                 namespace ns = kolmogorov_smirnov;
-            	value_type ks = ns::statistic<value_type>( acc, d );
+            	value_type ks1 = ns::statistic<value_type>( acc, d );
+                bool ok = ks1 - ks0 < bounds_::smallest(); 
                 os 
                     << '('
                     << boost::accumulators::extract::count(acc) 
                     << ','
-                    << ks 
+                    << ks1
+                    << ','
+                    << ok
                     << ')'
                     << std::endl;	    
             }
+
+            private:
+            mutable value_type ks0;
+
     	};
     
     };
     
-}// kolmogorov_smirnov
+}// empirical_distribution
 }// detail
 }// statistics
 }// boost

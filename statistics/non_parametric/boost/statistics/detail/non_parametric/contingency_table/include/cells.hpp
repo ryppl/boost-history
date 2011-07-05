@@ -10,5 +10,10 @@
 
 #include <boost/statistics/detail/non_parametric/contingency_table/cells/cells.hpp>
 #include <boost/statistics/detail/non_parametric/contingency_table/cells/non_empty_cells_count.hpp>
+#include <boost/statistics/detail/non_parametric/contingency_table/cells/count_matching.hpp>
+#include <boost/statistics/detail/non_parametric/contingency_table/cells/marginal_cells.hpp>
+#include <boost/statistics/detail/non_parametric/contingency_table/cells/cells_count.hpp>
+#include <boost/statistics/detail/non_parametric/contingency_table/cells/traits.hpp>
+#include <boost/statistics/detail/non_parametric/contingency_table/cells/initializer.hpp>
 
 #endif

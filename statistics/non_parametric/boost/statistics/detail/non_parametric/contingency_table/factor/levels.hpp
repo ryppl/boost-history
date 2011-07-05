@@ -32,7 +32,6 @@ namespace boost {
 namespace statistics{
 namespace detail{
 namespace contingency_table{
-namespace factor{
 
 BOOST_PARAMETER_NAME(map_of_levels);
 
@@ -50,9 +49,9 @@ namespace impl{
     class levels : public boost::accumulators::accumulator_base
     {
         typedef boost::accumulators::dont_care dont_care_;
-        typedef factor::levels_traits<Key,T> traits_;
+        typedef contingency_table::levels_traits<Key,T> traits_;
         typedef typename traits_::set_ set_;
-        typedef factor::kwd<Key> kwd_;
+        typedef contingency_table::kwd_levels<Key> kwd_;
 
         public:
         typedef Key key_type;
@@ -101,7 +100,6 @@ namespace impl{
     };
 
 }// impl
-
 namespace tag
 {
     template<typename Key>
@@ -109,37 +107,54 @@ namespace tag
       : boost::accumulators::depends_on<>
     {
     
-        //typedef factor::tpl_keyword<Key> keyword_;
+        //typedef contingency_table::tpl_keyword<Key> keyword_;
     
         struct impl{
             template<typename T,typename W>
             struct apply{
-                typedef factor::impl::levels<Key,T> type;    	
+                typedef contingency_table::impl::levels<Key,T> type;    	
             };
         };
 
     };
     
 }// tag
-
 namespace result_of{
+namespace extract{
 
     template<typename Key,typename AccSet>
-    struct factor
+    struct levels
     : boost::accumulators::detail::extractor_result<
-        AccSet, factor::tag::levels<Key> >{};
+        AccSet, contingency_table::tag::levels<Key> 
+    >{};
 
+}// extract
 }// result_of
 
+namespace levels_aux{
+     
+     template<typename Key,typename AccSet>
+     struct value_of{
+        typedef typename contingency_table::result_of::extract::levels<
+            Key,AccSet>::type ref_levels_;
+        typedef typename boost::remove_cv<
+            typename boost::remove_reference<
+                ref_levels_
+            >::type
+        >::type levels_;
+        typedef typename levels_::value_type type;
+    };
+
+}// levels_aux
 namespace extract
 {
 
   	template<typename Key,typename AccSet>
-    typename factor::result_of::template 
-        factor<Key,AccSet>::type
+    typename contingency_table::result_of::extract:: template 
+        levels<Key,AccSet>::type
   	levels(AccSet const& acc)
     {
-    	typedef factor::tag::levels<Key> the_tag;
+    	typedef contingency_table::tag::levels<Key> the_tag;
         return boost::accumulators::extract_result<the_tag>(acc);
   	}
 
@@ -147,7 +162,6 @@ namespace extract
 
 using extract::levels;
 
-}// factor
 }// contingency_table
 }// detail
 }// statistics

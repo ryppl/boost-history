@@ -17,7 +17,6 @@ namespace boost {
 namespace statistics{
 namespace detail{
 namespace contingency_table{
-namespace factor{
    
    template<typename Keys>
     struct vec_levels : boost::mpl::fold< 
@@ -25,12 +24,10 @@ namespace factor{
         boost::mpl::vector0<>,
         boost::mpl::push_back<
             boost::mpl::_1,
-            contingency_table::factor::tag::levels<boost::mpl::_2>
+            contingency_table::tag::levels<boost::mpl::_2>
         >
     >{};
    
-   
-}// factor
 }// contingency_table
 }// detail
 }// statistics

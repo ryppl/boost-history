@@ -8,8 +8,7 @@
 #ifndef BOOST_STATISTICS_DETAIL_NON_PARAMETRIC_CONTINGENCY_TABLE_INCLUDE_PEARSON_CHISQ_INDEPENDENCE_HPP_ER_2010
 #define BOOST_STATISTICS_DETAIL_NON_PARAMETRIC_CONTINGENCY_TABLE_INCLUDE_PEARSON_CHISQ_INDEPENDENCE_HPP_ER_2010
 
-#include <boost/statistics/detail/non_parametric/contingency_table/pearson_chisq/independence/df.hpp>
-#include <boost/statistics/detail/non_parametric/contingency_table/pearson_chisq/independence/statistic.hpp>
-#include <boost/statistics/detail/non_parametric/contingency_table/pearson_chisq/independence/tag.hpp>
+#include <boost/statistics/detail/non_parametric/contingency_table/pearson_chisq/independence/feature.hpp>
+#include <boost/statistics/detail/non_parametric/contingency_table/pearson_chisq/independence/null_hypothesis.hpp>
 
 #endif

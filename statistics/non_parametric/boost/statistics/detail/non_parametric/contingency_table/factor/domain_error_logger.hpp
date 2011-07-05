@@ -14,7 +14,6 @@ namespace boost {
 namespace statistics{
 namespace detail{
 namespace contingency_table{
-namespace factor{
 
 class domain_error_logger{
    typedef std::string str_;
@@ -52,7 +51,6 @@ class domain_error_logger{
    
 };
 
-}// factor
 }// contingency_table
 }// detail
 }// statistics

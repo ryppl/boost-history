@@ -30,8 +30,7 @@
 namespace boost { 
 namespace statistics{
 namespace detail{
-namespace kolmogorov_smirnov{
-
+namespace empirical_distribution{
 namespace impl{
 
     // Warning : See empirical_distribution::impl::count
@@ -58,7 +57,6 @@ namespace impl{
 	};
     
 }
-
 namespace tag
 {
     struct kolmogorov_smirnov
@@ -78,7 +76,7 @@ namespace tag
 namespace result_of{
 
     template<typename T1,typename AccSet,typename D>
-    struct statistic
+    struct kolmogorov_smirnov_statistic
     {
         typedef T1 type;
     };
@@ -88,8 +86,8 @@ namespace result_of{
     // Usage : statistic<T1>(acc,dist)
     template<typename T1,typename AccSet,typename D>
     typename kolmogorov_smirnov
-        ::result_of::template statistic<T1,AccSet,D>::type
-    statistic(AccSet const& acc,const D& dist)
+        ::result_of::template kolmogorov_smirnov_statistic<T1,AccSet,D>::type
+    kolmogorov_smirnov_statistic(AccSet const& acc,const D& dist)
     {
             namespace ed = boost::statistics::detail::empirical_distribution;
             namespace ks = boost::statistics::detail::kolmogorov_smirnov;
@@ -126,6 +124,8 @@ namespace result_of{
             return m1;
     }
 
+
+}// kolgorov_statistic
 }// empirical_distribution
 }// detail
 }// statistics
