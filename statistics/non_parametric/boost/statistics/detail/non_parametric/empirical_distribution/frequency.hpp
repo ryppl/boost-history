@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// accumulator::statistics::empirical_distribution::frequency.hpp            //
+// frequency.hpp                                                             //
 //                                                                           //
 //  Copyright 2010 Erwann Rogard. Distributed under the Boost                //
 //  Software License, Version 1.0. (See accompanying file                    //
@@ -7,6 +7,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_STATISTICS_DETAIL_ACCUMULATOR_STATISTICS_FREQUENCY_HPP_ER_2010
 #define BOOST_STATISTICS_DETAIL_ACCUMULATOR_STATISTICS_FREQUENCY_HPP_ER_2010
+/*
+
 #include <iostream> // tmp
 
 #include <boost/mpl/placeholders.hpp>
@@ -32,18 +34,18 @@ namespace empirical_distribution{
 
     // Usage:
     //     namespace ns = empirical_distribution;
-    //     accumulator_set<T,stats<ns::tag::count<Cum> > > acc;
+    //     accumulator_set<T,stats<ns::tag::count<is_cum> > > acc;
     //     acc = boost:for_each(samples,acc);
-    //     ns::extract::count<Cum>(acc,x);
+    //     ns::extract::count<is_cum>(acc,x);
     // The result of the last statement is the % of observation matching (less 
-    // than) x in the samples if Cum = false (true).
+    // than) x in the samples if is_cum = false (true).
 
 namespace impl{
 
     // Frequency as percentage of the sample size 
     //
     // Warning : See empirical_distribution::impl::count.
-	template<typename T,bool Cum,typename T1>
+	template<typename T,bool is_cum,typename T1>
 	class frequency : public boost::accumulators::accumulator_base{
     	
 		typedef std::size_t size_;
@@ -69,10 +71,10 @@ namespace impl{
 
 namespace tag
 {
-    template<bool Cum,typename T1 = double>
+    template<bool is_cum,typename T1 = double>
     struct frequency
       : boost::accumulators::depends_on<
-      	statistics::detail::empirical_distribution::tag::count<Cum>,
+      	statistics::detail::empirical_distribution::tag::count<is_cum>,
         boost::accumulators::tag::count
     >
     {
@@ -80,7 +82,7 @@ namespace tag
             template<typename T,typename W>
             struct apply{
         		typedef statistics::detail::empirical_distribution
-                	::impl::frequency<T,Cum,T1> type;    	
+                	::impl::frequency<T,is_cum,T1> type;    	
             };
         };
     };
@@ -88,11 +90,11 @@ namespace tag
 
 namespace result_of{
 
-    template<bool Cum,typename T1,typename AccSet>
+    template<bool is_cum,typename T1,typename AccSet>
     struct frequency{
 
         typedef boost::statistics::detail
-        	::empirical_distribution::tag::frequency<Cum,T1> tag_;
+        	::empirical_distribution::tag::frequency<is_cum,T1> tag_;
         typedef typename boost::accumulators
         	::detail::template extractor_result<AccSet,tag_>::type type;
 
@@ -102,10 +104,10 @@ namespace result_of{
 namespace extract
 {
 
-    // Usage : frequency<Cum,T1>(acc,x)
-    template<bool Cum,typename T1,typename AccSet,typename T>
+    // Usage : frequency<is_cum,T1>(acc,x)
+    template<bool is_cum,typename T1,typename AccSet,typename T>
     typename boost::statistics::detail::empirical_distribution
-    	::result_of::template frequency<Cum,T1,AccSet>::type
+    	::result_of::template frequency<is_cum,T1,AccSet>::type
     frequency(AccSet const& acc,const T& x)
     {
 		    typedef std::size_t size_;
@@ -113,10 +115,12 @@ namespace extract
 
             namespace ns = boost::statistics::detail::empirical_distribution;
 
-            size_ i =  ns::extract::count<Cum>( acc, x );
+            size_ i =  ns::extract::count<is_cum>( acc, x );
             size_ n = boost::accumulators::extract_result<tag_n_>( acc );
             return static_cast<T1>(i)/static_cast<T1>(n);
     }
+
+
 
 }
 
@@ -126,5 +130,7 @@ using extract::frequency;
 }// detail
 }// statistics
 }// boost
+
+*/
 
 #endif

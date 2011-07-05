@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// accumulator::statistics::empirical_distribution::ordered_sample.hpp       //
+// ordered_sample.hpp                                                        //
 //                                                                           //
 //  Copyright 2010 Erwann Rogard. Distributed under the Boost                //
 //  Software License, Version 1.0. (See accompanying file                    //
@@ -76,6 +76,7 @@ namespace impl{
 
 namespace tag
 {
+   
     struct ordered_sample
       : boost::accumulators::depends_on<>
     {
