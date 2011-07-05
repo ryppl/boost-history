@@ -818,64 +818,64 @@ namespace detail {
         }
     }
 
-    // Robust 65-bit predicate, avoids using high-precision libraries.
-    // Works correctly for any input coordinate type that can be casted without
-    // lose of data to the integer type within a range [-2^31, 2^31 - 1].
-    template <typename T>
-    static bool robust_65bit_less_predicate(const point_2d<T> &left_point,
-                                            const point_2d<T> &right_point,
-                                            const point_2d<T> &new_point) {
-        polygon_ulong_long_type a1, a2, b1, b2;
-        polygon_ulong_long_type b1_sqr, b2_sqr, l_expr, r_expr;
-        bool l_expr_plus, r_expr_plus;
+    //// Robust 65-bit predicate, avoids using high-precision libraries.
+    //// Works correctly for any input coordinate type that can be casted without
+    //// lose of data to the integer type within a range [-2^31, 2^31 - 1].
+    //template <typename T>
+    //static bool robust_65bit_less_predicate(const point_2d<T> &left_point,
+    //                                        const point_2d<T> &right_point,
+    //                                        const point_2d<T> &new_point) {
+    //    polygon_ulong_long_type a1, a2, b1, b2;
+    //    polygon_ulong_long_type b1_sqr, b2_sqr, l_expr, r_expr;
+    //    bool l_expr_plus, r_expr_plus;
 
-        // Compute a1 = (x0-x1), a2 = (x0-x2), b1 = (y0 - y1), b2 = (y0 - y2).
-        convert_to_65_bit(new_point.x() - left_point.x(), a1);
-        convert_to_65_bit(new_point.x() - right_point.x(), a2);
-        convert_to_65_bit(new_point.y() - left_point.y(), b1);
-        convert_to_65_bit(new_point.y() - right_point.y(), b2);
+    //    // Compute a1 = (x0-x1), a2 = (x0-x2), b1 = (y0 - y1), b2 = (y0 - y2).
+    //    convert_to_65_bit(new_point.x() - left_point.x(), a1);
+    //    convert_to_65_bit(new_point.x() - right_point.x(), a2);
+    //    convert_to_65_bit(new_point.y() - left_point.y(), b1);
+    //    convert_to_65_bit(new_point.y() - right_point.y(), b2);
 
-        // Compute b1_sqr = (y0-y1)^2 and b2_sqr = (y0-y2)^2.
-        b1_sqr = b1 * b1;
-        b2_sqr = b2 * b2;
-        polygon_ulong_long_type b1_sqr_mod = b1_sqr % a1;
-        polygon_ulong_long_type b2_sqr_mod = b2_sqr % a2;
+    //    // Compute b1_sqr = (y0-y1)^2 and b2_sqr = (y0-y2)^2.
+    //    b1_sqr = b1 * b1;
+    //    b2_sqr = b2 * b2;
+    //    polygon_ulong_long_type b1_sqr_mod = b1_sqr % a1;
+    //    polygon_ulong_long_type b2_sqr_mod = b2_sqr % a2;
 
-        // Compute l_expr = (x1 - x2).
-        l_expr_plus = convert_to_65_bit(left_point.x() - right_point.x(), l_expr);
+    //    // Compute l_expr = (x1 - x2).
+    //    l_expr_plus = convert_to_65_bit(left_point.x() - right_point.x(), l_expr);
 
-        // In case (b2_sqr / a2) < (b1_sqr / a1), decrease left_expr by 1.
-        if (b2_sqr_mod * a1 < b1_sqr_mod * a2) {
-            if (!l_expr_plus)
-                ++l_expr;
-            else if (l_expr != 0)
-                --l_expr;
-            else {
-                ++l_expr;
-                l_expr_plus = false;
-            }
-        }
+    //    // In case (b2_sqr / a2) < (b1_sqr / a1), decrease left_expr by 1.
+    //    if (b2_sqr_mod * a1 < b1_sqr_mod * a2) {
+    //        if (!l_expr_plus)
+    //            ++l_expr;
+    //        else if (l_expr != 0)
+    //            --l_expr;
+    //        else {
+    //            ++l_expr;
+    //            l_expr_plus = false;
+    //        }
+    //    }
 
-        // Compute right expression.
-        polygon_ulong_long_type value1 = b1_sqr / a1;
-        polygon_ulong_long_type value2 = b2_sqr / a2;
-        if (value1 >= value2) {
-            r_expr = value1 - value2;
-            r_expr_plus = true;
-        } else {
-            r_expr = value2 - value1;
-            r_expr_plus = false;
-        }
+    //    // Compute right expression.
+    //    polygon_ulong_long_type value1 = b1_sqr / a1;
+    //    polygon_ulong_long_type value2 = b2_sqr / a2;
+    //    if (value1 >= value2) {
+    //        r_expr = value1 - value2;
+    //        r_expr_plus = true;
+    //    } else {
+    //        r_expr = value2 - value1;
+    //        r_expr_plus = false;
+    //    }
 
-        // Compare left and right expressions.
-        if (!l_expr_plus && r_expr_plus)
-            return true;
-        if (l_expr_plus && !r_expr_plus)
-            return false;
-        if (l_expr_plus && r_expr_plus)
-            return l_expr < r_expr;
-        return l_expr > r_expr;
-    }
+    //    // Compare left and right expressions.
+    //    if (!l_expr_plus && r_expr_plus)
+    //        return true;
+    //    if (l_expr_plus && !r_expr_plus)
+    //        return false;
+    //    if (l_expr_plus && r_expr_plus)
+    //        return l_expr < r_expr;
+    //    return l_expr > r_expr;
+    //}
 
     // Robust predicate, avoids using high-precision libraries.
     // Returns true if a horizontal line going through the new point site
@@ -908,12 +908,8 @@ namespace detail {
         double dist1 = find_distance_to_point_arc(left_point, new_point);
         double dist2 = find_distance_to_point_arc(right_point, new_point);
 
-        if (!almost_equal(dist1, dist2, 6))
-            return dist1 < dist2;
-
-        // If the result of the epsilon robust predicate is undefined
-        // use 65-bit robust predicate that produces exact result.
-        return robust_65bit_less_predicate(left_point, right_point, new_point);
+        // The undefined ulp range is equal to 3EPS + 3EPS <= 6ULP.
+        return dist1 < dist2;
     }
 
     template <typename T>
@@ -956,38 +952,6 @@ namespace detail {
         return UNDEFINED;
     }
 
-//#ifdef USE_MULTI_PRECISION_LIBRARY
-//    template<typename T>
-//    static bool mpz_less_predicate(point_2d<T> segment_start, point_2d<T> segment_end,
-//                                   point_2d<T> site_point, point_2d<T> new_point,
-//                                   bool reverse_order) {
-//        mpz_class segment_start_x, segment_start_y, segment_end_x, segment_end_y,
-//                  site_point_x, site_point_y, new_point_x, new_point_y;
-//        segment_start_x = static_cast<int>(segment_start.x());
-//        segment_start_y = static_cast<int>(segment_start.y());
-//        segment_end_x = static_cast<int>(segment_end.x());
-//        segment_end_y = static_cast<int>(segment_end.y());
-//        site_point_x = static_cast<int>(site_point.x());
-//        site_point_y = static_cast<int>(site_point.y());
-//        new_point_x = static_cast<int>(new_point.x());
-//        new_point_y = static_cast<int>(new_point.y());
-//
-//        mpz_class dif_x, dif_y, a, b, mul1, mul2, temp, left_expr, right_expr;
-//        dif_x = new_point_x - site_point_x;
-//        dif_y = new_point_y - site_point_y;
-//        a = segment_end_x - segment_start_x;
-//        b = segment_end_y - segment_start_y;
-//        mul1 = new_point_x - segment_end_x;
-//        mul2 = new_point_y - segment_end_y;
-//        temp = dif_x * dif_x + dif_y * dif_y;
-//        left_expr = (a * a + b * b) * temp * temp;
-//        right_expr = (2.0 * dif_x * (b * mul1 - a * mul2) - b * temp);
-//        right_expr = right_expr * right_expr;
-//
-//        return (!reverse_order) ? (left_expr > right_expr) : (left_expr < right_expr);
-//    }
-//#endif
-
     // Returns true if a horizontal line going through a new site intersects
     // right arc at first, else returns false. If horizontal line goes
     // through intersection point of the given two arcs returns false also.
@@ -1005,11 +969,7 @@ namespace detail {
         double dist1 = find_distance_to_point_arc(site_point, new_point);
         double dist2 = find_distance_to_segment_arc(segment_site, new_point);
 
-        if (!almost_equal(dist1, dist2, 11)) {
-            return reverse_order ^ (dist1 < dist2);
-        }
-
-        // TODO(asydorchuk): Add mpl support there.
+        // The undefined ulp range is equal to 3EPS + 8EPS <= 11ULP.
         return reverse_order ^ (dist1 < dist2);
     }
 
@@ -1035,11 +995,6 @@ namespace detail {
         double dist2 = find_distance_to_segment_arc(right_segment, new_point);
 
         // The undefined ulp range is equal to 8EPS + 8EPS <= 16ULP.
-        if (!almost_equal(dist1, dist2, 16)) {
-            return dist1 < dist2;
-        }
-
-        // TODO(asydorchuk): Add mpl support there.
         return dist1 < dist2;
     }
 
@@ -1806,17 +1761,17 @@ namespace detail {
 
         // Constructs degenerate bisector, used to search an arc that is above
         // the given site. The input to the constructor is the new site point.
-        explicit beach_line_node(const site_event_type &new_point) {
-            left_site_ = new_point;
-            right_site_ = new_point;
+        explicit beach_line_node(const site_event_type &new_site) {
+            left_site_ = new_site;
+            right_site_ = new_site;
         }
 
         // Constructs a new bisector. The input to the constructor is the two
         // sites that create the bisector. The order of sites is important.
-        beach_line_node(const site_event_type &left_point,
-                        const site_event_type &right_point) {
-            left_site_ = left_point;
-            right_site_ = right_point;
+        beach_line_node(const site_event_type &left_site,
+                        const site_event_type &right_site) {
+            left_site_ = left_site;
+            right_site_ = right_site;
         }
 
         const site_event_type &left_site() const {
