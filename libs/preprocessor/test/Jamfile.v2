@@ -32,7 +32,7 @@ test-suite preprocessor
         [ compile slot.cpp ]
         [ compile tuple.cpp ]
         [ compile variadic.cpp ]
-  ;
+   ;
 
 test-suite preprocessor_gcc 
    :   
@@ -96,13 +96,13 @@ test-suite preprocessor_gcc
           : <cflags>-std=c++0x 
           : variadic_gcc 
         ] 
-  :     
-  <toolset>gcc-4.3.0
-  <toolset>gcc-4.4.0
-  <toolset>gcc-4.5.0
-  <toolset>gcc-4.5.2
-  <toolset>gcc-4.6.0
-  ;
+   :     
+   <toolset>gcc-4.3.0
+   <toolset>gcc-4.4.0
+   <toolset>gcc-4.5.0
+   <toolset>gcc-4.5.2
+   <toolset>gcc-4.6.0
+   ;
 
 test-suite preprocessor_gcc ;
 
@@ -122,7 +122,16 @@ test-suite preprocessor_nvm
         [ compile seq.cpp : <define>BOOST_PP_VARIADICS=0 : seq_nvm ]
         [ compile slot.cpp : <define>BOOST_PP_VARIADICS=0 : slot_nvm ]
         [ compile tuple.cpp : <define>BOOST_PP_VARIADICS=0 : tuple_nvm ]
-  ;
+   ;
+
+test-suite preprocessor_dbg
+   :   
+        [ compile-fail debug_fail.cpp 
+          : <variant>debug
+            <define>BOOST_PP_VARIADICS=1
+            <toolset>gcc:<cflags>-std=c++0x
+        ]
+   ;
 
 test-suite preprocessor_c
    :   
@@ -178,7 +187,7 @@ test-suite preprocessor_c
           : <toolset>gcc:<cflags>-std=c99
           : variadic_c 
         ]
-  ;
+   ;
 
 test-suite preprocessor_c_nvm
    :   
@@ -242,4 +251,14 @@ test-suite preprocessor_c_nvm
             <toolset>gcc:<cflags>-std=c99
           : tuple_c_nvm 
         ]
-  ;
+   ;
+
+test-suite preprocessor_c_dbg
+   :   
+        [ compile-fail debug_fail.c 
+          : <variant>debug
+            <define>BOOST_PP_VARIADICS=1
+            <toolset>gcc:<cflags>-std=c99
+          : debug_fail_c
+        ]
+   ;

@@ -18,7 +18,6 @@
 # include <boost/preprocessor/facilities/expand.hpp>
 # include <boost/preprocessor/facilities/identity.hpp>
 # include <boost/preprocessor/facilities/intercept.hpp>
-# include <boost/preprocessor/facilities/is_tuple.hpp>
 # include <boost/preprocessor/facilities/is_tuple_begin.hpp>
 # include <boost/preprocessor/facilities/overload.hpp>
 #

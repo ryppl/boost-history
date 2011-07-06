@@ -13,6 +13,8 @@
 # define BOOST_PREPROCESSOR_DEBUG_HPP
 #
 # include <boost/preprocessor/debug/assert.hpp>
+# include <boost/preprocessor/debug/assert_is_tuple.hpp>
+# include <boost/preprocessor/debug/assert_is_array.hpp>
 # include <boost/preprocessor/debug/line.hpp>
 #
 # endif

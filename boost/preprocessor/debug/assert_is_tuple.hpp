@@ -9,25 +9,33 @@
 #
 # /* See http://www.boost.org for most recent version. */
 #
-# ifndef BOOST_PREPROCESSOR_FACILITIES_IS_TUPLE_HPP
-# define BOOST_PREPROCESSOR_FACILITIES_IS_TUPLE_HPP
+# ifndef BOOST_PREPROCESSOR_DEBUG_ASSERT_IS_TUPLE_HPP
+# define BOOST_PREPROCESSOR_DEBUG_ASSERT_IS_TUPLE_HPP
 #
 # include <boost/preprocessor/config/config.hpp>
 # include <boost/preprocessor/control/iif.hpp>
+# include <boost/preprocessor/debug/assert.hpp>
 # include <boost/preprocessor/facilities/is_empty.hpp>
 # include <boost/preprocessor/facilities/is_tuple_begin.hpp>
 #
-# /* BOOST_PP_IS_TUPLE */
+# /* BOOST_PP_ASSERT_IS_TUPLE */
 #
 # if BOOST_PP_VARIADICS
-# define BOOST_PP_IS_TUPLE(x) \
-    BOOST_PP_IIF \
+# if defined(NDEBUG)
+# define BOOST_PP_ASSERT_IS_TUPLE(x) \
+/**/
+# else
+# define BOOST_PP_ASSERT_IS_TUPLE(x) \
+    BOOST_PP_ASSERT \
       ( \
-      BOOST_PP_IS_TUPLE_BEGIN(x), \
-      BOOST_PP_IS_TUPLE_DETAIL_IS_NOT_AFTER, \
-      BOOST_PP_IS_TUPLE_DETAIL_GEN_ZERO \
+      BOOST_PP_IIF \
+        ( \
+        BOOST_PP_IS_TUPLE_BEGIN(x), \
+        BOOST_PP_IS_TUPLE_DETAIL_IS_NOT_AFTER, \
+        BOOST_PP_IS_TUPLE_DETAIL_GEN_ZERO \
+        ) \
+      (x) \
       ) \
-    (x) \
 /**/
 #
 # define BOOST_PP_IS_TUPLE_DETAIL_IS_NOT_AFTER(x) \
@@ -41,5 +49,6 @@
     0 \
 /**/
 #
+# endif /* NDEBUG */
 # endif /* BOOST_PP_VARIADICS */
-# endif /* BOOST_PREPROCESSOR_IS_TUPLE_HPP */
+# endif /* BOOST_PREPROCESSOR_DEBUG_ASSERT_IS_TUPLE_HPP */
