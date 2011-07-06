@@ -1,13 +1,34 @@
 [section:errors Type of errors]
+
 The following sections will describe some of the errors that an user or a device can make. 
 Those are the most frequent and we are not exhaustive, however we will find out how well our algorithms work.
 We will calculate (in a mathematical way) the probability of failures and the factors which affect it.
 
 [h4 Alteration]
+
 [h5 Single error]
+
+If the digits are added, an alteration of one digit will render the sum different and therefore the check digit.
+
 [h5 Multiple error]
 
+If more than one digit is altered, a simple sum can't ensure that the check digit will be different. 
+In fact it depends on the compensation of the altered digits.
+For example : 1 + 2 + 3 = 6. If we alter 2 digits, the sum could become : 2 + 2 + 2 = 6. The result is equal because 1 + 3 = 2 + 2, the digits altered are compensated.
+
 [h4 Transposition]
+
+A transposition on a simple sum is impossible to detect because the addition is commutative, the order is not important.
+A solution is to associate the position of a digit with a weight.
+
+The Luhn algorithm alternates a digit multiply by two and a simple digit. All twin transpositions are catched but the sequence "90" or "09" because: 
+
+9*2 = 18 and 18-9 = 9 so 9*2 = 9
+0*2 = 0
+
+The two digits have the same value if there are doubled or not.
+
+[note A transposition is only catched if the two digits transposed have a different weight and their values with or without weight are not the same.]
 
 [h4 Length]
 [h4 Phonetic error]
