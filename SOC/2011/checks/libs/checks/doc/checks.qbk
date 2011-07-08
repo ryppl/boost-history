@@ -179,8 +179,7 @@ This provides this output:
 
 [section:acks Acknowledgements]
 
-* Thanks to Google for providing the Summer of Code Program 2011 that enabled Pierre Talbot to
-write this library.
+* Thanks to Paul Bristow who is the mentor of this project for her infinite patience and his wise advices.
 
 * [@http://en.wikipedia.org/wiki/File:UPC_EANUCC-12_barcode.svg UPC EANUCC 12 barcode]
 is copied from Wikipedia under the Creative Commons license.
