@@ -123,7 +123,7 @@ BOOST_AUTO_TEST_CASE(luhn_alteration_test)
 	// odd : test the alteration on each digits
     for(unsigned int j=0; j< luhn_numbers_odd[i].length(); ++j)
     {
-      // alteration + ([1|2|3|4|5|6|7|8|9] % 10)
+      // alteration + [1|2|3|4|5|6|7|8|9] % 10
 	  for(int k=1; k <= 9; ++k)
 	  {
         std::string luhn_alterate = luhn_numbers_odd[i] ;
@@ -149,19 +149,45 @@ BOOST_AUTO_TEST_CASE(luhn_alteration_test)
 
 BOOST_AUTO_TEST_SUITE_END() //modulus_alteration_test
 
+BOOST_AUTO_TEST_SUITE(modulus_transposition_test)
+
+// Transposition of 90 and 09 fail with odd and even tests.
+BOOST_AUTO_TEST_CASE_EXPECTED_FAILURES( luhn_transposition_test, 2 )
+BOOST_AUTO_TEST_CASE(luhn_transposition_test)
+{
+  std::string luhn_transposition_odd = "12345678903"; //odd
+  std::string luhn_transposition_even = "123456789007"; // even  
+  std::string luhn_transposition;
+  // for each digits
+  for(int i=0; i < 9; ++i)
+  {
+    // Test a permutation with all the digits remaining
+    for(int j=i+1; j < 10; j+=2)
+    {
+      // Odd
+      luhn_transposition = luhn_transposition_odd;
+      luhn_transposition[i] = luhn_transposition[j];
+      luhn_transposition[j] = luhn_transposition_odd[i];
+      std::cout << "Odd test : switch " << luhn_transposition[j] << " with " << luhn_transposition[i] << std::endl;
+      BOOST_CHECK_EQUAL ( boost::checks::check_luhn( luhn_transposition.begin(), luhn_transposition.end(), luhn_transposition.size() ), false );
+      // Even
+      luhn_transposition = luhn_transposition_even;
+      luhn_transposition[i] = luhn_transposition[j];
+      luhn_transposition[j] = luhn_transposition_even[i];
+      std::cout << "Even test : switch " << luhn_transposition[j] << " with " << luhn_transposition[i] << std::endl;
+      BOOST_CHECK_EQUAL ( boost::checks::check_luhn( luhn_transposition.begin(), luhn_transposition.end(), luhn_transposition.size() ), false );
+    }
+  }
+} // BOOST_AUTO_TEST_CASE(luhn_transposition_test)
+
+BOOST_AUTO_TEST_SUITE_END() //modulus_transposition_test
+
 BOOST_AUTO_TEST_CASE(modulus_encoding_test)
 { 
 	// Modulus 11 tests on the different encoding of the characters.
 	// Luhn tests on the different encoding of the characters.
 
 } // BOOST_AUTO_TEST_CASE(modulus_encoding_test)
-
-BOOST_AUTO_TEST_CASE(modulus_length_test)
-{ 
-	// Modulus 11 tests on the length.
-	// Luhn tests on the length.
-
-} // BOOST_AUTO_TEST_CASE(modulus_length_test)
 
 BOOST_AUTO_TEST_CASE(modulus_collection_test)
 { 
