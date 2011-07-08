@@ -1,30 +1,43 @@
 [section:modulus Modular sum algorithms]
 
-A ['modular sum algorithm] computes the sum of a serie of digits modulo a number. 
+A ['modular sum algorithm] computes the sum of a sequence of digits modulus a number. 
 The number obtained is called the ['check digit], in many codes it is added as the last digit.
-This rubbish algorithm detect all ['alteration] of one digit but doesn't detect a simple ['transposition] if the check digit is not altered.
+This rubbish algorithm detect all ['alteration] of one digit but doesn't detect a simple ['transposition] if the check digit is not transposed.
 This is why even the most basic algorithms introduce the notion of ['weight]. The weight is the contribution of a number to the final sum.
 The following algorithms presented are the base of many, many codes and numbers in the world.
 We could describe a number and its check digit calculation with three characteristics : length, weigth and the modulus. 
-So we could design a generic function but we won't. It wouldn't be efficient and unnecessarily more complicated.
+So we could design a generic function but we won't. It wouldn't be efficient and would be unnecessarily more complicated.
 The next parts will present the three different algorithms that we have choose to design.
+
+[note We may add other algorithms later]
 
 [h4 Luhn algorithm]
 
 [h5 Description]
 
 The Luhn algorithm is used with a lot of codes and numbers, the most well-known usage is the verification of the ['credit card numbers].
-It produce a check digit from a sequence with a unlimited length.
+It produce a check digit from a sequence with an unlimited length.
 The weigth pattern used is : from the rightmost digit (the check digit) double the value of every second digit.
 It use a modulus 10 on the sum, the range of the check digit is from 0 to 9.
 
 [note When a digit is doubled, we subtract 9 from the result if it exceeds 9]
 
+[h5 Errors]
+
+[*Alterations] of one digit are all catched. The alterations of more than one digit are not all catched.
+All [*transpositions] on digits with different weight are catched but the sequence "90" or "09" because: 
+
+9*2 = 18 and 18-9 = 9 so 9*2 = 9
+0*2 = 0
+
+The two digits have the same value if there are doubled or not.
+Seeing that Luhn alternates a weight of 1 and 2, the transpositions on digits with the same weight are not catched.
+
 [h4 Modulus 10 algorithm]
 
 [h5 Description]
 
-This algorithm use a modulus 10 such as the Luhn algorithm but use a custom weight pattern. 
+This algorithm use a modulus 10 as the Luhn algorithm but use a custom weight pattern. 
 The sum is made without subtraction if the multiplication of a digit exceeds 9.
 The custom weight pattern is interresting for many codes and numbers that aren't implemented in the high level library. 
 The user can easily craft his own check function with this weight pattern.
@@ -33,7 +46,7 @@ The user can easily craft his own check function with this weight pattern.
 
 The modulus 11 algorithm use a modulus of 11, so we have 11 possible check digits. 
 The ten first characters are the figures from 0 to 9, the eleventh is a special character choose by the designer of the number. It is typically 'X' or 'x'.
-The weight of a digit is related to its position. The weight of the first character is the total length of the number - with the check digit included. 
+The weight of a digit is related to its position. The weight of the first character is equal to the total length of the number (with the check digit included). 
 The weight decrease by one for the second position, one again for the third, etc.
 
 [endsect][/section:modulus Modular sum algorithms]
