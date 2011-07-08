@@ -88,11 +88,25 @@ namespace boost{
     template <class In>
     char isbn10_check_digit(In isbn_begin, In isbn_end);
 
+	template <typename Out, typename In>
+    inline Out compute_luhn(In &begin, const In &end, unsigned int nbr_digits=0);
+
+	template <typename In>
+    inline char compute_luhn(In &begin, const In &end, unsigned int nbr_digits=0);
+
     template <typename In>
     inline bool check_luhn(In &begin, const In &end, unsigned int nbr_digits=0);
 	
     template <typename In>
-    inline bool check_mod11(In &begin, const In end, unsigned int nbr_digits=0);
+    inline bool check_mod11(In &begin, const In &end, unsigned int nbr_digits=0);
 
+    template <typename Out, typename In>
+    inline Out compute_mod11(In &begin, const In &end, unsigned int nbr_digits=0);
+
+    template <typename In>
+    inline bool check_mod10(In &begin, const In &end, unsigned int weight[], unsigned int nbr_digits=0);
+
+    template <typename In>
+    inline char compute_mod10(In &begin, const In &end, unsigned int weight[], unsigned int nbr_digits=0);
   }
 }
