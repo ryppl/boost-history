@@ -16,7 +16,7 @@
 # include <boost/preprocessor/arithmetic/dec.hpp>
 # include <boost/preprocessor/variadic/size.hpp>
 #
-# /* BOOST_PP_IS_TUPLE */
+# /* BOOST_PP_IS_TUPLE_BEGIN */
 #
 # if BOOST_PP_VARIADICS
 # define BOOST_PP_IS_TUPLE_BEGIN(x) \
