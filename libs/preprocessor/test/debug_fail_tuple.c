@@ -9,4 +9,4 @@
 #
 # /* See http://www.boost.org for most recent version. */
 #
-# include <libs/preprocessor/test/debug_fail.cxx>
+# include <libs/preprocessor/test/debug_fail_tuple.cxx>
