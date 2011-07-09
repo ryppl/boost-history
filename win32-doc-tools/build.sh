@@ -1,13 +1,14 @@
 #!/bin/sh -e
 
 ICONV=iconv-1.9.2.win32
-LIBXML=libxml2-2.7.6.win32
+LIBXML=libxml2-2.7.8.win32
 LIBXSLT=libxslt-1.1.26.win32
-ZLIB=zlib-1.2.3.win32
-DOCBOOK_XSL=docbook-xsl-1.75.2
+ZLIB=zlib-1.2.5.win32
+DOCBOOK_XSL_VERSION=1.76.1
+DOCBOOK_XSL=docbook-xsl-${DOCBOOK_XSL_VERSION}
 DOCBOOK_DTD_VER=4.2
 
-OUTPUT_NAME=win32-doc-tools-0.1.1
+OUTPUT_NAME=win32-doc-tools-0.1.2
 FILES=$(pwd)/files
 TMPDIR=$(pwd)/tmp
 DESTDIR=$(pwd)
@@ -19,7 +20,7 @@ SOURCEFORGE_DOWNLOAD=http://sourceforge.net/projects/docbook/files/
 
 # Could just use 'wget -nc'....
 
-function download {
+download() {
 	FILENAME=$2
 
 	if test -f $FILES/$FILENAME; then
@@ -56,21 +57,27 @@ mkdir -p $OUTPUT_DIR/bin
 cp $FILES/quickbook.exe $OUTPUT_DIR/bin
 
 # Install zipfiles
-function install_zipfile {
+install_zipfile() {
 	NAME=$1
 	TGT_DIR=$2
 	
 	unzip -q -d $TMPDIR $FILES/$NAME.zip
+
+    if test -d $TMPDIR/$NAME; then
+        DIRNAME=$TMPDIR/$NAME
+    else
+        DIRNAME=$(echo $TMPDIR/$NAME | sed s/\.win32$//)
+    fi
 	
 	# Rename readme.txt files so they don't clash
-	if test -f $TMPDIR/$NAME/readme.txt; then
-		mv $TMPDIR/$NAME/readme.txt $TGT_DIR/README-$NAME.txt
+	if test -f $DIRNAME/readme.txt; then
+		mv $DIRNAME/readme.txt $TGT_DIR/README-$NAME.txt
 	fi
 
 	mkdir -p $TGT_DIR
-	cp -pR $TMPDIR/$NAME/* $TGT_DIR/
+	cp -pR $DIRNAME/* $TGT_DIR/
 	
-	rm -r $TMPDIR/$NAME/
+	rm -r $DIRNAME/
 }
 
 install_zipfile $ICONV $OUTPUT_DIR
