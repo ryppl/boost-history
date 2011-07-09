@@ -16,5 +16,6 @@
 
 BOOST_PP_ASSERT_IS_TUPLE((x,3,e,2)ty)
 BOOST_PP_ASSERT_IS_ARRAY((y,(x,3,e,2)))
+BOOST_PP_ASSERT_IS_LIST((4,(x)))
 
 # endif
