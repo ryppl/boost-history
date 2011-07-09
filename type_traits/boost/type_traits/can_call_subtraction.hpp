@@ -13,7 +13,13 @@
 #define BOOST_TT_TRAIT_OP -
 #define BOOST_TT_FORBIDDEN_IF\
    ::boost::type_traits::ice_or<\
-      /* void* with fundamental or pointer */\
+      /* Lhs==pointer and Rhs==fundamental and Rhs!=integral */\
+      ::boost::type_traits::ice_and<\
+         ::boost::is_pointer< Lhs_noref >::value,\
+         ::boost::is_fundamental< Rhs_nocv >::value,\
+         ::boost::type_traits::ice_not< ::boost::is_integral< Rhs_noref >::value >::value\
+      >::value,\
+      /* Lhs==void* and (Rhs==fundamental or Rhs==pointer) */\
       ::boost::type_traits::ice_and<\
          ::boost::is_pointer< Lhs_noref >::value,\
          ::boost::is_void< Lhs_noptr >::value,\
@@ -22,6 +28,7 @@
             ::boost::is_pointer< Rhs_noref >::value\
          >::value\
       >::value,\
+      /* Rhs==void* and (Lhs==fundamental or Lhs==pointer) */\
       ::boost::type_traits::ice_and<\
          ::boost::is_pointer< Rhs_noref >::value,\
          ::boost::is_void< Rhs_noptr >::value,\
@@ -30,14 +37,7 @@
             ::boost::is_pointer< Lhs_noref >::value\
          >::value\
       >::value,\
-      /* LHS==pointer!=void* and RHS==fundamental non integral */\
-      ::boost::type_traits::ice_and<\
-         ::boost::is_pointer< Lhs_noref >::value,\
-         ::boost::type_traits::ice_not< ::boost::is_void< Lhs_noptr >::value >::value,\
-         ::boost::is_fundamental< Rhs_nocv >::value,\
-         ::boost::type_traits::ice_not< ::boost::is_integral< Rhs_noref >::value >::value\
-      >::value,\
-      /* LHS=fundamental and RHS=pointer */\
+      /* Lhs=fundamental and Rhs=pointer */\
       ::boost::type_traits::ice_and<\
          ::boost::is_fundamental< Lhs_nocv >::value,\
          ::boost::is_pointer< Rhs_noref >::value\

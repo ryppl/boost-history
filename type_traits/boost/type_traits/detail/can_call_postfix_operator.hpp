@@ -32,7 +32,7 @@ namespace BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl) {
 template <typename T> T &make();
 
 
-// 2. checks if operator BOOST_TT_TRAIT_OP returns void or not
+// 2. checks if the operator returns void or not
 // conditions: Lhs!=void
 
 // we first redefine "operator," so that we have no compilation error if
@@ -42,7 +42,7 @@ template <typename T> T &make();
 // - operator BOOST_TT_TRAIT_OP returns void   -> (lhs BOOST_TT_TRAIT_OP, returns_void_t()) returns returns_void_t
 // - operator BOOST_TT_TRAIT_OP returns !=void -> (lhs BOOST_TT_TRAIT_OP, returns_void_t()) returns int
 struct returns_void_t {};
-template <typename T> int operator,(T const &, returns_void_t);
+template <typename T> int operator,(T, returns_void_t);
 
 // this intermediate trait has member value of type bool:
 // - value==true -> operator BOOST_TT_TRAIT_OP returns void
@@ -57,7 +57,7 @@ struct operator_returns_void {
 };
 
 
-// 3. check for return type if Ret!=dont_care
+// 3. checks if the return type is Ret or Ret==dont_care
 // conditions: Lhs!=void
 
 struct dont_care { };
@@ -90,8 +90,9 @@ struct operator_returns_Ret < Lhs, Ret, true > {
    BOOST_STATIC_CONSTANT(bool, value = false);
 };
 
-// when Ret!=void, checks if it is convertible to Ret using the sizeof trick
+// otherwise checks if it is convertible to Ret using the sizeof trick
 // based on overload resolution
+// condition: Ret!=void and Ret!=dont_care and the operator does not return void
 template < typename Lhs, typename Ret >
 struct operator_returns_Ret < Lhs, Ret, false > {
    static ::boost::type_traits::yes_type is_convertible_to_Ret(Ret); // this version is preferred for types convertible to Ret
@@ -104,8 +105,8 @@ struct operator_returns_Ret < Lhs, Ret, false > {
 // 4. we provide our operator definition for types that do not have one already
 
 // a type returned from operator BOOST_TT_TRAIT_OP when no such operator is
-// found in the type's own namespace so that we have a means to know that our
-// operator was used
+// found in the type's own namespace (our own operator is used) so that we have
+// a means to know that our operator was used
 struct tag { };
 
 // this class allows implicit conversions and makes the following operator
@@ -117,10 +118,10 @@ struct any { template <class T> any(T const&); };
 tag operator BOOST_TT_TRAIT_OP (const any&, int);
 
 
-// 5. check for operator existence
+// 5. checks for operator existence
 // condition: Lhs!=void
 
-// check if our definition of operator BOOST_TT_TRAIT_OP is used or an other
+// checks if our definition of operator BOOST_TT_TRAIT_OP is used or an other
 // existing one;
 // this is done with redefinition of "operator," that returns tag or tag2
 struct tag2 { };
@@ -135,9 +136,9 @@ struct operator_exists {
 };
 
 
-// 5. main trait: to avoid any compilation error, this struct behaves
-// differently when:
-// - operator BOOST_TT_TRAIT_OP(Lhs) is forbidden by the standard
+// 5. main trait: to avoid any compilation error, this class behaves
+// differently when operator BOOST_TT_TRAIT_OP(Lhs) is forbidden by the
+// standard.
 // Forbidden_if is a bool that is:
 // - true when the operator BOOST_TT_TRAIT_OP(Lhs) is forbidden by the standard
 //   (would yield compilation error if used)

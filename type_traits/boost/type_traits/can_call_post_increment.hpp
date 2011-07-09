@@ -12,16 +12,20 @@
 #define BOOST_TT_TRAIT_NAME can_call_post_increment
 #define BOOST_TT_TRAIT_OP ++
 #define BOOST_TT_FORBIDDEN_IF\
-   /* void* or const fundamental */\
    ::boost::type_traits::ice_or<\
+      /* void* */\
       ::boost::type_traits::ice_and<\
          ::boost::is_pointer< Lhs_noref >::value,\
          ::boost::is_void< Lhs_noptr >::value\
       >::value,\
+      /* (fundamental or pointer) and const */\
       ::boost::type_traits::ice_and<\
-         ::boost::is_fundamental< Lhs_nocv >::value,\
+         ::boost::type_traits::ice_or<\
+            ::boost::is_fundamental< Lhs_nocv >::value,\
+            ::boost::is_pointer< Lhs_noref >::value\
+         >::value,\
          ::boost::is_const< Lhs_noref >::value\
-     >::value\
+      >::value\
    >::value
 
 

@@ -13,13 +13,13 @@
 #define BOOST_TT_TRAIT_OP *=
 #define BOOST_TT_FORBIDDEN_IF\
    ::boost::type_traits::ice_or<\
-      /* LHS is fundamental and const, RHS is fundamental */\
+      /* Lhs==fundamental and Lhs==const and Rhs==fundamental */\
       ::boost::type_traits::ice_and<\
          ::boost::is_fundamental< Lhs_nocv >::value,\
          ::boost::is_const< Lhs_noref >::value,\
          ::boost::is_fundamental< Rhs_nocv >::value\
       >::value,\
-      /* pointer with pointer or fundamental */\
+      /* Lhs==pointer and (Rhs==fundamental or Rhs==pointer) */\
       ::boost::type_traits::ice_and<\
          ::boost::is_pointer< Lhs_noref >::value,\
          ::boost::type_traits::ice_or<\
@@ -27,6 +27,7 @@
             ::boost::is_pointer< Rhs_noref >::value\
          >::value\
       >::value,\
+      /* Rhs==pointer and (Lhs==fundamental or Lhs==pointer) */\
       ::boost::type_traits::ice_and<\
          ::boost::is_pointer< Rhs_noref >::value,\
          ::boost::type_traits::ice_or<\

@@ -13,16 +13,17 @@
 #define BOOST_TT_TRAIT_OP >
 #define BOOST_TT_FORBIDDEN_IF\
    ::boost::type_traits::ice_or<\
-      /* pointer and fundamental */\
+      /* Lhs==pointer and Rhs==fundamental */\
       ::boost::type_traits::ice_and<\
          ::boost::is_pointer< Lhs_noref >::value,\
          ::boost::is_fundamental< Rhs_nocv >::value\
       >::value,\
+      /* Rhs==pointer and Lhs==fundamental */\
       ::boost::type_traits::ice_and<\
          ::boost::is_pointer< Rhs_noref >::value,\
          ::boost::is_fundamental< Lhs_nocv >::value\
       >::value,\
-      /* two pointers but no inheritance or no void* */\
+      /* Lhs==pointer and Rhs==pointer and Lhs!=base(Rhs) and Rhs!=base(Lhs) and Lhs!=void* and Rhs!=void* */\
       ::boost::type_traits::ice_and<\
          ::boost::is_pointer< Lhs_noref >::value,\
          ::boost::is_pointer< Rhs_noref >::value,\

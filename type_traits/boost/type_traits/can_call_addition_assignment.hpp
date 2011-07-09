@@ -13,39 +13,46 @@
 #define BOOST_TT_TRAIT_OP +=
 #define BOOST_TT_FORBIDDEN_IF\
    ::boost::type_traits::ice_or<\
-      /* LHS is fundamental and const, RHS is fundamental */\
-      ::boost::type_traits::ice_and<\
-         ::boost::is_fundamental< Lhs_nocv >::value,\
-         ::boost::is_const< Lhs_noref >::value,\
-         ::boost::is_fundamental< Rhs_nocv >::value\
-      >::value,\
-      /* two pointers */\
+      /* Lhs==pointer and Rhs==pointer */\
       ::boost::type_traits::ice_and<\
          ::boost::is_pointer< Lhs_noref >::value,\
          ::boost::is_pointer< Rhs_noref >::value\
       >::value,\
-      /* void* with fundamental */\
+      /* Lhs==void* and Rhs==fundamental */\
       ::boost::type_traits::ice_and<\
          ::boost::is_pointer< Lhs_noref >::value,\
          ::boost::is_void< Lhs_noptr >::value,\
          ::boost::is_fundamental< Rhs_nocv >::value\
       >::value,\
+      /* Rhs==void* and Lhs==fundamental */\
       ::boost::type_traits::ice_and<\
          ::boost::is_pointer< Rhs_noref >::value,\
          ::boost::is_void< Rhs_noptr >::value,\
          ::boost::is_fundamental< Lhs_nocv >::value\
       >::value,\
-      /* LHS==pointer and RHS==fundamental non integral */\
+      /* Lhs==pointer and Rhs==fundamental and Rhs!=integral */\
       ::boost::type_traits::ice_and<\
          ::boost::is_pointer< Lhs_noref >::value,\
          ::boost::is_fundamental< Rhs_nocv >::value,\
          ::boost::type_traits::ice_not< ::boost::is_integral< Rhs_noref >::value >::value\
       >::value,\
-      /* LHS==non bool fundamental and RHS==pointer */\
+      /* Rhs==pointer and Lhs==fundamental and Lhs!=bool */\
       ::boost::type_traits::ice_and<\
+         ::boost::is_pointer< Rhs_noref >::value,\
          ::boost::is_fundamental< Lhs_nocv >::value,\
-         ::boost::type_traits::ice_not< ::boost::is_same< bool, Lhs_nocv >::value >::value,\
-         ::boost::is_pointer< Rhs_noref >::value\
+         ::boost::type_traits::ice_not< ::boost::is_same< Lhs_nocv, bool >::value >::value\
+      >::value,\
+      /* (Lhs==fundamental or Lhs==pointer) and (Rhs==fundamental or Rhs==pointer) and (Lhs==const) */\
+      ::boost::type_traits::ice_and<\
+         ::boost::type_traits::ice_or<\
+            ::boost::is_fundamental< Lhs_nocv >::value,\
+            ::boost::is_pointer< Lhs_noref >::value\
+         >::value,\
+         ::boost::type_traits::ice_or<\
+            ::boost::is_fundamental< Rhs_nocv >::value,\
+            ::boost::is_pointer< Rhs_noref >::value\
+         >::value,\
+         ::boost::is_const< Lhs_noref >::value\
       >::value\
    >::value
 

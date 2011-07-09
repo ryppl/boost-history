@@ -4,9 +4,9 @@
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 // test with one template parameter
-#define TEST_T(TYPE,RESULT) BOOST_CHECK_INTEGRAL_CONSTANT((::tt::BOOST_TT_TRAIT_NAME<TYPE>::value), RESULT)
+#define TEST_T(TYPE,RESULT) BOOST_CHECK_INTEGRAL_CONSTANT((::boost::BOOST_TT_TRAIT_NAME<TYPE>::value), RESULT)
 // test with one template parameter plus return value
-#define TEST_TR(TYPE,RET,RESULT) BOOST_CHECK_INTEGRAL_CONSTANT((::tt::BOOST_TT_TRAIT_NAME<TYPE,RET>::value), RESULT)
+#define TEST_TR(TYPE,RET,RESULT) BOOST_CHECK_INTEGRAL_CONSTANT((::boost::BOOST_TT_TRAIT_NAME<TYPE,RET>::value), RESULT)
 
 namespace {
 
@@ -66,7 +66,7 @@ struct tag { };
 
 //class internal_private { ret operator BOOST_TT_TRAIT_OP () const; };
 
-void run1() {
+void common() {
    TEST_T(void, false);
    TEST_TR(void, void, false);
    TEST_TR(void, int, false);

@@ -309,7 +309,7 @@ boost::can_call_unary_minus<A>::value; // error: A::operator-() is private
 ``
 
 * There is an issue if the operator exists only for type `A` and `B` is
-convertible to `A`. In this case, the compiler will report an ambigous overload
+convertible to `A`. In this case, the compiler will report an ambiguous overload
 because both the existing operator and the one we provide (with argument of type
 `any`) need type conversion, so that none is preferred.
 
@@ -318,7 +318,7 @@ struct A { };
 void operator-(const A&);
 struct B { operator A(); };
 boost::can_call_unary_minus<A>::value; // this is fine
-boost::can_call_unary_minus<B>::value; // error: ambigous overload between
+boost::can_call_unary_minus<B>::value; // error: ambiguous overload between
                                            // operator-(const any&) and
                                            // operator-(const A&)
                                            // both need type conversion
@@ -328,7 +328,7 @@ struct B { };
 struct A { A(const B&) { } };
 void operator-(const A&);
 boost::can_call_unary_minus<A>::value; // this is fine
-boost::can_call_unary_minus<B>::value; // error: ambigous overload between
+boost::can_call_unary_minus<B>::value; // error: ambiguous overload between
                                            // operator-(const any&) and
                                            // operator-(const A&)
                                            // both need type conversion
